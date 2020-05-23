@@ -11,7 +11,8 @@ export const FEE_ALERT_THRESHOLD = 5.0 // this is denominated in dollars
 export const CURRENCY_SYMBOL_IMAGES = {
   BCH: 'https://developer.airbitz.co/content/bitcoincash-logo-solo-64.png',
   BTC: 'https://developer.airbitz.co/content/bitcoin-logo-solo-64.png',
-  ETH: 'https://developer.airbitz.co/content/ethereum-logo-solo-64.png'
+  ETH: 'https://developer.airbitz.co/content/ethereum-logo-solo-64.png',
+  ETC: 'https://developer.airbitz.co/content/ethereum-classic-logo-solo-64.png'
 }
 
 // Translations for custom fee keys:
@@ -59,6 +60,7 @@ export const CURRENCY_SETTINGS_KEYS = [
   'bitcointestnet',
   'bitcoincash',
   'ethereum',
+  'ethereumclassic',
   'dash',
   'litecoin',
   'bitcoinsv',
@@ -84,6 +86,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:bitcoincash',
   'wallet:monero',
   'wallet:ethereum',
+  'wallet:ethereumclassic',
   'wallet:binance',
   'wallet:bitcoinsv',
   'wallet:litecoin',
@@ -121,6 +124,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   EBST: 'eboost',
   EOS: 'eos',
   ETH: 'ethereum',
+  ETC: 'ethereumclassic',
   FIO: 'fio',
   FTC: 'feathercoin',
   GRS: 'groestlcoin',
@@ -186,7 +190,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   RBTC: {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
     allowZeroTx: true,
-    isImportKeySupported: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    },
     isCustomTokensSupported: false,
     isTokensSupported: true
   },
@@ -202,7 +209,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       modalMessage: s.strings.request_xlm_minimum_notification_body
     },
     displayBuyCrypto: false,
-    isImportKeySupported: true
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    }
   },
   XRP: {
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
@@ -216,7 +226,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       modalMessage: s.strings.request_xrp_minimum_notification_body
     },
     displayBuyCrypto: true,
-    isImportKeySupported: true
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    }
   },
   XMR: {
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
@@ -238,14 +251,20 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     displayBuyCrypto: true,
-    isImportKeySupported: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    },
     isCustomTokensSupported: true,
     isTokensSupported: true,
     showEarnInterestCard: true
   },
   DAI: {
     displayBuyCrypto: true,
-    isImportKeySupported: true
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    }
   },
   HERC: {
     displayBuyCrypto: true,
@@ -256,7 +275,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     // will share / copy public address instead of URI on Request scene
     isUriEncodedStructure: true,
     dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
-    isImportKeySupported: true
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    }
   },
   BNB: {
     uniqueIdentifier: {
@@ -264,7 +286,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       identifierName: s.strings.unique_identifier_memo,
       identifierKeyboardType: 'default'
     },
-    isImportKeySupported: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    },
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   },
   TUSD: {

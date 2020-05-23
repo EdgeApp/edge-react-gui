@@ -24,9 +24,6 @@ Object {
       "isProcessing": false,
       "lobby": null,
     },
-    "wallets": Object {
-      "byId": Object {},
-    },
   },
   "cryptoExchange": Object {
     "calculatingMax": false,
@@ -296,6 +293,9 @@ Object {
       },
       "EOS": Object {
         "denomination": "10000",
+      },
+      "ETC": Object {
+        "denomination": "1000000000000000000",
       },
       "ETH": Object {
         "denomination": "1000000000000000000",

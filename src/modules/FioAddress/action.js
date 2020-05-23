@@ -8,7 +8,6 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import type { Dispatch, GetState } from '../../types/reduxTypes'
 import { truncateDecimals } from '../../util/utils'
-import { getAccount, getWallets } from '../Core/selectors'
 import { getDefaultIsoFiat, getDisplayDenomination, getExchangeDenomination } from '../Settings/selectors'
 import { getFioWallets } from '../UI/selectors'
 import type { BuyAddressResponse } from './reducer'
@@ -24,11 +23,12 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
     type: 'FIO/SET_FIO_ADDRESSES_PROGRESS'
   })
   const state = getState()
+  const { currencyWallets = {} } = state.core.account
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
   let fioAddresses = []
 
   if (fioWallets != null) {
-    for (const wallet: EdgeCurrencyWallet of fioWallets) {
+    for (const wallet of fioWallets) {
       const walletFioAddresses = await wallet.otherMethods.getFioAddresses()
       fioAddresses = [...fioAddresses, ...walletFioAddresses]
     }
@@ -42,8 +42,7 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
   })
 
   const { connectedWalletsByFioAddress } = state.ui.fio
-  const walletsMap: { [string]: EdgeCurrencyWallet } = getWallets(state)
-  const wallets = Object.keys(walletsMap).map(walletKey => walletsMap[walletKey])
+  const wallets = Object.keys(currencyWallets).map(walletKey => currencyWallets[walletKey])
   for (const { name } of fioAddresses) {
     if (!connectedWalletsByFioAddress[name]) {
       const fioWallet = await findWalletByFioAddress(fioWallets, name)
@@ -62,7 +61,7 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
 
 export const getRegInfo = (fioAddress: string, selectedWallet: EdgeCurrencyWallet) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = getAccount(state)
+  const { account } = state.core
   const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
   const displayDenomination = getDisplayDenomination(state, Constants.FIO_STR)
 

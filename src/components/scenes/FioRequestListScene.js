@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -13,6 +13,7 @@ import fioRequestsIcon from '../../assets/images/sidenav/fiorequests.png'
 import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
+import { addToFioAddressCache } from '../../modules/FioAddress/util.js'
 import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioRequest/components/FioRequestRow'
 import T from '../../modules/UI/components/FormattedText/index'
 import { styles as requestListStyles } from '../../styles/scenes/FioRequestListStyle'
@@ -30,11 +31,13 @@ export type State = {
   loadingPending: boolean,
   loadingSent: boolean,
   rejectLoading: boolean,
+  addressCachedUpdated: boolean,
   fioRequestsPending: FioRequest[],
   fioRequestsSent: FioRequest[]
 }
 
 export type StateProps = {
+  account: EdgeAccount,
   wallets: { [walletId: string]: GuiWallet },
   fioWallets: EdgeCurrencyWallet[],
   isConnected: boolean
@@ -46,8 +49,9 @@ export class FioRequestList extends Component<StateProps, State> {
   constructor (props: StateProps) {
     super(props)
     this.state = {
-      loadingPending: false,
-      loadingSent: false,
+      loadingPending: true,
+      loadingSent: true,
+      addressCachedUpdated: false,
       rejectLoading: false,
       fioRequestsPending: [],
       fioRequestsSent: []
@@ -60,10 +64,27 @@ export class FioRequestList extends Component<StateProps, State> {
     this.getFioRequestsSent()
   }
 
+  componentDidUpdate = () => {
+    if (this.state.addressCachedUpdated || this.state.loadingPending || this.state.loadingSent) return
+
+    const { fioRequestsPending, fioRequestsSent } = this.state
+    const addressArray = []
+    for (const request of fioRequestsPending) {
+      addressArray.push(request.payee_fio_address)
+      addressArray.push(request.payer_fio_address)
+    }
+    for (const request of fioRequestsSent) {
+      addressArray.push(request.payee_fio_address)
+      addressArray.push(request.payer_fio_address)
+    }
+
+    addToFioAddressCache(this.props.account, addressArray)
+    this.setState({ addressCachedUpdated: true })
+  }
+
   getFioRequestsPending = async () => {
     const { fioWallets } = this.props
     let fioRequestsPending = []
-    this.setState({ fioRequestsPending: [], loadingPending: true })
     if (fioWallets.length) {
       try {
         for (const wallet of fioWallets) {
@@ -99,7 +120,6 @@ export class FioRequestList extends Component<StateProps, State> {
   getFioRequestsSent = async () => {
     const { fioWallets } = this.props
     let fioRequestsSent = []
-    this.setState({ fioRequestsSent: [], loadingSent: true })
     if (fioWallets.length) {
       try {
         for (const wallet of fioWallets) {
@@ -198,7 +218,14 @@ export class FioRequestList extends Component<StateProps, State> {
     }
     const { wallets } = this.props
     for (const walletKey: string of Object.keys(wallets)) {
-      if (wallets[walletKey].currencyCode.toLowerCase() === fioRequest.content.chain_code.toLowerCase()) {
+      if (wallets[walletKey].currencyCode.toUpperCase() === fioRequest.content.token_code.toUpperCase()) {
+        Actions[Constants.FIO_PENDING_REQUEST_DETAILS]({ selectedFioPendingRequest: fioRequest })
+        return
+      }
+      if (
+        wallets[walletKey].currencyCode.toUpperCase() === fioRequest.content.chain_code.toUpperCase() &&
+        wallets[walletKey].enabledTokens.indexOf(fioRequest.content.token_code.toUpperCase()) > -1
+      ) {
         Actions[Constants.FIO_PENDING_REQUEST_DETAILS]({ selectedFioPendingRequest: fioRequest })
         return
       }

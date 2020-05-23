@@ -7,7 +7,6 @@ import type {
   FioConnectWalletConfirmStateProps as StateProps
 } from '../../components/scenes/FioConnectWalletConfirmScene'
 import { FioConnectWalletConfirmScene } from '../../components/scenes/FioConnectWalletConfirmScene'
-import { isConnectedState } from '../../modules/Core/selectors'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import type { Dispatch, State } from '../../types/reduxTypes'
 
@@ -15,7 +14,7 @@ const mapStateToProps = (state: State, ownProps) => {
   const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
   const out: StateProps = {
     ccWalletMap,
-    isConnected: isConnectedState(state)
+    isConnected: state.network.isConnected
   }
   return out
 }

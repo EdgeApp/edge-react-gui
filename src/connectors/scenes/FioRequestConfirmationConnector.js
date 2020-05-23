@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
 import type { FioRequestConfirmationDispatchProps, FioRequestConfirmationProps } from '../../components/scenes/FioRequestConfirmationScene'
 import { FioRequestConfirmationComponent } from '../../components/scenes/FioRequestConfirmationScene'
-import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { Dispatch, State } from '../../types/reduxTypes'
@@ -16,10 +15,10 @@ import { getDenomFromIsoCode } from '../../util/utils'
 
 const mapStateToProps = (state: State): FioRequestConfirmationProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
   const fioWallets: EdgeCurrencyWallet[] = UI_SELECTORS.getFioWallets(state)
-  const isConnected = CORE_SELECTORS.isConnectedState(state)
+  const { isConnected } = state.network
 
   if (!guiWallet || !currencyCode) {
     return {

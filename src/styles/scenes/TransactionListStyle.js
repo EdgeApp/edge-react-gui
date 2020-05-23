@@ -364,10 +364,10 @@ export const styles = {
     marginBottom: scale(2)
   },
   transactionDetailsReceivedTx: {
-    color: '#77C513'
+    color: THEME.COLORS.TRANSACTION_LIST_RECEIVED_TX
   },
   transactionDetailsSentTx: {
-    color: '#E85466'
+    color: THEME.COLORS.TRANSACTION_LIST_SENT_TX
   },
   transactionCategory: {
     flex: 1,

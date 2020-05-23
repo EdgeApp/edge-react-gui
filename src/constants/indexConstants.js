@@ -6,9 +6,6 @@ export { REQUEST_STATUS } from './RequestStatusConstants'
 export * from './WalletAndCurrencyConstants.js'
 export * from './CountryConstants.js'
 
-export const ANDROID = 'android'
-export const IOS = 'ios'
-
 // Popup menu keys:
 export const CHANGE_MINING_FEE_VALUE = 'changeMiningFee'
 export const EXCHANGE_MAX_AMOUNT_VALUE = 'exchangeMaxAmountValue'

@@ -1,5 +1,6 @@
 // @flow
 
+import transferFullLogo from '../edgeLogo/Edge_logo_L.png'
 import changellyFullLogo from './exchange_logo_changelly.png'
 import changenowFullLogo from './exchange_logo_changenow.png'
 import coinswitchFullLogo from './exchange_logo_coinswitch.png'
@@ -48,5 +49,6 @@ export const swapPluginLogos = {
   godex: godexFullLogo,
   shapeshift: shapeshiftFullLogo,
   switchain: switchainFullLogo,
-  totle: totleFullLogo
+  totle: totleFullLogo,
+  transfer: transferFullLogo
 }

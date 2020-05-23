@@ -5,12 +5,11 @@ import { connect } from 'react-redux'
 
 import type { ChangePinDispatchProps, ChangePinOwnProps, ChangePinStateProps } from '../../components/scenes/ChangePinScene'
 import ChangePinComponent from '../../components/scenes/ChangePinScene'
-import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import type { State } from '../../types/reduxTypes.js'
 
 export const mapStateToProps = (state: State, ownProps: ChangePinOwnProps): ChangePinStateProps => ({
-  context: CORE_SELECTORS.getContext(state),
-  account: CORE_SELECTORS.getAccount(state),
+  context: state.core.context,
+  account: state.core.account,
   showHeader: false
 })
 

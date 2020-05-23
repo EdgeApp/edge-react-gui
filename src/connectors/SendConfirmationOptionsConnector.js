@@ -7,16 +7,16 @@ import { updateMaxSpend } from '../actions/SendConfirmationActions'
 import { activated } from '../actions/UniqueIdentifierModalActions.js'
 import SendConfirmationOptions from '../components/common/SendConfirmationOptions'
 import { CHANGE_MINING_FEE_SEND_CONFIRMATION } from '../constants/indexConstants'
-import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import type { Dispatch, State } from '../types/reduxTypes.js'
 
 const mapStateToProps = (state: State) => {
+  const { currencyWallets = {} } = state.core.account
   const sourceWalletId = state.ui.wallets.selectedWalletId
   const currencyCode = state.ui.wallets.selectedCurrencyCode
   const isEditable = state.ui.scenes.sendConfirmation.isEditable
 
   return {
-    sourceWallet: CORE_SELECTORS.getWallet(state, sourceWalletId),
+    sourceWallet: currencyWallets[sourceWalletId],
     currencyCode,
     isEditable
   }

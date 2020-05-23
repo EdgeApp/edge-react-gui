@@ -11,6 +11,8 @@ import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
 type Props = {
   bridge: AirshipBridge<null>,
+  title: string,
+  placeholder: string,
   notes: string,
   onChange: string => void
 }
@@ -33,13 +35,13 @@ export class TransactionDetailsNotesInput extends Component<Props, State> {
   }
 
   render () {
-    const { bridge } = this.props
+    const { bridge, title, placeholder } = this.props
     const { notes } = this.state
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
         <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
           <View style={styles.airshipContainer}>
-            <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_notes_title}</FormattedText>
+            <FormattedText style={styles.airshipHeader}>{title}</FormattedText>
             <TouchableWithoutFeedback onPress={() => this.notesInput.focus()}>
               <View style={styles.inputNotesWrap}>
                 <TextInput
@@ -48,12 +50,12 @@ export class TransactionDetailsNotesInput extends Component<Props, State> {
                   autoCorrect={false}
                   style={styles.inputNotes}
                   autoCapitalize="sentences"
-                  underlineColorAndroid={'transparent'}
+                  underlineColorAndroid={THEME.COLORS.TRANSPARENT}
                   placeholderTextColor={THEME.COLORS.GRAY_3}
                   value={notes}
                   ref={ref => (this.notesInput = ref)}
                   onChangeText={this.onChange}
-                  placeholder={s.strings.transaction_details_notes_title}
+                  placeholder={placeholder}
                 />
               </View>
             </TouchableWithoutFeedback>

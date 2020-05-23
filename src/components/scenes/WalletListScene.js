@@ -3,7 +3,7 @@
 import { createYesNoModal } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Animated, FlatList, Image, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
@@ -16,7 +16,7 @@ import { disableOtp, keepOtp } from '../../actions/OtpActions.js'
 import { linkReferralWithCurrencies, toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import credLogo from '../../assets/images/cred_logo.png'
-import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
+import otpIcon from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
@@ -25,16 +25,13 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import s from '../../locales/strings.js'
 import { getDefaultIsoFiat, getIsAccountBalanceVisible, getOtpResetPending } from '../../modules/Settings/selectors.js'
 import T from '../../modules/UI/components/FormattedText/index'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index.js'
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
+import { dayText, nightText } from '../../styles/common/textStyles.js'
 import { addWalletStyle } from '../../styles/components/AddWalletStyle.js'
 import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.js'
-import { TwoButtonModalStyle } from '../../styles/components/TwoButtonModalStyle.js'
-import styles from '../../styles/scenes/WalletListStyle'
-import THEME from '../../theme/variables/airbitz'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
@@ -43,17 +40,16 @@ import { makeGuiWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
+import { CrossFade } from '../common/CrossFade.js'
 import { launchModal } from '../common/ModalProvider.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
+import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
 import { WalletListEmptyRow } from '../common/WalletListEmptyRow.js'
 import { WalletListRow } from '../common/WalletListRow.js'
 import { WalletListSortableRow } from '../common/WalletListSortableRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
-import { StaticModalComponent } from '../modals/StaticModalComponent.js'
-import { TwoButtonTextModalComponent } from '../modals/TwoButtonTextModalComponent.js'
-
-const DONE_TEXT = s.strings.string_done_cap
-const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
-const ARCHIVED_TEXT = s.strings.fragmet_wallets_list_archive_title_capitalized
+import { TwoButtonSimpleConfirmationModal } from '../modals/TwoButtonSimpleConfirmationModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 type StateProps = {
   account: EdgeAccount,
@@ -76,15 +72,7 @@ type DispatchProps = {
 type Props = StateProps & DispatchProps
 
 type State = {
-  sortableListOpacity: number,
-  fullListOpacity: number,
-  sortableListZIndex: number,
-  sortableListExists: boolean,
-  fullListZIndex: number,
-  fullListExists: boolean,
-  showOtpResetModal: boolean,
-  showMessageModal: boolean,
-  messageModalMessage: ?string
+  sorting: boolean
 }
 
 class WalletListComponent extends Component<Props, State> {
@@ -92,143 +80,90 @@ class WalletListComponent extends Component<Props, State> {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
     this.state = {
-      sortableListOpacity: new Animated.Value(0),
-      sortableListZIndex: new Animated.Value(0),
-      sortableListExists: false,
-      fullListOpacity: new Animated.Value(1),
-      fullListZIndex: new Animated.Value(100),
-      fullListExists: true,
-      showOtpResetModal: this.props.otpResetPending,
-      showMessageModal: false,
-      messageModalMessage: null
+      sorting: false
     }
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (nextProps.otpResetPending && nextProps.otpResetPending !== this.props.otpResetPending) {
-      this.setState({
-        showOtpResetModal: true
-      })
+  componentDidMount () {
+    this.checkOtpResetPendingModal()
+  }
+
+  checkOtpResetPendingModal = async () => {
+    if (this.props.otpResetPending) {
+      const resolved = await Airship.show(bridge => (
+        <TwoButtonSimpleConfirmationModal
+          bridge={bridge}
+          icon={<Image source={otpIcon} />}
+          title={s.strings.otp_modal_reset_headline}
+          subTitle={s.strings.otp_modal_reset_description}
+          cancelText={s.strings.request_review_answer_no}
+          doneText={s.strings.request_review_answer_yes}
+        />
+      ))
+      resolved ? this.props.keepOtp() : this.props.disableOtp()
     }
   }
 
   executeWalletRowOption = (walletId: string, option: WalletListMenuKey) => {
     if (option === 'sort') {
-      return this.enableSorting()
+      return this.setState({ sorting: true })
     }
     return this.props.walletRowOption(walletId, option)
   }
 
   render () {
-    const { wallets } = this.props
+    const { wallets, activeWalletIds } = this.props
+    const { sorting } = this.state
+    const loading = Object.keys(wallets).length <= 0
+
+    const walletIcon = <Image source={WalletIcon} style={styles.walletIcon} />
 
     return (
-      <SafeAreaView>
-        <View style={styles.container}>
-          <XPubModal />
-          <Gradient style={styles.gradient} />
-          <WiredProgressBar progress={getWalletLoadingPercent} />
-          <WiredBalanceBox
-            showBalance={getIsAccountBalanceVisible}
-            fiatAmount={getTotalFiatAmountFromExchangeRates}
-            isoFiatCurrencyCode={getDefaultIsoFiat}
-            onPress={this.props.toggleAccountBalanceVisibility}
-            exchangeRates={this.props.exchangeRates}
-          />
-          <View style={[styles.walletsBox]}>
-            <Gradient style={[styles.walletsBoxHeaderWrap]}>
-              <View style={[styles.walletsBoxHeaderTextWrap]}>
-                <View style={styles.leftArea}>
-                  <Image source={WalletIcon} style={[styles.walletIcon]} />
-                  <T style={styles.walletsBoxHeaderText}>{WALLETS_HEADER_TEXT}</T>
-                </View>
-              </View>
-
-              <View style={[styles.donePlusContainer, this.state.sortableListExists && styles.donePlusSortable]}>
-                {this.state.sortableListExists && (
-                  <Animated.View
-                    style={[
-                      styles.doneContainer,
-                      {
-                        opacity: this.state.sortableListOpacity,
-                        zIndex: this.state.sortableListZIndex
-                      }
-                    ]}
-                  >
-                    <TouchableOpacity style={[styles.walletsBoxDoneTextWrap]} onPress={this.disableSorting}>
-                      <T style={[styles.walletsBoxDoneText]}>{DONE_TEXT}</T>
-                    </TouchableOpacity>
-                  </Animated.View>
-                )}
-                {this.state.fullListExists && (
-                  <Animated.View
-                    style={[
-                      styles.plusContainer,
-                      {
-                        opacity: this.state.fullListOpacity,
-                        zIndex: this.state.fullListZIndex
-                      }
-                    ]}
-                  >
-                    <View style={styles.plusSpacer} />
-                    <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet]} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
-                      <Ionicon name="md-add" style={[styles.dropdownIcon]} size={28} color="white" />
-                    </TouchableOpacity>
-                  </Animated.View>
-                )}
-              </View>
-            </Gradient>
-
-            {Object.keys(wallets).length > 0 ? this.renderActiveSortableList() : <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />}
-          </View>
-          {this.launchModal()}
-        </View>
-      </SafeAreaView>
-    )
-  }
-
-  launchModal = () => {
-    if (this.state.showOtpResetModal) {
-      return (
-        <TwoButtonTextModalComponent
-          style={TwoButtonModalStyle}
-          headerText={s.strings.otp_modal_reset_headline}
-          launchModal
-          middleText={s.strings.otp_modal_reset_description}
-          iconImage={iconImage}
-          cancelText={s.strings.otp_disable}
-          doneText={s.strings.otp_keep}
-          onCancel={this.disableOtp}
-          onDone={this.keepOtp}
+      <SceneWrapper background="body">
+        <WiredProgressBar progress={getWalletLoadingPercent} />
+        <WiredBalanceBox
+          showBalance={getIsAccountBalanceVisible}
+          fiatAmount={getTotalFiatAmountFromExchangeRates}
+          isoFiatCurrencyCode={getDefaultIsoFiat}
+          onPress={this.props.toggleAccountBalanceVisibility}
+          exchangeRates={this.props.exchangeRates}
         />
-      )
-    }
-    if (this.state.showMessageModal && this.state.messageModalMessage != null) {
-      return <StaticModalComponent cancel={this.cancelStatic} body={this.state.messageModalMessage} modalDismissTimerSeconds={8} isVisible />
-    }
-
-    return null
-  }
-  disableOtp = () => {
-    this.props.disableOtp()
-    this.setState({
-      showMessageModal: true,
-      showOtpResetModal: false,
-      messageModalMessage: s.strings.otp_disabled_modal
-    })
-  }
-
-  keepOtp = () => {
-    this.props.keepOtp()
-    this.setState({
-      showOtpResetModal: false
-    })
-  }
-
-  cancelStatic = () => {
-    this.setState({
-      showMessageModal: false
-    })
+        <View /* header stack */>
+          <SettingsHeaderRow icon={walletIcon} text={s.strings.fragment_wallets_header} />
+          <CrossFade activeKey={sorting ? 'doneButton' : 'addButton'}>
+            <TouchableOpacity key="addButton" style={styles.headerButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
+              <Ionicon name="md-add" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
+            </TouchableOpacity>
+            <TouchableOpacity key="doneButton" style={styles.headerButton} onPress={this.disableSorting}>
+              <T style={nightText()}>{s.strings.string_done_cap}</T>
+            </TouchableOpacity>
+          </CrossFade>
+        </View>
+        <View style={styles.listStack}>
+          <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
+            <ActivityIndicator key="spinner" style={styles.listSpinner} size={'large'} />
+            <FlatList
+              key="fullList"
+              style={StyleSheet.absoltueFill}
+              data={activeWalletIds.map(key => ({ key }))}
+              extraData={wallets}
+              renderItem={this.renderRow}
+              ListFooterComponent={this.renderFooter()}
+              ListHeaderComponent={this.renderPromoCard()}
+            />
+            <SortableListView
+              key="sortList"
+              style={StyleSheet.absoltueFill}
+              data={wallets}
+              order={this.props.activeWalletIds}
+              onRowMoved={this.onActiveRowMoved}
+              renderRow={this.renderSortableRow}
+            />
+          </CrossFade>
+        </View>
+        <XPubModal />
+      </SceneWrapper>
+    )
   }
 
   renderSortableRow = (guiWallet: GuiWallet | void) => {
@@ -246,106 +181,7 @@ class WalletListComponent extends Component<Props, State> {
     )
   }
 
-  renderActiveSortableList () {
-    const { wallets, activeWalletIds } = this.props
-
-    return (
-      <View style={styles.listsContainer}>
-        {this.state.sortableListExists && (
-          <Animated.View
-            testID={'sortableList'}
-            style={[{ flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex }, styles.sortableList]}
-          >
-            <SortableListView
-              style={styles.sortableWalletListContainer}
-              data={wallets}
-              order={this.props.activeWalletIds}
-              onRowMoved={this.onActiveRowMoved}
-              render={ARCHIVED_TEXT}
-              renderRow={this.renderSortableRow}
-            />
-          </Animated.View>
-        )}
-        {this.state.fullListExists && (
-          <Animated.View testID={'fullList'} style={[{ flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex }, styles.fullList]}>
-            <FlatList
-              style={styles.sortableWalletListContainer}
-              data={activeWalletIds.map(key => ({ key }))}
-              extraData={this.props.wallets}
-              renderItem={this.renderRow}
-              ListFooterComponent={this.renderFooter()}
-              ListHeaderComponent={this.renderPromoCard()}
-            />
-          </Animated.View>
-        )}
-      </View>
-    )
-  }
-
-  enableSorting = () => {
-    // start animation, use callback to setState, then setState's callback to execute 2nd animation
-    const sortableToOpacity = 1
-    const sortableListToZIndex = 100
-    const fullListToOpacity = 0
-    const fullListToZIndex = 0
-
-    this.setState({ sortableListExists: true }, () => {
-      Animated.parallel([
-        Animated.timing(this.state.sortableListOpacity, {
-          toValue: sortableToOpacity,
-          timing: 300,
-          useNativeDriver: false
-        }),
-        Animated.timing(this.state.sortableListZIndex, {
-          toValue: sortableListToZIndex,
-          timing: 300
-        }),
-        Animated.timing(this.state.fullListOpacity, {
-          toValue: fullListToOpacity,
-          timing: 300,
-          useNativeDriver: false
-        }),
-        Animated.timing(this.state.fullListZIndex, {
-          toValue: fullListToZIndex,
-          timing: 300
-        })
-      ]).start(() => {
-        this.setState({ fullListExists: false })
-      })
-    })
-  }
-
-  disableSorting = () => {
-    const sortableToOpacity = 0
-    const sortableListToZIndex = 0
-    const fullListToOpacity = 1
-    const fullListToZIndex = 100
-
-    this.setState({ fullListExists: true }, () => {
-      Animated.parallel([
-        Animated.timing(this.state.sortableListOpacity, {
-          toValue: sortableToOpacity,
-          timing: 300,
-          useNativeDriver: false
-        }),
-        Animated.timing(this.state.sortableListZIndex, {
-          toValue: sortableListToZIndex,
-          timing: 300
-        }),
-        Animated.timing(this.state.fullListOpacity, {
-          toValue: fullListToOpacity,
-          timing: 300,
-          useNativeDriver: false
-        }),
-        Animated.timing(this.state.fullListZIndex, {
-          toValue: fullListToZIndex,
-          timing: 300
-        })
-      ]).start(() => {
-        this.setState({ sortableListExists: false })
-      })
-    })
-  }
+  disableSorting = () => this.setState({ sorting: false })
 
   onActiveRowMoved = (action: { from: number, to: number }) => {
     const newOrder = [...this.props.activeWalletIds]
@@ -460,6 +296,55 @@ class WalletListComponent extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  // The sort & add buttons are stacked on top of the header component:
+  headerButton: {
+    alignSelf: 'flex-end',
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: THEME.rem(1)
+  },
+  walletIcon: {
+    width: THEME.rem(1.375),
+    height: THEME.rem(1.375)
+  },
+
+  // The two lists are stacked vertically on top of each other:
+  listStack: {
+    flexGrow: 1
+  },
+  listSpinner: {
+    flexGrow: 1,
+    alignSelf: 'center'
+  },
+
+  // Promo area:
+  promoArea: {
+    padding: THEME.rem(0.5)
+  },
+  promoCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.WHITE,
+    margin: THEME.rem(0.5),
+    padding: THEME.rem(0.5)
+  },
+  promoIcon: {
+    width: THEME.rem(2),
+    height: THEME.rem(2),
+    margin: THEME.rem(0.5)
+  },
+  promoText: {
+    ...dayText('row-left'),
+    flex: 1,
+    margin: THEME.rem(0.5)
+  },
+  promoClose: {
+    padding: THEME.rem(0.5)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const WalletListScene = connect(
   (state: ReduxState): StateProps => {

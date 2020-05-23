@@ -10,7 +10,6 @@ import URL from 'url-parse'
 
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
-import { createAddressModal } from '../components/modals/AddressModal.js'
 import { showError } from '../components/services/AirshipInstance'
 import {
   ADD_TOKEN,
@@ -27,7 +26,6 @@ import {
   WARNING
 } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
 import Text from '../modules/UI/components/FormattedText'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
@@ -36,7 +34,7 @@ import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { B } from '../styles/common/textStyles.js'
 import styles from '../styles/scenes/ScaneStyle.js'
-import { colors as COLORS } from '../theme/variables/airbitz.js'
+import { THEME } from '../theme/variables/airbitz.js'
 import { type ReturnAddressLink, parseDeepLink } from '../types/DeepLink.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { GuiWallet } from '../types/types.js'
@@ -102,17 +100,19 @@ export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWal
 export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getState: GetState) => {
   if (!data) return
   const state = getState()
+  const { account } = state.core
+  const { currencyWallets = {} } = account
+
   const selectedWalletId = state.ui.wallets.selectedWalletId
-  const edgeWallet = state.core.wallets.byId[selectedWalletId]
+  const edgeWallet = currencyWallets[selectedWalletId]
   const guiWallet = state.ui.wallets.byId[selectedWalletId]
   const currencyCode = state.ui.wallets.selectedCurrencyCode
 
   let fioAddress
-  const account = CORE_SELECTORS.getAccount(state)
   if (account && account.currencyConfig) {
     const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
     const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
-    const coreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+    const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
     const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
     try {
       const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
@@ -204,6 +204,7 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
 
       if (fioAddress) {
         guiMakeSpendInfo.fioAddress = fioAddress
+        guiMakeSpendInfo.isSendUsingFioAddress = true
       }
       Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
       // dispatch(sendConfirmationUpdateTx(parsedUri))
@@ -249,25 +250,6 @@ export const isPrivateKeyUri = (parsedUri: EdgeParsedUri): boolean => {
 export const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
   // $FlowFixMe should be paymentProtocolUrl (lowercased)?
   return !!parsedUri.paymentProtocolURL && !parsedUri.publicAddress
-}
-
-export const toggleAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
-  const coreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
-  const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const account = CORE_SELECTORS.getAccount(state)
-  const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
-  const addressModal = createAddressModal({
-    walletId,
-    coreWallet,
-    fioPlugin,
-    currencyCode
-  })
-  const uri = await launchModal(addressModal)
-  if (uri) {
-    dispatch(parseScannedUri(uri))
-  }
 }
 
 export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
@@ -320,8 +302,10 @@ export const privateKeyModalActivated = () => async (dispatch: Dispatch, getStat
     const state = getState()
     const parsedUri = state.ui.scenes.scan.parsedUri
     if (!parsedUri) return
+
+    const { currencyWallets = {} } = state.core.account
     const selectedWalletId = state.ui.wallets.selectedWalletId
-    const edgeWallet = state.core.wallets.byId[selectedWalletId]
+    const edgeWallet = currencyWallets[selectedWalletId]
 
     const spendInfo: EdgeSpendInfo = {
       privateKeys: parsedUri.privateKeys,
@@ -360,7 +344,7 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
       threeButtonModal = createThreeButtonModal({
         title: s.strings.buy_crypto_modal_title,
         message: messageSyntax,
-        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={COLORS.primary} />,
+        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={THEME.COLORS.SECONDARY} />,
         primaryButton: {
           text: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode),
           returnValue: 'buy'
@@ -380,7 +364,7 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
       threeButtonModal = createThreeButtonModal({
         title: s.strings.buy_crypto_modal_title,
         message: messageSyntax,
-        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={COLORS.primary} />,
+        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={THEME.COLORS.SECONDARY} />,
         primaryButton: {
           text: sprintf(s.strings.buy_crypto_modal_exchange),
           returnValue: 'exchange'

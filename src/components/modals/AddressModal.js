@@ -1,45 +1,79 @@
 // @flow
 
-import { FormField, InputAndButtonStyle, MaterialInputStyle, Modal, ModalStyle, PrimaryButton, SecondaryButton, TertiaryButton } from 'edge-components'
-import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
-import { ActivityIndicator, Clipboard, Text, View } from 'react-native'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
+import { FormField, MaterialInputStyle, TertiaryButton } from 'edge-components'
+import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import React, { Component, Fragment } from 'react'
+import {
+  ActivityIndicator,
+  Clipboard,
+  FlatList,
+  Image,
+  InputAccessoryView,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
-import * as Constants from '../../constants/indexConstants'
+import ENS_LOGO from '../../assets/images/ens_logo.png'
+import FIO_LOGO from '../../assets/images/fio_logo.png'
+import { CURRENCY_PLUGIN_NAMES } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { checkPubAddress } from '../../modules/FioAddress/util'
-import styles from '../../styles/scenes/ScaneStyle'
-import { colors as COLORS } from '../../theme/variables/airbitz.js'
+import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
+import { type FioAddresses, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
+import Text from '../../modules/UI/components/FormattedText/index'
+import THEME from '../../theme/variables/airbitz.js'
+import type { Dispatch, State as StateType } from '../../types/reduxTypes.js'
+import type { FioAddress, FlatListItem } from '../../types/types.js'
 import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
+import { type AirshipBridge, AirshipModal, dayText, IconCircle } from './modalParts.js'
 
-// INTERACTIVE_MODAL /////////////////////////////////////////////////////////////////////////////
-type AddressModalProps = {
-  onDone: (string | null) => void,
-  coreWallet: EdgeCurrencyWallet,
-  fioPlugin: EdgeCurrencyConfig,
-  currencyCode: string
+const MODAL_ICON = 'address-book-o'
+const inputAccessoryViewID: string = 'inputAccessoryViewID'
+
+type OwnProps = {
+  bridge: AirshipBridge<string | null>,
+  walletId: string,
+  currencyCode: string,
+  title?: string,
+  subtitle?: string,
+  showPasteButton?: boolean,
+  isFioOnly?: boolean,
+  useUserFioAddressesOnly?: boolean
 }
 
-type AddressModalState = {
+type StateProps = {
+  account: EdgeAccount,
+  userFioAddresses: FioAddress[],
+  userFioAddressesLoading: boolean,
+  coreWallet: EdgeCurrencyWallet,
+  fioPlugin: EdgeCurrencyConfig
+}
+
+type DispatchProps = {
+  refreshAllFioAddresses: () => Promise<void>
+}
+
+type State = {
   clipboard: string,
   uri: string,
   statusLabel: string,
   fieldError: string,
-  cryptoAddress?: string
+  cryptoAddress?: string,
+  fioAddresses: FioAddresses,
+  filteredFioAddresses: string[]
 }
-export class AddressModal extends Component<AddressModalProps, AddressModalState> {
-  /* static Icon = Icon
-  static Title = Title
-  static Description = Description
-  static Body = Body
-  static Footer = Footer
-  static Item = Item
-  static Row = Row */
+
+type Props = StateProps & OwnProps & DispatchProps
+
+class AddressModalConnected extends Component<Props, State> {
   fioCheckQueue: number = 0
 
-  constructor (props: AddressModalProps) {
+  constructor (props: Props) {
     super(props)
     this.fioCheckQueue = 0
     this.state = {
@@ -47,12 +81,21 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
       uri: '',
       statusLabel: s.strings.fragment_send_address,
       cryptoAddress: undefined,
-      fieldError: ''
+      fieldError: '',
+      fioAddresses: { addresses: {} },
+      filteredFioAddresses: []
     }
   }
 
   componentDidMount () {
     this._setClipboard(this.props)
+    this.getFioAddresses()
+  }
+
+  componentDidUpdate (prevProps) {
+    if (this.props.useUserFioAddressesOnly && prevProps.userFioAddresses !== this.props.userFioAddresses) {
+      this.filterFioAddresses(this.state.uri)
+    }
   }
 
   _setClipboard = async props => {
@@ -72,12 +115,48 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
     }
   }
 
+  getFioAddresses = async () => {
+    const { useUserFioAddressesOnly, refreshAllFioAddresses, account } = this.props
+    if (useUserFioAddressesOnly) {
+      refreshAllFioAddresses()
+    } else {
+      this.setState({ fioAddresses: await getFioAddressCache(account) })
+      this.filterFioAddresses('')
+    }
+  }
+
   setStatusLabel = (status: string) => {
     this.setState({ statusLabel: status })
   }
 
   setCryptoAddress = (address?: string) => {
     this.setState({ cryptoAddress: address })
+  }
+
+  filterFioAddresses = (uri: string): void => {
+    const { useUserFioAddressesOnly, userFioAddresses, isFioOnly } = this.props
+    const { fioAddresses } = this.state
+    const fioAddressesArray = []
+
+    if (useUserFioAddressesOnly) {
+      for (const address of userFioAddresses) {
+        const addressLowerCase = address.name.toLowerCase()
+        if (uri !== '' && !addressLowerCase.includes(uri.toLowerCase())) continue // Autocomplete/Filter Check
+        fioAddressesArray.push(address.name)
+      }
+    }
+
+    if (!useUserFioAddressesOnly) {
+      for (const address in fioAddresses.addresses) {
+        if (!fioAddresses.addresses[address]) continue // Ignore when address is not active (boolean false)
+        const addressLowerCase = address.toLowerCase()
+        if (uri !== '' && !addressLowerCase.includes(uri.toLowerCase())) continue // Autocomplete/Filter check
+        if (isFioOnly && (this.checkIfDomain(address) || !address.includes('@'))) continue // if isFioOnly is true. Ignore address if not a valid FIO address
+        fioAddressesArray.push(address)
+      }
+    }
+
+    this.setState({ filteredFioAddresses: fioAddressesArray.sort() })
   }
 
   onChangeTextDelayed = (domain: string) => {
@@ -176,9 +255,8 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
   }
 
   updateUri = (uri: string) => {
-    this.setState({
-      uri
-    })
+    this.setState({ uri })
+    this.filterFioAddresses(uri)
   }
 
   onPasteFromClipboard = () => {
@@ -191,81 +269,216 @@ export class AddressModal extends Component<AddressModalProps, AddressModalState
     })
   }
 
+  onPressFioAddress = (address: string) => {
+    this.setState({ uri: address }, async () => {
+      if (await this.isFioAddressValid(address)) {
+        await this.checkIfFioAddress(address)
+      }
+      this.handleSubmit()
+    })
+  }
+
+  renderFioAddressRow = ({ item }: FlatListItem<string>) => {
+    let addressType
+    if (this.checkIfDomain(item)) {
+      addressType = ENS_LOGO
+    } else if (item.includes('@')) {
+      addressType = FIO_LOGO
+    } else {
+      return null
+    }
+    return (
+      <TouchableWithoutFeedback onPress={() => this.onPressFioAddress(item)}>
+        <View style={styles.tileContainer}>
+          <Image source={addressType} style={styles.fioAddressAvatarContainer} resizeMode={'cover'} />
+          <Text style={styles.fioAddressText}>{item}</Text>
+        </View>
+      </TouchableWithoutFeedback>
+    )
+  }
+
   handleSubmit = () => {
     const { uri, cryptoAddress, fieldError } = this.state
     const submitData = cryptoAddress || uri
     if (fieldError) return
-
-    this.props.onDone(submitData)
+    this.props.bridge.resolve(submitData)
   }
-
-  handleClose = () => {
-    this.props.onDone(null)
-  }
-
+  handleClose = () => this.props.bridge.resolve(null)
+  keyExtractor = (item: string, index: number) => index.toString()
   render () {
     const copyMessage = this.state.clipboard ? sprintf(s.strings.string_paste_address, this.state.clipboard) : null
-    const { uri, statusLabel, fieldError } = this.state
+    const { uri, statusLabel, fieldError, filteredFioAddresses } = this.state
+    const { title, subtitle, showPasteButton, userFioAddressesLoading } = this.props
     return (
-      <View style={ModalStyle.modal}>
-        <Modal.Icon>
-          <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color={COLORS.primary} />
-        </Modal.Icon>
-        <Modal.Container>
-          <Modal.Icon.AndroidHackSpacer />
-          <Modal.Title style={styles.title}>
-            <Text>{s.strings.fragment_send_address_dialog_title_short}</Text>
-          </Modal.Title>
-          <Modal.Body>
-            <View>
-              <Text style={styles.title}>{s.strings.address_modal_body}</Text>
-              <FormField
-                style={MaterialInputStyle}
-                value={uri}
-                onChangeText={this.onChangeTextDelayed}
-                error={fieldError}
-                label={statusLabel}
-                onSubmit={this.handleSubmit}
-              />
+      <AirshipModal bridge={this.props.bridge} onCancel={this.handleClose}>
+        {gap => (
+          <Fragment>
+            <IconCircle>
+              <FontAwesomeIcon name={MODAL_ICON} size={iconStyles.size} color={iconStyles.color} />
+            </IconCircle>
+            <View style={styles.container}>
+              <View style={styles.tileContainerHeader}>
+                <Text style={dayText('title')}>{title || s.strings.address_modal_default_header}</Text>
+                {subtitle && <Text style={dayText('autoCenter')}>{subtitle}</Text>}
+              </View>
+              {showPasteButton && copyMessage && (
+                <View style={styles.tileContainerButtons}>
+                  <TertiaryButton ellipsizeMode={'middle'} onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
+                    <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
+                  </TertiaryButton>
+                </View>
+              )}
+              <View style={styles.tileContainerInput}>
+                {Platform.OS === 'ios' ? (
+                  <InputAccessoryView nativeID={inputAccessoryViewID}>
+                    <View style={styles.accessoryView}>
+                      <TouchableOpacity style={styles.accessoryButton} onPress={this.handleClose}>
+                        <Text style={styles.accessoryText}>{s.strings.string_cancel_cap}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </InputAccessoryView>
+                ) : null}
+                <FormField
+                  autoFocus
+                  blurOnSubmit
+                  returnKeyType="done"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  style={addressInputStyles}
+                  value={uri}
+                  onChangeText={this.onChangeTextDelayed}
+                  error={fieldError}
+                  label={statusLabel}
+                  onSubmitEditing={this.handleSubmit}
+                  inputAccessoryViewID={inputAccessoryViewID}
+                />
+              </View>
+              {!userFioAddressesLoading ? (
+                <FlatList
+                  style={{ flex: 1, marginBottom: -gap.bottom }}
+                  contentContainerStyle={{ paddingBottom: gap.bottom }}
+                  data={filteredFioAddresses}
+                  initialNumToRender={24}
+                  keyboardShouldPersistTaps="handled"
+                  keyExtractor={this.keyExtractor}
+                  renderItem={this.renderFioAddressRow}
+                />
+              ) : (
+                <View style={styles.loaderContainer}>
+                  <ActivityIndicator />
+                </View>
+              )}
             </View>
-          </Modal.Body>
-          <Modal.Footer>
-            {copyMessage && (
-              <Modal.Row style={InputAndButtonStyle.tertiaryButtonRow}>
-                <TertiaryButton ellipsizeMode={'middle'} onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
-                  <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
-                </TertiaryButton>
-              </Modal.Row>
-            )}
-            <Modal.Row style={[InputAndButtonStyle.row]}>
-              <SecondaryButton onPress={this.handleClose} style={[InputAndButtonStyle.noButton]}>
-                <SecondaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
-              </SecondaryButton>
-              <PrimaryButton onPress={this.handleSubmit} style={[InputAndButtonStyle.yesButton]} disabled={statusLabel === s.strings.resolving || !!fieldError}>
-                {statusLabel === s.strings.resolving ? (
-                  <ActivityIndicator size="small" />
-                ) : (
-                  <PrimaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_done_cap}</PrimaryButton.Text>
-                )}
-              </PrimaryButton>
-            </Modal.Row>
-          </Modal.Footer>
-        </Modal.Container>
-      </View>
+          </Fragment>
+        )}
+      </AirshipModal>
     )
   }
 }
 
-export type AddressModalOpts = {
-  walletId: string,
-  coreWallet: EdgeCurrencyWallet,
-  fioPlugin: EdgeCurrencyConfig,
-  currencyCode: string
+const AddressModal = connect(
+  (state: StateType, ownProps: OwnProps): StateProps => {
+    const { account } = state.core
+    const { currencyWallets = {} } = account
+    return {
+      account,
+      coreWallet: currencyWallets[ownProps.walletId],
+      userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+      userFioAddressesLoading: state.ui.scenes.fioAddress.fioAddressesLoading,
+      fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    }
+  },
+  (dispatch: Dispatch): DispatchProps => ({ refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses()) })
+)(AddressModalConnected)
+export { AddressModal }
+
+const { rem } = THEME
+
+const addressInputStyles = {
+  ...MaterialInputStyle,
+  container: {
+    ...MaterialInputStyle.container,
+    paddingTop: 0
+  }
 }
 
-export const createAddressModal = (opts: AddressModalOpts) => {
-  function AddressModalWrapped (props: { +onDone: Function }) {
-    return <AddressModal {...opts} {...props} />
-  }
-  return AddressModalWrapped
+const iconStyles = {
+  size: rem(2),
+  color: THEME.COLORS.SECONDARY
 }
+
+const tileStyles = {
+  width: '100%',
+  backgroundColor: THEME.COLORS.WHITE,
+  borderBottomWidth: 1,
+  borderBottomColor: THEME.COLORS.GRAY_3,
+  padding: rem(1)
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+    flexDirection: 'column'
+  },
+  tileContainerHeader: {
+    ...tileStyles,
+    borderBottomWidth: 0,
+    paddingVertical: rem(0.5)
+  },
+  tileContainerButtons: {
+    ...tileStyles,
+    paddingVertical: rem(0.5),
+    borderBottomWidth: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  tileContainerInput: {
+    ...tileStyles,
+    paddingTop: 0,
+    paddingBottom: rem(0.5),
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  tileContainer: {
+    ...tileStyles,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  fioAddressAvatarContainer: {
+    width: rem(2.2),
+    height: rem(2.2),
+    borderRadius: rem(1.1),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  fioAddressText: {
+    fontSize: rem(1.2),
+    paddingLeft: rem(0.8)
+  },
+  addressModalButton: {
+    width: '100%'
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+
+  // Accessory Input
+  accessoryView: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  accessoryButton: {
+    padding: rem(0.5)
+  },
+  accessoryText: {
+    color: THEME.COLORS.ACCENT_BLUE,
+    fontSize: rem(1)
+  }
+})

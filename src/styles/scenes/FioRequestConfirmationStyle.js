@@ -20,6 +20,17 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  selectFullWidth: {
+    width: '100%',
+    paddingHorizontal: scale(30),
+    paddingVertical: scale(10)
+  },
+  title: {
+    fontSize: scale(28),
+    color: THEME.COLORS.WHITE,
+    marginTop: scale(20),
+    marginBottom: scale(10)
+  },
   text: {
     color: THEME.COLORS.WHITE,
     fontSize: scale(16)
@@ -30,5 +41,32 @@ export const styles = StyleSheet.create({
   },
   input: {
     width: '70%'
+  },
+  error: {
+    color: THEME.COLORS.ACCENT_RED,
+    fontSize: scale(12),
+    width: '100%'
+  },
+  loading: {
+    flex: 1,
+    marginTop: scale(40),
+    alignSelf: 'center'
+  },
+  selectAddressContainer: {
+    height: scale(18)
+  },
+  selectAddressText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(14)
+  },
+  selectAddressTextPressed: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(14)
+  },
+  memoContainer: {
+    marginTop: scale(10),
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 })

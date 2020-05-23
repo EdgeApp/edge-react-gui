@@ -5,7 +5,7 @@ import { type EdgeAccount } from 'edge-core-js/types'
 
 import { type Dispatch, type GetState, type State } from '../types/reduxTypes.js'
 import { type AccountReferral, type Promotion, type ReferralCache } from '../types/ReferralTypes.js'
-import { asCurrencyCodes, asMessageTweaks, asPluginTweaks } from '../types/TweakTypes.js'
+import { asCurrencyCode, asMessageTweak, asPluginTweak } from '../types/TweakTypes.js'
 import { type TweakSource, lockStartDates } from '../util/ReferralHelpers.js'
 
 const REFERRAL_CACHE_FILE = 'ReferralCache.json'
@@ -191,14 +191,14 @@ function unpackAccountReferral (raw: any): AccountReferral {
 const asDiskPromotion = asObject({
   installerId: asString,
   hiddenMessages: asOptional(asMap(asBoolean), {}),
-  messages: asMessageTweaks,
-  plugins: asPluginTweaks
+  messages: asOptional(asArray(asMessageTweak), []),
+  plugins: asOptional(asArray(asPluginTweak), [])
 })
 
 const asDiskAccountReferral = asObject({
   creationDate: asOptional(asDate),
   installerId: asOptional(asString),
-  currencyCodes: asCurrencyCodes,
+  currencyCodes: asOptional(asArray(asCurrencyCode)),
   promotions: asOptional(asArray(asDiskPromotion), []),
 
   // User overrides:
@@ -213,14 +213,14 @@ const asDiskAccountReferral = asObject({
  * The referral cache, as stored on disk.
  */
 const asDiskReferralCache = asObject({
-  accountMessages: asMessageTweaks,
-  accountPlugins: asPluginTweaks
+  accountMessages: asOptional(asArray(asMessageTweak), []),
+  accountPlugins: asOptional(asArray(asPluginTweak), [])
 })
 
 /**
  * Account tweaks & promotions as sent down by the server on refresh.
  */
 const asServerTweaks = asObject({
-  messages: asMessageTweaks,
-  plugins: asPluginTweaks
+  messages: asOptional(asArray(asMessageTweak), []),
+  plugins: asOptional(asArray(asPluginTweak), [])
 })

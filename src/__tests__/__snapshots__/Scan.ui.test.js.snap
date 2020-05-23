@@ -55,6 +55,59 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
         >
           <Icon
             allowFontScaling={false}
+            name="share"
+            size={25.28239436619718}
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22.473239436619718,
+                "height": 22.473239436619718,
+              }
+            }
+          />
+          <FormattedText
+            style={
+              Object {
+                "backgroundColor": "transparent",
+                "color": "#FFFFFF",
+                "fontSize": 19.664084507042254,
+                "opacity": 1,
+              }
+            }
+          >
+            Transfer
+          </FormattedText>
+        </View>
+      </TouchableHighlight>
+      <TouchableHighlight
+        activeOpacity={0.85}
+        delayPressOut={100}
+        onPress={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#FFFFFF10",
+            "borderRadius": 4.213732394366197,
+            "flex": 1,
+            "height": 70.22887323943662,
+            "justifyContent": "center",
+            "marginLeft": 1.4045774647887324,
+            "marginRight": 1.4045774647887324,
+          }
+        }
+        underlayColor="#0E4B75"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "column",
+              "justifyContent": "center",
+            }
+          }
+        >
+          <Icon
+            allowFontScaling={false}
             name="address-book-o"
             size={25.28239436619718}
             style={
@@ -169,6 +222,59 @@ exports[`Scan component should render with DENIED props 1`] = `
         }
       }
     >
+      <TouchableHighlight
+        activeOpacity={0.85}
+        delayPressOut={100}
+        onPress={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#FFFFFF10",
+            "borderRadius": 4.213732394366197,
+            "flex": 1,
+            "height": 70.22887323943662,
+            "justifyContent": "center",
+            "marginLeft": 1.4045774647887324,
+            "marginRight": 1.4045774647887324,
+          }
+        }
+        underlayColor="#0E4B75"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "column",
+              "justifyContent": "center",
+            }
+          }
+        >
+          <Icon
+            allowFontScaling={false}
+            name="share"
+            size={25.28239436619718}
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22.473239436619718,
+                "height": 22.473239436619718,
+              }
+            }
+          />
+          <FormattedText
+            style={
+              Object {
+                "backgroundColor": "transparent",
+                "color": "#FFFFFF",
+                "fontSize": 19.664084507042254,
+                "opacity": 1,
+              }
+            }
+          >
+            Transfer
+          </FormattedText>
+        </View>
+      </TouchableHighlight>
       <TouchableHighlight
         activeOpacity={0.85}
         delayPressOut={100}

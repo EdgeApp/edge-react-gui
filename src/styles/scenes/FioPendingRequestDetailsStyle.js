@@ -50,6 +50,7 @@ export const styles = StyleSheet.create({
   },
   selectWalletBtn: {
     height: '100%',
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: THEME.COLORS.OPACITY_WHITE

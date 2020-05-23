@@ -3912,7 +3912,7 @@ diffie-hellman@^5.0.0:
     miller-rabin "^4.0.0"
     randombytes "^2.0.0"
 
-disklet@^0.4.1, disklet@^0.4.4:
+disklet@^0.4.4:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.4.4.tgz#e83bde7311a0fa8e8e78dc4fd57e8f26c05bba91"
   integrity sha512-K2U1ulxRZwkanVTUMP0AxkCniRJ3cP9Tr9m2DTMYb0N1paFHfX8c/fxLV5cz2dAnTtb7D/4y0mrigpPYLsb0vw==
@@ -4030,10 +4030,17 @@ edge-components@^0.0.26:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.1:
-  version "0.17.1"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.1.tgz#5e8b2a14cf5d725cee96ded280f8383f22168866"
-  integrity sha512-44zjos70+Ud4UH0TJ2go7nZrH+aQHXapkO6HZEl6OxCXLHBYAbl54EmsfhNmutAwMjTmLK71UGHvFrKAXoP+tA==
+edge-components@^0.0.27:
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/edge-components/-/edge-components-0.0.27.tgz#4364d57fe3733a98cb846892069a2fcd887a10f3"
+  integrity sha512-UBJeGdC/Z6HKSAfdb2zCSZVFMhl9gDrj7DqUVR5cqMwHAc75Spx/FNmqpfcCrBiKlHaybF1oxNJ/2HYiNbGFdA==
+  dependencies:
+    react-native-linear-gradient "^2.4.0"
+
+edge-core-js@^0.17.2:
+  version "0.17.2"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.2.tgz#5bc8ef31c76eeb11b52b5ba39b7d54f45c94d443"
+  integrity sha512-U9hqagjbs9qO75QCUPYNDrWlOB5epNb5BdKGgTpHhaszG8QTMSXAbFmjcU9E43qSRArdN29nvUIA8lhiYB5U8w==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -4055,10 +4062,10 @@ edge-core-js@^0.17.1:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.4:
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.4.tgz#357ea974722b91d4be0b84555eb99b5cdd53ce5a"
-  integrity sha512-+K4HWKtwiQIo0J0mGw9m2yhzn457xKcrhtODiJYR/S3PtQByzd96fHDd39fKVSJpvSROAjSd2jF7l887yb6hgA==
+edge-currency-accountbased@^0.7.6:
+  version "0.7.6"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.6.tgz#64a7afd4fde4ed4dcc7f1da160fdcd15673baef3"
+  integrity sha512-nBWIGlJI3UbXPy3qLDDEdB7BIaCosIp9fZnUKxyKvWsnOfVaTwCm+Nuf09phPPQG/HHwTarKx+iQegoghgHhHA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.0.2"
@@ -4115,10 +4122,10 @@ edge-currency-monero@^0.2.4:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#william/v0.14.0-hardfork"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.10.3:
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.10.3.tgz#b6c00a8c554d6a979c22e27a089e76fbcdc010fc"
-  integrity sha512-sXPgMYMxNI0cEw3skPDS9+FIl/gLOaJ++sdM0v0FgJNUOzSe++DsCePJ9FeFwql1NH5Uoegk7W7xJ32XMOGUbg==
+edge-exchange-plugins@^0.10.4:
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.10.4.tgz#f62fa3ef6982b3811d01eff733dd75ce8ee01071"
+  integrity sha512-Xv7bzdnOxbtMOLbl5H5gw4V8LRJRE0lltwZKsfFiU8ze9S/CrOAE2Dt4ny7Y8rm70MbKSNX92BHxbqvfT57i8A==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.2.0"
@@ -9713,6 +9720,11 @@ react-native-animatable@^1.3.1:
   resolved "git://github.com/EdgeApp/react-native-camera.git#2ff75ebbacc0062b5fccbcc951f41db5c6c38c11"
   dependencies:
     prop-types "^15.6.2"
+
+react-native-check-version@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-check-version/-/react-native-check-version-1.0.5.tgz#45c622214efbfbb106fd8cfb7cf73d520d21a691"
+  integrity sha512-AvS1LfImO8NHpy6DYEU7o5Y7ob0pe1k/Q+IQyYAuOETpuTpcLd2TL3bdcV9oGWnp8DL1IOGPXEIIqz+GT/ATfg==
 
 "react-native-contacts-wrapper@git://github.com/EdgeApp/react-native-contacts-wrapper.git#a57a5d9":
   version "0.2.4"

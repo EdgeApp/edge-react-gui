@@ -4,6 +4,7 @@ import { type EdgeCurrencyInfo, type EdgeSpendInfo, type EdgeTransaction, errorN
 import { connect } from 'react-redux'
 
 import {
+  type FioSenderInfo,
   getAuthRequiredDispatch,
   newPin,
   newSpendInfo,
@@ -17,7 +18,6 @@ import {
 import { activated as uniqueIdentifierModalActivated } from '../../actions/UniqueIdentifierModalActions.js'
 import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from '../../components/scenes/SendConfirmationScene'
 import { SendConfirmation } from '../../components/scenes/SendConfirmationScene'
-import { getWallet, isConnectedState } from '../../modules/Core/selectors.js'
 import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination, getPlugins } from '../../modules/Settings/selectors.js'
 import {
   getError,
@@ -37,8 +37,10 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const sceneState = state.ui.scenes.sendConfirmation
   let fiatPerCrypto = 0
   let secondaryExchangeCurrencyCode = ''
+
+  const { currencyWallets = {} } = state.core.account
   const guiWallet = getSelectedWallet(state)
-  const coreWallet = getWallet(state, guiWallet.id)
+  const coreWallet = currencyWallets[guiWallet.id]
   const currencyCode = getSelectedCurrencyCode(state)
   const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
 
@@ -111,7 +113,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     sceneState,
     coreWallet,
     toggleCryptoOnTop,
-    isConnected: isConnectedState(state)
+    isConnected: state.network.isConnected
   }
   return out
 }
@@ -123,7 +125,7 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   sendConfirmationUpdateTx: guiMakeSpendInfo => dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo)),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
-  signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave()),
+  signBroadcastAndSave: (fioSender?: FioSenderInfo): any => dispatch(signBroadcastAndSave(fioSender)),
   onChangePin: (pin: string) => dispatch(newPin(pin)),
   uniqueIdentifierButtonPressed: () => {
     dispatch(uniqueIdentifierModalActivated())

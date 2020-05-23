@@ -92,7 +92,7 @@ const CryptoExchangeWalletListRowStyle = {
   },
   walletDetailsRowLine: {
     height: 1,
-    borderColor: 'rgba(14, 75, 117, 0.5)',
+    borderColor: THEME.COLORS.CRYPTO_EXCHANGE_WALLET_LIST_ROW_OPAQUE_BLUE,
     borderBottomWidth: 1,
     marginTop: scale(12),
     marginBottom: scale(9)

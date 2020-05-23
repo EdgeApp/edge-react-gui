@@ -98,7 +98,7 @@ export function parseDeepLink (uri: string): DeepLink {
   const url = new URL(uri, true)
 
   // Handle dl.edge.app links:
-  if (url.protocol === 'https:' && url.host === 'dl.edge.app') {
+  if ((url.protocol === 'https:' || url.protocol === 'http:') && url.host === 'dl.edge.app') {
     return parseDownloadLink(url)
   }
 

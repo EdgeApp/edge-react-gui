@@ -15,7 +15,7 @@ const IconButtonStyle = {
     color: THEME.COLORS.GRAY_2
   },
   iconSize: 36,
-  underlayColor: THEME.COLORS.CLEAR
+  underlayColor: THEME.COLORS.TRANSPARENT
 }
 
 const TextAndIconButtonStyle = {

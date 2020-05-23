@@ -1,8 +1,35 @@
 # edge-react-gui
 
+## 1.13.0 (2020-05-22)
+
+- Add buy support in India with new partner Transak
+- Transfer button to easily transfer funds between wallets
+- FIO
+  - OBT data support
+  - Custom ERC20 token support
+  - Warning about access to FIO address when deleting FIO wallet
+- New address modal with autocomplete FIO addresses
+- Edge update version notification
+- RTL text fixes
+- Allow fee change even in locked transactions with partners or exchanges
+- Force text entry to right of FlipInput amount
+- Upgrade edge-core-js to v0.17.2
+  - Prioritize the WazirX rate plugin when available.
+- Upgrade edge-currency-accountbased to v0.7.6
+  - Tezos - Add makeMutex to wrap makeSpend() to avoid entering it more than once
+  - Refactor EOS plugin to remove owner key to support importing wallets
+  - Add Ethereum Classic support
+  - Remove ourReceiveAddresses from Tezos makeSpend
+- Upgrade edge-exchange-plugins to v0.10.4
+  - Add WazirX exchange rate provider
+  - Fix Switchain ERC20 token sending issue and metadata
+  - Fix swapInfo orderUri variable name across all swap partners
+- Upgrade edge-components to v0.0.27
+  - Add keyboardType and inputAccessoryViewId on FormFieldInput
+
 ## 1.12.4 (2020-05-14)
 
-- Add logic to prevent excluded currency codes from appearing in search results
+- Prevent excluded currency codes from appearing in wallet modal search results
 - Temporarily exclude XTZ in exchange from-wallet selector
 
 ## 1.12.3 (2020-05-08)
@@ -11,6 +38,7 @@
   - Use constant-time comparisons for encryption & decryption.
   - Upgrade redux-keto dependency & fix uncovered type errors.
   - Improve git server error messages & rotation logic.
+- Add Orchid (OXT) ERC20 token
 
 ## 1.12.2 (2020-05-04)
 
@@ -102,7 +130,6 @@
 
 - Switch from jsc-android to react-native-v8 to fix Samsung S7 device family crashes
 
-
 ## 1.11.8 (2020-03-24)
 
 - Fix error message on Create Wallet caused by partially enabled FIO wallet
@@ -165,11 +192,11 @@
 
 ## 1.11.0
 
-- Redesign of Wallet List and Transaction History screens 
-- Improved 2FA Background Notifications 
-- Safello - Sell 
-- Safello - Denmark region support added 
-- Safello - Additional payment method added for Sweden 
+- Redesign of Wallet List and Transaction History screens
+- Improved 2FA Background Notifications
+- Safello - Sell
+- Safello - Denmark region support added
+- Safello - Additional payment method added for Sweden
 - Support new DAI and SAI
 - Other minor fixes
 

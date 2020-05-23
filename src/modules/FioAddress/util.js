@@ -1,18 +1,25 @@
 // @flow
 
-import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 
 import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import type { FioConnectionWalletItem, GuiWallet } from '../../types/types'
+import type { FioConnectionWalletItem, FioObtRecord, GuiWallet } from '../../types/types'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
+const FIO_ADDRESS_CACHE = 'FioAddressCache.json'
 
 type DiskletConnectedWallets = {
   [fullCurrencyCode: string]: {
     walletId: string,
     publicAddress: string
+  }
+}
+
+export type FioAddresses = {
+  addresses: {
+    [address: string]: boolean
   }
 }
 
@@ -249,8 +256,13 @@ export const makeNotConnectedWallets = (wallets: { [walletId: string]: GuiWallet
     }
     if (wallets[walletKey].enabledTokens && wallets[walletKey].enabledTokens.length) {
       for (const enabledToken: string of wallets[walletKey].enabledTokens) {
-        const tokenData = wallets[walletKey].metaTokens.find(metaToken => metaToken.currencyCode === enabledToken)
-        if (!tokenData) continue
+        let tokenData = wallets[walletKey].metaTokens.find(metaToken => metaToken.currencyCode === enabledToken)
+        if (!tokenData) {
+          tokenData = {
+            currencyCode: enabledToken,
+            symbolImage: ''
+          }
+        }
         const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${tokenData.currencyCode}`
         if (!ccWalletMap[fullCurrencyCode]) {
           notConnectedWallets[`${wallets[walletKey].id}-${tokenData.currencyCode}`] = {
@@ -291,8 +303,13 @@ export const makeConnectedWallets = (wallets: { [walletId: string]: GuiWallet },
     }
     if (wallets[walletKey].enabledTokens && wallets[walletKey].enabledTokens.length) {
       for (const enabledToken: string of wallets[walletKey].enabledTokens) {
-        const tokenData = wallets[walletKey].metaTokens.find(metaToken => metaToken.currencyCode === enabledToken)
-        if (!tokenData) continue
+        let tokenData = wallets[walletKey].metaTokens.find(metaToken => metaToken.currencyCode === enabledToken)
+        if (!tokenData) {
+          tokenData = {
+            currencyCode: enabledToken,
+            symbolImage: ''
+          }
+        }
         const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${tokenData.currencyCode}`
         if (ccWalletMap[fullCurrencyCode] === wallets[walletKey].id) {
           connectedWallets[`${wallets[walletKey].id}-${tokenData.currencyCode}`] = {
@@ -327,4 +344,96 @@ export const checkPubAddress = async (fioPlugin: EdgeCurrencyConfig, fioAddress:
   }
 
   return ''
+}
+
+export const addToFioAddressCache = async (account: EdgeAccount, fioAddressesToAdd: string[]): Promise<FioAddresses> => {
+  const fioAddressesObject = await getFioAddressCache(account)
+  let writeToDisklet = false
+
+  for (const fioAddressToAdd of fioAddressesToAdd) {
+    if (!fioAddressesObject.addresses[fioAddressToAdd]) {
+      fioAddressesObject['addresses'][fioAddressToAdd] = true
+      writeToDisklet = true
+    }
+  }
+
+  if (writeToDisklet) {
+    await account.disklet.setText(FIO_ADDRESS_CACHE, JSON.stringify(fioAddressesObject))
+  }
+  return fioAddressesObject
+}
+
+export const getFioAddressCache = async (account: EdgeAccount): Promise<FioAddresses> => {
+  try {
+    const fioAddressObject = await account.disklet.getText(FIO_ADDRESS_CACHE)
+    return JSON.parse(fioAddressObject)
+  } catch (e) {
+    return { addresses: {} }
+  }
+}
+
+export const checkRecordSendFee = async (fioWallet: EdgeCurrencyWallet, fioAddress: string) => {
+  try {
+    const getFeeResult = await fioWallet.otherMethods.fioAction('getFee', {
+      endPoint: 'record_obt_data',
+      fioAddress: fioAddress
+    })
+    if (getFeeResult.fee) {
+      throw new Error(s.strings.fio_no_bundled_err_msg)
+    }
+  } catch (e) {
+    throw new Error(s.strings.fio_get_fee_err_msg)
+  }
+}
+
+export const recordSend = async (
+  senderWallet: EdgeCurrencyWallet,
+  senderFioAddress: string,
+  params: {
+    payeeFioAddress: string,
+    payerPublicAddress: string,
+    payeePublicAddress: string,
+    amount: string,
+    currencyCode: string,
+    chainCode: string,
+    txid: string,
+    memo: string
+  }
+) => {
+  if (senderFioAddress && senderWallet) {
+    const { payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, currencyCode, chainCode, txid, memo } = params
+    try {
+      await senderWallet.otherMethods.fioAction('recordObtData', {
+        payerFioAddress: senderFioAddress,
+        payeeFioAddress,
+        payerPublicAddress,
+        payeePublicAddress,
+        amount,
+        tokenCode: currencyCode,
+        chainCode,
+        obtId: txid,
+        memo,
+        maxFee: 0,
+        tpid: '',
+        status: 'sent_to_blockchain'
+      })
+    } catch (e) {
+      //
+      throw new Error(e.message)
+    }
+  }
+}
+
+export const getFioObtData = async (fioWallets: EdgeCurrencyWallet[]): Promise<FioObtRecord[]> => {
+  let obtDataRecords = []
+  for (const fioWallet: EdgeCurrencyWallet of fioWallets) {
+    try {
+      const { obt_data_records } = await fioWallet.otherMethods.fioAction('getObtData', {})
+      obtDataRecords = [...obtDataRecords, ...obt_data_records]
+    } catch (e) {
+      //
+    }
+  }
+
+  return obtDataRecords
 }

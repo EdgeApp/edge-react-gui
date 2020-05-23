@@ -5,7 +5,6 @@ import { type EdgeAccount, type EdgeContext } from 'edge-core-js/types'
 import { type Reducer, combineReducers } from 'redux'
 
 import { type Action } from '../types/reduxTypes.js'
-import { type WalletsState, wallets } from './CoreWalletsReducer.js'
 import { type EdgeLoginState, edgeLogin } from './EdgeLoginReducer.js'
 
 export type CoreState = {
@@ -14,7 +13,6 @@ export type CoreState = {
   +disklet: Disklet,
 
   // Nested reducers:
-  +wallets: WalletsState,
   +edgeLogin: EdgeLoginState
 }
 
@@ -43,6 +41,5 @@ export const core: Reducer<CoreState, Action> = combineReducers({
   },
 
   // Nested reducers:
-  edgeLogin,
-  wallets
+  edgeLogin
 })

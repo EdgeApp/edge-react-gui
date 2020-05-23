@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
-import { Image, TouchableHighlight, View } from 'react-native'
+import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -16,9 +16,10 @@ import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/index'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
-import styles, { customWalletListOptionsStyles, styles as styleRaw } from '../../styles/scenes/WalletListStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { type State as ReduxState } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo, type GuiDenomination, type GuiWallet } from '../../types/types.js'
+import { scale, scaleH } from '../../util/scaling.js'
 import { decimalOrZero, getFiatSymbol, getObjectDiff, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
 import { ProgressPie } from './ProgressPie.js'
 import { WalletListMenu } from './WalletListMenu.js'
@@ -147,14 +148,14 @@ class WalletListRowComponent extends Component<Props> {
         <View>
           <TouchableHighlight
             style={[styles.rowContainer]}
-            underlayColor={styleRaw.walletRowUnderlay.color}
+            underlayColor={THEME.COLORS.ROW_PRESSED}
             onPress={() => this._onPressSelectWallet(id, currencyCode, guiWallet.receiveAddress.publicAddress)}
           >
             <View style={[styles.rowContent]}>
               <View style={styles.rowIconWrap}>
                 {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
                 <View style={styles.rowCurrencyLogoAndroid}>
-                  <ProgressPie size={styles.rowCurrencyOverlaySize} color={'rgba(255, 255, 255, 0.75)'} progress={progress} />
+                  <ProgressPie size={rowCurrencyOverlaySize} color={THEME.COLORS.OPAQUE_WHITE_2} progress={progress} />
                 </View>
               </View>
               <View style={styles.walletDetailsContainer}>
@@ -233,6 +234,126 @@ class WalletListRowComponent extends Component<Props> {
     return walletProgress
   }
 }
+
+const customWalletListOptionsStyles = StyleSheet.create({
+  icon: {
+    fontSize: scale(21),
+    fontWeight: '200',
+    position: 'relative',
+    top: 6
+  },
+  menuIconWrap: {
+    width: scale(46),
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  }
+})
+const rowCurrencyOverlaySize = scale(23.3)
+const rawStyles = {
+  rowContainer: {
+    padding: scale(6),
+    paddingLeft: scale(8),
+    height: scale(106),
+    backgroundColor: THEME.COLORS.WHITE,
+    borderBottomWidth: scale(1),
+    borderBottomColor: THEME.COLORS.GRAY_3
+  },
+  rowContent: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  rowIconWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: scale(36)
+  },
+  rowCurrencyLogoAndroid: {
+    position: 'absolute',
+    top: 8,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: scale(23),
+    width: scale(23),
+    marginRight: scale(12),
+    marginLeft: scale(3),
+    resizeMode: 'contain',
+    alignSelf: 'center'
+  },
+  rowOptionsWrap: {
+    width: scaleH(37)
+  },
+  symbol: {
+    fontFamily: THEME.FONTS.SYMBOLS
+  },
+  walletDetailsContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    marginTop: scale(5)
+  },
+  walletDetailsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  walletDetailsRowLine: {
+    height: 1,
+    borderColor: 'rgba(14, 75, 117, 0.5)',
+    borderBottomWidth: 1,
+    marginTop: scale(12),
+    marginBottom: scale(9)
+  },
+  walletDetailsRowCurrency: {
+    flex: 1,
+    fontSize: scale(18)
+  },
+  walletDetailsRowValue: {
+    textAlign: 'right',
+    fontSize: scale(18),
+    color: THEME.COLORS.GRAY_1
+  },
+  walletDetailsRowName: {
+    flex: 1,
+    fontSize: scale(14),
+    color: THEME.COLORS.SECONDARY
+  },
+  walletDetailsRowFiat: {
+    fontSize: scale(14),
+    textAlign: 'right',
+    color: THEME.COLORS.SECONDARY
+  },
+  walletDetailsRowExchangeRate: {
+    fontSize: scale(14),
+    textAlign: 'left',
+    color: THEME.COLORS.GRAY_1
+  },
+  walletDetailsRowDifferenceNeutral: {
+    fontSize: scale(14),
+    textAlign: 'right',
+    color: THEME.COLORS.SECONDARY
+  },
+  walletDetailsRowDifferencePositive: {
+    fontSize: scale(14),
+    textAlign: 'right',
+    fontWeight: '400',
+    color: THEME.COLORS.WALLET_LIST_DIFF_POSITIVE
+  },
+  walletDetailsRowDifferenceNegative: {
+    fontSize: scale(14),
+    textAlign: 'right',
+    fontWeight: '400',
+    color: THEME.COLORS.WALLET_LIST_DIFF_NEGATIVE
+  },
+  walletDetailsFiatBalanceRow: {
+    flexDirection: 'row'
+  },
+  walletDetailsExchangeRow: {
+    flexDirection: 'row',
+    flex: 1
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const WalletListRow = connect(
   (state: ReduxState, ownProps: OwnProps): StateProps => ({

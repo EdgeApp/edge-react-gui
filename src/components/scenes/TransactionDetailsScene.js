@@ -192,7 +192,15 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   onChangeNotes = (notes: string) => this.setState({ notes })
   openNotesInput = () => {
-    Airship.show(bridge => <TransactionDetailsNotesInput bridge={bridge} notes={this.state.notes} onChange={this.onChangeNotes} />).then(_ => {})
+    Airship.show(bridge => (
+      <TransactionDetailsNotesInput
+        bridge={bridge}
+        title={s.strings.transaction_details_notes_title}
+        placeholder={s.strings.transaction_details_notes_title}
+        notes={this.state.notes}
+        onChange={this.onChangeNotes}
+      />
+    )).then(_ => {})
   }
 
   openAdvancedDetails = async () => {
@@ -350,10 +358,8 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                 <View style={styles.tileContainer}>
                   <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_amount_current_price}</FormattedText>
                   <View style={styles.tileRow}>
-                    <FormattedText style={styles.tileTextPrice}>
-                      {`${fiatSymbol} `}
-                      {currentFiat.amount}
-                    </FormattedText>
+                    <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
+                    <FormattedText style={styles.tileTextPrice}>{currentFiat.amount}</FormattedText>
                     <FormattedText style={parseFloat(currentFiat.difference) >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>
                       {parseFloat(currentFiat.difference) >= 0 ? currentFiat.percentage : `- ${currentFiat.percentage}`}%
                     </FormattedText>

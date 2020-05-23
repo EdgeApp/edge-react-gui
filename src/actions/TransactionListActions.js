@@ -5,11 +5,11 @@ import _ from 'lodash'
 
 import { showTransactionDropdown } from '../components/navigation/TransactionDropdown.js'
 import { showError } from '../components/services/AirshipInstance.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import type { TransactionListTx } from '../types/types.js'
 import * as UTILS from '../util/utils'
+import { checkFioObtData } from './FioActions'
 
 export const updateTransactions = (transactionUpdate: {
   numTransactions: number,
@@ -82,7 +82,8 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
 }
 
 const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  const { currencyWallets = {} } = state.core.account
+  const wallet = currencyWallets[walletId]
   if (!wallet) return
   // initialize the master array of transactions that will eventually go into Redux
   let transactionsWithKeys = [] // array of transactions as objects with key included for sorting?
@@ -166,7 +167,11 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: Array
   const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   let numberOfRelevantTransactions = 0
   let isTransactionForSelectedWallet = false
+  const receivedTxs = []
   for (const transaction of edgeTransactions) {
+    if (UTILS.isReceivedTransaction(transaction)) {
+      receivedTxs.push(transaction)
+    }
     if (transaction.currencyCode === selectedCurrencyCode && transaction.wallet && transaction.wallet.id === selectedWalletId) {
       isTransactionForSelectedWallet = true
       // this next part may be unnecessary
@@ -181,6 +186,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: Array
     startEntries: state.ui.scenes.transactionList.currentEndIndex + 1 + numberOfRelevantTransactions
   }
   if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
+  if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
   if (!UTILS.isReceivedTransaction(edgeTransaction)) return
   showTransactionDropdown(edgeTransaction)
 }

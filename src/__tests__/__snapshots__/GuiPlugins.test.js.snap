@@ -90,13 +90,14 @@ Array [
     "cryptoCodes": Array [
       "BTC",
     ],
-    "deepPath": "/buy",
+    "deepPath": "/order/buy",
     "deepQuery": Object {
       "order_id": "null",
       "page": "0",
     },
-    "description": "Fee: 2.5% / Settlement: 1-48 hours
-Limit: €10000+/day",
+    "description": "Fee: 2.5% / Settlement: 1 - 48hours
+Level 1 Limit: €10000/day
+Level 2 Limit: Unlimited",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": Array [
@@ -115,7 +116,7 @@ Limit: €10000+/day",
     ],
     "deepPath": "",
     "deepQuery": Object {},
-    "description": "Fee: 7% / Settlement: 10-30 minutes
+    "description": "Fee: 7% / Settlement: 10 - 30min
 Limit: $18000/day",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "paymentTypeLogoKey": "credit",
@@ -138,6 +139,8 @@ Limit: $18000/day",
       "BAT",
       "BNB",
       "PAX",
+      "QTUM",
+      "RVN",
       "TUSD",
       "USDC",
       "USDT",
@@ -145,7 +148,8 @@ Limit: $18000/day",
     "deepPath": "",
     "deepQuery": Object {},
     "description": "Fee: 6.5% / Settlement: 10 minutes
-Limit: $10000/day",
+Daily Limit: $10800
+Monthly Limit: $54000",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
     "paymentTypeLogoKey": "credit",
     "paymentTypes": Array [
@@ -167,7 +171,7 @@ Array [
     ],
     "deepPath": "",
     "deepQuery": Object {},
-    "description": "Fee: 1% / Settlement: 1-5 days
+    "description": "Fee: 1% / Settlement: 1 - 5days
 Limit: $2500/week",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "paymentTypeLogoKey": "bank",
@@ -187,7 +191,7 @@ Limit: $2500/week",
     ],
     "deepPath": "",
     "deepQuery": Object {},
-    "description": "Fee: 7% / Settlement: 10-30 minutes
+    "description": "Fee: 7% / Settlement: 10 - 30min
 Limit: $18000/day",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "paymentTypeLogoKey": "credit",
@@ -210,6 +214,8 @@ Limit: $18000/day",
       "BAT",
       "BNB",
       "PAX",
+      "QTUM",
+      "RVN",
       "TUSD",
       "USDC",
       "USDT",
@@ -217,7 +223,8 @@ Limit: $18000/day",
     "deepPath": "",
     "deepQuery": Object {},
     "description": "Fee: 6.5% / Settlement: 10 minutes
-Limit: $10000/day",
+Daily Limit: $10800
+Monthly Limit: $54000",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
     "paymentTypeLogoKey": "applepay",
     "paymentTypes": Array [
@@ -257,7 +264,7 @@ Array [
     ],
     "deepPath": "",
     "deepQuery": Object {},
-    "description": "Fee: 1% / Settlement: 1-5 days
+    "description": "Fee: 1% / Settlement: 1 - 5days
 Limit: Unlimited",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "paymentTypeLogoKey": "bank",

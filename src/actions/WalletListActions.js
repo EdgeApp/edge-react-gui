@@ -8,7 +8,6 @@ import { TwoButtonSimpleConfirmationModal } from '../components/modals/TwoButton
 import { Airship, showError, showFullScreenSpinner } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors.js'
 import { getSettings } from '../modules/Settings/selectors.js'
 import { setAccountBalanceVisibility } from '../modules/Settings/SettingsActions.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
@@ -28,7 +27,7 @@ export const updateActiveWalletsOrder = (activeWalletIds: Array<string>) => (dis
 
 export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   const currentAccountBalanceVisibility = state.ui.settings.isAccountBalanceVisible
   ACCOUNT_SETTINGS.setAccountBalanceVisibility(account, !currentAccountBalanceVisibility)
     .then(() => {
@@ -59,6 +58,7 @@ export const linkReferralWithCurrencies = (uri: string) => async (dispatch: Disp
 const getCurrencyAddress = async (currencyCode, getState) => {
   // Wallet Check
   const state = getState()
+  const { account } = state.core
   const wallets = state.ui.wallets.byId
   const walletIds = Object.keys(wallets)
   const walletId = walletIds.find(id => {
@@ -73,7 +73,6 @@ const getCurrencyAddress = async (currencyCode, getState) => {
 
   // Wallet Creation
   const settings = getSettings(state)
-  const account = CORE_SELECTORS.getAccount(state)
   const { defaultIsoFiat } = settings
 
   const guiWalletTypes = getGuiWalletType(account, currencyCode)
