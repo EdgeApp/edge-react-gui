@@ -348,7 +348,7 @@ export class MainComponent extends Component<Props> {
                 key={Constants.FIO_REQUEST_CONFIRMATION}
                 navTransparent
                 component={ifLoggedIn(FioRequestConfirmationConnector)}
-                renderTitle={this.renderWalletName()}
+                renderTitle={this.renderTitle(s.strings.fio_confirm_request_header)}
                 renderLeftButton={this.renderBackButton(BACK)}
                 renderRightButton={this.renderMenuButton()}
               />

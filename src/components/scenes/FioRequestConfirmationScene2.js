@@ -3,14 +3,16 @@
 import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js/src/types/types'
 import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
+import editIcon from '../../assets/images/transaction_details_icon.png'
 import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache } from '../../modules/FioAddress/util.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
+import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import THEME from '../../theme/variables/airbitz'
 import type { GuiCurrencyInfo } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -140,13 +142,69 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
     return item.fioAddress
   }
 
+  openFioAddressFromModal = () => null
+  openFioAddressToModal = () => null
+  openMemoModal = () => null
   render() {
+    const { primaryCurrencyInfo, secondaryCurrencyInfo } = this.props
+    if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
+    let cryptoAmount, exchangeAmount
+    try {
+      cryptoAmount = bns.div(this.props.amounts.nativeAmount, primaryCurrencyInfo.displayDenomination.multiplier, 18)
+      exchangeAmount = bns.div(this.props.amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, 18)
+    } catch (e) {
+      return null
+    }
+    const fiatAmount = this.fiatAmount(exchangeAmount)
+    const cryptoName = primaryCurrencyInfo.displayDenomination.name
+    const fiatName = secondaryCurrencyInfo.displayDenomination.name
+
     return (
       <SceneWrapper>
-        <View style={styles.container} />
+        <View style={styles.container}>
+          <TouchableWithoutFeedback onPress={this.openFioAddressFromModal}>
+            <View style={styles.tileContainer}>
+              <Image style={styles.tileIcon} source={editIcon} />
+              <Text style={styles.tileTextHeader}>{s.strings.fio_confirm_request_from}</Text>
+              <Text style={styles.tileTextBody}>{this.props.fioModalData.fioAddress}</Text>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={this.openFioAddressToModal}>
+            <View style={styles.tileContainer}>
+              <Image style={styles.tileIcon} source={editIcon} />
+              <Text style={styles.tileTextHeader}>{s.strings.fio_confirm_request_to}</Text>
+              <Text style={styles.tileTextBody}>{this.props.fioModalData.fioAddress}</Text>
+            </View>
+          </TouchableWithoutFeedback>
+          <View style={styles.tileContainer}>
+            <Text style={styles.tileTextHeader}>{s.strings.fio_confirm_request_amount}</Text>
+            <Text style={styles.tileTextBody}>{`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`}</Text>
+          </View>
+          <TouchableWithoutFeedback onPress={this.openMemoModal}>
+            <View style={styles.tileContainer}>
+              <Image style={styles.tileIcon} source={editIcon} />
+              <Text style={styles.tileTextHeader}>{s.strings.fio_confirm_request_memo}</Text>
+              <Text style={styles.tileTextBody}>{this.props.fioModalData.memo}</Text>
+            </View>
+          </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback onPress={() => null}>
+            <View style={styles.nextButton}>
+              <Text style={styles.buttonText}>{s.strings.string_next_capitalized}</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
       </SceneWrapper>
     )
   }
+}
+
+const { rem } = THEME
+const tileStyles = {
+  width: '100%',
+  backgroundColor: THEME.COLORS.WHITE,
+  borderBottomWidth: 1,
+  borderBottomColor: THEME.COLORS.GRAY_3,
+  padding: rem(0.5)
 }
 
 const styles = StyleSheet.create({
@@ -154,6 +212,40 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
-    backgroundColor: THEME.COLORS.GRAY_4
+    backgroundColor: THEME.COLORS.GRAY_4,
+    alignItems: 'center'
+  },
+  tileContainer: {
+    ...tileStyles
+  },
+  tileTextHeader: {
+    color: THEME.COLORS.SECONDARY,
+    fontSize: rem(0.75),
+    margin: rem(0.25)
+  },
+  tileTextBody: {
+    color: THEME.COLORS.GRAY_5,
+    fontSize: rem(1),
+    margin: rem(0.25)
+  },
+  tileIcon: {
+    position: 'absolute',
+    width: rem(0.75),
+    height: rem(0.75),
+    top: rem(0.75),
+    right: rem(0.75)
+  },
+  nextButton: {
+    backgroundColor: THEME.COLORS.SECONDARY,
+    marginTop: rem(1),
+    borderRadius: rem(1.5),
+    width: '80%',
+    height: rem(3),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: rem(1.25)
   }
 })
