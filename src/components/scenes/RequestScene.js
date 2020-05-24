@@ -28,7 +28,6 @@ import { getObjectDiff } from '../../util/utils'
 import { launchModal } from '../common/ModalProvider.js'
 import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { createFioAddressModal } from '../modals/RequestFioAddressModal'
 import { showError, showToast } from '../services/AirshipInstance.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
@@ -409,27 +408,35 @@ export class Request extends Component<Props, State> {
   }
 
   fioAddressModal = async () => {
-    if (!this.props.isConnected) {
-      showError(s.strings.fio_network_alert_text)
-      return
+    // if (!this.props.isConnected) {
+    //   showError(s.strings.fio_network_alert_text)
+    //   return
+    // }
+    // if (!this.props.fioAddressesExist) {
+    //   showError(`${s.strings.title_register_fio_address}. ${s.strings.fio_request_by_fio_address_error_no_address}`)
+    //   return
+    // }
+    // if (!this.amounts || bns.lte(this.amounts.nativeAmount, '0')) {
+    //   if (Platform.OS === 'android') {
+    //     showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
+    //     return
+    //   } else {
+    //     this.fioMode()
+    //     return
+    //   }
+    // }
+    // const fioAddressModal = createFioAddressModal({ fioPlugin: this.props.fioPlugin, isConnected: this.props.isConnected })
+    // const fioModalData = await launchModal(fioAddressModal)
+    const fioModalData = {
+      fioAddress: 'edgy42@edge',
+      memo: 'My Memo'
     }
-    if (!this.props.fioAddressesExist) {
-      showError(`${s.strings.title_register_fio_address}. ${s.strings.fio_request_by_fio_address_error_no_address}`)
-      return
+    const amounts = {
+      exchangeAmount: '0.000107',
+      nativeAmount: '10700'
     }
-    if (!this.amounts || bns.lte(this.amounts.nativeAmount, '0')) {
-      if (Platform.OS === 'android') {
-        showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
-        return
-      } else {
-        this.fioMode()
-        return
-      }
-    }
-    const fioAddressModal = createFioAddressModal({ fioPlugin: this.props.fioPlugin, isConnected: this.props.isConnected })
-    const fioModalData = await launchModal(fioAddressModal)
     if (fioModalData) {
-      Actions[Constants.FIO_REQUEST_CONFIRMATION]({ fioModalData, amounts: this.amounts })
+      Actions[Constants.FIO_REQUEST_CONFIRMATION]({ fioModalData, amounts })
     }
   }
 
