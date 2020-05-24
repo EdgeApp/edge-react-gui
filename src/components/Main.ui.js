@@ -142,6 +142,7 @@ const PASSWORD_RECOVERY = s.strings.title_password_recovery
 const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
 const TERMS_OF_SERVICE = s.strings.title_terms_of_service
+const SEND_FIO_REQUEST = s.strings.fio_confirm_request_header
 
 type DispatchProps = {
   // Navigation actions:
@@ -349,7 +350,7 @@ export class MainComponent extends Component<Props> {
                 key={Constants.FIO_REQUEST_CONFIRMATION}
                 navTransparent
                 component={ifLoggedIn(FioRequestConfirmationConnector)}
-                renderTitle={this.renderWalletName()}
+                renderTitle={this.renderTitle(SEND_FIO_REQUEST)}
                 renderLeftButton={this.renderBackButton(BACK)}
                 renderRightButton={this.renderMenuButton()}
               />
