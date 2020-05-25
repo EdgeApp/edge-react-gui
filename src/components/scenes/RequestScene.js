@@ -20,7 +20,7 @@ import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/Flip
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import RequestStatus from '../../modules/UI/components/RequestStatus/index.js'
-import ShareButtons from '../../modules/UI/components/ShareButtons/index.js'
+import { ShareButtons } from '../../modules/UI/components/ShareButtons/ShareButtons.ui.js'
 import { styles } from '../../styles/scenes/RequestStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
