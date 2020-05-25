@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
-import { Animated, Image, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { Animated, Image, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
@@ -36,7 +36,12 @@ type State = {
   forceUpdateGuiCounter: number,
   primaryDisplayAmount: string, // Actual display amount including 1000s separator and localized for region
   secondaryDisplayAmount: string, // Actual display amount including 1000s separator and localized for region
-  rerenderCounter: number
+  rerenderCounter: number,
+  inputCursorToRight: boolean,
+  selection?: {
+    start: number,
+    end: number
+  }
 }
 
 export type FlipInputOwnProps = {
@@ -99,13 +104,6 @@ function setSecondaryToPrimary (props: Props, secondaryDecimalAmount: string) {
 
 const addCurrencySymbol = (currencySymbol: string, displayAmount: string) =>
   displayAmount.includes(currencySymbol) ? displayAmount : `${currencySymbol} ${displayAmount}`
-const removeCurrencySymbol = (currencySymbol: string, previousDisplayAmount: string, displayAmount: string) => {
-  // This looks for a number left if the currency symbol and moves it to the far right
-  if (previousDisplayAmount === displayAmount.substring(1)) {
-    displayAmount = previousDisplayAmount + displayAmount[0]
-  }
-  return displayAmount.replace(currencySymbol, '').trim()
-}
 
 const getInitialState = (props: Props) => {
   const state: State = {
@@ -116,7 +114,8 @@ const getInitialState = (props: Props) => {
     primaryDisplayAmount: '',
     forceUpdateGuiCounter: 0,
     secondaryDisplayAmount: '',
-    rerenderCounter: 0
+    rerenderCounter: 0,
+    inputCursorToRight: false
   }
 
   let stateAmounts = {}
@@ -207,12 +206,12 @@ export class FlipInput extends Component<Props, State> {
     } else {
       if (!this.state.isToggled) {
         const decimalAmount = intl.formatToNativeNumber(
-          removeCurrencySymbol(this.props.primaryInfo.currencySymbol, this.state.primaryDisplayAmount, this.state.primaryDisplayAmount)
+          this.removeCurrencySymbol(this.props.primaryInfo.currencySymbol, this.state.primaryDisplayAmount, this.state.primaryDisplayAmount)
         )
         this.setState(setPrimaryToSecondary(nextProps, decimalAmount))
       } else {
         const decimalAmount = intl.formatToNativeNumber(
-          removeCurrencySymbol(this.props.secondaryInfo.currencySymbol, this.state.secondaryDisplayAmount, this.state.secondaryDisplayAmount)
+          this.removeCurrencySymbol(this.props.secondaryInfo.currencySymbol, this.state.secondaryDisplayAmount, this.state.secondaryDisplayAmount)
         )
         const newState = setSecondaryToPrimary(nextProps, decimalAmount)
         this.setState({
@@ -258,8 +257,17 @@ export class FlipInput extends Component<Props, State> {
     }
   }
 
+  removeCurrencySymbol = (currencySymbol: string, previousDisplayAmount: string, displayAmount: string) => {
+    // This looks for a number left if the currency symbol and moves it to the far right
+    if (previousDisplayAmount === displayAmount.substring(1)) {
+      displayAmount = previousDisplayAmount + displayAmount[0]
+    }
+    this.setState({ selection: undefined, inputCursorToRight: true })
+    return displayAmount.replace(currencySymbol, '').trim()
+  }
+
   onPrimaryAmountChange = (amountChanged: string) => {
-    const displayAmount = removeCurrencySymbol(this.props.primaryInfo.currencySymbol, this.state.primaryDisplayAmount, amountChanged)
+    const displayAmount = this.removeCurrencySymbol(this.props.primaryInfo.currencySymbol, this.state.primaryDisplayAmount, amountChanged)
     if (!intl.isValidInput(displayAmount)) return
 
     // Do any necessary formatting of the display value such as truncating decimals
@@ -275,7 +283,7 @@ export class FlipInput extends Component<Props, State> {
   }
 
   onSecondaryAmountChange = (amountChanged: string) => {
-    const displayAmount = removeCurrencySymbol(this.props.secondaryInfo.currencySymbol, this.state.secondaryDisplayAmount, amountChanged)
+    const displayAmount = this.removeCurrencySymbol(this.props.secondaryInfo.currencySymbol, this.state.secondaryDisplayAmount, amountChanged)
     if (!intl.isValidInput(displayAmount)) return
 
     // Do any necessary formatting of the display value such as truncating decimals
@@ -338,6 +346,19 @@ export class FlipInput extends Component<Props, State> {
     }
   }
 
+  inputSelectionChange = (amount: string) => {
+    if (this.state.selection) this.setState({ selection: undefined })
+    if (this.state.inputCursorToRight) {
+      this.setState({
+        selection: {
+          start: amount.length,
+          end: amount.length
+        },
+        inputCursorToRight: false
+      })
+    }
+  }
+
   topRowFront = (fieldInfo: FlipInputFieldInfo, onChangeText: string => void, amount: string) => {
     return (
       <TouchableWithoutFeedback onPress={this.textInputFrontFocus}>
@@ -353,7 +374,8 @@ export class FlipInput extends Component<Props, State> {
               autoCorrect={false}
               keyboardType="numeric"
               selectionColor={THEME.COLORS.WHITE}
-              selection={{ start: amount.length, end: amount.length }}
+              selection={Platform.OS === 'ios' ? { start: amount.length, end: amount.length } : this.state.selection}
+              onSelectionChange={() => this.inputSelectionChange(amount)}
               returnKeyType={this.props.topReturnKeyType || 'done'}
               underlineColorAndroid={THEME.COLORS.TRANSPARENT}
               ref={this.getTextInputFrontRef}
@@ -402,7 +424,8 @@ export class FlipInput extends Component<Props, State> {
               autoCorrect={false}
               keyboardType="numeric"
               selectionColor={THEME.COLORS.WHITE}
-              selection={{ start: amount.length, end: amount.length }}
+              selection={Platform.OS === 'ios' ? { start: amount.length, end: amount.length } : this.state.selection}
+              onSelectionChange={() => this.inputSelectionChange(amount)}
               returnKeyType={this.props.topReturnKeyType || 'done'}
               underlineColorAndroid={THEME.COLORS.TRANSPARENT}
               ref={this.getTextInputBackRef}
