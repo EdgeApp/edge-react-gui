@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js/src/types/types'
+import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js/src/types/types'
 import React, { Component } from 'react'
 import { Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -16,6 +16,7 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import THEME from '../../theme/variables/airbitz'
 import type { GuiCurrencyInfo } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { AddressModal } from '../modals/AddressModal.js'
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 
@@ -28,7 +29,10 @@ export type FioRequestConfirmationProps = {
   secondaryCurrencyInfo: GuiCurrencyInfo,
   fioWallets: EdgeCurrencyWallet[],
   account: EdgeAccount,
-  isConnected: boolean
+  isConnected: boolean,
+  fioPlugin: EdgeCurrencyConfig,
+  walletId: string,
+  currencyCode: string
 }
 
 export type FioRequestConfirmationDispatchProps = {
@@ -50,6 +54,7 @@ type LocalState = {
   loading: boolean,
   selectedFioAddress: string,
   walletAddresses: { fioAddress: string, fioWallet: EdgeCurrencyWallet }[],
+  fioAddressTo: string,
   memo: string
 }
 
@@ -60,6 +65,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
       loading: false,
       selectedFioAddress: '',
       walletAddresses: [],
+      fioAddressTo: '',
       memo: ''
     }
   }
@@ -110,7 +116,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
         }
         // send fio request
         await fioWallet.otherMethods.fioAction('requestFunds', {
-          payerFioAddress: this.props.fioModalData.fioAddress,
+          payerFioAddress: this.state.fioAddressTo,
           payeeFioAddress: this.state.selectedFioAddress,
           payeeTokenPublicAddress: this.props.publicAddress,
           amount: val,
@@ -121,7 +127,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
         })
         this.setState({ loading: false })
         showToast(s.strings.fio_request_ok_body)
-        addToFioAddressCache(this.props.account, [this.props.fioModalData.fioAddress])
+        addToFioAddressCache(this.props.account, [this.state.fioAddressTo])
         Actions.popTo(Constants.TRANSACTION_LIST)
       } catch (error) {
         this.setState({ loading: false })
@@ -146,7 +152,22 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
   }
 
   openFioAddressFromModal = () => null
-  openFioAddressToModal = () => null
+
+  openFioAddressToModal = async () => {
+    const fioAddressTo = await Airship.show(bridge => (
+      <AddressModal
+        bridge={bridge}
+        walletId={this.props.walletId}
+        currencyCode={this.props.currencyCode}
+        title={s.strings.fio_confirm_request_fio_title}
+        subtitle={s.strings.fio_confirm_request_fio_subtitle_to}
+        isFioOnly
+      />
+    ))
+    if (!(await this.props.fioPlugin.otherMethods.doesAccountExist(fioAddressTo)))
+      return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
+    this.setState({ fioAddressTo: fioAddressTo || '' })
+  }
 
   openMemoModal = async () => {
     const memo = await Airship.show(bridge => (
@@ -160,7 +181,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
 
   render() {
     const { primaryCurrencyInfo, secondaryCurrencyInfo } = this.props
-    const { memo } = this.state
+    const { fioAddressTo, memo } = this.state
     if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
     let cryptoAmount, exchangeAmount
     try {
@@ -186,8 +207,8 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
           <TouchableWithoutFeedback onPress={this.openFioAddressToModal}>
             <View style={styles.tileContainer}>
               <Image style={styles.tileIcon} source={editIcon} />
-              <Text style={styles.tileTextHeader}>{s.strings.fio_confirm_request_to}</Text>
-              <Text style={styles.tileTextBody}>{this.props.fioModalData.fioAddress}</Text>
+              <Text style={fioAddressTo.length > 0 ? styles.tileTextHeader : styles.tileTextHeaderError}>{s.strings.fio_confirm_request_to}</Text>
+              <Text style={styles.tileTextBody}>{fioAddressTo}</Text>
             </View>
           </TouchableWithoutFeedback>
           <View style={styles.tileContainer}>
@@ -234,6 +255,11 @@ const styles = StyleSheet.create({
   },
   tileTextHeader: {
     color: THEME.COLORS.SECONDARY,
+    fontSize: rem(0.75),
+    margin: rem(0.25)
+  },
+  tileTextHeaderError: {
+    color: THEME.COLORS.ACCENT_RED,
     fontSize: rem(0.75),
     margin: rem(0.25)
   },

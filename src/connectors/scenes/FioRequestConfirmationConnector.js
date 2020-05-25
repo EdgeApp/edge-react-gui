@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
 import type { FioRequestConfirmationDispatchProps, FioRequestConfirmationProps } from '../../components/scenes/FioRequestConfirmationScene2.js'
 import { FioRequestConfirmationComponent } from '../../components/scenes/FioRequestConfirmationScene2.js'
+import { CURRENCY_PLUGIN_NAMES } from '../../constants/indexConstants'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { Dispatch, State } from '../../types/reduxTypes'
@@ -19,6 +20,7 @@ const mapStateToProps = (state: State): FioRequestConfirmationProps => {
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
   const fioWallets: EdgeCurrencyWallet[] = UI_SELECTORS.getFioWallets(state)
   const { isConnected } = state.network
+  const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
 
   if (!guiWallet || !currencyCode) {
     return {
@@ -30,7 +32,10 @@ const mapStateToProps = (state: State): FioRequestConfirmationProps => {
       publicAddress: '',
       fioWallets,
       account,
-      isConnected
+      isConnected,
+      walletId: '',
+      currencyCode: '',
+      fioPlugin
     }
   }
 
@@ -65,7 +70,10 @@ const mapStateToProps = (state: State): FioRequestConfirmationProps => {
     secondaryCurrencyInfo,
     fioWallets,
     account,
-    isConnected
+    isConnected,
+    walletId: state.ui.wallets.selectedWalletId,
+    currencyCode: state.ui.wallets.selectedCurrencyCode,
+    fioPlugin
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): FioRequestConfirmationDispatchProps => ({
