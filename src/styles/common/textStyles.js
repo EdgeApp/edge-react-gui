@@ -8,14 +8,14 @@ import { THEME } from '../../theme/variables/airbitz.js'
 /**
  * Use this component just like its HTML equivalent.
  */
-export function B (props: { children: Node }) {
+export function B(props: { children: Node }) {
   return <Text style={tweakRules.bold}>{props.children}</Text>
 }
 
 /**
  * Use this function to build a text style for use on a light background.
  */
-export function dayText (...rules: Array<$Keys<typeof dayRules>>): Object {
+export function dayText(...rules: Array<$Keys<typeof dayRules>>): Object {
   const base: Object = {
     color: THEME.COLORS.BLACK,
     fontFamily: THEME.FONTS.DEFAULT,
@@ -27,7 +27,7 @@ export function dayText (...rules: Array<$Keys<typeof dayRules>>): Object {
 /**
  * Use this function to build a text style for use on a dark background.
  */
-export function nightText (...rules: Array<$Keys<typeof nightRules>>): Object {
+export function nightText(...rules: Array<$Keys<typeof nightRules>>): Object {
   const base: Object = {
     color: THEME.COLORS.WHITE,
     fontFamily: THEME.FONTS.DEFAULT,

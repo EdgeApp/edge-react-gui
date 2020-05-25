@@ -26,14 +26,14 @@ export type WalletListTokenRowDispatchProps = {}
 export type WalletListTokenRowProps = WalletListTokenRowOwnProps & WalletListTokenRowStateProps
 
 export class WalletListTokenRowComponent extends Component<WalletListTokenRowProps> {
-  render () {
+  render() {
     const { wallet, onSelectWallet, currencyCode, fiatValue, cryptoAmount } = this.props
     const parentId = wallet.id
     const fiatBalance = intl.formatNumber(fiatValue, { toFixed: 2 }) || '0'
     const fiatSymbol = getFiatSymbol(wallet.isoFiatCurrencyCode) || ''
     return (
       <TouchableHighlight
-        style={[styles.tokenRowContainer]}
+        style={styles.tokenRowContainer}
         underlayColor={stylesRaw.underlay.color}
         key={currencyCode}
         onPress={() => onSelectWallet(parentId, currencyCode)}
@@ -42,11 +42,11 @@ export class WalletListTokenRowComponent extends Component<WalletListTokenRowPro
           <View style={styles.currencyRowNameTextWrap}>
             <Text style={styles.currencyRowText}>{currencyCode}</Text>
           </View>
-          <View style={[styles.rowRight]}>
-            <View style={[styles.rowRightCryptoWrap]}>
-              <Text style={[styles.rowRightCryptoText]}>{cryptoAmount}</Text>
+          <View style={styles.rowRight}>
+            <View style={styles.rowRightCryptoWrap}>
+              <Text style={styles.rowRightCryptoText}>{cryptoAmount}</Text>
             </View>
-            <View style={[styles.rowRightFiatWrap]}>
+            <View style={styles.rowRightFiatWrap}>
               <Text style={styles.rowRightFiatText}>
                 {fiatSymbol} {fiatBalance}
               </Text>

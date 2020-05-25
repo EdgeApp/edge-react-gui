@@ -21,7 +21,7 @@ import shapeshiftLogo from './settingsExchangeShapeshift.png'
 import switchainLogo from './settingsExchangeSwitchain.png'
 import totleLogo from './settingsExchangeTotle.png'
 
-export function getSwapPluginIcon (pluginId: string) {
+export function getSwapPluginIcon(pluginId: string) {
   const icon = swapPluginIcons[pluginId]
   return icon == null ? defaultLogo : icon
 }

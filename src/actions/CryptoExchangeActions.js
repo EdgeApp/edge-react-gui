@@ -110,7 +110,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   dispatch({ type: 'SET_FROM_WALLET_MAX', data: primaryNativeAmount })
 }
 
-async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
+async function fetchSwapQuote(state: State, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
   const { account } = state.core
 
   // Find preferred swap provider:
@@ -410,7 +410,7 @@ export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetSta
   }
 }
 
-async function getBalanceMessage (state: State, wallet: GuiWallet, currencyCode: string) {
+async function getBalanceMessage(state: State, wallet: GuiWallet, currencyCode: string) {
   const { account } = state.core
   const currencyConverter = account.exchangeCache
   const balanceInCrypto = wallet.nativeBalances[currencyCode]

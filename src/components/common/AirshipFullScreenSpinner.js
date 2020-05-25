@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { ActivityIndicator, Animated, StyleSheet, Text, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
@@ -23,12 +23,12 @@ type Props = {
 export class AirshipFullScreenSpinner extends Component<Props> {
   opacity: Animated.Value
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.opacity = new Animated.Value(0)
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { activity, bridge } = this.props
 
     // Animate in:
@@ -54,7 +54,7 @@ export class AirshipFullScreenSpinner extends Component<Props> {
     }
   }
 
-  render () {
+  render() {
     return (
       <Animated.View style={[styles.container, { opacity: this.opacity }]}>
         <View style={styles.darkness} />
@@ -63,15 +63,15 @@ export class AirshipFullScreenSpinner extends Component<Props> {
     )
   }
 
-  renderContent () {
+  renderContent() {
     const { activity, message } = this.props
     if (activity == null) return <Text style={styles.text}>{message}</Text>
 
     return (
-      <Fragment>
+      <>
         <Text style={[styles.text, { marginRight: unit }]}>{message}</Text>
         <ActivityIndicator />
-      </Fragment>
+      </>
     )
   }
 }

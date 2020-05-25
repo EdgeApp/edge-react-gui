@@ -61,6 +61,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     baseColor: THEME.COLORS.PRIMARY,
     textColor: THEME.COLORS.PRIMARY
   }
+
   materialInputOnWhiteStyle = {
     ...MaterialInputOnWhite,
     container: {
@@ -81,7 +82,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     fieldPos: 200
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { fioWallets } = this.props
     this.getRegexFromDomain(FIO_DOMAIN_DEFAULT)
     if (fioWallets.length > 0) {
@@ -127,7 +128,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     }
   }
 
-  checkFioAddress (fioAddress: string) {
+  checkFioAddress(fioAddress: string) {
     this.setState({
       loading: true
     })
@@ -200,13 +201,13 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     })
   }
 
-  renderButton () {
+  renderButton() {
     const { isValid, isAvailable, loading, walletLoading } = this.state
 
     if (isValid && isAvailable && !loading) {
       return (
         <View style={styles.buttons}>
-          <PrimaryButton style={[styles.next]} onPress={this.handleNextButton} disabled={!isAvailable || walletLoading}>
+          <PrimaryButton style={styles.next} onPress={this.handleNextButton} disabled={!isAvailable || walletLoading}>
             {walletLoading ? <ActivityIndicator size="small" /> : <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>}
           </PrimaryButton>
         </View>
@@ -216,7 +217,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     return null
   }
 
-  renderLoader () {
+  renderLoader() {
     const { isValid, touched, isAvailable, loading } = this.state
 
     let icon = null
@@ -239,7 +240,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     return <View style={fioAddressStyles.statusIcon}>{loading ? <ActivityIndicator style={styles.feedbackIcon} size="small" /> : icon}</View>
   }
 
-  renderFioWallets () {
+  renderFioWallets() {
     const { fioWallets } = this.props
     const { selectedWallet } = this.state
     if (fioWallets && fioWallets.length > 1) {
@@ -262,7 +263,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     }
   }
 
-  render () {
+  render() {
     const { fioAddress, touched, isAvailable, replaceRegex } = this.state
 
     let chooseHandleErrorMessage = ''
@@ -277,8 +278,8 @@ export class FioAddressRegisterScene extends Component<Props, State> {
       <SafeAreaView>
         <Gradient style={styles.scrollableGradient} />
         <ScrollView ref="_scrollView">
-          <View style={[styles.scrollableView]}>
-            <Image source={fioAddressIcon} style={fioAddressStyles.image} resizeMode={'cover'} />
+          <View style={styles.scrollableView}>
+            <Image source={fioAddressIcon} style={fioAddressStyles.image} resizeMode="cover" />
             <View style={[styles.createWalletPromptArea, fioAddressStyles.paddings, fioAddressStyles.title]}>
               <T style={styles.instructionalText}>{s.strings.fio_address_first_screen_title}</T>
             </View>
@@ -296,7 +297,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
                 autoCorrect={false}
                 autoCapitalize="none"
                 placeholder={s.strings.fio_address_confirm_screen_label}
-                caretHidden={true}
+                caretHidden
                 onFocus={this.handleFioAddressFocus}
                 onChangeText={this.handleFioAddressChange}
                 onSubmitEditing={this.handleNextButton}

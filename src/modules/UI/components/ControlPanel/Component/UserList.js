@@ -29,7 +29,7 @@ type State = {
 export default class UserList extends Component<Props, State> {
   cleanups: Array<() => mixed> = []
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       localUsers: this.props.context.localUsers,
@@ -37,7 +37,7 @@ export default class UserList extends Component<Props, State> {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { context } = this.props
     this.cleanups.push(context.watch('localUsers', localUsers => this.setState({ localUsers })))
 
@@ -50,11 +50,11 @@ export default class UserList extends Component<Props, State> {
       .catch(showError)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.cleanups.forEach(cleanup => cleanup())
   }
 
-  render () {
+  render() {
     const { currentUsername } = this.props
     const { localUsers, mostRecentUsernames } = this.state
 
@@ -81,7 +81,7 @@ export default class UserList extends Component<Props, State> {
             </TouchableHighlight>
             <TouchableHighlight style={styles.userList.icon} underlayColor={styles.underlay.color} onPress={this.handlePressDeleteLocalAccount(username)}>
               <View /* Hack, do not remove */>
-                <Icon size={20} name={'close'} type={Constants.MATERIAL_ICONS} style={{}} />
+                <Icon size={20} name="close" type={Constants.MATERIAL_ICONS} style={{}} />
               </View>
             </TouchableHighlight>
           </View>
@@ -89,12 +89,15 @@ export default class UserList extends Component<Props, State> {
       </ScrollView>
     )
   }
+
   handlePressUserSelect = (username: string) => () => {
     return this.props.logout(username)
   }
+
   handleDeleteLocalAccount = (username: string) => () => {
     return this.props.deleteLocalAccount(username)
   }
+
   handlePressDeleteLocalAccount = (username: string) => () => {
     return Alert.alert(s.strings.delete_account_header, sprintf(s.strings.delete_username_account, username), [
       { text: s.strings.no, style: 'cancel' },

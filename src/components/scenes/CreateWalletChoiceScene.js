@@ -29,24 +29,24 @@ export class CreateWalletChoiceComponent extends PureComponent<CreateWalletChoic
     Actions[Constants.CREATE_WALLET_IMPORT]({ selectedWalletType })
   }
 
-  render () {
+  render() {
     return (
       <SafeAreaView>
         <View style={styles.scene}>
           <Gradient style={styles.gradient} />
           <ScrollView>
             <View style={styles.view}>
-              <Image source={WalletIcon} style={styles.currencyLogo} resizeMode={'cover'} />
+              <Image source={WalletIcon} style={styles.currencyLogo} resizeMode="cover" />
               <View style={styles.createWalletPromptArea}>
                 <Text style={styles.instructionalText}>{s.strings.create_wallet_choice_instructions}</Text>
               </View>
               <View style={styles.buttons}>
-                <PrimaryButton style={[styles.next]} onPress={this.onSelectNew}>
+                <PrimaryButton style={styles.next} onPress={this.onSelectNew}>
                   <PrimaryButton.Text>{s.strings.create_wallet_choice_new_button}</PrimaryButton.Text>
                 </PrimaryButton>
               </View>
               <View style={styles.buttons}>
-                <SecondaryButton style={[styles.next]} onPress={this.onSelectRestore}>
+                <SecondaryButton style={styles.next} onPress={this.onSelectRestore}>
                   <SecondaryButton.Text>{s.strings.create_wallet_import_title}</SecondaryButton.Text>
                 </SecondaryButton>
               </View>

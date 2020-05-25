@@ -120,7 +120,7 @@ export const selectWalletFromModal = (walletId: string, currencyCode: string) =>
   dispatch(refreshReceiveAddressRequest(walletId))
 }
 
-function dispatchUpsertWallets (dispatch, wallets: Array<EdgeCurrencyWallet>) {
+function dispatchUpsertWallets(dispatch, wallets: Array<EdgeCurrencyWallet>) {
   global.pcount('dispatchUpsertWallets')
   dispatch(upsertWallets(wallets))
 }
@@ -353,7 +353,7 @@ export const editCustomToken = (
   }
 }
 
-export async function deleteCustomTokenAsync (walletId: string, currencyCode: string, getState: GetState) {
+export async function deleteCustomTokenAsync(walletId: string, currencyCode: string, getState: GetState) {
   const state = getState()
   const { account } = state.core
   const { currencyWallets = {} } = account

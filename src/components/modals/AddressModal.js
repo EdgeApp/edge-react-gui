@@ -2,7 +2,7 @@
 
 import { FormField, MaterialInputStyle, TertiaryButton } from 'edge-components'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import {
   ActivityIndicator,
   Clipboard,
@@ -73,7 +73,7 @@ type Props = StateProps & OwnProps & DispatchProps
 class AddressModalConnected extends Component<Props, State> {
   fioCheckQueue: number = 0
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.fioCheckQueue = 0
     this.state = {
@@ -87,12 +87,12 @@ class AddressModalConnected extends Component<Props, State> {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this._setClipboard(this.props)
     this.getFioAddresses()
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     if (this.props.useUserFioAddressesOnly && prevProps.userFioAddresses !== this.props.userFioAddresses) {
       this.filterFioAddresses(this.state.uri)
     }
@@ -218,7 +218,7 @@ class AddressModalConnected extends Component<Props, State> {
     }
   }
 
-  checkFioPubAddressQueue (uri: string) {
+  checkFioPubAddressQueue(uri: string) {
     this.setStatusLabel(s.strings.resolving)
     this.fioCheckQueue++
     setTimeout(async () => {
@@ -241,7 +241,7 @@ class AddressModalConnected extends Component<Props, State> {
     }, 1000)
   }
 
-  async checkIfFioAddress (uri: string) {
+  async checkIfFioAddress(uri: string) {
     this.setState({ fieldError: '' })
 
     if (await this.isFioAddressValid(uri)) {
@@ -290,7 +290,7 @@ class AddressModalConnected extends Component<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={() => this.onPressFioAddress(item)}>
         <View style={styles.tileContainer}>
-          <Image source={addressType} style={styles.fioAddressAvatarContainer} resizeMode={'cover'} />
+          <Image source={addressType} style={styles.fioAddressAvatarContainer} resizeMode="cover" />
           <Text style={styles.fioAddressText}>{item}</Text>
         </View>
       </TouchableWithoutFeedback>
@@ -303,16 +303,17 @@ class AddressModalConnected extends Component<Props, State> {
     if (fieldError) return
     this.props.bridge.resolve(submitData)
   }
+
   handleClose = () => this.props.bridge.resolve(null)
   keyExtractor = (item: string, index: number) => index.toString()
-  render () {
+  render() {
     const copyMessage = this.state.clipboard ? sprintf(s.strings.string_paste_address, this.state.clipboard) : null
     const { uri, statusLabel, fieldError, filteredFioAddresses } = this.state
     const { title, subtitle, showPasteButton, userFioAddressesLoading } = this.props
     return (
       <AirshipModal bridge={this.props.bridge} onCancel={this.handleClose}>
         {gap => (
-          <Fragment>
+          <>
             <IconCircle>
               <FontAwesomeIcon name={MODAL_ICON} size={iconStyles.size} color={iconStyles.color} />
             </IconCircle>
@@ -323,7 +324,7 @@ class AddressModalConnected extends Component<Props, State> {
               </View>
               {showPasteButton && copyMessage && (
                 <View style={styles.tileContainerButtons}>
-                  <TertiaryButton ellipsizeMode={'middle'} onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
+                  <TertiaryButton ellipsizeMode="middle" onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
                     <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
                   </TertiaryButton>
                 </View>
@@ -369,7 +370,7 @@ class AddressModalConnected extends Component<Props, State> {
                 </View>
               )}
             </View>
-          </Fragment>
+          </>
         )}
       </AirshipModal>
     )

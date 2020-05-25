@@ -31,7 +31,4 @@ const mapStateToProps = (state: State) => {
   return out
 }
 
-export const FioRequestListConnector = connect(
-  mapStateToProps,
-  {}
-)(FioRequestList)
+export const FioRequestListConnector = connect(mapStateToProps, {})(FioRequestList)

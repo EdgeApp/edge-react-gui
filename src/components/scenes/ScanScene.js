@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { ActivityIndicator, Text, TouchableHighlight, View } from 'react-native'
 import OpenAppSettings from 'react-native-app-settings'
 import { RNCamera } from 'react-native-camera'
@@ -44,14 +44,14 @@ const ADDRESS_TEXT = s.strings.fragment_send_address
 const FLASH_TEXT = s.strings.fragment_send_flash
 
 export class Scan extends Component<Props> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  render () {
+  render() {
     return (
-      <Fragment>
+      <>
         <SceneWrapper background="header" hasTabs={false}>
           {this.renderCameraArea()}
           <View style={styles.overlayButtonAreaWrap}>
@@ -78,7 +78,7 @@ export class Scan extends Component<Props> {
           </View>
         </SceneWrapper>
         <SecondaryModal />
-      </Fragment>
+      </>
     )
   }
 

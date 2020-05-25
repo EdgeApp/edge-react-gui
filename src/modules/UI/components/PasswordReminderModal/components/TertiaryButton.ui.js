@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import type { Node } from 'react-native'
-import { default as RN, TouchableHighlight, View } from 'react-native'
+import { Text as NativeText, TouchableHighlight, View } from 'react-native'
 
 import { rawStyles, styles } from '../../Buttons/style.js'
 
@@ -14,7 +14,7 @@ export type TertiaryButtonProps = {
 export type TertiaryButtonState = {}
 export class TertiaryButton extends Component<TertiaryButtonProps, TertiaryButtonState> {
   static Text: Node
-  render () {
+  render() {
     return (
       <TouchableHighlight
         onPress={this.props.onPress}
@@ -34,7 +34,7 @@ export type TertiaryButtonTextProps = {
 export type TertiaryButtonTextState = {}
 
 TertiaryButton.Text = class Text extends Component<TertiaryButtonTextProps, TertiaryButtonTextState> {
-  render () {
-    return <RN.Text style={[styles.buttonText, styles.tertiaryButtonText, this.props.style]}>{this.props.children}</RN.Text>
+  render() {
+    return <NativeText style={[styles.buttonText, styles.tertiaryButtonText, this.props.style]}>{this.props.children}</NativeText>
   }
 }

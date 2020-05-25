@@ -47,11 +47,11 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     loading: false
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.setBalance()
   }
 
-  toggleLoading (loading: boolean = false) {
+  toggleLoading(loading: boolean = false) {
     this.setState({ loading })
   }
 
@@ -115,7 +115,7 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ registerSuccess: true }))
   }
 
-  render () {
+  render() {
     const { fioAddressName, fee } = this.props
     const { balance, loading } = this.state
 

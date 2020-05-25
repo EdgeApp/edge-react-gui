@@ -47,7 +47,7 @@ type State = {
 let firstRun = true
 
 class LoginSceneComponent extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
 
     this.state = {
@@ -58,11 +58,11 @@ class LoginSceneComponent extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  getSkipUpdate () {
+  getSkipUpdate() {
     return this.props.disklet.getText('ignoreUpdate.json').catch(() => '')
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     const { YOLO_USERNAME, YOLO_PASSWORD } = ENV
     if (YOLO_USERNAME != null && YOLO_PASSWORD != null && firstRun) {
       const { context, initializeAccount } = this.props
@@ -101,7 +101,7 @@ class LoginSceneComponent extends Component<Props, State> {
     }
   }
 
-  componentDidUpdate (oldProps: Props) {
+  componentDidUpdate(oldProps: Props) {
     const { account, pendingDeepLink } = this.props
 
     // Did we get a new recovery link?
@@ -116,7 +116,7 @@ class LoginSceneComponent extends Component<Props, State> {
     }
   }
 
-  onClickHelp () {
+  onClickHelp() {
     Keyboard.dismiss()
     showHelpModal()
   }
@@ -127,11 +127,11 @@ class LoginSceneComponent extends Component<Props, State> {
     if (account != null) this.props.initializeAccount(account, touchIdInfo)
   }
 
-  render () {
+  render() {
     const { counter, passwordRecoveryKey } = this.state
 
     return this.props.account.username == null ? (
-      <View style={styles.container} testID={'edge: login-scene'}>
+      <View style={styles.container} testID="edge: login-scene">
         <LoginScreen
           username={this.props.username}
           accountOptions={null}
@@ -172,16 +172,16 @@ export const LoginScene = connect(
   }),
 
   (dispatch: Dispatch): DispatchProps => ({
-    deepLinkHandled () {
+    deepLinkHandled() {
       dispatch({ type: 'DEEP_LINK_HANDLED' })
     },
-    initializeAccount (account, touchIdInfo) {
+    initializeAccount(account, touchIdInfo) {
       dispatch(initializeAccount(account, touchIdInfo))
     },
-    logout () {
+    logout() {
       dispatch(logoutRequest())
     },
-    showSendLogsModal () {
+    showSendLogsModal() {
       dispatch(showSendLogsModal())
     }
   })

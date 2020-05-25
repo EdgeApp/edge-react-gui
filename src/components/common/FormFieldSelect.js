@@ -22,7 +22,7 @@ class FormFieldSelect extends Component<FormFieldSelectProps> {
     label: ''
   }
 
-  render () {
+  render() {
     const { container, baseColor, textColor } = this.props.style
     const { data } = this.props
     return (

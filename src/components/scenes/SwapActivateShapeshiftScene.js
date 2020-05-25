@@ -29,7 +29,7 @@ class SwapActivateShapeshiftComponent extends Component<Props> {
     }
   }
 
-  render () {
+  render() {
     return (
       <SceneWrapper background="body" hasTabs={false}>
         <WebView
@@ -39,9 +39,7 @@ class SwapActivateShapeshiftComponent extends Component<Props> {
           }}
           incognito
           onNavigationStateChange={this.onNavigate}
-          userAgent={
-            'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36'
-          }
+          userAgent="Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36"
         />
       </SceneWrapper>
     )
@@ -51,7 +49,7 @@ class SwapActivateShapeshiftComponent extends Component<Props> {
 export const SwapActivateShapeshiftScene = connect(
   (state: ReduxState) => ({}),
   (dispatch: Dispatch) => ({
-    activateShapeShift (oauthCode: string) {
+    activateShapeShift(oauthCode: string) {
       return dispatch(activateShapeShift(oauthCode))
     }
   })

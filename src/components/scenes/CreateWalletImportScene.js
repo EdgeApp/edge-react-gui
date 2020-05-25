@@ -36,7 +36,7 @@ type State = {
 }
 
 class CreateWalletImportComponent extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       input: '',
@@ -74,7 +74,7 @@ class CreateWalletImportComponent extends Component<Props, State> {
     this.setState({ input })
   }
 
-  render () {
+  render() {
     const { error, isProcessing, input } = this.state
     const { selectedWalletType } = this.props
     const { currencyCode } = selectedWalletType
@@ -91,21 +91,21 @@ class CreateWalletImportComponent extends Component<Props, State> {
               <Text style={styles.instructionalText}>{instructionSyntax}</Text>
             </View>
             <FormField
-              style={[{ flex: 1, height: 150 }]}
+              style={{ flex: 1, height: 150 }}
               autoFocus
-              clearButtonMode={'while-editing'}
+              clearButtonMode="while-editing"
               autoCorrect={false}
               onChangeText={this.onChangeText}
               label={labelKeySyntax}
               value={input}
-              returnKeyType={'next'}
+              returnKeyType="next"
               onSubmitEditing={this.onNext}
               numberOfLines={5}
-              multiline={true}
+              multiline
               error={error}
             />
             <View style={styles.buttons}>
-              <PrimaryButton style={[styles.next]} onPress={this.onNext} disabled={isProcessing}>
+              <PrimaryButton style={styles.next} onPress={this.onNext} disabled={isProcessing}>
                 {isProcessing ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>}
               </PrimaryButton>
             </View>

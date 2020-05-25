@@ -13,7 +13,7 @@ export type Props = {
   border?: StyleSheet.Styles
 }
 export class ShareButton extends PureComponent<Props> {
-  render () {
+  render() {
     const { displayName, onPress, style, border } = this.props
     return (
       <TouchableHighlight style={[styles.shareButton, style]} underlayColor={styleRaw.underlay.color} onPress={onPress}>

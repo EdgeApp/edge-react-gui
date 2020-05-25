@@ -1,7 +1,7 @@
 // @flow
 
 import { FormField, MaterialInputStyle } from 'edge-components'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { FlatList, Image, TouchableHighlight, View } from 'react-native'
 
 import fioAddressListIcon from '../../../assets/images/list_fioAddress.png'
@@ -28,7 +28,7 @@ type State = {
 }
 
 export class SelectModal extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       input: ''
@@ -67,11 +67,11 @@ export class SelectModal extends Component<Props, State> {
         <TouchableHighlight style={styles.touchable} onPress={() => this.selectItem(value)} underlayColor={styles.underlayColor}>
           <View style={styles.rowContainerTop}>
             <View style={styles.containerLeft}>
-              <Image style={styles.imageContainer} source={fioAddressListIcon} resizeMode={'contain'} />
+              <Image style={styles.imageContainer} source={fioAddressListIcon} resizeMode="contain" />
             </View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsRow}>
-                <T style={[styles.walletDetailsRowName]}>{label}</T>
+                <T style={styles.walletDetailsRowName}>{label}</T>
               </View>
             </View>
           </View>
@@ -83,18 +83,18 @@ export class SelectModal extends Component<Props, State> {
 
   keyExtractor = (item: Item, index: number) => index.toString()
   onSearchFilterChange = (input: string) => this.setState({ input })
-  render () {
+  render() {
     const { bridge, headerTitle } = this.props
     const { input } = this.state
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve('')}>
         {gap => (
-          <Fragment>
+          <>
             <View style={{ flex: 1 }}>
               <View style={{ marginHorizontal: scale(15), marginBottom: scale(13) }}>
                 <FormField
                   autoFocus
-                  keyboardType={'default'}
+                  keyboardType="default"
                   label={headerTitle}
                   onChangeText={this.onSearchFilterChange}
                   style={MaterialInputStyle}
@@ -111,7 +111,7 @@ export class SelectModal extends Component<Props, State> {
                 renderItem={this.renderItem}
               />
             </View>
-          </Fragment>
+          </>
         )}
       </AirshipModal>
     )

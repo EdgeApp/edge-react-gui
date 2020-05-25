@@ -9,7 +9,7 @@ export const LoadingScene = () => {
   return (
     <SceneWrapper hasHeader={false} hasTabs={false}>
       <View style={styles.container}>
-        <ActivityIndicator size={'large'} />
+        <ActivityIndicator size="large" />
       </View>
     </SceneWrapper>
   )

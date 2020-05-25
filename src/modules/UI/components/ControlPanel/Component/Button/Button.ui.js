@@ -11,7 +11,7 @@ export type TextProps = {
   style?: StyleSheet.style
 }
 export class Text extends Component<TextProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
 
     return (
@@ -27,7 +27,7 @@ export type RowProps = {
   style?: StyleSheet.style
 }
 export class Row extends Component<RowProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
 
     return (
@@ -43,7 +43,7 @@ export type ItemProps = {
   style?: StyleSheet.style
 }
 export class Item extends Component<ItemProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
 
     return (
@@ -59,7 +59,7 @@ export type LeftProps = {
   style?: StyleSheet.style
 }
 export class Left extends Component<LeftProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
 
     return (
@@ -75,7 +75,7 @@ export type CenterProps = {
   style?: StyleSheet.style
 }
 export class Center extends Component<CenterProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
 
     return (
@@ -91,7 +91,7 @@ export type RightProps = {
   style?: StyleSheet.style
 }
 export class Right extends Component<RightProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
 
     return (
@@ -116,7 +116,7 @@ export class Button extends Component<ButtonProps> {
   static Right = Right
   static Text = Text
 
-  render () {
+  render() {
     const { children, style, onPress, underlayColor = rawStyles.underlay.color, ...props } = this.props
 
     return (

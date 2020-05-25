@@ -26,7 +26,7 @@ type State = {
 }
 
 export class CreateWalletName extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     let walletName = ''
     // XXX Hack for Ripple
@@ -67,7 +67,7 @@ export class CreateWalletName extends Component<Props, State> {
     this.setState({ walletName })
   }
 
-  render () {
+  render() {
     return (
       <SafeAreaView>
         <View style={styles.scene}>
@@ -80,11 +80,11 @@ export class CreateWalletName extends Component<Props, State> {
               onNext={this.onNext}
             />
             <View style={styles.buttons}>
-              <SecondaryButton style={[styles.back]} onPress={this.onBack}>
+              <SecondaryButton style={styles.back} onPress={this.onBack}>
                 <SecondaryButton.Text>{s.strings.title_back}</SecondaryButton.Text>
               </SecondaryButton>
 
-              <PrimaryButton style={[styles.next]} onPress={this.onNext}>
+              <PrimaryButton style={styles.next} onPress={this.onNext}>
                 <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
               </PrimaryButton>
             </View>
@@ -105,7 +105,7 @@ export type WalletNameInputProps = {
 }
 
 class WalletNameInput extends Component<WalletNameInputProps> {
-  render () {
+  render() {
     const MaterialInputOnWhiteStyle = {
       ...MaterialInputOnWhite,
       container: {
@@ -118,13 +118,13 @@ class WalletNameInput extends Component<WalletNameInputProps> {
         <FormField
           style={MaterialInputOnWhiteStyle}
           autoFocus
-          clearButtonMode={'while-editing'}
+          clearButtonMode="while-editing"
           autoCorrect={false}
           placeholder={this.props.placeholder}
           onChangeText={this.props.onChangeText}
           label={s.strings.fragment_wallets_addwallet_name_hint}
           value={this.props.value}
-          returnKeyType={'next'}
+          returnKeyType="next"
           onSubmitEditing={this.props.onNext}
         />
       </View>

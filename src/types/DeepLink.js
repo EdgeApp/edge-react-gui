@@ -88,7 +88,7 @@ export type DeepLink =
  * Parse a link into the app, identifying special
  * features that Edge knows how to handle.
  */
-export function parseDeepLink (uri: string): DeepLink {
+export function parseDeepLink(uri: string): DeepLink {
   // Normalize some legacy cases:
   for (const prefix of prefixes) {
     const [from, to] = prefix
@@ -122,7 +122,7 @@ export function parseDeepLink (uri: string): DeepLink {
 /**
  * Parse an `edge://` link of some kind.
  */
-function parseEdgeProtocol (url: URL): DeepLink {
+function parseEdgeProtocol(url: URL): DeepLink {
   const [, ...pathParts] = url.pathname.split('/')
 
   switch (url.host) {
@@ -175,7 +175,7 @@ function parseEdgeProtocol (url: URL): DeepLink {
   throw new SyntaxError('Unknown deep link format')
 }
 
-function parseDownloadLink (url: URL): PromotionLink {
+function parseDownloadLink(url: URL): PromotionLink {
   if (url.query.af != null) {
     return { type: 'promotion', installerId: url.query.af }
   }
@@ -188,7 +188,7 @@ function parseDownloadLink (url: URL): PromotionLink {
  * `edge://x-callback-url/request-litecoin-address` or
  * `litecoin-ret://x-callback-url/request-address`
  */
-function parseReturnAddress (url: URL, currencyName: string): DeepLink {
+function parseReturnAddress(url: URL, currencyName: string): DeepLink {
   const sourceName = url.query['x-source']
   const successUri = url.query['x-success']
   return { type: 'returnAddress', currencyName, sourceName, successUri }

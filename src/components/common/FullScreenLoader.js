@@ -10,7 +10,7 @@ type Props = {
 }
 
 class FullScreenLoader extends Component<Props> {
-  render () {
+  render() {
     const { size, indicatorStyles } = this.props
     return (
       <View style={styles.loadingContainer}>

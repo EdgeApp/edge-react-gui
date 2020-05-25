@@ -48,7 +48,7 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
     })
   }
 
-  render () {
+  render() {
     const osPrefix = Platform.OS === 'ios' ? 'ios-' : 'md-'
     let hasXpubExplorerValue = false
     if (this.props.xPubExplorer) {

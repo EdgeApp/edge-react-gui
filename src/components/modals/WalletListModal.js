@@ -2,7 +2,7 @@
 
 import { FormField, MaterialInputStyle } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { FlatList, View } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -62,7 +62,7 @@ type State = {
 type Props = StateProps & OwnProps
 
 class WalletListModalConnected extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       input: '',
@@ -70,7 +70,7 @@ class WalletListModalConnected extends Component<Props, State> {
     }
   }
 
-  static getDerivedStateFromProps (props: Props) {
+  static getDerivedStateFromProps(props: Props) {
     const { activeWalletIds, wallets, excludeWalletIds, showCreateWallet, account } = props
 
     // Uppercase currency codes
@@ -216,8 +216,10 @@ class WalletListModalConnected extends Component<Props, State> {
   selectWallet = (wallet: GuiWallet) => this.props.bridge.resolve({ walletToSelect: { walletId: wallet.id, currencyCode: wallet.currencyCode } })
   selectTokenWallet = (tokenSelectObject: TokenSelectObject) =>
     this.props.bridge.resolve({ walletToSelect: { walletId: tokenSelectObject.id, currencyCode: tokenSelectObject.currencyCode } })
+
   createWallet = (createWalletCurrency: GuiWalletType) =>
     this.props.bridge.resolve({ walletToCreate: { walletType: createWalletCurrency.value, currencyCode: createWalletCurrency.currencyCode } })
+
   renderWalletItem = ({ item }: FlatListItem<Record>) => {
     const { showCreateWallet } = this.props
     const { allowedCurrencyCodes, excludeCurrencyCodes } = this.state
@@ -249,18 +251,18 @@ class WalletListModalConnected extends Component<Props, State> {
 
   keyExtractor = (item: Record, index: number) => index.toString()
   onSearchFilterChange = (input: string) => this.setState({ input })
-  render () {
+  render() {
     const { bridge, headerTitle } = this.props
     const { input } = this.state
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve({})}>
         {gap => (
-          <Fragment>
+          <>
             <View style={{ flex: 1 }}>
               <View style={{ marginHorizontal: scale(15), marginBottom: scale(13) }}>
                 <FormField
                   autoFocus
-                  keyboardType={'default'}
+                  keyboardType="default"
                   label={headerTitle}
                   onChangeText={this.onSearchFilterChange}
                   style={MaterialInputStyle}
@@ -277,24 +279,22 @@ class WalletListModalConnected extends Component<Props, State> {
                 renderItem={this.renderWalletItem}
               />
             </View>
-          </Fragment>
+          </>
         )}
       </AirshipModal>
     )
   }
 }
 
-const WalletListModal = connect(
-  (state: StateType): StateProps => {
-    const wallets = state.ui.wallets.byId
-    return {
-      wallets,
-      activeWalletIds: global.isFioDisabled
-        ? getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
-        : getActiveWalletIds(state),
-      mostRecentWallets: state.ui.settings.mostRecentWallets,
-      account: state.core.account
-    }
+const WalletListModal = connect((state: StateType): StateProps => {
+  const wallets = state.ui.wallets.byId
+  return {
+    wallets,
+    activeWalletIds: global.isFioDisabled
+      ? getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
+      : getActiveWalletIds(state),
+    mostRecentWallets: state.ui.settings.mostRecentWallets,
+    account: state.core.account
   }
-)(WalletListModalConnected)
+})(WalletListModalConnected)
 export { WalletListModal }

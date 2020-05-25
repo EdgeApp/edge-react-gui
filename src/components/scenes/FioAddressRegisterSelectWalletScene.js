@@ -43,7 +43,7 @@ export type DispatchProps = {
 type Props = NavigationProps & StateProps & DispatchProps
 
 export class FioAddressRegisterSelectWalletScene extends Component<Props> {
-  componentDidMount (): void {
+  componentDidMount(): void {
     const {
       fioAddress,
       selectedWallet: { wallet }
@@ -118,7 +118,7 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
     return (
       <View style={styles.selectPaymentLower}>
         <View style={styles.buttons}>
-          <PrimaryButton disabled={isSelectWalletDisabled} style={[styles.next]} onPress={this.onPressSelect}>
+          <PrimaryButton disabled={isSelectWalletDisabled} style={styles.next} onPress={this.onPressSelect}>
             {isSelectWalletDisabled || loading ? (
               <ActivityIndicator />
             ) : (
@@ -140,7 +140,7 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
     )
   }
 
-  render () {
+  render() {
     const { activationCost, loading } = this.props
     const detailsText = sprintf(s.strings.fio_address_wallet_selection_text, loading ? '-' : activationCost)
     return (
@@ -149,7 +149,7 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
           <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
-              <Image source={fioAddressIcon} style={fioAddressStyles.image} resizeMode={'cover'} />
+              <Image source={fioAddressIcon} style={fioAddressStyles.image} resizeMode="cover" />
               <View style={styles.createWalletPromptArea}>
                 <T style={styles.instructionalText}>{detailsText}</T>
               </View>

@@ -81,7 +81,7 @@ class CryptoExchangeComponent extends Component<Props, State> {
   fromAmountDisplay: string
   toAmountNative: string
   toAmountDisplay: string
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     const newState: State = {
       whichWallet: 'from',
@@ -94,7 +94,7 @@ class CryptoExchangeComponent extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (this.state.forceUpdateGuiCounter !== nextProps.forceUpdateGuiCounter) {
       this.setState({
         fromExchangeAmount: nextProps.fromExchangeAmount,
@@ -114,7 +114,7 @@ class CryptoExchangeComponent extends Component<Props, State> {
     }
   }
 
-  render () {
+  render() {
     let fromSecondaryInfo: GuiCurrencyInfo
     if (this.props.fromWallet) {
       fromSecondaryInfo = {
@@ -192,6 +192,7 @@ class CryptoExchangeComponent extends Component<Props, State> {
       </SceneWrapper>
     )
   }
+
   getQuote = () => {
     const data: SetNativeAmountInfo = {
       whichWallet: this.state.whichWalletFocus,
@@ -204,6 +205,7 @@ class CryptoExchangeComponent extends Component<Props, State> {
     }
     Alert.alert(s.strings.no_exchange_amount, s.strings.select_exchange_amount)
   }
+
   renderButton = () => {
     if (this.props.calculatingMax) {
       return (
@@ -236,12 +238,14 @@ class CryptoExchangeComponent extends Component<Props, State> {
       whichWallet: 'to'
     })
   }
+
   focusFromWallet = () => {
     this.setState({
       whichWallet: 'from',
       whichWalletFocus: 'from'
     })
   }
+
   focusToWallet = () => {
     this.setState({
       whichWallet: 'to',
@@ -351,17 +355,17 @@ export const CryptoExchangeScene = connect(
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    getQuoteForTransaction (fromWalletNativeAmount: SetNativeAmountInfo) {
+    getQuoteForTransaction(fromWalletNativeAmount: SetNativeAmountInfo) {
       dispatch(getQuoteForTransaction(fromWalletNativeAmount))
     },
-    onSelectWallet (walletId: string, currencyCode: string) {
+    onSelectWallet(walletId: string, currencyCode: string) {
       dispatch(selectWalletForExchange(walletId, currencyCode))
       dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
     },
-    openModal (data: 'from' | 'to') {
+    openModal(data: 'from' | 'to') {
       dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data })
     },
-    createCurrencyWallet (walletType: string, currencyCode: string, fiat: string) {
+    createCurrencyWallet(walletType: string, currencyCode: string, fiat: string) {
       const walletName = DEFAULT_STARTER_WALLET_NAMES[currencyCode]
       dispatch(createCurrencyWalletAndAddToSwap(walletName, walletType, fiat))
     }

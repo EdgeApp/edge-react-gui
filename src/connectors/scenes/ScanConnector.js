@@ -25,7 +25,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   selectFromWalletForExchange: (walletId, currencyCode) => dispatch(selectWalletForExchange(walletId, currencyCode, 'from'))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Scan)
+export default connect(mapStateToProps, mapDispatchToProps)(Scan)

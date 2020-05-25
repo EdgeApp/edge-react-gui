@@ -59,7 +59,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     logEvent('SwapQuote')
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     const { swapInfo } = this.props
     if (!this.calledApprove) swapInfo.quote.close()
   }
@@ -73,10 +73,11 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
   renderSlider = () => {
     const { pending } = this.props
     if (pending) {
-      return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'small'} />
+      return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="small" />
     }
     return <Slider onSlidingComplete={this.doShift} sliderDisabled={pending} parentStyle={styles.slideContainer} />
   }
+
   renderTimer = () => {
     const { swapInfo, timeExpired } = this.props
     const { expirationDate } = swapInfo.quote
@@ -85,7 +86,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     return <CircleTimer style={styles.timerContainer} timeExpired={() => timeExpired(swapInfo)} expiration={expirationDate} />
   }
 
-  async checkChangellyKYC () {
+  async checkChangellyKYC() {
     const { account, swapInfo, timeExpired } = this.props
     const result = await swapVerifyTerms(account.swapConfig.changelly, [
       {
@@ -104,7 +105,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     if (!result) timeExpired(swapInfo)
   }
 
-  async checkSwitchainKYC () {
+  async checkSwitchainKYC() {
     const { account, swapInfo, timeExpired } = this.props
     const result = await swapVerifyTerms(account.swapConfig.switchain, [
       {
@@ -123,7 +124,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     if (!result) timeExpired(swapInfo)
   }
 
-  async checkChangeNowKYC () {
+  async checkChangeNowKYC() {
     const { account, swapInfo, timeExpired } = this.props
     const result = await swapVerifyTerms(account.swapConfig.changenow, [
       {
@@ -142,7 +143,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     if (!result) timeExpired(swapInfo)
   }
 
-  async checkCoinswitchKYC () {
+  async checkCoinswitchKYC() {
     const { account, swapInfo, timeExpired } = this.props
     const result = await swapVerifyTerms(account.swapConfig.coinswitch, [
       {
@@ -153,7 +154,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     if (!result) timeExpired(swapInfo)
   }
 
-  async checkFoxExchangeKYC () {
+  async checkFoxExchangeKYC() {
     const { account, swapInfo, timeExpired } = this.props
     const result = await swapVerifyTerms(account.swapConfig.foxExchange, [
       {
@@ -164,7 +165,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     if (!result) timeExpired(swapInfo)
   }
 
-  render () {
+  render() {
     const { fromCurrencyIcon, fromDenomination, fromWalletCurrencyName, swapInfo, toCurrencyIcon, toDenomination, toWalletCurrencyName } = this.props
     const { fee, fromDisplayAmount, fromFiat, toDisplayAmount, toFiat } = swapInfo
     const { isEstimate, pluginId } = swapInfo.quote
@@ -174,7 +175,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
       <SceneWrapper>
         <ScrollView>
           <View style={styles.topLogoRow}>
-            <Image source={swapPluginLogos[pluginId]} resizeMode={'contain'} style={styles.logoImage} />
+            <Image source={swapPluginLogos[pluginId]} resizeMode="contain" style={styles.logoImage} />
           </View>
           <View style={styles.centerRow}>
             <ExchangeQuoteComponent

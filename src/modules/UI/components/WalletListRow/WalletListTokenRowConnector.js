@@ -26,7 +26,4 @@ const mapDispatchToProps = (dispatch: Dispatch): WalletListTokenRowDispatchProps
   return {}
 }
 
-export const WalletListTokenRowConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WalletListTokenRowComponent)
+export const WalletListTokenRowConnector = connect(mapStateToProps, mapDispatchToProps)(WalletListTokenRowComponent)

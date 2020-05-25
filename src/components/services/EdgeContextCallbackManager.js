@@ -17,7 +17,7 @@ type Props = StateProps
 class EdgeContextCallbackManager extends React.Component<Props> {
   cleanups: Array<() => mixed> = []
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     const { context } = props
 
@@ -36,18 +36,18 @@ class EdgeContextCallbackManager extends React.Component<Props> {
     )
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     for (const cleanup of this.cleanups) cleanup()
   }
 
-  showError (error: mixed): Promise<void> {
+  showError(error: mixed): Promise<void> {
     // TODO: Run the errors through our translation infrastructure:
     const message = error instanceof Error ? error.message : String(error)
 
     return Airship.show(bridge => <AlertDropdown bridge={bridge} message={message} warning />)
   }
 
-  render () {
+  render() {
     return null
   }
 }

@@ -30,19 +30,19 @@ type State = {
 }
 
 export class PasswordReminderModal extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
 
     this.state = this.initialState()
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (nextProps.loginStatus && !equals(this.props.passwordReminder, nextProps.passwordReminder)) {
       nextProps.setPasswordReminder(nextProps.passwordReminder)
     }
   }
 
-  render () {
+  render() {
     const error = this.props.status === 'INVALID' ? s.strings.password_reminder_invalid : ''
     const isChecking = this.props.status === 'IS_CHECKING'
     return (

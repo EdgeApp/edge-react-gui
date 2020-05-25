@@ -16,7 +16,7 @@ export const iconSize = scale(64)
  * Place this inside a modal (before the content box) to get an
  * offset circle for holding an icon.
  */
-export function IconCircle (props: Props) {
+export function IconCircle(props: Props) {
   return <View style={styles.iconCircle}>{props.children}</View>
 }
 

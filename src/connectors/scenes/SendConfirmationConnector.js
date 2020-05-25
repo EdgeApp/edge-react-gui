@@ -139,7 +139,4 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   getAuthRequiredDispatch: (spendInfo: EdgeSpendInfo): any => dispatch(getAuthRequiredDispatch(spendInfo)) // Type casting any cause dispatch returns a function
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SendConfirmation)
+export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmation)

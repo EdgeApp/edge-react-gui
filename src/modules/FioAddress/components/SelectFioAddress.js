@@ -43,7 +43,7 @@ type LocalState = {
 
 class SelectFioAddress extends Component<Props, LocalState> {
   MaterialInputStyle = {}
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       loading: false,
@@ -51,7 +51,7 @@ class SelectFioAddress extends Component<Props, LocalState> {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.checkForPubAddresses()
 
     const materialStyle = { ...MaterialInput }
@@ -67,7 +67,7 @@ class SelectFioAddress extends Component<Props, LocalState> {
     }
   }
 
-  async checkForPubAddresses () {
+  async checkForPubAddresses() {
     const { fioWallets, selectedWallet, currencyCode } = this.props
     if (selectedWallet && selectedWallet.currencyCode === Constants.FIO_STR) {
       const fioWallet = fioWallets.find((fioWalletItem: EdgeCurrencyWallet) => fioWalletItem.id === selectedWallet.id)
@@ -156,7 +156,7 @@ class SelectFioAddress extends Component<Props, LocalState> {
     this.props.onMemoChange(memo, memoError)
   }
 
-  render () {
+  render() {
     const { selected, memo, memoError, loading: walletLoading } = this.props
     const { fioAddresses, loading } = this.state
     if (!fioAddresses.length) return null
@@ -223,7 +223,4 @@ const mapStateToProps = (state: State): SelectFioAddressProps => {
   }
 }
 
-export const SelectFioAddressConnector = connect(
-  mapStateToProps,
-  {}
-)(SelectFioAddress)
+export const SelectFioAddressConnector = connect(mapStateToProps, {})(SelectFioAddress)

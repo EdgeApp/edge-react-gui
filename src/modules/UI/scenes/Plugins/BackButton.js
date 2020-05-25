@@ -10,15 +10,15 @@ import BackButton from '../../components/Header/Component/BackButton.ui'
 type PluginScene = { goBack(): boolean }
 let currentPlugin: PluginScene | void
 
-export function setPluginScene (plugin: PluginScene | void) {
+export function setPluginScene(plugin: PluginScene | void) {
   currentPlugin = plugin
 }
 
-export function renderPluginBackButton (label: string = s.strings.title_back) {
+export function renderPluginBackButton(label: string = s.strings.title_back) {
   return <BackButton withArrow onPress={handlePluginBack} label={label} />
 }
 
-export function handlePluginBack () {
+export function handlePluginBack() {
   if (currentPlugin == null || !currentPlugin.goBack()) {
     Actions.pop()
   }

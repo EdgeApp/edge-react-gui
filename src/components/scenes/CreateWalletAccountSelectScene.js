@@ -72,7 +72,7 @@ type State = {
 }
 
 export class CreateWalletAccountSelect extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     const { selectedFiat, selectedWalletType, createAccountBasedWallet, accountName } = props
     let createdWallet
@@ -97,7 +97,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     return wallet
   }
 
-  componentDidMount () {
+  componentDidMount() {
     logEvent('ActivateWalletSelect')
   }
 
@@ -158,7 +158,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     return (
       <View style={styles.selectPaymentLower}>
         <View style={styles.buttons}>
-          <PrimaryButton disabled={isSelectWalletDisabled} style={[styles.next]} onPress={this.onPressSelect}>
+          <PrimaryButton disabled={isSelectWalletDisabled} style={styles.next} onPress={this.onPressSelect}>
             {isSelectWalletDisabled ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.create_wallet_account_select_wallet}</PrimaryButton.Text>}
           </PrimaryButton>
         </View>
@@ -228,7 +228,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
           <Text style={styles.accountReviewConfirmText}>{s.strings.create_wallet_account_confirm}</Text>
         </View>
         <View style={styles.confirmButtonArea}>
-          <PrimaryButton disabled={isContinueButtonDisabled} style={[styles.confirmButton]} onPress={this.onPressSubmit}>
+          <PrimaryButton disabled={isContinueButtonDisabled} style={styles.confirmButton} onPress={this.onPressSubmit}>
             {/* we want it disabled with activity indicator if creating wallet, or wallet is created and pending quote */}
             {isContinueButtonDisabled ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.legacy_address_modal_continue}</PrimaryButton.Text>}
           </PrimaryButton>
@@ -237,7 +237,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     )
   }
 
-  render () {
+  render() {
     const { supportedCurrencies, selectedWalletType, activationCost, wallets, walletAccountActivationQuoteError } = this.props
     const { walletId } = this.state
     const instructionSyntax = sprintf(
@@ -269,7 +269,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
           <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
-              <Image source={logos['eos']} style={styles.currencyLogo} resizeMode={'cover'} />
+              <Image source={logos.eos} style={styles.currencyLogo} resizeMode="cover" />
               <View style={styles.createWalletPromptArea}>
                 <Text style={styles.instructionalText}>{!walletId || walletAccountActivationQuoteError ? instructionSyntax : confirmMessageSyntax}</Text>
               </View>

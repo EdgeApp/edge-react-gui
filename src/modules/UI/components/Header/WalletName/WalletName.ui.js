@@ -13,13 +13,13 @@ export type Props = {
 }
 
 class WalletName extends React.Component<Props> {
-  render () {
+  render() {
     const { name, denomination } = this.props
 
     if (name) {
       return (
         <View style={style.headerNameContainer}>
-          <Text style={walletSelectorStyles.text} ellipsizeMode={'middle'} numberOfLines={1}>
+          <Text style={walletSelectorStyles.text} ellipsizeMode="middle" numberOfLines={1}>
             {name}:<B>{denomination}</B>
           </Text>
         </View>
@@ -28,7 +28,7 @@ class WalletName extends React.Component<Props> {
 
     return (
       <View style={style.headerNameContainer}>
-        <Text style={walletSelectorStyles.text} ellipsizeMode={'middle'} numberOfLines={1}>
+        <Text style={walletSelectorStyles.text} ellipsizeMode="middle" numberOfLines={1}>
           {s.strings.loading}
         </Text>
       </View>

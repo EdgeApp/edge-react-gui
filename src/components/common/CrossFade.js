@@ -43,7 +43,7 @@ export class CrossFade extends React.Component<Props, State> {
   // Putting these in state would cause extra re-renders:
   opacities: Opacities
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {}
     this.opacities = {}
@@ -52,7 +52,7 @@ export class CrossFade extends React.Component<Props, State> {
   /**
    * Starts animations on an as-needed basis.
    */
-  componentDidUpdate () {
+  componentDidUpdate() {
     const { activeKey, children, duration = 500 } = this.props
 
     forEachKey(children, key => {
@@ -73,7 +73,7 @@ export class CrossFade extends React.Component<Props, State> {
    * Ensure we have a state row for each child.
    * Shows each child if it is active, or we are already showing it.
    */
-  static getDerivedStateFromProps (props: Props, state: State): State {
+  static getDerivedStateFromProps(props: Props, state: State): State {
     const { activeKey, children } = props
 
     const out: State = {}
@@ -86,7 +86,7 @@ export class CrossFade extends React.Component<Props, State> {
   /**
    * Renders each non-hidden child inside an animated wrapper.
    */
-  render () {
+  render() {
     const { activeKey, children } = this.props
 
     const out: React.Element<any>[] = []
@@ -118,7 +118,7 @@ export class CrossFade extends React.Component<Props, State> {
 /**
  * Iterates over all the React children with `key` properties.
  */
-function forEachKey<Child> (children: React.ChildrenArray<Child>, callback: (key: string, child: Child) => void): void {
+function forEachKey<Child>(children: React.ChildrenArray<Child>, callback: (key: string, child: Child) => void): void {
   React.Children.forEach(children, (child: Child) => {
     if (child != null && child.key != null) {
       callback(String(child.key), child)

@@ -11,7 +11,7 @@ type Props = {
   edgeTransaction: EdgeTransaction
 }
 
-export function TransactionDetailsTitle (props: Props) {
+export function TransactionDetailsTitle(props: Props) {
   if (props.edgeTransaction == null) return null // Should never happen!?
 
   const { date } = props.edgeTransaction

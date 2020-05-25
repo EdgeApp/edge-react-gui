@@ -46,12 +46,12 @@ export type WalletListRowState = {
 }
 
 export class WalletListRowComponent extends Component<WalletListRowProps, WalletListRowState> {
-  constructor (props: WalletListRowProps) {
+  constructor(props: WalletListRowProps) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  render () {
+  render() {
     const { wallet, onSelectWallet, settings, fiatBalance, excludedCurrencyCode } = this.props
     const { currencyCode, name, id, enabledTokens, nativeBalances, metaTokens } = wallet
     const denominations = wallet.allDenominations[currencyCode]
@@ -111,24 +111,24 @@ export class WalletListRowComponent extends Component<WalletListRowProps, Wallet
     return (
       <View style={styles.rowWrapper}>
         <TouchableHighlight
-          style={[styles.rowContainer]}
+          style={styles.rowContainer}
           disabled={disabled}
           underlayColor={stylesRaw.underlay.color}
           onPress={() => onSelectWallet(id, currencyCode)}
         >
           <View style={styles.rowInfo}>
-            <View style={[styles.rowLeft]}>
-              <Text style={[styles.rowNameText]} numberOfLines={1}>
+            <View style={styles.rowLeft}>
+              <Text style={styles.rowNameText} numberOfLines={1}>
                 {name}
               </Text>
             </View>
-            <View style={[styles.rowRight]}>
-              <View style={[styles.rowRightCryptoWrap]}>
-                <Text style={[styles.rowRightCryptoText]}>
+            <View style={styles.rowRight}>
+              <View style={styles.rowRightCryptoWrap}>
+                <Text style={styles.rowRightCryptoText}>
                   {finalCryptoAmount} {cryptoSymbol || ''}
                 </Text>
               </View>
-              <View style={[styles.rowRightFiatWrap]}>
+              <View style={styles.rowRightFiatWrap}>
                 <Text style={styles.rowRightFiatText}>
                   {fiatSymbol} {fiatBalance}
                 </Text>

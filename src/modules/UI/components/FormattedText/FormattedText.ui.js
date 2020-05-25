@@ -8,12 +8,12 @@ import { getObjectDiff } from '../../../../util/utils.js'
 import styles from './style'
 
 export default class FormattedText extends Component {
-  shouldComponentUpdate (nextProps) {
+  shouldComponentUpdate(nextProps) {
     const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
     return !!diffElement
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.style = this.props.isBold ? [styles.boldStyle] : [styles.defaultStyle]
 
@@ -26,14 +26,14 @@ export default class FormattedText extends Component {
     }
   }
 
-  setNativeProps (props) {
-    this.refs['nativeForward'].setNativeProps(props)
+  setNativeProps(props) {
+    this.refs.nativeForward.setNativeProps(props)
   }
 
-  render () {
+  render() {
     const fontSize = this.props.fontSize ? scale(this.props.fontSize) : scale(14)
     return (
-      <Text {...this.props} style={[this.style, { fontSize }, this.props.style]} ref={'nativeForward'} allowFontScaling={false}>
+      <Text {...this.props} style={[this.style, { fontSize }, this.props.style]} ref="nativeForward" allowFontScaling={false}>
         {this.props.children}
       </Text>
     )

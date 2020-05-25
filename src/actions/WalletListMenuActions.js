@@ -23,7 +23,7 @@ import { refreshWallet } from './WalletActions.js'
 
 export type WalletListMenuKey = 'sort' | 'rename' | 'delete' | 'resync' | 'exportWalletTransactions' | 'getSeed' | 'split' | 'manageTokens' | 'viewXPub'
 
-export function walletListMenuAction (walletId: string, option: WalletListMenuKey) {
+export function walletListMenuAction(walletId: string, option: WalletListMenuKey) {
   switch (option) {
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {

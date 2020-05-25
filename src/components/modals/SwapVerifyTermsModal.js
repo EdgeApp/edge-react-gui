@@ -10,7 +10,7 @@ import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Butt
 import { Airship } from '../services/AirshipInstance.js'
 import { type AirshipBridge, AirshipModal, ContentArea, dayText, IconCircle, THEME } from './modalParts.js'
 
-export async function swapVerifyTerms (swapConfig: EdgeSwapConfig, links: Array<{ text: string, uri: string }>): Promise<boolean> {
+export async function swapVerifyTerms(swapConfig: EdgeSwapConfig, links: Array<{ text: string, uri: string }>): Promise<boolean> {
   if (swapConfig.userSettings && swapConfig.userSettings.agreedToTerms) {
     return true
   }
@@ -32,7 +32,7 @@ type Props = {
   links: Array<{ text: string, uri: string }>
 }
 
-function SwapVerifyTermsModal (props: Props) {
+function SwapVerifyTermsModal(props: Props) {
   const { bridge, swapInfo, links } = props
   const { displayName, pluginId } = swapInfo
   const iconSize = THEME.rem(1.75)
@@ -41,7 +41,7 @@ function SwapVerifyTermsModal (props: Props) {
   return (
     <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(false)}>
       <IconCircle>
-        <Image source={swapPluginIcons[pluginId]} resizeMode={'contain'} style={{ height: iconSize, width: iconSize }} />
+        <Image source={swapPluginIcons[pluginId]} resizeMode="contain" style={{ height: iconSize, width: iconSize }} />
       </IconCircle>
 
       <ContentArea padding="wide">

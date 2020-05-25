@@ -60,7 +60,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   }
 })
 
-export const FioPendingRequestConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FioPendingRequestDetailsComponent)
+export const FioPendingRequestConnector = connect(mapStateToProps, mapDispatchToProps)(FioPendingRequestDetailsComponent)

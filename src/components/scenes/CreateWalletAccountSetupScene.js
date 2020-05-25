@@ -54,7 +54,7 @@ type State = {
 }
 
 export class CreateWalletAccountSetup extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       accountHandle: props.accountHandle || ''
@@ -64,7 +64,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     logEvent('ActivateWalletStart')
   }
 
@@ -96,18 +96,19 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
       })
     }
   }
+
   renderButton = () => {
     const { isCheckingHandleAvailability, handleAvailableStatus } = this.props
     return (
       <View style={styles.buttons}>
-        <PrimaryButton style={[styles.next]} onPress={this.onSetup} disabled={isCheckingHandleAvailability || handleAvailableStatus !== 'AVAILABLE'}>
+        <PrimaryButton style={styles.next} onPress={this.onSetup} disabled={isCheckingHandleAvailability || handleAvailableStatus !== 'AVAILABLE'}>
           <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
         </PrimaryButton>
       </View>
     )
   }
 
-  render () {
+  render() {
     const { isCheckingHandleAvailability, handleAvailableStatus } = this.props
     const isHandleAvailable: boolean = handleAvailableStatus === 'AVAILABLE'
     const validityIcon = isHandleAvailable ? validIcon : invalidIcon
@@ -125,8 +126,8 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
       <SafeAreaView>
         <Gradient style={styles.scrollableGradient} />
         <ScrollView>
-          <View style={[styles.scrollableView]}>
-            <Image source={logos['eos']} style={styles.currencyLogo} resizeMode={'cover'} />
+          <View style={styles.scrollableView}>
+            <Image source={logos.eos} style={styles.currencyLogo} resizeMode="cover" />
             <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
               <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, 'EOS')}</Text>
             </View>
@@ -138,12 +139,12 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
               <FormField
                 style={this.modifiedStyle}
                 autoFocus
-                clearButtonMode={'while-editing'}
+                clearButtonMode="while-editing"
                 autoCorrect={false}
                 onChangeText={this.handleChangeHandle}
                 label={s.strings.create_wallet_account_handle}
                 value={this.state.accountHandle}
-                returnKeyType={'next'}
+                returnKeyType="next"
                 onSubmitEditing={this.onSetup}
                 error={chooseHandleErrorMessage}
               />

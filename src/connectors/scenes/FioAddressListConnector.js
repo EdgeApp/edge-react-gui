@@ -37,7 +37,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses())
 })
 
-export const FioAddressListConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FioAddressListScene)
+export const FioAddressListConnector = connect(mapStateToProps, mapDispatchToProps)(FioAddressListScene)

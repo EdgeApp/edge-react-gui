@@ -18,7 +18,4 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   decline: () => Actions.pop()
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LinkedComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(LinkedComponent)

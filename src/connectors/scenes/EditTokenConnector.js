@@ -29,7 +29,4 @@ const mapDispatchToProps = (dispatch: Dispatch): EditTokenDispatchProps => ({
   }
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EditToken)
+export default connect(mapStateToProps, mapDispatchToProps)(EditToken)

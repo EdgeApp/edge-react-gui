@@ -32,7 +32,7 @@ type WebViewCallbacks = {
  * May be called multiple times if the inner HTML reloads.
  * @param {*} debug Set to true to enable logging.
  */
-function makeOuterWebViewBridge<Root> (onRoot: (root: Root) => mixed, debug: boolean = false): WebViewCallbacks {
+function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: boolean = false): WebViewCallbacks {
   let bridge: Bridge | void
   let gatedRoot: Root | void
   let webview: WebView | void
@@ -41,7 +41,7 @@ function makeOuterWebViewBridge<Root> (onRoot: (root: Root) => mixed, debug: boo
   const tryReleasingRoot = () => {
     if (gatedRoot != null && webview != null) {
       onRoot(gatedRoot)
-      gatedRoot = void 0
+      gatedRoot = undefined
     }
   }
 
@@ -62,7 +62,7 @@ function makeOuterWebViewBridge<Root> (onRoot: (root: Root) => mixed, debug: boo
     // of YAOB's message format to determine when the client has restarted.
     if (bridge != null && Array.isArray(message.events) && message.events.find(event => event.localId === 0)) {
       bridge.close(new Error('plugin: The WebView has been unmounted.'))
-      bridge = void 0
+      bridge = undefined
     }
 
     // If we have no bridge, start one:
@@ -137,7 +137,7 @@ class GuiPluginView extends React.Component<Props, State> {
   _promoMessage: string | void
   _webview: WebView | void
 
-  constructor (props) {
+  constructor(props) {
     const { deepPath, deepQuery, dispatch, plugin, state } = props
     super(props)
     setPluginScene(this)
@@ -169,7 +169,7 @@ class GuiPluginView extends React.Component<Props, State> {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.checkPermissions()
       .then(() => {
         const message = this._promoMessage
@@ -178,13 +178,13 @@ class GuiPluginView extends React.Component<Props, State> {
       .catch(showError)
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     const { deepPath, deepQuery, plugin, state } = this.props
     this.updatePromoCode(plugin, state)
     this._edgeProvider._updateState(state, deepPath, deepQuery, this._promoCode)
   }
 
-  updatePromoCode (plugin: GuiPlugin, state: ReduxState) {
+  updatePromoCode(plugin: GuiPlugin, state: ReduxState) {
     const accountPlugins = state.account.referralCache.accountPlugins
     const accountReferral = state.account.accountReferral
     const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
@@ -192,13 +192,13 @@ class GuiPluginView extends React.Component<Props, State> {
     this._promoMessage = activePlugins.promoMessages[plugin.pluginId]
   }
 
-  async checkPermissions () {
+  async checkPermissions() {
     const { plugin } = this.props
     const { permissions = [] } = plugin
     for (const name of permissions) await requestPermission(name)
   }
 
-  goBack (): boolean {
+  goBack(): boolean {
     if (this._webview == null || !this._canGoBack) {
       return false
     }
@@ -221,7 +221,7 @@ class GuiPluginView extends React.Component<Props, State> {
     this._canGoBack = event.canGoBack
   }
 
-  render () {
+  render() {
     const { plugin, deepPath, deepQuery } = this.props
     const { originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = plugin
     const uri = makePluginUri(plugin, {
@@ -242,14 +242,14 @@ class GuiPluginView extends React.Component<Props, State> {
           allowUniversalAccessFromFileURLs
           geolocationEnabled
           injectedJavaScript={javascript}
-          javaScriptEnabled={true}
+          javaScriptEnabled
           onLoadProgress={this.onLoadProgress}
           onNavigationStateChange={this.onNavigationStateChange}
           onMessage={this._callbacks.onMessage}
           originWhitelist={originWhitelist}
           key={`webView${this.state.webViewKey}`}
           ref={this._callbacks.setRef}
-          setWebContentsDebuggingEnabled={true}
+          setWebContentsDebuggingEnabled
           source={{ uri }}
           userAgent={userAgent + ' hasEdgeProvider edge/app.edge.'}
           useWebKit

@@ -77,7 +77,4 @@ const mapDispatchToProps = (dispatch: Dispatch): FioRequestConfirmationDispatchP
   }
 })
 
-export const FioRequestConfirmationConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FioRequestConfirmationComponent)
+export const FioRequestConfirmationConnector = connect(mapStateToProps, mapDispatchToProps)(FioRequestConfirmationComponent)

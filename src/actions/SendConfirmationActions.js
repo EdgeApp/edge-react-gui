@@ -289,7 +289,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
     if (!guiMakeSpendInfo.dismissAlert) {
       Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
         {
-          onPress () {},
+          onPress() {},
           style: 'default',
           text: s.strings.string_ok
         }
@@ -356,7 +356,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
 
     Alert.alert(s.strings.transaction_failure, message, [
       {
-        onPress () {},
+        onPress() {},
         style: 'default',
         text: s.strings.string_ok
       }
@@ -367,7 +367,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
 const errorNames = {
   IncorrectPinError: 'IncorrectPinError'
 }
-export function IncorrectPinError (message: ?string = s.strings.incorrect_pin) {
+export function IncorrectPinError(message: ?string = s.strings.incorrect_pin) {
   const error = new Error(message)
   error.name = errorNames.IncorrectPinError
   return error

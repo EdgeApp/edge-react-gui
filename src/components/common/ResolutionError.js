@@ -57,7 +57,7 @@ export class ResolutionError extends Error {
   method: string
   currencyTicker: string
 
-  constructor (code: string, options: ResolutionErrorOptions = { domain: '' }) {
+  constructor(code: string, options: ResolutionErrorOptions = { domain: '' }) {
     const resolutionErrorHandler: ResolutionErrorHandler = HandlersByCode[code]
     const { domain, method, currencyTicker, recordName } = options
     super(resolutionErrorHandler({ domain, method, currencyTicker, recordName }))

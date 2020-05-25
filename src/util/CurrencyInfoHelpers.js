@@ -8,7 +8,7 @@ import { type GuiWalletType } from '../types/types.js'
 /**
  * Grab all the EdgeCurrencyInfo objects in an account.
  */
-export function getCurrencyInfos (account: EdgeAccount): EdgeCurrencyInfo[] {
+export function getCurrencyInfos(account: EdgeAccount): EdgeCurrencyInfo[] {
   const { currencyConfig = {} } = account
   return Object.keys(currencyConfig).map(pluginId => currencyConfig[pluginId].currencyInfo)
 }
@@ -21,7 +21,7 @@ for (let i = 0; i < WALLET_TYPE_ORDER.length; ++i) {
 /**
  * Sort an array of EdgeCurrencyInfo objects for display to the user.
  */
-export function sortCurrencyInfos (infos: EdgeCurrencyInfo[]): EdgeCurrencyInfo[] {
+export function sortCurrencyInfos(infos: EdgeCurrencyInfo[]): EdgeCurrencyInfo[] {
   return infos.sort((a, b) => {
     // Use the table first:
     const aIndex = walletOrderTable[a.walletType]
@@ -39,7 +39,7 @@ export function sortCurrencyInfos (infos: EdgeCurrencyInfo[]): EdgeCurrencyInfo[
  * The wallet creation scenes use a truncated version of EdgeCurrencyInfo,
  * so make that.
  */
-export function makeGuiWalletType (currencyInfo: EdgeCurrencyInfo): GuiWalletType {
+export function makeGuiWalletType(currencyInfo: EdgeCurrencyInfo): GuiWalletType {
   return {
     label: currencyInfo.displayName,
     value: currencyInfo.walletType,
@@ -52,7 +52,7 @@ export function makeGuiWalletType (currencyInfo: EdgeCurrencyInfo): GuiWalletTyp
 /**
  * Grab a list of wallet types for the wallet creation scenes.
  */
-export function getGuiWalletTypes (account: EdgeAccount): GuiWalletType[] {
+export function getGuiWalletTypes(account: EdgeAccount): GuiWalletType[] {
   const infos = sortCurrencyInfos(getCurrencyInfos(account))
 
   const out: GuiWalletType[] = []
@@ -84,7 +84,7 @@ export function getGuiWalletTypes (account: EdgeAccount): GuiWalletType[] {
 /**
  * Get specific wallet type for the wallet creation scenes. BTC will always result in segwit
  */
-export function getGuiWalletType (account: EdgeAccount, currencyCode: string): GuiWalletType | null {
+export function getGuiWalletType(account: EdgeAccount, currencyCode: string): GuiWalletType | null {
   const infos = getCurrencyInfos(account)
   const currencyCodeFormatted = currencyCode.toUpperCase()
   const currencyInfo = infos.find(info => info.currencyCode === currencyCodeFormatted)

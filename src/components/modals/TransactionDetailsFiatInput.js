@@ -25,7 +25,7 @@ type State = {
 }
 
 export class TransactionDetailsFiatInput extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = { amount: props.amount }
   }
@@ -52,11 +52,11 @@ export class TransactionDetailsFiatInput extends Component<Props, State> {
 
   onChange = (value: string) => {
     const input = this.filter(value)
-    const check = (isNaN(input.replace(',', '.')) && (input !== ',' && input !== '.')) || input === ''
+    const check = (isNaN(input.replace(',', '.')) && input !== ',' && input !== '.') || input === ''
     this.changeAmount(check ? '' : input)
   }
 
-  render () {
+  render() {
     const { bridge, currency } = this.props
     const { amount } = this.state
     return (
@@ -69,7 +69,7 @@ export class TransactionDetailsFiatInput extends Component<Props, State> {
               returnKeyType="done"
               autoCapitalize="none"
               keyboardType="numeric"
-              clearButtonMode={'while-editing'}
+              clearButtonMode="while-editing"
               label={s.strings.transaction_details_fiat_label}
               style={materialFiatInput}
               onFocus={this.onFocus}

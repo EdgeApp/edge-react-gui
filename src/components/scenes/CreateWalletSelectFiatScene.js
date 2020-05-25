@@ -32,7 +32,7 @@ type State = {
 }
 
 class CreateWalletSelectFiatComponent extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       searchTerm: '',
@@ -99,7 +99,7 @@ class CreateWalletSelectFiatComponent extends Component<Props, State> {
 
   handleOnBlur = () => {}
 
-  render () {
+  render() {
     const filteredArray = this.props.supportedFiats.filter(entry => {
       return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
     })
@@ -113,15 +113,15 @@ class CreateWalletSelectFiatComponent extends Component<Props, State> {
               style={styles.picker}
               autoFocus
               containerStyle={{ height: formFieldHeight }}
-              clearButtonMode={'while-editing'}
+              clearButtonMode="while-editing"
               onFocus={this.handleOnFocus}
               onBlur={this.handleOnBlur}
               autoCorrect={false}
-              autoCapitalize={'words'}
+              autoCapitalize="words"
               onChangeText={this.handleSearchTermChange}
               value={this.state.searchTerm}
               label={s.strings.fragment_wallets_addwallet_fiat_hint}
-              returnKeyType={'search'}
+              returnKeyType="search"
             />
             <FlatList
               style={styles.resultList}
@@ -142,15 +142,11 @@ class CreateWalletSelectFiatComponent extends Component<Props, State> {
   renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
     return (
       <View style={[styles.singleCryptoTypeWrap, data.item.value === this.state.selectedFiat && styles.selectedItem]}>
-        <TouchableHighlight
-          style={[styles.singleCryptoType]}
-          onPress={() => this.handleSelectFiatType(data.item)}
-          underlayColor={stylesRaw.underlayColor.color}
-        >
-          <View style={[styles.cryptoTypeInfoWrap]}>
+        <TouchableHighlight style={styles.singleCryptoType} onPress={() => this.handleSelectFiatType(data.item)} underlayColor={stylesRaw.underlayColor.color}>
+          <View style={styles.cryptoTypeInfoWrap}>
             <View style={styles.cryptoTypeLeft}>
-              <View style={[styles.cryptoTypeLeftTextWrap]}>
-                <Text style={[styles.cryptoTypeName]}>{data.item.label}</Text>
+              <View style={styles.cryptoTypeLeftTextWrap}>
+                <Text style={styles.cryptoTypeName}>{data.item.label}</Text>
               </View>
             </View>
           </View>

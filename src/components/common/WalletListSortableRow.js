@@ -35,7 +35,7 @@ type StateProps = {
 type Props = OwnProps & StateProps
 
 class WalletListSortableRowComponent extends Component<Props> {
-  render () {
+  render() {
     const { guiWallet, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
     // $FlowFixMe react-native-sortable-listview sneakily injects this prop:
     const { sortHandlers } = this.props
@@ -56,8 +56,8 @@ class WalletListSortableRowComponent extends Component<Props> {
 
     return (
       <TouchableHighlight style={[styles.rowContainer, styles.sortableWalletListRow]} underlayColor={THEME.COLORS.ROW_PRESSED} {...sortHandlers}>
-        <View style={[styles.rowContent]}>
-          <View style={[styles.rowDragArea]}>
+        <View style={styles.rowContent}>
+          <View style={styles.rowDragArea}>
             <Image source={sort} style={styles.rowDragIcon} />
           </View>
           <View style={styles.rowIconWrap}>
@@ -71,14 +71,14 @@ class WalletListSortableRowComponent extends Component<Props> {
           </View>
           <View style={styles.walletDetailsContainer}>
             <View style={styles.walletDetailsRow}>
-              <T style={[styles.walletDetailsRowCurrency]}>{currencyCode}</T>
-              <T style={[styles.walletDetailsRowValue]}>{finalCryptoAmountString}</T>
+              <T style={styles.walletDetailsRowCurrency}>{currencyCode}</T>
+              <T style={styles.walletDetailsRowValue}>{finalCryptoAmountString}</T>
             </View>
             <View style={styles.walletDetailsRow}>
-              <T style={[styles.walletDetailsRowName]}>{name}</T>
+              <T style={styles.walletDetailsRowName}>{name}</T>
               <View style={styles.walletDetailsFiatBalanceRow}>
-                <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceSymbol}</T>
-                <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+                <T style={styles.walletDetailsRowFiat}>{fiatBalanceSymbol}</T>
+                <T style={styles.walletDetailsRowFiat}>{fiatBalanceString}</T>
               </View>
             </View>
           </View>
@@ -171,11 +171,9 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const WalletListSortableRow = connect(
-  (state: ReduxState, ownProps: OwnProps): StateProps => ({
-    showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
-    settings: state.ui.settings,
-    exchangeRates: state.exchangeRates,
-    walletFiatSymbol: getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode)
-  })
-)(WalletListSortableRowComponent)
+export const WalletListSortableRow = connect((state: ReduxState, ownProps: OwnProps): StateProps => ({
+  showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
+  settings: state.ui.settings,
+  exchangeRates: state.exchangeRates,
+  walletFiatSymbol: getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode)
+}))(WalletListSortableRowComponent)

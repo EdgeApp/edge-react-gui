@@ -25,7 +25,7 @@ type State = {
 }
 
 export class TransactionDetailsPersonInput extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = { personName: props.personName }
   }
@@ -41,7 +41,7 @@ export class TransactionDetailsPersonInput extends Component<Props, State> {
     this.props.bridge.resolve(null)
   }
 
-  render () {
+  render() {
     const { bridge, personStatus, contacts } = this.props
     const { personName } = this.state
     const personStatusString = sprintf(s.strings.transaction_details_person_input, personStatus)

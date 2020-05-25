@@ -17,7 +17,4 @@ export const mapDispatchToProps = (dispatch: Dispatch): ChangePasswordDispatchPr
   onComplete: Actions.pop
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ChangePasswordComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePasswordComponent)

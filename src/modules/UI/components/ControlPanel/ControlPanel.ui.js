@@ -32,7 +32,7 @@ export type Props = {
 }
 
 export default class ControlPanel extends Component<Props> {
-  shouldComponentUpdate (nextProps: Props) {
+  shouldComponentUpdate(nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, {
       primaryDisplayDenomination: true,
       primaryExchangeDenomination: true,
@@ -42,7 +42,7 @@ export default class ControlPanel extends Component<Props> {
     return !!diffElement
   }
 
-  render () {
+  render() {
     const {
       exchangeRate,
       currencyLogo,
@@ -87,7 +87,7 @@ export default class ControlPanel extends Component<Props> {
         <Button onPress={this.toggleUserList} style={styles.toggleButton} underlayColor={styles.underlay.color}>
           <Button.Row>
             <Button.Left>
-              <Image style={styles.iconImage} resizeMode={'contain'} source={accountIcon} />
+              <Image style={styles.iconImage} resizeMode="contain" source={accountIcon} />
             </Button.Left>
 
             <Button.Center>

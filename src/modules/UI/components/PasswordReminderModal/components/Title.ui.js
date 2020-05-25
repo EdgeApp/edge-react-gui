@@ -19,7 +19,7 @@ export type Props = {
 export type State = {}
 
 export class Title extends Component<Props, State> {
-  render () {
+  render() {
     return <Text style={[styles.title, this.props.style]}>{this.props.children}</Text>
   }
 }

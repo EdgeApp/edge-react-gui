@@ -90,7 +90,7 @@ export class Request extends Component<Props, State> {
   amounts: ExchangedFlipInputAmounts
   flipInput: RefObject | null = null
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     const minimumPopupModalState: CurrencyMinimumPopupState = {}
     Object.keys(Constants.SPECIAL_CURRENCY_INFO).forEach(currencyCode => {
@@ -114,7 +114,7 @@ export class Request extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.generateEncodedUri()
     this.props.refreshAllFioAddresses()
   }
@@ -126,7 +126,7 @@ export class Request extends Component<Props, State> {
     this.setState({ minimumPopupModalState })
   }
 
-  shouldComponentUpdate (nextProps: Props, nextState: State) {
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
     let diffElement2: string = ''
     const diffElement = getObjectDiff(this.props, nextProps, {
       primaryCurrencyInfo: true,
@@ -140,7 +140,7 @@ export class Request extends Component<Props, State> {
     return !!diffElement || !!diffElement2
   }
 
-  async generateEncodedUri () {
+  async generateEncodedUri() {
     const { edgeWallet, useLegacyAddress, currencyCode } = this.props
     if (!currencyCode) return
     let publicAddress = this.props.publicAddress
@@ -168,7 +168,7 @@ export class Request extends Component<Props, State> {
     }
   }
 
-  async UNSAFE_componentWillReceiveProps (nextProps: Props) {
+  async UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const { currencyCode } = nextProps
     if (nextProps.loading || currencyCode === null) return
 
@@ -245,9 +245,9 @@ export class Request extends Component<Props, State> {
     this.flipInput = ref && ref.flipInput ? ref.flipInput.current : null
   }
 
-  render () {
+  render() {
     if (this.props.loading) {
-      return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
+      return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" />
     }
 
     const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, currencyInfo, guiWallet } = this.props
@@ -271,12 +271,12 @@ export class Request extends Component<Props, State> {
             primaryCurrencyInfo={primaryCurrencyInfo}
             secondaryCurrencyInfo={secondaryCurrencyInfo}
             exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
-            overridePrimaryExchangeAmount={''}
+            overridePrimaryExchangeAmount=""
             forceUpdateGuiCounter={0}
             onExchangeAmountChanged={this.onExchangeAmountChanged}
             keyboardVisible={false}
             color={THEME.COLORS.WHITE}
-            isFiatOnTop={true}
+            isFiatOnTop
             isFocus={false}
             onNext={this.onNext}
             topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}

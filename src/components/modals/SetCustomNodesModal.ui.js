@@ -30,7 +30,7 @@ export type SetCustomNodesModalState = {
 export type SetCustomNodeModalProps = SetCustomNodesModalOwnProps
 
 export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetCustomNodesModalState> {
-  constructor (props: SetCustomNodeModalProps) {
+  constructor(props: SetCustomNodeModalProps) {
     super(props)
     const { electrumServers } = this.props
     const readableNodesList = electrumServers ? electrumServers.join('\n') : ''
@@ -70,7 +70,7 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
     }
   }
 
-  render () {
+  render() {
     return (
       <InteractiveModal legacy isActive={this.props.isActive}>
         <InteractiveModal.Icon>
@@ -86,7 +86,7 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
               style={styles.customNodesInput}
               value={this.state.readableNodesList}
               onChangeText={this.onChangeText}
-              editable={true}
+              editable
               multiline
               placeholder={this.props.defaultElectrumServer}
               placeholderTextColor={rawStyle.placeholderText.color}

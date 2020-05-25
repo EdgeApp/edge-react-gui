@@ -14,7 +14,8 @@ class ExitButton extends Component<Props> {
   popThis = () => {
     Actions.pop()
   }
-  render () {
+
+  render() {
     return (
       <TouchableOpacity style={styles.sideTextWrap} onPress={this.popThis}>
         <T style={styles.sideText}>{s.strings.string_exit}</T>

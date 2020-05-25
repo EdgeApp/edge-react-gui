@@ -42,18 +42,18 @@ type State = {
 export class LayoutContext extends Component<Props, State> {
   update: *
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = Dimensions.get('window')
     this.update = ({ window }) => this.setState(window)
     Dimensions.addEventListener('change', this.update)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     Dimensions.removeEventListener('change', this.update)
   }
 
-  render () {
+  render() {
     const { height, width } = this.state
     const isLandscape = height < width
 

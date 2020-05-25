@@ -91,7 +91,4 @@ const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({
   refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses())
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Request)
+export default connect(mapStateToProps, mapDispatchToProps)(Request)

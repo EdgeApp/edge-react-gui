@@ -13,7 +13,7 @@ type Props = {
   currencyInfo: EdgeCurrencyInfo
 }
 
-export function CurrencySettingsTitle (props: Props) {
+export function CurrencySettingsTitle(props: Props) {
   const { currencyInfo } = props
   const { displayName, symbolImage = '' } = currencyInfo
 

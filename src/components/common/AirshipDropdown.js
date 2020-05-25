@@ -32,16 +32,16 @@ export class AirshipDropdown extends Component<Props> {
   offset: Animated.Value
   timeout: TimeoutID | void
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.offset = new Animated.Value(this.hiddenOffset())
   }
 
-  hiddenOffset () {
+  hiddenOffset() {
     return -Dimensions.get('window').height / 4
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { bridge, autoHideMs = 5000 } = this.props
 
     // Animate in:
@@ -53,7 +53,7 @@ export class AirshipDropdown extends Component<Props> {
       // Start the auto-hide timer:
       if (autoHideMs) {
         this.timeout = setTimeout(() => {
-          this.timeout = void 0
+          this.timeout = undefined
           bridge.resolve()
         }, autoHideMs)
       }
@@ -70,7 +70,7 @@ export class AirshipDropdown extends Component<Props> {
     })
   }
 
-  render () {
+  render() {
     const { bridge, children, backgroundColor, onPress = () => bridge.resolve() } = this.props
 
     return (

@@ -16,7 +16,7 @@ export type Props = {
   shareViaShare: Function
 }
 export class ShareButtons extends PureComponent<Props> {
-  render () {
+  render() {
     const {
       copyToClipboard,
       // shareViaEmail,

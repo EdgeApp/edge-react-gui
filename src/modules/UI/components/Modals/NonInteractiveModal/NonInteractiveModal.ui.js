@@ -2,7 +2,7 @@
 
 import React, { type Node, Component } from 'react'
 import { Dimensions, Platform, StyleSheet, Text, View } from 'react-native'
-import { default as Modal } from 'react-native-modal'
+import Modal from 'react-native-modal'
 
 import { Gradient } from '../../Gradient/Gradient.ui.js'
 import { styles } from './styles.js'
@@ -13,7 +13,7 @@ export type ContainerProps = {
   style?: StyleSheet.Styles
 }
 export class Container extends Component<ContainerProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <View style={[styles.container, style]} {...props}>
@@ -29,11 +29,11 @@ export type HeaderProps = {
   style?: StyleSheet.Styles
 }
 export class Header extends Component<HeaderProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <View style={[styles.header, style]} {...props}>
-        <Gradient reverse style={[styles.gradient]}>
+        <Gradient reverse style={styles.gradient}>
           {children}
         </Gradient>
       </View>
@@ -47,7 +47,7 @@ export type FooterProps = {
   style?: StyleSheet.Styles
 }
 export class Footer extends Component<FooterProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <View style={[styles.footer, style]} {...props}>
@@ -63,7 +63,7 @@ export type IconProps = {
   style?: StyleSheet.Styles
 }
 export class Icon extends Component<IconProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <View style={[styles.icon, style]} {...props}>
@@ -79,7 +79,7 @@ export type MessageProps = {
   style?: StyleSheet.Styles
 }
 export class Message extends Component<MessageProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
     return (
       <Text style={[styles.message, style]} {...props}>
@@ -95,7 +95,7 @@ type ItemProps = {
   style?: StyleSheet.Styles
 }
 export class Item extends Component<ItemProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
 
     return (
@@ -112,7 +112,7 @@ type RowProps = {
   style?: StyleSheet.Styles
 }
 export class Row extends Component<RowProps> {
-  render () {
+  render() {
     const { children, style, ...props } = this.props
 
     return (
@@ -154,7 +154,7 @@ export class NonInteractiveModal extends Component<Props> {
 
   timer: TimeoutID
 
-  render () {
+  render() {
     const { isActive, style, ...props } = this.props
     const children = React.Children.toArray(this.props.children)
     const icon = children.find(child => child.type === NonInteractiveModal.Icon)

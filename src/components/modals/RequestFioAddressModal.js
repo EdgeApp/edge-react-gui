@@ -27,7 +27,7 @@ type AddressModalState = {
 export class FioAddressModal extends Component<AddressModalProps, AddressModalState> {
   fioCheckQueue: number = 0
 
-  constructor (props: AddressModalProps) {
+  constructor(props: AddressModalProps) {
     super(props)
     this.state = {
       clipboard: '',
@@ -39,7 +39,7 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this._setClipboard()
   }
 
@@ -154,7 +154,7 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
     return /^[\x20-\x7E]*$/.test(str)
   }
 
-  render () {
+  render() {
     const copyMessage = this.state.clipboard ? sprintf(s.strings.string_paste_address, this.state.clipboard) : null
     const { address, memo, addressError, memoError, addressValidationLoading } = this.state
     const submitDisabled = addressValidationLoading || !!addressError || !!memoError
@@ -177,7 +177,7 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
                 error={addressError}
                 placeholder={s.strings.fio_address_confirm_screen_label}
                 label={s.strings.fio_address_confirm_screen_label}
-                autoFocus={true}
+                autoFocus
               />
               <FormField
                 style={MaterialInputStyle}
@@ -194,20 +194,20 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
           <Modal.Footer>
             {copyMessage && (
               <Modal.Row style={InputAndButtonStyle.tertiaryButtonRow}>
-                <TertiaryButton ellipsizeMode={'middle'} onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
+                <TertiaryButton ellipsizeMode="middle" onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
                   <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
                 </TertiaryButton>
               </Modal.Row>
             )}
-            <Modal.Row style={[InputAndButtonStyle.row]}>
-              <SecondaryButton onPress={this.onCancel} style={[InputAndButtonStyle.noButton]}>
-                <SecondaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
+            <Modal.Row style={InputAndButtonStyle.row}>
+              <SecondaryButton onPress={this.onCancel} style={InputAndButtonStyle.noButton}>
+                <SecondaryButton.Text style={InputAndButtonStyle.buttonText}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
               </SecondaryButton>
-              <PrimaryButton onPress={this.onSubmit} disabled={submitDisabled} style={[InputAndButtonStyle.yesButton]}>
+              <PrimaryButton onPress={this.onSubmit} disabled={submitDisabled} style={InputAndButtonStyle.yesButton}>
                 {addressValidationLoading ? (
                   <ActivityIndicator size="small" />
                 ) : (
-                  <PrimaryButton.Text style={[InputAndButtonStyle.buttonText]}>{s.strings.string_done_cap}</PrimaryButton.Text>
+                  <PrimaryButton.Text style={InputAndButtonStyle.buttonText}>{s.strings.string_done_cap}</PrimaryButton.Text>
                 )}
               </PrimaryButton>
             </Modal.Row>
@@ -221,7 +221,7 @@ export class FioAddressModal extends Component<AddressModalProps, AddressModalSt
 export type FioAddressModalOpts = { fioPlugin: EdgeCurrencyConfig, isConnected: boolean }
 
 export const createFioAddressModal = (opts: FioAddressModalOpts) => {
-  function FioAddressModalWrapped (props: { +onDone: ({ fioAddress: string, memo: string } | null) => mixed }) {
+  function FioAddressModalWrapped(props: { +onDone: ({ fioAddress: string, memo: string } | null) => mixed }) {
     return <FioAddressModal {...opts} {...props} />
   }
   return FioAddressModalWrapped

@@ -51,7 +51,7 @@ type LocalState = {
 }
 
 export class FioPendingRequestDetailsComponent extends Component<Props, LocalState> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     const newState: LocalState = {
       memo: this.props.selectedFioPendingRequest.content.memo,
@@ -60,11 +60,11 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
     this.state = newState
   }
 
-  componentDidMount (): void {
+  componentDidMount(): void {
     this.setDefaultWallet()
   }
 
-  setDefaultWallet (): void {
+  setDefaultWallet(): void {
     const { onSelectWallet, wallets, selectedFioPendingRequest } = this.props
     const { chain_code, token_code } = selectedFioPendingRequest.content
     const confirmTokenCode = token_code && token_code !== chain_code ? token_code : null
@@ -239,7 +239,7 @@ export class FioPendingRequestDetailsComponent extends Component<Props, LocalSta
     )
   }
 
-  render () {
+  render() {
     const materialStyle = MaterialInput
     materialStyle.tintColor = THEME.COLORS.WHITE
     materialStyle.baseColor = THEME.COLORS.WHITE

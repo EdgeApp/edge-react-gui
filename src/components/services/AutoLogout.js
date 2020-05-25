@@ -26,11 +26,11 @@ class AutoLogoutComponent extends Component<Props, State> {
     appState: 'active'
   }
 
-  componentDidMount () {
+  componentDidMount() {
     AppState.addEventListener('change', this.handleAppStateChange)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     AppState.removeEventListener('change', this.handleAppStateChange)
   }
 
@@ -50,21 +50,21 @@ class AutoLogoutComponent extends Component<Props, State> {
     }))
   }
 
-  foregrounded (nextAppState: AppStateType): boolean {
+  foregrounded(nextAppState: AppStateType): boolean {
     return this.state.appState === 'background' && nextAppState === 'active'
   }
 
-  backgrounded (nextAppState: AppStateType): boolean {
+  backgrounded(nextAppState: AppStateType): boolean {
     return this.state.appState === 'background' && nextAppState !== 'active'
   }
 
-  isTimeExpired (durationInSeconds: number, newTimestamp: Date, oldTimeStamp: Date): boolean {
+  isTimeExpired(durationInSeconds: number, newTimestamp: Date, oldTimeStamp: Date): boolean {
     const differenceInMilliseconds: number = newTimestamp - oldTimeStamp
     const differenceInSeconds: number = differenceInMilliseconds / 1000
     return differenceInSeconds > durationInSeconds
   }
 
-  render () {
+  render() {
     return null
   }
 }
@@ -75,7 +75,7 @@ export const AutoLogout = connect(
     autoLogoutTimeInSeconds: state.ui.settings.autoLogoutTimeInSeconds
   }),
   (dispatch: Dispatch) => ({
-    logout () {
+    logout() {
       return dispatch(logoutRequest())
     }
   })

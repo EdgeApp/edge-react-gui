@@ -48,7 +48,7 @@ class CryptoExchangeWalletListTokenRowConnected extends Component<Props, LocalSt
     })
   }
 
-  render () {
+  render() {
     const multiplier = this.props.displayDenomination ? this.props.displayDenomination.multiplier : '0'
     const preliminaryCryptoAmount = truncateDecimals(bns.div(this.props.nativeAmount, multiplier, DIVIDE_PRECISION), 6)
     const cryptoBalance = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6))
@@ -56,16 +56,16 @@ class CryptoExchangeWalletListTokenRowConnected extends Component<Props, LocalSt
       <TouchableHighlight style={styles.touchable} underlayColor={styles.underlayColor} onPress={this.onPress}>
         <View style={[styles.containerToken, styles.rowContainerTop]}>
           <View style={styles.containerLeft}>
-            <Image style={styles.imageContainer} source={{ uri: this.props.image }} resizeMode={'contain'} />
+            <Image style={styles.imageContainer} source={{ uri: this.props.image }} resizeMode="contain" />
           </View>
           <View style={styles.walletDetailsContainer}>
             <View style={styles.walletDetailsRow}>
-              <FormattedText style={[styles.walletDetailsRowCurrency]}>{this.props.currencyCode}</FormattedText>
-              <FormattedText style={[styles.walletDetailsRowValue]}>{cryptoBalance}</FormattedText>
+              <FormattedText style={styles.walletDetailsRowCurrency}>{this.props.currencyCode}</FormattedText>
+              <FormattedText style={styles.walletDetailsRowValue}>{cryptoBalance}</FormattedText>
             </View>
             <View style={styles.walletDetailsRow}>
-              <FormattedText style={[styles.walletDetailsRowName]}>{this.props.name}</FormattedText>
-              <FormattedText style={[styles.walletDetailsRowFiat]}>
+              <FormattedText style={styles.walletDetailsRowName}>{this.props.name}</FormattedText>
+              <FormattedText style={styles.walletDetailsRowFiat}>
                 {this.props.fiatSymbol} {this.props.fiatBalance}
               </FormattedText>
             </View>
@@ -85,9 +85,6 @@ const mapStateToProps = (state: State, ownProps): StateProps => {
   }
 }
 
-const CryptoExchangeWalletListTokenRow = connect(
-  mapStateToProps,
-  null
-)(CryptoExchangeWalletListTokenRowConnected)
+const CryptoExchangeWalletListTokenRow = connect(mapStateToProps, null)(CryptoExchangeWalletListTokenRowConnected)
 
 export { CryptoExchangeWalletListTokenRow }

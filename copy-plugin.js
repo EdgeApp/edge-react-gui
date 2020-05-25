@@ -15,7 +15,7 @@ platforms.forEach(platform => {
   }
 })
 
-function copyAssets (plugin) {
+function copyAssets(plugin) {
   const manifest = require(`./node_modules/${plugin}/manifest.json`)
   platforms.forEach(platformDir => {
     const pluginDir = path.join(platformDir, manifest.pluginId)

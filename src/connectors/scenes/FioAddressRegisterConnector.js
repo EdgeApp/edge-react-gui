@@ -39,7 +39,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   createFioWallet: () => dispatch(createFioWallet())
 })
 
-export const FioAddressRegisterConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FioAddressRegisterScene)
+export const FioAddressRegisterConnector = connect(mapStateToProps, mapDispatchToProps)(FioAddressRegisterScene)

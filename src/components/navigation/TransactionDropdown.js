@@ -21,7 +21,7 @@ import { Airship } from '../services/AirshipInstance.js'
 
 let showing = false
 
-export function showTransactionDropdown (tx: EdgeTransaction) {
+export function showTransactionDropdown(tx: EdgeTransaction) {
   if (!showing) {
     showing = true
     playReceiveSound().catch(error => console.log(error)) // Fail quietly
@@ -37,7 +37,7 @@ type Props = {
   tx: EdgeTransaction
 }
 
-export function TransactionDropdown (props: Props) {
+export function TransactionDropdown(props: Props) {
   const { bridge, message, tx } = props
 
   return (
