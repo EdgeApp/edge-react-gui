@@ -36,7 +36,11 @@ type State = {
   forceUpdateGuiCounter: number,
   primaryDisplayAmount: string, // Actual display amount including 1000s separator and localized for region
   secondaryDisplayAmount: string, // Actual display amount including 1000s separator and localized for region
-  rerenderCounter: number
+  rerenderCounter: number,
+  selection?: {
+    start: number,
+    end: number
+  }
 }
 
 export type FlipInputOwnProps = {
@@ -209,6 +213,7 @@ export class FlipInput extends Component<Props, State> {
         const decimalAmount = intl.formatToNativeNumber(
           removeCurrencySymbol(this.props.primaryInfo.currencySymbol, this.state.primaryDisplayAmount, this.state.primaryDisplayAmount)
         )
+        this.setState({ selection: undefined })
         this.setState(setPrimaryToSecondary(nextProps, decimalAmount))
       } else {
         const decimalAmount = intl.formatToNativeNumber(
@@ -216,6 +221,7 @@ export class FlipInput extends Component<Props, State> {
         )
         const newState = setSecondaryToPrimary(nextProps, decimalAmount)
         this.setState({
+          selection: undefined,
           primaryDisplayAmount: newState.primaryDisplayAmount,
           secondaryDisplayAmount: newState.secondaryDisplayAmount
         })
@@ -260,6 +266,7 @@ export class FlipInput extends Component<Props, State> {
 
   onPrimaryAmountChange = (amountChanged: string) => {
     const displayAmount = removeCurrencySymbol(this.props.primaryInfo.currencySymbol, this.state.primaryDisplayAmount, amountChanged)
+    this.setState({ selection: undefined })
     if (!intl.isValidInput(displayAmount)) return
 
     // Do any necessary formatting of the display value such as truncating decimals
@@ -276,6 +283,7 @@ export class FlipInput extends Component<Props, State> {
 
   onSecondaryAmountChange = (amountChanged: string) => {
     const displayAmount = removeCurrencySymbol(this.props.secondaryInfo.currencySymbol, this.state.secondaryDisplayAmount, amountChanged)
+    this.setState({ selection: undefined })
     if (!intl.isValidInput(displayAmount)) return
 
     // Do any necessary formatting of the display value such as truncating decimals
@@ -338,6 +346,19 @@ export class FlipInput extends Component<Props, State> {
     }
   }
 
+  inputSelectionChange = (amount: string) => {
+    if (this.state.selection) {
+      this.setState({ selection: undefined })
+    } else {
+      this.setState({
+        selection: {
+          start: amount.length,
+          end: amount.length
+        }
+      })
+    }
+  }
+
   topRowFront = (fieldInfo: FlipInputFieldInfo, onChangeText: string => void, amount: string) => {
     return (
       <TouchableWithoutFeedback onPress={this.textInputFrontFocus}>
@@ -353,7 +374,8 @@ export class FlipInput extends Component<Props, State> {
               autoCorrect={false}
               keyboardType="numeric"
               selectionColor={THEME.COLORS.WHITE}
-              selection={{ start: amount.length, end: amount.length }}
+              selection={this.state.selection}
+              onSelectionChange={() => this.inputSelectionChange(amount)}
               returnKeyType={this.props.topReturnKeyType || 'done'}
               underlineColorAndroid={THEME.COLORS.TRANSPARENT}
               ref={this.getTextInputFrontRef}
@@ -402,7 +424,8 @@ export class FlipInput extends Component<Props, State> {
               autoCorrect={false}
               keyboardType="numeric"
               selectionColor={THEME.COLORS.WHITE}
-              selection={{ start: amount.length, end: amount.length }}
+              selection={this.state.selection}
+              onSelectionChange={() => this.inputSelectionChange(amount)}
               returnKeyType={this.props.topReturnKeyType || 'done'}
               underlineColorAndroid={THEME.COLORS.TRANSPARENT}
               ref={this.getTextInputBackRef}

@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 1.13.1 (2020-05-25)
+
+- Fix flipinput crash on Android
+
 ## 1.13.0 (2020-05-22)
 
 - Add buy support in India with new partner Transak
