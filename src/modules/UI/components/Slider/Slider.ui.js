@@ -1,45 +1,45 @@
 // @flow
 
 import React, { Component } from 'react'
-import { ActivityIndicator, Text, View } from 'react-native'
-import Slider from 'react-native-slider'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import NativeSlider from 'react-native-slider'
 import slowlog from 'react-native-slowlog'
 
 import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
 import s from '../../../../locales/strings.js'
 import { THEME } from '../../../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 import { scale } from '../../../../util/scaling.js'
-import styles from './styles.js'
 
 const SLIDE_TO_COMPLETE_TEXT = s.strings.send_confirmation_slide_to_confirm
 const ENTER_AN_AMOUNT_TEXT = s.strings.select_exchange_amount_short
 
 type Props = {
+  onSlidingComplete(): mixed,
+  parentStyle?: any,
+  showSpinner?: boolean,
+
+  // Reset logic:
+  forceUpdateGuiCounter?: number,
   resetSlider?: boolean,
-  sliderDisabled: boolean,
-  forceUpdateGuiCounter: number,
-  onSlidingComplete: () => {},
-  parentStyle: any,
-  showSpinner: boolean,
-  disabledText?: string
+
+  // Disabled logic:
+  disabledText?: string,
+  sliderDisabled: boolean
 }
 
 type State = {
-  onSlidingComplete: () => {},
   forceUpdateGuiCounter: number,
-  sliderDisabled: boolean,
   value: number
 }
 
-export default class ABSlider extends Component<Props, State> {
+export class Slider extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
 
     this.state = {
       forceUpdateGuiCounter: 0,
-      value: 10,
-      sliderDisabled: props.sliderDisabled,
-      onSlidingComplete: props.onSlidingComplete
+      value: 10
     }
     slowlog(this, /.*/, global.slowlogOptions)
   }
@@ -70,8 +70,8 @@ export default class ABSlider extends Component<Props, State> {
     const sliderText = !this.props.sliderDisabled ? SLIDE_TO_COMPLETE_TEXT : this.props.disabledText || ENTER_AN_AMOUNT_TEXT
 
     return (
-      <View style={[styles.container, this.props.parentStyle]}>
-        <Slider
+      <View style={this.props.parentStyle}>
+        <NativeSlider
           disabled={this.props.sliderDisabled}
           onValueChange={this.onValueChange}
           onSlidingComplete={this.onSlidingComplete}
@@ -79,7 +79,6 @@ export default class ABSlider extends Component<Props, State> {
           maximumValue={10}
           value={this.state.value}
           style={styles.slider}
-          trackStyle={styles.track}
           thumbStyle={thumbStyle}
           thumbImage={leftArrowImg}
           minimumTrackTintColor={THEME.COLORS.TRANSPARENT}
@@ -92,3 +91,45 @@ export default class ABSlider extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  slider: {
+    backgroundColor: THEME.COLORS.OPACITY_WHITE,
+    overflow: 'hidden',
+    borderRadius: 26,
+    height: 52,
+    zIndex: 2
+  },
+  thumb: {
+    width: 52,
+    height: 52,
+    position: 'absolute',
+    backgroundColor: THEME.COLORS.ACCENT_MINT,
+    borderRadius: 52
+  },
+  disabledThumb: {
+    width: 52,
+    height: 52,
+    position: 'absolute',
+    backgroundColor: THEME.COLORS.GRAY_2,
+    borderRadius: 52
+  },
+  textOverlay: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    fontSize: PLATFORM.deviceWidth >= 320 ? 13 : 16,
+    position: 'absolute',
+    color: THEME.COLORS.WHITE,
+    alignSelf: 'center',
+    top: 17,
+    zIndex: 1
+  },
+  activityIndicator: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    position: 'absolute',
+    alignSelf: 'center',
+    top: 17,
+    zIndex: 1
+  }
+}
+
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

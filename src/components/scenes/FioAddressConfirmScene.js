@@ -10,7 +10,7 @@ import { Actions } from 'react-native-router-flux'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/index'
-import ABSlider from '../../modules/UI/components/Slider/index.js'
+import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import { styles } from '../../styles/scenes/FioAddressConfirmStyle'
 import { getFeeDisplayed, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -138,8 +138,7 @@ export class FioAddressConfirmScene extends Component<Props, State> {
           </View>
           <View style={styles.blockPadding}>
             <Scene.Footer style={styles.footer}>
-              <ABSlider
-                forceUpdateGuiCounter={false}
+              <Slider
                 resetSlider={false}
                 parentStyle={styles.sliderStyle}
                 onSlidingComplete={this.saveFioAddress}
