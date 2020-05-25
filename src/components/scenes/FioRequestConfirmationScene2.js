@@ -6,6 +6,7 @@ import React, { Component } from 'react'
 import { Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
+import fioRequestsIcon from '../../assets/images/fio/SendModule_FioAddress.png'
 import editIcon from '../../assets/images/transaction_details_icon.png'
 import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
@@ -16,7 +17,8 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import THEME from '../../theme/variables/airbitz'
 import type { GuiCurrencyInfo } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { showError, showToast } from '../services/AirshipInstance'
+import { SimpleInputModal } from '../modals/SimpleInputModal.js'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 
 export type FioRequestConfirmationProps = {
   exchangeSecondaryToPrimaryRatio: number,
@@ -48,7 +50,8 @@ type Props = FioRequestConfirmationProps & FioRequestConfirmationDispatchProps &
 type LocalState = {
   loading: boolean,
   selectedFioAddress: string,
-  walletAddresses: { fioAddress: string, fioWallet: EdgeCurrencyWallet }[]
+  walletAddresses: { fioAddress: string, fioWallet: EdgeCurrencyWallet }[],
+  memo: string
 }
 
 export class FioRequestConfirmationComponent extends Component<Props, LocalState> {
@@ -57,7 +60,8 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
     this.state = {
       loading: false,
       selectedFioAddress: '',
-      walletAddresses: []
+      walletAddresses: [],
+      memo: ''
     }
   }
 
@@ -113,7 +117,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
           amount: val,
           tokenCode: this.props.primaryCurrencyInfo.exchangeCurrencyCode,
           chainCode: this.props.chainCode || this.props.primaryCurrencyInfo.exchangeCurrencyCode,
-          memo: this.props.fioModalData.memo,
+          memo: this.state.memo,
           maxFee: 0
         })
         this.setState({ loading: false })
@@ -144,9 +148,26 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
 
   openFioAddressFromModal = () => null
   openFioAddressToModal = () => null
-  openMemoModal = () => null
+
+  openMemoModal = async () => {
+    const memo = await Airship.show(bridge => (
+      <SimpleInputModal
+        bridge={bridge}
+        icon={<Image style={iconStyles} source={fioRequestsIcon} />}
+        title={s.strings.fio_confirm_request_input_title_memo}
+        inputLabel={s.strings.fio_confirm_request_memo}
+        inputValue={this.state.memo}
+      />
+    ))
+
+    if (memo.length > 64) return showError(s.strings.send_fio_request_error_memo_inline)
+    if (memo && !/^[\x20-\x7E]*$/.test(memo)) return showError(s.strings.send_fio_request_error_memo_invalid_character)
+    this.setState({ memo })
+  }
+
   render() {
     const { primaryCurrencyInfo, secondaryCurrencyInfo } = this.props
+    const { memo } = this.state
     if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
     let cryptoAmount, exchangeAmount
     try {
@@ -184,7 +205,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
             <View style={styles.tileContainer}>
               <Image style={styles.tileIcon} source={editIcon} />
               <Text style={styles.tileTextHeader}>{s.strings.fio_confirm_request_memo}</Text>
-              <Text style={styles.tileTextBody}>{this.props.fioModalData.memo}</Text>
+              <Text style={styles.tileTextBody}>{memo}</Text>
             </View>
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback onPress={() => null}>
@@ -206,7 +227,10 @@ const tileStyles = {
   borderBottomColor: THEME.COLORS.GRAY_3,
   padding: rem(0.5)
 }
-
+const iconStyles = {
+  size: rem(2),
+  color: THEME.COLORS.SECONDARY
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

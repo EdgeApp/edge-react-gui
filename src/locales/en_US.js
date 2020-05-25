@@ -724,6 +724,7 @@ const strings = {
   fio_confirm_request_to: 'Send Request To',
   fio_confirm_request_amount: 'Amount',
   fio_confirm_request_memo: 'Memo',
+  fio_confirm_request_input_title_memo: 'Enter Request Memo',
   err_token_not_in_wallet_title: 'No %s Wallet',
   err_token_not_in_wallet_msg: 'Your account does not have a %s wallet to pay this request',
   err_no_address_title: 'No FIO Address found.',
