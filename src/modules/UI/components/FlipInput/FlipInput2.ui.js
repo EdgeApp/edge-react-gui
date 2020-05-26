@@ -37,7 +37,11 @@ type State = {
   primaryDisplayAmount: string, // Actual display amount including 1000s separator and localized for region
   secondaryDisplayAmount: string, // Actual display amount including 1000s separator and localized for region
   rerenderCounter: number,
-  selection?: {
+  selectionPrimary?: {
+    start: number,
+    end: number
+  },
+  selectionSecondary?: {
     start: number,
     end: number
   }
@@ -213,7 +217,7 @@ export class FlipInput extends Component<Props, State> {
         const decimalAmount = intl.formatToNativeNumber(
           removeCurrencySymbol(this.props.primaryInfo.currencySymbol, this.state.primaryDisplayAmount, this.state.primaryDisplayAmount)
         )
-        this.setState({ selection: undefined })
+        this.setState({ selectionPrimary: undefined, selectionSecondary: undefined })
         this.setState(setPrimaryToSecondary(nextProps, decimalAmount))
       } else {
         const decimalAmount = intl.formatToNativeNumber(
@@ -221,7 +225,8 @@ export class FlipInput extends Component<Props, State> {
         )
         const newState = setSecondaryToPrimary(nextProps, decimalAmount)
         this.setState({
-          selection: undefined,
+          selectionPrimary: undefined,
+          selectionSecondary: undefined,
           primaryDisplayAmount: newState.primaryDisplayAmount,
           secondaryDisplayAmount: newState.secondaryDisplayAmount
         })
@@ -266,7 +271,7 @@ export class FlipInput extends Component<Props, State> {
 
   onPrimaryAmountChange = (amountChanged: string) => {
     const displayAmount = removeCurrencySymbol(this.props.primaryInfo.currencySymbol, this.state.primaryDisplayAmount, amountChanged)
-    this.setState({ selection: undefined })
+    this.setState({ selectionPrimary: undefined, selectionSecondary: undefined })
     if (!intl.isValidInput(displayAmount)) return
 
     // Do any necessary formatting of the display value such as truncating decimals
@@ -283,7 +288,7 @@ export class FlipInput extends Component<Props, State> {
 
   onSecondaryAmountChange = (amountChanged: string) => {
     const displayAmount = removeCurrencySymbol(this.props.secondaryInfo.currencySymbol, this.state.secondaryDisplayAmount, amountChanged)
-    this.setState({ selection: undefined })
+    this.setState({ selectionPrimary: undefined, selectionSecondary: undefined })
     if (!intl.isValidInput(displayAmount)) return
 
     // Do any necessary formatting of the display value such as truncating decimals
@@ -346,12 +351,25 @@ export class FlipInput extends Component<Props, State> {
     }
   }
 
-  inputSelectionChange = (amount: string) => {
-    if (this.state.selection) {
-      this.setState({ selection: undefined })
+  inputSelectionPrimaryChange = (amount: string) => {
+    if (this.state.selectionPrimary) {
+      this.setState({ selectionPrimary: undefined })
     } else {
       this.setState({
-        selection: {
+        selectionPrimary: {
+          start: amount.length,
+          end: amount.length
+        }
+      })
+    }
+  }
+
+  inputSelectionSecondaryChange = (amount: string) => {
+    if (this.state.selectionSecondary) {
+      this.setState({ selectionSecondary: undefined })
+    } else {
+      this.setState({
+        selectionSecondary: {
           start: amount.length,
           end: amount.length
         }
@@ -374,8 +392,8 @@ export class FlipInput extends Component<Props, State> {
               autoCorrect={false}
               keyboardType="numeric"
               selectionColor={THEME.COLORS.WHITE}
-              selection={this.state.selection}
-              onSelectionChange={() => this.inputSelectionChange(amount)}
+              selection={this.state.selectionPrimary}
+              onSelectionChange={() => this.inputSelectionPrimaryChange(amount)}
               returnKeyType={this.props.topReturnKeyType || 'done'}
               underlineColorAndroid={THEME.COLORS.TRANSPARENT}
               ref={this.getTextInputFrontRef}
@@ -424,8 +442,8 @@ export class FlipInput extends Component<Props, State> {
               autoCorrect={false}
               keyboardType="numeric"
               selectionColor={THEME.COLORS.WHITE}
-              selection={this.state.selection}
-              onSelectionChange={() => this.inputSelectionChange(amount)}
+              selection={this.state.selectionSecondary}
+              onSelectionChange={() => this.inputSelectionSecondaryChange(amount)}
               returnKeyType={this.props.topReturnKeyType || 'done'}
               underlineColorAndroid={THEME.COLORS.TRANSPARENT}
               ref={this.getTextInputBackRef}
