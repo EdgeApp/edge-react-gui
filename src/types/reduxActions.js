@@ -24,7 +24,6 @@ type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
   | 'NEW_RECEIVE_ADDRESS'
-  | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL'
   | 'SET_CONFIRM_PASSWORD_ERROR'
   | 'SET_TRANSACTION_SUBCATEGORIES'
   | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
@@ -51,7 +50,6 @@ type LegacyActionName =
   | 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED'
   | 'UPDATE_EXCHANGE_RATES'
   | 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
-  | 'UPDATE_WALLET_FIAT_BALANCE_VISIBILITY'
   | 'UPDATE_WALLET_LOADING_PROGRESS'
 
 // Actions with no payload:
@@ -173,6 +171,7 @@ export type Action =
       }
     }
   | { type: 'PERMISSIONS/UPDATE', data: PermissionsState }
+  | { type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL', data: { error: Error } }
   | { type: 'PROMOTION_ADDED', data: Promotion }
   | { type: 'PROMOTION_REMOVED', data: string /* installerId */ }
   | { type: 'HANDLE_AVAILABLE_STATUS', data: HandleAvailableStatus }
