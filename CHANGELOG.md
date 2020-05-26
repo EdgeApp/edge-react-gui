@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 1.13.2 (2020-05-26)
+
+- Fix flipinput crash on max spend Android
+
 ## 1.13.1 (2020-05-25)
 
 - Fix flipinput crash on Android
