@@ -15,7 +15,7 @@ import type { State } from '../../../types/reduxTypes'
 import type { FioRequest } from '../../../types/types'
 import { getFiatSymbol } from '../../../util/utils'
 import { getDisplayDenomination } from '../../Settings/selectors'
-import T from '../../UI/components/FormattedText/index'
+import T from '../../UI/components/FormattedText/FormattedText.ui.js'
 import { getSelectedWallet } from '../../UI/selectors'
 import { isRejectedFioRequest, isSentFioRequest } from '../util'
 

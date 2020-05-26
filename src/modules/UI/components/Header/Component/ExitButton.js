@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import s from '../../../../../locales/strings.js'
-import T from '../../../components/FormattedText'
+import T from '../../../components/FormattedText/FormattedText.ui.js'
 import styles from '../style'
 
 type Props = {}

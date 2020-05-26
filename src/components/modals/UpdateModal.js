@@ -6,7 +6,7 @@ import { Image } from 'react-native-animatable'
 
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { LadderLayout } from '../common/LadderLayout'
 import { type AirshipBridge, AirshipModal, dayText, IconCircle, textSize, THEME } from './modalParts.js'
 

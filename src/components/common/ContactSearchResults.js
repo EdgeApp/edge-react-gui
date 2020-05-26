@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { FlatList, Image, TouchableHighlight, View } from 'react-native'
 
 import ContactImage from '../../assets/images/contact.png'
-import FormattedText from '../../modules/UI/components/FormattedText/index.js'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles from '../../styles/scenes/TransactionDetailsStyle.js'
 import { type GuiContact } from '../../types/types.js'
 

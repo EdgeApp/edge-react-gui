@@ -8,8 +8,8 @@ import { Actions } from 'react-native-router-flux'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
-import T from '../../modules/UI/components/FormattedText/index'
-import ABSlider from '../../modules/UI/components/Slider/index.js'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import { CryptoExchangeWalletListRowStyle as walletStyles } from '../../styles/components/CryptoExchangeWalletListRowStyle'
 import { styles } from '../../styles/scenes/FioConnectWalletStyle'
@@ -148,8 +148,7 @@ export class FioDisconnectWalletScene extends Component<Props, State> {
           />
         </ScrollView>
         <View style={[styles.bottomSection, styles.bottomSectionBlue]}>
-          <ABSlider
-            forceUpdateGuiCounter={false}
+          <Slider
             resetSlider
             onSlidingComplete={this.confirm}
             sliderDisabled={!Object.keys(selectedToRemove).length}

@@ -2,7 +2,8 @@
 
 import React, { Component } from 'react'
 
-import { Input, InputWithAutoFocus } from '../materialWrappers/indexMaterial'
+import { Input } from '../materialWrappers/Input.js'
+import { InputWithAutoFocus } from '../materialWrappers/InputWithAutoFocus.js'
 
 /*
 type Props = {

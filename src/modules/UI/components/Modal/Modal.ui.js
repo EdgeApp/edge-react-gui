@@ -7,7 +7,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import s from '../../../../locales/strings.js'
 import { scale } from '../../../../util/scaling.js'
-import T from '../FormattedText'
+import T from '../FormattedText/FormattedText.ui.js'
 import styles, { exitColor } from './style'
 
 type Props = {

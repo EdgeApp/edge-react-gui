@@ -7,16 +7,16 @@ import { View } from 'react-native'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import * as UTILS from '../../../../util/utils'
-import T from '../../components/FormattedText'
+import T from '../../components/FormattedText/FormattedText.ui.js'
 import styles from './styles'
 
 const EXCHANGE_RATE_LOADING_TEXT = s.strings.drawer_exchange_rate_loading
 
 type Props = {
   primaryInfo: Object,
-  primaryDisplayAmount: string,
+  primaryDisplayAmount?: string, // defaults to '1'
   secondaryInfo: Object,
-  secondaryDisplayAmount: string
+  secondaryDisplayAmount: string | number
 }
 
 export default class ExchangeRate extends Component<Props> {

@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { FlatList, TouchableHighlight, View } from 'react-native'
 
-import FormattedText from '../../modules/UI/components/FormattedText/index'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles from '../../styles/scenes/TransactionDetailsStyle'
 import { THEME } from '../../theme/variables/airbitz.js'
 import type { SubcategorySearchResultData } from '../../types/types.js'

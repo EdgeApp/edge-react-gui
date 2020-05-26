@@ -27,7 +27,7 @@ import {
 } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
-import Text from '../modules/UI/components/FormattedText'
+import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'

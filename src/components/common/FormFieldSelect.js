@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 
-import { Select } from '../materialWrappers/indexMaterial'
+import { Select } from '../materialWrappers/Select.js'
 
 type FormFieldSelectProps = {
   value: string,

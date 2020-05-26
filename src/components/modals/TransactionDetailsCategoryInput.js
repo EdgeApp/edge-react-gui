@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { TouchableWithoutFeedback, View } from 'react-native'
 
 import s from '../../locales/strings.js'
-import FormattedText from '../../modules/UI/components/FormattedText/index.js'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles, { materialInput } from '../../styles/scenes/TransactionDetailsStyle.js'
 import { splitTransactionCategory } from '../../util/utils.js'
 import { FormField } from '../common/FormField.js'

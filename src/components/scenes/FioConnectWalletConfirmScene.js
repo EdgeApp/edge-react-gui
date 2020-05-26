@@ -8,9 +8,9 @@ import { Actions } from 'react-native-router-flux'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import ABSlider from '../../modules/UI/components/Slider/index.js'
+import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import { styles } from '../../styles/scenes/FioConnectWalletStyle'
 import type { FioConnectionWalletItem } from '../../types/types'
@@ -122,8 +122,7 @@ export class FioConnectWalletConfirmScene extends Component<Props, State> {
             </TouchableWithoutFeedback>
             <View style={styles.spacer} />
             <View style={styles.spacer} />
-            <ABSlider
-              forceUpdateGuiCounter={false}
+            <Slider
               resetSlider
               onSlidingComplete={this.confirm}
               sliderDisabled={!acknowledge}

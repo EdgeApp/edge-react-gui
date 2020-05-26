@@ -7,7 +7,7 @@ import { Image, TouchableHighlight, View } from 'react-native'
 
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
-import FormattedText from '../../modules/UI/components/FormattedText/index'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/components/CryptoExchangeWalletListRowStyle.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'

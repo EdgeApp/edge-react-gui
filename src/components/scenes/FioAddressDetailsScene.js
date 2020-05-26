@@ -8,7 +8,7 @@ import fioAddressDetailsIcon from '../../assets/images/details_fioAddress.png'
 import * as Constants from '../../constants/SceneKeys'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles } from '../../styles/scenes/FioAddressDetailsStyle'
 import { SceneWrapper } from '../common/SceneWrapper'
 

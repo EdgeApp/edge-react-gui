@@ -15,12 +15,12 @@ import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
+import ExchangeRate from '../../modules/UI/components/ExchangeRate/ExchangeRate.ui.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
-import RequestStatus from '../../modules/UI/components/RequestStatus/index.js'
-import ShareButtons from '../../modules/UI/components/ShareButtons/index.js'
+import { RequestStatus } from '../../modules/UI/components/RequestStatus/RequestStatus.ui.js'
+import { ShareButtons } from '../../modules/UI/components/ShareButtons/ShareButtons.ui.js'
 import { styles } from '../../styles/scenes/RequestStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
@@ -299,7 +299,7 @@ export class Request extends Component<Props, State> {
           <View style={styles.qrContainer}>
             <QrCode data={this.state.encodedURI} size={qrSize} />
           </View>
-          <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
+          <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} />
         </View>
 
         <View style={styles.shareButtonsContainer}>

@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import { intl } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import FormattedText from '../../modules/UI/components/FormattedText/index.js'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles, { materialFiatInput } from '../../styles/scenes/TransactionDetailsStyle.js'
 import { truncateDecimals } from '../../util/utils.js'
 import { FormField } from '../common/FormField.js'

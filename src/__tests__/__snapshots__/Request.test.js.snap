@@ -119,8 +119,6 @@ exports[`Request should render with loaded props 1`] = `
     </View>
     <RequestStatus
       addressExplorer={null}
-      amountReceivedInCrypto={0}
-      amountRequestedInCrypto={0}
     />
   </View>
   <View

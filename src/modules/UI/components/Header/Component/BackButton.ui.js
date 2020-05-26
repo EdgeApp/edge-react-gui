@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
 
 import * as Constants from '../../../../../constants/indexConstants.js'
-import T from '../../../components/FormattedText'
+import T from '../../../components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../Icon/Icon.ui.js'
 import styles from '../style'
 

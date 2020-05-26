@@ -6,7 +6,7 @@ import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles } from '../../styles/components/WiredBalanceBoxStyle.js'
 import { type State } from '../../types/reduxTypes.js'
 import { getFiatSymbol } from '../../util/utils.js'

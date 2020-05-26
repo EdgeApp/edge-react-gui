@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import style from '../../styles/scenes/TransactionListStyle.js'
 import type { GuiWallet } from '../../types/types.js'
 
