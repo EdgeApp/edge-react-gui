@@ -5,6 +5,7 @@ import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget,
 import React from 'react'
 import { Alert, Linking } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -22,8 +23,7 @@ import {
   MATERIAL_ICONS,
   PLUGIN_BUY,
   SEND_CONFIRMATION,
-  SHOPPING_CART,
-  WARNING
+  SHOPPING_CART
 } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
@@ -33,7 +33,6 @@ import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { B } from '../styles/common/textStyles.js'
-import styles from '../styles/scenes/ScaneStyle.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import { type ReturnAddressLink, parseDeepLink } from '../types/DeepLink.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
@@ -268,7 +267,7 @@ export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch
 export const showLegacyAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const legacyAddressModal = createYesNoModal({
     title: s.strings.legacy_address_modal_title,
-    icon: <Icon style={styles.legacyAddressModalIcon} type={ION_ICONS} name={WARNING} size={50} />,
+    icon: <AntDesignIcon name="warning" size={THEME.rem(2)} color={THEME.COLORS.ACCENT_RED} style={{ marginBottom: THEME.rem(0.25) }} />,
     message: s.strings.legacy_address_modal_warning,
     textAlign: 'left',
     noButtonText: s.strings.legacy_address_modal_cancel,

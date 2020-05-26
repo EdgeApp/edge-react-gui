@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { ActivityIndicator, Text, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import OpenAppSettings from 'react-native-app-settings'
 import { RNCamera } from 'react-native-camera'
 import { Actions } from 'react-native-router-flux'
@@ -13,7 +13,7 @@ import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
-import styles, { styles as styleRaw } from '../../styles/scenes/ScaneStyle'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { AddressModal } from '../modals/AddressModal.js'
@@ -46,21 +46,21 @@ export class Scan extends Component<Props> {
         <SceneWrapper background="header" hasTabs={false}>
           {this.renderCameraArea()}
           <View style={styles.overlayButtonAreaWrap}>
-            <TouchableHighlight style={styles.bottomButton} onPress={this._onPressTransfer} underlayColor={styleRaw.underlay.color}>
+            <TouchableHighlight style={styles.bottomButton} onPress={this._onPressTransfer} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
                 <FAIcon style={styles.transferIcon} name="share" size={scale(18)} />
                 <T style={styles.bottomButtonText}>{s.strings.fragment_transaction_transfer}</T>
               </View>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={styleRaw.underlay.color}>
+            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
                 <FAIcon style={styles.addressBookIcon} name="address-book-o" size={scale(18)} />
                 <T style={styles.bottomButtonText}>{s.strings.fragment_send_address}</T>
               </View>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={styleRaw.underlay.color}>
+            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon style={styles.flashIcon} name="ios-flash" size={scale(24)} />
                 <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
@@ -143,5 +143,93 @@ export class Scan extends Component<Props> {
     )
   }
 }
+
+const rawStyles = {
+  // Camera area:
+  cameraArea: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center'
+  },
+  overlayTop: {
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.GRAY_1,
+    justifyContent: 'center',
+    opacity: 0.95,
+    padding: scale(7),
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0
+  },
+  overlayTopText: {
+    color: THEME.COLORS.WHITE,
+    textAlign: 'center',
+    fontSize: scale(14)
+  },
+
+  // Permission denied view:
+  cameraPermissionDeniedText: {
+    color: THEME.COLORS.WHITE,
+    textAlign: 'center',
+    fontSize: scale(14),
+    padding: 20
+  },
+  settingsButton: {
+    backgroundColor: THEME.COLORS.SECONDARY,
+    alignItems: 'center',
+    padding: 10
+  },
+  settingsButtonText: {
+    color: THEME.COLORS.WHITE
+  },
+
+  // Bottom button area:
+  overlayButtonAreaWrap: {
+    flexDirection: 'row',
+    paddingTop: scale(11),
+    paddingBottom: scale(11),
+    paddingRight: scale(8),
+    paddingLeft: scale(8)
+  },
+  bottomButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
+    borderRadius: scale(3),
+    height: scale(50),
+    marginLeft: scale(1),
+    marginRight: scale(1)
+  },
+  bottomButtonTextWrap: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  transferIcon: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16),
+    height: scale(16)
+  },
+  addressBookIcon: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16),
+    height: scale(16),
+    transform: [{ scaleX: -1.0 }]
+  },
+  flashIcon: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(22),
+    height: scale(18)
+  },
+  bottomButtonText: {
+    opacity: 1,
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(14),
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export default Scan
