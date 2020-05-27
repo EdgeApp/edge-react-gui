@@ -151,7 +151,25 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
     return item.fioAddress
   }
 
-  openFioAddressFromModal = () => null
+  openFioAddressFromModal = async () => {
+    const { fioPlugin } = this.props
+    const { walletAddresses } = this.state
+    const fioAddressFrom = await Airship.show(bridge => (
+      <AddressModal
+        bridge={bridge}
+        walletId={this.props.walletId}
+        currencyCode={this.props.currencyCode}
+        title={s.strings.fio_confirm_request_fio_title}
+        subtitle={s.strings.fio_confirm_request_fio_subtitle_from}
+        useUserFioAddressesOnly
+      />
+    ))
+    if (!(await fioPlugin.otherMethods.doesAccountExist(fioAddressFrom)))
+      return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressFrom ? '\n' + fioAddressFrom : ''}`)
+    if (!walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)) return showError(s.strings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
+    if (fioAddressFrom === this.state.fioAddressTo) return showError(s.strings.fio_confirm_request_error_from_same)
+    this.setState({ fioAddressFrom: fioAddressFrom || '' })
+  }
 
   openFioAddressToModal = async () => {
     const fioAddressTo = await Airship.show(bridge => (
@@ -166,6 +184,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
     ))
     if (!(await this.props.fioPlugin.otherMethods.doesAccountExist(fioAddressTo)))
       return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
+    if (this.state.fioAddressFrom === fioAddressTo) return showError(s.strings.fio_confirm_request_error_to_same)
     this.setState({ fioAddressTo: fioAddressTo || '' })
   }
 
@@ -181,7 +200,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
 
   render() {
     const { primaryCurrencyInfo, secondaryCurrencyInfo } = this.props
-    const { fioAddressTo, memo } = this.state
+    const { fioAddressFrom, fioAddressTo, memo } = this.state
     if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
     let cryptoAmount, exchangeAmount
     try {
@@ -200,8 +219,8 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
           <TouchableWithoutFeedback onPress={this.openFioAddressFromModal}>
             <View style={styles.tileContainer}>
               <Image style={styles.tileIcon} source={editIcon} />
-              <Text style={styles.tileTextHeader}>{s.strings.fio_confirm_request_from}</Text>
-              <Text style={styles.tileTextBody}>{this.props.fioModalData.fioAddress}</Text>
+              <Text style={fioAddressFrom.length > 0 ? styles.tileTextHeader : styles.tileTextHeaderError}>{s.strings.fio_confirm_request_from}</Text>
+              <Text style={styles.tileTextBody}>{fioAddressFrom}</Text>
             </View>
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback onPress={this.openFioAddressToModal}>

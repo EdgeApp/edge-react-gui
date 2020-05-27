@@ -672,6 +672,8 @@
   "fio_confirm_request_amount": "Amount",
   "fio_confirm_request_memo": "Memo",
   "fio_confirm_request_input_title_memo": "Enter Request Memo",
+  "fio_confirm_request_error_from_same": "Select a FIO address that is different from your \"Send Request To\" address",
+  "fio_confirm_request_error_to_same": "Select a FIO address that is different from your \"Send Request From\" address",
   "err_token_not_in_wallet_title": "No %s Wallet",
   "err_token_not_in_wallet_msg": "Your account does not have a %s wallet to pay this request",
   "err_no_address_title": "No FIO Address found.",
