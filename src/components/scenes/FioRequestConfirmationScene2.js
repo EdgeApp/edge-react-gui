@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js/src/types/types'
 import React, { Component } from 'react'
-import { Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import fioRequestsIcon from '../../assets/images/fio/SendModule_FioAddress.png'
@@ -42,11 +42,7 @@ export type FioRequestConfirmationDispatchProps = {
 }
 
 type NavigationProps = {
-  amounts: ExchangedFlipInputAmounts,
-  fioModalData: {
-    fioAddress: string,
-    memo: string
-  }
+  amounts: ExchangedFlipInputAmounts
 }
 
 type Props = FioRequestConfirmationProps & FioRequestConfirmationDispatchProps & NavigationProps
@@ -92,6 +88,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
         fioAddressFrom: walletAddresses[0].fioAddress
       })
     }
+    this.openFioAddressToModal()
   }
 
   onNextPress = async () => {
@@ -205,7 +202,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
 
   render() {
     const { primaryCurrencyInfo, secondaryCurrencyInfo } = this.props
-    const { fioAddressFrom, fioAddressTo, memo } = this.state
+    const { fioAddressFrom, fioAddressTo, loading, memo } = this.state
     if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
     let cryptoAmount, exchangeAmount
     try {
@@ -246,11 +243,13 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
               <Text style={styles.tileTextBody}>{memo}</Text>
             </View>
           </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={() => null}>
-            <View style={styles.nextButton}>
-              <Text style={styles.buttonText}>{s.strings.string_next_capitalized}</Text>
-            </View>
-          </TouchableWithoutFeedback>
+          {fioAddressFrom.length > 0 && fioAddressTo.length > 0 ? (
+            <TouchableWithoutFeedback onPress={this.onNextPress}>
+              <View style={styles.nextButton}>
+                {loading ? <ActivityIndicator size="small" /> : <Text style={styles.buttonText}>{s.strings.string_next_capitalized}</Text>}
+              </View>
+            </TouchableWithoutFeedback>
+          ) : null}
         </View>
       </SceneWrapper>
     )
