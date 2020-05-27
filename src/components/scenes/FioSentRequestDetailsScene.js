@@ -64,12 +64,7 @@ export class FioSentRequestDetailsComponent extends Component<Props, LocalState>
   }
 
   requestedField = (payer: string, status: string) => {
-    let statusLabel = (
-      <T style={styles.title}>
-        {s.strings.title_request} {s.strings.fragment_transaction_list_sent_prefix}
-        {s.strings.word_to_in_convert_from_to_string}
-      </T>
-    )
+    let statusLabel = <T style={styles.title}>{s.strings.fio_request_sent_details_to}</T>
     if (isSentFioRequest(status)) {
       statusLabel = <T style={[styles.title, styles.titleReceived]}>{s.strings.fragment_transaction_list_receive_prefix}</T>
     }
@@ -111,6 +106,10 @@ export class FioSentRequestDetailsComponent extends Component<Props, LocalState>
       <SceneWrapper>
         <SafeAreaView>
           <View>{this.amountField()}</View>
+          <View style={styles.row}>
+            <T style={styles.title}>{s.strings.fio_request_sent_details_from}</T>
+            <T style={styles.text}>{this.props.selectedFioSentRequest.payee_fio_address}</T>
+          </View>
           <View>{this.requestedField(this.props.selectedFioSentRequest.payer_fio_address, this.props.selectedFioSentRequest.status)}</View>
           <View>{this.dateField(new Date(this.props.selectedFioSentRequest.time_stamp))}</View>
           <View>{this.memoField(this.props.selectedFioSentRequest.content.memo)}</View>

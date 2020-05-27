@@ -716,6 +716,8 @@ const strings = {
   fio_request_error_header: 'Request Failed',
   fio_request_ok_body: 'Your request has been successfully sent',
   fio_request_default_wallet_error: 'No appropriate wallet for this request',
+  fio_request_sent_details_to: 'Request sent to',
+  fio_request_sent_details_from: 'Request sent from',
   fio_get_requests_error: 'There was an issue fetching requests',
   fio_confirm_request_error: 'There was an issue during request send',
   fio_reject_request_error: 'There was an issue during request rejection',
