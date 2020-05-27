@@ -2,14 +2,12 @@
 
 import { bns } from 'biggystring'
 import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeSpendInfo, type EdgeSwapQuote, type EdgeSwapRequest, errorNames } from 'edge-core-js/types'
-import React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { trackConversion } from '../actions/TrackingActions.js'
-import { SwapVerifyShapeshiftModal } from '../components/modals/SwapVerifyShapeshiftModal.js'
-import { Airship, showError } from '../components/services/AirshipInstance.js'
+import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import { intl } from '../locales/intl'
 import s from '../locales/strings.js'
@@ -234,25 +232,6 @@ const processSwapQuoteError = (error: any) => (dispatch: Dispatch, getState: Get
             type: 'GENERIC_SHAPE_SHIFT_ERROR',
             data: s.strings.ss_geolock
           })
-        }
-
-        case 'needsActivation': {
-          if (error.pluginId === 'shapeshift') {
-            Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [
-              { text: s.strings.string_cancel_cap, onPress: () => {} },
-              { text: s.strings.string_ok, onPress: () => Actions[Constants.SWAP_ACTIVATE_SHAPESHIFT]() }
-            ])
-            return
-          }
-          break // Not handled
-        }
-
-        case 'noVerification': {
-          if (error.pluginId === 'shapeshift') {
-            Airship.show(bridge => <SwapVerifyShapeshiftModal bridge={bridge} />)
-            return
-          }
-          break // Not handled
         }
       }
       break // Not handled

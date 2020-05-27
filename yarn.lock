@@ -5850,7 +5850,7 @@ interpret@1.2.0:
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.2.0.tgz#d5061a6224be58e8083985f5014d844359576296"
   integrity sha512-mT34yGKMNceBQUoVn7iCDKDntA7SC6gycMAWzGx1z/CMCTV7b2AAtXlo3nRyHZ1FelRkQbQjprHSYGwzLtkVbw==
 
-invariant@*, invariant@2.2.4, invariant@^2.1.0, invariant@^2.2.2, invariant@^2.2.4:
+invariant@*, invariant@2.2.4, invariant@^2.2.2, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -9375,12 +9375,6 @@ react-native-contacts@2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-2.2.5.tgz#5f7ff7b0310a095753ef0491d6e9453dcfc17ff8"
   integrity sha512-yorPL9PS/g3lKIczZZ18s+LI2+tPHfudsAwuEKA63VB0YteBb5Rz2NnMmBzvI3bRdvNgzzXoCPwxOzAHL0tt1g==
-
-"react-native-cookies@git://github.com/joeferraro/react-native-cookies.git#4206542d":
-  version "3.3.0"
-  resolved "git://github.com/joeferraro/react-native-cookies.git#4206542d0735e12693848f742e86f663feeeabd9"
-  dependencies:
-    invariant "^2.1.0"
 
 react-native-device-info@^0.11.0:
   version "0.11.0"
