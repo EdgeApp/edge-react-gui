@@ -157,8 +157,8 @@ export class NonInteractiveModal extends Component<Props> {
   render() {
     const { isActive, style, ...props } = this.props
     const children = React.Children.toArray(this.props.children)
-    const icon = children.find(child => child.type === NonInteractiveModal.Icon)
-    const footer = children.find(child => child.type === NonInteractiveModal.Footer)
+    const icon = children.find(child => child.type === NonInteractiveModal.Icon) || null
+    const footer = children.find(child => child.type === NonInteractiveModal.Footer) || null
 
     const deviceWidth = Dimensions.get('window').width
     const deviceHeight = Platform.OS === 'ios' ? Dimensions.get('window').height : require('react-native-extra-dimensions-android').get('REAL_WINDOW_HEIGHT')

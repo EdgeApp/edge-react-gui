@@ -5,7 +5,6 @@ import { ActivityIndicator, Text, TouchableHighlight, View } from 'react-native'
 import OpenAppSettings from 'react-native-app-settings'
 import { RNCamera } from 'react-native-camera'
 import { Actions } from 'react-native-router-flux'
-// $FlowFixMe
 import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'

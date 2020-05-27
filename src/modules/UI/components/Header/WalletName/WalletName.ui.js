@@ -8,13 +8,13 @@ import { B } from '../../../../../styles/common/textStyles.js'
 import style, { walletSelectorStyles } from '../style'
 
 export type Props = {
-  name: ?string,
-  denomination: ?string
+  name?: string,
+  denomination?: string
 }
 
 class WalletName extends React.Component<Props> {
   render() {
-    const { name, denomination } = this.props
+    const { name, denomination = '' } = this.props
 
     if (name) {
       return (

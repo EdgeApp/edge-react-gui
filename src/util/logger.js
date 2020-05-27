@@ -37,8 +37,7 @@ let numWrites = 0
 async function isLogFileLimitExceeded(filePath) {
   const stats = await RNFS.stat(filePath)
 
-  const size = stats.size
-  return size > MAX_BYTE_SIZE_PER_FILE
+  return Number(stats.size) > MAX_BYTE_SIZE_PER_FILE
 }
 
 async function rotateLogs() {

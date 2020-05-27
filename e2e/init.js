@@ -1,4 +1,4 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 /* globals jasmine beforeAll beforeEach afterAll */
 
 import detox from 'detox'
