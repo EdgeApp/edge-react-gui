@@ -429,7 +429,6 @@
     "cryptoCodes": [
       "BTC",
       "ETH",
-      "BCH",
       "XRP"
     ],
     "paymentTypeLogoKey": "credit"
@@ -449,7 +448,6 @@
     "cryptoCodes": [
       "BTC",
       "ETH",
-      "BCH",
       "XRP"
     ],
     "paymentTypeLogoKey": "bank",
