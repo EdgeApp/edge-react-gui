@@ -53,8 +53,8 @@ type Props = FioRequestConfirmationProps & FioRequestConfirmationDispatchProps &
 
 type LocalState = {
   loading: boolean,
-  selectedFioAddress: string,
   walletAddresses: { fioAddress: string, fioWallet: EdgeCurrencyWallet }[],
+  fioAddressFrom: string,
   fioAddressTo: string,
   memo: string
 }
@@ -64,7 +64,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
     super(props)
     this.state = {
       loading: false,
-      selectedFioAddress: '',
+      fioAddressFrom: '',
       walletAddresses: [],
       fioAddressTo: '',
       memo: ''
@@ -89,14 +89,14 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
 
       this.setState({
         walletAddresses,
-        selectedFioAddress: walletAddresses[0].fioAddress
+        fioAddressFrom: walletAddresses[0].fioAddress
       })
     }
   }
 
   onNextPress = async () => {
-    const { walletAddresses, selectedFioAddress } = this.state
-    const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === selectedFioAddress)
+    const { walletAddresses, fioAddressFrom } = this.state
+    const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
 
     if (walletAddress) {
       const { fioWallet } = walletAddress
@@ -109,7 +109,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
         // checking fee
         this.setState({ loading: true })
         try {
-          const getFeeRes = await fioWallet.otherMethods.fioAction('getFee', { endPoint: 'new_funds_request', fioAddress: this.state.selectedFioAddress })
+          const getFeeRes = await fioWallet.otherMethods.fioAction('getFee', { endPoint: 'new_funds_request', fioAddress: this.state.fioAddressFrom })
           if (getFeeRes.fee) return showError(s.strings.fio_no_bundled_err_msg)
         } catch (e) {
           this.setState({ loading: false })
@@ -118,7 +118,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
         // send fio request
         await fioWallet.otherMethods.fioAction('requestFunds', {
           payerFioAddress: this.state.fioAddressTo,
-          payeeFioAddress: this.state.selectedFioAddress,
+          payeeFioAddress: this.state.fioAddressFrom,
           payeeTokenPublicAddress: this.props.publicAddress,
           amount: val,
           tokenCode: this.props.primaryCurrencyInfo.exchangeCurrencyCode,
@@ -145,7 +145,7 @@ export class FioRequestConfirmationComponent extends Component<Props, LocalState
   }
 
   handleFioWalletChange = (something: string, index: number): void => {
-    this.setState({ selectedFioAddress: this.state.walletAddresses[index].fioAddress })
+    this.setState({ fioAddressFrom: this.state.walletAddresses[index].fioAddress })
   }
 
   labelFromItem = (item: { fioAddress: string }): string => {
