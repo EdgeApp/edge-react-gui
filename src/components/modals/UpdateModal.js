@@ -1,8 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Text, TouchableHighlight, View } from 'react-native'
-import { Image } from 'react-native-animatable'
+import { Image, Text, TouchableHighlight, View } from 'react-native'
 
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
 import s from '../../locales/strings.js'
