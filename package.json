@@ -140,7 +140,6 @@
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-airship": "^0.2.2",
-    "react-native-app-settings": "git://github.com/swansontec/react-native-app-settings#fix-rn59",
     "react-native-appearance": "^0.3.4",
     "react-native-camera": "git://github.com/EdgeApp/react-native-camera.git#edge-fixes",
     "react-native-check-version": "^1.0.5",
