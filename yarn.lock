@@ -9170,11 +9170,6 @@ querystringify@^2.0.0:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.1.0.tgz#7ded8dfbf7879dcc60d0a644ac6754b283ad17ef"
   integrity sha512-sluvZZ1YiTLD5jsqZcDmFyV2EwToyXZBfpoVOmktMmW+VEnhgakFHnasVph65fOjGPTWN0Nw3+XQaSeMayr0kg==
 
-ramda@^0.25.0:
-  version "0.25.0"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.25.0.tgz#8fdf68231cffa90bc2f9460390a0cb74a29b29a9"
-  integrity sha512-GXpfrYVPwx3K7RQ6aYT8KPS8XViSXUVJT1ONhoKPE9VAleW42YE+U+8VEyGWt41EnEQW7gwecYJriTI0pKoecQ==
-
 randomatic@^3.0.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/randomatic/-/randomatic-3.1.1.tgz#b776efc59375984e36c537b2f51a1f0aff0da1ed"
@@ -9342,14 +9337,6 @@ react-native-drawer-layout@1.3.2:
   dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
-react-native-drawer@^2.3.0:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/react-native-drawer/-/react-native-drawer-2.5.1.tgz#08b9314184f48c724f1b467f8859797369798654"
-  integrity sha512-cxcQNbSWy5sbGi7anSVp6EDr6JarOBMY9lbFOeLFeVYbONiudoqRKbgEsSDgSw3/LFCLvUXK5zdjXCOedeytxQ==
-  dependencies:
-    prop-types "^15.5.8"
-    tween-functions "^1.0.1"
-
 react-native-extra-dimensions-android@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.2.5.tgz#8ade91029aaac7519bf305116d39019e618a60f0"
@@ -9372,21 +9359,12 @@ react-native-firebase@4.3.8:
     postinstall-build "^5.0.1"
     prop-types "^15.6.1"
 
-"react-native-flip-view@git://github.com/EdgeApp/react-native-flip-view.git":
-  version "1.0.5"
-  resolved "git://github.com/EdgeApp/react-native-flip-view.git#9796c6469385559da6689a4f56f540fc6f3d003a"
-
 "react-native-fs@git://github.com/EdgeApp/react-native-fs.git#edge/removeEncoding":
   version "2.13.3"
   resolved "git://github.com/EdgeApp/react-native-fs.git#575a0376ac7287f2048ee470e2af5ad3aeb65764"
   dependencies:
     base-64 "^0.1.0"
     utf8 "^2.1.1"
-
-react-native-image-picker@0.28.0:
-  version "0.28.0"
-  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.28.0.tgz#e3f26df170ea932e9c0404624fbced2f59a300e3"
-  integrity sha512-lQfdOyC1mQ/pvfEaUGdoodO1A1clg9kf6YC1WdbWhA6XK+joBd9GQYf8SaCf6/7vM25U4ib+6ux4yvnrS1pOqQ==
 
 react-native-iphone-x-helper@^1.0.3:
   version "1.2.0"
@@ -9433,12 +9411,6 @@ react-native-material-dropdown@^0.11.1:
     react-native-material-ripple "^0.8.0"
     react-native-material-textfield "^0.12.0"
 
-"react-native-material-kit@git://github.com/xinthink/react-native-material-kit.git#da1c292e":
-  version "0.5.1"
-  resolved "git://github.com/xinthink/react-native-material-kit.git#da1c292e2a6036b570381edb7a3752f254daf2b3"
-  dependencies:
-    ramda "^0.25.0"
-
 react-native-material-ripple@^0.7.0:
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/react-native-material-ripple/-/react-native-material-ripple-0.7.5.tgz#e2af5110680532f14aea3c3a438247be2ffef659"
@@ -9478,10 +9450,6 @@ react-native-permissions@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.0.6.tgz#504f01728191431ad4b82895c4a349981fb5802b"
   integrity sha512-I9UXYcxkQw8umXsnQIlTj+l6Usgi5kvBPaz62K04tb/OTMXHn10a1BBYlacs4MYdGu3Fy+sSvxfeze9RPPaM3g==
-
-"react-native-picker@git://github.com/egodigital/react-native-picker#747c09b":
-  version "4.3.7"
-  resolved "git://github.com/egodigital/react-native-picker#747c09b49e52b17ad095a712b694e41be0117ded"
 
 react-native-popup-menu@0.13.3:
   version "0.13.3"
@@ -9761,11 +9729,6 @@ react-test-renderer@16.8.3:
     prop-types "^15.6.2"
     react-is "^16.8.3"
     scheduler "^0.13.3"
-
-react-timer-mixin@^0.13.4:
-  version "0.13.4"
-  resolved "https://registry.yarnpkg.com/react-timer-mixin/-/react-timer-mixin-0.13.4.tgz#75a00c3c94c13abe29b43d63b4c65a88fc8264d3"
-  integrity sha512-4+ow23tp/Tv7hBM5Az5/Be/eKKF7DIvJ09voz5LyHGQaqqz9WV8YMs31eFvcYQs7d451LSg7kDJV70XYN/Ug/Q==
 
 react-transform-hmr@^1.0.4:
   version "1.0.4"
@@ -11514,11 +11477,6 @@ tunnel-agent@^0.6.0:
   integrity sha1-J6XeoGs2sEoKmWZ3SykIaPD8QP0=
   dependencies:
     safe-buffer "^5.0.1"
-
-tween-functions@^1.0.1:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/tween-functions/-/tween-functions-1.2.0.tgz#1ae3a50e7c60bb3def774eac707acbca73bbc3ff"
-  integrity sha1-GuOlDnxguz3vd06scHrLynO7w/8=
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"

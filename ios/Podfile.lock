@@ -39,10 +39,6 @@ PODS:
     - nanopb/encode (= 0.3.8)
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
-  - Picker (4.3.7):
-    - Picker/Core (= 4.3.7)
-  - Picker/Core (4.3.7):
-    - React
   - React (0.59.10):
     - React/Core (= 0.59.10)
   - react-native-camera (1.13.1):
@@ -60,13 +56,9 @@ PODS:
   - react-native-firebase (4.3.8):
     - Firebase/Core
     - React
-  - react-native-image-picker (0.28.0):
-    - React
   - react-native-locale (0.0.19):
     - React
   - react-native-mail (3.0.7):
-    - React
-  - react-native-material-kit (0.3.4):
     - React
   - react-native-randombytes (3.5.1):
     - React
@@ -161,15 +153,12 @@ DEPENDENCIES:
   - Firebase/Core (~> 5.3.0)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
-  - Picker (from `../node_modules/react-native-picker`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-fast-crypto (from `../node_modules/react-native-fast-crypto`)
   - react-native-firebase (from `../node_modules/react-native-firebase`)
-  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-locale (from `../node_modules/react-native-locale`)
   - react-native-mail (from `../node_modules/react-native-mail`)
-  - react-native-material-kit (from `../node_modules/react-native-material-kit`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
@@ -223,8 +212,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
-  Picker:
-    :path: "../node_modules/react-native-picker"
   React:
     :path: "../node_modules/react-native"
   react-native-camera:
@@ -235,14 +222,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fast-crypto"
   react-native-firebase:
     :path: "../node_modules/react-native-firebase"
-  react-native-image-picker:
-    :path: "../node_modules/react-native-image-picker"
   react-native-locale:
     :path: "../node_modules/react-native-locale"
   react-native-mail:
     :path: "../node_modules/react-native-mail"
-  react-native-material-kit:
-    :path: "../node_modules/react-native-material-kit"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
   react-native-safari-view:
@@ -291,16 +274,13 @@ SPEC CHECKSUMS:
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   GoogleToolboxForMac: 2b2596cbb7186865e98cadf2b1e262d851c2b168
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
-  Picker: 37554355aef82a532ea95b71b6eeba66bc86182b
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
   react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
   react-native-contacts: f6e5c518598762081ff9cf7c70db36f71668538e
   react-native-fast-crypto: aed797071793e23416d6e8c7c1c5dadb63036a0c
   react-native-firebase: c20ee01585998768935fc2cff74ff8e9740f1a73
-  react-native-image-picker: e6e06d4315e3c85bad17e4b2002cd29f11d202c8
   react-native-locale: bd8edf0e51706d469af3e2fa568a8102213a3139
   react-native-mail: 021d8ee60e374609f5689ef354dc8e36839a9ba6
-  react-native-material-kit: e779e910356c15278dcd2d2153b8656d24084c05
   react-native-randombytes: 1b6091800f62c6c393c6bc850ac089ebf63d4c0a
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
@@ -318,6 +298,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: 102f363f981cba1cf77600fa5ae705564fec76f9
+PODFILE CHECKSUM: 4f4dee0dcfb8005a1523a690c4fb147e6168bc23
 
 COCOAPODS: 1.9.1
