@@ -103,13 +103,19 @@ export class FioAddressRegisterScene extends Component<Props, State> {
 
   handleNextButton = () => {
     const { isConnected } = this.props
-    const { fioAddress, selectedWallet, selectedDomain } = this.state
-    if (isConnected) {
-      if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
-      const fullAddress = `${fioAddress}${Constants.FIO_ADDRESS_DELIMITER}${selectedDomain.name}`
-      Actions[Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET]({ fioAddress: fullAddress, selectedWallet, selectedDomain })
-    } else {
-      showError(s.strings.fio_network_alert_text)
+    const { fioAddress, selectedWallet, selectedDomain, isValid, isAvailable, loading, walletLoading } = this.state
+    if (isValid && isAvailable && !loading && !walletLoading) {
+      if (isConnected) {
+        if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
+        const fullAddress = `${fioAddress}${Constants.FIO_ADDRESS_DELIMITER}${selectedDomain.name}`
+        Actions[Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET]({
+          fioAddress: fullAddress,
+          selectedWallet,
+          selectedDomain
+        })
+      } else {
+        showError(s.strings.fio_network_alert_text)
+      }
     }
   }
 
