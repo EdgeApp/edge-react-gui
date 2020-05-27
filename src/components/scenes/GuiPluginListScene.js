@@ -28,7 +28,7 @@ import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogo
 import { ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
-import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
+import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/scenes/PluginsStyle.js'
@@ -198,13 +198,13 @@ class GuiPluginList extends Component<Props, State> {
     const selectedCountryCode: string = await Airship.show(bridge => <CountrySelectionModal bridge={bridge} countryCode={countryCode} />)
     if (selectedCountryCode) {
       try {
-        const syncedSettings = await getSyncedSettingsAsync(account)
+        const syncedSettings = await getSyncedSettings(account)
         const updatedSettings = {
           ...syncedSettings,
           countryCode: selectedCountryCode
         }
         updateCountryCode(selectedCountryCode)
-        await setSyncedSettingsAsync(account, updatedSettings)
+        await setSyncedSettings(account, updatedSettings)
       } catch (error) {
         showError(error)
       }
