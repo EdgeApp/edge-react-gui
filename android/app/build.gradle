@@ -229,3 +229,6 @@ task copyDownloadableDepsToLibs(type: Copy) {
 apply plugin: 'com.google.gms.google-services'
 
 com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
+
+// Integrate react-native-vector-icons fonts
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
