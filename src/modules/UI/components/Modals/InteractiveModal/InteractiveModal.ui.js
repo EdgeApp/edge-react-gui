@@ -189,7 +189,7 @@ export class InteractiveModal extends Component<Props> {
     const { isActive, style, ...props } = this.props
     const children = React.Children.toArray(this.props.children)
     const icon = children.find(child => child.type === InteractiveModal.Icon)
-    const title = children.find(child => child.type === InteractiveModal.Title)
+    const title = children.find(child => child.type === InteractiveModal.Title) || null
     const body = children.find(child => child.type === InteractiveModal.Body)
     const footer = children.find(child => child.type === InteractiveModal.Footer)
 

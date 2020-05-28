@@ -72,7 +72,7 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     try {
       const balance = await paymentWallet.getBalance()
 
-      if (balance || balance === 0) {
+      if (balance != null) {
         const newBalance = parseFloat(truncateDecimals(bns.div(balance, this.props.denominationMultiplier, 18), 6))
         this.setState({
           balance: newBalance

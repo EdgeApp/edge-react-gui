@@ -128,7 +128,7 @@ export class PluginBridge {
     return Promise.reject(new Error('not implemented'))
   }
 
-  _spend(guiMakeSpendInfo: GuiMakeSpendInfo, lockInputs: boolean = true, signOnly: boolean = false): Promise<EdgeTransaction> {
+  _spend(guiMakeSpendInfo: GuiMakeSpendInfo, lockInputs: boolean = true, signOnly: boolean = false): Promise<EdgeTransaction | void> {
     return new Promise((resolve, reject) => {
       if (signOnly) {
         reject(new Error('not implemented'))
@@ -165,7 +165,7 @@ export class PluginBridge {
   //   console.log(e)
   // }
 
-  async makeSpendRequest(guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction> {
+  async makeSpendRequest(guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction | void> {
     const edgeTransaction = await this._spend(guiMakeSpendInfo)
     console.log('Plugin successfully sent transaction')
     console.log(edgeTransaction)

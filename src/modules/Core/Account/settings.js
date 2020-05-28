@@ -447,20 +447,7 @@ export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: st
   })
 
 // Helper Functions
-export const getSyncedSettings = (account: EdgeAccount) =>
-  account.disklet
-    .getText(SYNCED_SETTINGS_FILENAME)
-    .then(text => {
-      const settingsFromFile = JSON.parse(text)
-      return settingsFromFile
-    })
-    .catch(e => {
-      console.log(e)
-      // If Settings.json doesn't exist yet, create it, and return it
-      return setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
-    })
-
-export async function getSyncedSettingsAsync(account: EdgeAccount): Promise<any> {
+export async function getSyncedSettings(account: EdgeAccount): Promise<any> {
   try {
     const text = await account.disklet.getText(SYNCED_SETTINGS_FILENAME)
     const settingsFromFile = JSON.parse(text)
@@ -472,12 +459,7 @@ export async function getSyncedSettingsAsync(account: EdgeAccount): Promise<any>
   }
 }
 
-export const setSyncedSettings = (account: EdgeAccount, settings: Object) => {
-  const text = JSON.stringify(settings)
-  account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
-}
-
-export async function setSyncedSettingsAsync(account: EdgeAccount, settings: Object) {
+export async function setSyncedSettings(account: EdgeAccount, settings: Object): Promise<void> {
   const text = JSON.stringify(settings)
   await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
 }
