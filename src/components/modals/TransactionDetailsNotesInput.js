@@ -10,11 +10,11 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
 type Props = {
-  bridge: AirshipBridge<null>,
+  bridge: AirshipBridge<string>,
   title: string,
-  placeholder: string,
+  placeholder?: string,
   notes: string,
-  onChange: string => void
+  onChange?: string => void
 }
 
 type State = {
@@ -31,15 +31,17 @@ export class TransactionDetailsNotesInput extends Component<Props, State> {
 
   onChange = (notes: string) => {
     this.setState({ notes })
-    this.props.onChange(notes)
+    if (this.props.onChange) {
+      this.props.onChange(notes)
+    }
   }
 
   render() {
     const { bridge, title, placeholder } = this.props
     const { notes } = this.state
     return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
-        <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(notes)}>
+        <TouchableWithoutFeedback onPress={() => bridge.resolve(notes)}>
           <View style={styles.airshipContainer}>
             <FormattedText style={styles.airshipHeader}>{title}</FormattedText>
             <TouchableWithoutFeedback onPress={() => this.notesInput.focus()}>
@@ -60,7 +62,7 @@ export class TransactionDetailsNotesInput extends Component<Props, State> {
               </View>
             </TouchableWithoutFeedback>
             <View style={styles.spacer} />
-            <PrimaryButton style={styles.saveButton} onPress={() => bridge.resolve(null)}>
+            <PrimaryButton style={styles.saveButton} onPress={() => bridge.resolve(notes)}>
               <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>
             </PrimaryButton>
           </View>
