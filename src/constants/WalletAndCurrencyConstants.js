@@ -34,6 +34,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   EBST: s.strings.string_first_eboost_wallet_name,
   EOS: s.strings.string_first_eos_wallet_name,
   ETH: s.strings.string_first_ethereum_wallet_name,
+  FIO: s.strings.string_first_fio_wallet_name,
   FTC: s.strings.string_first_feather_coin_wallet_name,
   GRS: s.strings.string_first_groestlcoin_wallet_name,
   HERC: s.strings.string_first_hercules_wallet_name,
