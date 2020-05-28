@@ -66,7 +66,12 @@ export class FioRequestConfirmationConnected extends Component<Props, State> {
     }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.setAddressesState()
+    this.openFioAddressToModal()
+  }
+
+  setAddressesState = async () => {
     if (this.props.fioWallets) {
       const walletAddresses = []
       for (const fioWallet: EdgeCurrencyWallet of this.props.fioWallets) {
@@ -87,7 +92,6 @@ export class FioRequestConfirmationConnected extends Component<Props, State> {
         fioAddressFrom: walletAddresses[0].fioAddress
       })
     }
-    this.openFioAddressToModal()
   }
 
   onNextPress = async () => {
@@ -125,7 +129,7 @@ export class FioRequestConfirmationConnected extends Component<Props, State> {
         this.setState({ loading: false })
         showToast(s.strings.fio_request_ok_body)
         addToFioAddressCache(this.props.account, [this.state.fioAddressTo])
-        Actions.popTo(Constants.TRANSACTION_LIST)
+        Actions.popTo(Constants.REQUEST)
       } catch (error) {
         this.setState({ loading: false })
         showError(`${s.strings.fio_request_error_header}. ${error.json ? JSON.stringify(error.json.fields[0].error) : ''}`)
@@ -133,11 +137,6 @@ export class FioRequestConfirmationConnected extends Component<Props, State> {
     } else {
       showError(s.strings.fio_wallet_missing_for_fio_address)
     }
-  }
-
-  fiatAmount = (amount: string): string => {
-    const fiatPerCrypto = this.props.exchangeSecondaryToPrimaryRatio
-    return intl.formatNumber(fiatPerCrypto * parseFloat(amount), { toFixed: 2 }) || '0'
   }
 
   openFioAddressFromModal = async () => {
@@ -198,7 +197,8 @@ export class FioRequestConfirmationConnected extends Component<Props, State> {
     } catch (e) {
       return null
     }
-    const fiatAmount = this.fiatAmount(exchangeAmount)
+
+    const fiatAmount = intl.formatNumber(this.props.exchangeSecondaryToPrimaryRatio * parseFloat(exchangeAmount), { toFixed: 2 }) || '0'
     const cryptoName = primaryCurrencyInfo.displayDenomination.name
     const fiatName = secondaryCurrencyInfo.displayDenomination.name
 
