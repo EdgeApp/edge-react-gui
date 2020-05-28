@@ -179,7 +179,6 @@ dependencies {
     implementation project(':react-native-camera')
     implementation project(':react-native-contacts-wrapper')
     implementation project(':react-native-contacts')
-    implementation project(':react-native-cookies')
     implementation project(':react-native-device-info')
     implementation project(':react-native-fast-crypto')
     implementation project(':react-native-firebase')

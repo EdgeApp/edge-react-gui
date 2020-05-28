@@ -3,16 +3,12 @@
 import { type EdgePluginMap, type EdgeSwapConfig } from 'edge-core-js/types'
 import React, { type Node, Component } from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import CookieManager from 'react-native-cookies'
-import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
 
 import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferralActions.js'
 import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
-import { deactivateShapeShift } from '../../actions/ShapeShiftActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
-import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { dayText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -22,17 +18,15 @@ import { type PluginTweak } from '../../types/TweakTypes.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
-import { SettingsLabelRow } from '../common/SettingsLabelRow.js'
 import { SettingsRow } from '../common/SettingsRow.js'
 import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { SwapPreferredModal } from '../modals/SwapPreferredModal.js'
-import { Airship, showError } from '../services/AirshipInstance.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 type DispatchProps = {
   changePreferredSwapPlugin(pluginId: string | void): void,
   ignoreAccountSwap(): void,
-  removePromotion(installerId: string): void,
-  shapeShiftLogOut(): void
+  removePromotion(installerId: string): void
 }
 
 type StateProps = {
@@ -87,16 +81,6 @@ export class SwapSettings extends Component<Props, State> {
     for (const cleanup of this.cleanups) cleanup()
   }
 
-  shapeShiftSignInToggle = () => {
-    if (this.state.needsActivation.shapeshift) {
-      CookieManager.clearAll()
-        .catch(showError)
-        .then(() => Actions[Constants.SWAP_ACTIVATE_SHAPESHIFT]())
-    } else {
-      this.props.shapeShiftLogOut()
-    }
-  }
-
   handlePreferredModal = () => {
     const { accountPlugins, changePreferredSwapPlugin, exchanges, ignoreAccountSwap, accountReferral, settingsPreferredSwap } = this.props
 
@@ -136,21 +120,7 @@ export class SwapSettings extends Component<Props, State> {
       exchanges[pluginId].changeEnabled(newValue)
     }
 
-    const toggle = <SettingsSwitchRow key={pluginId} icon={logo} text={displayName} value={this.state.enabled[pluginId]} onPress={handlePress} />
-
-    if (pluginId === 'shapeshift') {
-      const leftText = displayName + ' ' + s.strings.account
-      const actionText = this.state.needsActivation.shapeshift ? s.strings.ss_login : s.strings.ss_logout
-
-      return (
-        <>
-          {toggle}
-          <SettingsLabelRow key="activate" icon={logo} text={leftText} right={actionText} onPress={this.shapeShiftSignInToggle} />
-        </>
-      )
-    }
-
-    return toggle
+    return <SettingsSwitchRow key={pluginId} icon={logo} text={displayName} value={this.state.enabled[pluginId]} onPress={handlePress} />
   }
 
   renderPluginIcon(pluginId: string): Node {
@@ -238,9 +208,6 @@ export const SwapSettingsScene = connect(
     },
     removePromotion(installerId: string) {
       dispatch(removePromotion(installerId))
-    },
-    shapeShiftLogOut() {
-      dispatch(deactivateShapeShift())
     }
   })
 )(SwapSettings)

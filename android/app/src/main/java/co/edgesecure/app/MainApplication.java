@@ -25,7 +25,6 @@ import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lynxit.contactswrapper.ContactsWrapperPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.peel.react.TcpSocketsModule;
-import com.psykar.cookiemanager.CookieManagerPackage;
 import com.reactlibrary.DiskletPackage;
 import com.reactnativecommunity.art.ARTPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
@@ -59,7 +58,6 @@ public class MainApplication extends Application implements ReactApplication {
               new AsyncStoragePackage(),
               new DiskletPackage(),
               new RNCWebViewPackage(),
-              new CookieManagerPackage(),
               new OpenAppSettingsPackage(),
               BugsnagReactNative.getPackage(),
               new RNFirebasePackage(),

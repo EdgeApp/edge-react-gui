@@ -94,7 +94,6 @@ import { GuiPluginLegacyScene, renderLegacyPluginBackButton } from './scenes/Gui
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
-import { SwapActivateShapeshiftScene } from './scenes/SwapActivateShapeshiftScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { showToast } from './services/AirshipInstance.js'
 
@@ -480,15 +479,6 @@ export class MainComponent extends Component<Props> {
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderMenuButton()}
               />
-              <Scene
-                key={Constants.SWAP_ACTIVATE_SHAPESHIFT}
-                navTransparent
-                component={ifLoggedIn(SwapActivateShapeshiftScene)}
-                renderTitle={this.renderTitle(s.strings.title_activate_shapeshift)}
-                renderLeftButton={this.renderBackButton(BACK)}
-                renderRightButton={this.renderEmptyButton()}
-                onLeft={Actions.pop}
-              />
             </Stack>
           </Tabs>
 
@@ -626,15 +616,6 @@ export class MainComponent extends Component<Props> {
               renderTitle={this.renderTitle(DEFAULT_FIAT)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
-            />
-            <Scene
-              key={Constants.SWAP_ACTIVATE_SHAPESHIFT}
-              navTransparent
-              component={ifLoggedIn(SwapActivateShapeshiftScene)}
-              renderTitle={this.renderTitle(s.strings.title_activate_shapeshift)}
-              renderLeftButton={this.renderBackButton(BACK)}
-              renderRightButton={this.renderEmptyButton()}
-              onLeft={Actions.pop}
             />
           </Stack>
 
