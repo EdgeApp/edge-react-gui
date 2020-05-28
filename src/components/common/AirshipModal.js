@@ -20,6 +20,9 @@ type Props = {
   // Called when the user taps outside the modal or clicks the back button:
   onCancel: () => mixed,
 
+  // This is to have marginTop when there is an icon on the modal
+  icon?: boolean,
+
   // Content padding:
   padding?: number
 }
@@ -102,7 +105,7 @@ export class AirshipModal extends Component<Props> {
    * Draws the actual visual elements, given the current layout information:
    */
   renderModal(height: number, gap: SafeAreaGap, keyboardAnimation: Animated.Value, keyboardLayout: number) {
-    const { children, center, padding = 0 } = this.props
+    const { children, center, icon, padding = 0 } = this.props
 
     // Set up the dynamic CSS values:
     const screenPadding = {
@@ -117,6 +120,7 @@ export class AirshipModal extends Component<Props> {
       : [
           styles.bottomBody,
           {
+            marginTop: icon && keyboardLayout > 0 ? THEME.rem(1.75) : 0,
             marginBottom: -keyboardLayout,
             maxHeight: keyboardLayout + 0.75 * (height - gap.bottom - gap.top),
             paddingBottom: keyboardLayout + padding,

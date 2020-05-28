@@ -29,6 +29,7 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import THEME from '../../theme/variables/airbitz.js'
 import type { Dispatch, State as StateType } from '../../types/reduxTypes.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
+import { KeyboardTracker } from '../common/KeyboardTracker.js'
 import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
 import { type AirshipBridge, AirshipModal, dayText, IconCircle } from './modalParts.js'
 
@@ -311,7 +312,7 @@ class AddressModalConnected extends Component<Props, State> {
     const { uri, statusLabel, fieldError, filteredFioAddresses } = this.state
     const { title, subtitle, showPasteButton, userFioAddressesLoading } = this.props
     return (
-      <AirshipModal bridge={this.props.bridge} onCancel={this.handleClose}>
+      <AirshipModal bridge={this.props.bridge} onCancel={this.handleClose} icon>
         {gap => (
           <>
             <IconCircle>
@@ -322,13 +323,20 @@ class AddressModalConnected extends Component<Props, State> {
                 <Text style={dayText('title')}>{title || s.strings.address_modal_default_header}</Text>
                 {subtitle && <Text style={dayText('autoCenter')}>{subtitle}</Text>}
               </View>
-              {showPasteButton && copyMessage && (
-                <View style={styles.tileContainerButtons}>
-                  <TertiaryButton ellipsizeMode="middle" onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
-                    <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
-                  </TertiaryButton>
-                </View>
-              )}
+              <KeyboardTracker>
+                {(keyboardAnimation, keyboardLayout) => {
+                  if (keyboardLayout === 0 && showPasteButton && copyMessage) {
+                    return (
+                      <View style={styles.tileContainerButtons}>
+                        <TertiaryButton ellipsizeMode="middle" onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
+                          <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
+                        </TertiaryButton>
+                      </View>
+                    )
+                  }
+                  return null
+                }}
+              </KeyboardTracker>
               <View style={styles.tileContainerInput}>
                 {Platform.OS === 'ios' ? (
                   <InputAccessoryView nativeID={inputAccessoryViewID}>
@@ -340,7 +348,6 @@ class AddressModalConnected extends Component<Props, State> {
                   </InputAccessoryView>
                 ) : null}
                 <FormField
-                  autoFocus
                   blurOnSubmit
                   returnKeyType="done"
                   autoCapitalize="none"
@@ -404,7 +411,7 @@ const addressInputStyles = {
 }
 
 const iconStyles = {
-  size: rem(2),
+  size: rem(1.5),
   color: THEME.COLORS.SECONDARY
 }
 
@@ -413,7 +420,7 @@ const tileStyles = {
   backgroundColor: THEME.COLORS.WHITE,
   borderBottomWidth: 1,
   borderBottomColor: THEME.COLORS.GRAY_3,
-  padding: rem(1)
+  padding: rem(0.75)
 }
 
 const styles = StyleSheet.create({
@@ -425,11 +432,13 @@ const styles = StyleSheet.create({
   tileContainerHeader: {
     ...tileStyles,
     borderBottomWidth: 0,
-    paddingVertical: rem(0.5)
+    paddingTop: rem(0.75),
+    paddingBottom: rem(0.375)
   },
   tileContainerButtons: {
     ...tileStyles,
-    paddingVertical: rem(0.5),
+    paddingTop: rem(0.375),
+    paddingBottom: 0,
     borderBottomWidth: 0,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -437,8 +446,7 @@ const styles = StyleSheet.create({
   },
   tileContainerInput: {
     ...tileStyles,
-    paddingTop: 0,
-    paddingBottom: rem(0.5),
+    paddingVertical: 0,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
@@ -456,8 +464,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   fioAddressText: {
-    fontSize: rem(1.2),
-    paddingLeft: rem(0.8)
+    fontSize: rem(1),
+    paddingLeft: rem(0.75)
   },
   addressModalButton: {
     width: '100%'
