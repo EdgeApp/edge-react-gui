@@ -29,7 +29,6 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 type StateProps = {
   exchangeSecondaryToPrimaryRatio: number,
   publicAddress: string,
-  loading: boolean,
   chainCode: string,
   primaryCurrencyInfo: GuiCurrencyInfo,
   secondaryCurrencyInfo: GuiCurrencyInfo,
@@ -139,14 +138,6 @@ export class FioRequestConfirmationConnected extends Component<Props, State> {
   fiatAmount = (amount: string): string => {
     const fiatPerCrypto = this.props.exchangeSecondaryToPrimaryRatio
     return intl.formatNumber(fiatPerCrypto * parseFloat(amount), { toFixed: 2 }) || '0'
-  }
-
-  handleFioWalletChange = (something: string, index: number): void => {
-    this.setState({ fioAddressFrom: this.state.walletAddresses[index].fioAddress })
-  }
-
-  labelFromItem = (item: { fioAddress: string }): string => {
-    return item.fioAddress
   }
 
   openFioAddressFromModal = async () => {
@@ -263,7 +254,6 @@ const FioRequestConfirmationScene = connect((state: StateType): StateProps => {
   if (!guiWallet || !currencyCode) {
     return {
       exchangeSecondaryToPrimaryRatio: 0,
-      loading: true,
       chainCode: '',
       primaryCurrencyInfo: emptyCurrencyInfo,
       secondaryCurrencyInfo: emptyCurrencyInfo,
@@ -302,7 +292,6 @@ const FioRequestConfirmationScene = connect((state: StateType): StateProps => {
   return {
     exchangeSecondaryToPrimaryRatio,
     publicAddress: guiWallet.receiveAddress.publicAddress || '',
-    loading: false,
     chainCode: guiWallet.currencyCode,
     primaryCurrencyInfo,
     secondaryCurrencyInfo,
