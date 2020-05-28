@@ -17,7 +17,7 @@ import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/Flip
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import THEME from '../../theme/variables/airbitz'
-import type { State } from '../../types/reduxTypes'
+import type { State as StateType } from '../../types/reduxTypes'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types'
 import { emptyCurrencyInfo } from '../../types/types'
 import { getDenomFromIsoCode } from '../../util/utils'
@@ -26,7 +26,7 @@ import { AddressModal } from '../modals/AddressModal.js'
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 
-export type FioRequestConfirmationProps = {
+type StateProps = {
   exchangeSecondaryToPrimaryRatio: number,
   publicAddress: string,
   loading: boolean,
@@ -45,9 +45,9 @@ type NavigationProps = {
   amounts: ExchangedFlipInputAmounts
 }
 
-type Props = FioRequestConfirmationProps & NavigationProps
+type Props = StateProps & NavigationProps
 
-type LocalState = {
+type State = {
   loading: boolean,
   walletAddresses: { fioAddress: string, fioWallet: EdgeCurrencyWallet }[],
   fioAddressFrom: string,
@@ -55,7 +55,7 @@ type LocalState = {
   memo: string
 }
 
-export class FioRequestConfirmationConnected extends Component<Props, LocalState> {
+export class FioRequestConfirmationConnected extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -252,7 +252,7 @@ export class FioRequestConfirmationConnected extends Component<Props, LocalState
   }
 }
 
-const FioRequestConfirmationScene = connect((state: State): FioRequestConfirmationProps => {
+const FioRequestConfirmationScene = connect((state: StateType): StateProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const { account } = state.core
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
