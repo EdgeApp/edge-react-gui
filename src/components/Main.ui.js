@@ -29,7 +29,7 @@ import { CreateWalletSelectFiatScene } from '../components/scenes/CreateWalletSe
 import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene.js'
 import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene.js'
 import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene.js'
-import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConfirmationScene2.js'
+import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConfirmationScene.js'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
