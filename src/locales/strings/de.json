@@ -634,7 +634,7 @@
   "fio_address_details_screen_manage_account_settings": "Kontoeinstellungen",
   "fio_address_details_screen_connect_to_wallets": "Mit Wallets verbinden",
   "fio_address_list_screen_button_register": "Neue FIO-Adresse registrieren",
-  "fio_get_fee_err_msg": "Es gab ein Problem beim Erhalten der Gebühr. Bitte versuchen Sie es später erneut.",
+  "fio_get_fee_err_msg": "",
   "fio_get_reg_info_err_msg": "Es gab ein Problem beim Erhalten von Registrierungsinformationen.",
   "fio_register_address_err_msg": "Es gab ein Problem beim Registrieren einer Adresse. Bitte versuchen Sie es später erneut.",
   "fio_error_invalid_address": "Ungültige FIO-Adresse",
