@@ -2,70 +2,102 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Alert, Image, TouchableHighlight, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
+import { Alert, View } from 'react-native'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import fioAddressDetailsIcon from '../../assets/images/details_fioAddress.png'
-import * as Constants from '../../constants/SceneKeys'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
+import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
+import { findWalletByFioAddress } from '../../modules/FioAddress/util'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { styles as mainStyles } from '../../styles/MainStyle'
 import { styles } from '../../styles/scenes/FioAddressDetailsStyle'
-import type { FioConnectionWalletItem } from '../../types/types'
+import { THEME } from '../../theme/variables/airbitz'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SettingsHeaderRow } from '../common/SettingsHeaderRow'
+import { SettingsRow } from '../common/SettingsRow'
 
 export type StateProps = {
-  notConnectedWallets?: { [key: string]: FioConnectionWalletItem },
-  fioWallets: EdgeCurrencyWallet[],
-  loading: boolean
+  fioWallets: EdgeCurrencyWallet[]
 }
 
 export type NavProps = {
   fioAddressName: string,
   expiration: string,
-  registerSuccess?: boolean,
-  feeCollected?: number
+  navigation: any
+}
+
+export type LocalState = {
+  fioWalletLoading: boolean,
+  fioWallet: EdgeCurrencyWallet | null
 }
 
 type Props = StateProps & NavProps
 
-export class FioAddressDetailsScene extends Component<Props> {
+const headerIconSize = THEME.rem(1.5)
+
+export class FioAddressDetailsScene extends Component<Props, LocalState> {
+  state: LocalState = {
+    fioWalletLoading: false,
+    fioWallet: null
+  }
+
   componentDidMount() {
     const { fioAddressName } = this.props
-
     if (!fioAddressName) {
       Alert.alert(s.strings.fio_address_details_screen_alert_title, s.strings.fio_address_details_screen_alert_message, [
         { text: s.strings.fio_address_details_screen_alert_button }
       ])
     }
+    this.props.navigation.setParams({
+      renderTitle: this.renderTitle(fioAddressName)
+    })
+    this.findFioWallet()
   }
 
-  _onToggleConnectWallets = (): void => {
-    const { fioAddressName } = this.props
-    Actions[Constants.FIO_CONNECT_TO_WALLETS]({ fioAddressName })
+  findFioWallet = async () => {
+    const { fioAddressName, fioWallets } = this.props
+    this.setState({ fioWalletLoading: true })
+    const fioWallet = await findWalletByFioAddress(fioWallets, fioAddressName)
+    this.setState({ fioWalletLoading: false, fioWallet })
   }
 
-  renderButton() {
-    if (this.props.registerSuccess) {
-      return (
-        <View style={styles.buttons}>
-          <TouchableHighlight style={styles.bottomButton} onPress={Actions[Constants.FIO_ADDRESS_LIST]} underlayColor={styles.underlay.color}>
-            <View style={styles.bottomButtonTextWrap}>
-              <T style={styles.bottomButtonText}>{s.strings.fio_address_list}</T>
-            </View>
-          </TouchableHighlight>
-        </View>
-      )
+  _onPressAccountSettings = (): void => {
+    //
+  }
+
+  checkExpiredSoon = (): boolean => {
+    const { expiration } = this.props
+    const month = 1000 * 60 * 60 * 24 * 30
+    return new Date(expiration).getTime() - new Date().getTime() < month
+  }
+
+  renderTitle = (title: string) => {
+    return (
+      <View style={styles.titleWrapper}>
+        <T style={mainStyles.titleStyle}>{title}</T>
+      </View>
+    )
+  }
+
+  renderAccountSettings = () => {
+    let icon, displayName
+    if (this.checkExpiredSoon()) {
+      icon = <IonIcon name="ios-warning" color={THEME.COLORS.ACCENT_ORANGE} size={headerIconSize} />
+      displayName = <T style={styles.warning}>{s.strings.fio_address_details_expired_soon}</T>
+    } else {
+      icon = <IonIcon name="ios-settings" color={THEME.COLORS.GRAY_1} size={headerIconSize} />
+      displayName = <T style={styles.settingsText}>{s.strings.fio_address_details_screen_manage_account_settings}</T>
     }
 
     return (
-      <View style={styles.buttons}>
-        <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleConnectWallets} underlayColor={styles.underlay.color}>
-          <View style={[styles.bottomButtonTextWrap, styles.buttonWithLoader]}>
-            <T style={styles.bottomButtonText}>{s.strings.fio_address_details_screen_connect_to_wallets}</T>
-          </View>
-        </TouchableHighlight>
-      </View>
+      <SettingsRow
+        icon={icon}
+        text={displayName}
+        onPress={this._onPressAccountSettings}
+        right={<AntDesignIcon name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />}
+      />
     )
   }
 
@@ -73,19 +105,17 @@ export class FioAddressDetailsScene extends Component<Props> {
     const { fioAddressName, expiration } = this.props
     return (
       <SceneWrapper>
-        <View style={styles.view}>
-          <View style={styles.texts}>
-            <View style={styles.image}>
-              <Image source={fioAddressDetailsIcon} />
-            </View>
-            <T style={styles.text}>{s.strings.fio_address_details_screen_registered}</T>
-            <T style={styles.title}>{fioAddressName}</T>
-            <T style={styles.text}>
-              {`${s.strings.fio_address_details_screen_expires} `}
-              {intl.formatExpDate(expiration)}
-            </T>
-          </View>
-          {this.renderButton()}
+        <T style={styles.expiration}>
+          {`${s.strings.fio_address_details_screen_expires} `}
+          {intl.formatExpDate(expiration)}
+        </T>
+        <View style={styles.viewGrey}>
+          {this.renderAccountSettings()}
+          <SettingsHeaderRow
+            icon={<IonIcon name="ios-link" color={THEME.COLORS.WHITE} size={headerIconSize} />}
+            text={s.strings.fio_address_details_connect_to_wallets}
+          />
+          <ConnectWallets fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} disabled={this.state.fioWalletLoading} />
         </View>
       </SceneWrapper>
     )

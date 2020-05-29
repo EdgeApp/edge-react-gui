@@ -107,7 +107,7 @@ export class FioAddressConfirmScene extends Component<Props, State> {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ registerSuccess: true, fioAddressName, expiration, feeCollected }))
+    window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ fioAddressName, expiration, feeCollected }))
   }
 
   render() {

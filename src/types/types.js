@@ -257,7 +257,8 @@ export type FioConnectionWalletItem = {
   name: string,
   currencyCode: string,
   chainCode: string,
-  fullCurrencyCode: string
+  fullCurrencyCode: string,
+  isConnected: boolean
 }
 
 export type FioObtRecord = {

@@ -255,23 +255,22 @@ export const findWalletByFioAddress = async (fioWallets: EdgeCurrencyWallet[], f
   return null
 }
 
-export const makeNotConnectedWallets = (wallets: { [walletId: string]: GuiWallet }, ccWalletMap: CcWalletMap): { [key: string]: FioConnectionWalletItem } => {
-  const notConnectedWallets = {}
+export const makeConnectWallets = (wallets: { [walletId: string]: GuiWallet }, ccWalletMap: CcWalletMap): { [key: string]: FioConnectionWalletItem } => {
+  const walletItems = {}
   for (const walletKey: string in wallets) {
     if (wallets[walletKey].type === FIO_WALLET_TYPE) continue
     const publicAddress = wallets[walletKey].receiveAddress.publicAddress
     const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${wallets[walletKey].currencyCode}`
-    if (!ccWalletMap[fullCurrencyCode]) {
-      notConnectedWallets[`${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`] = {
-        key: `${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`,
-        id: wallets[walletKey].id,
-        publicAddress,
-        symbolImage: wallets[walletKey].symbolImage,
-        name: wallets[walletKey].name,
-        currencyCode: wallets[walletKey].currencyCode,
-        chainCode: wallets[walletKey].currencyCode,
-        fullCurrencyCode
-      }
+    walletItems[`${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`] = {
+      key: `${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`,
+      id: wallets[walletKey].id,
+      publicAddress,
+      symbolImage: wallets[walletKey].symbolImage,
+      name: wallets[walletKey].name,
+      currencyCode: wallets[walletKey].currencyCode,
+      chainCode: wallets[walletKey].currencyCode,
+      fullCurrencyCode,
+      isConnected: ccWalletMap[fullCurrencyCode] === wallets[walletKey].id
     }
     if (wallets[walletKey].enabledTokens && wallets[walletKey].enabledTokens.length) {
       for (const enabledToken: string of wallets[walletKey].enabledTokens) {
@@ -283,70 +282,22 @@ export const makeNotConnectedWallets = (wallets: { [walletId: string]: GuiWallet
           }
         }
         const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${tokenData.currencyCode}`
-        if (!ccWalletMap[fullCurrencyCode]) {
-          notConnectedWallets[`${wallets[walletKey].id}-${tokenData.currencyCode}`] = {
-            key: `${wallets[walletKey].id}-${tokenData.currencyCode}`,
-            id: wallets[walletKey].id,
-            publicAddress,
-            symbolImage: tokenData.symbolImage,
-            name: wallets[walletKey].name,
-            currencyCode: tokenData.currencyCode,
-            chainCode: wallets[walletKey].currencyCode,
-            fullCurrencyCode
-          }
+        walletItems[`${wallets[walletKey].id}-${tokenData.currencyCode}`] = {
+          key: `${wallets[walletKey].id}-${tokenData.currencyCode}`,
+          id: wallets[walletKey].id,
+          publicAddress,
+          symbolImage: tokenData.symbolImage,
+          name: wallets[walletKey].name,
+          currencyCode: tokenData.currencyCode,
+          chainCode: wallets[walletKey].currencyCode,
+          fullCurrencyCode,
+          isConnected: ccWalletMap[fullCurrencyCode] === wallets[walletKey].id
         }
       }
     }
   }
 
-  return notConnectedWallets
-}
-
-export const makeConnectedWallets = (wallets: { [walletId: string]: GuiWallet }, ccWalletMap: CcWalletMap): { [key: string]: FioConnectionWalletItem } => {
-  const connectedWallets = {}
-  for (const walletKey: string in wallets) {
-    if (wallets[walletKey].type === FIO_WALLET_TYPE) continue
-    const publicAddress = wallets[walletKey].receiveAddress.publicAddress
-    const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${wallets[walletKey].currencyCode}`
-    if (ccWalletMap[fullCurrencyCode] === wallets[walletKey].id) {
-      connectedWallets[`${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`] = {
-        key: `${wallets[walletKey].id}-${wallets[walletKey].currencyCode}`,
-        id: wallets[walletKey].id,
-        publicAddress,
-        symbolImage: wallets[walletKey].symbolImage,
-        name: wallets[walletKey].name,
-        currencyCode: wallets[walletKey].currencyCode,
-        chainCode: wallets[walletKey].currencyCode,
-        fullCurrencyCode
-      }
-    }
-    if (wallets[walletKey].enabledTokens && wallets[walletKey].enabledTokens.length) {
-      for (const enabledToken: string of wallets[walletKey].enabledTokens) {
-        let tokenData = wallets[walletKey].metaTokens.find(metaToken => metaToken.currencyCode === enabledToken)
-        if (!tokenData) {
-          tokenData = {
-            currencyCode: enabledToken,
-            symbolImage: ''
-          }
-        }
-        const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${tokenData.currencyCode}`
-        if (ccWalletMap[fullCurrencyCode] === wallets[walletKey].id) {
-          connectedWallets[`${wallets[walletKey].id}-${tokenData.currencyCode}`] = {
-            key: `${wallets[walletKey].id}-${tokenData.currencyCode}`,
-            id: wallets[walletKey].id,
-            publicAddress,
-            symbolImage: tokenData.symbolImage,
-            name: wallets[walletKey].name,
-            currencyCode: tokenData.currencyCode,
-            chainCode: wallets[walletKey].currencyCode,
-            fullCurrencyCode
-          }
-        }
-      }
-    }
-  }
-
-  return connectedWallets
+  return walletItems
 }
 
 export const checkPubAddress = async (fioPlugin: EdgeCurrencyConfig, fioAddress: string, chainCode: string, tokenCode: string): Promise<string> => {

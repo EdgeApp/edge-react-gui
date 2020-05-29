@@ -5,11 +5,9 @@ import React, { Component } from 'react'
 import { ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import { styles } from '../../styles/scenes/FioConnectWalletStyle'
@@ -30,7 +28,8 @@ export type FioConnectWalletConfirmStateProps = {
 export type FioConnectWalletConfirmRouteProps = {
   fioWallet: EdgeCurrencyWallet,
   fioAddressName: string,
-  selectedWallets: FioConnectionWalletItem[]
+  walletsToConnect: FioConnectionWalletItem[],
+  walletsToDisconnect: FioConnectionWalletItem[]
 }
 
 export type FioConnectWalletConfirmDispatchProps = {
@@ -46,27 +45,38 @@ export class FioConnectWalletConfirmScene extends Component<Props, State> {
   }
 
   confirm = async (): Promise<void> => {
-    const { fioWallet, fioAddressName, selectedWallets, updateConnectedWallets, ccWalletMap, isConnected } = this.props
+    const { fioWallet, fioAddressName, walletsToConnect, walletsToDisconnect, updateConnectedWallets, ccWalletMap, isConnected } = this.props
     if (isConnected) {
       this.setState({ connectWalletsLoading: true })
       const newCcWalletMap = { ...ccWalletMap }
       try {
-        await updatePubAddressesForFioAddress(
-          fioWallet,
-          fioAddressName,
-          selectedWallets.map((wallet: FioConnectionWalletItem) => {
-            newCcWalletMap[wallet.fullCurrencyCode] = wallet.id
-            return {
-              walletId: wallet.id,
-              tokenCode: wallet.currencyCode,
-              chainCode: wallet.chainCode,
-              publicAddress: wallet.publicAddress
-            }
+        const pubAddresses = []
+        walletsToConnect.forEach((wallet: FioConnectionWalletItem) => {
+          newCcWalletMap[wallet.fullCurrencyCode] = wallet.id
+          pubAddresses.push({
+            walletId: wallet.id,
+            tokenCode: wallet.currencyCode,
+            chainCode: wallet.chainCode,
+            publicAddress: wallet.publicAddress
           })
-        )
+        })
+        walletsToDisconnect.forEach((wallet: FioConnectionWalletItem) => {
+          newCcWalletMap[wallet.fullCurrencyCode] = ''
+          pubAddresses.push({
+            walletId: wallet.id,
+            tokenCode: wallet.currencyCode,
+            chainCode: wallet.chainCode,
+            publicAddress: '0'
+          })
+        })
+        await updatePubAddressesForFioAddress(fioWallet, fioAddressName, pubAddresses)
         updateConnectedWallets(fioAddressName, newCcWalletMap)
-        showToast(s.strings.fio_connect_wallets_success)
-        Actions.popTo(Constants.FIO_ADDRESS_DETAILS)
+        if (walletsToConnect.length) {
+          showToast(s.strings.fio_connect_wallets_success)
+        } else {
+          if (walletsToDisconnect.length) showToast(s.strings.fio_disconnect_wallets_success)
+        }
+        Actions.pop()
       } catch (e) {
         showError(e.message)
       }
@@ -83,7 +93,7 @@ export class FioConnectWalletConfirmScene extends Component<Props, State> {
   }
 
   render() {
-    const { fioAddressName, selectedWallets } = this.props
+    const { fioAddressName, walletsToConnect, walletsToDisconnect } = this.props
     const { acknowledge, connectWalletsLoading } = this.state
 
     return (
@@ -91,32 +101,38 @@ export class FioConnectWalletConfirmScene extends Component<Props, State> {
         <ScrollView>
           <View style={styles.info}>
             <T style={styles.title}>{s.strings.fio_address_register_form_field_label}</T>
-            <T style={styles.titleLarge}>{fioAddressName}</T>
-            <View style={styles.spacer} />
-            <View style={styles.spacer} />
-            <T style={styles.title}>{s.strings.title_fio_connect_to_wallet}</T>
-            <View style={styles.spacer} />
-            {selectedWallets.map(wallet => (
-              <T key={`${wallet.id}-${wallet.currencyCode}`} style={styles.walletName}>
-                {wallet.name} ({wallet.currencyCode})
-              </T>
-            ))}
+            <T style={styles.content}>{fioAddressName}</T>
           </View>
+
+          {walletsToConnect.length ? (
+            <View style={styles.info}>
+              <T style={styles.title}>{s.strings.title_fio_connect_to_wallet}</T>
+              {walletsToConnect.map(wallet => (
+                <T key={`${wallet.id}-${wallet.currencyCode}`} style={styles.content}>
+                  {wallet.name} ({wallet.currencyCode})
+                </T>
+              ))}
+            </View>
+          ) : null}
+
+          {walletsToDisconnect.length ? (
+            <View style={styles.info}>
+              <T style={styles.title}>{s.strings.title_fio_disconnect_wallets}</T>
+              {walletsToDisconnect.map(wallet => (
+                <T key={`${wallet.id}-${wallet.currencyCode}`} style={styles.content}>
+                  {wallet.name} ({wallet.currencyCode})
+                </T>
+              ))}
+            </View>
+          ) : null}
+
           <View style={styles.spacer} />
           <View style={styles.spacer} />
-          <View style={styles.info}>
+
+          <View style={styles.confirmContainer}>
             <TouchableWithoutFeedback onPress={this.check}>
               <View style={styles.checkBoxContainer}>
-                <View style={styles.checkBox}>
-                  {acknowledge && (
-                    <Icon
-                      style={styles.checkBoxIconOk}
-                      type={Constants.MATERIAL_COMMUNITY}
-                      name={Constants.CHECK_CIRCLE}
-                      size={styles.checkBoxIconOk.fontSize}
-                    />
-                  )}
-                </View>
+                <View style={styles.checkBox}>{acknowledge && <View style={styles.checkBoxIconOk} />}</View>
                 <T style={styles.checkTitle}>{s.strings.fio_connect_checkbox_text}</T>
               </View>
             </TouchableWithoutFeedback>

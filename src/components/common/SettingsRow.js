@@ -9,7 +9,7 @@ import { THEME } from '../../theme/variables/airbitz.js'
 type Props = {
   disabled?: boolean, // Show with grey style
   icon?: Node,
-  text: string,
+  text: string | Node,
   right?: Node,
   onPress?: () => void
 }

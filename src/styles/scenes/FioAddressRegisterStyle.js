@@ -83,7 +83,7 @@ export const styles = StyleSheet.create({
   },
   domainListRowName: {
     flex: 1,
-    fontSize: THEME.rem(1.25),
+    fontSize: THEME.rem(1),
     color: THEME.COLORS.SECONDARY
   },
   domainListRowContainerTop: {
