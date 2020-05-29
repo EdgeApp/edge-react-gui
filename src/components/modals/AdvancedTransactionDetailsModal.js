@@ -7,7 +7,7 @@ import { Clipboard, Linking } from 'react-native'
 
 import { MATERIAL_COMMUNITY, TELESCOPE } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import Text from '../../modules/UI/components/FormattedText/index'
+import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import styles, { activeOpacity } from '../../styles/scenes/TransactionDetailsStyle.js'
@@ -47,7 +47,7 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
     onDone()
   }
 
-  render () {
+  render() {
     const { txid, signedTx } = this.props
     const isTxId = !!txid
     const isSignedTx = !!signedTx
@@ -103,7 +103,7 @@ export type AdvancedTransactionDetailsOpts = {
 }
 
 export const createAdvancedTransactionDetailsModal = (opts: AdvancedTransactionDetailsOpts) => {
-  function AdvancedTransactionDetailsWrapped (props: { +onDone: Function }) {
+  function AdvancedTransactionDetailsWrapped(props: { +onDone: Function }) {
     return <AdvancedTransactionDetailsModal {...opts} {...props} />
   }
   return AdvancedTransactionDetailsWrapped

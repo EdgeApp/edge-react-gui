@@ -2,6 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 
+import THEME from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling.js'
 
 export const styles = StyleSheet.create({
@@ -16,10 +17,8 @@ export const styles = StyleSheet.create({
     marginBottom: scale(10)
   },
 
-  // The white background is a theme-independent part of the QR code:
-  // eslint-disable-next-line react-native/no-color-literals
   qrContainer: {
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.QR_CODE_BACKGROUND,
     marginTop: scale(15),
     borderRadius: scale(4),
     padding: scale(4)
@@ -28,5 +27,19 @@ export const styles = StyleSheet.create({
   shareButtonsContainer: {
     alignItems: 'stretch',
     justifyContent: 'center'
+  },
+  accessoryView: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  accessoryBtn: {
+    paddingVertical: scale(7),
+    paddingHorizontal: scale(15)
+  },
+  accessoryText: {
+    color: THEME.COLORS.ACCENT_BLUE,
+    fontSize: scale(16)
   }
 })

@@ -27,7 +27,7 @@ const defaultReferralCache: ReferralCache = {
 }
 
 const accountInner: Reducer<AccountState, Action> = combineReducers({
-  accountReferral (state: AccountReferral = defaultAccountReferral, action: Action): AccountReferral {
+  accountReferral(state: AccountReferral = defaultAccountReferral, action: Action): AccountReferral {
     switch (action.type) {
       case 'ACCOUNT_REFERRAL_LOADED': {
         const { referral } = action.data
@@ -37,7 +37,7 @@ const accountInner: Reducer<AccountState, Action> = combineReducers({
         return { ...referral, promotions }
       }
       case 'ACCOUNT_SWAP_IGNORED': {
-        return { ...state, ignoreAccountSwap: true }
+        return { ...state, ignoreAccountSwap: action.data }
       }
       case 'MESSAGE_TWEAK_HIDDEN': {
         const { messageId, source } = action.data
@@ -67,11 +67,11 @@ const accountInner: Reducer<AccountState, Action> = combineReducers({
     return state
   },
 
-  accountReferralLoaded (state: boolean = false, action: Action): boolean {
+  accountReferralLoaded(state: boolean = false, action: Action): boolean {
     return action.type === 'ACCOUNT_REFERRAL_LOADED' ? true : state
   },
 
-  referralCache (state: ReferralCache = defaultReferralCache, action: Action): ReferralCache {
+  referralCache(state: ReferralCache = defaultReferralCache, action: Action): ReferralCache {
     switch (action.type) {
       case 'ACCOUNT_REFERRAL_LOADED': {
         const { cache } = action.data
@@ -97,7 +97,7 @@ export const account: Reducer<AccountState, Action> = (state: AccountState | voi
 /**
  * Merges lists of promotions, preferring items from b if there's a conflict.
  */
-function mergePromotions (a: Promotion[], b: Promotion[]): Promotion[] {
+function mergePromotions(a: Promotion[], b: Promotion[]): Promotion[] {
   const toRemove: { [id: string]: true } = {}
   for (const promo of b) toRemove[promo.installerId] = true
   return [...a.filter(promo => toRemove[promo.installerId] !== true), ...b]

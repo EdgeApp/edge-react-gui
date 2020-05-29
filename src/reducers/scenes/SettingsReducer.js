@@ -52,6 +52,7 @@ export type SettingsState = {
   FTC: CurrencySetting,
   RVN: CurrencySetting,
   ETH: CurrencySetting,
+  ETC: CurrencySetting,
   LTC: CurrencySetting,
   VTC: CurrencySetting,
   XZC: CurrencySetting,
@@ -111,7 +112,7 @@ export type SettingsState = {
   }
 }
 
-function currencyPLuginUtil (state: SettingsState, currencyInfo: EdgeCurrencyInfo): SettingsState {
+function currencyPLuginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo): SettingsState {
   const { plugins } = state
   const { allCurrencyInfos, supportedWalletTypes } = plugins
   const { pluginId, walletType } = currencyInfo

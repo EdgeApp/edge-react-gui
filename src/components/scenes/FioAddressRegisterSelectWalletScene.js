@@ -7,13 +7,13 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import fioAddressIcon from '../../assets/images/list_fioAddress.png'
-import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector'
+import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
-import T from '../../modules/UI/components/FormattedText/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
+import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { styles as fioAddressStyles } from '../../styles/scenes/FioAddressRegisterStyle'
 import type { GuiWallet } from '../../types/types'
@@ -43,7 +43,7 @@ export type DispatchProps = {
 type Props = NavigationProps & StateProps & DispatchProps
 
 export class FioAddressRegisterSelectWalletScene extends Component<Props> {
-  componentDidMount (): void {
+  componentDidMount(): void {
     const {
       fioAddress,
       selectedWallet: { wallet }
@@ -52,33 +52,20 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
   }
 
   onPressSelect = async () => {
-    const { supportedCurrencies, wallets } = this.props
-    const allowedWallets = []
-    for (const id in wallets) {
-      const wallet = wallets[id]
-      if (supportedCurrencies[wallet.currencyCode]) {
-        allowedWallets.push(wallets[id])
+    const { supportedCurrencies } = this.props
+    const allowedCurrencyCodes = []
+    for (const currency in supportedCurrencies) {
+      if (supportedCurrencies[currency]) {
+        allowedCurrencyCodes.push(currency)
       }
     }
-    Airship.show(bridge => (
-      <WalletListModal
-        bridge={bridge}
-        wallets={allowedWallets}
-        existingWalletToFilterId={''}
-        existingWalletToFilterCurrencyCode={''}
-        supportedWalletTypes={[]}
-        excludedCurrencyCode={[]}
-        showWalletCreators={false}
-        headerTitle={s.strings.select_wallet}
-        excludedTokens={[]}
-        noWalletCodes={[]}
-        disableZeroBalance={false}
-      />
-    )).then((response: GuiWallet | Object | null) => {
-      if (response) {
-        this.onSelectWallet(response.id, response.currencyCode)
+    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />).then(
+      (response: WalletListResult) => {
+        if (response.walletToSelect) {
+          this.onSelectWallet(response.walletToSelect.walletId, response.walletToSelect.currencyCode)
+        }
       }
-    })
+    )
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
@@ -131,7 +118,7 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
     return (
       <View style={styles.selectPaymentLower}>
         <View style={styles.buttons}>
-          <PrimaryButton disabled={isSelectWalletDisabled} style={[styles.next]} onPress={this.onPressSelect}>
+          <PrimaryButton disabled={isSelectWalletDisabled} style={styles.next} onPress={this.onPressSelect}>
             {isSelectWalletDisabled || loading ? (
               <ActivityIndicator />
             ) : (
@@ -153,7 +140,7 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
     )
   }
 
-  render () {
+  render() {
     const { activationCost, loading } = this.props
     const detailsText = sprintf(s.strings.fio_address_wallet_selection_text, loading ? '-' : activationCost)
     return (
@@ -162,7 +149,7 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
           <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
-              <Image source={fioAddressIcon} style={fioAddressStyles.image} resizeMode={'cover'} />
+              <Image source={fioAddressIcon} style={fioAddressStyles.image} resizeMode="cover" />
               <View style={styles.createWalletPromptArea}>
                 <T style={styles.instructionalText}>{detailsText}</T>
               </View>

@@ -7,16 +7,16 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import { DELETE } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import { getAccount, getWalletName } from '../modules/Core/selectors.js'
-import Text from '../modules/UI/components/FormattedText/index'
+import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
 import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 
 export const showDeleteWalletModal = (walletId: string, additionalMsg: string = '') => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const walletName = getWalletName(state, walletId)
-  const account = getAccount(state)
+  const { account } = state.core
+  const { currencyWallets = {} } = account
 
   // Use `launchModal` to put the modal component on screen:
   const modal = createYesNoModal({
@@ -24,8 +24,8 @@ export const showDeleteWalletModal = (walletId: string, additionalMsg: string = 
     message: (
       <Text style={{ textAlign: 'center' }}>
         {s.strings.fragmet_wallets_delete_wallet_first_confirm_message_mobile}
-        <B>{`${walletName}?`}</B>
-        {additionalMsg}
+        <B>{`${getWalletName(currencyWallets[walletId])}?`}</B>
+        {`\n \n ${additionalMsg}`}
       </Text>
     ),
     icon: <OptionIcon iconName={DELETE} />,

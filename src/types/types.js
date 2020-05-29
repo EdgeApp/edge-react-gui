@@ -116,9 +116,9 @@ export type TransactionListTx = {
   unfilteredIndex: number
 }
 
-export type FlatListItem = {
-  key: number,
-  item: any
+export type FlatListItem<T> = {
+  index: number,
+  item: T
 }
 
 export type DeviceDimensions = {
@@ -223,4 +223,46 @@ export type MostRecentWallet = {
 export type FioAddress = {
   name: string,
   expiration: string
+}
+
+export type FioRequest = {
+  fio_request_id: string,
+  content: {
+    payee_public_address: string,
+    amount: string,
+    token_code: string,
+    chain_code: string,
+    memo: string
+  },
+  payee_fio_address: string,
+  payer_fio_address: string,
+  payer_fio_public_key: string,
+  status: string,
+  time_stamp: string,
+  fioWalletId?: string
+}
+
+export type FioConnectionWalletItem = {
+  key: string,
+  id: string,
+  publicAddress: string,
+  symbolImage: string,
+  name: string,
+  currencyCode: string,
+  chainCode: string,
+  fullCurrencyCode: string
+}
+
+export type FioObtRecord = {
+  payer_fio_address: string,
+  payee_fio_address: string,
+  payer_fio_public_key: string,
+  payee_fio_public_key: string,
+  content: {
+    obt_id: string | null,
+    memo: string | null
+  },
+  fio_request_id: number,
+  status: string,
+  time_stamp: string
 }

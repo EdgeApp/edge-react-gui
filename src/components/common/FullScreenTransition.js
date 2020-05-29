@@ -18,7 +18,7 @@ type FullScreenTransitionProps = {
 }
 
 export class FullScreenTransitionComponent extends Component<FullScreenTransitionProps, FullScreenTransitionState> {
-  constructor (props: FullScreenTransitionProps) {
+  constructor(props: FullScreenTransitionProps) {
     super(props)
     this.state = {
       opacity: new Animated.Value(0)
@@ -47,7 +47,7 @@ export class FullScreenTransitionComponent extends Component<FullScreenTransitio
     }, 400)
   }
 
-  render () {
+  render() {
     const { opacity } = this.state
     const { image, text } = this.props
     return (

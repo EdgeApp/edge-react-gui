@@ -7,7 +7,7 @@ import { scale } from '../../util/scaling.js'
 /**
  * Calculates the height of the header (where the back button lives).
  */
-export function getHeaderHeight () {
+export function getHeaderHeight() {
   if (Platform.OS === 'ios') {
     const majorVersionIOS = Number(Platform.Version)
     return majorVersionIOS > 9 && majorVersionIOS < 11 ? 62 : 44
@@ -15,19 +15,9 @@ export function getHeaderHeight () {
   return 56
 }
 
-export const colors = {
-  gradient: {
-    light: '#3b7ada',
-    dark: '#2b5698'
-  },
-
-  primary: '#2a5799',
-  secondary: '#4977bb'
-}
-
 // https://projects.invisionapp.com/d/main#/console/10954562/239168414/inspect
 export const THEME = {
-  rem (n: number) {
+  rem(n: number) {
     return Math.round(n * scale(16))
   },
 
@@ -47,20 +37,13 @@ export const THEME = {
 
   OPACITY: {
     ACTIVE: 0.3,
-
-    FULL: 1.0,
-    HIGH: 0.8,
     MID: 0.5,
-    LOW: 0.1,
-    NONE: 0.0
+    MODAL_DARKNESS: 0.7
   },
 
   ALPHA: {
-    FULL: 99,
-    HIGH: 80,
     MID: 50,
-    LOW: 10,
-    NONE: 0
+    LOW: 10
   },
 
   COLORS: {
@@ -72,10 +55,6 @@ export const THEME = {
     GRADIENT: {
       DARK: '#0D2145',
       LIGHT: '#0E4B75'
-    },
-    GRADIENT_REVERSE: {
-      LIGHT: '#0D2145',
-      DARK: '#0E4B75'
     },
 
     ACCENT_BLUE: '#0073D9', // Airbitz blue
@@ -91,16 +70,39 @@ export const THEME = {
     GRAY_5: '#353535',
     WHITE: '#FFFFFF',
     OFF_WHITE: '#F6F6F6',
-    CLEAR: 'rgba(0, 0, 0, 0)',
     OPACITY_WHITE: 'rgba(255, 255, 255, 0.1)',
     OPAQUE_WHITE: 'rgba(255, 255, 255, 0.5)',
+    OPAQUE_WHITE_2: 'rgba(255, 255, 255, 0.75)',
+    OPAQUE_WHITE_3: 'rgba(255, 255, 255, 0.60)',
     OPACITY_GRAY_1: 'rgba(74, 81, 87, 0.1)',
+    SHADOW: '#000000', // True black for crisp drop shadows
 
     TRANSPARENT: 'transparent',
 
     ROW_PRESSED: '#D9E3ED', // same as GRAY_3
 
-    HEADER_TEXT_SECONDARY: '#A4C7DF'
+    APP_STATUS_BAR: '#00000040',
+    COUNTRY_SELECTION_MODAL_BLACK: '#000000', // Same as shadow but descriptive where it is used
+    COUNTRY_SELECTION_MODAL_GRAY_1: '#D8D6D6',
+    COUNTRY_SELECTION_MODAL_GRAY_2: '#58595C',
+    CRYPTO_EXCHANGE_WALLET_LIST_ROW_OPAQUE_BLUE: 'rgba(14, 75, 117, 0.5)',
+    FIO_ADDRESS_LIST_BORDER_BOTTOM: '#D8E2ED',
+    FIO_ADDRESS_LIST_FONT: '#4B5158',
+    HEADER_TEXT_SECONDARY: '#A4C7DF',
+    QR_CODE_BACKGROUND: 'white',
+    QR_CODE_FOREGROUND: 'black',
+    SETTINGS_COMPONENT_GREY: '#CCCCCC',
+    TRANSACTION_DETAILS_GREY_1: '#CCCCCC', // Same as SETTINGS_COMPONENT_GREY
+    TRANSACTION_DETAILS_GREY_2: '#D8D6D6', // Same as COUNTRY_SELECTION_MODAL_GRAY_1
+    TRANSACTION_DETAILS_GREY_3: '#58595C', // Same as COUNTRY_SELECTION_MODAL_GRAY_2
+    TRANSACTION_DETAILS_GREY_4: '#EEE',
+    TRANSACTION_DETAILS_SECONDARY: '#A4C7DF', // Same as HEADER_TEXT_SECONDARY
+    TRANSACTION_LIST_RECEIVED_TX: '#77C513',
+    TRANSACTION_LIST_SENT_TX: '#E85466',
+    WALLET_LIST_DIFF_NEGATIVE: '#E85466', // Same as TRANSACTION_LIST_SENT_TX
+    WALLET_LIST_DIFF_POSITIVE: '#77C513', // Same as TRANSACTION_LIST_RECEIVED_TX
+    WALLET_LIST_GRAY: '#E9E9EF',
+    WALLET_LIST_OPAQUE_BLUE: 'rgba(14, 75, 117, 0.5)' // Same as CRYPTO_EXCHANGE_WALLET_LIST_ROW_OPAQUE_BLUE
   }
 }
 

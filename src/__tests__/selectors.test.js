@@ -1,51 +1,12 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 /* globals describe test expect */
 
-import * as SETTINGS_SELECTORS from '../modules/Settings/selectors'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
-
-describe('getSupportedWalletTypes', function () {
-  describe('when multiple supported wallet types', function () {
-    test('[plugins] => [supportedWalletTypes]', function () {
-      const allCurrencyInfos = [{ displayName: 'Bitcoin', walletType: 'wallet:bitcoin' }, { displayName: 'Ethereum', walletType: 'wallet:ethereum' }]
-      const state = {
-        ui: {
-          settings: {
-            plugins: {
-              allCurrencyInfos
-            }
-          }
-        }
-      }
-      const expected = [{ label: 'Bitcoin', value: 'wallet:bitcoin' }, { label: 'Ethereum', value: 'wallet:ethereum' }]
-      const actual = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
-      expect(actual).toEqual(expected)
-    })
-  })
-
-  describe('when no supported wallet types', function () {
-    test('[plugins] => [supportedWalletTypes]', function () {
-      const state = {
-        ui: {
-          settings: {
-            plugins: {
-              allCurrencyInfos: []
-            }
-          }
-        }
-      }
-      const expected = []
-      const actual = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
-      expect(actual).toEqual(expected)
-    })
-  })
-})
 
 describe('getWalletAddressesCheckedPercent', function () {
   describe('when no progress', function () {
     test('zero progress => zero progress', function () {
-      const state = {
+      const state: any = {
         ui: {
           wallets: {
             walletLoadingProgress: {
@@ -71,7 +32,7 @@ describe('getWalletAddressesCheckedPercent', function () {
           randomNumbers.push(newRandomNumber)
         }
       }
-      const state = {
+      const state: any = {
         ui: {
           wallets: {
             walletLoadingProgress: {
@@ -92,7 +53,7 @@ describe('getWalletAddressesCheckedPercent', function () {
 
   describe('when progress complete', function () {
     test('complete progress => complete progress', function () {
-      const state = {
+      const state: any = {
         ui: {
           wallets: {
             walletLoadingProgress: {

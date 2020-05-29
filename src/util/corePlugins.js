@@ -11,7 +11,7 @@ if (ENV.ETHEREUM_INIT == null && (ENV.ETHERSCAN_API_KEY || ENV.INFURA_PROJECT_ID
   }
 }
 
-if (ENV.SHAPESHIFT_INIT == null && (ENV.SHAPESHIFT_API_KEY && ENV.SHAPESHIFT_CLIENT_ID && ENV.SHAPESHIFT_SECRET)) {
+if (ENV.SHAPESHIFT_INIT == null && ENV.SHAPESHIFT_API_KEY && ENV.SHAPESHIFT_CLIENT_ID && ENV.SHAPESHIFT_SECRET) {
   ENV.SHAPESHIFT_INIT = {
     apiKey: ENV.SHAPESHIFT_API_KEY,
     clientId: ENV.SHAPESHIFT_CLIENT_ID,
@@ -27,14 +27,15 @@ if (ENV.CHANGE_NOW_INIT == null && ENV.CHANGE_NOW_API_KEY) {
 
 export const currencyPlugins = {
   // edge-currency-accountbased:
+  binance: true,
   eos: true,
   ethereum: ENV.ETHEREUM_INIT,
+  ethereumclassic: true,
   fio: true,
-  stellar: true,
   ripple: true,
-  tezos: true,
-  binance: true,
   rsk: true,
+  stellar: true,
+  tezos: true,
   // edge-currency-bitcoin:
   bitcoin: true,
   bitcoincash: true,
@@ -70,7 +71,8 @@ export const ratePlugins = {
   coincapLegacy: false,
   nomics: ENV.NOMICS_INIT,
   currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
-  xagau: true
+  xagau: true,
+  wazirx: true
 }
 
 export const swapPlugins = {
@@ -81,7 +83,9 @@ export const swapPlugins = {
   foxExchange: ENV.FOX_INIT,
   godex: ENV.GODEX_INIT,
   // shapeshift: ENV.SHAPESHIFT_INIT,
-  totle: ENV.TOTLE_INIT
+  switchain: ENV.SWITCHAIN_INIT,
+  totle: ENV.TOTLE_INIT,
+  transfer: true
 }
 
 export const allPlugins = {

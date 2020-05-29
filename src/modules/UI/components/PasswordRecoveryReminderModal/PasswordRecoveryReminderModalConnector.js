@@ -13,7 +13,4 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   onGoToPasswordRecoveryScene: () => dispatch(onGoToPasswordRecoveryScene())
 })
 
-export const PasswordRecoveryReminderModalConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PasswordRecoveryReminderModalComponent)
+export const PasswordRecoveryReminderModalConnector = connect(mapStateToProps, mapDispatchToProps)(PasswordRecoveryReminderModalComponent)

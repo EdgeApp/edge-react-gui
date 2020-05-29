@@ -170,11 +170,23 @@ const merchantPartners = [
     jobTitle: '',
     familyName: '',
     recordID: ''
+  },
+  {
+    givenName: 'Switchain',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/switchain.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
   }
 ]
 
 class ContactsLoaderComponent extends Component<Props> {
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const { contactsPermission } = nextProps
 
     if (this.props.contactsPermission !== 'authorized' && contactsPermission === 'authorized') {
@@ -182,7 +194,7 @@ class ContactsLoaderComponent extends Component<Props> {
     }
   }
 
-  fetchContacts (): Promise<Array<GuiContact>> {
+  fetchContacts(): Promise<Array<GuiContact>> {
     return new Promise((resolve, reject) => {
       return Contacts.getAll((error, result) => {
         // The native code sometimes sends strings instead of errors:
@@ -208,7 +220,7 @@ class ContactsLoaderComponent extends Component<Props> {
       })
   }
 
-  render () {
+  render() {
     return null
   }
 }

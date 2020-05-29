@@ -1,7 +1,8 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 /* globals jasmine beforeAll beforeEach afterAll */
 
 import detox from 'detox'
+
 import config from '../package.json'
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 120000

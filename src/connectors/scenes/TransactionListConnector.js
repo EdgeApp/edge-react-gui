@@ -8,7 +8,6 @@ import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import type { DispatchProps, StateProps } from '../../components/scenes/TransactionListScene'
 import { TransactionList } from '../../components/scenes/TransactionListScene'
-import { getWallet } from '../../modules/Core/selectors.js'
 import { getCustomTokens, getDisplayDenomination, getDisplayDenominationKey, getExchangeDenomination, getSettings } from '../../modules/Settings/selectors.js'
 import { convertCurrency, getSelectedCurrencyCode, getSelectedWallet, getSelectedWalletId, getTransactions } from '../../modules/UI/selectors.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
@@ -22,7 +21,8 @@ const mapStateToProps = (state: State) => {
       loading: true
     }
   }
-  const coreWallet: EdgeCurrencyWallet = getWallet(state, selectedWalletId)
+  const { currencyWallets = {} } = state.core.account
+  const coreWallet: EdgeCurrencyWallet = currencyWallets[selectedWalletId]
   const fiatSymbol = getFiatSymbol(getSelectedWallet(state).fiatCurrencyCode)
   const currencyCode = getSelectedCurrencyCode(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
@@ -92,7 +92,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   }
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TransactionList)
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)

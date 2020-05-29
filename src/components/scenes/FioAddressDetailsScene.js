@@ -8,7 +8,7 @@ import fioAddressDetailsIcon from '../../assets/images/details_fioAddress.png'
 import * as Constants from '../../constants/SceneKeys'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles } from '../../styles/scenes/FioAddressDetailsStyle'
 import { SceneWrapper } from '../common/SceneWrapper'
 
@@ -27,7 +27,7 @@ export type SceneProps = {
 type Props = StateProps & SceneProps
 
 export class FioAddressDetailsScene extends Component<Props, State> {
-  componentDidMount () {
+  componentDidMount() {
     const { fioAddress } = this.props
 
     if (!fioAddress) {
@@ -37,11 +37,16 @@ export class FioAddressDetailsScene extends Component<Props, State> {
     }
   }
 
-  renderButton () {
+  _onToggleConnectWallets = (): void => {
+    const { fioAddressName } = this.props
+    Actions[Constants.FIO_CONNECT_TO_WALLETS]({ fioAddressName })
+  }
+
+  renderButton() {
     if (this.props.registerSuccess) {
       return (
         <View style={styles.buttons}>
-          <TouchableHighlight style={styles.bottomButton} onPress={() => Actions[Constants.FIO_ADDRESS_LIST]()} underlayColor={styles.underlay.color}>
+          <TouchableHighlight style={styles.bottomButton} onPress={Actions[Constants.FIO_ADDRESS_LIST]} underlayColor={styles.underlay.color}>
             <View style={styles.bottomButtonTextWrap}>
               <T style={styles.bottomButtonText}>{s.strings.fio_address_list}</T>
             </View>
@@ -49,9 +54,19 @@ export class FioAddressDetailsScene extends Component<Props, State> {
         </View>
       )
     }
+
+    return (
+      <View style={styles.buttons}>
+        <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleConnectWallets} underlayColor={styles.underlay.color}>
+          <View style={[styles.bottomButtonTextWrap, styles.buttonWithLoader]}>
+            <T style={styles.bottomButtonText}>{s.strings.fio_address_details_screen_connect_to_wallets}</T>
+          </View>
+        </TouchableHighlight>
+      </View>
+    )
   }
 
-  render () {
+  render() {
     const { fioAddressName, expiration } = this.props
     return (
       <SceneWrapper>

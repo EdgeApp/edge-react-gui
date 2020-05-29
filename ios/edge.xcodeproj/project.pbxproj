@@ -34,9 +34,6 @@
 		98AF3B3C1F99F7D20083E087 /* audio_received.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 98AF3B3A1F99F7D10083E087 /* audio_received.mp3 */; };
 		9C77109EF9C7495E83B65835 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E22452AEA7F9422FA609E7B4 /* Octicons.ttf */; };
 		A32373B436A54BE09CB501C5 /* font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1FA75A7FCCEA4AACBBC97934 /* font.ttf */; };
-		A80A1C7122A653DC00A5417B /* exchange_logo_fox_exchange.png in Resources */ = {isa = PBXBuildFile; fileRef = A80A1C6E22A653DC00A5417B /* exchange_logo_fox_exchange.png */; };
-		A80A1C7222A653DC00A5417B /* exchange_logo_fox_exchange@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A80A1C6F22A653DC00A5417B /* exchange_logo_fox_exchange@2x.png */; };
-		A80A1C7322A653DC00A5417B /* exchange_logo_fox_exchange@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = A80A1C7022A653DC00A5417B /* exchange_logo_fox_exchange@3x.png */; };
 		A88329F9AD044FEB8B7D2AA1 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 497F4AA15A3F4601A2F7027F /* MaterialCommunityIcons.ttf */; };
 		ABAD41DADC5F4A96990A421E /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F7BCB7447264484B9199BD43 /* Feather.ttf */; };
 		AC40390740E9458CBD92E01B /* SF-UI-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0F91EE15341B486DB1AD6756 /* SF-UI-Text-Regular.otf */; };
@@ -47,21 +44,8 @@
 		BBF0CDD08FB044868A4B510C /* SourceSansPro-SemiboldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7F94D33AFE62415995DED277 /* SourceSansPro-SemiboldItalic.ttf */; };
 		D4AFF217F0F5431F869AC7C6 /* SourceSansPro-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 974007B695574483B608D669 /* SourceSansPro-Light.ttf */; };
 		D6181FED10025926C9F176BD /* libPods-edge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DCFC9E062F0D18DD4E39B5C5 /* libPods-edge.a */; };
-		DA285EAC2203BF3000F79CE6 /* exchange_logo_faast@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = DA285EA92203BF2F00F79CE6 /* exchange_logo_faast@3x.png */; };
-		DA285EAD2203BF3000F79CE6 /* exchange_logo_faast.png in Resources */ = {isa = PBXBuildFile; fileRef = DA285EAA2203BF2F00F79CE6 /* exchange_logo_faast.png */; };
-		DA285EAE2203BF3000F79CE6 /* exchange_logo_faast@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DA285EAB2203BF2F00F79CE6 /* exchange_logo_faast@2x.png */; };
 		DA89DDF820F2CFD70012B4BD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA89DDF720F2CFD70012B4BD /* GoogleService-Info.plist */; };
 		DAF7C41220C505CC005B7898 /* plugins in Resources */ = {isa = PBXBuildFile; fileRef = DAF7C41120C505CC005B7898 /* plugins */; };
-		E638431C20EFE23300EA9FE9 /* alt_splash.png in Resources */ = {isa = PBXBuildFile; fileRef = E63842DA20EFE23300EA9FE9 /* alt_splash.png */; };
-		E6C089A7217E7ADB003DE9B9 /* exchange_logo_changelly.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C0899B217E7AD7003DE9B9 /* exchange_logo_changelly.png */; };
-		E6C089A9217E7ADB003DE9B9 /* exchange_logo_changenow.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C0899D217E7AD8003DE9B9 /* exchange_logo_changenow.png */; };
-		E6C089AA217E7ADB003DE9B9 /* exchange_logo_changenow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C0899E217E7AD9003DE9B9 /* exchange_logo_changenow@2x.png */; };
-		E6C089AB217E7ADB003DE9B9 /* exchange_logo_changenow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C0899F217E7AD9003DE9B9 /* exchange_logo_changenow@3x.png */; };
-		E6C089AC217E7ADB003DE9B9 /* exchange_logo_shapeshift.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C089A0217E7AD9003DE9B9 /* exchange_logo_shapeshift.png */; };
-		E6C089AD217E7ADB003DE9B9 /* exchange_logo_shapeshift@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C089A1217E7AD9003DE9B9 /* exchange_logo_shapeshift@2x.png */; };
-		E6C089AE217E7ADB003DE9B9 /* exchange_logo_shapeshift@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C089A2217E7ADA003DE9B9 /* exchange_logo_shapeshift@3x.png */; };
-		E6C089B0217E7ADB003DE9B9 /* exchange_logo_changelly@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C089A4217E7ADA003DE9B9 /* exchange_logo_changelly@3x.png */; };
-		E6C089B1217E7ADB003DE9B9 /* exchange_logo_changelly@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6C089A5217E7ADB003DE9B9 /* exchange_logo_changelly@2x.png */; };
 		ED5310DCFBF946DFA36CC462 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A4F20FA41E19409A93306235 /* Ionicons.ttf */; };
 		F0D7D6C909584919867CD8B5 /* SourceSansPro-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3174EFC33129444580156447 /* SourceSansPro-BlackItalic.ttf */; };
 		F3343A739BF04CF1B73A6AA6 /* SourceSansPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8203ECA416CB4127BE7B00B3 /* SourceSansPro-Regular.ttf */; };
@@ -106,32 +90,16 @@
 		9EAB0D55879A45ADA4669286 /* SourceSansPro-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-LightItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-LightItalic.ttf"; sourceTree = "<group>"; };
 		A0587BF5EC0B93837E5E83BE /* Pods-edge.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge.release.xcconfig"; path = "Pods/Target Support Files/Pods-edge/Pods-edge.release.xcconfig"; sourceTree = "<group>"; };
 		A4F20FA41E19409A93306235 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
-		A80A1C6E22A653DC00A5417B /* exchange_logo_fox_exchange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_fox_exchange.png; sourceTree = "<group>"; };
-		A80A1C6F22A653DC00A5417B /* exchange_logo_fox_exchange@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_fox_exchange@2x.png"; sourceTree = "<group>"; };
-		A80A1C7022A653DC00A5417B /* exchange_logo_fox_exchange@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_fox_exchange@3x.png"; sourceTree = "<group>"; };
 		AA0A843F10D9480786517FEF /* SourceSansPro-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Italic.ttf"; path = "../src/assets/fonts/SourceSansPro-Italic.ttf"; sourceTree = "<group>"; };
 		B3F94957529C4939AD4E8BD9 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		BC9BE38812E748DE91169D0A /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		CB5F84A172E9414BB03C915D /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; };
-		DA285EA92203BF2F00F79CE6 /* exchange_logo_faast@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_faast@3x.png"; sourceTree = "<group>"; };
-		DA285EAA2203BF2F00F79CE6 /* exchange_logo_faast.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_faast.png; sourceTree = "<group>"; };
-		DA285EAB2203BF2F00F79CE6 /* exchange_logo_faast@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_faast@2x.png"; sourceTree = "<group>"; };
 		DA89DDF720F2CFD70012B4BD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "edge/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DAF7C41120C505CC005B7898 /* plugins */ = {isa = PBXFileReference; lastKnownFileType = folder; path = plugins; sourceTree = "<group>"; };
 		DCFC9E062F0D18DD4E39B5C5 /* libPods-edge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-edge.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF62D00B1BE94D6E8890A424 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		E22452AEA7F9422FA609E7B4 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
-		E63842DA20EFE23300EA9FE9 /* alt_splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = alt_splash.png; sourceTree = "<group>"; };
 		E682D9AD200DF9A70042F9BA /* edge.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = edge.entitlements; path = edge/edge.entitlements; sourceTree = "<group>"; };
-		E6C0899B217E7AD7003DE9B9 /* exchange_logo_changelly.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_changelly.png; sourceTree = "<group>"; };
-		E6C0899D217E7AD8003DE9B9 /* exchange_logo_changenow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_changenow.png; sourceTree = "<group>"; };
-		E6C0899E217E7AD9003DE9B9 /* exchange_logo_changenow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_changenow@2x.png"; sourceTree = "<group>"; };
-		E6C0899F217E7AD9003DE9B9 /* exchange_logo_changenow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_changenow@3x.png"; sourceTree = "<group>"; };
-		E6C089A0217E7AD9003DE9B9 /* exchange_logo_shapeshift.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = exchange_logo_shapeshift.png; sourceTree = "<group>"; };
-		E6C089A1217E7AD9003DE9B9 /* exchange_logo_shapeshift@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_shapeshift@2x.png"; sourceTree = "<group>"; };
-		E6C089A2217E7ADA003DE9B9 /* exchange_logo_shapeshift@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_shapeshift@3x.png"; sourceTree = "<group>"; };
-		E6C089A4217E7ADA003DE9B9 /* exchange_logo_changelly@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_changelly@3x.png"; sourceTree = "<group>"; };
-		E6C089A5217E7ADB003DE9B9 /* exchange_logo_changelly@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "exchange_logo_changelly@2x.png"; sourceTree = "<group>"; };
 		F7BCB7447264484B9199BD43 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		F7C7D268E2FC4EF68EACC927 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
 		FD256E3EDE9A4D5CA794D8AD /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
@@ -266,22 +234,6 @@
 		FD982BC41FABFA020057F035 /* SplashScreenResource */ = {
 			isa = PBXGroup;
 			children = (
-				A80A1C6E22A653DC00A5417B /* exchange_logo_fox_exchange.png */,
-				A80A1C6F22A653DC00A5417B /* exchange_logo_fox_exchange@2x.png */,
-				A80A1C7022A653DC00A5417B /* exchange_logo_fox_exchange@3x.png */,
-				DA285EAA2203BF2F00F79CE6 /* exchange_logo_faast.png */,
-				DA285EAB2203BF2F00F79CE6 /* exchange_logo_faast@2x.png */,
-				DA285EA92203BF2F00F79CE6 /* exchange_logo_faast@3x.png */,
-				E6C0899B217E7AD7003DE9B9 /* exchange_logo_changelly.png */,
-				E6C089A5217E7ADB003DE9B9 /* exchange_logo_changelly@2x.png */,
-				E6C089A4217E7ADA003DE9B9 /* exchange_logo_changelly@3x.png */,
-				E6C0899D217E7AD8003DE9B9 /* exchange_logo_changenow.png */,
-				E6C0899E217E7AD9003DE9B9 /* exchange_logo_changenow@2x.png */,
-				E6C0899F217E7AD9003DE9B9 /* exchange_logo_changenow@3x.png */,
-				E6C089A0217E7AD9003DE9B9 /* exchange_logo_shapeshift.png */,
-				E6C089A1217E7AD9003DE9B9 /* exchange_logo_shapeshift@2x.png */,
-				E6C089A2217E7ADA003DE9B9 /* exchange_logo_shapeshift@3x.png */,
-				E63842DA20EFE23300EA9FE9 /* alt_splash.png */,
 				FD982BCB1FACDEF00057F035 /* LaunchScreen.xib */,
 				6ED8C11F21BB685C00CC03C7 /* splash.png */,
 			);
@@ -359,35 +311,20 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3D2A4BE322934B0000E1EC61 /* blank.html in Resources */,
-				E6C089AA217E7ADB003DE9B9 /* exchange_logo_changenow@2x.png in Resources */,
-				DA285EAC2203BF3000F79CE6 /* exchange_logo_faast@3x.png in Resources */,
-				DA285EAD2203BF3000F79CE6 /* exchange_logo_faast.png in Resources */,
-				E6C089AC217E7ADB003DE9B9 /* exchange_logo_shapeshift.png in Resources */,
 				DA89DDF820F2CFD70012B4BD /* GoogleService-Info.plist in Resources */,
-				E6C089AB217E7ADB003DE9B9 /* exchange_logo_changenow@3x.png in Resources */,
-				E6C089A9217E7ADB003DE9B9 /* exchange_logo_changenow.png in Resources */,
-				E6C089AE217E7ADB003DE9B9 /* exchange_logo_shapeshift@3x.png in Resources */,
-				E638431C20EFE23300EA9FE9 /* alt_splash.png in Resources */,
 				6ED8C12021BB685C00CC03C7 /* splash.png in Resources */,
-				E6C089B0217E7ADB003DE9B9 /* exchange_logo_changelly@3x.png in Resources */,
 				DAF7C41220C505CC005B7898 /* plugins in Resources */,
-				E6C089A7217E7ADB003DE9B9 /* exchange_logo_changelly.png in Resources */,
 				B524052E4B614E5DB1524555 /* Roboto_medium.ttf in Resources */,
 				98AF3B3C1F99F7D20083E087 /* audio_received.mp3 in Resources */,
 				049D53B0E7A04E8E9FB81225 /* Roboto.ttf in Resources */,
 				5753E201C6234F3D898201B7 /* rubicon-icon-font.ttf in Resources */,
-				E6C089AD217E7ADB003DE9B9 /* exchange_logo_shapeshift@2x.png in Resources */,
 				FD982BCC1FACDEF00057F035 /* LaunchScreen.xib in Resources */,
 				3D1368BD21DD76BB00DC8CE4 /* edge-core in Resources */,
 				98AF3B3B1F99F7D20083E087 /* audio_sent.mp3 in Resources */,
-				E6C089B1217E7ADB003DE9B9 /* exchange_logo_changelly@2x.png in Resources */,
-				DA285EAE2203BF3000F79CE6 /* exchange_logo_faast@2x.png in Resources */,
 				AC40390740E9458CBD92E01B /* SF-UI-Text-Regular.otf in Resources */,
 				A32373B436A54BE09CB501C5 /* font.ttf in Resources */,
-				A80A1C7322A653DC00A5417B /* exchange_logo_fox_exchange@3x.png in Resources */,
 				77105E1044684D61B6B0B1EA /* SourceSansPro-Black.ttf in Resources */,
 				F0D7D6C909584919867CD8B5 /* SourceSansPro-BlackItalic.ttf in Resources */,
-				A80A1C7222A653DC00A5417B /* exchange_logo_fox_exchange@2x.png in Resources */,
 				224A82278CB1465E9E84DC30 /* SourceSansPro-Bold.ttf in Resources */,
 				31BE19EEE2CA4692A7873F5F /* SourceSansPro-BoldItalic.ttf in Resources */,
 				F4A41DF580AB4DA18363D332 /* SourceSansPro-ExtraLight.ttf in Resources */,
@@ -403,7 +340,6 @@
 				72FEADA163204A53BB83DDB1 /* EvilIcons.ttf in Resources */,
 				ABAD41DADC5F4A96990A421E /* Feather.ttf in Resources */,
 				772873537EE6422F8F8E8CD3 /* FontAwesome.ttf in Resources */,
-				A80A1C7122A653DC00A5417B /* exchange_logo_fox_exchange.png in Resources */,
 				8E1B3057B68149CCA355FDBF /* FontAwesome5_Brands.ttf in Resources */,
 				5BAD66699331448D82B24104 /* FontAwesome5_Regular.ttf in Resources */,
 				26B52E61E77947A1A4E07707 /* FontAwesome5_Solid.ttf in Resources */,

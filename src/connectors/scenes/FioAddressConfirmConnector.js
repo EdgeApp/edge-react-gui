@@ -5,15 +5,18 @@ import { connect } from 'react-redux'
 
 import type { DispatchProps, StateProps } from '../../components/scenes/FioAddressConfirmScene'
 import { FioAddressConfirmScene } from '../../components/scenes/FioAddressConfirmScene'
-import { isConnectedState } from '../../modules/Core/selectors'
+import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
+import { getDisplayDenomination } from '../../modules/Settings/selectors'
 import type { Dispatch, State } from '../../types/reduxTypes'
 
 const mapStateToProps = (state: State) => {
   const { fioAddress } = state.ui.scenes
+  const displayDenomination = getDisplayDenomination(state, FIO_STR)
 
   const out: StateProps = {
     fioAddressName: fioAddress.fioAddressName,
-    isConnected: isConnectedState(state)
+    denominationMultiplier: displayDenomination.multiplier,
+    isConnected: state.network.isConnected
   }
   return out
 }
@@ -26,7 +29,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     })
 })
 
-export const FioAddressConfirmConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FioAddressConfirmScene)
+export const FioAddressConfirmConnector = connect(mapStateToProps, mapDispatchToProps)(FioAddressConfirmScene)

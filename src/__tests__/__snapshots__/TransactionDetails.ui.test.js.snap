@@ -48,15 +48,13 @@ exports[`TransactionDetails.ui should render 1`] = `
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -85,14 +83,12 @@ exports[`TransactionDetails.ui should render 1`] = `
                     }
                   }
                   style={
-                    Array [
-                      Object {
-                        "borderRadius": 20,
-                        "height": 40,
-                        "marginRight": 9,
-                        "width": 40,
-                      },
-                    ]
+                    Object {
+                      "borderRadius": 20,
+                      "height": 40,
+                      "marginRight": 9,
+                      "width": 40,
+                    }
                   }
                 />
                 <FormattedText
@@ -168,15 +164,13 @@ exports[`TransactionDetails.ui should render 1`] = `
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -257,12 +251,21 @@ exports[`TransactionDetails.ui should render 1`] = `
                 style={
                   Object {
                     "color": "#353535",
-                    "flex": 1,
                     "fontSize": 22,
                   }
                 }
               >
                 $ 
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "flex": 1,
+                    "fontSize": 22,
+                  }
+                }
+              >
                 120.00
               </FormattedText>
               <FormattedText
@@ -301,15 +304,13 @@ exports[`TransactionDetails.ui should render 1`] = `
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -389,15 +390,13 @@ exports[`TransactionDetails.ui should render 1`] = `
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -525,15 +524,13 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -562,14 +559,12 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                     }
                   }
                   style={
-                    Array [
-                      Object {
-                        "borderRadius": 20,
-                        "height": 40,
-                        "marginRight": 9,
-                        "width": 40,
-                      },
-                    ]
+                    Object {
+                      "borderRadius": 20,
+                      "height": 40,
+                      "marginRight": 9,
+                      "width": 40,
+                    }
                   }
                 />
                 <FormattedText
@@ -645,15 +640,13 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -734,12 +727,21 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 style={
                   Object {
                     "color": "#353535",
-                    "flex": 1,
                     "fontSize": 22,
                   }
                 }
               >
                 $ 
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "flex": 1,
+                    "fontSize": 22,
+                  }
+                }
+              >
                 120.00
               </FormattedText>
               <FormattedText
@@ -778,15 +780,13 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -866,15 +866,13 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -1002,15 +1000,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -1039,14 +1035,12 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                     }
                   }
                   style={
-                    Array [
-                      Object {
-                        "borderRadius": 20,
-                        "height": 40,
-                        "marginRight": 9,
-                        "width": 40,
-                      },
-                    ]
+                    Object {
+                      "borderRadius": 20,
+                      "height": 40,
+                      "marginRight": 9,
+                      "width": 40,
+                    }
                   }
                 />
                 <FormattedText
@@ -1122,15 +1116,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -1211,12 +1203,21 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                 style={
                   Object {
                     "color": "#353535",
-                    "flex": 1,
                     "fontSize": 22,
                   }
                 }
               >
                 $ 
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "flex": 1,
+                    "fontSize": 22,
+                  }
+                }
+              >
                 120.00
               </FormattedText>
               <FormattedText
@@ -1255,15 +1256,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -1343,15 +1342,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -1479,15 +1476,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -1516,14 +1511,12 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                     }
                   }
                   style={
-                    Array [
-                      Object {
-                        "borderRadius": 20,
-                        "height": 40,
-                        "marginRight": 9,
-                        "width": 40,
-                      },
-                    ]
+                    Object {
+                      "borderRadius": 20,
+                      "height": 40,
+                      "marginRight": 9,
+                      "width": 40,
+                    }
                   }
                 />
                 <FormattedText
@@ -1599,15 +1592,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -1688,12 +1679,21 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                 style={
                   Object {
                     "color": "#353535",
-                    "flex": 1,
                     "fontSize": 22,
                   }
                 }
               >
                 $ 
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "flex": 1,
+                    "fontSize": 22,
+                  }
+                }
+              >
                 120.00
               </FormattedText>
               <FormattedText
@@ -1732,15 +1732,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText
@@ -1820,15 +1818,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                   }
                 }
                 style={
-                  Array [
-                    Object {
-                      "height": 16,
-                      "position": "absolute",
-                      "right": 10,
-                      "top": 10,
-                      "width": 16,
-                    },
-                  ]
+                  Object {
+                    "height": 16,
+                    "position": "absolute",
+                    "right": 10,
+                    "top": 10,
+                    "width": 16,
+                  }
                 }
               />
               <FormattedText

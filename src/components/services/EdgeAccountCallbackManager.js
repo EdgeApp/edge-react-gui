@@ -20,11 +20,11 @@ type EdgeAccountCallbackManagerDispatchProps = {
 type Props = EdgeAccountCallbackManagerStateProps & EdgeAccountCallbackManagerDispatchProps
 
 class EdgeAccountCallbackManager extends React.Component<Props> {
-  render () {
+  render() {
     return null
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     if (this.props.account.id) this.subscribeToAccount()
   }
 
@@ -78,7 +78,4 @@ const mapDispatchToProps = (dispatch: Dispatch): EdgeAccountCallbackManagerDispa
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EdgeAccountCallbackManager)
+export default connect(mapStateToProps, mapDispatchToProps)(EdgeAccountCallbackManager)

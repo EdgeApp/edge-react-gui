@@ -33,7 +33,7 @@ export type Props = {
 export class PinInput extends Component<Props> {
   textField: any
 
-  render () {
+  render() {
     const { onChangePin, style, ...props } = this.props
     return <TextField ref={ref => (this.textField = ref)} onChangeText={onChangePin} style={[styles.pinInput, style]} {...DEFAULTS} {...props} />
   }

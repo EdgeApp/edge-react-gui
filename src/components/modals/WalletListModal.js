@@ -1,165 +1,127 @@
 // @flow
 
 import { FormField, MaterialInputStyle } from 'edge-components'
-import React, { Component, Fragment } from 'react'
-import { Dimensions, FlatList, View } from 'react-native'
+import { type EdgeAccount } from 'edge-core-js'
+import React, { Component } from 'react'
+import { FlatList, View } from 'react-native'
+import { connect } from 'react-redux'
 
-import { CryptoExchangeCreateWalletRow } from '../../components/common/CryptoExchangeCreateWalletRow.js'
+import { WalletListModalCreateRow } from '../../components/common/WalletListModalCreateRow.js'
 import { CryptoExchangeWalletListTokenRowConnected as CryptoExchangeWalletListRow } from '../../connectors/components/CryptoExchangeWalletListRowConnector.js'
-import s from '../../locales/strings.js'
-import FormattedText from '../../modules/UI/components/FormattedText/index'
-import { CryptoExchangeWalletSelectorModalStyles as styles } from '../../styles/components/CryptoExchangeWalletSelectorModalStyles.js'
-import type { GuiWallet, MostRecentWallet } from '../../types/types.js'
+import { getActiveWalletIds } from '../../modules/UI/selectors.js'
+import type { State as StateType } from '../../types/reduxTypes.js'
+import type { FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
+import { type GuiWalletType } from '../../types/types.js'
+import { getGuiWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
+import { type TokenSelectObject } from '../common/CryptoExchangeWalletListTokenRow.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
-export type StateProps = {
+export type WalletListResult = {
+  walletToSelect?: {
+    walletId: string,
+    currencyCode: string
+  },
+  walletToCreate?: {
+    walletType: string,
+    currencyCode: string
+  }
+}
+
+type StateProps = {
+  wallets: { [string]: GuiWallet },
   activeWalletIds: Array<string>,
-  mostRecentWallets: Array<MostRecentWallet>
+  mostRecentWallets: Array<MostRecentWallet>,
+  account: EdgeAccount
 }
 
 type OwnProps = {
-  bridge: AirshipBridge<GuiWallet | Object | null>,
-  wallets: Array<GuiWallet>,
-  existingWalletToFilterId?: string,
-  existingWalletToFilterCurrencyCode?: string,
+  bridge: AirshipBridge<WalletListResult>,
   headerTitle: string,
-  excludedCurrencyCode: Array<string>,
-  supportedWalletTypes: Array<Object>,
-  showWalletCreators: boolean,
-  excludedTokens: Array<string>,
-  noWalletCodes: Array<string>,
-  disableZeroBalance: boolean
+  showCreateWallet?: boolean,
+  excludeWalletIds?: Array<string>,
+  allowedCurrencyCodes?: Array<string>,
+  excludeCurrencyCodes?: Array<string>
 }
 
 type Record = {
   walletItem: GuiWallet | null,
-  supportedWalletType: Object | null,
+  createWalletCurrency: GuiWalletType | null,
   mostRecentUsed?: boolean,
   currencyCode?: string | null,
   headerLabel?: string
 }
 
-type FlatListItem = {
-  item: Record,
-  index: number
-}
-
-type LocalState = {
+type State = {
   input: string,
   records: Array<Record>,
-  totalCurrenciesAndTokens: number,
-  totalWalletsToAdd: number
+  allowedCurrencyCodes?: Array<string>,
+  excludeCurrencyCodes?: Array<string>
 }
 
 type Props = StateProps & OwnProps
 
-export class WalletListModal extends Component<Props, LocalState> {
-  constructor (props: Props) {
+class WalletListModalConnected extends Component<Props, State> {
+  constructor(props: Props) {
     super(props)
-    const records = []
-    let i = 0
-    let totalCurrenciesAndTokens = 0
-    let totalWalletsToAdd = 0
-    for (i; i < this.props.activeWalletIds.length; i++) {
-      const wallet = this.props.wallets.find(wallet => wallet.id === this.props.activeWalletIds[i])
-      if (wallet) {
-        if (wallet.type === 'wallet:fio' && global.isFioDisabled) continue // FIO disable changes
-        const record = {
-          walletItem: wallet,
-          supportedWalletType: null
-        }
-        records.push(record)
-        totalCurrenciesAndTokens++
-        if (wallet.enabledTokens.length) {
-          totalCurrenciesAndTokens = totalCurrenciesAndTokens + wallet.enabledTokens.length
-        }
-      }
-    }
-    for (i = 0; i < this.props.supportedWalletTypes.length; i++) {
-      const record = {
-        walletItem: null,
-        supportedWalletType: this.props.supportedWalletTypes[i]
-      }
-      totalWalletsToAdd++
-      records.push(record)
-    }
-
     this.state = {
       input: '',
+      records: []
+    }
+  }
+
+  static getDerivedStateFromProps(props: Props) {
+    const { activeWalletIds, wallets, excludeWalletIds, showCreateWallet, account } = props
+
+    // Uppercase currency codes
+    let { allowedCurrencyCodes, excludeCurrencyCodes } = props
+    if (allowedCurrencyCodes != null) {
+      allowedCurrencyCodes = allowedCurrencyCodes.map(code => code.toUpperCase())
+    }
+    if (excludeCurrencyCodes != null) {
+      excludeCurrencyCodes = excludeCurrencyCodes.map(code => code.toUpperCase())
+    }
+
+    const records = []
+
+    // Initialize Wallets
+    for (const walletId of activeWalletIds) {
+      const wallet = wallets[walletId]
+      const excludeWallet = wallet && excludeWalletIds ? excludeWalletIds.find(id => id === wallet.id) : false
+      if (wallet && !excludeWallet) {
+        records.push({
+          walletItem: wallet,
+          createWalletCurrency: null
+        })
+      }
+    }
+
+    // Initialize Create Wallets
+    if (showCreateWallet) {
+      const createWalletCurrencies = getGuiWalletTypes(account)
+      const walletsArray = Object.values(wallets)
+      for (const createWalletCurrency of createWalletCurrencies) {
+        const { currencyCode } = createWalletCurrency
+        const checkAllowedCurrencyCodes = allowedCurrencyCodes ? allowedCurrencyCodes.find(code => code === currencyCode) : true
+        const checkExcludeCurrencyCodes = excludeCurrencyCodes ? excludeCurrencyCodes.find(code => code === currencyCode) : false
+        const checkExistingWallet = walletsArray.find(wallet => (wallet && wallet.currencyCode ? wallet.currencyCode === currencyCode : false))
+        if (checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes && !checkExistingWallet) {
+          records.push({
+            walletItem: null,
+            createWalletCurrency
+          })
+        }
+      }
+    }
+    return {
       records,
-      totalCurrenciesAndTokens,
-      totalWalletsToAdd
+      allowedCurrencyCodes,
+      excludeCurrencyCodes
     }
   }
 
-  calculateHeight = () => {
-    const length = this.props.showWalletCreators
-      ? this.state.totalCurrenciesAndTokens + this.state.totalWalletsToAdd
-      : this.state.totalCurrenciesAndTokens - this.props.excludedTokens.length
-    const windowHeight = Dimensions.get('window').height * 0.7
-    const flatListHeight = length * styles.rowHeight
-    if (flatListHeight + styles.rowHeight > windowHeight) {
-      return windowHeight - styles.rowHeight
-    }
-    return flatListHeight
-  }
-  keyExtractor = (item: Record, index: number) => index.toString()
-
-  selectWallet = (wallet: GuiWallet) => {
-    this.props.bridge.resolve(wallet)
-  }
-  selectTokenWallet = (obj: Object) => {
-    this.props.bridge.resolve(obj)
-  }
-  createWallet = (supportedWallet: Object) => {
-    this.props.bridge.resolve(supportedWallet)
-  }
-  renderWalletItem = ({ item }: FlatListItem) => {
-    const excludeCurrency = this.props.existingWalletToFilterCurrencyCode || ''
-    if (item.walletItem) {
-      return (
-        <CryptoExchangeWalletListRow
-          wallet={item.walletItem}
-          onPress={this.selectWallet}
-          excludedCurrencyCode={[excludeCurrency]}
-          excludedTokens={this.props.excludedTokens}
-          onTokenPress={this.selectTokenWallet}
-          isWalletFiatBalanceVisible
-          disableZeroBalance={this.props.disableZeroBalance}
-          isMostRecentWallet={item.mostRecentUsed}
-          searchFilter={this.state.input}
-          currencyCodeFilter={item.currencyCode || ''}
-          headerLabel={item.headerLabel}
-        />
-      )
-    }
-    if (this.props.showWalletCreators) {
-      return <CryptoExchangeCreateWalletRow supportedWallet={item.supportedWalletType || {}} onPress={this.createWallet} disableZeroBalance={false} />
-    }
-    return null
-  }
-  renderUnSupported = () => {
-    if (this.props.noWalletCodes.length > 0) {
-      return (
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <FormattedText>
-              {s.strings.wallets_for_currency_code_dont_exist} {this.props.noWalletCodes.toString()}
-            </FormattedText>
-          </View>
-        </View>
-      )
-    }
-    return null
-  }
-  onSearchFilterChange = (input: string) => {
-    this.setState({
-      input
-    })
-  }
-  setWalletRecordsLabel = (wallets: Array<Record>, header: string): Array<Record> => {
-    return wallets.map((record: Record, i: number) => {
+  setWalletRecordsLabel = (records: Array<Record>, header: string): Array<Record> => {
+    return records.map((record: Record, i: number) => {
       if (i === 0) {
         return {
           ...record,
@@ -169,6 +131,7 @@ export class WalletListModal extends Component<Props, LocalState> {
       return record
     })
   }
+
   getMostRecentlyUsedWalletRecords = (size: number) => {
     const { mostRecentWallets } = this.props
     const { records } = this.state
@@ -190,6 +153,7 @@ export class WalletListModal extends Component<Props, LocalState> {
     }
     return this.setWalletRecordsLabel(mostRecentWalletRecords, 'mostRecentWalletsHeader')
   }
+
   getWalletRecords = () => {
     const { records, input } = this.state
 
@@ -199,17 +163,17 @@ export class WalletListModal extends Component<Props, LocalState> {
         const wallet = record.walletItem
         const tokenValue = wallet ? wallet.enabledTokens.length : 0
         if (wallet) {
-          return total + tokenValue + 1
+          return total + tokenValue + 1 // should be remove when the parent currency code is added on the enabledTokens
         }
         return total
       }, 0)
       if (walletTokenCount > 4 && walletTokenCount < 11) {
-        const wallets = this.setWalletRecordsLabel(records, 'normalWalletHeader')
-        return [...this.getMostRecentlyUsedWalletRecords(2), ...wallets]
+        const walletRecords = this.setWalletRecordsLabel(records, 'normalWalletHeader')
+        return [...this.getMostRecentlyUsedWalletRecords(2), ...walletRecords]
       }
       if (walletTokenCount > 10) {
-        const wallets = this.setWalletRecordsLabel(records, 'normalWalletHeader')
-        return [...this.getMostRecentlyUsedWalletRecords(3), ...wallets]
+        const walletRecords = this.setWalletRecordsLabel(records, 'normalWalletHeader')
+        return [...this.getMostRecentlyUsedWalletRecords(3), ...walletRecords]
       }
       return records
     }
@@ -217,9 +181,9 @@ export class WalletListModal extends Component<Props, LocalState> {
     // Search Input Filter
     const inputLowerCase = input.toLowerCase()
     const filteredRecords = []
-    for (let i = 0; i < records.length; i++) {
-      const record: Record = records[i]
-      const { walletItem, supportedWalletType } = record
+    for (const record of records) {
+      const { walletItem, createWalletCurrency } = record
+
       if (walletItem) {
         const { name, currencyCode, currencyNames, enabledTokens } = walletItem
         const nameString = name.toLowerCase()
@@ -242,27 +206,64 @@ export class WalletListModal extends Component<Props, LocalState> {
         }
       }
 
-      if (supportedWalletType && !walletItem) {
+      if (createWalletCurrency && !walletItem) {
         filteredRecords.push(record)
       }
     }
     return filteredRecords
   }
 
-  render () {
-    const { bridge } = this.props
+  selectWallet = (wallet: GuiWallet) => this.props.bridge.resolve({ walletToSelect: { walletId: wallet.id, currencyCode: wallet.currencyCode } })
+  selectTokenWallet = (tokenSelectObject: TokenSelectObject) =>
+    this.props.bridge.resolve({ walletToSelect: { walletId: tokenSelectObject.id, currencyCode: tokenSelectObject.currencyCode } })
+
+  createWallet = (createWalletCurrency: GuiWalletType) =>
+    this.props.bridge.resolve({ walletToCreate: { walletType: createWalletCurrency.value, currencyCode: createWalletCurrency.currencyCode } })
+
+  renderWalletItem = ({ item }: FlatListItem<Record>) => {
+    const { showCreateWallet } = this.props
+    const { allowedCurrencyCodes, excludeCurrencyCodes } = this.state
+    const { walletItem, createWalletCurrency, mostRecentUsed, currencyCode, headerLabel } = item
+    if (walletItem) {
+      return (
+        <CryptoExchangeWalletListRow
+          wallet={walletItem}
+          onPress={this.selectWallet}
+          excludedCurrencyCode={[]}
+          excludedTokens={[]}
+          onTokenPress={this.selectTokenWallet}
+          isWalletFiatBalanceVisible
+          disableZeroBalance={false}
+          isMostRecentWallet={mostRecentUsed}
+          searchFilter={this.state.input}
+          currencyCodeFilter={currencyCode || ''}
+          headerLabel={headerLabel}
+          allowedCurrencyCodes={allowedCurrencyCodes}
+          excludeCurrencyCodes={excludeCurrencyCodes}
+        />
+      )
+    }
+    if (showCreateWallet && createWalletCurrency) {
+      return <WalletListModalCreateRow supportedWallet={createWalletCurrency} onPress={this.createWallet} disableZeroBalance={false} />
+    }
+    return null
+  }
+
+  keyExtractor = (item: Record, index: number) => index.toString()
+  onSearchFilterChange = (input: string) => this.setState({ input })
+  render() {
+    const { bridge, headerTitle } = this.props
     const { input } = this.state
     return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
+      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve({})}>
         {gap => (
-          <Fragment>
+          <>
             <View style={{ flex: 1 }}>
               <View style={{ marginHorizontal: scale(15), marginBottom: scale(13) }}>
                 <FormField
                   autoFocus
-                  error={''}
-                  keyboardType={'default'}
-                  label={this.props.headerTitle}
+                  keyboardType="default"
+                  label={headerTitle}
                   onChangeText={this.onSearchFilterChange}
                   style={MaterialInputStyle}
                   value={input}
@@ -278,9 +279,22 @@ export class WalletListModal extends Component<Props, LocalState> {
                 renderItem={this.renderWalletItem}
               />
             </View>
-          </Fragment>
+          </>
         )}
       </AirshipModal>
     )
   }
 }
+
+const WalletListModal = connect((state: StateType): StateProps => {
+  const wallets = state.ui.wallets.byId
+  return {
+    wallets,
+    activeWalletIds: global.isFioDisabled
+      ? getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
+      : getActiveWalletIds(state),
+    mostRecentWallets: state.ui.settings.mostRecentWallets,
+    account: state.core.account
+  }
+})(WalletListModalConnected)
+export { WalletListModal }

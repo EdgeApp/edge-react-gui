@@ -30,13 +30,14 @@ export type PluginSummary = {
   preferredFiatPluginId: string | void,
   preferredSwapPluginId: string | void,
   disabled: { [pluginId: string]: true },
-  promoCodes: { [pluginId: string]: string }
+  promoCodes: { [pluginId: string]: string },
+  promoMessages: { [pluginId: string]: string }
 }
 
 /**
  * Finds the active message card.
  */
-export function bestOfMessages (
+export function bestOfMessages(
   accountMessages: MessageTweak[], // From the local cache
   accountReferral: AccountReferral, // From the account storage
   now: Date = new Date()
@@ -58,7 +59,7 @@ export function bestOfMessages (
 /**
  * Reports the active plugin tweaks.
  */
-export function bestOfPlugins (
+export function bestOfPlugins(
   accountPlugins: PluginTweak[], // From the local cache
   accountReferral: AccountReferral, // From the account storage
   settingsPreferredSwap: string | void,
@@ -70,7 +71,8 @@ export function bestOfPlugins (
     preferredFiatPluginId: undefined,
     preferredSwapPluginId: settingsPreferredSwap,
     disabled: {},
-    promoCodes: {}
+    promoCodes: {},
+    promoMessages: {}
   }
 
   // Fold in the account affiliate information:
@@ -96,7 +98,7 @@ export function bestOfPlugins (
 /**
  * Replaces default start dates with definite ones.
  */
-export function lockStartDates<T: { startDate?: Date }> (tweaks: T[], startDate: Date): T[] {
+export function lockStartDates<T: { startDate?: Date }>(tweaks: T[], startDate: Date): T[] {
   return tweaks.map(tweak => {
     return tweak.startDate == null ? { ...tweak, startDate } : tweak
   })
@@ -105,21 +107,22 @@ export function lockStartDates<T: { startDate?: Date }> (tweaks: T[], startDate:
 /**
  * Merges two active message structures, preferring the later one.
  */
-function mergePluginSummaries (a: PluginSummary, b: PluginSummary): PluginSummary {
+function mergePluginSummaries(a: PluginSummary, b: PluginSummary): PluginSummary {
   const { preferredFiatPluginId = a.preferredFiatPluginId } = b
   const { preferredSwapPluginId = a.preferredSwapPluginId } = b
   return {
     preferredFiatPluginId,
     preferredSwapPluginId,
     disabled: { ...a.disabled, ...b.disabled },
-    promoCodes: { ...a.promoCodes, ...b.promoCodes }
+    promoCodes: { ...a.promoCodes, ...b.promoCodes },
+    promoMessages: { ...a.promoMessages, ...b.promoMessages }
   }
 }
 
 /**
  * Finds the active message that occurs latest in the array.
  */
-function getTopMessage (messages: MessageTweak[], source: TweakSource, hidden: { [messageId: string]: boolean }, now: Date): MessageSummary | void {
+function getTopMessage(messages: MessageTweak[], source: TweakSource, hidden: { [messageId: string]: boolean }, now: Date): MessageSummary | void {
   let i = messages.length
   while (--i >= 0) {
     const message = messages[i]
@@ -133,23 +136,25 @@ function getTopMessage (messages: MessageTweak[], source: TweakSource, hidden: {
 /**
  * Combines a group of plugin tweaks into a single report.
  */
-function summarizePlugins (plugins: PluginTweak[], now: Date): PluginSummary {
+function summarizePlugins(plugins: PluginTweak[], now: Date): PluginSummary {
   const out: PluginSummary = {
     preferredFiatPluginId: undefined,
     preferredSwapPluginId: undefined,
     disabled: {},
-    promoCodes: {}
+    promoCodes: {},
+    promoMessages: {}
   }
 
   // Search through the account creation plugin tweaks:
   for (const plugin of plugins) {
-    const { pluginId, preferredFiat = false, preferredSwap = false, promoCode, disabled } = plugin
+    const { pluginId, disabled, preferredFiat = false, preferredSwap = false, promoCode, promoMessage } = plugin
     if (!isActive(plugin, now)) continue
 
     if (preferredFiat) out.preferredFiatPluginId = pluginId
     if (preferredSwap) out.preferredSwapPluginId = pluginId
     if (disabled) out.disabled[pluginId] = true
     if (promoCode != null) out.promoCodes[pluginId] = promoCode
+    if (promoMessage != null) out.promoMessages[pluginId] = promoMessage
   }
   return out
 }
@@ -157,14 +162,14 @@ function summarizePlugins (plugins: PluginTweak[], now: Date): PluginSummary {
 /**
  * Creates a unique id for a message, like '180.00 2020-02-20T20:20:20Z bob'.
  */
-function getMessageId (message: MessageTweak): string {
+function getMessageId(message: MessageTweak): string {
   const { startDate, durationDays } = message
 
   const days = durationDays.toFixed(2)
   return startDate != null ? days + ' ' + startDate.toISOString().replace(/\.\d+Z/, 'Z') : days
 }
 
-function isActive (tweak: MessageTweak | PluginTweak, now: Date): boolean {
+function isActive(tweak: MessageTweak | PluginTweak, now: Date): boolean {
   const { startDate = now, durationDays } = tweak
   const startTime = startDate.valueOf()
   const endTime = startTime + 24 * 60 * 60 * 1000 * durationDays

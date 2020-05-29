@@ -22,8 +22,12 @@ export type GuiMakeSpendInfo = {
   uniqueIdentifier?: string,
   otherParams?: Object,
   dismissAlert?: boolean,
+  fioAddress?: string,
+  memo?: string,
+  isSendUsingFioAddress?: boolean,
   onBack?: () => void,
-  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void
+  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
+  beforeTransaction?: () => Promise<void>
 }
 
 export type SendConfirmationState = {
@@ -195,13 +199,14 @@ export const error = (state: Error | null = null, action: Action) => {
 
 export const isEditable = (state: boolean = true, action: Action) => {
   switch (action.type) {
-    case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION':
+    case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
       if (!action.data) throw new Error('Invalid Action')
       const { guiMakeSpendInfo } = action.data
       if (!guiMakeSpendInfo || guiMakeSpendInfo.lockInputs) {
         return false
       }
       return state
+    }
     default:
       return state
   }

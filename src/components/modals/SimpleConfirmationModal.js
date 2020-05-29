@@ -14,7 +14,7 @@ type Props = {
 }
 
 export class SimpleConfirmationModal extends Component<Props> {
-  render () {
+  render() {
     const { bridge, buttonText, text } = this.props
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve()}>

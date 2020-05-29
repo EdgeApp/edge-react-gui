@@ -26,11 +26,11 @@ type EdgeWalletCallbackManagerDispatchProps = {
 type Props = EdgeWalletCallbackManagerStateProps & EdgeWalletCallbackManagerDispatchProps
 
 class EdgeWalletCallbackManager extends React.Component<Props> {
-  render () {
+  render() {
     return null
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { wallet } = this.props
 
     wallet.on('newTransactions', transactions => {
@@ -93,10 +93,13 @@ class EdgeWalletCallbackManager extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state, ownProps): EdgeWalletCallbackManagerStateProps => ({
-  id: ownProps.id,
-  wallet: state.core.wallets.byId[ownProps.id]
-})
+const mapStateToProps = (state, ownProps): EdgeWalletCallbackManagerStateProps => {
+  const { currencyWallets = {} } = state.core.account
+  return {
+    id: ownProps.id,
+    wallet: currencyWallets[ownProps.id]
+  }
+}
 
 const mapDispatchToProps = (dispatch: Dispatch): EdgeWalletCallbackManagerDispatchProps => {
   return {
@@ -109,7 +112,4 @@ const mapDispatchToProps = (dispatch: Dispatch): EdgeWalletCallbackManagerDispat
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(EdgeWalletCallbackManager)
+export default connect(mapStateToProps, mapDispatchToProps)(EdgeWalletCallbackManager)

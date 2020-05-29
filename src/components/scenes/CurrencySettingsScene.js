@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeCurrencyInfo } from 'edge-core-js'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -46,7 +46,7 @@ type State = {
 }
 
 export class CurrencySettingsComponent extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       isSetCustomNodesModalVisible: false,
@@ -96,7 +96,7 @@ export class CurrencySettingsComponent extends Component<Props, State> {
     }
   }
 
-  render () {
+  render() {
     return (
       <SceneWrapper background="body" hasTabs={false}>
         <ScrollView>
@@ -124,7 +124,7 @@ export class CurrencySettingsComponent extends Component<Props, State> {
             return <SettingsRadioRow key={denomination.multiplier} icon={left} text="" isSelected={isSelected} onPress={onPress} />
           })}
           {this.props.defaultElectrumServer.length !== 0 && (
-            <Fragment>
+            <>
               <SettingsHeaderRow text={CUSTOM_NODES_TEXT} />
               <SettingsSwitchRow
                 text={s.strings.settings_enable_custom_nodes}
@@ -136,7 +136,7 @@ export class CurrencySettingsComponent extends Component<Props, State> {
                 text={s.strings.settings_set_custom_nodes_modal_title}
                 onPress={() => this.openSetCustomNodesModal('row')}
               />
-            </Fragment>
+            </>
           )}
         </ScrollView>
       </SceneWrapper>
@@ -163,16 +163,16 @@ export const CurrencySettingsScene = connect(
     }
   },
   (dispatch: Dispatch, ownProps: NavigationProps): DispatchProps => ({
-    disableCustomNodes () {
+    disableCustomNodes() {
       dispatch(disableCustomNodes(ownProps.currencyInfo.currencyCode))
     },
-    enableCustomNodes () {
+    enableCustomNodes() {
       dispatch(enableCustomNodes(ownProps.currencyInfo.currencyCode))
     },
-    selectDenomination (denominationKey) {
+    selectDenomination(denominationKey) {
       dispatch(setDenominationKeyRequest(ownProps.currencyInfo.currencyCode, denominationKey))
     },
-    saveCustomNodesList (nodesList: Array<string>) {
+    saveCustomNodesList(nodesList: Array<string>) {
       dispatch(saveCustomNodesList(ownProps.currencyInfo.currencyCode, nodesList))
     }
   })

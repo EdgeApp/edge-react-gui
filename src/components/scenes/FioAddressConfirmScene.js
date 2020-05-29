@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
@@ -8,10 +9,10 @@ import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
-import ABSlider from '../../modules/UI/components/Slider/index.js'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import { styles } from '../../styles/scenes/FioAddressConfirmStyle'
-import { getFeeDisplayed } from '../../util/utils'
+import { getFeeDisplayed, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 
@@ -23,6 +24,7 @@ export type State = {
 
 export type StateProps = {
   fioAddressName: string,
+  denominationMultiplier: string,
   isConnected: boolean
 }
 
@@ -45,11 +47,11 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     loading: false
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.setBalance()
   }
 
-  toggleLoading (loading: boolean = false) {
+  toggleLoading(loading: boolean = false) {
     this.setState({ loading })
   }
 
@@ -70,8 +72,8 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     try {
       const balance = await paymentWallet.getBalance()
 
-      if (balance || balance === 0) {
-        const newBalance = parseInt(balance) / Constants.BILLION
+      if (balance != null) {
+        const newBalance = parseFloat(truncateDecimals(bns.div(balance, this.props.denominationMultiplier, 18), 6))
         this.setState({
           balance: newBalance
         })
@@ -113,7 +115,7 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ registerSuccess: true }))
   }
 
-  render () {
+  render() {
     const { fioAddressName, fee } = this.props
     const { balance, loading } = this.state
 
@@ -136,8 +138,7 @@ export class FioAddressConfirmScene extends Component<Props, State> {
           </View>
           <View style={styles.blockPadding}>
             <Scene.Footer style={styles.footer}>
-              <ABSlider
-                forceUpdateGuiCounter={false}
+              <Slider
                 resetSlider={false}
                 parentStyle={styles.sliderStyle}
                 onSlidingComplete={this.saveFioAddress}

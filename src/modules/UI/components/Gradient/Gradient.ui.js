@@ -20,16 +20,16 @@ export type Props = {
 }
 
 export class Gradient extends Component<Props> {
-  shouldComponentUpdate (nextProps: Props) {
+  shouldComponentUpdate(nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
     return !!diffElement
   }
 
-  render () {
-    const { reverse, style } = this.props
+  render() {
+    const { children, reverse, style } = this.props
     return (
       <LinearGradient style={style} start={UPPER_LEFT} end={UPPER_RIGHT} colors={reverse ? REVERSE_COLORS : COLORS}>
-        {this.props.children}
+        {children}
       </LinearGradient>
     )
   }

@@ -8,7 +8,7 @@ import { launchModal } from '../../../../components/common/ModalProvider.js'
 import { ANDROID_INFO_ICON, EXCLAMATION, ION_ICONS, IOS_INFO_ICON, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import { styles as sceneStyles } from '../../../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
-import FormattedText from '../../components/FormattedText'
+import FormattedText from '../../components/FormattedText/FormattedText.ui.js'
 import { IconButton } from '../Buttons/IconButton.ui'
 import { Icon } from '../Icon/Icon.ui'
 
@@ -46,6 +46,7 @@ class ExchangeQuoteComponent extends Component<Props, State> {
     }
     return null
   }
+
   showExplanationForEstimate = () => {
     const modal = createSimpleConfirmModal({
       title: s.strings.estimated_exchange_rate,
@@ -55,6 +56,7 @@ class ExchangeQuoteComponent extends Component<Props, State> {
     })
     launchModal(modal).then((response: null) => {})
   }
+
   renderHeadline = () => {
     const styles = sceneStyles.quoteDetailContainer
     if (this.props.isEstimate) {
@@ -71,7 +73,8 @@ class ExchangeQuoteComponent extends Component<Props, State> {
     }
     return <FormattedText style={styles.headlineText}>{this.props.headline}</FormattedText>
   }
-  render () {
+
+  render() {
     const styles = sceneStyles.quoteDetailContainer
     const container = this.props.isTop ? styles.containerExpanded : styles.containerCollapsed
     return (

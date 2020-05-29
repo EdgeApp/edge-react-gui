@@ -15,14 +15,13 @@ import { showActivity, showError, showToast } from '../components/services/Airsh
 import { CURRENCY_PLUGIN_NAMES, ION_ICONS, LOCKED_ICON, WALLET_LIST } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import { sendLogs } from '../modules/Logs/action.js'
 import * as SETTINGS_ACTIONS from '../modules/Settings/SettingsActions.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
-import { colors, THEME } from '../theme/variables/airbitz.js'
+import { THEME } from '../theme/variables/airbitz.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import { disableOtp, keepOtp } from './OtpActions.js'
 
@@ -38,7 +37,7 @@ export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getSta
 
 export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   ACCOUNT_SETTINGS.setPINModeRequest(account, pinMode)
     .then(() => dispatch(SETTINGS_ACTIONS.setPINMode(pinMode)))
     .catch(showError)
@@ -46,7 +45,7 @@ export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getS
 
 export const setAutoLogoutTimeInSecondsRequest = (autoLogoutTimeInSeconds: number) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   ACCOUNT_SETTINGS.setAutoLogoutTimeInSecondsRequest(account, autoLogoutTimeInSeconds)
     .then(() =>
       dispatch({
@@ -59,7 +58,7 @@ export const setAutoLogoutTimeInSecondsRequest = (autoLogoutTimeInSeconds: numbe
 
 export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
 
   // PSEUDO_CODE
   // get spendingLimits
@@ -98,7 +97,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
 
 export const setMerchantModeRequest = (merchantMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   ACCOUNT_SETTINGS.setMerchantModeRequest(account, merchantMode)
     .then(() => dispatch(SETTINGS_ACTIONS.setMerchantMode(merchantMode)))
     .catch(showError)
@@ -106,7 +105,7 @@ export const setMerchantModeRequest = (merchantMode: boolean) => (dispatch: Disp
 
 export const setPreferredSwapPluginId = (pluginId: string | void) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   ACCOUNT_SETTINGS.setPreferredSwapPluginId(account, pluginId)
     .then(() => dispatch({ type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: pluginId }))
     .catch(showError)
@@ -114,7 +113,7 @@ export const setPreferredSwapPluginId = (pluginId: string | void) => (dispatch: 
 
 export const setBluetoothModeRequest = (bluetoothMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   ACCOUNT_SETTINGS.setBluetoothModeRequest(account, bluetoothMode)
     .then(() => dispatch(SETTINGS_ACTIONS.setBluetoothMode(bluetoothMode)))
     .catch(showError)
@@ -124,7 +123,7 @@ export const checkCurrentPassword = (arg: string) => async (dispatch: Dispatch, 
   const clearPasswordError = { confirmPasswordError: '' }
   dispatch({ type: 'SET_CONFIRM_PASSWORD_ERROR', data: clearPasswordError })
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   const isPassword = await account.checkPassword(arg)
   dispatch(SETTINGS_ACTIONS.setSettingsLock(!isPassword))
   if (!isPassword) {
@@ -139,7 +138,7 @@ export const lockSettings = () => async (dispatch: Dispatch) => {
 // Denominations
 export const setDenominationKeyRequest = (currencyCode: string, denominationKey: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
 
   return ACCOUNT_SETTINGS.setDenominationKeyRequest(account, currencyCode, denominationKey)
     .then(() => dispatch(SETTINGS_ACTIONS.setDenominationKey(currencyCode, denominationKey)))
@@ -159,11 +158,10 @@ export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => asyn
   }
 }
 
-export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
+export function togglePinLoginEnabled(pinLoginEnabled: boolean) {
   return (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
-    const context = CORE_SELECTORS.getContext(state)
-    const account = CORE_SELECTORS.getAccount(state)
+    const { context, account } = state.core
 
     dispatch(SETTINGS_ACTIONS.togglePinLoginEnabled(pinLoginEnabled))
     return account.changePin({ enableLogin: pinLoginEnabled }).catch(async error => {
@@ -177,7 +175,7 @@ export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
 
 export const showReEnableOtpModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   const otpResetDate = account.otpResetDate
   if (!otpResetDate) return
   // Use `launchModal` to put the modal component on screen:
@@ -200,7 +198,7 @@ export const showReEnableOtpModal = () => async (dispatch: Dispatch, getState: G
 
 export const enableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state: State = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
@@ -212,7 +210,7 @@ export const enableCustomNodes = (currencyCode: string) => async (dispatch: Disp
 
 export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state: State = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
@@ -224,7 +222,7 @@ export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dis
 
 export const saveCustomNodesList = (currencyCode: string, nodesList: Array<string>) => async (dispatch: Dispatch, getState: GetState) => {
   const state: State = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
@@ -251,7 +249,7 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
     }
     const validateInput = async (input): Promise<{ success: boolean, message: string }> => {
       const state = getState()
-      const account = CORE_SELECTORS.getAccount(state)
+      const { account } = state.core
       const isPassword = await account.checkPassword(input)
       if (isPassword) {
         dispatch({ type: 'PASSWORD_USED' })
@@ -304,14 +302,12 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
         <IonIcon
           name="ios-paper-plane"
           size={24}
-          color={colors.primary}
-          style={[
-            {
-              backgroundColor: THEME.COLORS.TRANSPARENT,
-              zIndex: 1015,
-              elevation: 1015
-            }
-          ]}
+          color={THEME.COLORS.SECONDARY}
+          style={{
+            backgroundColor: THEME.COLORS.TRANSPARENT,
+            zIndex: 1015,
+            elevation: 1015
+          }}
         />
       ),
       title: s.strings.settings_button_send_logs,
@@ -331,10 +327,10 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
 
 export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = state.core.account
+  const { account } = state.core
   const restoreWalletsModal = createYesNoModal({
     title: s.strings.restore_wallets_modal_title,
-    icon: <Icon type={'entypo'} name="wallet" size={30} />,
+    icon: <Icon type="entypo" name="wallet" size={30} />,
     message: s.strings.restore_wallets_modal_description,
     noButtonText: s.strings.restore_wallets_modal_cancel,
     yesButtonText: s.strings.restore_wallets_modal_confirm
@@ -357,7 +353,7 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
 
 export const setDeveloperModeOn = (developerModeOn: boolean) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   ACCOUNT_SETTINGS.setDeveloperModeOn(account, developerModeOn)
     .then(() => {
       if (developerModeOn) {

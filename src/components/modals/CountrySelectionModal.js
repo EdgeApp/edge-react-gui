@@ -1,7 +1,7 @@
 // @flow
 
 import { FormField, MaterialInputStyle } from 'edge-components'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { FlatList, Image, TouchableHighlight, View } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
@@ -24,7 +24,7 @@ type CountrySelectionModalState = {
 }
 
 export class CountrySelectionModal extends Component<CountrySelectionModalProps, CountrySelectionModalState> {
-  constructor (props: CountrySelectionModalProps) {
+  constructor(props: CountrySelectionModalProps) {
     super(props)
     const deviceCountry = DeviceInfo.getDeviceCountry() // "US"
     this.state = {
@@ -47,14 +47,14 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
 
     return (
       <View style={[styles.singleCountryWrap, data.item['alpha-2'] === countryCode && styles.selectedItem]}>
-        <TouchableHighlight style={[styles.singleCountry]} onPress={() => bridge.resolve(data.item['alpha-2'])} underlayColor={styles.underlayColor.color}>
-          <View style={[styles.countryInfoWrap]}>
+        <TouchableHighlight style={styles.singleCountry} onPress={() => bridge.resolve(data.item['alpha-2'])} underlayColor={styles.underlayColor.color}>
+          <View style={styles.countryInfoWrap}>
             <View style={styles.countryLeft}>
-              <View style={[styles.countryLogo]}>
+              <View style={styles.countryLogo}>
                 <Image source={{ uri: logoUrl }} style={{ height: scale(40), width: scale(40), borderRadius: 20 }} />
               </View>
-              <View style={[styles.countryLeftTextWrap]}>
-                <FormattedText style={[styles.countryName]}>{data.item.name}</FormattedText>
+              <View style={styles.countryLeftTextWrap}>
+                <FormattedText style={styles.countryName}>{data.item.name}</FormattedText>
               </View>
             </View>
           </View>
@@ -63,7 +63,7 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
     )
   }
 
-  render () {
+  render() {
     const { bridge } = this.props
     const { input, countryCode } = this.state
     const lowerCaseInput = input.toLowerCase()
@@ -77,15 +77,15 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(this.state.countryCode)}>
         {gap => (
-          <Fragment>
+          <>
             <IconCircle>
               <Icon type={FONT_AWESOME} name={FLAG} size={36} />
             </IconCircle>
             <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12) }}>
               <FormField
                 autoFocus
-                error={''}
-                keyboardType={'default'}
+                error=""
+                keyboardType="default"
                 label={s.strings.buy_sell_crypto_select_country_button}
                 onChangeText={this.updateCountryInput}
                 style={MaterialInputStyle}
@@ -101,7 +101,7 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
                 renderItem={this._renderItem}
               />
             </View>
-          </Fragment>
+          </>
         )}
       </AirshipModal>
     )

@@ -1,4 +1,5 @@
 def build (platform) {
+  sh "mkdir -p buildnum temp"
   // Copy the previous build num
   try {
     sh "cp ./buildnum/${platform}.json ./${platform}/buildnum.json"
@@ -7,7 +8,6 @@ def build (platform) {
   }
   sh "node ./deploy.js edge ${platform} ${BRANCH_NAME}"
   // Save the build num after a successful build
-  sh "mkdir -p buildnum"
   sh "cp ./${platform}/buildnum.json ./buildnum/${platform}.json"
   // Add the build num and the platform to the description
   def buildnum = readJSON file: "./buildnum/${platform}.json"
@@ -46,10 +46,11 @@ pipeline {
       steps {
         // Import the buildnums from previous build
         copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
+
         // Fix version for branchs that are not "master" or "develop"
         script {
           def packageJson = readJSON file: "./package.json"
-          if (BRANCH_NAME != "master" && BRANCH_NAME != "develop" && BRANCH_NAME != "test") {
+          if (BRANCH_NAME != "master" && BRANCH_NAME != "develop" && BRANCH_NAME != "test" && BRANCH_NAME != "yolo") {
             def cleanBranch = BRANCH_NAME.replaceAll('/', '-')
             packageJson.version = "${packageJson.version}-${cleanBranch}".inspect()
             writeJSON file: "./package.json", json: packageJson
@@ -99,6 +100,7 @@ pipeline {
           branch 'master'
           branch 'develop'
           branch 'test'
+          branch 'yolo'
         }
       }
       stages {

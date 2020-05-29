@@ -20,6 +20,9 @@ type Props = {
   // Called when the user taps outside the modal or clicks the back button:
   onCancel: () => mixed,
 
+  // This is to have marginTop when there is an icon on the modal
+  icon?: boolean,
+
   // Content padding:
   padding?: number
 }
@@ -33,13 +36,13 @@ export class AirshipModal extends Component<Props> {
   opacity: Animated.Value
   offset: Animated.Value
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.opacity = new Animated.Value(0)
     this.offset = new Animated.Value(Dimensions.get('window').height)
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       this.props.onCancel()
       return true
@@ -48,7 +51,7 @@ export class AirshipModal extends Component<Props> {
     // Animate in:
     Animated.parallel([
       Animated.timing(this.opacity, {
-        toValue: 0.7,
+        toValue: THEME.OPACITY.MODAL_DARKNESS,
         duration: 300,
         useNativeDriver: true
       }),
@@ -76,11 +79,11 @@ export class AirshipModal extends Component<Props> {
     )
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (this.backHandler) this.backHandler.remove()
   }
 
-  render () {
+  render() {
     return (
       <LayoutContext>
         {metrics => {
@@ -101,8 +104,8 @@ export class AirshipModal extends Component<Props> {
   /**
    * Draws the actual visual elements, given the current layout information:
    */
-  renderModal (height: number, gap: SafeAreaGap, keyboardAnimation: Animated.Value, keyboardLayout: number) {
-    const { children, center, padding = 0 } = this.props
+  renderModal(height: number, gap: SafeAreaGap, keyboardAnimation: Animated.Value, keyboardLayout: number) {
+    const { children, center, icon, padding = 0 } = this.props
 
     // Set up the dynamic CSS values:
     const screenPadding = {
@@ -115,17 +118,18 @@ export class AirshipModal extends Component<Props> {
     const bodyStyle = center
       ? [styles.centerBody, { padding, transform }]
       : [
-        styles.bottomBody,
-        {
-          marginBottom: -keyboardLayout,
-          maxHeight: keyboardLayout + 0.75 * (height - gap.bottom - gap.top),
-          paddingBottom: keyboardLayout + padding,
-          paddingLeft: padding,
-          paddingRight: padding,
-          paddingTop: padding,
-          transform
-        }
-      ]
+          styles.bottomBody,
+          {
+            marginTop: icon && keyboardLayout > 0 ? THEME.rem(1.75) : 0,
+            marginBottom: -keyboardLayout,
+            maxHeight: keyboardLayout + 0.75 * (height - gap.bottom - gap.top),
+            paddingBottom: keyboardLayout + padding,
+            paddingLeft: padding,
+            paddingRight: padding,
+            paddingTop: padding,
+            transform
+          }
+        ]
 
     return (
       <Animated.View style={[styles.screen, screenPadding]}>
@@ -135,11 +139,11 @@ export class AirshipModal extends Component<Props> {
         <Animated.View style={bodyStyle}>
           {typeof children === 'function'
             ? children({
-              bottom: center ? padding : keyboardLayout + padding,
-              left: padding,
-              right: padding,
-              top: padding
-            })
+                bottom: center ? padding : keyboardLayout + padding,
+                left: padding,
+                right: padding,
+                top: padding
+              })
             : children}
         </Animated.View>
       </Animated.View>
@@ -200,7 +204,7 @@ const styles = StyleSheet.create({
     top: 0,
 
     // Visuals:
-    backgroundColor: THEME.COLORS.BLACK
+    backgroundColor: THEME.COLORS.SHADOW
   },
 
   screen: {

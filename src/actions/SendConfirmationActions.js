@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import { createYesNoModal } from 'edge-components'
-import type { EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -13,7 +13,7 @@ import { showError } from '../components/services/AirshipInstance.js'
 import { EXCLAMATION, FEE_ALERT_THRESHOLD, MATERIAL_COMMUNITY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
-import { getAccount, getWallet } from '../modules/Core/selectors.js'
+import { addToFioAddressCache, checkRecordSendFee, recordSend } from '../modules/FioAddress/util'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
@@ -25,6 +25,14 @@ import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { convertNativeToExchange } from '../util/utils'
 import { playSendSound } from './SoundActions.js'
+
+export type FioSenderInfo = {
+  fioAddress: string,
+  fioWallet: EdgeCurrencyWallet | null,
+  fioError: string,
+  memo: string,
+  memoError: string
+}
 
 export const newSpendInfo = (spendInfo: EdgeSpendInfo, authRequired: AuthType) => ({
   type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
@@ -80,8 +88,10 @@ const BITPAY = {
 
 export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentProtocolUri) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { currencyWallets = {} } = state.core.account
+
   const walletId = getSelectedWalletId(state)
-  const edgeWallet = getWallet(state, walletId)
+  const edgeWallet = currencyWallets[walletId]
 
   Promise.resolve(paymentProtocolURL)
     .then(paymentProtocolURL => edgeWallet.getPaymentProtocolInfo(paymentProtocolURL))
@@ -118,8 +128,10 @@ export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | Ed
   getState: GetState
 ) => {
   const state = getState()
+  const { currencyWallets = {} } = state.core.account
+
   const walletId = getSelectedWalletId(state)
-  const edgeWallet = getWallet(state, walletId)
+  const edgeWallet = currencyWallets[walletId]
   const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
   const spendInfo = getSpendInfo(state, guiMakeSpendInfoClone)
 
@@ -139,8 +151,10 @@ export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | Ed
 
 export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { currencyWallets = {} } = state.core.account
+
   const walletId = getSelectedWalletId(state)
-  const edgeWallet = getWallet(state, walletId)
+  const edgeWallet = currencyWallets[walletId]
   const spendInfo = getSpendInfo(state)
 
   edgeWallet
@@ -169,11 +183,13 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
     .catch(showError)
 }
 
-export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: GetState) => {
+export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = getAccount(state)
+  const { account } = state.core
+  const { currencyWallets = {} } = account
+
   const selectedWalletId = getSelectedWalletId(state)
-  const wallet = getWallet(state, selectedWalletId)
+  const wallet = currencyWallets[selectedWalletId]
   const edgeUnsignedTransaction: EdgeTransaction = getTransaction(state)
 
   const guiWallet = getSelectedWallet(state)
@@ -188,6 +204,14 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
 
   const spendInfo = state.ui.scenes.sendConfirmation.spendInfo
   const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo
+
+  try {
+    if (guiMakeSpendInfo.beforeTransaction) {
+      await guiMakeSpendInfo.beforeTransaction()
+    }
+  } catch (e) {
+    return
+  }
 
   if (!spendInfo) throw new Error(s.strings.invalid_spend_request)
   const authRequired = getAuthRequired(state, spendInfo)
@@ -223,6 +247,9 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     if (state.ui.scenes.sendConfirmation.transactionMetadata) {
       edgeMetadata = { ...edgeMetadata, ...state.ui.scenes.sendConfirmation.transactionMetadata }
     }
+    if (guiMakeSpendInfo.fioAddress) {
+      edgeMetadata.name = guiMakeSpendInfo.fioAddress
+    }
     const publicAddress = spendInfo ? spendInfo.spendTargets[0].publicAddress : ''
     if (publicAddress) {
       if (edgeMetadata.notes) {
@@ -233,6 +260,11 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     }
     if (!edgeMetadata.amountFiat) {
       edgeMetadata.amountFiat = amountFiat
+    }
+    if (guiMakeSpendInfo.fioAddress && fioSender) {
+      let fioNotes = `${s.strings.fragment_transaction_list_sent_prefix}${s.strings.fragment_send_from_label.toLowerCase()} ${fioSender.fioAddress}`
+      fioNotes += fioSender.memo ? `\n${s.strings.fio_sender_memo_label}: ${fioSender.memo}` : ''
+      edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
     }
     if (getSpecialCurrencyInfo(currencyCode).uniqueIdentifierToNotes && edgeSignedTransaction.otherParams != null) {
       const newNotesSyntax = sprintf(
@@ -257,11 +289,52 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
     if (!guiMakeSpendInfo.dismissAlert) {
       Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
         {
-          onPress () {},
+          onPress() {},
           style: 'default',
           text: s.strings.string_ok
         }
       ])
+    }
+
+    if (guiMakeSpendInfo.fioAddress) {
+      addToFioAddressCache(account, [guiMakeSpendInfo.fioAddress])
+    }
+
+    if (fioSender) {
+      const { fioAddress, fioWallet, memo } = fioSender
+      const payeeFioAddress = guiMakeSpendInfo.fioAddress
+      if (
+        payeeFioAddress &&
+        fioAddress &&
+        fioWallet &&
+        edgeSignedTransaction.otherParams &&
+        edgeSignedTransaction.otherParams.transactionJson &&
+        edgeSignedTransaction.otherParams.transactionJson.actions &&
+        edgeSignedTransaction.otherParams.transactionJson.actions.length
+      ) {
+        const payerPublicAddress = edgeSignedTransaction.otherParams.transactionJson.actions[0].data.from
+        const payeePublicAddress = edgeSignedTransaction.otherParams.transactionJson.actions[0].data.to
+        const amount = edgeSignedTransaction.otherParams.transactionJson.actions[0].data.quantity
+        let chainCode
+        if (edgeSignedTransaction.wallet && edgeSignedTransaction.wallet.currencyInfo) {
+          chainCode = edgeSignedTransaction.wallet.currencyInfo.currencyCode
+        }
+        try {
+          await checkRecordSendFee(fioWallet, fioAddress)
+        } catch (e) {
+          showError(e.message)
+        }
+        recordSend(fioWallet, fioAddress, {
+          payeeFioAddress,
+          payerPublicAddress,
+          payeePublicAddress,
+          amount: amount && bns.div(amount, exchangeDenomination.multiplier, 18),
+          currencyCode: edgeSignedTransaction.currencyCode,
+          chainCode: chainCode || guiWallet.currencyCode,
+          txid: edgeSignedTransaction.txid,
+          memo
+        })
+      }
     }
 
     if (guiMakeSpendInfo.onDone) {
@@ -283,7 +356,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
 
     Alert.alert(s.strings.transaction_failure, message, [
       {
-        onPress () {},
+        onPress() {},
         style: 'default',
         text: s.strings.string_ok
       }
@@ -294,7 +367,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
 const errorNames = {
   IncorrectPinError: 'IncorrectPinError'
 }
-export function IncorrectPinError (message: ?string = s.strings.incorrect_pin) {
+export function IncorrectPinError(message: ?string = s.strings.incorrect_pin) {
   const error = new Error(message)
   error.name = errorNames.IncorrectPinError
   return error

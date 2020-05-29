@@ -184,7 +184,7 @@ export const untranslatedReducer: Reducer<PasswordReminderState, PasswordReminde
   }
 }
 
-function translateAction (action: Action): PasswordReminderReducerAction {
+function translateAction(action: Action): PasswordReminderReducerAction {
   if (action.type === 'ACCOUNT_INIT_COMPLETE' && action.data.account.newAccount) {
     const now = Date.now()
     return {

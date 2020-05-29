@@ -1,5 +1,6 @@
 // @flow
 
+import { type WalletListMenuKey } from '../actions/WalletListMenuActions.js'
 import s from '../locales/strings.js'
 
 export const MAX_TOKEN_CODE_CHARACTERS = 7
@@ -10,7 +11,8 @@ export const FEE_ALERT_THRESHOLD = 5.0 // this is denominated in dollars
 export const CURRENCY_SYMBOL_IMAGES = {
   BCH: 'https://developer.airbitz.co/content/bitcoincash-logo-solo-64.png',
   BTC: 'https://developer.airbitz.co/content/bitcoin-logo-solo-64.png',
-  ETH: 'https://developer.airbitz.co/content/ethereum-logo-solo-64.png'
+  ETH: 'https://developer.airbitz.co/content/ethereum-logo-solo-64.png',
+  ETC: 'https://developer.airbitz.co/content/ethereum-classic-logo-solo-64.png'
 }
 
 // Translations for custom fee keys:
@@ -58,6 +60,7 @@ export const CURRENCY_SETTINGS_KEYS = [
   'bitcointestnet',
   'bitcoincash',
   'ethereum',
+  'ethereumclassic',
   'dash',
   'litecoin',
   'bitcoinsv',
@@ -72,6 +75,37 @@ export const CURRENCY_SETTINGS_KEYS = [
   'groestlcoin',
   'eboost',
   'ufo'
+]
+
+/**
+ * Determines the sort order of the various currencies the app supports.
+ * Use `sortCurrencyInfos` to actually do the sorting.
+ */
+export const WALLET_TYPE_ORDER = [
+  'wallet:bitcoin',
+  'wallet:bitcoincash',
+  'wallet:monero',
+  'wallet:ethereum',
+  'wallet:ethereumclassic',
+  'wallet:binance',
+  'wallet:bitcoinsv',
+  'wallet:litecoin',
+  'wallet:eos',
+  'wallet:ripple',
+  'wallet:rsk',
+  'wallet:stellar',
+  'wallet:dash',
+  'wallet:tezos',
+  'wallet:digibyte',
+  'wallet:vertcoin',
+  'wallet:ravencoin',
+  'wallet:qtum',
+  'wallet:feathercoin',
+  'wallet:bitcoingold',
+  'wallet:smartcash',
+  'wallet:groestlcoin',
+  'wallet:zcoin',
+  'wallet:ufo'
 ]
 
 // Put these in reverse order of preference
@@ -90,6 +124,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   EBST: 'eboost',
   EOS: 'eos',
   ETH: 'ethereum',
+  ETC: 'ethereumclassic',
   FIO: 'fio',
   FTC: 'feathercoin',
   GRS: 'groestlcoin',
@@ -155,7 +190,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   RBTC: {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
     allowZeroTx: true,
-    isImportKeySupported: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    },
     isCustomTokensSupported: false,
     isTokensSupported: true
   },
@@ -171,7 +209,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       modalMessage: s.strings.request_xlm_minimum_notification_body
     },
     displayBuyCrypto: false,
-    isImportKeySupported: true
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    }
   },
   XRP: {
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
@@ -185,7 +226,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       modalMessage: s.strings.request_xrp_minimum_notification_body
     },
     displayBuyCrypto: true,
-    isImportKeySupported: true
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    }
   },
   XMR: {
     dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
@@ -207,14 +251,20 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     allowZeroTx: true,
     displayBuyCrypto: true,
-    isImportKeySupported: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    },
     isCustomTokensSupported: true,
     isTokensSupported: true,
     showEarnInterestCard: true
   },
   DAI: {
     displayBuyCrypto: true,
-    isImportKeySupported: true
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    }
   },
   HERC: {
     displayBuyCrypto: true,
@@ -225,7 +275,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     // will share / copy public address instead of URI on Request scene
     isUriEncodedStructure: true,
     dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
-    isImportKeySupported: true
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    }
   },
   BNB: {
     uniqueIdentifier: {
@@ -233,7 +286,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       identifierName: s.strings.unique_identifier_memo,
       identifierKeyboardType: 'default'
     },
-    isImportKeySupported: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    },
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   },
   TUSD: {
@@ -249,6 +305,76 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     specialTransactionTitle: s.strings.fragment_transaction_list_mint_tx_title
   }
 }
+
+/**
+ * Customizes which coins get which options on the wallet list scene.
+ */
+export const WALLET_LIST_MENU: {
+  currencyCodes?: string[],
+  label: string,
+  value: WalletListMenuKey
+}[] = [
+  {
+    label: s.strings.fragment_wallets_sort,
+    value: 'sort'
+  },
+  {
+    label: s.strings.string_rename,
+    value: 'rename'
+  },
+  {
+    label: s.strings.string_delete,
+    value: 'delete'
+  },
+  {
+    label: s.strings.string_resync,
+    value: 'resync'
+  },
+  {
+    label: s.strings.fragment_wallets_export_transactions,
+    value: 'exportWalletTransactions'
+  },
+  {
+    label: s.strings.string_master_private_key,
+    value: 'getSeed'
+  },
+  {
+    currencyCodes: ['BTC', 'BCH'],
+    label: s.strings.string_split_wallet,
+    value: 'split'
+  },
+  {
+    currencyCodes: ['ETH', 'RBTC'],
+    label: s.strings.string_add_edit_tokens,
+    value: 'manageTokens'
+  },
+  {
+    currencyCodes: [
+      'BTC',
+      'BCH',
+      'DASH',
+      'FTC',
+      'XZC',
+      'LTC',
+      'UFO',
+      'QTUM',
+      'VTC',
+      'BTG',
+      'DGB',
+      'SMART',
+      'GRS',
+      'BSV',
+      'EBST',
+      'EOS',
+      'DOGE',
+      'RVN',
+      'RBTC',
+      'TBTC'
+    ],
+    label: s.strings.fragment_wallets_view_xpub,
+    value: 'viewXPub'
+  }
+]
 
 export const USD_FIAT = 'iso:USD'
 export const getSymbolFromCurrency = (currencyCode: string) => {

@@ -3,33 +3,36 @@
 import React, { Component } from 'react'
 import { Alert, FlatList, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import Text from '../../modules/UI/components/FormattedText/index'
+import { getDefaultFiat } from '../../modules/Settings/selectors.js'
+import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { FlatListItem, GuiFiatType, GuiWalletType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
-import * as UTILS from '../../util/utils'
+import { getSupportedFiats } from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
-export type CreateWalletSelectFiatOwnProps = {
+type OwnProps = {
   selectedWalletType: GuiWalletType,
-  supportedFiats: Array<GuiFiatType>,
   cleanedPrivateKey?: string
 }
-export type CreateWalletSelectFiatStateProps = {
+type StateProps = {
   supportedFiats: Array<GuiFiatType>
 }
-export type Props = CreateWalletSelectFiatOwnProps & CreateWalletSelectFiatStateProps
+type Props = OwnProps & StateProps
+
 type State = {
   searchTerm: string,
   selectedFiat: string
 }
 
-export class CreateWalletSelectFiat extends Component<Props, State> {
-  constructor (props: Props) {
+class CreateWalletSelectFiatComponent extends Component<Props, State> {
+  constructor(props: Props) {
     super(props)
     this.state = {
       searchTerm: '',
@@ -56,7 +59,12 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
       // check if account-based or not
       const specialCurrencyInfo = Constants.getSpecialCurrencyInfo(selectedWalletType.currencyCode)
       // check if eos-like
-      const nextSceneKey = specialCurrencyInfo.needsAccountNameSetup ? Constants.CREATE_WALLET_ACCOUNT_SETUP : Constants.CREATE_WALLET_NAME
+      let nextSceneKey = Constants.CREATE_WALLET_NAME
+      if (!specialCurrencyInfo.needsAccountNameSetup || cleanedPrivateKey) {
+        nextSceneKey = Constants.CREATE_WALLET_NAME
+      } else {
+        nextSceneKey = Constants.CREATE_WALLET_ACCOUNT_SETUP
+      }
       Actions[nextSceneKey]({
         selectedWalletType: selectedWalletType,
         selectedFiat: this.getFiatType(this.state.selectedFiat),
@@ -87,15 +95,11 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
     }
   }
 
-  handleOnFocus = () => {
-    UTILS.noOp()
-  }
+  handleOnFocus = () => {}
 
-  handleOnBlur = () => {
-    UTILS.noOp()
-  }
+  handleOnBlur = () => {}
 
-  render () {
+  render() {
     const filteredArray = this.props.supportedFiats.filter(entry => {
       return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
     })
@@ -109,15 +113,15 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
               style={styles.picker}
               autoFocus
               containerStyle={{ height: formFieldHeight }}
-              clearButtonMode={'while-editing'}
+              clearButtonMode="while-editing"
               onFocus={this.handleOnFocus}
               onBlur={this.handleOnBlur}
               autoCorrect={false}
-              autoCapitalize={'words'}
+              autoCapitalize="words"
               onChangeText={this.handleSearchTermChange}
               value={this.state.searchTerm}
               label={s.strings.fragment_wallets_addwallet_fiat_hint}
-              returnKeyType={'search'}
+              returnKeyType="search"
             />
             <FlatList
               style={styles.resultList}
@@ -135,18 +139,14 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
     )
   }
 
-  renderFiatTypeResult = (data: FlatListItem) => {
+  renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
     return (
       <View style={[styles.singleCryptoTypeWrap, data.item.value === this.state.selectedFiat && styles.selectedItem]}>
-        <TouchableHighlight
-          style={[styles.singleCryptoType]}
-          onPress={() => this.handleSelectFiatType(data.item)}
-          underlayColor={stylesRaw.underlayColor.color}
-        >
-          <View style={[styles.cryptoTypeInfoWrap]}>
+        <TouchableHighlight style={styles.singleCryptoType} onPress={() => this.handleSelectFiatType(data.item)} underlayColor={stylesRaw.underlayColor.color}>
+          <View style={styles.cryptoTypeInfoWrap}>
             <View style={styles.cryptoTypeLeft}>
-              <View style={[styles.cryptoTypeLeftTextWrap]}>
-                <Text style={[styles.cryptoTypeName]}>{data.item.label}</Text>
+              <View style={styles.cryptoTypeLeftTextWrap}>
+                <Text style={styles.cryptoTypeName}>{data.item.label}</Text>
               </View>
             </View>
           </View>
@@ -159,3 +159,10 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
     return item.value
   }
 }
+
+export const CreateWalletSelectFiatScene = connect(
+  (state: ReduxState): StateProps => ({
+    supportedFiats: getSupportedFiats(getDefaultFiat(state))
+  }),
+  (dispatch: Dispatch) => ({})
+)(CreateWalletSelectFiatComponent)

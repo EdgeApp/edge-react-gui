@@ -5,7 +5,8 @@ import { Clipboard, Linking, Platform, Text } from 'react-native'
 
 import { EYE_ICON, ION_ICONS } from '../../constants/IconConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import { scale } from '../../util/scaling.js'
@@ -48,7 +49,7 @@ export default class XPubModal extends Component<XPubModalComponentProps, XPubMo
     })
   }
 
-  render () {
+  render() {
     const osPrefix = Platform.OS === 'ios' ? 'ios-' : 'md-'
     let hasXpubExplorerValue = false
     if (this.props.xPubExplorer) {

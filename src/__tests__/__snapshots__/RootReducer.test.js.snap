@@ -24,9 +24,6 @@ Object {
       "isProcessing": false,
       "lobby": null,
     },
-    "wallets": Object {
-      "byId": Object {},
-    },
   },
   "cryptoExchange": Object {
     "calculatingMax": false,
@@ -91,8 +88,10 @@ Object {
     "contacts": "undetermined",
     "location": "undetermined",
   },
-  "showMainApp": true,
   "ui": Object {
+    "fio": Object {
+      "connectedWalletsByFioAddress": Object {},
+    },
     "passwordReminder": Object {
       "lastLoginDate": -Infinity,
       "lastPasswordUseDate": -Infinity,
@@ -295,6 +294,9 @@ Object {
       "EOS": Object {
         "denomination": "10000",
       },
+      "ETC": Object {
+        "denomination": "1000000000000000000",
+      },
       "ETH": Object {
         "denomination": "1000000000000000000",
       },
@@ -353,6 +355,9 @@ Object {
         "denomination": "1000000000000000000",
       },
       "OMG": Object {
+        "denomination": "1000000000000000000",
+      },
+      "OXT": Object {
         "denomination": "1000000000000000000",
       },
       "PAX": Object {

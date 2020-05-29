@@ -1,8 +1,6 @@
 #!/usr/bin/env node
-/**
- * Created by paul on 6/27/17.
- * @flow
- */
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 const fs = require('fs')
 const childProcess = require('child_process')
 const sprintf = require('sprintf-js').sprintf
@@ -12,39 +10,64 @@ const mylog = console.log
 
 let _currentPath = __dirname
 
-// type CoreDep = {
-//   repoName: string,
-//   repoHash: string
-// }
-// type BuildObj = {
-//   guiDir: string,
-//   hockeyAppId: string,
-//   hockeyAppToken: string,
-//   hockeyAppTags: string,
-//   coreDeps: {[repo: string]: CoreDep},
-//   repoBranch: string,
-//   platformType: string,
-//   guiPlatformDir: string,
-//   productName: string,
-//   xcodeScheme: string,
-//   teamId: string,
-//   provisioningProfile: string,
+/**
+ * Things we expect to be set in the config file:
+ */
+// type BuildConfigFile = {
+//   // Common build options:
+//   envJson: { [repoBranch: string]: Object },
+
+//   // Android build options:
 //   androidKeyStore: string,
 //   androidKeyStoreAlias: string,
 //   androidKeyStorePassword: string,
-//   version: string,
-//   buildNum: string,
-//   guiDir: string,
-//   guiHash: string,
+//   androidTask: string,
+
+//   // iOS build options:
+//   appleDeveloperTeamId: string,
 //   xcodeScheme: string,
+//   xcodeWorkspace: string,
+
+//   // Upload options:
+//   appCenterApiToken: string,
+//   appCenterAppName: string,
+//   appCenterDistroGroup: string,
+//   appCenterGroupName: string,
+//   bugsnagApiKey: string,
+//   hockeyAppId: string,
+//   hockeyAppTags: string,
+//   hockeyAppToken: string,
+//   productName: string
+// }
+
+/**
+ * These are basically global variables:
+ */
+// type BuildObj = BuildConfigFile & {
+//   // Set in makeCommonPre:
+//   guiDir: string,
+//   guiPlatformDir: string,
+//   platformType: string, // 'android' | 'ios'
+//   repoBranch: string, // 'develop' | 'master' | 'test'
+//   tmpDir: string,
+
+//   // Set in makeCommonPost:
+//   buildNum: string,
+//   bundleMapFile: string,
+//   bundlePath: string,
+//   bundleUrl: string,
+//   guiHash: string,
+//   version: string,
+
+//   // Set in build steps:
+//   dSymFile: string,
 //   dSymZip: string,
-//   ipaFile: string,
-//   androidTask: string
+//   ipaFile: string // Also APK
 // }
 
 main()
 
-function main () {
+function main() {
   if (argv.length < 4) {
     mylog('Usage: node deploy.js [project] [platform] [branch]')
     mylog('  project options: edge')
@@ -52,39 +75,11 @@ function main () {
     mylog('  network options: master, develop')
   }
 
-  // let buildObj: BuildObj = {
-  //   guiDir: '',
-  //   hockeyAppId: '',
-  //   hockeyAppToken: '',
-  //   hockeyAppTags: '',
-  //   coreDeps: {},
-  //   repoBranch: '',
-  //   platformType: '',
-  //   guiPlatformDir: '',
-  //   productName: '',
-  //   xcodeScheme: '',
-  //   teamId: '',
-  //   provisioningProfile: '',
-  //   androidKeyStore: '',
-  //   androidKeyStoreAlias: '',
-  //   androidKeyStorePassword: '',
-  //   version: '',
-  //   buildNum: '',
-  //   guiHash: '',
-  //   dSymZip: '',
-  //   ipaFile: '',
-  //   androidTask: ''
-  // }
-
-  const buildObj = {}
+  const buildObj = {} // BuildObj
 
   makeCommonPre(argv, buildObj)
-
   makeProject(argv[2], buildObj)
-
   makeCommonPost(buildObj)
-
-  buildCommon(buildObj)
 
   if (argv[3] === 'ios') {
     buildIos(buildObj)
@@ -94,16 +89,15 @@ function main () {
   buildCommonPost(buildObj)
 }
 
-function makeCommonPre (argv, buildObj) {
+function makeCommonPre(argv, buildObj) {
   buildObj.guiDir = __dirname
-  buildObj.coreDeps = []
   buildObj.repoBranch = argv[4] // master or develop
   buildObj.platformType = argv[3] // ios or android
   buildObj.guiPlatformDir = buildObj.guiDir + '/' + buildObj.platformType
   buildObj.tmpDir = `${buildObj.guiDir}/temp`
 }
 
-function makeProject (project, buildObj) {
+function makeProject(project, buildObj) {
   const config = JSON.parse(fs.readFileSync(`${buildObj.guiDir}/deploy-config.json`, 'utf8'))
 
   Object.assign(buildObj, config[project])
@@ -113,7 +107,7 @@ function makeProject (project, buildObj) {
   console.log(buildObj)
 }
 
-function makeCommonPost (buildObj) {
+function makeCommonPost(buildObj) {
   const packageJson = JSON.parse(fs.readFileSync(buildObj.guiDir + '/package.json', 'utf8'))
   buildObj.version = packageJson.version
   if (buildObj.repoBranch === 'develop') {
@@ -122,6 +116,17 @@ function makeCommonPost (buildObj) {
     buildObj.version = packageJson.version + '-t'
   } else {
     buildObj.version = packageJson.version
+  }
+
+  if (buildObj.envJson != null) {
+    const envJsonPath = buildObj.guiDir + '/env.json'
+    let envJson = {}
+    if (fs.existsSync(envJsonPath)) {
+      envJson = JSON.parse(fs.readFileSync(envJsonPath, 'utf8'))
+    }
+    envJson = { ...envJson, ...buildObj.envJson[buildObj.repoBranch] }
+    fs.chmodSync(envJsonPath, 0o600)
+    fs.writeFileSync(envJsonPath, JSON.stringify(envJson, null, 2))
   }
 
   const buildNumFile = buildObj.guiPlatformDir + '/buildnum.json'
@@ -150,29 +155,7 @@ function makeCommonPost (buildObj) {
   }
 }
 
-function buildCommon (buildObj) {
-  // chdir(buildObj.guiDir)
-  // call('rm -rf ' + buildObj.guiDir + '/node_modules')
-  // call('rm -rf $TMPDIR/*react-*')
-  // call('yarn')
-  // // buildObj.packageLock = JSON.parse(fs.readFileSync(buildObj.guiDir + '/package-lock.json', 'utf8'))
-  //
-  // for (const coreDep of buildObj.coreDeps) {
-  //   // if (typeof buildObj.packageLock !== 'undefined') {
-  //   //   if (typeof buildObj.packageLock.dependencies !== 'undefined') {
-  //   //     if (typeof buildObj.packageLock.dependencies[coreDep.repoName] !== 'undefined') {
-  //   //       if (typeof buildObj.packageLock.dependencies[coreDep.repoName].version !== 'undefined') {
-  //   //         coreDep.repoHash = buildObj.packageLock.dependencies[coreDep.repoName].version
-  //   coreDep.repoHash = 'Unknown'
-  //
-  //   //       }
-  //   //     }
-  //   //   }
-  //   // }
-  // }
-}
-
-function buildIos (buildObj) {
+function buildIos(buildObj) {
   chdir(buildObj.guiDir)
 
   if (fs.existsSync(`${buildObj.guiDir}/GoogleService-Info.plist`)) {
@@ -251,7 +234,7 @@ function buildIos (buildObj) {
   call(cmdStr)
 }
 
-function buildAndroid (buildObj) {
+function buildAndroid(buildObj) {
   if (fs.existsSync(`${buildObj.guiDir}/google-services.json`)) {
     call(`cp -a ${buildObj.guiDir}/google-services.json ${buildObj.guiPlatformDir}/app/`)
   }
@@ -285,7 +268,7 @@ function buildAndroid (buildObj) {
   buildObj.ipaFile = buildObj.guiPlatformDir + '/app/build/outputs/apk/release/app-release.apk'
 }
 
-function buildCommonPost (buildObj) {
+function buildCommonPost(buildObj) {
   let curl
   const notes = `${buildObj.productName} ${buildObj.version} (${buildObj.buildNum}) branch: ${buildObj.repoBranch} #${buildObj.guiHash}`
 
@@ -323,13 +306,13 @@ function buildCommonPost (buildObj) {
       `-F sourceMap=@${buildObj.bundleMapFile} ` +
       `-F minifiedUrl=${buildObj.bundleUrl} ` +
       `-F minifiedFile=@${buildObj.bundlePath} ` +
-      `-F overwrite=true`
+      '-F overwrite=true'
     call(curl)
 
     if (buildObj.dSymFile) {
       const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" ${buildObj.tmpDir}/`
       call(cpa)
-      curl = `/usr/bin/curl https://upload.bugsnag.com/ ` + `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` + `-F projectRoot=${buildObj.guiPlatformDir}`
+      curl = '/usr/bin/curl https://upload.bugsnag.com/ ' + `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` + `-F projectRoot=${buildObj.guiPlatformDir}`
       call(curl)
     }
   }
@@ -339,9 +322,7 @@ function buildCommonPost (buildObj) {
     mylog('***********************\n')
 
     mylog('*** Getting upload URL/ID')
-    curl = `curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${
-      buildObj.appCenterApiToken
-    }' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads'`
+    curl = `curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads'`
     let response = rmNewline(cmd(curl))
     let responseObj = JSON.parse(response)
     console.log('Got reply', response)
@@ -351,33 +332,27 @@ function buildCommonPost (buildObj) {
     call(curl)
 
     mylog('\n*** Change resource status to committed')
-    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${
-      buildObj.appCenterApiToken
-    }' -d '{ "status": "committed" }' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads/${
-      responseObj.upload_id
-    }'`
+    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' -d '{ "status": "committed" }' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads/${responseObj.upload_id}'`
     response = rmNewline(cmd(curl))
     responseObj = JSON.parse(response)
     console.log('Got reply', response)
 
     mylog('\n*** Releasing to distribution group')
-    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${
-      buildObj.appCenterApiToken
-    }' -d '{ "destination_name": "${buildObj.appCenterDistroGroup}", "release_notes": "${notes}" }' 'https://api.appcenter.ms/${responseObj.release_url}'`
+    curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' -d '{ "destination_name": "${buildObj.appCenterDistroGroup}", "release_notes": "${notes}" }' 'https://api.appcenter.ms/${responseObj.release_url}'`
     call(curl)
 
     mylog('\n*** Upload to App Center Complete ***')
   }
 }
 
-function builddate () {
+function builddate() {
   const date = new Date()
 
   const dateStr = sprintf('%d-%02d-%02d', date.getFullYear(), date.getMonth() + 1, date.getDate())
   return dateStr
 }
 
-function buildnum (oldBuild = '') {
+function buildnum(oldBuild = '') {
   const date = new Date()
   const year = date.getFullYear() - 2000
   const month = date.getMonth() + 1
@@ -402,16 +377,16 @@ function buildnum (oldBuild = '') {
   return buildNum
 }
 
-function rmNewline (text) {
+function rmNewline(text) {
   return text.replace(/(\r\n|\n|\r)/gm, '')
 }
 
-function chdir (path) {
+function chdir(path) {
   console.log('chdir: ' + path)
   _currentPath = path
 }
 
-function call (cmdstring) {
+function call(cmdstring) {
   console.log('call: ' + cmdstring)
   const opts = {
     encoding: 'utf8',
@@ -423,7 +398,7 @@ function call (cmdstring) {
   childProcess.execSync(cmdstring, opts)
 }
 
-function cmd (cmdstring) {
+function cmd(cmdstring) {
   console.log('cmd: ' + cmdstring)
   const opts = {
     encoding: 'utf8',

@@ -1,34 +1,160 @@
 # edge-react-gui
 
-## 1.12.0
+## 1.13.2 (2020-05-26)
+
+- Fix flipinput crash on max spend Android
+
+## 1.13.1 (2020-05-25)
+
+- Fix flipinput crash on Android
+
+## 1.13.0 (2020-05-22)
+
+- Add buy support in India with new partner Transak
+- Transfer button to easily transfer funds between wallets
+- FIO
+  - OBT data support
+  - Custom ERC20 token support
+  - Warning about access to FIO address when deleting FIO wallet
+- New address modal with autocomplete FIO addresses
+- Edge update version notification
+- RTL text fixes
+- Allow fee change even in locked transactions with partners or exchanges
+- Force text entry to right of FlipInput amount
+- Upgrade edge-core-js to v0.17.2
+  - Prioritize the WazirX rate plugin when available.
+- Upgrade edge-currency-accountbased to v0.7.6
+  - Tezos - Add makeMutex to wrap makeSpend() to avoid entering it more than once
+  - Refactor EOS plugin to remove owner key to support importing wallets
+  - Add Ethereum Classic support
+  - Remove ourReceiveAddresses from Tezos makeSpend
+- Upgrade edge-exchange-plugins to v0.10.4
+  - Add WazirX exchange rate provider
+  - Fix Switchain ERC20 token sending issue and metadata
+  - Fix swapInfo orderUri variable name across all swap partners
+- Upgrade edge-components to v0.0.27
+  - Add keyboardType and inputAccessoryViewId on FormFieldInput
+
+## 1.12.4 (2020-05-14)
+
+- Prevent excluded currency codes from appearing in wallet modal search results
+- Temporarily exclude XTZ in exchange from-wallet selector
+
+## 1.12.3 (2020-05-08)
+
+- Upgrade edge-core-js to v0.17.1
+  - Use constant-time comparisons for encryption & decryption.
+  - Upgrade redux-keto dependency & fix uncovered type errors.
+  - Improve git server error messages & rotation logic.
+- Add Orchid (OXT) ERC20 token
+
+## 1.12.2 (2020-05-04)
+
+- Create and pay FIO Requests
+- Connect wallets to FIO addresses
+- Unstoppable Domains - added support for .kred .luxe and .xyz domains
+- Fix Switchain ERC20 swap
+- Fixed crashes on logout
+- Additional promo code functionality
+- Various other bug fixes
+- Upgrade edge-currency-accountbased to v0.7.4
+  - Refactor ETH and RSK to use common code
+  - FIO performance improvements
+  - isAccountAvailable() renamed to doesAccountExist()
+- Simplex upgraded to support additional fiat currencies
+
+## 1.12.1 (2020-04-17)
+
+- New exchange provider Switchain
+- Increased limit and added more countries to MoonPay
+- New transaction details screen
+- Enhanced deeplinking capabilities
+- Bug fixes and visual enhancements
+- ***BREAKING CHANGE*** Upgrade edge-core-js to v0.17.0
+  - This release also renames all `pluginName` instances to `pluginId`. This affects all plugin types, but the core contains compatibility code so old currency plugins continue working (but not for rate or swap plugins, which are easier to just upgrade).
+  - Breaking changes to the swap API:
+    - Return a new `EdgeSwapResult` structure from `EdgeSwapQuote.approve`. This now contains the `destinationAddress` and `orderId` that used to exist on the `EdgeSwapQuote` type.
+    - Merge the `EdgeSwapPluginQuote` and `EdgeSwapQuote` types into one.
+      - The `EdgeSwapQuote.isEstimate` flag is no longer optional, but must be `true` or `false`.
+      - Remove `EdgeSwapQuote.quoteUri`. Just concatenate `EdgeSwapInfo.orderUri` with `EdgeSwapResult.orderId` to get this.
+    - Rename `EdgeSwapInfo.quoteUri` to `orderUri`.
+    - Remove the deprecated `plugins` option from `EdgeSwapRequestOptions`.
+  - Other breaking changes:
+    - Remove deprecated `EdgeAccount.currencyTools`. Use `EdgeAccount.currencyConfig`.
+    - Remove deprecated `EdgeAccount.exchangeTools`. Use `EdgeAccount.swapConfig`.
+    - Remove deprecated `EdgeAccount.getExchangeQuote`. Use `EdgeAccount.fetchSwapQuote`.
+    - Remove deprecated `EdgeAccount.pluginData`. Use `EdgeAccount.dataStore`.
+    - Remove deprecated `EdgeIo.WebSocket`.
+
+- Upgrade edge-exchange-plugins to v0.10.2
+  - Add Switchain swap plugin.
+  - Pass promo codes to Changelly, ChangeNow, and Godex.
+  - Fix ChangeNow on Android & add better logging.
+
+- Upgrade edge-currency-accountbased to v0.7.2
+  - Add cleaners v0.2.0 type checking
+  - Fix duplicate FIO address after registration
+  - Reprioritize EOS Hyperion nodes to resolve transaction history view issue
+
+- Upgrade edge-login-ui-rn to v0.6.9
+  - Visual fixes to Password Recovery and 2FA
+
+## 1.12.0 (2020-04-07)
 
 - Add FIO - register address, send, and receive
 - Added additional Banxa payment methods
 - Fix missing XLM transaction history
 - Move Exchange side menu button
 - Remove countries from Simplex Sell
+- Add FIO currency support
+  - Includes new screens to view and register new FIO addresses
+- Upgrade edge-currency-accountbased to v0.7.1
+  - FIO currency
+  - XLM transaction history fix
+- Upgrade edge-core-js to v0.16.25
+  - Prioritize swap providers with active promo codes.
 
-## 1.11.10
+## 1.11.10 (2020-04-01)
 
 - Reduced Bits of Gold fees
 - Expanded price tracking for ERC20 tokens
 - Updated Totle plugin
 - Enhanced deeplinking
 - Bug fixes
+- Upgrade edge-exchange-plugins to v0.9.2
+  - Increases number of asset prices retrieved from CoinCap to 500
+  - Upgrade Totle plugin to new API
+- Refactor edgeProvider
+  - Fix lockInputs and set default to true
+  - Handle the case where both nativeAmount and exchangeAmount are missing in a spend target
+- Deeplinking and GuiPlugin refactor
+  - Disable GUI plugins based on promo setup.
+  - Inject linking parameters into EdgeProvider
+  - Pass promo codes to fiat plugins via EdgeProvider & optional query parameter
+  - Link into plugins apart from Simplex
+  - Improve flexibility of plugin data format
 
-## 1.11.9
+## 1.11.9 (2020-03-24)
 
-- Samsung S7 crash fix
+- Switch from jsc-android to react-native-v8 to fix Samsung S7 device family crashes
 
-## 1.11.8
+## 1.11.8 (2020-03-24)
 
-- Fix wallet type error message on Create Wallet
+- Fix error message on Create Wallet caused by partially enabled FIO wallet
 
-## 1.11.7
+## 1.11.7 (2020-03-23)
 
 - Bits of Gold support for Buy in Israel
 - Add Metronome ERC20 token
 - Bug fixes and visual improvements
+- Add priority setting for exchange rate providers
+- Fix white screen crash on settings screen
+- Enhanced deeplink support
+- Upgrade edge-login-ui-rn to v0.6.8
+  - Added auto-scroll on terms and conditions screen
+- Upgrade edge-currency-accountbased to v0.6.9
+  - Add response error checking to fetch() calls
+  - Fixed crash when Etherscan API returned text rather than a number by adding decimal and hex regex to response validation
 
 ## 1.11.6
 
@@ -74,11 +200,11 @@
 
 ## 1.11.0
 
-- Redesign of Wallet List and Transaction History screens 
-- Improved 2FA Background Notifications 
-- Safello - Sell 
-- Safello - Denmark region support added 
-- Safello - Additional payment method added for Sweden 
+- Redesign of Wallet List and Transaction History screens
+- Improved 2FA Background Notifications
+- Safello - Sell
+- Safello - Denmark region support added
+- Safello - Additional payment method added for Sweden
 - Support new DAI and SAI
 - Other minor fixes
 

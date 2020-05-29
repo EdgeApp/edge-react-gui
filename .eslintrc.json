@@ -1,18 +1,21 @@
 {
-  "extends": ["plugin:flowtype/recommended", "plugin:react-native/all", "plugin:react/recommended", "standard"],
+  "extends": [
+    "standard-kit/prettier",
+    "standard-kit/prettier/node",
+    "standard-kit/prettier/jsx",
+    "standard-kit/prettier/flow",
+    "plugin:react-native/all",
+    "plugin:react/recommended"
+  ],
   "globals": {
     "fetch": true
   },
   "parser": "babel-eslint",
-  "plugins": ["flowtype", "react-native", "react", "simple-import-sort", "standard"],
+  "plugins": ["react-native", "react", "simple-import-sort"],
   "rules": {
     "camelcase": "warn",
-    "flowtype/generic-spacing": "off",
     "flowtype/require-valid-file-annotation": [2, "always"],
-    "flowtype/semi": [2, "never"],
-    "no-throw-literal": "error",
     "no-var": "error",
-    "prefer-const": "error",
     "react-native/no-inline-styles": 0,
     "react-native/no-raw-text": ["error", { "skip": ["FormattedText", "T", "B"] }],
     "react-native/no-unused-styles": 0,
@@ -24,7 +27,10 @@
     "react/no-typos": "error",
     "react/prop-types": 0,
     "react/self-closing-comp": ["error", { "component": true }],
-    "simple-import-sort/sort": "error"
+    "simple-import-sort/sort": "error",
+    "no-prototype-builtins": "off",
+    "react/jsx-handler-names": "off",
+    "react-native/sort-styles": "off"
   },
   "settings": {
     "react": { "pragma": "React", "version": "16.8.0", "flowVersion": "0.66" }

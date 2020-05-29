@@ -3,7 +3,6 @@
 import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../../types/reduxTypes.js'
-import { getUsername } from '../../../Core/selectors.js'
 import { getDisplayDenominationFull } from '../../../Settings/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../../UI/selectors.js'
 import ControlPanel from './ControlPanel.ui'
@@ -53,14 +52,11 @@ const mapStateToProps = (state: State) => {
     secondaryDisplayAmount,
     secondaryToPrimaryRatio,
     usersView: state.ui.scenes.controlPanel.usersView,
-    username: getUsername(state)
+    username: state.core.account.username
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   openSelectUser: () => dispatch({ type: 'OPEN_SELECT_USER' }),
   closeSelectUser: () => dispatch({ type: 'CLOSE_SELECT_USER' })
 })
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ControlPanel)
+export default connect(mapStateToProps, mapDispatchToProps)(ControlPanel)

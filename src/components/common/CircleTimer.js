@@ -11,9 +11,10 @@ type Props = {
 export const TEN_MINUTES = 600
 
 class CircleTimer extends Component<Props> {
-  componentDidMount () {
+  componentDidMount() {
     setTimeout(this.timerTick, 1000)
   }
+
   timerTick = () => {
     const now = new Date()
     const nowMilli = now.getTime()
@@ -29,12 +30,14 @@ class CircleTimer extends Component<Props> {
     console.log('timer: percentage ', percentage) */
     setTimeout(this.timerTick, 1000)
   }
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
+
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (nextProps.expiration !== null && nextProps.expiration !== this.props.expiration) {
       setTimeout(this.timerTick, 1000)
     }
   }
-  render () {
+
+  render() {
     const { container } = this.props.style
     if (!this.props.expiration) {
       return null

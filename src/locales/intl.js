@@ -27,7 +27,7 @@ const intlHandler = {
    * @param options
    * @returns {string}
    */
-  formatNumberInput (input: string, options?: IntlNumberFormatOptionsType): string {
+  formatNumberInput(input: string, options?: IntlNumberFormatOptionsType): string {
     const _options = {}
 
     if (input.endsWith('.') || input.endsWith(',')) {
@@ -49,7 +49,7 @@ const intlHandler = {
    * @param options
    * @return {string}
    */
-  formatNumber (number: number | string, options?: IntlNumberFormatOptionsType): string {
+  formatNumber(number: number | string, options?: IntlNumberFormatOptionsType): string {
     let i
     let intPart
     let stringify = String(number)
@@ -76,7 +76,7 @@ const intlHandler = {
    * @param value
    * @returns {boolean}
    */
-  isValidInput (value: string): boolean {
+  isValidInput(value: string): boolean {
     const { decimalSeparator, groupingSeparator } = locale
     const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g')
 
@@ -95,7 +95,7 @@ const intlHandler = {
    * Should change UTILS.formatNumberInput
    * @param input
    */
-  prettifyNumber (input: string): string {
+  prettifyNumber(input: string): string {
     let out = input.replace(/^0+/, '')
     if (out.startsWith(locale.decimalSeparator)) {
       out = '0' + out
@@ -110,7 +110,7 @@ const intlHandler = {
    * @param allowBlank
    * @returns {string}
    */
-  truncateDecimals (input: string, precision?: number, allowBlank?: boolean = false): string {
+  truncateDecimals(input: string, precision?: number, allowBlank?: boolean = false): string {
     const { decimalSeparator } = locale
 
     if (input === '') {
@@ -134,7 +134,7 @@ const intlHandler = {
    * @param options
    * @returns {string}
    */
-  formatToNativeNumber (value: string, options?: IntlNumberFormatOptionsType): string {
+  formatToNativeNumber(value: string, options?: IntlNumberFormatOptionsType): string {
     const { decimalSeparator, groupingSeparator } = locale
     if (value.endsWith('.') || value.endsWith(',')) {
       value = value.slice(0, -1) + locale.decimalSeparator
@@ -151,7 +151,7 @@ const intlHandler = {
    * @param monthShort
    * @returns {string}
    */
-  formatExpDate (expiration: Date | string, monthShort?: boolean = false): string {
+  formatExpDate(expiration: Date | string, monthShort?: boolean = false): string {
     const expirationDate = new Date(expiration)
 
     return new Intl.DateTimeFormat(locale.localeIdentifier.replace('_', '-'), {
@@ -159,8 +159,20 @@ const intlHandler = {
     }).format(expirationDate)
   },
 
+  /**
+   * Returns time string depending on locale
+   * @param date
+   * @returns {string}
+   */
+  formatTime(date: Date): string {
+    return new Intl.DateTimeFormat(locale.localeIdentifier.replace('_', '-'), {
+      hour: 'numeric',
+      minute: 'numeric'
+    }).format(date)
+  },
+
   // $FlowFixMe: add after implementation
-  formatDate (date, options) {
+  formatDate(date, options) {
     throw new Error('Not implemented')
   }
 }

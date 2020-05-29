@@ -22,7 +22,7 @@ type ProgressBarState = {
 export class ProgressBar extends PureComponent<ProgressBarProps, ProgressBarState> {
   animation: Animated.Value
 
-  constructor (props: ProgressBarProps) {
+  constructor(props: ProgressBarProps) {
     super(props)
     this.animation = new Animated.Value(props.progress)
     this.state = {
@@ -30,7 +30,7 @@ export class ProgressBar extends PureComponent<ProgressBarProps, ProgressBarStat
     }
   }
 
-  componentDidUpdate (prevProps: ProgressBarProps) {
+  componentDidUpdate(prevProps: ProgressBarProps) {
     if (prevProps.progress !== this.props.progress) {
       Animated.timing(this.animation, {
         toValue: this.props.progress,
@@ -40,7 +40,7 @@ export class ProgressBar extends PureComponent<ProgressBarProps, ProgressBarStat
     }
   }
 
-  render () {
+  render() {
     const widthInterpolated = this.animation.interpolate({
       inputRange: [0, 100],
       outputRange: ['10%', '100%'],

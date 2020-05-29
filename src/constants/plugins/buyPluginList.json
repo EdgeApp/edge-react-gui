@@ -5,7 +5,7 @@
     "paymentTypes": [
       "credit"
     ],
-    "description": "Fee: ~7% / Settlement: 10-30 minutes\nLimit: $18000/day",
+    "description": "Fee: 7% / Settlement: 10 - 30min\nLimit: $18000/day",
     "title": "Credit and Debit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "forCountries": [
@@ -259,7 +259,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 1% / Settlement: 1-5 days\nLimit: $2500/week",
+    "description": "Fee: 1% / Settlement: 1 - 5days\nLimit: $2500/week",
     "title": "ACH Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "forCountries": [
@@ -317,7 +317,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 1.55% / Settlement: 1-2 days\nLimit: €5000/day with no KYC",
+    "description": "Fee: 1.55% / Settlement: 1 - 2days\nLimit: €5000/day with no KYC",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
     "paymentTypeLogoKey": "bank"
@@ -328,17 +328,20 @@
     "paymentTypes": [
       "credit"
     ],
-    "description": "Fee: 6.5% / Settlement: 10 minutes\nLimit: $10000/day",
+    "description": "Fee: 6.5% / Settlement: 10 minutes\nDaily Limit: $10800\nMonthly Limit: $54000",
     "title": "Credit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
     "forCountries": [
-      "AT",
+      "AR",
       "AU",
+      "AT",
       "BE",
-      "BG",
       "BR",
-      "HR",
+      "BG",
       "CA",
+      "CL",
+      "CO",
+      "HR",
       "CY",
       "CZ",
       "DK",
@@ -350,41 +353,46 @@
       "HK",
       "HU",
       "IS",
+      "IN",
+      "ID",
       "IE",
+      "IL",
       "IT",
       "JP",
       "KR",
+      "KW",
       "LV",
       "LI",
       "LT",
       "LU",
+      "MY",
       "MT",
+      "MU",
       "MX",
       "NL",
+      "NZ",
       "NO",
+      "PH",
       "PL",
       "PT",
+      "QA",
       "RO",
       "RU",
+      "SA",
+      "SG",
       "SK",
       "SI",
+      "ZA",
       "ES",
       "SE",
-      "ZA",
-      "GB",
-      "CO",
-      "GH",
-      "IL",
-      "IN",
-      "ID",
-      "MY",
-      "PK",
-      "PH",
-      "QA",
+      "CH",
+      "TW",
       "TH",
-      "VE",
-      "VN",
-      "US"
+      "TR",
+      "AE",
+      "GB",
+      "US",
+      "VN"
     ],
     "cryptoCodes": [
       "BTC",
@@ -398,6 +406,8 @@
       "BAT",
       "BNB",
       "PAX",
+      "QTUM",
+      "RVN",
       "TUSD",
       "USDC",
       "USDT"
@@ -419,7 +429,6 @@
     "cryptoCodes": [
       "BTC",
       "ETH",
-      "BCH",
       "XRP"
     ],
     "paymentTypeLogoKey": "credit"
@@ -430,7 +439,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 4% / Settlement: 1-2 days\nLimit: €2500/day",
+    "description": "Fee: 4% / Settlement: 1 - 2days\nLimit: €2500/day",
     "title": "Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
     "forCountries": [
@@ -439,7 +448,6 @@
     "cryptoCodes": [
       "BTC",
       "ETH",
-      "BCH",
       "XRP"
     ],
     "paymentTypeLogoKey": "bank",
@@ -470,7 +478,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 4-6% / Settlement: 5 min-24 hours\nLimit: $50000/day",
+    "description": "Fee: 2.5% / Settlement: 5min - 24hours\nLimit: $50000/day",
     "title": "POLi Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "forCountries": [
@@ -494,7 +502,7 @@
     "paymentTypes": [
       "cash"
     ],
-    "description": "Fee: 4-6% / Settlement: 5 min-24 hours\nLimit: $9000/day",
+    "description": "Fee: 5.5% / Settlement: 5min - 24hours\nLimit: $9000/day",
     "title": "Cash with Newsagent",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "forCountries": [
@@ -516,7 +524,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 4-6% / Settlement: Instant\nLimit: $50000/day",
+    "description": "Fee: 3% / Settlement: Instant\nLimit: $50000/day",
     "title": "PayID",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "forCountries": [
@@ -538,7 +546,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: $3 / Settlement: 5 min-24 hours\nLimit: $50000/day",
+    "description": "Fee: 2% / Settlement: 1 - 48hours\nLimit: €10000+/day",
     "title": "BPay",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "forCountries": [
@@ -560,7 +568,7 @@
     "paymentTypes": [
       "cash"
     ],
-    "description": "Fee: 4-6% / Settlement: Instant\nLimit: $50000/day",
+    "description": "Fee: 4.5% / Settlement: Instant\nLimit: $50000/day",
     "title": "Australia Post",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "forCountries": [
@@ -577,25 +585,142 @@
     }
   },
   {
+    "id": "banxa.credit",
+    "pluginId": "banxa",
+    "paymentTypes": [
+      "credit"
+    ],
+    "description": "Fee: 2.9% / Settlement: Instant\nLimit: $5000/day",
+    "title": "Credit Card",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "forCountries": [
+      "AU",
+      "HK"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
+    "paymentTypeLogoKey": "credit",
+    "deepQuery": {
+      "country": "au",
+      "payment_id": "6028"
+    }
+  },
+  {
     "id": "bits of gold",
     "pluginId": "bitsofgold",
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 2.5% / Settlement: 1-48 hours\nLimit: €10000+/day",
-    "title": "Israeli Bank Transfer",
+    "description": "Fee: 3% / Settlement: 1 - 48hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
+    "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
     "forCountries": [
-      "IL"
+      "AD",
+      "AT",
+      "BE",
+      "BG",
+      "BL",
+      "CH",
+      "CY",
+      "CZ",
+      "DE",
+      "DK",
+      "EE",
+      "ES",
+      "FI",
+      "FR",
+      "GB",
+      "GF",
+      "GG",
+      "GI",
+      "GP",
+      "GR",
+      "HR",
+      "HU",
+      "IE",
+      "IL",
+      "IM",
+      "IS",
+      "IT",
+      "JE",
+      "LI",
+      "LT",
+      "LU",
+      "LV",
+      "MC",
+      "MF",
+      "MQ",
+      "MT",
+      "NL",
+      "NO",
+      "PL",
+      "PM",
+      "PT",
+      "RE",
+      "RO",
+      "SE",
+      "SI",
+      "SK",
+      "SM",
+      "VA",
+      "YT"
     ],
     "cryptoCodes": [
       "BTC"
     ],
     "paymentTypeLogoKey": "bank",
-    "deepPath": "/buy",
+    "deepPath": "/order/buy",
     "deepQuery": {
       "order_id": "null",
       "page": "0"
+    }
+  },
+  {
+    "id": "transak.upi",
+    "pluginId": "transak",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Fee: 0.75% / Settlement: Instant\nLimit: ₹1,000,000/day",
+    "title": "United Payments Interface",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/transak.png",
+    "forCountries": [
+      "IN"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "and more"
+    ],
+    "paymentTypeLogoKey": "upi",
+    "deepQuery": {
+      "countryCode": "IN",
+      "paymentMethod": "upi"
+    }
+  },
+  {
+    "id": "transak.bank",
+    "pluginId": "transak",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Fee: 0.75% / Settlement: 2min - 4hours\nLimit: ₹1,000,000/day",
+    "title": "NEFT Transfer",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/transak.png",
+    "forCountries": [
+      "IN"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "and more"
+    ],
+    "paymentTypeLogoKey": "bank",
+    "deepQuery": {
+      "countryCode": "IN",
+      "paymentMethod": "neft_bank_transfer"
     }
   },
   "----- Sorting -----",
@@ -605,7 +730,7 @@
   },
   {
     "id": "bits of gold",
-    "sortIndex": 2
+    "sortIndex": 6
   },
   {
     "id": "wyre",
@@ -640,6 +765,10 @@
     "sortIndex": 4
   },
   {
+    "id": "banxa.credit",
+    "sortIndex": 4.5
+  },
+  {
     "id": "libertyx",
     "sortIndex": 7
   },
@@ -650,6 +779,14 @@
   {
     "id": "moonpay",
     "sortIndex": 5
+  },
+  {
+    "id": "transak.upi",
+    "sortIndex": 1
+  },
+  {
+    "id": "transak.bank",
+    "sortIndex": 2
   },
   "----- iOS specifics -----",
   {
@@ -702,7 +839,7 @@
     },
     "title": "Faster Payments",
     "paymentTypeLogoKey": "fasterPayments",
-    "description": "Fee: ~2.5% / Settlement: Instant-1 hour\nLimit: £5000",
+    "description": "Fee: 2.5% / Settlement: Instant - 1hour\nLimit: £5000",
     "sortIndex": 1
   },
   {
@@ -713,17 +850,36 @@
     "sortIndex": 2
   },
   {
+    "id": "bits of gold",
+    "forCountries": [
+      "IL"
+    ],
+    "sortIndex": 2,
+    "title": "Israeli Bank Transfer",
+    "description": "Fee: 2.5% / Settlement: 1 - 48hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited"
+  },
+  {
     "id": "banxa.bank",
     "forCountries": [
       "NL"
     ],
     "deepQuery": {
       "country": "nl",
-      "payment": "IDEAL"
+      "payment_id": "IDEAL"
     },
     "title": "iDEAL",
     "paymentTypeLogoKey": "ideal",
-    "description": "Fee: ~2.9% / Settlement: Instant\nLimit: €10000",
+    "description": "Fee: 2.9% / Settlement: Instant\nLimit: €10000",
     "sortIndex": 1
+  },{
+    "id": "banxa.credit",
+    "forCountries": [
+      "HK"
+    ],
+    "deepQuery": {
+      "country": "hk",
+      "payment_id": "6026"
+    },
+    "description": "Fee: 2.9% / Settlement: Instant\nLimit: HK$50000/day"
   }
 ]

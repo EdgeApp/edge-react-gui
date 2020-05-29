@@ -7,7 +7,7 @@ import fioAddressListIcon from '../../assets/images/list_fioAddress.png'
 import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { styles } from '../../styles/scenes/FioAddressListStyle'
 import type { FioAddress } from '../../types/types'
@@ -22,7 +22,7 @@ export const FioAddressItem = (props: FioAddressItemProps) => {
   const { address, onFioAddressPress } = props
 
   return (
-    <TouchableHighlight onPress={() => onFioAddressPress(`${address.name}`, address.expiration)}>
+    <TouchableHighlight onPress={() => onFioAddressPress(`${address.name}`, address.expiration)} underlayColor={styles.underlay.color}>
       <View style={styles.item}>
         <View style={styles.icon}>
           <Image source={fioAddressListIcon} style={styles.iconImg} />

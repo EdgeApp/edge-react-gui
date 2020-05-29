@@ -4,12 +4,11 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import PasswordRecoveryComponent from '../../components/scenes/PasswordRecoveryScene.js'
-import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import type { State } from '../../types/reduxTypes.js'
 
 export const mapStateToProps = (state: State) => ({
-  context: CORE_SELECTORS.getContext(state),
-  account: CORE_SELECTORS.getAccount(state),
+  context: state.core.context,
+  account: state.core.account,
   showHeader: false
 })
 
@@ -17,7 +16,4 @@ export const mapDispatchToProps = () => ({
   onComplete: Actions.pop
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PasswordRecoveryComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(PasswordRecoveryComponent)

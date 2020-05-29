@@ -16,14 +16,14 @@ export class ProgressPie extends Component<Props> {
   progressAnimation: Animated.Value
   progressTarget: number
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
 
     this.progressTarget = 0
     this.progressAnimation = new Animated.Value(this.progressTarget)
   }
 
-  componentDidUpdate (prevProps: Props) {
+  componentDidUpdate(prevProps: Props) {
     const { progress } = this.props
 
     if (progress !== this.progressTarget) {
@@ -37,7 +37,7 @@ export class ProgressPie extends Component<Props> {
     }
   }
 
-  render () {
+  render() {
     const { color, size } = this.props
 
     return (
@@ -52,7 +52,7 @@ export class ProgressPie extends Component<Props> {
  * This is a separate component so we can animate its props.
  */
 class PieShape extends Component<{ color: string, progress: number, radius: number }> {
-  render () {
+  render() {
     const { color, progress, radius } = this.props
 
     const angle = progress * CIRCLE

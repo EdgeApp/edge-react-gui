@@ -3,14 +3,13 @@ import { connect } from 'react-redux'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions.js'
 import { type DispatchProps, type OwnProps, type StateProps, CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene'
-import * as CORE_SELECTORS from '../../modules/Core/selectors'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 import { type GuiSwapInfo } from '../../types/types.js'
 
 export const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => {
   const { request } = ownProps.swapInfo
 
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   const fromWallet = state.cryptoExchange.fromWallet
   const toWallet = state.cryptoExchange.toWallet
 
@@ -30,17 +29,14 @@ export const mapStateToProps = (state: State, ownProps: OwnProps): StateProps =>
 }
 
 export const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  shift (swapInfo: GuiSwapInfo) {
+  shift(swapInfo: GuiSwapInfo) {
     dispatch(shiftCryptoCurrency(swapInfo))
   },
-  timeExpired (swapInfo: GuiSwapInfo) {
+  timeExpired(swapInfo: GuiSwapInfo) {
     dispatch(exchangeTimerExpired(swapInfo))
   }
 })
 
-const CryptoExchangeQuoteConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CryptoExchangeQuoteScreenComponent)
+const CryptoExchangeQuoteConnector = connect(mapStateToProps, mapDispatchToProps)(CryptoExchangeQuoteScreenComponent)
 
 export { CryptoExchangeQuoteConnector }

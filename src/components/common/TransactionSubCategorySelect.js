@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { FlatList, TouchableHighlight, View } from 'react-native'
 
-import FormattedText from '../../modules/UI/components/FormattedText/index'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles from '../../styles/scenes/TransactionDetailsStyle'
 import { THEME } from '../../theme/variables/airbitz.js'
 import type { SubcategorySearchResultData } from '../../types/types.js'
@@ -22,7 +22,7 @@ type Props = {
 }
 
 class SubCategorySelect extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       subcategories: this.props.subcategoriesList,
@@ -36,7 +36,7 @@ class SubCategorySelect extends Component<Props, State> {
     return subcategoriesList.filter(subCategory => subCategory.toLowerCase().includes(enteredSubcategory.toLowerCase()))
   }
 
-  render () {
+  render() {
     const { categories } = this.props
     const filteredSubcats = !this.props.enteredSubcategory ? this.props.subcategoriesList : this.filterSubcategory()
     let newPotentialSubCategories = []
@@ -63,8 +63,8 @@ class SubCategorySelect extends Component<Props, State> {
     const renderAdd = () => {
       if (filterArray.find(item => item === data.item)) {
         return (
-          <View style={[styles.rowPlusWrap]}>
-            <FormattedText style={[styles.rowPlus]}>+</FormattedText>
+          <View style={styles.rowPlusWrap}>
+            <FormattedText style={styles.rowPlus}>+</FormattedText>
           </View>
         )
       }
@@ -72,9 +72,9 @@ class SubCategorySelect extends Component<Props, State> {
 
     return (
       <TouchableHighlight delayPressIn={60} style={styles.rowContainer} underlayColor={THEME.COLORS.GRAY_4} onPress={() => this.props.onPressFxn(data.item)}>
-        <View style={[styles.rowContent]}>
-          <View style={[styles.rowCategoryTextWrap]}>
-            <FormattedText style={[styles.rowCategoryText]} numberOfLines={1}>
+        <View style={styles.rowContent}>
+          <View style={styles.rowCategoryTextWrap}>
+            <FormattedText style={styles.rowCategoryText} numberOfLines={1}>
               {data.item}
             </FormattedText>
           </View>

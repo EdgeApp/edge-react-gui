@@ -2,18 +2,15 @@
 
 import { bns } from 'biggystring'
 import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeSpendInfo, type EdgeSwapQuote, type EdgeSwapRequest, errorNames } from 'edge-core-js/types'
-import React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { trackConversion } from '../actions/TrackingActions.js'
-import { SwapVerifyShapeshiftModal } from '../components/modals/SwapVerifyShapeshiftModal.js'
-import { Airship, showError } from '../components/services/AirshipInstance.js'
+import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import { intl } from '../locales/intl'
 import s from '../locales/strings.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
@@ -43,8 +40,9 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
       throw new Error('No currency selected') // Should never happen
     }
 
-    const fromCoreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
-    const toCoreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, toWallet.id)
+    const { currencyWallets = {} } = state.core.account
+    const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWallet.id]
+    const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWallet.id]
     const request: EdgeSwapRequest = {
       fromCurrencyCode,
       fromWallet: fromCoreWallet,
@@ -83,7 +81,8 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   if (!fromWallet) {
     return
   }
-  const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
+  const { currencyWallets = {} } = state.core.account
+  const wallet: EdgeCurrencyWallet = currencyWallets[fromWallet.id]
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
   if (Constants.getSpecialCurrencyInfo(parentCurrencyCode).noMaxSpend) {
@@ -109,8 +108,8 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   dispatch({ type: 'SET_FROM_WALLET_MAX', data: primaryNativeAmount })
 }
 
-async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
-  const account = CORE_SELECTORS.getAccount(state)
+async function fetchSwapQuote(state: State, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
+  const { account } = state.core
 
   // Find preferred swap provider:
   const activePlugins = bestOfPlugins(state.account.referralCache.accountPlugins, state.account.accountReferral, state.ui.settings.preferredSwapPluginId)
@@ -130,7 +129,7 @@ async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<
 
   // Currency conversion tools:
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+  const currencyConverter = account.exchangeCache
 
   // Format from amount:
   const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
@@ -234,25 +233,6 @@ const processSwapQuoteError = (error: any) => (dispatch: Dispatch, getState: Get
             data: s.strings.ss_geolock
           })
         }
-
-        case 'needsActivation': {
-          if (error.pluginId === 'shapeshift') {
-            Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [
-              { text: s.strings.string_cancel_cap, onPress: () => {} },
-              { text: s.strings.string_ok, onPress: () => Actions[Constants.SWAP_ACTIVATE_SHAPESHIFT]() }
-            ])
-            return
-          }
-          break // Not handled
-        }
-
-        case 'noVerification': {
-          if (error.pluginId === 'shapeshift') {
-            Airship.show(bridge => <SwapVerifyShapeshiftModal bridge={bridge} />)
-            return
-          }
-          break // Not handled
-        }
       }
       break // Not handled
     }
@@ -272,48 +252,56 @@ const processSwapQuoteError = (error: any) => (dispatch: Dispatch, getState: Get
 
 export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const { account } = state.core
   dispatch({ type: 'START_SHIFT_TRANSACTION' })
 
   const { quote, request } = swapInfo
   const { pluginId, toNativeAmount } = quote
-  const { fromWallet, toWallet, toCurrencyCode } = request
+  const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
 
   try {
     logEvent('SwapStart')
     const result = await quote.approve()
     await fromWallet.saveTx(result.transaction)
 
-    const category = sprintf(
-      'exchange:%s %s %s',
-      state.cryptoExchange.fromCurrencyCode,
-      s.strings.word_to_in_convert_from_to_string,
-      state.cryptoExchange.toCurrencyCode
-    )
-    const account = CORE_SELECTORS.getAccount(state)
     const si = account.swapConfig[pluginId].swapInfo
-    const name = si.displayName
-    const supportEmail = si.supportEmail
-    const quoteIdUri = si.orderUri != null && result.orderId != null ? si.orderUri + result.orderId : result.transaction.txid
-    const payinAddress = result.transaction.otherParams != null ? result.transaction.otherParams.payinAddress : ''
-    const uniqueIdentifier = result.transaction.otherParams != null ? result.transaction.otherParams.uniqueIdentifier : ''
-    const isEstimate = quote.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote
-    const notes =
-      sprintf(
-        s.strings.exchange_notes_metadata_generic2,
-        state.cryptoExchange.fromDisplayAmount,
-        state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
-        fromWallet.name,
-        state.cryptoExchange.toDisplayAmount,
-        state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
-        toWallet.name,
-        result.destinationAddress || '',
-        quoteIdUri,
-        payinAddress,
-        uniqueIdentifier,
-        supportEmail
-      ) +
-      ' ' +
-      isEstimate
+
+    let category: string
+    let name: string
+    let notes: string
+    if (pluginId === 'transfer') {
+      category = sprintf('transfer:%s %s %s', fromCurrencyCode, s.strings.word_to_in_convert_from_to_string, toWallet.name)
+      name = toWallet.name || ''
+
+      const recipientAddress = (await toWallet.getReceiveAddress()).publicAddress
+      notes = s.strings.tx_notes_metadata_recipient_address + recipientAddress
+    } else {
+      category = sprintf('exchange:%s %s %s', fromCurrencyCode, s.strings.word_to_in_convert_from_to_string, toCurrencyCode)
+      name = si.displayName
+
+      const supportEmail = si.supportEmail
+      const quoteIdUri = si.orderUri != null && result.orderId != null ? si.orderUri + result.orderId : result.transaction.txid
+      const payinAddress = result.transaction.otherParams != null ? result.transaction.otherParams.payinAddress : ''
+      const uniqueIdentifier = result.transaction.otherParams != null ? result.transaction.otherParams.uniqueIdentifier : ''
+      const isEstimate = quote.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote
+      notes =
+        sprintf(
+          s.strings.exchange_notes_metadata_generic2,
+          state.cryptoExchange.fromDisplayAmount,
+          state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
+          fromWallet.name,
+          state.cryptoExchange.toDisplayAmount,
+          state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
+          toWallet.name,
+          result.destinationAddress || '',
+          quoteIdUri,
+          payinAddress,
+          uniqueIdentifier,
+          supportEmail
+        ) +
+        ' ' +
+        isEstimate
+    }
 
     const edgeMetaData: EdgeMetadata = {
       name,
@@ -386,7 +374,7 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string, 
 
 export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
   // make sure exchanges are enabled
   let isAnyExchangeEnabled = false
   const exchanges = account.swapConfig
@@ -401,8 +389,9 @@ export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetSta
   }
 }
 
-async function getBalanceMessage (state: State, wallet: GuiWallet, currencyCode: string) {
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+async function getBalanceMessage(state: State, wallet: GuiWallet, currencyCode: string) {
+  const { account } = state.core
+  const currencyConverter = account.exchangeCache
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)

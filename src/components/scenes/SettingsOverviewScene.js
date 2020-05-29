@@ -12,7 +12,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import * as Constants from '../../constants/indexConstants'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Action } from '../../types/reduxTypes.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
@@ -56,14 +56,14 @@ type State = {
 }
 
 export default class SettingsOverview extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       touchIdText: s.strings.settings_button_use_touchID
     }
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     if (!this.props.supportsTouchId) {
       return null
     }
@@ -87,18 +87,22 @@ export default class SettingsOverview extends Component<Props, State> {
     }
   }
 
-  unlockSettingsAlert () {
+  unlockSettingsAlert() {
     showToast(s.strings.settings_alert_unlock)
   }
+
   _onPressChangePasswordRouting = () => {
     return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.CHANGE_PASSWORD]()
   }
+
   _onPressChangePinRouting = () => {
     return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.CHANGE_PIN]()
   }
+
   _onPressOtp = () => {
     return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.OTP_SETUP]()
   }
+
   _onPressRecoverPasswordRouting = () => {
     return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.RECOVER_PASSWORD]()
   }
@@ -109,6 +113,10 @@ export default class SettingsOverview extends Component<Props, State> {
 
   _onPressSpendingLimits = () => {
     return Actions[Constants.SPENDING_LIMITS]()
+  }
+
+  _onPressPromotionSettings = () => {
+    Actions.push(Constants.PROMOTION_SETTINGS)
   }
 
   _onPressOpenLogoffTime = () => {}
@@ -137,7 +145,7 @@ export default class SettingsOverview extends Component<Props, State> {
     }
   }
 
-  render () {
+  render() {
     const { account } = this.props
 
     const autoLogout = secondsToDisplay(this.props.autoLogoutTimeInSeconds)
@@ -192,7 +200,7 @@ export default class SettingsOverview extends Component<Props, State> {
 
           <SettingsSwitchRow key="pinRelogin" text={s.strings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this._onTogglePinLogin} />
           {this.props.supportsTouchId && (
-            <SettingsSwitchRow key={'useTouchID'} text={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this._onToggleTouchIdOption} />
+            <SettingsSwitchRow key="useTouchID" text={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this._onToggleTouchIdOption} />
           )}
 
           {CURRENCY_SETTINGS_KEYS.map(pluginId => {
@@ -205,6 +213,7 @@ export default class SettingsOverview extends Component<Props, State> {
             return <SettingsRow key={pluginId} icon={icon} text={displayName} onPress={onPress} right={rightArrow} />
           })}
 
+          <SettingsRow text={s.strings.title_promotion_settings} right={rightArrow} onPress={this._onPressPromotionSettings} />
           <SettingsSwitchRow key="developerMode" text={s.strings.settings_developer_mode} value={this.props.developerModeOn} onPress={this.onDeveloperPress} />
           <SettingsRow onPress={this.showRestoreWalletModal} text={s.strings.restore_wallets_modal_title} />
           <SettingsRow text={s.strings.title_terms_of_service} onPress={Actions[Constants.TERMS_OF_SERVICE]} right={rightArrow} />

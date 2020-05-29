@@ -5,7 +5,6 @@ import { type EdgeContext } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../../../types/reduxTypes.js'
-import * as CORE_SELECTORS from '../../../../Core/selectors.js'
 import { logoutRequest } from '../../../../Login/action'
 import { deleteLocalAccount } from '../action'
 import UserList from './UserList'
@@ -22,9 +21,9 @@ type DispatchProps = {
 
 const mapStateToProps = (state: State): StateProps => {
   return {
-    context: CORE_SELECTORS.getContext(state),
+    context: state.core.context,
     disklet: state.core.disklet,
-    currentUsername: CORE_SELECTORS.getUsername(state)
+    currentUsername: state.core.account.username
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
@@ -36,7 +35,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   }
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserList)
+export default connect(mapStateToProps, mapDispatchToProps)(UserList)

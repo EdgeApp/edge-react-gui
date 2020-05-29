@@ -1,14 +1,17 @@
 // @flow
 import React, { Component } from 'react'
-import { TextInput, View } from 'react-native'
+import { Platform, StyleSheet, TextInput, View } from 'react-native'
 
 import { MATERIAL_COMMUNITY, SERVER } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
-import styles, { styles as rawStyle } from '../../styles/SettingsComponentsStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../theme/variables/platform.js'
+import { isIphoneX } from '../../util/isIphoneX.js'
 import { noOp } from '../../util/utils.js'
 
 export type SetCustomNodesModalOwnProps = {
@@ -28,7 +31,7 @@ export type SetCustomNodesModalState = {
 export type SetCustomNodeModalProps = SetCustomNodesModalOwnProps
 
 export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetCustomNodesModalState> {
-  constructor (props: SetCustomNodeModalProps) {
+  constructor(props: SetCustomNodeModalProps) {
     super(props)
     const { electrumServers } = this.props
     const readableNodesList = electrumServers ? electrumServers.join('\n') : ''
@@ -68,7 +71,7 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
     }
   }
 
-  render () {
+  render() {
     return (
       <InteractiveModal legacy isActive={this.props.isActive}>
         <InteractiveModal.Icon>
@@ -84,7 +87,7 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
               style={styles.customNodesInput}
               value={this.state.readableNodesList}
               onChangeText={this.onChangeText}
-              editable={true}
+              editable
               multiline
               placeholder={this.props.defaultElectrumServer}
               placeholderTextColor={rawStyle.placeholderText.color}
@@ -107,3 +110,41 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
     )
   }
 }
+
+export const rawStyle = {
+  customNodesInputWrap: {
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    borderRadius: 3,
+    height: PLATFORM.deviceHeight * 0.13 - (Platform.OS === 'android' ? 23 : 0) + (isIphoneX ? 60 : 0),
+    padding: 3
+  },
+  customNodesInput: {
+    height: PLATFORM.deviceHeight * 0.13 - (Platform.OS === 'android' ? 23 : 0) + (isIphoneX ? 60 : 0) - 8,
+    color: THEME.COLORS.GRAY_1,
+    fontSize: 15,
+    fontFamily: THEME.FONTS.DEFAULT,
+    paddingVertical: 0,
+    textAlignVertical: 'top'
+  },
+  buttonsWrap: {
+    flexDirection: 'column'
+  },
+  primaryButton: {
+    marginBottom: 8
+  },
+  primaryButtonText: {
+    color: THEME.COLORS.WHITE
+  },
+  secondaryButtonText: {
+    color: THEME.COLORS.WHITE
+  },
+  placeholderText: {
+    color: THEME.COLORS.GRAY_2
+  },
+  placeholderUnderline: {
+    color: THEME.COLORS.TRANSPARENT
+  }
+}
+
+const styles = StyleSheet.create(rawStyle)

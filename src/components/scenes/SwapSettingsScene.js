@@ -1,18 +1,14 @@
 // @flow
 
 import { type EdgePluginMap, type EdgeSwapConfig } from 'edge-core-js/types'
-import React, { type Node, Component, Fragment } from 'react'
+import React, { type Node, Component } from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import CookieManager from 'react-native-cookies'
-import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
 
 import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferralActions.js'
 import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
-import { deactivateShapeShift } from '../../actions/ShapeShiftActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
-import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { dayText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -22,17 +18,15 @@ import { type PluginTweak } from '../../types/TweakTypes.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
-import { SettingsLabelRow } from '../common/SettingsLabelRow.js'
 import { SettingsRow } from '../common/SettingsRow.js'
 import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { SwapPreferredModal } from '../modals/SwapPreferredModal.js'
-import { Airship, showError } from '../services/AirshipInstance.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 type DispatchProps = {
   changePreferredSwapPlugin(pluginId: string | void): void,
   ignoreAccountSwap(): void,
-  removePromotion(installerId: string): void,
-  shapeShiftLogOut(): void
+  removePromotion(installerId: string): void
 }
 
 type StateProps = {
@@ -53,7 +47,7 @@ export class SwapSettings extends Component<Props, State> {
   cleanups: Array<() => mixed> = []
   sortedIds: Array<string>
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     const { exchanges } = props
 
@@ -79,21 +73,12 @@ export class SwapSettings extends Component<Props, State> {
       )
     }
 
-    this.sortedIds = Object.keys(exchanges).sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
+    const exchangeIds = Object.keys(exchanges).filter(id => id !== 'transfer')
+    this.sortedIds = exchangeIds.sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     for (const cleanup of this.cleanups) cleanup()
-  }
-
-  shapeShiftSignInToggle = () => {
-    if (this.state.needsActivation.shapeshift) {
-      CookieManager.clearAll()
-        .catch(showError)
-        .then(() => Actions[Constants.SWAP_ACTIVATE_SHAPESHIFT]())
-    } else {
-      this.props.shapeShiftLogOut()
-    }
   }
 
   handlePreferredModal = () => {
@@ -110,7 +95,7 @@ export class SwapSettings extends Component<Props, State> {
     })
   }
 
-  render () {
+  render() {
     return (
       <SceneWrapper hasTabs={false} background="body">
         <ScrollView contentContainerStyle={{ paddingBottom: THEME.rem(4) }}>
@@ -125,39 +110,25 @@ export class SwapSettings extends Component<Props, State> {
     )
   }
 
-  renderPlugin (pluginId: string) {
+  renderPlugin(pluginId: string) {
     const { exchanges } = this.props
     const { displayName } = exchanges[pluginId].swapInfo
     const logo = this.renderPluginIcon(pluginId)
 
-    function handlePress () {
+    function handlePress() {
       const newValue = !exchanges[pluginId].enabled
       exchanges[pluginId].changeEnabled(newValue)
     }
 
-    const toggle = <SettingsSwitchRow key={pluginId} icon={logo} text={displayName} value={this.state.enabled[pluginId]} onPress={handlePress} />
-
-    if (pluginId === 'shapeshift') {
-      const leftText = displayName + ' ' + s.strings.account
-      const actionText = this.state.needsActivation.shapeshift ? s.strings.ss_login : s.strings.ss_logout
-
-      return (
-        <Fragment>
-          {toggle}
-          <SettingsLabelRow key="activate" icon={logo} text={leftText} right={actionText} onPress={this.shapeShiftSignInToggle} />
-        </Fragment>
-      )
-    }
-
-    return toggle
+    return <SettingsSwitchRow key={pluginId} icon={logo} text={displayName} value={this.state.enabled[pluginId]} onPress={handlePress} />
   }
 
-  renderPluginIcon (pluginId: string): Node {
+  renderPluginIcon(pluginId: string): Node {
     const logoSource = getSwapPluginIcon(pluginId)
     return <Image resizeMode="contain" style={styles.swapIcon} source={logoSource} />
   }
 
-  renderPreferredArea () {
+  renderPreferredArea() {
     const { accountPlugins, exchanges, accountReferral, settingsPreferredSwap } = this.props
 
     // Pick plugin:
@@ -169,36 +140,36 @@ export class SwapSettings extends Component<Props, State> {
     const { instructions, handlePress, right } =
       swapSource.type === 'promotion'
         ? {
-          instructions: s.strings.swap_preferred_promo_instructions,
-          handlePress: () => this.props.removePromotion(swapSource.installerId),
-          right: <AntDesignIcon name="close" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.swapIcon} />
-        }
+            instructions: s.strings.swap_preferred_promo_instructions,
+            handlePress: () => this.props.removePromotion(swapSource.installerId),
+            right: <AntDesignIcon name="close" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.swapIcon} />
+          }
         : {
-          instructions: s.strings.swap_preferred_instructions,
-          handlePress: this.handlePreferredModal,
-          right: null
-        }
+            instructions: s.strings.swap_preferred_instructions,
+            handlePress: this.handlePreferredModal,
+            right: null
+          }
 
     // Pick the selection row:
     const { text, icon } =
       pluginId != null && exchanges[pluginId] != null
         ? {
-          text: exchanges[pluginId].swapInfo.displayName,
-          icon: this.renderPluginIcon(pluginId)
-        }
+            text: exchanges[pluginId].swapInfo.displayName,
+            icon: this.renderPluginIcon(pluginId)
+          }
         : {
-          text: s.strings.swap_preferred_cheapest,
-          icon: <AntDesignIcon name="barschart" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.swapIcon} />
-        }
+            text: s.strings.swap_preferred_cheapest,
+            icon: <AntDesignIcon name="barschart" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.swapIcon} />
+          }
 
     return (
-      <Fragment>
+      <>
         <View style={styles.instructionArea}>
           <Text style={styles.instructionText}>{instructions}</Text>
         </View>
 
         <SettingsRow icon={icon} text={text} onPress={handlePress} right={right} />
-      </Fragment>
+      </>
     )
   }
 }
@@ -229,17 +200,14 @@ export const SwapSettingsScene = connect(
     settingsPreferredSwap: state.ui.settings.preferredSwapPluginId
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    changePreferredSwapPlugin (pluginId) {
+    changePreferredSwapPlugin(pluginId) {
       dispatch(setPreferredSwapPluginId(pluginId))
     },
-    ignoreAccountSwap () {
+    ignoreAccountSwap() {
       dispatch(ignoreAccountSwap())
     },
-    removePromotion (installerId: string) {
+    removePromotion(installerId: string) {
       dispatch(removePromotion(installerId))
-    },
-    shapeShiftLogOut () {
-      dispatch(deactivateShapeShift())
     }
   })
 )(SwapSettings)

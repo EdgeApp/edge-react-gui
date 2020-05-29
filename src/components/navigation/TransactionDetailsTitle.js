@@ -4,14 +4,14 @@ import { type EdgeTransaction } from 'edge-core-js'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import T from '../../modules/UI/components/FormattedText/index.js'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 
 type Props = {
   edgeTransaction: EdgeTransaction
 }
 
-export function TransactionDetailsTitle (props: Props) {
+export function TransactionDetailsTitle(props: Props) {
   if (props.edgeTransaction == null) return null // Should never happen!?
 
   const { date } = props.edgeTransaction
@@ -36,14 +36,12 @@ const rawStyles = {
   transactionDetailsDate: {
     fontSize: THEME.rem(1),
     color: THEME.COLORS.WHITE,
-    fontFamily: THEME.FONTS.DEFAULT,
-    lineHeight: 0
+    fontFamily: THEME.FONTS.DEFAULT
   },
   transactionDetailsTime: {
     fontSize: THEME.rem(0.6875),
     color: THEME.COLORS.HEADER_TEXT_SECONDARY,
-    fontFamily: THEME.FONTS.DEFAULT,
-    lineHeight: 0
+    fontFamily: THEME.FONTS.DEFAULT
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

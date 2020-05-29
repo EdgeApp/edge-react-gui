@@ -16,7 +16,6 @@ import {
 } from '../../actions/SettingsActions'
 import SettingsOverview from '../../components/scenes/SettingsOverviewScene'
 import * as Constants from '../../constants/indexConstants'
-import * as CORE_SELECTORS from '../../modules/Core/selectors'
 import { resetSendLogsStatus, sendLogs } from '../../modules/Logs/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
@@ -24,10 +23,10 @@ import type { Dispatch, State } from '../../types/reduxTypes.js'
 // settings_button_lock_settings, or //settings_button_unlock_settings
 
 const mapStateToProps = (state: State) => {
+  const { account } = state.core
   const isLocked = SETTINGS_SELECTORS.getSettingsLock(state)
   const lockButtonIcon = isLocked ? Constants.LOCKED_ICON : Constants.UNLOCKED_ICON
   const lockButton = isLocked ? 'settings_button_unlock_settings' : 'settings_button_lock_settings'
-  const account = CORE_SELECTORS.getAccount(state)
   const isTouchIdSupported = SETTINGS_SELECTORS.getIsTouchIdSupported(state)
   const isTouchIdEnabled = SETTINGS_SELECTORS.getIsTouchIdEnabled(state)
   const confirmPasswordError = SETTINGS_SELECTORS.getConfirmPasswordErrorMessage(state)
@@ -37,7 +36,7 @@ const mapStateToProps = (state: State) => {
   return {
     defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
     autoLogoutTimeInSeconds: SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state),
-    username: CORE_SELECTORS.getUsername(state),
+    username: account.username,
     account,
     supportsTouchId: isTouchIdSupported,
     touchIdEnabled: isTouchIdEnabled,
@@ -65,7 +64,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   toggleDeveloperMode: (developerModeOn: boolean) => dispatch(setDeveloperModeOn(developerModeOn))
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SettingsOverview)
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)

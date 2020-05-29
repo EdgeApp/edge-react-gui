@@ -68,6 +68,11 @@ export const styles = {
     justifyContent: 'center',
     alignItems: 'center'
   },
+  transferIcon: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16),
+    height: scale(16)
+  },
   addressBookIcon: {
     color: THEME.COLORS.WHITE,
     fontSize: scale(16),
@@ -95,6 +100,9 @@ export const styles = {
   // Address modal:
   addressModalButton: {
     width: '100%'
+  },
+  title: {
+    textAlign: 'center'
   },
 
   // These seem unused, and should be cleaned up later:

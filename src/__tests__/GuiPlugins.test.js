@@ -87,11 +87,11 @@ describe('GuiPlugins tools', () => {
   })
 })
 
-function pluginIds (plugins: GuiPluginRow[]): string[] {
+function pluginIds(plugins: GuiPluginRow[]): string[] {
   return plugins.map(plugin => plugin.pluginId)
 }
 
-function titles (plugins: GuiPluginRow[]): string[] {
+function titles(plugins: GuiPluginRow[]): string[] {
   return plugins.map(plugin => plugin.title)
 }
 

@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import style from '../../styles/scenes/TransactionListStyle.js'
 import type { GuiWallet } from '../../types/types.js'
 
@@ -21,12 +21,12 @@ export default class BuyCrypto extends Component<Props> {
     return wallet.currencyNames[wallet.currencyCode]
   }
 
-  render () {
+  render() {
     return (
       <TouchableWithoutFeedback onPress={Actions[Constants.PLUGIN_BUY]}>
         <View style={style.buyCryptoContainer}>
           <View style={style.buyCryptoBox}>
-            <Image style={style.buyCryptoBoxImage} source={{ uri: this.props.wallet.symbolImage }} resizeMode={'cover'} />
+            <Image style={style.buyCryptoBoxImage} source={{ uri: this.props.wallet.symbolImage }} resizeMode="cover" />
             <T style={style.buyCryptoBoxText}>{sprintf(s.strings.transaction_list_buy_crypto_message, this.getCurrencyName)}</T>
           </View>
           <View style={style.buyCryptoNoTransactionBox}>

@@ -6,7 +6,7 @@ import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles } from '../../styles/components/WiredBalanceBoxStyle.js'
 import { type State } from '../../types/reduxTypes.js'
 import { getFiatSymbol } from '../../util/utils.js'
@@ -30,12 +30,12 @@ type WiredBalanceBoxOwnProps = {
 }
 
 class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
-  constructor (props: BalanceBoxProps) {
+  constructor(props: BalanceBoxProps) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  render () {
+  render() {
     const { isoFiatCurrencyCode, fiatAmount, showBalance, exchangeRates } = this.props
     const fiatSymbol = isoFiatCurrencyCode ? getFiatSymbol(isoFiatCurrencyCode) : ''
     const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
@@ -66,22 +66,22 @@ class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
     return <TouchableOpacity onPress={this.props.onPress}>{displayedBox}</TouchableOpacity>
   }
 
-  balanceBox (fiatBalanceString: string) {
+  balanceBox(fiatBalanceString: string) {
     return (
-      <View style={[styles.totalBalanceBox]}>
-        <View style={[styles.totalBalanceWrap]}>
-          <View style={[styles.totalBalanceHeader]}>
-            <T style={[styles.totalBalanceText]}>{s.strings.fragment_wallets_balance_text}</T>
+      <View style={styles.totalBalanceBox}>
+        <View style={styles.totalBalanceWrap}>
+          <View style={styles.totalBalanceHeader}>
+            <T style={styles.totalBalanceText}>{s.strings.fragment_wallets_balance_text}</T>
           </View>
-          <View style={[styles.currentBalanceBoxDollarsWrap]}>
-            <T style={[styles.currentBalanceBoxDollars]}>{fiatBalanceString}</T>
+          <View style={styles.currentBalanceBoxDollarsWrap}>
+            <T style={styles.currentBalanceBoxDollars}>{fiatBalanceString}</T>
           </View>
         </View>
       </View>
     )
   }
 
-  noBalanceBox (textType: string) {
+  noBalanceBox(textType: string) {
     let displayedText
     if (textType === 'noExchangeRates') {
       displayedText = s.strings.exchange_rates_loading
@@ -90,9 +90,9 @@ class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
     }
 
     return (
-      <View style={[styles.totalBalanceBox]}>
-        <View style={[styles.totalBalanceWrap]}>
-          <View style={[styles.hiddenBalanceBoxDollarsWrap]}>
+      <View style={styles.totalBalanceBox}>
+        <View style={styles.totalBalanceWrap}>
+          <View style={styles.hiddenBalanceBoxDollarsWrap}>
             <T numberOfLines={2} style={textType === 'noExchangeRates' ? styles.currentBalanceBoxNoExchangeRates : styles.currentBalanceBoxDollars}>
               {displayedText}
             </T>
@@ -103,16 +103,13 @@ class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
   }
 }
 
-export const WiredBalanceBox = connect(
-  (state: State, ownProps: WiredBalanceBoxOwnProps): BalanceBoxProps => {
-    const isoFiatCurrencyCode = typeof ownProps.isoFiatCurrencyCode === 'function' ? ownProps.isoFiatCurrencyCode(state) : ownProps.isoFiatCurrencyCode
-    return {
-      showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
-      fiatAmount: typeof ownProps.fiatAmount === 'function' ? ownProps.fiatAmount(state, isoFiatCurrencyCode) : ownProps.fiatAmount,
-      onPress: ownProps.onPress,
-      isoFiatCurrencyCode,
-      exchangeRates: ownProps.exchangeRates
-    }
-  },
-  null
-)(BalanceBox)
+export const WiredBalanceBox = connect((state: State, ownProps: WiredBalanceBoxOwnProps): BalanceBoxProps => {
+  const isoFiatCurrencyCode = typeof ownProps.isoFiatCurrencyCode === 'function' ? ownProps.isoFiatCurrencyCode(state) : ownProps.isoFiatCurrencyCode
+  return {
+    showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
+    fiatAmount: typeof ownProps.fiatAmount === 'function' ? ownProps.fiatAmount(state, isoFiatCurrencyCode) : ownProps.fiatAmount,
+    onPress: ownProps.onPress,
+    isoFiatCurrencyCode,
+    exchangeRates: ownProps.exchangeRates
+  }
+}, null)(BalanceBox)

@@ -3,7 +3,7 @@
 
 import { Bridge, bridgifyObject } from 'yaob'
 
-function setupBridge () {
+function setupBridge() {
   // We have already run once in this context:
   if (window.bridge != null) return
 

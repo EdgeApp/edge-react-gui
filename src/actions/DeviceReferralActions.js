@@ -1,10 +1,10 @@
 // @flow
 
-import { asObject, asOptional, asString } from 'cleaners'
+import { asArray, asObject, asOptional, asString } from 'cleaners'
 
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { type DeviceReferral } from '../types/ReferralTypes.js'
-import { asCurrencyCodes, asMessageTweaks, asPluginTweaks } from '../types/TweakTypes.js'
+import { asCurrencyCode, asMessageTweak, asPluginTweak } from '../types/TweakTypes.js'
 import { logEvent } from '../util/tracking.js'
 
 const DEVICE_REFERRAL_FILE = 'utilityServer.json'
@@ -48,7 +48,7 @@ export const loadDeviceReferral = () => async (dispatch: Dispatch, getState: Get
 /**
  * Turns the on-disk data into an DeviceReferral structure.
  */
-function unpackDeviceReferral (raw: any): DeviceReferral {
+function unpackDeviceReferral(raw: any): DeviceReferral {
   const clean = asDiskDeviceReferral(raw)
   const out: DeviceReferral = {
     installerId: clean.installerId,
@@ -70,9 +70,9 @@ function unpackDeviceReferral (raw: any): DeviceReferral {
  */
 const asDiskDeviceReferral = asObject({
   installerId: asOptional(asString),
-  currencyCodes: asCurrencyCodes,
-  messages: asMessageTweaks,
-  plugins: asPluginTweaks,
+  currencyCodes: asOptional(asArray(asCurrencyCode)),
+  messages: asOptional(asArray(asMessageTweak), []),
+  plugins: asOptional(asArray(asPluginTweak), []),
 
   // Legacy fields:
   currencyCode: asOptional(asString)

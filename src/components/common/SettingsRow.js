@@ -18,11 +18,11 @@ type Props = {
  * A settings row features tappable text, as well as an optional icon
  * on the left and another optional component on the right.
  */
-export function SettingsRow (props: Props): Node {
+export function SettingsRow(props: Props): Node {
   const { disabled = false, icon, text, right, onPress } = props
 
   return (
-    <TouchableHighlight onPress={onPress} underlayColor="rgba(0,0,0,0)">
+    <TouchableHighlight onPress={onPress} underlayColor={THEME.COLORS.TRANSPARENT}>
       <View style={styles.row}>
         {icon != null ? <View style={styles.padding}>{icon}</View> : undefined}
         <Text style={disabled ? styles.disabledText : styles.text}>{text}</Text>

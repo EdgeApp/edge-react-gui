@@ -1,0 +1,7 @@
+// @flow
+
+// Flow uses this file to determine the type of imported images.
+// See node_modules/react-native/Libraries/Image/RelativeImageStub.js
+
+const image: string = ''
+export default image

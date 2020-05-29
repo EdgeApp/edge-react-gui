@@ -34,14 +34,15 @@ export const styles = StyleSheet.create({
   },
   formFieldView: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginBottom: scale(4)
   },
   statusIcon: {
     width: scale(25),
     height: scale(25)
   },
   bottomSpace: {
-    paddingBottom: scale(400)
+    paddingBottom: scale(500)
   },
   selectWalletBlock: {
     marginTop: scale(48),

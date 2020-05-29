@@ -12,8 +12,7 @@ import ENV from '../../../env.json'
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
 import s from '../../locales/strings.js'
-import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui'
 import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/api'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
@@ -46,7 +45,7 @@ type State = {
   showWalletList: any
 }
 
-export function renderLegacyPluginBackButton (label: string = BACK) {
+export function renderLegacyPluginBackButton(label: string = BACK) {
   return <BackButton withArrow onPress={pluginPop} label={label} />
 }
 
@@ -63,7 +62,7 @@ class GuiPluginLegacy extends React.Component<Props, State> {
   successUrl: ?string
   openingSendConfirmation: boolean
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     console.log('pvs: Legacy')
     this.state = {
@@ -96,6 +95,7 @@ class GuiPluginLegacy extends React.Component<Props, State> {
   chooseWallet = (walletId: string, currencyCode: string) => {
     this.props.selectWallet(walletId, currencyCode)
   }
+
   toggleWalletList = () => {
     this.setState({ showWalletList: !this.state.showWalletList })
   }
@@ -105,7 +105,7 @@ class GuiPluginLegacy extends React.Component<Props, State> {
     return true
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     this.bridge.context.coreWallets = this.props.coreWallets
     this.bridge.context.wallets = this.props.wallets
     this.bridge.context.walletName = this.props.walletName
@@ -113,12 +113,12 @@ class GuiPluginLegacy extends React.Component<Props, State> {
     this.bridge.context.wallet = this.props.coreWallet
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.bridge.componentDidMount()
     BackHandler.addEventListener('hardwareBackPress', this.handleBack)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBack)
   }
 
@@ -126,6 +126,7 @@ class GuiPluginLegacy extends React.Component<Props, State> {
     if (!this.webview) return
     this.webview.injectJavaScript('window.history.back()')
   }
+
   _webviewOpenUrl = (url: string) => {
     if (!this.webview) return
     this.webview.injectJavaScript("window.open('" + url + "', '_self')")
@@ -187,6 +188,7 @@ class GuiPluginLegacy extends React.Component<Props, State> {
   _setWebview = webview => {
     this.webview = webview
   }
+
   // This is the preferred method for calling back . it does not return any promise like other bridge calls.
   edgeCallBack = data => {
     switch (data['edge-callback']) {
@@ -287,7 +289,7 @@ class GuiPluginLegacy extends React.Component<Props, State> {
     }
   }
 
-  render () {
+  render() {
     const { baseUri } = this.props.plugin
 
     // We don't support deep linking or custom query parameters,
@@ -304,12 +306,10 @@ class GuiPluginLegacy extends React.Component<Props, State> {
           originWhitelist={['file://*', 'https://*', 'http://*', 'edge://*']}
           ref={this._setWebview}
           injectedJavaScript={legacyJavascript}
-          javaScriptEnabled={true}
+          javaScriptEnabled
           source={{ uri }}
-          userAgent={
-            'Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36'
-          }
-          setWebContentsDebuggingEnabled={true}
+          userAgent="Mozilla/5.0 (Linux; Android 6.0.1; SM-G532G Build/MMB29T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.83 Mobile Safari/537.36"
+          setWebContentsDebuggingEnabled
           useWebKit
         />
       </SceneWrapper>
@@ -318,10 +318,10 @@ class GuiPluginLegacy extends React.Component<Props, State> {
 }
 
 const mapStateToProps = state => {
-  const account = CORE_SELECTORS.getAccount(state)
+  const { account } = state.core
+  const { currencyWallets = {} } = account
   const guiWallet = UI_SELECTORS.getSelectedWallet(state)
-  const coreWallet = guiWallet && guiWallet.id ? CORE_SELECTORS.getWallet(state, guiWallet.id) : null
-  const coreWallets = state.core.wallets.byId
+  const coreWallet = guiWallet && guiWallet.id ? currencyWallets[guiWallet.id] : null
   const wallets = state.ui.wallets.byId
   const walletName = coreWallet ? coreWallet.name : null
   const walletId = coreWallet ? coreWallet.id : null
@@ -330,7 +330,7 @@ const mapStateToProps = state => {
     account,
     guiWallet,
     coreWallet,
-    coreWallets,
+    coreWallets: currencyWallets,
     wallets,
     walletName,
     walletId,
@@ -344,7 +344,4 @@ const mapDispatchToProps = dispatch => ({
   thisDispatch: dispatch
 })
 
-export const GuiPluginLegacyScene = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(GuiPluginLegacy)
+export const GuiPluginLegacyScene = connect(mapStateToProps, mapDispatchToProps)(GuiPluginLegacy)

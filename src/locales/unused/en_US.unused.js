@@ -298,7 +298,6 @@ const strings = {
   fragment_send_no_satoshi_title: 'Enter an amount',
   fragment_send_photos: 'Photos',
   fragment_send_send_bitcoin_invalid: 'Invalid bitcoin address',
-  fragment_send_transfer: 'Transfer',
   fragment_setup_camera_text:
     'You will next see a popup requesting access to your Camera.\\n\\n[[abtag APP_TITLE]] needs this to scan QR codes to pay people and merchants.',
   fragment_setup_camera_title: 'Enable Camera Access',

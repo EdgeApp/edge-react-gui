@@ -24,11 +24,12 @@ import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTy
 import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
+import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import { ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
-import { getSyncedSettingsAsync, setSyncedSettingsAsync } from '../../modules/Core/Account/settings.js'
-import Text from '../../modules/UI/components/FormattedText'
+import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
+import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -62,7 +63,8 @@ const paymentTypeLogosById = {
   newsagent: paymentTypeLogoNewsagent,
   payid: paymentTypeLogoPayid,
   poli: paymentTypeLogoPoli,
-  swish: paymentTypeLogoSwish
+  swish: paymentTypeLogoSwish,
+  upi: paymentTypeLogoUpi
 }
 
 type OwnProps = {
@@ -91,14 +93,14 @@ const DEVELOPER_PLUGIN_KEY = 'developerPlugin'
 const asDeveloperUri = asObject({ uri: asString })
 
 class GuiPluginList extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       developerUri: ''
     }
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     await this.checkDisclaimer()
     this.checkCountry()
 
@@ -112,7 +114,7 @@ class GuiPluginList extends Component<Props, State> {
   /**
    * Verify that we have shown the disclaimer
    */
-  async checkDisclaimer () {
+  async checkDisclaimer() {
     const { account } = this.props
     try {
       const text = await account.disklet.getText(MODAL_DATA_FILE)
@@ -143,7 +145,7 @@ class GuiPluginList extends Component<Props, State> {
   /**
    * Verify that we have a country selected
    */
-  checkCountry () {
+  checkCountry() {
     const { countryCode } = this.props
     if (!countryCode) this.showCountrySelectionModal().catch(showError)
   }
@@ -151,7 +153,7 @@ class GuiPluginList extends Component<Props, State> {
   /**
    * Launch the provided plugin, including pre-flight checks.
    */
-  async openPlugin (listRow: GuiPluginRow) {
+  async openPlugin(listRow: GuiPluginRow) {
     const { pluginId, deepQuery } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -190,19 +192,19 @@ class GuiPluginList extends Component<Props, State> {
     return Actions[PLUGIN_VIEW]({ plugin, deepPath, deepQuery })
   }
 
-  async showCountrySelectionModal () {
+  async showCountrySelectionModal() {
     const { account, updateCountryCode, countryCode } = this.props
 
     const selectedCountryCode: string = await Airship.show(bridge => <CountrySelectionModal bridge={bridge} countryCode={countryCode} />)
     if (selectedCountryCode) {
       try {
-        const syncedSettings = await getSyncedSettingsAsync(account)
+        const syncedSettings = await getSyncedSettings(account)
         const updatedSettings = {
           ...syncedSettings,
           countryCode: selectedCountryCode
         }
         updateCountryCode(selectedCountryCode)
-        await setSyncedSettingsAsync(account, updatedSettings)
+        await setSyncedSettings(account, updatedSettings)
       } catch (error) {
         showError(error)
       }
@@ -240,7 +242,7 @@ class GuiPluginList extends Component<Props, State> {
     )
   }
 
-  render () {
+  render() {
     const { accountPlugins, accountReferral, countryCode, developerModeOn, direction } = this.props
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 
@@ -270,7 +272,7 @@ class GuiPluginList extends Component<Props, State> {
     )
   }
 
-  renderCountryPicker (countryData: CountryData | void) {
+  renderCountryPicker(countryData: CountryData | void) {
     let flag = null
     let message = s.strings.buy_sell_crypto_select_country_button
     if (countryData != null) {
@@ -305,7 +307,7 @@ export const GuiPluginListScene = connect(
     developerModeOn: state.ui.settings.developerModeOn
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    updateCountryCode (countryCode: string) {
+    updateCountryCode(countryCode: string) {
       dispatch(updateOneSetting({ countryCode }))
     }
   })
