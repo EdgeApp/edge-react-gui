@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
 import { connect } from 'react-redux'
 
+import { AddressModal } from '../../../components/modals/AddressModal'
 import { TransactionDetailsNotesInput } from '../../../components/modals/TransactionDetailsNotesInput'
 import { Airship, showError } from '../../../components/services/AirshipInstance'
 import * as Constants from '../../../constants/indexConstants'
@@ -12,19 +13,20 @@ import { MaterialInput } from '../../../styles/components/FormFieldStyles.js'
 import { styles as CryptoExchangeSceneStyle } from '../../../styles/scenes/CryptoExchangeSceneStyles'
 import { styles } from '../../../styles/scenes/FioRequestConfirmationStyle'
 import type { State } from '../../../types/reduxTypes'
-import type { GuiWallet } from '../../../types/types'
+import type { FioRequest, GuiWallet } from '../../../types/types'
 import { TextAndIconButton } from '../../UI/components/Buttons/TextAndIconButton.ui.js'
 import Text from '../../UI/components/FormattedText/FormattedText.ui.js'
 import * as UI_SELECTORS from '../../UI/selectors.js'
 import { checkRecordSendFee, findWalletByFioAddress } from '../util'
-import { SelectModal } from './SelectModal'
 
 export type SelectFioAddressOwnProps = {
   selected: string,
   memo: string,
   memoError: string,
   onSelect: (fioAddress: string, fioWallet: EdgeCurrencyWallet, error: string) => void,
-  onMemoChange: (memo: string, memoError: string) => void
+  onMemoChange: (memo: string, memoError: string) => void,
+  fioRequest: FioRequest | null,
+  isSendUsingFioAddress: boolean | null
 }
 
 export type SelectFioAddressProps = {
@@ -37,8 +39,7 @@ export type SelectFioAddressProps = {
 type Props = SelectFioAddressOwnProps & SelectFioAddressProps
 
 type LocalState = {
-  loading: boolean,
-  fioAddresses: { value: string }[]
+  loading: boolean
 }
 
 class SelectFioAddress extends Component<Props, LocalState> {
@@ -46,13 +47,17 @@ class SelectFioAddress extends Component<Props, LocalState> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      loading: false,
-      fioAddresses: []
+      loading: false
     }
   }
 
   componentDidMount() {
-    this.checkForPubAddresses()
+    const { fioRequest, isSendUsingFioAddress } = this.props
+    if (fioRequest) {
+      this.setFioAddress(fioRequest.payer_fio_address)
+    } else if (isSendUsingFioAddress) {
+      this.setDefaultFioAddress()
+    }
 
     const materialStyle = { ...MaterialInput }
     materialStyle.tintColor = styles.text.color
@@ -67,47 +72,26 @@ class SelectFioAddress extends Component<Props, LocalState> {
     }
   }
 
-  async checkForPubAddresses() {
-    const { fioWallets, selectedWallet, currencyCode } = this.props
-    if (selectedWallet && selectedWallet.currencyCode === Constants.FIO_STR) {
-      const fioWallet = fioWallets.find((fioWalletItem: EdgeCurrencyWallet) => fioWalletItem.id === selectedWallet.id)
-      if (fioWallet) {
-        const fioNames = await fioWallet.otherMethods.getFioAddressNames()
-        this.setState({ fioAddresses: fioNames.map((name: string) => ({ value: name })) }, () => {
-          fioNames[0] && this.setFioAddress(fioNames[0])
+  async setDefaultFioAddress() {
+    const { fioWallets } = this.props
+    this.setState({ loading: true })
+    for (const fioWallet of fioWallets) {
+      const fioNames = await fioWallet.otherMethods.getFioAddressNames()
+      if (fioNames.length) {
+        this.setState({ loading: false }, () => {
+          this.setFioAddress(fioNames[0], fioWallet)
         })
+        break
       }
-    } else {
-      const fioAddresses = []
-      this.setState({ loading: true })
-      for (const fioWallet: EdgeCurrencyWallet of fioWallets) {
-        const fioNames = await fioWallet.otherMethods.getFioAddressNames()
-        for (const fioAddress: string of fioNames) {
-          try {
-            const { public_address } = await fioWallet.otherMethods.fioAction('getPublicAddress', {
-              fioAddress,
-              chainCode: selectedWallet.currencyCode,
-              tokenCode: currencyCode
-            })
-            if (public_address && public_address.length > 1) fioAddresses.push({ value: fioAddress })
-          } catch (e) {
-            continue
-          }
-        }
-      }
-      this.setState({ fioAddresses, loading: false }, () => {
-        this.setFioAddress(fioAddresses[0].value)
-      })
     }
   }
 
   selectAddress = () => {
-    const { fioAddresses } = this.state
-
+    const { currencyCode, selectedWallet } = this.props
     Airship.show(bridge => (
-      <SelectModal bridge={bridge} headerTitle={s.strings.fio_select_address} items={fioAddresses.map(({ value }) => ({ value, label: value }))} />
-    )).then((response: string) => {
-      if (response && typeof response === 'string') {
+      <AddressModal bridge={bridge} title={s.strings.fio_select_address} currencyCode={currencyCode} walletId={selectedWallet.id} useUserFioAddressesOnly />
+    )).then((response: string | null) => {
+      if (response) {
         this.setFioAddress(response)
       }
     })
@@ -125,9 +109,11 @@ class SelectFioAddress extends Component<Props, LocalState> {
     )).then(_ => {})
   }
 
-  setFioAddress = async (fioAddress: string) => {
+  setFioAddress = async (fioAddress: string, fioWallet?: EdgeCurrencyWallet | null) => {
     const { fioWallets } = this.props
-    const fioWallet = await findWalletByFioAddress(fioWallets, fioAddress)
+    if (!fioWallet) {
+      fioWallet = await findWalletByFioAddress(fioWallets, fioAddress)
+    }
     let error = ''
 
     if (!fioWallet) {
@@ -156,10 +142,44 @@ class SelectFioAddress extends Component<Props, LocalState> {
     this.props.onMemoChange(memo, memoError)
   }
 
+  renderFioAddress() {
+    const { selected, fioRequest } = this.props
+    const { loading } = this.state
+
+    if (loading) return <ActivityIndicator style={styles.loading} size="small" />
+
+    if (fioRequest) {
+      return (
+        <View>
+          <Text style={styles.selectAddressText}>
+            {s.strings.fragment_send_from_label}: {selected}
+          </Text>
+        </View>
+      )
+    }
+
+    return (
+      <View>
+        <TextAndIconButton
+          style={{
+            ...CryptoExchangeSceneStyle.flipWrapper.walletSelector,
+            text: styles.selectAddressText,
+            textPressed: styles.selectAddressTextPressed,
+            container: styles.selectAddressContainer
+          }}
+          onPress={this.selectAddress}
+          icon={Constants.KEYBOARD_ARROW_DOWN}
+          title={`${s.strings.fragment_send_from_label}: ${selected}`}
+        />
+      </View>
+    )
+  }
+
   render() {
-    const { selected, memo, memoError, loading: walletLoading } = this.props
-    const { fioAddresses, loading } = this.state
-    if (!fioAddresses.length) return null
+    const { fioRequest, selected, memo, memoError, loading: walletLoading, isSendUsingFioAddress } = this.props
+    const { loading } = this.state
+    if (!fioRequest && !isSendUsingFioAddress) return null
+    if (!fioRequest && !selected) return null
     if (walletLoading) {
       return (
         <View style={[styles.selectContainer, styles.selectFullWidth]}>
@@ -170,23 +190,7 @@ class SelectFioAddress extends Component<Props, LocalState> {
 
     return (
       <View style={[styles.selectContainer, styles.selectFullWidth]}>
-        {loading ? (
-          <ActivityIndicator style={styles.loading} size="small" />
-        ) : (
-          <View>
-            <TextAndIconButton
-              style={{
-                ...CryptoExchangeSceneStyle.flipWrapper.walletSelector,
-                text: styles.selectAddressText,
-                textPressed: styles.selectAddressTextPressed,
-                container: styles.selectAddressContainer
-              }}
-              onPress={this.selectAddress}
-              icon={Constants.KEYBOARD_ARROW_DOWN}
-              title={`${s.strings.fragment_send_from_label}: ${selected}`}
-            />
-          </View>
-        )}
+        {this.renderFioAddress()}
         {!loading && (
           <TouchableWithoutFeedback onPress={this.openMessageInput}>
             <View style={styles.memoContainer}>

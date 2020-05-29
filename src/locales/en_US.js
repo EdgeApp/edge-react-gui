@@ -681,7 +681,7 @@ const strings = {
   fio_address_details_screen_manage_account_settings: 'Account Settings',
   fio_address_details_screen_connect_to_wallets: 'Connect to Wallets',
   fio_address_list_screen_button_register: 'Register New FIO Address',
-  fio_get_fee_err_msg: 'There was an issue getting fee. Please try later.',
+  fio_get_fee_err_msg: 'There was an issue getting the FIO fee. Please try again later.',
   fio_get_reg_info_err_msg: 'There was an issue getting registration information.',
   fio_register_address_err_msg: 'There was an issue registering an address. Please try later.',
   fio_error_invalid_address: 'Invalid FIO address',

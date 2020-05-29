@@ -397,26 +397,30 @@ export const recordSend = async (
     currencyCode: string,
     chainCode: string,
     txid: string,
-    memo: string
+    memo: string,
+    fioRequestId?: string
   }
 ) => {
-  if (senderFioAddress && senderWallet) {
-    const { payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, currencyCode, chainCode, txid, memo } = params
+  const { payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, currencyCode, chainCode, txid, memo, fioRequestId } = params
+  if (senderFioAddress && senderWallet && payeePublicAddress) {
+    let actionParams = {
+      payerFioAddress: senderFioAddress,
+      payeeFioAddress,
+      payerPublicAddress,
+      payeePublicAddress,
+      amount,
+      tokenCode: currencyCode,
+      chainCode,
+      obtId: txid,
+      memo,
+      maxFee: 0,
+      status: 'sent_to_blockchain'
+    }
+    if (fioRequestId) {
+      actionParams = { ...actionParams, fioRequestId }
+    }
     try {
-      await senderWallet.otherMethods.fioAction('recordObtData', {
-        payerFioAddress: senderFioAddress,
-        payeeFioAddress,
-        payerPublicAddress,
-        payeePublicAddress,
-        amount,
-        tokenCode: currencyCode,
-        chainCode,
-        obtId: txid,
-        memo,
-        maxFee: 0,
-        tpid: '',
-        status: 'sent_to_blockchain'
-      })
+      await senderWallet.otherMethods.fioAction('recordObtData', actionParams)
     } catch (e) {
       //
       throw new Error(e.message)

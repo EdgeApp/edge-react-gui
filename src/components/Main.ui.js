@@ -52,7 +52,6 @@ import { FioAddressRegisterSelectWalletConnector } from '../connectors/scenes/Fi
 import { FioConnectWalletConfirmConnector } from '../connectors/scenes/FioConnectWalletConfirmConnector'
 import { FioConnectWalletConnector } from '../connectors/scenes/FioConnectWalletConnector'
 import { FioDisconnectWalletsConnector } from '../connectors/scenes/FioDisconnectWalletsConnector'
-import { FioPendingRequestConnector } from '../connectors/scenes/FioPendingRequestConnector'
 import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
 import { FioSentRequestConnector } from '../connectors/scenes/FioSentRequestConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
@@ -746,18 +745,6 @@ export class MainComponent extends Component<Props> {
               renderTitle={this.renderTitle(s.strings.drawer_fio_requests)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderMenuButton()}
-              onLeft={Actions.pop}
-            />
-          </Stack>
-
-          <Stack key={Constants.FIO_PENDING_REQUEST_DETAILS}>
-            <Scene
-              key={Constants.FIO_PENDING_REQUEST_DETAILS}
-              navTransparent
-              component={ifLoggedIn(FioPendingRequestConnector)}
-              renderTitle={this.renderTitle(s.strings.title_fio_pending_request_details)}
-              renderLeftButton={this.renderBackButton(BACK)}
-              renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
             />
           </Stack>
