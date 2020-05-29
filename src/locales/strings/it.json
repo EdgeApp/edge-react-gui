@@ -634,7 +634,7 @@
   "fio_address_details_screen_manage_account_settings": "Impostazioni account",
   "fio_address_details_screen_connect_to_wallets": "Connetti ai portafogli",
   "fio_address_list_screen_button_register": "Registra un indirizzo FIO",
-  "fio_get_fee_err_msg": "C'è stato un problema nell'ottenere la commissione. Riprova più tardi.",
+  "fio_get_fee_err_msg": "",
   "fio_get_reg_info_err_msg": "Si è verificato un problema nell'ottenere le informazioni di registrazione.",
   "fio_register_address_err_msg": "Si è verificato un problema durante la registrazione dell'indirizzo. Riprova più tardi.",
   "fio_error_invalid_address": "Indirizzo FIO non valido",
