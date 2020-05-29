@@ -46,6 +46,7 @@ target 'edge' do
   pod 'react-native-smart-splash-screen', :path => '../node_modules/react-native-smart-splash-screen'
   pod 'react-native-tcp', :path => '../node_modules/react-native-tcp'
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+  pod 'react-native-zcoin-sigma', :path => '../node_modules/react-native-zcoin-sigma'
   pod 'ReactNativeART', :path => '../node_modules/@react-native-community/art'
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'

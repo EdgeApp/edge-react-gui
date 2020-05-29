@@ -91,6 +91,7 @@
   "fragment_transaction_list_tx_dropped": "",
   "fragment_transaction_list_tx_synchronizing": "",
   "fragment_transaction_list_confirmation_progress": "%s из %s подтверждений",
+  "fragment_transaction_list_mint_tx_title": "Анонимирование",
   "transaction_list_buy_crypto_message": "",
   "transaction_list_no_tx_yet": "Нет переводов!",
   "fragment_wallets_addwallet_name_hint": "Новое имя кошелька",

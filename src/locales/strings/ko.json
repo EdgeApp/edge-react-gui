@@ -91,6 +91,7 @@
   "fragment_transaction_list_tx_dropped": "삭제됨",
   "fragment_transaction_list_tx_synchronizing": "동기화중",
   "fragment_transaction_list_confirmation_progress": "%s / %s 확인",
+  "fragment_transaction_list_mint_tx_title": "익명화 완료",
   "transaction_list_buy_crypto_message": "%s 구매",
   "transaction_list_no_tx_yet": "아직 거래 내역이 없습니다.",
   "fragment_wallets_addwallet_name_hint": "새로운 월렛 이름",

@@ -91,6 +91,7 @@
   "fragment_transaction_list_tx_dropped": "已下降",
   "fragment_transaction_list_tx_synchronizing": "同步中",
   "fragment_transaction_list_confirmation_progress": "%s / %s 确认",
+  "fragment_transaction_list_mint_tx_title": "匿名的",
   "transaction_list_buy_crypto_message": "买%s",
   "transaction_list_no_tx_yet": "没有交易记录！",
   "fragment_wallets_addwallet_name_hint": "新钱包名字",

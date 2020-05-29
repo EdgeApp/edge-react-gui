@@ -9,6 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import receivedTypeImage from '../../assets/images/transactions/transaction-type-received.png'
 import sentTypeImage from '../../assets/images/transactions/transaction-type-sent.png'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings'
 import T from '../../modules/UI/components/FormattedText/index'
@@ -82,6 +83,10 @@ export class TransactionRowComponent extends Component<Props, State> {
       // XXX -paulvp Why is this hard coded here?
       txName = SENT_TEXT + currencyName
       txImage = sentTypeImage
+
+      if (tx.otherParams.isSpecialTransaction) {
+        txName = getSpecialCurrencyInfo(this.props.selectedCurrencyCode).specialTransactionTitle
+      }
     } else {
       txName = RECEIVED_TEXT + currencyName
       txImage = receivedTypeImage

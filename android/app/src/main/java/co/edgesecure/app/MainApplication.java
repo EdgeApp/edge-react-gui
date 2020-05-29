@@ -33,6 +33,7 @@ import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 import com.rnfs.RNFSPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
+import com.zcoin.sigma.RNZcoinSigmaPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import io.fixd.rctlocale.RCTLocalePackage;
 import io.invertase.firebase.RNFirebasePackage;
@@ -84,7 +85,8 @@ public class MainApplication extends Application implements ReactApplication {
               new ReactNativeContacts(),
               new RNCameraPackage(),
               new RCTLocalePackage(),
-              new ExtraDimensionsPackage());
+              new ExtraDimensionsPackage(),
+              new RNZcoinSigmaPackage());
         }
 
         @Override

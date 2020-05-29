@@ -244,6 +244,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   BAT: {
     showEarnInterestCard: true
+  },
+  XZC: {
+    specialTransactionTitle: s.strings.fragment_transaction_list_mint_tx_title
   }
 }
 

@@ -91,6 +91,7 @@
   "fragment_transaction_list_tx_dropped": "ドロップ",
   "fragment_transaction_list_tx_synchronizing": "同期中",
   "fragment_transaction_list_confirmation_progress": "%s/%s確認",
+  "fragment_transaction_list_mint_tx_title": "匿名化",
   "transaction_list_buy_crypto_message": "%sを購入",
   "transaction_list_no_tx_yet": "トランザクションは未完了です！",
   "fragment_wallets_addwallet_name_hint": "新しいウォレット名",

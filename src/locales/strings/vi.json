@@ -91,6 +91,7 @@
   "fragment_transaction_list_tx_dropped": "Bị bỏ",
   "fragment_transaction_list_tx_synchronizing": "Đang đồng bộ",
   "fragment_transaction_list_confirmation_progress": "%s của %s sự xác nhận",
+  "fragment_transaction_list_mint_tx_title": "Đã ẩn danh",
   "transaction_list_buy_crypto_message": "Mua %s",
   "transaction_list_no_tx_yet": "Không có giao dịch nào!",
   "fragment_wallets_addwallet_name_hint": "Tên ví mới",

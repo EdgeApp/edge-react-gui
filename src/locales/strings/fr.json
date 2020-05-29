@@ -91,6 +91,7 @@
   "fragment_transaction_list_tx_dropped": "Non retenu",
   "fragment_transaction_list_tx_synchronizing": "Synchronisation",
   "fragment_transaction_list_confirmation_progress": "%s sur %s Confirmations",
+  "fragment_transaction_list_mint_tx_title": "Anonymisé",
   "transaction_list_buy_crypto_message": "Acheter %s",
   "transaction_list_no_tx_yet": "Aucune transaction a été éffectuée ",
   "fragment_wallets_addwallet_name_hint": "Nouveau nom de Wallet ",
