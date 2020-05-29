@@ -22,7 +22,6 @@ import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.krazylabs.OpenAppSettingsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.lynxit.contactswrapper.ContactsWrapperPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.peel.react.TcpSocketsModule;
 import com.reactlibrary.DiskletPackage;
@@ -78,7 +77,6 @@ public class MainApplication extends Application implements ReactApplication {
               new ImagePickerPackage(),
               new RNFSPackage(),
               new RNDeviceInfo(),
-              new ContactsWrapperPackage(),
               new ReactNativeContacts(),
               new RNCameraPackage(),
               new RCTLocalePackage(),

@@ -177,7 +177,6 @@ dependencies {
     implementation project(':ExtraDimensions')
     implementation project(':react-native-app-settings')
     implementation project(':react-native-camera')
-    implementation project(':react-native-contacts-wrapper')
     implementation project(':react-native-contacts')
     implementation project(':react-native-device-info')
     implementation project(':react-native-fast-crypto')

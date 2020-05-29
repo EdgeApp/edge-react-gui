@@ -6,7 +6,6 @@ import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEnco
 import React, { Component } from 'react'
 import type { RefObject } from 'react-native'
 import { ActivityIndicator, Clipboard, Dimensions, InputAccessoryView, Platform, Text, TouchableOpacity, View } from 'react-native'
-import ContactsWrapper from 'react-native-contacts-wrapper'
 import RNFS from 'react-native-fs'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
@@ -302,13 +301,7 @@ export class Request extends Component<Props, State> {
         </View>
 
         <View style={styles.shareButtonsContainer}>
-          <ShareButtons
-            shareViaEmail={this.shareViaEmail}
-            shareViaSMS={this.shareViaSMS}
-            shareViaShare={this.shareViaShare}
-            copyToClipboard={this.copyToClipboard}
-            fioAddressModal={this.fioAddressModal}
-          />
+          <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />
         </View>
       </SceneWrapper>
     )
@@ -380,24 +373,6 @@ export class Request extends Component<Props, State> {
           message: sharedAddress
         }
         Share.open(shareOptions).catch(e => console.log(e))
-      })
-      .catch(showError)
-  }
-
-  shareViaEmail = () => {
-    ContactsWrapper.getContact()
-      .then(() => {
-        this.shareMessage()
-        // console.log('shareViaEmail')
-      })
-      .catch(showError)
-  }
-
-  shareViaSMS = () => {
-    ContactsWrapper.getContact()
-      .then(() => {
-        this.shareMessage()
-        // console.log('shareViaSMS')
       })
       .catch(showError)
   }
