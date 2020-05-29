@@ -105,6 +105,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:smartcash',
   'wallet:groestlcoin',
   'wallet:zcoin',
+  'wallet:zcoins',
   'wallet:ufo'
 ]
 
