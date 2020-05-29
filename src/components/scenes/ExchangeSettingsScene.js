@@ -3,7 +3,6 @@
 import { type EdgeSwapConfig } from 'edge-core-js/types'
 import React, { Component } from 'react'
 import { Image, ScrollView, View } from 'react-native'
-import CookieManager from 'react-native-cookies'
 import { Actions } from 'react-native-router-flux'
 
 import { getSwapPluginIcon } from '../../assets/images/exchange'

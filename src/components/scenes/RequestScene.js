@@ -4,8 +4,8 @@ import { bns } from 'biggystring'
 import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Clipboard, Dimensions, Platform, View } from 'react-native'
-import ContactsWrapper from 'react-native-contacts-wrapper'
+import type { RefObject } from 'react-native'
+import { ActivityIndicator, Clipboard, Dimensions, InputAccessoryView, Platform, Text, TouchableOpacity, View } from 'react-native'
 import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
 import slowlog from 'react-native-slowlog'
@@ -257,12 +257,7 @@ export class Request extends Component<Props, State> {
         </View>
 
         <View style={styles.shareButtonsContainer}>
-          <ShareButtons
-            shareViaEmail={this.shareViaEmail}
-            shareViaSMS={this.shareViaSMS}
-            shareViaShare={this.shareViaShare}
-            copyToClipboard={this.copyToClipboard}
-          />
+          <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />
         </View>
       </SceneWrapper>
     )
@@ -333,24 +328,6 @@ export class Request extends Component<Props, State> {
           message: sharedAddress
         }
         Share.open(shareOptions).catch(e => console.log(e))
-      })
-      .catch(showError)
-  }
-
-  shareViaEmail = () => {
-    ContactsWrapper.getContact()
-      .then(() => {
-        this.shareMessage()
-        // console.log('shareViaEmail')
-      })
-      .catch(showError)
-  }
-
-  shareViaSMS = () => {
-    ContactsWrapper.getContact()
-      .then(() => {
-        this.shareMessage()
-        // console.log('shareViaSMS')
       })
       .catch(showError)
   }

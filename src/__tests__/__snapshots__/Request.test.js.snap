@@ -72,8 +72,12 @@ exports[`Request should render with loaded props 1`] = `
   >
     <ShareButtons
       copyToClipboard={[Function]}
+<<<<<<< HEAD
       shareViaEmail={[Function]}
       shareViaSMS={[Function]}
+=======
+      fioAddressModal={[Function]}
+>>>>>>> 8ae70cbbc... Stop using react-native-contacts-wrapper
       shareViaShare={[Function]}
     />
   </View>

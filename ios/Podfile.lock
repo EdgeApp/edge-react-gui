@@ -31,14 +31,14 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
-  - GoogleToolboxForMac/Defines (2.1.0)
-  - "GoogleToolboxForMac/NSData+zlib (2.1.0)":
-    - GoogleToolboxForMac/Defines (= 2.1.0)
-  - nanopb (0.3.8):
-    - nanopb/decode (= 0.3.8)
-    - nanopb/encode (= 0.3.8)
-  - nanopb/decode (0.3.8)
-  - nanopb/encode (0.3.8)
+  - GoogleToolboxForMac/Defines (2.2.1)
+  - "GoogleToolboxForMac/NSData+zlib (2.2.1)":
+    - GoogleToolboxForMac/Defines (= 2.2.1)
+  - nanopb (0.3.901):
+    - nanopb/decode (= 0.3.901)
+    - nanopb/encode (= 0.3.901)
+  - nanopb/decode (0.3.901)
+  - nanopb/encode (0.3.901)
   - Picker (4.3.7):
     - Picker/Core (= 4.3.7)
   - Picker/Core (4.3.7):
@@ -54,10 +54,6 @@ PODS:
   - react-native-camera/RN (1.13.1):
     - React
   - react-native-contacts (2.2.5):
-    - React
-  - react-native-contacts-wrapper (0.2.4):
-    - React
-  - react-native-cookies (3.3.0):
     - React
   - react-native-fast-crypto (1.8.1):
     - React
@@ -168,8 +164,6 @@ DEPENDENCIES:
   - Picker (from `../node_modules/react-native-picker`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
-  - react-native-contacts-wrapper (from `../node_modules/react-native-contacts-wrapper`)
-  - react-native-cookies (from `../node_modules/react-native-cookies`)
   - react-native-fast-crypto (from `../node_modules/react-native-fast-crypto`)
   - react-native-firebase (from `../node_modules/react-native-firebase`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
@@ -237,10 +231,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera"
   react-native-contacts:
     :path: "../node_modules/react-native-contacts"
-  react-native-contacts-wrapper:
-    :path: "../node_modules/react-native-contacts-wrapper"
-  react-native-cookies:
-    :path: "../node_modules/react-native-cookies"
   react-native-fast-crypto:
     :path: "../node_modules/react-native-fast-crypto"
   react-native-firebase:
@@ -299,14 +289,12 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: f3f0657372592ecdfdfe2cac604a5a75758376a6
   Folly: de497beb10f102453a1afa9edbf8cf8a251890de
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
-  GoogleToolboxForMac: 2b2596cbb7186865e98cadf2b1e262d851c2b168
-  nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
+  GoogleToolboxForMac: b3553629623a3b1bff17f555e736cd5a6d95ad55
+  nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Picker: 37554355aef82a532ea95b71b6eeba66bc86182b
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
   react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
   react-native-contacts: f6e5c518598762081ff9cf7c70db36f71668538e
-  react-native-contacts-wrapper: a423605f89dba6b83edf481940736646f97cd25a
-  react-native-cookies: 48615324004b541be94e9424f81224f0ba1ff68d
   react-native-fast-crypto: aed797071793e23416d6e8c7c1c5dadb63036a0c
   react-native-firebase: c20ee01585998768935fc2cff74ff8e9740f1a73
   react-native-image-picker: e6e06d4315e3c85bad17e4b2002cd29f11d202c8
@@ -330,6 +318,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: f12745f38290ed4c6d2aa32d0c8458fe63f40242
+PODFILE CHECKSUM: cdd111390e8db2ae15e46e53da4d4709e29680cb
 
 COCOAPODS: 1.8.4

@@ -122,8 +122,6 @@
     "react-native-app-settings": "git://github.com/swansontec/react-native-app-settings#fix-rn59",
     "react-native-camera": "git://github.com/EdgeApp/react-native-camera.git#edge-fixes",
     "react-native-contacts": "2.2.5",
-    "react-native-contacts-wrapper": "git://github.com/EdgeApp/react-native-contacts-wrapper.git#a57a5d9",
-    "react-native-cookies": "git://github.com/joeferraro/react-native-cookies.git#4206542d",
     "react-native-device-info": "^0.22.4",
     "react-native-drawer": "^2.3.0",
     "react-native-extra-dimensions-android": "^1.2.5",
