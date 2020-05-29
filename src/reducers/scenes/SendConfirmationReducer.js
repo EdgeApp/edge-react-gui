@@ -7,6 +7,7 @@ import { type Reducer } from 'redux'
 
 import { initialState } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import type { Action } from '../../types/reduxTypes.js'
+import type { FioRequest } from '../../types/types'
 
 export type FeeOption = 'custom' | 'high' | 'low' | 'standard'
 
@@ -23,7 +24,7 @@ export type GuiMakeSpendInfo = {
   otherParams?: Object,
   dismissAlert?: boolean,
   fioAddress?: string,
-  memo?: string,
+  fioPendingRequest?: FioRequest,
   isSendUsingFioAddress?: boolean,
   onBack?: () => void,
   onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,

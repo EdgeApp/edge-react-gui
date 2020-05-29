@@ -12,7 +12,7 @@ import { MaterialInput } from '../../../styles/components/FormFieldStyles.js'
 import { styles as CryptoExchangeSceneStyle } from '../../../styles/scenes/CryptoExchangeSceneStyles'
 import { styles } from '../../../styles/scenes/FioRequestConfirmationStyle'
 import type { State } from '../../../types/reduxTypes'
-import type { GuiWallet } from '../../../types/types'
+import type { FioRequest, GuiWallet } from '../../../types/types'
 import { TextAndIconButton } from '../../UI/components/Buttons/TextAndIconButton.ui.js'
 import Text from '../../UI/components/FormattedText/FormattedText.ui.js'
 import * as UI_SELECTORS from '../../UI/selectors.js'
@@ -24,7 +24,9 @@ export type SelectFioAddressOwnProps = {
   memo: string,
   memoError: string,
   onSelect: (fioAddress: string, fioWallet: EdgeCurrencyWallet, error: string) => void,
-  onMemoChange: (memo: string, memoError: string) => void
+  onMemoChange: (memo: string, memoError: string) => void,
+  fioRequest: FioRequest | null,
+  isSendUsingFioAddress: boolean | null
 }
 
 export type SelectFioAddressProps = {
@@ -52,7 +54,12 @@ class SelectFioAddress extends Component<Props, LocalState> {
   }
 
   componentDidMount() {
-    this.checkForPubAddresses()
+    const { fioRequest, isSendUsingFioAddress } = this.props
+    if (fioRequest) {
+      this.setFioAddress(fioRequest.payer_fio_address)
+    } else if (isSendUsingFioAddress) {
+      this.checkForPubAddresses()
+    }
 
     const materialStyle = { ...MaterialInput }
     materialStyle.tintColor = styles.text.color
@@ -156,10 +163,44 @@ class SelectFioAddress extends Component<Props, LocalState> {
     this.props.onMemoChange(memo, memoError)
   }
 
+  renderFioAddress() {
+    const { selected, fioRequest } = this.props
+    const { loading } = this.state
+
+    if (loading) return <ActivityIndicator style={styles.loading} size="small" />
+
+    if (fioRequest) {
+      return (
+        <View>
+          <Text style={styles.selectAddressText}>
+            {s.strings.fragment_send_from_label}: {selected}
+          </Text>
+        </View>
+      )
+    }
+
+    return (
+      <View>
+        <TextAndIconButton
+          style={{
+            ...CryptoExchangeSceneStyle.flipWrapper.walletSelector,
+            text: styles.selectAddressText,
+            textPressed: styles.selectAddressTextPressed,
+            container: styles.selectAddressContainer
+          }}
+          onPress={this.selectAddress}
+          icon={Constants.KEYBOARD_ARROW_DOWN}
+          title={`${s.strings.fragment_send_from_label}: ${selected}`}
+        />
+      </View>
+    )
+  }
+
   render() {
-    const { selected, memo, memoError, loading: walletLoading } = this.props
+    const { fioRequest, memo, memoError, loading: walletLoading, isSendUsingFioAddress } = this.props
     const { fioAddresses, loading } = this.state
-    if (!fioAddresses.length) return null
+    if (!fioRequest && !isSendUsingFioAddress) return null
+    if (!fioRequest && !fioAddresses.length) return null
     if (walletLoading) {
       return (
         <View style={[styles.selectContainer, styles.selectFullWidth]}>
@@ -170,23 +211,7 @@ class SelectFioAddress extends Component<Props, LocalState> {
 
     return (
       <View style={[styles.selectContainer, styles.selectFullWidth]}>
-        {loading ? (
-          <ActivityIndicator style={styles.loading} size="small" />
-        ) : (
-          <View>
-            <TextAndIconButton
-              style={{
-                ...CryptoExchangeSceneStyle.flipWrapper.walletSelector,
-                text: styles.selectAddressText,
-                textPressed: styles.selectAddressTextPressed,
-                container: styles.selectAddressContainer
-              }}
-              onPress={this.selectAddress}
-              icon={Constants.KEYBOARD_ARROW_DOWN}
-              title={`${s.strings.fragment_send_from_label}: ${selected}`}
-            />
-          </View>
-        )}
+        {this.renderFioAddress()}
         {!loading && (
           <TouchableWithoutFeedback onPress={this.openMessageInput}>
             <View style={styles.memoContainer}>

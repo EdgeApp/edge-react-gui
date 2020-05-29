@@ -2,10 +2,10 @@
 
 import { connect } from 'react-redux'
 
-import type { StateProps } from '../../components/scenes/FioRequestListScene'
+import type { DispatchProps, StateProps } from '../../components/scenes/FioRequestListScene'
 import { FioRequestList } from '../../components/scenes/FioRequestListScene'
 import { getFioWallets, getSelectedWallet, getWallets } from '../../modules/UI/selectors.js'
-import type { State } from '../../types/reduxTypes'
+import type { Dispatch, State } from '../../types/reduxTypes'
 
 const mapStateToProps = (state: State) => {
   const fioWallets = getFioWallets(state)
@@ -14,6 +14,7 @@ const mapStateToProps = (state: State) => {
   const account = state.core.account
   if (!wallet) {
     const out: StateProps = {
+      state,
       account,
       wallets: {},
       fioWallets: [],
@@ -23,6 +24,7 @@ const mapStateToProps = (state: State) => {
   }
 
   const out: StateProps = {
+    state,
     account,
     wallets,
     fioWallets,
@@ -31,4 +33,10 @@ const mapStateToProps = (state: State) => {
   return out
 }
 
-export const FioRequestListConnector = connect(mapStateToProps, {})(FioRequestList)
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+  onSelectWallet: (walletId: string, currencyCode: string) => {
+    dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
+  }
+})
+
+export const FioRequestListConnector = connect(mapStateToProps, mapDispatchToProps)(FioRequestList)
