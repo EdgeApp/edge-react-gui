@@ -7,6 +7,7 @@ import { showError } from '../../components/services/AirshipInstance'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import type { Dispatch, GetState } from '../../types/reduxTypes'
+import type { FioDomain } from '../../types/types'
 import { truncateDecimals } from '../../util/utils'
 import { getDefaultIsoFiat, getDisplayDenomination, getExchangeDenomination } from '../Settings/selectors'
 import { getFioWallets } from '../UI/selectors'
@@ -26,11 +27,15 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
   const { currencyWallets = {} } = state.core.account
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
   let fioAddresses = []
+  let fioDomains = []
 
   if (fioWallets != null) {
     for (const wallet of fioWallets) {
+      const walletId = wallet.id
       const walletFioAddresses = await wallet.otherMethods.getFioAddresses()
       fioAddresses = [...fioAddresses, ...walletFioAddresses]
+      const walletFioDomains = await wallet.otherMethods.getFioDomains()
+      fioDomains = [...fioDomains, ...walletFioDomains.map(({ name, expiration, isPublic }) => ({ name, expiration, isPublic, walletId }))]
     }
   }
 
@@ -38,6 +43,10 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
     dispatch({
       type: 'FIO/SET_FIO_ADDRESSES',
       data: { fioAddresses }
+    })
+    dispatch({
+      type: 'FIO/SET_FIO_DOMAINS',
+      data: { fioDomains }
     })
   })
 
@@ -59,7 +68,10 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
   }
 }
 
-export const getRegInfo = (fioAddress: string, selectedWallet: EdgeCurrencyWallet) => async (dispatch: Dispatch, getState: GetState) => {
+export const getRegInfo = (fioAddress: string, selectedWallet: EdgeCurrencyWallet, selectedDomain: FioDomain) => async (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
   const state = getState()
   const { account } = state.core
   const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
@@ -77,6 +89,30 @@ export const getRegInfo = (fioAddress: string, selectedWallet: EdgeCurrencyWalle
     activationCost = parseFloat(truncateDecimals(bns.div(`${fee}`, displayDenomination.multiplier, 18), 6))
   } catch (e) {
     showError(s.strings.fio_get_fee_err_msg)
+  }
+
+  if (selectedDomain.name !== Constants.FIO_DOMAIN_DEFAULT.name) {
+    dispatch({
+      type: 'FIO/SET_FIO_ADDRESS_REG_INFO',
+      data: {
+        handleRegistrationInfo: {
+          activationCost,
+          supportedCurrencies: { [Constants.FIO_STR]: true }
+        },
+        addressRegistrationPaymentInfo: {
+          [Constants.FIO_STR]: {
+            amount: `${activationCost}`,
+            nativeAmount: '',
+            address: ''
+          }
+        }
+      }
+    })
+    dispatch({
+      type: 'FIO/FIO_ADDRESS_REG_INFO_LOADING',
+      data: false
+    })
+    return
   }
 
   try {

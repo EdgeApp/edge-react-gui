@@ -16,7 +16,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { styles as fioAddressStyles } from '../../styles/scenes/FioAddressRegisterStyle'
-import type { GuiWallet } from '../../types/types'
+import type { FioDomain, GuiWallet } from '../../types/types'
 import { Airship, showError } from '../services/AirshipInstance'
 
 export type StateProps = {
@@ -32,11 +32,12 @@ export type StateProps = {
 }
 
 export type NavigationProps = {
-  selectedWallet: { wallet: EdgeCurrencyWallet }
+  selectedWallet: EdgeCurrencyWallet,
+  selectedDomain: FioDomain
 }
 
 export type DispatchProps = {
-  getRegInfo: (fioAddress: string, selectedWallet: EdgeCurrencyWallet) => Promise<void>,
+  getRegInfo: (fioAddress: string, selectedWallet: EdgeCurrencyWallet, selectedDomain: FioDomain) => Promise<void>,
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 
@@ -44,15 +45,17 @@ type Props = NavigationProps & StateProps & DispatchProps
 
 export class FioAddressRegisterSelectWalletScene extends Component<Props> {
   componentDidMount(): void {
-    const {
-      fioAddress,
-      selectedWallet: { wallet }
-    } = this.props
-    this.props.getRegInfo(fioAddress, wallet)
+    const { fioAddress, selectedWallet, selectedDomain } = this.props
+    this.props.getRegInfo(fioAddress, selectedWallet, selectedDomain)
   }
 
-  onPressSelect = async () => {
-    const { supportedCurrencies } = this.props
+  onPressNext = async () => {
+    const { selectedDomain, supportedCurrencies } = this.props
+
+    if (selectedDomain.name !== Constants.FIO_DOMAIN_DEFAULT.name) {
+      return this.onSelectWallet(selectedDomain.walletId, Constants.FIO_STR)
+    }
+
     const allowedCurrencyCodes = []
     for (const currency in supportedCurrencies) {
       if (supportedCurrencies[currency]) {
@@ -69,18 +72,13 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
-    const {
-      activationCost,
-      isConnected,
-      paymentInfo: allPaymentInfo,
-      selectedWallet: { wallet }
-    } = this.props
+    const { activationCost, isConnected, paymentInfo: allPaymentInfo, selectedWallet } = this.props
 
     if (isConnected) {
       if (paymentCurrencyCode === Constants.FIO_STR) {
         const { fioWallets } = this.props
         const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
-        Actions[Constants.FIO_ADDRESS_CONFIRM]({ paymentWallet, fee: activationCost, ownerPublicKey: wallet.publicWalletInfo.keys.publicKey })
+        Actions[Constants.FIO_ADDRESS_CONFIRM]({ paymentWallet, fee: activationCost, ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey })
       } else {
         this.props.onSelectWallet(walletId, paymentCurrencyCode)
         const guiMakeSpendInfo = {
@@ -113,16 +111,20 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
   }
 
   renderSelectWallet = () => {
-    const { activationCost, loading } = this.props
+    const { activationCost, selectedDomain, loading } = this.props
     const isSelectWalletDisabled = !activationCost || activationCost === 0
+    const isDefaultDomainSelected = selectedDomain.name === Constants.FIO_DOMAIN_DEFAULT.name
+
     return (
       <View style={styles.selectPaymentLower}>
         <View style={styles.buttons}>
-          <PrimaryButton disabled={isSelectWalletDisabled} style={styles.next} onPress={this.onPressSelect}>
+          <PrimaryButton disabled={isSelectWalletDisabled} style={styles.next} onPress={this.onPressNext}>
             {isSelectWalletDisabled || loading ? (
               <ActivityIndicator />
             ) : (
-              <PrimaryButton.Text>{s.strings.create_wallet_account_select_wallet}</PrimaryButton.Text>
+              <PrimaryButton.Text>
+                {isDefaultDomainSelected ? s.strings.create_wallet_account_select_wallet : s.strings.string_next_capitalized}
+              </PrimaryButton.Text>
             )}
           </PrimaryButton>
         </View>

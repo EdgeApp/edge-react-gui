@@ -4,11 +4,12 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { type Reducer } from 'redux'
 
 import type { Action } from '../../types/reduxTypes.js'
-import type { FioAddress } from '../../types/types'
+import type { FioAddress, FioDomain } from '../../types/types'
 
 export type FioAddressSceneState = {
   fioAddressName: string,
   fioAddresses: FioAddress[],
+  fioDomains: FioDomain[],
   fioAddressesLoading: boolean,
   selectedWallet: EdgeCurrencyWallet | null,
   expiration: Date,
@@ -47,6 +48,7 @@ export type BuyAddressResponse = {
 const initialState: FioAddressSceneState = {
   fioAddressName: '',
   fioAddresses: [],
+  fioDomains: [],
   fioAddressesLoading: false,
   selectedWallet: null,
   expiration: new Date('2020-01-01T10:10:10Z'),
@@ -93,6 +95,12 @@ export const fioAddress: Reducer<FioAddressSceneState, Action> = (state = initia
         ...state,
         fioAddresses: action.data.fioAddresses,
         fioAddressesLoading: false
+      }
+    case 'FIO/SET_FIO_DOMAINS':
+      if (!action.data) throw new Error(`Invalid action SET_FIO_DOMAINS`)
+      return {
+        ...state,
+        fioDomains: action.data.fioDomains
       }
     case 'FIO/SET_FIO_ADDRESS_REG_INFO':
       if (!action.data) throw new Error(`Invalid action addressRegistrationPaymentInfo`)

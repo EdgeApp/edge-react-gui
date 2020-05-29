@@ -16,12 +16,14 @@ const strings = {
   drawer_scan_qr_send: 'Scan QR (Send)',
   drawer_sweep_private_key: 'Sweep Private Key',
   drawer_wallets: 'Wallets',
+  drawer_fio_names: 'FIO Names',
   drawer_fio_address: 'FIO Address',
   drawer_fio_requests: 'FIO Requests',
 
   network_alert_title: 'No Internet connection',
   fio_network_alert_text: 'FIO functionality requires internet connection.',
   fio_address_choose_label: 'Choose a FIO Address',
+  fio_address_choose_domain_label: 'Choose FIO Domain for Your Address',
 
   // Error messages:
   error_token_exists: 'A currency named %s already exists',
@@ -385,6 +387,8 @@ const strings = {
   title_fio_sent_request_details: 'Sent Request Details',
   title_fio_account_settings: 'Account Settings',
   title_fio_address: 'FIO Addresses',
+  title_fio_names: 'FIO Names',
+  title_fio_domains: 'FIO Domains',
   title_fio_address_confirmation: 'Register FIO Address',
   title_fio_requested: 'Requested',
   title_fio_connect_to_wallet: 'Connect to Wallet',
@@ -681,6 +685,7 @@ const strings = {
   fio_address_details_screen_manage_account_settings: 'Account Settings',
   fio_address_details_screen_connect_to_wallets: 'Connect to Wallets',
   fio_address_list_screen_button_register: 'Register New FIO Address',
+  fio_address_list_register_domain: 'Register New Domain',
   fio_get_fee_err_msg: 'There was an issue getting the FIO fee. Please try again later.',
   fio_get_reg_info_err_msg: 'There was an issue getting registration information.',
   fio_register_address_err_msg: 'There was an issue registering an address. Please try later.',

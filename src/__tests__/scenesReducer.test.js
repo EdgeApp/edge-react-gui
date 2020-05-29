@@ -43,6 +43,7 @@ test('initialState', () => {
       fioAddressName: '',
       fioAddresses: [],
       fioAddressesLoading: false,
+      fioDomains: [],
       selectedWallet: null,
       handleRegistrationInfo: {
         activationCost: 40,

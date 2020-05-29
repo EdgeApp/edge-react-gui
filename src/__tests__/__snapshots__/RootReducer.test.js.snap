@@ -137,6 +137,7 @@ Object {
         "fioAddressName": "",
         "fioAddresses": Array [],
         "fioAddressesLoading": false,
+        "fioDomains": Array [],
         "handleRegistrationInfo": Object {
           "activationCost": 40,
           "supportedCurrencies": Object {},

@@ -119,7 +119,6 @@ const CREATE_WALLET_SELECT_FIAT = s.strings.title_create_wallet_select_fiat
 const CREATE_WALLET = s.strings.title_create_wallet
 const CREATE_WALLET_ACCOUNT_SETUP = s.strings.create_wallet_create_account
 const CREATE_WALLET_ACCOUNT_ACTIVATE = s.strings.create_wallet_account_activate
-const FIO_ADDRESS = s.strings.title_fio_address
 const FIO_ADDRESS_CONFIRMATION = s.strings.title_fio_address_confirmation
 const TRANSACTIONS_EXPORT = s.strings.title_export_transactions
 const BUY = s.strings.title_buy
@@ -646,7 +645,7 @@ export class MainComponent extends Component<Props> {
               key={Constants.FIO_ADDRESS_LIST}
               navTransparent
               component={ifLoggedIn(FioAddressListConnector)}
-              renderTitle={this.renderTitle(FIO_ADDRESS)}
+              renderTitle={this.renderTitle(s.strings.title_fio_names)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderMenuButton()}
               onLeft={Actions.pop}
@@ -694,7 +693,7 @@ export class MainComponent extends Component<Props> {
               key={Constants.FIO_ADDRESS_DETAILS}
               navTransparent
               component={ifLoggedIn(FioAddressDetailsConnector)}
-              renderTitle={this.renderTitle(FIO_ADDRESS)}
+              renderTitle={this.renderTitle(s.strings.title_fio_address)}
               renderLeftButton={this.renderBackButton(BACK)}
               renderRightButton={this.renderMenuButton()}
             />
@@ -732,7 +731,7 @@ export class MainComponent extends Component<Props> {
               key={Constants.FIO_ADDRESS_REGISTER_SUCCESS}
               navTransparent
               component={ifLoggedIn(FioAddressDetailsConnector)}
-              renderTitle={this.renderTitle(FIO_ADDRESS)}
+              renderTitle={this.renderTitle(s.strings.title_fio_address)}
               renderRightButton={this.renderMenuButton()}
             />
           </Stack>

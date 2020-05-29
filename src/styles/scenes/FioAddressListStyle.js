@@ -39,6 +39,12 @@ export const styles = StyleSheet.create({
     height: scale(40),
     width: scale(45)
   },
+  iconIon: {
+    height: scale(40),
+    width: scale(45),
+    paddingRight: scale(4),
+    textAlign: 'center'
+  },
   info: {
     flex: 4
   },
@@ -57,8 +63,7 @@ export const styles = StyleSheet.create({
     marginLeft: 'auto'
   },
   button: {
-    marginTop: 'auto',
-    padding: scale(15)
+    padding: scale(10)
   },
   toggleButton: {
     backgroundColor: THEME.COLORS.PRIMARY,
@@ -68,11 +73,11 @@ export const styles = StyleSheet.create({
   },
   domainVew: {
     paddingHorizontal: scale(15),
-    paddingTop: scale(15),
+    paddingTop: scale(10),
     paddingBottom: scale(0)
   },
   link: {
-    padding: scale(15),
+    padding: scale(10),
     color: THEME.COLORS.ACCENT_BLUE,
     textAlign: 'center'
   },
@@ -83,5 +88,18 @@ export const styles = StyleSheet.create({
     flex: 1,
     marginTop: scale(40),
     alignSelf: 'center'
+  },
+  row: {
+    flex: 1
+  },
+  noNames: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(16),
+    textAlign: 'center',
+    padding: scale(15)
+  },
+  headerIcon: {
+    width: scale(24),
+    height: scale(22)
   }
 })

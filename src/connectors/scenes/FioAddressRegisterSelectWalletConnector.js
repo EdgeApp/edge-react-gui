@@ -9,6 +9,7 @@ import { getRegInfo } from '../../modules/FioAddress/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import { getFioWallets } from '../../modules/UI/selectors'
 import type { Dispatch, State } from '../../types/reduxTypes'
+import type { FioDomain } from '../../types/types'
 
 const mapStateToProps = (state: State) => {
   const wallets = state.ui.wallets.byId
@@ -35,7 +36,8 @@ const mapStateToProps = (state: State) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  getRegInfo: (fioAddress: string, selectedWallet: EdgeCurrencyWallet) => dispatch(getRegInfo(fioAddress, selectedWallet)),
+  getRegInfo: (fioAddress: string, selectedWallet: EdgeCurrencyWallet, selectedDomain: FioDomain) =>
+    dispatch(getRegInfo(fioAddress, selectedWallet, selectedDomain)),
   onSelectWallet: (walletId: string, currencyCode: string) => {
     dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
   }

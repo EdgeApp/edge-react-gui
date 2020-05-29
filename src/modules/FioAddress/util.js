@@ -441,3 +441,19 @@ export const getFioObtData = async (fioWallets: EdgeCurrencyWallet[]): Promise<F
 
   return obtDataRecords
 }
+
+export const getFioDomains = async (fioPlugin: EdgeCurrencyConfig, fioAddress: string, chainCode: string, tokenCode: string): Promise<string> => {
+  const isFioAddress = await fioPlugin.otherMethods.isFioAddressValid(fioAddress)
+  try {
+    if (isFioAddress) {
+      const { public_address: publicAddress } = await fioPlugin.otherMethods.getConnectedPublicAddress(fioAddress.toLowerCase(), chainCode, tokenCode)
+      if (publicAddress && publicAddress.length > 1) {
+        return publicAddress
+      }
+    }
+  } catch (e) {
+    throw new Error(s.strings.err_no_address_title)
+  }
+
+  return ''
+}
