@@ -28,7 +28,6 @@ import { getObjectDiff } from '../../util/utils'
 import { launchModal } from '../common/ModalProvider.js'
 import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { createFioAddressModal } from '../modals/RequestFioAddressModal'
 import { showError, showToast } from '../services/AirshipInstance.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
@@ -426,11 +425,7 @@ export class Request extends Component<Props, State> {
         return
       }
     }
-    const fioAddressModal = createFioAddressModal({ fioPlugin: this.props.fioPlugin, isConnected: this.props.isConnected })
-    const fioModalData = await launchModal(fioAddressModal)
-    if (fioModalData) {
-      Actions[Constants.FIO_REQUEST_CONFIRMATION]({ fioModalData, amounts: this.amounts })
-    }
+    Actions[Constants.FIO_REQUEST_CONFIRMATION]({ amounts: this.amounts })
   }
 
   fioMode = () => {
