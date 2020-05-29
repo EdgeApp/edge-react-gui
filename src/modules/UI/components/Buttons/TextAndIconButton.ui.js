@@ -1,6 +1,5 @@
 // @flow
 
-import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
@@ -18,13 +17,6 @@ type State = {
 }
 
 class TextAndIconButton extends Component<Props, State> {
-  static propTypes = {
-    icon: PropTypes.string.isRequired,
-    style: PropTypes.object.isRequired,
-    onPress: PropTypes.func.isRequired,
-    title: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.func.isRequired])
-  }
-
   UNSAFE_componentWillMount() {
     this.setState({
       pressed: false

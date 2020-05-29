@@ -1,6 +1,6 @@
 // @flow
 
-import { equals } from 'ramda'
+import { isEqual } from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Text } from 'react-native'
 
@@ -38,7 +38,7 @@ export class PasswordReminderModal extends Component<Props, State> {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.loginStatus && !equals(this.props.passwordReminder, nextProps.passwordReminder)) {
+    if (nextProps.loginStatus && !isEqual(this.props.passwordReminder, nextProps.passwordReminder)) {
       nextProps.setPasswordReminder(nextProps.passwordReminder)
     }
   }
