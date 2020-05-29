@@ -50,7 +50,9 @@ import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetai
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegisterConnector'
 import { FioAddressRegisterSelectWalletConnector } from '../connectors/scenes/FioAddressRegisterSelectWalletConnector'
+import { FioAddressSettingsConnector } from '../connectors/scenes/FioAddressSettingsConnector'
 import { FioConnectWalletConfirmConnector } from '../connectors/scenes/FioConnectWalletConfirmConnector'
+import { FioDomainSettingsConnector } from '../connectors/scenes/FioDomainSettingsConnector'
 import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
 import { FioSentRequestConnector } from '../connectors/scenes/FioSentRequestConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
@@ -705,6 +707,15 @@ export class MainComponent extends Component<Props> {
               renderRightButton={this.renderMenuButton()}
               onLeft={Actions.pop}
             />
+            <Scene
+              key={Constants.FIO_ADDRESS_SETTINGS}
+              navTransparent
+              component={FioAddressSettingsConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_address_settings)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderMenuButton()}
+              onLeft={Actions.pop}
+            />
           </Stack>
 
           <Stack key={Constants.FIO_ADDRESS_REGISTER_SUCCESS}>
@@ -714,6 +725,18 @@ export class MainComponent extends Component<Props> {
               component={ifLoggedIn(FioAddressRegisteredScene)}
               renderTitle={this.renderTitle(s.strings.title_fio_address)}
               renderRightButton={this.renderMenuButton()}
+            />
+          </Stack>
+
+          <Stack key={Constants.FIO_DOMAIN_SETTINGS}>
+            <Scene
+              key={Constants.FIO_DOMAIN_SETTINGS}
+              navTransparent
+              component={FioDomainSettingsConnector}
+              renderTitle={this.renderTitle(s.strings.title_fio_domain_settings)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderMenuButton()}
+              onLeft={Actions.pop}
             />
           </Stack>
 

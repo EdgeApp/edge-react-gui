@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import React, { type Node } from 'react'
 import { Image, TouchableHighlight, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -13,40 +13,65 @@ import { Icon } from '../../../modules/UI/components/Icon/Icon.ui'
 import { styles } from '../../../styles/scenes/FioAddressListStyle'
 import { THEME } from '../../../theme/variables/airbitz'
 import type { FioAddress, FioDomain } from '../../../types/types'
-import { scale } from '../../../util/scaling.js'
+
+type FioAddressNameProps = {
+  item: FioAddress,
+  onPress: FioAddress => void
+}
+
+type FioDomainNameProps = {
+  item: FioDomain,
+  onPress: FioDomain => void
+}
 
 type FioNameProps = {
-  item: FioAddress | FioDomain,
-  onPress: (fioAddress: string, expiration: string) => void,
-  isDomain?: boolean
+  name: string,
+  expiration: string,
+  icon: Node
 }
 
 const ionIconSize = THEME.rem(2.375)
 
-export const FioName = (props: FioNameProps) => {
-  const { item, isDomain, onPress } = props
+const FioName = (props: FioNameProps) => {
+  const { name, expiration, icon } = props
 
   return (
-    <TouchableHighlight onPress={() => onPress(`${item.name}`, item.expiration)} underlayColor={styles.underlay.color}>
-      <View style={styles.item}>
-        <View style={styles.icon}>
-          {isDomain ? (
-            <IonIcon name="ios-at" style={styles.iconIon} color={THEME.COLORS.BLUE_3} size={ionIconSize} />
-          ) : (
-            <Image source={fioAddressListIcon} style={styles.iconImg} />
-          )}
-        </View>
-        <View style={styles.info}>
-          <T style={styles.infoTitle}>{item.name}</T>
-          <T style={styles.infoSubtitle}>
-            {`${s.strings.fio_address_details_screen_expires} `}&nbsp;
-            {intl.formatExpDate(item.expiration)}
-          </T>
-        </View>
-        <View style={styles.arrow}>
-          <Icon type={Constants.FONT_AWESOME} name={Constants.ANGLE_RIGHT} size={scale(30)} />
-        </View>
+    <View style={styles.item}>
+      <View style={styles.icon}>{icon}</View>
+      <View style={styles.info}>
+        <T style={styles.infoTitle}>{name}</T>
+        <T style={styles.infoSubtitle}>
+          {`${s.strings.fio_address_details_screen_expires} `}&nbsp;
+          {intl.formatExpDate(expiration)}
+        </T>
       </View>
+      <View style={styles.arrow}>
+        <Icon type={Constants.FONT_AWESOME} name={Constants.ANGLE_RIGHT} size={THEME.rem(2)} />
+      </View>
+    </View>
+  )
+}
+
+export const FioAddressRow = (props: FioAddressNameProps) => {
+  const { item, onPress } = props
+
+  return (
+    <TouchableHighlight onPress={() => onPress(item)} underlayColor={styles.underlay.color}>
+      <FioName name={item.name} expiration={item.expiration} icon={<Image source={fioAddressListIcon} style={styles.iconImg} />} />
+    </TouchableHighlight>
+  )
+}
+
+export const FioDomainRow = (props: FioDomainNameProps) => {
+  const { item, onPress } = props
+
+  return (
+    <TouchableHighlight onPress={() => onPress(item)} underlayColor={styles.underlay.color}>
+      <FioName
+        name={item.name}
+        expiration={item.expiration}
+        icon={<IonIcon name="ios-at" style={styles.iconIon} color={THEME.COLORS.BLUE_3} size={ionIconSize} />}
+      />
     </TouchableHighlight>
   )
 }

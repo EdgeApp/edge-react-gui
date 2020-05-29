@@ -3,9 +3,11 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+import * as Constants from '../../constants/indexConstants'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
@@ -17,6 +19,7 @@ import { THEME } from '../../theme/variables/airbitz'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow'
 import { SettingsRow } from '../common/SettingsRow'
+import { showError } from '../services/AirshipInstance'
 
 export type StateProps = {
   fioWallets: EdgeCurrencyWallet[]
@@ -64,7 +67,13 @@ export class FioAddressDetailsScene extends Component<Props, LocalState> {
   }
 
   _onPressAccountSettings = (): void => {
-    //
+    const { fioAddressName, expiration } = this.props
+    const { fioWallet } = this.state
+    if (fioWallet) {
+      Actions[Constants.FIO_ADDRESS_SETTINGS]({ fioWallet, fioAddressName, expiration: intl.formatExpDate(expiration) })
+    } else {
+      showError(s.strings.fio_wallet_missing_for_fio_address)
+    }
   }
 
   checkExpiredSoon = (): boolean => {

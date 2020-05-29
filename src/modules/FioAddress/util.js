@@ -2,6 +2,7 @@
 
 import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import { sprintf } from 'sprintf-js'
 
 import { FIO_DOMAIN_DEFAULT, FIO_STR, FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
@@ -514,4 +515,44 @@ export const getRegInfo = async (
   }
 
   throw new Error(s.strings.fio_get_reg_info_err_msg)
+}
+
+export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null, forDomain?: boolean = false): Promise<number> => {
+  if (fioWallet) {
+    try {
+      const { fee } = await fioWallet.otherMethods.fioAction('getFee', {
+        endPoint: forDomain ? 'renew_fio_domain' : 'renew_fio_address',
+        fioAddress: ''
+      })
+
+      return fee
+    } catch (e) {
+      throw new Error(s.strings.fio_get_fee_err_msg)
+    }
+  }
+  throw new Error(s.strings.fio_get_fee_err_msg)
+}
+
+export const renewFioName = async (
+  fioWallet: EdgeCurrencyWallet | null,
+  fioName: string,
+  fee: number,
+  isDomain?: boolean = false
+): Promise<{ expiration: string }> => {
+  const errorStr = sprintf(s.strings.fio_renew_err_msg, isDomain ? s.strings.fio_domain_label : s.strings.fio_address_register_form_field_label)
+  if (fioWallet) {
+    try {
+      let params = {}
+      if (isDomain) {
+        params = { fioDomain: fioName, maxFee: fee }
+      } else {
+        params = { fioAddress: fioName, maxFee: fee }
+      }
+      const { expiration } = await fioWallet.otherMethods.fioAction(isDomain ? 'renewFioDomain' : 'renewFioAddress', params)
+      return { expiration }
+    } catch (e) {
+      throw new Error(errorStr)
+    }
+  }
+  throw new Error(errorStr)
 }
