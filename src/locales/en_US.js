@@ -668,6 +668,7 @@ const strings = {
   fio_address_register_no_wallet_name: 'No wallet name',
   fio_address_register_select_wallet: 'Connect to FIO Wallet',
   fio_address_register_pending: 'Your FIO Address will be registered as soon as payment is received. Tap FIO Address in few minutes.',
+  fio_address_register_metadata_name: 'FIO Registration',
   fio_address_confirm_screen_label: 'FIO Address',
   fio_address_confirm_screen_registration_label: 'Registration Fee',
   fio_address_confirm_screen_free_label: 'Free',

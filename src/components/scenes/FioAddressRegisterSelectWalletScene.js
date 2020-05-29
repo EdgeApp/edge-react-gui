@@ -1,6 +1,7 @@
 // @flow
 
-import { type EdgeCurrencyWallet, type EdgeTransaction } from 'edge-core-js'
+import { bns } from 'biggystring'
+import { type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeDenomination, type EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -10,47 +11,81 @@ import fioAddressIcon from '../../assets/images/list_fioAddress.png'
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
+import { getRegInfo } from '../../modules/FioAddress/util'
+import { getExchangeDenomination } from '../../modules/Settings/selectors'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { styles as fioAddressStyles } from '../../styles/scenes/FioAddressRegisterStyle'
+import type { State } from '../../types/reduxTypes'
 import type { FioDomain, GuiWallet } from '../../types/types'
 import { Airship, showError } from '../services/AirshipInstance'
 
 export type StateProps = {
-  supportedCurrencies: { [currencyCode: string]: boolean },
-  paymentInfo: { [currencyCode: string]: { amount: string, address: string, nativeAmount: string } },
-  activationCost: number,
+  state: State,
   wallets: { [string]: GuiWallet },
-  fioAddress: string,
+  fioPlugin: EdgeCurrencyConfig,
   fioWallets: EdgeCurrencyWallet[],
+  fioDisplayDenomination: EdgeDenomination,
   defaultFiatCode: string,
-  loading: boolean,
   isConnected: boolean
 }
 
 export type NavigationProps = {
+  fioAddress: string,
   selectedWallet: EdgeCurrencyWallet,
   selectedDomain: FioDomain
 }
 
 export type DispatchProps = {
-  getRegInfo: (fioAddress: string, selectedWallet: EdgeCurrencyWallet, selectedDomain: FioDomain) => Promise<void>,
   onSelectWallet: (walletId: string, currencyCode: string) => void
+}
+
+type LocalState = {
+  loading: boolean,
+  supportedCurrencies: { [currencyCode: string]: boolean },
+  paymentInfo: { [currencyCode: string]: { amount: string, address: string } },
+  activationCost: number
 }
 
 type Props = NavigationProps & StateProps & DispatchProps
 
-export class FioAddressRegisterSelectWalletScene extends Component<Props> {
+export class FioAddressRegisterSelectWalletScene extends Component<Props, LocalState> {
+  state: LocalState = {
+    loading: false,
+    activationCost: 40,
+    supportedCurrencies: {},
+    paymentInfo: {}
+  }
+
   componentDidMount(): void {
-    const { fioAddress, selectedWallet, selectedDomain } = this.props
-    this.props.getRegInfo(fioAddress, selectedWallet, selectedDomain)
+    this.getRegInfo()
+  }
+
+  getRegInfo = async () => {
+    this.setState({ loading: true })
+
+    try {
+      const { activationCost, supportedCurrencies, paymentInfo } = await getRegInfo(
+        this.props.fioPlugin,
+        this.props.fioAddress,
+        this.props.selectedWallet,
+        this.props.selectedDomain,
+        this.props.fioDisplayDenomination
+      )
+      this.setState({ activationCost, supportedCurrencies, paymentInfo })
+    } catch (e) {
+      showError(e.message)
+    }
+
+    this.setState({ loading: false })
   }
 
   onPressNext = async () => {
-    const { selectedDomain, supportedCurrencies } = this.props
+    const { selectedDomain } = this.props
+    const { supportedCurrencies } = this.state
 
     if (selectedDomain.name !== Constants.FIO_DOMAIN_DEFAULT.name) {
       return this.onSelectWallet(selectedDomain.walletId, Constants.FIO_STR)
@@ -72,19 +107,34 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
-    const { activationCost, isConnected, paymentInfo: allPaymentInfo, selectedWallet } = this.props
+    const { isConnected, selectedWallet, fioAddress, state } = this.props
+    const { activationCost, paymentInfo: allPaymentInfo } = this.state
 
     if (isConnected) {
       if (paymentCurrencyCode === Constants.FIO_STR) {
         const { fioWallets } = this.props
         const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
-        Actions[Constants.FIO_ADDRESS_CONFIRM]({ paymentWallet, fee: activationCost, ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey })
+        Actions[Constants.FIO_ADDRESS_CONFIRM]({
+          fioAddressName: fioAddress,
+          paymentWallet,
+          fee: activationCost,
+          ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
+        })
       } else {
         this.props.onSelectWallet(walletId, paymentCurrencyCode)
+
+        const exchangeDenomination = getExchangeDenomination(state, paymentCurrencyCode)
+        let nativeAmount = bns.mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
+        nativeAmount = bns.toFixed(nativeAmount, 0, 0)
+
         const guiMakeSpendInfo = {
           currencyCode: paymentCurrencyCode,
-          nativeAmount: allPaymentInfo[paymentCurrencyCode].nativeAmount,
+          nativeAmount,
           publicAddress: allPaymentInfo[paymentCurrencyCode].address,
+          metadata: {
+            name: s.strings.fio_address_register_metadata_name,
+            notes: `${s.strings.title_fio_address_confirmation}\n${fioAddress}`
+          },
           dismissAlert: true,
           lockInputs: true,
           onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
@@ -111,7 +161,8 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
   }
 
   renderSelectWallet = () => {
-    const { activationCost, selectedDomain, loading } = this.props
+    const { selectedDomain } = this.props
+    const { activationCost, loading } = this.state
     const isSelectWalletDisabled = !activationCost || activationCost === 0
     const isDefaultDomainSelected = selectedDomain.name === Constants.FIO_DOMAIN_DEFAULT.name
 
@@ -143,7 +194,7 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props> {
   }
 
   render() {
-    const { activationCost, loading } = this.props
+    const { activationCost, loading } = this.state
     const detailsText = sprintf(s.strings.fio_address_wallet_selection_text, loading ? '-' : activationCost)
     return (
       <SafeAreaView>

@@ -1,5 +1,6 @@
 // @flow
 
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, Image, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -10,27 +11,29 @@ import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles } from '../../styles/scenes/FioAddressDetailsStyle'
+import type { FioConnectionWalletItem } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-export type State = {}
-
 export type StateProps = {
+  notConnectedWallets?: { [key: string]: FioConnectionWalletItem },
+  fioWallets: EdgeCurrencyWallet[],
+  loading: boolean
+}
+
+export type NavProps = {
   fioAddressName: string,
-  expiration: Date,
-  registerSuccess?: boolean
+  expiration: string,
+  registerSuccess?: boolean,
+  feeCollected?: number
 }
 
-export type SceneProps = {
-  fioAddress: string
-}
+type Props = StateProps & NavProps
 
-type Props = StateProps & SceneProps
-
-export class FioAddressDetailsScene extends Component<Props, State> {
+export class FioAddressDetailsScene extends Component<Props> {
   componentDidMount() {
-    const { fioAddress } = this.props
+    const { fioAddressName } = this.props
 
-    if (!fioAddress) {
+    if (!fioAddressName) {
       Alert.alert(s.strings.fio_address_details_screen_alert_title, s.strings.fio_address_details_screen_alert_message, [
         { text: s.strings.fio_address_details_screen_alert_button }
       ])

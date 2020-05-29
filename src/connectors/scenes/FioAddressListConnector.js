@@ -31,11 +31,6 @@ const mapStateToProps = (state: State) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  setFioAddress: (fioAddressName: string, expiration: string) =>
-    dispatch({
-      type: 'FIO/FIO_ADDRESS_SET_FIO_ADDRESS',
-      data: { fioAddressName, expiration }
-    }),
   refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses())
 })
 

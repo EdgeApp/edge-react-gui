@@ -48,7 +48,6 @@ export type StateProps = {
 }
 
 export type DispatchProps = {
-  changeFioAddressName: (fioAddressName: string) => void,
   createFioWallet: () => Promise<EdgeCurrencyWallet>
 }
 
@@ -103,13 +102,12 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   }
 
   handleNextButton = () => {
-    const { changeFioAddressName, isConnected } = this.props
+    const { isConnected } = this.props
     const { fioAddress, selectedWallet, selectedDomain } = this.state
     if (isConnected) {
       if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
       const fullAddress = `${fioAddress}${Constants.FIO_ADDRESS_DELIMITER}${selectedDomain.name}`
-      changeFioAddressName(fullAddress)
-      Actions[Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET]({ selectedWallet, selectedDomain })
+      Actions[Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET]({ fioAddress: fullAddress, selectedWallet, selectedDomain })
     } else {
       showError(s.strings.fio_network_alert_text)
     }

@@ -38,19 +38,9 @@ test('initialState', () => {
       exchangeRates: {}
     },
     fioAddress: {
-      expiration: new Date('2020-01-01T10:10:10Z'),
-      feeCollected: 0,
-      fioAddressName: '',
       fioAddresses: [],
       fioAddressesLoading: false,
-      fioDomains: [],
-      selectedWallet: null,
-      handleRegistrationInfo: {
-        activationCost: 40,
-        supportedCurrencies: {}
-      },
-      addressRegistrationPaymentInfo: {},
-      regInfoLoading: false
+      fioDomains: []
     },
     requestType: {
       useLegacyAddress: false,

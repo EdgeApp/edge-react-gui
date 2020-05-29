@@ -31,11 +31,6 @@ const mapStateToProps = (state: State) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  changeFioAddressName: (fioAddressName: string) =>
-    dispatch({
-      type: 'FIO/FIO_ADDRESS_UPDATE_FIO_ADDRESS_NAME',
-      data: { fioAddressName }
-    }),
   createFioWallet: () => dispatch(createFioWallet())
 })
 

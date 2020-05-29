@@ -1,11 +1,13 @@
 // @flow
 
-import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import { bns } from 'biggystring'
+import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 
-import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
+import { FIO_DOMAIN_DEFAULT, FIO_STR, FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import type { FioConnectionWalletItem, FioObtRecord, GuiWallet } from '../../types/types'
+import type { FioConnectionWalletItem, FioDomain, FioObtRecord, GuiWallet } from '../../types/types'
+import { truncateDecimals } from '../../util/utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
 const FIO_ADDRESS_CACHE = 'FioAddressCache.json'
@@ -14,6 +16,23 @@ type DiskletConnectedWallets = {
   [fullCurrencyCode: string]: {
     walletId: string,
     publicAddress: string
+  }
+}
+
+type BuyAddressResponse = {
+  error: any,
+  success: {
+    charge: {
+      pricing: {
+        [currencyCode: string]: {
+          amount: string,
+          currency: string
+        }
+      },
+      addresses: {
+        [currencyCode: string]: string
+      }
+    }
   }
 }
 
@@ -456,4 +475,92 @@ export const getFioDomains = async (fioPlugin: EdgeCurrencyConfig, fioAddress: s
   }
 
   return ''
+}
+
+/**
+ *
+ * @param fioPlugin
+ * @param fioAddress
+ * @param selectedWallet
+ * @param selectedDomain
+ * @param displayDenomination
+ * @returns {Promise<{activationCost: number, supportedCurrencies:{[string]: boolean}, paymentInfo: {[string]: {amount: string, address: string}}}>}
+ */
+export const getRegInfo = async (
+  fioPlugin: EdgeCurrencyConfig,
+  fioAddress: string,
+  selectedWallet: EdgeCurrencyWallet,
+  selectedDomain: FioDomain,
+  displayDenomination: EdgeDenomination
+): Promise<{
+  supportedCurrencies: { [currencyCode: string]: boolean },
+  activationCost: number,
+  paymentInfo: { [currencyCode: string]: { amount: string, address: string } }
+}> => {
+  let activationCost = 0
+
+  try {
+    const fee = await selectedWallet.otherMethods.getFee('registerFioAddress')
+    activationCost = parseFloat(truncateDecimals(bns.div(`${fee}`, displayDenomination.multiplier, 18), 6))
+  } catch (e) {
+    throw new Error(s.strings.fio_get_fee_err_msg)
+  }
+
+  if (selectedDomain.name !== FIO_DOMAIN_DEFAULT.name) {
+    return {
+      activationCost,
+      supportedCurrencies: { [FIO_STR]: true },
+      paymentInfo: {
+        [FIO_STR]: {
+          amount: `${activationCost}`,
+          nativeAmount: '',
+          address: ''
+        }
+      }
+    }
+  }
+
+  try {
+    const buyAddressResponse: BuyAddressResponse = await fioPlugin.otherMethods.buyAddressRequest({
+      address: fioAddress,
+      referralCode: 'edge',
+      publicKey: selectedWallet.publicWalletInfo.keys.publicKey
+    })
+
+    if (buyAddressResponse.error) {
+      console.log(buyAddressResponse.error)
+      throw new Error(s.strings.fio_get_reg_info_err_msg)
+    }
+
+    if (buyAddressResponse.success) {
+      const supportedCurrencies = { [FIO_STR]: true }
+      const paymentInfo = {
+        [FIO_STR]: {
+          amount: `${activationCost}`,
+          nativeAmount: '',
+          address: ''
+        }
+      }
+
+      for (const currencyKey in buyAddressResponse.success.charge.pricing) {
+        const currencyCode = buyAddressResponse.success.charge.pricing[currencyKey].currency
+        supportedCurrencies[currencyCode] = true
+
+        paymentInfo[currencyCode] = {
+          amount: buyAddressResponse.success.charge.pricing[currencyKey].amount,
+          address: buyAddressResponse.success.charge.addresses[currencyKey]
+        }
+      }
+
+      return {
+        activationCost,
+        supportedCurrencies,
+        paymentInfo
+      }
+    }
+  } catch (e) {
+    console.log(e)
+  }
+
+  throw new Error(s.strings.fio_get_reg_info_err_msg)
 }

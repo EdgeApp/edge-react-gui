@@ -31,7 +31,6 @@ export type StateProps = {
 }
 
 export type DispatchProps = {
-  setFioAddress: (fioAddress: string, expiration: string) => void,
   refreshAllFioAddresses: () => Promise<void>
 }
 
@@ -88,9 +87,8 @@ export class FioAddressListScene extends Component<Props> {
     })
   }
 
-  onAddressPress = (fioAddress: string, expirationValue: string) => {
-    this.props.setFioAddress(fioAddress, expirationValue)
-    Actions[Constants.FIO_ADDRESS_DETAILS]({ fioAddress, expirationValue })
+  onAddressPress = (fioAddressName: string, expiration: string) => {
+    Actions[Constants.FIO_ADDRESS_DETAILS]({ fioAddressName, expiration })
   }
 
   onDomainPress = (domain: string, expirationValue: string) => {

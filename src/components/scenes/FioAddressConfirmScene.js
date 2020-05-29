@@ -23,22 +23,18 @@ export type State = {
 }
 
 export type StateProps = {
-  fioAddressName: string,
   denominationMultiplier: string,
   isConnected: boolean
 }
 
 export type NavigationProps = {
+  fioAddressName: string,
   paymentWallet: EdgeCurrencyWallet,
   fee: number,
   ownerPublicKey: string
 }
 
-export type DispatchProps = {
-  changeConfirmSelectedWallet: (selectedWallet: EdgeCurrencyWallet | null, expiration: string, feeCollected: number) => any
-}
-
-type Props = NavigationProps & StateProps & DispatchProps
+type Props = NavigationProps & StateProps
 
 export class FioAddressConfirmScene extends Component<Props, State> {
   state: State = {
@@ -106,13 +102,12 @@ export class FioAddressConfirmScene extends Component<Props, State> {
   }
 
   confirmSelected = (expiration: string, feeCollected: number): void => {
-    const { paymentWallet, changeConfirmSelectedWallet, isConnected } = this.props
+    const { fioAddressName, isConnected } = this.props
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    changeConfirmSelectedWallet(paymentWallet, expiration, feeCollected)
-    window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ registerSuccess: true }))
+    window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ registerSuccess: true, fioAddressName, expiration, feeCollected }))
   }
 
   render() {
