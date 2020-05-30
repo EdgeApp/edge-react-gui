@@ -131,18 +131,9 @@ Object {
         "exchangeRates": Object {},
       },
       "fioAddress": Object {
-        "addressRegistrationPaymentInfo": Object {},
-        "expiration": 2020-01-01T10:10:10.000Z,
-        "feeCollected": 0,
-        "fioAddressName": "",
         "fioAddresses": Array [],
         "fioAddressesLoading": false,
-        "handleRegistrationInfo": Object {
-          "activationCost": 40,
-          "supportedCurrencies": Object {},
-        },
-        "regInfoLoading": false,
-        "selectedWallet": null,
+        "fioDomains": Array [],
       },
       "passwordRecoveryReminderModal": Object {
         "isVisible": false,

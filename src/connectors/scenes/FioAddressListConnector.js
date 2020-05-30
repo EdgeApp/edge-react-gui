@@ -9,17 +9,19 @@ import * as Constants from '../../constants/indexConstants'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { getFioWallets } from '../../modules/UI/selectors'
 import type { Dispatch, State } from '../../types/reduxTypes'
-import type { FioAddress } from '../../types/types'
+import type { FioAddress, FioDomain } from '../../types/types'
 
 const mapStateToProps = (state: State) => {
   const { account } = state.core
   const fioAddresses: FioAddress[] = state.ui.scenes.fioAddress.fioAddresses
+  const fioDomains: FioDomain[] = state.ui.scenes.fioAddress.fioDomains
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
   const loading: boolean = state.ui.scenes.fioAddress.fioAddressesLoading
   const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
 
   const out: StateProps = {
     fioAddresses,
+    fioDomains,
     fioWallets,
     fioPlugin,
     loading,
@@ -29,11 +31,6 @@ const mapStateToProps = (state: State) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  setFioAddress: (fioAddressName: string, expiration: string) =>
-    dispatch({
-      type: 'FIO/FIO_ADDRESS_SET_FIO_ADDRESS',
-      data: { fioAddressName, expiration }
-    }),
   refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses())
 })
 

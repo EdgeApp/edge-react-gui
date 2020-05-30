@@ -9,7 +9,16 @@ import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailabl
 import { type TweakSource } from '../util/ReferralHelpers.js'
 import { type DeepLink } from './DeepLink.js'
 import { type AccountReferral, type DeviceReferral, type Promotion, type ReferralCache } from './ReferralTypes.js'
-import { type CustomTokenInfo, type FioAddress, type FioObtRecord, type GuiContact, type GuiCurrencyInfo, type GuiSwapInfo, type GuiWallet } from './types.js'
+import {
+  type CustomTokenInfo,
+  type FioAddress,
+  type FioDomain,
+  type FioObtRecord,
+  type GuiContact,
+  type GuiCurrencyInfo,
+  type GuiSwapInfo,
+  type GuiWallet
+} from './types.js'
 
 type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'
@@ -218,27 +227,8 @@ export type Action =
     }
   | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: string }
   | { type: 'NETWORK/NETWORK_STATUS', data: { isConnected: boolean } }
-  | { type: 'FIO/FIO_ADDRESS_UPDATE_FIO_ADDRESS_NAME', data: { fioAddressName: string } }
-  | { type: 'FIO/FIO_ADDRESS_UPDATE_SELECTED_WALLET', data: { selectedWallet: EdgeCurrencyWallet | null, expiration: string, feeCollected: number } }
-  | { type: 'FIO/FIO_ADDRESS_SET_FIO_ADDRESS', data: { fioAddressName: string, expiration: string } }
   | { type: 'FIO/SET_FIO_ADDRESSES', data: { fioAddresses: FioAddress[] } }
-  | { type: 'FIO/FIO_ADDRESS_REG_INFO_LOADING', data: boolean }
-  | {
-      type: 'FIO/SET_FIO_ADDRESS_REG_INFO',
-      data: {
-        handleRegistrationInfo: {
-          activationCost: number,
-          supportedCurrencies: { [currencyCode: string]: boolean }
-        },
-        addressRegistrationPaymentInfo: {
-          [currencyCode: string]: {
-            amount: string,
-            nativeAmount: string,
-            address: string
-          }
-        }
-      }
-    }
   | { type: 'FIO/UPDATE_CONNECTED_WALLETS', data: { connectedWalletsByFioAddress: { [fioAddress: string]: CcWalletMap } } }
   | { type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS', data: { fioAddress: string, ccWalletMap: CcWalletMap } }
   | { type: 'FIO/SET_OBT_DATA', data: FioObtRecord[] }
+  | { type: 'FIO/SET_FIO_DOMAINS', data: { fioDomains: FioDomain[] } }

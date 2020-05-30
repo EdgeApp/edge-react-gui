@@ -318,7 +318,7 @@ const FioAddressButton = () => {
 
         <Button.Center>
           <Button.Text>
-            <Text>{s.strings.drawer_fio_address}</Text>
+            <Text>{s.strings.drawer_fio_names}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>

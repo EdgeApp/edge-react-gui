@@ -225,6 +225,13 @@ export type FioAddress = {
   expiration: string
 }
 
+export type FioDomain = {
+  name: string,
+  expiration: string,
+  isPublic: boolean,
+  walletId: string
+}
+
 export type FioRequest = {
   fio_request_id: string,
   content: {
@@ -250,7 +257,8 @@ export type FioConnectionWalletItem = {
   name: string,
   currencyCode: string,
   chainCode: string,
-  fullCurrencyCode: string
+  fullCurrencyCode: string,
+  isConnected: boolean
 }
 
 export type FioObtRecord = {

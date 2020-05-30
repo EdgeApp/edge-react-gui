@@ -50,6 +50,7 @@ export const THEME = {
     PRIMARY: '#0D2145',
     SECONDARY: '#0E4B75',
     PRIMARY_BUTTON_TOUCHED: 'rgba(42,87,153,0.55)',
+    PRIMARY_BUTTON_2_TOUCHED: 'rgba(102,237,168,0.6)',
     BLUE_3: '#0E507D',
 
     GRADIENT: {
