@@ -1,7 +1,15 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeSpendInfo, type EdgeSwapQuote, type EdgeSwapRequest, errorNames } from 'edge-core-js/types'
+import {
+  type EdgeCurrencyWallet,
+  type EdgeMetadata,
+  type EdgeSpendInfo,
+  type EdgeSwapQuote,
+  type EdgeSwapRequest,
+  type EdgeSwapResult,
+  errorNames
+} from 'edge-core-js/types'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
@@ -261,7 +269,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
 
   try {
     logEvent('SwapStart')
-    const result = await quote.approve()
+    const result: EdgeSwapResult = await quote.approve()
     await fromWallet.saveTx(result.transaction)
 
     const si = account.swapConfig[pluginId].swapInfo
@@ -281,8 +289,16 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
 
       const supportEmail = si.supportEmail
       const quoteIdUri = si.orderUri != null && result.orderId != null ? si.orderUri + result.orderId : result.transaction.txid
-      const payinAddress = result.transaction.otherParams != null ? result.transaction.otherParams.payinAddress : ''
-      const uniqueIdentifier = result.transaction.otherParams != null ? result.transaction.otherParams.uniqueIdentifier : ''
+
+      let payinAddress = ''
+      let uniqueIdentifier = ''
+      const { spendTargets = [] } = result.transaction
+      const [spendTarget] = spendTargets
+      if (spendTarget != null) {
+        payinAddress = spendTarget.publicAddress
+        uniqueIdentifier = spendTarget.uniqueIdentifier
+      }
+
       const isEstimate = quote.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote
       notes =
         sprintf(
