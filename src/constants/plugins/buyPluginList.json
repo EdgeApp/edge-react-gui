@@ -833,6 +833,10 @@
     "forCountries": [
       "GB"
     ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
     "deepQuery": {
       "country": "GB",
       "payment_id": "6018"

@@ -94,7 +94,8 @@
       "YT"
     ],
     "cryptoCodes": [
-      "BTC"
+      "BTC",
+      "ETH"
     ],
     "paymentTypeLogoKey": "bank",
     "deepPath": "/order/sell",
