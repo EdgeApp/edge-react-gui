@@ -488,7 +488,8 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "ETH",
+      "USDT"
     ],
     "paymentTypeLogoKey": "poli",
     "deepQuery": {
@@ -510,7 +511,8 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "ETH",
+      "USDT"
     ],
     "paymentTypeLogoKey": "newsagent",
     "deepQuery": {
@@ -532,7 +534,8 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "ETH",
+      "USDT"
     ],
     "paymentTypeLogoKey": "payid",
     "deepQuery": {
@@ -554,7 +557,8 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "ETH",
+      "USDT"
     ],
     "paymentTypeLogoKey": "bpay",
     "deepQuery": {
@@ -576,7 +580,8 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "ETH",
+      "USDT"
     ],
     "paymentTypeLogoKey": "auspost",
     "deepQuery": {
@@ -591,7 +596,7 @@
       "credit"
     ],
     "description": "Fee: 2.9% / Settlement: Instant\nLimit: $5000/day",
-    "title": "Credit Card",
+    "title": "Credit and Debit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "forCountries": [
       "AU",
@@ -599,7 +604,8 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "ETH",
+      "USDT"
     ],
     "paymentTypeLogoKey": "credit",
     "deepQuery": {
@@ -668,7 +674,8 @@
       "YT"
     ],
     "cryptoCodes": [
-      "BTC"
+      "BTC",
+      "ETH"
     ],
     "paymentTypeLogoKey": "bank",
     "deepPath": "/order/buy",
@@ -833,6 +840,10 @@
     "forCountries": [
       "GB"
     ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
     "deepQuery": {
       "country": "GB",
       "payment_id": "6018"
@@ -881,5 +892,12 @@
       "payment_id": "6026"
     },
     "description": "Fee: 2.9% / Settlement: Instant\nLimit: HK$50000/day"
+  },
+  {
+    "id": "banxa.credit",
+    "forCountries": [
+      "AU"
+    ],
+    "sortIndex": 3
   }
 ]
