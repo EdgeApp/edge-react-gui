@@ -3,6 +3,8 @@
   "app_name_short": "Edge",
   "bitcoin_received": "%1$s ricevuti",
   "dialog_title": "Imposta il tempo di auto disconnessione",
+  "share_subject": "",
+  "share_message": "",
   "drawer_exchange_rate_loading": "Tasso di cambio in fase di caricamento",
   "drawer_exchange": "Cambio valuta",
   "drawer_request": "Richiedi",
