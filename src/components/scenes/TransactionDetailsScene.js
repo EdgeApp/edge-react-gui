@@ -8,7 +8,6 @@ import slowlog from 'react-native-slowlog'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import editIcon from '../../assets/images/transaction_details_icon.png'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
@@ -19,6 +18,7 @@ import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { Tile } from '../common/Tile.js'
 import { createAdvancedTransactionDetailsModal } from '../modals/AdvancedTransactionDetailsModal.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
 import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInput.js'
@@ -320,40 +320,28 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
           <View style={styles.container}>
             <ScrollView>
               <View style={styles.tilesContainer}>
-                <TouchableWithoutFeedback onPress={this.openPersonInput}>
-                  <View style={styles.tileContainerBig}>
-                    <Image style={styles.tileIcon} source={editIcon} />
-                    <FormattedText style={styles.tileTextTop}>{personHeader}</FormattedText>
-                    <View style={styles.tileRow}>
-                      {thumbnailPath ? (
-                        <Image style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
-                      ) : (
-                        <IonIcon style={styles.tileAvatarIcon} name="ios-contact" size={iconSize.avatar} />
-                      )}
-                      <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
-                    </View>
+                <Tile type="editable" title={personHeader} onPress={this.openPersonInput}>
+                  <View style={styles.tileRow}>
+                    {thumbnailPath ? (
+                      <Image style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
+                    ) : (
+                      <IonIcon style={styles.tileAvatarIcon} name="ios-contact" size={iconSize.avatar} />
+                    )}
+                    <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
                   </View>
-                </TouchableWithoutFeedback>
-                <View style={styles.tileContainer}>
-                  <FormattedText style={styles.tileTextTop}>{sprintf(s.strings.transaction_details_crypto_amount, crypto.currencyName)}</FormattedText>
-                  <FormattedText style={styles.tileTextBottom}>
-                    {`${crypto.symbolString} `}
-                    {crypto.amountString}
-                    {crypto.feeString ? ` (${crypto.feeString})` : ''}
-                  </FormattedText>
-                </View>
-                <TouchableWithoutFeedback onPress={this.openFiatInput}>
-                  <View style={styles.tileContainer}>
-                    <Image style={styles.tileIcon} source={editIcon} />
-                    <FormattedText style={styles.tileTextTop}>{sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)}</FormattedText>
-                    <View style={styles.tileRow}>
-                      <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
-                      <FormattedText style={styles.tileTextBottom}>{fiatValue}</FormattedText>
-                    </View>
+                </Tile>
+                <Tile
+                  type="static"
+                  title={sprintf(s.strings.transaction_details_crypto_amount, crypto.currencyName)}
+                  body={`${crypto.symbolString} ${crypto.amountString}${crypto.feeString ? ` (${crypto.feeString})` : ''}`}
+                />
+                <Tile type="editable" title={sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={this.openFiatInput}>
+                  <View style={styles.tileRow}>
+                    <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
+                    <FormattedText style={styles.tileTextBottom}>{fiatValue}</FormattedText>
                   </View>
-                </TouchableWithoutFeedback>
-                <View style={styles.tileContainer}>
-                  <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_amount_current_price}</FormattedText>
+                </Tile>
+                <Tile type="static" title={s.strings.transaction_details_amount_current_price}>
                   <View style={styles.tileRow}>
                     <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
                     <FormattedText style={styles.tileTextPrice}>{currentFiat.amount}</FormattedText>
@@ -361,26 +349,16 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                       {parseFloat(currentFiat.difference) >= 0 ? currentFiat.percentage : `- ${currentFiat.percentage}`}%
                     </FormattedText>
                   </View>
-                </View>
-                <TouchableWithoutFeedback onPress={this.openCategoryInput}>
-                  <View style={styles.tileContainerBig}>
-                    <Image style={styles.tileIcon} source={editIcon} />
-                    <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_category_title}</FormattedText>
-                    <View style={styles.tileRow}>
-                      <View style={styles.tileCategory}>
-                        <FormattedText style={styles.tileCategoryText}>{categories[category].syntax}</FormattedText>
-                      </View>
-                      <FormattedText style={styles.tileSubCategoryText}>{subCategory}</FormattedText>
+                </Tile>
+                <Tile type="editable" title={s.strings.transaction_details_category_title} onPress={this.openCategoryInput}>
+                  <View style={styles.tileRow}>
+                    <View style={styles.tileCategory}>
+                      <FormattedText style={styles.tileCategoryText}>{categories[category].syntax}</FormattedText>
                     </View>
+                    <FormattedText style={styles.tileSubCategoryText}>{subCategory}</FormattedText>
                   </View>
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback onPress={this.openNotesInput}>
-                  <View style={styles.tileContainerNotes}>
-                    <Image style={styles.tileIcon} source={editIcon} />
-                    <FormattedText style={styles.tileTextTopNotes}>{s.strings.transaction_details_notes_title}</FormattedText>
-                    <FormattedText style={styles.tileTextNotes}>{notes}</FormattedText>
-                  </View>
-                </TouchableWithoutFeedback>
+                </Tile>
+                <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
                 <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
                   <FormattedText style={styles.textTransactionData}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
                 </TouchableWithoutFeedback>
