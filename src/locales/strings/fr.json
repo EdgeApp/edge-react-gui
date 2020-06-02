@@ -3,6 +3,8 @@
   "app_name_short": "",
   "bitcoin_received": "%1$s reçu",
   "dialog_title": "Configuration le temps d'auto déconnexion ",
+  "share_subject": "",
+  "share_message": "",
   "drawer_exchange_rate_loading": "Chargement du taux de change",
   "drawer_exchange": "Echange",
   "drawer_request": "Faire une demande",
