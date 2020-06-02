@@ -17,6 +17,7 @@ export function getHeaderHeight() {
 
 // https://projects.invisionapp.com/d/main#/console/10954562/239168414/inspect
 export const THEME = {
+  websiteUrl: 'https://edge.app',
   rem(n: number) {
     return Math.round(n * scale(16))
   },
