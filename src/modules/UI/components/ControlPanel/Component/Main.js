@@ -15,10 +15,10 @@ import receiveIcon from '../../../../../assets/images/sidenav/receive.png'
 import scanIcon from '../../../../../assets/images/sidenav/scan.png'
 import sellIcon from '../../../../../assets/images/sidenav/sell.png'
 import settings from '../../../../../assets/images/sidenav/settings.png'
+import shareIcon from '../../../../../assets/images/sidenav/share.png'
 import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
-import sendImage from '../../../../../assets/images/transactions/transactions-send.png'
 import * as Constants from '../../../../../constants/indexConstants.js'
 import { guiPlugins } from '../../../../../constants/plugins/GuiPlugins.js'
 import s from '../../../../../locales/strings.js'
@@ -291,7 +291,7 @@ const ShareButton = () => {
     <Button onPress={shareApp}>
       <Button.Row>
         <Button.Left>
-          <Image source={sendImage} style={styles.iconImage} />
+          <Image source={shareIcon} style={styles.iconImage} />
         </Button.Left>
 
         <Button.Center>
