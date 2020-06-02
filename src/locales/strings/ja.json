@@ -3,6 +3,8 @@
   "app_name_short": "",
   "bitcoin_received": "%1$s受け取りました",
   "dialog_title": "自動ログオフ時間の設定",
+  "share_subject": "",
+  "share_message": "",
   "drawer_exchange_rate_loading": "交換レートを読み込み中です",
   "drawer_exchange": "取引する",
   "drawer_request": "リクエスト",
