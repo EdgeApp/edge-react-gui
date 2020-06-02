@@ -5,6 +5,8 @@ const strings = {
   app_name_short: 'Edge',
   bitcoin_received: '%1$s Received',
   dialog_title: 'Set Auto Logoff time',
+  share_subject: 'Hey, I think you should try %s',
+  share_message: 'You can buy, store, and trade dozens of cryptocurrencies all in one app.',
 
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
   drawer_exchange: 'Exchange',
