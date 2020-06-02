@@ -3723,10 +3723,10 @@ edge-components@^0.0.27:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.3:
-  version "0.17.3"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.3.tgz#86d5591471bd89e478b5c9723ee0e28b1feb0e20"
-  integrity sha512-hqt1rVjld0eHh6eXHqdJzKgcqFAlG7e1yTJcE2NNVahVQrljDhMBxJF1ceBLafOt1J4mAansLTaofYUUX/apPQ==
+edge-core-js@^0.17.4:
+  version "0.17.4"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.4.tgz#5dd2d2c68ae439eadc4fa17638b7151a1877024d"
+  integrity sha512-oalWYPi3kPSTQhZJ3yFHzaNAe40qbSHYPa+nS9YgLJdZRgNcCcyYn2ynarYM5JLVwHul4oALTKPugEoe764xYg==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
