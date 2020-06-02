@@ -3,6 +3,8 @@
   "app_name_short": "Edge",
   "bitcoin_received": "%1$s Empfangen",
   "dialog_title": "Automatische Abmeldung einstellen",
+  "share_subject": "",
+  "share_message": "",
   "drawer_exchange_rate_loading": "Wechselkurs-Zuschlag",
   "drawer_exchange": "Tauschbörse",
   "drawer_request": "Angefordert",
