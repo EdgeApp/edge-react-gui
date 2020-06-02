@@ -13,6 +13,7 @@ import { type CoreState, core } from './CoreReducer.js'
 import { type CryptoExchangeState, cryptoExchange } from './CryptoExchangeReducer.js'
 import { type NetworkState, network } from './NetworkReducer.js'
 import { type PermissionsState, permissions } from './PermissionsReducer.js'
+import { type EdgeTheme, theme } from './ThemeReducer.js'
 
 const defaultDeviceReferral: DeviceReferral = { messages: [], plugins: [] }
 
@@ -33,7 +34,8 @@ export type RootState = {
   +exchangeRates: ExchangeRatesState,
   +permissions: PermissionsState,
   +ui: UiState,
-  +network: NetworkState
+  +network: NetworkState,
+  +theme: EdgeTheme
 }
 
 export const rootReducer: Reducer<RootState, Action> = combineReducers({
@@ -69,5 +71,6 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
   exchangeRates,
   permissions,
   ui,
-  network
+  network,
+  theme
 })
