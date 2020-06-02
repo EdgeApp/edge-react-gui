@@ -3,6 +3,8 @@
   "app_name_short": "Edge",
   "bitcoin_received": "%1$s 받음",
   "dialog_title": "자동 로그오프 시간을 설정",
+  "share_subject": "",
+  "share_message": "",
   "drawer_exchange_rate_loading": "환율 로딩중",
   "drawer_exchange": "거래",
   "drawer_request": "요청",
