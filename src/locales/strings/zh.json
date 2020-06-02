@@ -3,6 +3,8 @@
   "app_name_short": "",
   "bitcoin_received": "已接收 %1$s",
   "dialog_title": "设置自动登出的时间",
+  "share_subject": "",
+  "share_message": "",
   "drawer_exchange_rate_loading": "加载汇率数据",
   "drawer_exchange": "外汇",
   "drawer_request": "要求",
