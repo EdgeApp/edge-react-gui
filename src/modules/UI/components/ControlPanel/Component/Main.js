@@ -3,6 +3,8 @@
 import React, { Component } from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import Share from 'react-native-share'
+import { sprintf } from 'sprintf-js'
 
 import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
 import exchangeIcon from '../../../../../assets/images/sidenav/exchange.png'
@@ -13,12 +15,14 @@ import receiveIcon from '../../../../../assets/images/sidenav/receive.png'
 import scanIcon from '../../../../../assets/images/sidenav/scan.png'
 import sellIcon from '../../../../../assets/images/sidenav/sell.png'
 import settings from '../../../../../assets/images/sidenav/settings.png'
+import shareIcon from '../../../../../assets/images/sidenav/share.png'
 import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import * as Constants from '../../../../../constants/indexConstants.js'
 import { guiPlugins } from '../../../../../constants/plugins/GuiPlugins.js'
 import s from '../../../../../locales/strings.js'
+import { THEME } from '../../../../../theme/variables/airbitz.js'
 import { scale } from '../../../../../util/scaling.js'
 import styles from '../style'
 import { Button } from './Button/Button.ui.js'
@@ -36,6 +40,7 @@ const PLUGIN_BUY_TEXT = s.strings.title_plugin_buy
 const PLUGIN_SELL_TEXT = s.strings.title_plugin_sell
 const EARN_INTEREST_TEXT = s.strings.earn_interest
 const TERMS_OF_SERVICE_TEXT = s.strings.title_terms_of_service
+const SHARE_TEXT = s.strings.string_share + ' ' + s.strings.app_name
 
 export type Props = {
   logout: (username?: string) => void,
@@ -74,6 +79,8 @@ export default class Main extends Component<Props> {
               <RequestButton />
               <Separator />
               <TermsOfServiceButton />
+              <Separator />
+              <ShareButton />
               <Separator />
             </View>
           </View>
@@ -263,6 +270,33 @@ const TermsOfServiceButton = () => {
         <Button.Center>
           <Button.Text>
             <Text>{TERMS_OF_SERVICE_TEXT}</Text>
+          </Button.Text>
+        </Button.Center>
+      </Button.Row>
+    </Button>
+  )
+}
+
+const shareApp = () => {
+  const message = `${sprintf(s.strings.share_subject, s.strings.app_name)}\n\n${s.strings.share_message}\n\n${THEME.websiteUrl}`
+  const shareOptions = {
+    message,
+    url: '',
+    title: ''
+  }
+  Share.open(shareOptions).catch(e => console.log(e))
+}
+const ShareButton = () => {
+  return (
+    <Button onPress={shareApp}>
+      <Button.Row>
+        <Button.Left>
+          <Image source={shareIcon} style={styles.iconImage} />
+        </Button.Left>
+
+        <Button.Center>
+          <Button.Text>
+            <Text>{SHARE_TEXT}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
