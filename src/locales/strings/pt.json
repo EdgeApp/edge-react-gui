@@ -3,6 +3,8 @@
   "app_name_short": "",
   "bitcoin_received": "%1$s Recebido",
   "dialog_title": "Defina o Tempo de Logoff Automaticamente",
+  "share_subject": "",
+  "share_message": "",
   "drawer_exchange_rate_loading": "Taxa de câmbio Carregando",
   "drawer_exchange": "Troca",
   "drawer_request": "Pedir",
