@@ -25,225 +25,98 @@ exports[`TransactionDetails.ui should render 1`] = `
             }
           }
         >
-          <TouchableWithoutFeedback
+          <Connect(TileComponent)
             onPress={[Function]}
+            title="Sender Name"
+            type="editable"
           >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "height": 101,
-                  "justifyContent": "center",
-                  "padding": 18,
-                  "width": "100%",
-                }
-              }
-            >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 2,
-                  }
-                }
-              >
-                Sender Name
-              </FormattedText>
-              <View
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <Image
-                  source={
-                    Object {
-                      "uri": "thumb/nail/path",
-                    }
-                  }
-                  style={
-                    Object {
-                      "borderRadius": 20,
-                      "height": 40,
-                      "marginRight": 9,
-                      "width": 40,
-                    }
-                  }
-                />
-                <FormattedText
-                  style={
-                    Object {
-                      "color": "#353535",
-                      "fontSize": 22,
-                    }
-                  }
-                >
-                  Sender
-                </FormattedText>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-          <View
-            style={
-              Object {
-                "backgroundColor": "#FFFFFF",
-                "borderBottomColor": "#D9E3ED",
-                "borderBottomWidth": 1,
-                "height": 90,
-                "justifyContent": "center",
-                "padding": 18,
-                "width": "100%",
-              }
-            }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#0E4B75",
-                  "fontSize": 16,
-                  "marginBottom": 2,
-                }
-              }
-            >
-              Bitcoin Amount
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#353535",
-                  "fontSize": 22,
-                }
-              }
-            >
-              ₿ 
-              0.00000123
-              
-            </FormattedText>
-          </View>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "height": 90,
-                  "justifyContent": "center",
-                  "padding": 18,
-                  "width": "100%",
-                }
-              }
-            >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 2,
-                  }
-                }
-              >
-                Amount in iso:USD
-              </FormattedText>
-              <View
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <FormattedText
-                  style={
-                    Object {
-                      "color": "#353535",
-                      "fontSize": 22,
-                    }
-                  }
-                >
-                  $ 
-                </FormattedText>
-                <FormattedText
-                  style={
-                    Object {
-                      "color": "#353535",
-                      "fontSize": 22,
-                    }
-                  }
-                >
-                  0.00
-                </FormattedText>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-          <View
-            style={
-              Object {
-                "backgroundColor": "#FFFFFF",
-                "borderBottomColor": "#D9E3ED",
-                "borderBottomWidth": 1,
-                "height": 90,
-                "justifyContent": "center",
-                "padding": 18,
-                "width": "100%",
-              }
-            }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#0E4B75",
-                  "fontSize": 16,
-                  "marginBottom": 2,
-                }
-              }
-            >
-              Amount at Current Price
-            </FormattedText>
             <View
               style={
                 Object {
                   "alignItems": "center",
                   "flexDirection": "row",
+                  "margin": 6,
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "uri": "thumb/nail/path",
+                  }
+                }
+                style={
+                  Object {
+                    "borderRadius": 20,
+                    "height": 40,
+                    "marginRight": 9,
+                    "width": 40,
+                  }
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                Sender
+              </FormattedText>
+            </View>
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
+            body="₿ 0.00000123"
+            title="Bitcoin Amount"
+            type="static"
+          />
+          <Connect(TileComponent)
+            onPress={[Function]}
+            title="Amount in iso:USD"
+            type="editable"
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "margin": 6,
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                $ 
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                0.00
+              </FormattedText>
+            </View>
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
+            title="Amount at Current Price"
+            type="static"
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "margin": 6,
                 }
               }
             >
@@ -280,148 +153,62 @@ exports[`TransactionDetails.ui should render 1`] = `
                 %
               </FormattedText>
             </View>
-          </View>
-          <TouchableWithoutFeedback
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
             onPress={[Function]}
+            title="Category"
+            type="editable"
           >
             <View
               style={
                 Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "height": 101,
-                  "justifyContent": "center",
-                  "padding": 18,
-                  "width": "100%",
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "margin": 6,
                 }
               }
             >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 2,
-                  }
-                }
-              >
-                Category
-              </FormattedText>
               <View
                 style={
                   Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
+                    "backgroundColor": "#A4C7DF",
+                    "borderRadius": 3,
+                    "marginVertical": 7,
+                    "paddingHorizontal": 11,
+                    "paddingVertical": 7,
                   }
                 }
               >
-                <View
-                  style={
-                    Object {
-                      "backgroundColor": "#A4C7DF",
-                      "borderRadius": 3,
-                      "marginVertical": 7,
-                      "paddingHorizontal": 11,
-                      "paddingVertical": 7,
-                    }
-                  }
-                >
-                  <FormattedText
-                    style={
-                      Object {
-                        "color": "#0E4B75",
-                        "fontSize": 20,
-                      }
-                    }
-                  >
-                    Income
-                  </FormattedText>
-                </View>
                 <FormattedText
                   style={
                     Object {
-                      "color": "#353535",
-                      "marginHorizontal": 16,
-                      "marginVertical": 7,
+                      "color": "#0E4B75",
+                      "fontSize": 20,
                     }
                   }
                 >
-                  
+                  Income
                 </FormattedText>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "minHeight": 101,
-                  "padding": 18,
-                  "width": "100%",
-                }
-              }
-            >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 11,
-                  }
-                }
-              >
-                Notes
-              </FormattedText>
               <FormattedText
                 style={
                   Object {
                     "color": "#353535",
-                    "fontSize": 20,
+                    "marginHorizontal": 16,
+                    "marginVertical": 7,
                   }
                 }
               >
                 
               </FormattedText>
             </View>
-          </TouchableWithoutFeedback>
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
+            body=""
+            onPress={[Function]}
+            title="Notes"
+            type="editable"
+          />
           <TouchableWithoutFeedback
             onPress={[Function]}
           >
@@ -501,225 +288,98 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             }
           }
         >
-          <TouchableWithoutFeedback
+          <Connect(TileComponent)
             onPress={[Function]}
+            title="Recipient Name"
+            type="editable"
           >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "height": 101,
-                  "justifyContent": "center",
-                  "padding": 18,
-                  "width": "100%",
-                }
-              }
-            >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 2,
-                  }
-                }
-              >
-                Recipient Name
-              </FormattedText>
-              <View
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <Image
-                  source={
-                    Object {
-                      "uri": "thumb/nail/path",
-                    }
-                  }
-                  style={
-                    Object {
-                      "borderRadius": 20,
-                      "height": 40,
-                      "marginRight": 9,
-                      "width": 40,
-                    }
-                  }
-                />
-                <FormattedText
-                  style={
-                    Object {
-                      "color": "#353535",
-                      "fontSize": 22,
-                    }
-                  }
-                >
-                  Recipient
-                </FormattedText>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-          <View
-            style={
-              Object {
-                "backgroundColor": "#FFFFFF",
-                "borderBottomColor": "#D9E3ED",
-                "borderBottomWidth": 1,
-                "height": 90,
-                "justifyContent": "center",
-                "padding": 18,
-                "width": "100%",
-              }
-            }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#0E4B75",
-                  "fontSize": 16,
-                  "marginBottom": 2,
-                }
-              }
-            >
-              Bitcoin Amount
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#353535",
-                  "fontSize": 22,
-                }
-              }
-            >
-              ₿ 
-              0.00000122
-               (+ 0 fee)
-            </FormattedText>
-          </View>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "height": 90,
-                  "justifyContent": "center",
-                  "padding": 18,
-                  "width": "100%",
-                }
-              }
-            >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 2,
-                  }
-                }
-              >
-                Amount in iso:USD
-              </FormattedText>
-              <View
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <FormattedText
-                  style={
-                    Object {
-                      "color": "#353535",
-                      "fontSize": 22,
-                    }
-                  }
-                >
-                  $ 
-                </FormattedText>
-                <FormattedText
-                  style={
-                    Object {
-                      "color": "#353535",
-                      "fontSize": 22,
-                    }
-                  }
-                >
-                  6392.93
-                </FormattedText>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-          <View
-            style={
-              Object {
-                "backgroundColor": "#FFFFFF",
-                "borderBottomColor": "#D9E3ED",
-                "borderBottomWidth": 1,
-                "height": 90,
-                "justifyContent": "center",
-                "padding": 18,
-                "width": "100%",
-              }
-            }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#0E4B75",
-                  "fontSize": 16,
-                  "marginBottom": 2,
-                }
-              }
-            >
-              Amount at Current Price
-            </FormattedText>
             <View
               style={
                 Object {
                   "alignItems": "center",
                   "flexDirection": "row",
+                  "margin": 6,
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "uri": "thumb/nail/path",
+                  }
+                }
+                style={
+                  Object {
+                    "borderRadius": 20,
+                    "height": 40,
+                    "marginRight": 9,
+                    "width": 40,
+                  }
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                Recipient
+              </FormattedText>
+            </View>
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
+            body="₿ 0.00000122 (+ 0 fee)"
+            title="Bitcoin Amount"
+            type="static"
+          />
+          <Connect(TileComponent)
+            onPress={[Function]}
+            title="Amount in iso:USD"
+            type="editable"
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "margin": 6,
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                $ 
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                6392.93
+              </FormattedText>
+            </View>
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
+            title="Amount at Current Price"
+            type="static"
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "margin": 6,
                 }
               }
             >
@@ -756,148 +416,62 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 %
               </FormattedText>
             </View>
-          </View>
-          <TouchableWithoutFeedback
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
             onPress={[Function]}
+            title="Category"
+            type="editable"
           >
             <View
               style={
                 Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "height": 101,
-                  "justifyContent": "center",
-                  "padding": 18,
-                  "width": "100%",
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "margin": 6,
                 }
               }
             >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 2,
-                  }
-                }
-              >
-                Category
-              </FormattedText>
               <View
                 style={
                   Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
+                    "backgroundColor": "#A4C7DF",
+                    "borderRadius": 3,
+                    "marginVertical": 7,
+                    "paddingHorizontal": 11,
+                    "paddingVertical": 7,
                   }
                 }
               >
-                <View
-                  style={
-                    Object {
-                      "backgroundColor": "#A4C7DF",
-                      "borderRadius": 3,
-                      "marginVertical": 7,
-                      "paddingHorizontal": 11,
-                      "paddingVertical": 7,
-                    }
-                  }
-                >
-                  <FormattedText
-                    style={
-                      Object {
-                        "color": "#0E4B75",
-                        "fontSize": 20,
-                      }
-                    }
-                  >
-                    Expense
-                  </FormattedText>
-                </View>
                 <FormattedText
                   style={
                     Object {
-                      "color": "#353535",
-                      "marginHorizontal": 16,
-                      "marginVertical": 7,
+                      "color": "#0E4B75",
+                      "fontSize": 20,
                     }
                   }
                 >
-                  
+                  Expense
                 </FormattedText>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "minHeight": 101,
-                  "padding": 18,
-                  "width": "100%",
-                }
-              }
-            >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 11,
-                  }
-                }
-              >
-                Notes
-              </FormattedText>
               <FormattedText
                 style={
                   Object {
                     "color": "#353535",
-                    "fontSize": 20,
+                    "marginHorizontal": 16,
+                    "marginVertical": 7,
                   }
                 }
               >
                 
               </FormattedText>
             </View>
-          </TouchableWithoutFeedback>
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
+            body=""
+            onPress={[Function]}
+            title="Notes"
+            type="editable"
+          />
           <TouchableWithoutFeedback
             onPress={[Function]}
           >
@@ -977,225 +551,98 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             }
           }
         >
-          <TouchableWithoutFeedback
+          <Connect(TileComponent)
             onPress={[Function]}
+            title="Sender Name"
+            type="editable"
           >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "height": 101,
-                  "justifyContent": "center",
-                  "padding": 18,
-                  "width": "100%",
-                }
-              }
-            >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 2,
-                  }
-                }
-              >
-                Sender Name
-              </FormattedText>
-              <View
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <Image
-                  source={
-                    Object {
-                      "uri": "thumb/nail/path",
-                    }
-                  }
-                  style={
-                    Object {
-                      "borderRadius": 20,
-                      "height": 40,
-                      "marginRight": 9,
-                      "width": 40,
-                    }
-                  }
-                />
-                <FormattedText
-                  style={
-                    Object {
-                      "color": "#353535",
-                      "fontSize": 22,
-                    }
-                  }
-                >
-                  Sender
-                </FormattedText>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-          <View
-            style={
-              Object {
-                "backgroundColor": "#FFFFFF",
-                "borderBottomColor": "#D9E3ED",
-                "borderBottomWidth": 1,
-                "height": 90,
-                "justifyContent": "center",
-                "padding": 18,
-                "width": "100%",
-              }
-            }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#0E4B75",
-                  "fontSize": 16,
-                  "marginBottom": 2,
-                }
-              }
-            >
-              Bitcoin Amount
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#353535",
-                  "fontSize": 22,
-                }
-              }
-            >
-              ₿ 
-              0.00000123
-              
-            </FormattedText>
-          </View>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "height": 90,
-                  "justifyContent": "center",
-                  "padding": 18,
-                  "width": "100%",
-                }
-              }
-            >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 2,
-                  }
-                }
-              >
-                Amount in iso:USD
-              </FormattedText>
-              <View
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <FormattedText
-                  style={
-                    Object {
-                      "color": "#353535",
-                      "fontSize": 22,
-                    }
-                  }
-                >
-                  $ 
-                </FormattedText>
-                <FormattedText
-                  style={
-                    Object {
-                      "color": "#353535",
-                      "fontSize": 22,
-                    }
-                  }
-                >
-                  0.00
-                </FormattedText>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-          <View
-            style={
-              Object {
-                "backgroundColor": "#FFFFFF",
-                "borderBottomColor": "#D9E3ED",
-                "borderBottomWidth": 1,
-                "height": 90,
-                "justifyContent": "center",
-                "padding": 18,
-                "width": "100%",
-              }
-            }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#0E4B75",
-                  "fontSize": 16,
-                  "marginBottom": 2,
-                }
-              }
-            >
-              Amount at Current Price
-            </FormattedText>
             <View
               style={
                 Object {
                   "alignItems": "center",
                   "flexDirection": "row",
+                  "margin": 6,
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "uri": "thumb/nail/path",
+                  }
+                }
+                style={
+                  Object {
+                    "borderRadius": 20,
+                    "height": 40,
+                    "marginRight": 9,
+                    "width": 40,
+                  }
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                Sender
+              </FormattedText>
+            </View>
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
+            body="₿ 0.00000123"
+            title="Bitcoin Amount"
+            type="static"
+          />
+          <Connect(TileComponent)
+            onPress={[Function]}
+            title="Amount in iso:USD"
+            type="editable"
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "margin": 6,
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                $ 
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                0.00
+              </FormattedText>
+            </View>
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
+            title="Amount at Current Price"
+            type="static"
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "margin": 6,
                 }
               }
             >
@@ -1232,148 +679,62 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                 %
               </FormattedText>
             </View>
-          </View>
-          <TouchableWithoutFeedback
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
             onPress={[Function]}
+            title="Category"
+            type="editable"
           >
             <View
               style={
                 Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "height": 101,
-                  "justifyContent": "center",
-                  "padding": 18,
-                  "width": "100%",
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "margin": 6,
                 }
               }
             >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 2,
-                  }
-                }
-              >
-                Category
-              </FormattedText>
               <View
                 style={
                   Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
+                    "backgroundColor": "#A4C7DF",
+                    "borderRadius": 3,
+                    "marginVertical": 7,
+                    "paddingHorizontal": 11,
+                    "paddingVertical": 7,
                   }
                 }
               >
-                <View
-                  style={
-                    Object {
-                      "backgroundColor": "#A4C7DF",
-                      "borderRadius": 3,
-                      "marginVertical": 7,
-                      "paddingHorizontal": 11,
-                      "paddingVertical": 7,
-                    }
-                  }
-                >
-                  <FormattedText
-                    style={
-                      Object {
-                        "color": "#0E4B75",
-                        "fontSize": 20,
-                      }
-                    }
-                  >
-                    Income
-                  </FormattedText>
-                </View>
                 <FormattedText
                   style={
                     Object {
-                      "color": "#353535",
-                      "marginHorizontal": 16,
-                      "marginVertical": 7,
+                      "color": "#0E4B75",
+                      "fontSize": 20,
                     }
                   }
                 >
-                  
+                  Income
                 </FormattedText>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "minHeight": 101,
-                  "padding": 18,
-                  "width": "100%",
-                }
-              }
-            >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 11,
-                  }
-                }
-              >
-                Notes
-              </FormattedText>
               <FormattedText
                 style={
                   Object {
                     "color": "#353535",
-                    "fontSize": 20,
+                    "marginHorizontal": 16,
+                    "marginVertical": 7,
                   }
                 }
               >
                 
               </FormattedText>
             </View>
-          </TouchableWithoutFeedback>
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
+            body=""
+            onPress={[Function]}
+            title="Notes"
+            type="editable"
+          />
           <TouchableWithoutFeedback
             onPress={[Function]}
           >
@@ -1453,225 +814,98 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             }
           }
         >
-          <TouchableWithoutFeedback
+          <Connect(TileComponent)
             onPress={[Function]}
+            title="Sender Name"
+            type="editable"
           >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "height": 101,
-                  "justifyContent": "center",
-                  "padding": 18,
-                  "width": "100%",
-                }
-              }
-            >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 2,
-                  }
-                }
-              >
-                Sender Name
-              </FormattedText>
-              <View
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <Image
-                  source={
-                    Object {
-                      "uri": "thumb/nail/path",
-                    }
-                  }
-                  style={
-                    Object {
-                      "borderRadius": 20,
-                      "height": 40,
-                      "marginRight": 9,
-                      "width": 40,
-                    }
-                  }
-                />
-                <FormattedText
-                  style={
-                    Object {
-                      "color": "#353535",
-                      "fontSize": 22,
-                    }
-                  }
-                >
-                  Sender
-                </FormattedText>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-          <View
-            style={
-              Object {
-                "backgroundColor": "#FFFFFF",
-                "borderBottomColor": "#D9E3ED",
-                "borderBottomWidth": 1,
-                "height": 90,
-                "justifyContent": "center",
-                "padding": 18,
-                "width": "100%",
-              }
-            }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#0E4B75",
-                  "fontSize": 16,
-                  "marginBottom": 2,
-                }
-              }
-            >
-              Bitcoin Amount
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#353535",
-                  "fontSize": 22,
-                }
-              }
-            >
-              ₿ 
-              0.00000123
-              
-            </FormattedText>
-          </View>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "height": 90,
-                  "justifyContent": "center",
-                  "padding": 18,
-                  "width": "100%",
-                }
-              }
-            >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 2,
-                  }
-                }
-              >
-                Amount in iso:USD
-              </FormattedText>
-              <View
-                style={
-                  Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
-                  }
-                }
-              >
-                <FormattedText
-                  style={
-                    Object {
-                      "color": "#353535",
-                      "fontSize": 22,
-                    }
-                  }
-                >
-                  $ 
-                </FormattedText>
-                <FormattedText
-                  style={
-                    Object {
-                      "color": "#353535",
-                      "fontSize": 22,
-                    }
-                  }
-                >
-                  0.00
-                </FormattedText>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-          <View
-            style={
-              Object {
-                "backgroundColor": "#FFFFFF",
-                "borderBottomColor": "#D9E3ED",
-                "borderBottomWidth": 1,
-                "height": 90,
-                "justifyContent": "center",
-                "padding": 18,
-                "width": "100%",
-              }
-            }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#0E4B75",
-                  "fontSize": 16,
-                  "marginBottom": 2,
-                }
-              }
-            >
-              Amount at Current Price
-            </FormattedText>
             <View
               style={
                 Object {
                   "alignItems": "center",
                   "flexDirection": "row",
+                  "margin": 6,
+                }
+              }
+            >
+              <Image
+                source={
+                  Object {
+                    "uri": "thumb/nail/path",
+                  }
+                }
+                style={
+                  Object {
+                    "borderRadius": 20,
+                    "height": 40,
+                    "marginRight": 9,
+                    "width": 40,
+                  }
+                }
+              />
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                Sender
+              </FormattedText>
+            </View>
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
+            body="₿ 0.00000123"
+            title="Bitcoin Amount"
+            type="static"
+          />
+          <Connect(TileComponent)
+            onPress={[Function]}
+            title="Amount in iso:USD"
+            type="editable"
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "margin": 6,
+                }
+              }
+            >
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                $ 
+              </FormattedText>
+              <FormattedText
+                style={
+                  Object {
+                    "color": "#353535",
+                    "fontSize": 22,
+                  }
+                }
+              >
+                0.00
+              </FormattedText>
+            </View>
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
+            title="Amount at Current Price"
+            type="static"
+          >
+            <View
+              style={
+                Object {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "margin": 6,
                 }
               }
             >
@@ -1708,148 +942,62 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                 %
               </FormattedText>
             </View>
-          </View>
-          <TouchableWithoutFeedback
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
             onPress={[Function]}
+            title="Category"
+            type="editable"
           >
             <View
               style={
                 Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "height": 101,
-                  "justifyContent": "center",
-                  "padding": 18,
-                  "width": "100%",
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "margin": 6,
                 }
               }
             >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 2,
-                  }
-                }
-              >
-                Category
-              </FormattedText>
               <View
                 style={
                   Object {
-                    "alignItems": "center",
-                    "flexDirection": "row",
+                    "backgroundColor": "#A4C7DF",
+                    "borderRadius": 3,
+                    "marginVertical": 7,
+                    "paddingHorizontal": 11,
+                    "paddingVertical": 7,
                   }
                 }
               >
-                <View
-                  style={
-                    Object {
-                      "backgroundColor": "#A4C7DF",
-                      "borderRadius": 3,
-                      "marginVertical": 7,
-                      "paddingHorizontal": 11,
-                      "paddingVertical": 7,
-                    }
-                  }
-                >
-                  <FormattedText
-                    style={
-                      Object {
-                        "color": "#0E4B75",
-                        "fontSize": 20,
-                      }
-                    }
-                  >
-                    Income
-                  </FormattedText>
-                </View>
                 <FormattedText
                   style={
                     Object {
-                      "color": "#353535",
-                      "marginHorizontal": 16,
-                      "marginVertical": 7,
+                      "color": "#0E4B75",
+                      "fontSize": 20,
                     }
                   }
                 >
-                  
+                  Income
                 </FormattedText>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback
-            onPress={[Function]}
-          >
-            <View
-              style={
-                Object {
-                  "backgroundColor": "#FFFFFF",
-                  "borderBottomColor": "#D9E3ED",
-                  "borderBottomWidth": 1,
-                  "minHeight": 101,
-                  "padding": 18,
-                  "width": "100%",
-                }
-              }
-            >
-              <Image
-                source={
-                  Object {
-                    "testUri": "../../../src/assets/images/transaction_details_icon.png",
-                  }
-                }
-                style={
-                  Object {
-                    "height": 16,
-                    "position": "absolute",
-                    "right": 10,
-                    "top": 10,
-                    "width": 16,
-                  }
-                }
-              />
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#0E4B75",
-                    "fontSize": 16,
-                    "marginBottom": 11,
-                  }
-                }
-              >
-                Notes
-              </FormattedText>
               <FormattedText
                 style={
                   Object {
                     "color": "#353535",
-                    "fontSize": 20,
+                    "marginHorizontal": 16,
+                    "marginVertical": 7,
                   }
                 }
               >
                 
               </FormattedText>
             </View>
-          </TouchableWithoutFeedback>
+          </Connect(TileComponent)>
+          <Connect(TileComponent)
+            body=""
+            onPress={[Function]}
+            title="Notes"
+            type="editable"
+          />
           <TouchableWithoutFeedback
             onPress={[Function]}
           >

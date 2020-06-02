@@ -51,7 +51,8 @@ export const styles = {
   },
   tileRow: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    margin: rem(0.25)
   },
   textTransactionData: {
     color: THEME.COLORS.SECONDARY,
