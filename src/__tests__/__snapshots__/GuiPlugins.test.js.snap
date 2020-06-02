@@ -89,6 +89,7 @@ Array [
   Object {
     "cryptoCodes": Array [
       "BTC",
+      "ETH",
     ],
     "deepPath": "/order/buy",
     "deepQuery": Object {
