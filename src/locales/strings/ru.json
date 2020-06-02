@@ -3,6 +3,8 @@
   "app_name_short": "",
   "bitcoin_received": "%1$s получено",
   "dialog_title": "Установить время автоматического выхода",
+  "share_subject": "",
+  "share_message": "",
   "drawer_exchange_rate_loading": "Загрузка обменного курса",
   "drawer_exchange": "Обмен",
   "drawer_request": "Запрос",
