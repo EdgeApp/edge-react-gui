@@ -3,7 +3,7 @@
 import { abs, bns, sub } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Image, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -12,7 +12,9 @@ import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { type EdgeTheme } from '../../reducers/ThemeReducer.js'
 import styles, { iconSize } from '../../styles/scenes/TransactionDetailsStyle.js'
+import THEME from '../../theme/variables/airbitz'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils.js'
@@ -375,4 +377,85 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       </>
     )
   }
+}
+
+const { rem } = THEME
+const getStyles = (theme: EdgeTheme) => { // eslint-disable-line
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      width: '100%',
+      height: '100%',
+      backgroundColor: THEME.COLORS.GRAY_4
+    },
+    tilesContainer: {
+      flex: 1,
+      width: '100%',
+      flexDirection: 'column'
+    },
+    tileRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      margin: rem(0.25)
+    },
+    tileTextBottom: {
+      color: THEME.COLORS.GRAY_5,
+      fontSize: rem(1)
+    },
+    tileAvatarIcon: {
+      color: THEME.COLORS.GRAY_2,
+      marginRight: rem(0.4)
+    },
+    tileThumbnail: {
+      width: rem(1.8),
+      height: rem(1.8),
+      borderRadius: rem(0.9),
+      marginRight: rem(0.4)
+    },
+    tileTextPrice: {
+      flex: 1,
+      color: THEME.COLORS.GRAY_5,
+      fontSize: rem(1)
+    },
+    tileTextPriceChangeUp: {
+      color: THEME.COLORS.ACCENT_MINT,
+      fontSize: rem(1)
+    },
+    tileTextPriceChangeDown: {
+      color: THEME.COLORS.ACCENT_RED,
+      fontSize: rem(1)
+    },
+    tileCategory: {
+      paddingHorizontal: rem(0.5),
+      paddingVertical: rem(0.3),
+      marginVertical: rem(0.3),
+      backgroundColor: THEME.COLORS.TRANSACTION_DETAILS_SECONDARY,
+      borderRadius: 3
+    },
+    tileCategoryText: {
+      color: THEME.COLORS.SECONDARY,
+      fontSize: rem(0.9)
+    },
+    tileSubCategoryText: {
+      marginVertical: rem(0.3),
+      marginHorizontal: rem(0.7),
+      color: THEME.COLORS.GRAY_5
+    },
+    textTransactionData: {
+      color: THEME.COLORS.SECONDARY,
+      marginVertical: rem(1.3),
+      fontSize: rem(0.9),
+      width: '100%',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      textAlign: 'center'
+    },
+    saveButtonContainer: {
+      paddingHorizontal: rem(0.5),
+      paddingBottom: rem(0.8)
+    },
+    saveButton: {
+      height: rem(3)
+    }
+  })
 }
