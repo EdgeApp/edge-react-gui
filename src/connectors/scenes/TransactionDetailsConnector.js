@@ -43,7 +43,8 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
     currencyCode,
     guiWallet: wallet,
     currentFiatAmount,
-    walletDefaultDenomProps
+    walletDefaultDenomProps,
+    theme: state.theme
   }
 }
 
