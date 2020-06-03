@@ -21,7 +21,9 @@ export type EdgeTheme = {
   background2: string,
   cancelButton: string,
   accentTextPositive: string,
-  accentTextNegative: string
+  accentTextNegative: string,
+  materialInputBaseColor: string,
+  materialInputTintColor: string
 }
 
 export const theme = (state: EdgeTheme = darkTheme) => state

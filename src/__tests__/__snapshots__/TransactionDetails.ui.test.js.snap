@@ -48,10 +48,10 @@ exports[`TransactionDetails.ui should render 1`] = `
                 }
                 style={
                   Object {
-                    "borderRadius": 20,
-                    "height": 40,
-                    "marginRight": 9,
-                    "width": 40,
+                    "borderRadius": 22,
+                    "height": 45,
+                    "marginRight": 11,
+                    "width": 45,
                   }
                 }
               />
@@ -145,7 +145,7 @@ exports[`TransactionDetails.ui should render 1`] = `
               <FormattedText
                 style={
                   Object {
-                    "color": "#66EDA8",
+                    "color": "#77C513",
                     "fontSize": 22,
                   }
                 }
@@ -175,9 +175,9 @@ exports[`TransactionDetails.ui should render 1`] = `
                     "borderColor": "#66EDA8",
                     "borderRadius": 3,
                     "borderWidth": 1,
-                    "marginVertical": 7,
+                    "marginVertical": 6,
                     "paddingHorizontal": 11,
-                    "paddingVertical": 7,
+                    "paddingVertical": 6,
                   }
                 }
               >
@@ -185,7 +185,7 @@ exports[`TransactionDetails.ui should render 1`] = `
                   style={
                     Object {
                       "color": "#66EDA8",
-                      "fontSize": 20,
+                      "fontSize": 22,
                     }
                   }
                 >
@@ -196,8 +196,8 @@ exports[`TransactionDetails.ui should render 1`] = `
                 style={
                   Object {
                     "color": "#FFFFFF",
-                    "marginHorizontal": 16,
-                    "marginVertical": 7,
+                    "marginHorizontal": 17,
+                    "marginVertical": 6,
                   }
                 }
               >
@@ -218,10 +218,8 @@ exports[`TransactionDetails.ui should render 1`] = `
               style={
                 Object {
                   "color": "#66EDA8",
-                  "fontSize": 20,
-                  "marginLeft": "auto",
-                  "marginRight": "auto",
-                  "marginVertical": 29,
+                  "fontSize": 22,
+                  "marginVertical": 28,
                   "textAlign": "center",
                   "width": "100%",
                 }
@@ -230,13 +228,7 @@ exports[`TransactionDetails.ui should render 1`] = `
               View Advanced Transaction Data
             </FormattedText>
           </TouchableWithoutFeedback>
-          <View
-            style={
-              Object {
-                "flex": 1,
-              }
-            }
-          />
+          <View />
           <View
             style={
               Object {
@@ -317,10 +309,10 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 }
                 style={
                   Object {
-                    "borderRadius": 20,
-                    "height": 40,
-                    "marginRight": 9,
-                    "width": 40,
+                    "borderRadius": 22,
+                    "height": 45,
+                    "marginRight": 11,
+                    "width": 45,
                   }
                 }
               />
@@ -444,9 +436,9 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                     "borderColor": "#66EDA8",
                     "borderRadius": 3,
                     "borderWidth": 1,
-                    "marginVertical": 7,
+                    "marginVertical": 6,
                     "paddingHorizontal": 11,
-                    "paddingVertical": 7,
+                    "paddingVertical": 6,
                   }
                 }
               >
@@ -454,7 +446,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                   style={
                     Object {
                       "color": "#66EDA8",
-                      "fontSize": 20,
+                      "fontSize": 22,
                     }
                   }
                 >
@@ -465,8 +457,8 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 style={
                   Object {
                     "color": "#FFFFFF",
-                    "marginHorizontal": 16,
-                    "marginVertical": 7,
+                    "marginHorizontal": 17,
+                    "marginVertical": 6,
                   }
                 }
               >
@@ -487,10 +479,8 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               style={
                 Object {
                   "color": "#66EDA8",
-                  "fontSize": 20,
-                  "marginLeft": "auto",
-                  "marginRight": "auto",
-                  "marginVertical": 29,
+                  "fontSize": 22,
+                  "marginVertical": 28,
                   "textAlign": "center",
                   "width": "100%",
                 }
@@ -499,13 +489,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               View Advanced Transaction Data
             </FormattedText>
           </TouchableWithoutFeedback>
-          <View
-            style={
-              Object {
-                "flex": 1,
-              }
-            }
-          />
+          <View />
           <View
             style={
               Object {
@@ -586,10 +570,10 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                 }
                 style={
                   Object {
-                    "borderRadius": 20,
-                    "height": 40,
-                    "marginRight": 9,
-                    "width": 40,
+                    "borderRadius": 22,
+                    "height": 45,
+                    "marginRight": 11,
+                    "width": 45,
                   }
                 }
               />
@@ -683,7 +667,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               <FormattedText
                 style={
                   Object {
-                    "color": "#66EDA8",
+                    "color": "#77C513",
                     "fontSize": 22,
                   }
                 }
@@ -713,9 +697,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                     "borderColor": "#66EDA8",
                     "borderRadius": 3,
                     "borderWidth": 1,
-                    "marginVertical": 7,
+                    "marginVertical": 6,
                     "paddingHorizontal": 11,
-                    "paddingVertical": 7,
+                    "paddingVertical": 6,
                   }
                 }
               >
@@ -723,7 +707,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                   style={
                     Object {
                       "color": "#66EDA8",
-                      "fontSize": 20,
+                      "fontSize": 22,
                     }
                   }
                 >
@@ -734,8 +718,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                 style={
                   Object {
                     "color": "#FFFFFF",
-                    "marginHorizontal": 16,
-                    "marginVertical": 7,
+                    "marginHorizontal": 17,
+                    "marginVertical": 6,
                   }
                 }
               >
@@ -756,10 +740,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               style={
                 Object {
                   "color": "#66EDA8",
-                  "fontSize": 20,
-                  "marginLeft": "auto",
-                  "marginRight": "auto",
-                  "marginVertical": 29,
+                  "fontSize": 22,
+                  "marginVertical": 28,
                   "textAlign": "center",
                   "width": "100%",
                 }
@@ -768,13 +750,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               View Advanced Transaction Data
             </FormattedText>
           </TouchableWithoutFeedback>
-          <View
-            style={
-              Object {
-                "flex": 1,
-              }
-            }
-          />
+          <View />
           <View
             style={
               Object {
@@ -855,10 +831,10 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                 }
                 style={
                   Object {
-                    "borderRadius": 20,
-                    "height": 40,
-                    "marginRight": 9,
-                    "width": 40,
+                    "borderRadius": 22,
+                    "height": 45,
+                    "marginRight": 11,
+                    "width": 45,
                   }
                 }
               />
@@ -952,7 +928,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               <FormattedText
                 style={
                   Object {
-                    "color": "#66EDA8",
+                    "color": "#77C513",
                     "fontSize": 22,
                   }
                 }
@@ -982,9 +958,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                     "borderColor": "#66EDA8",
                     "borderRadius": 3,
                     "borderWidth": 1,
-                    "marginVertical": 7,
+                    "marginVertical": 6,
                     "paddingHorizontal": 11,
-                    "paddingVertical": 7,
+                    "paddingVertical": 6,
                   }
                 }
               >
@@ -992,7 +968,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                   style={
                     Object {
                       "color": "#66EDA8",
-                      "fontSize": 20,
+                      "fontSize": 22,
                     }
                   }
                 >
@@ -1003,8 +979,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                 style={
                   Object {
                     "color": "#FFFFFF",
-                    "marginHorizontal": 16,
-                    "marginVertical": 7,
+                    "marginHorizontal": 17,
+                    "marginVertical": 6,
                   }
                 }
               >
@@ -1025,10 +1001,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               style={
                 Object {
                   "color": "#66EDA8",
-                  "fontSize": 20,
-                  "marginLeft": "auto",
-                  "marginRight": "auto",
-                  "marginVertical": 29,
+                  "fontSize": 22,
+                  "marginVertical": 28,
                   "textAlign": "center",
                   "width": "100%",
                 }
@@ -1037,13 +1011,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               View Advanced Transaction Data
             </FormattedText>
           </TouchableWithoutFeedback>
-          <View
-            style={
-              Object {
-                "flex": 1,
-              }
-            }
-          />
+          <View />
           <View
             style={
               Object {

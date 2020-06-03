@@ -44,5 +44,7 @@ export const theme: EdgeTheme = {
   background2: pallete.edgeNavy,
   cancelButton: pallete.white,
   accentTextPositive: pallete.accentGreen,
-  accentTextNegative: pallete.accentRed
+  accentTextNegative: pallete.accentRed,
+  materialInputBaseColor: pallete.blueGray,
+  materialInputTintColor: pallete.blueGray
 }
