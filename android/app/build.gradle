@@ -112,10 +112,6 @@ android {
         renderscriptTargetApi 23
         renderscriptSupportModeEnabled true
     }
-    signingConfigs {
-        release {
-        }
-    }
     splits {
         abi {
             reset()
@@ -124,7 +120,20 @@ android {
             include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
         }
     }
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+        release {
+        }
+    }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
@@ -150,7 +159,7 @@ android {
     }
 }
 
-// specify signing properties on the command line
+// Edge addition: specify signing properties on the command line
 if (hasProperty('storeFile')) {
     println 'Generating a signed package'
     android.signingConfigs.release.storeFile     = file(storeFile)
@@ -159,10 +168,10 @@ if (hasProperty('storeFile')) {
     android.signingConfigs.release.keyPassword   = keyPassword
 } else {
     println 'Generating a debug package'
-    android.signingConfigs.release.storeFile     = file("airbitz.keystore")
-    android.signingConfigs.release.storePassword = "password"
-    android.signingConfigs.release.keyAlias      = "airbitz"
-    android.signingConfigs.release.keyPassword   = "password"
+    android.signingConfigs.release.storeFile     = file('debug.keystore')
+    android.signingConfigs.release.storePassword = 'android'
+    android.signingConfigs.release.keyAlias      = 'androiddebugkey'
+    android.signingConfigs.release.keyPassword   = 'android'
 }
 
 dependencies {
