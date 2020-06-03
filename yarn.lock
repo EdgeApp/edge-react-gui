@@ -9569,9 +9569,7 @@ react-native-mail@^5.0.1:
 
 "react-native-material-textfield@git://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.10.2"
-  resolved "git://github.com/EdgeApp/react-native-material-textfield.git#c30320fd26e5619c1fe57b3043b8fd9ae2a0c57a"
-  dependencies:
-    prop-types "^15.5.9"
+  resolved "git://github.com/EdgeApp/react-native-material-textfield.git#b3392e9dea84e4f55363ae153503f589163f86cd"
 
 react-native-modal@^11.0.1:
   version "11.0.1"
