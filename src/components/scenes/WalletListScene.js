@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import SortableListView from 'react-native-sortable-listview'
+// import SortableListView from 'react-native-sortable-listview'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
@@ -64,7 +64,7 @@ class WalletListComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { wallets, activeWalletIds } = this.props
+    const { wallets } = this.props
     const { sorting } = this.state
     const loading = Object.keys(wallets).length <= 0
 
@@ -101,14 +101,14 @@ class WalletListComponent extends React.Component<Props, State> {
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
             <ActivityIndicator key="spinner" style={styles.listSpinner} size="large" />
             <WalletList key="fullList" header={this.renderPromoCard()} footer={WalletListFooter} />
-            <SortableListView
+            {/* <SortableListView
               key="sortList"
               style={StyleSheet.absoltueFill}
               data={wallets}
               order={activeWalletIds}
               onRowMoved={this.onActiveRowMoved}
               renderRow={this.renderSortableRow}
-            />
+            /> */}
           </CrossFade>
         </View>
         <XPubModal />
