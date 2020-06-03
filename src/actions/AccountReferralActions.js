@@ -132,8 +132,7 @@ export const ignoreAccountSwap = (ignore: boolean = true) => async (dispatch: Di
 
 export const refreshAccountReferral = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const { installerId, creationDate } = state.account.accountReferral
-  if (installerId == null || creationDate == null) return
+  const { installerId = 'no-installer-id', creationDate = new Date('2018-01-01') } = state.account.accountReferral
 
   const uri = `https://util1.edge.app/api/v1/partner?installerId=${installerId}`
   const reply = await fetch(uri)
