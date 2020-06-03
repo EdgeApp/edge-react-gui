@@ -5,12 +5,13 @@ exports[`TransactionDetails.ui should render 1`] = `
   <SceneWrapper
     bodySplit={33.709859154929575}
   >
-    <View
+    <Connect(GradientComponent)
       style={
         Object {
-          "backgroundColor": "#F4F5F6",
           "flex": 1,
+          "flexDirection": "column",
           "height": "100%",
+          "justifyContent": "center",
           "width": "100%",
         }
       }
@@ -47,17 +48,17 @@ exports[`TransactionDetails.ui should render 1`] = `
                 }
                 style={
                   Object {
-                    "borderRadius": 20,
-                    "height": 40,
-                    "marginRight": 9,
-                    "width": 40,
+                    "borderRadius": 22,
+                    "height": 45,
+                    "marginRight": 11,
+                    "width": 45,
                   }
                 }
               />
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -88,7 +89,7 @@ exports[`TransactionDetails.ui should render 1`] = `
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -98,7 +99,7 @@ exports[`TransactionDetails.ui should render 1`] = `
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -123,7 +124,7 @@ exports[`TransactionDetails.ui should render 1`] = `
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -133,7 +134,7 @@ exports[`TransactionDetails.ui should render 1`] = `
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "flex": 1,
                     "fontSize": 22,
                   }
@@ -144,7 +145,7 @@ exports[`TransactionDetails.ui should render 1`] = `
               <FormattedText
                 style={
                   Object {
-                    "color": "#66EDA8",
+                    "color": "#77C513",
                     "fontSize": 22,
                   }
                 }
@@ -171,19 +172,20 @@ exports[`TransactionDetails.ui should render 1`] = `
               <View
                 style={
                   Object {
-                    "backgroundColor": "#A4C7DF",
+                    "borderColor": "#66EDA8",
                     "borderRadius": 3,
-                    "marginVertical": 7,
+                    "borderWidth": 1,
+                    "marginVertical": 6,
                     "paddingHorizontal": 11,
-                    "paddingVertical": 7,
+                    "paddingVertical": 6,
                   }
                 }
               >
                 <FormattedText
                   style={
                     Object {
-                      "color": "#0E4B75",
-                      "fontSize": 20,
+                      "color": "#66EDA8",
+                      "fontSize": 22,
                     }
                   }
                 >
@@ -193,9 +195,9 @@ exports[`TransactionDetails.ui should render 1`] = `
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
-                    "marginHorizontal": 16,
-                    "marginVertical": 7,
+                    "color": "#FFFFFF",
+                    "marginHorizontal": 17,
+                    "marginVertical": 6,
                   }
                 }
               >
@@ -215,11 +217,9 @@ exports[`TransactionDetails.ui should render 1`] = `
             <FormattedText
               style={
                 Object {
-                  "color": "#0E4B75",
-                  "fontSize": 20,
-                  "marginLeft": "auto",
-                  "marginRight": "auto",
-                  "marginVertical": 29,
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginVertical": 28,
                   "textAlign": "center",
                   "width": "100%",
                 }
@@ -228,37 +228,35 @@ exports[`TransactionDetails.ui should render 1`] = `
               View Advanced Transaction Data
             </FormattedText>
           </TouchableWithoutFeedback>
+          <View />
           <View
             style={
               Object {
-                "flex": 1,
-              }
-            }
-          />
-          <View
-            style={
-              Object {
-                "paddingBottom": 18,
-                "paddingHorizontal": 11,
+                "alignItems": "center",
+                "justifyContent": "center",
+                "paddingBottom": 22,
+                "width": "100%",
               }
             }
           >
-            <PrimaryButton
+            <PrimaryButton2
               onPress={[Function]}
               style={
                 Object {
+                  "borderRadius": 34,
                   "height": 67,
+                  "width": "80%",
                 }
               }
             >
               <Text>
                 Save
               </Text>
-            </PrimaryButton>
+            </PrimaryButton2>
           </View>
         </View>
       </ScrollViewMock>
-    </View>
+    </Connect(GradientComponent)>
   </SceneWrapper>
 </React.Fragment>
 `;
@@ -268,12 +266,13 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
   <SceneWrapper
     bodySplit={33.709859154929575}
   >
-    <View
+    <Connect(GradientComponent)
       style={
         Object {
-          "backgroundColor": "#F4F5F6",
           "flex": 1,
+          "flexDirection": "column",
           "height": "100%",
+          "justifyContent": "center",
           "width": "100%",
         }
       }
@@ -310,17 +309,17 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
                 }
                 style={
                   Object {
-                    "borderRadius": 20,
-                    "height": 40,
-                    "marginRight": 9,
-                    "width": 40,
+                    "borderRadius": 22,
+                    "height": 45,
+                    "marginRight": 11,
+                    "width": 45,
                   }
                 }
               />
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -351,7 +350,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -361,7 +360,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -386,7 +385,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -396,7 +395,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "flex": 1,
                     "fontSize": 22,
                   }
@@ -434,19 +433,20 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               <View
                 style={
                   Object {
-                    "backgroundColor": "#A4C7DF",
+                    "borderColor": "#66EDA8",
                     "borderRadius": 3,
-                    "marginVertical": 7,
+                    "borderWidth": 1,
+                    "marginVertical": 6,
                     "paddingHorizontal": 11,
-                    "paddingVertical": 7,
+                    "paddingVertical": 6,
                   }
                 }
               >
                 <FormattedText
                   style={
                     Object {
-                      "color": "#0E4B75",
-                      "fontSize": 20,
+                      "color": "#66EDA8",
+                      "fontSize": 22,
                     }
                   }
                 >
@@ -456,9 +456,9 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
-                    "marginHorizontal": 16,
-                    "marginVertical": 7,
+                    "color": "#FFFFFF",
+                    "marginHorizontal": 17,
+                    "marginVertical": 6,
                   }
                 }
               >
@@ -478,11 +478,9 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             <FormattedText
               style={
                 Object {
-                  "color": "#0E4B75",
-                  "fontSize": 20,
-                  "marginLeft": "auto",
-                  "marginRight": "auto",
-                  "marginVertical": 29,
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginVertical": 28,
                   "textAlign": "center",
                   "width": "100%",
                 }
@@ -491,37 +489,35 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               View Advanced Transaction Data
             </FormattedText>
           </TouchableWithoutFeedback>
+          <View />
           <View
             style={
               Object {
-                "flex": 1,
-              }
-            }
-          />
-          <View
-            style={
-              Object {
-                "paddingBottom": 18,
-                "paddingHorizontal": 11,
+                "alignItems": "center",
+                "justifyContent": "center",
+                "paddingBottom": 22,
+                "width": "100%",
               }
             }
           >
-            <PrimaryButton
+            <PrimaryButton2
               onPress={[Function]}
               style={
                 Object {
+                  "borderRadius": 34,
                   "height": 67,
+                  "width": "80%",
                 }
               }
             >
               <Text>
                 Save
               </Text>
-            </PrimaryButton>
+            </PrimaryButton2>
           </View>
         </View>
       </ScrollViewMock>
-    </View>
+    </Connect(GradientComponent)>
   </SceneWrapper>
 </React.Fragment>
 `;
@@ -531,12 +527,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
   <SceneWrapper
     bodySplit={33.709859154929575}
   >
-    <View
+    <Connect(GradientComponent)
       style={
         Object {
-          "backgroundColor": "#F4F5F6",
           "flex": 1,
+          "flexDirection": "column",
           "height": "100%",
+          "justifyContent": "center",
           "width": "100%",
         }
       }
@@ -573,17 +570,17 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
                 }
                 style={
                   Object {
-                    "borderRadius": 20,
-                    "height": 40,
-                    "marginRight": 9,
-                    "width": 40,
+                    "borderRadius": 22,
+                    "height": 45,
+                    "marginRight": 11,
+                    "width": 45,
                   }
                 }
               />
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -614,7 +611,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -624,7 +621,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -649,7 +646,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -659,7 +656,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "flex": 1,
                     "fontSize": 22,
                   }
@@ -670,7 +667,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               <FormattedText
                 style={
                   Object {
-                    "color": "#66EDA8",
+                    "color": "#77C513",
                     "fontSize": 22,
                   }
                 }
@@ -697,19 +694,20 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               <View
                 style={
                   Object {
-                    "backgroundColor": "#A4C7DF",
+                    "borderColor": "#66EDA8",
                     "borderRadius": 3,
-                    "marginVertical": 7,
+                    "borderWidth": 1,
+                    "marginVertical": 6,
                     "paddingHorizontal": 11,
-                    "paddingVertical": 7,
+                    "paddingVertical": 6,
                   }
                 }
               >
                 <FormattedText
                   style={
                     Object {
-                      "color": "#0E4B75",
-                      "fontSize": 20,
+                      "color": "#66EDA8",
+                      "fontSize": 22,
                     }
                   }
                 >
@@ -719,9 +717,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
-                    "marginHorizontal": 16,
-                    "marginVertical": 7,
+                    "color": "#FFFFFF",
+                    "marginHorizontal": 17,
+                    "marginVertical": 6,
                   }
                 }
               >
@@ -741,11 +739,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             <FormattedText
               style={
                 Object {
-                  "color": "#0E4B75",
-                  "fontSize": 20,
-                  "marginLeft": "auto",
-                  "marginRight": "auto",
-                  "marginVertical": 29,
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginVertical": 28,
                   "textAlign": "center",
                   "width": "100%",
                 }
@@ -754,37 +750,35 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               View Advanced Transaction Data
             </FormattedText>
           </TouchableWithoutFeedback>
+          <View />
           <View
             style={
               Object {
-                "flex": 1,
-              }
-            }
-          />
-          <View
-            style={
-              Object {
-                "paddingBottom": 18,
-                "paddingHorizontal": 11,
+                "alignItems": "center",
+                "justifyContent": "center",
+                "paddingBottom": 22,
+                "width": "100%",
               }
             }
           >
-            <PrimaryButton
+            <PrimaryButton2
               onPress={[Function]}
               style={
                 Object {
+                  "borderRadius": 34,
                   "height": 67,
+                  "width": "80%",
                 }
               }
             >
               <Text>
                 Save
               </Text>
-            </PrimaryButton>
+            </PrimaryButton2>
           </View>
         </View>
       </ScrollViewMock>
-    </View>
+    </Connect(GradientComponent)>
   </SceneWrapper>
 </React.Fragment>
 `;
@@ -794,12 +788,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
   <SceneWrapper
     bodySplit={33.709859154929575}
   >
-    <View
+    <Connect(GradientComponent)
       style={
         Object {
-          "backgroundColor": "#F4F5F6",
           "flex": 1,
+          "flexDirection": "column",
           "height": "100%",
+          "justifyContent": "center",
           "width": "100%",
         }
       }
@@ -836,17 +831,17 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
                 }
                 style={
                   Object {
-                    "borderRadius": 20,
-                    "height": 40,
-                    "marginRight": 9,
-                    "width": 40,
+                    "borderRadius": 22,
+                    "height": 45,
+                    "marginRight": 11,
+                    "width": 45,
                   }
                 }
               />
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -877,7 +872,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -887,7 +882,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -912,7 +907,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "fontSize": 22,
                   }
                 }
@@ -922,7 +917,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
+                    "color": "#FFFFFF",
                     "flex": 1,
                     "fontSize": 22,
                   }
@@ -933,7 +928,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               <FormattedText
                 style={
                   Object {
-                    "color": "#66EDA8",
+                    "color": "#77C513",
                     "fontSize": 22,
                   }
                 }
@@ -960,19 +955,20 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               <View
                 style={
                   Object {
-                    "backgroundColor": "#A4C7DF",
+                    "borderColor": "#66EDA8",
                     "borderRadius": 3,
-                    "marginVertical": 7,
+                    "borderWidth": 1,
+                    "marginVertical": 6,
                     "paddingHorizontal": 11,
-                    "paddingVertical": 7,
+                    "paddingVertical": 6,
                   }
                 }
               >
                 <FormattedText
                   style={
                     Object {
-                      "color": "#0E4B75",
-                      "fontSize": 20,
+                      "color": "#66EDA8",
+                      "fontSize": 22,
                     }
                   }
                 >
@@ -982,9 +978,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               <FormattedText
                 style={
                   Object {
-                    "color": "#353535",
-                    "marginHorizontal": 16,
-                    "marginVertical": 7,
+                    "color": "#FFFFFF",
+                    "marginHorizontal": 17,
+                    "marginVertical": 6,
                   }
                 }
               >
@@ -1004,11 +1000,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             <FormattedText
               style={
                 Object {
-                  "color": "#0E4B75",
-                  "fontSize": 20,
-                  "marginLeft": "auto",
-                  "marginRight": "auto",
-                  "marginVertical": 29,
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                  "marginVertical": 28,
                   "textAlign": "center",
                   "width": "100%",
                 }
@@ -1017,37 +1011,35 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               View Advanced Transaction Data
             </FormattedText>
           </TouchableWithoutFeedback>
+          <View />
           <View
             style={
               Object {
-                "flex": 1,
-              }
-            }
-          />
-          <View
-            style={
-              Object {
-                "paddingBottom": 18,
-                "paddingHorizontal": 11,
+                "alignItems": "center",
+                "justifyContent": "center",
+                "paddingBottom": 22,
+                "width": "100%",
               }
             }
           >
-            <PrimaryButton
+            <PrimaryButton2
               onPress={[Function]}
               style={
                 Object {
+                  "borderRadius": 34,
                   "height": 67,
+                  "width": "80%",
                 }
               }
             >
               <Text>
                 Save
               </Text>
-            </PrimaryButton>
+            </PrimaryButton2>
           </View>
         </View>
       </ScrollViewMock>
-    </View>
+    </Connect(GradientComponent)>
   </SceneWrapper>
 </React.Fragment>
 `;

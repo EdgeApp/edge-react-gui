@@ -10,14 +10,14 @@ import { sprintf } from 'sprintf-js'
 
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type EdgeTheme } from '../../reducers/ThemeReducer.js'
-import styles, { iconSize } from '../../styles/scenes/TransactionDetailsStyle.js'
-import THEME from '../../theme/variables/airbitz'
+import { iconSize } from '../../styles/scenes/TransactionDetailsStyle.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils.js'
+import { Gradient } from '../common/Gradient.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { Tile } from '../common/Tile.js'
@@ -69,7 +69,8 @@ export type TransactionDetailsOwnProps = {
   currencyCode: string,
   guiWallet: GuiWallet,
   currentFiatAmount: string,
-  walletDefaultDenomProps: EdgeDenomination
+  walletDefaultDenomProps: EdgeDenomination,
+  theme: EdgeTheme
 }
 
 export type TransactionDetailsDispatchProps = {
@@ -87,7 +88,8 @@ type State = {
   bizId: number,
   miscJson: any, // core receives this as a string
   category: string,
-  subCategory: string
+  subCategory: string,
+  styles: StyleSheet
 }
 
 type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDispatchProps
@@ -112,7 +114,8 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       thumbnailPath,
       direction,
       bizId: 0,
-      miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : ''
+      miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : '',
+      styles: getStyles(props.theme)
     }
     slowlog(this, /.*/, global.slowlogOptions)
   }
@@ -142,6 +145,10 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       }
     }
     return { category: defaultCategory, subCategory: '' }
+  }
+
+  static getDerivedStateFromProps(props: TransactionDetailsProps) {
+    return { styles: getStyles(props.theme) }
   }
 
   componentDidMount() {
@@ -305,7 +312,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   // Render
   render() {
     const { guiWallet } = this.props
-    const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory } = this.state
+    const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory, styles } = this.state
     const { fiatCurrencyCode } = guiWallet
 
     const crypto: fiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
@@ -319,7 +326,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     return (
       <>
         <SceneWrapper bodySplit={scale(24)}>
-          <View style={styles.container}>
+          <Gradient style={styles.container}>
             <ScrollView>
               <View style={styles.tilesContainer}>
                 <Tile type="editable" title={personHeader} onPress={this.openPersonInput}>
@@ -366,27 +373,28 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                 </TouchableWithoutFeedback>
                 <View style={styles.spacer} />
                 <View style={styles.saveButtonContainer}>
-                  <PrimaryButton style={styles.saveButton} onPress={this.onSaveTxDetails}>
-                    <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>
-                  </PrimaryButton>
+                  <PrimaryButton2 style={styles.saveButton} onPress={this.onSaveTxDetails}>
+                    <PrimaryButton2.Text>{s.strings.string_save}</PrimaryButton2.Text>
+                  </PrimaryButton2>
                 </View>
               </View>
             </ScrollView>
-          </View>
+          </Gradient>
         </SceneWrapper>
       </>
     )
   }
 }
 
-const getStyles = (theme: EdgeTheme) => { // eslint-disable-line
+const getStyles = (theme: EdgeTheme) => {
   const { rem } = theme
   return StyleSheet.create({
     container: {
       flex: 1,
       width: '100%',
       height: '100%',
-      backgroundColor: THEME.COLORS.GRAY_4
+      flexDirection: 'column',
+      justifyContent: 'center'
     },
     tilesContainer: {
       flex: 1,
@@ -399,62 +407,65 @@ const getStyles = (theme: EdgeTheme) => { // eslint-disable-line
       margin: rem(0.25)
     },
     tileTextBottom: {
-      color: THEME.COLORS.GRAY_5,
+      color: theme.primaryText,
       fontSize: rem(1)
     },
     tileAvatarIcon: {
-      color: THEME.COLORS.GRAY_2,
-      marginRight: rem(0.4)
+      color: theme.primaryText,
+      marginRight: rem(0.5)
     },
     tileThumbnail: {
-      width: rem(1.8),
-      height: rem(1.8),
-      borderRadius: rem(0.9),
-      marginRight: rem(0.4)
+      width: rem(2),
+      height: rem(2),
+      borderRadius: rem(1),
+      marginRight: rem(0.5)
     },
     tileTextPrice: {
       flex: 1,
-      color: THEME.COLORS.GRAY_5,
+      color: theme.primaryText,
       fontSize: rem(1)
     },
     tileTextPriceChangeUp: {
-      color: THEME.COLORS.ACCENT_MINT,
+      color: theme.accentTextPositive,
       fontSize: rem(1)
     },
     tileTextPriceChangeDown: {
-      color: THEME.COLORS.ACCENT_RED,
+      color: theme.accentTextNegative,
       fontSize: rem(1)
     },
     tileCategory: {
       paddingHorizontal: rem(0.5),
-      paddingVertical: rem(0.3),
-      marginVertical: rem(0.3),
-      backgroundColor: THEME.COLORS.TRANSACTION_DETAILS_SECONDARY,
+      paddingVertical: rem(0.25),
+      marginVertical: rem(0.25),
+      borderWidth: 1,
+      borderColor: theme.selectButtonOutline,
       borderRadius: 3
     },
     tileCategoryText: {
-      color: THEME.COLORS.SECONDARY,
-      fontSize: rem(0.9)
+      color: theme.selectButtonText,
+      fontSize: rem(1)
     },
     tileSubCategoryText: {
-      marginVertical: rem(0.3),
-      marginHorizontal: rem(0.7),
-      color: THEME.COLORS.GRAY_5
+      marginVertical: rem(0.25),
+      marginHorizontal: rem(0.75),
+      color: theme.primaryText
     },
     textTransactionData: {
-      color: THEME.COLORS.SECONDARY,
-      marginVertical: rem(1.3),
-      fontSize: rem(0.9),
+      color: theme.selectButtonText,
+      marginVertical: rem(1.25),
+      fontSize: rem(1),
       width: '100%',
-      marginLeft: 'auto',
-      marginRight: 'auto',
       textAlign: 'center'
     },
     saveButtonContainer: {
-      paddingHorizontal: rem(0.5),
-      paddingBottom: rem(0.8)
+      width: '100%',
+      paddingBottom: rem(1),
+      justifyContent: 'center',
+      alignItems: 'center'
     },
     saveButton: {
+      width: '80%',
+      borderRadius: rem(1.5),
       height: rem(3)
     }
   })

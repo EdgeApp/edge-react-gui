@@ -6,6 +6,7 @@ import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { TransactionDetails } from '../components/scenes/TransactionDetailsScene.js'
+import { themeTest as theme } from '../theme/variables/edgeDark.js'
 import { type GuiWallet } from '../types/types.js'
 
 const typeHack: any = {
@@ -77,7 +78,8 @@ describe('TransactionDetails.ui', () => {
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
-      displayDropdownAlert: jest.fn()
+      displayDropdownAlert: jest.fn(),
+      theme
     }
     const actual = renderer.render(<TransactionDetails {...props} />)
 
@@ -110,7 +112,8 @@ describe('TransactionDetails.ui', () => {
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
-      displayDropdownAlert: jest.fn()
+      displayDropdownAlert: jest.fn(),
+      theme
     }
     const actual = renderer.render(<TransactionDetails {...props} />)
 
@@ -143,7 +146,8 @@ describe('TransactionDetails.ui', () => {
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
-      displayDropdownAlert: jest.fn()
+      displayDropdownAlert: jest.fn(),
+      theme
     }
     const actual = renderer.render(<TransactionDetails {...props} />)
 
@@ -179,7 +183,8 @@ describe('TransactionDetails.ui', () => {
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
-      displayDropdownAlert: jest.fn()
+      displayDropdownAlert: jest.fn(),
+      theme
     }
     const actual = renderer.render(<TransactionDetails {...props} />)
 
