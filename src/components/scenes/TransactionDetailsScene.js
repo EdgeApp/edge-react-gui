@@ -310,7 +310,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   // Render
   render() {
-    const { guiWallet } = this.props
+    const { guiWallet, edgeTransaction } = this.props
     const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory, styles } = this.state
     const { fiatCurrencyCode } = guiWallet
 
@@ -365,6 +365,17 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   <FormattedText style={styles.tileSubCategoryText}>{subCategory}</FormattedText>
                 </View>
               </Tile>
+              {edgeTransaction.spendTargets && (
+                <Tile type="static" title={s.strings.transaction_details_recipient_addresses}>
+                  <View style={styles.tileColumn}>
+                    {edgeTransaction.spendTargets.map(target => (
+                      <FormattedText style={styles.tileTextBottom} key={target.publicAddress}>
+                        {target.publicAddress}
+                      </FormattedText>
+                    ))}
+                  </View>
+                </Tile>
+              )}
               <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
               <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
                 <FormattedText style={styles.textTransactionData}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
@@ -394,6 +405,11 @@ const getStyles = (theme: EdgeTheme) => {
     tileRow: {
       flexDirection: 'row',
       alignItems: 'center',
+      margin: rem(0.25)
+    },
+    tileColumn: {
+      flexDirection: 'column',
+      justifyContent: 'center',
       margin: rem(0.25)
     },
     tileTextBottom: {
