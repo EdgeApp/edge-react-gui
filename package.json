@@ -154,7 +154,7 @@
     "react-native-patina": "^0.1.1",
     "react-native-permissions": "1.0.6",
     "react-native-popup-menu": "0.13.3",
-    "react-native-randombytes": "^3.5.0",
+    "react-native-randombytes": "^3.5.3",
     "react-native-router-flux": "4.0.6",
     "react-native-safari-view": "^2.1.0",
     "react-native-safe-area-view": "^0.14.4",

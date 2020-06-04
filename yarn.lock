@@ -9528,10 +9528,10 @@ react-native-popup-menu@0.13.3:
   resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.13.3.tgz#3f4203945acb4954d08d5b50a0345ccc18657eba"
   integrity sha1-P0IDlFrLSVTQjVtQoDRczBhlfro=
 
-react-native-randombytes@^3.5.0:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/react-native-randombytes/-/react-native-randombytes-3.5.1.tgz#7e4518204460079c8b3b533c701746c86b809c89"
-  integrity sha512-yTvK2at9nwlqaYcf2hi1rxnt/WW7Ck872NnsqzD6IdWutF2Z3uL3a2kGd8SVCSG5JO2B+VCTS6VjHispdUGKAg==
+react-native-randombytes@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/react-native-randombytes/-/react-native-randombytes-3.5.3.tgz#b3bdcd11473cce106551a586244b98855e443cd1"
+  integrity sha512-n/7QwMrRJxHr+/3mt2KxqqacGylM+ssW+FfBTgXGzvwq5KzSohooEWf6Z6MTSByuJ/izP9VbSPtwomPwzvupKQ==
   dependencies:
     buffer "^4.9.1"
     sjcl "^1.0.3"
