@@ -5,7 +5,7 @@ PODS:
     - React
   - BugsnagReactNative/Core (2.12.6):
     - React
-  - BVLinearGradient (2.5.3):
+  - BVLinearGradient (2.5.6):
     - React
   - disklet (0.4.5):
     - React
@@ -140,6 +140,8 @@ PODS:
     - React
   - RNFS (2.13.3):
     - React
+  - RNLocalize (1.4.0):
+    - React
   - RNOpenAppSettings (1.0.0):
     - React
   - RNShare (1.1.3):
@@ -192,6 +194,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFS (from `../node_modules/react-native-fs`)
+  - RNLocalize (from `../node_modules/react-native-localize`)
   - RNOpenAppSettings (from `../node_modules/react-native-app-settings`)
   - RNShare (from `../node_modules/react-native-share`)
   - RNSound (from `../node_modules/react-native-sound`)
@@ -260,6 +263,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-device-info"
   RNFS:
     :path: "../node_modules/react-native-fs"
+  RNLocalize:
+    :path: "../node_modules/react-native-localize"
   RNOpenAppSettings:
     :path: "../node_modules/react-native-app-settings"
   RNShare:
@@ -276,7 +281,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BugsnagReactNative: 7ba00c17a3dedfeea4dd011919962d415a231c49
-  BVLinearGradient: 0d985ec461359c82bc254f26d11008bdae50d17a
+  BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   disklet: 4f586f90b70fdb46f06614a5b7342eda5c90f253
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   edge-login-ui-rn: bda9d63e6d83ad22a639f08368cc14bb0bbf770f
@@ -307,6 +312,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 60a80e72d95bf02a01cace55d3697d9724f0d77f
   RNDeviceInfo: e7c5fcde13d40e161d8a27f6c5dc69c638936002
   RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
+  RNLocalize: b6df30cc25ae736d37874f9bce13351db2f56796
   RNOpenAppSettings: 1169b90a275e9e18c5973e1608949f97d426e7f3
   RNShare: 4f206fa36e384e95a0cbf79f2a92490647e93127
   RNSound: a1d01988e043aed5dbb476c2152b5ffb02446750
@@ -314,6 +320,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: 16364b0d34732bc62f42ae7327e7ece5d40b3c06
+PODFILE CHECKSUM: c66aed4605db6ff37b193578b5bb783c1ea5e0e3
 
 COCOAPODS: 1.9.3
