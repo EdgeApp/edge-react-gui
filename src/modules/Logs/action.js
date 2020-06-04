@@ -1,7 +1,7 @@
 // @flow
 
 import { Platform } from 'react-native'
-import DeviceInfo from 'react-native-device-info'
+import { getBrand, getBuildNumber, getDeviceId, getVersion } from 'react-native-device-info'
 
 import packageJson from '../../../package.json'
 import s from '../../locales/strings.js'
@@ -56,9 +56,9 @@ export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: G
     walletDump = accountSummary + walletDump
   }
   const appInfo = `App version: ${packageJson.version}
-App build: ${DeviceInfo.getReadableVersion()}
+App build: ${getVersion()}.${getBuildNumber()}
 os: ${Platform.OS} ${Platform.Version}
-device: ${DeviceInfo.getBrand()} ${DeviceInfo.getDeviceId()}
+device: ${getBrand()} ${getDeviceId()}
 `
 
   return LOGGER.log('SENDING LOGS WITH MESSAGE: ' + text)

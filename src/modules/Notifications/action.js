@@ -1,5 +1,6 @@
 // @flow
-import DeviceInfo from 'react-native-device-info'
+
+import { getUniqueId } from 'react-native-device-info'
 
 import type { Dispatch, GetState } from '../../types/reduxTypes'
 import { getActiveWalletCurrencyCodes } from '../UI/selectors'
@@ -7,7 +8,7 @@ import { getActiveWalletCurrencyCodes } from '../UI/selectors'
 const { notif1 } = require('../notifServer')
 
 export const fetchSettings = async (userId: string, currencyCode: string) => {
-  const deviceId = DeviceInfo.getUniqueID()
+  const deviceId = getUniqueId()
   const deviceIdEncoded = encodeURIComponent(deviceId)
   const encodedUserId = encodeURIComponent(userId)
   return notif1.get(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)
@@ -29,7 +30,7 @@ export const enableNotifications = (currencyCode: string, hours: string, enabled
   const state = getState()
   const { account } = state.core
   const encodedUserId = encodeURIComponent(account.rootLoginId)
-  const deviceId = DeviceInfo.getUniqueID()
+  const deviceId = getUniqueId()
   const deviceIdEncoded = encodeURIComponent(deviceId)
   try {
     await notif1.put(`user/notifications/${currencyCode}?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`, { hours, enabled })
