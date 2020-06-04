@@ -394,6 +394,7 @@ const strings = {
   transaction_details_fiat_label: 'Choose an amount',
   transaction_details_error_invalid: 'Invalid Transaction',
   transaction_details_choose_a_sub_category: 'Choose a sub-category',
+  transaction_details_recipient_address: 'Recipient Address',
   tx_detail_picker_title: 'Choose a Category:',
   transaction_details_notes_title: 'Notes',
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',
