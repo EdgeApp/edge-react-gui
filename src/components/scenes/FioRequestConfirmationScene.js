@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js/src/types/types'
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -15,6 +15,7 @@ import { addToFioAddressCache } from '../../modules/FioAddress/util.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { Slider } from '../../modules/UI/components/Slider/Slider.ui'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import THEME from '../../theme/variables/airbitz'
 import type { State as StateType } from '../../types/reduxTypes'
@@ -94,7 +95,7 @@ export class FioRequestConfirmationConnected extends Component<Props, State> {
     }
   }
 
-  onNextPress = async () => {
+  onConfirm = async () => {
     const { walletAddresses, fioAddressFrom } = this.state
     const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
 
@@ -231,11 +232,14 @@ export class FioRequestConfirmationConnected extends Component<Props, State> {
             </View>
           </TouchableWithoutFeedback>
           {fioAddressFrom.length > 0 && fioAddressTo.length > 0 ? (
-            <TouchableWithoutFeedback onPress={this.onNextPress} disabled={loading}>
-              <View style={styles.nextButton}>
-                {loading ? <ActivityIndicator size="small" /> : <Text style={styles.buttonText}>{s.strings.string_next_capitalized}</Text>}
-              </View>
-            </TouchableWithoutFeedback>
+            <Slider
+              resetSlider={false}
+              parentStyle={styles.sliderStyle}
+              onSlidingComplete={this.onConfirm}
+              sliderDisabled={loading}
+              showSpinner={loading}
+              disabledText={s.strings.loading}
+            />
           ) : null}
         </View>
       </SceneWrapper>
@@ -359,5 +363,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: THEME.COLORS.WHITE,
     fontSize: rem(1.25)
+  },
+  sliderStyle: {
+    marginTop: rem(2),
+    width: rem(15),
+    backgroundColor: THEME.COLORS.PRIMARY,
+    borderRadius: rem(2)
   }
 })
