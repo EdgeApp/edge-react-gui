@@ -152,6 +152,7 @@ export class FioRequestConfirmationConnected extends Component<Props, State> {
         useUserFioAddressesOnly
       />
     ))
+    if (fioAddressFrom === null) return
     if (!(await fioPlugin.otherMethods.doesAccountExist(fioAddressFrom)))
       return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressFrom ? '\n' + fioAddressFrom : ''}`)
     if (!walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)) return showError(s.strings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
@@ -170,6 +171,7 @@ export class FioRequestConfirmationConnected extends Component<Props, State> {
         isFioOnly
       />
     ))
+    if (fioAddressTo === null) return
     if (!(await this.props.fioPlugin.otherMethods.doesAccountExist(fioAddressTo)))
       return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
     if (this.state.fioAddressFrom === fioAddressTo) return showError(s.strings.fio_confirm_request_error_to_same)
