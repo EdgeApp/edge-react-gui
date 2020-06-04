@@ -1,6 +1,7 @@
 // @flow
 
 import { toFixed } from 'biggystring'
+import { getLocales, getNumberFormatSettings } from 'react-native-localize'
 
 export type IntlLocaleType = {
   localeIdentifier: string, // Like en_US or en-US
@@ -21,6 +22,11 @@ const EN_US_LOCALE: IntlLocaleType = {
 const NATIVE_DECIMAL_SEPARATOR = '.'
 const NUMBER_GROUP_SIZE = 3
 let locale = EN_US_LOCALE
+
+// Set the locale at boot:
+const [firstLocale = { languageTag: 'en_US' }] = getLocales()
+const numberFormat = getNumberFormatSettings()
+setIntlLocale({ localeIdentifier: firstLocale.languageTag, ...numberFormat })
 
 /**
  * Formats number input according to user locale
