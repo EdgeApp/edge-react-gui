@@ -21,6 +21,7 @@ import com.krazylabs.OpenAppSettingsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.peel.react.TcpSocketsModule;
+import com.reactcommunity.rnlocalize.RNLocalizePackage;
 import com.reactlibrary.DiskletPackage;
 import com.reactnativecommunity.art.ARTPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
@@ -52,6 +53,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+              new RNLocalizePackage(),
               new ARTPackage(),
               new AsyncStoragePackage(),
               new DiskletPackage(),

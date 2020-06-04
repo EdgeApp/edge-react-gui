@@ -99,3 +99,25 @@ jest.mock('react-native-fs', () => {
     PicturesDirectoryPath: jest.fn()
   }
 })
+jest.mock('react-native-localize', () => {
+  return {
+    getCountry() {
+      return 'US'
+    },
+    getCurrencies() {
+      return ['USD', 'EUR'] // List can sometimes be empty!
+    },
+    getLocales() {
+      return [
+        { countryCode: 'US', languageTag: 'en-US', languageCode: 'en', isRTL: false },
+        { countryCode: 'FR', languageTag: 'fr-FR', languageCode: 'fr', isRTL: false }
+      ]
+    },
+    getNumberFormatSettings() {
+      return {
+        decimalSeparator: '.',
+        groupingSeparator: ','
+      }
+    }
+  }
+})
