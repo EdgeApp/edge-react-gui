@@ -21,6 +21,7 @@ import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { Tile } from '../common/Tile.js'
 import { createAdvancedTransactionDetailsModal } from '../modals/AdvancedTransactionDetailsModal.js'
+import { RawTextModal } from '../modals/RawTextModal.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
 import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInput.js'
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
@@ -69,7 +70,9 @@ export type TransactionDetailsOwnProps = {
   guiWallet: GuiWallet,
   currentFiatAmount: string,
   walletDefaultDenomProps: EdgeDenomination,
-  theme: EdgeTheme
+  theme: EdgeTheme,
+  destinationDenomination?: EdgeDenomination,
+  destinationWallet?: GuiWallet
 }
 
 export type TransactionDetailsDispatchProps = {
@@ -219,6 +222,55 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
         txExplorerUrl: currencyInfo ? sprintf(currencyInfo.transactionExplorer, edgeTransaction.txid) : null,
         ...edgeTransaction
       })
+    )
+  }
+
+  renderExchangeData = () => {
+    const { destinationDenomination, destinationWallet, edgeTransaction, guiWallet, walletDefaultDenomProps } = this.props
+    const { styles } = this.state
+    const { swapData, spendTargets } = edgeTransaction
+
+    if (!swapData || !spendTargets || !destinationDenomination) return null
+
+    const { plugin, isEstimate, orderId, payoutAddress, refundAddress } = swapData
+    const sourceAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(spendTargets[0].nativeAmount)
+    const sourceCurrencyCode = spendTargets[0].currencyCode
+    const destinationAmount = UTILS.convertNativeToDisplay(destinationDenomination.multiplier)(swapData.payoutNativeAmount)
+    const destinationCurrencyCode = swapData.payoutCurrencyCode
+
+    const createExchangeDataString = (newline: string = '\n') => {
+      const destinationWalletName = destinationWallet ? destinationWallet.name : ''
+      const uniqueIdentifier = spendTargets && spendTargets[0].uniqueIdentifier ? spendTargets[0].uniqueIdentifier : ''
+      const exchangeAddresses =
+        spendTargets && spendTargets.length > 0
+          ? spendTargets.map((target, index) => `${target.publicAddress}${index + 1 !== spendTargets.length ? newline : ''}`).toString()
+          : ''
+
+      return `${s.strings.transaction_details_exchange_service}: ${plugin.displayName}${newline}${s.strings.transaction_details_exchange_order_id}: ${
+        orderId || ''
+      }${newline}${s.strings.transaction_details_exchange_source_wallet}: ${guiWallet.name}${newline}${
+        s.strings.fragment_send_from_label
+      }: ${sourceAmount} ${sourceCurrencyCode}${newline}${s.strings.string_to_capitalize}: ${destinationAmount} ${destinationCurrencyCode}${newline}${
+        s.strings.transaction_details_exchange_destination_wallet
+      }: ${destinationWalletName}${newline}${isEstimate ? s.strings.fixed_quote : s.strings.estimated_quote}${newline}${newline}${
+        s.strings.transaction_details_exchange_exchange_address
+      }:${newline}  ${exchangeAddresses}${newline}${s.strings.transaction_details_exchange_exchange_unique_id}:${newline}  ${uniqueIdentifier}${newline}${
+        s.strings.transaction_details_exchange_payout_address
+      }:${newline}  ${payoutAddress}${newline}${s.strings.transaction_details_exchange_refund_address}:${newline}  ${refundAddress || ''}${newline}`
+    }
+
+    const openExchangeDetails = () => {
+      Airship.show(bridge => <RawTextModal bridge={bridge} body={createExchangeDataString()} />)
+    }
+
+    return (
+      <Tile type="touchable" title={s.strings.transaction_details_exchange_details} onPress={openExchangeDetails}>
+        <View style={styles.tileColumn}>
+          <FormattedText style={styles.tileTextBottom}>{`${s.strings.title_exchange} ${sourceAmount} ${sourceCurrencyCode}`}</FormattedText>
+          <FormattedText style={styles.tileTextBottom}>{`${s.strings.string_to_capitalize} ${destinationAmount} ${destinationCurrencyCode}`}</FormattedText>
+          <FormattedText style={styles.tileTextBottom}>{swapData.isEstimate ? s.strings.fixed_quote : s.strings.estimated_quote}</FormattedText>
+        </View>
+      </Tile>
     )
   }
 
@@ -376,6 +428,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   </View>
                 </Tile>
               )}
+              {this.renderExchangeData()}
               <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
               <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
                 <FormattedText style={styles.textTransactionData}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
