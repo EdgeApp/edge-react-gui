@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import { Linking, Text } from 'react-native'
-import DeviceInfo from 'react-native-device-info'
+import { getBuildNumber, getVersion } from 'react-native-device-info'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { WebView } from 'react-native-webview'
 
@@ -10,8 +10,8 @@ import s from '../../locales/strings.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type AirshipBridge, AirshipModal, ContentArea, dayText, IconCircle, ModalCloseArrow, textSize, THEME } from './modalParts.js'
 
-const buildNumber = DeviceInfo.getBuildNumber()
-const versionNumber = DeviceInfo.getVersion()
+const buildNumber = getBuildNumber()
+const versionNumber = getVersion()
 const CONTENT_URI = 'https://edgesecure.co/info.html'
 
 export function showHelpModal(): Promise<mixed> {
