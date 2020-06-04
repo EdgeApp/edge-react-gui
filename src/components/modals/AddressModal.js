@@ -44,7 +44,8 @@ type OwnProps = {
   subtitle?: string,
   showPasteButton?: boolean,
   isFioOnly?: boolean,
-  useUserFioAddressesOnly?: boolean
+  useUserFioAddressesOnly?: boolean,
+  checkAddressConnected?: boolean
 }
 
 type StateProps = {
@@ -242,11 +243,39 @@ class AddressModalConnected extends Component<Props, State> {
     }, 1000)
   }
 
-  async checkIfFioAddress(uri: string) {
+  checkFioAddressExistQueue = (fioAddress: string) => {
+    this.setStatusLabel(s.strings.resolving)
+    this.fioCheckQueue++
+    setTimeout(async () => {
+      // do not check if user continue typing fio address
+      if (this.fioCheckQueue > 1) {
+        return --this.fioCheckQueue
+      }
+      this.fioCheckQueue = 0
+      try {
+        const { fioPlugin } = this.props
+        const doesAccountExist = await fioPlugin.otherMethods.doesAccountExist(fioAddress)
+        this.setStatusLabel(s.strings.fragment_send_address)
+        if (!doesAccountExist) {
+          return this.setState({ fieldError: s.strings.err_no_address_title })
+        }
+      } catch (e) {
+        this.setStatusLabel(s.strings.fragment_send_address)
+        return this.setState({ fieldError: e.message })
+      }
+    }, 1000)
+  }
+
+  checkIfFioAddress = async (uri: string) => {
+    const { useUserFioAddressesOnly, checkAddressConnected } = this.props
     this.setState({ fieldError: '' })
 
     if (await this.isFioAddressValid(uri)) {
-      this.checkFioPubAddressQueue(uri)
+      if (useUserFioAddressesOnly) return
+      if (checkAddressConnected) {
+        return this.checkFioPubAddressQueue(uri)
+      }
+      this.checkFioAddressExistQueue(uri)
     }
   }
 
