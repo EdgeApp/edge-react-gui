@@ -47,6 +47,7 @@ target 'edge' do
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
   pod 'RNFS', :path => '../node_modules/react-native-fs'
+  pod 'RNLocalize', :path => '../node_modules/react-native-localize'
   pod 'RNOpenAppSettings', :path => '../node_modules/react-native-app-settings'
   pod 'RNShare', :path => '../node_modules/react-native-share'
   pod 'RNSound', :path => '../node_modules/react-native-sound'
