@@ -340,11 +340,12 @@ const LogoutButton = ({ onPress }) => {
   )
 }
 
+const goToFioNamesScene = () => Actions.jump(Constants.FIO_ADDRESS_LIST)
 const FioAddressButton = () => {
   // FIO disable changes below
   if (global.isFioDisabled) return null
   return (
-    <Button onPress={Actions[Constants.FIO_ADDRESS_LIST]}>
+    <Button onPress={goToFioNamesScene}>
       <Button.Row>
         <Button.Left>
           <Image source={fioAddressIcon} style={styles.iconImage} />
@@ -360,7 +361,7 @@ const FioAddressButton = () => {
   )
 }
 
-const goToFioRequestsScene = () => Actions[Constants.FIO_REQUEST_LIST]()
+const goToFioRequestsScene = () => Actions.jump(Constants.FIO_REQUEST_LIST)
 const FioRequestsButton = () => {
   return (
     <Button onPress={goToFioRequestsScene}>
