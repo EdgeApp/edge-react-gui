@@ -120,7 +120,6 @@ export class FioAddressListScene extends Component<Props> {
             {fioAddresses.map((address: FioAddress) => (
               <FioAddressRow key={`${address.name}`} item={address} onPress={this.onAddressPress} />
             ))}
-            {loading && <ActivityIndicator style={styles.loading} size="large" />}
           </View>
           <SettingsHeaderRow icon={<IonIcon name="ios-at" color={THEME.COLORS.WHITE} size={this.headerIconSize} />} text={s.strings.title_fio_domains} />
           <View style={styles.list}>
@@ -132,8 +131,8 @@ export class FioAddressListScene extends Component<Props> {
             {fioDomains.map((domain: FioDomain) => (
               <FioDomainRow key={`${domain.name}`} item={domain} onPress={this.onDomainPress} />
             ))}
-            {loading && <ActivityIndicator style={styles.loading} size="large" />}
           </View>
+          {loading && <ActivityIndicator style={styles.loading} size="large" />}
         </ScrollView>
 
         <View>
