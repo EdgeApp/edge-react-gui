@@ -17,7 +17,6 @@ import { iconSize } from '../../styles/scenes/TransactionDetailsStyle.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils.js'
-import { Gradient } from '../common/Gradient.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { Tile } from '../common/Tile.js'
@@ -325,61 +324,59 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
     return (
       <>
-        <SceneWrapper bodySplit={scale(24)}>
-          <Gradient style={styles.container}>
-            <ScrollView>
-              <View style={styles.tilesContainer}>
-                <Tile type="editable" title={personHeader} onPress={this.openPersonInput}>
-                  <View style={styles.tileRow}>
-                    {thumbnailPath ? (
-                      <Image style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
-                    ) : (
-                      <IonIcon style={styles.tileAvatarIcon} name="ios-contact" size={iconSize.avatar} />
-                    )}
-                    <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
-                  </View>
-                </Tile>
-                <Tile
-                  type="static"
-                  title={sprintf(s.strings.transaction_details_crypto_amount, crypto.currencyName)}
-                  body={`${crypto.symbolString} ${crypto.amountString}${crypto.feeString ? ` (${crypto.feeString})` : ''}`}
-                />
-                <Tile type="editable" title={sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={this.openFiatInput}>
-                  <View style={styles.tileRow}>
-                    <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
-                    <FormattedText style={styles.tileTextBottom}>{fiatValue}</FormattedText>
-                  </View>
-                </Tile>
-                <Tile type="static" title={s.strings.transaction_details_amount_current_price}>
-                  <View style={styles.tileRow}>
-                    <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
-                    <FormattedText style={styles.tileTextPrice}>{currentFiat.amount}</FormattedText>
-                    <FormattedText style={parseFloat(currentFiat.difference) >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>
-                      {parseFloat(currentFiat.difference) >= 0 ? currentFiat.percentage : `- ${currentFiat.percentage}`}%
-                    </FormattedText>
-                  </View>
-                </Tile>
-                <Tile type="editable" title={s.strings.transaction_details_category_title} onPress={this.openCategoryInput}>
-                  <View style={styles.tileRow}>
-                    <View style={styles.tileCategory}>
-                      <FormattedText style={styles.tileCategoryText}>{categories[category].syntax}</FormattedText>
-                    </View>
-                    <FormattedText style={styles.tileSubCategoryText}>{subCategory}</FormattedText>
-                  </View>
-                </Tile>
-                <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
-                <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
-                  <FormattedText style={styles.textTransactionData}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
-                </TouchableWithoutFeedback>
-                <View style={styles.spacer} />
-                <View style={styles.saveButtonContainer}>
-                  <PrimaryButton2 style={styles.saveButton} onPress={this.onSaveTxDetails}>
-                    <PrimaryButton2.Text>{s.strings.string_save}</PrimaryButton2.Text>
-                  </PrimaryButton2>
+        <SceneWrapper background="header" bodySplit={scale(24)}>
+          <ScrollView>
+            <View style={styles.tilesContainer}>
+              <Tile type="editable" title={personHeader} onPress={this.openPersonInput}>
+                <View style={styles.tileRow}>
+                  {thumbnailPath ? (
+                    <Image style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
+                  ) : (
+                    <IonIcon style={styles.tileAvatarIcon} name="ios-contact" size={iconSize.avatar} />
+                  )}
+                  <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
                 </View>
+              </Tile>
+              <Tile
+                type="static"
+                title={sprintf(s.strings.transaction_details_crypto_amount, crypto.currencyName)}
+                body={`${crypto.symbolString} ${crypto.amountString}${crypto.feeString ? ` (${crypto.feeString})` : ''}`}
+              />
+              <Tile type="editable" title={sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={this.openFiatInput}>
+                <View style={styles.tileRow}>
+                  <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
+                  <FormattedText style={styles.tileTextBottom}>{fiatValue}</FormattedText>
+                </View>
+              </Tile>
+              <Tile type="static" title={s.strings.transaction_details_amount_current_price}>
+                <View style={styles.tileRow}>
+                  <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
+                  <FormattedText style={styles.tileTextPrice}>{currentFiat.amount}</FormattedText>
+                  <FormattedText style={parseFloat(currentFiat.difference) >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>
+                    {parseFloat(currentFiat.difference) >= 0 ? currentFiat.percentage : `- ${currentFiat.percentage}`}%
+                  </FormattedText>
+                </View>
+              </Tile>
+              <Tile type="editable" title={s.strings.transaction_details_category_title} onPress={this.openCategoryInput}>
+                <View style={styles.tileRow}>
+                  <View style={styles.tileCategory}>
+                    <FormattedText style={styles.tileCategoryText}>{categories[category].syntax}</FormattedText>
+                  </View>
+                  <FormattedText style={styles.tileSubCategoryText}>{subCategory}</FormattedText>
+                </View>
+              </Tile>
+              <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
+              <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
+                <FormattedText style={styles.textTransactionData}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
+              </TouchableWithoutFeedback>
+              <View style={styles.spacer} />
+              <View style={styles.saveButtonContainer}>
+                <PrimaryButton2 style={styles.saveButton} onPress={this.onSaveTxDetails}>
+                  <PrimaryButton2.Text>{s.strings.string_save}</PrimaryButton2.Text>
+                </PrimaryButton2>
               </View>
-            </ScrollView>
-          </Gradient>
+            </View>
+          </ScrollView>
         </SceneWrapper>
       </>
     )
@@ -389,13 +386,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 const getStyles = (theme: EdgeTheme) => {
   const { rem } = theme
   return StyleSheet.create({
-    container: {
-      flex: 1,
-      width: '100%',
-      height: '100%',
-      flexDirection: 'column',
-      justifyContent: 'center'
-    },
     tilesContainer: {
       flex: 1,
       width: '100%',
