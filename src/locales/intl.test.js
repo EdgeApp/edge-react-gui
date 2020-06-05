@@ -4,22 +4,14 @@
 import { truncateDecimals } from '../util/utils'
 import * as intl from './intl'
 
-const EN_US_LOCALE = {
+const EN_US_LOCALE: intl.IntlLocaleType = {
   localeIdentifier: 'en_US',
   decimalSeparator: '.',
-  quotationBeginDelimiterKey: '“',
-  quotationEndDelimiterKey: '”',
-  currencySymbol: '$',
-  currencyCode: 'USD',
   groupingSeparator: ','
 }
-const DE_DE_LOCALE = {
+const DE_DE_LOCALE: intl.IntlLocaleType = {
   localeIdentifier: 'de_DE',
   decimalSeparator: ',',
-  quotationBeginDelimiterKey: '“',
-  quotationEndDelimiterKey: '”',
-  currencySymbol: 'DKK',
-  currencyCode: 'DKK',
   groupingSeparator: '.'
 }
 

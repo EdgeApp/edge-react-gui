@@ -2,22 +2,25 @@
 
 import { toFixed } from 'biggystring'
 
-const EN_US_LOCALE = {
+export type IntlLocaleType = {
+  localeIdentifier: string, // Like en_US or en-US
+  decimalSeparator: string,
+  groupingSeparator: string
+}
+
+type IntlNumberFormatOptionsType = {
+  toFixed?: number,
+  noGrouping?: boolean
+}
+
+const EN_US_LOCALE: IntlLocaleType = {
   localeIdentifier: 'en_US',
   decimalSeparator: '.',
-  quotationBeginDelimiterKey: '“',
-  quotationEndDelimiterKey: '”',
   groupingSeparator: ','
 }
 const NATIVE_DECIMAL_SEPARATOR = '.'
 const NUMBER_GROUP_SIZE = 3
 let locale = EN_US_LOCALE
-
-type IntlLocaleType = any
-type IntlNumberFormatOptionsType = {
-  toFixed?: number,
-  noGrouping?: boolean
-}
 
 /**
  * Formats number input according to user locale
