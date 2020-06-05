@@ -3822,10 +3822,10 @@ edge-exchange-plugins@^0.11.0:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.6.10:
-  version "0.6.10"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.10.tgz#483df1dc5066cc79932368b3687b0cc84ed29246"
-  integrity sha512-k27TETvXUw/O4kB7wNFJlTBub2Wd/uEumTIyLqzsvgZSGIJ63XZGWfFqDRU1U5VdB2mLaJt8PzZ7AJm6KknaKw==
+edge-login-ui-rn@^0.6.11:
+  version "0.6.11"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.11.tgz#23677e75b3338724e330724518808733e2cdfb0e"
+  integrity sha512-moElopbxdG2h/HmEZDjHFfVCX+w9ELUSFwBspvi/qKPbULSt/H2mfYAopmJ3I6aXWk1SWdQ4HIY2q5TzhTDSUg==
   dependencies:
     edge-components "^0.0.26"
     material-ui "^0.20.0"
