@@ -22,7 +22,7 @@ const defaultContext: EdgeContext = flowHack
 const defaultDisklet: Disklet = flowHack
 
 export const core: Reducer<CoreState, Action> = combineReducers({
-  account (state: EdgeAccount = defaultAccount, action: Action): EdgeAccount {
+  account(state: EdgeAccount = defaultAccount, action: Action): EdgeAccount {
     switch (action.type) {
       case 'LOGIN':
         return action.data
@@ -32,11 +32,11 @@ export const core: Reducer<CoreState, Action> = combineReducers({
     return state
   },
 
-  context (state: EdgeContext = defaultContext, action: Action): EdgeContext {
+  context(state: EdgeContext = defaultContext, action: Action): EdgeContext {
     return action.type === 'CORE/CONTEXT/ADD_CONTEXT' ? action.data.context : state
   },
 
-  disklet (state: Disklet = defaultDisklet, action: Action): Disklet {
+  disklet(state: Disklet = defaultDisklet, action: Action): Disklet {
     return action.type === 'CORE/CONTEXT/ADD_CONTEXT' ? action.data.disklet : state
   },
 

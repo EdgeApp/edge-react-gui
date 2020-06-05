@@ -9,10 +9,11 @@ import { createCurrencyWallet } from '../../actions/CreateWalletActions.js'
 import CheckIcon from '../../assets/images/createWallet/check_icon_lg.png'
 import { WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
-import Text from '../../modules/UI/components/FormattedText/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
+import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
+import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { GuiFiatType, GuiWalletType } from '../../types/types.js'
@@ -38,13 +39,14 @@ type State = {
 }
 
 class CreateWalletReviewComponent extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       isAnimationVisible: false
     }
   }
-  componentDidMount () {
+
+  componentDidMount() {
     Keyboard.dismiss()
   }
 
@@ -63,7 +65,7 @@ class CreateWalletReviewComponent extends Component<Props, State> {
     Actions.pop()
   }
 
-  render () {
+  render() {
     const { isCreatingWallet } = this.props
     const { isAnimationVisible } = this.state
 
@@ -89,12 +91,12 @@ class CreateWalletReviewComponent extends Component<Props, State> {
                 </Text>
               </View>
 
-              <View style={[styles.buttons]}>
-                <SecondaryButton style={[styles.cancel]} onPress={this.onBack}>
+              <View style={styles.buttons}>
+                <SecondaryButton style={styles.cancel} onPress={this.onBack}>
                   <SecondaryButton.Text>{s.strings.title_back}</SecondaryButton.Text>
                 </SecondaryButton>
 
-                <PrimaryButton style={[styles.create]} onPress={this.onSubmit} disabled={isCreatingWallet}>
+                <PrimaryButton style={styles.create} onPress={this.onSubmit} disabled={isCreatingWallet}>
                   {isCreatingWallet ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.fragment_create_wallet_create_wallet}</PrimaryButton.Text>}
                 </PrimaryButton>
               </View>
@@ -103,7 +105,7 @@ class CreateWalletReviewComponent extends Component<Props, State> {
         ) : (
           <FullScreenTransitionComponent
             onDone={() => Actions.popTo(WALLET_LIST_SCENE)}
-            image={<Image source={CheckIcon} style={[styles.currencyLogo, { marginBottom: 36 }]} resizeMode={'cover'} />}
+            image={<Image source={CheckIcon} style={[styles.currencyLogo, { marginBottom: 36 }]} resizeMode="cover" />}
             text={<Text style={styles.createWalletImportTransitionText}>{s.strings.create_wallet_import_successful}</Text>}
           />
         )}
@@ -117,7 +119,7 @@ export const CreateWalletReviewScene = connect(
     isCreatingWallet: state.ui.scenes.createWallet.isCreatingWallet
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    createCurrencyWallet (walletName: string, walletType: string, fiatCurrencyCode: string, importText?: string) {
+    createCurrencyWallet(walletName: string, walletType: string, fiatCurrencyCode: string, importText?: string) {
       dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, true, false, importText))
     }
   })

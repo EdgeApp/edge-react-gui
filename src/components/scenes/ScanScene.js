@@ -1,18 +1,17 @@
 // @flow
 
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { ActivityIndicator, Text, TouchableHighlight, View } from 'react-native'
 import OpenAppSettings from 'react-native-app-settings'
 import { RNCamera } from 'react-native-camera'
 import { Actions } from 'react-native-router-flux'
-// $FlowFixMe
 import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import styles, { styles as styleRaw } from '../../styles/scenes/ScaneStyle'
 import { scale } from '../../util/scaling.js'
@@ -44,14 +43,14 @@ const ADDRESS_TEXT = s.strings.fragment_send_address
 const FLASH_TEXT = s.strings.fragment_send_flash
 
 export class Scan extends Component<Props> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  render () {
+  render() {
     return (
-      <Fragment>
+      <>
         <SceneWrapper background="header" hasTabs={false}>
           {this.renderCameraArea()}
           <View style={styles.overlayButtonAreaWrap}>
@@ -78,7 +77,7 @@ export class Scan extends Component<Props> {
           </View>
         </SceneWrapper>
         <SecondaryModal />
-      </Fragment>
+      </>
     )
   }
 
@@ -95,7 +94,14 @@ export class Scan extends Component<Props> {
   _onToggleAddressModal = async () => {
     const { walletId, currencyCode } = this.props
     const uri = await Airship.show(bridge => (
-      <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={s.strings.scan_address_modal_title} showPasteButton />
+      <AddressModal
+        bridge={bridge}
+        walletId={walletId}
+        currencyCode={currencyCode}
+        title={s.strings.scan_address_modal_title}
+        showPasteButton
+        checkAddressConnected
+      />
     ))
     if (uri) {
       this.props.parseScannedUri(uri)

@@ -4,7 +4,8 @@ import { Platform, StyleSheet, TextInput, View } from 'react-native'
 
 import { MATERIAL_COMMUNITY, SERVER } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
@@ -30,7 +31,7 @@ export type SetCustomNodesModalState = {
 export type SetCustomNodeModalProps = SetCustomNodesModalOwnProps
 
 export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetCustomNodesModalState> {
-  constructor (props: SetCustomNodeModalProps) {
+  constructor(props: SetCustomNodeModalProps) {
     super(props)
     const { electrumServers } = this.props
     const readableNodesList = electrumServers ? electrumServers.join('\n') : ''
@@ -70,7 +71,7 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
     }
   }
 
-  render () {
+  render() {
     return (
       <InteractiveModal legacy isActive={this.props.isActive}>
         <InteractiveModal.Icon>
@@ -86,7 +87,7 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
               style={styles.customNodesInput}
               value={this.state.readableNodesList}
               onChangeText={this.onChangeText}
-              editable={true}
+              editable
               multiline
               placeholder={this.props.defaultElectrumServer}
               placeholderTextColor={rawStyle.placeholderText.color}

@@ -237,6 +237,15 @@ exports[`SendConfirmation should render with destination 1`] = `
             }
           />
         </Padding>
+        <Connect(SelectFioAddress)
+          fioRequest={null}
+          isSendUsingFioAddress={null}
+          memo=""
+          memoError=""
+          onMemoChange={[Function]}
+          onSelect={[Function]}
+          selected=""
+        />
       </View>
       <Footer
         style={
@@ -248,7 +257,7 @@ exports[`SendConfirmation should render with destination 1`] = `
           ]
         }
       >
-        <ABSlider
+        <Slider
           forceUpdateGuiCounter={0}
           onSlidingComplete={[Function]}
           parentStyle={
@@ -488,6 +497,15 @@ exports[`SendConfirmation should render with standard props 1`] = `
             }
           />
         </Padding>
+        <Connect(SelectFioAddress)
+          fioRequest={null}
+          isSendUsingFioAddress={null}
+          memo=""
+          memoError=""
+          onMemoChange={[Function]}
+          onSelect={[Function]}
+          selected=""
+        />
       </View>
       <Footer
         style={
@@ -499,7 +517,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           ]
         }
       >
-        <ABSlider
+        <Slider
           forceUpdateGuiCounter={0}
           onSlidingComplete={[Function]}
           parentStyle={
@@ -719,6 +737,15 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             }
           />
         </Padding>
+        <Connect(SelectFioAddress)
+          fioRequest={null}
+          isSendUsingFioAddress={null}
+          memo=""
+          memoError=""
+          onMemoChange={[Function]}
+          onSelect={[Function]}
+          selected=""
+        />
       </View>
       <Footer
         style={
@@ -730,7 +757,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           ]
         }
       >
-        <ABSlider
+        <Slider
           forceUpdateGuiCounter={0}
           onSlidingComplete={[Function]}
           parentStyle={
@@ -980,6 +1007,15 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             }
           />
         </Padding>
+        <Connect(SelectFioAddress)
+          fioRequest={null}
+          isSendUsingFioAddress={null}
+          memo=""
+          memoError=""
+          onMemoChange={[Function]}
+          onSelect={[Function]}
+          selected=""
+        />
       </View>
       <Footer
         style={
@@ -993,7 +1029,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           ]
         }
       >
-        <ABSlider
+        <Slider
           forceUpdateGuiCounter={0}
           onSlidingComplete={[Function]}
           parentStyle={

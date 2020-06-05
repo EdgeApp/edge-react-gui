@@ -1,4 +1,4 @@
-/* globals global describe it expect */
+/* globals describe it expect */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import React from 'react'

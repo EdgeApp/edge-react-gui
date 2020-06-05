@@ -27,7 +27,7 @@ type DispatchProps = {
 type Props = StateProps & DispatchProps
 
 class DeepLinkingManagerComponent extends React.Component<Props> {
-  componentDidMount () {
+  componentDidMount() {
     Linking.addEventListener('url', this.handleLinkEvent)
     Linking.getInitialURL()
       .then(url => {
@@ -36,12 +36,12 @@ class DeepLinkingManagerComponent extends React.Component<Props> {
       .catch(showError)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     Linking.removeEventListener('url', this.handleLinkEvent)
   }
 
   // Retry links that need a different app state:
-  componentDidUpdate () {
+  componentDidUpdate() {
     const { pendingDeepLink } = this.props
     if (pendingDeepLink == null) return
 
@@ -49,7 +49,7 @@ class DeepLinkingManagerComponent extends React.Component<Props> {
     requestAnimationFrame(() => this.props.retryPendingDeepLink())
   }
 
-  render () {
+  render() {
     return null
   }
 
@@ -66,10 +66,10 @@ export const DeepLinkingManager = connect(
   }),
 
   (dispatch: Dispatch): DispatchProps => ({
-    launchDeepLink (link) {
+    launchDeepLink(link) {
       dispatch(launchDeepLink(link))
     },
-    retryPendingDeepLink () {
+    retryPendingDeepLink() {
       dispatch(retryPendingDeepLink())
     }
   })

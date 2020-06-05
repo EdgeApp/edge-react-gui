@@ -11,7 +11,7 @@ type Props = {
 }
 
 class EdgeWalletsManager extends React.Component<Props> {
-  render () {
+  render() {
     return this.props.ids.map(id => <EdgeWalletCallbackManager key={id} id={id} />)
   }
 }

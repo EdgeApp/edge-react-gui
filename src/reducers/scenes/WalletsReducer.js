@@ -279,7 +279,7 @@ const manageTokensPending = (state = false, action: Action): boolean => {
   }
 }
 
-function schema (wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress): GuiWallet {
+function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress): GuiWallet {
   const id: string = wallet.id
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'

@@ -280,7 +280,6 @@
       "BE",
       "BG",
       "CH",
-      "CY",
       "CZ",
       "DK",
       "EE",
@@ -289,12 +288,10 @@
       "DE",
       "GR",
       "HU",
-      "IE",
       "IT",
       "LV",
       "LT",
       "LU",
-      "MT",
       "NL",
       "PL",
       "PT",
@@ -304,9 +301,7 @@
       "ES",
       "SE",
       "HR",
-      "IS",
       "LI",
-      "MC",
       "NO",
       "SM",
       "GB"
@@ -429,7 +424,6 @@
     "cryptoCodes": [
       "BTC",
       "ETH",
-      "BCH",
       "XRP"
     ],
     "paymentTypeLogoKey": "credit"
@@ -449,7 +443,6 @@
     "cryptoCodes": [
       "BTC",
       "ETH",
-      "BCH",
       "XRP"
     ],
     "paymentTypeLogoKey": "bank",
@@ -490,7 +483,9 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "LTC",
+      "ETH",
+      "USDT"
     ],
     "paymentTypeLogoKey": "poli",
     "deepQuery": {
@@ -512,7 +507,9 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "LTC",
+      "ETH",
+      "USDT"
     ],
     "paymentTypeLogoKey": "newsagent",
     "deepQuery": {
@@ -534,7 +531,9 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "LTC",
+      "ETH",
+      "USDT"
     ],
     "paymentTypeLogoKey": "payid",
     "deepQuery": {
@@ -556,7 +555,9 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "LTC",
+      "ETH",
+      "USDT"
     ],
     "paymentTypeLogoKey": "bpay",
     "deepQuery": {
@@ -578,7 +579,9 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "LTC",
+      "ETH",
+      "USDT"
     ],
     "paymentTypeLogoKey": "auspost",
     "deepQuery": {
@@ -593,7 +596,7 @@
       "credit"
     ],
     "description": "Fee: 2.9% / Settlement: Instant\nLimit: $5000/day",
-    "title": "Credit Card",
+    "title": "Credit and Debit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "forCountries": [
       "AU",
@@ -601,7 +604,9 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH"
+      "LTC",
+      "ETH",
+      "USDT"
     ],
     "paymentTypeLogoKey": "credit",
     "deepQuery": {
@@ -670,7 +675,8 @@
       "YT"
     ],
     "cryptoCodes": [
-      "BTC"
+      "BTC",
+      "ETH"
     ],
     "paymentTypeLogoKey": "bank",
     "deepPath": "/order/buy",
@@ -835,6 +841,10 @@
     "forCountries": [
       "GB"
     ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH"
+    ],
     "deepQuery": {
       "country": "GB",
       "payment_id": "6018"
@@ -883,5 +893,12 @@
       "payment_id": "6026"
     },
     "description": "Fee: 2.9% / Settlement: Instant\nLimit: HK$50000/day"
+  },
+  {
+    "id": "banxa.credit",
+    "forCountries": [
+      "AU"
+    ],
+    "sortIndex": 3
   }
 ]

@@ -8,7 +8,6 @@ import cl.json.RNSharePackage;
 import co.airbitz.AbcCoreJsUi.AbcCoreJsUiPackage;
 import co.airbitz.fastcrypto.RNFastCryptoPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
-import com.beefe.picker.PickerViewPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.bugsnag.BugsnagReactNative;
 import com.chirag.RNMail.RNMail;
@@ -18,14 +17,10 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.modules.i18nmanager.I18nUtil;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.github.xinthink.rnmk.ReactMaterialKitPackage;
-import com.imagepicker.ImagePickerPackage;
 import com.krazylabs.OpenAppSettingsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.lynxit.contactswrapper.ContactsWrapperPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.peel.react.TcpSocketsModule;
-import com.psykar.cookiemanager.CookieManagerPackage;
 import com.reactlibrary.DiskletPackage;
 import com.reactnativecommunity.art.ARTPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
@@ -59,7 +54,6 @@ public class MainApplication extends Application implements ReactApplication {
               new AsyncStoragePackage(),
               new DiskletPackage(),
               new RNCWebViewPackage(),
-              new CookieManagerPackage(),
               new OpenAppSettingsPackage(),
               BugsnagReactNative.getPackage(),
               new RNFirebasePackage(),
@@ -67,7 +61,6 @@ public class MainApplication extends Application implements ReactApplication {
               new RNFirebaseDatabasePackage(),
               new RNMail(),
               new RCTSplashScreenPackage(),
-              new PickerViewPackage(),
               new AbcCoreJsUiPackage(),
               new RNSoundPackage(),
               new RNSharePackage(),
@@ -75,12 +68,9 @@ public class MainApplication extends Application implements ReactApplication {
               new RNFastCryptoPackage(),
               new VectorIconsPackage(),
               new TcpSocketsModule(),
-              new ReactMaterialKitPackage(),
               new LinearGradientPackage(),
-              new ImagePickerPackage(),
               new RNFSPackage(),
               new RNDeviceInfo(),
-              new ContactsWrapperPackage(),
               new ReactNativeContacts(),
               new RNCameraPackage(),
               new RCTLocalePackage(),

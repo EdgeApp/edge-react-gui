@@ -15,7 +15,7 @@ import type { State } from '../../../types/reduxTypes'
 import type { FioRequest } from '../../../types/types'
 import { getFiatSymbol } from '../../../util/utils'
 import { getDisplayDenomination } from '../../Settings/selectors'
-import T from '../../UI/components/FormattedText/index'
+import T from '../../UI/components/FormattedText/FormattedText.ui.js'
 import { getSelectedWallet } from '../../UI/selectors'
 import { isRejectedFioRequest, isSentFioRequest } from '../util'
 
@@ -112,12 +112,12 @@ class FioRequestRow extends Component<Props> {
     return <T style={[styles.transactionPendingTime, statusStyle]}>{label}</T>
   }
 
-  render () {
+  render() {
     const { fioRequest, isSent, isHeaderRow, isLastOfDate, displayDenomination } = this.props
     if (!displayDenomination) return null
 
     return (
-      <View key={fioRequest.fio_request_id.toString()} style={[styles.singleTransactionWrap]}>
+      <View key={fioRequest.fio_request_id.toString()} style={styles.singleTransactionWrap}>
         {isHeaderRow && (
           <View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
@@ -130,23 +130,23 @@ class FioRequestRow extends Component<Props> {
           underlayColor={this.underlayColor}
           style={[styles.singleTransaction, { borderBottomWidth: isLastOfDate ? 0 : 1 }]}
         >
-          <View style={[styles.transactionInfoWrap]}>
+          <View style={styles.transactionInfoWrap}>
             <View style={styles.transactionLeft}>
-              <View style={[styles.transactionLeftLogoWrap]}>
+              <View style={styles.transactionLeftLogoWrap}>
                 <Image style={[styles.transactionLogo, requestListStyles.transactionLogo]} source={fioRequestsIcon} />
               </View>
             </View>
 
-            <View style={[styles.transactionRight]}>
+            <View style={styles.transactionRight}>
               <View style={[styles.transactionDetailsRow, fioRequest.content.memo ? styles.transactionDetailsRowMargin : null]}>
-                <T style={[styles.transactionPartner]} adjustsFontSizeToFit={true} minimumFontScale={this.minimumFontScale}>
+                <T style={styles.transactionPartner} adjustsFontSizeToFit minimumFontScale={this.minimumFontScale}>
                   {isSent ? fioRequest.payer_fio_address : this.requestedField()}
                 </T>
                 {this.currencyField(fioRequest.content.amount, isSent ? fioRequest.status : '')}
               </View>
-              <View style={[styles.transactionDetailsRow]}>
+              <View style={styles.transactionDetailsRow}>
                 {this.requestedTimeAndMemo(new Date(fioRequest.time_stamp), fioRequest.content.memo)}
-                <T style={[styles.transactionFiat]}>
+                <T style={styles.transactionFiat}>
                   {this.props.fiatSymbol} {this.props.fiatAmount}
                 </T>
               </View>
@@ -193,7 +193,4 @@ const mapStateToProps = (state: State, ownProps: OwnProps) => {
   return out
 }
 
-export const FioRequestRowConnector = connect(
-  mapStateToProps,
-  {}
-)(FioRequestRow)
+export const FioRequestRowConnector = connect(mapStateToProps, {})(FioRequestRow)

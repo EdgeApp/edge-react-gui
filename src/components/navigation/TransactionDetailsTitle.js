@@ -4,14 +4,14 @@ import { type EdgeTransaction } from 'edge-core-js'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import T from '../../modules/UI/components/FormattedText/index.js'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 
 type Props = {
   edgeTransaction: EdgeTransaction
 }
 
-export function TransactionDetailsTitle (props: Props) {
+export function TransactionDetailsTitle(props: Props) {
   if (props.edgeTransaction == null) return null // Should never happen!?
 
   const { date } = props.edgeTransaction

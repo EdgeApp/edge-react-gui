@@ -15,7 +15,7 @@ type Props = {
 
 export const errorModal = (title: string, error: Error) =>
   class ErrorModal extends React.Component<Props> {
-    render () {
+    render() {
       return (
         <InteractiveModal>
           <InteractiveModal.Icon>

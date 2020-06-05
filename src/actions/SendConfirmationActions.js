@@ -289,7 +289,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
     if (!guiMakeSpendInfo.dismissAlert) {
       Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
         {
-          onPress () {},
+          onPress() {},
           style: 'default',
           text: s.strings.string_ok
         }
@@ -300,40 +300,51 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
       addToFioAddressCache(account, [guiMakeSpendInfo.fioAddress])
     }
 
+    // fio
     if (fioSender) {
       const { fioAddress, fioWallet, memo } = fioSender
       const payeeFioAddress = guiMakeSpendInfo.fioAddress
-      if (
-        payeeFioAddress &&
-        fioAddress &&
-        fioWallet &&
-        edgeSignedTransaction.otherParams &&
-        edgeSignedTransaction.otherParams.transactionJson &&
-        edgeSignedTransaction.otherParams.transactionJson.actions &&
-        edgeSignedTransaction.otherParams.transactionJson.actions.length
-      ) {
-        const payerPublicAddress = edgeSignedTransaction.otherParams.transactionJson.actions[0].data.from
-        const payeePublicAddress = edgeSignedTransaction.otherParams.transactionJson.actions[0].data.to
-        const amount = edgeSignedTransaction.otherParams.transactionJson.actions[0].data.quantity
-        let chainCode
-        if (edgeSignedTransaction.wallet && edgeSignedTransaction.wallet.currencyInfo) {
-          chainCode = edgeSignedTransaction.wallet.currencyInfo.currencyCode
+      if (payeeFioAddress && fioAddress && fioWallet) {
+        if (guiMakeSpendInfo.fioPendingRequest) {
+          const { fioPendingRequest: pendingRequest } = guiMakeSpendInfo
+          try {
+            await recordSend(fioWallet, fioAddress, {
+              fioRequestId: pendingRequest.fio_request_id,
+              payeeFioAddress: pendingRequest.payee_fio_address,
+              payerPublicAddress: pendingRequest.payer_fio_public_key,
+              payeePublicAddress: pendingRequest.content.payee_public_address,
+              amount: pendingRequest.content.amount,
+              currencyCode: pendingRequest.content.token_code,
+              chainCode: pendingRequest.content.chain_code,
+              txid: edgeSignedTransaction.txid,
+              memo
+            })
+          } catch (e) {
+            showError(e.message)
+          }
+        } else if (guiMakeSpendInfo.publicAddress || publicAddress) {
+          const payerPublicAddress = wallet.publicWalletInfo.keys.publicKey
+          const amount = guiMakeSpendInfo.nativeAmount || '0'
+          let chainCode
+          if (edgeSignedTransaction.wallet && edgeSignedTransaction.wallet.currencyInfo) {
+            chainCode = edgeSignedTransaction.wallet.currencyInfo.currencyCode
+          }
+          try {
+            await checkRecordSendFee(fioWallet, fioAddress)
+            recordSend(fioWallet, fioAddress, {
+              payeeFioAddress,
+              payerPublicAddress,
+              payeePublicAddress: guiMakeSpendInfo.publicAddress || publicAddress || '',
+              amount: amount && bns.div(amount, exchangeDenomination.multiplier, 18),
+              currencyCode: edgeSignedTransaction.currencyCode,
+              chainCode: chainCode || guiWallet.currencyCode,
+              txid: edgeSignedTransaction.txid,
+              memo
+            })
+          } catch (e) {
+            showError(e.message)
+          }
         }
-        try {
-          await checkRecordSendFee(fioWallet, fioAddress)
-        } catch (e) {
-          showError(e.message)
-        }
-        recordSend(fioWallet, fioAddress, {
-          payeeFioAddress,
-          payerPublicAddress,
-          payeePublicAddress,
-          amount: amount && bns.div(amount, exchangeDenomination.multiplier, 18),
-          currencyCode: edgeSignedTransaction.currencyCode,
-          chainCode: chainCode || guiWallet.currencyCode,
-          txid: edgeSignedTransaction.txid,
-          memo
-        })
       }
     }
 
@@ -356,7 +367,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
 
     Alert.alert(s.strings.transaction_failure, message, [
       {
-        onPress () {},
+        onPress() {},
         style: 'default',
         text: s.strings.string_ok
       }
@@ -367,7 +378,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
 const errorNames = {
   IncorrectPinError: 'IncorrectPinError'
 }
-export function IncorrectPinError (message: ?string = s.strings.incorrect_pin) {
+export function IncorrectPinError(message: ?string = s.strings.incorrect_pin) {
   const error = new Error(message)
   error.name = errorNames.IncorrectPinError
   return error

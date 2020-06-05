@@ -1,4 +1,5 @@
 def build (platform) {
+  sh "mkdir -p buildnum temp"
   // Copy the previous build num
   try {
     sh "cp ./buildnum/${platform}.json ./${platform}/buildnum.json"
@@ -7,7 +8,6 @@ def build (platform) {
   }
   sh "node ./deploy.js edge ${platform} ${BRANCH_NAME}"
   // Save the build num after a successful build
-  sh "mkdir -p buildnum"
   sh "cp ./${platform}/buildnum.json ./buildnum/${platform}.json"
   // Add the build num and the platform to the description
   def buildnum = readJSON file: "./buildnum/${platform}.json"

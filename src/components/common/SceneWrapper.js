@@ -47,7 +47,7 @@ type Props = {
  * Also draws a common gradient background under the scene.
  */
 export class SceneWrapper extends Component<Props> {
-  render () {
+  render() {
     const { avoidKeyboard = false, hasHeader = true, hasTabs = true } = this.props
 
     return (
@@ -77,7 +77,7 @@ export class SceneWrapper extends Component<Props> {
   /**
    * Render the scene wrapper component, given various items from the context.
    */
-  renderScene (gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number) {
+  renderScene(gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number) {
     const { children, background = 'header', bodySplit = 0, padding = 0 } = this.props
 
     // Render the scene container:

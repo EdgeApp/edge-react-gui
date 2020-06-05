@@ -19,7 +19,7 @@ type Props = {
   warning?: boolean
 }
 
-export function AlertDropdown (props: Props) {
+export function AlertDropdown(props: Props) {
   const { bridge, message, warning } = props
 
   return (

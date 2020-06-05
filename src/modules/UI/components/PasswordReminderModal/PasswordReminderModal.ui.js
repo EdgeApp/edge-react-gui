@@ -1,15 +1,16 @@
 // @flow
 
-import { equals } from 'ramda'
+import { isEqual } from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Text } from 'react-native'
 
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import type { PasswordReminder } from '../../../../types/types.js'
-import { SecondaryButton, TertiaryButton } from '../Buttons'
+import { SecondaryButton } from '../Buttons/SecondaryButton.ui.js'
+import { TertiaryButton } from '../Buttons/TertiaryButton.ui.js'
 import { Icon } from '../Icon/Icon.ui'
-import { InteractiveModal } from '../Modals'
+import { InteractiveModal } from '../Modals/InteractiveModal/InteractiveModal.ui.js'
 import { PasswordInput } from './components/PasswordInput.ui.js'
 import { styles } from './styles.js'
 
@@ -30,19 +31,19 @@ type State = {
 }
 
 export class PasswordReminderModal extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
 
     this.state = this.initialState()
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
-    if (nextProps.loginStatus && !equals(this.props.passwordReminder, nextProps.passwordReminder)) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.loginStatus && !isEqual(this.props.passwordReminder, nextProps.passwordReminder)) {
       nextProps.setPasswordReminder(nextProps.passwordReminder)
     }
   }
 
-  render () {
+  render() {
     const error = this.props.status === 'INVALID' ? s.strings.password_reminder_invalid : ''
     const isChecking = this.props.status === 'IS_CHECKING'
     return (

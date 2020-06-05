@@ -60,7 +60,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   setWalletAccountActivationQuoteError: message => dispatch({ type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: message })
 })
 
-export const CreateWalletAccountSelectConnector = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CreateWalletAccountSelect)
+export const CreateWalletAccountSelectConnector = connect(mapStateToProps, mapDispatchToProps)(CreateWalletAccountSelect)

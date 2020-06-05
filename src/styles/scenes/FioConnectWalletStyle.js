@@ -6,33 +6,32 @@ import THEME from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling'
 
 export const styles = StyleSheet.create({
+  view: {
+    flex: 1
+  },
   info: {
-    paddingTop: scale(30),
-    paddingLeft: scale(26),
-    paddingRight: scale(26)
+    backgroundColor: THEME.COLORS.SECONDARY,
+    paddingVertical: THEME.rem(1),
+    paddingHorizontal: THEME.rem(1),
+    marginBottom: THEME.rem(0.25)
   },
   title: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(16),
+    color: THEME.COLORS.TRANSACTION_DETAILS_GREY_1,
+    marginBottom: THEME.rem(0.25),
+    fontSize: THEME.rem(0.75),
     fontWeight: 'normal',
-    textAlign: 'center'
+    textAlign: 'left'
   },
-  walletName: {
+  content: {
     color: THEME.COLORS.WHITE,
     fontSize: scale(15),
-    textAlign: 'center'
-  },
-  titleLarge: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(22),
-    fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'left'
   },
   spacer: {
     paddingTop: scale(20)
   },
   checkTitle: {
-    fontSize: scale(15),
+    fontSize: THEME.rem(0.75),
     color: THEME.COLORS.WHITE,
     marginLeft: scale(15)
   },
@@ -41,12 +40,16 @@ export const styles = StyleSheet.create({
     borderWidth: scale(2),
     borderColor: THEME.COLORS.WHITE,
     borderRadius: 15,
-    width: scale(24),
-    height: scale(24)
+    width: THEME.rem(1.5),
+    height: THEME.rem(1.5),
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   checkBoxIconOk: {
-    fontSize: scale(20),
-    color: THEME.COLORS.WHITE
+    width: THEME.rem(1),
+    height: THEME.rem(1),
+    borderRadius: 12,
+    backgroundColor: THEME.COLORS.ACCENT_MINT
   },
   checkBoxContainer: {
     flexDirection: 'row',
@@ -55,11 +58,12 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     color: THEME.COLORS.WHITE
   },
-  list: {
-    backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`
+  confirmContainer: {
+    paddingHorizontal: THEME.rem(2)
   },
-  contentStyles: {
-    paddingBottom: scale(20)
+  list: {
+    flex: 5,
+    backgroundColor: THEME.COLORS.WHITE
   },
   no_wallets_text: {
     padding: scale(30),
@@ -70,11 +74,8 @@ export const styles = StyleSheet.create({
   wallet: {
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
-  walletSelected: {
-    backgroundColor: THEME.COLORS.OPAQUE_WHITE
-  },
   walletDisabled: {
-    opacity: 0.4
+    opacity: 0.7
   },
   walletDetailsContainer: {
     flex: 1,
@@ -85,6 +86,10 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center'
   },
+  switchContainer: {
+    alignItems: 'flex-end',
+    paddingRight: THEME.rem(0.25)
+  },
   walletDetailsRowCurrency: {
     fontSize: scale(18)
   },
@@ -93,16 +98,12 @@ export const styles = StyleSheet.create({
     color: THEME.COLORS.SECONDARY
   },
   underlay: {
-    color: THEME.COLORS.GRAY_3
+    color: THEME.COLORS.GRAY_2
   },
   bottomSection: {
-    backgroundColor: THEME.COLORS.OPACITY_GRAY_1,
+    flex: 2,
+    backgroundColor: THEME.COLORS.GRAY_3,
     paddingBottom: scale(20)
-  },
-  bottomSectionBlue: {
-    backgroundColor: THEME.COLORS.BLUE_3,
-    padding: scale(20),
-    paddingBottom: scale(35)
   },
   button: {
     display: 'flex',
@@ -116,10 +117,6 @@ export const styles = StyleSheet.create({
     marginTop: scale(15),
     marginBottom: scale(15)
   },
-  connectedBtn: {
-    marginTop: 0,
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
   buttonTextWrap: {
     flexDirection: 'column',
     justifyContent: 'center',
@@ -128,7 +125,7 @@ export const styles = StyleSheet.create({
   buttonText: {
     opacity: 1,
     color: THEME.COLORS.WHITE,
-    fontSize: scale(14),
+    fontSize: THEME.rem(1),
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   buttonTextBlue: {

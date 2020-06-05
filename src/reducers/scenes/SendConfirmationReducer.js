@@ -7,6 +7,7 @@ import { type Reducer } from 'redux'
 
 import { initialState } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import type { Action } from '../../types/reduxTypes.js'
+import type { FioRequest } from '../../types/types'
 
 export type FeeOption = 'custom' | 'high' | 'low' | 'standard'
 
@@ -23,7 +24,7 @@ export type GuiMakeSpendInfo = {
   otherParams?: Object,
   dismissAlert?: boolean,
   fioAddress?: string,
-  memo?: string,
+  fioPendingRequest?: FioRequest,
   isSendUsingFioAddress?: boolean,
   onBack?: () => void,
   onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
@@ -199,13 +200,14 @@ export const error = (state: Error | null = null, action: Action) => {
 
 export const isEditable = (state: boolean = true, action: Action) => {
   switch (action.type) {
-    case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION':
+    case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
       if (!action.data) throw new Error('Invalid Action')
       const { guiMakeSpendInfo } = action.data
       if (!guiMakeSpendInfo || guiMakeSpendInfo.lockInputs) {
         return false
       }
       return state
+    }
     default:
       return state
   }

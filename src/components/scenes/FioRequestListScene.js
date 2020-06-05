@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, FlatList, Image, TouchableOpacity, View } from 'react-native'
@@ -15,19 +16,23 @@ import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache } from '../../modules/FioAddress/util.js'
 import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioRequest/components/FioRequestRow'
-import T from '../../modules/UI/components/FormattedText/index'
+import { getExchangeDenomination } from '../../modules/Settings/selectors'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles as requestListStyles } from '../../styles/scenes/FioRequestListStyle'
 import styles from '../../styles/scenes/TransactionListStyle'
 import { THEME } from '../../theme/variables/airbitz'
+import type { State } from '../../types/reduxTypes'
 import type { FioRequest, GuiWallet } from '../../types/types'
 import FullScreenLoader from '../common/FullScreenLoader'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
-import { showError } from '../services/AirshipInstance'
+import type { WalletListResult } from '../modals/WalletListModal'
+import { WalletListModal } from '../modals/WalletListModal'
+import { Airship, showError } from '../services/AirshipInstance'
 
 const SCROLL_THRESHOLD = 0.5
 
-export type State = {
+export type LocalState = {
   loadingPending: boolean,
   loadingSent: boolean,
   rejectLoading: boolean,
@@ -37,16 +42,28 @@ export type State = {
 }
 
 export type StateProps = {
+  state: State,
   account: EdgeAccount,
   wallets: { [walletId: string]: GuiWallet },
   fioWallets: EdgeCurrencyWallet[],
   isConnected: boolean
 }
 
-export class FioRequestList extends Component<StateProps, State> {
-  headerIconSize = THEME.rem(1.375)
+export type DispatchProps = {
+  onSelectWallet: (walletId: string, currencyCode: string) => void
+}
 
-  constructor (props: StateProps) {
+export type OwnProps = {
+  navigation: any
+}
+
+type Props = OwnProps & StateProps & DispatchProps
+
+export class FioRequestList extends Component<Props, LocalState> {
+  headerIconSize = THEME.rem(1.375)
+  willFocusSubscription: { remove: () => void } | null = null
+
+  constructor(props: Props) {
     super(props)
     this.state = {
       loadingPending: true,
@@ -60,8 +77,14 @@ export class FioRequestList extends Component<StateProps, State> {
   }
 
   componentDidMount = () => {
-    this.getFioRequestsPending()
-    this.getFioRequestsSent()
+    this.willFocusSubscription = this.props.navigation.addListener('didFocus', () => {
+      this.getFioRequestsPending()
+      this.getFioRequestsSent()
+    })
+  }
+
+  componentWillUnmount(): void {
+    this.willFocusSubscription && this.willFocusSubscription.remove()
   }
 
   componentDidUpdate = () => {
@@ -216,25 +239,91 @@ export class FioRequestList extends Component<StateProps, State> {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    const { wallets } = this.props
+    const { wallets, onSelectWallet } = this.props
+    const availableWallets: { id: string, currencyCode: string }[] = []
     for (const walletKey: string of Object.keys(wallets)) {
       if (wallets[walletKey].currencyCode.toUpperCase() === fioRequest.content.token_code.toUpperCase()) {
-        Actions[Constants.FIO_PENDING_REQUEST_DETAILS]({ selectedFioPendingRequest: fioRequest })
-        return
+        availableWallets.push({ id: wallets[walletKey].id, currencyCode: wallets[walletKey].currencyCode })
+        if (availableWallets.length > 1) {
+          this.renderDropUp(fioRequest)
+          return
+        }
       }
       if (
         wallets[walletKey].currencyCode.toUpperCase() === fioRequest.content.chain_code.toUpperCase() &&
         wallets[walletKey].enabledTokens.indexOf(fioRequest.content.token_code.toUpperCase()) > -1
       ) {
-        Actions[Constants.FIO_PENDING_REQUEST_DETAILS]({ selectedFioPendingRequest: fioRequest })
-        return
+        availableWallets.push({ id: wallets[walletKey].id, currencyCode: fioRequest.content.token_code.toUpperCase() })
+        if (availableWallets.length > 1) {
+          this.renderDropUp(fioRequest)
+          return
+        }
       }
+    }
+    if (availableWallets.length) {
+      onSelectWallet(availableWallets[0].id, availableWallets[0].currencyCode)
+      this.sendCrypto(fioRequest)
+      return
     }
     Alert.alert(
       sprintf(s.strings.err_token_not_in_wallet_title, fioRequest.content.token_code),
       sprintf(s.strings.err_token_not_in_wallet_msg, fioRequest.content.token_code),
       [{ text: s.strings.string_ok_cap }]
     )
+  }
+
+  renderDropUp = async (selectedFioPendingRequest: FioRequest) => {
+    const { onSelectWallet } = this.props
+    const { chain_code, token_code } = selectedFioPendingRequest.content
+    const allowedFullCurrencyCode = chain_code !== token_code && token_code && token_code !== '' ? [`${chain_code}:${token_code}`] : [chain_code]
+
+    const selectedResult: WalletListResult = await Airship.show(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedFullCurrencyCode} />
+    ))
+    if (selectedResult.walletToSelect) {
+      onSelectWallet(selectedResult.walletToSelect.walletId, selectedResult.walletToSelect.currencyCode)
+      this.sendCrypto(selectedFioPendingRequest)
+    }
+  }
+
+  sendCrypto = async (pendingRequest: FioRequest) => {
+    const { fioWallets, state } = this.props
+    const fioWalletByAddress = fioWallets.find(wallet => wallet.id === pendingRequest.fioWalletId) || null
+    if (!fioWalletByAddress) return showError(s.strings.fio_wallet_missing_for_fio_address)
+    const exchangeDenomination = getExchangeDenomination(state, pendingRequest.content.token_code)
+    let nativeAmount = bns.mul(pendingRequest.content.amount, exchangeDenomination.multiplier)
+    nativeAmount = bns.toFixed(nativeAmount, 0, 0)
+    const guiMakeSpendInfo = {
+      fioPendingRequest: pendingRequest,
+      fioAddress: pendingRequest.payee_fio_address,
+      currencyCode: pendingRequest.content.token_code,
+      nativeAmount: nativeAmount,
+      publicAddress: pendingRequest.content.payee_public_address,
+      lockInputs: true,
+      beforeTransaction: async () => {
+        try {
+          const getFeeResult = await fioWalletByAddress.otherMethods.fioAction('getFee', {
+            endPoint: 'record_obt_data',
+            fioAddress: pendingRequest.payer_fio_address
+          })
+          if (getFeeResult.fee) {
+            showError(s.strings.fio_no_bundled_err_msg)
+            throw new Error(s.strings.fio_no_bundled_err_msg)
+          }
+        } catch (e) {
+          showError(s.strings.fio_get_fee_err_msg)
+          throw e
+        }
+      },
+      onDone: (err, edgeTransaction) => {
+        if (!err) {
+          this.getFioRequestsPending()
+          Actions.replace(Constants.TRANSACTION_DETAILS, { edgeTransaction })
+        }
+      }
+    }
+
+    Actions[Constants.SEND_CONFIRMATION]({ guiMakeSpendInfo })
   }
 
   selectSentRequest = (fioRequest: FioRequest) => {
@@ -271,7 +360,7 @@ export class FioRequestList extends Component<StateProps, State> {
     return headers
   }
 
-  listKeyExtractor (item: FioRequest) {
+  listKeyExtractor(item: FioRequest) {
     return item.fio_request_id.toString()
   }
 
@@ -294,7 +383,7 @@ export class FioRequestList extends Component<StateProps, State> {
       index + 1 === this.state.fioRequestsSent.length ||
       (index > 0 &&
         intl.formatExpDate(new Date(this.state.fioRequestsSent[index + 1].time_stamp), true) !== intl.formatExpDate(new Date(fioRequest.time_stamp), true))
-    return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectSentRequest} isSent={true} isHeaderRow={isHeaderRow} isLastOfDate={isLastOfDate} />
+    return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectSentRequest} isSent isHeaderRow={isHeaderRow} isLastOfDate={isLastOfDate} />
   }
 
   renderHiddenItem = (rowObj: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
@@ -310,7 +399,7 @@ export class FioRequestList extends Component<StateProps, State> {
     )
   }
 
-  render () {
+  render() {
     const { loadingPending, loadingSent, rejectLoading, fioRequestsPending, fioRequestsSent } = this.state
 
     return (
@@ -325,7 +414,7 @@ export class FioRequestList extends Component<StateProps, State> {
               </View>
             ) : null}
             <View style={requestListStyles.container}>
-              {loadingPending && <ActivityIndicator style={requestListStyles.loading} size={'small'} />}
+              {loadingPending && <ActivityIndicator style={requestListStyles.loading} size="small" />}
               <SwipeListView
                 useSectionList
                 sections={this.pendingRequestHeaders()}
@@ -334,7 +423,7 @@ export class FioRequestList extends Component<StateProps, State> {
                 renderHiddenItem={this.renderHiddenItem}
                 renderSectionHeader={this.headerRowUsingTitle}
                 rightOpenValue={requestListStyles.swipeRow.right}
-                disableRightSwipe={true}
+                disableRightSwipe
               />
             </View>
           </View>
@@ -348,7 +437,7 @@ export class FioRequestList extends Component<StateProps, State> {
             <View style={requestListStyles.scrollView}>
               <View style={requestListStyles.container}>
                 <View style={requestListStyles.requestsWrap}>
-                  {loadingSent && <ActivityIndicator style={requestListStyles.loading} size={'small'} />}
+                  {loadingSent && <ActivityIndicator style={requestListStyles.loading} size="small" />}
                   <FlatList
                     style={styles.transactionsScrollWrap}
                     data={fioRequestsSent}

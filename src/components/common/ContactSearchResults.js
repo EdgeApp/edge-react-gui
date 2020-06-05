@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { FlatList, Image, TouchableHighlight, View } from 'react-native'
 
 import ContactImage from '../../assets/images/contact.png'
-import FormattedText from '../../modules/UI/components/FormattedText/index.js'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles from '../../styles/scenes/TransactionDetailsStyle.js'
 import { type GuiContact } from '../../types/types.js'
 
@@ -21,7 +21,7 @@ type FlatListItem = {
 }
 
 export class ContactSearchResults extends Component<Props> {
-  render () {
+  render() {
     const filteredArray = []
     const { contacts, currentPayeeText } = this.props
     const formattedInputText = currentPayeeText.toLowerCase().replace(/\s+/g, '') // Remove all whitepsaces
@@ -55,21 +55,21 @@ export class ContactSearchResults extends Component<Props> {
     return (
       <View style={styles.singleContactWrap}>
         <TouchableHighlight
-          style={[styles.singleContact]}
+          style={styles.singleContact}
           onPress={() => this.props.onSelectPayee(fullName, thumbnailPath)}
           underlayColor={styles.underlayColor.color}
         >
-          <View style={[styles.contactInfoWrap]}>
+          <View style={styles.contactInfoWrap}>
             <View style={styles.contactLeft}>
-              <View style={[styles.contactLogo]}>
+              <View style={styles.contactLogo}>
                 {thumbnailPath ? (
                   <Image source={{ uri: thumbnailPath }} style={styles.contactThumbnail} />
                 ) : (
                   <Image source={ContactImage} style={styles.contactThumbnail} />
                 )}
               </View>
-              <View style={[styles.contactLeftTextWrap]}>
-                <FormattedText style={[styles.contactName]}>{fullName}</FormattedText>
+              <View style={styles.contactLeftTextWrap}>
+                <FormattedText style={styles.contactName}>{fullName}</FormattedText>
               </View>
             </View>
           </View>

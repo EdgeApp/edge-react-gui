@@ -18,7 +18,4 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   }
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SpendingLimitsComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(SpendingLimitsComponent)

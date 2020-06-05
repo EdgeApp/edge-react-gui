@@ -2,7 +2,7 @@
 
 import { abs, bns, sub } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Image, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -11,8 +11,8 @@ import { sprintf } from 'sprintf-js'
 import editIcon from '../../assets/images/transaction_details_icon.png'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/index.js'
-import FormattedText from '../../modules/UI/components/FormattedText/index.js'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles, { iconSize } from '../../styles/scenes/TransactionDetailsStyle.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
@@ -91,7 +91,7 @@ type State = {
 type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDispatchProps
 
 export class TransactionDetails extends Component<TransactionDetailsProps, State> {
-  constructor (props: TransactionDetailsProps) {
+  constructor(props: TransactionDetailsProps) {
     super(props)
     const { thumbnailPath } = props
     const edgeTransaction = {
@@ -142,7 +142,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     return { category: defaultCategory, subCategory: '' }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.getSubcategories()
   }
 
@@ -150,6 +150,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   onChangePayee = (payeeName: string, thumbnailPath: string) => {
     this.setState({ payeeName, thumbnailPath })
   }
+
   openPersonInput = () => {
     const personLabel = this.state.direction === 'receive' ? s.strings.transaction_details_payer : s.strings.transaction_details_payee
     Airship.show(bridge => (
@@ -286,11 +287,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     const { currentFiatAmount } = this.props
     const { amountFiat } = this.state
 
-    const amount = currentFiatAmount
-      ? parseFloat(currentFiatAmount)
-        .toFixed(2)
-        .toString()
-      : '0'
+    const amount = currentFiatAmount ? parseFloat(currentFiatAmount).toFixed(2).toString() : '0'
     const fiatAmount = amountFiat.replace(',', '.')
     const difference = amount ? parseFloat(amount) - parseFloat(fiatAmount) : 0
     const percentageFloat = amount && parseFloat(fiatAmount) > 0 ? (difference / parseFloat(fiatAmount)) * 100 : 0
@@ -304,7 +301,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   // Render
-  render () {
+  render() {
     const { guiWallet } = this.props
     const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory } = this.state
     const { fiatCurrencyCode } = guiWallet
@@ -318,20 +315,20 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     const personHeader = sprintf(s.strings.transaction_details_person_name, personLabel)
 
     return (
-      <Fragment>
+      <>
         <SceneWrapper bodySplit={scale(24)}>
           <View style={styles.container}>
             <ScrollView>
               <View style={styles.tilesContainer}>
                 <TouchableWithoutFeedback onPress={this.openPersonInput}>
                   <View style={styles.tileContainerBig}>
-                    <Image style={[styles.tileIcon]} source={editIcon} />
+                    <Image style={styles.tileIcon} source={editIcon} />
                     <FormattedText style={styles.tileTextTop}>{personHeader}</FormattedText>
                     <View style={styles.tileRow}>
                       {thumbnailPath ? (
-                        <Image style={[styles.tileThumbnail]} source={{ uri: thumbnailPath }} />
+                        <Image style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
                       ) : (
-                        <IonIcon style={styles.tileAvatarIcon} name={'ios-contact'} size={iconSize.avatar} />
+                        <IonIcon style={styles.tileAvatarIcon} name="ios-contact" size={iconSize.avatar} />
                       )}
                       <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
                     </View>
@@ -347,7 +344,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                 </View>
                 <TouchableWithoutFeedback onPress={this.openFiatInput}>
                   <View style={styles.tileContainer}>
-                    <Image style={[styles.tileIcon]} source={editIcon} />
+                    <Image style={styles.tileIcon} source={editIcon} />
                     <FormattedText style={styles.tileTextTop}>{sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)}</FormattedText>
                     <View style={styles.tileRow}>
                       <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
@@ -367,7 +364,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                 </View>
                 <TouchableWithoutFeedback onPress={this.openCategoryInput}>
                   <View style={styles.tileContainerBig}>
-                    <Image style={[styles.tileIcon]} source={editIcon} />
+                    <Image style={styles.tileIcon} source={editIcon} />
                     <FormattedText style={styles.tileTextTop}>{s.strings.transaction_details_category_title}</FormattedText>
                     <View style={styles.tileRow}>
                       <View style={styles.tileCategory}>
@@ -379,7 +376,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={this.openNotesInput}>
                   <View style={styles.tileContainerNotes}>
-                    <Image style={[styles.tileIcon]} source={editIcon} />
+                    <Image style={styles.tileIcon} source={editIcon} />
                     <FormattedText style={styles.tileTextTopNotes}>{s.strings.transaction_details_notes_title}</FormattedText>
                     <FormattedText style={styles.tileTextNotes}>{notes}</FormattedText>
                   </View>
@@ -397,7 +394,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
             </ScrollView>
           </View>
         </SceneWrapper>
-      </Fragment>
+      </>
     )
   }
 }

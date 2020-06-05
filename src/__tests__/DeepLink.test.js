@@ -6,7 +6,7 @@ import { type DeepLink, parseDeepLink } from '../types/DeepLink.js'
 /**
  * Generates deep link unit tests using a simple table format.
  */
-function makeLinkTests (tests: { [uri: string]: DeepLink }): void {
+function makeLinkTests(tests: { [uri: string]: DeepLink }): void {
   for (const link of Object.keys(tests)) {
     const expected = tests[link]
     it(link, function () {

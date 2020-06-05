@@ -112,7 +112,7 @@ export type SettingsState = {
   }
 }
 
-function currencyPLuginUtil (state: SettingsState, currencyInfo: EdgeCurrencyInfo): SettingsState {
+function currencyPLuginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo): SettingsState {
   const { plugins } = state
   const { allCurrencyInfos, supportedWalletTypes } = plugins
   const { pluginId, walletType } = currencyInfo

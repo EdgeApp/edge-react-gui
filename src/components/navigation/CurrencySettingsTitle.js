@@ -6,14 +6,14 @@ import { Image, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles } from '../../styles/MainStyle.js'
 
 type Props = {
   currencyInfo: EdgeCurrencyInfo
 }
 
-export function CurrencySettingsTitle (props: Props) {
+export function CurrencySettingsTitle(props: Props) {
   const { currencyInfo } = props
   const { displayName, symbolImage = '' } = currencyInfo
 

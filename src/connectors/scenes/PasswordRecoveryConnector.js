@@ -16,7 +16,4 @@ export const mapDispatchToProps = () => ({
   onComplete: Actions.pop
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PasswordRecoveryComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(PasswordRecoveryComponent)

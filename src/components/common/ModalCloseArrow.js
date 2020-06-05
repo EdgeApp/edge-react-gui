@@ -13,7 +13,7 @@ type Props = {
 /**
  * Place this inside a modal (after the content box) to get a close button.
  */
-export function ModalCloseArrow (props: Props) {
+export function ModalCloseArrow(props: Props) {
   return (
     <TouchableOpacity style={{ alignItems: 'center' }} onPress={props.onPress}>
       <EntypoIcon name="chevron-thin-down" size={THEME.rem(1.4)} color={THEME.COLORS.GRAY_1} />

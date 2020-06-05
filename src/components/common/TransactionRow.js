@@ -11,7 +11,7 @@ import receivedTypeImage from '../../assets/images/transactions/transaction-type
 import sentTypeImage from '../../assets/images/transactions/transaction-type-sent.png'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import type { ContactsState } from '../../reducers/ContactsReducer'
 import styles, { styles as styleRaw } from '../../styles/scenes/TransactionListStyle'
 import type { GuiWallet, TransactionListTx } from '../../types/types.js'
@@ -45,12 +45,12 @@ const UNCONFIRMED_TRANSACTION = s.strings.fragment_wallet_unconfirmed
 type Props = TransactionRowOwnProps & TransactionRowStateProps
 
 export class TransactionRowComponent extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  shouldComponentUpdate (nextProps: Props) {
+  shouldComponentUpdate(nextProps: Props) {
     const diffElement = UTILS.getObjectDiff(this.props, nextProps, { transaction: true }, { transactions: true })
     if (diffElement) {
       return true
@@ -59,7 +59,7 @@ export class TransactionRowComponent extends Component<Props, State> {
     }
   }
 
-  render () {
+  render() {
     global.pcount && global.pcount('TransactionRow:render')
     const completedTxList: Array<TransactionListTx> = this.props.transactions
     // $FlowFixMe
@@ -194,7 +194,7 @@ export class TransactionRowComponent extends Component<Props, State> {
       }
     }
     const out = (
-      <View style={[styles.singleTransactionWrap]}>
+      <View style={styles.singleTransactionWrap}>
         {(tx.key === 0 || tx.dateString !== completedTxList[tx.key - 1].dateString) && (
           <View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
@@ -207,28 +207,28 @@ export class TransactionRowComponent extends Component<Props, State> {
           underlayColor={styleRaw.transactionUnderlay.color}
           style={[styles.singleTransaction, { borderBottomWidth: lastOfDate ? 0 : 1 }]}
         >
-          <View style={[styles.transactionInfoWrap]}>
+          <View style={styles.transactionInfoWrap}>
             <View style={styles.transactionLeft}>
-              <View style={[styles.transactionLeftLogoWrap]}>
+              <View style={styles.transactionLeftLogoWrap}>
                 {thumbnailPath ? (
-                  <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }} />
+                  <Image style={styles.transactionLogo} source={{ uri: thumbnailPath }} />
                 ) : (
                   <Image style={styles.transactionLogo} source={txImage} />
                 )}
               </View>
             </View>
 
-            <View style={[styles.transactionRight]}>
+            <View style={styles.transactionRight}>
               <View style={[styles.transactionDetailsRow, transactionCategory ? styles.transactionDetailsRowMargin : null]}>
-                <T style={[styles.transactionPartner]} adjustsFontSizeToFit={true} minimumFontScale={0.6}>
+                <T style={styles.transactionPartner} adjustsFontSizeToFit minimumFontScale={0.6}>
                   {transactionPartner}
                 </T>
                 {transactionAmountString()}
               </View>
               {formattedTransactionCategory ? (
-                <View style={[styles.transactionDetailsRow]}>
-                  <T style={[styles.transactionCategory]}>{formattedTransactionCategory}</T>
-                  <T style={[styles.transactionFiat]}>{`${fiatSymbol} ${fiatAmountString}`}</T>
+                <View style={styles.transactionDetailsRow}>
+                  <T style={styles.transactionCategory}>{formattedTransactionCategory}</T>
+                  <T style={styles.transactionFiat}>{`${fiatSymbol} ${fiatAmountString}`}</T>
                 </View>
               ) : null}
               {formattedTransactionCategory ? (
@@ -237,9 +237,9 @@ export class TransactionRowComponent extends Component<Props, State> {
                 </View>
               ) : null}
               {!formattedTransactionCategory ? (
-                <View style={[styles.transactionDetailsRow]}>
+                <View style={styles.transactionDetailsRow}>
                   <T style={[styles.transactionPendingTime, pendingTimeStyle]}>{pendingTimeSyntax}</T>
-                  <T style={[styles.transactionFiat]}>{`${fiatSymbol} ${fiatAmountString}`}</T>
+                  <T style={styles.transactionFiat}>{`${fiatSymbol} ${fiatAmountString}`}</T>
                 </View>
               ) : null}
             </View>

@@ -34,6 +34,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   EBST: s.strings.string_first_eboost_wallet_name,
   EOS: s.strings.string_first_eos_wallet_name,
   ETH: s.strings.string_first_ethereum_wallet_name,
+  FIO: s.strings.string_first_fio_wallet_name,
   FTC: s.strings.string_first_feather_coin_wallet_name,
   GRS: s.strings.string_first_groestlcoin_wallet_name,
   HERC: s.strings.string_first_hercules_wallet_name,
@@ -545,4 +546,10 @@ export const FIAT_CODES_SYMBOLS = {
 
 export const FIO_WALLET_TYPE = 'wallet:fio'
 export const FIO_STR = 'FIO'
-export const FIO_DOMAIN_DEFAULT = '@edge'
+export const FIO_DOMAIN_DEFAULT = {
+  name: 'edge',
+  expiration: new Date().toDateString(),
+  isPublic: true,
+  walletId: ''
+}
+export const FIO_ADDRESS_DELIMITER = '@'

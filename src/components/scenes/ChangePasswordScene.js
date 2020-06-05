@@ -31,10 +31,10 @@ export class ChangePassword extends Component<ChangePasswordComponent> {
     this.props.onComplete()
   }
 
-  render () {
+  render() {
     return (
       <SceneWrapper hasTabs={false} background="body">
-        <ScrollView keyboardShouldPersistTaps={'always'}>
+        <ScrollView keyboardShouldPersistTaps="always">
           <ChangePasswordScreen
             account={this.props.account}
             context={this.props.context}

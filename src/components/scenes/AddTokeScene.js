@@ -7,8 +7,8 @@ import slowlog from 'react-native-slowlog'
 
 import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/index'
-import Text from '../../modules/UI/components/FormattedText/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles } from '../../styles/scenes/AddTokenStyles.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import { decimalPlacesToDenomination } from '../../util/utils.js'
@@ -50,7 +50,7 @@ type State = {
 export type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
 
 export class AddToken extends Component<AddTokenProps, State> {
-  constructor (props: AddTokenProps) {
+  constructor(props: AddTokenProps) {
     super(props)
     const { currencyName, currencyCode, contractAddress, decimalPlaces } = props
     this.state = {
@@ -63,7 +63,7 @@ export class AddToken extends Component<AddTokenProps, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  render () {
+  render() {
     const { addTokenPending } = this.props
     return (
       <SceneWrapper background="body">
@@ -72,53 +72,53 @@ export class AddToken extends Component<AddTokenProps, State> {
             <Text style={styles.instructionalText}>{s.strings.addtoken_top_instructions}</Text>
           </View>
           <View style={styles.formArea}>
-            <View style={[styles.nameArea]}>
+            <View style={styles.nameArea}>
               <FormField
-                style={[styles.currencyName]}
+                style={styles.currencyName}
                 value={this.state.currencyName}
                 onChangeText={this.onChangeName}
                 autoCapitalize="words"
                 autoFocus
                 label={s.strings.addtoken_name_input_text}
-                returnKeyType={'done'}
+                returnKeyType="done"
                 autoCorrect={false}
               />
             </View>
-            <View style={[styles.currencyCodeArea]}>
+            <View style={styles.currencyCodeArea}>
               <FormField
-                style={[styles.currencyCodeInput]}
+                style={styles.currencyCodeInput}
                 value={this.state.currencyCode}
                 onChangeText={this.onChangeCurrencyCode}
-                autoCapitalize={'characters'}
+                autoCapitalize="characters"
                 label={s.strings.addtoken_currency_code_input_text}
-                returnKeyType={'done'}
+                returnKeyType="done"
                 autoCorrect={false}
                 maxLength={MAX_TOKEN_CODE_CHARACTERS}
               />
             </View>
-            <View style={[styles.contractAddressArea]}>
+            <View style={styles.contractAddressArea}>
               <FormField
-                style={[styles.contractAddressInput]}
+                style={styles.contractAddressInput}
                 value={this.state.contractAddress}
                 onChangeText={this.onChangeContractAddress}
                 label={s.strings.addtoken_contract_address_input_text}
-                returnKeyType={'done'}
+                returnKeyType="done"
                 autoCorrect={false}
               />
             </View>
-            <View style={[styles.decimalPlacesArea]}>
+            <View style={styles.decimalPlacesArea}>
               <FormField
-                style={[styles.decimalPlacesInput]}
+                style={styles.decimalPlacesInput}
                 value={this.state.decimalPlaces}
                 onChangeText={this.onChangeDecimalPlaces}
                 label={s.strings.addtoken_denomination_input_text}
-                returnKeyType={'done'}
+                returnKeyType="done"
                 autoCorrect={false}
-                keyboardType={'numeric'}
+                keyboardType="numeric"
               />
             </View>
           </View>
-          <View style={[styles.buttonsArea]}>
+          <View style={styles.buttonsArea}>
             <PrimaryButton style={styles.saveButton} onPress={this._onSave}>
               {addTokenPending ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
             </PrimaryButton>

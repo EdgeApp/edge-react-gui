@@ -5,7 +5,7 @@ import { type EdgeContext, type EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorl
 import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io.js'
 import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
-import React, { Fragment, PureComponent } from 'react'
+import React, { PureComponent } from 'react'
 import { Alert, AppState } from 'react-native'
 import SplashScreen from 'react-native-smart-splash-screen'
 
@@ -34,10 +34,10 @@ const contextOptions = {
 const isReactNative = detectBundler.isReactNative
 const nativeIo = isReactNative
   ? {
-    'edge-currency-accountbased': makeAccountbasedIo(),
-    'edge-currency-bitcoin': makeBitcoinIo(),
-    'edge-currency-monero': makeMoneroIo()
-  }
+      'edge-currency-accountbased': makeAccountbasedIo(),
+      'edge-currency-bitcoin': makeBitcoinIo(),
+      'edge-currency-monero': makeMoneroIo()
+    }
   : {}
 
 /**
@@ -48,16 +48,16 @@ export class EdgeCoreManager extends PureComponent<Props, State> {
   splashHidden: boolean = false
   paused: boolean = false
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = { context: null, counter: 0 }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     AppState.addEventListener('change', this.onAppStateChange)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     AppState.removeEventListener('change', this.onAppStateChange)
   }
 
@@ -74,7 +74,7 @@ export class EdgeCoreManager extends PureComponent<Props, State> {
     }
   }
 
-  hideSplash () {
+  hideSplash() {
     if (!this.splashHidden) {
       this.splashHidden = true
       SplashScreen.close({
@@ -91,7 +91,10 @@ export class EdgeCoreManager extends PureComponent<Props, State> {
       console.log('EdgeContext closed')
       this.setState({ context: null })
     })
-    this.setState(state => ({ context, counter: state.counter + 1 }), () => this.hideSplash())
+    this.setState(
+      state => ({ context, counter: state.counter + 1 }),
+      () => this.hideSplash()
+    )
   }
 
   onError = (error: Error) => {
@@ -104,7 +107,7 @@ export class EdgeCoreManager extends PureComponent<Props, State> {
     world.makeEdgeContext(contextOptions).then(this.onContext, this.onError)
   }
 
-  renderCore () {
+  renderCore() {
     return ENV.USE_FAKE_CORE ? (
       <MakeFakeEdgeWorld debug={ENV.DEBUG_CORE_BRIDGE} users={[fakeUser]} onLoad={this.onFakeEdgeWorld} onError={this.onError} nativeIo={nativeIo} />
     ) : (
@@ -112,15 +115,15 @@ export class EdgeCoreManager extends PureComponent<Props, State> {
     )
   }
 
-  render () {
+  render() {
     const { context, counter } = this.state
     const key = `redux${counter}`
 
     return (
-      <Fragment>
+      <>
         {context == null ? <LoadingScene /> : <Services key={key} context={context} />}
         {this.renderCore()}
-      </Fragment>
+      </>
     )
   }
 }

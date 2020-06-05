@@ -5,7 +5,7 @@ import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
-import * as SETTINGS_API from '../modules/Core/Account/settings'
+import { getSyncedSettings, setSyncedSettings } from '../modules/Core/Account/settings'
 import { setEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
 import * as UI_WALLET_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
@@ -73,7 +73,7 @@ export const addTokenAsync = async (
   const coreWallet = currencyWallets[walletId]
   await coreWallet.addCustomToken(newTokenObj)
   coreWallet.enableTokens([currencyCode])
-  const settingsOnFile = await SETTINGS_API.getSyncedSettingsAsync(account)
+  const settingsOnFile = await getSyncedSettings(account)
 
   const setSettings = settingsOnFile
   const customTokens = settingsOnFile.customTokens
@@ -86,7 +86,7 @@ export const addTokenAsync = async (
   }
   settingsOnFile.customTokens = newCustomTokens
   settingsOnFile[currencyCode] = newTokenObj
-  await SETTINGS_API.setSyncedSettingsAsync(account, settingsOnFile)
+  await setSyncedSettings(account, settingsOnFile)
   const newEnabledTokens = uiWallet.enabledTokens
   if (uiWallet.enabledTokens.indexOf(newTokenObj.currencyCode) === -1) {
     newEnabledTokens.push(newTokenObj.currencyCode)

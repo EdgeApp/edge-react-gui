@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type Node, Fragment } from 'react'
+import React, { type Node } from 'react'
 import { Image, Text, View } from 'react-native'
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 /**
  * Lays out a collection of children with equal space between each one.
  */
-export function LadderLayout (props: Props) {
+export function LadderLayout(props: Props) {
   const { horizontal = false, padding } = props
   const children = React.Children.toArray(props.children)
 
@@ -63,9 +63,9 @@ export function LadderLayout (props: Props) {
     }
   }
 
-  return <Fragment>{newChildren}</Fragment>
+  return <>{newChildren}</>
 }
 
-function isStyled (element) {
+function isStyled(element) {
   return React.isValidElement(element) && (element.type === Image || element.type === Text || element.type === View || element.props.style != null)
 }

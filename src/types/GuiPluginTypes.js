@@ -106,7 +106,7 @@ export type GuiPluginJson = $Call<typeof asGuiPluginJson, any>
  * Helper function to turn a GuiPluginJson into a cooked list.
  * Call `asGuiPluginJson` to clean & validate the input file first.
  */
-export function filterGuiPluginJson (cleanJson: GuiPluginJson, platform: string, countryCode: string): GuiPluginRow[] {
+export function filterGuiPluginJson(cleanJson: GuiPluginJson, platform: string, countryCode: string): GuiPluginRow[] {
   // Filter and merge related rows:
   const mergedRows: { [id: string]: GuiPluginRow } = {}
   const sortIndexes: { [id: string]: number } = {}
@@ -156,7 +156,7 @@ export function filterGuiPluginJson (cleanJson: GuiPluginJson, platform: string,
 /**
  * Prepares a plugin's URI.
  */
-export function makePluginUri (
+export function makePluginUri(
   plugin: GuiPlugin,
   opts: {
     deepPath?: string,

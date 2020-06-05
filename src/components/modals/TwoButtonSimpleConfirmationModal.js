@@ -17,7 +17,7 @@ type Props = {
 }
 
 export class TwoButtonSimpleConfirmationModal extends React.Component<Props> {
-  render () {
+  render() {
     const { bridge, cancelText, doneText, subTitle, title, icon = <EntypoIcon name="info" size={THEME.rem(2)} color={THEME.COLORS.SECONDARY} /> } = this.props
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(false)}>

@@ -1,14 +1,15 @@
 // @flow
 
 import { createStaticModal, createYesNoModal } from 'edge-components'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Clipboard, Image, Text, TouchableOpacity, View } from 'react-native'
 
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton, TertiaryButton } from '../../modules/UI/components/Buttons/index'
-import T from '../../modules/UI/components/FormattedText/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import { TertiaryButton } from '../../modules/UI/components/Buttons/TertiaryButton.ui.js'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { ExpandableBoxStyle } from '../../styles/components/ExpandableBoxStyle.js'
 import { styles } from '../../styles/scenes/OtpSettingsScreenStyles.js'
@@ -34,7 +35,7 @@ type State = {
 }
 
 export default class OtpSettingsScene extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       showMessageModal: false,
@@ -126,7 +127,7 @@ export default class OtpSettingsScene extends Component<Props, State> {
     return null
   }
 
-  renderMiddle (styles: Object) {
+  renderMiddle(styles: Object) {
     const message = this.props.isOtpEnabled ? s.strings.otp_enabled_description : s.strings.otp_description
     return (
       <View style={styles.middle}>
@@ -137,10 +138,10 @@ export default class OtpSettingsScene extends Component<Props, State> {
     )
   }
 
-  render () {
+  render() {
     console.log('this.state.showMessageModal: ', this.state.showMessageModal)
     return (
-      <Fragment>
+      <>
         <SceneWrapper hasTabs={false} background="body">
           <View style={styles.body}>
             <OtpHeroComponent style={styles.hero} enabled={this.props.isOtpEnabled} />
@@ -155,7 +156,7 @@ export default class OtpSettingsScene extends Component<Props, State> {
           isVisible={this.state.showMessageModal}
           modalDismissTimerSeconds={10}
         />
-      </Fragment>
+      </>
     )
   }
 }

@@ -11,7 +11,7 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import * as SETTINGS_API from '../modules/Core/Account/settings.js'
+import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } from '../modules/Core/Account/settings.js'
 import { updateWalletsRequest } from '../modules/Core/Wallets/action.js'
 import { getEnabledTokensFromFile, setEnabledTokens, updateEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
@@ -120,7 +120,7 @@ export const selectWalletFromModal = (walletId: string, currencyCode: string) =>
   dispatch(refreshReceiveAddressRequest(walletId))
 }
 
-function dispatchUpsertWallets (dispatch, wallets: Array<EdgeCurrencyWallet>) {
+function dispatchUpsertWallets(dispatch, wallets: Array<EdgeCurrencyWallet>) {
   global.pcount('dispatchUpsertWallets')
   dispatch(upsertWallets(wallets))
 }
@@ -353,19 +353,19 @@ export const editCustomToken = (
   }
 }
 
-export async function deleteCustomTokenAsync (walletId: string, currencyCode: string, getState: GetState) {
+export async function deleteCustomTokenAsync(walletId: string, currencyCode: string, getState: GetState) {
   const state = getState()
   const { account } = state.core
   const { currencyWallets = {} } = account
   const guiWallets = state.ui.wallets.byId
   const coreWalletsToUpdate = []
-  const receivedSyncSettings = await SETTINGS_API.getSyncedSettings(account)
+  const receivedSyncSettings = await getSyncedSettings(account)
   receivedSyncSettings[currencyCode].isVisible = false
   const syncedCustomTokens: Array<CustomTokenInfo> = [...receivedSyncSettings.customTokens]
   const indexOfSyncedToken: number = _.findIndex(syncedCustomTokens, item => item.currencyCode === currencyCode)
   syncedCustomTokens[indexOfSyncedToken].isVisible = false
   receivedSyncSettings.customTokens = syncedCustomTokens
-  await SETTINGS_API.setSyncedSettingsAsync(account, receivedSyncSettings)
+  await setSyncedSettings(account, receivedSyncSettings)
   const walletPromises = Object.values(guiWallets).map(wallet => {
     // Flow is having issues here, need to fix
     // $FlowFixMe
@@ -393,7 +393,7 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
   }
   const coreWalletsToUpdate = []
   dispatch({ type: 'DELETE_CUSTOM_TOKEN_START' })
-  SETTINGS_API.getSyncedSettings(account)
+  getSyncedSettings(account)
     .then(settings => {
       if (settings[currencyCode]) settings[currencyCode].isVisible = false // remove top-level property. We should migrate away from it eventually anyway
       if (localSettings[currencyCode]) localSettings[currencyCode].isVisible = false
@@ -408,7 +408,7 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
       return settings
     })
     .then(adjustedSettings => {
-      return SETTINGS_API.setSyncedSettings(account, adjustedSettings)
+      return setSyncedSettings(account, adjustedSettings)
     })
     .then(() => {
       const walletPromises = Object.values(guiWallets).map(wallet => {
@@ -478,7 +478,7 @@ export const updateMostRecentWalletsSelected = (walletId: string, currencyCode: 
   }
   currentMostRecentWallets.unshift({ id: walletId, currencyCode })
 
-  SETTINGS_API.setMostRecentWalletsSelected(account, currentMostRecentWallets)
+  setMostRecentWalletsSelected(account, currentMostRecentWallets)
     .then(() => {
       dispatch(updateMostRecentWallets(currentMostRecentWallets))
     })
@@ -490,7 +490,7 @@ export const removeMostRecentWallet = (walletId: string, currencyCode: string) =
   const { account } = state.core
   const { mostRecentWallets } = state.ui.settings
   const currentMostRecentWallets = mostRecentWallets.filter(wallet => wallet.id !== walletId || wallet.currencyCode !== currencyCode)
-  SETTINGS_API.setMostRecentWalletsSelected(account, currentMostRecentWallets)
+  setMostRecentWalletsSelected(account, currentMostRecentWallets)
     .then(() => {
       dispatch(updateMostRecentWallets(currentMostRecentWallets))
     })

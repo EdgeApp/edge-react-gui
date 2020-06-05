@@ -10,8 +10,7 @@ export const styles = StyleSheet.create({
     flex: 2,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    paddingLeft: scale(15),
-    paddingRight: scale(15)
+    paddingHorizontal: THEME.rem(1)
   },
   texts: {
     flex: 1,
@@ -54,10 +53,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  buttonWithLoader: {
-    position: 'relative',
-    width: '100%'
-  },
   bottomButtonText: {
     opacity: 1,
     color: THEME.COLORS.WHITE,
@@ -67,8 +62,33 @@ export const styles = StyleSheet.create({
   underlay: {
     color: THEME.COLORS.SECONDARY
   },
-  loading: {
-    position: 'absolute',
-    right: scale(15)
+  viewGrey: {
+    flex: 1,
+    backgroundColor: THEME.COLORS.GRAY_3,
+    paddingHorizontal: 0
+  },
+  expiration: {
+    fontSize: THEME.rem(0.75),
+    color: THEME.COLORS.WHITE,
+    textAlign: 'center',
+    marginTop: THEME.rem(-0.5),
+    paddingBottom: THEME.rem(0.75)
+  },
+  titleWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%'
+  },
+  settingsText: {
+    color: THEME.COLORS.GRAY_1,
+    fontSize: THEME.rem(1)
+  },
+  iconImage: {
+    color: THEME.COLORS.GRAY_1,
+    width: THEME.rem(1.5),
+    height: THEME.rem(1.5)
+  },
+  warning: {
+    color: THEME.COLORS.ACCENT_RED
   }
 })

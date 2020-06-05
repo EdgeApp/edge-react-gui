@@ -22,7 +22,4 @@ const mapStateToProps = (state: State) => {
   return out
 }
 
-export const FioSentRequestConnector = connect(
-  mapStateToProps,
-  {}
-)(FioSentRequestDetailsComponent)
+export const FioSentRequestConnector = connect(mapStateToProps, {})(FioSentRequestDetailsComponent)

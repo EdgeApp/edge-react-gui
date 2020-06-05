@@ -9,7 +9,7 @@ import { THEME } from '../../theme/variables/airbitz.js'
 type Props = {
   disabled?: boolean, // Show with grey style
   icon?: Node,
-  text: string,
+  text: string | Node,
   right?: Node,
   onPress?: () => void
 }
@@ -18,7 +18,7 @@ type Props = {
  * A settings row features tappable text, as well as an optional icon
  * on the left and another optional component on the right.
  */
-export function SettingsRow (props: Props): Node {
+export function SettingsRow(props: Props): Node {
   const { disabled = false, icon, text, right, onPress } = props
 
   return (

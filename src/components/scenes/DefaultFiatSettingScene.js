@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { setDefaultFiatRequest } from '../../actions/SettingsActions'
 import s from '../../locales/strings.js'
 import { getDefaultFiat } from '../../modules/Settings/selectors'
-import Text from '../../modules/UI/components/FormattedText/index'
+import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import { THEME } from '../../theme/variables/airbitz'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
@@ -36,7 +36,7 @@ type State = {
 }
 
 class DefaultFiatSettingComponent extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       searchTerm: '',
@@ -51,7 +51,7 @@ class DefaultFiatSettingComponent extends Component<Props, State> {
     })
   }
 
-  render () {
+  render() {
     const filteredArray = this.props.supportedFiats.filter(entry => {
       return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
     })
@@ -62,9 +62,9 @@ class DefaultFiatSettingComponent extends Component<Props, State> {
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <FormField
               autoFocus
-              clearButtonMode={'while-editing'}
+              clearButtonMode="while-editing"
               autoCorrect={false}
-              autoCapitalize={'words'}
+              autoCapitalize="words"
               onChangeText={this.handleSearchTermChange}
               value={this.state.searchTerm}
               label={DEFAULT_FIAT_PICKER_PLACEHOLDER}
@@ -107,11 +107,11 @@ class DefaultFiatSettingComponent extends Component<Props, State> {
   renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
     return (
       <View style={[styles.singleFiatTypeWrap, data.item.value === this.state.selectedFiat && styles.selectedItem]}>
-        <TouchableHighlight style={[styles.singleFiatType]} onPress={() => this.onSelectFiat(data.item)} underlayColor={stylesRaw.underlayColor.color}>
-          <View style={[styles.fiatTypeInfoWrap]}>
+        <TouchableHighlight style={styles.singleFiatType} onPress={() => this.onSelectFiat(data.item)} underlayColor={stylesRaw.underlayColor.color}>
+          <View style={styles.fiatTypeInfoWrap}>
             <View style={styles.fiatTypeLeft}>
-              <View style={[styles.fiatTypeLeftTextWrap]}>
-                <Text style={[styles.fiatTypeName]}>{data.item.label}</Text>
+              <View style={styles.fiatTypeLeftTextWrap}>
+                <Text style={styles.fiatTypeName}>{data.item.label}</Text>
               </View>
             </View>
           </View>
@@ -182,7 +182,7 @@ export const DefaultFiatSettingScene = connect(
     supportedFiats: getSupportedFiats(getDefaultFiat(state))
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    onSelectFiat (selectedDefaultFiat) {
+    onSelectFiat(selectedDefaultFiat) {
       dispatch(setDefaultFiatRequest(selectedDefaultFiat))
       Actions.pop()
     }

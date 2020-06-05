@@ -31,7 +31,7 @@ import { updateWalletsEnabledTokens, updateWalletsRequest } from '../Core/Wallet
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
-function getFirstActiveWalletInfo (account: EdgeAccount): { walletId: string, currencyCode: string } {
+function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, currencyCode: string } {
   // Find the first wallet:
   const walletId = account.activeWalletIds[0]
   const walletKey = account.allKeys.find(key => key.id === walletId)
@@ -276,7 +276,7 @@ export const logoutRequest = (username?: string) => (dispatch: Dispatch, getStat
 /**
  * Finds the currency info for a currency code.
  */
-function findCurrencyInfo (account: EdgeAccount, currencyCode: string): EdgeCurrencyInfo | void {
+function findCurrencyInfo(account: EdgeAccount, currencyCode: string): EdgeCurrencyInfo | void {
   for (const pluginId in account.currencyConfig) {
     const { currencyInfo } = account.currencyConfig[pluginId]
     if (currencyInfo.currencyCode.toUpperCase() === currencyCode) {
@@ -288,7 +288,7 @@ function findCurrencyInfo (account: EdgeAccount, currencyCode: string): EdgeCurr
 /**
  * Creates a wallet, with timeout, and maybe also activates it.
  */
-async function safeCreateWallet (account: EdgeAccount, walletType: string, walletName: string, fiatCurrencyCode: string, dispatch: Dispatch) {
+async function safeCreateWallet(account: EdgeAccount, walletType: string, walletName: string, fiatCurrencyCode: string, dispatch: Dispatch) {
   const wallet = await runWithTimeout(
     account.createCurrencyWallet(walletType, {
       name: walletName,
@@ -309,7 +309,7 @@ async function safeCreateWallet (account: EdgeAccount, walletType: string, walle
 /**
  * Creates the custom default wallets inside a new account.
  */
-async function createCustomWallets (account: EdgeAccount, fiatCurrencyCode: string, currencyCodes: string[], dispatch: Dispatch) {
+async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: string, currencyCodes: string[], dispatch: Dispatch) {
   const currencyInfos = []
   for (const code of currencyCodes) {
     const [parent] = code.split(':')
@@ -341,7 +341,7 @@ async function createCustomWallets (account: EdgeAccount, fiatCurrencyCode: stri
 /**
  * Creates the default wallets inside a new account.
  */
-async function createDefaultWallets (account: EdgeAccount, fiatCurrencyCode: string, dispatch: Dispatch) {
+async function createDefaultWallets(account: EdgeAccount, fiatCurrencyCode: string, dispatch: Dispatch) {
   // TODO: Run these in parallel once the Core has safer locking:
   await safeCreateWallet(account, 'wallet:bitcoin', s.strings.string_first_bitcoin_wallet_name, fiatCurrencyCode, dispatch)
   await safeCreateWallet(account, 'wallet:bitcoincash', s.strings.string_first_bitcoincash_wallet_name, fiatCurrencyCode, dispatch)

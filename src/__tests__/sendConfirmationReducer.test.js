@@ -1,7 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 /* globals describe test expect */
 
-import { clone } from 'ramda'
+import { cloneDeep } from 'lodash'
 
 import { newPin, newSpendInfo, reset, updateSpendPending, updateTransaction } from '../actions/SendConfirmationActions.js'
 import s from '../locales/strings.js'
@@ -45,7 +45,7 @@ describe('sendConfirmation reducer', () => {
         }
         const error = null
         const forceUpdateGui = true
-        const initialStateClone = clone(initialState)
+        const initialStateClone = cloneDeep(initialState)
         const action = updateTransaction(transaction, guiMakeSpendInfo, forceUpdateGui, error)
         const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
 
@@ -74,7 +74,7 @@ describe('sendConfirmation reducer', () => {
         }
         const error = null
         const forceUpdateGui = true
-        const initialStateClone = clone(initialState)
+        const initialStateClone = cloneDeep(initialState)
         const action = updateTransaction(transaction, guiMakeSpendInfo, forceUpdateGui, error)
         const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
 
@@ -86,7 +86,7 @@ describe('sendConfirmation reducer', () => {
         const guiMakeSpendInfo = { nativeAmount: '100000' }
         const forceUpdateGui = true
         const error = new Error()
-        const initialStateClone = clone(initialState)
+        const initialStateClone = cloneDeep(initialState)
         const action = updateTransaction(transaction, guiMakeSpendInfo, forceUpdateGui, error)
         const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
 
@@ -108,7 +108,7 @@ describe('sendConfirmation reducer', () => {
         }
         const error = new Error(s.strings.incorrect_pin)
         const forceUpdateGui = true
-        const initialStateClone = clone(initialState)
+        const initialStateClone = cloneDeep(initialState)
         const action = updateTransaction(transaction, guiMakeSpendInfo, forceUpdateGui, error)
         const actual = sendConfirmation(initialStateClone, action) // use initialState after sendConfirmation reducer not longer mutates state
 
@@ -125,7 +125,7 @@ describe('sendConfirmation reducer', () => {
           metadata: { name: 'airbitz' }
         }
         const action = newSpendInfo(spendInfo, 'none')
-        const initialStateClone = clone(initialState)
+        const initialStateClone = cloneDeep(initialState)
         const actual = sendConfirmation(initialStateClone, action)
 
         expect(actual).toMatchSnapshot()
@@ -139,7 +139,7 @@ describe('sendConfirmation reducer', () => {
           metadata: {}
         }
         const action = newSpendInfo(spendInfo, 'none')
-        const initialStateClone = clone(initialState)
+        const initialStateClone = cloneDeep(initialState)
         const actual = sendConfirmation(initialStateClone, action)
 
         expect(actual).toMatchSnapshot()
@@ -154,7 +154,7 @@ describe('sendConfirmation reducer', () => {
         metadata: {}
       }
       const action = newSpendInfo(spendInfo, 'none')
-      const initialStateClone = clone(initialState)
+      const initialStateClone = cloneDeep(initialState)
 
       const actual = sendConfirmation(initialStateClone, action)
 
@@ -166,7 +166,7 @@ describe('sendConfirmation reducer', () => {
     // test('UPDATE_PAYMENT_PROTOCOL_TRANSACTION', () => {
     //   const edgeTransaction = { id: '123', nativeAmount: '123' }
     //   const action = updatePaymentProtocolTransaction(edgeTransaction)
-    //   const initialStateClone = clone(initialState)
+    //   const initialStateClone = cloneDeep(initialState)
     //   const actual = sendConfirmation(initialStateClone, action)
     //   expect(actual).toMatchSnapshot()
     // })
@@ -176,7 +176,7 @@ describe('sendConfirmation reducer', () => {
     test('UPDATE_TRANSACTION', () => {
       const error = new Error()
       const action = updateTransaction(null, null, null, error)
-      const initialStateClone = clone(initialState)
+      const initialStateClone = cloneDeep(initialState)
       const actual = sendConfirmation(initialStateClone, action)
 
       expect(actual).toMatchSnapshot()
@@ -185,7 +185,7 @@ describe('sendConfirmation reducer', () => {
 
   test('pin', () => {
     const action = newPin('1234')
-    const initialStateClone = clone(initialState)
+    const initialStateClone = cloneDeep(initialState)
     const actual = sendConfirmation(initialStateClone, action)
 
     expect(actual).toMatchSnapshot()
@@ -193,7 +193,7 @@ describe('sendConfirmation reducer', () => {
 
   test('pending', () => {
     const action = updateSpendPending(true)
-    const initialStateClone = clone(initialState)
+    const initialStateClone = cloneDeep(initialState)
     const actual = sendConfirmation(initialStateClone, action)
 
     expect(actual).toMatchSnapshot()

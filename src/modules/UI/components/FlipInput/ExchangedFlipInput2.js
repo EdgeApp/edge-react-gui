@@ -53,19 +53,19 @@ type State = {
   secondaryInfo: FlipInputFieldInfo
 }
 
-function getPrimaryDisplayToExchangeRatio (props: Props): string {
+function getPrimaryDisplayToExchangeRatio(props: Props): string {
   const exchangeMultiplier: string = props.primaryCurrencyInfo.exchangeDenomination.multiplier
   const displayMultiplier: string = props.primaryCurrencyInfo.displayDenomination.multiplier
   return bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
 }
 
-function getSecondaryDisplayToExchangeRatio (props: Props): string {
+function getSecondaryDisplayToExchangeRatio(props: Props): string {
   const displayMultiplier: string = props.secondaryCurrencyInfo.displayDenomination.multiplier
   const exchangeMultiplier: string = props.secondaryCurrencyInfo.exchangeDenomination.multiplier
   return bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
 }
 
-function propsToState (props: Props): State {
+function propsToState(props: Props): State {
   // Calculate secondaryToPrimaryRatio for FlipInput. FlipInput takes a ratio in display amounts which may be
   // different than exchange amounts. ie. USD / mBTC
   // nextProps.exchangeSecondaryToPrimaryRatio // ie. 1/10000
@@ -125,22 +125,22 @@ export class ExchangedFlipInput extends Component<Props, State> {
     isEditable: true
   }
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = propsToState(props)
     slowlog(this, /.*/, global.slowlogOptions)
     this.flipInput = React.createRef()
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     this.setState(propsToState(nextProps))
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.toggleCryptoOnTop = this.flipInput.current ? this.flipInput.current.toggleCryptoOnTop : null
   }
 
-  shouldComponentUpdate (nextProps: Props, nextState: State) {
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
     let diffElement2: string = ''
     const diffElement = getObjectDiff(this.props, nextProps, {
       primaryCurrencyInfo: true,
@@ -168,7 +168,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
     return !bns.eq(this.state.exchangeSecondaryToPrimaryRatio, '0')
   }
 
-  render () {
+  render() {
     return (
       <FlipInput
         overridePrimaryDecimalAmount={this.state.overridePrimaryDecimalAmount}

@@ -56,7 +56,4 @@ export const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   // nextScreen: () => dispatch(actions.nextScreen())
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MenuDropDown)
+export default connect(mapStateToProps, mapDispatchToProps)(MenuDropDown)

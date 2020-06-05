@@ -7,7 +7,7 @@ import { Image, TouchableHighlight, View } from 'react-native'
 
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
-import FormattedText from '../../modules/UI/components/FormattedText/index'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/components/CryptoExchangeWalletListRowStyle.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
@@ -49,7 +49,7 @@ type Props = StateProps & OwnProps
 const DIVIDE_PRECISION = 18
 
 class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       fiatBalance: '',
@@ -59,12 +59,15 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
       fiatSymbol: ''
     }
   }
-  componentDidMount () {
+
+  componentDidMount() {
     this.setUp(this.props)
   }
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
+
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     this.setUp(nextProps)
   }
+
   setUp = (props: Props) => {
     const { denomination, customTokens, settings, exchangeRates } = this.props
     const multiplier = denomination.multiplier
@@ -99,12 +102,14 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
       enabledNativeBalances
     })
   }
+
   onPress = () => {
     if (this.props.disableZeroBalance && this.state.cryptoBalance === '0' && this.state.fiatBalance === '0') return
     if (!this.props.excludedCurrencyCode.includes(this.props.wallet.currencyCode)) {
       this.props.onPress(this.props.wallet)
     }
   }
+
   renderTokens = () => {
     const { wallet, settings, exchangeRates, searchFilter, isMostRecentWallet, currencyCodeFilter, allowedCurrencyCodes, excludeCurrencyCodes } = this.props
     if (this.props.wallet.enabledTokens.length > 0) {
@@ -116,15 +121,15 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
             // Token Filters
             const checkAllowedCurrencyCodes = allowedCurrencyCodes
               ? allowedCurrencyCodes.find(currencyCode => {
-                const [currency, token] = currencyCode.split(':')
-                return currency === property || token === property
-              })
+                  const [currency, token] = currencyCode.split(':')
+                  return currency === property || token === property
+                })
               : true
             const checkExcludeCurrencyCodes = excludeCurrencyCodes
               ? excludeCurrencyCodes.find(currencyCode => {
-                const [currency, token] = currencyCode.split(':')
-                return currency === property || token === property
-              })
+                  const [currency, token] = currencyCode.split(':')
+                  return currency === property || token === property
+                })
               : false
             const { name } = this.props.wallet
             const token = this.props.wallet.metaTokens.find(item => item.currencyCode === property)
@@ -172,6 +177,7 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
     }
     return null
   }
+
   renderWallet = () => {
     const { wallet, searchFilter, isMostRecentWallet, currencyCodeFilter, allowedCurrencyCodes, excludeCurrencyCodes } = this.props
     const checkAllowedCurrencyCodes = allowedCurrencyCodes ? allowedCurrencyCodes.find(currencyCode => currencyCode === wallet.currencyCode) : true
@@ -200,18 +206,18 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
       <TouchableHighlight style={styles.touchable} underlayColor={styles.underlayColor} onPress={this.onPress}>
         <View style={styles.rowContainerTop}>
           <View style={styles.containerLeft}>
-            <Image style={styles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode={'contain'} />
+            <Image style={styles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode="contain" />
           </View>
           <View style={styles.walletDetailsContainer}>
             <View style={styles.walletDetailsRow}>
-              <FormattedText style={[styles.walletDetailsRowCurrency]}>{wallet.currencyCode}</FormattedText>
-              <FormattedText style={[styles.walletDetailsRowValue]}>
+              <FormattedText style={styles.walletDetailsRowCurrency}>{wallet.currencyCode}</FormattedText>
+              <FormattedText style={styles.walletDetailsRowValue}>
                 {this.state.cryptoSymbol} {this.state.cryptoBalance}
               </FormattedText>
             </View>
             <View style={styles.walletDetailsRow}>
-              <FormattedText style={[styles.walletDetailsRowName]}>{wallet.name}</FormattedText>
-              <FormattedText style={[styles.walletDetailsRowFiat]}>
+              <FormattedText style={styles.walletDetailsRowName}>{wallet.name}</FormattedText>
+              <FormattedText style={styles.walletDetailsRowFiat}>
                 {this.state.fiatSymbol} {this.state.fiatBalance}
               </FormattedText>
             </View>
@@ -220,7 +226,8 @@ class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
       </TouchableHighlight>
     )
   }
-  render () {
+
+  render() {
     return (
       <View style={styles.container}>
         {this.props.headerLabel === 'mostRecentWalletsHeader' && (

@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 
-import { Select } from '../materialWrappers/indexMaterial'
+import { Select } from '../materialWrappers/Select.js'
 
 type FormFieldSelectProps = {
   value: string,
@@ -22,7 +22,7 @@ class FormFieldSelect extends Component<FormFieldSelectProps> {
     label: ''
   }
 
-  render () {
+  render() {
     const { container, baseColor, textColor } = this.props.style
     const { data } = this.props
     return (

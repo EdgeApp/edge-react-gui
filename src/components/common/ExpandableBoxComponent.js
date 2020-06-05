@@ -19,16 +19,17 @@ type State = {
   collapsed: boolean
 }
 class ExpandableBoxComponent extends Component<Props, State> {
-  constructor (props: any) {
+  constructor(props: any) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  UNSAFE_componentWillMount () {
+  UNSAFE_componentWillMount() {
     this.setState({
       collapsed: true
     })
   }
+
   onPress = () => {
     this.setState({
       collapsed: !this.state.collapsed
@@ -58,7 +59,7 @@ class ExpandableBoxComponent extends Component<Props, State> {
     return null
   }
 
-  render () {
+  render() {
     const style = this.props.style
     return (
       <View

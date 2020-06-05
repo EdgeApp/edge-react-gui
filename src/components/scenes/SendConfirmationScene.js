@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
@@ -14,13 +14,13 @@ import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, getSpecialCurrencyInfo } from
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { SelectFioAddressConnector as SelectFioAddress } from '../../modules/FioAddress/components/SelectFioAddress'
-import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
+import ExchangeRate from '../../modules/UI/components/ExchangeRate/ExchangeRate.ui.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
-import Text from '../../modules/UI/components/FormattedText/index'
+import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { PinInput } from '../../modules/UI/components/PinInput/PinInput.ui.js'
-import Recipient from '../../modules/UI/components/Recipient/index.js'
-import ABSlider from '../../modules/UI/components/Slider/index.js'
+import Recipient from '../../modules/UI/components/Recipient/Recipient.ui.js'
+import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducers/scenes/SendConfirmationReducer.js'
@@ -101,7 +101,7 @@ export class SendConfirmation extends Component<Props, State> {
   pinInput: any
   flipInput: any
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
     this.state = {
@@ -116,10 +116,10 @@ export class SendConfirmation extends Component<Props, State> {
       nativeAmount: props.nativeAmount,
       showSpinner: false,
       fioSender: {
-        fioAddress: '',
+        fioAddress: props.guiMakeSpendInfo && props.guiMakeSpendInfo.fioPendingRequest ? props.guiMakeSpendInfo.fioPendingRequest.payer_fio_address : '',
         fioWallet: null,
         fioError: '',
-        memo: '',
+        memo: props.guiMakeSpendInfo && props.guiMakeSpendInfo.fioPendingRequest ? props.guiMakeSpendInfo.fioPendingRequest.content.memo : '',
         memoError: ''
       },
       isFiatOnTop: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0')),
@@ -128,7 +128,7 @@ export class SendConfirmation extends Component<Props, State> {
     this.flipInput = React.createRef()
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
     const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
     const guiMakeSpendInfo = this.props.guiMakeSpendInfo
@@ -146,7 +146,7 @@ export class SendConfirmation extends Component<Props, State> {
     this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount, keyboardVisible })
   }
 
-  componentDidUpdate (prevProps: Props) {
+  componentDidUpdate(prevProps: Props) {
     if (!prevProps.transactionMetadata && this.props.transactionMetadata && this.props.authRequired !== 'none' && this.props.nativeAmount !== '0') {
       this.pinInput.focus()
     }
@@ -155,7 +155,7 @@ export class SendConfirmation extends Component<Props, State> {
     }
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const newState = {}
     if (nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
       const overridePrimaryExchangeAmount = bns.div(nextProps.nativeAmount, nextProps.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
@@ -174,14 +174,14 @@ export class SendConfirmation extends Component<Props, State> {
     this.setState(newState)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.props.reset()
     if (this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.onBack) {
       this.props.guiMakeSpendInfo.onBack()
     }
   }
 
-  render () {
+  render() {
     const { networkFee, parentNetworkFee, guiWallet } = this.props
     const primaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.currencyCode,
@@ -217,8 +217,7 @@ export class SendConfirmation extends Component<Props, State> {
     const DESTINATION_TEXT = sprintf(s.strings.send_confirmation_to, destination)
     const ADDRESS_TEXT = sprintf(s.strings.send_confirmation_address, address)
     const fioAddress = this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.fioAddress ? this.props.guiMakeSpendInfo.fioAddress : ''
-    const memo = this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.memo ? this.props.guiMakeSpendInfo.memo : ''
-    const fio = this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.isSendUsingFioAddress ? this.state.fioSender : null
+    const fioSender = this.state.fioSender
     const displayAddress = fioAddress ? '' : address
 
     const feeCalculated = !!networkFee || !!parentNetworkFee
@@ -227,7 +226,8 @@ export class SendConfirmation extends Component<Props, State> {
       this.props.sliderDisabled ||
       !feeCalculated ||
       (!getSpecialCurrencyInfo(this.props.currencyCode).allowZeroTx && this.props.nativeAmount === '0') ||
-      (fio && (!!fio.fioError || !!fio.memoError))
+      !!fioSender.fioError ||
+      !!fioSender.memoError
 
     const isTaggableCurrency = !!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
     const networkFeeData = this.getNetworkFeeData()
@@ -235,7 +235,7 @@ export class SendConfirmation extends Component<Props, State> {
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_from_wallet, guiWallet.name) : ''
     const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
     return (
-      <Fragment>
+      <>
         <SceneWrapper>
           <View style={styles.mainScrollView}>
             <View style={[styles.balanceContainer, styles.error]}>
@@ -253,9 +253,9 @@ export class SendConfirmation extends Component<Props, State> {
               ) : (
                 <ExchangeRate secondaryDisplayAmount={this.props.fiatPerCrypto} primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} />
               )}
-              {fio && fio.fioError ? (
+              {fioSender.fioError ? (
                 <Text style={[styles.error, styles.errorText]} numberOfLines={2}>
-                  {fio.fioError}
+                  {fioSender.fioError}
                 </Text>
               ) : null}
             </View>
@@ -308,7 +308,7 @@ export class SendConfirmation extends Component<Props, State> {
                         style={styles.addUniqueIDButton}
                         onPress={this.props.uniqueIdentifierButtonPressed}
                       >
-                        <Text style={styles.addUniqueIDButtonText} ellipsizeMode={'tail'}>
+                        <Text style={styles.addUniqueIDButtonText} ellipsizeMode="tail">
                           {uniqueIdentifierText(currencyCode, uniqueIdentifier)}
                         </Text>
                       </TouchableOpacity>
@@ -332,41 +332,27 @@ export class SendConfirmation extends Component<Props, State> {
               <Scene.Padding style={{ paddingHorizontal: 54 }}>
                 <Scene.Item style={{ alignItems: 'center', flex: -1 }}>
                   {!!fioAddress && (
-                    <Scene.Row style={{ paddingTop: 10, paddingBottom: fio ? 0 : 10 }}>
+                    <Scene.Row style={{ paddingTop: 10, paddingBottom: 0 }}>
                       <Recipient.Text style={{}}>
                         <Text>{sprintf(s.strings.send_to_title, fioAddress)}</Text>
                       </Recipient.Text>
                     </Scene.Row>
                   )}
-
-                  {!!memo && (
-                    <Scene.Row style={{ paddingBottom: 5, paddingTop: 10 }}>
-                      <Recipient.Text style={{}}>
-                        <Text>{fioAddress ? s.strings.unique_identifier_memo : ''}:</Text>
-                      </Recipient.Text>
-                    </Scene.Row>
-                  )}
-
-                  {!!memo && (
-                    <Scene.Row style={{ paddingTop: 0, paddingBottom: 10 }}>
-                      <Text style={styles.rowText}>{memo}</Text>
-                    </Scene.Row>
-                  )}
                 </Scene.Item>
               </Scene.Padding>
 
-              {fio && (
-                <SelectFioAddress
-                  selected={fio.fioAddress}
-                  memo={fio.memo}
-                  memoError={fio.memoError}
-                  onSelect={this.onFioAddressSelect}
-                  onMemoChange={this.onMemoChange}
-                />
-              )}
+              <SelectFioAddress
+                selected={fioSender.fioAddress}
+                memo={fioSender.memo}
+                memoError={fioSender.memoError}
+                fioRequest={this.props.guiMakeSpendInfo ? this.props.guiMakeSpendInfo.fioPendingRequest : null}
+                isSendUsingFioAddress={this.props.guiMakeSpendInfo ? this.props.guiMakeSpendInfo.isSendUsingFioAddress : null}
+                onSelect={this.onFioAddressSelect}
+                onMemoChange={this.onMemoChange}
+              />
             </View>
             <Scene.Footer style={[styles.footer, isTaggableCurrency && styles.footerWithPaymentId]}>
-              <ABSlider
+              <Slider
                 forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
                 resetSlider={this.props.resetSlider}
                 parentStyle={styles.sliderStyle}
@@ -384,13 +370,13 @@ export class SendConfirmation extends Component<Props, State> {
             keyboardType={getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.identifierKeyboardType}
           />
         )}
-      </Fragment>
+      </>
     )
   }
 
   signBroadcastAndSave = () => {
     const { guiMakeSpendInfo } = this.props
-    if (guiMakeSpendInfo && guiMakeSpendInfo.isSendUsingFioAddress) {
+    if (guiMakeSpendInfo && (guiMakeSpendInfo.isSendUsingFioAddress || guiMakeSpendInfo.fioPendingRequest)) {
       return this.props.signBroadcastAndSave(this.state.fioSender)
     }
     this.props.signBroadcastAndSave()

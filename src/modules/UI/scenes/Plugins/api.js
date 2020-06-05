@@ -19,7 +19,7 @@ type Wallet = {
   fiatCurrencyCode: string
 }
 type Wallets = Array<Wallet>
-function formatWallet (w: GuiWallet): Wallet {
+function formatWallet(w: GuiWallet): Wallet {
   return {
     id: w.id,
     name: w.name,
@@ -54,7 +54,7 @@ let navStack: Array<string> = []
 // $FlowFixMe
 let _context: Context = null
 
-export function pop (): any {
+export function pop(): any {
   navStack.pop()
   if (navStack.length === 0) {
     Actions.pop()
@@ -68,52 +68,52 @@ export function pop (): any {
 export class PluginBridge {
   context: Context
 
-  constructor (context: Context) {
+  constructor(context: Context) {
     _context = this.context = context
     // reset navstack
     navStack = []
   }
 
-  componentDidMount () {
+  componentDidMount() {
     Actions.refresh({
       leftTitle: 'Back'
     })
   }
 
-  bitidAddress (): Promise<string> {
+  bitidAddress(): Promise<string> {
     // TODO: not supported by core...yet
     return Promise.reject(new Error('not implemented'))
   }
 
-  bitidSignature (): Promise<string> {
+  bitidSignature(): Promise<string> {
     // TODO: not supported by core...yet
     // const {uri, message} = data
     return Promise.reject(new Error('not implemented'))
   }
 
-  chooseWallet (obj: { cbid: string, func: string, id: string, currencyCode: string }): Promise<any> {
+  chooseWallet(obj: { cbid: string, func: string, id: string, currencyCode: string }): Promise<any> {
     this.context.chooseWallet(obj.id, obj.currencyCode)
     return Promise.resolve(null)
   }
 
-  changeWallet (): Promise<any> {
+  changeWallet(): Promise<any> {
     this.context.toggleWalletList()
     return Promise.resolve(null)
   }
 
-  selectedWallet (): Promise<Wallet> {
+  selectedWallet(): Promise<Wallet> {
     if (!this.context.wallet) {
       return Promise.reject(new Error('wallet not initialized yet'))
     }
     return Promise.resolve(formatWallet(this.context.wallet))
   }
 
-  wallets (): Promise<Wallets> {
+  wallets(): Promise<Wallets> {
     const wallets = Object.keys(this.context.wallets).map(key => formatWallet(this.context.wallets[key]))
     return Promise.resolve(wallets)
   }
 
-  async getAddress (data: any): Promise<Address> {
+  async getAddress(data: any): Promise<Address> {
     const walletId = data.walletId
     const coreWallet = this.context.coreWallets[walletId]
     const currencyCode = data.currencyCode
@@ -123,12 +123,12 @@ export class PluginBridge {
     return { encodeUri, address }
   }
 
-  finalizeReceiveRequest (data: any): Promise<boolean> {
+  finalizeReceiveRequest(data: any): Promise<boolean> {
     // const {coreWallet, receiveAddress} = data
     return Promise.reject(new Error('not implemented'))
   }
 
-  _spend (guiMakeSpendInfo: GuiMakeSpendInfo, lockInputs: boolean = true, signOnly: boolean = false): Promise<EdgeTransaction> {
+  _spend(guiMakeSpendInfo: GuiMakeSpendInfo, lockInputs: boolean = true, signOnly: boolean = false): Promise<EdgeTransaction | void> {
     return new Promise((resolve, reject) => {
       if (signOnly) {
         reject(new Error('not implemented'))
@@ -165,7 +165,7 @@ export class PluginBridge {
   //   console.log(e)
   // }
 
-  async makeSpendRequest (guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction> {
+  async makeSpendRequest(guiMakeSpendInfo: GuiMakeSpendInfo): Promise<EdgeTransaction | void> {
     const edgeTransaction = await this._spend(guiMakeSpendInfo)
     console.log('Plugin successfully sent transaction')
     console.log(edgeTransaction)
@@ -183,15 +183,15 @@ export class PluginBridge {
   //   return edgeTransaction
   // }
 
-  broadcastTx (data: any): Promise<EdgeTransaction> {
+  broadcastTx(data: any): Promise<EdgeTransaction> {
     throw new Error('ErrorUnimplemented')
   }
 
-  saveTx (data: any): Promise<EdgeTransaction> {
+  saveTx(data: any): Promise<EdgeTransaction> {
     throw new Error('ErrorUnimplemented')
   }
 
-  requestFile (): Promise<string> {
+  requestFile(): Promise<string> {
     // TODO
     // const {options} = data
     return Promise.reject(new Error('not implemented'))
@@ -221,17 +221,17 @@ export class PluginBridge {
     }
   }
 
-  clearData (): Promise<boolean> {
+  clearData(): Promise<boolean> {
     return this.context.account.dataStore.deleteStore(this.context.plugin.storeId).then(() => {
       return true
     })
   }
 
-  getAffiliateInfo (): Promise<any> {
+  getAffiliateInfo(): Promise<any> {
     return Promise.reject(new Error('not implemented'))
   }
 
-  get (data: any): Promise<string> {
+  get(data: any): Promise<string> {
     const { key } = data
     if (this.context.plugin.environment[key]) {
       return Promise.resolve(this.context.plugin.environment[key])
@@ -240,15 +240,15 @@ export class PluginBridge {
     }
   }
 
-  debugLevel (data: any): Promise<boolean> {
+  debugLevel(data: any): Promise<boolean> {
     console.log(`LOGGING ${this.context.plugin.pluginId}  ${data.level}: ${data.text}`)
     return Promise.resolve(true)
   }
 
-  showAlert (data: any): Promise<boolean> {
-    Alert.alert(data['title'], data['message'], [
+  showAlert(data: any): Promise<boolean> {
+    Alert.alert(data.title, data.message, [
       {
-        onPress () {},
+        onPress() {},
         style: 'default',
         text: s.strings.string_ok
       }
@@ -256,41 +256,41 @@ export class PluginBridge {
     return Promise.resolve(true)
   }
 
-  hideAlert (): Promise<boolean> {
+  hideAlert(): Promise<boolean> {
     return Promise.reject(new Error('not implemented'))
   }
 
-  title (data: any): Promise<boolean> {
+  title(data: any): Promise<boolean> {
     const { title } = data
     this.context.renderTitle(title)
     return Promise.resolve(true)
   }
 
-  back (): Promise<boolean> {
+  back(): Promise<boolean> {
     pop()
     return Promise.resolve(true)
   }
 
-  exit (): Promise<boolean> {
+  exit(): Promise<boolean> {
     Actions.pop()
     return Promise.resolve(true)
   }
 
-  launchExternal (data: any): Promise<any> {
+  launchExternal(data: any): Promise<any> {
     return Linking.openURL(data.uri)
   }
 
-  navStackClear (): Promise<boolean> {
+  navStackClear(): Promise<boolean> {
     navStack = []
     return Promise.resolve(true)
   }
 
-  navStackPush (data: any): Promise<boolean> {
+  navStackPush(data: any): Promise<boolean> {
     navStack.push(data.path)
     return Promise.resolve(true)
   }
 
-  navStackPop (): Promise<string> {
+  navStackPop(): Promise<string> {
     const path = navStack.pop()
     return Promise.resolve(path)
   }

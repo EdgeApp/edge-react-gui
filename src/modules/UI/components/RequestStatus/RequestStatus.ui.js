@@ -1,81 +1,44 @@
 // @flow
 
 import React from 'react'
-import { Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
 import { AddressTextWithBlockExplorerModal } from '../../../../components/common/AddressTextWithBlockExplorerModal'
 import s from '../../../../locales/strings.js'
-import T from '../FormattedText/'
-import styles from './styles'
-
-const REMAINING_TEXT = s.strings.bitcoin_remaining
-const RECEIVED_TEXT = s.strings.bitcoin_received
+import { THEME } from '../../../../theme/variables/airbitz.js'
+import T from '../FormattedText/FormattedText.ui.js'
 
 type RequestStateProps = {
-  amountSatoshi: number,
   requestAddress: string,
-  addressExplorer: string
+  addressExplorer: string | null
 }
 
-const RequestStatus = (props: RequestStateProps) => {
-  const amountRequestedInCrypto = props.amountSatoshi
-  const amountReceivedInCrypto = props.amountSatoshi
+export const RequestStatus = (props: RequestStateProps) => {
   const requestAddress = props.requestAddress
   const addressExplorer = props.addressExplorer
 
-  const hasReceivedPartialPayment = () => {
-    const hasReceivedPartialPayment = hasReceivedPayment() && !isPaymentSufficient()
+  return (
+    <View style={styles.view}>
+      <Text style={styles.text}>{s.strings.request_qr_your_receiving_wallet_address}</Text>
 
-    return hasReceivedPartialPayment
-  }
-
-  const hasReceivedPayment = () => {
-    const hasReceivedPayment = !!amountReceivedInCrypto
-
-    return hasReceivedPayment
-  }
-
-  const isPaymentSufficient = () => {
-    const isPaymentSufficient = amountReceivedInCrypto >= amountRequestedInCrypto
-
-    return isPaymentSufficient
-  }
-
-  const getOutstandingDebtInCrypto = () => {
-    const outstandingDebtInCrypto = amountRequestedInCrypto - amountReceivedInCrypto
-
-    return outstandingDebtInCrypto
-  }
-
-  const getDisplayRequestStatus = () => {
-    const waitingForPayment = (
-      <View style={styles.view}>
-        <Text style={styles.text}>{s.strings.request_qr_your_receiving_wallet_address}</Text>
-
-        <AddressTextWithBlockExplorerModal address={requestAddress} addressExplorer={addressExplorer}>
-          <T numberOfLines={1} ellipsizeMode="middle" style={styles.text}>
-            {requestAddress}
-          </T>
-        </AddressTextWithBlockExplorerModal>
-      </View>
-    )
-
-    const partialPaymentReceived = (
-      <View style={styles.view}>
-        <Text style={styles.text}>{amountReceivedInCrypto + RECEIVED_TEXT}</Text>
-
-        <Text style={styles.text}>{getOutstandingDebtInCrypto() + REMAINING_TEXT}</Text>
-
-        <Text style={styles.text}>{requestAddress}</Text>
-      </View>
-    )
-
-    const displayStatus = hasReceivedPartialPayment() ? partialPaymentReceived : waitingForPayment
-
-    return displayStatus
-  }
-
-  return <View style={styles.view}>{getDisplayRequestStatus()}</View>
+      <AddressTextWithBlockExplorerModal address={requestAddress} addressExplorer={addressExplorer}>
+        <T numberOfLines={1} ellipsizeMode="middle" style={styles.text}>
+          {requestAddress}
+        </T>
+      </AddressTextWithBlockExplorerModal>
+    </View>
+  )
 }
 
-export default RequestStatus
+const styles = StyleSheet.create({
+  view: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  text: {
+    color: THEME.COLORS.WHITE,
+    margin: 10
+  }
+})

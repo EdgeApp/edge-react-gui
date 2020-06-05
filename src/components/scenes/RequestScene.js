@@ -6,7 +6,6 @@ import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEnco
 import React, { Component } from 'react'
 import type { RefObject } from 'react-native'
 import { ActivityIndicator, Clipboard, Dimensions, InputAccessoryView, Platform, Text, TouchableOpacity, View } from 'react-native'
-import ContactsWrapper from 'react-native-contacts-wrapper'
 import RNFS from 'react-native-fs'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
@@ -15,12 +14,12 @@ import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import ExchangeRate from '../../modules/UI/components/ExchangeRate/index.js'
+import ExchangeRate from '../../modules/UI/components/ExchangeRate/ExchangeRate.ui.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
-import RequestStatus from '../../modules/UI/components/RequestStatus/index.js'
-import ShareButtons from '../../modules/UI/components/ShareButtons/index.js'
+import { RequestStatus } from '../../modules/UI/components/RequestStatus/RequestStatus.ui.js'
+import { ShareButtons } from '../../modules/UI/components/ShareButtons/ShareButtons.ui.js'
 import { styles } from '../../styles/scenes/RequestStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
@@ -28,7 +27,6 @@ import { getObjectDiff } from '../../util/utils'
 import { launchModal } from '../common/ModalProvider.js'
 import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { createFioAddressModal } from '../modals/RequestFioAddressModal'
 import { showError, showToast } from '../services/AirshipInstance.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
@@ -90,7 +88,7 @@ export class Request extends Component<Props, State> {
   amounts: ExchangedFlipInputAmounts
   flipInput: RefObject | null = null
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     const minimumPopupModalState: CurrencyMinimumPopupState = {}
     Object.keys(Constants.SPECIAL_CURRENCY_INFO).forEach(currencyCode => {
@@ -114,7 +112,7 @@ export class Request extends Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.generateEncodedUri()
     this.props.refreshAllFioAddresses()
   }
@@ -126,7 +124,7 @@ export class Request extends Component<Props, State> {
     this.setState({ minimumPopupModalState })
   }
 
-  shouldComponentUpdate (nextProps: Props, nextState: State) {
+  shouldComponentUpdate(nextProps: Props, nextState: State) {
     let diffElement2: string = ''
     const diffElement = getObjectDiff(this.props, nextProps, {
       primaryCurrencyInfo: true,
@@ -140,7 +138,7 @@ export class Request extends Component<Props, State> {
     return !!diffElement || !!diffElement2
   }
 
-  async generateEncodedUri () {
+  async generateEncodedUri() {
     const { edgeWallet, useLegacyAddress, currencyCode } = this.props
     if (!currencyCode) return
     let publicAddress = this.props.publicAddress
@@ -168,7 +166,7 @@ export class Request extends Component<Props, State> {
     }
   }
 
-  async UNSAFE_componentWillReceiveProps (nextProps: Props) {
+  async UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const { currencyCode } = nextProps
     if (nextProps.loading || currencyCode === null) return
 
@@ -245,9 +243,9 @@ export class Request extends Component<Props, State> {
     this.flipInput = ref && ref.flipInput ? ref.flipInput.current : null
   }
 
-  render () {
+  render() {
     if (this.props.loading) {
-      return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
+      return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" />
     }
 
     const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, currencyInfo, guiWallet } = this.props
@@ -271,12 +269,12 @@ export class Request extends Component<Props, State> {
             primaryCurrencyInfo={primaryCurrencyInfo}
             secondaryCurrencyInfo={secondaryCurrencyInfo}
             exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
-            overridePrimaryExchangeAmount={''}
+            overridePrimaryExchangeAmount=""
             forceUpdateGuiCounter={0}
             onExchangeAmountChanged={this.onExchangeAmountChanged}
             keyboardVisible={false}
             color={THEME.COLORS.WHITE}
-            isFiatOnTop={true}
+            isFiatOnTop
             isFocus={false}
             onNext={this.onNext}
             topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
@@ -299,17 +297,11 @@ export class Request extends Component<Props, State> {
           <View style={styles.qrContainer}>
             <QrCode data={this.state.encodedURI} size={qrSize} />
           </View>
-          <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
+          <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} />
         </View>
 
         <View style={styles.shareButtonsContainer}>
-          <ShareButtons
-            shareViaEmail={this.shareViaEmail}
-            shareViaSMS={this.shareViaSMS}
-            shareViaShare={this.shareViaShare}
-            copyToClipboard={this.copyToClipboard}
-            fioAddressModal={this.fioAddressModal}
-          />
+          <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />
         </View>
       </SceneWrapper>
     )
@@ -385,24 +377,6 @@ export class Request extends Component<Props, State> {
       .catch(showError)
   }
 
-  shareViaEmail = () => {
-    ContactsWrapper.getContact()
-      .then(() => {
-        this.shareMessage()
-        // console.log('shareViaEmail')
-      })
-      .catch(showError)
-  }
-
-  shareViaSMS = () => {
-    ContactsWrapper.getContact()
-      .then(() => {
-        this.shareMessage()
-        // console.log('shareViaSMS')
-      })
-      .catch(showError)
-  }
-
   shareViaShare = () => {
     this.shareMessage()
     // console.log('shareViaShare')
@@ -426,11 +400,7 @@ export class Request extends Component<Props, State> {
         return
       }
     }
-    const fioAddressModal = createFioAddressModal({ fioPlugin: this.props.fioPlugin, isConnected: this.props.isConnected })
-    const fioModalData = await launchModal(fioAddressModal)
-    if (fioModalData) {
-      Actions[Constants.FIO_REQUEST_CONFIRMATION]({ fioModalData, amounts: this.amounts })
-    }
+    Actions[Constants.FIO_REQUEST_CONFIRMATION]({ amounts: this.amounts })
   }
 
   fioMode = () => {

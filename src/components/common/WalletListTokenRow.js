@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux'
 
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type GuiWallet } from '../../types/types.js'
@@ -46,7 +46,7 @@ export class WalletListTokenRow extends PureComponent<Props> {
     Actions.transactionList({ params: 'walletList' })
   }
 
-  render () {
+  render() {
     const { wallet, currencyCode, settings, exchangeRates, walletFiatSymbol, showBalance, progress } = this.props
     const { name } = wallet
     const meta = wallet.metaTokens.find(token => token.currencyCode === currencyCode)
@@ -79,7 +79,7 @@ export class WalletListTokenRow extends PureComponent<Props> {
       differencePercentageString = ''
     } else if (exchangeRate && differencePercentage && differencePercentage === 0) {
       differencePercentageStringStyle = styles.walletDetailsRowDifferenceNeutral
-      differencePercentageString = `0.00%`
+      differencePercentageString = '0.00%'
     } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
       differencePercentageStringStyle = styles.walletDetailsRowDifferenceNegative
       differencePercentageString = `- ${Math.abs(differencePercentage).toFixed(2)}%`
@@ -90,32 +90,32 @@ export class WalletListTokenRow extends PureComponent<Props> {
 
     return (
       <TouchableHighlight style={styles.tokenRowContainer} underlayColor={THEME.COLORS.ROW_PRESSED} delayLongPress={500} onPress={this.selectWallet}>
-        <View style={[styles.rowContent]}>
+        <View style={styles.rowContent}>
           <View style={styles.rowIconWrap}>
-            {symbolImage && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImage }} resizeMode="cover" />}
+            {symbolImage && <Image style={styles.rowCurrencyLogoAndroid} source={{ uri: symbolImage }} resizeMode="cover" />}
             <View style={styles.rowCurrencyLogoAndroid}>
               <ProgressPie size={rowCurrencyOverlaySize} color={THEME.COLORS.OPAQUE_WHITE_2} progress={progress} />
             </View>
           </View>
           <View style={styles.walletDetailsContainer}>
             <View style={styles.walletDetailsRow}>
-              <T style={[styles.walletDetailsRowCurrency]}>{currencyCode}</T>
-              <T style={[styles.walletDetailsRowValue]}>{cryptoAmountString}</T>
+              <T style={styles.walletDetailsRowCurrency}>{currencyCode}</T>
+              <T style={styles.walletDetailsRowValue}>{cryptoAmountString}</T>
             </View>
             <View style={styles.walletDetailsRow}>
-              <T style={[styles.walletDetailsRowName]}>{name}</T>
+              <T style={styles.walletDetailsRowName}>{name}</T>
               <View style={styles.walletDetailsFiatBalanceRow}>
-                <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceSymbol}</T>
-                <T style={[styles.walletDetailsRowFiat]}>{fiatBalanceString}</T>
+                <T style={styles.walletDetailsRowFiat}>{fiatBalanceSymbol}</T>
+                <T style={styles.walletDetailsRowFiat}>{fiatBalanceString}</T>
               </View>
             </View>
             <View style={styles.walletDetailsRowLine} />
             <View style={styles.walletDetailsRow}>
               <View style={styles.walletDetailsExchangeRow}>
-                <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateFiatSymbol}</T>
-                <T style={[styles.walletDetailsRowExchangeRate]}>{exchangeRateString}</T>
+                <T style={styles.walletDetailsRowExchangeRate}>{exchangeRateFiatSymbol}</T>
+                <T style={styles.walletDetailsRowExchangeRate}>{exchangeRateString}</T>
               </View>
-              <T style={[differencePercentageStringStyle]}>{differencePercentageString}</T>
+              <T style={differencePercentageStringStyle}>{differencePercentageString}</T>
             </View>
           </View>
           <View style={styles.rowOptionsWrap} />

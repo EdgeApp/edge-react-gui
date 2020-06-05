@@ -14,7 +14,7 @@ const buildNumber = DeviceInfo.getBuildNumber()
 const versionNumber = DeviceInfo.getVersion()
 const CONTENT_URI = 'https://edgesecure.co/info.html'
 
-export function showHelpModal (): Promise<mixed> {
+export function showHelpModal(): Promise<mixed> {
   return Airship.show(bridge => <HelpModal bridge={bridge} />)
 }
 
@@ -25,7 +25,7 @@ type Props = {
 class HelpModal extends Component<Props> {
   webview: WebView | void
 
-  render () {
+  render() {
     const { bridge } = this.props
 
     return (

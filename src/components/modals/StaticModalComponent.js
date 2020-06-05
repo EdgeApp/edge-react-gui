@@ -25,20 +25,23 @@ const gradientColors = [THEME.COLORS.GRADIENT.DARK, THEME.COLORS.GRADIENT.LIGHT]
 
 class StaticModalComponent extends Component<Props> {
   reset: TimeoutID
-  shouldComponentUpdate (nextProps: Props) {
+  shouldComponentUpdate(nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
     return !!diffElement
   }
-  componentDidMount () {
+
+  componentDidMount() {
     if (this.props.modalDismissTimerSeconds) {
       this.reset = setTimeout(() => {
         this.props.cancel()
       }, this.props.modalDismissTimerSeconds * 1000)
     }
   }
-  componentWillUnmount () {
+
+  componentWillUnmount() {
     clearTimeout(this.reset)
   }
+
   renderMiddle = (styles: Object) => {
     if (this.props.bodyComponent) {
       return this.props.bodyComponent
@@ -46,14 +49,14 @@ class StaticModalComponent extends Component<Props> {
     return <Text style={styles.bodyText}>{this.props.body}</Text>
   }
 
-  render () {
+  render() {
     const styles = StaticModalStyle
 
     const deviceWidth = Dimensions.get('window').width
     const deviceHeight = Platform.OS === 'ios' ? Dimensions.get('window').height : require('react-native-extra-dimensions-android').get('REAL_WINDOW_HEIGHT')
 
     return (
-      <Modal animationType={'slide'} isVisible={this.props.isVisible} style={styles.container} deviceHeight={deviceHeight} deviceWidth={deviceWidth}>
+      <Modal animationType="slide" isVisible={this.props.isVisible} style={styles.container} deviceHeight={deviceHeight} deviceWidth={deviceWidth}>
         <TouchableOpacity onPress={this.props.cancel}>
           <View style={styles.modalBox}>
             <View style={styles.innerBox}>

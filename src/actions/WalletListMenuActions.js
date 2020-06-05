@@ -10,7 +10,7 @@ import { launchModal } from '../components/common/ModalProvider.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
-import Text from '../modules/UI/components/FormattedText'
+import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
 import { B } from '../styles/common/textStyles.js'
 import { THEME } from '../theme/variables/airbitz.js'
@@ -23,7 +23,7 @@ import { refreshWallet } from './WalletActions.js'
 
 export type WalletListMenuKey = 'sort' | 'rename' | 'delete' | 'resync' | 'exportWalletTransactions' | 'getSeed' | 'split' | 'manageTokens' | 'viewXPub'
 
-export function walletListMenuAction (walletId: string, option: WalletListMenuKey) {
+export function walletListMenuAction(walletId: string, option: WalletListMenuKey) {
   switch (option) {
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {

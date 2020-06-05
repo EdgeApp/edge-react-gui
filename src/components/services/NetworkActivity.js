@@ -19,7 +19,7 @@ const NetInfo = {}
 class NetworkActivityComponent extends Component<Props> {
   netInfoUnsubscribe: Function | null = null
 
-  componentDidMount () {
+  componentDidMount() {
     this.netInfoUnsubscribe = NetInfo.addEventListener(state => {
       console.log('NetworkActivity - isConnected changed: ', state.isConnected)
       this.props.changeConnectivity(state.isConnected)
@@ -29,11 +29,11 @@ class NetworkActivityComponent extends Component<Props> {
     })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.netInfoUnsubscribe && this.netInfoUnsubscribe()
   }
 
-  render () {
+  render() {
     return null
   }
 }

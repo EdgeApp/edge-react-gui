@@ -4,11 +4,11 @@ import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 
 import s from '../../locales/strings.js'
-import FormattedText from '../../modules/UI/components/FormattedText/index'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles } from '../../styles/scenes/CryptoExchangeQuoteProcessingSceneStyles.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
-export function CryptoExchangeQuoteProcessingScreenComponent (props: {}) {
+export function CryptoExchangeQuoteProcessingScreenComponent(props: {}) {
   return (
     <SceneWrapper hasTabs={false}>
       <View style={styles.top}>

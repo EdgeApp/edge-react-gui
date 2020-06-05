@@ -5,7 +5,7 @@ import { TouchableWithoutFeedback, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
-import FormattedText from '../../modules/UI/components/FormattedText/index'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles, { materialInput } from '../../styles/scenes/TransactionDetailsStyle'
 import { type GuiContact } from '../../types/types.js'
 import { ContactSearchResults } from '../common/ContactSearchResults.js'
@@ -25,7 +25,7 @@ type State = {
 }
 
 export class TransactionDetailsPersonInput extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = { personName: props.personName }
   }
@@ -41,7 +41,7 @@ export class TransactionDetailsPersonInput extends Component<Props, State> {
     this.props.bridge.resolve(null)
   }
 
-  render () {
+  render() {
     const { bridge, personStatus, contacts } = this.props
     const { personName } = this.state
     const personStatusString = sprintf(s.strings.transaction_details_person_input, personStatus)

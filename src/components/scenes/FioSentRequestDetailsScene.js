@@ -7,8 +7,8 @@ import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
-import T from '../../modules/UI/components/FormattedText/index'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/index'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { styles } from '../../styles/scenes/FioSentRequestDetailsStyle.js'
 import type { FioRequest } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -33,7 +33,7 @@ type LocalState = {
 }
 
 export class FioSentRequestDetailsComponent extends Component<Props, LocalState> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     const state: LocalState = {
       memo: '',
@@ -64,12 +64,7 @@ export class FioSentRequestDetailsComponent extends Component<Props, LocalState>
   }
 
   requestedField = (payer: string, status: string) => {
-    let statusLabel = (
-      <T style={styles.title}>
-        {s.strings.title_request} {s.strings.fragment_transaction_list_sent_prefix}
-        {s.strings.word_to_in_convert_from_to_string}
-      </T>
-    )
+    let statusLabel = <T style={styles.title}>{s.strings.fio_request_sent_details_to}</T>
     if (isSentFioRequest(status)) {
       statusLabel = <T style={[styles.title, styles.titleReceived]}>{s.strings.fragment_transaction_list_receive_prefix}</T>
     }
@@ -106,11 +101,15 @@ export class FioSentRequestDetailsComponent extends Component<Props, LocalState>
     )
   }
 
-  render () {
+  render() {
     return (
       <SceneWrapper>
         <SafeAreaView>
           <View>{this.amountField()}</View>
+          <View style={styles.row}>
+            <T style={styles.title}>{s.strings.fio_request_sent_details_from}</T>
+            <T style={styles.text}>{this.props.selectedFioSentRequest.payee_fio_address}</T>
+          </View>
           <View>{this.requestedField(this.props.selectedFioSentRequest.payer_fio_address, this.props.selectedFioSentRequest.status)}</View>
           <View>{this.dateField(new Date(this.props.selectedFioSentRequest.time_stamp))}</View>
           <View>{this.memoField(this.props.selectedFioSentRequest.content.memo)}</View>

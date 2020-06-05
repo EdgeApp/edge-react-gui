@@ -9,8 +9,8 @@ import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/index'
-import ABSlider from '../../modules/UI/components/Slider/index.js'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import { styles } from '../../styles/scenes/FioAddressConfirmStyle'
 import { getFeeDisplayed, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -23,22 +23,18 @@ export type State = {
 }
 
 export type StateProps = {
-  fioAddressName: string,
   denominationMultiplier: string,
   isConnected: boolean
 }
 
 export type NavigationProps = {
+  fioAddressName: string,
   paymentWallet: EdgeCurrencyWallet,
   fee: number,
   ownerPublicKey: string
 }
 
-export type DispatchProps = {
-  changeConfirmSelectedWallet: (selectedWallet: EdgeCurrencyWallet | null, expiration: string, feeCollected: number) => any
-}
-
-type Props = NavigationProps & StateProps & DispatchProps
+type Props = NavigationProps & StateProps
 
 export class FioAddressConfirmScene extends Component<Props, State> {
   state: State = {
@@ -47,11 +43,11 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     loading: false
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.setBalance()
   }
 
-  toggleLoading (loading: boolean = false) {
+  toggleLoading(loading: boolean = false) {
     this.setState({ loading })
   }
 
@@ -72,7 +68,7 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     try {
       const balance = await paymentWallet.getBalance()
 
-      if (balance || balance === 0) {
+      if (balance != null) {
         const newBalance = parseFloat(truncateDecimals(bns.div(balance, this.props.denominationMultiplier, 18), 6))
         this.setState({
           balance: newBalance
@@ -106,16 +102,15 @@ export class FioAddressConfirmScene extends Component<Props, State> {
   }
 
   confirmSelected = (expiration: string, feeCollected: number): void => {
-    const { paymentWallet, changeConfirmSelectedWallet, isConnected } = this.props
+    const { fioAddressName, isConnected } = this.props
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    changeConfirmSelectedWallet(paymentWallet, expiration, feeCollected)
-    window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ registerSuccess: true }))
+    window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ fioAddressName, expiration, feeCollected }))
   }
 
-  render () {
+  render() {
     const { fioAddressName, fee } = this.props
     const { balance, loading } = this.state
 
@@ -138,8 +133,7 @@ export class FioAddressConfirmScene extends Component<Props, State> {
           </View>
           <View style={styles.blockPadding}>
             <Scene.Footer style={styles.footer}>
-              <ABSlider
-                forceUpdateGuiCounter={false}
+              <Slider
                 resetSlider={false}
                 parentStyle={styles.sliderStyle}
                 onSlidingComplete={this.saveFioAddress}

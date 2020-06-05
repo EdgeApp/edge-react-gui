@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 
 import { CREATE_WALLET_CHOICE, CREATE_WALLET_SELECT_FIAT, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import Text from '../../modules/UI/components/FormattedText/index'
+import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type FlatListItem, type GuiWalletType } from '../../types/types.js'
@@ -28,7 +28,7 @@ type State = {
 }
 
 class CreateWalletSelectCryptoComponent extends Component<Props, State> {
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
     this.state = {
       selectedWalletType: '',
@@ -36,7 +36,7 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
     }
   }
 
-  getWalletType (walletType: string): GuiWalletType | void {
+  getWalletType(walletType: string): GuiWalletType | void {
     const { account } = this.props
     return getGuiWalletTypes(account).find(type => type.value === walletType)
   }
@@ -86,7 +86,7 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
 
   handleOnBlur = () => {}
 
-  render () {
+  render() {
     const { account } = this.props
     const { searchTerm } = this.state
     const lowerSearch = searchTerm.toLowerCase()
@@ -107,15 +107,15 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
               autoFocus
               containerStyle={{ height: formFieldHeight }}
               style={styles.picker}
-              clearButtonMode={'while-editing'}
+              clearButtonMode="while-editing"
               onFocus={this.handleOnFocus}
               onBlur={this.handleOnBlur}
               autoCorrect={false}
-              autoCapitalize={'words'}
+              autoCapitalize="words"
               onChangeText={this.handleSearchTermChange}
               value={this.state.searchTerm}
               label={s.strings.create_wallet_choose_crypto}
-              returnKeyType={'search'}
+              returnKeyType="search"
               autpCorrect={false}
             />
             <FlatList
@@ -144,21 +144,21 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
     return (
       <View style={[styles.singleCryptoTypeWrap, value === this.state.selectedWalletType && styles.selectedItem]}>
         <TouchableHighlight
-          style={[styles.singleCryptoType]}
+          style={styles.singleCryptoType}
           onPress={() => this.handleSelectWalletType(data.item)}
           underlayColor={stylesRaw.underlayColor.color}
         >
-          <View style={[styles.cryptoTypeInfoWrap]}>
+          <View style={styles.cryptoTypeInfoWrap}>
             <View style={styles.cryptoTypeLeft}>
-              <View style={[styles.cryptoTypeLogo]}>
+              <View style={styles.cryptoTypeLogo}>
                 {symbolImageDarkMono ? (
                   <Image source={{ uri: symbolImageDarkMono }} style={[styles.cryptoTypeLogo, { borderRadius: 20 }]} />
                 ) : (
                   <View style={styles.cryptoTypeLogo} />
                 )}
               </View>
-              <View style={[styles.cryptoTypeLeftTextWrap]}>
-                <Text style={[styles.cryptoTypeName]}>
+              <View style={styles.cryptoTypeLeftTextWrap}>
+                <Text style={styles.cryptoTypeName}>
                   {label} - {currencyCode}
                 </Text>
               </View>

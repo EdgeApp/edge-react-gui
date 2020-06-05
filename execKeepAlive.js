@@ -6,7 +6,7 @@ const argv = process.argv
 
 main()
 
-function pad (num, size) {
+function pad(num, size) {
   let s = num + ''
   while (s.length < size) {
     s = '0' + s
@@ -14,7 +14,7 @@ function pad (num, size) {
   return s
 }
 
-async function main () {
+async function main() {
   let code = 0
   try {
     if (argv.length === 4) {
@@ -28,7 +28,7 @@ async function main () {
   process.exit(code)
 }
 
-async function callAsync (cmdString, pipeCmd = '') {
+async function callAsync(cmdString, pipeCmd = '') {
   return new Promise((resolve, reject) => {
     const cmdArray = cmdString.split(' ')
     const pipeArray = pipeCmd.split(' ')

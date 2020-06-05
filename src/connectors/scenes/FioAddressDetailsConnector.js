@@ -4,19 +4,16 @@ import { connect } from 'react-redux'
 
 import type { StateProps } from '../../components/scenes/FioAddressDetailsScene'
 import { FioAddressDetailsScene } from '../../components/scenes/FioAddressDetailsScene'
+import { getFioWallets } from '../../modules/UI/selectors'
 import type { State } from '../../types/reduxTypes'
 
 const mapStateToProps = (state: State) => {
-  const { fioAddressName, expiration } = state.ui.scenes.fioAddress
+  const fioWallets = getFioWallets(state)
 
   const out: StateProps = {
-    fioAddressName,
-    expiration
+    fioWallets
   }
   return out
 }
 
-export const FioAddressDetailsConnector = connect(
-  mapStateToProps,
-  {}
-)(FioAddressDetailsScene)
+export const FioAddressDetailsConnector = connect(mapStateToProps, {})(FioAddressDetailsScene)

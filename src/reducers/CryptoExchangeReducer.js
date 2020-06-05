@@ -81,7 +81,7 @@ const initialState: CryptoExchangeState = {
   creatingWallet: false
 }
 
-function cryptoExchangeInner (state = initialState, action: Action): CryptoExchangeState {
+function cryptoExchangeInner(state = initialState, action: Action): CryptoExchangeState {
   let forceUpdateGuiCounter
   switch (action.type) {
     case 'UI/WALLETS/CREATE_WALLET_START': {
@@ -209,7 +209,7 @@ function cryptoExchangeInner (state = initialState, action: Action): CryptoExcha
   }
 }
 
-function getLogo (wallet, currencyCode) {
+function getLogo(wallet, currencyCode) {
   if (currencyCode === wallet.currencyCode) return wallet.symbolImage
   for (let i = 0; i < wallet.metaTokens.length; i++) {
     const obj = wallet.metaTokens[i]
@@ -220,7 +220,7 @@ function getLogo (wallet, currencyCode) {
   return null
 }
 
-function getLogoDark (wallet, currencyCode) {
+function getLogoDark(wallet, currencyCode) {
   if (currencyCode === wallet.currencyCode) return wallet.symbolImageDarkMono
   for (let i = 0; i < wallet.metaTokens.length; i++) {
     const obj = wallet.metaTokens[i]

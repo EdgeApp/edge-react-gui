@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
 
 import s from '../../locales/strings'
-import FormattedText from '../../modules/UI/components/FormattedText/index'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/components/CryptoExchangeWalletListRowStyle.js'
 import { type GuiWalletType } from '../../types/types.js'
 
@@ -14,14 +14,14 @@ type Props = {
 
 export class WalletListModalCreateRow extends Component<Props> {
   onPress = () => this.props.onPress(this.props.supportedWallet)
-  render () {
+  render() {
     const { supportedWallet } = this.props
     return (
       <View style={styles.container}>
         <TouchableHighlight style={styles.touchable} underlayColor={styles.underlayColor} onPress={this.onPress}>
           <View style={styles.rowContainerTop}>
             <View style={styles.containerLeft}>
-              <Image style={styles.imageContainer} source={{ uri: supportedWallet.symbolImage }} resizeMode={'contain'} />
+              <Image style={styles.imageContainer} source={{ uri: supportedWallet.symbolImage }} resizeMode="contain" />
             </View>
             <View style={[styles.containerCenter, styles.containerCreateCenter]}>
               <FormattedText style={styles.containerCenterCurrency}>{supportedWallet.currencyCode}</FormattedText>

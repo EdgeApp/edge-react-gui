@@ -54,7 +54,7 @@ export type Props = {
 export type State = {}
 
 export class PasswordInput extends Component<Props, State> {
-  render () {
+  render() {
     const props = { ...DEFAULTS, ...this.props }
     return <TextField {...props} />
   }

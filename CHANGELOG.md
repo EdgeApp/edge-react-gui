@@ -1,5 +1,42 @@
 # edge-react-gui
 
+## 1.14.0 (2020-06-05)
+
+- New FIO features
+  - Create custom domain
+  - Renew addresses and domains
+  - Use new Address Modal for picking FIO addresses on all FIO related screens
+  - Redesign user flow for connecting wallets to FIO addresses
+- New Share Edge button in the side menu
+- Remove unused code, dependencies, and strings
+- Upgrade edge-core-js to v0.17.4
+  - Save transaction metadata with spends
+  - Save an EdgeTransaction.spendTargets list with every spend
+  - Save an optional EdgeTransaction.swapData field with swap transactions
+  - Save the decryption keys for Monero spends (requires a matching Monero plugin change)
+  - Replace git2.airbitz.co with git1.edge.app in the sync server list
+- Upgrade edge-currency-bitcoin to v4.8.0
+  - Add mempool.space recommended bitcoin fee API
+  - Increased target block delays for earn.com fee estimator
+  - Increased bitcoin gap limit to 25
+- Upgrade edge-currency-accountbased to v0.7.9
+- Fix case where a FIO address could appear associated with two FIO wallets
+  - Add etherclusterApiServers[] to rskInfo.js
+  - Add custom FIO domain support
+  - Add FIO address renewal support
+- Upgrade edge-currency-monero to v0.2.5
+  - Upgrade mymonero-core-js to export transaction private key
+  - Upgrade edge-core-js to v0.17.4
+  - Add EdgeTransaction.txSecret to capture transaction private key
+  - Improve logging
+  - Add makeMutex() to wrap makeSpend() to avoid entering it more than once at a time
+- Upgrade edge-exchange-plugins to v0.11.0
+  - Save swap metadata using the new, official edge-core-js API
+- Upgrade edge-login-ui-rn to v0.6.10
+  - Remove native-base as a dependency
+  - Upgrade to react-native-vector-icons version 6
+  - Fix ios-warning icon size
+
 ## 1.13.2 (2020-05-26)
 
 - Fix flipinput crash on max spend Android

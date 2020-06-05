@@ -24,7 +24,4 @@ const mapDispatchToProps = (dispatch: Dispatch, ownProps: DispatchProps): Dispat
     onPress: ownProps.onPress || onPress
   }
 }
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WalletSelector)
+export default connect(mapStateToProps, mapDispatchToProps)(WalletSelector)

@@ -177,19 +177,14 @@ dependencies {
     implementation project(':ExtraDimensions')
     implementation project(':react-native-app-settings')
     implementation project(':react-native-camera')
-    implementation project(':react-native-contacts-wrapper')
     implementation project(':react-native-contacts')
-    implementation project(':react-native-cookies')
     implementation project(':react-native-device-info')
     implementation project(':react-native-fast-crypto')
     implementation project(':react-native-firebase')
     implementation project(':react-native-fs')
-    implementation project(':react-native-image-picker')
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-locale')
     implementation project(':react-native-mail')
-    implementation project(':react-native-material-kit')
-    implementation project(':react-native-picker')
     implementation project(':react-native-randombytes')
     implementation project(':react-native-share')
     implementation project(':react-native-smart-splash-screen')
@@ -230,3 +225,6 @@ task copyDownloadableDepsToLibs(type: Copy) {
 apply plugin: 'com.google.gms.google-services'
 
 com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
+
+// Integrate react-native-vector-icons fonts
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"

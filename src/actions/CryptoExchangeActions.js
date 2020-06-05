@@ -1,15 +1,21 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeSpendInfo, type EdgeSwapQuote, type EdgeSwapRequest, errorNames } from 'edge-core-js/types'
-import React from 'react'
+import {
+  type EdgeCurrencyWallet,
+  type EdgeMetadata,
+  type EdgeSpendInfo,
+  type EdgeSwapQuote,
+  type EdgeSwapRequest,
+  type EdgeSwapResult,
+  errorNames
+} from 'edge-core-js/types'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { trackConversion } from '../actions/TrackingActions.js'
-import { SwapVerifyShapeshiftModal } from '../components/modals/SwapVerifyShapeshiftModal.js'
-import { Airship, showError } from '../components/services/AirshipInstance.js'
+import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import { intl } from '../locales/intl'
 import s from '../locales/strings.js'
@@ -110,7 +116,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   dispatch({ type: 'SET_FROM_WALLET_MAX', data: primaryNativeAmount })
 }
 
-async function fetchSwapQuote (state: State, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
+async function fetchSwapQuote(state: State, request: EdgeSwapRequest): Promise<GuiSwapInfo> {
   const { account } = state.core
 
   // Find preferred swap provider:
@@ -235,25 +241,6 @@ const processSwapQuoteError = (error: any) => (dispatch: Dispatch, getState: Get
             data: s.strings.ss_geolock
           })
         }
-
-        case 'needsActivation': {
-          if (error.pluginId === 'shapeshift') {
-            Alert.alert(s.strings.kyc_title, s.strings.kyc_message, [
-              { text: s.strings.string_cancel_cap, onPress: () => {} },
-              { text: s.strings.string_ok, onPress: () => Actions[Constants.SWAP_ACTIVATE_SHAPESHIFT]() }
-            ])
-            return
-          }
-          break // Not handled
-        }
-
-        case 'noVerification': {
-          if (error.pluginId === 'shapeshift') {
-            Airship.show(bridge => <SwapVerifyShapeshiftModal bridge={bridge} />)
-            return
-          }
-          break // Not handled
-        }
       }
       break // Not handled
     }
@@ -282,7 +269,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
 
   try {
     logEvent('SwapStart')
-    const result = await quote.approve()
+    const result: EdgeSwapResult = await quote.approve()
     await fromWallet.saveTx(result.transaction)
 
     const si = account.swapConfig[pluginId].swapInfo
@@ -302,8 +289,16 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
 
       const supportEmail = si.supportEmail
       const quoteIdUri = si.orderUri != null && result.orderId != null ? si.orderUri + result.orderId : result.transaction.txid
-      const payinAddress = result.transaction.otherParams != null ? result.transaction.otherParams.payinAddress : ''
-      const uniqueIdentifier = result.transaction.otherParams != null ? result.transaction.otherParams.uniqueIdentifier : ''
+
+      let payinAddress = ''
+      let uniqueIdentifier = ''
+      const { spendTargets = [] } = result.transaction
+      const [spendTarget] = spendTargets
+      if (spendTarget != null) {
+        payinAddress = spendTarget.publicAddress
+        uniqueIdentifier = spendTarget.uniqueIdentifier
+      }
+
       const isEstimate = quote.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote
       notes =
         sprintf(
@@ -410,7 +405,7 @@ export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetSta
   }
 }
 
-async function getBalanceMessage (state: State, wallet: GuiWallet, currencyCode: string) {
+async function getBalanceMessage(state: State, wallet: GuiWallet, currencyCode: string) {
   const { account } = state.core
   const currencyConverter = account.exchangeCache
   const balanceInCrypto = wallet.nativeBalances[currencyCode]

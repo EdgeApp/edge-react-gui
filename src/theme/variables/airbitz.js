@@ -7,7 +7,7 @@ import { scale } from '../../util/scaling.js'
 /**
  * Calculates the height of the header (where the back button lives).
  */
-export function getHeaderHeight () {
+export function getHeaderHeight() {
   if (Platform.OS === 'ios') {
     const majorVersionIOS = Number(Platform.Version)
     return majorVersionIOS > 9 && majorVersionIOS < 11 ? 62 : 44
@@ -17,7 +17,8 @@ export function getHeaderHeight () {
 
 // https://projects.invisionapp.com/d/main#/console/10954562/239168414/inspect
 export const THEME = {
-  rem (n: number) {
+  websiteUrl: 'https://edge.app',
+  rem(n: number) {
     return Math.round(n * scale(16))
   },
 
@@ -50,6 +51,7 @@ export const THEME = {
     PRIMARY: '#0D2145',
     SECONDARY: '#0E4B75',
     PRIMARY_BUTTON_TOUCHED: 'rgba(42,87,153,0.55)',
+    PRIMARY_BUTTON_2_TOUCHED: 'rgba(102,237,168,0.6)',
     BLUE_3: '#0E507D',
 
     GRADIENT: {

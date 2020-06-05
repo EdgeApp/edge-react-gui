@@ -6,7 +6,8 @@ import { ActivityIndicator, Image, Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
-import { PrimaryButton, SecondaryButton } from '../../modules/UI/components/Buttons/index'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import { styles } from '../../styles/scenes/EdgeLoginSceneStyle.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
@@ -19,7 +20,7 @@ type EdgeLoginSceneProps = {
 }
 
 export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
-  renderBody () {
+  renderBody() {
     let message = this.props.error
     if (!this.props.error) {
       message = s.strings.edge_description
@@ -37,7 +38,7 @@ export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
     )
   }
 
-  renderButtons () {
+  renderButtons() {
     if (this.props.isProcessing) {
       return (
         <View style={styles.buttonsProcessing}>
@@ -70,14 +71,14 @@ export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
     )
   }
 
-  renderImage () {
+  renderImage() {
     if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.displayImageUrl) {
-      return <Image style={styles.image} resizeMode={'contain'} source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
+      return <Image style={styles.image} resizeMode="contain" source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
     }
     return null
   }
 
-  renderHeader () {
+  renderHeader() {
     let title = ''
     if (this.props.lobby && this.props.lobby.loginRequest) {
       title = this.props.lobby.loginRequest.displayName ? this.props.lobby.loginRequest.displayName : ''
@@ -98,7 +99,7 @@ export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
     return <View style={styles.header} />
   }
 
-  render () {
+  render() {
     if (!this.props.lobby && !this.props.error) {
       return (
         <SceneWrapper background="body">

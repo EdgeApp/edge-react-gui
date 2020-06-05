@@ -24,15 +24,12 @@ class HeaderWalletSelectorConnected extends Component<DispatchProps> {
     return null
   }
 
-  render () {
+  render() {
     return <WalletSelector onPress={this.onPress} />
   }
 }
 
-const HeaderWalletSelector = connect(
-  null,
-  (dispatch: Dispatch): DispatchProps => ({
-    onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
-  })
-)(HeaderWalletSelectorConnected)
+const HeaderWalletSelector = connect(null, (dispatch: Dispatch): DispatchProps => ({
+  onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
+}))(HeaderWalletSelectorConnected)
 export { HeaderWalletSelector }
