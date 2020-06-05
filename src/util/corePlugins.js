@@ -30,7 +30,7 @@ export const currencyPlugins = {
   binance: true,
   eos: true,
   ethereum: ENV.ETHEREUM_INIT,
-  ethereumclassic: true,
+  ethereumclassic: false,
   fio: true,
   ripple: true,
   rsk: true,
