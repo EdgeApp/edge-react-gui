@@ -46,10 +46,17 @@ class TileComponent extends PureComponent<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
         <View style={styles.container}>
-          {type === 'editable' && <FontAwesome name="edit" style={styles.editIcon} />}
-          <Text style={error ? styles.textHeaderError : styles.textHeader}>{title}</Text>
-          {typeof body === 'string' && <Text style={styles.textBody}>{body}</Text>}
-          {children}
+          <View style={styles.content}>
+            {type === 'editable' && <FontAwesome name="edit" style={styles.editIcon} />}
+            <Text style={error ? styles.textHeaderError : styles.textHeader}>{title}</Text>
+            {typeof body === 'string' && <Text style={styles.textBody}>{body}</Text>}
+            {children}
+          </View>
+          {type === 'touchable' && (
+            <View style={styles.iconContainer}>
+              <FontAwesome name="chevron-right" style={styles.arrowIcon} />
+            </View>
+          )}
         </View>
       </TouchableWithoutFeedback>
     )
@@ -64,7 +71,22 @@ const getStyles = (theme: EdgeTheme) => {
       width: '100%',
       backgroundColor: theme.tileBackground,
       marginBottom: theme.rem(0.125),
-      padding: theme.rem(0.5)
+      padding: theme.rem(0.5),
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    content: {
+      flex: 1
+    },
+    iconContainer: {
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    arrowIcon: {
+      color: theme.primaryText,
+      height: theme.rem(1),
+      marginHorizontal: theme.rem(0.5),
+      textAlign: 'center'
     },
     textHeader: {
       color: theme.secondaryText,
