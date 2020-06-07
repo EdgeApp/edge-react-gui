@@ -5,6 +5,7 @@ import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction 
 import React, { Component } from 'react'
 import { Image, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -226,7 +227,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   renderExchangeData = () => {
-    const { destinationDenomination, destinationWallet, edgeTransaction, guiWallet, walletDefaultDenomProps } = this.props
+    const { destinationDenomination, destinationWallet, edgeTransaction, guiWallet, walletDefaultDenomProps, theme } = this.props
     const { styles } = this.state
     const { swapData, spendTargets } = edgeTransaction
 
@@ -260,7 +261,15 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     }
 
     const openExchangeDetails = () => {
-      Airship.show(bridge => <RawTextModal bridge={bridge} body={createExchangeDataString()} />)
+      Airship.show(bridge => (
+        <RawTextModal
+          bridge={bridge}
+          body={createExchangeDataString()}
+          title={s.strings.transaction_details_exchange_details}
+          theme={theme}
+          icon={<FontAwesome name="exchange" size={theme.rem(1.5)} color={theme.tileBackground} />}
+        />
+      ))
     }
 
     return (

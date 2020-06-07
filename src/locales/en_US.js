@@ -74,6 +74,7 @@ const strings = {
   fragment_request_copy_title: 'Copy',
   fragment_request_subtitle: 'Request',
   fragment_request_address_copied: 'Request address successfully copied to clipboard',
+  fragment_copied: 'Successfully copied to clipboard',
   request_minimum_notification_title: 'Minimum Balance Required',
   request_xrp_minimum_notification_body:
     'Ripple (XRP) wallets require a 20 XRP minimum balance. You must deposit at least 20 XRP to this address before this wallet will show a balance or transactions. 20 XRP will be unspendable for the lifetime of this wallet address.',
