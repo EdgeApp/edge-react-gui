@@ -3,7 +3,8 @@
 import { abs, bns, sub } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Image, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, Linking, Platform, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import SafariView from 'react-native-safari-view'
 import slowlog from 'react-native-slowlog'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -272,14 +273,30 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       ))
     }
 
+    const openUrl = () => {
+      const url = swapData.orderUri
+      if (Platform.OS === 'ios') {
+        return SafariView.isAvailable()
+          .then(SafariView.show({ url }))
+          .catch(error => {
+            Linking.openURL(url)
+            console.log(error)
+          })
+      }
+      Linking.openURL(url)
+    }
+
     return (
-      <Tile type="touchable" title={s.strings.transaction_details_exchange_details} onPress={openExchangeDetails}>
-        <View style={styles.tileColumn}>
-          <FormattedText style={styles.tileTextBottom}>{`${s.strings.title_exchange} ${sourceAmount} ${sourceCurrencyCode}`}</FormattedText>
-          <FormattedText style={styles.tileTextBottom}>{`${s.strings.string_to_capitalize} ${destinationAmount} ${destinationCurrencyCode}`}</FormattedText>
-          <FormattedText style={styles.tileTextBottom}>{swapData.isEstimate ? s.strings.fixed_quote : s.strings.estimated_quote}</FormattedText>
-        </View>
-      </Tile>
+      <>
+        <Tile type="touchable" title={s.strings.transaction_details_exchange_details} onPress={openExchangeDetails}>
+          <View style={styles.tileColumn}>
+            <FormattedText style={styles.tileTextBottom}>{`${s.strings.title_exchange} ${sourceAmount} ${sourceCurrencyCode}`}</FormattedText>
+            <FormattedText style={styles.tileTextBottom}>{`${s.strings.string_to_capitalize} ${destinationAmount} ${destinationCurrencyCode}`}</FormattedText>
+            <FormattedText style={styles.tileTextBottom}>{swapData.isEstimate ? s.strings.fixed_quote : s.strings.estimated_quote}</FormattedText>
+          </View>
+        </Tile>
+        {swapData.orderUri && <Tile type="touchable" title={s.strings.transaction_details_exchange_status_page} onPress={openUrl} body={swapData.orderUri} />}
+      </>
     )
   }
 

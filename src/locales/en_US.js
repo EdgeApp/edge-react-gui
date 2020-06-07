@@ -410,6 +410,7 @@ const strings = {
   transaction_details_exchange_exchange_unique_id: 'Exchange Unique ID',
   transaction_details_exchange_payout_address: 'Payout Address',
   transaction_details_exchange_refund_address: 'Refund Address',
+  transaction_details_exchange_status_page: 'Exchange Status Page',
   tx_detail_picker_title: 'Choose a Category:',
   transaction_details_notes_title: 'Notes',
   back_button_tap_again_to_exit: 'Please tap BACK again to log out',

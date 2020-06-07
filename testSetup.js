@@ -50,6 +50,9 @@ jest.mock('Linking', () => {
     getInitialURL: jest.fn()
   }
 })
+jest.mock('react-native-safari-view', () => ({
+  show: () => jest.fn()
+}))
 jest.mock('react-native-fs', () => {
   // https://github.com/itinance/react-native-fs/issues/404
   return {
