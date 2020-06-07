@@ -226,7 +226,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   renderExchangeData = () => {
-    const { destinationDenomination, destinationWallet, edgeTransaction, walletDefaultDenomProps } = this.props
+    const { destinationDenomination, destinationWallet, edgeTransaction, walletDefaultDenomProps, theme } = this.props
     const { styles } = this.state
     const { swapData, spendTargets } = edgeTransaction
 
@@ -247,6 +247,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
           destinationWallet={destinationWallet}
           sourceAmount={sourceAmount}
           destinationAmount={destinationAmount}
+          theme={theme}
         />
       ))
     }
