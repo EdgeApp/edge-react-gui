@@ -4,6 +4,7 @@ import { abs, bns, sub } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, Linking, Platform, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import slowlog from 'react-native-slowlog'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -28,7 +29,7 @@ import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCat
 import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInput.js'
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
 import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPersonInput.js'
-import { Airship } from '../services/AirshipInstance.js'
+import { Airship, showError } from '../services/AirshipInstance.js'
 
 const categories = {
   exchange: {
@@ -286,6 +287,23 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       Linking.openURL(url)
     }
 
+    const openEmail = () => {
+      const email = swapData.plugin.supportEmail
+      const body = createExchangeDataString('<br />')
+
+      Mailer.mail(
+        {
+          subject: sprintf(s.strings.transaction_details_exchange_support_request, swapData.plugin.displayName),
+          recipients: [email],
+          body,
+          isHTML: true
+        },
+        (error, event) => {
+          if (error) showError(error)
+        }
+      )
+    }
+
     return (
       <>
         <Tile type="touchable" title={s.strings.transaction_details_exchange_details} onPress={openExchangeDetails}>
@@ -296,6 +314,9 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
           </View>
         </Tile>
         {swapData.orderUri && <Tile type="touchable" title={s.strings.transaction_details_exchange_status_page} onPress={openUrl} body={swapData.orderUri} />}
+        {swapData.plugin.supportEmail && (
+          <Tile type="touchable" title={s.strings.transaction_details_exchange_support} onPress={openEmail} body={swapData.plugin.supportEmail} />
+        )}
       </>
     )
   }
