@@ -4,6 +4,7 @@ import { abs, bns, sub } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, Linking, Platform, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import slowlog from 'react-native-slowlog'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -27,7 +28,7 @@ import { TransactionDetailsExchangeDetailsModal } from '../modals/TransactionDet
 import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInput.js'
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
 import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPersonInput.js'
-import { Airship } from '../services/AirshipInstance.js'
+import { Airship, showError } from '../services/AirshipInstance.js'
 
 const categories = {
   exchange: {
@@ -255,13 +256,46 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
     const openUrl = () => {
       const url = swapData.orderUri
-      if (!url) return
       if (Platform.OS === 'ios') {
         return SafariView.isAvailable()
           .then(SafariView.show({ url }))
           .catch(error => Linking.openURL(url)) // eslint-disable-line handle-callback-err
       }
       Linking.openURL(url)
+    }
+
+    const openEmail = () => {
+      const email = swapData.plugin.supportEmail
+      const { plugin, isEstimate, orderId, payoutAddress, refundAddress } = swapData
+      const walletName = edgeTransaction.wallet && edgeTransaction.wallet.name ? edgeTransaction.wallet.name : ''
+      const destinationWalletName = destinationWallet ? destinationWallet.name : ''
+      const uniqueIdentifier = spendTargets && spendTargets[0].uniqueIdentifier ? spendTargets[0].uniqueIdentifier : ''
+      const exchangeAddresses = spendTargets && spendTargets.length > 0 ? spendTargets.map(target => `${target.publicAddress}<br/>`).toString() : ''
+      const body = `
+        ${s.strings.transaction_details_exchange_service}: ${plugin.displayName}<br/>
+        ${s.strings.transaction_details_exchange_order_id}: ${orderId || ''}<br/>
+        ${s.strings.transaction_details_exchange_source_wallet}: ${walletName}<br/>
+        ${s.strings.fragment_send_from_label}: ${sourceAmount} ${sourceCurrencyCode}<br/>
+        ${s.strings.string_to_capitalize}: ${destinationAmount} ${destinationCurrencyCode}<br/>
+        ${s.strings.transaction_details_exchange_destination_wallet}: ${destinationWalletName}<br/>
+        ${isEstimate ? s.strings.transaction_details_exchange_fixed_rate : s.strings.transaction_details_exchange_variable_rate}<br/><br/>
+        <p>${s.strings.transaction_details_exchange_exchange_address}:<br/>  ${exchangeAddresses}</p>
+        <p>${s.strings.transaction_details_exchange_exchange_unique_id}:<br/>  ${uniqueIdentifier}</p>
+        <p>${s.strings.transaction_details_exchange_payout_address}:<br/>  ${payoutAddress}</p>
+        <p>${s.strings.transaction_details_exchange_refund_address}:<br/>  ${refundAddress || ''}</p>
+      `
+
+      Mailer.mail(
+        {
+          subject: sprintf(s.strings.transaction_details_exchange_support_request, swapData.plugin.displayName),
+          recipients: [email],
+          body,
+          isHTML: true
+        },
+        (error, event) => {
+          if (error) showError(error)
+        }
+      )
     }
 
     return (
@@ -276,6 +310,9 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
           </View>
         </Tile>
         {swapData.orderUri && <Tile type="touchable" title={s.strings.transaction_details_exchange_status_page} onPress={openUrl} body={swapData.orderUri} />}
+        {swapData.plugin.supportEmail && (
+          <Tile type="touchable" title={s.strings.transaction_details_exchange_support} onPress={openEmail} body={swapData.plugin.supportEmail} />
+        )}
       </>
     )
   }

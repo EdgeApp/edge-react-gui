@@ -8,9 +8,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { type EdgeTheme } from '../../reducers/ThemeReducer.js'
 import { type GuiWallet } from '../../types/types.js'
 import { type AirshipBridge, AirshipModal, ContentArea, IconCircle, THEME } from './modalParts.js'
-import { type EdgeTheme } from '../../reducers/ThemeReducer.js'
 
 type Props = {
   bridge: AirshipBridge<void>,
@@ -71,21 +71,21 @@ export class TransactionDetailsExchangeDetailsModal extends Component<Props> {
               {s.strings.transaction_details_exchange_destination_wallet}: {destinationWalletName}
             </Text>
             <Text>{isEstimate ? s.strings.transaction_details_exchange_fixed_rate : s.strings.transaction_details_exchange_variable_rate}</Text>
-            <View style={styles.spacer}/>
+            <View style={styles.spacer} />
             <Text>{s.strings.transaction_details_exchange_exchange_address}:</Text>
-            <Text>  {exchangeAddresses}</Text>
+            <Text> {exchangeAddresses}</Text>
             <Text>{s.strings.transaction_details_exchange_exchange_unique_id}:</Text>
-            <Text>  {uniqueIdentifier}</Text>
+            <Text> {uniqueIdentifier}</Text>
             <Text>{s.strings.transaction_details_exchange_payout_address}:</Text>
-            <Text>  {payoutAddress}</Text>
+            <Text> {payoutAddress}</Text>
             <Text>{s.strings.transaction_details_exchange_refund_address}:</Text>
-            <Text>  {refundAddress || ''}</Text>
+            <Text> {refundAddress || ''}</Text>
           </ScrollView>
           <View style={styles.buttonContainer}>
-            <PrimaryButton  style={[ styles.button, {marginRight: theme.rem(0.25)}]} onPress={() => bridge.resolve()}>
+            <PrimaryButton style={[styles.button, { marginRight: theme.rem(0.25) }]} onPress={() => bridge.resolve()}>
               <PrimaryButton.Text>{s.strings.fragment_request_copy_title}</PrimaryButton.Text>
             </PrimaryButton>
-            <PrimaryButton  style={[ styles.button, {marginRight: theme.rem(0.25)}]} onPress={() => bridge.resolve()}>
+            <PrimaryButton style={[styles.button, { marginRight: theme.rem(0.25) }]} onPress={() => bridge.resolve()}>
               <PrimaryButton.Text>{s.strings.string_ok_cap}</PrimaryButton.Text>
             </PrimaryButton>
           </View>
