@@ -19,6 +19,10 @@
 #import <sys/errno.h>
 #import <UserNotifications/UserNotifications.h>
 
+@interface AppDelegate () <FIRMessagingDelegate, UNUserNotificationCenterDelegate>
+
+@end
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application
@@ -41,7 +45,9 @@
   didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [BugsnagReactNative start];
+  
   [FIRApp configure];
+  [FIRMessaging messaging].delegate = self;
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
@@ -55,12 +61,14 @@
   [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:60*60*12];
 
   // Notification permissions:
+  [UNUserNotificationCenter currentNotificationCenter].delegate = self;
   [[UNUserNotificationCenter currentNotificationCenter]
       requestAuthorizationWithOptions:UNAuthorizationOptionBadge | UNAuthorizationOptionAlert
       completionHandler: ^(BOOL granted, NSError *error) {
         if (error) NSLog(@"failed to get notification permission");
         else NSLog(granted ? @"notifications granted" : @"notifications not granted");
       }];
+  [application registerForRemoteNotifications];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
@@ -68,6 +76,22 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   return YES;
+}
+
+- (void)messaging:(FIRMessaging *)messaging didReceiveRegistrationToken:(NSString *)fcmToken {
+    NSLog(@"FCM registration token: %@", fcmToken);
+    // Notify about received token.
+    NSDictionary *dataDict = [NSDictionary dictionaryWithObject:fcmToken forKey:@"token"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:
+     @"FCMToken" object:nil userInfo:dataDict];
+    // TODO: If necessary send token to application server.
+    // Note: This callback is fired at each app startup and whenever a new token is generated.
+}
+
+// With "FirebaseAppDelegateProxyEnabled": NO
+- (void)application:(UIApplication *)application
+    didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [FIRMessaging messaging].APNSToken = deviceToken;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge

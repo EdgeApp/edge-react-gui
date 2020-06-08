@@ -133,6 +133,10 @@ export default class SettingsOverview extends Component<Props, State> {
     this.props.dispatchUpdateEnableTouchIdEnable(!this.props.touchIdEnabled, this.props.account)
   }
 
+  _onPressNotifications = () => {
+    Actions[Constants.NOTIFICATION_SETTINGS]()
+  }
+
   onDeveloperPress = () => {
     this.props.toggleDeveloperMode(!this.props.developerModeOn)
   }
@@ -203,6 +207,7 @@ export default class SettingsOverview extends Component<Props, State> {
             <SettingsSwitchRow key="useTouchID" text={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this._onToggleTouchIdOption} />
           )}
 
+          <SettingsRow text={s.strings.settings_notifications} right={rightArrow} onPress={this._onPressNotifications} />
           {CURRENCY_SETTINGS_KEYS.map(pluginId => {
             if (account.currencyConfig[pluginId] == null) return null
             const { currencyInfo } = account.currencyConfig[pluginId]

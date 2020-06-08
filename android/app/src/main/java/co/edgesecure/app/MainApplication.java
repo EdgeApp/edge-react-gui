@@ -33,6 +33,8 @@ import io.fixd.rctlocale.RCTLocalePackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
+import io.invertase.firebase.instanceid.RNFirebaseInstanceIdPackage;
+
 import java.util.Arrays;
 import java.util.List;
 import org.reactnative.camera.RNCameraPackage;
@@ -59,6 +61,7 @@ public class MainApplication extends Application implements ReactApplication {
               new RNFirebasePackage(),
               new RNFirebaseAnalyticsPackage(),
               new RNFirebaseDatabasePackage(),
+              new RNFirebaseInstanceIdPackage(),
               new RNMail(),
               new RCTSplashScreenPackage(),
               new AbcCoreJsUiPackage(),
