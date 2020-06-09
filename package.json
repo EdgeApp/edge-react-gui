@@ -112,6 +112,9 @@
   "dependencies": {
     "@react-native-community/art": "^1.0.2",
     "@react-native-community/async-storage": "^1.6.2",
+    "@react-native-firebase/app": "^7.0.1",
+    "@react-native-firebase/iid": "^7.0.1",
+    "@react-native-firebase/messaging": "^7.0.1",
     "async-lock": "^1.1.2",
     "biggystring": "^3.0.2",
     "bugsnag-react-native": "^2.10.2",

@@ -69,6 +69,7 @@ import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnec
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
+import { registerDevice } from '../modules/Device/action'
 import { logoutRequest } from '../modules/Login/action.js'
 import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConnector'
 import T from '../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -90,10 +91,12 @@ import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle.js
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
+import { CurrencyNotificationScene } from './scenes/CurrencyNotificationScene'
 import { GuiPluginLegacyScene, renderLegacyPluginBackButton } from './scenes/GuiPluginLegacyScene.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
+import { NotificationScene } from './scenes/NotificationScene'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { showToast } from './services/AirshipInstance.js'
 
@@ -142,6 +145,8 @@ const DEFAULT_FIAT = s.strings.title_default_fiat
 const TERMS_OF_SERVICE = s.strings.title_terms_of_service
 
 type DispatchProps = {
+  registerDevice(): void,
+
   // Navigation actions:
   logout(username?: string): void,
   openDrawer(): void,
@@ -177,6 +182,7 @@ export class MainComponent extends Component<Props> {
 
   componentDidMount() {
     logEvent('AppStart')
+    this.props.registerDevice()
   }
 
   render() {
@@ -616,6 +622,24 @@ export class MainComponent extends Component<Props> {
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
             />
+            <Scene
+              key={Constants.NOTIFICATION_SETTINGS}
+              navTransparent
+              component={ifLoggedIn(NotificationScene)}
+              renderTitle={this.renderTitle(s.strings.settings_notifications)}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key={Constants.CURRENCY_NOTIFICATION_SETTINGS}
+              navTransparent
+              component={ifLoggedIn(CurrencyNotificationScene)}
+              renderTitle={props => <CurrencySettingsTitle currencyInfo={props.currencyInfo} titleString={s.strings.settings_currency_notifications} />}
+              renderLeftButton={this.renderBackButton(BACK)}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
           </Stack>
 
           <Stack key={Constants.PLUGIN_VIEW_DEEP} hideDrawerButton>
@@ -886,6 +910,10 @@ export class MainComponent extends Component<Props> {
 export const Main = connect(
   (state: ReduxState): StateProps => ({}),
   (dispatch: Dispatch): DispatchProps => ({
+    registerDevice() {
+      dispatch(registerDevice())
+    },
+
     // Navigation actions:
     logout(username?: string): void {
       dispatch(logoutRequest(username))

@@ -10,14 +10,15 @@ import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles } from '../../styles/MainStyle.js'
 
 type Props = {
-  currencyInfo: EdgeCurrencyInfo
+  currencyInfo: EdgeCurrencyInfo,
+  titleString?: string
 }
 
 export function CurrencySettingsTitle(props: Props) {
-  const { currencyInfo } = props
+  const { currencyInfo, titleString = s.strings.title_crypto_settings } = props
   const { displayName, symbolImage = '' } = currencyInfo
 
-  const title = sprintf(s.strings.title_crypto_settings, displayName)
+  const title = sprintf(titleString, displayName)
   return (
     <View style={styles.titleWrapper}>
       <Image style={styles.titleImage} source={{ uri: symbolImage }} />

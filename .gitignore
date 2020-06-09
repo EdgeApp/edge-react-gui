@@ -4,8 +4,8 @@ env.json
 deploy-config.json
 **/buildnum.json
 keystores/
-google-services.json
-GoogleService-Info.plist
+android/app/google-services.json
+ios/edge/GoogleService-Info.plist
 android-release.bundle.map
 ios-release.bundle.map
 main.jsbundle
