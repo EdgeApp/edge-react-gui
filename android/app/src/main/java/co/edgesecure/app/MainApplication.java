@@ -30,7 +30,6 @@ import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 import com.rnfs.RNFSPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.zmxv.RNSound.RNSoundPackage;
-import io.fixd.rctlocale.RCTLocalePackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
@@ -78,7 +77,6 @@ public class MainApplication extends Application implements ReactApplication {
               new RNDeviceInfo(),
               new ReactNativeContacts(),
               new RNCameraPackage(),
-              new RCTLocalePackage(),
               new ExtraDimensionsPackage());
         }
 
