@@ -11,7 +11,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'

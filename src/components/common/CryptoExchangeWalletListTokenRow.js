@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { Image, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { CryptoExchangeWalletListRowStyle as styles } from '../../styles/components/CryptoExchangeWalletListRowStyle.js'
