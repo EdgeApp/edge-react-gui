@@ -8,7 +8,7 @@ import { ActivityIndicator, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants'
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getRenewalFee, renewFioName } from '../../modules/FioAddress/util'
 import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'

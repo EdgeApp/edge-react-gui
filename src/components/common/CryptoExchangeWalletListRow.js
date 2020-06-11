@@ -5,7 +5,7 @@ import _ from 'lodash'
 import React, { Component } from 'react'
 import { Image, TouchableHighlight, View } from 'react-native'
 
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'

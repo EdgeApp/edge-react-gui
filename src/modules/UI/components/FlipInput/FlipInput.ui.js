@@ -6,7 +6,7 @@ import { Animated, Platform, Text, TextInput, TouchableWithoutFeedback, View } f
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
 import * as Constants from '../../../../constants/indexConstants'
-import { intl } from '../../../../locales/intl'
+import * as intl from '../../../../locales/intl.js'
 import { THEME } from '../../../../theme/variables/airbitz.js'
 import type { FlipInputFieldInfo } from '../../../../types/types.js'
 import * as UTILS from '../../../../util/utils.js'

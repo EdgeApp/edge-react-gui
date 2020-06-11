@@ -6,7 +6,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import fioAddressListIcon from '../../../assets/images/list_fioAddress.png'
 import * as Constants from '../../../constants/indexConstants'
-import { intl } from '../../../locales/intl'
+import * as intl from '../../../locales/intl.js'
 import s from '../../../locales/strings.js'
 import T from '../../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../../modules/UI/components/Icon/Icon.ui'

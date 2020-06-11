@@ -4,7 +4,7 @@ import { log10 } from 'biggystring'
 import React, { Component } from 'react'
 import { View } from 'react-native'
 
-import { intl } from '../../../../locales/intl'
+import * as intl from '../../../../locales/intl.js'
 import s from '../../../../locales/strings.js'
 import * as UTILS from '../../../../util/utils'
 import T from '../../components/FormattedText/FormattedText.ui.js'

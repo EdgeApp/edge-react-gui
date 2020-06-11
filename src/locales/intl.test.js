@@ -1,9 +1,8 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
+/* globals describe test expect beforeEach */
 
 import { truncateDecimals } from '../util/utils'
-/* globals describe test expect beforeEach */
-/* eslint-disable import/first */
-import { intl, setIntlLocale } from './intl'
+import * as intl from './intl'
 
 const EN_US_LOCALE = {
   localeIdentifier: 'en_US',
@@ -28,7 +27,7 @@ describe('Intl numbers', function () {
   describe('isValidInput', function () {
     describe('when input is valid', function () {
       beforeEach(function () {
-        setIntlLocale(EN_US_LOCALE)
+        intl.setIntlLocale(EN_US_LOCALE)
       })
       test('1 => true', function () {
         const validInput = '1'
@@ -75,7 +74,7 @@ describe('Intl numbers', function () {
 
     describe('when input is invalid', function () {
       beforeEach(function () {
-        setIntlLocale(EN_US_LOCALE)
+        intl.setIntlLocale(EN_US_LOCALE)
       })
       test('R => false', function () {
         const invalidInput = 'R'
@@ -115,7 +114,7 @@ describe('Intl numbers', function () {
 
     describe('en-Us', function () {
       beforeEach(function () {
-        setIntlLocale(EN_US_LOCALE)
+        intl.setIntlLocale(EN_US_LOCALE)
       })
 
       test('en .', function () {
@@ -137,7 +136,7 @@ describe('Intl numbers', function () {
 
     describe('de-DE', function () {
       beforeEach(() => {
-        setIntlLocale(DE_DE_LOCALE)
+        intl.setIntlLocale(DE_DE_LOCALE)
       })
       test(',', function () {
         expect(intl.isValidInput(',')).toBe(true)
@@ -158,7 +157,7 @@ describe('Intl numbers', function () {
 
     describe('en-US should fail', function () {
       beforeEach(() => {
-        setIntlLocale(EN_US_LOCALE)
+        intl.setIntlLocale(EN_US_LOCALE)
       })
       // test(',', function () {
       //   expect(intl.isValidInput(',')).toBe(false)
@@ -172,7 +171,7 @@ describe('Intl numbers', function () {
   describe('formatNumberInput => prettifyNumber', function () {
     describe('en-EN', function () {
       beforeEach(function () {
-        setIntlLocale(EN_US_LOCALE)
+        intl.setIntlLocale(EN_US_LOCALE)
       })
       test('. => 0.', function () {
         const input = '.'
@@ -186,7 +185,7 @@ describe('Intl numbers', function () {
   describe('prettifyNumber', function () {
     describe('en-EN', function () {
       beforeEach(function () {
-        setIntlLocale(EN_US_LOCALE)
+        intl.setIntlLocale(EN_US_LOCALE)
       })
       test('. => 0.', function () {
         const input = '.'
@@ -201,22 +200,20 @@ describe('Intl numbers', function () {
 describe('Integration with functionality', function () {
   describe('truncateDecimals', function () {
     beforeEach(function () {
-      setIntlLocale(EN_US_LOCALE)
+      intl.setIntlLocale(EN_US_LOCALE)
     })
     test('', function () {
       const input = '1'
       const precision = 0
       const expected = '1'
-      const actual = truncateDecimals(input, precision)
-      expect(actual).toBe(expected)
+      expect(truncateDecimals(input, precision)).toBe(expected)
       expect(intl.truncateDecimals(input, precision)).toBe(expected)
     })
     test('1 => 1', function () {
       const input = '1'
       const precision = 8
       const expected = '1'
-      const actual = truncateDecimals(input, precision)
-      expect(actual).toBe(expected)
+      expect(truncateDecimals(input, precision)).toBe(expected)
       expect(intl.truncateDecimals(input, precision)).toBe(expected)
     })
 
@@ -224,8 +221,7 @@ describe('Integration with functionality', function () {
       const input = '1.0'
       const precision = 1
       const expected = '1.0'
-      const actual = truncateDecimals(input, precision)
-      expect(actual).toBe(expected)
+      expect(truncateDecimals(input, precision)).toBe(expected)
       expect(intl.truncateDecimals(input, precision)).toBe(expected)
     })
 
@@ -233,8 +229,7 @@ describe('Integration with functionality', function () {
       const input = '1.123456789'
       const precision = 1
       const expected = '1.1'
-      const actual = truncateDecimals(input, precision)
-      expect(actual).toBe(expected)
+      expect(truncateDecimals(input, precision)).toBe(expected)
       expect(intl.truncateDecimals(input, precision)).toBe(expected)
     })
 
@@ -242,8 +237,7 @@ describe('Integration with functionality', function () {
       const input = '1.19'
       const precision = 1
       const expected = '1.1'
-      const actual = truncateDecimals(input, precision)
-      expect(actual).toBe(expected)
+      expect(truncateDecimals(input, precision)).toBe(expected)
       expect(intl.truncateDecimals(input, precision)).toBe(expected)
     })
 
@@ -252,8 +246,7 @@ describe('Integration with functionality', function () {
       const precision = 1
       const expected = ''
       const allowBlank = true
-      const actual = truncateDecimals(input, precision, allowBlank)
-      expect(actual).toBe(expected)
+      expect(truncateDecimals(input, precision, allowBlank)).toBe(expected)
       expect(intl.truncateDecimals(input, precision, allowBlank)).toBe(expected)
     })
     test("allowBlank=false '' => 0", function () {
@@ -261,8 +254,7 @@ describe('Integration with functionality', function () {
       const precision = 1
       const expected = '0'
       const allowBlank = false
-      const actual = truncateDecimals(input, precision, allowBlank)
-      expect(actual).toBe(expected)
+      expect(truncateDecimals(input, precision, allowBlank)).toBe(expected)
       expect(intl.truncateDecimals(input, precision, allowBlank)).toBe(expected)
     })
   })
@@ -271,7 +263,7 @@ describe('Integration with functionality', function () {
 describe('Integration with default numbers formatting', function () {
   describe('formatNumberInput de_DE', function () {
     beforeEach(function () {
-      setIntlLocale(DE_DE_LOCALE)
+      intl.setIntlLocale(DE_DE_LOCALE)
     })
     test('1. => 1,', function () {
       const input = '1.'
@@ -282,7 +274,7 @@ describe('Integration with default numbers formatting', function () {
   })
   describe('formatNumberInput en_US', function () {
     beforeEach(function () {
-      setIntlLocale(EN_US_LOCALE)
+      intl.setIntlLocale(EN_US_LOCALE)
     })
     test('Should save zero in decimal: 12.0 => 12.0', function () {
       const input = '12.0'
@@ -300,7 +292,7 @@ describe('Integration with default numbers formatting', function () {
 
   describe('truncateDecimals should be idempotent', function () {
     beforeEach(function () {
-      setIntlLocale(EN_US_LOCALE)
+      intl.setIntlLocale(EN_US_LOCALE)
     })
     test('0.1 => 0.1', function () {
       const input = '0.1'
@@ -314,7 +306,7 @@ describe('Integration with default numbers formatting', function () {
 describe('formatNumber', function () {
   describe('en_US', function () {
     beforeEach(function () {
-      setIntlLocale(EN_US_LOCALE)
+      intl.setIntlLocale(EN_US_LOCALE)
     })
     test('1.2', function () {
       const input = '1.2'
@@ -370,7 +362,7 @@ describe('formatNumber', function () {
 describe('formatNumber de_DE locale', function () {
   describe('de_DE', function () {
     beforeEach(function () {
-      setIntlLocale(DE_DE_LOCALE)
+      intl.setIntlLocale(DE_DE_LOCALE)
     })
 
     test('1234.56 => 1.234,56', function () {
