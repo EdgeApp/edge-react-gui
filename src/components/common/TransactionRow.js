@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import receivedTypeImage from '../../assets/images/transactions/transaction-type-received.png'
 import sentTypeImage from '../../assets/images/transactions/transaction-type-sent.png'
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import type { ContactsState } from '../../reducers/ContactsReducer'

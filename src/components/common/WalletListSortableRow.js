@@ -6,7 +6,7 @@ import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import sort from '../../assets/images/walletlist/sort.png'
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { type ExchangeRatesState } from '../../modules/ExchangeRates/reducer.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
