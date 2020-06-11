@@ -184,7 +184,6 @@ dependencies {
     implementation project(':react-native-firebase')
     implementation project(':react-native-fs')
     implementation project(':react-native-linear-gradient')
-    implementation project(':react-native-locale')
     implementation project(':react-native-mail')
     implementation project(':react-native-randombytes')
     implementation project(':react-native-share')
