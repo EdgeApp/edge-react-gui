@@ -67,8 +67,6 @@ PODS:
   - react-native-firebase (4.3.8):
     - Firebase/Core
     - React
-  - react-native-locale (0.0.19):
-    - React
   - react-native-mail (3.0.7):
     - React
   - react-native-randombytes (3.5.1):
@@ -171,7 +169,6 @@ DEPENDENCIES:
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-fast-crypto (from `../node_modules/react-native-fast-crypto`)
   - react-native-firebase (from `../node_modules/react-native-firebase`)
-  - react-native-locale (from `../node_modules/react-native-locale`)
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
@@ -239,8 +236,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fast-crypto"
   react-native-firebase:
     :path: "../node_modules/react-native-firebase"
-  react-native-locale:
-    :path: "../node_modules/react-native-locale"
   react-native-mail:
     :path: "../node_modules/react-native-mail"
   react-native-randombytes:
@@ -300,7 +295,6 @@ SPEC CHECKSUMS:
   react-native-contacts: f6e5c518598762081ff9cf7c70db36f71668538e
   react-native-fast-crypto: aed797071793e23416d6e8c7c1c5dadb63036a0c
   react-native-firebase: c20ee01585998768935fc2cff74ff8e9740f1a73
-  react-native-locale: bd8edf0e51706d469af3e2fa568a8102213a3139
   react-native-mail: 021d8ee60e374609f5689ef354dc8e36839a9ba6
   react-native-randombytes: 1b6091800f62c6c393c6bc850ac089ebf63d4c0a
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
@@ -320,6 +314,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: c66aed4605db6ff37b193578b5bb783c1ea5e0e3
+PODFILE CHECKSUM: bccb5f8797ef2ddff8d5531850eb71ce326573b8
 
 COCOAPODS: 1.9.3

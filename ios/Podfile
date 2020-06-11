@@ -35,7 +35,6 @@ target 'edge' do
   pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
   pod 'react-native-fast-crypto', :path => '../node_modules/react-native-fast-crypto'
   pod 'react-native-firebase', :path => '../node_modules/react-native-firebase'
-  pod 'react-native-locale', :path => '../node_modules/react-native-locale'
   pod 'react-native-mail', :path => '../node_modules/react-native-mail'
   pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
   pod 'react-native-safari-view', :path => '../node_modules/react-native-safari-view'

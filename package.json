@@ -146,7 +146,6 @@
     "react-native-fs": "git://github.com/EdgeApp/react-native-fs.git#edge/removeEncoding",
     "react-native-keyboard-aware-scroll-view": "^0.9.1",
     "react-native-linear-gradient": "^2.0.0",
-    "react-native-locale": "git://github.com/fixd/react-native-locale#a2b1296",
     "react-native-localize": "^1.4.0",
     "react-native-mail": "3.0.7",
     "react-native-material-dropdown": "^0.11.1",
