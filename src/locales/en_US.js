@@ -329,9 +329,6 @@ const strings = {
   string_add_edit_tokens: 'Add / Edit Tokens',
   tx_notes_metadata: '%s: %s\nRecipient Address: %s',
   tx_notes_metadata_recipient_address: 'Recipient Address: ',
-  exchange_notes_metadata_generic: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s to address %7$s \nOrder: %8$s. \nFor assistance, please contact %9$s.',
-  exchange_notes_metadata_generic2:
-    'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s to address %7$s \nOrder: %8$s. \nExchange payment address: %9$s. \nExchange unique identifier: %10$s \n\nFor assistance, please contact %11$s.',
   title_crypto_settings: '%s Settings',
   title_create_wallet_select_crypto: 'Select Type',
   title_create_wallet_select_fiat: 'Select Fiat',

@@ -276,53 +276,17 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
 
     let category: string
     let name: string
-    let notes: string
     if (pluginId === 'transfer') {
       category = sprintf('transfer:%s %s %s', fromCurrencyCode, s.strings.word_to_in_convert_from_to_string, toWallet.name)
       name = toWallet.name || ''
-
-      const recipientAddress = (await toWallet.getReceiveAddress()).publicAddress
-      notes = s.strings.tx_notes_metadata_recipient_address + recipientAddress
     } else {
       category = sprintf('exchange:%s %s %s', fromCurrencyCode, s.strings.word_to_in_convert_from_to_string, toCurrencyCode)
       name = si.displayName
-
-      const supportEmail = si.supportEmail
-      const quoteIdUri = si.orderUri != null && result.orderId != null ? si.orderUri + result.orderId : result.transaction.txid
-
-      let payinAddress = ''
-      let uniqueIdentifier = ''
-      const { spendTargets = [] } = result.transaction
-      const [spendTarget] = spendTargets
-      if (spendTarget != null) {
-        payinAddress = spendTarget.publicAddress
-        uniqueIdentifier = spendTarget.uniqueIdentifier
-      }
-
-      const isEstimate = quote.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote
-      notes =
-        sprintf(
-          s.strings.exchange_notes_metadata_generic2,
-          state.cryptoExchange.fromDisplayAmount,
-          state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
-          fromWallet.name,
-          state.cryptoExchange.toDisplayAmount,
-          state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
-          toWallet.name,
-          result.destinationAddress || '',
-          quoteIdUri,
-          payinAddress,
-          uniqueIdentifier,
-          supportEmail
-        ) +
-        ' ' +
-        isEstimate
     }
 
     const edgeMetaData: EdgeMetadata = {
       name,
-      category,
-      notes
+      category
     }
     Actions.popTo(Constants.EXCHANGE_SCENE)
     await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)
