@@ -3,22 +3,55 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, StyleSheet, TouchableHighlight, View } from 'react-native'
 
+import { type WalletListMenuKey } from '../../actions/WalletListMenuActions.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { scale } from '../../util/scaling.js'
+import { type GuiWallet } from '../../types/types.js'
+import { scale, scaleH } from '../../util/scaling.js'
+import { WalletListMenu } from './WalletListMenu.js'
 
-export class WalletListEmptyRow extends Component<{}> {
+type Props = {
+  walletId?: string,
+  executeWalletRowOption?: (walletId: string, option: WalletListMenuKey) => void
+}
+
+export class WalletListEmptyRow extends Component<Props> {
   render() {
+    const { walletId, executeWalletRowOption } = this.props
     return (
       <TouchableHighlight style={[styles.rowContainer, styles.emptyRow]} underlayColor={THEME.COLORS.ROW_PRESSED}>
         <View style={styles.rowContent}>
           <View style={styles.rowNameTextWrap}>
             <ActivityIndicator style={{ height: 18, width: 18 }} />
           </View>
+          {walletId && executeWalletRowOption && (
+            <View style={styles.rowOptionsWrap}>
+              <WalletListMenu
+                customStyles={customWalletListOptionsStyles}
+                executeWalletRowOption={executeWalletRowOption}
+                walletId={walletId}
+              />
+            </View>
+          )}
         </View>
       </TouchableHighlight>
     )
   }
 }
+
+const customWalletListOptionsStyles = StyleSheet.create({
+  icon: {
+    fontSize: scale(21),
+    fontWeight: '200',
+    position: 'relative',
+    top: 6
+  },
+  menuIconWrap: {
+    width: scale(46),
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  }
+})
 
 const rawStyles = {
   emptyRow: {
@@ -48,6 +81,9 @@ const rawStyles = {
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: scale(5)
+  },
+  rowOptionsWrap: {
+    width: scaleH(37)
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
