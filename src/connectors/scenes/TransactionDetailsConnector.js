@@ -36,6 +36,10 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
     parseFloat(cryptoAmount)
   )
 
+  const { swapData } = edgeTransaction
+  const destinationDenomination = swapData ? SETTINGS_SELECTORS.getDisplayDenomination(state, swapData.payoutCurrencyCode) : undefined
+  const destinationWallet = swapData ? UI_SELECTORS.getWallet(state, swapData.payoutWalletId) : undefined
+
   return {
     contacts,
     subcategoriesList,
@@ -44,7 +48,9 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
     guiWallet: wallet,
     currentFiatAmount,
     walletDefaultDenomProps,
-    theme: state.theme
+    theme: state.theme,
+    destinationDenomination,
+    destinationWallet
   }
 }
 
