@@ -25,10 +25,14 @@ export type WalletListResult = {
   walletToCreate?: {
     walletType: string,
     currencyCode: string
+  },
+  tokenToCreate?: {
+    currencyCode: string,
+    parentCurrencyCode: string
   }
 }
 
-export type CreateToken = {
+type CreateToken = {
   currencyCode: string,
   currencyName: string,
   symbolImage?: string,
@@ -275,16 +279,20 @@ class WalletListModalConnected extends Component<Props, State> {
   }
 
   selectWallet = (wallet: GuiWallet) => this.props.bridge.resolve({ walletToSelect: { walletId: wallet.id, currencyCode: wallet.currencyCode } })
+
   selectTokenWallet = (tokenSelectObject: TokenSelectObject) =>
     this.props.bridge.resolve({ walletToSelect: { walletId: tokenSelectObject.id, currencyCode: tokenSelectObject.currencyCode } })
 
   createWallet = (createWalletCurrency: GuiWalletType) =>
     this.props.bridge.resolve({ walletToCreate: { walletType: createWalletCurrency.value, currencyCode: createWalletCurrency.currencyCode } })
 
+  createToken = (createToken: CreateToken) =>
+    this.props.bridge.resolve({ tokenToCreate: { currencyCode: createToken.currencyCode, parentCurrencyCode: createToken.parentCurrencyCode } })
+
   renderWalletItem = ({ item }: FlatListItem<Record>) => {
     const { showCreateWallet } = this.props
     const { allowedCurrencyCodes, excludeCurrencyCodes } = this.state
-    const { walletItem, createWalletCurrency, mostRecentUsed, currencyCode, headerLabel } = item
+    const { walletItem, createWalletCurrency, createToken, mostRecentUsed, currencyCode, headerLabel } = item
     if (walletItem) {
       return (
         <CryptoExchangeWalletListRow
@@ -305,7 +313,26 @@ class WalletListModalConnected extends Component<Props, State> {
       )
     }
     if (showCreateWallet && createWalletCurrency) {
-      return <WalletListModalCreateRow supportedWallet={createWalletCurrency} onPress={this.createWallet} disableZeroBalance={false} />
+      return (
+        <WalletListModalCreateRow
+          currencyCode={createWalletCurrency.currencyCode}
+          image={createWalletCurrency.symbolImage}
+          name={createWalletCurrency.label}
+          type="wallet"
+          onPress={() => this.createWallet(createWalletCurrency)}
+        />
+      )
+    }
+    if (showCreateWallet && createToken) {
+      return (
+        <WalletListModalCreateRow
+          currencyCode={createToken.currencyCode}
+          image={createToken.symbolImage}
+          name={createToken.currencyName}
+          type="token"
+          onPress={() => this.createToken(createToken)}
+        />
+      )
     }
     return null
   }

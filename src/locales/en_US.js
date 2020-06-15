@@ -68,6 +68,7 @@ const strings = {
   edittoken_improper_token_load: 'Unable to load initial data.',
   fragment_wallets_sort: 'Sort',
   fragment_create_wallet_create_wallet: 'Create Wallet',
+  fragment_create_wallet_create_token: 'Create Token',
   fragment_create_wallet_select_valid: 'Please select valid data',
   fragment_insufficient_funds: 'insufficient funds',
   fragmet_invalid_password: 'Invalid Password',
