@@ -16,7 +16,7 @@ export const fetchSettings = async (userId: string, currencyCode: string) => {
 export const registerNotifications = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  const encodedUserId = encodeURIComponent(account.id)
+  const encodedUserId = encodeURIComponent(account.rootLoginId)
   const currencyCodes = getActiveWalletCurrencyCodes(state)
   try {
     await notif1.post(`user/notifications?userId=${encodedUserId}`, { currencyCodes })
@@ -28,7 +28,7 @@ export const registerNotifications = () => async (dispatch: Dispatch, getState: 
 export const enableNotifications = (currencyCode: string, hours: string, enabled: boolean) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  const encodedUserId = encodeURIComponent(account.id)
+  const encodedUserId = encodeURIComponent(account.rootLoginId)
   const deviceId = DeviceInfo.getUniqueID()
   const deviceIdEncoded = encodeURIComponent(deviceId)
   try {
