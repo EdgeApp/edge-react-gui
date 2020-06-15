@@ -11,7 +11,7 @@ import { sprintf } from 'sprintf-js'
 
 import { createCurrencyWalletAndAddToSwap } from '../../actions/CreateWalletActions.js'
 import { type SetNativeAmountInfo, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
-import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
+import { createToken, updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
 import { ARROW_DOWN_BOLD, DEFAULT_STARTER_WALLET_NAMES, MATERIAL_COMMUNITY } from '../../constants/indexConstants.js'
@@ -64,7 +64,8 @@ type DispatchProps = {
   onSelectWallet(string, string): void,
   openModal(data: 'from' | 'to'): mixed,
   getQuoteForTransaction(SetNativeAmountInfo): void,
-  createCurrencyWallet(string, string, string): void
+  createCurrencyWallet(string, string, string): void,
+  createToken(string, string, string): void
 }
 type Props = StateProps & DispatchProps
 
@@ -278,6 +279,9 @@ class CryptoExchangeComponent extends Component<Props, State> {
       if (response.walletToCreate) {
         this.props.createCurrencyWallet(response.walletToCreate.walletType, response.walletToCreate.currencyCode, this.props.defaultIsoFiat)
       }
+      if (response.tokenToCreate) {
+        this.props.createToken(response.tokenToCreate.currencyCode, response.tokenToCreate.parentCurrencyCode, this.props.defaultIsoFiat)
+      }
     })
     return null
   }
@@ -368,6 +372,9 @@ export const CryptoExchangeScene = connect(
     createCurrencyWallet(walletType: string, currencyCode: string, fiat: string) {
       const walletName = DEFAULT_STARTER_WALLET_NAMES[currencyCode]
       dispatch(createCurrencyWalletAndAddToSwap(walletName, walletType, fiat))
+    },
+    createToken(currencyCode: string, parentCurrencyCode: string, fiatCurrencyCode: string) {
+      dispatch(createToken(currencyCode, parentCurrencyCode, fiatCurrencyCode))
     }
   })
 )(CryptoExchangeComponent)

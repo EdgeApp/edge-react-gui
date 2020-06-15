@@ -7,6 +7,7 @@ import React from 'react'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants.js'
@@ -21,7 +22,7 @@ import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
-import { makeGuiWalletType } from '../util/CurrencyInfoHelpers.js'
+import { getGuiWalletType, makeGuiWalletType } from '../util/CurrencyInfoHelpers.js'
 import * as UTILS from '../util/utils'
 import { addTokenAsync } from './AddTokenActions.js'
 
@@ -176,6 +177,45 @@ export const upsertWallets = (wallets: Array<EdgeCurrencyWallet>) => (dispatch: 
       wallets
     }
   })
+}
+
+export const createToken = (currencyCode: string, parentCurrencyCode: string, fiatCurrencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const { currencyWallets = {} } = state.core.account
+
+  // Check wallets on existing parent to enable tokens on
+  let wallet
+  for (const walletId in currencyWallets) {
+    const currencyWallet = currencyWallets[walletId]
+    if (currencyWallet.currencyInfo.currencyCode === parentCurrencyCode) {
+      wallet = currencyWallet
+    }
+  }
+
+  try {
+    dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
+
+    // Create wallet if no existing wallet
+    if (!wallet) {
+      const { account } = state.core
+      const walletType = getGuiWalletType(account, parentCurrencyCode)
+      if (!walletType) throw new Error(s.strings.create_wallet_failed_message)
+      const walletName = Constants.DEFAULT_STARTER_WALLET_NAMES[parentCurrencyCode]
+      wallet = await account.createCurrencyWallet(walletType.value, { name: walletName, fiatCurrencyCode })
+    }
+
+    const enabledTokens = await wallet.getEnabledTokens()
+    dispatch({
+      type: 'UPDATE_WALLET_ENABLED_TOKENS',
+      data: { walletId: wallet.id, tokens: await setEnabledTokens(wallet, [...enabledTokens, currencyCode], []) }
+    })
+    dispatch(refreshWallet(wallet.id))
+    dispatch(selectWalletForExchange(wallet.id, currencyCode))
+    dispatch({ type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' })
+  } catch (error) {
+    showError(error)
+    dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
+  }
 }
 
 export const setWalletEnabledTokens = (walletId: string, enabledTokens: Array<string>, disabledTokens: Array<string>) => (
