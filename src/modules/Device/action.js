@@ -43,7 +43,7 @@ export const attachToUser = () => async (dispatch: Dispatch, getState: GetState)
   const state = getState()
   const { account } = state.core
 
-  const encodedUserId = encodeURIComponent(account.id)
+  const encodedUserId = encodeURIComponent(account.rootLoginId)
   const deviceId = DeviceInfo.getUniqueID()
   const deviceIdEncoded = encodeURIComponent(deviceId)
   try {
