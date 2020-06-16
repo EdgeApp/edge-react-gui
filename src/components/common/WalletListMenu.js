@@ -16,7 +16,7 @@ type Props = {
   walletId: string,
   executeWalletRowOption: (walletId: string, option: WalletListMenuKey) => void,
   currencyCode?: string,
-  customStyles: StyleSheet.Styles,
+  customStyles: StyleSheet.Styles
 }
 
 const modifiedMenuDropDownStyle = {
