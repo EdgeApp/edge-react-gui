@@ -309,6 +309,7 @@
   "string_split_wallet": "%s 를 분할",
   "string_add_edit_tokens": "토큰을 추가 / 편집",
   "string_get_raw_keys": "",
+  "string_raw_keys": "",
   "tx_notes_metadata": "%s: %s\n수취인 주소: %s",
   "tx_notes_metadata_recipient_address": "",
   "title_crypto_settings": "%s 설정",
