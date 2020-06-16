@@ -3,7 +3,7 @@
 import { createInputModal, createSecureTextModal, createSimpleConfirmModal, Icon } from 'edge-components'
 import React from 'react'
 import { Actions } from 'react-native-router-flux'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { launchModal } from '../components/common/ModalProvider.js'
@@ -14,7 +14,6 @@ import s from '../locales/strings.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
 import { B } from '../styles/common/textStyles.js'
-import { THEME } from '../theme/variables/airbitz.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
@@ -105,6 +104,9 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     case 'getSeed': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
+        const { theme } = state
+        const icon = <FontAwesome style={{ left: theme.rem(0.125) }} name="user-secret" color={theme.tileBackground} size={theme.rem(2)} />
+
         const { account } = state.core
         const { currencyWallets = {} } = account
         const wallet = currencyWallets[walletId]
@@ -141,15 +143,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
           }
 
           const getSeedModal = createSecureTextModal({
-            icon: (
-              <FAIcon
-                style={{ position: 'relative', left: 1 }}
-                type={Constants.FONT_AWESOME}
-                name={Constants.GET_SEED}
-                color={THEME.COLORS.PRIMARY}
-                size={30}
-              />
-            ),
+            icon,
             title: s.strings.fragment_wallets_get_seed_wallet,
             message: (
               <Text>
@@ -169,15 +163,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
               title: s.strings.fragment_wallets_get_seed_wallet,
               message: seed,
               buttonText: s.strings.string_ok,
-              icon: (
-                <FAIcon
-                  style={{ position: 'relative', left: 1 }}
-                  type={Constants.FONT_AWESOME}
-                  name={Constants.GET_SEED}
-                  color={THEME.COLORS.PRIMARY}
-                  size={30}
-                />
-              )
+              icon
             })
             await launchModal(modal)
           }
@@ -190,9 +176,10 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     case 'getRawKeys': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
+        const { theme } = state
+        const icon = <FontAwesome style={{ left: theme.rem(0.125) }} name="user-secret" color={theme.tileBackground} size={theme.rem(2)} />
+
         const { account } = state.core
-        const { allKeys = {} } = account
-        const keys = allKeys.find(key => key.id === walletId)
 
         try {
           const input = {
@@ -226,15 +213,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
           }
 
           const getSeedModal = createSecureTextModal({
-            icon: (
-              <FAIcon
-                style={{ position: 'relative', left: 1 }}
-                type={Constants.FONT_AWESOME}
-                name={Constants.GET_SEED}
-                color={THEME.COLORS.PRIMARY}
-                size={30}
-              />
-            ),
+            icon,
             title: s.strings.string_get_raw_keys,
             message: <Text>{s.strings.fragment_wallets_get_raw_key_wallet_confirm_message}</Text>,
             input,
@@ -243,24 +222,11 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
             validateInput
           })
           const resolveValue = await launchModal(getSeedModal)
+
           if (resolveValue) {
+            const keys = account.allKeys.find(key => key.id === walletId)
             const seed = keys ? JSON.stringify(keys.keys, null, 2) : ''
-            Airship.show(bridge => (
-              <RawTextModal
-                bridge={bridge}
-                body={seed}
-                title={s.strings.string_raw_keys}
-                icon={
-                  <FAIcon
-                    style={{ position: 'relative', left: 1 }}
-                    type={Constants.FONT_AWESOME}
-                    name={Constants.GET_SEED}
-                    color={THEME.COLORS.PRIMARY}
-                    size={30}
-                  />
-                }
-              />
-            ))
+            Airship.show(bridge => <RawTextModal bridge={bridge} body={seed} title={s.strings.string_raw_keys} icon={icon} />)
           }
         } catch (error) {
           showError(error)
