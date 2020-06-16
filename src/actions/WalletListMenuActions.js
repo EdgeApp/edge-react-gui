@@ -21,7 +21,17 @@ import { showResyncWalletModal } from './ResyncWalletModalActions.js'
 import { showSplitWalletModal } from './SplitWalletModalActions.js'
 import { refreshWallet } from './WalletActions.js'
 
-export type WalletListMenuKey = 'sort' | 'rename' | 'delete' | 'resync' | 'exportWalletTransactions' | 'getSeed' | 'split' | 'manageTokens' | 'viewXPub'
+export type WalletListMenuKey =
+  | 'sort'
+  | 'rename'
+  | 'delete'
+  | 'resync'
+  | 'exportWalletTransactions'
+  | 'getSeed'
+  | 'split'
+  | 'manageTokens'
+  | 'viewXPub'
+  | 'getRawKeys'
 
 export function walletListMenuAction(walletId: string, option: WalletListMenuKey) {
   switch (option) {
@@ -154,6 +164,86 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
           const resolveValue = await launchModal(getSeedModal)
           if (resolveValue) {
             const seed = wallet.getDisplayPrivateSeed()
+            const modal = createSimpleConfirmModal({
+              title: s.strings.fragment_wallets_get_seed_wallet,
+              message: seed,
+              buttonText: s.strings.string_ok,
+              icon: (
+                <FAIcon
+                  style={{ position: 'relative', left: 1 }}
+                  type={Constants.FONT_AWESOME}
+                  name={Constants.GET_SEED}
+                  color={THEME.COLORS.PRIMARY}
+                  size={30}
+                />
+              )
+            })
+            await launchModal(modal)
+          }
+        } catch (error) {
+          showError(error)
+        }
+      }
+    }
+
+    case 'getRawKeys': {
+      return async (dispatch: Dispatch, getState: GetState) => {
+        const state = getState()
+        const { account } = state.core
+        const { allKeys = {} } = account
+        const keys = allKeys.find(key => key.id === walletId)
+
+        try {
+          const input = {
+            label: s.strings.confirm_password_text,
+            autoCorrect: false,
+            returnKeyType: 'go',
+            initialValue: '',
+            autoFocus: true
+          }
+          const yesButton = {
+            title: s.strings.string_get_raw_keys
+          }
+          const noButton = {
+            title: s.strings.string_cancel_cap
+          }
+
+          const validateInput = async input => {
+            const isPassword = await account.checkPassword(input)
+            if (isPassword) {
+              dispatch({ type: 'PASSWORD_USED' })
+              return {
+                success: true,
+                message: ''
+              }
+            } else {
+              return {
+                success: false,
+                message: s.strings.password_reminder_invalid
+              }
+            }
+          }
+
+          const getSeedModal = createSecureTextModal({
+            icon: (
+              <FAIcon
+                style={{ position: 'relative', left: 1 }}
+                type={Constants.FONT_AWESOME}
+                name={Constants.GET_SEED}
+                color={THEME.COLORS.PRIMARY}
+                size={30}
+              />
+            ),
+            title: s.strings.string_get_raw_keys,
+            message: <Text>{s.strings.fragment_wallets_get_raw_key_wallet_confirm_message}</Text>,
+            input,
+            yesButton,
+            noButton,
+            validateInput
+          })
+          const resolveValue = await launchModal(getSeedModal)
+          if (resolveValue) {
+            const seed = keys ? JSON.stringify(keys.keys, null, 2) : ''
             const modal = createSimpleConfirmModal({
               title: s.strings.fragment_wallets_get_seed_wallet,
               message: seed,
