@@ -7,7 +7,8 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { launchModal } from '../components/common/ModalProvider.js'
-import { showError } from '../components/services/AirshipInstance.js'
+import { RawTextModal } from '../components/modals/RawTextModal.js'
+import { Airship, showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -244,21 +245,22 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
           const resolveValue = await launchModal(getSeedModal)
           if (resolveValue) {
             const seed = keys ? JSON.stringify(keys.keys, null, 2) : ''
-            const modal = createSimpleConfirmModal({
-              title: s.strings.fragment_wallets_get_seed_wallet,
-              message: seed,
-              buttonText: s.strings.string_ok,
-              icon: (
-                <FAIcon
-                  style={{ position: 'relative', left: 1 }}
-                  type={Constants.FONT_AWESOME}
-                  name={Constants.GET_SEED}
-                  color={THEME.COLORS.PRIMARY}
-                  size={30}
-                />
-              )
-            })
-            await launchModal(modal)
+            Airship.show(bridge => (
+              <RawTextModal
+                bridge={bridge}
+                body={seed}
+                title={s.strings.string_raw_keys}
+                icon={
+                  <FAIcon
+                    style={{ position: 'relative', left: 1 }}
+                    type={Constants.FONT_AWESOME}
+                    name={Constants.GET_SEED}
+                    color={THEME.COLORS.PRIMARY}
+                    size={30}
+                  />
+                }
+              />
+            ))
           }
         } catch (error) {
           showError(error)
