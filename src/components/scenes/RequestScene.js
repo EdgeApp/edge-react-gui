@@ -374,10 +374,7 @@ export class Request extends Component<Props, State> {
         const newUri = await edgeWallet.encodeUri(edgeEncodeUri)
         sharedAddress = newUri.substring(0, newUri.indexOf('?'))
       }
-      edgePayUri = `\n\n${sprintf(
-        s.strings.request_qr_email_title,
-        s.strings.app_name_short
-      )}\n\n${s.strings.app_name_short.toLowerCase()}://pay/${sharedAddress.replace(':', '/')}`
+      edgePayUri = `\n\n${sprintf(s.strings.request_qr_email_title, s.strings.app_name_short)}\n\nhttps://deep.edge.app/pay/${sharedAddress.replace(':', '/')}`
     }
 
     const title = `${sprintf(s.strings.request_qr_email_title, s.strings.app_name_short)}`
