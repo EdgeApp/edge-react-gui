@@ -268,7 +268,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
           bridge={bridge}
           body={createExchangeDataString()}
           title={s.strings.transaction_details_exchange_details}
-          theme={theme}
           icon={<FontAwesome name="exchange" size={theme.rem(1.5)} color={theme.tileBackground} />}
         />
       ))
