@@ -309,6 +309,7 @@
   "string_split_wallet": "%s aufsplitten",
   "string_add_edit_tokens": "Hinzufügen / Bearbeiten von Token",
   "string_get_raw_keys": "",
+  "string_raw_keys": "",
   "tx_notes_metadata": "%s: %s\nEmpfänger Adresse: %s",
   "tx_notes_metadata_recipient_address": "Empfängeradresse:",
   "title_crypto_settings": "%s Einstellungen",
