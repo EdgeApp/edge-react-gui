@@ -40,8 +40,8 @@ export class WalletListMenu extends Component<Props> {
     this.options = []
     if (!currencyCode) {
       this.options.push({
-        label: s.strings.string_master_private_key,
-        value: 'getSeed'
+        label: s.strings.string_get_raw_keys,
+        value: 'getRawKeys'
       })
       return
     }
