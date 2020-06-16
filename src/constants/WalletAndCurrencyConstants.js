@@ -386,6 +386,10 @@ export const WALLET_LIST_MENU: {
     ],
     label: s.strings.fragment_wallets_view_xpub,
     value: 'viewXPub'
+  },
+  {
+    label: s.strings.string_get_raw_keys,
+    value: 'getRawKeys'
   }
 ]
 
