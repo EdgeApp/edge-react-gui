@@ -309,6 +309,7 @@
   "string_split_wallet": "Phân chia %s",
   "string_add_edit_tokens": "Thêm / chỉnh sửa thẻ",
   "string_get_raw_keys": "",
+  "string_raw_keys": "",
   "tx_notes_metadata": "Địa chỉ người nhận",
   "tx_notes_metadata_recipient_address": "",
   "title_crypto_settings": "%s cài đặt",
