@@ -4,22 +4,29 @@ import { PrimaryButton } from 'edge-components'
 import React, { type Node, Component } from 'react'
 import { Clipboard, ScrollView, StyleSheet, View } from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
+import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type EdgeTheme } from '../../reducers/ThemeReducer.js'
+import type { State as StateType } from '../../types/reduxTypes.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { type AirshipBridge, AirshipModal, ContentArea, IconCircle } from './modalParts.js'
 
-type Props = {
+type OwnProps = {
   bridge: AirshipBridge<void>,
   body: string,
   icon?: Node,
-  theme: EdgeTheme,
   title: string
 }
 
-export class RawTextModal extends Component<Props> {
+type StateProps = {
+  theme: EdgeTheme
+}
+
+type Props = OwnProps & StateProps
+
+export class RawTextModalComponent extends Component<Props> {
   copyToClipboard = () => {
     Clipboard.setString(this.props.body)
     showToast(s.strings.fragment_copied)
@@ -50,6 +57,8 @@ export class RawTextModal extends Component<Props> {
     )
   }
 }
+
+export const RawTextModal = connect((state: StateType): StateProps => ({ theme: state.theme }))(RawTextModalComponent)
 
 const getStyles = (theme: EdgeTheme) => {
   return StyleSheet.create({
