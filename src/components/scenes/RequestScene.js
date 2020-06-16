@@ -6,7 +6,6 @@ import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEnco
 import React, { Component } from 'react'
 import type { RefObject } from 'react-native'
 import { ActivityIndicator, Clipboard, Dimensions, InputAccessoryView, Platform, Text, TouchableOpacity, View } from 'react-native'
-import RNFS from 'react-native-fs'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import slowlog from 'react-native-slowlog'
@@ -354,27 +353,41 @@ export class Request extends Component<Props, State> {
     return false
   }
 
-  shareMessage = () => {
-    const { currencyCode, publicAddress } = this.props
-    let sharedAddress = this.state.encodedURI
-    // if encoded (like XTZ), only share the public address
-    if (currencyCode && Constants.getSpecialCurrencyInfo(currencyCode).isUriEncodedStructure) {
-      sharedAddress = publicAddress
+  shareMessage = async () => {
+    const { currencyCode, publicAddress, edgeWallet } = this.props
+    const { legacyAddress } = this.state
+    if (!currencyCode || !edgeWallet) {
+      throw new Error('Wallet still loading. Please wait and try again.')
     }
-    const title = sprintf(s.strings.request_qr_email_title, s.strings.app_name, currencyCode)
-    const message = sprintf(s.strings.request_qr_email_title, s.strings.app_name, currencyCode) + ': ' + sharedAddress
-    const path = Platform.OS === 'ios' ? RNFS.DocumentDirectoryPath + '/' + title + '.txt' : RNFS.ExternalDirectoryPath + '/' + title + '.txt'
-    RNFS.writeFile(path, message, 'utf8')
-      .then(success => {
-        const url = Platform.OS === 'ios' ? 'file://' + path : ''
-        const shareOptions = {
-          url,
-          title,
-          message: sharedAddress
-        }
-        Share.open(shareOptions).catch(e => console.log(e))
-      })
-      .catch(showError)
+    let sharedAddress = this.state.encodedURI
+    let edgePayUri = ''
+    // if encoded (like XTZ), only share the public address
+    if (Constants.getSpecialCurrencyInfo(currencyCode).isUriEncodedStructure) {
+      sharedAddress = publicAddress
+    } else {
+      // Rebuild uri to preserve uriPrefix if amount is 0
+      if (sharedAddress.indexOf('amount') === -1) {
+        const edgeEncodeUri: EdgeEncodeUri =
+          this.props.useLegacyAddress && legacyAddress
+            ? { publicAddress, legacyAddress, currencyCode, nativeAmount: '0' }
+            : { publicAddress, currencyCode, nativeAmount: '0' }
+        const newUri = await edgeWallet.encodeUri(edgeEncodeUri)
+        sharedAddress = newUri.substring(0, newUri.indexOf('?'))
+      }
+      edgePayUri = `\n\n${sprintf(
+        s.strings.request_qr_email_title,
+        s.strings.app_name_short
+      )}\n\n${s.strings.app_name_short.toLowerCase()}://pay/${sharedAddress.replace(':', '/')}`
+    }
+
+    const title = `${sprintf(s.strings.request_qr_email_title, s.strings.app_name_short)}`
+    const message = `${sharedAddress}${edgePayUri}`
+    const shareOptions = {
+      url: '',
+      title,
+      message
+    }
+    Share.open(shareOptions).catch(e => console.log(e))
   }
 
   shareViaShare = () => {
