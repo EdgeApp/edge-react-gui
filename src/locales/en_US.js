@@ -329,6 +329,7 @@ const strings = {
   string_split_wallet: 'Split %s',
   string_add_edit_tokens: 'Add / Edit Tokens',
   string_get_raw_keys: 'Get Raw Keys',
+  string_raw_keys: 'Raw Keys',
   tx_notes_metadata: '%s: %s\nRecipient Address: %s',
   tx_notes_metadata_recipient_address: 'Recipient Address: ',
   title_crypto_settings: '%s Settings',
