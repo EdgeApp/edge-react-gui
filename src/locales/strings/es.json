@@ -309,6 +309,7 @@
   "string_split_wallet": "Dividir %s",
   "string_add_edit_tokens": "Añadir /Editar Tokens",
   "string_get_raw_keys": "",
+  "string_raw_keys": "",
   "tx_notes_metadata": "%s%s\nDirección del destinatario:%s",
   "tx_notes_metadata_recipient_address": "Dirección del destinatario: ",
   "title_crypto_settings": "%s Ajustes",
