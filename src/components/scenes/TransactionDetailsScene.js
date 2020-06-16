@@ -421,6 +421,16 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     const personName = payeeName && payeeName !== '' ? this.state.payeeName : personLabel
     const personHeader = sprintf(s.strings.transaction_details_person_name, personLabel)
 
+    // spendTargets recipient addresses format
+    let recipientsAddresses = ''
+    if (edgeTransaction.spendTargets) {
+      const { spendTargets } = edgeTransaction
+      for (let i = 0; i < spendTargets.length; i++) {
+        const newLine = i + 1 < spendTargets.length ? '\n' : ''
+        recipientsAddresses = `${recipientsAddresses}${spendTargets[i].publicAddress}${newLine}`
+      }
+    }
+
     return (
       <>
         <SceneWrapper background="header" bodySplit={scale(24)}>
@@ -464,17 +474,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   <FormattedText style={styles.tileSubCategoryText}>{subCategory}</FormattedText>
                 </View>
               </Tile>
-              {edgeTransaction.spendTargets && (
-                <Tile type="static" title={s.strings.transaction_details_recipient_addresses}>
-                  <View style={styles.tileColumn}>
-                    {edgeTransaction.spendTargets.map(target => (
-                      <FormattedText style={styles.tileTextBottom} key={target.publicAddress}>
-                        {target.publicAddress}
-                      </FormattedText>
-                    ))}
-                  </View>
-                </Tile>
-              )}
+              {edgeTransaction.spendTargets && <Tile type="copy" title={s.strings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
               {this.renderExchangeData()}
               <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
               <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
