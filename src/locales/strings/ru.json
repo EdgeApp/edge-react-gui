@@ -309,6 +309,7 @@
   "string_split_wallet": "Разделить %s",
   "string_add_edit_tokens": "Добавить / редактировать токены",
   "string_get_raw_keys": "",
+  "string_raw_keys": "",
   "tx_notes_metadata": "",
   "tx_notes_metadata_recipient_address": "",
   "title_crypto_settings": "%s Настройки",
