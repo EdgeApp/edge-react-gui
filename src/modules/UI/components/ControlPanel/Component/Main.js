@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Image, ScrollView, Text, View } from 'react-native'
+import { Image, Platform, ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import { sprintf } from 'sprintf-js'
@@ -278,11 +278,11 @@ const TermsOfServiceButton = () => {
 }
 
 const shareApp = () => {
-  const message = `${sprintf(s.strings.share_subject, s.strings.app_name)}\n\n${s.strings.share_message}\n\n${THEME.websiteUrl}`
+  const url = THEME.websiteUrl
+  const message = `${sprintf(s.strings.share_subject, s.strings.app_name)}\n\n${s.strings.share_message}\n\n`
   const shareOptions = {
-    message,
-    url: '',
-    title: ''
+    message: Platform.OS === 'ios' ? message : message + url,
+    url: Platform.OS === 'ios' ? url : ''
   }
   Share.open(shareOptions).catch(e => console.log(e))
 }
