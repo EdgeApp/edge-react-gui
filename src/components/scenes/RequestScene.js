@@ -360,7 +360,8 @@ export class Request extends Component<Props, State> {
       throw new Error('Wallet still loading. Please wait and try again.')
     }
     let sharedAddress = this.state.encodedURI
-    let edgePayUri = ''
+    let edgePayUri = 'https://deep.edge.app/'
+    let addOnMessage = ''
     // if encoded (like XTZ), only share the public address
     if (Constants.getSpecialCurrencyInfo(currencyCode).isUriEncodedStructure) {
       sharedAddress = publicAddress
@@ -374,15 +375,14 @@ export class Request extends Component<Props, State> {
         const newUri = await edgeWallet.encodeUri(edgeEncodeUri)
         sharedAddress = newUri.substring(0, newUri.indexOf('?'))
       }
-      edgePayUri = `\n\n${sprintf(s.strings.request_qr_email_title, s.strings.app_name_short)}\n\nhttps://deep.edge.app/pay/${sharedAddress.replace(':', '/')}`
+      edgePayUri = edgePayUri + `pay/${sharedAddress.replace(':', '/')}`
+      addOnMessage = `\n\n${sprintf(s.strings.request_qr_email_title, s.strings.app_name_short)}\n\n${edgePayUri}`
     }
 
-    const title = `${sprintf(s.strings.request_qr_email_title, s.strings.app_name_short)}`
-    const message = `${sharedAddress}${edgePayUri}`
+    const message = `${sharedAddress}${addOnMessage}`
     const shareOptions = {
-      url: '',
-      title,
-      message
+      message,
+      url: Platform.OS === 'ios' ? edgePayUri : ''
     }
     Share.open(shareOptions).catch(e => console.log(e))
   }
