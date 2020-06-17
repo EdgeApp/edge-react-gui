@@ -731,6 +731,31 @@
       "paymentMethod": "neft_bank_transfer"
     }
   },
+  {
+    "id": "transak.wyre",
+    "pluginId": "transak",
+    "paymentTypes": [
+      "credit"
+    ],
+    "description": "Fee: 3.9% / Settlement: Instant\nLimit: $250/day",
+    "title": "Debit Card",
+    "forCountries": [
+      "US"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "USDC",
+      "DAI"
+    ],
+    "partnerIconPath": "https://developer.airbitz.co/content/transak_logo.png",
+    "paymentTypeLogoKey": "debit",
+    "deepQuery": {
+      "countryCode": "US",
+      "paymentMethod": "credit_debit_card",
+      "exchangeScreenTitle": "Buy crypto to your Edge wallet"
+    }
+  },
   "----- Sorting -----",
   {
     "id": "simplex",
@@ -794,6 +819,10 @@
   },
   {
     "id": "transak.bank",
+    "sortIndex": 2
+  },
+  {
+    "id": "transak.wyre",
     "sortIndex": 2
   },
   "----- iOS specifics -----",
