@@ -693,7 +693,7 @@
     ],
     "description": "Fee: 0.75% / Settlement: Instant\nLimit: ₹1,000,000/day",
     "title": "United Payments Interface",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/transak.png",
+    "partnerIconPath": "https://developer.airbitz.co/content/transak_logo.png",
     "forCountries": [
       "IN"
     ],
@@ -705,6 +705,7 @@
     "paymentTypeLogoKey": "upi",
     "deepQuery": {
       "countryCode": "IN",
+      "exchangeScreenTitle": "Buy crypto to your Edge wallet",
       "paymentMethod": "upi"
     }
   },
@@ -716,7 +717,7 @@
     ],
     "description": "Fee: 0.75% / Settlement: 2min - 4hours\nLimit: ₹1,000,000/day",
     "title": "NEFT Transfer",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/transak.png",
+    "partnerIconPath": "https://developer.airbitz.co/content/transak_logo.png",
     "forCountries": [
       "IN"
     ],
@@ -728,6 +729,7 @@
     "paymentTypeLogoKey": "bank",
     "deepQuery": {
       "countryCode": "IN",
+      "exchangeScreenTitle": "Buy crypto to your Edge wallet",
       "paymentMethod": "neft_bank_transfer"
     }
   },
@@ -912,7 +914,8 @@
     "paymentTypeLogoKey": "ideal",
     "description": "Fee: 2.9% / Settlement: Instant\nLimit: €10000",
     "sortIndex": 1
-  },{
+  },
+  {
     "id": "banxa.credit",
     "forCountries": [
       "HK"
