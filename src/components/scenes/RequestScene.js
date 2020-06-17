@@ -376,12 +376,12 @@ export class Request extends Component<Props, State> {
         sharedAddress = newUri.substring(0, newUri.indexOf('?'))
       }
       edgePayUri = edgePayUri + `pay/${sharedAddress.replace(':', '/')}`
-      addOnMessage = `\n\n${sprintf(s.strings.request_qr_email_title, s.strings.app_name_short)}\n\n${edgePayUri}`
+      addOnMessage = `\n\n${sprintf(s.strings.request_qr_email_title, s.strings.app_name_short)}\n\n`
     }
 
     const message = `${sharedAddress}${addOnMessage}`
     const shareOptions = {
-      message,
+      message: Platform.OS === 'ios' ? message : message + edgePayUri,
       url: Platform.OS === 'ios' ? edgePayUri : ''
     }
     Share.open(shareOptions).catch(e => console.log(e))
