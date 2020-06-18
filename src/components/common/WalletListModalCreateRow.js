@@ -9,7 +9,7 @@ import { type GuiWalletType } from '../../types/types.js'
 
 type Props = {
   supportedWallet: GuiWalletType,
-  onPress(GuiWalletType): void
+  onPress(GuiWalletType): Promise<void>
 }
 
 export class WalletListModalCreateRow extends Component<Props> {
