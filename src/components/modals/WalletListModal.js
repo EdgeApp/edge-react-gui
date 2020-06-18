@@ -300,10 +300,12 @@ class WalletListModalConnected extends Component<Props, State> {
     }
   }
 
+  createAndSelectToken = async (createToken: CreateToken) => {}
+
   renderWalletItem = ({ item }: FlatListItem<Record>) => {
     const { showCreateWallet } = this.props
     const { allowedCurrencyCodes, excludeCurrencyCodes } = this.state
-    const { walletItem, createWalletCurrency, mostRecentUsed, currencyCode, headerLabel } = item
+    const { walletItem, createWalletCurrency, createToken, mostRecentUsed, currencyCode, headerLabel } = item
     if (walletItem) {
       return (
         <CryptoExchangeWalletListRow
@@ -324,7 +326,26 @@ class WalletListModalConnected extends Component<Props, State> {
       )
     }
     if (showCreateWallet && createWalletCurrency) {
-      return <WalletListModalCreateRow supportedWallet={createWalletCurrency} onPress={this.createAndSelectWallet} disableZeroBalance={false} />
+      return (
+        <WalletListModalCreateRow
+          currencyCode={createWalletCurrency.currencyCode}
+          image={createWalletCurrency.symbolImage}
+          name={createWalletCurrency.label}
+          type="wallet"
+          onPress={() => this.createAndSelectWallet(createWalletCurrency)}
+        />
+      )
+    }
+    if (showCreateWallet && createToken) {
+      return (
+        <WalletListModalCreateRow
+          currencyCode={createToken.currencyCode}
+          image={createToken.symbolImage}
+          name={createToken.currencyName}
+          type="token"
+          onPress={() => this.createAndSelectToken(createToken)}
+        />
+      )
     }
     return null
   }
