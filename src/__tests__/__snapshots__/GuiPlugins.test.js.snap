@@ -185,29 +185,6 @@ Limit: $2500/week",
   Object {
     "cryptoCodes": Array [
       "BTC",
-      "ETH",
-      "USDC",
-      "DAI",
-    ],
-    "deepPath": "",
-    "deepQuery": Object {
-      "countryCode": "US",
-      "exchangeScreenTitle": "Buy crypto to your Edge wallet",
-      "paymentMethod": "credit_debit_card",
-    },
-    "description": "Fee: 3.9% / Settlement: Instant
-Limit: $250/day",
-    "partnerIconPath": "https://developer.airbitz.co/content/transak_logo.png",
-    "paymentTypeLogoKey": "debit",
-    "paymentTypes": Array [
-      "credit",
-    ],
-    "pluginId": "transak",
-    "title": "Debit Card",
-  },
-  Object {
-    "cryptoCodes": Array [
-      "BTC",
       "BCH",
       "ETH",
       "LTC",
