@@ -6,15 +6,17 @@ import React, { Component } from 'react'
 import { FlatList, View } from 'react-native'
 import { connect } from 'react-redux'
 
+import { refreshWallet } from '../../actions/WalletActions.js'
 import { WalletListModalCreateRow } from '../../components/common/WalletListModalCreateRow.js'
 import { CryptoExchangeWalletListTokenRowConnected as CryptoExchangeWalletListRow } from '../../connectors/components/CryptoExchangeWalletListRowConnector.js'
 import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
+import { setEnabledTokens } from '../../modules/Core/Wallets/EnabledTokens.js'
 import { getActiveWalletIds } from '../../modules/UI/selectors.js'
 import type { State as StateType } from '../../types/reduxTypes.js'
 import type { FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
 import { type GuiWalletType } from '../../types/types.js'
-import { getCurrencyInfos, getGuiWalletTypes } from '../../util/CurrencyInfoHelpers.js'
+import { getCurrencyInfos, getGuiWalletType, getGuiWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { type TokenSelectObject } from '../common/CryptoExchangeWalletListTokenRow.js'
 import { showError, showFullScreenSpinner } from '../services/AirshipInstance.js'
@@ -48,6 +50,10 @@ type OwnProps = {
   excludeCurrencyCodes?: Array<string>
 }
 
+type DispatchProps = {
+  tokenCreated(string, string[]): void
+}
+
 type CreateToken = {
   currencyCode: string,
   currencyName: string,
@@ -71,7 +77,7 @@ type State = {
   excludeCurrencyCodes?: Array<string>
 }
 
-type Props = StateProps & OwnProps
+type Props = StateProps & OwnProps & DispatchProps
 
 class WalletListModalConnected extends Component<Props, State> {
   constructor(props: Props) {
@@ -300,7 +306,38 @@ class WalletListModalConnected extends Component<Props, State> {
     }
   }
 
-  createAndSelectToken = async (createToken: CreateToken) => {}
+  createAndSelectToken = async ({ currencyCode, parentCurrencyCode }: CreateToken) => {
+    const { account, tokenCreated } = this.props
+    const { currencyWallets } = account
+
+    // Find existing EdgeCurrencyWallet
+    let wallet
+    for (const walletId in currencyWallets) {
+      const currencyWallet = currencyWallets[walletId]
+      if (currencyWallet.currencyInfo.currencyCode === parentCurrencyCode) {
+        wallet = currencyWallet
+        break
+      }
+    }
+
+    try {
+      if (!wallet) {
+        const walletType = getGuiWalletType(account, parentCurrencyCode)
+        if (!walletType) throw new Error(s.strings.create_wallet_failed_message)
+        wallet = await this.createWallet(walletType.currencyCode, walletType.value)
+      }
+
+      const enabledTokens = await showFullScreenSpinner(
+        s.strings.wallet_list_modal_enabling_token,
+        setEnabledTokens(wallet, [...(await wallet.getEnabledTokens()), currencyCode], [])
+      )
+
+      tokenCreated(wallet.id, enabledTokens)
+      this.props.bridge.resolve({ walletToSelect: { walletId: wallet.id, currencyCode } })
+    } catch (error) {
+      showError(error)
+    }
+  }
 
   renderWalletItem = ({ item }: FlatListItem<Record>) => {
     const { showCreateWallet } = this.props
@@ -387,16 +424,27 @@ class WalletListModalConnected extends Component<Props, State> {
   }
 }
 
-const WalletListModal = connect((state: StateType): StateProps => {
-  const wallets = state.ui.wallets.byId
-  return {
-    wallets,
-    activeWalletIds: global.isFioDisabled
-      ? getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
-      : getActiveWalletIds(state),
-    mostRecentWallets: state.ui.settings.mostRecentWallets,
-    account: state.core.account,
-    defaultIsoFiat: state.ui.settings.defaultIsoFiat
-  }
-})(WalletListModalConnected)
+const WalletListModal = connect(
+  (state: StateType): StateProps => {
+    const wallets = state.ui.wallets.byId
+    return {
+      wallets,
+      activeWalletIds: global.isFioDisabled
+        ? getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
+        : getActiveWalletIds(state),
+      mostRecentWallets: state.ui.settings.mostRecentWallets,
+      account: state.core.account,
+      defaultIsoFiat: state.ui.settings.defaultIsoFiat
+    }
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    tokenCreated(walletId: string, tokens: string[]) {
+      dispatch({
+        type: 'UPDATE_WALLET_ENABLED_TOKENS',
+        data: { walletId, tokens }
+      })
+      dispatch(refreshWallet(walletId))
+    }
+  })
+)(WalletListModalConnected)
 export { WalletListModal }
