@@ -842,9 +842,7 @@
     ],
     "description": "Fee: 3.9% / Settlement: Instant\nLimit: $250/day",
     "title": "Debit Card",
-    "forCountries": [
-      "US"
-    ],
+    "forCountries": [],
     "cryptoCodes": [
       "BTC",
       "ETH",
