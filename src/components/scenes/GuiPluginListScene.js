@@ -17,6 +17,7 @@ import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymen
 import paymentTypeLogoBpay from '../../assets/images/paymentTypes/paymentTypeLogoBpay.png'
 import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLogoCash.png'
 import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
+import paymentTypeLogoDebitCard from '../../assets/images/paymentTypes/paymentTypeLogoDebitCard.png'
 import paymentTypeLogoFasterPayments from '../../assets/images/paymentTypes/paymentTypeLogoFasterPayments.png'
 import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
 import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
@@ -57,6 +58,7 @@ const paymentTypeLogosById = {
   bankgirot: paymentTypeLogoBankgirot,
   bpay: paymentTypeLogoBpay,
   cash: paymentTypeLogoCash,
+  debit: paymentTypeLogoDebitCard,
   fasterPayments: paymentTypeLogoFasterPayments,
   giftcard: paymentTypeLogoGiftCard,
   ideal: paymentTypeLogoIdeal,
