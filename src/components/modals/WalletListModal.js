@@ -8,6 +8,8 @@ import { connect } from 'react-redux'
 
 import { WalletListModalCreateRow } from '../../components/common/WalletListModalCreateRow.js'
 import { CryptoExchangeWalletListTokenRowConnected as CryptoExchangeWalletListRow } from '../../connectors/components/CryptoExchangeWalletListRowConnector.js'
+import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/indexConstants.js'
+import s from '../../locales/strings.js'
 import { getActiveWalletIds } from '../../modules/UI/selectors.js'
 import type { State as StateType } from '../../types/reduxTypes.js'
 import type { FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
@@ -15,6 +17,7 @@ import { type GuiWalletType } from '../../types/types.js'
 import { getGuiWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { type TokenSelectObject } from '../common/CryptoExchangeWalletListTokenRow.js'
+import { showError, showFullScreenSpinner } from '../services/AirshipInstance.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
 export type WalletListResult = {
@@ -32,7 +35,8 @@ type StateProps = {
   wallets: { [string]: GuiWallet },
   activeWalletIds: Array<string>,
   mostRecentWallets: Array<MostRecentWallet>,
-  account: EdgeAccount
+  account: EdgeAccount,
+  defaultIsoFiat: string
 }
 
 type OwnProps = {
@@ -213,12 +217,33 @@ class WalletListModalConnected extends Component<Props, State> {
     return filteredRecords
   }
 
+  createWallet = (currencyCode: string, walletType: string) => {
+    const { account, defaultIsoFiat } = this.props
+    const [type, format] = walletType.split('-')
+
+    return showFullScreenSpinner(
+      s.strings.wallet_list_modal_creating_wallet,
+      account.createCurrencyWallet(type, {
+        name: DEFAULT_STARTER_WALLET_NAMES[currencyCode],
+        defaultIsoFiat,
+        keyOptions: format ? { format } : {}
+      })
+    )
+  }
+
   selectWallet = (wallet: GuiWallet) => this.props.bridge.resolve({ walletToSelect: { walletId: wallet.id, currencyCode: wallet.currencyCode } })
+
   selectTokenWallet = (tokenSelectObject: TokenSelectObject) =>
     this.props.bridge.resolve({ walletToSelect: { walletId: tokenSelectObject.id, currencyCode: tokenSelectObject.currencyCode } })
 
-  createWallet = (createWalletCurrency: GuiWalletType) =>
-    this.props.bridge.resolve({ walletToCreate: { walletType: createWalletCurrency.value, currencyCode: createWalletCurrency.currencyCode } })
+  createAndSelectWallet = async ({ currencyCode, value }: GuiWalletType) => {
+    try {
+      const wallet = await this.createWallet(currencyCode, value)
+      this.props.bridge.resolve({ walletToSelect: { walletId: wallet.id, currencyCode: wallet.currencyInfo.currencyCode } })
+    } catch (error) {
+      showError(error)
+    }
+  }
 
   renderWalletItem = ({ item }: FlatListItem<Record>) => {
     const { showCreateWallet } = this.props
@@ -244,7 +269,7 @@ class WalletListModalConnected extends Component<Props, State> {
       )
     }
     if (showCreateWallet && createWalletCurrency) {
-      return <WalletListModalCreateRow supportedWallet={createWalletCurrency} onPress={this.createWallet} disableZeroBalance={false} />
+      return <WalletListModalCreateRow supportedWallet={createWalletCurrency} onPress={this.createAndSelectWallet} disableZeroBalance={false} />
     }
     return null
   }
@@ -294,7 +319,8 @@ const WalletListModal = connect((state: StateType): StateProps => {
       ? getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
       : getActiveWalletIds(state),
     mostRecentWallets: state.ui.settings.mostRecentWallets,
-    account: state.core.account
+    account: state.core.account,
+    defaultIsoFiat: state.ui.settings.defaultIsoFiat
   }
 })(WalletListModalConnected)
 export { WalletListModal }

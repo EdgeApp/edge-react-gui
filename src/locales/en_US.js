@@ -566,6 +566,7 @@ const strings = {
   exchange_to_wallet: 'Exchange to %s',
   wallet_list_modal_header_mru: 'Most Recent Wallets',
   wallet_list_modal_header_all: 'All Wallets',
+  wallet_list_modal_creating_wallet: 'Creating Wallet. Please Wait',
   earn_interest: 'Earn Interest',
   earn_interest_on: 'Earn Interest on %s',
   fio_address_first_screen_title: 'Send and Receive with an easy to remember FIO Address!',
