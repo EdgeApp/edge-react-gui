@@ -206,6 +206,7 @@ dependencies {
     compile "com.google.firebase:firebase-firestore:17.1.0"
     compile "com.google.firebase:firebase-messaging:17.3.0"
     compile "com.google.firebase:firebase-storage:16.0.1"
+    compile "com.google.firebase:firebase-iid"
 
     // Background fetching (pre AndroidX version):
     // https://stackoverflow.com/questions/52521302

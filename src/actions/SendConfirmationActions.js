@@ -251,13 +251,6 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
       edgeMetadata.name = guiMakeSpendInfo.fioAddress
     }
     const publicAddress = spendInfo ? spendInfo.spendTargets[0].publicAddress : ''
-    if (publicAddress) {
-      if (edgeMetadata.notes) {
-        edgeMetadata.notes += `\n${s.strings.tx_notes_metadata_recipient_address + publicAddress}`
-      } else {
-        edgeMetadata.notes = s.strings.tx_notes_metadata_recipient_address + publicAddress
-      }
-    }
     if (!edgeMetadata.amountFiat) {
       edgeMetadata.amountFiat = amountFiat
     }

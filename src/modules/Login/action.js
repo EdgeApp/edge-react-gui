@@ -28,6 +28,7 @@ import {
   SYNCED_ACCOUNT_TYPES
 } from '../Core/Account/settings.js'
 import { updateWalletsEnabledTokens, updateWalletsRequest } from '../Core/Wallets/action.js'
+import { attachToUser } from '../Device/action'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -54,12 +55,15 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
   dispatch({ type: 'LOGIN', data: account })
   Actions[Constants.EDGE]()
 
+  const state = getState()
+  const { context } = state.core
+
+  dispatch(attachToUser())
+
   const walletInfos = account.allKeys
   const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
   console.log('Wallet Infos:', filteredWalletInfos)
 
-  const state = getState()
-  const { context } = state.core
   let accountInitObject = {
     account,
     touchIdInfo: touchIdInfo,
@@ -232,7 +236,7 @@ export const mergeSettings = (
       const doesHavePlugin = account.currencyConfig[currencyName]
       // if there are settings for this key
       // and currency (not token) and has a plugin name
-      if (loadedSettings && loadedSettings[key] && (doesHaveDenominations || doesHavePlugin) && currencyName) {
+      if (loadedSettings && loadedSettings[key] && doesHaveDenominations && doesHavePlugin && currencyName) {
         // for each currency info (each native currency)
         const pluginDenominations = account.currencyConfig[currencyName].currencyInfo.denominations // get denominations for that plugin
         const settingDenominationIndex = pluginDenominations.findIndex(pluginDenom => pluginDenom.multiplier === loadedSettings[key].denomination) // find settings denom in plugin denoms

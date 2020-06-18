@@ -15,7 +15,7 @@ import { scale } from '../../util/scaling.js'
 type Props = {
   walletId: string,
   executeWalletRowOption: (walletId: string, option: WalletListMenuKey) => void,
-  currencyCode: string,
+  currencyCode?: string,
   customStyles: StyleSheet.Styles
 }
 
@@ -38,6 +38,13 @@ export class WalletListMenu extends Component<Props> {
     const { currencyCode } = props
 
     this.options = []
+    if (!currencyCode) {
+      this.options.push({
+        label: s.strings.string_get_raw_keys,
+        value: 'getRawKeys'
+      })
+      return
+    }
     for (const option of WALLET_LIST_MENU) {
       const { currencyCodes, label, value } = option
       if (currencyCodes != null && !currencyCodes.includes(currencyCode)) continue

@@ -12,7 +12,7 @@ import SplashScreen from 'react-native-smart-splash-screen'
 import ENV from '../../../env.json'
 import { allPlugins } from '../../util/corePlugins.js'
 import { fakeUser } from '../../util/fake-user.js'
-import { LoadingScene } from '../scenes/LoadingScene.js'
+import { EdgeCoreManagerLoadingScene } from '../scenes/EdgeCoreManagerLoadingScene.js'
 import { Services } from './Services.js'
 
 type Props = {
@@ -121,7 +121,7 @@ export class EdgeCoreManager extends PureComponent<Props, State> {
 
     return (
       <>
-        {context == null ? <LoadingScene /> : <Services key={key} context={context} />}
+        {context == null ? <EdgeCoreManagerLoadingScene /> : <Services key={key} context={context} />}
         {this.renderCore()}
       </>
     )

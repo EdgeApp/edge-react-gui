@@ -177,7 +177,7 @@ class WalletListComponent extends Component<Props, State> {
     return guiWallet != null ? (
       <WalletListRow guiWallet={guiWallet} executeWalletRowOption={this.executeWalletRowOption} showBalance={getIsAccountBalanceVisible} />
     ) : (
-      <WalletListEmptyRow />
+      <WalletListEmptyRow walletId={data.item.key} executeWalletRowOption={this.executeWalletRowOption} />
     )
   }
 
