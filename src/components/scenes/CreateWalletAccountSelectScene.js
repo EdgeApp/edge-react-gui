@@ -109,9 +109,9 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       }
     }
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />).then(
-      (response: WalletListResult) => {
-        if (response.walletToSelect) {
-          this.onSelectWallet(response.walletToSelect.walletId, response.walletToSelect.currencyCode)
+      ({ walletId, currencyCode }: WalletListResult) => {
+        if (walletId && currencyCode) {
+          this.onSelectWallet(walletId, currencyCode)
         }
       }
     )

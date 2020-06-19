@@ -196,10 +196,10 @@ export class FioAddressRegisterScene extends Component<Props, State> {
 
   selectFioWallet = () => {
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={[Constants.FIO_STR]} />).then(
-      (response: WalletListResult) => {
-        if (response.walletToSelect) {
-          if (response.walletToSelect.currencyCode === Constants.FIO_STR) {
-            this.handleFioWalletChange(response.walletToSelect.walletId)
+      ({ walletId, currencyCode }: WalletListResult) => {
+        if (walletId && currencyCode) {
+          if (currencyCode === Constants.FIO_STR) {
+            this.handleFioWalletChange(walletId)
           } else {
             showError(`${s.strings.create_wallet_select_valid_crypto}: ${Constants.FIO_STR}`)
           }
