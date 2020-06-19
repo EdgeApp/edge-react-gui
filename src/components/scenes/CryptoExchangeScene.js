@@ -268,9 +268,9 @@ class CryptoExchangeComponent extends Component<Props, State> {
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
       />
-    )).then((response: WalletListResult) => {
-      if (response.walletToSelect) {
-        this.props.onSelectWallet(response.walletToSelect.walletId, response.walletToSelect.currencyCode)
+    )).then(({ walletId, currencyCode }: WalletListResult) => {
+      if (walletId && currencyCode) {
+        this.props.onSelectWallet(walletId, currencyCode)
       }
     })
     return null

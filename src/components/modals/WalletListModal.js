@@ -23,10 +23,8 @@ import { showError, showFullScreenSpinner } from '../services/AirshipInstance.js
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
 export type WalletListResult = {
-  walletToSelect?: {
-    walletId: string,
-    currencyCode: string
-  }
+  walletId?: string,
+  currencyCode?: string
 }
 
 type StateProps = {
@@ -288,15 +286,15 @@ class WalletListModalConnected extends Component<Props, State> {
     )
   }
 
-  selectWallet = (wallet: GuiWallet) => this.props.bridge.resolve({ walletToSelect: { walletId: wallet.id, currencyCode: wallet.currencyCode } })
+  selectWallet = (wallet: GuiWallet) => this.props.bridge.resolve({ walletId: wallet.id, currencyCode: wallet.currencyCode })
 
   selectTokenWallet = (tokenSelectObject: TokenSelectObject) =>
-    this.props.bridge.resolve({ walletToSelect: { walletId: tokenSelectObject.id, currencyCode: tokenSelectObject.currencyCode } })
+    this.props.bridge.resolve({ walletId: tokenSelectObject.id, currencyCode: tokenSelectObject.currencyCode })
 
   createAndSelectWallet = async ({ currencyCode, value }: GuiWalletType) => {
     try {
       const wallet = await this.createWallet(currencyCode, value)
-      this.props.bridge.resolve({ walletToSelect: { walletId: wallet.id, currencyCode: wallet.currencyInfo.currencyCode } })
+      this.props.bridge.resolve({ walletId: wallet.id, currencyCode: wallet.currencyInfo.currencyCode })
     } catch (error) {
       showError(error)
     }
@@ -329,7 +327,7 @@ class WalletListModalConnected extends Component<Props, State> {
       )
 
       tokenCreated(wallet.id, enabledTokens)
-      this.props.bridge.resolve({ walletToSelect: { walletId: wallet.id, currencyCode } })
+      this.props.bridge.resolve({ walletId: wallet.id, currencyCode })
     } catch (error) {
       showError(error)
     }

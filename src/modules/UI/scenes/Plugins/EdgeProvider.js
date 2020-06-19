@@ -124,8 +124,8 @@ export class EdgeProvider extends Bridgeable {
       <WalletListModal bridge={bridge} showCreateWallet allowedCurrencyCodes={allowedCurrencyCodes} headerTitle={s.strings.choose_your_wallet} />
     ))
 
-    if (selectedWallet.walletToSelect) {
-      const { walletId, currencyCode } = selectedWallet.walletToSelect
+    const { walletId, currencyCode } = selectedWallet
+    if (walletId && currencyCode) {
       this._dispatch(selectWallet(walletId, currencyCode))
       return Promise.resolve(currencyCode)
     }
