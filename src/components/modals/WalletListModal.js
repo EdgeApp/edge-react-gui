@@ -26,10 +26,6 @@ export type WalletListResult = {
   walletToSelect?: {
     walletId: string,
     currencyCode: string
-  },
-  walletToCreate?: {
-    walletType: string,
-    currencyCode: string
   }
 }
 
