@@ -7,7 +7,6 @@ import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
 import { type AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene.js'
 import { showError } from '../components/services/AirshipInstance.js'
@@ -18,58 +17,7 @@ import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { logEvent } from '../util/tracking.js'
-import { selectWallet as selectWalletAction, updateMostRecentWalletsSelected } from './WalletActions.js'
-
-export const createCurrencyWalletAndAddToSwap = (walletName: string, walletType: string, fiatCurrencyCode: string) => (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
-  const state = getState()
-  const { account } = state.core
-
-  dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
-  // Try and get the new format param from the legacy walletType if it's mentioned
-  const [type, format] = walletType.split('-')
-  return account
-    .createCurrencyWallet(type, {
-      name: walletName,
-      fiatCurrencyCode,
-      keyOptions: format ? { format } : {}
-    })
-    .then(edgeWallet => {
-      dispatch({ type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' })
-      dispatch(updateMostRecentWalletsSelected(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
-      dispatch(selectWalletForExchange(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
-    })
-    .catch(async error => {
-      const modal = createSimpleConfirmModal({
-        title: s.strings.create_wallet_failed_header,
-        message: s.strings.create_wallet_failed_message,
-        icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
-        buttonText: s.strings.string_ok
-      })
-      await launchModal(modal)
-      console.log(error)
-      dispatch({ type: 'UI/WALLETS/CREATE_WALLET_FAILURE' })
-    })
-}
-export const createCurrencyWalletAndSelectForPlugins = (walletName: string, walletType: string, fiatCurrencyCode: string) => async (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
-  const state = getState()
-  const { account } = state.core
-
-  // dispatch({ type: 'UI/WALLETS/CREATE_WALLET_START' })
-  // Try and get the new format param from the legacy walletType if it's mentioned
-  const [type, format] = walletType.split('-')
-  const wallet = await account.createCurrencyWallet(type, {
-    name: walletName,
-    fiatCurrencyCode,
-    keyOptions: format ? { format } : {}
-  })
-  return Promise.resolve(wallet)
-}
+import { selectWallet as selectWalletAction } from './WalletActions.js'
 
 export const createCurrencyWallet = (
   walletName: string,
