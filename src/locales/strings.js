@@ -1,6 +1,6 @@
 // @flow
 
-import DeviceInfo from 'react-native-device-info'
+import { getLocales } from 'react-native-localize'
 
 import en from './en_US'
 import es from './strings/es.json'
@@ -18,7 +18,9 @@ const allLocales = { en, ru, es, it, pt, ja, fr, ko, vi, zh }
 const strings: typeof en = { ...en }
 const out = { strings }
 
-selectLocale(DeviceInfo.getDeviceLocale())
+// Set the language at boot:
+const [firstLocale = { languageTag: 'en_US' }] = getLocales()
+selectLocale(firstLocale.languageTag)
 
 function mergeStrings(primary: Object, secondary: Object) {
   for (const str in secondary) {

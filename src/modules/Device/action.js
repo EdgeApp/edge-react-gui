@@ -1,6 +1,6 @@
 // @flow
 import { Platform } from 'react-native'
-import DeviceInfo from 'react-native-device-info'
+import { getBuildNumber, getUniqueId, getUserAgent, getVersion } from 'react-native-device-info'
 import firebase from 'react-native-firebase'
 
 import ENV from '../../../env.json'
@@ -15,16 +15,16 @@ export const registerDevice = () => async (dispatch: Dispatch, getState: GetStat
   try {
     if (!ENV.USE_FIREBASE) return
 
-    const deviceId = DeviceInfo.getUniqueID()
+    const deviceId = getUniqueId()
     const deviceIdEncoded = encodeURIComponent(deviceId)
     const tokenId = await firebase
       .iid()
       .getToken()
       .catch(() => console.log('Failed to fetch firebase device token.'))
-    const deviceDescription = DeviceInfo.getUserAgent()
+    const deviceDescription = await getUserAgent()
     const osType = Platform.OS
-    const edgeVersion = DeviceInfo.getVersion()
-    const edgeBuildNumber = parseInt(DeviceInfo.getBuildNumber())
+    const edgeVersion = getVersion()
+    const edgeBuildNumber = parseInt(getBuildNumber())
 
     await notif1.post(`device?deviceId=${deviceIdEncoded}`, {
       appId,
@@ -44,7 +44,7 @@ export const attachToUser = () => async (dispatch: Dispatch, getState: GetState)
   const { account } = state.core
 
   const encodedUserId = encodeURIComponent(account.rootLoginId)
-  const deviceId = DeviceInfo.getUniqueID()
+  const deviceId = getUniqueId()
   const deviceIdEncoded = encodeURIComponent(deviceId)
   try {
     await notif1.post(`user/device/attach?userId=${encodedUserId}&deviceId=${deviceIdEncoded}`)

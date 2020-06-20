@@ -3,7 +3,7 @@
 import { FormField, MaterialInputStyle } from 'edge-components'
 import React, { Component } from 'react'
 import { FlatList, Image, TouchableHighlight, View } from 'react-native'
-import DeviceInfo from 'react-native-device-info'
+import { getCountry } from 'react-native-localize'
 
 import { COUNTRY_CODES, FLAG, FLAG_LOGO_URL, FONT_AWESOME } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
@@ -26,7 +26,7 @@ type CountrySelectionModalState = {
 export class CountrySelectionModal extends Component<CountrySelectionModalProps, CountrySelectionModalState> {
   constructor(props: CountrySelectionModalProps) {
     super(props)
-    const deviceCountry = DeviceInfo.getDeviceCountry() // "US"
+    const deviceCountry = getCountry() // "US"
     this.state = {
       input: '',
       countryCode: props.countryCode || deviceCountry || 'US'

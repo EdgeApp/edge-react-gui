@@ -12,7 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import fioRequestsIcon from '../../assets/images/sidenav/fiorequests.png'
 import * as Constants from '../../constants/indexConstants'
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache } from '../../modules/FioAddress/util.js'
 import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioRequest/components/FioRequestRow'

@@ -4,20 +4,33 @@ import dateformat from 'dateformat'
 
 /* globals jest */
 jest.mock('dateformat', () => (number, format) => dateformat(number, format, true)) // force timezone to UTC
+
 jest.mock('react-native-device-info', () => ({
+  getBrand() {
+    return 'Apple'
+  },
   getBuildNumber() {
     return '2019010101'
   },
-  getDeviceLocale() {
-    return 'en_US'
+  getBundleId() {
+    return 'co.edgesecure.app'
+  },
+  getDeviceId() {
+    return 'iPhone7,2'
+  },
+  getUniqueId() {
+    return 'abcd1234'
+  },
+  getUserAgent() {
+    return Promise.resolve(
+      'Mozilla/5.0 (iPhone9,3; U; CPU iPhone OS 10_0_1 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/14A403 Safari/602.1'
+    )
   },
   getVersion() {
     return '1.2.3'
-  },
-  isTablet() {
-    return false
   }
 }))
+
 jest.mock('edge-login-ui-rn', () => ({
   getSupportedBiometryType() {
     return 'FaceID'
@@ -97,5 +110,27 @@ jest.mock('react-native-fs', () => {
     TemporaryDirectoryPath: jest.fn(),
     LibraryDirectoryPath: jest.fn(),
     PicturesDirectoryPath: jest.fn()
+  }
+})
+jest.mock('react-native-localize', () => {
+  return {
+    getCountry() {
+      return 'US'
+    },
+    getCurrencies() {
+      return ['USD', 'EUR'] // List can sometimes be empty!
+    },
+    getLocales() {
+      return [
+        { countryCode: 'US', languageTag: 'en-US', languageCode: 'en', isRTL: false },
+        { countryCode: 'FR', languageTag: 'fr-FR', languageCode: 'fr', isRTL: false }
+      ]
+    },
+    getNumberFormatSettings() {
+      return {
+        decimalSeparator: '.',
+        groupingSeparator: ','
+      }
+    }
   }
 })
