@@ -4,7 +4,7 @@ import type { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-cor
 
 import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
 import s from '../locales/strings'
-import { getFioObtData, refreshConnectedWalletsForFioAddress } from '../modules/FioAddress/util'
+import { addToFioAddressCache, getFioObtData, refreshConnectedWalletsForFioAddress } from '../modules/FioAddress/util.js'
 import { getFioWallets } from '../modules/UI/selectors'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { FioObtRecord } from '../types/types'
@@ -57,6 +57,7 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
     if (obtForTx.content.memo) fioNotes += `\n${s.strings.fio_sender_memo_label}: ${obtForTx.content.memo}`
     edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
     edgeMetadata.name = obtForTx.payer_fio_address
+    addToFioAddressCache(state.core.account, [obtForTx.payer_fio_address])
     try {
       await wallet.saveTxMetadata(transaction.txid, transaction.currencyCode, edgeMetadata)
     } catch (e) {
