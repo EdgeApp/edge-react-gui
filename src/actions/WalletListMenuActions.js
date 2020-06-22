@@ -33,7 +33,7 @@ export type WalletListMenuKey =
   | 'viewXPub'
   | 'getRawKeys'
 
-export function walletListMenuAction(walletId: string, option: WalletListMenuKey) {
+export function walletListMenuAction(walletId: string, option: WalletListMenuKey, currencyCode: string) {
   switch (option) {
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {
@@ -97,7 +97,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const state = getState()
         const { currencyWallets = {} } = state.core.account
         const wallet = currencyWallets[walletId]
-        Actions[Constants.TRANSACTIONS_EXPORT]({ sourceWallet: wallet })
+        Actions[Constants.TRANSACTIONS_EXPORT]({ sourceWallet: wallet, currencyCode })
       }
     }
 

@@ -14,7 +14,8 @@ import { sanitizeForFilename } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 export type PassedProps = {
-  sourceWallet: EdgeCurrencyWallet
+  sourceWallet: EdgeCurrencyWallet,
+  currencyCode: string
 }
 type StateProps = {
   denomination: string
@@ -67,7 +68,8 @@ export class TransactionsExportSceneComponent extends Component<Props> {
 
   exportQBO = async () => {
     const transactionOptions: EdgeGetTransactionsOptions = {
-      denomination: this.props.denomination
+      denomination: this.props.denomination,
+      currencyCode: this.props.currencyCode
     }
     const file = await this.props.sourceWallet.exportTransactionsToQBO(transactionOptions)
 
@@ -78,7 +80,8 @@ export class TransactionsExportSceneComponent extends Component<Props> {
 
   exportCSV = async () => {
     const transactionOptions: EdgeGetTransactionsOptions = {
-      denomination: this.props.denomination
+      denomination: this.props.denomination,
+      currencyCode: this.props.currencyCode
     }
     let file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
     if (typeof file !== 'string') file = ''

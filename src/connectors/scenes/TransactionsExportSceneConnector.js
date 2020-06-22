@@ -7,9 +7,7 @@ import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: State, ownProps: PassedProps) => {
-  const wallet = ownProps.sourceWallet
-  const currencyCode = wallet.currencyInfo.currencyCode
-  const denominationObject = getDisplayDenomination(state, currencyCode)
+  const denominationObject = getDisplayDenomination(state, ownProps.currencyCode)
   const denomination = denominationObject.multiplier
   return {
     denomination

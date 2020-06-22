@@ -64,7 +64,7 @@ type DispatchProps = {
   hideMessageTweak(messageId: string, source: TweakSource): void,
   toggleAccountBalanceVisibility(): void,
   updateActiveWalletsOrder(walletIds: Array<string>): void,
-  walletRowOption(walletId: string, option: WalletListMenuKey): void,
+  walletRowOption(walletId: string, option: WalletListMenuKey, currencyCode: string): void,
   disableOtp(): void,
   keepOtp(): void,
   linkReferralWithCurrencies(string): void
@@ -104,11 +104,11 @@ class WalletListComponent extends Component<Props, State> {
     }
   }
 
-  executeWalletRowOption = (walletId: string, option: WalletListMenuKey) => {
+  executeWalletRowOption = (walletId: string, option: WalletListMenuKey, currencyCode?: string) => {
     if (option === 'sort') {
       return this.setState({ sorting: true })
     }
-    return this.props.walletRowOption(walletId, option)
+    return this.props.walletRowOption(walletId, option, currencyCode || this.props.wallets[walletId].currencyCode)
   }
 
   render() {
@@ -379,8 +379,8 @@ export const WalletListScene = connect(
     updateActiveWalletsOrder(activeWalletIds) {
       dispatch(updateActiveWalletsOrder(activeWalletIds))
     },
-    walletRowOption(walletId, option) {
-      dispatch(walletListMenuAction(walletId, option))
+    walletRowOption(walletId, option, currencyCode) {
+      dispatch(walletListMenuAction(walletId, option, currencyCode))
     },
     disableOtp() {
       dispatch(disableOtp())
