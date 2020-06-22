@@ -28,7 +28,7 @@ const DIVIDE_PRECISION = 18
 
 type OwnProps = {
   guiWallet: GuiWallet,
-  executeWalletRowOption(walletId: string, option: WalletListMenuKey): void,
+  executeWalletRowOption: (walletId: string, option: WalletListMenuKey, currencyCode?: string) => void,
   showBalance: boolean | Function
 }
 type StateProps = {
@@ -211,6 +211,7 @@ class WalletListRowComponent extends Component<Props> {
               balance={metaTokenBalances[property]}
               showBalance={this.props.showBalance}
               progress={progress}
+              executeWalletRowOption={this.props.executeWalletRowOption}
             />
           )
         }
