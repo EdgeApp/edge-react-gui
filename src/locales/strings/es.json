@@ -476,7 +476,7 @@
   "trying_to_find": "Buscando el mejor tipo de cambio...",
   "exchange_will_be_sent": "%1$s%2$s serán enviados",
   "exchange_will_be_received": "%1$s %2$s serán recibidos",
-  "mining_fee": "Comisión de red máxima",
+  "mining_fee": "",
   "confirm_to_complete_exchange": "Confirma para completar el cambio.",
   "scan_camera_permission_denied": "Para escanear un código QR, activa por favor el acceso a la cámara en ajustes",
   "open_settings": "Abrir ajustes",
