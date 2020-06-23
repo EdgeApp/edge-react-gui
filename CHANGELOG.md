@@ -1,5 +1,14 @@
 # edge-react-gui
 
+## 1.15.1 (2020-06-22)
+
+- Show fee as fiat amount on swap quote scene
+- Upgrade edge-currency-bitcoin to v4.8.2
+  - Prioritize Earn.com fee estimation
+  - Decrease fee level block targets
+- Upgrade edge-exchange-plugins to v0.11.1
+  - Force high fee when swapping from BTC
+
 ## 1.15.0 (2020-06-17)
 
 - Newly designed transaction details scene
