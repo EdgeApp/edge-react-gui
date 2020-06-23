@@ -206,11 +206,6 @@ class GuiPluginView extends React.Component<Props, State> {
     return true
   }
 
-  onNavigationStateChange = event => {
-    console.log('Plugin navigation: ', event)
-    this._canGoBack = event.canGoBack
-  }
-
   onLoadProgress = event => {
     console.log('Plugin navigation: ', event.nativeEvent)
     this._canGoBack = event.nativeEvent.canGoBack
