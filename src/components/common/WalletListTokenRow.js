@@ -5,6 +5,7 @@ import React, { PureComponent } from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
+import { type WalletListMenuKey } from '../../actions/WalletListMenuActions.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -14,6 +15,7 @@ import { type GuiWallet } from '../../types/types.js'
 import { scale, scaleH } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import { ProgressPie } from './ProgressPie.js'
+import { WalletListMenu } from './WalletListMenu.js'
 
 type OwnProps = {
   parentId: string,
@@ -22,7 +24,8 @@ type OwnProps = {
   balance: string,
   walletFiatSymbol: string,
   showBalance: boolean,
-  progress: number
+  progress: number,
+  executeWalletRowOption: (walletId: string, option: WalletListMenuKey, currencyCode?: string) => void
 }
 
 export type StateProps = {
@@ -118,7 +121,15 @@ export class WalletListTokenRow extends PureComponent<Props> {
               <T style={differencePercentageStringStyle}>{differencePercentageString}</T>
             </View>
           </View>
-          <View style={styles.rowOptionsWrap} />
+          <View style={styles.rowOptionsWrap}>
+            <WalletListMenu
+              currencyCode={currencyCode}
+              customStyles={customWalletListOptionsStyles}
+              executeWalletRowOption={this.props.executeWalletRowOption}
+              walletId={wallet.id}
+              isToken
+            />
+          </View>
         </View>
       </TouchableHighlight>
     )
@@ -126,6 +137,20 @@ export class WalletListTokenRow extends PureComponent<Props> {
 }
 
 const rowCurrencyOverlaySize = scale(23.3)
+const customWalletListOptionsStyles = StyleSheet.create({
+  icon: {
+    fontSize: scale(21),
+    fontWeight: '200',
+    position: 'relative',
+    top: 6
+  },
+  menuIconWrap: {
+    width: scale(46),
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  }
+})
 const rawStyles = {
   rowContent: {
     flex: 1,
