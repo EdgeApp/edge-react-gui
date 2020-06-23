@@ -9,12 +9,11 @@ import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
-import { createCurrencyWalletAndAddToSwap } from '../../actions/CreateWalletActions.js'
 import { type SetNativeAmountInfo, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
-import { ARROW_DOWN_BOLD, DEFAULT_STARTER_WALLET_NAMES, MATERIAL_COMMUNITY } from '../../constants/indexConstants.js'
+import { ARROW_DOWN_BOLD, MATERIAL_COMMUNITY } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { getSettings } from '../../modules/Settings/selectors.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
@@ -63,8 +62,7 @@ type StateProps = {
 type DispatchProps = {
   onSelectWallet(string, string): void,
   openModal(data: 'from' | 'to'): mixed,
-  getQuoteForTransaction(SetNativeAmountInfo): void,
-  createCurrencyWallet(string, string, string): void
+  getQuoteForTransaction(SetNativeAmountInfo): void
 }
 type Props = StateProps & DispatchProps
 
@@ -270,13 +268,9 @@ class CryptoExchangeComponent extends Component<Props, State> {
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
       />
-    )).then((response: WalletListResult) => {
-      if (response.walletToSelect) {
-        this.props.onSelectWallet(response.walletToSelect.walletId, response.walletToSelect.currencyCode)
-        return
-      }
-      if (response.walletToCreate) {
-        this.props.createCurrencyWallet(response.walletToCreate.walletType, response.walletToCreate.currencyCode, this.props.defaultIsoFiat)
+    )).then(({ walletId, currencyCode }: WalletListResult) => {
+      if (walletId && currencyCode) {
+        this.props.onSelectWallet(walletId, currencyCode)
       }
     })
     return null
@@ -364,10 +358,6 @@ export const CryptoExchangeScene = connect(
     },
     openModal(data: 'from' | 'to') {
       dispatch({ type: 'OPEN_WALLET_SELECTOR_MODAL', data })
-    },
-    createCurrencyWallet(walletType: string, currencyCode: string, fiat: string) {
-      const walletName = DEFAULT_STARTER_WALLET_NAMES[currencyCode]
-      dispatch(createCurrencyWalletAndAddToSwap(walletName, walletType, fiat))
     }
   })
 )(CryptoExchangeComponent)

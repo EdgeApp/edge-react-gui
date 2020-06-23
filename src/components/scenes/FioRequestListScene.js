@@ -277,11 +277,11 @@ export class FioRequestList extends Component<Props, LocalState> {
     const { chain_code, token_code } = selectedFioPendingRequest.content
     const allowedFullCurrencyCode = chain_code !== token_code && token_code && token_code !== '' ? [`${chain_code}:${token_code}`] : [chain_code]
 
-    const selectedResult: WalletListResult = await Airship.show(bridge => (
+    const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedFullCurrencyCode} />
     ))
-    if (selectedResult.walletToSelect) {
-      onSelectWallet(selectedResult.walletToSelect.walletId, selectedResult.walletToSelect.currencyCode)
+    if (walletId && currencyCode) {
+      onSelectWallet(walletId, currencyCode)
       this.sendCrypto(selectedFioPendingRequest)
     }
   }
