@@ -3,8 +3,8 @@
 import React from 'react'
 import { Actions } from 'react-native-router-flux'
 
-import s from '../../../../locales/strings'
-import BackButton from '../../components/Header/Component/BackButton.ui'
+import s from '../../locales/strings'
+import BackButton from '../../modules/UI/components/Header/Component/BackButton.ui'
 
 // The scene holds a ref to the webview:
 type PluginScene = { goBack(): boolean }
