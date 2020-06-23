@@ -150,13 +150,18 @@ async function fetchSwapQuote(state: State, request: EdgeSwapRequest): Promise<G
   const fromBalanceInFiatRaw = await currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.fiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
   const fromFiat = intl.formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
-  // Format fee:
+  // Format crypto fee:
   const settings = SETTINGS_SELECTORS.getSettings(state)
   const feeDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, quote.networkFee.currencyCode)
   const feeNativeAmount = quote.networkFee.nativeAmount
   const feeTempAmount = bns.div(feeNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-  const feeDisplayAmount = bns.toFixed(feeTempAmount, 0, 8)
-  const fee = feeDisplayAmount + ' ' + feeDenomination.name
+  const feeDisplayAmount = bns.toFixed(feeTempAmount, 0, 6)
+
+  // Format fiat fee:
+  const feeDenominatedAmount = UTILS.convertNativeToExchange(fromExchangeDenomination.multiplier)(feeNativeAmount)
+  const feeFiatAmountRaw = await currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.fiatCurrencyCode, Number(feeDenominatedAmount))
+  const feeFiatAmount = intl.formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
+  const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${fromWallet.fiatCurrencyCode.replace('iso:', '')})`
 
   // Format to amount:
   const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
