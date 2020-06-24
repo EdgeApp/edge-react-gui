@@ -42,7 +42,7 @@ export function sortCurrencyInfos(infos: EdgeCurrencyInfo[]): EdgeCurrencyInfo[]
 export function makeCreateWalletType(currencyInfo: EdgeCurrencyInfo): CreateWalletType {
   return {
     currencyName: currencyInfo.displayName,
-    value: currencyInfo.walletType,
+    walletType: currencyInfo.walletType,
     symbolImage: currencyInfo.symbolImage,
     symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
     currencyCode: currencyInfo.currencyCode
@@ -61,14 +61,14 @@ export function getCreateWalletTypes(account: EdgeAccount): CreateWalletType[] {
     if (currencyInfo.pluginId === 'bitcoin') {
       out.push({
         currencyName: 'Bitcoin (Segwit)',
-        value: 'wallet:bitcoin-bip49',
+        walletType: 'wallet:bitcoin-bip49',
         symbolImage: currencyInfo.symbolImage,
         symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
         currencyCode: currencyInfo.currencyCode
       })
       out.push({
         currencyName: 'Bitcoin (no Segwit)',
-        value: 'wallet:bitcoin-bip44',
+        walletType: 'wallet:bitcoin-bip44',
         symbolImage: currencyInfo.symbolImage,
         symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
         currencyCode: currencyInfo.currencyCode

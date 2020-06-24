@@ -79,7 +79,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     if (props.existingWalletId) {
       createdWallet = this.renameAndReturnWallet(props.existingCoreWallet)
     } else {
-      createdWallet = createAccountBasedWallet(accountName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value), false, false)
+      createdWallet = createAccountBasedWallet(accountName, selectedWalletType.walletType, fixFiatCurrencyCode(selectedFiat.value), false, false)
     }
     this.state = {
       error: '',
