@@ -15,7 +15,7 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
-import type { GuiFiatType, GuiWallet, GuiWalletType } from '../../types/types.js'
+import type { CreateWalletType, GuiFiatType, GuiWallet } from '../../types/types.js'
 import { logEvent } from '../../util/tracking.js'
 import { fixFiatCurrencyCode } from '../../util/utils.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -48,7 +48,7 @@ export type CreateWalletAccountSelectStateProps = {
 
 export type CreateWalletAccountSelectOwnProps = {
   selectedFiat: GuiFiatType,
-  selectedWalletType: GuiWalletType,
+  selectedWalletType: CreateWalletType,
   accountName: string,
   isReactivation?: boolean,
   existingWalletId?: string

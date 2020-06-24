@@ -19,7 +19,7 @@ import type { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletRe
 import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
-import type { GuiFiatType, GuiWalletType } from '../../types/types.js'
+import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
 import { FormField } from '../common/FormField.js'
@@ -33,7 +33,7 @@ const logos = {
 
 export type CreateWalletAccountSetupOwnProps = {
   selectedFiat: GuiFiatType,
-  selectedWalletType: GuiWalletType,
+  selectedWalletType: CreateWalletType,
   accountHandle?: string,
   isReactivation?: boolean,
   existingWalletId?: string

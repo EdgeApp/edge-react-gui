@@ -88,7 +88,7 @@ export type CustomTokenInfo = {
   walletType?: string
 }
 
-export type GuiWalletType = {
+export type CreateWalletType = {
   label: string,
   value: string,
   symbolImage?: string,

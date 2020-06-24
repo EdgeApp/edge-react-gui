@@ -36,7 +36,7 @@ import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
 import { type FlatListItem, type GuiWallet } from '../../types/types.js'
-import { makeGuiWalletType } from '../../util/CurrencyInfoHelpers.js'
+import { makeCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
@@ -220,7 +220,7 @@ class WalletListComponent extends Component<Props, State> {
 
     if (answer) {
       Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
-        selectedWalletType: makeGuiWalletType(ethereum.currencyInfo)
+        selectedWalletType: makeCreateWalletType(ethereum.currencyInfo)
       })
     }
   }
