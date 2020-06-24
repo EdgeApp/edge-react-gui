@@ -11,8 +11,8 @@ import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
-import { type FlatListItem, type GuiWalletType } from '../../types/types.js'
-import { getGuiWalletTypes } from '../../util/CurrencyInfoHelpers.js'
+import { type CreateWalletType, type FlatListItem } from '../../types/types.js'
+import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -36,33 +36,33 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
     }
   }
 
-  getWalletType(walletType: string): GuiWalletType | void {
+  getWalletType(walletType: string): CreateWalletType | void {
     const { account } = this.props
-    return getGuiWalletTypes(account).find(type => type.value === walletType)
+    return getCreateWalletTypes(account).find(type => type.value === walletType)
   }
 
   onNext = () => {
     const { selectedWalletType } = this.state
 
     // Find the details about the wallet type:
-    const guiWalletType = this.getWalletType(selectedWalletType)
-    if (guiWalletType == null) {
+    const createWalletType = this.getWalletType(selectedWalletType)
+    if (createWalletType == null) {
       Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
       return
     }
 
     // Does this wallet type support private key import?
-    const { currencyCode } = guiWalletType
+    const { currencyCode } = createWalletType
     const { isImportKeySupported } = getSpecialCurrencyInfo(currencyCode)
 
     // Go to the next screen:
     if (isImportKeySupported) {
       Actions[CREATE_WALLET_CHOICE]({
-        selectedWalletType: guiWalletType
+        selectedWalletType: createWalletType
       })
     } else {
       Actions[CREATE_WALLET_SELECT_FIAT]({
-        selectedWalletType: guiWalletType
+        selectedWalletType: createWalletType
       })
     }
   }
@@ -78,7 +78,7 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
     })
   }
 
-  handleSelectWalletType = (item: GuiWalletType): void => {
+  handleSelectWalletType = (item: CreateWalletType): void => {
     this.setState({ selectedWalletType: item.value }, this.onNext)
   }
 
@@ -92,7 +92,7 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
     const lowerSearch = searchTerm.toLowerCase()
 
     // Sort and filter the available types:
-    const sortedArray = getGuiWalletTypes(account)
+    const sortedArray = getCreateWalletTypes(account)
     const filteredArray = sortedArray.filter(
       entry => entry.label.toLowerCase().indexOf(lowerSearch) >= 0 || entry.currencyCode.toLowerCase().indexOf(lowerSearch) >= 0
     )
@@ -134,7 +134,7 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
     )
   }
 
-  renderWalletTypeResult = (data: FlatListItem<GuiWalletType>) => {
+  renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
     const { value, symbolImageDarkMono, currencyCode } = data.item
 
     // Ripple hack:
@@ -169,7 +169,7 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
     )
   }
 
-  keyExtractor = (item: GuiWalletType, index: number): string => {
+  keyExtractor = (item: CreateWalletType, index: number): string => {
     return item.value
   }
 }

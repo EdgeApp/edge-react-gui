@@ -16,14 +16,14 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
-import type { GuiFiatType, GuiWalletType } from '../../types/types.js'
+import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { FullScreenTransitionComponent } from '../common/FullScreenTransition.js'
 
 type OwnProps = {
   walletName: string,
   selectedFiat: GuiFiatType,
-  selectedWalletType: GuiWalletType,
+  selectedWalletType: CreateWalletType,
   cleanedPrivateKey?: string // for creating wallet from import private key
 }
 type StateProps = {

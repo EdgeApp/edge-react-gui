@@ -11,7 +11,7 @@ import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { getSettings } from '../modules/Settings/selectors.js'
 import { setAccountBalanceVisibility } from '../modules/Settings/SettingsActions.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { getGuiWalletType } from '../util/CurrencyInfoHelpers.js'
+import { getCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 
 export const updateActiveWalletsOrder = (activeWalletIds: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -75,14 +75,14 @@ const getCurrencyAddress = async (currencyCode, getState) => {
   const settings = getSettings(state)
   const { defaultIsoFiat } = settings
 
-  const guiWalletTypes = getGuiWalletType(account, currencyCode)
-  if (!guiWalletTypes) throw new Error(s.strings.wallet_list_referral_link_currency_invalid)
+  const createWalletTypes = getCreateWalletType(account, currencyCode)
+  if (!createWalletTypes) throw new Error(s.strings.wallet_list_referral_link_currency_invalid)
 
   const askUserToCreateWallet = await createWalletCheckModal(currencyCode)
   if (!askUserToCreateWallet) throw new Error(s.strings.wallet_list_referral_link_cancelled_wallet_creation)
 
-  const createWallet = account.createCurrencyWallet(guiWalletTypes.value, {
-    name: guiWalletTypes.label,
+  const createWallet = account.createCurrencyWallet(createWalletTypes.value, {
+    name: createWalletTypes.label,
     fiatCurrencyCode: defaultIsoFiat
   })
   const wallet = await showFullScreenSpinner(s.strings.wallet_list_referral_link_currency_loading, createWallet)
