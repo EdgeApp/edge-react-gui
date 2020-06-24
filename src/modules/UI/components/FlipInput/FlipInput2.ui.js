@@ -110,7 +110,7 @@ const addCurrencySymbol = (currencySymbol: string, displayAmount: string) =>
 const removeCurrencySymbol = (currencySymbol: string, previousDisplayAmount: string, displayAmount: string) => {
   // This looks for a number left if the currency symbol and moves it to the far right
   if (previousDisplayAmount === displayAmount.substring(1)) {
-    displayAmount = previousDisplayAmount + displayAmount[0]
+    displayAmount = previousDisplayAmount + (displayAmount[0] || '')
   }
   return displayAmount.replace(currencySymbol, '').trim()
 }
