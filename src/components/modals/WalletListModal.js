@@ -291,9 +291,9 @@ class WalletListModalConnected extends Component<Props, State> {
   selectTokenWallet = (tokenSelectObject: TokenSelectObject) =>
     this.props.bridge.resolve({ walletId: tokenSelectObject.id, currencyCode: tokenSelectObject.currencyCode })
 
-  createAndSelectWallet = async ({ currencyCode, value }: CreateWalletType) => {
+  createAndSelectWallet = async ({ currencyCode, walletType }: CreateWalletType) => {
     try {
-      const wallet = await this.createWallet(currencyCode, value)
+      const wallet = await this.createWallet(currencyCode, walletType)
       this.props.bridge.resolve({ walletId: wallet.id, currencyCode: wallet.currencyInfo.currencyCode })
     } catch (error) {
       showError(error)
@@ -318,7 +318,7 @@ class WalletListModalConnected extends Component<Props, State> {
       if (!wallet) {
         const walletType = getCreateWalletType(account, parentCurrencyCode)
         if (!walletType) throw new Error(s.strings.create_wallet_failed_message)
-        wallet = await this.createWallet(walletType.currencyCode, walletType.value)
+        wallet = await this.createWallet(walletType.currencyCode, walletType.walletType)
       }
 
       const enabledTokens = await showFullScreenSpinner(

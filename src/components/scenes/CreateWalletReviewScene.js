@@ -52,7 +52,7 @@ class CreateWalletReviewComponent extends Component<Props, State> {
 
   onSubmit = async () => {
     const { walletName, selectedWalletType, selectedFiat, cleanedPrivateKey, createCurrencyWallet } = this.props
-    const createdWallet = await createCurrencyWallet(walletName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value), cleanedPrivateKey)
+    const createdWallet = await createCurrencyWallet(walletName, selectedWalletType.walletType, fixFiatCurrencyCode(selectedFiat.value), cleanedPrivateKey)
     // note that we will be using cleanedPrivateKey as a flag for an imported private key
     if (createdWallet && cleanedPrivateKey) {
       this.setState({

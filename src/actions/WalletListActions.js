@@ -81,7 +81,7 @@ const getCurrencyAddress = async (currencyCode, getState) => {
   const askUserToCreateWallet = await createWalletCheckModal(currencyCode)
   if (!askUserToCreateWallet) throw new Error(s.strings.wallet_list_referral_link_cancelled_wallet_creation)
 
-  const createWallet = account.createCurrencyWallet(createWalletTypes.value, {
+  const createWallet = account.createCurrencyWallet(createWalletTypes.walletType, {
     name: createWalletTypes.currencyName,
     fiatCurrencyCode: defaultIsoFiat
   })

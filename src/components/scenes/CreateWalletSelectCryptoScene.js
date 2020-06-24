@@ -38,7 +38,7 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
 
   getWalletType(walletType: string): CreateWalletType | void {
     const { account } = this.props
-    return getCreateWalletTypes(account).find(type => type.value === walletType)
+    return getCreateWalletTypes(account).find(type => type.walletType === walletType)
   }
 
   onNext = () => {
@@ -79,7 +79,7 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
   }
 
   handleSelectWalletType = (item: CreateWalletType): void => {
-    this.setState({ selectedWalletType: item.value }, this.onNext)
+    this.setState({ selectedWalletType: item.walletType }, this.onNext)
   }
 
   handleOnFocus = () => {}
@@ -135,14 +135,14 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
   }
 
   renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
-    const { value, symbolImageDarkMono, currencyCode } = data.item
+    const { walletType, symbolImageDarkMono, currencyCode } = data.item
 
     // Ripple hack:
     let { currencyName } = data.item
     if (currencyCode.toLowerCase() === 'xrp') currencyName = 'Ripple'
 
     return (
-      <View style={[styles.singleCryptoTypeWrap, value === this.state.selectedWalletType && styles.selectedItem]}>
+      <View style={[styles.singleCryptoTypeWrap, walletType === this.state.selectedWalletType && styles.selectedItem]}>
         <TouchableHighlight
           style={styles.singleCryptoType}
           onPress={() => this.handleSelectWalletType(data.item)}
@@ -170,7 +170,7 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
   }
 
   keyExtractor = (item: CreateWalletType, index: number): string => {
-    return item.value
+    return item.walletType
   }
 }
 
