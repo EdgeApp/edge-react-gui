@@ -94,7 +94,7 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
     // Sort and filter the available types:
     const sortedArray = getCreateWalletTypes(account)
     const filteredArray = sortedArray.filter(
-      entry => entry.label.toLowerCase().indexOf(lowerSearch) >= 0 || entry.currencyCode.toLowerCase().indexOf(lowerSearch) >= 0
+      entry => entry.currencyName.toLowerCase().indexOf(lowerSearch) >= 0 || entry.currencyCode.toLowerCase().indexOf(lowerSearch) >= 0
     )
 
     const formFieldHeight = scale(50)
@@ -138,8 +138,8 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
     const { value, symbolImageDarkMono, currencyCode } = data.item
 
     // Ripple hack:
-    let { label } = data.item
-    if (currencyCode.toLowerCase() === 'xrp') label = 'Ripple'
+    let { currencyName } = data.item
+    if (currencyCode.toLowerCase() === 'xrp') currencyName = 'Ripple'
 
     return (
       <View style={[styles.singleCryptoTypeWrap, value === this.state.selectedWalletType && styles.selectedItem]}>
@@ -159,7 +159,7 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
               </View>
               <View style={styles.cryptoTypeLeftTextWrap}>
                 <Text style={styles.cryptoTypeName}>
-                  {label} - {currencyCode}
+                  {currencyName} - {currencyCode}
                 </Text>
               </View>
             </View>

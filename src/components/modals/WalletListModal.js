@@ -361,7 +361,7 @@ class WalletListModalConnected extends Component<Props, State> {
         <WalletListModalCreateRow
           currencyCode={createWalletCurrency.currencyCode}
           image={createWalletCurrency.symbolImage}
-          name={createWalletCurrency.label}
+          name={createWalletCurrency.currencyName}
           type="wallet"
           onPress={() => this.createAndSelectWallet(createWalletCurrency)}
         />
