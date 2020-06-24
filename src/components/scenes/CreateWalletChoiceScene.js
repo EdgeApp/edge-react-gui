@@ -13,10 +13,10 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
-import { type GuiWalletType } from '../../types/types.js'
+import { type CreateWalletType } from '../../types/types.js'
 
 type CreateWalletChoiceProps = {
-  selectedWalletType: GuiWalletType
+  selectedWalletType: CreateWalletType
 }
 
 export class CreateWalletChoiceComponent extends PureComponent<CreateWalletChoiceProps> {

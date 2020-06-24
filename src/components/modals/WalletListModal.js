@@ -15,8 +15,8 @@ import { setEnabledTokens } from '../../modules/Core/Wallets/EnabledTokens.js'
 import { getActiveWalletIds } from '../../modules/UI/selectors.js'
 import type { State as StateType } from '../../types/reduxTypes.js'
 import type { FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
-import { type GuiWalletType } from '../../types/types.js'
-import { getCurrencyInfos, getGuiWalletType, getGuiWalletTypes } from '../../util/CurrencyInfoHelpers.js'
+import { type CreateWalletType } from '../../types/types.js'
+import { getCreateWalletType, getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { type TokenSelectObject } from '../common/CryptoExchangeWalletListTokenRow.js'
 import { showError, showFullScreenSpinner } from '../services/AirshipInstance.js'
@@ -57,7 +57,7 @@ type CreateToken = {
 
 type Record = {
   walletItem: GuiWallet | null,
-  createWalletCurrency: GuiWalletType | null,
+  createWalletCurrency: CreateWalletType | null,
   createToken: CreateToken | null,
   mostRecentUsed?: boolean,
   currencyCode?: string | null,
@@ -132,7 +132,7 @@ class WalletListModalConnected extends Component<Props, State> {
 
     // Initialize Create Wallets
     if (showCreateWallet) {
-      const createWalletCurrencies = getGuiWalletTypes(account)
+      const createWalletCurrencies = getCreateWalletTypes(account)
       const walletsArray = Object.values(wallets)
       for (const createWalletCurrency of createWalletCurrencies) {
         const { currencyCode } = createWalletCurrency
@@ -291,9 +291,9 @@ class WalletListModalConnected extends Component<Props, State> {
   selectTokenWallet = (tokenSelectObject: TokenSelectObject) =>
     this.props.bridge.resolve({ walletId: tokenSelectObject.id, currencyCode: tokenSelectObject.currencyCode })
 
-  createAndSelectWallet = async ({ currencyCode, value }: GuiWalletType) => {
+  createAndSelectWallet = async ({ currencyCode, walletType }: CreateWalletType) => {
     try {
-      const wallet = await this.createWallet(currencyCode, value)
+      const wallet = await this.createWallet(currencyCode, walletType)
       this.props.bridge.resolve({ walletId: wallet.id, currencyCode: wallet.currencyInfo.currencyCode })
     } catch (error) {
       showError(error)
@@ -316,9 +316,9 @@ class WalletListModalConnected extends Component<Props, State> {
 
     try {
       if (!wallet) {
-        const walletType = getGuiWalletType(account, parentCurrencyCode)
+        const walletType = getCreateWalletType(account, parentCurrencyCode)
         if (!walletType) throw new Error(s.strings.create_wallet_failed_message)
-        wallet = await this.createWallet(walletType.currencyCode, walletType.value)
+        wallet = await this.createWallet(walletType.currencyCode, walletType.walletType)
       }
 
       const enabledTokens = await showFullScreenSpinner(
@@ -361,7 +361,7 @@ class WalletListModalConnected extends Component<Props, State> {
         <WalletListModalCreateRow
           currencyCode={createWalletCurrency.currencyCode}
           image={createWalletCurrency.symbolImage}
-          name={createWalletCurrency.label}
+          name={createWalletCurrency.currencyName}
           type="wallet"
           onPress={() => this.createAndSelectWallet(createWalletCurrency)}
         />
