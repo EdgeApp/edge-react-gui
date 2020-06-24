@@ -30,8 +30,6 @@ test('initialState', () => {
       walletAccountActivationQuoteError: ''
     },
     editToken: {
-      deleteCustomTokenProcessing: false,
-      deleteTokenModalVisible: false,
       editCustomTokenProcessing: false
     },
     exchangeRate: {
