@@ -44,7 +44,6 @@ import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateW
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
-import EditToken from '../connectors/scenes/EditTokenConnector.js'
 import { FioAddressConfirmConnector } from '../connectors/scenes/FioAddressConfirmConnector'
 import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetailsConnector'
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
@@ -92,6 +91,7 @@ import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { CurrencyNotificationScene } from './scenes/CurrencyNotificationScene'
+import { EditTokenScene } from './scenes/EditTokenScene.js'
 import { GuiPluginLegacyScene, renderLegacyPluginBackButton } from './scenes/GuiPluginLegacyScene.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
@@ -351,7 +351,7 @@ export class MainComponent extends Component<Props> {
               />
               <Scene
                 key={Constants.EDIT_TOKEN}
-                component={ifLoggedIn(EditToken)}
+                component={ifLoggedIn(EditTokenScene)}
                 navTransparent
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderEmptyButton()}
