@@ -146,8 +146,6 @@ Object {
         "walletAccountActivationQuoteError": "",
       },
       "editToken": Object {
-        "deleteCustomTokenProcessing": false,
-        "deleteTokenModalVisible": false,
         "editCustomTokenProcessing": false,
       },
       "exchangeRate": Object {
