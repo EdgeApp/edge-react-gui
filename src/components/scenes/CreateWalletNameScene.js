@@ -34,7 +34,7 @@ export class CreateWalletName extends Component<Props, State> {
     if (this.props.selectedWalletType.currencyCode.toLowerCase() === 'xrp') {
       walletName = sprintf(s.strings.my_crypto_wallet_name, 'XRP')
     } else {
-      walletName = sprintf(s.strings.my_crypto_wallet_name, this.props.selectedWalletType.label)
+      walletName = sprintf(s.strings.my_crypto_wallet_name, this.props.selectedWalletType.currencyName)
     }
     this.state = { walletName }
   }

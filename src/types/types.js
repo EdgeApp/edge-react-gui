@@ -89,7 +89,7 @@ export type CustomTokenInfo = {
 }
 
 export type CreateWalletType = {
-  label: string,
+  currencyName: string,
   value: string,
   symbolImage?: string,
   symbolImageDarkMono?: string,

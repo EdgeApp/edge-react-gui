@@ -81,7 +81,7 @@ class CreateWalletReviewComponent extends Component<Props, State> {
               </View>
               <View style={styles.reviewArea}>
                 <Text style={styles.reviewAreaText}>
-                  {s.strings.create_wallet_crypto_type_label} {this.props.selectedWalletType.label} - {this.props.selectedWalletType.currencyCode}
+                  {s.strings.create_wallet_crypto_type_label} {this.props.selectedWalletType.currencyName} - {this.props.selectedWalletType.currencyCode}
                 </Text>
                 <Text style={styles.reviewAreaText}>
                   {s.strings.create_wallet_fiat_type_label} {this.props.selectedFiat.label}
