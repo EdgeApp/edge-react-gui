@@ -4,7 +4,9 @@ import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
+import { connect } from 'react-redux'
 
+import { deleteCustomToken, editCustomToken } from '../../actions/WalletActions.js'
 import { DELETE, MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
@@ -13,40 +15,33 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import StylizedModal from '../../modules/UI/components/Modal/Modal.ui'
 import OptionIcon from '../../modules/UI/components/OptionIcon/OptionIcon.ui'
 import styles from '../../styles/scenes/EditTokenStyle.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import DeleteTokenButtons from '../common/DeleteTokenButtons.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
-export type EditTokenDispatchProps = {
-  showDeleteTokenModal: () => void,
-  hideDeleteTokenModal: () => void,
-  deleteCustomToken: (walletId: string, currencyCode: string) => void,
-  editCustomToken: (
-    walletId: string,
-    currencyName: string,
-    currencyCode: string,
-    contractAddress: string,
-    denomination: string,
-    oldCurrencyCode: string
-  ) => void
-}
-
-export type EditTokenStateProps = {
-  customTokens: Array<CustomTokenInfo>,
-  deleteTokenModalVisible: boolean,
-  editCustomTokenProcessing: boolean,
-  deleteCustomTokenProcessing: boolean
-}
-
-export type EditTokenOwnProps = {
-  walletId: string,
+type OwnProps = {
   addTokenPending: boolean,
   currencyCode: string,
   metaTokens: Array<EdgeMetaToken>,
-  onDeleteToken: string => void
+  onDeleteToken(currencyCode: string): void,
+  walletId: string
 }
+type StateProps = {
+  customTokens: Array<CustomTokenInfo>,
+  deleteCustomTokenProcessing: boolean,
+  deleteTokenModalVisible: boolean,
+  editCustomTokenProcessing: boolean
+}
+type DispatchProps = {
+  deleteCustomToken(walletId: string, currencyCode: string): void,
+  editCustomToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string): void,
+  hideDeleteTokenModal(): void,
+  showDeleteTokenModal(): void
+}
+type Props = OwnProps & StateProps & DispatchProps
 
 type State = {
   currencyName: string,
@@ -58,10 +53,8 @@ type State = {
   enabled?: boolean
 }
 
-export type EditTokenComponentProps = EditTokenDispatchProps & EditTokenOwnProps & EditTokenStateProps
-
-export default class EditToken extends Component<EditTokenComponentProps, State> {
-  constructor(props: EditTokenComponentProps) {
+class EditTokenComponent extends Component<Props, State> {
+  constructor(props: Props) {
     super(props)
     const tokenInfoIndex = _.findIndex(props.customTokens, item => item.currencyCode === props.currencyCode)
     if (tokenInfoIndex >= 0) {
@@ -242,3 +235,26 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
     )
   }
 }
+
+export const EditTokenScene = connect(
+  (state: ReduxState): StateProps => ({
+    customTokens: state.ui.settings.customTokens,
+    deleteTokenModalVisible: state.ui.scenes.editToken.deleteTokenModalVisible,
+    deleteCustomTokenProcessing: state.ui.scenes.editToken.deleteCustomTokenProcessing,
+    editCustomTokenProcessing: state.ui.scenes.editToken.editCustomTokenProcessing
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    deleteCustomToken(walletId: string, currencyCode: string) {
+      dispatch(deleteCustomToken(walletId, currencyCode))
+    },
+    editCustomToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string) {
+      dispatch(editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, oldCurrencyCode))
+    },
+    hideDeleteTokenModal() {
+      dispatch({ type: 'HIDE_DELETE_TOKEN_MODAL' })
+    },
+    showDeleteTokenModal() {
+      dispatch({ type: 'SHOW_DELETE_TOKEN_MODAL' })
+    }
+  })
+)(EditTokenComponent)
