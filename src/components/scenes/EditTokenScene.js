@@ -3,7 +3,7 @@
 import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
@@ -13,10 +13,10 @@ import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { TertiaryButton } from '../../modules/UI/components/Buttons/TertiaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import styles from '../../styles/scenes/EditTokenStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -80,50 +80,44 @@ class EditTokenComponent extends Component<Props, State> {
             <View style={styles.instructionalArea}>
               <Text style={styles.instructionalText}>{s.strings.edittoken_top_instructions}</Text>
             </View>
-            <View style={styles.formArea}>
-              <View style={styles.nameArea}>
-                <FormField
-                  style={styles.currencyName}
-                  value={this.state.currencyName}
-                  onChangeText={this.onChangeName}
-                  autoCapitalize="words"
-                  label={s.strings.addtoken_name_input_text}
-                  returnKeyType="done"
-                  autoCorrect={false}
-                />
-              </View>
-              <View style={styles.currencyCodeArea}>
-                <FormField
-                  style={styles.currencyCodeInput}
-                  value={this.state.currencyCode}
-                  onChangeText={this.onChangeCurrencyCode}
-                  autoCapitalize="characters"
-                  label={s.strings.addtoken_currency_code_input_text}
-                  returnKeyType="done"
-                  autoCorrect={false}
-                  maxLength={MAX_TOKEN_CODE_CHARACTERS}
-                />
-              </View>
-              <View style={styles.contractAddressArea}>
-                <FormField
-                  style={styles.contractAddressInput}
-                  value={this.state.contractAddress}
-                  onChangeText={this.onChangeContractAddress}
-                  label={s.strings.addtoken_contract_address_input_text}
-                  returnKeyType="done"
-                  autoCorrect={false}
-                />
-              </View>
-              <View style={styles.decimalPlacesArea}>
-                <FormField
-                  style={styles.decimalPlacesInput}
-                  value={this.state.decimalPlaces}
-                  onChangeText={this.onChangeDecimalPlaces}
-                  label={s.strings.addtoken_denomination_input_text}
-                  autoCorrect={false}
-                  keyboardType="numeric"
-                />
-              </View>
+            <View style={styles.nameArea}>
+              <FormField
+                value={this.state.currencyName}
+                onChangeText={this.onChangeName}
+                autoCapitalize="words"
+                label={s.strings.addtoken_name_input_text}
+                returnKeyType="done"
+                autoCorrect={false}
+              />
+            </View>
+            <View style={styles.currencyCodeArea}>
+              <FormField
+                value={this.state.currencyCode}
+                onChangeText={this.onChangeCurrencyCode}
+                autoCapitalize="characters"
+                label={s.strings.addtoken_currency_code_input_text}
+                returnKeyType="done"
+                autoCorrect={false}
+                maxLength={MAX_TOKEN_CODE_CHARACTERS}
+              />
+            </View>
+            <View style={styles.contractAddressArea}>
+              <FormField
+                value={this.state.contractAddress}
+                onChangeText={this.onChangeContractAddress}
+                label={s.strings.addtoken_contract_address_input_text}
+                returnKeyType="done"
+                autoCorrect={false}
+              />
+            </View>
+            <View style={styles.decimalPlacesArea}>
+              <FormField
+                value={this.state.decimalPlaces}
+                onChangeText={this.onChangeDecimalPlaces}
+                label={s.strings.addtoken_denomination_input_text}
+                autoCorrect={false}
+                keyboardType="numeric"
+              />
             </View>
             <View style={styles.errorMessageArea}>
               <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
@@ -225,6 +219,61 @@ class EditTokenComponent extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  container: {
+    paddingHorizontal: scale(20),
+    backgroundColor: THEME.COLORS.GRAY_4
+  },
+
+  instructionalArea: {
+    paddingVertical: scale(16),
+    paddingHorizontal: scale(20)
+  },
+  instructionalText: {
+    fontSize: scale(16),
+    textAlign: 'center'
+  },
+
+  nameArea: {
+    height: scale(70)
+  },
+  currencyCodeArea: {
+    height: scale(70)
+  },
+  contractAddressArea: {
+    height: scale(70)
+  },
+  decimalPlacesArea: {
+    height: scale(70)
+  },
+  errorMessageArea: {
+    height: scale(16),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  errorMessageText: {
+    color: THEME.COLORS.ACCENT_RED
+  },
+  buttonsArea: {
+    marginVertical: scale(16),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    paddingVertical: scale(4)
+  },
+  deleteButton: {
+    flex: 1,
+    marginRight: scale(1)
+  },
+  saveButton: {
+    flex: 1,
+    padding: scale(13),
+    marginLeft: scale(1)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const EditTokenScene = connect(
   (state: ReduxState): StateProps => ({
