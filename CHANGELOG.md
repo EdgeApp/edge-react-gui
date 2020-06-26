@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 1.15.2 (2020-06-25)
+
+- Update FIO server list
+
 ## 1.15.1 (2020-06-22)
 
 - Show fee as fiat amount on swap quote scene
