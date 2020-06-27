@@ -2,14 +2,12 @@
 
 import { PrimaryButton } from 'edge-components'
 import React, { type Node, Component } from 'react'
-import { Clipboard, ScrollView, StyleSheet, View } from 'react-native'
+import { Clipboard, ScrollView, View } from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
-import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { type EdgeTheme } from '../../reducers/ThemeReducer.js'
-import type { State as StateType } from '../../types/reduxTypes.js'
+import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { type AirshipBridge, AirshipModal, ContentArea, IconCircle } from './modalParts.js'
 
@@ -19,12 +17,7 @@ type OwnProps = {
   icon?: Node,
   title: string
 }
-
-type StateProps = {
-  theme: EdgeTheme
-}
-
-type Props = OwnProps & StateProps
+type Props = OwnProps & ThemeProps
 
 export class RawTextModalComponent extends Component<Props> {
   copyToClipboard = () => {
@@ -58,34 +51,32 @@ export class RawTextModalComponent extends Component<Props> {
   }
 }
 
-export const RawTextModal = connect((state: StateType): StateProps => ({ theme: state.theme }))(RawTextModalComponent)
+const getStyles = cacheStyles(theme => ({
+  header: {
+    width: '100%',
+    textAlign: 'center',
+    fontSize: theme.rem(1.5),
+    paddingTop: theme.rem(0.75)
+  },
+  textContainer: {
+    flex: 1
+  },
+  buttonContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: theme.rem(1),
+    paddingBottom: theme.rem(1)
+  },
+  buttonLeft: {
+    width: '100%',
+    marginRight: theme.rem(0.5)
+  },
+  buttonRight: {
+    width: '100%',
+    marginLeft: theme.rem(0.5)
+  }
+}))
 
-const getStyles = (theme: EdgeTheme) => {
-  return StyleSheet.create({
-    header: {
-      width: '100%',
-      textAlign: 'center',
-      fontSize: theme.rem(1.5),
-      paddingTop: theme.rem(0.75)
-    },
-    textContainer: {
-      flex: 1
-    },
-    buttonContainer: {
-      width: '100%',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingHorizontal: theme.rem(1),
-      paddingBottom: theme.rem(1)
-    },
-    buttonLeft: {
-      width: '100%',
-      marginRight: theme.rem(0.5)
-    },
-    buttonRight: {
-      width: '100%',
-      marginLeft: theme.rem(0.5)
-    }
-  })
-}
+export const RawTextModal = withTheme(RawTextModalComponent)

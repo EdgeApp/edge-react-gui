@@ -9,14 +9,19 @@ import SafariView from 'react-native-safari-view'
 import slowlog from 'react-native-slowlog'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
+import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
+import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/Settings/selectors.js'
 import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { type EdgeTheme } from '../../reducers/ThemeReducer.js'
+import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getSelectedWallet, getWallet } from '../../modules/UI/selectors.js'
 import { iconSize } from '../../styles/scenes/TransactionDetailsStyle.js'
+import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils.js'
@@ -30,6 +35,41 @@ import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInp
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
 import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPersonInput.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
+
+type OwnProps = {
+  edgeTransaction: EdgeTransaction,
+  thumbnailPath?: string
+}
+type StateProps = {
+  contacts: Array<GuiContact>,
+  currencyCode: string,
+  currencyInfo?: EdgeCurrencyInfo,
+  currentFiatAmount: number,
+  destinationDenomination?: EdgeDenomination,
+  destinationWallet?: GuiWallet,
+  guiWallet: GuiWallet,
+  subcategoriesList: Array<string>,
+  walletDefaultDenomProps: EdgeDenomination
+}
+type DispatchProps = {
+  getSubcategories(): void,
+  setNewSubcategory(newSubcategory: string): void,
+  setTransactionDetails(transaction: EdgeTransaction, edgeMetadata: EdgeMetadata): void
+}
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+
+type State = {
+  payeeName: string, // remove commenting once metaData in Redux
+  thumbnailPath?: string,
+  notes: string,
+  amountFiat: string,
+  direction: string,
+  bizId: number,
+  miscJson: any, // core receives this as a string
+  category: string,
+  subCategory: string,
+  styles: StyleSheet
+}
 
 const categories = {
   exchange: {
@@ -50,57 +90,22 @@ const categories = {
   }
 }
 
-type fiatCryptoAmountUI = {
+type FiatCryptoAmountUI = {
   amountString: string,
   symbolString: string,
   currencyName: string,
   feeString: string
 }
 
-type fiatCurrentAmountUI = {
+type FiatCurrentAmountUI = {
   amount: string,
   difference: number,
   percentage: string
 }
 
-export type TransactionDetailsOwnProps = {
-  edgeTransaction: EdgeTransaction,
-  contacts: Array<GuiContact>,
-  subcategoriesList: Array<string>,
-  thumbnailPath: string,
-  currencyInfo: EdgeCurrencyInfo | null,
-  currencyCode: string,
-  guiWallet: GuiWallet,
-  currentFiatAmount: string,
-  walletDefaultDenomProps: EdgeDenomination,
-  theme: EdgeTheme,
-  destinationDenomination?: EdgeDenomination,
-  destinationWallet?: GuiWallet
-}
-
-export type TransactionDetailsDispatchProps = {
-  setNewSubcategory: (string, Array<string>) => void,
-  setTransactionDetails: (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => void,
-  getSubcategories: () => void
-}
-
-type State = {
-  payeeName: string, // remove commenting once metaData in Redux
-  thumbnailPath: string,
-  notes: string,
-  amountFiat: string,
-  direction: string,
-  bizId: number,
-  miscJson: any, // core receives this as a string
-  category: string,
-  subCategory: string,
-  styles: StyleSheet
-}
-
-type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDispatchProps
-
-export class TransactionDetails extends Component<TransactionDetailsProps, State> {
-  constructor(props: TransactionDetailsProps) {
+// Only exported for unit-testing purposes
+export class TransactionDetailsComponent extends Component<Props, State> {
+  constructor(props: Props) {
     super(props)
     const { thumbnailPath } = props
     const edgeTransaction = {
@@ -152,7 +157,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     return { category: defaultCategory, subCategory: '' }
   }
 
-  static getDerivedStateFromProps(props: TransactionDetailsProps) {
+  static getDerivedStateFromProps(props: Props) {
     return { styles: getStyles(props.theme) }
   }
 
@@ -161,7 +166,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   // Inputs Components
-  onChangePayee = (payeeName: string, thumbnailPath: string) => {
+  onChangePayee = (payeeName: string, thumbnailPath?: string) => {
     this.setState({ payeeName, thumbnailPath })
   }
 
@@ -338,7 +343,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   // Crypto Amount Logic
-  getReceivedCryptoAmount = () => {
+  getReceivedCryptoAmount(): FiatCryptoAmountUI {
     const { edgeTransaction, walletDefaultDenomProps, guiWallet } = this.props
 
     const absoluteAmount = abs(edgeTransaction.nativeAmount)
@@ -355,7 +360,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     }
   }
 
-  getSentCryptoAmount = () => {
+  getSentCryptoAmount(): FiatCryptoAmountUI {
     const { edgeTransaction, walletDefaultDenomProps, guiWallet } = this.props
 
     const absoluteAmount = abs(edgeTransaction.nativeAmount)
@@ -389,7 +394,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   // Exchange Rate Fiat
-  getCurrentFiat = () => {
+  getCurrentFiat(): FiatCurrentAmountUI {
     const { currentFiatAmount } = this.props
     const { amountFiat } = this.state
 
@@ -412,10 +417,10 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory, styles } = this.state
     const { fiatCurrencyCode } = guiWallet
 
-    const crypto: fiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
+    const crypto: FiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
     const fiatSymbol = UTILS.getFiatSymbol(guiWallet.fiatCurrencyCode)
     const fiatValue = UTILS.truncateDecimals(amountFiat.replace('-', ''), 2, true)
-    const currentFiat: fiatCurrentAmountUI = this.getCurrentFiat()
+    const currentFiat: FiatCurrentAmountUI = this.getCurrentFiat()
     const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recipient
     const personName = payeeName && payeeName !== '' ? this.state.payeeName : personLabel
     const personHeader = sprintf(s.strings.transaction_details_person_name, personLabel)
@@ -493,85 +498,131 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 }
 
-const getStyles = (theme: EdgeTheme) => {
-  const { rem } = theme
-  return StyleSheet.create({
-    tilesContainer: {
-      flex: 1,
-      width: '100%',
-      flexDirection: 'column'
+const getStyles = cacheStyles(theme => ({
+  tilesContainer: {
+    flex: 1,
+    width: '100%',
+    flexDirection: 'column'
+  },
+  tileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: theme.rem(0.25)
+  },
+  tileColumn: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    margin: theme.rem(0.25)
+  },
+  tileTextBottom: {
+    color: theme.primaryText,
+    fontSize: theme.rem(1)
+  },
+  tileAvatarIcon: {
+    color: theme.primaryText,
+    marginRight: theme.rem(0.5)
+  },
+  tileThumbnail: {
+    width: theme.rem(2),
+    height: theme.rem(2),
+    borderRadius: theme.rem(1),
+    marginRight: theme.rem(0.5)
+  },
+  tileTextPrice: {
+    flex: 1,
+    color: theme.primaryText,
+    fontSize: theme.rem(1)
+  },
+  tileTextPriceChangeUp: {
+    color: theme.accentTextPositive,
+    fontSize: theme.rem(1)
+  },
+  tileTextPriceChangeDown: {
+    color: theme.accentTextNegative,
+    fontSize: theme.rem(1)
+  },
+  tileCategory: {
+    paddingHorizontal: theme.rem(0.5),
+    paddingVertical: theme.rem(0.25),
+    marginVertical: theme.rem(0.25),
+    borderWidth: 1,
+    borderColor: theme.selectButtonOutline,
+    borderRadius: 3
+  },
+  tileCategoryText: {
+    color: theme.selectButtonText,
+    fontSize: theme.rem(1)
+  },
+  tileSubCategoryText: {
+    marginVertical: theme.rem(0.25),
+    marginHorizontal: theme.rem(0.75),
+    color: theme.primaryText
+  },
+  textTransactionData: {
+    color: theme.selectButtonText,
+    marginVertical: theme.rem(1.25),
+    fontSize: theme.rem(1),
+    width: '100%',
+    textAlign: 'center'
+  },
+  saveButtonContainer: {
+    width: '100%',
+    paddingBottom: theme.rem(1),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  saveButton: {
+    width: '80%',
+    borderRadius: theme.rem(1.5),
+    height: theme.rem(3)
+  }
+}))
+
+export const TransactionDetailsScene = connect(
+  (state: ReduxState, ownProps: OwnProps): StateProps => {
+    const { edgeTransaction } = ownProps
+    const walletId = edgeTransaction.wallet ? edgeTransaction.wallet.id : null
+    const wallet = walletId ? getWallet(state, walletId) : getSelectedWallet(state)
+    const contacts = state.contacts
+    const subcategoriesList = state.ui.scenes.transactionDetails.subcategories.sort()
+    const settings = getSettings(state)
+    const currencyCode = edgeTransaction.currencyCode
+    const plugins = getPlugins(state)
+    const allCurrencyInfos = plugins.allCurrencyInfos
+    const currencyInfo = UTILS.getCurrencyInfo(allCurrencyInfos, currencyCode)
+    const walletDefaultDenomProps: EdgeDenomination = UTILS.isCryptoParentCurrency(wallet, edgeTransaction.currencyCode)
+      ? UTILS.getWalletDefaultDenomProps(wallet, settings)
+      : UTILS.getWalletDefaultDenomProps(wallet, settings, edgeTransaction.currencyCode)
+
+    const nativeAmount = edgeTransaction && edgeTransaction.nativeAmount ? bns.abs(edgeTransaction.nativeAmount) : ''
+    const cryptoAmount = convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
+    const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, parseFloat(cryptoAmount))
+
+    const { swapData } = edgeTransaction
+    const destinationDenomination = swapData ? getDisplayDenomination(state, swapData.payoutCurrencyCode) : undefined
+    const destinationWallet = swapData ? getWallet(state, swapData.payoutWalletId) : undefined
+
+    return {
+      contacts,
+      currencyCode,
+      currencyInfo,
+      currentFiatAmount,
+      destinationDenomination,
+      destinationWallet,
+      guiWallet: wallet,
+      subcategoriesList,
+      walletDefaultDenomProps
+    }
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    getSubcategories() {
+      dispatch(getSubcategories())
     },
-    tileRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      margin: rem(0.25)
+    setNewSubcategory(newSubcategory: string) {
+      dispatch(setNewSubcategory(newSubcategory))
     },
-    tileColumn: {
-      flexDirection: 'column',
-      justifyContent: 'center',
-      margin: rem(0.25)
-    },
-    tileTextBottom: {
-      color: theme.primaryText,
-      fontSize: rem(1)
-    },
-    tileAvatarIcon: {
-      color: theme.primaryText,
-      marginRight: rem(0.5)
-    },
-    tileThumbnail: {
-      width: rem(2),
-      height: rem(2),
-      borderRadius: rem(1),
-      marginRight: rem(0.5)
-    },
-    tileTextPrice: {
-      flex: 1,
-      color: theme.primaryText,
-      fontSize: rem(1)
-    },
-    tileTextPriceChangeUp: {
-      color: theme.accentTextPositive,
-      fontSize: rem(1)
-    },
-    tileTextPriceChangeDown: {
-      color: theme.accentTextNegative,
-      fontSize: rem(1)
-    },
-    tileCategory: {
-      paddingHorizontal: rem(0.5),
-      paddingVertical: rem(0.25),
-      marginVertical: rem(0.25),
-      borderWidth: 1,
-      borderColor: theme.selectButtonOutline,
-      borderRadius: 3
-    },
-    tileCategoryText: {
-      color: theme.selectButtonText,
-      fontSize: rem(1)
-    },
-    tileSubCategoryText: {
-      marginVertical: rem(0.25),
-      marginHorizontal: rem(0.75),
-      color: theme.primaryText
-    },
-    textTransactionData: {
-      color: theme.selectButtonText,
-      marginVertical: rem(1.25),
-      fontSize: rem(1),
-      width: '100%',
-      textAlign: 'center'
-    },
-    saveButtonContainer: {
-      width: '100%',
-      paddingBottom: rem(1),
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    saveButton: {
-      width: '80%',
-      borderRadius: rem(1.5),
-      height: rem(3)
+    setTransactionDetails(transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) {
+      dispatch(setTransactionDetails(transaction, edgeMetadata))
     }
   })
-}
+)(withTheme(TransactionDetailsComponent))
