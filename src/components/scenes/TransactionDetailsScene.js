@@ -9,14 +9,19 @@ import SafariView from 'react-native-safari-view'
 import slowlog from 'react-native-slowlog'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
+import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
+import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/Settings/selectors.js'
 import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getSelectedWallet, getWallet } from '../../modules/UI/selectors.js'
 import { type EdgeTheme } from '../../reducers/ThemeReducer.js'
 import { iconSize } from '../../styles/scenes/TransactionDetailsStyle.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils.js'
@@ -30,6 +35,42 @@ import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInp
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
 import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPersonInput.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
+
+type OwnProps = {
+  edgeTransaction: EdgeTransaction,
+  thumbnailPath?: string
+}
+type StateProps = {
+  contacts: Array<GuiContact>,
+  currencyCode: string,
+  currencyInfo?: EdgeCurrencyInfo,
+  currentFiatAmount: number,
+  destinationDenomination?: EdgeDenomination,
+  destinationWallet?: GuiWallet,
+  guiWallet: GuiWallet,
+  subcategoriesList: Array<string>,
+  theme: EdgeTheme,
+  walletDefaultDenomProps: EdgeDenomination
+}
+type DispatchProps = {
+  getSubcategories(): void,
+  setNewSubcategory(newSubcategory: string): void,
+  setTransactionDetails(transaction: EdgeTransaction, edgeMetadata: EdgeMetadata): void
+}
+type Props = OwnProps & StateProps & DispatchProps
+
+type State = {
+  payeeName: string, // remove commenting once metaData in Redux
+  thumbnailPath?: string,
+  notes: string,
+  amountFiat: string,
+  direction: string,
+  bizId: number,
+  miscJson: any, // core receives this as a string
+  category: string,
+  subCategory: string,
+  styles: StyleSheet
+}
 
 const categories = {
   exchange: {
@@ -50,57 +91,22 @@ const categories = {
   }
 }
 
-type fiatCryptoAmountUI = {
+type FiatCryptoAmountUI = {
   amountString: string,
   symbolString: string,
   currencyName: string,
   feeString: string
 }
 
-type fiatCurrentAmountUI = {
+type FiatCurrentAmountUI = {
   amount: string,
   difference: number,
   percentage: string
 }
 
-export type TransactionDetailsOwnProps = {
-  edgeTransaction: EdgeTransaction,
-  contacts: Array<GuiContact>,
-  subcategoriesList: Array<string>,
-  thumbnailPath: string,
-  currencyInfo: EdgeCurrencyInfo | null,
-  currencyCode: string,
-  guiWallet: GuiWallet,
-  currentFiatAmount: string,
-  walletDefaultDenomProps: EdgeDenomination,
-  theme: EdgeTheme,
-  destinationDenomination?: EdgeDenomination,
-  destinationWallet?: GuiWallet
-}
-
-export type TransactionDetailsDispatchProps = {
-  setNewSubcategory: (string, Array<string>) => void,
-  setTransactionDetails: (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => void,
-  getSubcategories: () => void
-}
-
-type State = {
-  payeeName: string, // remove commenting once metaData in Redux
-  thumbnailPath: string,
-  notes: string,
-  amountFiat: string,
-  direction: string,
-  bizId: number,
-  miscJson: any, // core receives this as a string
-  category: string,
-  subCategory: string,
-  styles: StyleSheet
-}
-
-type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDispatchProps
-
-export class TransactionDetails extends Component<TransactionDetailsProps, State> {
-  constructor(props: TransactionDetailsProps) {
+// Only exported for unit-testing purposes
+export class TransactionDetailsComponent extends Component<Props, State> {
+  constructor(props: Props) {
     super(props)
     const { thumbnailPath } = props
     const edgeTransaction = {
@@ -152,7 +158,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     return { category: defaultCategory, subCategory: '' }
   }
 
-  static getDerivedStateFromProps(props: TransactionDetailsProps) {
+  static getDerivedStateFromProps(props: Props) {
     return { styles: getStyles(props.theme) }
   }
 
@@ -161,7 +167,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   // Inputs Components
-  onChangePayee = (payeeName: string, thumbnailPath: string) => {
+  onChangePayee = (payeeName: string, thumbnailPath?: string) => {
     this.setState({ payeeName, thumbnailPath })
   }
 
@@ -338,7 +344,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   // Crypto Amount Logic
-  getReceivedCryptoAmount = () => {
+  getReceivedCryptoAmount(): FiatCryptoAmountUI {
     const { edgeTransaction, walletDefaultDenomProps, guiWallet } = this.props
 
     const absoluteAmount = abs(edgeTransaction.nativeAmount)
@@ -355,7 +361,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     }
   }
 
-  getSentCryptoAmount = () => {
+  getSentCryptoAmount(): FiatCryptoAmountUI {
     const { edgeTransaction, walletDefaultDenomProps, guiWallet } = this.props
 
     const absoluteAmount = abs(edgeTransaction.nativeAmount)
@@ -389,7 +395,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   // Exchange Rate Fiat
-  getCurrentFiat = () => {
+  getCurrentFiat(): FiatCurrentAmountUI {
     const { currentFiatAmount } = this.props
     const { amountFiat } = this.state
 
@@ -412,10 +418,10 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory, styles } = this.state
     const { fiatCurrencyCode } = guiWallet
 
-    const crypto: fiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
+    const crypto: FiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
     const fiatSymbol = UTILS.getFiatSymbol(guiWallet.fiatCurrencyCode)
     const fiatValue = UTILS.truncateDecimals(amountFiat.replace('-', ''), 2, true)
-    const currentFiat: fiatCurrentAmountUI = this.getCurrentFiat()
+    const currentFiat: FiatCurrentAmountUI = this.getCurrentFiat()
     const personLabel = direction === 'receive' ? s.strings.transaction_details_sender : s.strings.transaction_details_recipient
     const personName = payeeName && payeeName !== '' ? this.state.payeeName : personLabel
     const personHeader = sprintf(s.strings.transaction_details_person_name, personLabel)
@@ -575,3 +581,53 @@ const getStyles = (theme: EdgeTheme) => {
     }
   })
 }
+
+export const TransactionDetailsScene = connect(
+  (state: ReduxState, ownProps: OwnProps): StateProps => {
+    const { edgeTransaction } = ownProps
+    const walletId = edgeTransaction.wallet ? edgeTransaction.wallet.id : null
+    const wallet = walletId ? getWallet(state, walletId) : getSelectedWallet(state)
+    const contacts = state.contacts
+    const subcategoriesList = state.ui.scenes.transactionDetails.subcategories.sort()
+    const settings = getSettings(state)
+    const currencyCode = edgeTransaction.currencyCode
+    const plugins = getPlugins(state)
+    const allCurrencyInfos = plugins.allCurrencyInfos
+    const currencyInfo = UTILS.getCurrencyInfo(allCurrencyInfos, currencyCode)
+    const walletDefaultDenomProps: EdgeDenomination = UTILS.isCryptoParentCurrency(wallet, edgeTransaction.currencyCode)
+      ? UTILS.getWalletDefaultDenomProps(wallet, settings)
+      : UTILS.getWalletDefaultDenomProps(wallet, settings, edgeTransaction.currencyCode)
+
+    const nativeAmount = edgeTransaction && edgeTransaction.nativeAmount ? bns.abs(edgeTransaction.nativeAmount) : ''
+    const cryptoAmount = convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
+    const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, parseFloat(cryptoAmount))
+
+    const { swapData } = edgeTransaction
+    const destinationDenomination = swapData ? getDisplayDenomination(state, swapData.payoutCurrencyCode) : undefined
+    const destinationWallet = swapData ? getWallet(state, swapData.payoutWalletId) : undefined
+
+    return {
+      contacts,
+      currencyCode,
+      currencyInfo,
+      currentFiatAmount,
+      destinationDenomination,
+      destinationWallet,
+      guiWallet: wallet,
+      subcategoriesList,
+      theme: state.theme,
+      walletDefaultDenomProps
+    }
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    getSubcategories() {
+      dispatch(getSubcategories())
+    },
+    setNewSubcategory(newSubcategory: string) {
+      dispatch(setNewSubcategory(newSubcategory))
+    },
+    setTransactionDetails(transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) {
+      dispatch(setTransactionDetails(transaction, edgeMetadata))
+    }
+  })
+)(TransactionDetailsComponent)
