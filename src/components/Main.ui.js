@@ -61,7 +61,6 @@ import Request from '../connectors/scenes/RequestConnector.js'
 import Scan from '../connectors/scenes/ScanConnector'
 import SendConfirmation from '../connectors/scenes/SendConfirmationConnector.js'
 import SettingsOverview from '../connectors/scenes/SettingsOverviewConnector'
-import TransactionDetails from '../connectors/scenes/TransactionDetailsConnector.js'
 import TransactionListConnector from '../connectors/scenes/TransactionListConnector'
 import TransactionsExportSceneConnector from '../connectors/scenes/TransactionsExportSceneConnector'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
@@ -98,6 +97,7 @@ import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
 import { NotificationScene } from './scenes/NotificationScene'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
+import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
 import { showToast } from './services/AirshipInstance.js'
 
 const RouterWithRedux = connect()(Router)
@@ -188,7 +188,7 @@ export class MainComponent extends Component<Props> {
         navTransparent
         onEnter={() => this.props.requestPermission('contacts')}
         clone
-        component={ifLoggedIn(TransactionDetails)}
+        component={ifLoggedIn(TransactionDetailsScene)}
         renderTitle={TransactionDetailsTitle}
         renderLeftButton={this.renderBackButton()}
         renderRightButton={this.renderMenuButton()}
