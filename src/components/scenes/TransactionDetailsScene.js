@@ -19,8 +19,8 @@ import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/S
 import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getSelectedWallet, getWallet } from '../../modules/UI/selectors.js'
-import { type EdgeTheme } from '../../reducers/ThemeReducer.js'
 import { iconSize } from '../../styles/scenes/TransactionDetailsStyle.js'
+import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
@@ -49,7 +49,6 @@ type StateProps = {
   destinationWallet?: GuiWallet,
   guiWallet: GuiWallet,
   subcategoriesList: Array<string>,
-  theme: EdgeTheme,
   walletDefaultDenomProps: EdgeDenomination
 }
 type DispatchProps = {
@@ -57,7 +56,7 @@ type DispatchProps = {
   setNewSubcategory(newSubcategory: string): void,
   setTransactionDetails(transaction: EdgeTransaction, edgeMetadata: EdgeMetadata): void
 }
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type State = {
   payeeName: string, // remove commenting once metaData in Redux
@@ -499,88 +498,85 @@ export class TransactionDetailsComponent extends Component<Props, State> {
   }
 }
 
-const getStyles = (theme: EdgeTheme) => {
-  const { rem } = theme
-  return StyleSheet.create({
-    tilesContainer: {
-      flex: 1,
-      width: '100%',
-      flexDirection: 'column'
-    },
-    tileRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      margin: rem(0.25)
-    },
-    tileColumn: {
-      flexDirection: 'column',
-      justifyContent: 'center',
-      margin: rem(0.25)
-    },
-    tileTextBottom: {
-      color: theme.primaryText,
-      fontSize: rem(1)
-    },
-    tileAvatarIcon: {
-      color: theme.primaryText,
-      marginRight: rem(0.5)
-    },
-    tileThumbnail: {
-      width: rem(2),
-      height: rem(2),
-      borderRadius: rem(1),
-      marginRight: rem(0.5)
-    },
-    tileTextPrice: {
-      flex: 1,
-      color: theme.primaryText,
-      fontSize: rem(1)
-    },
-    tileTextPriceChangeUp: {
-      color: theme.accentTextPositive,
-      fontSize: rem(1)
-    },
-    tileTextPriceChangeDown: {
-      color: theme.accentTextNegative,
-      fontSize: rem(1)
-    },
-    tileCategory: {
-      paddingHorizontal: rem(0.5),
-      paddingVertical: rem(0.25),
-      marginVertical: rem(0.25),
-      borderWidth: 1,
-      borderColor: theme.selectButtonOutline,
-      borderRadius: 3
-    },
-    tileCategoryText: {
-      color: theme.selectButtonText,
-      fontSize: rem(1)
-    },
-    tileSubCategoryText: {
-      marginVertical: rem(0.25),
-      marginHorizontal: rem(0.75),
-      color: theme.primaryText
-    },
-    textTransactionData: {
-      color: theme.selectButtonText,
-      marginVertical: rem(1.25),
-      fontSize: rem(1),
-      width: '100%',
-      textAlign: 'center'
-    },
-    saveButtonContainer: {
-      width: '100%',
-      paddingBottom: rem(1),
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    saveButton: {
-      width: '80%',
-      borderRadius: rem(1.5),
-      height: rem(3)
-    }
-  })
-}
+const getStyles = cacheStyles(theme => ({
+  tilesContainer: {
+    flex: 1,
+    width: '100%',
+    flexDirection: 'column'
+  },
+  tileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: theme.rem(0.25)
+  },
+  tileColumn: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    margin: theme.rem(0.25)
+  },
+  tileTextBottom: {
+    color: theme.primaryText,
+    fontSize: theme.rem(1)
+  },
+  tileAvatarIcon: {
+    color: theme.primaryText,
+    marginRight: theme.rem(0.5)
+  },
+  tileThumbnail: {
+    width: theme.rem(2),
+    height: theme.rem(2),
+    borderRadius: theme.rem(1),
+    marginRight: theme.rem(0.5)
+  },
+  tileTextPrice: {
+    flex: 1,
+    color: theme.primaryText,
+    fontSize: theme.rem(1)
+  },
+  tileTextPriceChangeUp: {
+    color: theme.accentTextPositive,
+    fontSize: theme.rem(1)
+  },
+  tileTextPriceChangeDown: {
+    color: theme.accentTextNegative,
+    fontSize: theme.rem(1)
+  },
+  tileCategory: {
+    paddingHorizontal: theme.rem(0.5),
+    paddingVertical: theme.rem(0.25),
+    marginVertical: theme.rem(0.25),
+    borderWidth: 1,
+    borderColor: theme.selectButtonOutline,
+    borderRadius: 3
+  },
+  tileCategoryText: {
+    color: theme.selectButtonText,
+    fontSize: theme.rem(1)
+  },
+  tileSubCategoryText: {
+    marginVertical: theme.rem(0.25),
+    marginHorizontal: theme.rem(0.75),
+    color: theme.primaryText
+  },
+  textTransactionData: {
+    color: theme.selectButtonText,
+    marginVertical: theme.rem(1.25),
+    fontSize: theme.rem(1),
+    width: '100%',
+    textAlign: 'center'
+  },
+  saveButtonContainer: {
+    width: '100%',
+    paddingBottom: theme.rem(1),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  saveButton: {
+    width: '80%',
+    borderRadius: theme.rem(1.5),
+    height: theme.rem(3)
+  }
+}))
 
 export const TransactionDetailsScene = connect(
   (state: ReduxState, ownProps: OwnProps): StateProps => {
@@ -615,7 +611,6 @@ export const TransactionDetailsScene = connect(
       destinationWallet,
       guiWallet: wallet,
       subcategoriesList,
-      theme: state.theme,
       walletDefaultDenomProps
     }
   },
@@ -630,4 +625,4 @@ export const TransactionDetailsScene = connect(
       dispatch(setTransactionDetails(transaction, edgeMetadata))
     }
   })
-)(TransactionDetailsComponent)
+)(withTheme(TransactionDetailsComponent))
