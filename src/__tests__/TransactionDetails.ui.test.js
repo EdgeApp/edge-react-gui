@@ -6,7 +6,7 @@ import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { TransactionDetailsComponent } from '../components/scenes/TransactionDetailsScene.js'
-import { themeTest as theme } from '../theme/variables/edgeDark.js'
+import { getTheme } from '../theme/ThemeContext.js'
 import { type GuiWallet } from '../types/types.js'
 
 const typeHack: any = {
@@ -78,7 +78,7 @@ describe('TransactionDetails.ui', () => {
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn(),
-      theme
+      theme: getTheme()
     }
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
@@ -111,7 +111,7 @@ describe('TransactionDetails.ui', () => {
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn(),
-      theme
+      theme: getTheme()
     }
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
@@ -144,7 +144,7 @@ describe('TransactionDetails.ui', () => {
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn(),
-      theme
+      theme: getTheme()
     }
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
@@ -180,7 +180,7 @@ describe('TransactionDetails.ui', () => {
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn(),
-      theme
+      theme: getTheme()
     }
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 

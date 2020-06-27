@@ -14,6 +14,7 @@ import s from '../locales/strings.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
 import { B } from '../styles/common/textStyles.js'
+import { getTheme } from '../theme/ThemeContext.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
@@ -104,7 +105,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     case 'getSeed': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const { theme } = state
+        const theme = getTheme()
         const icon = <FontAwesome style={{ left: theme.rem(0.125) }} name="user-secret" color={theme.tileBackground} size={theme.rem(2)} />
 
         const { account } = state.core
@@ -176,7 +177,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     case 'getRawKeys': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const { theme } = state
+        const theme = getTheme()
         const icon = <FontAwesome style={{ left: theme.rem(0.125) }} name="user-secret" color={theme.tileBackground} size={theme.rem(2)} />
 
         const { account } = state.core

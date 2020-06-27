@@ -5,14 +5,15 @@ import { type EdgeContext, type EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorl
 import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io.js'
 import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
-import React, { PureComponent } from 'react'
+import * as React from 'react'
 import { Alert, AppState } from 'react-native'
 import SplashScreen from 'react-native-smart-splash-screen'
 
 import ENV from '../../../env.json'
+import { ThemeProvider } from '../../theme/ThemeContext.js'
 import { allPlugins } from '../../util/corePlugins.js'
 import { fakeUser } from '../../util/fake-user.js'
-import { EdgeCoreManagerLoadingScene } from '../scenes/EdgeCoreManagerLoadingScene.js'
+import { LoadingScene } from '../scenes/LoadingScene.js'
 import { Services } from './Services.js'
 
 type Props = {
@@ -44,7 +45,7 @@ const nativeIo = isReactNative
  * Mounts the edge-core-js WebView, and then mounts the rest of the app
  * once the core context is ready.
  */
-export class EdgeCoreManager extends PureComponent<Props, State> {
+export class EdgeCoreManager extends React.PureComponent<Props, State> {
   splashHidden: boolean = false
   paused: boolean = false
 
@@ -115,15 +116,17 @@ export class EdgeCoreManager extends PureComponent<Props, State> {
     )
   }
 
-  render() {
+  render(): React.Node {
     const { context, counter } = this.state
     const key = `redux${counter}`
 
     return (
-      <>
-        {context == null ? <EdgeCoreManagerLoadingScene /> : <Services key={key} context={context} />}
-        {this.renderCore()}
-      </>
+      <ThemeProvider>
+        <>
+          {context == null ? <LoadingScene /> : <Services key={key} context={context} />}
+          {this.renderCore()}
+        </>
+      </ThemeProvider>
     )
   }
 }
