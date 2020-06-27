@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, FlatList, Image, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
@@ -19,10 +19,10 @@ import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioReques
 import { getExchangeDenomination } from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles as requestListStyles } from '../../styles/scenes/FioRequestListStyle'
-import styles from '../../styles/scenes/TransactionListStyle'
 import { THEME } from '../../theme/variables/airbitz'
 import type { State } from '../../types/reduxTypes'
 import type { FioRequest, GuiWallet } from '../../types/types'
+import { scale } from '../../util/scaling.js'
 import FullScreenLoader from '../common/FullScreenLoader'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
@@ -455,3 +455,25 @@ export class FioRequestList extends Component<Props, LocalState> {
     )
   }
 }
+
+const rawStyles = {
+  transactionsScrollWrap: {
+    flex: 1
+  },
+  singleDateArea: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    flex: 3,
+    padding: scale(3),
+    paddingLeft: scale(15),
+    flexDirection: 'row',
+    paddingRight: scale(24)
+  },
+  leftDateArea: {
+    flex: 1
+  },
+  formattedDate: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(14)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
