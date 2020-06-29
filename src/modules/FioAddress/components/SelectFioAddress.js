@@ -1,7 +1,8 @@
 // @flow
+
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { AddressModal } from '../../../components/modals/AddressModal'
@@ -10,9 +11,10 @@ import { Airship, showError } from '../../../components/services/AirshipInstance
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
 import { styles as CryptoExchangeSceneStyle } from '../../../styles/scenes/CryptoExchangeSceneStyles'
-import { styles } from '../../../styles/scenes/FioRequestConfirmationStyle'
+import { THEME } from '../../../theme/variables/airbitz.js'
 import type { State } from '../../../types/reduxTypes'
 import type { FioRequest, GuiWallet } from '../../../types/types'
+import { scale } from '../../../util/scaling.js'
 import { TextAndIconButton } from '../../UI/components/Buttons/TextAndIconButton.ui.js'
 import Text from '../../UI/components/FormattedText/FormattedText.ui.js'
 import * as UI_SELECTORS from '../../UI/selectors.js'
@@ -190,6 +192,57 @@ class SelectFioAddress extends Component<Props, LocalState> {
     )
   }
 }
+
+const rawStyles = {
+  selectContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  selectFullWidth: {
+    width: '100%',
+    paddingHorizontal: scale(30),
+    paddingVertical: scale(10)
+  },
+  title: {
+    fontSize: scale(28),
+    color: THEME.COLORS.WHITE,
+    marginTop: scale(20),
+    marginBottom: scale(10)
+  },
+  text: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16)
+  },
+  error: {
+    color: THEME.COLORS.ACCENT_RED,
+    fontSize: scale(12),
+    width: '100%'
+  },
+  loading: {
+    flex: 1,
+    marginTop: scale(40),
+    alignSelf: 'center'
+  },
+  selectAddressContainer: {
+    height: scale(18)
+  },
+  selectAddressText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(14)
+  },
+  selectAddressTextPressed: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(14)
+  },
+  memoContainer: {
+    marginTop: scale(10),
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 const mapStateToProps = (state: State): SelectFioAddressProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
