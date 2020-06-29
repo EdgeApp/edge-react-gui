@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ScrollView, TouchableWithoutFeedback, View } from 'react-native'
+import { ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import s from '../../locales/strings.js'
@@ -10,8 +10,9 @@ import { updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import { styles } from '../../styles/scenes/FioConnectWalletStyle'
+import { THEME } from '../../theme/variables/airbitz.js'
 import type { FioConnectionWalletItem } from '../../types/types'
+import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError, showToast } from '../services/AirshipInstance'
 
@@ -153,3 +154,62 @@ export class FioConnectWalletConfirmScene extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  info: {
+    backgroundColor: THEME.COLORS.SECONDARY,
+    paddingVertical: THEME.rem(1),
+    paddingHorizontal: THEME.rem(1),
+    marginBottom: THEME.rem(0.25)
+  },
+  title: {
+    color: THEME.COLORS.TRANSACTION_DETAILS_GREY_1,
+    marginBottom: THEME.rem(0.25),
+    fontSize: THEME.rem(0.75),
+    fontWeight: 'normal',
+    textAlign: 'left'
+  },
+  content: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(15),
+    textAlign: 'left'
+  },
+  spacer: {
+    paddingTop: scale(20)
+  },
+  checkTitle: {
+    fontSize: THEME.rem(0.75),
+    color: THEME.COLORS.WHITE,
+    marginLeft: scale(15)
+  },
+  checkBox: {
+    borderStyle: 'solid',
+    borderWidth: scale(2),
+    borderColor: THEME.COLORS.WHITE,
+    borderRadius: 15,
+    width: THEME.rem(1.5),
+    height: THEME.rem(1.5),
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  checkBoxIconOk: {
+    width: THEME.rem(1),
+    height: THEME.rem(1),
+    borderRadius: 12,
+    backgroundColor: THEME.COLORS.ACCENT_MINT
+  },
+  checkBoxContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: scale(8),
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: THEME.COLORS.WHITE
+  },
+  confirmContainer: {
+    paddingHorizontal: THEME.rem(2)
+  },
+  wallet: {
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
