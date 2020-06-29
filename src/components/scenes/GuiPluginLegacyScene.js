@@ -2,7 +2,7 @@
 
 import { type EdgeCurrencyWallet, type EdgeMetadata } from 'edge-core-js'
 import React from 'react'
-import { BackHandler, View } from 'react-native'
+import { BackHandler, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
@@ -17,7 +17,7 @@ import BackButton from '../../modules/UI/components/Header/Component/BackButton.
 import { PluginBridge, pop as pluginPop } from '../../modules/UI/scenes/Plugins/api'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import type { GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
-import styles from '../../styles/scenes/PluginsStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { type GuiPlugin } from '../../types/GuiPluginTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -314,6 +314,21 @@ class GuiPluginLegacy extends React.Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  titleStyle: {
+    alignSelf: 'center',
+    fontSize: 20,
+    color: THEME.COLORS.WHITE,
+    fontFamily: THEME.FONTS.DEFAULT
+  },
+  titleWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 const mapStateToProps = state => {
   const { account } = state.core
