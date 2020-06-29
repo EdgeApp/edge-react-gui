@@ -2,14 +2,14 @@
 
 import { FormField, MaterialInputStyle } from 'edge-components'
 import React, { Component } from 'react'
-import { FlatList, Image, TouchableHighlight, View } from 'react-native'
+import { FlatList, Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { getCountry } from 'react-native-localize'
 
 import { COUNTRY_CODES, FLAG, FLAG_LOGO_URL, FONT_AWESOME } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import styles from '../../styles/components/CountrySelectionModalStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
 import { type AirshipBridge, AirshipModal, IconCircle } from './modalParts.js'
 
@@ -109,3 +109,51 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
 
   keyExtractor = (item: { filename?: string, name: string, 'alpha-2': string }, index: number) => item.name
 }
+
+const rawStyles = {
+  singleCountry: {
+    height: scale(60),
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.COUNTRY_SELECTION_MODAL_GRAY_1,
+    padding: scale(10),
+    paddingRight: scale(15),
+    paddingLeft: scale(15)
+  },
+  singleCountryWrap: {
+    flexDirection: 'column',
+    flex: 1
+  },
+  countryInfoWrap: {
+    flexDirection: 'row',
+    height: scale(40),
+    flex: 1,
+    justifyContent: 'space-between'
+  },
+  countryLeft: {
+    flexDirection: 'row'
+  },
+  countryLogo: {
+    width: scale(40),
+    height: scale(40),
+    marginRight: scale(10)
+  },
+  countryLeftTextWrap: {
+    justifyContent: 'center'
+  },
+  countryName: {
+    fontSize: scale(16),
+    color: THEME.COLORS.COUNTRY_SELECTION_MODAL_GRAY_2,
+    textAlignVertical: 'center'
+  },
+  underlayColor: {
+    color: THEME.COLORS.GRAY_4
+  },
+  selectedItem: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    borderLeftWidth: scale(1),
+    borderLeftColor: THEME.COLORS.GRAY_3,
+    borderRightWidth: scale(1),
+    borderRightColor: THEME.COLORS.GRAY_3
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
