@@ -7,8 +7,7 @@ import Modal from 'react-native-modal'
 
 import * as Constants from '../../constants/indexConstants.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import { StaticModalStyle } from '../../styles/components/StaticModalStyle.js'
-import THEME from '../../theme/variables/airbitz'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { getObjectDiff } from '../../util/utils'
 
 type Props = {
@@ -23,7 +22,7 @@ const gradientStart = { x: 0, y: 0 }
 const gradientEnd = { x: 1, y: 0 }
 const gradientColors = [THEME.COLORS.GRADIENT.DARK, THEME.COLORS.GRADIENT.LIGHT]
 
-class StaticModalComponent extends Component<Props> {
+export class StaticModalComponent extends Component<Props> {
   reset: TimeoutID
   shouldComponentUpdate(nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
@@ -50,8 +49,6 @@ class StaticModalComponent extends Component<Props> {
   }
 
   render() {
-    const styles = StaticModalStyle
-
     const deviceWidth = Dimensions.get('window').width
     const deviceHeight = Platform.OS === 'ios' ? Dimensions.get('window').height : require('react-native-extra-dimensions-android').get('REAL_WINDOW_HEIGHT')
 
@@ -74,4 +71,55 @@ class StaticModalComponent extends Component<Props> {
   }
 }
 
-export { StaticModalComponent }
+const screenDimensions = {
+  height: Dimensions.get('window').height,
+  width: Dimensions.get('window').width
+}
+
+const styles = {
+  container: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: (screenDimensions.height * 1) / 8,
+    left: 0,
+    right: 0
+  },
+  modalBox: {
+    paddingHorizontal: screenDimensions.width / 8,
+    width: screenDimensions.width,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch'
+  },
+  innerBox: {
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  header: {
+    position: 'relative',
+    height: 62,
+    width: '100%',
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+  bottom: {
+    position: 'relative',
+    width: '100%',
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  bodyRow: {
+    width: '100%',
+    padding: 15
+  },
+  bodyText: {
+    width: '100%',
+    textAlign: 'center',
+    fontFamily: THEME.FONTS.DEFAULT
+  },
+  shim: 20, // Styles.Shim.height,
+  icon: {
+    color: THEME.COLORS.WHITE
+  },
+  iconSize: 36
+}
