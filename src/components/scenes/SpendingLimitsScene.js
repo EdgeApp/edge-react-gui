@@ -2,7 +2,7 @@
 
 import { Gradient, Scene } from 'edge-components'
 import React, { Component } from 'react'
-import { Switch } from 'react-native'
+import { StyleSheet, Switch } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import s from '../../locales/strings.js'
@@ -11,7 +11,7 @@ import { PasswordInput } from '../../modules/UI/components/Modals/components/Pas
 import { TextInput } from '../../modules/UI/components/Modals/components/TextInput.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import type { SpendingLimits as SpendingLimitsType } from '../../reducers/SpendingLimitsReducer.js'
-import styles from '../../styles/scenes/SpendingLimitsStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 
 export type SpendingLimitsOwnProps = {
   transactionSpendingLimit: {
@@ -118,3 +118,21 @@ export class SpendingLimitsComponent extends Component<SpendingLimitsOwnProps, S
     )
   }
 }
+
+const rawStyles = {
+  scene: {
+    padding: 24,
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  spacer: {
+    height: 28
+  },
+  gradient: {
+    height: THEME.HEADER
+  },
+  bodyText: {
+    color: THEME.COLORS.PRIMARY,
+    fontFamily: THEME.FONTS.DEFAULT
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
