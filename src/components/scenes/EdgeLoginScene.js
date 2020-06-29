@@ -2,13 +2,14 @@
 
 import type { EdgeLobby } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, Text, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
-import { styles } from '../../styles/scenes/EdgeLoginSceneStyle.js'
+import { THEME } from '../../theme/variables/airbitz'
+import { isIphoneX } from '../../util/isIphoneX.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type EdgeLoginSceneProps = {
@@ -119,3 +120,98 @@ export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
     )
   }
 }
+
+const rawStyles = {
+  header: {
+    position: 'relative',
+    flex: 3,
+    flexDirection: 'column'
+  },
+  headerTopShim: {
+    flex: 2
+  },
+  headerImageContainer: {
+    flex: 4,
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+  image: {
+    width: 80,
+    height: 80
+  },
+  headerTextRow: {
+    flex: 3,
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+  headerBottomShim: {
+    flex: 1
+  },
+  body: {
+    position: 'relative',
+    flex: 4
+  },
+  buttonContainer: {
+    position: 'relative',
+    flex: 3,
+    flexDirection: 'column',
+    width: '100%',
+    justifyContent: 'flex-end'
+  },
+  buttons: {
+    marginRight: '5%',
+    marginLeft: '5%',
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    paddingBottom: isIphoneX ? 30 : 20
+  },
+  buttonsProcessing: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  spinnerContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  bodyText: {
+    marginRight: '5%',
+    marginLeft: '5%',
+    color: THEME.COLORS.GRAY_1,
+    fontSize: 18,
+    textAlign: 'center',
+    fontFamily: THEME.FONTS.DEFAULT
+  },
+  loadingTextBody: {
+    color: THEME.COLORS.GRAY_1,
+    fontSize: 18,
+    textAlign: 'center',
+    fontFamily: THEME.FONTS.DEFAULT,
+    marginBottom: 20
+  },
+  cancel: {
+    flex: 1,
+    marginRight: '1.5%',
+    backgroundColor: THEME.COLORS.GRAY_2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 3
+  },
+  cancelSolo: {
+    flex: 1,
+    backgroundColor: THEME.COLORS.GRAY_2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 3
+  },
+  submit: {
+    flex: 1,
+    marginLeft: '1.5%',
+    backgroundColor: THEME.COLORS.SECONDARY,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 3
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
