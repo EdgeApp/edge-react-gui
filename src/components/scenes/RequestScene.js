@@ -5,7 +5,7 @@ import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import type { RefObject } from 'react-native'
-import { ActivityIndicator, Clipboard, Dimensions, InputAccessoryView, Platform, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Clipboard, Dimensions, InputAccessoryView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import slowlog from 'react-native-slowlog'
@@ -19,9 +19,9 @@ import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/Exchan
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { RequestStatus } from '../../modules/UI/components/RequestStatus/RequestStatus.ui.js'
 import { ShareButtons } from '../../modules/UI/components/ShareButtons/ShareButtons.ui.js'
-import { styles } from '../../styles/scenes/RequestStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import { getObjectDiff } from '../../util/utils'
 import { launchModal } from '../common/ModalProvider.js'
 import { QrCode } from '../common/QrCode.js'
@@ -439,3 +439,43 @@ export class Request extends Component<Props, State> {
     }
   }
 }
+
+const rawStyles = {
+  main: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+
+  exchangeRateContainer: {
+    alignItems: 'center',
+    marginBottom: scale(10)
+  },
+
+  qrContainer: {
+    backgroundColor: THEME.COLORS.QR_CODE_BACKGROUND,
+    marginTop: scale(15),
+    borderRadius: scale(4),
+    padding: scale(4)
+  },
+
+  shareButtonsContainer: {
+    alignItems: 'stretch',
+    justifyContent: 'center'
+  },
+  accessoryView: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  accessoryBtn: {
+    paddingVertical: scale(7),
+    paddingHorizontal: scale(15)
+  },
+  accessoryText: {
+    color: THEME.COLORS.ACCENT_BLUE,
+    fontSize: scale(16)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
