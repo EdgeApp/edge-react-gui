@@ -34,14 +34,6 @@ type Props = {
   selectFromWalletForExchange: (walletId: string, currencyCode: string) => void
 }
 
-const HEADER_TEXT = s.strings.send_scan_header_text
-
-const DENIED_PERMISSION_TEXT = s.strings.scan_camera_permission_denied // blank string because way off-centered (not sure reason why)
-const OPEN_SETTINGS_TEXT = s.strings.open_settings
-const TRANSFER_TEXT = s.strings.fragment_transaction_transfer
-const ADDRESS_TEXT = s.strings.fragment_send_address
-const FLASH_TEXT = s.strings.fragment_send_flash
-
 export class Scan extends Component<Props> {
   constructor(props: Props) {
     super(props)
@@ -57,21 +49,21 @@ export class Scan extends Component<Props> {
             <TouchableHighlight style={styles.bottomButton} onPress={this._onPressTransfer} underlayColor={styleRaw.underlay.color}>
               <View style={styles.bottomButtonTextWrap}>
                 <FAIcon style={styles.transferIcon} name="share" size={scale(18)} />
-                <T style={styles.bottomButtonText}>{TRANSFER_TEXT}</T>
+                <T style={styles.bottomButtonText}>{s.strings.fragment_transaction_transfer}</T>
               </View>
             </TouchableHighlight>
 
             <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={styleRaw.underlay.color}>
               <View style={styles.bottomButtonTextWrap}>
                 <FAIcon style={styles.addressBookIcon} name="address-book-o" size={scale(18)} />
-                <T style={styles.bottomButtonText}>{ADDRESS_TEXT}</T>
+                <T style={styles.bottomButtonText}>{s.strings.fragment_send_address}</T>
               </View>
             </TouchableHighlight>
 
             <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={styleRaw.underlay.color}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon style={styles.flashIcon} name="ios-flash" size={scale(24)} />
-                <T style={styles.bottomButtonText}>{FLASH_TEXT}</T>
+                <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
               </View>
             </TouchableHighlight>
           </View>
@@ -124,9 +116,9 @@ export class Scan extends Component<Props> {
     if (this.props.cameraPermission === 'denied') {
       return (
         <View style={styles.cameraArea}>
-          <Text style={styles.cameraPermissionDeniedText}>{DENIED_PERMISSION_TEXT}</Text>
+          <Text style={styles.cameraPermissionDeniedText}>{s.strings.scan_camera_permission_denied}</Text>
           <TouchableHighlight style={styles.settingsButton} onPress={this.openSettingsTapped}>
-            <Text style={styles.settingsButtonText}>{OPEN_SETTINGS_TEXT}</Text>
+            <Text style={styles.settingsButtonText}>{s.strings.open_settings}</Text>
           </TouchableHighlight>
         </View>
       )
@@ -138,7 +130,7 @@ export class Scan extends Component<Props> {
       return (
         <RNCamera style={styles.cameraArea} captureAudio={false} flashMode={flashMode} onBarCodeRead={this.onBarCodeRead} type={RNCamera.Constants.Type.back}>
           <View style={styles.overlayTop}>
-            <T style={styles.overlayTopText}>{HEADER_TEXT}</T>
+            <T style={styles.overlayTopText}>{s.strings.send_scan_header_text}</T>
           </View>
         </RNCamera>
       )

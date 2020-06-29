@@ -34,15 +34,9 @@ type TransactionRowOwnProps = {
 export type TransactionRowStateProps = {
   walletBlockHeight: number | null
 }
+type Props = TransactionRowOwnProps & TransactionRowStateProps
 
 type State = {}
-
-const SENT_TEXT = s.strings.fragment_transaction_list_sent_prefix
-const RECEIVED_TEXT = s.strings.fragment_transaction_list_receive_prefix
-const CONFIRMATION_PROGRESS_TEXT = s.strings.fragment_transaction_list_confirmation_progress
-const UNCONFIRMED_TRANSACTION = s.strings.fragment_wallet_unconfirmed
-
-type Props = TransactionRowOwnProps & TransactionRowStateProps
 
 export class TransactionRowComponent extends Component<Props, State> {
   constructor(props: Props) {
@@ -80,10 +74,10 @@ export class TransactionRowComponent extends Component<Props, State> {
     }
     if (UTILS.isSentTransaction(tx)) {
       // XXX -paulvp Why is this hard coded here?
-      txName = SENT_TEXT + currencyName
+      txName = s.strings.fragment_transaction_list_sent_prefix + currencyName
       txImage = sentTypeImage
     } else {
-      txName = RECEIVED_TEXT + currencyName
+      txName = s.strings.fragment_transaction_list_receive_prefix + currencyName
       txImage = receivedTypeImage
     }
 
@@ -139,10 +133,10 @@ export class TransactionRowComponent extends Component<Props, State> {
     } else if (currentConfirmations <= 0) {
       // if completely unconfirmed or wallet uninitialized, or wallet lagging behind (tx block height larger than wallet block height)
       pendingTimeStyle = styles.transactionPending
-      pendingTimeSyntax = UNCONFIRMED_TRANSACTION
+      pendingTimeSyntax = s.strings.fragment_wallet_unconfirmed
     } else if (currentConfirmations < requiredConfirmations) {
       pendingTimeStyle = styles.transactionPartialConfirmation
-      pendingTimeSyntax = sprintf(CONFIRMATION_PROGRESS_TEXT, currentConfirmations, requiredConfirmations)
+      pendingTimeSyntax = sprintf(s.strings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
     } else {
       pendingTimeStyle = styles.transactionTime
       pendingTimeSyntax = tx.time

@@ -23,8 +23,6 @@ import { type GuiWallet } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
 
-const BACK = s.strings.title_back
-
 type Props = {
   plugin: GuiPlugin,
   navigation: any,
@@ -45,7 +43,7 @@ type State = {
   showWalletList: any
 }
 
-export function renderLegacyPluginBackButton(label: string = BACK) {
+export function renderLegacyPluginBackButton(label: string = s.strings.title_back) {
   return <BackButton withArrow onPress={pluginPop} label={label} />
 }
 

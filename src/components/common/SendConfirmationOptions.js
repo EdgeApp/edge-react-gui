@@ -12,10 +12,6 @@ import { MenuDropDownStyle } from '../../styles/components/HeaderMenuDropDownSty
 import { styles } from '../../styles/scenes/SendConfirmationStyle.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 
-const CHANGE_MINING_FEE_TEXT = s.strings.title_change_mining_fee
-const SEND_MAX_TEXT = s.strings.send_confirmation_max_button_title
-const HELP_TEXT = s.strings.string_help
-
 const CHANGE_MINING_FEE = 'CHANGE_MINING_FEE'
 const SEND_MAX = 'SEND_MAX'
 const HELP = 'HELP'
@@ -61,7 +57,7 @@ export default class SendConfirmationOptions extends Component<Props> {
             {!getSpecialCurrencyInfo(currencyCode).noChangeMiningFee && (
               <MenuOption value={CHANGE_MINING_FEE} style={defaultMenuStyle.menuOption}>
                 <View style={defaultMenuStyle.menuOptionItem}>
-                  <Text style={defaultMenuStyle.optionText}>{CHANGE_MINING_FEE_TEXT}</Text>
+                  <Text style={defaultMenuStyle.optionText}>{s.strings.title_change_mining_fee}</Text>
                 </View>
               </MenuOption>
             )}
@@ -69,7 +65,7 @@ export default class SendConfirmationOptions extends Component<Props> {
             {isEditable && !getSpecialCurrencyInfo(currencyCode).noMaxSpend && (
               <MenuOption value={SEND_MAX} style={defaultMenuStyle.menuOption}>
                 <View style={defaultMenuStyle.menuOptionItem}>
-                  <Text style={[defaultMenuStyle.optionText, styles.maxSpend]}>{SEND_MAX_TEXT}</Text>
+                  <Text style={[defaultMenuStyle.optionText, styles.maxSpend]}>{s.strings.send_confirmation_max_button_title}</Text>
                 </View>
               </MenuOption>
             )}
@@ -84,7 +80,7 @@ export default class SendConfirmationOptions extends Component<Props> {
 
             <MenuOption value={HELP} style={defaultMenuStyle.menuOption}>
               <View style={defaultMenuStyle.menuOptionItem}>
-                <Text style={defaultMenuStyle.optionText}>{HELP_TEXT}</Text>
+                <Text style={defaultMenuStyle.optionText}>{s.strings.string_help}</Text>
               </View>
             </MenuOption>
           </MenuOptions>

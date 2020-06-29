@@ -18,9 +18,6 @@ import { getSupportedFiats } from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
-const DEFAULT_FIAT_PICKER_PLACEHOLDER = s.strings.settings_select_currency
-const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
-
 type StateProps = {
   supportedFiats: Array<GuiFiatType>
 }
@@ -67,7 +64,7 @@ class DefaultFiatSettingComponent extends Component<Props, State> {
               autoCapitalize="words"
               onChangeText={this.handleSearchTermChange}
               value={this.state.searchTerm}
-              label={DEFAULT_FIAT_PICKER_PLACEHOLDER}
+              label={s.strings.settings_select_currency}
               style={[MaterialInputOnWhite, { width: '100%' }]}
             />
             <FlatList
@@ -88,7 +85,7 @@ class DefaultFiatSettingComponent extends Component<Props, State> {
 
   onSelectFiat = ({ value: selectedFiat }: { value: string }) => {
     if (!this.isValidFiat(selectedFiat)) {
-      Alert.alert(INVALID_DATA_TEXT)
+      Alert.alert(s.strings.fragment_create_wallet_select_valid)
     } else {
       this.setState({ selectedFiat })
       Keyboard.dismiss()

@@ -13,12 +13,6 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.
 import type { SpendingLimits as SpendingLimitsType } from '../../reducers/SpendingLimitsReducer.js'
 import styles from '../../styles/scenes/SpendingLimitsStyle.js'
 
-const ENTER_YOUR_PASSWORD = s.strings.enter_your_password
-const TRANSACTION_SPENDING_LIMIT_TITLE = s.strings.spending_limits_tx_title
-const TRANSACTION_SPENDING_LIMIT_PLACEHOLDER = s.strings.spending_limits_tx_title
-const TRANSACTION_SPENDING_LIMIT_DESCRIPTION = s.strings.spending_limits_tx_description
-const SAVE_TEXT = s.strings.save
-
 export type SpendingLimitsOwnProps = {
   transactionSpendingLimit: {
     amount: number,
@@ -54,7 +48,7 @@ export class SpendingLimitsComponent extends Component<SpendingLimitsOwnProps, S
         <Scene key="SpendingLimitsSceneKey" style={styles.scene}>
           <KeyboardAwareScrollView>
             <Scene.Header>
-              <PasswordInput label={ENTER_YOUR_PASSWORD} onChangeText={onPasswordChanged} />
+              <PasswordInput label={s.strings.enter_your_password} onChangeText={onPasswordChanged} />
             </Scene.Header>
 
             <Scene.Padding style={styles.spacer} />
@@ -62,9 +56,9 @@ export class SpendingLimitsComponent extends Component<SpendingLimitsOwnProps, S
             <Scene.Body>
               <Scene.Row>
                 <Scene.Item>
-                  <Scene.Body.Text style={styles.bodyText}>{TRANSACTION_SPENDING_LIMIT_TITLE}</Scene.Body.Text>
+                  <Scene.Body.Text style={styles.bodyText}>{s.strings.spending_limits_tx_title}</Scene.Body.Text>
 
-                  <Scene.Body.Text style={styles.bodyText}>{TRANSACTION_SPENDING_LIMIT_DESCRIPTION}</Scene.Body.Text>
+                  <Scene.Body.Text style={styles.bodyText}>{s.strings.spending_limits_tx_description}</Scene.Body.Text>
                 </Scene.Item>
 
                 <Switch onValueChange={onTransactionIsEnabledChanged} value={transactionIsEnabled} />
@@ -76,7 +70,7 @@ export class SpendingLimitsComponent extends Component<SpendingLimitsOwnProps, S
                   value={transactionAmount.toString()}
                   onChangeText={onTransactionAmountChanged}
                   containerStyle={[{ flex: 1 }]}
-                  label={TRANSACTION_SPENDING_LIMIT_PLACEHOLDER}
+                  label={s.strings.spending_limits_tx_title}
                   suffix={currencySymbol}
                   autoCorrect={false}
                   keyboardType="numeric"
@@ -88,7 +82,7 @@ export class SpendingLimitsComponent extends Component<SpendingLimitsOwnProps, S
 
             <Scene.Footer>
               <PrimaryButton onPress={onSubmit}>
-                <PrimaryButton.Text>{SAVE_TEXT}</PrimaryButton.Text>
+                <PrimaryButton.Text>{s.strings.save}</PrimaryButton.Text>
               </PrimaryButton>
             </Scene.Footer>
           </KeyboardAwareScrollView>

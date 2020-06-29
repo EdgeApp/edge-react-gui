@@ -66,10 +66,6 @@ type State = {
   reset: boolean
 }
 
-const SHOW_BALANCE_TEXT = s.strings.string_show_balance
-const REQUEST_TEXT = s.strings.fragment_request_subtitle
-const SEND_TEXT = s.strings.fragment_send_subtitle
-
 const emptyArray = []
 
 export class TransactionList extends Component<Props, State> {
@@ -209,7 +205,7 @@ export class TransactionList extends Component<Props, State> {
               {!isBalanceVisible ? (
                 <View style={styles.totalBalanceWrap}>
                   <View style={styles.hiddenBalanceBoxDollarsWrap}>
-                    <T style={styles.currentBalanceBoxHiddenText}>{SHOW_BALANCE_TEXT}</T>
+                    <T style={styles.currentBalanceBoxHiddenText}>{s.strings.string_show_balance}</T>
                   </View>
                 </View>
               ) : (
@@ -256,13 +252,13 @@ export class TransactionList extends Component<Props, State> {
                 <TouchableHighlight style={[styles.requestBox, styles.button]} underlayColor={styleRaw.underlay.color} onPress={Actions.request}>
                   <View style={styles.requestWrap}>
                     <Image style={{ width: 25, height: 25 }} source={requestImage} />
-                    <T style={styles.request}>{REQUEST_TEXT}</T>
+                    <T style={styles.request}>{s.strings.fragment_request_subtitle}</T>
                   </View>
                 </TouchableHighlight>
                 <TouchableHighlight style={[styles.sendBox, styles.button]} underlayColor={styleRaw.underlay.color} onPress={Actions.scan}>
                   <View style={styles.sendWrap}>
                     <Image style={{ width: 25, height: 25 }} source={sendImage} />
-                    <T style={styles.send}>{SEND_TEXT}</T>
+                    <T style={styles.send}>{s.strings.fragment_send_subtitle}</T>
                   </View>
                 </TouchableHighlight>
               </View>
