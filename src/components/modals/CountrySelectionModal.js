@@ -47,7 +47,7 @@ export class CountrySelectionModal extends Component<CountrySelectionModalProps,
 
     return (
       <View style={[styles.singleCountryWrap, data.item['alpha-2'] === countryCode && styles.selectedItem]}>
-        <TouchableHighlight style={styles.singleCountry} onPress={() => bridge.resolve(data.item['alpha-2'])} underlayColor={styles.underlayColor.color}>
+        <TouchableHighlight style={styles.singleCountry} onPress={() => bridge.resolve(data.item['alpha-2'])} underlayColor={THEME.COLORS.GRAY_4}>
           <View style={styles.countryInfoWrap}>
             <View style={styles.countryLeft}>
               <View style={styles.countryLogo}>
@@ -144,9 +144,6 @@ const rawStyles = {
     fontSize: scale(16),
     color: THEME.COLORS.COUNTRY_SELECTION_MODAL_GRAY_2,
     textAlignVertical: 'center'
-  },
-  underlayColor: {
-    color: THEME.COLORS.GRAY_4
   },
   selectedItem: {
     backgroundColor: THEME.COLORS.GRAY_4,

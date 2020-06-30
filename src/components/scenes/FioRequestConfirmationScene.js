@@ -320,7 +320,7 @@ const tileStyles = {
   padding: rem(0.5)
 }
 
-const styles = StyleSheet.create({
+const rawStyles = {
   container: {
     flex: 1,
     width: '100%',
@@ -372,4 +372,5 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.COLORS.PRIMARY,
     borderRadius: rem(2)
   }
-})
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

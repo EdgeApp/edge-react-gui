@@ -20,7 +20,7 @@ export function IconCircle(props: Props) {
   return <View style={styles.iconCircle}>{props.children}</View>
 }
 
-const styles = StyleSheet.create({
+const rawStyles = {
   iconCircle: {
     // Layout:
     alignSelf: 'center',
@@ -39,4 +39,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden'
   }
-})
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

@@ -153,14 +153,15 @@ class LoginSceneComponent extends Component<Props, State> {
   }
 }
 
-const styles = StyleSheet.create({
+const rawStyles = {
   container: {
     flex: 1,
     position: 'relative',
     paddingTop: StatusBar.currentHeight,
     backgroundColor: THEME.COLORS.PRIMARY
   }
-})
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const LoginScene = connect(
   (state: ReduxState): StateProps => ({
