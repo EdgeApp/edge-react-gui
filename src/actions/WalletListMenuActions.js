@@ -34,7 +34,7 @@ export type WalletListMenuKey =
   | 'viewXPub'
   | 'getRawKeys'
 
-export function walletListMenuAction(walletId: string, option: WalletListMenuKey, currencyCode: string) {
+export function walletListMenuAction(walletId: string, option: WalletListMenuKey, currencyCode?: string) {
   switch (option) {
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {

@@ -108,7 +108,10 @@ class WalletListComponent extends Component<Props, State> {
     if (option === 'sort') {
       return this.setState({ sorting: true })
     }
-    return this.props.walletRowOption(walletId, option, currencyCode || this.props.wallets[walletId].currencyCode)
+    if (this.props.wallets[walletId] != null && !currencyCode) {
+      currencyCode = this.props.wallets[walletId].currencyCode
+    }
+    return this.props.walletRowOption(walletId, option, currencyCode)
   }
 
   render() {
