@@ -2,6 +2,8 @@
 
 import React, { Component } from 'react'
 
+import { THEME } from '../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../theme/variables/platform.js'
 import { Input } from '../materialWrappers/Input.js'
 import { InputWithAutoFocus } from '../materialWrappers/InputWithAutoFocus.js'
 
@@ -36,7 +38,7 @@ type State = {
 
 class FormField extends Component<Props, State> {
 */
-class FormField extends Component {
+export class FormField extends Component {
   static defaultProps = {
     autoCapitalize: 'none',
     autoCorrect: false,
@@ -131,4 +133,20 @@ class FormField extends Component {
   }
 }
 
-export { FormField }
+export const MaterialInputOnWhite = {
+  container: {
+    position: 'relative',
+    width: PLATFORM.deviceWidth / 1.52,
+    height: 60
+  },
+  baseColor: THEME.COLORS.PRIMARY,
+  tintColor: THEME.COLORS.SECONDARY,
+  errorColor: THEME.COLORS.ACCENT_RED,
+  textColor: THEME.COLORS.BLACK,
+  affixTextStyle: {
+    color: THEME.COLORS.ACCENT_RED
+  },
+  titleTextStyle: {
+    // color: THEME.COLORS.PRIMARY // this causes the forms to have a default text color EVEN ON ERROR
+  }
+}

@@ -16,13 +16,12 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import type { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletReducer.js'
-import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
-import { FormField } from '../common/FormField.js'
+import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 
 const deviceWidth = PLATFORM.deviceWidth
 

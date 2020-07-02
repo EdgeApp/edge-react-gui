@@ -2,7 +2,7 @@
 
 import { Platform, StyleSheet } from 'react-native'
 
-import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles'
+import { MaterialInputOnWhite } from '../../components/common/FormField.js'
 import THEME from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { scale } from '../../util/scaling.js'
