@@ -2,14 +2,15 @@
 
 import { createSimpleConfirmModal } from 'edge-components'
 import React, { Component } from 'react'
-import { Image, Platform, View } from 'react-native'
+import { Image, Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { launchModal } from '../../../../components/common/ModalProvider.js'
-import { ANDROID_INFO_ICON, EXCLAMATION, ION_ICONS, IOS_INFO_ICON, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
+import { EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
-import { styles as sceneStyles } from '../../../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
+import { THEME } from '../../../../theme/variables/airbitz.js'
+import { scale } from '../../../../util/scaling.js'
 import FormattedText from '../../components/FormattedText/FormattedText.ui.js'
-import { IconButton } from '../Buttons/IconButton.ui'
 import { Icon } from '../Icon/Icon.ui'
 
 type Props = {
@@ -27,9 +28,8 @@ type Props = {
 }
 type State = {}
 
-class ExchangeQuoteComponent extends Component<Props, State> {
+export class ExchangeQuoteComponent extends Component<Props, State> {
   renderBottom = () => {
-    const styles = sceneStyles.quoteDetailContainer
     if (this.props.isTop) {
       return (
         <View style={styles.bottomRow}>
@@ -58,24 +58,24 @@ class ExchangeQuoteComponent extends Component<Props, State> {
   }
 
   renderHeadline = () => {
-    const styles = sceneStyles.quoteDetailContainer
     if (this.props.isEstimate) {
-      const platform = Platform.OS
-      const infoIcon = platform === 'ios' ? IOS_INFO_ICON : ANDROID_INFO_ICON
       return (
-        <View style={styles.headlineRow}>
+        <TouchableOpacity style={styles.headlineRow} onPress={this.showExplanationForEstimate}>
           <FormattedText style={styles.headlineEstimateText}>
             {s.strings.approximately} {this.props.headline}
           </FormattedText>
-          <IconButton style={styles.iconButton} onPress={this.showExplanationForEstimate} icon={infoIcon} iconType={ION_ICONS} />
-        </View>
+          <IonIcon
+            name={Platform.OS === 'ios' ? 'ios-information-circle-outline' : 'md-information-circle-outline'}
+            color={THEME.COLORS.ACCENT_ORANGE}
+            size={THEME.rem(0.875)}
+          />
+        </TouchableOpacity>
       )
     }
     return <FormattedText style={styles.headlineText}>{this.props.headline}</FormattedText>
   }
 
   render() {
-    const styles = sceneStyles.quoteDetailContainer
     const container = this.props.isTop ? styles.containerExpanded : styles.containerCollapsed
     return (
       <View style={styles.container}>
@@ -111,4 +111,126 @@ class ExchangeQuoteComponent extends Component<Props, State> {
   }
 }
 
-export { ExchangeQuoteComponent }
+const rawStyles = {
+  container: {
+    width: '90%',
+    borderRadius: 3
+  },
+  containerCollapsed: {
+    width: '100%',
+    minHeight: scale(65),
+    backgroundColor: THEME.COLORS.OPACITY_WHITE,
+    borderRadius: 3
+  },
+  containerExpanded: {
+    width: '100%',
+    height: scale(94),
+    backgroundColor: THEME.COLORS.OPACITY_WHITE,
+    borderRadius: 3
+  },
+  headlineEstimateText: {
+    color: THEME.COLORS.ACCENT_ORANGE,
+    fontSize: scale(14),
+    marginRight: THEME.rem(0.375)
+  },
+  headlineRow: {
+    flexDirection: 'row',
+    paddingTop: scale(10),
+    paddingBottom: scale(10),
+    alignItems: 'center'
+  },
+  headlineText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(14),
+    paddingTop: scale(10),
+    paddingBottom: scale(10)
+  },
+  minerFeeText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(14),
+    paddingTop: scale(5),
+    paddingBottom: scale(10)
+  },
+  minerFeeRightText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(14),
+    paddingTop: scale(5),
+    paddingBottom: scale(10),
+    alignSelf: 'flex-end'
+  },
+  currencyNameText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16),
+    paddingTop: scale(10),
+    paddingLeft: scale(10)
+  },
+  cryptoAmountText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16),
+    paddingTop: scale(10),
+    paddingRight: scale(10),
+    textAlign: 'right'
+  },
+  walletNameText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16),
+    paddingLeft: scale(10),
+    paddingBottom: scale(9)
+  },
+  fiatAmountText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16),
+    paddingRight: 10,
+    paddingBottom: scale(9),
+    textAlign: 'right'
+  },
+  topRow: {
+    flexDirection: 'row'
+  },
+  bottomRow: {
+    height: scale(45),
+    paddingRight: 10,
+    paddingLeft: 10
+  },
+  bottomContentBox: {
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    borderColor: THEME.COLORS.WHITE
+  },
+  bottomContentBoxLeft: {
+    flex: 1
+  },
+  bottomContentBoxRight: {
+    flex: 1,
+    justifyContent: 'flex-end'
+  },
+  walletInfoContainer: {
+    flex: 8,
+    alignItems: 'flex-start'
+  },
+  amountInfoContainer: {
+    flex: 11,
+    alignItems: 'flex-end'
+  },
+  logoContainer: {
+    flex: 2,
+    alignItems: 'center',
+    paddingTop: scale(10),
+    paddingLeft: 5
+  },
+  iconContainer: {
+    position: 'relative',
+    height: scale(29),
+    width: scale(29),
+    backgroundColor: THEME.COLORS.OPACITY_WHITE,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+  currencyIcon: {
+    height: scale(25),
+    width: scale(25),
+    resizeMode: 'contain'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

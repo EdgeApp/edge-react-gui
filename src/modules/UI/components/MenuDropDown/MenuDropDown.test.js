@@ -4,8 +4,7 @@
 import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import { MenuDropDownStyle } from '../../../../styles/components/HeaderMenuDropDownStyles.js'
-import { MenuDropDown } from './MenuDropDown.ui.js'
+import { MenuDropDown, MenuDropDownStyle } from './MenuDropDown.ui.js'
 
 describe('MenuDropDown component', () => {
   it('should render with standard props', () => {

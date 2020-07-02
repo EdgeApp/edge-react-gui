@@ -2,15 +2,16 @@
 
 import _ from 'lodash'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
 import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { styles } from '../../styles/scenes/AddTokenStyles.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import { decimalPlacesToDenomination } from '../../util/utils.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -71,52 +72,46 @@ export class AddToken extends Component<AddTokenProps, State> {
           <View style={styles.instructionalArea}>
             <Text style={styles.instructionalText}>{s.strings.addtoken_top_instructions}</Text>
           </View>
-          <View style={styles.formArea}>
-            <View style={styles.nameArea}>
-              <FormField
-                style={styles.currencyName}
-                value={this.state.currencyName}
-                onChangeText={this.onChangeName}
-                autoCapitalize="words"
-                autoFocus
-                label={s.strings.addtoken_name_input_text}
-                returnKeyType="done"
-                autoCorrect={false}
-              />
-            </View>
-            <View style={styles.currencyCodeArea}>
-              <FormField
-                style={styles.currencyCodeInput}
-                value={this.state.currencyCode}
-                onChangeText={this.onChangeCurrencyCode}
-                autoCapitalize="characters"
-                label={s.strings.addtoken_currency_code_input_text}
-                returnKeyType="done"
-                autoCorrect={false}
-                maxLength={MAX_TOKEN_CODE_CHARACTERS}
-              />
-            </View>
-            <View style={styles.contractAddressArea}>
-              <FormField
-                style={styles.contractAddressInput}
-                value={this.state.contractAddress}
-                onChangeText={this.onChangeContractAddress}
-                label={s.strings.addtoken_contract_address_input_text}
-                returnKeyType="done"
-                autoCorrect={false}
-              />
-            </View>
-            <View style={styles.decimalPlacesArea}>
-              <FormField
-                style={styles.decimalPlacesInput}
-                value={this.state.decimalPlaces}
-                onChangeText={this.onChangeDecimalPlaces}
-                label={s.strings.addtoken_denomination_input_text}
-                returnKeyType="done"
-                autoCorrect={false}
-                keyboardType="numeric"
-              />
-            </View>
+          <View style={styles.nameArea}>
+            <FormField
+              value={this.state.currencyName}
+              onChangeText={this.onChangeName}
+              autoCapitalize="words"
+              autoFocus
+              label={s.strings.addtoken_name_input_text}
+              returnKeyType="done"
+              autoCorrect={false}
+            />
+          </View>
+          <View style={styles.currencyCodeArea}>
+            <FormField
+              value={this.state.currencyCode}
+              onChangeText={this.onChangeCurrencyCode}
+              autoCapitalize="characters"
+              label={s.strings.addtoken_currency_code_input_text}
+              returnKeyType="done"
+              autoCorrect={false}
+              maxLength={MAX_TOKEN_CODE_CHARACTERS}
+            />
+          </View>
+          <View style={styles.contractAddressArea}>
+            <FormField
+              value={this.state.contractAddress}
+              onChangeText={this.onChangeContractAddress}
+              label={s.strings.addtoken_contract_address_input_text}
+              returnKeyType="done"
+              autoCorrect={false}
+            />
+          </View>
+          <View style={styles.decimalPlacesArea}>
+            <FormField
+              value={this.state.decimalPlaces}
+              onChangeText={this.onChangeDecimalPlaces}
+              label={s.strings.addtoken_denomination_input_text}
+              returnKeyType="done"
+              autoCorrect={false}
+              keyboardType="numeric"
+            />
           </View>
           <View style={styles.buttonsArea}>
             <PrimaryButton style={styles.saveButton} onPress={this._onSave}>
@@ -182,3 +177,51 @@ export class AddToken extends Component<AddTokenProps, State> {
     )
   }
 }
+
+const rawStyles = {
+  container: {
+    flex: 1,
+    paddingHorizontal: scale(20)
+  },
+
+  instructionalArea: {
+    paddingVertical: scale(16),
+    paddingHorizontal: scale(20)
+  },
+  instructionalText: {
+    fontSize: scale(16),
+    textAlign: 'center'
+  },
+
+  nameArea: {
+    height: scale(70)
+  },
+  currencyCodeArea: {
+    height: scale(70)
+  },
+  contractAddressArea: {
+    height: scale(70)
+  },
+  decimalPlacesArea: {
+    height: scale(70)
+  },
+  buttonsArea: {
+    marginTop: scale(16),
+    height: scale(52),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    paddingVertical: scale(4)
+  },
+  saveButton: {
+    flex: 1,
+    marginLeft: scale(2),
+    backgroundColor: THEME.COLORS.SECONDARY,
+    borderRadius: 3
+  },
+  bottomPaddingForKeyboard: {
+    height: scale(300)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

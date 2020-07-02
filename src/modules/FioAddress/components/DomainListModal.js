@@ -3,7 +3,7 @@
 import { FormField, MaterialInputStyle } from 'edge-components'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { FlatList, Image, Linking, Text, TouchableHighlight, View } from 'react-native'
+import { FlatList, Image, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import fioAddressIcon from '../../../assets/images/list_fioAddress.png'
@@ -11,7 +11,6 @@ import { type AirshipBridge, AirshipModal, dayText, IconCircle, THEME } from '..
 import { showError } from '../../../components/services/AirshipInstance'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
-import { CryptoExchangeWalletListRowStyle as styles } from '../../../styles/components/CryptoExchangeWalletListRowStyle.js'
 import { styles as fioAddressRegisterStyles } from '../../../styles/scenes/FioAddressRegisterStyle'
 import type { State as StateType } from '../../../types/reduxTypes'
 import type { FioDomain, FlatListItem } from '../../../types/types.js'
@@ -101,7 +100,7 @@ class DomainListModalConnected extends Component<Props, State> {
     const { value, label, createNew } = item
     if (createNew) {
       return (
-        <TouchableHighlight style={styles.touchable} onPress={this.createNew} underlayColor={styles.underlayColor}>
+        <TouchableHighlight onPress={this.createNew} underlayColor={THEME.COLORS.TRANSPARENT}>
           <View style={[styles.rowContainerTop, fioAddressRegisterStyles.domainListRowContainerTop]}>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsRow}>
@@ -115,7 +114,7 @@ class DomainListModalConnected extends Component<Props, State> {
     }
     if (value) {
       return (
-        <TouchableHighlight style={styles.touchable} onPress={() => this.selectItem(value)} underlayColor={styles.underlayColor}>
+        <TouchableHighlight onPress={() => this.selectItem(value)} underlayColor={THEME.COLORS.TRANSPARENT}>
           <View style={[styles.rowContainerTop, fioAddressRegisterStyles.domainListRowContainerTop]}>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsRow}>
@@ -165,7 +164,31 @@ class DomainListModalConnected extends Component<Props, State> {
   }
 }
 
-const DomainListModal = connect((state: StateType): StateProps => {
+const rawStyles = {
+  rowContainerTop: {
+    width: '100%',
+    height: scale(76),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: scale(10),
+    paddingRight: scale(10),
+    borderBottomWidth: scale(1),
+    borderBottomColor: THEME.COLORS.GRAY_3
+  },
+  walletDetailsContainer: {
+    flex: 1,
+    flexDirection: 'column'
+  },
+  walletDetailsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+
+export const DomainListModal = connect((state: StateType): StateProps => {
   const { account } = state.core
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
   const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
@@ -176,4 +199,3 @@ const DomainListModal = connect((state: StateType): StateProps => {
     fioPlugin
   }
 })(DomainListModalConnected)
-export { DomainListModal }

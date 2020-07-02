@@ -29,19 +29,6 @@ import { Button } from './Button/Button.ui.js'
 import { Separator } from './Separator/Separator.ui.js'
 import UserList from './UserListConnector'
 
-const WALLETS_TEXT = s.strings.drawer_wallets
-const SCAN_TEXT = s.strings.drawer_scan_qr_send
-const SWEEP_PRIVATE_KEY_TEXT = s.strings.drawer_sweep_private_key
-const REQUEST_TEXT = s.strings.drawer_request
-const EXCHANGE_TEXT = s.strings.drawer_exchange
-const LOGOUT_TEXT = s.strings.settings_button_logout
-const SETTINGS_TEXT = s.strings.settings_title
-const PLUGIN_BUY_TEXT = s.strings.title_plugin_buy
-const PLUGIN_SELL_TEXT = s.strings.title_plugin_sell
-const EARN_INTEREST_TEXT = s.strings.earn_interest
-const TERMS_OF_SERVICE_TEXT = s.strings.title_terms_of_service
-const SHARE_TEXT = s.strings.string_share + ' ' + s.strings.app_name
-
 export type Props = {
   logout: (username?: string) => void,
   usersView: boolean
@@ -112,7 +99,7 @@ const BuyButton = () => {
 
           <Button.Center>
             <Button.Text>
-              <Text>{PLUGIN_BUY_TEXT}</Text>
+              <Text>{s.strings.title_plugin_buy}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>
@@ -133,7 +120,7 @@ const SellButton = () => {
 
           <Button.Center>
             <Button.Text>
-              <Text>{PLUGIN_SELL_TEXT}</Text>
+              <Text>{s.strings.title_plugin_sell}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>
@@ -154,7 +141,7 @@ const EarnInterestButton = () => {
 
           <Button.Center>
             <Button.Text>
-              <Text>{EARN_INTEREST_TEXT}</Text>
+              <Text>{s.strings.earn_interest}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>
@@ -175,7 +162,7 @@ const WalletsButton = () => {
 
           <Button.Center>
             <Button.Text>
-              <Text>{WALLETS_TEXT}</Text>
+              <Text>{s.strings.drawer_wallets}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>
@@ -194,7 +181,7 @@ const ScanButton = () => {
 
         <Button.Center>
           <Button.Text>
-            <Text>{SCAN_TEXT}</Text>
+            <Text>{s.strings.drawer_scan_qr_send}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -215,7 +202,7 @@ const SweepPrivateKeyButton = () => {
 
         <Button.Center>
           <Button.Text>
-            <Text>{SWEEP_PRIVATE_KEY_TEXT}</Text>
+            <Text>{s.strings.drawer_sweep_private_key}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -233,7 +220,7 @@ const RequestButton = () => {
 
         <Button.Center>
           <Button.Text>
-            <Text>{REQUEST_TEXT}</Text>
+            <Text>{s.strings.drawer_request}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -251,7 +238,7 @@ const ExchangeButton = () => {
 
         <Button.Center>
           <Button.Text>
-            <Text>{EXCHANGE_TEXT}</Text>
+            <Text>{s.strings.drawer_exchange}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -269,7 +256,7 @@ const TermsOfServiceButton = () => {
 
         <Button.Center>
           <Button.Text>
-            <Text>{TERMS_OF_SERVICE_TEXT}</Text>
+            <Text>{s.strings.title_terms_of_service}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -296,7 +283,7 @@ const ShareButton = () => {
 
         <Button.Center>
           <Button.Text>
-            <Text>{SHARE_TEXT}</Text>
+            <Text>{s.strings.string_share + ' ' + s.strings.app_name}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -314,7 +301,7 @@ const SettingsButton = () => {
 
         <Button.Center>
           <Button.Text>
-            <Text>{SETTINGS_TEXT}</Text>
+            <Text>{s.strings.settings_title}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>
@@ -332,7 +319,7 @@ const LogoutButton = ({ onPress }) => {
 
         <Button.Center>
           <Button.Text>
-            <Text>{LOGOUT_TEXT}</Text>
+            <Text>{s.strings.settings_button_logout}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>

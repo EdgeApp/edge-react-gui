@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Animated, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Animated, FlatList, Image, StyleSheet, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
@@ -21,8 +21,9 @@ import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getSelectedWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import type { ContactsState } from '../../reducers/ContactsReducer'
-import styles, { styles as styleRaw } from '../../styles/scenes/TransactionListStyle'
+import { THEME } from '../../theme/variables/airbitz.js'
 import type { GuiWallet, TransactionListTx } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import BuyCrypto from '../common/BuyCrypto.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -65,10 +66,6 @@ type State = {
   width: ?number,
   reset: boolean
 }
-
-const SHOW_BALANCE_TEXT = s.strings.string_show_balance
-const REQUEST_TEXT = s.strings.fragment_request_subtitle
-const SEND_TEXT = s.strings.fragment_send_subtitle
 
 const emptyArray = []
 
@@ -209,7 +206,7 @@ export class TransactionList extends Component<Props, State> {
               {!isBalanceVisible ? (
                 <View style={styles.totalBalanceWrap}>
                   <View style={styles.hiddenBalanceBoxDollarsWrap}>
-                    <T style={styles.currentBalanceBoxHiddenText}>{SHOW_BALANCE_TEXT}</T>
+                    <T style={styles.currentBalanceBoxHiddenText}>{s.strings.string_show_balance}</T>
                   </View>
                 </View>
               ) : (
@@ -253,16 +250,16 @@ export class TransactionList extends Component<Props, State> {
                 </View>
               )}
               <View style={styles.requestSendRow}>
-                <TouchableHighlight style={[styles.requestBox, styles.button]} underlayColor={styleRaw.underlay.color} onPress={Actions.request}>
+                <TouchableHighlight style={[styles.requestBox, styles.button]} underlayColor={THEME.COLORS.SECONDARY} onPress={Actions.request}>
                   <View style={styles.requestWrap}>
                     <Image style={{ width: 25, height: 25 }} source={requestImage} />
-                    <T style={styles.request}>{REQUEST_TEXT}</T>
+                    <T style={styles.request}>{s.strings.fragment_request_subtitle}</T>
                   </View>
                 </TouchableHighlight>
-                <TouchableHighlight style={[styles.sendBox, styles.button]} underlayColor={styleRaw.underlay.color} onPress={Actions.scan}>
+                <TouchableHighlight style={[styles.sendBox, styles.button]} underlayColor={THEME.COLORS.SECONDARY} onPress={Actions.scan}>
                   <View style={styles.sendWrap}>
                     <Image style={{ width: 25, height: 25 }} source={sendImage} />
-                    <T style={styles.send}>{SEND_TEXT}</T>
+                    <T style={styles.send}>{s.strings.fragment_send_subtitle}</T>
                   </View>
                 </TouchableHighlight>
               </View>
@@ -308,3 +305,165 @@ export class TransactionList extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  touchableBalanceBox: {
+    height: scale(200)
+  },
+  currentBalanceBox: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  totalBalanceWrap: {
+    flex: 3,
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  hiddenBalanceBoxDollarsWrap: {
+    flex: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  currentBalanceBoxHiddenText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(44)
+  },
+  balanceBoxContents: {
+    flex: 1,
+    paddingTop: scale(10),
+    paddingBottom: scale(20),
+    justifyContent: 'space-between'
+  },
+  balanceShownContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column'
+  },
+  iconWrap: {
+    // two
+    height: scale(28),
+    width: scale(28),
+    justifyContent: 'flex-start',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  currentBalanceBoxBitsWrap: {
+    // two
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  currentBalanceBoxBits: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(40)
+  },
+  currentBalanceBoxDollarsWrap: {
+    justifyContent: 'flex-start',
+    height: scale(26),
+    paddingTop: scale(4),
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  currentBalanceBoxDollars: {
+    // two
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(20)
+  },
+
+  requestSendRow: {
+    // two
+    height: scale(50),
+    flexDirection: 'row'
+  },
+  button: {
+    borderRadius: scale(3)
+  },
+  requestBox: {
+    backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: scale(8),
+    marginRight: scale(2),
+    flexDirection: 'row',
+    borderColor: THEME.COLORS.GRAY_4
+    // borderWidth: 0.1,
+  },
+  requestWrap: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  sendBox: {
+    backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
+    // opacity: THEME.OPACITY.MID,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: scale(2),
+    marginRight: scale(8),
+    flexDirection: 'row',
+    borderColor: THEME.COLORS.GRAY_4
+    // borderWidth: 0.1,
+  },
+  sendWrap: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  request: {
+    fontSize: scale(18),
+    color: THEME.COLORS.WHITE,
+    marginHorizontal: scale(12)
+  },
+  send: {
+    fontSize: scale(18),
+    color: THEME.COLORS.WHITE,
+    marginHorizontal: scale(12)
+  },
+
+  // beginning of second half
+  transactionsScrollWrap: {
+    flex: 1
+  },
+
+  symbol: {
+    fontFamily: THEME.FONTS.SYMBOLS
+  },
+  emptyListLoader: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: scale(230)
+  },
+
+  // Interest:
+  earnInterestContainer: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: scale(15),
+    marginBottom: 0
+  },
+  earnInterestBox: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    backgroundColor: THEME.COLORS.WHITE,
+    padding: scale(15)
+  },
+  earnInterestImage: {
+    width: scale(32),
+    height: scale(32),
+    marginHorizontal: scale(4)
+  },
+  earnInterestText: {
+    marginTop: scale(10),
+    fontSize: scale(17),
+    color: THEME.COLORS.GRAY_1
+  }
+}
+
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

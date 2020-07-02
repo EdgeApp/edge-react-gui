@@ -11,10 +11,9 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
-import { FormField } from '../common/FormField.js'
+import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 
 export type CreateWalletNameOwnProps = {
   selectedFiat: GuiFiatType,

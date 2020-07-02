@@ -3,7 +3,7 @@
 import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import React, { Component } from 'react'
-import { ActivityIndicator, FlatList, View } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
@@ -11,8 +11,9 @@ import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { styles } from '../../styles/scenes/ManageTokensStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import ManageTokenRow from '../common/ManageTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -172,3 +173,63 @@ export default class ManageTokens extends Component<ManageTokensProps, State> {
     Actions.editToken({ walletId: id, currencyCode, metaTokens, onDeleteToken: this._onDeleteToken })
   }
 }
+
+const rawStyles = {
+  container: {
+    position: 'relative',
+    flex: 1,
+    backgroundColor: THEME.COLORS.WHITE,
+    paddingBottom: scale(50)
+  },
+  instructionalArea: {
+    paddingVertical: scale(16),
+    paddingHorizontal: scale(20)
+  },
+  instructionalText: {
+    fontSize: scale(16),
+    textAlign: 'center'
+  },
+  metaTokenListArea: {
+    borderTopWidth: 1,
+    borderTopColor: THEME.COLORS.GRAY_3,
+    flex: 1
+  },
+  metaTokenListWrap: {
+    flex: 1
+  },
+  tokenList: {
+    flex: 1
+  },
+
+  buttonsArea: {
+    height: scale(52),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    paddingVertical: scale(4),
+    paddingHorizontal: scale(20)
+  },
+  addButton: {
+    flex: 1,
+    marginLeft: scale(2),
+    backgroundColor: THEME.COLORS.GRAY_2,
+    borderRadius: 3
+  },
+  buttonText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(17.5)
+  },
+  saveButton: {
+    flex: 1,
+    marginRight: scale(2),
+    backgroundColor: THEME.COLORS.SECONDARY,
+    borderRadius: 3
+  },
+  oneButton: {
+    flex: 1,
+    backgroundColor: THEME.COLORS.SECONDARY,
+    borderRadius: 3
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

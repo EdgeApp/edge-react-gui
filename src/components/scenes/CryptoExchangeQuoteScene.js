@@ -2,7 +2,7 @@
 
 import { type EdgeAccount } from 'edge-core-js/types'
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { swapPluginLogos } from '../../assets/images/exchange'
@@ -10,8 +10,9 @@ import s from '../../locales/strings.js'
 import { ExchangeQuoteComponent } from '../../modules/UI/components/ExchangeQuote/ExchangeQuoteComponent.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
-import { styles } from '../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { type GuiSwapInfo } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
 import { CircleTimer } from '../common/CircleTimer'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -35,11 +36,11 @@ export type DispatchProps = {
   shift(swapInfo: GuiSwapInfo): mixed,
   timeExpired(swapInfo: GuiSwapInfo): void
 }
-
 type Props = OwnProps & StateProps & DispatchProps
+
 type State = {}
 
-class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
+export class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
   calledApprove: true
 
   componentDidMount = () => {
@@ -83,7 +84,7 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
     const { expirationDate } = swapInfo.quote
 
     if (!expirationDate) return null
-    return <CircleTimer style={styles.timerContainer} timeExpired={() => timeExpired(swapInfo)} expiration={expirationDate} />
+    return <CircleTimer timeExpired={() => timeExpired(swapInfo)} expiration={expirationDate} />
   }
 
   async checkChangellyKYC() {
@@ -216,4 +217,39 @@ class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
   }
 }
 
-export { CryptoExchangeQuoteScreenComponent }
+const rawStyles = {
+  topLogoRow: {
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    paddingTop: scale(8),
+    height: scale(55),
+    paddingBottom: 4
+  },
+  logoImage: {
+    position: 'relative',
+    maxWidth: '70%',
+    resizeMode: 'contain'
+  },
+  centerRow: {
+    alignItems: 'center'
+  },
+  confirmTextRow: {
+    paddingVertical: scale(12),
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  bottomRow: {
+    alignItems: 'center'
+  },
+  slideContainer: {
+    height: scale(35),
+    width: 270
+  },
+  confirmText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(14),
+    width: '100%',
+    textAlign: 'center'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

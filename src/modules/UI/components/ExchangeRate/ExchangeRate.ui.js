@@ -10,8 +10,6 @@ import * as UTILS from '../../../../util/utils'
 import T from '../../components/FormattedText/FormattedText.ui.js'
 import styles from './styles'
 
-const EXCHANGE_RATE_LOADING_TEXT = s.strings.drawer_exchange_rate_loading
-
 type Props = {
   primaryInfo: Object,
   primaryDisplayAmount?: string, // defaults to '1'
@@ -62,7 +60,7 @@ export default class ExchangeRate extends Component<Props> {
     return (
       <View style={styles.view}>
         {!UTILS.isCompleteExchangeData(exchangeData) ? (
-          <T style={styles.text}>{EXCHANGE_RATE_LOADING_TEXT}</T>
+          <T style={styles.text}>{s.strings.drawer_exchange_rate_loading}</T>
         ) : (
           <T style={styles.text}>
             {formattedPrimaryAmount} {primaryDisplayName} = {secondaryDisplaySymbol} {formattedSecondaryAmount} {secondaryCurrencyCode}

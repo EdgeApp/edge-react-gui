@@ -90,8 +90,8 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
               editable
               multiline
               placeholder={this.props.defaultElectrumServer}
-              placeholderTextColor={rawStyle.placeholderText.color}
-              underlineColorAndroid={rawStyle.placeholderUnderline.color}
+              placeholderTextColor={THEME.COLORS.GRAY_2}
+              underlineColorAndroid={THEME.COLORS.TRANSPARENT}
               autoCorrect={false}
             />
           </View>
@@ -101,7 +101,7 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
             <PrimaryButton onPress={this.handleSave} style={styles.primaryButton}>
               <PrimaryButton.Text style={styles.primaryButtonText}>{s.strings.string_save}</PrimaryButton.Text>
             </PrimaryButton>
-            <SecondaryButton onPress={this.onCancel} style={styles.secondaryButton}>
+            <SecondaryButton onPress={this.onCancel}>
               <SecondaryButton.Text style={styles.secondaryButtonText}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
             </SecondaryButton>
           </View>
@@ -111,7 +111,7 @@ export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetC
   }
 }
 
-export const rawStyle = {
+const rawStyles = {
   customNodesInputWrap: {
     borderWidth: 1,
     borderColor: '#CCCCCC',
@@ -138,13 +138,7 @@ export const rawStyle = {
   },
   secondaryButtonText: {
     color: THEME.COLORS.WHITE
-  },
-  placeholderText: {
-    color: THEME.COLORS.GRAY_2
-  },
-  placeholderUnderline: {
-    color: THEME.COLORS.TRANSPARENT
   }
 }
 
-const styles = StyleSheet.create(rawStyle)
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

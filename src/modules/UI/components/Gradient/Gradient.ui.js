@@ -6,7 +6,6 @@ import { StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { type ThemeProps, withTheme } from '../../../../theme/ThemeContext.js'
-import { getObjectDiff } from '../../../../util/utils'
 
 const UPPER_LEFT = { x: 0, y: 0 }
 const UPPER_RIGHT = { x: 1, y: 0 }
@@ -19,11 +18,6 @@ export type OwnProps = {
 type Props = OwnProps & ThemeProps
 
 class GradientComponent extends PureComponent<Props> {
-  shouldComponentUpdate(nextProps: Props) {
-    const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
-    return !!diffElement
-  }
-
   render() {
     const { children, reverse, theme, style } = this.props
     const colors = [theme.background1, theme.background2]

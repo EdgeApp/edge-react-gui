@@ -1,15 +1,14 @@
 // @flow
 
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
 import * as Constants from '../../constants/indexConstants.js'
-import { TextAndIconButton } from '../../modules/UI/components/Buttons/TextAndIconButton.ui.js'
-import THEME from '../../theme/variables/airbitz.js'
+import { TextAndIconButton, TextAndIconButtonStyle } from '../../modules/UI/components/Buttons/TextAndIconButton.ui.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 
 type Props = {
-  style: Object,
   children: any,
   showMessage: string,
   hideMessage: string
@@ -18,16 +17,13 @@ type Props = {
 type State = {
   collapsed: boolean
 }
-class ExpandableBoxComponent extends Component<Props, State> {
+
+export class ExpandableBoxComponent extends Component<Props, State> {
   constructor(props: any) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
-  }
 
-  UNSAFE_componentWillMount() {
-    this.setState({
-      collapsed: true
-    })
+    this.state = { collapsed: true }
   }
 
   onPress = () => {
@@ -36,22 +32,22 @@ class ExpandableBoxComponent extends Component<Props, State> {
     })
   }
 
-  renderTop = (style: Object) => {
+  renderTop = () => {
     const msg = this.state.collapsed ? this.props.showMessage : this.props.hideMessage
     const icon = this.state.collapsed ? Constants.KEYBOARD_ARROW_DOWN : Constants.KEYBOARD_ARROW_UP
     return (
-      <View style={style.top}>
-        <TextAndIconButton style={style.textIconButton} icon={icon} iconType={Constants.MATERIAL_ICONS} onPress={this.onPress} title={msg} />
+      <View style={styles.top}>
+        <TextAndIconButton style={textIconButtonStyles} icon={icon} iconType={Constants.MATERIAL_ICONS} onPress={this.onPress} title={msg} />
       </View>
     )
   }
 
-  renderBottom = (style: Object) => {
+  renderBottom = () => {
     if (!this.state.collapsed) {
       return (
-        <View style={style.bottom}>
-          <View style={style.bottomInfo}>
-            <View style={style.bottomInner}>{this.props.children}</View>
+        <View style={styles.bottom}>
+          <View style={styles.bottomInfo}>
+            <View style={styles.bottomInner}>{this.props.children}</View>
           </View>
         </View>
       )
@@ -60,23 +56,70 @@ class ExpandableBoxComponent extends Component<Props, State> {
   }
 
   render() {
-    const style = this.props.style
     return (
       <View
         style={[
-          style.container,
+          styles.container,
           !this.state.collapsed && {
-            ...style.container,
             borderWidth: 0,
             borderColor: THEME.COLORS.GRAY_3
           }
         ]}
       >
-        {this.renderTop(style)}
-        {this.renderBottom(style)}
+        {this.renderTop()}
+        {this.renderBottom()}
       </View>
     )
   }
 }
 
-export { ExpandableBoxComponent }
+const textIconButtonStyles = {
+  ...TextAndIconButtonStyle,
+  text: {
+    ...TextAndIconButtonStyle.text,
+    fontSize: 14,
+    color: THEME.COLORS.SECONDARY
+  },
+  textPressed: {
+    ...TextAndIconButtonStyle.text,
+    fontSize: 14,
+    color: THEME.COLORS.SECONDARY
+  },
+  icon: {
+    ...TextAndIconButtonStyle.icon,
+    color: THEME.COLORS.SECONDARY
+  }
+}
+
+const rawStyles = {
+  container: {
+    flex: 1,
+    width: '100%',
+    flexDirection: 'column'
+  },
+  top: {
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    backgroundColor: THEME.COLORS.GRAY_3,
+    height: THEME.BUTTONS.HEIGHT
+  },
+  bottom: {
+    width: '100%',
+    flexDirection: 'column'
+  },
+  bottomInfo: {
+    width: '100%',
+    minHeight: 40,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    padding: 5,
+    borderColor: THEME.COLORS.GRAY_3
+  },
+  bottomInner: {
+    width: '100%',
+    flexDirection: 'column',
+    padding: 5
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

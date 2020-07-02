@@ -19,9 +19,6 @@ import { SettingsRow } from '../common/SettingsRow.js'
 import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { SetCustomNodesModal } from '../modals/SetCustomNodesModal.ui.js'
 
-const SETTINGS_DENOMINATION_TEXT = s.strings.settings_denominations_title
-const CUSTOM_NODES_TEXT = s.strings.settings_custom_nodes_title
-
 type NavigationProps = {
   currencyInfo: EdgeCurrencyInfo
 }
@@ -111,7 +108,7 @@ export class CurrencySettingsComponent extends Component<Props, State> {
               activatedBy={this.state.activatedBy}
             />
           )}
-          <SettingsHeaderRow text={SETTINGS_DENOMINATION_TEXT} />
+          <SettingsHeaderRow text={s.strings.settings_denominations_title} />
           {this.props.denominations.map(denomination => {
             const key = denomination.multiplier
             const left = (
@@ -125,7 +122,7 @@ export class CurrencySettingsComponent extends Component<Props, State> {
           })}
           {this.props.defaultElectrumServer.length !== 0 && (
             <>
-              <SettingsHeaderRow text={CUSTOM_NODES_TEXT} />
+              <SettingsHeaderRow text={s.strings.settings_custom_nodes_title} />
               <SettingsSwitchRow
                 text={s.strings.settings_enable_custom_nodes}
                 value={this.props.disableFetchingServers}

@@ -15,10 +15,11 @@ export const LoadingScene = () => {
   )
 }
 
-const styles = StyleSheet.create({
+const rawStyles = {
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
   }
-})
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

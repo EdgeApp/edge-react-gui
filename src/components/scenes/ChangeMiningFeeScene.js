@@ -2,7 +2,7 @@
 
 import { type EdgeCurrencyWallet } from 'edge-core-js/types'
 import React, { type Node, Component } from 'react'
-import { ScrollView, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { connect } from 'react-redux'
 
@@ -12,7 +12,6 @@ import s from '../../locales/strings.js'
 import { getGuiMakeSpendInfo } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
 import { type FeeOption } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { dayText, nightText } from '../../styles/common/textStyles.js'
-import { styles } from '../../styles/scenes/ChangeMiningFeeStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { FormField } from '../common/FormField.js'
@@ -133,6 +132,51 @@ export class ChangeMiningFee extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  content: {
+    flexGrow: 1,
+    backgroundColor: THEME.COLORS.WHITE,
+    padding: THEME.rem(1.4)
+  },
+
+  // Radio input:
+  radioRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: THEME.rem(1)
+  },
+  radio: {
+    borderRadius: THEME.rem(0.5),
+    marginRight: THEME.rem(0.5),
+    width: THEME.rem(1),
+    height: THEME.rem(1),
+    borderWidth: THEME.rem(1 / 16),
+    borderColor: THEME.COLORS.GRAY_2
+  },
+  selected: {
+    borderColor: THEME.COLORS.ACCENT_BLUE,
+    backgroundColor: THEME.COLORS.ACCENT_BLUE
+  },
+
+  // Custom fee area:
+  customArea: {
+    marginBottom: THEME.rem(1)
+  },
+
+  // Warning box:
+  warningBox: {
+    padding: THEME.rem(0.5),
+
+    backgroundColor: THEME.COLORS.ACCENT_ORANGE,
+    borderRadius: THEME.rem(0.5),
+
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-between'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const ChangeMiningFeeScene = connect(
   (state: ReduxState): StateProps => ({

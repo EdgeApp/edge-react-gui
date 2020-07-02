@@ -1,32 +1,52 @@
 // @flow
+
 import React, { Component } from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, View } from 'react-native'
 
 import iconImage from '../../assets/images/otp/OTP-badge.png'
 import s from '../../locales/strings.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { scale } from '../../util/scaling.js'
 
 type OtpHeroProps = {
-  style: Object,
   enabled: boolean
 }
 
 export default class OtpHero extends Component<OtpHeroProps> {
-  renderText = (style: Object) => {
+  renderText = () => {
     if (this.props.enabled) {
-      return <Text style={style.bodyText}>{s.strings.title_otp_enabled}</Text>
+      return <Text style={styles.bodyText}>{s.strings.title_otp_enabled}</Text>
     }
-    return <Text style={style.bodyText}>{s.strings.title_otp_disabled}</Text>
+    return <Text style={styles.bodyText}>{s.strings.title_otp_disabled}</Text>
   }
 
   render() {
-    const style = this.props.style
     return (
-      <View style={style.container}>
-        <View style={style.shim} />
-        <Image source={iconImage} style={style.icon} size={style.imageSize} />
-        <View style={style.shim} />
-        {this.renderText(style)}
+      <View style={styles.container}>
+        <View style={styles.shim} />
+        <Image source={iconImage} size={scale(50)} />
+        <View style={styles.shim} />
+        {this.renderText()}
       </View>
     )
   }
 }
+
+const rawStyles = {
+  container: {
+    width: '100%',
+    height: scale(120),
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  shim: {
+    height: scale(10)
+  },
+  bodyText: {
+    width: '100%',
+    textAlign: 'center',
+    fontSize: scale(21),
+    color: THEME.COLORS.GRAY_1
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
