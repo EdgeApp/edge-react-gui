@@ -9,7 +9,6 @@ import { TransactionDetailsNotesInput } from '../../../components/modals/Transac
 import { Airship, showError } from '../../../components/services/AirshipInstance'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
-import { MaterialInput } from '../../../styles/components/FormFieldStyles.js'
 import { styles as CryptoExchangeSceneStyle } from '../../../styles/scenes/CryptoExchangeSceneStyles'
 import { styles } from '../../../styles/scenes/FioRequestConfirmationStyle'
 import type { State } from '../../../types/reduxTypes'
@@ -43,7 +42,6 @@ type LocalState = {
 }
 
 class SelectFioAddress extends Component<Props, LocalState> {
-  MaterialInputStyle = {}
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -57,18 +55,6 @@ class SelectFioAddress extends Component<Props, LocalState> {
       this.setFioAddress(fioRequest.payer_fio_address)
     } else if (isSendUsingFioAddress) {
       this.setDefaultFioAddress()
-    }
-
-    const materialStyle = { ...MaterialInput }
-    materialStyle.tintColor = styles.text.color
-    materialStyle.baseColor = styles.text.color
-    this.MaterialInputStyle = {
-      ...materialStyle,
-      container: {
-        ...materialStyle.container,
-        width: styles.selectFullWidth.width
-      },
-      titleTextStyle: styles.title
     }
   }
 
