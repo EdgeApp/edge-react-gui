@@ -45,12 +45,13 @@ export type CreateWalletAccountSetupDispatchProps = {
 
 type Props = CreateWalletAccountSetupOwnProps & CreateWalletAccountSetupDispatchProps & CreateWalletAccountSetupStateProps
 type State = {
-  accountHandle: string,
-  symbolImage: string
+  accountHandle: string
 }
 
 export class CreateWalletAccountSetup extends Component<Props, State> {
-  constructor(props: Props) {
+  debouncedCheckHandleAvailability: () => void
+
+  constructor (props: Props) {
     super(props)
 
     this.state = {
