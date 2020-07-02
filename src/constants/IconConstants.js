@@ -39,8 +39,6 @@ export const MAIL = 'ios-mail'
 export const ALERT_OUTLINE = 'ios-alert-outline'
 export const KEY_ICON = 'ios-key'
 export const WALLET_ICON = 'ios-wallet'
-export const IOS_INFO_ICON = 'ios-information-circle-outline'
-export const ANDROID_INFO_ICON = 'md-information-circle-outline'
 export const WARNING = 'ios-warning'
 
 // Material

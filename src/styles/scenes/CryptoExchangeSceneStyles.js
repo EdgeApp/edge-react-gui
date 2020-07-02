@@ -2,7 +2,7 @@
 
 import THEME from '../../theme/variables/airbitz'
 import { scale } from '../../util/scaling.js'
-import { IconButtonStyle, TextAndIconButtonStyle } from '../components/ButtonStyles.js'
+import { TextAndIconButtonStyle } from '../components/ButtonStyles.js'
 
 export const styles = {
   mainScrollView: {
@@ -49,7 +49,6 @@ export const styles = {
     height: scale(20)
   },
 
-  flipButton: IconButtonStyle,
   downArrow: {
     color: THEME.COLORS.WHITE
   },

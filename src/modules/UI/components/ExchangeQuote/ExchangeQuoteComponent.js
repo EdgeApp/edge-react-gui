@@ -2,14 +2,15 @@
 
 import { createSimpleConfirmModal } from 'edge-components'
 import React, { Component } from 'react'
-import { Image, Platform, View } from 'react-native'
+import { Image, Platform, TouchableOpacity, View } from 'react-native'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { launchModal } from '../../../../components/common/ModalProvider.js'
-import { ANDROID_INFO_ICON, EXCLAMATION, ION_ICONS, IOS_INFO_ICON, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
+import { EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import { styles as sceneStyles } from '../../../../styles/scenes/CryptoExchangeQuoteSceneStyles.js'
+import { THEME } from '../../../../theme/variables/airbitz.js'
 import FormattedText from '../../components/FormattedText/FormattedText.ui.js'
-import { IconButton } from '../Buttons/IconButton.ui'
 import { Icon } from '../Icon/Icon.ui'
 
 type Props = {
@@ -60,15 +61,17 @@ class ExchangeQuoteComponent extends Component<Props, State> {
   renderHeadline = () => {
     const styles = sceneStyles.quoteDetailContainer
     if (this.props.isEstimate) {
-      const platform = Platform.OS
-      const infoIcon = platform === 'ios' ? IOS_INFO_ICON : ANDROID_INFO_ICON
       return (
-        <View style={styles.headlineRow}>
+        <TouchableOpacity style={styles.headlineRow} onPress={this.showExplanationForEstimate}>
           <FormattedText style={styles.headlineEstimateText}>
             {s.strings.approximately} {this.props.headline}
           </FormattedText>
-          <IconButton style={styles.iconButton} onPress={this.showExplanationForEstimate} icon={infoIcon} iconType={ION_ICONS} />
-        </View>
+          <IonIcon
+            name={Platform.OS === 'ios' ? 'ios-information-circle-outline' : 'md-information-circle-outline'}
+            color={THEME.COLORS.ACCENT_ORANGE}
+            size={THEME.rem(0.875)}
+          />
+        </TouchableOpacity>
       )
     }
     return <FormattedText style={styles.headlineText}>{this.props.headline}</FormattedText>
