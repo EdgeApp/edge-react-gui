@@ -44,12 +44,13 @@ export type CreateWalletAccountSetupDispatchProps = {
 
 type Props = CreateWalletAccountSetupOwnProps & CreateWalletAccountSetupDispatchProps & CreateWalletAccountSetupStateProps
 type State = {
-  accountHandle: string,
-  symbolImage: string
+  accountHandle: string
 }
 
-export class CreateWalletAccountSetup extends React.Component<Props, State> {
-  constructor(props: Props) {
+export class CreateWalletAccountSetup extends Component<Props, State> {
+  debouncedCheckHandleAvailability: () => void
+
+  constructor (props: Props) {
     super(props)
 
     this.state = {
