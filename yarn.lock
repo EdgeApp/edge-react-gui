@@ -9518,10 +9518,10 @@ react-native-modal@^11.0.1:
     prop-types "^15.6.2"
     react-native-animatable "^1.3.1"
 
-react-native-patina@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.0.tgz#6e8ef787138f4d3bb91c99db29f6d0455c9ab2f9"
-  integrity sha512-ZrEQExgRDXBjMBEoCGkEh9B4T90xBGhMnRHX3xy1UcAVSxH/BUOb/D/xlCnE3aZRuzOazvniWCzmk1XVGT0+oQ==
+react-native-patina@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.1.tgz#9891541e731450df8a067e44010127627cd988a9"
+  integrity sha512-9ACbyuvsiDQo9Y6MqXKzaG30RCgobPUC9bB5IyvKKu7vR4Fz2NrSuOQVFq9HLiiiUowVm5xYwLlR0eoy3zhMRg==
 
 react-native-permissions@1.0.6:
   version "1.0.6"
