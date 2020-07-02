@@ -8,8 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { type WalletListMenuKey } from '../../actions/WalletListMenuActions.js'
 import { WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { MenuDropDown } from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
-import { MenuDropDownStyle } from '../../styles/components/HeaderMenuDropDownStyles.js'
+import { MenuDropDown, MenuDropDownStyle } from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
 import { scale } from '../../util/scaling.js'
 
 type Props = {

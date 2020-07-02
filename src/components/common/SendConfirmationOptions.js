@@ -2,14 +2,15 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Keyboard, View } from 'react-native'
+import { Keyboard, StyleSheet, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
 
 import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { MenuDropDownStyle } from '../../styles/components/HeaderMenuDropDownStyles.js'
 import { styles } from '../../styles/scenes/SendConfirmationStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { scale } from '../../util/scaling.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 
 const CHANGE_MINING_FEE = 'CHANGE_MINING_FEE'
@@ -44,7 +45,6 @@ export default class SendConfirmationOptions extends Component<Props> {
   }
 
   render() {
-    const defaultMenuStyle = MenuDropDownStyle
     const { currencyCode, isEditable } = this.props
     return (
       <View>
@@ -89,3 +89,21 @@ export default class SendConfirmationOptions extends Component<Props> {
     )
   }
 }
+
+const rawStyles = {
+  menuOption: {
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    borderBottomWidth: 1,
+    justifyContent: 'center'
+  },
+  menuOptionItem: {
+    flexDirection: 'row',
+    paddingVertical: scale(4),
+    paddingHorizontal: scale(6)
+  },
+  optionText: {
+    color: THEME.COLORS.GRAY_1,
+    fontSize: scale(18)
+  }
+}
+const defaultMenuStyle: typeof rawStyles = StyleSheet.create(rawStyles)

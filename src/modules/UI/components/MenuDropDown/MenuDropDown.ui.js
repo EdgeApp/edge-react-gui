@@ -6,7 +6,9 @@ import { StyleSheet, Text, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
 import slowlog from 'react-native-slowlog'
 
-import { getObjectDiff } from '../../../../util/utils'
+import { THEME } from '../../../../theme/variables/airbitz.js'
+import { scale } from '../../../../util/scaling.js'
+import { getObjectDiff } from '../../../../util/utils.js'
 
 export type StateProps = {
   style: StyleSheet.Styles,
@@ -24,7 +26,7 @@ type State = {
   pageY: number
 }
 
-class MenuDropDown extends Component<Props, State> {
+export class MenuDropDown extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -82,4 +84,62 @@ class MenuDropDown extends Component<Props, State> {
     )
   }
 }
-export { MenuDropDown }
+
+const dropdownTriggerWidth = 46
+
+export const MenuDropDownStyle = {
+  container: {
+    flexDirection: 'column',
+    width: scale(dropdownTriggerWidth),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  menuButton: {
+    width: scale(dropdownTriggerWidth),
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  menuOption: {
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    borderBottomWidth: 1,
+    justifyContent: 'center'
+  },
+  menuTrigger: {
+    triggerTouchable: {
+      underlayColor: THEME.COLORS.TRANSPARENT,
+      activeOpacity: 1,
+      style: {
+        width: scale(dropdownTriggerWidth),
+        justifyContent: 'center',
+        alignSelf: 'center',
+        height: '100%',
+        alignItems: 'center'
+      }
+    },
+    menuTriggerUnderlay: {}
+  },
+  menuIconWrap: {
+    width: scale(46),
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  menuOptions: {},
+  menuOptionItem: {
+    flexDirection: 'row',
+    paddingVertical: scale(4),
+    paddingHorizontal: scale(6)
+  },
+  optionText: {
+    color: THEME.COLORS.GRAY_1,
+    fontSize: scale(18)
+  },
+  icon: {
+    fontSize: scale(20),
+    color: THEME.COLORS.GRAY_1
+  },
+  altIconText: {
+    fontSize: scale(20)
+  }
+}
