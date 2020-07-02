@@ -25,6 +25,7 @@ import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { rawStyles, styles } from '../../styles/scenes/SendConfirmationStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
 import { AddressTextWithBlockExplorerModal } from '../common/AddressTextWithBlockExplorerModal'
@@ -280,7 +281,7 @@ export class SendConfirmation extends Component<Props, State> {
               <Scene.Padding style={{ paddingHorizontal: 54 }}>
                 <Scene.Item style={{ alignItems: 'center', flex: -1 }}>
                   <Scene.Row style={{ paddingVertical: 4 }}>
-                    <Text style={[styles.feeAreaText, networkFeeData.feeStyle]}>{networkFeeData.feeSyntax}</Text>
+                    <Text style={[styles.feeAreaText, { color: networkFeeData.feeColor }]}>{networkFeeData.feeSyntax}</Text>
                   </Scene.Row>
 
                   {!!destination && (
@@ -411,9 +412,9 @@ export class SendConfirmation extends Component<Props, State> {
     }
   }
 
-  getNetworkFeeData = (): { feeSyntax: string, feeStyle: Object } => {
+  getNetworkFeeData = (): { feeSyntax: string, feeColor: string } => {
     const { networkFee, parentNetworkFee, parentDisplayDenomination, exchangeRates } = this.props
-    let feeStyle = {}
+    let feeColor = THEME.COLORS.WHITE
 
     const primaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.currencyCode,
@@ -452,7 +453,7 @@ export class SendConfirmation extends Component<Props, State> {
       const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
       return {
         feeSyntax: sprintf(s.strings.send_confirmation_fee_line, `${cryptoFeeSymbol()} 0`, `${fiatFeeSymbol} 0`),
-        feeStyle
+        feeColor
       }
       // if parentNetworkFee greater than zero
     }
@@ -471,7 +472,7 @@ export class SendConfirmation extends Component<Props, State> {
       // catch-all scenario if only existing fee is negative (shouldn't be possible)
       return {
         feeSyntax: '',
-        feeStyle: {}
+        feeColor
       }
     }
     const cryptoFeeSymbol = denomination.symbol ? denomination.symbol : ''
@@ -492,13 +493,13 @@ export class SendConfirmation extends Component<Props, State> {
     const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
     // check if fee is high enough to signal a warning to user (via font color)
     if (feeAmountInUSD > FEE_ALERT_THRESHOLD) {
-      feeStyle = styles.feeDanger
+      feeColor = THEME.COLORS.ACCENT_RED
     } else if (feeAmountInUSD > FEE_COLOR_THRESHOLD) {
-      feeStyle = styles.feeWarning
+      feeColor = THEME.COLORS.ACCENT_ORANGE
     }
     return {
       feeSyntax: sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString),
-      feeStyle
+      feeColor
     }
   }
 
