@@ -3,7 +3,7 @@
 import { abs, bns, sub } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Image, Linking, Platform, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import slowlog from 'react-native-slowlog'
@@ -67,8 +67,7 @@ type State = {
   bizId: number,
   miscJson: any, // core receives this as a string
   category: string,
-  subCategory: string,
-  styles: StyleSheet
+  subCategory: string
 }
 
 const categories = {
@@ -124,8 +123,7 @@ export class TransactionDetailsComponent extends Component<Props, State> {
       thumbnailPath,
       direction,
       bizId: 0,
-      miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : '',
-      styles: getStyles(props.theme)
+      miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : ''
     }
     slowlog(this, /.*/, global.slowlogOptions)
   }
@@ -155,10 +153,6 @@ export class TransactionDetailsComponent extends Component<Props, State> {
       }
     }
     return { category: defaultCategory, subCategory: '' }
-  }
-
-  static getDerivedStateFromProps(props: Props) {
-    return { styles: getStyles(props.theme) }
   }
 
   componentDidMount() {
@@ -235,8 +229,8 @@ export class TransactionDetailsComponent extends Component<Props, State> {
 
   renderExchangeData = () => {
     const { destinationDenomination, destinationWallet, edgeTransaction, guiWallet, walletDefaultDenomProps, theme } = this.props
-    const { styles } = this.state
     const { swapData, spendTargets } = edgeTransaction
+    const styles = getStyles(theme)
 
     if (!swapData || !spendTargets || !destinationDenomination) return null
 
@@ -413,9 +407,10 @@ export class TransactionDetailsComponent extends Component<Props, State> {
 
   // Render
   render() {
-    const { guiWallet, edgeTransaction } = this.props
-    const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory, styles } = this.state
+    const { guiWallet, edgeTransaction, theme } = this.props
+    const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory } = this.state
     const { fiatCurrencyCode } = guiWallet
+    const styles = getStyles(theme)
 
     const crypto: FiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
     const fiatSymbol = UTILS.getFiatSymbol(guiWallet.fiatCurrencyCode)
@@ -484,7 +479,6 @@ export class TransactionDetailsComponent extends Component<Props, State> {
               <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
                 <FormattedText style={styles.textTransactionData}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
               </TouchableWithoutFeedback>
-              <View style={styles.spacer} />
               <View style={styles.saveButtonContainer}>
                 <PrimaryButton2 style={styles.saveButton} onPress={this.onSaveTxDetails}>
                   <PrimaryButton2.Text>{s.strings.string_save}</PrimaryButton2.Text>
