@@ -4,14 +4,12 @@ import { PrimaryButton, SecondaryButton, TertiaryButton } from 'edge-components'
 import { type EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Clipboard, Linking } from 'react-native'
+import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import { MATERIAL_COMMUNITY, TELESCOPE } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
-import styles, { activeOpacity } from '../../styles/scenes/TransactionDetailsStyle.js'
-import { scale } from '../../util/scaling.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { showToast } from '../services/AirshipInstance.js'
 
 export type AdvancedTransactionDetailsModalOwnProps = {
@@ -54,7 +52,7 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
     return (
       <InteractiveModal>
         <InteractiveModal.Icon>
-          <Icon style={styles.txIDIcon} name={TELESCOPE} type={MATERIAL_COMMUNITY} size={scale(34)} />
+          <MCIcon name="telescope" color={THEME.COLORS.SECONDARY} size={THEME.rem(2.125)} />
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title>
@@ -69,7 +67,7 @@ export class AdvancedTransactionDetailsModal extends Component<AdvancedTransacti
         <InteractiveModal.Footer>
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <TertiaryButton onPress={this.handleClick} activeOpacity={activeOpacity}>
+              <TertiaryButton onPress={this.handleClick} activeOpacity={THEME.OPACITY.ACTIVE}>
                 <TertiaryButton.Text>{s.strings.transaction_details_show_advanced_block_explorer}</TertiaryButton.Text>
               </TertiaryButton>
             </InteractiveModal.Item>

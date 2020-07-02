@@ -1,13 +1,13 @@
 // @flow
 
 import React, { Component } from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import styles, { materialInput } from '../../styles/scenes/TransactionDetailsStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { splitTransactionCategory } from '../../util/utils.js'
-import { FormField } from '../common/FormField.js'
+import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 import SubCategorySelect from '../common/TransactionSubCategorySelect.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
@@ -82,7 +82,7 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
             <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_category_title}</FormattedText>
             <View style={styles.inputCategoryMainContainter}>
               <FormattedText style={styles.inputCategoryListHeader}>{s.strings.tx_detail_picker_title}</FormattedText>
-              <View style={styles.InputCategoryRow}>
+              <View style={styles.inputCategoryRow}>
                 {categories.map(item => {
                   const containterStyle = category === item.key ? styles.inputCategoryContainterSelected : styles.inputCategoryContainter
                   return (
@@ -146,3 +146,63 @@ export class TransactionDetailsCategoryInput extends Component<Props, State> {
     return [...selectedSubcategories, ...filteredSubcategories]
   }
 }
+
+const materialInput = {
+  ...MaterialInputOnWhite,
+  fontSize: THEME.rem(0.9),
+  labelFontSize: THEME.rem(0.65),
+  container: {
+    ...MaterialInputOnWhite.container,
+    height: THEME.rem(3.44),
+    width: '100%'
+  }
+}
+
+const rawStyles = {
+  airshipContainer: {
+    flex: 1,
+    padding: THEME.rem(0.8)
+  },
+  airshipHeader: {
+    fontSize: THEME.rem(1.2),
+    marginBottom: THEME.rem(1),
+    alignSelf: 'center'
+  },
+  inputCategoryListHeader: {
+    fontSize: THEME.rem(0.7),
+    marginBottom: THEME.rem(0.3),
+    color: THEME.COLORS.SECONDARY
+  },
+  inputCategoryRow: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  inputCategoryContainter: {
+    paddingHorizontal: THEME.rem(0.5),
+    paddingVertical: THEME.rem(0.2),
+    marginRight: THEME.rem(0.6),
+    borderWidth: 1,
+    borderColor: THEME.COLORS.TRANSACTION_DETAILS_SECONDARY,
+    borderRadius: 3
+  },
+  inputCategoryContainterSelected: {
+    paddingHorizontal: THEME.rem(0.5),
+    paddingVertical: THEME.rem(0.2),
+    marginRight: THEME.rem(0.6),
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: THEME.COLORS.TRANSACTION_DETAILS_SECONDARY,
+    backgroundColor: THEME.COLORS.TRANSACTION_DETAILS_SECONDARY
+  },
+  inputCategoryText: {
+    color: THEME.COLORS.SECONDARY,
+    fontSize: THEME.rem(0.9)
+  },
+  inputCategoryMainContainter: {
+    marginBottom: THEME.rem(0.8)
+  },
+  inputSubCategoryContainter: {
+    marginTop: THEME.rem(0.8)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

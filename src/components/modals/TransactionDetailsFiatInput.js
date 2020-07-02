@@ -2,15 +2,15 @@
 
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import styles, { materialFiatInput } from '../../styles/scenes/TransactionDetailsStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { truncateDecimals } from '../../util/utils.js'
-import { FormField } from '../common/FormField.js'
+import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
 type Props = {
@@ -95,3 +95,25 @@ export class TransactionDetailsFiatInput extends Component<Props, State> {
       .replace(/x/, ',')
   }
 }
+
+const materialFiatInput = {
+  ...MaterialInputOnWhite,
+  fontSize: THEME.rem(3),
+  container: {
+    ...MaterialInputOnWhite.container,
+    width: '100%'
+  }
+}
+
+const rawStyles = {
+  airshipContainer: {
+    flex: 1,
+    padding: THEME.rem(0.8)
+  },
+  airshipHeader: {
+    fontSize: THEME.rem(1.2),
+    marginBottom: THEME.rem(1),
+    alignSelf: 'center'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

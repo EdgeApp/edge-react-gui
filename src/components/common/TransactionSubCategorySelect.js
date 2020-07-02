@@ -1,12 +1,12 @@
 // @flow
 
 import React, { Component } from 'react'
-import { FlatList, TouchableHighlight, View } from 'react-native'
+import { FlatList, StyleSheet, TouchableHighlight, View } from 'react-native'
 
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import styles from '../../styles/scenes/TransactionDetailsStyle'
 import { THEME } from '../../theme/variables/airbitz.js'
 import type { SubcategorySearchResultData } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 
 type State = {
   subcategories: Array<string>,
@@ -86,5 +86,44 @@ class SubCategorySelect extends Component<Props, State> {
 
   keyExtractor = (item: any, index: number) => String(index)
 }
+
+const rawStyles = {
+  resultList: {
+    backgroundColor: THEME.COLORS.WHITE,
+    borderTopColor: THEME.COLORS.GRAY_3,
+    borderTopWidth: 1,
+    flex: 1
+  },
+  rowContainer: {
+    flex: 1,
+    height: THEME.rem(3.1),
+    paddingLeft: THEME.rem(0.6),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: THEME.COLORS.WHITE,
+    borderBottomWidth: 1,
+    borderColor: THEME.COLORS.TRANSACTION_DETAILS_GREY_4
+  },
+  rowContent: {
+    flex: 1,
+    flexDirection: 'row',
+    paddingRight: scale(20)
+  },
+  rowCategoryTextWrap: {
+    flex: 1,
+    justifyContent: 'center',
+    marginRight: scale(5)
+  },
+  rowCategoryText: {
+    fontSize: THEME.rem(0.95)
+  },
+  rowPlusWrap: {
+    justifyContent: 'center'
+  },
+  rowPlus: {
+    fontSize: THEME.rem(0.95)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export default SubCategorySelect
