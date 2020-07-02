@@ -168,7 +168,7 @@ export const checkHandleAvailability = (currencyCode: string, accountName: strin
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
-    const data = await currencyPlugin.otherMethods.checkAccountName(accountName)
+    const data = await currencyPlugin.otherMethods.validateAccount(accountName)
     if (data.result === 'AccountAvailable') {
       dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data: 'AVAILABLE' })
     }
@@ -197,7 +197,7 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
   const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
-  const handleAvailability = await currencyPlugin.otherMethods.checkAccountName(accountName)
+  const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
   const paymentDenom = getExchangeDenomination(state, currencyCode)
   let nativeAmount = bns.mul(amount, paymentDenom.multiplier)
   nativeAmount = bns.toFixed(nativeAmount, 0, 0)
