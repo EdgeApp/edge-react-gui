@@ -6,33 +6,33 @@ import React, { Component } from 'react'
 import { FlatList, View } from 'react-native'
 import { connect } from 'react-redux'
 
+import { refreshWallet } from '../../actions/WalletActions.js'
 import { WalletListModalCreateRow } from '../../components/common/WalletListModalCreateRow.js'
 import { CryptoExchangeWalletListTokenRowConnected as CryptoExchangeWalletListRow } from '../../connectors/components/CryptoExchangeWalletListRowConnector.js'
+import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/indexConstants.js'
+import s from '../../locales/strings.js'
+import { setEnabledTokens } from '../../modules/Core/Wallets/EnabledTokens.js'
 import { getActiveWalletIds } from '../../modules/UI/selectors.js'
 import type { State as StateType } from '../../types/reduxTypes.js'
 import type { FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
-import { type GuiWalletType } from '../../types/types.js'
-import { getGuiWalletTypes } from '../../util/CurrencyInfoHelpers.js'
+import { type CreateWalletType } from '../../types/types.js'
+import { getCreateWalletType, getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { type TokenSelectObject } from '../common/CryptoExchangeWalletListTokenRow.js'
+import { showError, showFullScreenSpinner } from '../services/AirshipInstance.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
 export type WalletListResult = {
-  walletToSelect?: {
-    walletId: string,
-    currencyCode: string
-  },
-  walletToCreate?: {
-    walletType: string,
-    currencyCode: string
-  }
+  walletId?: string,
+  currencyCode?: string
 }
 
 type StateProps = {
   wallets: { [string]: GuiWallet },
   activeWalletIds: Array<string>,
   mostRecentWallets: Array<MostRecentWallet>,
-  account: EdgeAccount
+  account: EdgeAccount,
+  defaultIsoFiat: string
 }
 
 type OwnProps = {
@@ -44,9 +44,21 @@ type OwnProps = {
   excludeCurrencyCodes?: Array<string>
 }
 
+type DispatchProps = {
+  tokenCreated(string, string[]): void
+}
+
+type CreateToken = {
+  currencyCode: string,
+  currencyName: string,
+  symbolImage?: string,
+  parentCurrencyCode: string
+}
+
 type Record = {
   walletItem: GuiWallet | null,
-  createWalletCurrency: GuiWalletType | null,
+  createWalletCurrency: CreateWalletType | null,
+  createToken: CreateToken | null,
   mostRecentUsed?: boolean,
   currencyCode?: string | null,
   headerLabel?: string
@@ -59,7 +71,7 @@ type State = {
   excludeCurrencyCodes?: Array<string>
 }
 
-type Props = StateProps & OwnProps
+type Props = StateProps & OwnProps & DispatchProps
 
 class WalletListModalConnected extends Component<Props, State> {
   constructor(props: Props) {
@@ -83,6 +95,22 @@ class WalletListModalConnected extends Component<Props, State> {
     }
 
     const records = []
+    const createTokens = {}
+
+    // Create Tokens Array
+    if (showCreateWallet) {
+      const currencyInfos = getCurrencyInfos(account)
+      for (const currencyInfo of currencyInfos) {
+        for (const metaToken of currencyInfo.metaTokens) {
+          createTokens[`${currencyInfo.currencyCode}:${metaToken.currencyCode}`] = {
+            currencyCode: metaToken.currencyCode,
+            currencyName: metaToken.currencyName,
+            symbolImage: metaToken.symbolImage,
+            parentCurrencyCode: currencyInfo.currencyCode
+          }
+        }
+      }
+    }
 
     // Initialize Wallets
     for (const walletId of activeWalletIds) {
@@ -91,14 +119,20 @@ class WalletListModalConnected extends Component<Props, State> {
       if (wallet && !excludeWallet) {
         records.push({
           walletItem: wallet,
-          createWalletCurrency: null
+          createWalletCurrency: null,
+          createToken: null
         })
+
+        // Filter createTokens array on enabled tokens
+        for (const enabledToken of wallet.enabledTokens) {
+          delete createTokens[`${wallet.currencyCode}:${enabledToken}`]
+        }
       }
     }
 
     // Initialize Create Wallets
     if (showCreateWallet) {
-      const createWalletCurrencies = getGuiWalletTypes(account)
+      const createWalletCurrencies = getCreateWalletTypes(account)
       const walletsArray = Object.values(wallets)
       for (const createWalletCurrency of createWalletCurrencies) {
         const { currencyCode } = createWalletCurrency
@@ -108,11 +142,36 @@ class WalletListModalConnected extends Component<Props, State> {
         if (checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes && !checkExistingWallet) {
           records.push({
             walletItem: null,
-            createWalletCurrency
+            createWalletCurrency,
+            createToken: null
           })
         }
       }
     }
+
+    // Initialize Create Tokens
+    if (showCreateWallet) {
+      for (const fullCurrencyCode in createTokens) {
+        if (createTokens.hasOwnProperty(fullCurrencyCode)) {
+          const createToken = createTokens[fullCurrencyCode]
+          const tokenCurrencyCode = createToken.currencyCode
+          const checkAllowedCurrencyCodes = allowedCurrencyCodes
+            ? allowedCurrencyCodes.find(currencyCode => currencyCode === fullCurrencyCode || currencyCode === tokenCurrencyCode)
+            : true
+          const checkExcludeCurrencyCodes = excludeCurrencyCodes
+            ? excludeCurrencyCodes.find(currencyCode => currencyCode === fullCurrencyCode || currencyCode === tokenCurrencyCode)
+            : false
+          if (checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes) {
+            records.push({
+              walletItem: null,
+              createWalletCurrency: null,
+              createToken
+            })
+          }
+        }
+      }
+    }
+
     return {
       records,
       allowedCurrencyCodes,
@@ -182,7 +241,7 @@ class WalletListModalConnected extends Component<Props, State> {
     const inputLowerCase = input.toLowerCase()
     const filteredRecords = []
     for (const record of records) {
-      const { walletItem, createWalletCurrency } = record
+      const { walletItem, createWalletCurrency, createToken } = record
 
       if (walletItem) {
         const { name, currencyCode, currencyNames, enabledTokens } = walletItem
@@ -206,24 +265,78 @@ class WalletListModalConnected extends Component<Props, State> {
         }
       }
 
-      if (createWalletCurrency && !walletItem) {
+      if ((createWalletCurrency || createToken) && !walletItem) {
         filteredRecords.push(record)
       }
     }
     return filteredRecords
   }
 
-  selectWallet = (wallet: GuiWallet) => this.props.bridge.resolve({ walletToSelect: { walletId: wallet.id, currencyCode: wallet.currencyCode } })
-  selectTokenWallet = (tokenSelectObject: TokenSelectObject) =>
-    this.props.bridge.resolve({ walletToSelect: { walletId: tokenSelectObject.id, currencyCode: tokenSelectObject.currencyCode } })
+  createWallet = (currencyCode: string, walletType: string) => {
+    const { account, defaultIsoFiat } = this.props
+    const [type, format] = walletType.split('-')
 
-  createWallet = (createWalletCurrency: GuiWalletType) =>
-    this.props.bridge.resolve({ walletToCreate: { walletType: createWalletCurrency.value, currencyCode: createWalletCurrency.currencyCode } })
+    return showFullScreenSpinner(
+      s.strings.wallet_list_modal_creating_wallet,
+      account.createCurrencyWallet(type, {
+        name: DEFAULT_STARTER_WALLET_NAMES[currencyCode],
+        defaultIsoFiat,
+        keyOptions: format ? { format } : {}
+      })
+    )
+  }
+
+  selectWallet = (wallet: GuiWallet) => this.props.bridge.resolve({ walletId: wallet.id, currencyCode: wallet.currencyCode })
+
+  selectTokenWallet = (tokenSelectObject: TokenSelectObject) =>
+    this.props.bridge.resolve({ walletId: tokenSelectObject.id, currencyCode: tokenSelectObject.currencyCode })
+
+  createAndSelectWallet = async ({ currencyCode, walletType }: CreateWalletType) => {
+    try {
+      const wallet = await this.createWallet(currencyCode, walletType)
+      this.props.bridge.resolve({ walletId: wallet.id, currencyCode: wallet.currencyInfo.currencyCode })
+    } catch (error) {
+      showError(error)
+    }
+  }
+
+  createAndSelectToken = async ({ currencyCode, parentCurrencyCode }: CreateToken) => {
+    const { account, tokenCreated } = this.props
+    const { currencyWallets } = account
+
+    // Find existing EdgeCurrencyWallet
+    let wallet
+    for (const walletId in currencyWallets) {
+      const currencyWallet = currencyWallets[walletId]
+      if (currencyWallet.currencyInfo.currencyCode === parentCurrencyCode) {
+        wallet = currencyWallet
+        break
+      }
+    }
+
+    try {
+      if (!wallet) {
+        const walletType = getCreateWalletType(account, parentCurrencyCode)
+        if (!walletType) throw new Error(s.strings.create_wallet_failed_message)
+        wallet = await this.createWallet(walletType.currencyCode, walletType.walletType)
+      }
+
+      const enabledTokens = await showFullScreenSpinner(
+        s.strings.wallet_list_modal_enabling_token,
+        setEnabledTokens(wallet, [...(await wallet.getEnabledTokens()), currencyCode], [])
+      )
+
+      tokenCreated(wallet.id, enabledTokens)
+      this.props.bridge.resolve({ walletId: wallet.id, currencyCode })
+    } catch (error) {
+      showError(error)
+    }
+  }
 
   renderWalletItem = ({ item }: FlatListItem<Record>) => {
     const { showCreateWallet } = this.props
     const { allowedCurrencyCodes, excludeCurrencyCodes } = this.state
-    const { walletItem, createWalletCurrency, mostRecentUsed, currencyCode, headerLabel } = item
+    const { walletItem, createWalletCurrency, createToken, mostRecentUsed, currencyCode, headerLabel } = item
     if (walletItem) {
       return (
         <CryptoExchangeWalletListRow
@@ -244,7 +357,26 @@ class WalletListModalConnected extends Component<Props, State> {
       )
     }
     if (showCreateWallet && createWalletCurrency) {
-      return <WalletListModalCreateRow supportedWallet={createWalletCurrency} onPress={this.createWallet} disableZeroBalance={false} />
+      return (
+        <WalletListModalCreateRow
+          currencyCode={createWalletCurrency.currencyCode}
+          image={createWalletCurrency.symbolImage}
+          name={createWalletCurrency.currencyName}
+          type="wallet"
+          onPress={() => this.createAndSelectWallet(createWalletCurrency)}
+        />
+      )
+    }
+    if (showCreateWallet && createToken) {
+      return (
+        <WalletListModalCreateRow
+          currencyCode={createToken.currencyCode}
+          image={createToken.symbolImage}
+          name={createToken.currencyName}
+          type="token"
+          onPress={() => this.createAndSelectToken(createToken)}
+        />
+      )
     }
     return null
   }
@@ -286,15 +418,27 @@ class WalletListModalConnected extends Component<Props, State> {
   }
 }
 
-const WalletListModal = connect((state: StateType): StateProps => {
-  const wallets = state.ui.wallets.byId
-  return {
-    wallets,
-    activeWalletIds: global.isFioDisabled
-      ? getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
-      : getActiveWalletIds(state),
-    mostRecentWallets: state.ui.settings.mostRecentWallets,
-    account: state.core.account
-  }
-})(WalletListModalConnected)
+const WalletListModal = connect(
+  (state: StateType): StateProps => {
+    const wallets = state.ui.wallets.byId
+    return {
+      wallets,
+      activeWalletIds: global.isFioDisabled
+        ? getActiveWalletIds(state).filter(id => !(wallets[id] != null && wallets[id].type === 'wallet:fio'))
+        : getActiveWalletIds(state),
+      mostRecentWallets: state.ui.settings.mostRecentWallets,
+      account: state.core.account,
+      defaultIsoFiat: state.ui.settings.defaultIsoFiat
+    }
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    tokenCreated(walletId: string, tokens: string[]) {
+      dispatch({
+        type: 'UPDATE_WALLET_ENABLED_TOKENS',
+        data: { walletId, tokens }
+      })
+      dispatch(refreshWallet(walletId))
+    }
+  })
+)(WalletListModalConnected)
 export { WalletListModal }

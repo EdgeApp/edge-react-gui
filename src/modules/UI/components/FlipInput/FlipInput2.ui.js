@@ -7,7 +7,7 @@ import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
 import * as Constants from '../../../../constants/indexConstants'
-import { intl } from '../../../../locales/intl'
+import * as intl from '../../../../locales/intl.js'
 import { THEME } from '../../../../theme/variables/airbitz.js'
 import { scale } from '../../../../util/scaling.js'
 import * as UTILS from '../../../../util/utils.js'
@@ -110,7 +110,7 @@ const addCurrencySymbol = (currencySymbol: string, displayAmount: string) =>
 const removeCurrencySymbol = (currencySymbol: string, previousDisplayAmount: string, displayAmount: string) => {
   // This looks for a number left if the currency symbol and moves it to the far right
   if (previousDisplayAmount === displayAmount.substring(1)) {
-    displayAmount = previousDisplayAmount + displayAmount[0]
+    displayAmount = previousDisplayAmount + (displayAmount[0] || '')
   }
   return displayAmount.replace(currencySymbol, '').trim()
 }

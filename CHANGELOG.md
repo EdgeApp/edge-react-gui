@@ -1,5 +1,34 @@
 # edge-react-gui
 
+## 1.15.2 (2020-06-25)
+
+- Update FIO server list
+
+## 1.15.1 (2020-06-22)
+
+- Show fee as fiat amount on swap quote scene
+- Upgrade edge-currency-bitcoin to v4.8.2
+  - Prioritize Earn.com fee estimation
+  - Decrease fee level block targets
+- Upgrade edge-exchange-plugins to v0.11.1
+  - Force high fee when swapping from BTC
+
+## 1.15.0 (2020-06-17)
+
+- Newly designed transaction details scene
+- Price change alert push notifications
+- Transak - added US debit card support
+- Moonpay - added more countries
+- Implement new theming scheme and utilize it for transaction details scene
+- Fix the request scene share button to share the wallet public address URI instead of a file
+- Fix share app button so it doesn't share a file
+- Upgrade edge-core-js to v0.17.6
+  - Expose an `EdgeAccount.rootLoginId`
+  - Save the decryption keys for Monero spends
+  - Replace git2.airbitz.co with git1.edge.app in the sync server list
+- Upgrade edge-currency-bitcoin to v4.8.1
+  - Make sure minimum LOW_FEE is enforced on all fee levels
+
 ## 1.14.1 (2020-06-08)
 
 - Add try/catch to prevent info1 errors from appearing when server is under load

@@ -31,7 +31,7 @@ export const currencyPlugins = {
   eos: true,
   telos: true,
   ethereum: ENV.ETHEREUM_INIT,
-  ethereumclassic: false,
+  ethereumclassic: true,
   fio: true,
   ripple: true,
   rsk: true,

@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { TouchableWithoutFeedback, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { intl } from '../../locales/intl.js'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles, { materialFiatInput } from '../../styles/scenes/TransactionDetailsStyle.js'

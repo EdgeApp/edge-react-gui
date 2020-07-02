@@ -3,7 +3,7 @@
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
 
-import { intl } from '../../locales/intl.js'
+import * as intl from '../../locales/intl.js'
 import type { State } from '../../types/reduxTypes.js'
 import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types/types.js'
 import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils.js'
@@ -47,12 +47,13 @@ export const getActiveWalletIds = (state: State): Array<string> => {
 }
 
 export const getActiveWalletCurrencyCodes = (state: State) => {
-  const ids = getActiveWalletIds(state)
-  const currencyCodesMap = ids.reduce((map, id) => {
-    const wallet = getWallet(state, id)
+  const { account } = state.core
+  const { activeWalletIds, currencyWallets } = account
+  const currencyCodesMap = activeWalletIds.reduce((map, id) => {
+    const wallet = currencyWallets[id]
     if (!wallet) return map
 
-    map[wallet.currencyCode] = true
+    map[wallet.currencyInfo.currencyCode] = true
     return map
   }, {})
   const currencyCodes: Array<string> = Object.keys(currencyCodesMap)

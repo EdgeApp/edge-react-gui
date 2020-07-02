@@ -6,7 +6,7 @@ import { Image, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import fioRequestsIcon from '../../../assets/images/fio/fio_sent_request.png'
-import { intl } from '../../../locales/intl'
+import * as intl from '../../../locales/intl.js'
 import s from '../../../locales/strings'
 import { styles as requestListStyles } from '../../../styles/scenes/FioRequestListStyle'
 import styles from '../../../styles/scenes/TransactionListStyle'

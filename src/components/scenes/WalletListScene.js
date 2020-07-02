@@ -36,7 +36,7 @@ import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
 import { type FlatListItem, type GuiWallet } from '../../types/types.js'
-import { makeGuiWalletType } from '../../util/CurrencyInfoHelpers.js'
+import { makeCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
@@ -64,7 +64,7 @@ type DispatchProps = {
   hideMessageTweak(messageId: string, source: TweakSource): void,
   toggleAccountBalanceVisibility(): void,
   updateActiveWalletsOrder(walletIds: Array<string>): void,
-  walletRowOption(walletId: string, option: WalletListMenuKey): void,
+  walletRowOption(walletId: string, option: WalletListMenuKey, currencyCode: string): void,
   disableOtp(): void,
   keepOtp(): void,
   linkReferralWithCurrencies(string): void
@@ -104,11 +104,14 @@ class WalletListComponent extends Component<Props, State> {
     }
   }
 
-  executeWalletRowOption = (walletId: string, option: WalletListMenuKey) => {
+  executeWalletRowOption = (walletId: string, option: WalletListMenuKey, currencyCode?: string) => {
     if (option === 'sort') {
       return this.setState({ sorting: true })
     }
-    return this.props.walletRowOption(walletId, option)
+    if (this.props.wallets[walletId] != null && !currencyCode) {
+      currencyCode = this.props.wallets[walletId].currencyCode
+    }
+    return this.props.walletRowOption(walletId, option, currencyCode)
   }
 
   render() {
@@ -177,7 +180,7 @@ class WalletListComponent extends Component<Props, State> {
     return guiWallet != null ? (
       <WalletListRow guiWallet={guiWallet} executeWalletRowOption={this.executeWalletRowOption} showBalance={getIsAccountBalanceVisible} />
     ) : (
-      <WalletListEmptyRow />
+      <WalletListEmptyRow walletId={data.item.key} executeWalletRowOption={this.executeWalletRowOption} />
     )
   }
 
@@ -220,7 +223,7 @@ class WalletListComponent extends Component<Props, State> {
 
     if (answer) {
       Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
-        selectedWalletType: makeGuiWalletType(ethereum.currencyInfo)
+        selectedWalletType: makeCreateWalletType(ethereum.currencyInfo)
       })
     }
   }
@@ -379,8 +382,8 @@ export const WalletListScene = connect(
     updateActiveWalletsOrder(activeWalletIds) {
       dispatch(updateActiveWalletsOrder(activeWalletIds))
     },
-    walletRowOption(walletId, option) {
-      dispatch(walletListMenuAction(walletId, option))
+    walletRowOption(walletId, option, currencyCode) {
+      dispatch(walletListMenuAction(walletId, option, currencyCode))
     },
     disableOtp() {
       dispatch(disableOtp())

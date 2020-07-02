@@ -5,8 +5,8 @@ import { type EdgeCurrencyWallet } from 'edge-core-js'
 import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import { TransactionDetails } from '../components/scenes/TransactionDetailsScene.js'
-import { themeTest as theme } from '../theme/variables/edgeDark.js'
+import { TransactionDetailsComponent } from '../components/scenes/TransactionDetailsScene.js'
+import { getTheme } from '../theme/ThemeContext.js'
 import { type GuiWallet } from '../types/types.js'
 
 const typeHack: any = {
@@ -70,18 +70,17 @@ describe('TransactionDetails.ui', () => {
       contacts: [],
       subcategoriesList: [],
       thumbnailPath: 'thumb/nail/path',
-      currencyInfo: null,
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
-      currentFiatAmount: '120',
+      currentFiatAmount: 120,
       walletDefaultDenomProps: settings[fakeGuiWallet.currencyCode].denominations,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn(),
-      theme
+      theme: getTheme()
     }
-    const actual = renderer.render(<TransactionDetails {...props} />)
+    const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })
@@ -104,18 +103,17 @@ describe('TransactionDetails.ui', () => {
       contacts: [],
       subcategoriesList: [],
       thumbnailPath: 'thumb/nail/path',
-      currencyInfo: null,
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
-      currentFiatAmount: '120',
+      currentFiatAmount: 120,
       walletDefaultDenomProps: settings[fakeGuiWallet.currencyCode].denominations,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn(),
-      theme
+      theme: getTheme()
     }
-    const actual = renderer.render(<TransactionDetails {...props} />)
+    const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })
@@ -138,18 +136,17 @@ describe('TransactionDetails.ui', () => {
       contacts: [],
       subcategoriesList: [],
       thumbnailPath: 'thumb/nail/path',
-      currencyInfo: null,
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
-      currentFiatAmount: '120',
+      currentFiatAmount: 120,
       walletDefaultDenomProps: settings[fakeGuiWallet.currencyCode].denominations,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn(),
-      theme
+      theme: getTheme()
     }
-    const actual = renderer.render(<TransactionDetails {...props} />)
+    const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })
@@ -175,18 +172,17 @@ describe('TransactionDetails.ui', () => {
       contacts: [],
       subcategoriesList: [],
       thumbnailPath: 'thumb/nail/path',
-      currencyInfo: null,
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
-      currentFiatAmount: '120',
+      currentFiatAmount: 120,
       walletDefaultDenomProps: settings[fakeGuiWallet.currencyCode].denominations,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn(),
-      theme
+      theme: getTheme()
     }
-    const actual = renderer.render(<TransactionDetails {...props} />)
+    const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

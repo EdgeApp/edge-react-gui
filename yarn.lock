@@ -3757,10 +3757,10 @@ edge-components@^0.0.27:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.4:
-  version "0.17.4"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.4.tgz#5dd2d2c68ae439eadc4fa17638b7151a1877024d"
-  integrity sha512-oalWYPi3kPSTQhZJ3yFHzaNAe40qbSHYPa+nS9YgLJdZRgNcCcyYn2ynarYM5JLVwHul4oALTKPugEoe764xYg==
+edge-core-js@^0.17.6:
+  version "0.17.6"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.6.tgz#eb9e37f29e70e2cedfe25182dc09035ee007c3d3"
+  integrity sha512-lOpernFAca9G1M1ThAPU/ztpi2PRRFjefVnDq96rHsmWNB0QGHRFXmUJEbNNbS/NBn+lJdQ6ieqlgr8fICZokw==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3783,10 +3783,10 @@ edge-core-js@^0.17.4:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.9:
-  version "0.7.9"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.9.tgz#acfae07ce870e32abcfb88591a8f84befdb3d6e5"
-  integrity sha512-2APsPTbgrEI6thyc1YmmBlQ8PAHphiGnyRWYyApZ6nAHR1BhuITLTIwrTGT8zysYDI7gRagqvR+ujtOYBZMKTQ==
+edge-currency-accountbased@^0.7.11:
+  version "0.7.11"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.11.tgz#e0a1a19102ab99b77c6d0096311bc83e082312fa"
+  integrity sha512-fgm9WDznwT/dI1hTJ13SD2Yu8TSfEF4Rv/qcPNDJ4aEzP7QKaMFjAOJ365GAhjggu6VcI2Cmv3GaegX0Spdl8A==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.0.2"
@@ -3811,10 +3811,10 @@ edge-currency-accountbased@^0.7.9:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.8.0:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.8.0.tgz#c874d7836724fdefc0afaabb6f030661fea58601"
-  integrity sha512-DEn7syosSUDxR6cA+cxW8ODhc2HrWlw2wtQWHGND+vvAo6nDNVkrUz4kVuEm5pwILUKuebBpTxomJbROlHhBEA==
+edge-currency-bitcoin@^4.8.2:
+  version "4.8.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.8.2.tgz#64056937f670a892dc1dab5d0cff144f24b4caaa"
+  integrity sha512-yN7Y1ZnbpsgcQn6eQdaY8SjRzhJdL78pYARUDGnF/C0oSeA36J1gqWvtgT9bJTHK+VmyASWdU05MEsTBBPfpJA==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3844,10 +3844,10 @@ edge-currency-monero@^0.2.5:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.0.tgz#a09f1c3661655b4502097f1e60116e6d9d42cccd"
-  integrity sha512-G+O/oDTm7VPvdIRIYMT0c/M0Z8EtezYZiOseY3LHmidfXWA28xqlIQedAG5XaWNsnYovFzs0yienKeLudAFX3w==
+edge-exchange-plugins@^0.11.2:
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.2.tgz#b81f944c9be8a843ba4cc80383af9846fb56396d"
+  integrity sha512-SsykVGc53xAlHyrRuNZiApbZP4mBDIE0KB8ANc7BNaqOKdGRkEIwN8xVngU6PkmhVV4NtI6OzfiEwG3XiecQ2A==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.2.0"
@@ -3895,10 +3895,11 @@ edge-login-ui-rn@^0.6.11:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#3a67fdf":
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#dfde879":
   version "0.1.2"
-  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#3a67fdf8acf0f104db4f9cc379a7e89e9c623d18"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#dfde879a784c8336ce2ef9e06209757575a3a4ce"
   dependencies:
+    cleaners "^0.2.0"
     js-sha256 "^0.9.0"
     moment "^2.22.2"
 
@@ -6704,6 +6705,11 @@ jest@^24.9.0:
     import-local "^2.0.0"
     jest-cli "^24.9.0"
 
+jetifier@^1.6.5:
+  version "1.6.5"
+  resolved "https://registry.yarnpkg.com/jetifier/-/jetifier-1.6.5.tgz#ea87324a4230bef20a9651178ecab978ee54a8cb"
+  integrity sha512-T7yzBSu9PR+DqjYt+I0KVO1XTb1QhAfHnXV5Nd3xpbXM6Xg4e3vP60Q4qkNU8Fh6PHC2PivPUNN3rY7G2MxcDQ==
+
 js-sha256@^0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
@@ -9378,10 +9384,10 @@ react-native-device-info@^0.11.0:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.11.0.tgz#e96dd0e3f8a7d7e3022c1f441f51fa912fdc7444"
   integrity sha1-6W3Q4/in1+MCLB9EH1H6kS/cdEQ=
 
-react-native-device-info@^0.22.4:
-  version "0.22.6"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-0.22.6.tgz#32a674b0484d31214fdcfbbb0e677621e83ba69d"
-  integrity sha512-/w87PmHPvT5MY3HwzdVEWyFg/ib91lY6TlYJGNnNPaXNXY60ShB8HI+GXKyq4KAtbUc/WhRM1RQ8/WKJOal+UQ==
+react-native-device-info@^5.6.1:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-5.6.1.tgz#3ae88d8659b7b64d204dbfc39f69126b769363d4"
+  integrity sha512-FxjenoDZJKT53pp/Tl5gMsw5DA82Y5tOuySQlKS5AaDmw+Bu6EqEJjt0z4TRhJOVoqVJ35oCiZ3xViVbz/hB0w==
 
 react-native-dismiss-keyboard@1.0.0:
   version "1.0.0"
@@ -9445,13 +9451,14 @@ react-native-keyboard-aware-scroll-view@^0.9.1:
     react-native-iphone-x-helper "^1.0.3"
 
 react-native-linear-gradient@^2.0.0, react-native-linear-gradient@^2.4.0:
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.3.tgz#d90cf19a13fcccfa8bb32025ac40a15ae1b49e99"
-  integrity sha512-XdusrOXXlkI+yQpUW7YLeiq9cZiBwkvQX4XEkHPVrJ9H47gsKmdgBwObkZBzBQUP0dKK/Sg6aVpETEis4w43bQ==
+  version "2.5.6"
+  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
+  integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
 
-"react-native-locale@git://github.com/fixd/react-native-locale#a2b1296":
-  version "0.0.19"
-  resolved "git://github.com/fixd/react-native-locale#a2b12961a87e1dd638b0b08aa871b61fd1b4e69e"
+react-native-localize@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-1.4.0.tgz#4653596d066d0941c48f5404dc1c0d08b6950443"
+  integrity sha512-W2MQxm6hzD549ZbZcbWzWtYJseY7S7WR2WgsNhm9ULmbwP7tXFfOTbkJjQoqgPXYSXogKN3srXhntVsNZL0Ksw==
 
 react-native-mail@3.0.7, react-native-mail@^3.0.5:
   version "3.0.7"
@@ -9510,6 +9517,11 @@ react-native-modal@^11.0.1:
   dependencies:
     prop-types "^15.6.2"
     react-native-animatable "^1.3.1"
+
+react-native-patina@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.0.tgz#6e8ef787138f4d3bb91c99db29f6d0455c9ab2f9"
+  integrity sha512-ZrEQExgRDXBjMBEoCGkEh9B4T90xBGhMnRHX3xy1UcAVSxH/BUOb/D/xlCnE3aZRuzOazvniWCzmk1XVGT0+oQ==
 
 react-native-permissions@1.0.6:
   version "1.0.6"

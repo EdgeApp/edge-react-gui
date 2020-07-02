@@ -88,9 +88,9 @@ export type CustomTokenInfo = {
   walletType?: string
 }
 
-export type GuiWalletType = {
-  label: string,
-  value: string,
+export type CreateWalletType = {
+  currencyName: string,
+  walletType: string,
   symbolImage?: string,
   symbolImageDarkMono?: string,
   currencyCode: string
