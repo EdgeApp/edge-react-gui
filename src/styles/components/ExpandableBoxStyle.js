@@ -1,7 +1,7 @@
 // @flow
 
+import { TextAndIconButtonStyle } from '../../modules/UI/components/Buttons/TextAndIconButton.ui.js'
 import THEME from '../../theme/variables/airbitz.js'
-import { TextAndIconButtonStyle } from './ButtonStyles.js'
 
 const ExpandableBoxStyle = {
   container: {
