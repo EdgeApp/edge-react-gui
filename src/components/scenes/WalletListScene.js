@@ -64,7 +64,7 @@ type DispatchProps = {
   hideMessageTweak(messageId: string, source: TweakSource): void,
   toggleAccountBalanceVisibility(): void,
   updateActiveWalletsOrder(walletIds: Array<string>): void,
-  walletRowOption(walletId: string, option: WalletListMenuKey, currencyCode: string): void,
+  walletRowOption(walletId: string, option: WalletListMenuKey, currencyCode?: string): void,
   disableOtp(): void,
   keepOtp(): void,
   linkReferralWithCurrencies(string): void
@@ -108,7 +108,7 @@ class WalletListComponent extends Component<Props, State> {
     if (option === 'sort') {
       return this.setState({ sorting: true })
     }
-    if (this.props.wallets[walletId] != null && !currencyCode) {
+    if (currencyCode == null && this.props.wallets[walletId] != null) {
       currencyCode = this.props.wallets[walletId].currencyCode
     }
     return this.props.walletRowOption(walletId, option, currencyCode)
