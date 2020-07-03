@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 import { getEnabledTokens, selectWallet } from '../../actions/WalletActions.js'
 import { type WalletListMenuKey } from '../../actions/WalletListMenuActions.js'
 import WalletListTokenRow from '../../connectors/WalletListTokenRowConnector.js'
-import { TRANSACTION_LIST, WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
+import { getSpecialCurrencyInfo, TRANSACTION_LIST, WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
 import { intl } from '../../locales/intl'
 import s from '../../locales/strings.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
@@ -51,7 +51,8 @@ class WalletListRowComponent extends Component<Props> {
     this.props.selectWallet(walletId, currencyCode)
     // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
     // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
-    if (currencyCode !== 'EOS' || (currencyCode === 'EOS' && publicAddress)) {
+    const SPECIAL_CURRENCY_INFO = getSpecialCurrencyInfo(currencyCode)
+    if (!SPECIAL_CURRENCY_INFO.isAccountActivationRequired || (SPECIAL_CURRENCY_INFO.isAccountActivationRequired && publicAddress)) {
       Actions[TRANSACTION_LIST]({ params: 'walletList' })
     }
   }
