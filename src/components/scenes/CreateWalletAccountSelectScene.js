@@ -7,7 +7,6 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
-import { WalletListModalConnected as WalletListModal } from '../../connectors/components/WalletListModalConnector.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -129,13 +128,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
-    const {
-      wallets,
-      accountName,
-      fetchWalletAccountActivationPaymentInfo,
-      setWalletAccountActivationQuoteError,
-      selectedWalletType
-    } = this.props
+    const { wallets, accountName, fetchWalletAccountActivationPaymentInfo, setWalletAccountActivationQuoteError, selectedWalletType } = this.props
     setWalletAccountActivationQuoteError('') // reset fetching quote error to falsy
     const paymentWallet = wallets[walletId]
     const walletName = paymentWallet.name
@@ -241,15 +234,8 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     )
   }
 
-  render () {
-    const {
-      currencyConfigs,
-      supportedCurrencies,
-      selectedWalletType,
-      activationCost,
-      wallets,
-      walletAccountActivationQuoteError
-    } = this.props
+  render() {
+    const { currencyConfigs, supportedCurrencies, selectedWalletType, activationCost, wallets, walletAccountActivationQuoteError } = this.props
     const { walletId } = this.state
     const walletTypeValue = selectedWalletType.value.replace('wallet:', '')
     const { symbolImage } = currencyConfigs[walletTypeValue].currencyInfo
@@ -282,7 +268,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
           <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
-              <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode={'cover'} />
+              <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
               <View style={styles.createWalletPromptArea}>
                 <Text style={styles.instructionalText}>{!walletId || walletAccountActivationQuoteError ? instructionSyntax : confirmMessageSyntax}</Text>
               </View>
