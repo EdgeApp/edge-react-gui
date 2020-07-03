@@ -231,6 +231,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   OXT: {
     denomination: '1000000000000000000'
   },
+  COMP: {
+    denomination: '1000000000000000000'
+  },
   customTokens: [],
   mostRecentWallets: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
@@ -309,6 +312,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   CETH: 'object',
   ETHBNT: 'object',
   MET: 'object',
+  COMP: 'object',
   OXT: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   mostRecentWallets: 'object',

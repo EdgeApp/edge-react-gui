@@ -253,6 +253,9 @@ Object {
       "CETH": Object {
         "denomination": "100000000",
       },
+      "COMP": Object {
+        "denomination": "1000000000000000000",
+      },
       "CREP": Object {
         "denomination": "100000000",
       },
