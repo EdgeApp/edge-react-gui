@@ -13,7 +13,7 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
-import type { GuiFiatType, GuiWallet, GuiWalletType } from '../../types/types.js'
+import type { CreateWalletType, GuiFiatType, GuiWallet } from '../../types/types.js'
 import { logEvent } from '../../util/tracking.js'
 import { fixFiatCurrencyCode } from '../../util/utils.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -43,7 +43,7 @@ export type CreateWalletAccountSelectStateProps = {
 
 export type CreateWalletAccountSelectOwnProps = {
   selectedFiat: GuiFiatType,
-  selectedWalletType: GuiWalletType,
+  selectedWalletType: CreateWalletType,
   accountName: string,
   isReactivation?: boolean,
   existingWalletId?: string
@@ -74,7 +74,7 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     if (props.existingWalletId) {
       createdWallet = this.renameAndReturnWallet(props.existingCoreWallet)
     } else {
-      createdWallet = createAccountBasedWallet(accountName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value), false, false)
+      createdWallet = createAccountBasedWallet(accountName, selectedWalletType.walletType, fixFiatCurrencyCode(selectedFiat.value), false, false)
     }
     this.state = {
       error: '',
@@ -109,9 +109,9 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
       }
     }
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />).then(
-      (response: WalletListResult) => {
-        if (response.walletToSelect) {
-          this.onSelectWallet(response.walletToSelect.walletId, response.walletToSelect.currencyCode)
+      ({ walletId, currencyCode }: WalletListResult) => {
+        if (walletId && currencyCode) {
+          this.onSelectWallet(walletId, currencyCode)
         }
       }
     )

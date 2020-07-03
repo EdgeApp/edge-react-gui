@@ -5,37 +5,7 @@ import { type Reducer, combineReducers } from 'redux'
 import type { Action } from '../types/reduxTypes.js'
 
 export type EditTokenState = {
-  +deleteTokenModalVisible: boolean,
-  +deleteCustomTokenProcessing: boolean,
   +editCustomTokenProcessing: boolean
-}
-
-const deleteTokenModalVisible = (state = false, action: Action): boolean => {
-  switch (action.type) {
-    case 'SHOW_DELETE_TOKEN_MODAL':
-      return true
-
-    case 'HIDE_DELETE_TOKEN_MODAL':
-    case 'DELETE_CUSTOM_TOKEN_SUCCESS':
-      return false
-
-    default:
-      return state
-  }
-}
-
-const deleteCustomTokenProcessing = (state = false, action: Action): boolean => {
-  switch (action.type) {
-    case 'DELETE_CUSTOM_TOKEN_START':
-      return true
-
-    case 'DELETE_CUSTOM_TOKEN_SUCCESS':
-    case 'DELETE_CUSTOM_TOKEN_FAILURE':
-      return false
-
-    default:
-      return state
-  }
 }
 
 const editCustomTokenProcessing = (state = false, action: Action): boolean => {
@@ -55,7 +25,5 @@ const editCustomTokenProcessing = (state = false, action: Action): boolean => {
 }
 
 export const editToken: Reducer<EditTokenState, Action> = combineReducers({
-  deleteTokenModalVisible,
-  deleteCustomTokenProcessing,
   editCustomTokenProcessing
 })

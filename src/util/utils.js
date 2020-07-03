@@ -5,7 +5,7 @@ import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaTo
 import _ from 'lodash'
 
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
-import { intl } from '../locales/intl.js'
+import * as intl from '../locales/intl.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import type { State } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types/types.js'
@@ -559,14 +559,14 @@ export function splitTransactionCategory(
   }
 }
 
-export function debounce (func: Function, wait: number, immediate: boolean): any {
+export function debounce(func: Function, wait: number, immediate: boolean): any {
   let timeout
 
   return function executedFunction() {
     const context = this
     const args = arguments
 
-    const later = function() {
+    const later = function () {
       timeout = null
       if (!immediate) func.apply(context, args)
     }

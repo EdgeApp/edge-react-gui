@@ -3,7 +3,7 @@
 import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js'
 
 import { WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
-import { type GuiWalletType } from '../types/types.js'
+import { type CreateWalletType } from '../types/types.js'
 
 /**
  * Grab all the EdgeCurrencyInfo objects in an account.
@@ -39,10 +39,10 @@ export function sortCurrencyInfos(infos: EdgeCurrencyInfo[]): EdgeCurrencyInfo[]
  * The wallet creation scenes use a truncated version of EdgeCurrencyInfo,
  * so make that.
  */
-export function makeGuiWalletType(currencyInfo: EdgeCurrencyInfo): GuiWalletType {
+export function makeCreateWalletType(currencyInfo: EdgeCurrencyInfo): CreateWalletType {
   return {
-    label: currencyInfo.displayName,
-    value: currencyInfo.walletType,
+    currencyName: currencyInfo.displayName,
+    walletType: currencyInfo.walletType,
     symbolImage: currencyInfo.symbolImage,
     symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
     currencyCode: currencyInfo.currencyCode
@@ -52,29 +52,29 @@ export function makeGuiWalletType(currencyInfo: EdgeCurrencyInfo): GuiWalletType
 /**
  * Grab a list of wallet types for the wallet creation scenes.
  */
-export function getGuiWalletTypes(account: EdgeAccount): GuiWalletType[] {
+export function getCreateWalletTypes(account: EdgeAccount): CreateWalletType[] {
   const infos = sortCurrencyInfos(getCurrencyInfos(account))
 
-  const out: GuiWalletType[] = []
+  const out: CreateWalletType[] = []
   for (const currencyInfo of infos) {
     if (currencyInfo.pluginId === 'fio' && global.isFioDisabled) continue // FIO disable changes
     if (currencyInfo.pluginId === 'bitcoin') {
       out.push({
-        label: 'Bitcoin (Segwit)',
-        value: 'wallet:bitcoin-bip49',
+        currencyName: 'Bitcoin (Segwit)',
+        walletType: 'wallet:bitcoin-bip49',
         symbolImage: currencyInfo.symbolImage,
         symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
         currencyCode: currencyInfo.currencyCode
       })
       out.push({
-        label: 'Bitcoin (no Segwit)',
-        value: 'wallet:bitcoin-bip44',
+        currencyName: 'Bitcoin (no Segwit)',
+        walletType: 'wallet:bitcoin-bip44',
         symbolImage: currencyInfo.symbolImage,
         symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
         currencyCode: currencyInfo.currencyCode
       })
     } else {
-      out.push(makeGuiWalletType(currencyInfo))
+      out.push(makeCreateWalletType(currencyInfo))
     }
   }
 
@@ -84,9 +84,9 @@ export function getGuiWalletTypes(account: EdgeAccount): GuiWalletType[] {
 /**
  * Get specific wallet type for the wallet creation scenes. BTC will always result in segwit
  */
-export function getGuiWalletType(account: EdgeAccount, currencyCode: string): GuiWalletType | null {
+export function getCreateWalletType(account: EdgeAccount, currencyCode: string): CreateWalletType | null {
   const infos = getCurrencyInfos(account)
   const currencyCodeFormatted = currencyCode.toUpperCase()
   const currencyInfo = infos.find(info => info.currencyCode === currencyCodeFormatted)
-  return currencyInfo ? makeGuiWalletType(currencyInfo) : null
+  return currencyInfo ? makeCreateWalletType(currencyInfo) : null
 }

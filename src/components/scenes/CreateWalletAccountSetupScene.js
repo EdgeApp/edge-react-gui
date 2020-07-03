@@ -17,7 +17,7 @@ import type { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletRe
 import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
-import type { GuiFiatType, GuiWalletType } from '../../types/types.js'
+import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
 import { debounce } from '../../util/utils'
@@ -27,7 +27,7 @@ const deviceWidth = PLATFORM.deviceWidth
 
 export type CreateWalletAccountSetupOwnProps = {
   selectedFiat: GuiFiatType,
-  selectedWalletType: GuiWalletType,
+  selectedWalletType: CreateWalletType,
   accountHandle?: string,
   isReactivation?: boolean,
   existingWalletId?: string
@@ -51,7 +51,7 @@ type State = {
 export class CreateWalletAccountSetup extends Component<Props, State> {
   debouncedCheckHandleAvailability: () => void
 
-  constructor (props: Props) {
+  constructor(props: Props) {
     super(props)
 
     this.state = {
@@ -111,7 +111,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
     )
   }
 
-  render () {
+  render() {
     const { isCheckingHandleAvailability, handleAvailableStatus, selectedWalletType, currencyConfigs } = this.props
     const { accountHandle } = this.state
     const { currencyCode } = selectedWalletType
@@ -134,7 +134,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
         <Gradient style={styles.scrollableGradient} />
         <ScrollView>
           <View style={styles.scrollableView}>
-            <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode={'cover'} />
+            <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
             <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
               <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, currencyCode)}</Text>
             </View>

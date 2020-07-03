@@ -16,7 +16,7 @@ exports[`TransactionDetails.ui should render 1`] = `
           }
         }
       >
-        <Connect(TileComponent)
+        <WithTheme(TileComponent)
           onPress={[Function]}
           title="Sender Name"
           type="editable"
@@ -56,13 +56,13 @@ exports[`TransactionDetails.ui should render 1`] = `
               Sender
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           body="₿ 0.00000123"
           title="Bitcoin Amount"
           type="static"
         />
-        <Connect(TileComponent)
+        <WithTheme(TileComponent)
           onPress={[Function]}
           title="Amount in iso:USD"
           type="editable"
@@ -97,8 +97,8 @@ exports[`TransactionDetails.ui should render 1`] = `
               0.00
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           title="Amount at Current Price"
           type="static"
         >
@@ -144,8 +144,8 @@ exports[`TransactionDetails.ui should render 1`] = `
               %
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           onPress={[Function]}
           title="Category"
           type="editable"
@@ -194,8 +194,8 @@ exports[`TransactionDetails.ui should render 1`] = `
               
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           body=""
           onPress={[Function]}
           title="Notes"
@@ -266,7 +266,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
           }
         }
       >
-        <Connect(TileComponent)
+        <WithTheme(TileComponent)
           onPress={[Function]}
           title="Recipient Name"
           type="editable"
@@ -306,13 +306,13 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               Recipient
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           body="₿ 0.00000122 (+ 0 fee)"
           title="Bitcoin Amount"
           type="static"
         />
-        <Connect(TileComponent)
+        <WithTheme(TileComponent)
           onPress={[Function]}
           title="Amount in iso:USD"
           type="editable"
@@ -347,8 +347,8 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               6392.93
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           title="Amount at Current Price"
           type="static"
         >
@@ -394,8 +394,8 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               %
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           onPress={[Function]}
           title="Category"
           type="editable"
@@ -444,8 +444,8 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           body=""
           onPress={[Function]}
           title="Notes"
@@ -516,7 +516,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
           }
         }
       >
-        <Connect(TileComponent)
+        <WithTheme(TileComponent)
           onPress={[Function]}
           title="Sender Name"
           type="editable"
@@ -556,13 +556,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               Sender
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           body="₿ 0.00000123"
           title="Bitcoin Amount"
           type="static"
         />
-        <Connect(TileComponent)
+        <WithTheme(TileComponent)
           onPress={[Function]}
           title="Amount in iso:USD"
           type="editable"
@@ -597,8 +597,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               0.00
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           title="Amount at Current Price"
           type="static"
         >
@@ -644,8 +644,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               %
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           onPress={[Function]}
           title="Category"
           type="editable"
@@ -694,8 +694,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           body=""
           onPress={[Function]}
           title="Notes"
@@ -766,7 +766,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
           }
         }
       >
-        <Connect(TileComponent)
+        <WithTheme(TileComponent)
           onPress={[Function]}
           title="Sender Name"
           type="editable"
@@ -806,13 +806,13 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               Sender
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           body="₿ 0.00000123"
           title="Bitcoin Amount"
           type="static"
         />
-        <Connect(TileComponent)
+        <WithTheme(TileComponent)
           onPress={[Function]}
           title="Amount in iso:USD"
           type="editable"
@@ -847,8 +847,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               0.00
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           title="Amount at Current Price"
           type="static"
         >
@@ -894,8 +894,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               %
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           onPress={[Function]}
           title="Category"
           type="editable"
@@ -944,8 +944,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               
             </FormattedText>
           </View>
-        </Connect(TileComponent)>
-        <Connect(TileComponent)
+        </WithTheme(TileComponent)>
+        <WithTheme(TileComponent)
           body=""
           onPress={[Function]}
           title="Notes"

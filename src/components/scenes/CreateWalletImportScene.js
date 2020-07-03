@@ -15,12 +15,12 @@ import { errorModal } from '../../modules/UI/components/Modals/ErrorModal.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
-import { type GuiWalletType } from '../../types/types.js'
+import { type CreateWalletType } from '../../types/types.js'
 import { FormField } from '../common/FormField.js'
 import { launchModal } from '../common/ModalProvider.js'
 
 type OwnProps = {
-  selectedWalletType: GuiWalletType
+  selectedWalletType: CreateWalletType
 }
 type StateProps = {
   account: EdgeAccount

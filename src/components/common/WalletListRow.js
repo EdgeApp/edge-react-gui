@@ -10,7 +10,7 @@ import { getEnabledTokens, selectWallet } from '../../actions/WalletActions.js'
 import { type WalletListMenuKey } from '../../actions/WalletListMenuActions.js'
 import WalletListTokenRow from '../../connectors/WalletListTokenRowConnector.js'
 import { getSpecialCurrencyInfo, TRANSACTION_LIST, WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
@@ -28,7 +28,7 @@ const DIVIDE_PRECISION = 18
 
 type OwnProps = {
   guiWallet: GuiWallet,
-  executeWalletRowOption(walletId: string, option: WalletListMenuKey): void,
+  executeWalletRowOption: (walletId: string, option: WalletListMenuKey, currencyCode?: string) => void,
   showBalance: boolean | Function
 }
 type StateProps = {
@@ -211,6 +211,7 @@ class WalletListRowComponent extends Component<Props> {
               balance={metaTokenBalances[property]}
               showBalance={this.props.showBalance}
               progress={progress}
+              executeWalletRowOption={this.props.executeWalletRowOption}
             />
           )
         }

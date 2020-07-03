@@ -85,7 +85,7 @@ export const CurrencyNotificationScene = connect(
     const { account } = state.core
 
     return {
-      userId: account.id
+      userId: account.rootLoginId
     }
   },
   (dispatch: Dispatch): DispatchProps => ({

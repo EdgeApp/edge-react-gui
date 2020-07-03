@@ -166,6 +166,7 @@ if (hasProperty('storeFile')) {
 }
 
 dependencies {
+    implementation project(':react-native-localize')
     implementation project(':@react-native-community_art')
     implementation project(':@react-native-community_async-storage')
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
@@ -183,7 +184,6 @@ dependencies {
     implementation project(':react-native-firebase')
     implementation project(':react-native-fs')
     implementation project(':react-native-linear-gradient')
-    implementation project(':react-native-locale')
     implementation project(':react-native-mail')
     implementation project(':react-native-randombytes')
     implementation project(':react-native-share')

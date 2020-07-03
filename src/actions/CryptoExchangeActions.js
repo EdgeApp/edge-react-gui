@@ -17,7 +17,7 @@ import { sprintf } from 'sprintf-js'
 import { trackConversion } from '../actions/TrackingActions.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
-import { intl } from '../locales/intl'
+import * as intl from '../locales/intl.js'
 import s from '../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
@@ -150,13 +150,18 @@ async function fetchSwapQuote(state: State, request: EdgeSwapRequest): Promise<G
   const fromBalanceInFiatRaw = await currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.fiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
   const fromFiat = intl.formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
-  // Format fee:
+  // Format crypto fee:
   const settings = SETTINGS_SELECTORS.getSettings(state)
   const feeDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, quote.networkFee.currencyCode)
   const feeNativeAmount = quote.networkFee.nativeAmount
   const feeTempAmount = bns.div(feeNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-  const feeDisplayAmount = bns.toFixed(feeTempAmount, 0, 8)
-  const fee = feeDisplayAmount + ' ' + feeDenomination.name
+  const feeDisplayAmount = bns.toFixed(feeTempAmount, 0, 6)
+
+  // Format fiat fee:
+  const feeDenominatedAmount = UTILS.convertNativeToExchange(fromExchangeDenomination.multiplier)(feeNativeAmount)
+  const feeFiatAmountRaw = await currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.fiatCurrencyCode, Number(feeDenominatedAmount))
+  const feeFiatAmount = intl.formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
+  const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${fromWallet.fiatCurrencyCode.replace('iso:', '')})`
 
   // Format to amount:
   const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
@@ -276,53 +281,17 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
 
     let category: string
     let name: string
-    let notes: string
     if (pluginId === 'transfer') {
       category = sprintf('transfer:%s %s %s', fromCurrencyCode, s.strings.word_to_in_convert_from_to_string, toWallet.name)
       name = toWallet.name || ''
-
-      const recipientAddress = (await toWallet.getReceiveAddress()).publicAddress
-      notes = s.strings.tx_notes_metadata_recipient_address + recipientAddress
     } else {
       category = sprintf('exchange:%s %s %s', fromCurrencyCode, s.strings.word_to_in_convert_from_to_string, toCurrencyCode)
       name = si.displayName
-
-      const supportEmail = si.supportEmail
-      const quoteIdUri = si.orderUri != null && result.orderId != null ? si.orderUri + result.orderId : result.transaction.txid
-
-      let payinAddress = ''
-      let uniqueIdentifier = ''
-      const { spendTargets = [] } = result.transaction
-      const [spendTarget] = spendTargets
-      if (spendTarget != null) {
-        payinAddress = spendTarget.publicAddress
-        uniqueIdentifier = spendTarget.uniqueIdentifier
-      }
-
-      const isEstimate = quote.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote
-      notes =
-        sprintf(
-          s.strings.exchange_notes_metadata_generic2,
-          state.cryptoExchange.fromDisplayAmount,
-          state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
-          fromWallet.name,
-          state.cryptoExchange.toDisplayAmount,
-          state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
-          toWallet.name,
-          result.destinationAddress || '',
-          quoteIdUri,
-          payinAddress,
-          uniqueIdentifier,
-          supportEmail
-        ) +
-        ' ' +
-        isEstimate
     }
 
     const edgeMetaData: EdgeMetadata = {
       name,
-      category,
-      notes
+      category
     }
     Actions.popTo(Constants.EXCHANGE_SCENE)
     await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)

@@ -12,7 +12,7 @@ import { sprintf } from 'sprintf-js'
 
 import fioRequestsIcon from '../../assets/images/sidenav/fiorequests.png'
 import * as Constants from '../../constants/indexConstants'
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache } from '../../modules/FioAddress/util.js'
 import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioRequest/components/FioRequestRow'
@@ -277,11 +277,11 @@ export class FioRequestList extends Component<Props, LocalState> {
     const { chain_code, token_code } = selectedFioPendingRequest.content
     const allowedFullCurrencyCode = chain_code !== token_code && token_code && token_code !== '' ? [`${chain_code}:${token_code}`] : [chain_code]
 
-    const selectedResult: WalletListResult = await Airship.show(bridge => (
+    const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedFullCurrencyCode} />
     ))
-    if (selectedResult.walletToSelect) {
-      onSelectWallet(selectedResult.walletToSelect.walletId, selectedResult.walletToSelect.currencyCode)
+    if (walletId && currencyCode) {
+      onSelectWallet(walletId, currencyCode)
       this.sendCrypto(selectedFioPendingRequest)
     }
   }

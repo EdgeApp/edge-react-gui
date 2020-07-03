@@ -14,9 +14,10 @@ import { scale } from '../../util/scaling.js'
 
 type Props = {
   walletId: string,
-  executeWalletRowOption: (walletId: string, option: WalletListMenuKey) => void,
-  currencyCode: string,
-  customStyles: StyleSheet.Styles
+  executeWalletRowOption: (walletId: string, option: WalletListMenuKey, currencyCode?: string) => void,
+  currencyCode?: string,
+  customStyles: StyleSheet.Styles,
+  isToken?: boolean
 }
 
 const modifiedMenuDropDownStyle = {
@@ -35,9 +36,28 @@ export class WalletListMenu extends Component<Props> {
 
   constructor(props: Props) {
     super(props)
-    const { currencyCode } = props
+    const { currencyCode, isToken } = props
 
     this.options = []
+
+    // Non main wallet options
+    if (!currencyCode) {
+      this.options.push({
+        label: s.strings.string_get_raw_keys,
+        value: 'getRawKeys'
+      })
+      return
+    }
+
+    if (isToken) {
+      this.options.push({
+        label: s.strings.fragment_wallets_export_transactions,
+        value: 'exportWalletTransactions'
+      })
+      return
+    }
+
+    // Main wallet options
     for (const option of WALLET_LIST_MENU) {
       const { currencyCodes, label, value } = option
       if (currencyCodes != null && !currencyCodes.includes(currencyCode)) continue
@@ -54,8 +74,8 @@ export class WalletListMenu extends Component<Props> {
   }
 
   optionAction = (optionKey: WalletListMenuKey) => {
-    const { walletId, executeWalletRowOption } = this.props
-    executeWalletRowOption(walletId, optionKey)
+    const { walletId, executeWalletRowOption, currencyCode } = this.props
+    executeWalletRowOption(walletId, optionKey, currencyCode)
   }
 
   render() {
