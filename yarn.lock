@@ -3757,10 +3757,10 @@ edge-components@^0.0.27:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.6:
-  version "0.17.6"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.6.tgz#eb9e37f29e70e2cedfe25182dc09035ee007c3d3"
-  integrity sha512-lOpernFAca9G1M1ThAPU/ztpi2PRRFjefVnDq96rHsmWNB0QGHRFXmUJEbNNbS/NBn+lJdQ6ieqlgr8fICZokw==
+edge-core-js@^0.17.7:
+  version "0.17.7"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.7.tgz#cdb9368257fd168e2948c1eefda84b09b6ef4da8"
+  integrity sha512-KONmb3coXg11xR+OM7ydGso3V0f0ahdOj6XXRzM1qP/IjH0lgYb5yu25dboTedq1/OxgUn4IIPNvdkxIj3/Bfg==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3783,10 +3783,10 @@ edge-core-js@^0.17.6:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.11:
-  version "0.7.11"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.11.tgz#e0a1a19102ab99b77c6d0096311bc83e082312fa"
-  integrity sha512-fgm9WDznwT/dI1hTJ13SD2Yu8TSfEF4Rv/qcPNDJ4aEzP7QKaMFjAOJ365GAhjggu6VcI2Cmv3GaegX0Spdl8A==
+edge-currency-accountbased@^0.7.12:
+  version "0.7.12"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.12.tgz#68b7cfd0f307d928cfbf636c0103331dd40fdbc1"
+  integrity sha512-hYNMbUHgcTY+TqoiMSz864Fq0w5qr1d8QtaLRbP0SCwmc/Kyb8NzLkIDlLZ9BvuxrtCq5AnpS9kSn4Iytt8BTA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.0.2"
@@ -3811,10 +3811,10 @@ edge-currency-accountbased@^0.7.11:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.8.2:
-  version "4.8.2"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.8.2.tgz#64056937f670a892dc1dab5d0cff144f24b4caaa"
-  integrity sha512-yN7Y1ZnbpsgcQn6eQdaY8SjRzhJdL78pYARUDGnF/C0oSeA36J1gqWvtgT9bJTHK+VmyASWdU05MEsTBBPfpJA==
+edge-currency-bitcoin@^4.8.3:
+  version "4.8.3"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.8.3.tgz#c2e315c380ba89429ae609ef0a6bf3f375974fcf"
+  integrity sha512-w1Sl8hZrugwjEEgMGjlx3I+//MVgmBXJ5wOgyPiDBzlreBHR9p0FvcIOh5gaFLZnbP+SIdpw65lC5rOmJxUqQw==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3844,10 +3844,10 @@ edge-currency-monero@^0.2.5:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.2:
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.2.tgz#b81f944c9be8a843ba4cc80383af9846fb56396d"
-  integrity sha512-SsykVGc53xAlHyrRuNZiApbZP4mBDIE0KB8ANc7BNaqOKdGRkEIwN8xVngU6PkmhVV4NtI6OzfiEwG3XiecQ2A==
+edge-exchange-plugins@^0.11.3:
+  version "0.11.3"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.3.tgz#871b32b3684846fc2767bfe0e334c526f6fae820"
+  integrity sha512-5FG6ARTosUO4RCB/cGw70DNXJd5cMnuNwI/mqp9K9NoWjJl0Yk3yIUUQLJqpdo/6kjf/Cp5TA69Q0kGm7O+s+Q==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.2.0"

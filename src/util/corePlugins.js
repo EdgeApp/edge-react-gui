@@ -66,6 +66,7 @@ export const ratePlugins = {
   compound: true,
   coinbase: true,
   coincap: true,
+  coinmonitor: true,
   constantRate: true,
   coincapLegacy: false,
   nomics: ENV.NOMICS_INIT,
