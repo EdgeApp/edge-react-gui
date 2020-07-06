@@ -1,18 +1,26 @@
 // @flow
 
 import type { EdgeCurrencyWallet, EdgeGetTransactionsOptions } from 'edge-core-js'
-import * as React from 'react'
-import { Platform, StyleSheet, View } from 'react-native'
+import React, { PureComponent } from 'react'
+import { Platform, ScrollView, StyleSheet, View } from 'react-native'
 import RNFS from 'react-native-fs'
 import Mailer from 'react-native-mail'
 import Share from 'react-native-share'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import Entypo from 'react-native-vector-icons/Entypo'
 
+import { formatExpDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { scale } from '../../util/scaling.js'
 import { sanitizeForFilename } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
+import { SettingsLabelRow } from '../common/SettingsLabelRow.js'
+import { SettingsRow } from '../common/SettingsRow.js'
+import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
+
+const rightArrow = <AntDesign name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
 
 export type PassedProps = {
   sourceWallet: EdgeCurrencyWallet,
@@ -24,22 +32,87 @@ type StateProps = {
 
 type Props = StateProps & PassedProps
 
-export class TransactionsExportSceneComponent extends React.Component<Props> {
+type State = {
+  startDate: Date,
+  endDate: Date,
+  isExportQbo: boolean,
+  isExportCsv: boolean
+}
+
+export class TransactionsExportSceneComponent extends PureComponent<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1))
+    this.state = {
+      startDate: new Date(new Date().getFullYear(), lastMonth.getMonth(), 1, 0, 0, 0),
+      endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0),
+      isExportQbo: false,
+      isExportCsv: true
+    }
+  }
+
+  toggleExportQbo = () => {
+    this.setState({
+      isExportQbo: !this.state.isExportQbo
+    })
+  }
+
+  toggleExportCsv = () => {
+    this.setState({
+      isExportCsv: !this.state.isExportCsv
+    })
+  }
+
+  setThisMonth = () => {
+    this.setState({
+      startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0),
+      endDate: new Date()
+    })
+  }
+
+  setLastMonth = () => {
+    const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1))
+    this.setState({
+      startDate: new Date(new Date().getFullYear(), lastMonth.getMonth(), 1, 0, 0, 0),
+      endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0)
+    })
+  }
+
+  exportFile = async () => {
+    if (this.state.isExportQbo) {
+      await this.exportQBO()
+    }
+    if (this.state.isExportCsv) {
+      await this.exportCSV()
+    }
+  }
+
   render() {
+    const { startDate, endDate, isExportCsv, isExportQbo } = this.state
+    const walletName = `${this.props.sourceWallet.name || s.strings.string_no_wallet_name} (${this.props.currencyCode})`
+    const startDateString = formatExpDate(startDate)
+    const endDateString = formatExpDate(endDate)
+    const disabledExport = !isExportQbo && !isExportCsv
     return (
       <SceneWrapper background="body">
-        <View style={styles.shim} />
-        <View style={styles.actionButtonContainer}>
-          <PrimaryButton onPress={this.exportQBO}>
-            <PrimaryButton.Text>{s.strings.string_export_qbo}</PrimaryButton.Text>
-          </PrimaryButton>
-        </View>
-        <View style={styles.shim} />
-        <View style={styles.actionButtonContainer}>
-          <PrimaryButton onPress={this.exportCSV}>
-            <PrimaryButton.Text>{s.strings.string_export_csv}</PrimaryButton.Text>
-          </PrimaryButton>
-        </View>
+        <ScrollView>
+          <SettingsRow text={walletName} />
+          <SettingsHeaderRow icon={<Entypo name="calendar" color={THEME.COLORS.WHITE} size={iconSize} />} text={s.strings.export_transaction_date_range} />
+          <SettingsRow text={s.strings.export_transaction_this_month} right={rightArrow} onPress={this.setThisMonth} />
+          <SettingsRow text={s.strings.export_transaction_last_month} right={rightArrow} onPress={this.setLastMonth} />
+          <SettingsLabelRow text={s.strings.string_start} right={startDateString} onPress={() => undefined} />
+          <SettingsLabelRow text={s.strings.string_end} right={endDateString} onPress={() => undefined} />
+          <SettingsHeaderRow icon={<Entypo name="export" color={THEME.COLORS.WHITE} size={iconSize} />} text={s.strings.export_transaction_export_type} />
+          <SettingsSwitchRow key="exportQbo" text={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.toggleExportQbo} />
+          <SettingsSwitchRow key="exportCsv" text={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.toggleExportCsv} />
+          {!disabledExport && (
+            <View style={styles.bottomArea}>
+              <PrimaryButton onPress={this.exportFile} disabled={disabledExport}>
+                <PrimaryButton.Text>{s.strings.string_export}</PrimaryButton.Text>
+              </PrimaryButton>
+            </View>
+          )}
+        </ScrollView>
       </SceneWrapper>
     )
   }
@@ -151,14 +224,11 @@ export class TransactionsExportSceneComponent extends React.Component<Props> {
   }
 }
 
+const iconSize = THEME.rem(1.25)
+
 const rawStyles = {
-  actionButtonContainer: {
-    alignSelf: 'center',
-    width: '90%',
-    height: scale(THEME.BUTTONS.HEIGHT)
-  },
-  shim: {
-    height: scale(20)
+  bottomArea: {
+    padding: THEME.rem(1.5)
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

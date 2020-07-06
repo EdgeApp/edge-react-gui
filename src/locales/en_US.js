@@ -698,7 +698,18 @@ const strings = {
   update_header: 'Update Available',
   update_fresh: 'A fresh new version of Edge is now available. Please update to get our hot new features and fixes.',
   update_now: 'Update Now',
-  update_later: "I'll do it later"
+  update_later: "I'll do it later",
+
+  export_transaction_date_range: 'Date Range',
+  export_transaction_export_type: 'Export Type',
+  export_transaction_this_month: 'This Month',
+  export_transaction_last_month: 'Last Month',
+  string_start: 'Start',
+  string_end: 'End',
+  export_transaction_quickbooks_qbo: 'Quickbooks QBO',
+  export_transaction_csv: 'CSV',
+  string_export: 'Export',
+  string_no_wallet_name: 'No Wallet Name'
 }
 
 // export default strings
