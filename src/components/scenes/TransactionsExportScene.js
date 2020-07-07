@@ -1,8 +1,9 @@
 // @flow
 
+import DateTimePicker from '@react-native-community/datetimepicker'
 import type { EdgeCurrencyWallet, EdgeGetTransactionsOptions } from 'edge-core-js'
 import React, { PureComponent } from 'react'
-import { Platform, ScrollView, StyleSheet, View } from 'react-native'
+import { Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import RNFS from 'react-native-fs'
 import Mailer from 'react-native-mail'
 import Share from 'react-native-share'
@@ -35,6 +36,7 @@ type Props = StateProps & PassedProps
 type State = {
   startDate: Date,
   endDate: Date,
+  datePicker: 'startDate' | 'endDate' | null,
   isExportQbo: boolean,
   isExportCsv: boolean
 }
@@ -46,22 +48,15 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
     this.state = {
       startDate: new Date(new Date().getFullYear(), lastMonth.getMonth(), 1, 0, 0, 0),
       endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0),
+      datePicker: null,
       isExportQbo: false,
       isExportCsv: true
     }
   }
 
-  toggleExportQbo = () => {
-    this.setState({
-      isExportQbo: !this.state.isExportQbo
-    })
-  }
+  toggleExportQbo = () => this.setState({ isExportQbo: !this.state.isExportQbo })
 
-  toggleExportCsv = () => {
-    this.setState({
-      isExportCsv: !this.state.isExportCsv
-    })
-  }
+  toggleExportCsv = () => this.setState({ isExportCsv: !this.state.isExportCsv })
 
   setThisMonth = () => {
     this.setState({
@@ -85,10 +80,26 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
     if (this.state.isExportCsv) {
       await this.exportCSV()
     }
+    this.closeDatePicker()
   }
 
+  showStartDatePicker = () => this.setState({ datePicker: 'startDate' })
+
+  showEndDatePicker = () => this.setState({ datePicker: 'endDate' })
+
+  onChangeDatePicker = (event: any, date: Date) => {
+    if (this.state.datePicker === 'startDate') {
+      this.setState({ startDate: date })
+    }
+    if (this.state.datePicker === 'endDate') {
+      this.setState({ endDate: date })
+    }
+  }
+
+  closeDatePicker = () => this.setState({ datePicker: null })
+
   render() {
-    const { startDate, endDate, isExportCsv, isExportQbo } = this.state
+    const { startDate, endDate, datePicker, isExportCsv, isExportQbo } = this.state
     const walletName = `${this.props.sourceWallet.name || s.strings.string_no_wallet_name} (${this.props.currencyCode})`
     const startDateString = formatExpDate(startDate)
     const endDateString = formatExpDate(endDate)
@@ -96,23 +107,39 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
     return (
       <SceneWrapper background="body">
         <ScrollView>
-          <SettingsRow text={walletName} />
-          <SettingsHeaderRow icon={<Entypo name="calendar" color={THEME.COLORS.WHITE} size={iconSize} />} text={s.strings.export_transaction_date_range} />
-          <SettingsRow text={s.strings.export_transaction_this_month} right={rightArrow} onPress={this.setThisMonth} />
-          <SettingsRow text={s.strings.export_transaction_last_month} right={rightArrow} onPress={this.setLastMonth} />
-          <SettingsLabelRow text={s.strings.string_start} right={startDateString} onPress={() => undefined} />
-          <SettingsLabelRow text={s.strings.string_end} right={endDateString} onPress={() => undefined} />
-          <SettingsHeaderRow icon={<Entypo name="export" color={THEME.COLORS.WHITE} size={iconSize} />} text={s.strings.export_transaction_export_type} />
-          <SettingsSwitchRow key="exportQbo" text={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.toggleExportQbo} />
-          <SettingsSwitchRow key="exportCsv" text={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.toggleExportCsv} />
-          {!disabledExport && (
-            <View style={styles.bottomArea}>
-              <PrimaryButton onPress={this.exportFile} disabled={disabledExport}>
-                <PrimaryButton.Text>{s.strings.string_export}</PrimaryButton.Text>
-              </PrimaryButton>
+          <TouchableWithoutFeedback onPress={this.closeDatePicker}>
+            <View>
+              <SettingsRow text={walletName} onPress={this.closeDatePicker} />
+              <SettingsHeaderRow icon={<Entypo name="calendar" color={THEME.COLORS.WHITE} size={iconSize} />} text={s.strings.export_transaction_date_range} />
+              <SettingsRow text={s.strings.export_transaction_this_month} right={rightArrow} onPress={this.setThisMonth} />
+              <SettingsRow text={s.strings.export_transaction_last_month} right={rightArrow} onPress={this.setLastMonth} />
+              <SettingsLabelRow text={s.strings.string_start} right={startDateString} onPress={this.showStartDatePicker} />
+              <SettingsLabelRow text={s.strings.string_end} right={endDateString} onPress={this.showEndDatePicker} />
+              <SettingsHeaderRow icon={<Entypo name="export" color={THEME.COLORS.WHITE} size={iconSize} />} text={s.strings.export_transaction_export_type} />
+              <SettingsSwitchRow key="exportQbo" text={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.toggleExportQbo} />
+              <SettingsSwitchRow key="exportCsv" text={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.toggleExportCsv} />
+              {!disabledExport && (
+                <View style={styles.bottomArea}>
+                  <PrimaryButton onPress={this.exportFile} disabled={disabledExport}>
+                    <PrimaryButton.Text>{s.strings.string_export}</PrimaryButton.Text>
+                  </PrimaryButton>
+                </View>
+              )}
             </View>
-          )}
+          </TouchableWithoutFeedback>
         </ScrollView>
+        {datePicker !== null && (
+          <View>
+            {Platform.OS === 'ios' && (
+              <TouchableWithoutFeedback onPress={() => this.setState({ datePicker: null })}>
+                <View style={styles.accessoryView}>
+                  <Text style={styles.accessoryText}>Done</Text>
+                </View>
+              </TouchableWithoutFeedback>
+            )}
+            <DateTimePicker testID="datePicker" value={datePicker === 'startDate' ? startDate : endDate} mode="date" onChange={this.onChangeDatePicker} />
+          </View>
+        )}
       </SceneWrapper>
     )
   }
@@ -229,6 +256,22 @@ const iconSize = THEME.rem(1.25)
 const rawStyles = {
   bottomArea: {
     padding: THEME.rem(1.5)
+  },
+  accessoryView: {
+    paddingVertical: THEME.rem(0.5),
+    paddingHorizontal: THEME.rem(1),
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  accessoryBtn: {
+    paddingVertical: THEME.rem(0.5),
+    paddingHorizontal: THEME.rem(1)
+  },
+  accessoryText: {
+    color: THEME.COLORS.ACCENT_BLUE,
+    fontSize: THEME.rem(1)
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
