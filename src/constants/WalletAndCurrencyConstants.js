@@ -260,6 +260,13 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isTokensSupported: true,
     showEarnInterestCard: true
   },
+  ETC: {
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    }
+  },
   DAI: {
     displayBuyCrypto: true,
     isImportKeySupported: {
