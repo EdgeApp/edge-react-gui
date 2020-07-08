@@ -260,7 +260,7 @@ export class TransactionDetailsComponent extends Component<Props, State> {
         s.strings.fragment_send_from_label
       }: ${sourceAmount} ${sourceCurrencyCode}${newline}${s.strings.string_to_capitalize}: ${destinationAmount} ${destinationCurrencyCode}${newline}${
         s.strings.transaction_details_exchange_destination_wallet
-      }: ${destinationWalletName}${newline}${isEstimate ? s.strings.fixed_quote : s.strings.estimated_quote}${newline}${newline}${
+      }: ${destinationWalletName}${newline}${isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote}${newline}${newline}${
         s.strings.transaction_details_exchange_exchange_address
       }:${newline}  ${exchangeAddresses}${newline}${s.strings.transaction_details_exchange_exchange_unique_id}:${newline}  ${uniqueIdentifier}${newline}${
         s.strings.transaction_details_exchange_payout_address
@@ -314,7 +314,7 @@ export class TransactionDetailsComponent extends Component<Props, State> {
           <View style={styles.tileColumn}>
             <FormattedText style={styles.tileTextBottom}>{`${s.strings.title_exchange} ${sourceAmount} ${sourceCurrencyCode}`}</FormattedText>
             <FormattedText style={styles.tileTextBottom}>{`${s.strings.string_to_capitalize} ${destinationAmount} ${destinationCurrencyCode}`}</FormattedText>
-            <FormattedText style={styles.tileTextBottom}>{swapData.isEstimate ? s.strings.fixed_quote : s.strings.estimated_quote}</FormattedText>
+            <FormattedText style={styles.tileTextBottom}>{swapData.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote}</FormattedText>
           </View>
         </Tile>
         {swapData.orderUri && <Tile type="touchable" title={s.strings.transaction_details_exchange_status_page} onPress={openUrl} body={swapData.orderUri} />}
