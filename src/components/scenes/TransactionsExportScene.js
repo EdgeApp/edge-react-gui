@@ -20,6 +20,7 @@ import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../common/SettingsLabelRow.js'
 import { SettingsRow } from '../common/SettingsRow.js'
 import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
+import { showError } from '../services/AirshipInstance.js'
 
 const rightArrow = <AntDesign name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
 
@@ -74,6 +75,10 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
   }
 
   exportFile = async () => {
+    const { startDate, endDate } = this.state
+    if (startDate.getTime() > endDate.getTime()) {
+      return showError(s.strings.export_transaction_error)
+    }
     if (this.state.isExportQbo) {
       await this.exportQBO()
     }
@@ -170,7 +175,9 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
   exportQBO = async () => {
     const transactionOptions: EdgeGetTransactionsOptions = {
       denomination: this.props.denomination,
-      currencyCode: this.props.currencyCode
+      currencyCode: this.props.currencyCode,
+      startDate: this.state.startDate,
+      endDate: this.state.endDate
     }
     const file = await this.props.sourceWallet.exportTransactionsToQBO(transactionOptions)
 
@@ -182,7 +189,9 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
   exportCSV = async () => {
     const transactionOptions: EdgeGetTransactionsOptions = {
       denomination: this.props.denomination,
-      currencyCode: this.props.currencyCode
+      currencyCode: this.props.currencyCode,
+      startDate: this.state.startDate,
+      endDate: this.state.endDate
     }
     let file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
     if (typeof file !== 'string') file = ''

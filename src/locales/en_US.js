@@ -709,7 +709,8 @@ const strings = {
   export_transaction_quickbooks_qbo: 'Quickbooks QBO',
   export_transaction_csv: 'CSV',
   string_export: 'Export',
-  string_no_wallet_name: 'No Wallet Name'
+  string_no_wallet_name: 'No Wallet Name',
+  export_transaction_error: 'Start date should be earlier than the end date'
 }
 
 // export default strings
