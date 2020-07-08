@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
@@ -14,8 +14,9 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import styles from '../../styles/scenes/CreateWalletStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import type { CreateWalletType, GuiFiatType, GuiWallet } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
 import { fixFiatCurrencyCode } from '../../util/utils.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -282,3 +283,107 @@ export class CreateWalletAccountSelect extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  scene: {
+    flex: 1,
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  scrollableGradient: {
+    height: THEME.HEADER
+  },
+  scrollableView: {
+    position: 'relative',
+    paddingHorizontal: 20
+  },
+  currencyLogo: {
+    alignSelf: 'center',
+    marginTop: scale(24),
+    height: scale(64),
+    width: scale(64)
+  },
+  createWalletPromptArea: {
+    paddingTop: scale(16),
+    paddingBottom: scale(8)
+  },
+  instructionalText: {
+    fontSize: scale(16),
+    textAlign: 'center',
+    color: THEME.COLORS.GRAY_1
+  },
+  buttons: {
+    marginTop: scale(24),
+    flexDirection: 'row'
+  },
+  next: {
+    marginLeft: scale(1),
+    flex: 1
+  },
+  selectPaymentLower: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    width: '100%',
+    marginVertical: scale(8),
+    paddingHorizontal: scale(16)
+  },
+  paymentAndIconArea: {
+    flexDirection: 'row'
+  },
+  paymentArea: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: scale(12),
+    flex: 1
+  },
+  paymentLeft: {
+    fontSize: scale(16),
+    color: THEME.COLORS.GRAY_2
+  },
+  paymentLeftIconWrap: {
+    paddingVertical: scale(12),
+    marginRight: 6
+  },
+  paymentLeftIcon: {
+    width: scale(22),
+    height: scale(22)
+  },
+  paymentRight: {
+    fontFamily: THEME.FONTS.BOLD,
+    fontSize: scale(16),
+    color: THEME.COLORS.GRAY_2
+  },
+  accountReviewWalletNameArea: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingTop: scale(14),
+    paddingBottom: scale(8),
+    alignItems: 'center'
+  },
+  accountReviewWalletNameText: {
+    fontFamily: THEME.FONTS.BOLD,
+    fontSize: scale(16),
+    color: THEME.COLORS.SECONDARY
+  },
+  accountReviewInfoArea: {
+    width: '100%',
+    marginVertical: scale(10),
+    paddingHorizontal: scale(10)
+  },
+  accountReviewInfoText: {
+    color: THEME.COLORS.GRAY_2
+  },
+  accountReviewConfirmArea: {
+    width: '100%',
+    marginTop: scale(12),
+    marginBottom: scale(12),
+    paddingHorizontal: scale(10)
+  },
+  accountReviewConfirmText: {
+    color: THEME.COLORS.GRAY_2,
+    textAlign: 'center'
+  },
+  confirmButtonArea: {
+    marginHorizontal: scale(30)
+  },
+  confirmButton: {}
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
