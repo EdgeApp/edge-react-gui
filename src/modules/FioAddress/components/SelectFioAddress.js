@@ -10,12 +10,11 @@ import { TransactionDetailsNotesInput } from '../../../components/modals/Transac
 import { Airship, showError } from '../../../components/services/AirshipInstance'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
-import { styles as CryptoExchangeSceneStyle } from '../../../styles/scenes/CryptoExchangeSceneStyles'
 import { THEME } from '../../../theme/variables/airbitz.js'
 import type { State } from '../../../types/reduxTypes'
 import type { FioRequest, GuiWallet } from '../../../types/types'
 import { scale } from '../../../util/scaling.js'
-import { TextAndIconButton } from '../../UI/components/Buttons/TextAndIconButton.ui.js'
+import { TextAndIconButton, TextAndIconButtonStyle } from '../../UI/components/Buttons/TextAndIconButton.ui.js'
 import Text from '../../UI/components/FormattedText/FormattedText.ui.js'
 import * as UI_SELECTORS from '../../UI/selectors.js'
 import { checkRecordSendFee, findWalletByFioAddress } from '../util'
@@ -150,7 +149,7 @@ class SelectFioAddress extends Component<Props, LocalState> {
       <View>
         <TextAndIconButton
           style={{
-            ...CryptoExchangeSceneStyle.flipWrapper.walletSelector,
+            ...TextAndIconButtonStyle,
             text: styles.selectAddressText,
             textPressed: styles.selectAddressTextPressed,
             container: styles.selectAddressContainer

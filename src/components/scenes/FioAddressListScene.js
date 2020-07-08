@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Image, Linking, ScrollView, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -14,9 +14,9 @@ import { Button } from '../../modules/UI/components/ControlPanel/Component/Butto
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import { styles } from '../../styles/scenes/FioAddressListStyle'
-import { THEME } from '../../theme/variables/airbitz'
+import { THEME } from '../../theme/variables/airbitz.js'
 import type { FioAddress, FioDomain } from '../../types/types'
+import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow'
 import { showError } from '../services/AirshipInstance'
@@ -137,7 +137,7 @@ export class FioAddressListScene extends Component<Props> {
 
         <View>
           <View style={styles.button}>
-            <Button onPress={Actions[Constants.FIO_ADDRESS_REGISTER]} style={styles.toggleButton} underlayColor={styles.underlay.color}>
+            <Button onPress={Actions[Constants.FIO_ADDRESS_REGISTER]} style={styles.toggleButton} underlayColor={`${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`}>
               <Button.Center>
                 <Button.Text>
                   <T>{s.strings.fio_address_list_screen_button_register}</T>
@@ -149,7 +149,7 @@ export class FioAddressListScene extends Component<Props> {
           <View style={styles.domainVew}>
             <T>{s.strings.fio_address_reg_domain_label}</T>
           </View>
-          <TouchableOpacity onPress={this.registerDomain} underlayColor={styles.underlay.color}>
+          <TouchableOpacity onPress={this.registerDomain} underlayColor={`${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`}>
             <View>
               <T style={styles.link}>{s.strings.fio_address_reg_domain}</T>
             </View>
@@ -159,3 +159,67 @@ export class FioAddressListScene extends Component<Props> {
     )
   }
 }
+
+const rawStyles = {
+  gradient: {
+    height: THEME.HEADER
+  },
+  list: {
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  item: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: scale(15),
+    borderBottomColor: THEME.COLORS.FIO_ADDRESS_LIST_BORDER_BOTTOM,
+    borderBottomWidth: 1
+  },
+  icon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: scale(10),
+    marginLeft: scale(5)
+  },
+  button: {
+    padding: scale(10)
+  },
+  toggleButton: {
+    backgroundColor: THEME.COLORS.PRIMARY,
+    height: scale(58),
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  domainVew: {
+    paddingHorizontal: scale(15),
+    paddingTop: scale(10),
+    paddingBottom: scale(0)
+  },
+  link: {
+    padding: scale(10),
+    color: THEME.COLORS.ACCENT_BLUE,
+    textAlign: 'center'
+  },
+  loading: {
+    flex: 1,
+    marginTop: scale(40),
+    alignSelf: 'center'
+  },
+  row: {
+    flex: 1
+  },
+  noNames: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(16),
+    textAlign: 'center',
+    padding: scale(15)
+  },
+  headerIcon: {
+    width: scale(24),
+    height: scale(22)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

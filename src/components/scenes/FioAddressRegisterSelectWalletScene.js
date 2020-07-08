@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeDenomination, type EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
@@ -17,10 +17,11 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import styles from '../../styles/scenes/CreateWalletStyle.js'
-import { styles as fioAddressStyles } from '../../styles/scenes/FioAddressRegisterStyle'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../theme/variables/platform.js'
 import type { State } from '../../types/reduxTypes'
 import type { FioDomain, GuiWallet } from '../../types/types'
+import { scale } from '../../util/scaling.js'
 import { Airship, showError } from '../services/AirshipInstance'
 
 export type StateProps = {
@@ -203,12 +204,12 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props, LocalS
           <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
-              <Image source={fioAddressIcon} style={fioAddressStyles.image} resizeMode="cover" />
+              <Image source={fioAddressIcon} style={styles.image} resizeMode="cover" />
               <View style={styles.createWalletPromptArea}>
                 <T style={styles.instructionalText}>{detailsText}</T>
               </View>
               {this.renderSelectWallet()}
-              <View style={fioAddressStyles.bottomSpace} />
+              <View style={styles.bottomSpace} />
             </View>
           </ScrollView>
         </View>
@@ -216,3 +217,142 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props, LocalS
     )
   }
 }
+
+const rawStyles = {
+  scene: {
+    flex: 1,
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  scrollableGradient: {
+    height: THEME.HEADER
+  },
+  scrollableView: {
+    position: 'relative',
+    paddingHorizontal: 20
+  },
+  createWalletPromptArea: {
+    paddingTop: scale(16),
+    paddingBottom: scale(8)
+  },
+  instructionalText: {
+    fontSize: scale(16),
+    textAlign: 'center',
+    color: THEME.COLORS.GRAY_1
+  },
+  text: {
+    color: THEME.COLORS.WHITE
+  },
+  buttons: {
+    marginTop: scale(24),
+    flexDirection: 'row'
+  },
+  next: {
+    marginLeft: scale(1),
+    flex: 1
+  },
+  selectPaymentLower: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    width: '100%',
+    marginVertical: scale(8),
+    paddingHorizontal: scale(16)
+  },
+  paymentArea: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: scale(12),
+    flex: 1
+  },
+  paymentLeft: {
+    fontSize: scale(16),
+    color: THEME.COLORS.GRAY_2
+  },
+  paymentRight: {
+    fontFamily: THEME.FONTS.BOLD,
+    fontSize: scale(16),
+    color: THEME.COLORS.GRAY_2
+  },
+  image: {
+    alignSelf: 'center',
+    marginTop: scale(24),
+    height: scale(50),
+    width: scale(55)
+  },
+  title: {
+    paddingTop: scale(24)
+  },
+  paddings: {
+    paddingVertical: scale(8)
+  },
+  inputContainer: {
+    width: 'auto',
+    marginTop: 0,
+    marginBottom: 0
+  },
+  statusIconError: {
+    color: THEME.COLORS.ACCENT_RED
+  },
+  statusIconOk: {
+    color: THEME.COLORS.ACCENT_MINT
+  },
+  formFieldView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: scale(14),
+    marginBottom: scale(12)
+  },
+  formFieldViewContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: PLATFORM.deviceWidth - scale(30) - scale(40)
+  },
+  statusIconContainer: {
+    width: scale(25),
+    height: scale(25)
+  },
+  statusIcon: {
+    alignSelf: 'flex-end',
+    marginTop: scale(29),
+    width: scale(25),
+    height: scale(25)
+  },
+  bottomSpace: {
+    paddingBottom: scale(500)
+  },
+  selectWalletBlock: {
+    marginTop: scale(48),
+    paddingHorizontal: scale(18),
+    paddingBottom: scale(10),
+    backgroundColor: THEME.COLORS.GRAY_3
+  },
+  selectWalletBtn: {
+    marginTop: scale(15),
+    paddingVertical: scale(10),
+    paddingHorizontal: scale(5),
+    backgroundColor: THEME.COLORS.BLUE_3
+  },
+  domain: {
+    marginTop: scale(24),
+    marginLeft: scale(5),
+    paddingHorizontal: scale(10),
+    paddingVertical: scale(4),
+    borderRadius: scale(5),
+    borderColor: THEME.COLORS.BLUE_3,
+    borderWidth: scale(2)
+  },
+  domainText: {
+    color: THEME.COLORS.BLUE_3,
+    fontSize: scale(16)
+  },
+  domainListRowName: {
+    flex: 1,
+    fontSize: THEME.rem(1),
+    color: THEME.COLORS.SECONDARY
+  },
+  domainListRowContainerTop: {
+    height: 'auto',
+    paddingLeft: THEME.rem(0.75),
+    paddingRight: THEME.rem(0.75),
+    paddingVertical: THEME.rem(0.75)
+  }
+}
+export const styles: typeof rawStyles = StyleSheet.create(rawStyles)
