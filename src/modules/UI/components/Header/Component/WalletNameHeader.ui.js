@@ -15,7 +15,7 @@ type Props = {
   denomination: string
 }
 
-class WalletNameHeader extends React.Component<Props> {
+export class WalletNameHeader extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, { styles: true })
     return !!diffElement
@@ -36,4 +36,3 @@ class WalletNameHeader extends React.Component<Props> {
     )
   }
 }
-export { WalletNameHeader }
