@@ -24,10 +24,26 @@ import { showError } from '../services/AirshipInstance.js'
 
 const rightArrow = <AntDesign name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
 
+type Files = {
+  qbo?: {
+    file: string,
+    format: string,
+    path: string,
+    fileName: string
+  },
+  csv?: {
+    file: string,
+    format: string,
+    path: string,
+    fileName: string
+  }
+}
+
 export type PassedProps = {
   sourceWallet: EdgeCurrencyWallet,
   currencyCode: string
 }
+
 type StateProps = {
   denomination: string
 }
@@ -79,12 +95,7 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
     if (startDate.getTime() > endDate.getTime()) {
       return showError(s.strings.export_transaction_error)
     }
-    if (this.state.isExportQbo) {
-      await this.exportQBO()
-    }
-    if (this.state.isExportCsv) {
-      await this.exportCSV()
-    }
+    this.exportFiles()
     this.closeDatePicker()
   }
 
@@ -163,7 +174,10 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
   }
 
   fileName = (format: string) => {
-    const walletName = this.props.sourceWallet.name ? this.props.sourceWallet.name : 'MyWallet'
+    const { sourceWallet, currencyCode } = this.props
+    const fullCurrencyCode =
+      sourceWallet.currencyInfo.currencyCode === currencyCode ? currencyCode : `${sourceWallet.currencyInfo.currencyCode}-${currencyCode}`
+    const walletName = sourceWallet.name ? `${sourceWallet.name}-${fullCurrencyCode}-` : `${s.strings.string_no_wallet_name}-${fullCurrencyCode}-`
     return sanitizeForFilename(walletName) + this.filenameDateString() + '.' + format.toLowerCase()
   }
 
@@ -172,57 +186,75 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
     return directory + '/' + this.fileName(format)
   }
 
-  exportQBO = async () => {
+  exportFiles = async () => {
+    const { isExportQbo, isExportCsv } = this.state
     const transactionOptions: EdgeGetTransactionsOptions = {
       denomination: this.props.denomination,
       currencyCode: this.props.currencyCode,
       startDate: this.state.startDate,
       endDate: this.state.endDate
     }
-    const file = await this.props.sourceWallet.exportTransactionsToQBO(transactionOptions)
 
-    const format = 'QBO'
+    const files = {}
 
-    this.write(file, format)
-  }
-
-  exportCSV = async () => {
-    const transactionOptions: EdgeGetTransactionsOptions = {
-      denomination: this.props.denomination,
-      currencyCode: this.props.currencyCode,
-      startDate: this.state.startDate,
-      endDate: this.state.endDate
+    if (isExportQbo) {
+      const format = 'QBO'
+      files.qbo = {
+        file: await this.props.sourceWallet.exportTransactionsToQBO(transactionOptions),
+        format,
+        path: this.filePath(format),
+        fileName: this.fileName(format)
+      }
     }
-    let file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
-    if (typeof file !== 'string') file = ''
-    const format = 'CSV'
 
-    this.write(file, format)
+    if (isExportCsv) {
+      const file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
+      const format = 'CSV'
+      files.csv = {
+        file: typeof file !== 'string' ? '' : file,
+        format,
+        path: this.filePath(format),
+        fileName: this.fileName(format)
+      }
+    }
+
+    this.write(files)
   }
 
-  write = (file: string, format: string) => {
-    const path = this.filePath(format)
+  write = async (files: Files) => {
+    if (!files.qbo && !files.csv) return
+    const paths = []
+    let subject = null
+    try {
+      if (files.qbo) {
+        const { file, format, path } = files.qbo
+        paths.push(path)
+        subject = `Share Transactions ${format}`
+        await RNFS.writeFile(path, file, 'utf8')
+      }
 
-    const fileName = this.fileName(format)
+      if (files.csv) {
+        const { file, format, path } = files.csv
+        subject = subject ? `${subject}, ${format}` : `Share Transactions ${format}`
+        paths.push(path)
+        await RNFS.writeFile(path, file, 'utf8')
+      }
 
-    RNFS.writeFile(path, file, 'utf8')
-      .then(success => {
-        if (Platform.OS === 'ios') {
-          this.openShareApp(path, 'Share Transactions ' + format)
-          return
-        }
-        this.openMailApp(path, 'Share Transactions ' + format, format, fileName)
-      })
-      .catch(err => {
-        console.log('Error creating : ' + fileName, err.message)
-      })
+      if (Platform.OS === 'ios') {
+        this.openShareApp(paths, subject || '')
+        return
+      }
+      this.openMailApp(files, subject || '')
+    } catch (error) {
+      console.log(error.message)
+    }
   }
 
-  openShareApp = (path: string, subject: string) => {
+  openShareApp = (paths: string[], subject: string) => {
     const shareOptions = {
       title: subject,
       message: '',
-      url: 'file://' + path,
+      urls: paths.map(path => 'file://' + path),
       subject: subject //  for email
     }
     Share.open(shareOptions)
@@ -235,10 +267,14 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
       })
   }
 
-  openMailApp = (path: string, subject: string, fileType: string, fileName: string) => {
-    const attachment = {
-      path: path, // The absolute path of the file from which to read data.
-      type: fileType // Mime Type: jpg, png, doc, ppt, html, pdf
+  openMailApp = (files: Files, subject: string) => {
+    const attachments = []
+    for (const file in files) {
+      const { path, format } = files[file]
+      attachments.push({
+        path,
+        type: format
+      })
     }
     Mailer.mail(
       {
@@ -246,7 +282,7 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
         recipients: [''],
         body: ' ',
         isHTML: true,
-        attachment: attachment
+        attachments
       },
       (error, event) => {
         if (error) {
