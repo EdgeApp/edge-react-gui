@@ -229,7 +229,13 @@ export type FioDomain = {
   name: string,
   expiration: string,
   isPublic: boolean,
-  walletId: string
+  walletId: string,
+  isFree?: boolean
+}
+
+export type FioPublicDomain = {
+  domain: string,
+  free: boolean
 }
 
 export type FioRequest = {

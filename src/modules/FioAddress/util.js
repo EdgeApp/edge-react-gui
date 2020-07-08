@@ -4,7 +4,7 @@ import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
-import { FIO_DOMAIN_DEFAULT, FIO_STR, FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
+import { FIO_STR, FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import type { FioConnectionWalletItem, FioDomain, FioObtRecord, GuiWallet } from '../../types/types'
@@ -458,7 +458,7 @@ export const getRegInfo = async (
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
 
-  if (selectedDomain.name !== FIO_DOMAIN_DEFAULT.name) {
+  if (selectedDomain.walletId) {
     return {
       activationCost,
       supportedCurrencies: { [FIO_STR]: true },
@@ -475,7 +475,7 @@ export const getRegInfo = async (
   try {
     const buyAddressResponse: BuyAddressResponse = await fioPlugin.otherMethods.buyAddressRequest({
       address: fioAddress,
-      referralCode: 'edge',
+      referralCode: fioPlugin.currencyInfo.defaultSettings.defaultRef,
       publicKey: selectedWallet.publicWalletInfo.keys.publicKey
     })
 

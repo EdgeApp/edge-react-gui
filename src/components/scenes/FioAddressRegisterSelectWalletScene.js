@@ -87,7 +87,7 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props, LocalS
     const { selectedDomain } = this.props
     const { supportedCurrencies } = this.state
 
-    if (selectedDomain.name !== Constants.FIO_DOMAIN_DEFAULT.name) {
+    if (selectedDomain.walletId) {
       return this.onSelectWallet(selectedDomain.walletId, Constants.FIO_STR)
     }
 
@@ -164,7 +164,6 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props, LocalS
     const { selectedDomain } = this.props
     const { activationCost, loading } = this.state
     const isSelectWalletDisabled = !activationCost || activationCost === 0
-    const isDefaultDomainSelected = selectedDomain.name === Constants.FIO_DOMAIN_DEFAULT.name
 
     return (
       <View style={styles.selectPaymentLower}>
@@ -174,7 +173,7 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props, LocalS
               <ActivityIndicator />
             ) : (
               <PrimaryButton.Text>
-                {isDefaultDomainSelected ? s.strings.create_wallet_account_select_wallet : s.strings.string_next_capitalized}
+                {!selectedDomain.walletId ? s.strings.create_wallet_account_select_wallet : s.strings.string_next_capitalized}
               </PrimaryButton.Text>
             )}
           </PrimaryButton>

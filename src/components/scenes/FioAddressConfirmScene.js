@@ -2,9 +2,9 @@
 
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
-import { type EdgeCurrencyWallet } from 'edge-core-js'
+import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants'
@@ -23,6 +23,7 @@ export type State = {
 }
 
 export type StateProps = {
+  fioPlugin: EdgeCurrencyConfig | null,
   denominationMultiplier: string,
   isConnected: boolean
 }
@@ -47,14 +48,10 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     this.setBalance()
   }
 
-  toggleLoading(loading: boolean = false) {
-    this.setState({ loading })
-  }
-
   toggleButton = () => {
     const { fee } = this.props
     const { balance } = this.state
-    if (fee !== null && balance !== null) {
+    if (balance !== null) {
       if (fee > balance) {
         this.setState({
           sliderDisabled: true
@@ -84,30 +81,48 @@ export class FioAddressConfirmScene extends Component<Props, State> {
   }
 
   saveFioAddress = async () => {
-    const { isConnected, fioAddressName, paymentWallet, ownerPublicKey } = this.props
+    const { isConnected, fioAddressName, paymentWallet, fioPlugin, ownerPublicKey, fee } = this.props
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
     }
 
-    this.toggleLoading(true)
+    this.setState({ loading: true })
 
-    try {
-      const { expiration, feeCollected } = await paymentWallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioAddressName, ownerPublicKey })
-      this.confirmSelected(expiration, feeCollected)
-    } catch (e) {
-      showError(s.strings.fio_register_address_err_msg)
+    if (!fee) {
+      try {
+        if (!fioPlugin) {
+          throw new Error(s.strings.fio_register_address_err_msg)
+        }
+        const response = await fioPlugin.otherMethods.buyAddressRequest(
+          {
+            address: fioAddressName,
+            referralCode: fioPlugin.currencyInfo.defaultSettings.defaultRef,
+            publicKey: ownerPublicKey
+          },
+          true
+        )
+        if (response.error) {
+          throw new Error(response.error)
+        }
+        Alert.alert(
+          `${s.strings.fio_address_register_form_field_label} ${s.strings.fragment_wallet_unconfirmed}`,
+          s.strings.fio_address_register_pending_free,
+          [{ text: s.strings.string_ok_cap }]
+        )
+        Actions[Constants.WALLET_LIST]()
+      } catch (e) {
+        showError(e.message)
+      }
+    } else {
+      try {
+        const { expiration, feeCollected } = await paymentWallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioAddressName, ownerPublicKey })
+        window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ fioAddressName, expiration, feeCollected }))
+      } catch (e) {
+        showError(s.strings.fio_register_address_err_msg)
+      }
     }
-    this.toggleLoading()
-  }
-
-  confirmSelected = (expiration: string, feeCollected: number): void => {
-    const { fioAddressName, isConnected } = this.props
-    if (!isConnected) {
-      showError(s.strings.fio_network_alert_text)
-      return
-    }
-    window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ fioAddressName, expiration, feeCollected }))
+    this.setState({ loading: false })
   }
 
   render() {
@@ -123,13 +138,17 @@ export class FioAddressConfirmScene extends Component<Props, State> {
             <View style={styles.spacer} />
             <T style={styles.title}>{s.strings.fio_address_confirm_screen_registration_label}</T>
             <T style={styles.title}>
-              {fee ? getFeeDisplayed(fee) : '0'} {balance ? s.strings.fio_address_confirm_screen_fio_label : ''}
+              {fee ? getFeeDisplayed(fee) : s.strings.fio_domain_free} {balance && fee ? s.strings.fio_address_confirm_screen_fio_label : ''}
             </T>
             <View style={styles.spacer} />
-            <T style={styles.title}>{s.strings.fio_address_confirm_screen_balance_label}</T>
-            <T style={balance && fee !== null && fee <= balance ? styles.title : styles.titleDisabled}>
-              {balance ? balance.toFixed(2) : '0'} {balance ? s.strings.fio_address_confirm_screen_fio_label : ''}
-            </T>
+            {fee ? (
+              <View>
+                <T style={styles.title}>{s.strings.fio_address_confirm_screen_balance_label}</T>
+                <T style={balance && fee <= balance ? styles.title : styles.titleDisabled}>
+                  {balance ? balance.toFixed(2) : '0'} {balance ? s.strings.fio_address_confirm_screen_fio_label : ''}
+                </T>
+              </View>
+            ) : null}
           </View>
           <View style={styles.blockPadding}>
             <Scene.Footer style={styles.footer}>
@@ -137,7 +156,7 @@ export class FioAddressConfirmScene extends Component<Props, State> {
                 resetSlider={false}
                 parentStyle={styles.sliderStyle}
                 onSlidingComplete={this.saveFioAddress}
-                sliderDisabled={!balance || (balance !== null && fee !== null && fee > balance)}
+                sliderDisabled={(!balance && !!fee) || (balance !== null && fee > balance)}
                 showSpinner={loading}
                 disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label}
               />
