@@ -62,6 +62,7 @@ export const currencyPlugins = {
 }
 
 export const ratePlugins = {
+  bitmax: true,
   'shapeshift-rate': false,
   compound: true,
   coinbase: true,
