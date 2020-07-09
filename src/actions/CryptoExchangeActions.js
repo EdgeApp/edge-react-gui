@@ -109,6 +109,9 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
       currencyCode,
       spendTargets: [{ publicAddress }]
     }
+    if (currencyCode === 'BTC') {
+      edgeSpendInfo.networkFeeOption = 'high'
+    }
     primaryNativeAmount = await wallet.getMaxSpendable(edgeSpendInfo)
   } catch (error) {
     showError(error)
