@@ -594,6 +594,8 @@ const strings = {
   fio_address_register_pending: 'Your FIO Address will be registered as soon as payment is received. Tap FIO Names in few minutes.',
   fio_address_register_pending_free: 'Your free FIO Address will be registered in a few seconds. Tap FIO Names to see your address.',
   fio_address_register_metadata_name: 'FIO Registration',
+  fio_address_register_pay_title: 'You have already registered a free address for that domain.',
+  fio_address_register_pay: 'Payment required to register this address.',
   fio_address_confirm_screen_label: 'FIO Address',
   fio_address_confirm_screen_registration_label: 'Registration Fee',
   fio_address_confirm_screen_free_label: 'Free',

@@ -103,6 +103,25 @@ export class FioAddressConfirmScene extends Component<Props, State> {
           true
         )
         if (response.error) {
+          if (response.error === 'You have already registered a free address for that domain' && response.code === 400) {
+            const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.fallbackRef)
+            const domainExists = publicDomains.find(domain => domain.domain === fioAddressName.split('@')[1])
+            if (domainExists && !domainExists.free) {
+              Alert.alert(s.strings.fio_address_register_pay_title, s.strings.fio_address_register_pay, [{ text: s.strings.string_ok_cap }])
+              return Actions[Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET]({
+                fioAddress: fioAddressName,
+                selectedWallet: paymentWallet,
+                selectedDomain: {
+                  name: domainExists.domain,
+                  expiration: new Date().toDateString(),
+                  isPublic: true,
+                  walletId: '',
+                  isFree: domainExists.free
+                },
+                isFallback: true
+              })
+            }
+          }
           throw new Error(response.error)
         }
         Alert.alert(

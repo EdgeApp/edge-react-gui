@@ -436,6 +436,7 @@ export const getFioDomains = async (fioPlugin: EdgeCurrencyConfig, fioAddress: s
  * @param selectedWallet
  * @param selectedDomain
  * @param displayDenomination
+ * @param isFallback
  * @returns {Promise<{activationCost: number, supportedCurrencies:{[string]: boolean}, paymentInfo: {[string]: {amount: string, address: string}}}>}
  */
 export const getRegInfo = async (
@@ -443,7 +444,8 @@ export const getRegInfo = async (
   fioAddress: string,
   selectedWallet: EdgeCurrencyWallet,
   selectedDomain: FioDomain,
-  displayDenomination: EdgeDenomination
+  displayDenomination: EdgeDenomination,
+  isFallback: boolean = false
 ): Promise<{
   supportedCurrencies: { [currencyCode: string]: boolean },
   activationCost: number,
@@ -473,9 +475,10 @@ export const getRegInfo = async (
   }
 
   try {
+    const referralCode = isFallback ? fioPlugin.currencyInfo.defaultSettings.fallbackRef : fioPlugin.currencyInfo.defaultSettings.defaultRef
     const buyAddressResponse: BuyAddressResponse = await fioPlugin.otherMethods.buyAddressRequest({
       address: fioAddress,
-      referralCode: fioPlugin.currencyInfo.defaultSettings.defaultRef,
+      referralCode,
       publicKey: selectedWallet.publicWalletInfo.keys.publicKey
     })
 
@@ -517,7 +520,7 @@ export const getRegInfo = async (
   throw new Error(s.strings.fio_get_reg_info_err_msg)
 }
 
-export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null, forDomain?: boolean = false): Promise<number> => {
+export const getRenewalFee = async (fioWallet: EdgeCurrencyWallet | null, forDomain: boolean = false): Promise<number> => {
   if (fioWallet) {
     try {
       const { fee } = await fioWallet.otherMethods.fioAction('getFee', {
@@ -537,7 +540,7 @@ export const renewFioName = async (
   fioWallet: EdgeCurrencyWallet | null,
   fioName: string,
   fee: number,
-  isDomain?: boolean = false
+  isDomain: boolean = false
 ): Promise<{ expiration: string }> => {
   const errorStr = sprintf(s.strings.fio_renew_err_msg, isDomain ? s.strings.fio_domain_label : s.strings.fio_address_register_form_field_label)
   if (fioWallet) {

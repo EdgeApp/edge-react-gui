@@ -36,7 +36,8 @@ export type StateProps = {
 export type NavigationProps = {
   fioAddress: string,
   selectedWallet: EdgeCurrencyWallet,
-  selectedDomain: FioDomain
+  selectedDomain: FioDomain,
+  isFallback?: boolean
 }
 
 export type DispatchProps = {
@@ -73,7 +74,8 @@ export class FioAddressRegisterSelectWalletScene extends Component<Props, LocalS
         this.props.fioAddress,
         this.props.selectedWallet,
         this.props.selectedDomain,
-        this.props.fioDisplayDenomination
+        this.props.fioDisplayDenomination,
+        this.props.isFallback
       )
       this.setState({ activationCost, supportedCurrencies, paymentInfo })
     } catch (e) {
