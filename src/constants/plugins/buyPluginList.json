@@ -648,7 +648,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 2% / Settlement: 1 - 48hours\nLimit: €10000+/day",
+    "description": "Fee: 2% / Settlement: 1 - 48hours\nLimit: $10000+/day",
     "title": "BPay",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
     "forCountries": [
