@@ -86,6 +86,13 @@ export const styles = StyleSheet.create({
     fontSize: THEME.rem(1),
     color: THEME.COLORS.SECONDARY
   },
+  domainListRowFree: {
+    flex: 1,
+    fontSize: THEME.rem(0.75),
+    textTransform: 'uppercase',
+    color: THEME.COLORS.ACCENT_RED,
+    textAlign: 'right'
+  },
   domainListRowContainerTop: {
     height: 'auto',
     paddingLeft: THEME.rem(0.75),

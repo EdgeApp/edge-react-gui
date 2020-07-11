@@ -874,6 +874,12 @@ export class MainComponent extends Component<Props> {
         return true
       }
     }
+    if (this.isCurrentScene(Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET)) {
+      if (Actions.currentParams.isFallback) {
+        Actions.popTo(Constants.FIO_ADDRESS_REGISTER)
+        return true
+      }
+    }
     Actions.pop()
     return true
   }

@@ -22,26 +22,29 @@ import { getFioWallets } from '../../UI/selectors'
 type Item = {
   label: string,
   value: FioDomain,
+  isFree?: boolean,
   createNew?: boolean
 }
 
 type StateProps = {
-  domains: Item[],
+  userDomains: FioDomain[],
   fioWallets: EdgeCurrencyWallet[],
   fioPlugin: EdgeCurrencyConfig | null
 }
 
 type OwnProps = {
-  bridge: AirshipBridge<FioDomain | null>
+  bridge: AirshipBridge<FioDomain | null>,
+  publicDomains: FioDomain[]
 }
 
 type State = {
-  input: string
+  input: string,
+  domains: Item[],
+  prevDomainsJson: string
 }
 
 type Props = OwnProps & StateProps
 
-const defaultDomainItem = { value: Constants.FIO_DOMAIN_DEFAULT, label: `${Constants.FIO_ADDRESS_DELIMITER}${Constants.FIO_DOMAIN_DEFAULT.name}` }
 const newDomainItem = {
   createNew: true,
   value: { ...Constants.FIO_DOMAIN_DEFAULT, name: s.strings.fio_address_list_register_domain },
@@ -52,22 +55,44 @@ class DomainListModalConnected extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      input: ''
+      input: '',
+      domains: [],
+      prevDomainsJson: ''
     }
   }
 
+  static getDerivedStateFromProps(props, state) {
+    const { publicDomains, userDomains } = props
+
+    const prevDomainsJson = JSON.stringify([...publicDomains, ...userDomains])
+    if (prevDomainsJson === state.prevDomainsJson) {
+      return null
+    }
+
+    const domains = publicDomains.map((pubDomain: FioDomain) => ({
+      value: pubDomain,
+      label: `${Constants.FIO_ADDRESS_DELIMITER}${pubDomain.name}`
+    }))
+    const userDomainsConverted = []
+    for (const fioDomain of userDomains) {
+      userDomainsConverted.push({ value: fioDomain, label: `${Constants.FIO_ADDRESS_DELIMITER}${fioDomain.name}` })
+    }
+    userDomainsConverted.sort((userDomainA: Item, userDomainB: Item) => (userDomainA.value.name < userDomainB.value.name ? -1 : 1))
+
+    return { domains: [...domains, ...userDomainsConverted], prevDomainsJson }
+  }
+
   getItems = () => {
-    const { domains } = this.props
-    const { input } = this.state
+    const { domains, input } = this.state
 
     if (input === '') {
-      return [defaultDomainItem, ...domains, newDomainItem]
+      return [...domains, newDomainItem]
     }
 
     // Search Input Filter
     const inputLowerCase = input.toLowerCase()
     const filteredRecords = []
-    for (const item of [defaultDomainItem, ...domains]) {
+    for (const item of domains) {
       const { label, value } = item
 
       if (value) {
@@ -119,6 +144,7 @@ class DomainListModalConnected extends Component<Props, State> {
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsRow}>
                 <T style={fioAddressRegisterStyles.domainListRowName}>{label}</T>
+                <T style={fioAddressRegisterStyles.domainListRowFree}>{value.isFree ? s.strings.fio_domain_free : ''}</T>
               </View>
             </View>
           </View>
@@ -192,9 +218,8 @@ export const DomainListModal = connect((state: StateType): StateProps => {
   const { account } = state.core
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
   const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
-  const domains = state.ui.scenes.fioAddress.fioDomains.map(fioDomain => ({ value: fioDomain, label: `${Constants.FIO_ADDRESS_DELIMITER}${fioDomain.name}` }))
   return {
-    domains,
+    userDomains: state.ui.scenes.fioAddress.fioDomains,
     fioWallets,
     fioPlugin
   }
