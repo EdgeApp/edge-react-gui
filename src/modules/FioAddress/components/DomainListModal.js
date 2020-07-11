@@ -3,7 +3,7 @@
 import { FormField, MaterialInputStyle } from 'edge-components'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { FlatList, Image, Linking, Text, TouchableHighlight, View } from 'react-native'
+import { FlatList, Image, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import fioAddressIcon from '../../../assets/images/list_fioAddress.png'
@@ -11,7 +11,6 @@ import { type AirshipBridge, AirshipModal, dayText, IconCircle, THEME } from '..
 import { showError } from '../../../components/services/AirshipInstance'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
-import { CryptoExchangeWalletListRowStyle as styles } from '../../../styles/components/CryptoExchangeWalletListRowStyle.js'
 import { styles as fioAddressRegisterStyles } from '../../../styles/scenes/FioAddressRegisterStyle'
 import type { State as StateType } from '../../../types/reduxTypes'
 import type { FioDomain, FlatListItem } from '../../../types/types.js'
@@ -23,26 +22,29 @@ import { getFioWallets } from '../../UI/selectors'
 type Item = {
   label: string,
   value: FioDomain,
+  isFree?: boolean,
   createNew?: boolean
 }
 
 type StateProps = {
-  domains: Item[],
+  userDomains: FioDomain[],
   fioWallets: EdgeCurrencyWallet[],
   fioPlugin: EdgeCurrencyConfig | null
 }
 
 type OwnProps = {
-  bridge: AirshipBridge<FioDomain | null>
+  bridge: AirshipBridge<FioDomain | null>,
+  publicDomains: FioDomain[]
 }
 
 type State = {
-  input: string
+  input: string,
+  domains: Item[],
+  prevDomainsJson: string
 }
 
 type Props = OwnProps & StateProps
 
-const defaultDomainItem = { value: Constants.FIO_DOMAIN_DEFAULT, label: `${Constants.FIO_ADDRESS_DELIMITER}${Constants.FIO_DOMAIN_DEFAULT.name}` }
 const newDomainItem = {
   createNew: true,
   value: { ...Constants.FIO_DOMAIN_DEFAULT, name: s.strings.fio_address_list_register_domain },
@@ -53,22 +55,44 @@ class DomainListModalConnected extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      input: ''
+      input: '',
+      domains: [],
+      prevDomainsJson: ''
     }
   }
 
+  static getDerivedStateFromProps(props, state) {
+    const { publicDomains, userDomains } = props
+
+    const prevDomainsJson = JSON.stringify([...publicDomains, ...userDomains])
+    if (prevDomainsJson === state.prevDomainsJson) {
+      return null
+    }
+
+    const domains = publicDomains.map((pubDomain: FioDomain) => ({
+      value: pubDomain,
+      label: `${Constants.FIO_ADDRESS_DELIMITER}${pubDomain.name}`
+    }))
+    const userDomainsConverted = []
+    for (const fioDomain of userDomains) {
+      userDomainsConverted.push({ value: fioDomain, label: `${Constants.FIO_ADDRESS_DELIMITER}${fioDomain.name}` })
+    }
+    userDomainsConverted.sort((userDomainA: Item, userDomainB: Item) => (userDomainA.value.name < userDomainB.value.name ? -1 : 1))
+
+    return { domains: [...domains, ...userDomainsConverted], prevDomainsJson }
+  }
+
   getItems = () => {
-    const { domains } = this.props
-    const { input } = this.state
+    const { domains, input } = this.state
 
     if (input === '') {
-      return [defaultDomainItem, ...domains, newDomainItem]
+      return [...domains, newDomainItem]
     }
 
     // Search Input Filter
     const inputLowerCase = input.toLowerCase()
     const filteredRecords = []
-    for (const item of [defaultDomainItem, ...domains]) {
+    for (const item of domains) {
       const { label, value } = item
 
       if (value) {
@@ -101,7 +125,7 @@ class DomainListModalConnected extends Component<Props, State> {
     const { value, label, createNew } = item
     if (createNew) {
       return (
-        <TouchableHighlight style={styles.touchable} onPress={this.createNew} underlayColor={styles.underlayColor}>
+        <TouchableHighlight onPress={this.createNew} underlayColor={THEME.COLORS.TRANSPARENT}>
           <View style={[styles.rowContainerTop, fioAddressRegisterStyles.domainListRowContainerTop]}>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsRow}>
@@ -115,11 +139,12 @@ class DomainListModalConnected extends Component<Props, State> {
     }
     if (value) {
       return (
-        <TouchableHighlight style={styles.touchable} onPress={() => this.selectItem(value)} underlayColor={styles.underlayColor}>
+        <TouchableHighlight onPress={() => this.selectItem(value)} underlayColor={THEME.COLORS.TRANSPARENT}>
           <View style={[styles.rowContainerTop, fioAddressRegisterStyles.domainListRowContainerTop]}>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsRow}>
                 <T style={fioAddressRegisterStyles.domainListRowName}>{label}</T>
+                <T style={fioAddressRegisterStyles.domainListRowFree}>{value.isFree ? s.strings.fio_domain_free : ''}</T>
               </View>
             </View>
           </View>
@@ -165,15 +190,37 @@ class DomainListModalConnected extends Component<Props, State> {
   }
 }
 
-const DomainListModal = connect((state: StateType): StateProps => {
+const rawStyles = {
+  rowContainerTop: {
+    width: '100%',
+    height: scale(76),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: scale(10),
+    paddingRight: scale(10),
+    borderBottomWidth: scale(1),
+    borderBottomColor: THEME.COLORS.GRAY_3
+  },
+  walletDetailsContainer: {
+    flex: 1,
+    flexDirection: 'column'
+  },
+  walletDetailsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+
+export const DomainListModal = connect((state: StateType): StateProps => {
   const { account } = state.core
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
   const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
-  const domains = state.ui.scenes.fioAddress.fioDomains.map(fioDomain => ({ value: fioDomain, label: `${Constants.FIO_ADDRESS_DELIMITER}${fioDomain.name}` }))
   return {
-    domains,
+    userDomains: state.ui.scenes.fioAddress.fioDomains,
     fioWallets,
     fioPlugin
   }
 })(DomainListModalConnected)
-export { DomainListModal }

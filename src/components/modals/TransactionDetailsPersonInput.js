@@ -1,15 +1,15 @@
 // @flow
 
 import React, { Component } from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import styles, { materialInput } from '../../styles/scenes/TransactionDetailsStyle'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { type GuiContact } from '../../types/types.js'
 import { ContactSearchResults } from '../common/ContactSearchResults.js'
-import { FormField } from '../common/FormField'
+import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 import { type AirshipBridge, AirshipModal } from './modalParts'
 
 type Props = {
@@ -68,3 +68,27 @@ export class TransactionDetailsPersonInput extends Component<Props, State> {
     )
   }
 }
+
+const materialInput = {
+  ...MaterialInputOnWhite,
+  fontSize: THEME.rem(0.9),
+  labelFontSize: THEME.rem(0.65),
+  container: {
+    ...MaterialInputOnWhite.container,
+    height: THEME.rem(3.44),
+    width: '100%'
+  }
+}
+
+const rawStyles = {
+  airshipContainer: {
+    flex: 1,
+    padding: THEME.rem(0.8)
+  },
+  airshipHeader: {
+    fontSize: THEME.rem(1.2),
+    marginBottom: THEME.rem(1),
+    alignSelf: 'center'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

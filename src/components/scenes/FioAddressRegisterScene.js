@@ -15,14 +15,13 @@ import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { styles as CryptoExchangeSceneStyle } from '../../styles/scenes/CryptoExchangeSceneStyles'
 import { styles as fioAddressStyles } from '../../styles/scenes/FioAddressRegisterStyle'
 import THEME from '../../theme/variables/airbitz'
-import type { FioDomain } from '../../types/types'
+import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { scale } from '../../util/scaling.js'
-import { FormField } from '../common/FormField.js'
+import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -30,13 +29,14 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 export type State = {
   selectedWallet: EdgeCurrencyWallet | null,
   selectedDomain: FioDomain,
+  publicDomains: FioDomain[],
   fioAddress: string,
   isValid: boolean,
   touched: boolean,
   loading: boolean,
   walletLoading: boolean,
+  domainsLoading: boolean,
   isAvailable: boolean | null,
-  replaceRegex: RegExp,
   fieldPos: number,
   inputWidth: number
 }
@@ -62,20 +62,21 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   state = {
     selectedWallet: null,
     selectedDomain: Constants.FIO_DOMAIN_DEFAULT,
+    publicDomains: [],
     fioAddress: '',
     isValid: true,
     touched: false,
     isAvailable: false,
     loading: false,
     walletLoading: false,
-    replaceRegex: new RegExp(`${Constants.FIO_ADDRESS_DELIMITER}${Constants.FIO_DOMAIN_DEFAULT.name}`),
+    domainsLoading: true,
     fieldPos: 200,
     inputWidth: scale(200)
   }
 
   componentDidMount() {
     const { fioWallets } = this.props
-    this.getRegexFromDomain(Constants.FIO_DOMAIN_DEFAULT.name)
+    this.getPublicDomains()
     if (fioWallets.length > 0) {
       this.setState({
         selectedWallet: fioWallets[0]
@@ -83,6 +84,29 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     } else {
       this.createFioWallet()
     }
+  }
+
+  getPublicDomains = async () => {
+    const { fioPlugin } = this.props
+    try {
+      const publicDomains = await fioPlugin.otherMethods.getDomains()
+      const publicDomainsConverted = publicDomains
+        .sort(publicDomain => (publicDomain.domain === Constants.FIO_DOMAIN_DEFAULT.name ? -1 : 1))
+        .map((publicDomain: FioPublicDomain) => ({
+          name: publicDomain.domain,
+          expiration: new Date().toDateString(),
+          isPublic: true,
+          walletId: '',
+          isFree: publicDomain.free
+        }))
+      this.setState({
+        publicDomains: publicDomainsConverted,
+        selectedDomain: publicDomainsConverted[0]
+      })
+    } catch (e) {
+      //
+    }
+    this.setState({ domainsLoading: false })
   }
 
   createFioWallet = async (): Promise<void> => {
@@ -108,11 +132,20 @@ export class FioAddressRegisterScene extends Component<Props, State> {
       if (isConnected) {
         if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
         const fullAddress = `${fioAddress}${Constants.FIO_ADDRESS_DELIMITER}${selectedDomain.name}`
-        Actions[Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET]({
-          fioAddress: fullAddress,
-          selectedWallet,
-          selectedDomain
-        })
+        if (selectedDomain.isFree) {
+          Actions[Constants.FIO_ADDRESS_CONFIRM]({
+            fioAddressName: fullAddress,
+            paymentWallet: selectedWallet,
+            fee: 0,
+            ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
+          })
+        } else {
+          Actions[Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET]({
+            fioAddress: fullAddress,
+            selectedWallet,
+            selectedDomain
+          })
+        }
       } else {
         showError(s.strings.fio_network_alert_text)
       }
@@ -147,8 +180,6 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   }
 
   handleFioAddressChange = (fioAddressChanged: string) => {
-    fioAddressChanged = fioAddressChanged.replace(this.state.replaceRegex, '')
-
     if (!this.props.isConnected) {
       return this.setState({
         fioAddress: fioAddressChanged,
@@ -176,18 +207,6 @@ export class FioAddressRegisterScene extends Component<Props, State> {
     })
   }
 
-  getRegexFromDomain = (domain: string) => {
-    let orStatement = ''
-    let domainPart = ''
-    for (const ch of domain) {
-      domainPart += ch
-      orStatement += `${domainPart}|`
-    }
-    this.setState({
-      replaceRegex: new RegExp(`${Constants.FIO_ADDRESS_DELIMITER}?${Constants.FIO_ADDRESS_DELIMITER}(${orStatement.slice(0, orStatement.length - 1)})?`)
-    })
-  }
-
   handleFioWalletChange = (walletId: string) => {
     this.setState({
       selectedWallet: this.props.fioWallets.find(fioWallet => fioWallet.id === walletId)
@@ -196,10 +215,10 @@ export class FioAddressRegisterScene extends Component<Props, State> {
 
   selectFioWallet = () => {
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={[Constants.FIO_STR]} />).then(
-      (response: WalletListResult) => {
-        if (response.walletToSelect) {
-          if (response.walletToSelect.currencyCode === Constants.FIO_STR) {
-            this.handleFioWalletChange(response.walletToSelect.walletId)
+      ({ walletId, currencyCode }: WalletListResult) => {
+        if (walletId && currencyCode) {
+          if (currencyCode === Constants.FIO_STR) {
+            this.handleFioWalletChange(walletId)
           } else {
             showError(`${s.strings.create_wallet_select_valid_crypto}: ${Constants.FIO_STR}`)
           }
@@ -209,7 +228,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   }
 
   selectFioDomain = () => {
-    Airship.show(bridge => <DomainListModal bridge={bridge} />).then((response: FioDomain | null) => {
+    Airship.show(bridge => <DomainListModal bridge={bridge} publicDomains={this.state.publicDomains} />).then((response: FioDomain | null) => {
       if (response) {
         this.setState({ selectedDomain: response })
         this.checkFioAddress(this.state.fioAddress, response.name)
@@ -286,7 +305,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   }
 
   render() {
-    const { fioAddress, selectedDomain, touched, isAvailable, replaceRegex } = this.state
+    const { fioAddress, selectedDomain, touched, isAvailable, domainsLoading, walletLoading } = this.state
     let chooseHandleErrorMessage = ''
     if (touched && !this.props.isConnected) {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_cant_check
@@ -334,17 +353,22 @@ export class FioAddressRegisterScene extends Component<Props, State> {
                   onSubmitEditing={this.handleNextButton}
                   selectionColor={THEME.COLORS.ACCENT_MINT}
                   label={s.strings.fio_address_choose_label}
-                  value={fioAddress.replace(replaceRegex, '')}
+                  value={fioAddress}
                   maxLength={this.inputMaxLength}
                   returnKeyType={this.returnKeyType}
                   error={chooseHandleErrorMessage}
+                  disabled={walletLoading || domainsLoading}
                 />
-                <TouchableOpacity style={fioAddressStyles.domain} onPress={this.selectFioDomain}>
+                <TouchableOpacity style={fioAddressStyles.domain} onPress={this.selectFioDomain} disabled={domainsLoading}>
                   <View onLayout={this.domainOnLayout}>
-                    <T style={fioAddressStyles.domainText}>
-                      {Constants.FIO_ADDRESS_DELIMITER}
-                      {selectedDomain.name}
-                    </T>
+                    {domainsLoading ? (
+                      <ActivityIndicator size="small" />
+                    ) : (
+                      <T style={fioAddressStyles.domainText}>
+                        {Constants.FIO_ADDRESS_DELIMITER}
+                        {selectedDomain.name}
+                      </T>
+                    )}
                   </View>
                 </TouchableOpacity>
               </View>

@@ -11,9 +11,6 @@ import { THEME } from '../../../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 import { scale } from '../../../../util/scaling.js'
 
-const SLIDE_TO_COMPLETE_TEXT = s.strings.send_confirmation_slide_to_confirm
-const ENTER_AN_AMOUNT_TEXT = s.strings.select_exchange_amount_short
-
 type Props = {
   onSlidingComplete(): mixed,
   parentStyle?: any,
@@ -67,7 +64,9 @@ export class Slider extends Component<Props, State> {
 
   render() {
     const thumbStyle = !this.props.sliderDisabled ? styles.thumb : styles.disabledThumb
-    const sliderText = !this.props.sliderDisabled ? SLIDE_TO_COMPLETE_TEXT : this.props.disabledText || ENTER_AN_AMOUNT_TEXT
+    const sliderText = !this.props.sliderDisabled
+      ? s.strings.send_confirmation_slide_to_confirm
+      : this.props.disabledText || s.strings.select_exchange_amount_short
 
     return (
       <View style={this.props.parentStyle}>

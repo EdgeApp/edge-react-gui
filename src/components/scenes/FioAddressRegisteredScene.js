@@ -6,7 +6,7 @@ import { Actions } from 'react-native-router-flux'
 
 import fioAddressDetailsIcon from '../../assets/images/details_fioAddress.png'
 import * as Constants from '../../constants/SceneKeys'
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles as mainStyles } from '../../styles/MainStyle'

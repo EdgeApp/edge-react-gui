@@ -3,18 +3,19 @@
 import { bns } from 'biggystring'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Image, TouchableHighlight, View } from 'react-native'
+import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import receivedTypeImage from '../../assets/images/transactions/transaction-type-received.png'
 import sentTypeImage from '../../assets/images/transactions/transaction-type-sent.png'
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import type { ContactsState } from '../../reducers/ContactsReducer'
-import styles, { styles as styleRaw } from '../../styles/scenes/TransactionListStyle'
+import { THEME } from '../../theme/variables/airbitz.js'
 import type { GuiWallet, TransactionListTx } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 
 type TransactionRowOwnProps = {
@@ -34,15 +35,9 @@ type TransactionRowOwnProps = {
 export type TransactionRowStateProps = {
   walletBlockHeight: number | null
 }
+type Props = TransactionRowOwnProps & TransactionRowStateProps
 
 type State = {}
-
-const SENT_TEXT = s.strings.fragment_transaction_list_sent_prefix
-const RECEIVED_TEXT = s.strings.fragment_transaction_list_receive_prefix
-const CONFIRMATION_PROGRESS_TEXT = s.strings.fragment_transaction_list_confirmation_progress
-const UNCONFIRMED_TRANSACTION = s.strings.fragment_wallet_unconfirmed
-
-type Props = TransactionRowOwnProps & TransactionRowStateProps
 
 export class TransactionRowComponent extends Component<Props, State> {
   constructor(props: Props) {
@@ -80,10 +75,10 @@ export class TransactionRowComponent extends Component<Props, State> {
     }
     if (UTILS.isSentTransaction(tx)) {
       // XXX -paulvp Why is this hard coded here?
-      txName = SENT_TEXT + currencyName
+      txName = s.strings.fragment_transaction_list_sent_prefix + currencyName
       txImage = sentTypeImage
     } else {
-      txName = RECEIVED_TEXT + currencyName
+      txName = s.strings.fragment_transaction_list_receive_prefix + currencyName
       txImage = receivedTypeImage
     }
 
@@ -139,10 +134,10 @@ export class TransactionRowComponent extends Component<Props, State> {
     } else if (currentConfirmations <= 0) {
       // if completely unconfirmed or wallet uninitialized, or wallet lagging behind (tx block height larger than wallet block height)
       pendingTimeStyle = styles.transactionPending
-      pendingTimeSyntax = UNCONFIRMED_TRANSACTION
+      pendingTimeSyntax = s.strings.fragment_wallet_unconfirmed
     } else if (currentConfirmations < requiredConfirmations) {
       pendingTimeStyle = styles.transactionPartialConfirmation
-      pendingTimeSyntax = sprintf(CONFIRMATION_PROGRESS_TEXT, currentConfirmations, requiredConfirmations)
+      pendingTimeSyntax = sprintf(s.strings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
     } else {
       pendingTimeStyle = styles.transactionTime
       pendingTimeSyntax = tx.time
@@ -204,7 +199,7 @@ export class TransactionRowComponent extends Component<Props, State> {
         )}
         <TouchableHighlight
           onPress={() => this.props.onClick(tx, thumbnailPath)}
-          underlayColor={styleRaw.transactionUnderlay.color}
+          underlayColor={THEME.COLORS.ROW_PRESSED}
           style={[styles.singleTransaction, { borderBottomWidth: lastOfDate ? 0 : 1 }]}
         >
           <View style={styles.transactionInfoWrap}>
@@ -250,3 +245,100 @@ export class TransactionRowComponent extends Component<Props, State> {
     return out
   }
 }
+
+const rawStyles = {
+  singleTransaction: {
+    height: scale(80),
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    padding: scale(15),
+    paddingRight: scale(15),
+    paddingLeft: scale(15)
+  },
+  singleTransactionWrap: {
+    backgroundColor: THEME.COLORS.WHITE,
+    flexDirection: 'column',
+    flex: 1
+  },
+  singleDateArea: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    flex: 3,
+    padding: scale(3),
+    paddingLeft: scale(15),
+    flexDirection: 'row',
+    paddingRight: scale(24)
+  },
+  leftDateArea: {
+    flex: 1
+  },
+  formattedDate: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(14)
+  },
+  transactionInfoWrap: {
+    flex: 1,
+    flexDirection: 'row',
+    height: scale(40)
+  },
+  transactionLeft: {
+    flexDirection: 'row'
+  },
+  transactionLogo: {
+    width: scale(40),
+    height: scale(40),
+    borderRadius: scale(20),
+    marginRight: scale(10)
+  },
+  transactionLeftLogoWrap: {
+    justifyContent: 'center'
+  },
+  transactionPartner: {
+    flex: 1
+  },
+  transactionRight: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  transactionTime: {
+    color: THEME.COLORS.SECONDARY
+  },
+  transactionPending: {
+    color: THEME.COLORS.ACCENT_RED
+  },
+  transactionPartialConfirmation: {
+    color: THEME.COLORS.ACCENT_ORANGE
+  },
+  symbol: {
+    fontFamily: THEME.FONTS.SYMBOLS
+  },
+  transactionDetailsRow: {
+    flexDirection: 'row',
+    width: '100%'
+  },
+  transactionDetailsRowMargin: {
+    marginBottom: scale(2)
+  },
+  transactionDetailsReceivedTx: {
+    color: THEME.COLORS.TRANSACTION_LIST_RECEIVED_TX
+  },
+  transactionDetailsSentTx: {
+    color: THEME.COLORS.TRANSACTION_LIST_SENT_TX
+  },
+  transactionCategory: {
+    flex: 1,
+    fontSize: 12,
+    color: THEME.COLORS.SECONDARY
+  },
+  transactionFiat: {
+    fontSize: 12,
+    color: THEME.COLORS.SECONDARY
+  },
+  transactionPendingTime: {
+    flex: 1,
+    fontSize: 12
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

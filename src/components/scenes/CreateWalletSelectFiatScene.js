@@ -11,14 +11,14 @@ import { getDefaultFiat } from '../../modules/Settings/selectors.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
-import type { FlatListItem, GuiFiatType, GuiWalletType } from '../../types/types.js'
+import type { CreateWalletType, FlatListItem, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { getSupportedFiats } from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type OwnProps = {
-  selectedWalletType: GuiWalletType,
+  selectedWalletType: CreateWalletType,
   cleanedPrivateKey?: string
 }
 type StateProps = {

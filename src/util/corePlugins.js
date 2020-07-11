@@ -30,8 +30,8 @@ export const currencyPlugins = {
   binance: true,
   eos: true,
   ethereum: ENV.ETHEREUM_INIT,
-  ethereumclassic: false,
-  fio: true,
+  ethereumclassic: true,
+  fio: ENV.FIO_INIT,
   ripple: true,
   rsk: true,
   stellar: true,
@@ -62,10 +62,12 @@ export const currencyPlugins = {
 }
 
 export const ratePlugins = {
+  bitmax: true,
   'shapeshift-rate': false,
   compound: true,
   coinbase: true,
   coincap: true,
+  coinmonitor: true,
   constantRate: true,
   coincapLegacy: false,
   nomics: ENV.NOMICS_INIT,

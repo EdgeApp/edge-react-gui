@@ -2,15 +2,15 @@
 
 import React, { Component } from 'react'
 import { View } from 'react-native'
+
 type Props = {
-  style: Object,
   expiration: Date,
   timeExpired(): void
 }
 
 export const TEN_MINUTES = 600
 
-class CircleTimer extends Component<Props> {
+export class CircleTimer extends Component<Props> {
   componentDidMount() {
     setTimeout(this.timerTick, 1000)
   }
@@ -38,12 +38,9 @@ class CircleTimer extends Component<Props> {
   }
 
   render() {
-    const { container } = this.props.style
     if (!this.props.expiration) {
       return null
     }
-    return <View style={container} />
+    return <View style={{ width: 1, height: 1 }} />
   }
 }
-
-export { CircleTimer }

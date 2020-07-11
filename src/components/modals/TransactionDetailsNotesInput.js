@@ -1,12 +1,13 @@
 // @flow
 import React, { Component } from 'react'
-import { TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { Platform, StyleSheet, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import styles from '../../styles/scenes/TransactionDetailsStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../theme/variables/platform.js'
+import { scale } from '../../util/scaling.js'
 import { type AirshipBridge, AirshipModal } from './modalParts.js'
 
 type Props = {
@@ -71,3 +72,35 @@ export class TransactionDetailsNotesInput extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  airshipContainer: {
+    flex: 1,
+    padding: THEME.rem(0.8)
+  },
+  airshipHeader: {
+    fontSize: THEME.rem(1.2),
+    marginBottom: THEME.rem(1),
+    alignSelf: 'center'
+  },
+  spacer: {
+    flex: 1
+  },
+  saveButton: {
+    height: THEME.rem(3)
+  },
+  inputNotesWrap: {
+    borderWidth: 1,
+    borderColor: THEME.COLORS.TRANSACTION_DETAILS_GREY_1,
+    borderRadius: 3,
+    height: PLATFORM.deviceHeight * (Platform.OS === 'android' ? 0.3 : 0.35),
+    padding: THEME.rem(0.8)
+  },
+  inputNotes: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(15),
+    fontFamily: THEME.FONTS.DEFAULT,
+    paddingVertical: 0
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

@@ -2,11 +2,11 @@
 
 import React, { Component } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import s from '../../locales/strings.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { NonInteractiveModal } from '../../modules/UI/components/Modals/NonInteractiveModal/NonInteractiveModal.ui.js'
-import styles from '../../styles/scenes/ScaneStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 
 export type Props = {
   error: Error | null,
@@ -23,7 +23,7 @@ export class SecondaryModal extends Component<Props> {
     return (
       <NonInteractiveModal isActive={isActive} onBackButtonPress={onBackButtonPress} onBackdropPress={onBackdropPress} onModalHide={onModalHide}>
         <NonInteractiveModal.Icon>
-          <Icon style={styles.privateKeyIcon} type="ionIcons" name="ios-key" size={30} />
+          <IonIcon name="ios-key" color={THEME.COLORS.WHITE} size={30} style={{ transform: [{ rotate: '270deg' }] }} />
         </NonInteractiveModal.Icon>
 
         <NonInteractiveModal.Footer>

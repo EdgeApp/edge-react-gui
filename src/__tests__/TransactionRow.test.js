@@ -5,7 +5,6 @@ import React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { TransactionRowComponent } from '../components/common/TransactionRow.js'
-import { style } from '../styles/scenes/TransactionListStyle.js'
 
 describe('MenuDropDown component', () => {
   it('should render without props', () => {
@@ -48,7 +47,6 @@ describe('MenuDropDown component', () => {
       key: 0
     }
     const props = {
-      style,
       uiWallet,
       transactions: [{ ...transaction }],
       selectedCurrencyCode: 'XMR',

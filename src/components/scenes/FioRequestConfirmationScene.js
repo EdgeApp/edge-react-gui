@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 
 import editIcon from '../../assets/images/transaction_details_icon.png'
 import * as Constants from '../../constants/indexConstants'
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache } from '../../modules/FioAddress/util.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
@@ -320,7 +320,7 @@ const tileStyles = {
   padding: rem(0.5)
 }
 
-const styles = StyleSheet.create({
+const rawStyles = {
   container: {
     flex: 1,
     width: '100%',
@@ -372,4 +372,5 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.COLORS.PRIMARY,
     borderRadius: rem(2)
   }
-})
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

@@ -21,7 +21,7 @@ import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
-import { makeGuiWalletType } from '../util/CurrencyInfoHelpers.js'
+import { makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 import * as UTILS from '../util/utils'
 import { addTokenAsync } from './AddTokenActions.js'
 
@@ -95,7 +95,7 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
       const selectedFiat = supportedFiats[fiatTypeIndex]
 
       const { eos } = state.core.account.currencyConfig
-      const selectedWalletType = makeGuiWalletType(eos.currencyInfo)
+      const selectedWalletType = makeCreateWalletType(eos.currencyInfo)
       const createWalletAccountSetupSceneProps = {
         accountHandle: guiWallet.name,
         selectedWalletType,
@@ -392,7 +392,6 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
     ...getSettings(state)
   }
   const coreWalletsToUpdate = []
-  dispatch({ type: 'DELETE_CUSTOM_TOKEN_START' })
   getSyncedSettings(account)
     .then(settings => {
       if (settings[currencyCode]) settings[currencyCode].isVisible = false // remove top-level property. We should migrate away from it eventually anyway
@@ -445,7 +444,6 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
     })
     .catch(error => {
       showError(error)
-      dispatch({ type: 'DELETE_CUSTOM_TOKEN_FAILURE' })
     })
 }
 

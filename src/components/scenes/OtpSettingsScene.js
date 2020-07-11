@@ -2,7 +2,7 @@
 
 import { createStaticModal, createYesNoModal } from 'edge-components'
 import React, { Component } from 'react'
-import { Clipboard, Image, Text, TouchableOpacity, View } from 'react-native'
+import { Clipboard, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
 import * as Constants from '../../constants/indexConstants.js'
@@ -11,8 +11,8 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import { TertiaryButton } from '../../modules/UI/components/Buttons/TertiaryButton.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import { ExpandableBoxStyle } from '../../styles/components/ExpandableBoxStyle.js'
-import { styles } from '../../styles/scenes/OtpSettingsScreenStyles.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { scale } from '../../util/scaling.js'
 import { ExpandableBoxComponent } from '../common/ExpandableBoxComponent.js'
 import { launchModal } from '../common/ModalProvider.js'
 import OtpHeroComponent from '../common/OtpHeroComponent.js'
@@ -70,7 +70,7 @@ export default class OtpSettingsScene extends Component<Props, State> {
   onConfirmDisable = async () => {
     const afterDisableModal = createStaticModal({
       message: s.strings.otp_disabled_modal,
-      icon: <Icon style={styles.icon} name={Constants.CHECK_CIRCLE} size={styles.iconSize} type={Constants.SIMPLE_ICONS} />,
+      icon: <Icon style={styles.icon} name={Constants.CHECK_CIRCLE} size={scale(36)} type={Constants.SIMPLE_ICONS} />,
       modalDismissTimerSeconds: 8
     })
 
@@ -117,7 +117,7 @@ export default class OtpSettingsScene extends Component<Props, State> {
   renderKeyBox = (styles: Object) => {
     if (this.props.isOtpEnabled) {
       return (
-        <ExpandableBoxComponent style={ExpandableBoxStyle} showMessage={s.strings.otp_show_code} hideMessage={s.strings.otp_hide_code}>
+        <ExpandableBoxComponent showMessage={s.strings.otp_show_code} hideMessage={s.strings.otp_hide_code}>
           <TouchableOpacity onPress={this.onCopyOtpKey}>
             <Text style={styles.keyText}>{this.props.otpKey}</Text>
           </TouchableOpacity>
@@ -144,7 +144,7 @@ export default class OtpSettingsScene extends Component<Props, State> {
       <>
         <SceneWrapper hasTabs={false} background="body">
           <View style={styles.body}>
-            <OtpHeroComponent style={styles.hero} enabled={this.props.isOtpEnabled} />
+            <OtpHeroComponent enabled={this.props.isOtpEnabled} />
             {this.renderMiddle(styles)}
             <View style={styles.buttonContainer}>{this.renderButton()}</View>
           </View>
@@ -160,3 +160,41 @@ export default class OtpSettingsScene extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  body: {
+    backgroundColor: THEME.COLORS.WHITE,
+    flex: 1,
+    padding: scale(18)
+  },
+  shim: {
+    height: scale(10)
+  },
+  middle: {
+    width: '100%',
+    minHeight: scale(200)
+  },
+  middleText: {
+    width: '100%',
+    fontSize: scale(18),
+    textAlign: 'center',
+    fontFamily: THEME.FONTS.DEFAULT,
+    color: THEME.COLORS.GRAY_2
+  },
+  keyText: {
+    width: '100%',
+    fontSize: scale(18),
+    textAlign: 'center',
+    fontFamily: THEME.FONTS.DEFAULT,
+    color: THEME.COLORS.ACCENT_BLUE,
+    textDecorationLine: 'underline'
+  },
+  buttonContainer: {
+    width: '100%',
+    height: scale(THEME.BUTTONS.HEIGHT)
+  },
+  icon: {
+    color: THEME.COLORS.WHITE
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

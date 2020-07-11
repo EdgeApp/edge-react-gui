@@ -6,7 +6,7 @@ import { LoginScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { Keyboard, Linking, Platform, StatusBar, StyleSheet, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
-import DeviceInfo from 'react-native-device-info'
+import { getBundleId } from 'react-native-device-info'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 
@@ -84,7 +84,7 @@ class LoginSceneComponent extends Component<Props, State> {
           newVersion={response.version}
           released={response.released}
           onUpdate={() => {
-            const bundleId = DeviceInfo.getBundleId()
+            const bundleId = getBundleId()
             const url =
               Platform.OS === 'android'
                 ? `http://play.app.goo.gl/?link=http://play.google.com/store/apps/details?id=${bundleId}`
@@ -153,14 +153,15 @@ class LoginSceneComponent extends Component<Props, State> {
   }
 }
 
-const styles = StyleSheet.create({
+const rawStyles = {
   container: {
     flex: 1,
     position: 'relative',
     paddingTop: StatusBar.currentHeight,
     backgroundColor: THEME.COLORS.PRIMARY
   }
-})
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const LoginScene = connect(
   (state: ReduxState): StateProps => ({

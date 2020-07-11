@@ -1,9 +1,7 @@
 // @flow
 
-import { createYesNoModal } from 'edge-components'
-import { type EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
@@ -15,36 +13,28 @@ import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
 import { disableOtp, keepOtp } from '../../actions/OtpActions.js'
 import { linkReferralWithCurrencies, toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
-import credLogo from '../../assets/images/cred_logo.png'
 import otpIcon from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
-import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDefaultIsoFiat, getIsAccountBalanceVisible, getOtpResetPending } from '../../modules/Settings/selectors.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { dayText, nightText } from '../../styles/common/textStyles.js'
-import { addWalletStyle } from '../../styles/components/AddWalletStyle.js'
-import { buyMultipleCryptoStyle } from '../../styles/components/BuyCryptoStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
 import { type FlatListItem, type GuiWallet } from '../../types/types.js'
-import { makeGuiWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
-import { scale } from '../../util/scaling.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { CrossFade } from '../common/CrossFade.js'
-import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
 import { WalletListEmptyRow } from '../common/WalletListEmptyRow.js'
+import { WalletListFooter } from '../common/WalletListFooter.js'
 import { WalletListRow } from '../common/WalletListRow.js'
 import { WalletListSortableRow } from '../common/WalletListSortableRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
@@ -52,7 +42,6 @@ import { TwoButtonSimpleConfirmationModal } from '../modals/TwoButtonSimpleConfi
 import { Airship } from '../services/AirshipInstance.js'
 
 type StateProps = {
-  account: EdgeAccount,
   accountMessages: MessageTweak[],
   accountReferral: AccountReferral,
   activeWalletIds: Array<string>,
@@ -64,7 +53,7 @@ type DispatchProps = {
   hideMessageTweak(messageId: string, source: TweakSource): void,
   toggleAccountBalanceVisibility(): void,
   updateActiveWalletsOrder(walletIds: Array<string>): void,
-  walletRowOption(walletId: string, option: WalletListMenuKey): void,
+  walletRowOption(walletId: string, option: WalletListMenuKey, currencyCode?: string): void,
   disableOtp(): void,
   keepOtp(): void,
   linkReferralWithCurrencies(string): void
@@ -104,11 +93,14 @@ class WalletListComponent extends Component<Props, State> {
     }
   }
 
-  executeWalletRowOption = (walletId: string, option: WalletListMenuKey) => {
+  executeWalletRowOption = (walletId: string, option: WalletListMenuKey, currencyCode?: string) => {
     if (option === 'sort') {
       return this.setState({ sorting: true })
     }
-    return this.props.walletRowOption(walletId, option)
+    if (currencyCode == null && this.props.wallets[walletId] != null) {
+      currencyCode = this.props.wallets[walletId].currencyCode
+    }
+    return this.props.walletRowOption(walletId, option, currencyCode)
   }
 
   render() {
@@ -148,7 +140,7 @@ class WalletListComponent extends Component<Props, State> {
               data={activeWalletIds.map(key => ({ key }))}
               extraData={wallets}
               renderItem={this.renderRow}
-              ListFooterComponent={this.renderFooter()}
+              ListFooterComponent={WalletListFooter}
               ListHeaderComponent={this.renderPromoCard()}
             />
             <SortableListView
@@ -188,83 +180,6 @@ class WalletListComponent extends Component<Props, State> {
     newOrder.splice(action.to, 0, newOrder.splice(action.from, 1)[0])
     this.props.updateActiveWalletsOrder(newOrder)
     this.forceUpdate()
-  }
-
-  addToken = async () => {
-    const { account, wallets } = this.props
-
-    // check for existence of any token-enabled wallets
-    for (const key in wallets) {
-      const wallet = wallets[key]
-      const specialCurrencyInfo = getSpecialCurrencyInfo(wallet.currencyCode)
-      if (specialCurrencyInfo.isCustomTokensSupported) {
-        return Actions.manageTokens({ guiWallet: wallet })
-      }
-    }
-
-    // if no token-enabled wallets then allow creation of token-enabled wallet
-    const { ethereum } = account.currencyConfig
-    if (ethereum == null) {
-      return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
-    }
-
-    const answer = await launchModal(
-      createYesNoModal({
-        title: s.strings.wallet_list_add_token_modal_title,
-        message: s.strings.wallet_list_add_token_modal_message,
-        icon: <Icon type={Constants.ION_ICONS} name={Constants.WALLET_ICON} size={30} />,
-        noButtonText: s.strings.string_cancel_cap,
-        yesButtonText: s.strings.title_create_wallet
-      })
-    )
-
-    if (answer) {
-      Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
-        selectedWalletType: makeGuiWalletType(ethereum.currencyInfo)
-      })
-    }
-  }
-
-  renderFooter = () => {
-    return (
-      <View style={buyMultipleCryptoStyle.multipleCallToActionWrap}>
-        <View style={{ flexDirection: 'row', alignItems: 'stretch' }}>
-          <TouchableWithoutFeedback onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]} style={addWalletStyle.addWalletButton}>
-            <View style={addWalletStyle.addWalletContentWrap}>
-              <Ionicon name="md-add-circle" style={addWalletStyle.addWalletIcon} size={scale(24)} color={THEME.COLORS.GRAY_2} />
-              <T style={addWalletStyle.addWalletText}>{s.strings.wallet_list_add_wallet}</T>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.addToken} style={addWalletStyle.addWalletButton}>
-            <View style={addWalletStyle.addTokenContentWrap}>
-              <Ionicon name="md-add-circle" style={addWalletStyle.addWalletIcon} size={scale(24)} color={THEME.COLORS.GRAY_2} />
-              <T style={addWalletStyle.addWalletText}>{s.strings.wallet_list_add_token}</T>
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-        <TouchableWithoutFeedback onPress={Actions[Constants.PLUGIN_BUY]} style={buyMultipleCryptoStyle.buyMultipleCryptoContainer}>
-          <View style={buyMultipleCryptoStyle.buyMultipleCryptoBox}>
-            <View style={buyMultipleCryptoStyle.buyMultipleCryptoContentWrap}>
-              <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.BTC }} resizeMode="cover" />
-              <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.ETH }} resizeMode="cover" />
-              <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.BCH }} resizeMode="cover" />
-            </View>
-            <T style={buyMultipleCryptoStyle.buyMultipleCryptoBoxText}>{s.strings.title_plugin_buy}</T>
-          </View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback
-          onPress={() => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: guiPlugins.cred })}
-          style={buyMultipleCryptoStyle.buyMultipleCryptoContainer}
-        >
-          <View style={buyMultipleCryptoStyle.buyMultipleCryptoBox}>
-            <View style={buyMultipleCryptoStyle.buyMultipleCryptoContentWrap}>
-              <Image style={buyMultipleCryptoStyle.buyMultipleCryptoBoxImage} source={credLogo} resizeMode="contain" />
-            </View>
-            <T style={buyMultipleCryptoStyle.buyMultipleCryptoBoxText}>{s.strings.earn_interest}</T>
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
-    )
   }
 
   renderPromoCard() {
@@ -360,7 +275,6 @@ export const WalletListScene = connect(
     }
 
     return {
-      account: state.core.account,
       accountMessages: state.account.referralCache.accountMessages,
       accountReferral: state.account.accountReferral,
       activeWalletIds,
@@ -379,8 +293,8 @@ export const WalletListScene = connect(
     updateActiveWalletsOrder(activeWalletIds) {
       dispatch(updateActiveWalletsOrder(activeWalletIds))
     },
-    walletRowOption(walletId, option) {
-      dispatch(walletListMenuAction(walletId, option))
+    walletRowOption(walletId, option, currencyCode) {
+      dispatch(walletListMenuAction(walletId, option, currencyCode))
     },
     disableOtp() {
       dispatch(disableOtp())

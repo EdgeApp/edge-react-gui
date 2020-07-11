@@ -3,50 +3,42 @@
 import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
+import FAIcon from 'react-native-vector-icons/FontAwesome'
+import { connect } from 'react-redux'
 
-import { DELETE, MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants'
+import { deleteCustomToken, editCustomToken } from '../../actions/WalletActions.js'
+import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { TertiaryButton } from '../../modules/UI/components/Buttons/TertiaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import StylizedModal from '../../modules/UI/components/Modal/Modal.ui'
-import OptionIcon from '../../modules/UI/components/OptionIcon/OptionIcon.ui'
-import styles from '../../styles/scenes/EditTokenStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
-import DeleteTokenButtons from '../common/DeleteTokenButtons.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { TwoButtonSimpleConfirmationModal } from '../modals/TwoButtonSimpleConfirmationModal.js'
+import { Airship, showActivity } from '../services/AirshipInstance.js'
 
-export type EditTokenDispatchProps = {
-  showDeleteTokenModal: () => void,
-  hideDeleteTokenModal: () => void,
-  deleteCustomToken: (walletId: string, currencyCode: string) => void,
-  editCustomToken: (
-    walletId: string,
-    currencyName: string,
-    currencyCode: string,
-    contractAddress: string,
-    denomination: string,
-    oldCurrencyCode: string
-  ) => void
-}
-
-export type EditTokenStateProps = {
-  customTokens: Array<CustomTokenInfo>,
-  deleteTokenModalVisible: boolean,
-  editCustomTokenProcessing: boolean,
-  deleteCustomTokenProcessing: boolean
-}
-
-export type EditTokenOwnProps = {
-  walletId: string,
+type OwnProps = {
   addTokenPending: boolean,
   currencyCode: string,
   metaTokens: Array<EdgeMetaToken>,
-  onDeleteToken: string => void
+  onDeleteToken(currencyCode: string): void,
+  walletId: string
 }
+type StateProps = {
+  customTokens: Array<CustomTokenInfo>,
+  editCustomTokenProcessing: boolean
+}
+type DispatchProps = {
+  deleteCustomToken(walletId: string, currencyCode: string): Promise<void>,
+  editCustomToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string): void
+}
+type Props = OwnProps & StateProps & DispatchProps
 
 type State = {
   currencyName: string,
@@ -58,10 +50,8 @@ type State = {
   enabled?: boolean
 }
 
-export type EditTokenComponentProps = EditTokenDispatchProps & EditTokenOwnProps & EditTokenStateProps
-
-export default class EditToken extends Component<EditTokenComponentProps, State> {
-  constructor(props: EditTokenComponentProps) {
+class EditTokenComponent extends Component<Props, State> {
+  constructor(props: Props) {
     super(props)
     const tokenInfoIndex = _.findIndex(props.customTokens, item => item.currencyCode === props.currencyCode)
     if (tokenInfoIndex >= 0) {
@@ -84,97 +74,84 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
   render() {
     const { editCustomTokenProcessing } = this.props
     return (
-      <>
-        <SceneWrapper avoidKeyboard background="body">
-          {gap => (
-            <ScrollView style={[styles.container, { marginBottom: -gap.bottom }]} contentContainerStyle={{ paddingBottom: gap.bottom }}>
-              <View style={styles.instructionalArea}>
-                <Text style={styles.instructionalText}>{s.strings.edittoken_top_instructions}</Text>
-              </View>
-              <View style={styles.formArea}>
-                <View style={styles.nameArea}>
-                  <FormField
-                    style={styles.currencyName}
-                    value={this.state.currencyName}
-                    onChangeText={this.onChangeName}
-                    autoCapitalize="words"
-                    label={s.strings.addtoken_name_input_text}
-                    returnKeyType="done"
-                    autoCorrect={false}
-                  />
-                </View>
-                <View style={styles.currencyCodeArea}>
-                  <FormField
-                    style={styles.currencyCodeInput}
-                    value={this.state.currencyCode}
-                    onChangeText={this.onChangeCurrencyCode}
-                    autoCapitalize="characters"
-                    label={s.strings.addtoken_currency_code_input_text}
-                    returnKeyType="done"
-                    autoCorrect={false}
-                    maxLength={MAX_TOKEN_CODE_CHARACTERS}
-                  />
-                </View>
-                <View style={styles.contractAddressArea}>
-                  <FormField
-                    style={styles.contractAddressInput}
-                    value={this.state.contractAddress}
-                    onChangeText={this.onChangeContractAddress}
-                    label={s.strings.addtoken_contract_address_input_text}
-                    returnKeyType="done"
-                    autoCorrect={false}
-                  />
-                </View>
-                <View style={styles.decimalPlacesArea}>
-                  <FormField
-                    style={styles.decimalPlacesInput}
-                    value={this.state.decimalPlaces}
-                    onChangeText={this.onChangeDecimalPlaces}
-                    label={s.strings.addtoken_denomination_input_text}
-                    autoCorrect={false}
-                    keyboardType="numeric"
-                  />
-                </View>
-              </View>
-              <View style={styles.errorMessageArea}>
-                <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
-              </View>
-              <View style={styles.buttonsArea}>
-                <TertiaryButton onPress={this.props.showDeleteTokenModal} style={styles.deleteButton}>
-                  <TertiaryButton.Text>{s.strings.edittoken_delete_token}</TertiaryButton.Text>
-                </TertiaryButton>
-                <PrimaryButton style={styles.saveButton} onPress={this._onSave}>
-                  {editCustomTokenProcessing ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
-                </PrimaryButton>
-              </View>
-            </ScrollView>
-          )}
-        </SceneWrapper>
-        <StylizedModal
-          headerText={s.strings.edittoken_delete_prompt}
-          visibilityBoolean={this.props.deleteTokenModalVisible}
-          featuredIcon={<OptionIcon iconName={DELETE} style={styles.deleteIcon} />}
-          modalBottom={
-            <DeleteTokenButtons
-              onPressDelete={this.deleteToken}
-              onPressCancel={() => this.props.hideDeleteTokenModal()}
-              processingFlag={this.props.deleteCustomTokenProcessing}
-            />
-          }
-          onExitButtonFxn={() => this.props.hideDeleteTokenModal()}
-        />
-      </>
+      <SceneWrapper avoidKeyboard background="body">
+        {gap => (
+          <ScrollView style={[styles.container, { marginBottom: -gap.bottom }]} contentContainerStyle={{ paddingBottom: gap.bottom }}>
+            <View style={styles.instructionalArea}>
+              <Text style={styles.instructionalText}>{s.strings.edittoken_top_instructions}</Text>
+            </View>
+            <View style={styles.nameArea}>
+              <FormField
+                value={this.state.currencyName}
+                onChangeText={this.onChangeName}
+                autoCapitalize="words"
+                label={s.strings.addtoken_name_input_text}
+                returnKeyType="done"
+                autoCorrect={false}
+              />
+            </View>
+            <View style={styles.currencyCodeArea}>
+              <FormField
+                value={this.state.currencyCode}
+                onChangeText={this.onChangeCurrencyCode}
+                autoCapitalize="characters"
+                label={s.strings.addtoken_currency_code_input_text}
+                returnKeyType="done"
+                autoCorrect={false}
+                maxLength={MAX_TOKEN_CODE_CHARACTERS}
+              />
+            </View>
+            <View style={styles.contractAddressArea}>
+              <FormField
+                value={this.state.contractAddress}
+                onChangeText={this.onChangeContractAddress}
+                label={s.strings.addtoken_contract_address_input_text}
+                returnKeyType="done"
+                autoCorrect={false}
+              />
+            </View>
+            <View style={styles.decimalPlacesArea}>
+              <FormField
+                value={this.state.decimalPlaces}
+                onChangeText={this.onChangeDecimalPlaces}
+                label={s.strings.addtoken_denomination_input_text}
+                autoCorrect={false}
+                keyboardType="numeric"
+              />
+            </View>
+            <View style={styles.errorMessageArea}>
+              <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
+            </View>
+            <View style={styles.buttonsArea}>
+              <TertiaryButton onPress={this.deleteToken} style={styles.deleteButton}>
+                <TertiaryButton.Text>{s.strings.edittoken_delete_token}</TertiaryButton.Text>
+              </TertiaryButton>
+              <PrimaryButton style={styles.saveButton} onPress={this._onSave}>
+                {editCustomTokenProcessing ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
+              </PrimaryButton>
+            </View>
+          </ScrollView>
+        )}
+      </SceneWrapper>
     )
   }
 
-  showDeleteTokenModal = () => {
-    this.props.showDeleteTokenModal()
-  }
-
-  deleteToken = () => {
+  deleteToken = async () => {
     const { walletId, currencyCode } = this.props
-    this.props.deleteCustomToken(walletId, currencyCode)
-    this.props.onDeleteToken(currencyCode)
+    const result = await Airship.show(bridge => (
+      <TwoButtonSimpleConfirmationModal
+        bridge={bridge}
+        icon={<FAIcon name="trash-o" size={THEME.rem(1.5)} color={THEME.COLORS.PRIMARY} />}
+        title={s.strings.string_delete}
+        subTitle={s.strings.edittoken_delete_prompt}
+        doneText={s.strings.string_delete}
+        cancelText={s.strings.string_cancel_cap}
+      />
+    ))
+    if (result) {
+      showActivity(s.strings.string_delete, this.props.deleteCustomToken(walletId, currencyCode))
+      this.props.onDeleteToken(currencyCode)
+    }
   }
 
   onChangeName = (input: string) => {
@@ -242,3 +219,73 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
     )
   }
 }
+
+const rawStyles = {
+  container: {
+    paddingHorizontal: scale(20),
+    backgroundColor: THEME.COLORS.GRAY_4
+  },
+
+  instructionalArea: {
+    paddingVertical: scale(16),
+    paddingHorizontal: scale(20)
+  },
+  instructionalText: {
+    fontSize: scale(16),
+    textAlign: 'center'
+  },
+
+  nameArea: {
+    height: scale(70)
+  },
+  currencyCodeArea: {
+    height: scale(70)
+  },
+  contractAddressArea: {
+    height: scale(70)
+  },
+  decimalPlacesArea: {
+    height: scale(70)
+  },
+  errorMessageArea: {
+    height: scale(16),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  errorMessageText: {
+    color: THEME.COLORS.ACCENT_RED
+  },
+  buttonsArea: {
+    marginVertical: scale(16),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    paddingVertical: scale(4)
+  },
+  deleteButton: {
+    flex: 1,
+    marginRight: scale(1)
+  },
+  saveButton: {
+    flex: 1,
+    padding: scale(13),
+    marginLeft: scale(1)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+
+export const EditTokenScene = connect(
+  (state: ReduxState): StateProps => ({
+    customTokens: state.ui.settings.customTokens,
+    editCustomTokenProcessing: state.ui.scenes.editToken.editCustomTokenProcessing
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    async deleteCustomToken(walletId: string, currencyCode: string) {
+      await dispatch(deleteCustomToken(walletId, currencyCode))
+    },
+    editCustomToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string) {
+      dispatch(editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, oldCurrencyCode))
+    }
+  })
+)(EditTokenComponent)

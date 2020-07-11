@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, FlatList, Image, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
@@ -12,17 +12,17 @@ import { sprintf } from 'sprintf-js'
 
 import fioRequestsIcon from '../../assets/images/sidenav/fiorequests.png'
 import * as Constants from '../../constants/indexConstants'
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache } from '../../modules/FioAddress/util.js'
 import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioRequest/components/FioRequestRow'
 import { getExchangeDenomination } from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { styles as requestListStyles } from '../../styles/scenes/FioRequestListStyle'
-import styles from '../../styles/scenes/TransactionListStyle'
 import { THEME } from '../../theme/variables/airbitz'
 import type { State } from '../../types/reduxTypes'
 import type { FioRequest, GuiWallet } from '../../types/types'
+import { scale } from '../../util/scaling.js'
 import FullScreenLoader from '../common/FullScreenLoader'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
@@ -277,11 +277,11 @@ export class FioRequestList extends Component<Props, LocalState> {
     const { chain_code, token_code } = selectedFioPendingRequest.content
     const allowedFullCurrencyCode = chain_code !== token_code && token_code && token_code !== '' ? [`${chain_code}:${token_code}`] : [chain_code]
 
-    const selectedResult: WalletListResult = await Airship.show(bridge => (
+    const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedFullCurrencyCode} />
     ))
-    if (selectedResult.walletToSelect) {
-      onSelectWallet(selectedResult.walletToSelect.walletId, selectedResult.walletToSelect.currencyCode)
+    if (walletId && currencyCode) {
+      onSelectWallet(walletId, currencyCode)
       this.sendCrypto(selectedFioPendingRequest)
     }
   }
@@ -455,3 +455,25 @@ export class FioRequestList extends Component<Props, LocalState> {
     )
   }
 }
+
+const rawStyles = {
+  transactionsScrollWrap: {
+    flex: 1
+  },
+  singleDateArea: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    flex: 3,
+    padding: scale(3),
+    paddingLeft: scale(15),
+    flexDirection: 'row',
+    paddingRight: scale(24)
+  },
+  leftDateArea: {
+    flex: 1
+  },
+  formattedDate: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: scale(14)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

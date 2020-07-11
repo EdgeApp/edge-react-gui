@@ -16,14 +16,14 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
-import type { GuiFiatType, GuiWalletType } from '../../types/types.js'
+import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { FullScreenTransitionComponent } from '../common/FullScreenTransition.js'
 
 type OwnProps = {
   walletName: string,
   selectedFiat: GuiFiatType,
-  selectedWalletType: GuiWalletType,
+  selectedWalletType: CreateWalletType,
   cleanedPrivateKey?: string // for creating wallet from import private key
 }
 type StateProps = {
@@ -52,7 +52,7 @@ class CreateWalletReviewComponent extends Component<Props, State> {
 
   onSubmit = async () => {
     const { walletName, selectedWalletType, selectedFiat, cleanedPrivateKey, createCurrencyWallet } = this.props
-    const createdWallet = await createCurrencyWallet(walletName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value), cleanedPrivateKey)
+    const createdWallet = await createCurrencyWallet(walletName, selectedWalletType.walletType, fixFiatCurrencyCode(selectedFiat.value), cleanedPrivateKey)
     // note that we will be using cleanedPrivateKey as a flag for an imported private key
     if (createdWallet && cleanedPrivateKey) {
       this.setState({
@@ -81,7 +81,7 @@ class CreateWalletReviewComponent extends Component<Props, State> {
               </View>
               <View style={styles.reviewArea}>
                 <Text style={styles.reviewAreaText}>
-                  {s.strings.create_wallet_crypto_type_label} {this.props.selectedWalletType.label} - {this.props.selectedWalletType.currencyCode}
+                  {s.strings.create_wallet_crypto_type_label} {this.props.selectedWalletType.currencyName} - {this.props.selectedWalletType.currencyCode}
                 </Text>
                 <Text style={styles.reviewAreaText}>
                   {s.strings.create_wallet_fiat_type_label} {this.props.selectedFiat.label}

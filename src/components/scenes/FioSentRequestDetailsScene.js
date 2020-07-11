@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { View } from 'react-native'
 
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'

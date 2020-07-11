@@ -1,10 +1,11 @@
 // @flow
+
 import AsyncStorage from '@react-native-community/async-storage'
 import { asObject, asString } from 'cleaners'
 import { createInputModal } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js/types'
 import React, { Component } from 'react'
-import { FlatList, Image, Platform, TouchableWithoutFeedback, View } from 'react-native'
+import { FlatList, Image, Platform, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
@@ -32,7 +33,6 @@ import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import styles from '../../styles/scenes/PluginsStyle.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
@@ -299,6 +299,85 @@ class GuiPluginList extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  selectedCountryWrapper: {
+    padding: scale(16),
+    backgroundColor: THEME.COLORS.GRAY_4,
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3
+  },
+  selectedCountry: {
+    color: THEME.COLORS.GRAY_1,
+    backgroundColor: THEME.COLORS.GRAY_3,
+    borderRadius: scale(5),
+    padding: scale(8)
+  },
+  selectedCountryTextWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  pluginRow: {
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    paddingVertical: scale(8),
+    paddingHorizontal: scale(16),
+    backgroundColor: THEME.COLORS.WHITE,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    flexWrap: 'nowrap',
+    width: '100%'
+  },
+  pluginRowLogoAndInfo: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexWrap: 'nowrap'
+  },
+  pluginRowPoweredByRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    flexWrap: 'nowrap',
+    width: '100%'
+  },
+  logo: {
+    justifyContent: 'center',
+    marginRight: scale(16),
+    width: scale(50)
+  },
+  logoImage: {
+    aspectRatio: 1,
+    width: 50,
+    height: 50,
+    resizeMode: 'contain'
+  },
+  partnerIconImage: {
+    aspectRatio: 1,
+    height: scale(10)
+  },
+  textBoxWrap: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    width: '80%'
+  },
+  titleText: {
+    color: THEME.COLORS.GRAY_1,
+    fontSize: scale(16),
+    marginBottom: scale(4)
+  },
+  subtitleText: {
+    fontSize: scale(12),
+    lineHeight: scale(18)
+  },
+  footerText: {
+    fontSize: scale(10),
+    lineHeight: scale(16)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const GuiPluginListScene = connect(
   (state: ReduxState): StateProps => ({

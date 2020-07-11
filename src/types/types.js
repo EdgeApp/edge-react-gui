@@ -88,9 +88,9 @@ export type CustomTokenInfo = {
   walletType?: string
 }
 
-export type GuiWalletType = {
-  label: string,
-  value: string,
+export type CreateWalletType = {
+  currencyName: string,
+  walletType: string,
   symbolImage?: string,
   symbolImageDarkMono?: string,
   currencyCode: string
@@ -229,7 +229,13 @@ export type FioDomain = {
   name: string,
   expiration: string,
   isPublic: boolean,
-  walletId: string
+  walletId: string,
+  isFree?: boolean
+}
+
+export type FioPublicDomain = {
+  domain: string,
+  free: boolean
 }
 
 export type FioRequest = {

@@ -4,11 +4,8 @@ import type { Node } from 'react'
 import React, { PureComponent } from 'react'
 import { StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import { connect } from 'react-redux'
 
-import { type EdgeTheme } from '../../../../reducers/ThemeReducer.js'
-import type { State as StateType } from '../../../../types/reduxTypes.js'
-import { getObjectDiff } from '../../../../util/utils'
+import { type ThemeProps, withTheme } from '../../../../theme/ThemeContext.js'
 
 const UPPER_LEFT = { x: 0, y: 0 }
 const UPPER_RIGHT = { x: 1, y: 0 }
@@ -18,19 +15,9 @@ export type OwnProps = {
   reverse?: boolean,
   style?: StyleSheet.Styles
 }
-
-type StateProps = {
-  theme: EdgeTheme
-}
-
-type Props = OwnProps & StateProps
+type Props = OwnProps & ThemeProps
 
 class GradientComponent extends PureComponent<Props> {
-  shouldComponentUpdate(nextProps: Props) {
-    const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
-    return !!diffElement
-  }
-
   render() {
     const { children, reverse, theme, style } = this.props
     const colors = [theme.background1, theme.background2]
@@ -43,5 +30,5 @@ class GradientComponent extends PureComponent<Props> {
   }
 }
 
-export const Gradient = connect((state: StateType): StateProps => ({ theme: state.theme }))(GradientComponent)
+export const Gradient = withTheme(GradientComponent)
 export default Gradient

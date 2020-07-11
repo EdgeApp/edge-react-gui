@@ -55,6 +55,12 @@ if (!__DEV__) {
   // TODO: Fix logger to append data vs read/modify/write
   // $FlowFixMe
   console.log = log
+  // $FlowFixMe
+  console.info = log
+  // $FlowFixMe
+  console.warn = log
+  // $FlowFixMe
+  console.error = log
 }
 
 if (__DEV__ && ENABLE_WHY_DID_YOU_UPDATE) {
@@ -67,6 +73,12 @@ if (ENV.LOG_SERVER) {
   console.log = function () {
     logToServer(arguments)
   }
+  // $FlowFixMe
+  console.info = console.log
+  // $FlowFixMe
+  console.warn = console.log
+  // $FlowFixMe
+  console.error = console.log
 }
 
 const clog = console.log

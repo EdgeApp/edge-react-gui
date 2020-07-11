@@ -2,19 +2,21 @@
 
 import type { EdgeCurrencyWallet, EdgeGetTransactionsOptions } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Platform, View } from 'react-native'
+import { Platform, StyleSheet, View } from 'react-native'
 import RNFS from 'react-native-fs'
 import Mailer from 'react-native-mail'
 import Share from 'react-native-share'
 
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { styles } from '../../styles/scenes/TransactionsExportSceneStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { scale } from '../../util/scaling.js'
 import { sanitizeForFilename } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 export type PassedProps = {
-  sourceWallet: EdgeCurrencyWallet
+  sourceWallet: EdgeCurrencyWallet,
+  currencyCode: string
 }
 type StateProps = {
   denomination: string
@@ -67,7 +69,8 @@ export class TransactionsExportSceneComponent extends Component<Props> {
 
   exportQBO = async () => {
     const transactionOptions: EdgeGetTransactionsOptions = {
-      denomination: this.props.denomination
+      denomination: this.props.denomination,
+      currencyCode: this.props.currencyCode
     }
     const file = await this.props.sourceWallet.exportTransactionsToQBO(transactionOptions)
 
@@ -78,7 +81,8 @@ export class TransactionsExportSceneComponent extends Component<Props> {
 
   exportCSV = async () => {
     const transactionOptions: EdgeGetTransactionsOptions = {
-      denomination: this.props.denomination
+      denomination: this.props.denomination,
+      currencyCode: this.props.currencyCode
     }
     let file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
     if (typeof file !== 'string') file = ''
@@ -146,3 +150,15 @@ export class TransactionsExportSceneComponent extends Component<Props> {
     )
   }
 }
+
+const rawStyles = {
+  actionButtonContainer: {
+    alignSelf: 'center',
+    width: '90%',
+    height: scale(THEME.BUTTONS.HEIGHT)
+  },
+  shim: {
+    height: scale(20)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

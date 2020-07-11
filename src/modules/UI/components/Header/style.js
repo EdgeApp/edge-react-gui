@@ -2,8 +2,8 @@
 
 import { StyleSheet } from 'react-native'
 
-import { TextAndIconButtonStyle } from '../../../../styles/components/ButtonStyles.js'
 import THEME from '../../../../theme/variables/airbitz'
+import { TextAndIconButtonStyle } from '../Buttons/TextAndIconButton.ui.js'
 
 export default StyleSheet.create({
   headerRoot: {

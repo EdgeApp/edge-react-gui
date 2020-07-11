@@ -1,14 +1,15 @@
 // @flow
 
 import React, { PureComponent } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { styles } from '../../styles/components/WiredBalanceBoxStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { type State } from '../../types/reduxTypes.js'
+import { scale } from '../../util/scaling.js'
 import { getFiatSymbol } from '../../util/utils.js'
 
 type BalanceBoxState = {}
@@ -113,3 +114,46 @@ export const WiredBalanceBox = connect((state: State, ownProps: WiredBalanceBoxO
     exchangeRates: ownProps.exchangeRates
   }
 }, null)(BalanceBox)
+
+const rawStyles = {
+  totalBalanceBox: {
+    height: scale(111),
+    justifyContent: 'center'
+  },
+  totalBalanceWrap: {
+    flex: 3,
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  totalBalanceHeader: {
+    flex: 2,
+    justifyContent: 'flex-end',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  totalBalanceText: {
+    fontSize: scale(18),
+    color: THEME.COLORS.PRIMARY
+  },
+  currentBalanceBoxDollarsWrap: {
+    flex: 3,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  hiddenBalanceBoxDollarsWrap: {
+    flex: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  currentBalanceBoxDollars: {
+    color: THEME.COLORS.PRIMARY,
+    fontSize: scale(44)
+  },
+  currentBalanceBoxNoExchangeRates: {
+    color: THEME.COLORS.PRIMARY,
+    fontSize: scale(26),
+    textAlign: 'center'
+  }
+}
+export const styles: typeof rawStyles = StyleSheet.create(rawStyles)

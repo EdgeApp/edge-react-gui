@@ -100,7 +100,7 @@ export class SceneWrapper extends Component<Props> {
   }
 }
 
-const styles = StyleSheet.create({
+const rawStyles = {
   body: {
     // Layout:
     position: 'absolute',
@@ -130,4 +130,5 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start'
   }
-})
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

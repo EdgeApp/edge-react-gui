@@ -1,5 +1,38 @@
 # edge-react-gui
 
+## 1.16.0 (2020-07-10)
+
+- Add support for Ethereum Classic (ETC)
+- Add support for Compound ERC20 token (COMP)
+- Add token from wallet list modal
+- Export token transaction history
+- Wyre plugin refactor
+- Upgrade edge-core-js to v0.17.9
+  - Allow the user to pass an onLog callback to the context constructor
+    - This allows our CLI to silence the core and supports more flexibilty in GUI log handling
+  - Apply cleaners to the login stashes as well as remove some legacy disklet API usage
+  - Support date filters for getTransactions
+  - Save fee information in the spend metadata
+  - Fix BSV replay protection feature broken by commit 11e752d8
+  - Update info server URI
+  - Add bias for Coinmonitor exchange rate provider
+- Upgrade edge-currency-bitcoin to v4.8.4
+  - Save fee information in the spend metadata
+  - Send additional logging to core
+- Upgrade edge-currency-accountbased to v0.7.13
+  - Add getDomains method to FIO plugin
+  - Save fee information in the spend metadata
+  - Add Compound ERC20 token (COMP)
+- Upgrade edge-exchange-plugins to v0.11.4
+  - ChangeNow - Add fallback to floating-rate if trade is outside fixed-rate min and max
+  - Add FIO rate via BitMax API
+  - Add Coinmonitor rate API support for BTC/ARS pair
+  - Add promoCode support to Switchain
+
+## 1.15.2 (2020-06-25)
+
+- Update FIO server list
+
 ## 1.15.1 (2020-06-22)
 
 - Show fee as fiat amount on swap quote scene

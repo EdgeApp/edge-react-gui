@@ -2,19 +2,15 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Keyboard, View } from 'react-native'
+import { Keyboard, StyleSheet, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
 
 import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { MenuDropDownStyle } from '../../styles/components/HeaderMenuDropDownStyles.js'
-import { styles } from '../../styles/scenes/SendConfirmationStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { scale } from '../../util/scaling.js'
 import { showHelpModal } from '../modals/HelpModal.js'
-
-const CHANGE_MINING_FEE_TEXT = s.strings.title_change_mining_fee
-const SEND_MAX_TEXT = s.strings.send_confirmation_max_button_title
-const HELP_TEXT = s.strings.string_help
 
 const CHANGE_MINING_FEE = 'CHANGE_MINING_FEE'
 const SEND_MAX = 'SEND_MAX'
@@ -48,7 +44,6 @@ export default class SendConfirmationOptions extends Component<Props> {
   }
 
   render() {
-    const defaultMenuStyle = MenuDropDownStyle
     const { currencyCode, isEditable } = this.props
     return (
       <View>
@@ -59,32 +54,32 @@ export default class SendConfirmationOptions extends Component<Props> {
 
           <MenuOptions optionsContainerStyle={styles.optionContainer}>
             {!getSpecialCurrencyInfo(currencyCode).noChangeMiningFee && (
-              <MenuOption value={CHANGE_MINING_FEE} style={defaultMenuStyle.menuOption}>
-                <View style={defaultMenuStyle.menuOptionItem}>
-                  <Text style={defaultMenuStyle.optionText}>{CHANGE_MINING_FEE_TEXT}</Text>
+              <MenuOption value={CHANGE_MINING_FEE} style={styles.menuOption}>
+                <View style={styles.menuOptionItem}>
+                  <Text style={styles.optionText}>{s.strings.title_change_mining_fee}</Text>
                 </View>
               </MenuOption>
             )}
 
             {isEditable && !getSpecialCurrencyInfo(currencyCode).noMaxSpend && (
-              <MenuOption value={SEND_MAX} style={defaultMenuStyle.menuOption}>
-                <View style={defaultMenuStyle.menuOptionItem}>
-                  <Text style={[defaultMenuStyle.optionText, styles.maxSpend]}>{SEND_MAX_TEXT}</Text>
+              <MenuOption value={SEND_MAX} style={styles.menuOption}>
+                <View style={styles.menuOptionItem}>
+                  <Text style={[styles.optionText, styles.maxSpend]}>{s.strings.send_confirmation_max_button_title}</Text>
                 </View>
               </MenuOption>
             )}
 
             {!!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier && (
-              <MenuOption value={ADD_UNIQUE_IDENTIFIER} style={defaultMenuStyle.menuOption}>
-                <View style={defaultMenuStyle.menuOptionItem}>
-                  <Text style={defaultMenuStyle.optionText}>{getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.addButtonText}</Text>
+              <MenuOption value={ADD_UNIQUE_IDENTIFIER} style={styles.menuOption}>
+                <View style={styles.menuOptionItem}>
+                  <Text style={styles.optionText}>{getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.addButtonText}</Text>
                 </View>
               </MenuOption>
             )}
 
-            <MenuOption value={HELP} style={defaultMenuStyle.menuOption}>
-              <View style={defaultMenuStyle.menuOptionItem}>
-                <Text style={defaultMenuStyle.optionText}>{HELP_TEXT}</Text>
+            <MenuOption value={HELP} style={styles.menuOption}>
+              <View style={styles.menuOptionItem}>
+                <Text style={styles.optionText}>{s.strings.string_help}</Text>
               </View>
             </MenuOption>
           </MenuOptions>
@@ -93,3 +88,38 @@ export default class SendConfirmationOptions extends Component<Props> {
     )
   }
 }
+
+const rawStyles = {
+  menuTrigger: {
+    paddingHorizontal: scale(8),
+    paddingVertical: scale(4)
+  },
+  trigger: {
+    fontFamily: THEME.FONTS.BOLD,
+    fontSize: scale(18),
+    color: THEME.COLORS.WHITE,
+    paddingHorizontal: scale(8)
+  },
+  optionContainer: {
+    width: scale(165)
+  },
+  maxSpend: {
+    color: THEME.COLORS.ACCENT_ORANGE
+  },
+
+  menuOption: {
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    borderBottomWidth: 1,
+    justifyContent: 'center'
+  },
+  menuOptionItem: {
+    flexDirection: 'row',
+    paddingVertical: scale(4),
+    paddingHorizontal: scale(6)
+  },
+  optionText: {
+    color: THEME.COLORS.GRAY_1,
+    fontSize: scale(18)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

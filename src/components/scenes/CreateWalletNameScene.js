@@ -11,14 +11,13 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import { MaterialInputOnWhite } from '../../styles/components/FormFieldStyles.js'
 import styles from '../../styles/scenes/CreateWalletStyle.js'
-import type { GuiFiatType, GuiWalletType } from '../../types/types.js'
-import { FormField } from '../common/FormField.js'
+import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
+import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 
 export type CreateWalletNameOwnProps = {
   selectedFiat: GuiFiatType,
-  selectedWalletType: GuiWalletType,
+  selectedWalletType: CreateWalletType,
   cleanedPrivateKey?: string
 }
 type Props = CreateWalletNameOwnProps
@@ -34,7 +33,7 @@ export class CreateWalletName extends Component<Props, State> {
     if (this.props.selectedWalletType.currencyCode.toLowerCase() === 'xrp') {
       walletName = sprintf(s.strings.my_crypto_wallet_name, 'XRP')
     } else {
-      walletName = sprintf(s.strings.my_crypto_wallet_name, this.props.selectedWalletType.label)
+      walletName = sprintf(s.strings.my_crypto_wallet_name, this.props.selectedWalletType.currencyName)
     }
     this.state = { walletName }
   }

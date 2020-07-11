@@ -17,7 +17,7 @@ import { sprintf } from 'sprintf-js'
 import { trackConversion } from '../actions/TrackingActions.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
-import { intl } from '../locales/intl'
+import * as intl from '../locales/intl.js'
 import s from '../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
@@ -108,6 +108,9 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
       networkFeeOption: 'standard',
       currencyCode,
       spendTargets: [{ publicAddress }]
+    }
+    if (currencyCode === 'BTC') {
+      edgeSpendInfo.networkFeeOption = 'high'
     }
     primaryNativeAmount = await wallet.getMaxSpendable(edgeSpendInfo)
   } catch (error) {

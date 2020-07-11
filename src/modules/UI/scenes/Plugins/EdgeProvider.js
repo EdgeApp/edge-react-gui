@@ -1,7 +1,6 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeSpendTarget, EdgeTransaction, JsonObject } from 'edge-core-js'
 import React from 'react'
 import { Linking } from 'react-native'
@@ -11,17 +10,13 @@ import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { Bridgeable, update } from 'yaob'
 
-import { createCurrencyWalletAndSelectForPlugins } from '../../../../actions/CreateWalletActions.js'
 import { trackAccountEvent, trackConversion } from '../../../../actions/TrackingActions.js'
 import { selectWallet } from '../../../../actions/WalletActions'
-import { launchModal } from '../../../../components/common/ModalProvider.js'
 import { TwoButtonSimpleConfirmationModal } from '../../../../components/modals/TwoButtonSimpleConfirmationModal.js'
 import { type WalletListResult, WalletListModal } from '../../../../components/modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
-import { DEFAULT_STARTER_WALLET_NAMES, EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
-import { Icon } from '../../../../modules/UI/components/Icon/Icon.ui.js'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
 import type { Dispatch, State } from '../../../../types/reduxTypes.js'
@@ -129,33 +124,12 @@ export class EdgeProvider extends Bridgeable {
       <WalletListModal bridge={bridge} showCreateWallet allowedCurrencyCodes={allowedCurrencyCodes} headerTitle={s.strings.choose_your_wallet} />
     ))
 
-    if (selectedWallet.walletToSelect) {
-      const { walletId, currencyCode } = selectedWallet.walletToSelect
+    const { walletId, currencyCode } = selectedWallet
+    if (walletId && currencyCode) {
       this._dispatch(selectWallet(walletId, currencyCode))
       return Promise.resolve(currencyCode)
     }
 
-    if (selectedWallet.walletToCreate) {
-      const { walletType, currencyCode } = selectedWallet.walletToCreate
-      try {
-        const settings = this._state.ui.settings
-        const walletName = DEFAULT_STARTER_WALLET_NAMES[currencyCode]
-        const newWallet: EdgeCurrencyWallet = await this._dispatch(createCurrencyWalletAndSelectForPlugins(walletName, walletType, settings.defaultIsoFiat))
-        this._dispatch(selectWallet(newWallet.id, newWallet.currencyInfo.currencyCode))
-        const returnString: string = newWallet.currencyInfo.currencyCode
-        return Promise.resolve(returnString)
-      } catch (e) {
-        const modal = createSimpleConfirmModal({
-          title: s.strings.create_wallet_failed_header,
-          message: s.strings.create_wallet_failed_message,
-          icon: <Icon type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />,
-          buttonText: s.strings.string_ok
-        })
-        return launchModal(modal).then((response): Promise<string> => {
-          throw new Error(s.strings.user_closed_modal_no_wallet)
-        })
-      }
-    }
     throw new Error(s.strings.user_closed_modal_no_wallet)
   }
 

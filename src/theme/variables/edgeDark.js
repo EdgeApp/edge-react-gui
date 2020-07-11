@@ -1,5 +1,6 @@
 // @flow
-import type { EdgeTheme, EdgeThemeRaw } from '../../reducers/ThemeReducer.js'
+
+import { type Theme } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
 
 const pallete = {
@@ -26,7 +27,11 @@ const pallete = {
   blueGray: '#A4C7DF'
 }
 
-export const theme: EdgeThemeRaw = {
+export const edgeDark: Theme = {
+  rem(size: number): number {
+    return Math.round(scale(16) * size)
+  },
+
   primaryButton: pallete.edgeMint,
   primaryButtonText: pallete.edgeNavy,
   secondaryButtonOutline: pallete.edgeMint,
@@ -45,11 +50,5 @@ export const theme: EdgeThemeRaw = {
   background2: pallete.darkBlueNavyGradient2,
   cancelButton: pallete.white,
   accentTextPositive: pallete.accentGreen,
-  accentTextNegative: pallete.accentRed,
-  remMultiplier: 16
-}
-
-export const themeTest: EdgeTheme = {
-  ...theme,
-  rem: (rem: number) => Math.round(rem * scale(theme.remMultiplier))
+  accentTextNegative: pallete.accentRed
 }

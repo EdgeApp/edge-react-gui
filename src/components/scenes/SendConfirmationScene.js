@@ -4,14 +4,14 @@ import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import { type FioSenderInfo } from '../../actions/SendConfirmationActions'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
-import { intl } from '../../locales/intl'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { SelectFioAddressConnector as SelectFioAddress } from '../../modules/FioAddress/components/SelectFioAddress'
 import ExchangeRate from '../../modules/UI/components/ExchangeRate/ExchangeRate.ui.js'
@@ -24,8 +24,9 @@ import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducers/scenes/SendConfirmationReducer.js'
-import { rawStyles, styles } from '../../styles/scenes/SendConfirmationStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
 import { AddressTextWithBlockExplorerModal } from '../common/AddressTextWithBlockExplorerModal'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -280,7 +281,7 @@ export class SendConfirmation extends Component<Props, State> {
               <Scene.Padding style={{ paddingHorizontal: 54 }}>
                 <Scene.Item style={{ alignItems: 'center', flex: -1 }}>
                   <Scene.Row style={{ paddingVertical: 4 }}>
-                    <Text style={[styles.feeAreaText, networkFeeData.feeStyle]}>{networkFeeData.feeSyntax}</Text>
+                    <Text style={[styles.feeAreaText, { color: networkFeeData.feeColor }]}>{networkFeeData.feeSyntax}</Text>
                   </Scene.Row>
 
                   {!!destination && (
@@ -304,7 +305,7 @@ export class SendConfirmation extends Component<Props, State> {
                   {isTaggableCurrency && (
                     <Scene.Row style={{ paddingVertical: 10 }}>
                       <TouchableOpacity
-                        activeOpacity={rawStyles.activeOpacity}
+                        activeOpacity={THEME.OPACITY.ACTIVE}
                         style={styles.addUniqueIDButton}
                         onPress={this.props.uniqueIdentifierButtonPressed}
                       >
@@ -411,9 +412,9 @@ export class SendConfirmation extends Component<Props, State> {
     }
   }
 
-  getNetworkFeeData = (): { feeSyntax: string, feeStyle: Object } => {
+  getNetworkFeeData = (): { feeSyntax: string, feeColor: string } => {
     const { networkFee, parentNetworkFee, parentDisplayDenomination, exchangeRates } = this.props
-    let feeStyle = {}
+    let feeColor = THEME.COLORS.WHITE
 
     const primaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.currencyCode,
@@ -452,7 +453,7 @@ export class SendConfirmation extends Component<Props, State> {
       const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
       return {
         feeSyntax: sprintf(s.strings.send_confirmation_fee_line, `${cryptoFeeSymbol()} 0`, `${fiatFeeSymbol} 0`),
-        feeStyle
+        feeColor
       }
       // if parentNetworkFee greater than zero
     }
@@ -471,7 +472,7 @@ export class SendConfirmation extends Component<Props, State> {
       // catch-all scenario if only existing fee is negative (shouldn't be possible)
       return {
         feeSyntax: '',
-        feeStyle: {}
+        feeColor
       }
     }
     const cryptoFeeSymbol = denomination.symbol ? denomination.symbol : ''
@@ -492,13 +493,13 @@ export class SendConfirmation extends Component<Props, State> {
     const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
     // check if fee is high enough to signal a warning to user (via font color)
     if (feeAmountInUSD > FEE_ALERT_THRESHOLD) {
-      feeStyle = styles.feeDanger
+      feeColor = THEME.COLORS.ACCENT_RED
     } else if (feeAmountInUSD > FEE_COLOR_THRESHOLD) {
-      feeStyle = styles.feeWarning
+      feeColor = THEME.COLORS.ACCENT_ORANGE
     }
     return {
       feeSyntax: sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString),
-      feeStyle
+      feeColor
     }
   }
 
@@ -517,6 +518,75 @@ export class SendConfirmation extends Component<Props, State> {
     this.setState({ fioSender })
   }
 }
+
+const rawStyles = {
+  mainScrollView: {
+    flex: 1,
+    width: '100%',
+    alignItems: 'center'
+  },
+  exchangeRateContainer: {
+    alignItems: 'center',
+    marginVertical: scale(12)
+  },
+
+  main: {
+    alignItems: 'center',
+    width: '100%'
+  },
+  feeAreaText: {
+    fontSize: scale(16),
+    color: THEME.COLORS.WHITE,
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+
+  sliderStyle: {
+    width: scale(270)
+  },
+  error: {
+    marginHorizontal: scale(10),
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  errorText: {
+    textAlign: 'center',
+    color: THEME.COLORS.ACCENT_RED
+  },
+  balanceText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16)
+  },
+  balanceContainer: {
+    alignItems: 'center',
+    marginTop: scale(10)
+  },
+  rowText: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    color: THEME.COLORS.WHITE
+  },
+  pinInputContainer: {
+    width: scale(60),
+    height: scale(50)
+  },
+  pinInputSpacer: {
+    width: scale(10)
+  },
+  addUniqueIDButton: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    padding: scale(14),
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  addUniqueIDButtonText: {
+    color: THEME.COLORS.WHITE
+  },
+  footer: {
+    marginTop: scale(12)
+  },
+  footerWithPaymentId: {
+    marginTop: scale(0)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const uniqueIdentifierText = (currencyCode: string, uniqueIdentifier?: string): string => {
   if (!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier) {

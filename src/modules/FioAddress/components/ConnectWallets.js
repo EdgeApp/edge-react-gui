@@ -1,17 +1,18 @@
 // @flow
+
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, FlatList, Image, ScrollView, Switch, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, Switch, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { showError } from '../../../components/services/AirshipInstance'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
-import { CryptoExchangeWalletListRowStyle as walletStyles } from '../../../styles/components/CryptoExchangeWalletListRowStyle'
-import { styles } from '../../../styles/scenes/FioConnectWalletStyle'
+import { THEME } from '../../../theme/variables/airbitz.js'
 import type { State } from '../../../types/reduxTypes'
 import type { FioConnectionWalletItem } from '../../../types/types'
+import { scale } from '../../../util/scaling.js'
 import T from '../../UI/components/FormattedText/FormattedText.ui.js'
 import { getWallets } from '../../UI/selectors'
 import { makeConnectWallets } from '../util'
@@ -132,10 +133,10 @@ class ConnectWallets extends Component<FioConnectWalletStateProps & OwnProps, Lo
           ))
 
       return (
-        <View style={disabled ? styles.walletDisabled : styles.wallet} underlayColor={styles.underlay.color}>
-          <View style={walletStyles.rowContainerTop}>
-            <View style={walletStyles.containerLeft}>
-              {wallet.symbolImage ? <Image style={walletStyles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode="contain" /> : <T>-</T>}
+        <View style={disabled ? styles.walletDisabled : styles.wallet} underlayColor={THEME.COLORS.GRAY_2}>
+          <View style={styles.rowContainerTop}>
+            <View style={styles.containerLeft}>
+              {wallet.symbolImage ? <Image style={styles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode="contain" /> : <T>-</T>}
             </View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsCol}>
@@ -172,7 +173,6 @@ class ConnectWallets extends Component<FioConnectWalletStateProps & OwnProps, Lo
             {walletItems && Object.keys(walletItems).length ? (
               <FlatList
                 data={Object.values(walletItems)}
-                contentContainerStyle={styles.contentContainer}
                 initialNumToRender={24}
                 keyboardShouldPersistTaps="handled"
                 keyExtractor={this.keyExtractor}
@@ -187,7 +187,7 @@ class ConnectWallets extends Component<FioConnectWalletStateProps & OwnProps, Lo
           <TouchableHighlight
             style={[styles.button, continueDisabled ? styles.btnDisabled : null]}
             onPress={this._onContinuePress}
-            underlayColor={styles.btnUnderlay.color}
+            underlayColor={THEME.COLORS.SECONDARY}
             disabled={continueDisabled || disabled}
           >
             <View style={styles.buttonTextWrap}>
@@ -199,6 +199,102 @@ class ConnectWallets extends Component<FioConnectWalletStateProps & OwnProps, Lo
     )
   }
 }
+
+const rawStyles = {
+  view: {
+    flex: 1
+  },
+  list: {
+    flex: 5,
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  no_wallets_text: {
+    padding: scale(30),
+    fontSize: scale(22),
+    color: THEME.COLORS.GRAY_2,
+    textAlign: 'center'
+  },
+  wallet: {
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  walletDisabled: {
+    opacity: 0.7
+  },
+  walletDetailsContainer: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  walletDetailsCol: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  switchContainer: {
+    alignItems: 'flex-end',
+    paddingRight: THEME.rem(0.25)
+  },
+  walletDetailsRowCurrency: {
+    fontSize: scale(18)
+  },
+  walletDetailsRowName: {
+    fontSize: scale(14),
+    color: THEME.COLORS.SECONDARY
+  },
+  bottomSection: {
+    flex: 2,
+    backgroundColor: THEME.COLORS.GRAY_3,
+    paddingBottom: scale(20)
+  },
+  button: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.BLUE_3,
+    borderRadius: scale(3),
+    height: scale(50),
+    marginLeft: scale(15),
+    marginRight: scale(15),
+    marginTop: scale(15),
+    marginBottom: scale(15)
+  },
+  buttonTextWrap: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonText: {
+    opacity: 1,
+    color: THEME.COLORS.WHITE,
+    fontSize: THEME.rem(1),
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  btnDisabled: {
+    backgroundColor: THEME.COLORS.GRAY_2
+  },
+
+  rowContainerTop: {
+    width: '100%',
+    height: scale(76),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: scale(10),
+    paddingRight: scale(10),
+    borderBottomWidth: scale(1),
+    borderBottomColor: THEME.COLORS.GRAY_3
+  },
+  containerLeft: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: scale(10),
+    width: scale(36)
+  },
+  imageContainer: {
+    height: scale(24),
+    width: scale(24)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 const mapStateToProps = (state: State, ownProps): FioConnectWalletStateProps => {
   const wallets = getWallets(state)
