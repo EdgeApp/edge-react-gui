@@ -1,5 +1,10 @@
 # edge-react-gui
 
+## 1.16.1 (2020-07-12)
+
+- Upgrade edge-currency-accountbased to v0.7.14
+  - FIO fix domain reg url
+
 ## 1.16.0 (2020-07-10)
 
 - Add support for Ethereum Classic (ETC)
