@@ -109,7 +109,7 @@ class DomainListModalConnected extends Component<Props, State> {
     const { fioPlugin, fioWallets } = this.props
     if (!fioPlugin) return
     const publicKey = fioWallets[0].publicWalletInfo.keys.publicKey
-    const url = `${await fioPlugin.otherMethods.getRegDomainUrl()}${publicKey}`
+    const url = await fioPlugin.otherMethods.getRegDomainUrl(publicKey)
     Linking.canOpenURL(url).then(supported => {
       if (supported) {
         Linking.openURL(url)
