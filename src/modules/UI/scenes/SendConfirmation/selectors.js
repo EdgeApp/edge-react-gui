@@ -64,7 +64,9 @@ export const getTransaction = (state: State): EdgeTransaction => getScene(state)
 export const getGuiMakeSpendInfo = (state: State): GuiMakeSpendInfo => state.ui.scenes.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
 export const getForceUpdateGuiCounter = (state: State): number => state.ui.scenes.sendConfirmation.forceUpdateGuiCounter
 
-export const getNetworkFeeOption = (state: State): string => getGuiMakeSpendInfo(state).networkFeeOption || initialState.guiMakeSpendInfo.networkFeeOption || ''
+export const getNetworkFeeOption = (state: State): 'high' | 'standard' | 'low' | 'custom' =>
+  getGuiMakeSpendInfo(state).networkFeeOption || initialState.guiMakeSpendInfo.networkFeeOption
+
 export const getCustomNetworkFee = (state: State): any => getGuiMakeSpendInfo(state).customNetworkFee || initialState.guiMakeSpendInfo.customNetworkFee || {}
 export const getMetadata = (state: State): EdgeMetadata => getGuiMakeSpendInfo(state).metadata || initialState.guiMakeSpendInfo.metadata || {}
 export const getPublicAddress = (state: State): string => {
