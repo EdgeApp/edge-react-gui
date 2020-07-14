@@ -10,11 +10,14 @@ import Mailer from 'react-native-mail'
 import Share from 'react-native-share'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Entypo from 'react-native-vector-icons/Entypo'
+import { connect } from 'react-redux'
 
 import { formatExpDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
+import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
+import type { State as StateType } from '../../types/reduxTypes.js'
 import { sanitizeForFilename } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
@@ -40,16 +43,16 @@ type Files = {
   }
 }
 
-export type PassedProps = {
+type OwnProps = {
   sourceWallet: EdgeCurrencyWallet,
   currencyCode: string
 }
 
 type StateProps = {
-  denomination: string
+  multiplier: string
 }
 
-type Props = StateProps & PassedProps & ThemeProps
+type Props = StateProps & OwnProps & ThemeProps
 
 type State = {
   startDate: Date,
@@ -59,7 +62,7 @@ type State = {
   isExportCsv: boolean
 }
 
-class TransactionsExportScene extends PureComponent<Props, State> {
+class TransactionsExportSceneComponent extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1))
@@ -224,7 +227,7 @@ class TransactionsExportScene extends PureComponent<Props, State> {
   exportFiles = async () => {
     const { isExportQbo, isExportCsv } = this.state
     const transactionOptions: EdgeGetTransactionsOptions = {
-      denomination: this.props.denomination,
+      denomination: this.props.multiplier,
       currencyCode: this.props.currencyCode,
       startDate: this.state.startDate,
       endDate: this.state.endDate
@@ -361,4 +364,9 @@ const getStyles = cacheStyles(theme => ({
   }
 }))
 
-export const TransactionsExportSceneComponent = withTheme(TransactionsExportScene)
+export const TransactionsExportScene = connect((state: StateType, ownProps: OwnProps): StateProps => {
+  const denominationObject = getDisplayDenomination(state, ownProps.currencyCode)
+  return {
+    multiplier: denominationObject.multiplier
+  }
+})(withTheme(TransactionsExportSceneComponent))
