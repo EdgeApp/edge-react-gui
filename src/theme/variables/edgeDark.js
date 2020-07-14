@@ -60,6 +60,12 @@ export const edgeDark: Theme = {
   accentTextPositive: pallete.accentGreen,
   accentTextNegative: pallete.accentRed,
   transparent: pallete.transparent,
+  keyboardTopViewBackgroundDefault: pallete.white,
+  keyboardTopViewBackgroundDark: pallete.edgeBlue,
+  keyboardTopViewTextDefault: pallete.accentBlue,
+  keyboardTopViewTextDark: pallete.white,
+  datetimepickerBackgroundDefault: pallete.white,
+  datetimepickerBackgroundDark: pallete.edgeBlue,
 
   // Settings theme:
   settingsIconColor: pallete.white,

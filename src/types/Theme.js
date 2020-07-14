@@ -37,6 +37,12 @@ export type Theme = {
 
   // Misc colors:
   transparent: string,
+  keyboardTopViewBackgroundDefault: string,
+  keyboardTopViewBackgroundDark: string,
+  keyboardTopViewTextDefault: string,
+  keyboardTopViewTextDark: string,
+  datetimepickerBackgroundDefault: string,
+  datetimepickerBackgroundDark: string,
 
   // Settings theme:
   settingsIconColor: string,
