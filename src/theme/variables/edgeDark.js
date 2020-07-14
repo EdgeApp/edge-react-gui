@@ -26,7 +26,9 @@ const pallete = {
   gray: '#87939E',
   lightGray: '#D9E3ED',
   lightestGray: '#F4F5F6',
-  blueGray: '#A4C7DF'
+  blueGray: '#A4C7DF',
+
+  transparent: 'transparent'
 }
 
 export const edgeDark: Theme = {
@@ -47,6 +49,7 @@ export const edgeDark: Theme = {
   headerText: pallete.white,
   primaryText: pallete.white,
   secondaryText: pallete.blueGray,
+  disabledText: pallete.gray,
   tileBackground: pallete.edgeBlue,
   tileIcon: pallete.edgeMint,
   tileMore: pallete.white,
@@ -55,5 +58,17 @@ export const edgeDark: Theme = {
   background2: pallete.darkBlueNavyGradient2,
   cancelButton: pallete.white,
   accentTextPositive: pallete.accentGreen,
-  accentTextNegative: pallete.accentRed
+  accentTextNegative: pallete.accentRed,
+  transparent: pallete.transparent,
+
+  // Settings theme:
+  settingsIconColor: pallete.white,
+  settingsIconMintColor: pallete.edgeMint,
+  settingsHeaderRowBackground: pallete.edgeNavy,
+  settingsTextMintColor: pallete.edgeMint,
+  settingsRowBackground: pallete.edgeBlue,
+  settingsSwitchEnabledBackground: pallete.edgeMint,
+  settingsSwitchDisabledBackground: pallete.gray,
+  settingsButtonBackgroud: pallete.edgeMint,
+  settingsButtonText: pallete.edgeBlue
 }

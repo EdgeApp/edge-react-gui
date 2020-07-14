@@ -2,7 +2,7 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
-import * as React from 'react'
+import React, { Component } from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -13,7 +13,7 @@ import * as Constants from '../../constants/indexConstants'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
+import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { type Action } from '../../types/reduxTypes.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -24,7 +24,7 @@ import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
 import { Airship, showToast } from '../services/AirshipInstance.js'
 
-type Props = {
+type StateProps = {
   defaultFiat: string,
   autoLogoutTimeInSeconds: number,
   username: string,
@@ -55,7 +55,9 @@ type State = {
   touchIdText: string
 }
 
-export default class SettingsOverview extends React.Component<Props, State> {
+type Props = StateProps & ThemeProps
+
+class SettingsOverviewComponent extends Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -150,7 +152,9 @@ export default class SettingsOverview extends React.Component<Props, State> {
   }
 
   render() {
-    const { account } = this.props
+    const { account, theme } = this.props
+    const iconSize = theme.rem(1.25)
+    const styles = getStyles(theme)
 
     const autoLogout = secondsToDisplay(this.props.autoLogoutTimeInSeconds)
     const timeStrings = {
@@ -161,18 +165,18 @@ export default class SettingsOverview extends React.Component<Props, State> {
     }
     const autoLogoutRightText = autoLogout.value === 0 ? s.strings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
 
-    const rightArrow = <AntDesignIcon name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
+    const rightArrow = <AntDesignIcon name="right" color={theme.settingsIconColor} size={theme.rem(1)} />
 
     return (
-      <SceneWrapper background="body" hasTabs={false}>
+      <SceneWrapper hasTabs={false}>
         <ScrollView>
           <SettingsHeaderRow
-            icon={<FontAwesomeIcon name="user-o" color={THEME.COLORS.WHITE} size={iconSize} />}
+            icon={<FontAwesomeIcon name="user-o" color={theme.settingsIconColor} size={iconSize} />}
             text={`${s.strings.settings_account_title_cap}: ${this.props.username}`}
           />
           <SettingsRow
             text={s.strings[this.props.lockButton]}
-            right={<IonIcon name={this.props.lockButtonIcon} color={THEME.COLORS.GRAY_1} size={iconSize} />}
+            right={<IonIcon name={this.props.lockButtonIcon} color={theme.settingsIconMintColor} size={iconSize} />}
             onPress={this.showConfirmPasswordModal}
           />
           <SettingsRow
@@ -188,9 +192,13 @@ export default class SettingsOverview extends React.Component<Props, State> {
             text={s.strings.settings_button_password_recovery}
             right={rightArrow}
             onPress={this._onPressRecoverPasswordRouting}
+            marginBottom={false}
           />
 
-          <SettingsHeaderRow icon={<IonIcon name="ios-options" color={THEME.COLORS.WHITE} size={iconSize} />} text={s.strings.settings_options_title_cap} />
+          <SettingsHeaderRow
+            icon={<IonIcon name="ios-options" color={theme.settingsIconColor} size={iconSize} />}
+            text={s.strings.settings_options_title_cap}
+          />
           <SettingsRow text={s.strings.settings_exchange_settings} right={rightArrow} onPress={this._onPressExchangeSettings} />
           <SettingsRow text={s.strings.spending_limits} right={rightArrow} onPress={this._onPressSpendingLimits} />
           <SettingsLabelRow
@@ -224,8 +232,8 @@ export default class SettingsOverview extends React.Component<Props, State> {
           <SettingsRow text={s.strings.title_terms_of_service} onPress={Actions[Constants.TERMS_OF_SERVICE]} right={rightArrow} />
 
           <View style={styles.bottomArea}>
-            <PrimaryButton onPress={this.showSendLogsModal}>
-              <PrimaryButton.Text>{s.strings.settings_button_send_logs}</PrimaryButton.Text>
+            <PrimaryButton onPress={this.showSendLogsModal} style={styles.button}>
+              <PrimaryButton.Text style={styles.buttonText}>{s.strings.settings_button_send_logs}</PrimaryButton.Text>
             </PrimaryButton>
           </View>
         </ScrollView>
@@ -250,17 +258,27 @@ export default class SettingsOverview extends React.Component<Props, State> {
   }
 }
 
-const iconSize = THEME.rem(1.375)
-
-const styles = {
-  currencyLogo: {
-    height: iconSize,
-    width: iconSize,
-    resizeMode: 'contain'
-  },
-
-  bottomArea: {
-    padding: THEME.rem(1.414),
-    marginBottom: THEME.rem(4)
+const getStyles = cacheStyles(theme => {
+  const iconSize = theme.rem(1.25)
+  return {
+    currencyLogo: {
+      height: iconSize,
+      width: iconSize,
+      resizeMode: 'contain'
+    },
+    bottomArea: {
+      padding: theme.rem(2)
+    },
+    button: {
+      width: '100%',
+      height: theme.rem(3),
+      borderRadius: theme.rem(1.5),
+      backgroundColor: theme.settingsButtonBackgroud
+    },
+    buttonText: {
+      color: theme.settingsButtonText
+    }
   }
-}
+})
+
+export default withTheme(SettingsOverviewComponent)

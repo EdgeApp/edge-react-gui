@@ -1,32 +1,38 @@
 // @flow
 
-import * as React from 'react'
+import React, { type Node } from 'react'
 import { Text } from 'react-native'
 
 import { dayText } from '../../styles/common/textStyles.js'
-import { THEME } from '../../theme/variables/airbitz.js'
+import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { SettingsRow } from './SettingsRow.js'
 
-type Props = {
+type OwnProps = {
   disabled?: boolean,
-  icon?: React.Node,
+  icon?: Node,
   text: string,
   right: string,
   onPress: () => void
 }
 
+type Props = OwnProps & ThemeProps
+
 /**
  * A settings row with a smaller text on the right side.
  */
-export function SettingsLabelRow(props: Props): React.Node {
-  const { disabled, icon, text, right, onPress } = props
+export function SettingsLabelRowComponent(props: Props): Node {
+  const { disabled, icon, text, theme, right, onPress } = props
+  const styles = getStyles(theme)
 
   return <SettingsRow disabled={disabled} icon={icon} text={text} right={<Text style={styles.labelText}>{right}</Text>} onPress={onPress} />
 }
 
-const styles = {
+const getStyles = cacheStyles(theme => ({
   labelText: {
     ...dayText('bold', 'small'),
-    color: THEME.COLORS.SECONDARY
+    fontSize: theme.rem(1),
+    color: theme.settingsTextMintColor
   }
-}
+}))
+
+export const SettingsLabelRow = withTheme(SettingsLabelRowComponent)

@@ -1,37 +1,39 @@
 // @flow
 
-import * as React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import React, { type Node } from 'react'
+import { Text, View } from 'react-native'
 
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { nightText } from '../../styles/common/textStyles.js'
-import { THEME } from '../../theme/variables/airbitz'
+import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 
-type Props = {
-  icon?: React.Node,
+type OwnProps = {
+  icon?: Node,
   text: string
 }
+
+type Props = OwnProps & ThemeProps
 
 /**
  * A blue header row in a settings scene.
  */
-export function SettingsHeaderRow(props: Props) {
-  const { icon, text } = props
+export function SettingsHeaderRowComponent(props: Props): Node {
+  const { icon, text, theme } = props
+  const styles = getStyles(theme)
 
   return (
-    <Gradient style={styles.row}>
+    <View style={styles.row}>
       {icon != null ? <View style={styles.padding}>{icon}</View> : undefined}
       <Text style={styles.text}>{text}</Text>
-    </Gradient>
+    </View>
   )
 }
 
-const rawStyles = {
+const getStyles = cacheStyles(theme => ({
   row: {
     // Layout:
-    minHeight: THEME.rem(3),
-    paddingLeft: THEME.rem(0.5),
-    paddingRight: THEME.rem(0.5),
+    minHeight: theme.rem(2.75),
+    padding: theme.rem(0.75),
+    backgroundColor: theme.settingsHeaderRowBackground,
 
     // Children:
     alignItems: 'center',
@@ -42,12 +44,13 @@ const rawStyles = {
   text: {
     ...nightText('row-left'),
     flexGrow: 1,
-    fontSize: THEME.rem(1.125),
-    padding: THEME.rem(0.5)
+    fontSize: theme.rem(1),
+    color: theme.primaryText
   },
 
   padding: {
-    padding: THEME.rem(0.5)
+    paddingRight: theme.rem(0.75)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+export const SettingsHeaderRow = withTheme(SettingsHeaderRowComponent)

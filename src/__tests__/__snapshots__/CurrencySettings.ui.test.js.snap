@@ -6,7 +6,7 @@ exports[`CurrencySettings should render 1`] = `
   hasTabs={false}
 >
   <ScrollViewMock>
-    <SettingsHeaderRow
+    <WithTheme(SettingsHeaderRowComponent)
       text="Denominations"
     />
     <SettingsRadioRow

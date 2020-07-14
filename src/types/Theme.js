@@ -17,6 +17,7 @@ export type Theme = {
   headerText: string,
   primaryText: string,
   secondaryText: string,
+  disabledText: string,
 
   // Tile colors:
   lineDivider: string,
@@ -32,5 +33,19 @@ export type Theme = {
   secondaryButtonOutline: string,
   secondaryButtonText: string,
   selectButtonOutline: string,
-  selectButtonText: string
+  selectButtonText: string,
+
+  // Misc colors:
+  transparent: string,
+
+  // Settings theme:
+  settingsIconColor: string,
+  settingsIconMintColor: string,
+  settingsHeaderRowBackground: string,
+  settingsTextMintColor: string,
+  settingsRowBackground: string,
+  settingsSwitchEnabledBackground: string,
+  settingsSwitchDisabledBackground: string,
+  settingsButtonBackgroud: string,
+  settingsButtonText: string
 }
