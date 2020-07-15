@@ -1,5 +1,7 @@
 // @flow
 
+import RNS from '@rsksmart/rns'
+import { ChainId } from '@rsksmart/rns/types'
 import { FormField, MaterialInputStyle, TertiaryButton } from 'edge-components'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
@@ -18,6 +20,7 @@ import {
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
+import Web3 from 'web3'
 
 import ENS_LOGO from '../../assets/images/ens_logo.png'
 import FIO_LOGO from '../../assets/images/fio_logo.png'
@@ -171,7 +174,7 @@ class AddressModalConnected extends Component<Props, State> {
   }
 
   checkIfDomain = (domain: string): boolean => {
-    return this.checkIfUnstoppableDomain(domain) || this.checkIfEnsDomain(domain)
+    return this.checkIfUnstoppableDomain(domain) || this.checkIfEnsDomain(domain) || this.checkIfRnsDomain(domain)
   }
 
   checkIfUnstoppableDomain = (domain: string): boolean => {
@@ -182,11 +185,63 @@ class AddressModalConnected extends Component<Props, State> {
     return domain.endsWith('.eth') || domain.endsWith('.luxe') || domain.endsWith('.kred') || domain.endsWith('.xyz')
   }
 
+  checkIfRnsDomain = (domain: string): boolean => {
+    return domain.endsWith('.rsk')
+  }
+
+  // This approach considers resolution for tokens
+  getRnsChainIdFromPluginId = (pluginId: string): ChainId => {
+    switch (pluginId) {
+      case 'rsk':
+        return ChainId.RSK
+      case 'ethereum':
+        return ChainId.ETH
+      case 'ethereumclassic':
+        return ChainId.ETC
+      case 'bitcoin':
+        return ChainId.BTC
+      case 'litecoin':
+        return ChainId.LTC
+      case 'dogecoin':
+        return ChainId.DOGE
+      case 'dash':
+        return ChainId.DASH
+      case 'ripple':
+        return ChainId.XRP
+      case 'bitcoincash':
+        return ChainId.BCH
+      case 'binance':
+        return ChainId.BNB
+      case 'stellar':
+        return ChainId.XLM
+      case 'eos':
+        return ChainId.EOS
+      default:
+        return null
+    }
+  }
+
   fetchDomain = async (domain: string, currencyTicker: string): Promise<string> => {
     domain = domain.trim().toLowerCase()
     if (!this.checkIfDomain(domain)) {
       throw new ResolutionError(ResolutionErrorCode.UnsupportedDomain, { domain })
     }
+
+    if (this.checkIfRnsDomain(domain)) {
+      const chainId = this.getRnsChainIdFromPluginId(this.props.coreWallet.currencyInfo.pluginId)
+      if (chainId == null) {
+        throw new ResolutionError(ResolutionErrorCode.UnspecifiedCurrency, { domain, currencyTicker })
+      }
+      const web3 = new Web3('https://public-node.rsk.co')
+      const rns = new RNS(web3)
+      try {
+        const response = await rns.addr(domain, chainId)
+        return response
+      } catch (e) {
+        throw new ResolutionError(ResolutionErrorCode.UnregisteredDomain, { domain })
+      }
+    }
+
     const baseurl = `https://unstoppabledomains.com/api/v1`
     const url = this.checkIfEnsDomain(domain) ? `${baseurl}/${domain}/${currencyTicker}` : `${baseurl}/${domain}`
     const response = await global.fetch(url).then(res => res.json())

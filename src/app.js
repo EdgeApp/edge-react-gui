@@ -1,6 +1,7 @@
 // @flow
 /* global __DEV__ */
 
+import { decode, encode } from 'base-64'
 import { Client } from 'bugsnag-react-native'
 import React from 'react'
 import { Platform, StatusBar, Text, TextInput } from 'react-native'
@@ -9,6 +10,14 @@ import RNFS from 'react-native-fs'
 import ENV from '../env.json'
 import { THEME } from './theme/variables/airbitz.js'
 import { log, logToServer } from './util/logger'
+
+if (!global.btoa) {
+  global.btoa = encode
+}
+
+if (!global.atob) {
+  global.atob = decode
+}
 
 // Set up the transparent status bar at boot time on Android:
 StatusBar.setBarStyle('light-content')

@@ -629,7 +629,7 @@
   "fio_select_address_no_wallet_err": "No se ha encontrado ningún monedero FIO para la dirección seleccionada",
   "fio_sender_memo_label": "Nota FIO",
   "fio_sender_memo_placeholder": "Tu mensaje.",
-  "scan_address_modal_title": "Introduce el destinatario FIO, ENS, o dirección pública",
+  "scan_address_modal_title": "Introduce el destinatario FIO, ENS, RNS o dirección pública",
   "address_modal_default_header": "Introducir dirección",
   "resolving": "Resolviendo...",
   "UnregisteredDomain": "El dominio %1$s no está registrado",

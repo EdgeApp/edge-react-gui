@@ -629,7 +629,7 @@
   "fio_select_address_no_wallet_err": "Es wurde keine FIO-Wallet für ausgewählte Fio-Adresse gefunden",
   "fio_sender_memo_label": "FIO Notiz",
   "fio_sender_memo_placeholder": "Ihre Nachricht.",
-  "scan_address_modal_title": "Empfänger FIO, ENS oder öffentliche Adresse eingeben",
+  "scan_address_modal_title": "Empfänger FIO, ENS, RNS oder öffentliche Adresse eingeben",
   "address_modal_default_header": "Adresse eingeben",
   "resolving": "Wird behoben...",
   "UnregisteredDomain": "Domain %1$s ist nicht registriert",
