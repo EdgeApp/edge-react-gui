@@ -44,6 +44,11 @@ export type Theme = {
   datetimepickerBackgroundDefault: string,
   datetimepickerBackgroundDark: string,
 
+  // Fonts
+  fontFaceDefault: string,
+  fontFaceBold: string,
+  fontFaceSymbols: string,
+
   // Settings theme:
   settingsIconColor: string,
   settingsIconMintColor: string,

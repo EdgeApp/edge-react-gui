@@ -2,19 +2,18 @@
 
 exports[`CurrencySettings should render 1`] = `
 <SceneWrapper
-  background="body"
   hasTabs={false}
 >
   <ScrollViewMock>
     <WithTheme(SettingsHeaderRowComponent)
       text="Denominations"
     />
-    <SettingsRadioRow
+    <WithTheme(SettingsRadioRowComponent)
       icon={
         <Text
           style={
             Object {
-              "color": "#4A5157",
+              "color": "#FFFFFF",
               "flexShrink": 1,
               "fontFamily": "SourceSansPro-Black",
               "fontSize": 22,
@@ -39,12 +38,12 @@ exports[`CurrencySettings should render 1`] = `
       onPress={[Function]}
       text=""
     />
-    <SettingsRadioRow
+    <WithTheme(SettingsRadioRowComponent)
       icon={
         <Text
           style={
             Object {
-              "color": "#4A5157",
+              "color": "#FFFFFF",
               "flexShrink": 1,
               "fontFamily": "SourceSansPro-Black",
               "fontSize": 22,
@@ -69,12 +68,12 @@ exports[`CurrencySettings should render 1`] = `
       onPress={[Function]}
       text=""
     />
-    <SettingsRadioRow
+    <WithTheme(SettingsRadioRowComponent)
       icon={
         <Text
           style={
             Object {
-              "color": "#4A5157",
+              "color": "#FFFFFF",
               "flexShrink": 1,
               "fontFamily": "SourceSansPro-Black",
               "fontSize": 22,

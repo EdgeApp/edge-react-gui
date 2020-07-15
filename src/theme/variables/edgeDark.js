@@ -1,5 +1,7 @@
 // @flow
 
+import { Platform } from 'react-native'
+
 import { type Theme } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
 
@@ -59,6 +61,8 @@ export const edgeDark: Theme = {
   cancelButton: pallete.white,
   accentTextPositive: pallete.accentGreen,
   accentTextNegative: pallete.accentRed,
+
+  // Misc
   transparent: pallete.transparent,
   keyboardTopViewBackgroundDefault: pallete.white,
   keyboardTopViewBackgroundDark: pallete.edgeBlue,
@@ -66,6 +70,11 @@ export const edgeDark: Theme = {
   keyboardTopViewTextDark: pallete.white,
   datetimepickerBackgroundDefault: pallete.white,
   datetimepickerBackgroundDark: pallete.edgeBlue,
+
+  // Fonts
+  fontFaceDefault: 'SourceSansPro-Black',
+  fontFaceBold: 'SourceSansPro-Bold',
+  fontFaceSymbols: Platform.OS === 'android' ? 'SF-UI-Text-Regular' : 'SourceSansPro-Black',
 
   // Settings theme:
   settingsIconColor: pallete.white,

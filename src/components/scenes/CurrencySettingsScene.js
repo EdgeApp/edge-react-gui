@@ -9,7 +9,7 @@ import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenomina
 import s from '../../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { dayText } from '../../styles/common/textStyles.js'
-import { THEME } from '../../theme/variables/airbitz.js'
+import { type ThemeProps, withTheme } from '../../theme/ThemeContext.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { GuiDenomination } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -35,7 +35,7 @@ type DispatchProps = {
   saveCustomNodesList(nodes: Array<string>): void,
   selectDenomination(string): void
 }
-type Props = NavigationProps & StateProps & DispatchProps
+type Props = NavigationProps & StateProps & DispatchProps & ThemeProps
 
 type State = {
   isSetCustomNodesModalVisible: boolean,
@@ -94,8 +94,9 @@ export class CurrencySettingsComponent extends React.Component<Props, State> {
   }
 
   render() {
+    const { theme } = this.props
     return (
-      <SceneWrapper background="body" hasTabs={false}>
+      <SceneWrapper hasTabs={false}>
         <ScrollView>
           {this.props.defaultElectrumServer.length !== 0 && (
             <SetCustomNodesModal
@@ -112,8 +113,8 @@ export class CurrencySettingsComponent extends React.Component<Props, State> {
           {this.props.denominations.map(denomination => {
             const key = denomination.multiplier
             const left = (
-              <Text style={{ ...dayText('row-left'), color: THEME.COLORS.GRAY_1 }}>
-                <Text style={{ fontFamily: THEME.FONTS.SYMBOLS }}>{denomination.symbol}</Text> - {denomination.name}
+              <Text style={{ ...dayText('row-left'), color: theme.primaryText }}>
+                <Text style={{ fontFamily: theme.fontFaceSymbols }}>{denomination.symbol}</Text> - {denomination.name}
               </Text>
             )
             const isSelected = key === this.props.selectedDenominationKey
@@ -173,4 +174,4 @@ export const CurrencySettingsScene = connect(
       dispatch(saveCustomNodesList(ownProps.currencyInfo.currencyCode, nodesList))
     }
   })
-)(CurrencySettingsComponent)
+)(withTheme(CurrencySettingsComponent))

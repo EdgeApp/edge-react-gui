@@ -5,6 +5,7 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { CurrencySettingsComponent } from '../components/scenes/CurrencySettingsScene.js'
+import { edgeDark } from '../theme/variables/edgeDark.js'
 
 const typeHack: any = {}
 
@@ -30,7 +31,8 @@ describe('CurrencySettings', () => {
       disableCustomNodes: jest.fn(),
       enableCustomNodes: jest.fn(),
       saveCustomNodesList: jest.fn(),
-      selectDenomination: jest.fn()
+      selectDenomination: jest.fn(),
+      theme: edgeDark
     }
     const actual = renderer.render(<CurrencySettingsComponent {...props} />)
 

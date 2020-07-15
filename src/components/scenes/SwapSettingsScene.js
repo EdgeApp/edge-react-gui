@@ -1,8 +1,8 @@
 // @flow
 
 import { type EdgePluginMap, type EdgeSwapConfig } from 'edge-core-js/types'
-import * as React from 'react'
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { type Node, Component } from 'react'
+import { Image, ScrollView, Text, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
 
@@ -11,7 +11,7 @@ import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
 import { dayText } from '../../styles/common/textStyles.js'
-import { THEME } from '../../theme/variables/airbitz.js'
+import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
@@ -36,14 +36,14 @@ type StateProps = {
   settingsPreferredSwap: string | void
 }
 
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
   enabled: { [pluginId: string]: boolean },
   needsActivation: { [pluginId: string]: boolean }
 }
 
-export class SwapSettings extends React.Component<Props, State> {
+export class SwapSettings extends Component<Props, State> {
   cleanups: Array<() => mixed> = []
   sortedIds: Array<string>
 
@@ -96,9 +96,10 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 
   render() {
+    const styles = getStyles(this.props.theme)
     return (
-      <SceneWrapper hasTabs={false} background="body">
-        <ScrollView contentContainerStyle={{ paddingBottom: THEME.rem(4) }}>
+      <SceneWrapper hasTabs={false}>
+        <ScrollView contentContainerStyle={{ paddingBottom: this.props.theme.rem(4) }}>
           <View style={styles.instructionArea}>
             <Text style={styles.instructionText}>{s.strings.settings_exchange_instruction}</Text>
           </View>
@@ -123,13 +124,16 @@ export class SwapSettings extends React.Component<Props, State> {
     return <SettingsSwitchRow key={pluginId} icon={logo} text={displayName} value={this.state.enabled[pluginId]} onPress={handlePress} />
   }
 
-  renderPluginIcon(pluginId: string): React.Node {
+  renderPluginIcon(pluginId: string): Node {
     const logoSource = getSwapPluginIcon(pluginId)
+    const styles = getStyles(this.props.theme)
     return <Image resizeMode="contain" style={styles.swapIcon} source={logoSource} />
   }
 
   renderPreferredArea() {
-    const { accountPlugins, exchanges, accountReferral, settingsPreferredSwap } = this.props
+    const { accountPlugins, exchanges, accountReferral, settingsPreferredSwap, theme } = this.props
+    const iconSize = theme.rem(1.25)
+    const styles = getStyles(theme)
 
     // Pick plugin:
     const activePlugins = bestOfPlugins(accountPlugins, accountReferral, settingsPreferredSwap)
@@ -142,7 +146,7 @@ export class SwapSettings extends React.Component<Props, State> {
         ? {
             instructions: s.strings.swap_preferred_promo_instructions,
             handlePress: () => this.props.removePromotion(swapSource.installerId),
-            right: <AntDesignIcon name="close" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.swapIcon} />
+            right: <AntDesignIcon name="close" color={theme.settingsIconColor} size={iconSize} style={styles.swapIcon} />
           }
         : {
             instructions: s.strings.swap_preferred_instructions,
@@ -159,7 +163,7 @@ export class SwapSettings extends React.Component<Props, State> {
           }
         : {
             text: s.strings.swap_preferred_cheapest,
-            icon: <AntDesignIcon name="barschart" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.swapIcon} />
+            icon: <AntDesignIcon name="barschart" color={theme.settingsIconColor} size={iconSize} style={styles.swapIcon} />
           }
 
     return (
@@ -174,23 +178,20 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 }
 
-const iconSize = THEME.rem(1.375)
-
-const rawStyles = {
+const getStyles = cacheStyles(theme => ({
   instructionArea: {
-    backgroundColor: THEME.COLORS.GRAY_4,
-    padding: THEME.rem(1)
+    backgroundColor: theme.settingsHeaderRowBackground,
+    padding: theme.rem(1)
   },
   instructionText: {
     ...dayText('center'),
-    color: THEME.COLORS.GRAY_1
+    color: theme.primaryText
   },
   swapIcon: {
-    height: iconSize,
-    width: iconSize
+    height: theme.rem(1.25),
+    width: theme.rem(1.25)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 export const SwapSettingsScene = connect(
   (state: ReduxState): StateProps => ({
@@ -210,4 +211,4 @@ export const SwapSettingsScene = connect(
       dispatch(removePromotion(installerId))
     }
   })
-)(SwapSettings)
+)(withTheme(SwapSettings))
