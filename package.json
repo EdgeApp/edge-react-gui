@@ -133,6 +133,7 @@
     "edge-exchange-plugins": "^0.11.2",
     "edge-login-ui-rn": "^0.6.11",
     "lodash": "^4.17.2",
+    "node-libs-react-native": "^1.2.0",
     "qrcode-generator": "^1.4.4",
     "react": "16.8.3",
     "react-native": "0.59.10",
@@ -180,6 +181,7 @@
     "url": "^0.11.0",
     "url-parse": "^1.4.4",
     "v8-android-jit": "8.80.1",
+    "vm-browserify": "^1.1.2",
     "why-did-you-update": "^0.1.1"
   },
   "devDependencies": {
