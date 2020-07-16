@@ -20,7 +20,7 @@ import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../common/SettingsLabelRow.js'
 import { SettingsRow } from '../common/SettingsRow.js'
 import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
-import { showError } from '../services/AirshipInstance.js'
+import { showActivity, showError } from '../services/AirshipInstance.js'
 
 const rightArrow = <AntDesign name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
 
@@ -197,21 +197,27 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
 
     const files = {}
 
-    if (isExportQbo) {
-      const format = 'QBO'
-      files.qbo = {
-        file: await this.props.sourceWallet.exportTransactionsToQBO(transactionOptions),
+    // Error check when no transactions on a given date range
+    const csvFile = await showActivity(s.strings.export_transaction_loading, this.props.sourceWallet.exportTransactionsToCSV(transactionOptions))
+    if (typeof csvFile !== 'string') {
+      showError(s.strings.export_transaction_export_error)
+      return
+    }
+
+    if (isExportCsv) {
+      const format = 'CSV'
+      files.csv = {
+        file: csvFile,
         format,
         path: this.filePath(format),
         fileName: this.fileName(format)
       }
     }
 
-    if (isExportCsv) {
-      const file = await this.props.sourceWallet.exportTransactionsToCSV(transactionOptions)
-      const format = 'CSV'
-      files.csv = {
-        file: typeof file !== 'string' ? '' : file,
+    if (isExportQbo) {
+      const format = 'QBO'
+      files.qbo = {
+        file: await showActivity(s.strings.export_transaction_loading, this.props.sourceWallet.exportTransactionsToQBO(transactionOptions)),
         format,
         path: this.filePath(format),
         fileName: this.fileName(format)

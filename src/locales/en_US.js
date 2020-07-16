@@ -710,7 +710,9 @@ const strings = {
   export_transaction_csv: 'CSV',
   string_export: 'Export',
   string_no_wallet_name: 'No Wallet Name',
-  export_transaction_error: 'Start date should be earlier than the end date'
+  export_transaction_error: 'Start date should be earlier than the end date',
+  export_transaction_export_error: 'No transactions in the date range chosen',
+  export_transaction_loading: 'Exporting Transactions…'
 }
 
 // export default strings
