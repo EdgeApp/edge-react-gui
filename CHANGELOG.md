@@ -1,5 +1,11 @@
 # edge-react-gui
 
+## 1.16.2 (2020-07-17)
+
+- Upgrade Wyre plugin
+- Upgrade edge-currency-bitcoin to v4.8.5
+  - Support for Ravencoin's new blockheader length in latest hardfork
+
 ## 1.16.1 (2020-07-12)
 
 - Upgrade edge-currency-accountbased to v0.7.14
