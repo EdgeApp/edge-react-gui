@@ -58,5 +58,16 @@ export type Theme = {
   settingsSwitchEnabledBackground: string,
   settingsSwitchDisabledBackground: string,
   settingsButtonBackgroud: string,
-  settingsButtonText: string
+  settingsButtonText: string,
+
+  // Images
+  settingsChangellyLogo: string,
+  settingsChangenowLogo: string,
+  settingsCoinswitchLogo: string,
+  settingsDefaultLogo: string,
+  settingsFaastLogo: string,
+  settingsFoxExchangeLogo: string,
+  settingsGodexLogo: string,
+  settingsSwitchainLogo: string,
+  settingsTotleLogo: string
 }

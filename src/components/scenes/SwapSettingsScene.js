@@ -125,8 +125,9 @@ export class SwapSettings extends Component<Props, State> {
   }
 
   renderPluginIcon(pluginId: string): Node {
-    const logoSource = getSwapPluginIcon(pluginId)
-    const styles = getStyles(this.props.theme)
+    const { theme } = this.props
+    const logoSource = getSwapPluginIcon(pluginId, theme)
+    const styles = getStyles(theme)
     return <Image resizeMode="contain" style={styles.swapIcon} source={logoSource} />
   }
 

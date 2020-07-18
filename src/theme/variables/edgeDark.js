@@ -2,6 +2,15 @@
 
 import { Platform } from 'react-native'
 
+import changellyLogo from '../../assets/images/exchange/settingsExchangeChangelly.png'
+import changenowLogo from '../../assets/images/exchange/settingsExchangeChangenow.png'
+import coinswitchLogo from '../../assets/images/exchange/settingsExchangeCoinswitch.png'
+import defaultLogo from '../../assets/images/exchange/settingsExchangeDefault.png'
+import faastLogo from '../../assets/images/exchange/settingsExchangeFaast.png'
+import foxExchangeLogo from '../../assets/images/exchange/settingsExchangeFoxExchange.png'
+import godexLogo from '../../assets/images/exchange/settingsExchangeGodex.png'
+import switchainLogo from '../../assets/images/exchange/settingsExchangeSwitchain.png'
+import totleLogo from '../../assets/images/exchange/settingsExchangeTotle.png'
 import { type Theme } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
 
@@ -85,5 +94,16 @@ export const edgeDark: Theme = {
   settingsSwitchEnabledBackground: pallete.edgeMint,
   settingsSwitchDisabledBackground: pallete.gray,
   settingsButtonBackgroud: pallete.edgeMint,
-  settingsButtonText: pallete.edgeBlue
+  settingsButtonText: pallete.edgeBlue,
+
+  // Images
+  settingsChangellyLogo: changellyLogo,
+  settingsChangenowLogo: changenowLogo,
+  settingsCoinswitchLogo: coinswitchLogo,
+  settingsDefaultLogo: defaultLogo,
+  settingsFaastLogo: faastLogo,
+  settingsFoxExchangeLogo: foxExchangeLogo,
+  settingsGodexLogo: godexLogo,
+  settingsSwitchainLogo: switchainLogo,
+  settingsTotleLogo: totleLogo
 }
