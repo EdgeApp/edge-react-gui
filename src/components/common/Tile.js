@@ -93,8 +93,8 @@ const getStyles = cacheStyles(theme => ({
     color: theme.tileIcon,
     width: theme.rem(0.75),
     height: theme.rem(0.75),
-    top: theme.rem(0.75),
-    right: theme.rem(0.75)
+    top: theme.rem(0.25),
+    right: theme.rem(0.25)
   }
 }))
 

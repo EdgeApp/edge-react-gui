@@ -23,6 +23,7 @@ export type Theme = {
   tileMore: string,
 
   // Button colors:
+  modalClose: string,
   cancelButton: string,
   primaryButton: string,
   primaryButtonText: string,
