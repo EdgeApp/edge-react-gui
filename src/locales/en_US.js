@@ -227,6 +227,7 @@ const strings = {
   settings_button_pin: 'Change PIN',
   settings_exchange_settings: 'Exchange Settings',
   settings_exchange_instruction: 'Enable or disable the exchange providers available to you',
+  settings_notifications_switch: 'Enable Price Alerts',
   swap_preferred_header: 'Preferred Exchange',
   swap_preferred_cheapest: 'Pick best price',
   swap_preferred_instructions: 'When multiple exchanges can fill an order, prefer:',
