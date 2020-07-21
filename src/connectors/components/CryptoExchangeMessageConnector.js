@@ -1,15 +1,12 @@
 // @flow
 
-import { StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
 import { type Props, CryptoExchangeMessageBoxComponent } from '../../modules/UI/components/CryptoExchangeMessageBox/CryptoExchangeMessageBoxComponent'
 import type { State } from '../../types/reduxTypes.js'
 
-type OwnProps = {
-  style: StyleSheet.Styles
-}
+type OwnProps = {}
 
 const mapStateToProps = (state: State, ownProps: OwnProps): Props => {
   const insufficient = state.cryptoExchange.insufficientError
@@ -31,7 +28,6 @@ const mapStateToProps = (state: State, ownProps: OwnProps): Props => {
   }
 
   return {
-    style: ownProps.style,
     message,
     useErrorStyle
   }

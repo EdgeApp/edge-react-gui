@@ -2,10 +2,11 @@
 
 import type { Node } from 'react'
 import React, { Component } from 'react'
-import { Animated, View } from 'react-native'
+import { Animated, StyleSheet, View } from 'react-native'
 
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import styles from '../../styles/scenes/CreateWalletStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../theme/variables/platform.js'
 
 type FullScreenTransitionState = {
   opacity: number
@@ -70,3 +71,22 @@ export class FullScreenTransitionComponent extends Component<FullScreenTransitio
     )
   }
 }
+
+const rawStyles = {
+  scene: {
+    flex: 1,
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  gradient: {
+    height: THEME.HEADER,
+    width: '100%',
+    position: 'absolute'
+  },
+  view: {
+    position: 'relative',
+    top: THEME.HEADER,
+    paddingHorizontal: 20,
+    height: PLATFORM.usableHeight
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

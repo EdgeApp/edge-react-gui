@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Image, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
+import { Image, StyleSheet, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
@@ -79,7 +79,7 @@ import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
-import { styles } from '../styles/MainStyle.js'
+import { THEME } from '../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../types/reduxTypes.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
@@ -884,6 +884,25 @@ export class MainComponent extends Component<Props> {
     return true
   }
 }
+
+const rawStyles = {
+  titleWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%'
+  },
+  titleStyle: {
+    alignSelf: 'center',
+    fontSize: 20,
+    color: THEME.COLORS.WHITE,
+    fontFamily: THEME.FONTS.DEFAULT
+  },
+  footerTabStyles: {
+    height: THEME.FOOTER_TABS_HEIGHT
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const Main = connect(
   (state: ReduxState): StateProps => ({}),

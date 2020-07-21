@@ -1,7 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react'
-import { Image, ScrollView, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import WalletIcon from '../../assets/images/createWallet/wallet_icon_lg.png'
@@ -12,8 +12,10 @@ import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryBu
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import styles from '../../styles/scenes/CreateWalletStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../theme/variables/platform.js'
 import { type CreateWalletType } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 
 type CreateWalletChoiceProps = {
   selectedWalletType: CreateWalletType
@@ -58,3 +60,45 @@ export class CreateWalletChoiceComponent extends PureComponent<CreateWalletChoic
     )
   }
 }
+
+const rawStyles = {
+  scene: {
+    flex: 1,
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  gradient: {
+    height: THEME.HEADER,
+    width: '100%',
+    position: 'absolute'
+  },
+  view: {
+    position: 'relative',
+    top: THEME.HEADER,
+    paddingHorizontal: 20,
+    height: PLATFORM.usableHeight
+  },
+  currencyLogo: {
+    alignSelf: 'center',
+    marginTop: scale(24),
+    height: scale(64),
+    width: scale(64)
+  },
+  createWalletPromptArea: {
+    paddingTop: scale(16),
+    paddingBottom: scale(8)
+  },
+  instructionalText: {
+    fontSize: scale(16),
+    textAlign: 'center',
+    color: THEME.COLORS.GRAY_1
+  },
+  buttons: {
+    marginTop: scale(24),
+    flexDirection: 'row'
+  },
+  next: {
+    marginLeft: scale(1),
+    flex: 1
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

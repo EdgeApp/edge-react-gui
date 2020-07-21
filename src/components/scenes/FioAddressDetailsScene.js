@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
-import { Alert, View } from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -13,9 +13,8 @@ import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
 import { findWalletByFioAddress } from '../../modules/FioAddress/util'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { styles as mainStyles } from '../../styles/MainStyle'
-import { styles } from '../../styles/scenes/FioAddressDetailsStyle'
-import { THEME } from '../../theme/variables/airbitz'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { scale } from '../../util/scaling'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow'
 import { SettingsRow } from '../common/SettingsRow'
@@ -85,7 +84,7 @@ export class FioAddressDetailsScene extends Component<Props, LocalState> {
   renderTitle = (title: string) => {
     return (
       <View style={styles.titleWrapper}>
-        <T style={mainStyles.titleStyle}>{title}</T>
+        <T style={styles.titleStyle}>{title}</T>
       </View>
     )
   }
@@ -130,3 +129,44 @@ export class FioAddressDetailsScene extends Component<Props, LocalState> {
     )
   }
 }
+
+const rawStyles = {
+  text: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16)
+  },
+  image: {
+    marginBottom: scale(50)
+  },
+  titleStyle: {
+    alignSelf: 'center',
+    fontSize: 20,
+    color: THEME.COLORS.WHITE,
+    fontFamily: THEME.FONTS.DEFAULT
+  },
+  viewGrey: {
+    flex: 1,
+    backgroundColor: THEME.COLORS.GRAY_3,
+    paddingHorizontal: 0
+  },
+  expiration: {
+    fontSize: THEME.rem(0.75),
+    color: THEME.COLORS.WHITE,
+    textAlign: 'center',
+    marginTop: THEME.rem(-0.5),
+    paddingBottom: THEME.rem(0.75)
+  },
+  titleWrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%'
+  },
+  settingsText: {
+    color: THEME.COLORS.GRAY_1,
+    fontSize: THEME.rem(1)
+  },
+  warning: {
+    color: THEME.COLORS.ACCENT_RED
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

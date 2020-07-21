@@ -16,7 +16,6 @@ export type ThemeProps = {
 /**
  * Wrap cacheStyles with our specific Theme type.
  */
-type NativeStyles<Styles: Object> = $ObjMap<Styles, (style: any) => mixed>
-export function cacheStyles<Styles: Object>(callback: (theme: Theme) => Styles): (theme: Theme) => NativeStyles<Styles> {
+export function cacheStyles<Styles: Object>(callback: (theme: Theme) => Styles): (theme: Theme) => Styles {
   return cacheStylesInner(callback)
 }

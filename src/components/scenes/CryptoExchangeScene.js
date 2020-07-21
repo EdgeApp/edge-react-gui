@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import { type EdgeAccount } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Keyboard, View } from 'react-native'
+import { ActivityIndicator, Alert, Keyboard, StyleSheet, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
@@ -21,9 +21,10 @@ import { CryptoExchangeFlipInputWrapperComponent } from '../../modules/UI/compon
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { getExchangeRate } from '../../modules/UI/selectors.js'
-import { styles } from '../../styles/scenes/CryptoExchangeSceneStyles.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type GuiCurrencyInfo, type GuiWallet, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import { getDenomFromIsoCode } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -143,10 +144,9 @@ class CryptoExchangeComponent extends Component<Props, State> {
     return (
       <SceneWrapper>
         <KeyboardAwareScrollView style={styles.mainScrollView} keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollViewContentContainer}>
-          <CryptoExchangeMessageConnector style={styles.exchangeRateBanner} />
+          <CryptoExchangeMessageConnector />
           <View style={styles.shim} />
           <CryptoExchangeFlipInputWrapperComponent
-            style={styles.flipWrapper}
             guiWallet={this.props.fromWallet}
             buttonText={this.props.fromButtonText}
             currencyLogo={this.props.fromCurrencyIcon}
@@ -163,10 +163,9 @@ class CryptoExchangeComponent extends Component<Props, State> {
             onNext={this.getQuote}
           />
           <View style={styles.arrowShim} />
-          <Icon style={styles.downArrow} name={ARROW_DOWN_BOLD} size={styles.downArrowSize} type={MATERIAL_COMMUNITY} />
+          <Icon style={styles.downArrow} name={ARROW_DOWN_BOLD} size={scale(30)} type={MATERIAL_COMMUNITY} />
           <View style={styles.arrowShim} />
           <CryptoExchangeFlipInputWrapperComponent
-            style={styles.flipWrapper}
             guiWallet={this.props.toWallet}
             buttonText={this.props.toButtonText}
             currencyLogo={this.props.toCurrencyIcon}
@@ -276,6 +275,29 @@ class CryptoExchangeComponent extends Component<Props, State> {
     return null
   }
 }
+
+const rawStyles = {
+  mainScrollView: {
+    flex: 1
+  },
+  scrollViewContentContainer: {
+    alignItems: 'center'
+  },
+  arrowShim: {
+    height: scale(8)
+  },
+  shim: {
+    height: scale(20)
+  },
+
+  downArrow: {
+    color: THEME.COLORS.WHITE
+  },
+  actionButtonContainer: {
+    width: '90%'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 const DIVIDE_PRECISION = 18
 

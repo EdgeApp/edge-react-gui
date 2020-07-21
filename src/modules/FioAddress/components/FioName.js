@@ -1,7 +1,7 @@
 // @flow
 
 import React, { type Node } from 'react'
-import { Image, TouchableHighlight, View } from 'react-native'
+import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import fioAddressListIcon from '../../../assets/images/list_fioAddress.png'
@@ -10,9 +10,9 @@ import * as intl from '../../../locales/intl.js'
 import s from '../../../locales/strings.js'
 import T from '../../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../../modules/UI/components/Icon/Icon.ui'
-import { styles } from '../../../styles/scenes/FioAddressListStyle'
-import { THEME } from '../../../theme/variables/airbitz'
+import { THEME } from '../../../theme/variables/airbitz.js'
 import type { FioAddress, FioDomain } from '../../../types/types'
+import { scale } from '../../../util/scaling.js'
 
 type FioAddressNameProps = {
   item: FioAddress,
@@ -56,7 +56,7 @@ export const FioAddressRow = (props: FioAddressNameProps) => {
   const { item, onPress } = props
 
   return (
-    <TouchableHighlight onPress={() => onPress(item)} underlayColor={styles.underlay.color}>
+    <TouchableHighlight onPress={() => onPress(item)} underlayColor={`${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`}>
       <FioName name={item.name} expiration={item.expiration} icon={<Image source={fioAddressListIcon} style={styles.iconImg} />} />
     </TouchableHighlight>
   )
@@ -66,7 +66,7 @@ export const FioDomainRow = (props: FioDomainNameProps) => {
   const { item, onPress } = props
 
   return (
-    <TouchableHighlight onPress={() => onPress(item)} underlayColor={styles.underlay.color}>
+    <TouchableHighlight onPress={() => onPress(item)} underlayColor={`${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`}>
       <FioName
         name={item.name}
         expiration={item.expiration}
@@ -75,3 +75,49 @@ export const FioDomainRow = (props: FioDomainNameProps) => {
     </TouchableHighlight>
   )
 }
+
+const rawStyles = {
+  item: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: scale(15),
+    borderBottomColor: THEME.COLORS.FIO_ADDRESS_LIST_BORDER_BOTTOM,
+    borderBottomWidth: 1
+  },
+  icon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: scale(10),
+    marginLeft: scale(5)
+  },
+  iconImg: {
+    height: scale(40),
+    width: scale(45)
+  },
+  iconIon: {
+    height: scale(40),
+    width: scale(45),
+    paddingRight: scale(4),
+    textAlign: 'center'
+  },
+  info: {
+    flex: 4
+  },
+  infoTitle: {
+    color: THEME.COLORS.FIO_ADDRESS_LIST_FONT,
+    fontSize: scale(18)
+  },
+  infoSubtitle: {
+    color: THEME.COLORS.FIO_ADDRESS_LIST_FONT,
+    fontSize: scale(12)
+  },
+  arrow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginLeft: 'auto'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
