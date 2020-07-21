@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type Node, Component } from 'react'
+import * as React from 'react'
 import { Animated, BackHandler, Dimensions, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
@@ -11,7 +11,7 @@ import { type SafeAreaGap, LayoutContext } from './LayoutContext.js'
 
 type Props = {
   bridge: AirshipBridge<any>,
-  children: Node | ((gap: SafeAreaGap) => Node),
+  children: React.Node | ((gap: SafeAreaGap) => React.Node),
 
   // True to have the modal float in the center of the screen,
   // or false for a bottom modal:
@@ -31,7 +31,7 @@ type Props = {
  * A modal that slides a modal up from the bottom of the screen
  * and dims the rest of the app.
  */
-export class AirshipModal extends Component<Props> {
+export class AirshipModal extends React.Component<Props> {
   backHandler: { remove(): mixed } | void
   opacity: Animated.Value
   offset: Animated.Value

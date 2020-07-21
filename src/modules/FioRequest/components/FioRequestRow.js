@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeDenomination } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -34,7 +34,7 @@ type StateProps = {
 
 type Props = OwnProps & StateProps
 
-class FioRequestRow extends Component<Props> {
+class FioRequestRow extends React.Component<Props> {
   underlayColor = THEME.COLORS.ROW_PRESSED
   minimumFontScale = 0.6
 

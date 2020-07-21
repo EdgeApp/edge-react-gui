@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -41,7 +41,7 @@ type Props = OwnProps & StateProps
 
 type LocalState = {}
 
-class CryptoExchangeWalletListTokenRowConnected extends Component<Props, LocalState> {
+class CryptoExchangeWalletListTokenRowConnected extends React.Component<Props, LocalState> {
   onPress = () => {
     if (this.props.disabled) return
     this.props.onPress({

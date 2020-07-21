@@ -2,7 +2,7 @@
 
 import { abs, bns, sub } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
@@ -103,7 +103,7 @@ type FiatCurrentAmountUI = {
 }
 
 // Only exported for unit-testing purposes
-export class TransactionDetailsComponent extends Component<Props, State> {
+export class TransactionDetailsComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { thumbnailPath } = props

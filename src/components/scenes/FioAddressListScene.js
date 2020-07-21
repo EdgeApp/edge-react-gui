@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -40,7 +40,7 @@ export type NavigationProps = {
 
 type Props = StateProps & DispatchProps & NavigationProps
 
-export class FioAddressListScene extends Component<Props> {
+export class FioAddressListScene extends React.Component<Props> {
   headerIconSize = THEME.rem(1.375)
   willFocusSubscription: { remove: () => void } | null = null
 

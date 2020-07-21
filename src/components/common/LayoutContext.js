@@ -1,6 +1,6 @@
 // @flow
 
-import { type ChildrenArray, type Node, Component } from 'react'
+import * as React from 'react'
 import { Dimensions, Platform, StatusBar } from 'react-native'
 // $FlowFixMe See https://github.com/react-native-community/react-native-safe-area-view/pull/77
 import { getInset } from 'react-native-safe-area-view'
@@ -20,7 +20,7 @@ export type LayoutMetrics = {
 type Props = {
   // Expects a single child, which is a function
   // that accepts the current layout and returns an element.
-  children: (layout: LayoutMetrics) => ChildrenArray<Node>
+  children: (layout: LayoutMetrics) => React.ChildrenArray<React.Node>
 }
 
 type State = {
@@ -39,7 +39,7 @@ type State = {
  * Do not rely on the height being correct! Use flexbox to do layout
  * wherever possible, rather than relying on dimensions.
  */
-export class LayoutContext extends Component<Props, State> {
+export class LayoutContext extends React.Component<Props, State> {
   update: *
 
   constructor(props: Props) {

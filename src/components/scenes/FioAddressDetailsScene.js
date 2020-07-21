@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Alert, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -39,7 +39,7 @@ type Props = StateProps & NavProps
 
 const headerIconSize = THEME.rem(1.5)
 
-export class FioAddressDetailsScene extends Component<Props, LocalState> {
+export class FioAddressDetailsScene extends React.Component<Props, LocalState> {
   state: LocalState = {
     fioWalletLoading: false,
     fioWallet: null

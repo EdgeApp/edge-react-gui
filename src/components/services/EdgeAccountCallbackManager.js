@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeAccount } from 'edge-core-js'
-import React from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 
 import { updateWalletsRequest } from '../../modules/Core/Wallets/action.js'

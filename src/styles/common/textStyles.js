@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type Node } from 'react'
+import * as React from 'react'
 import { Text } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -8,7 +8,7 @@ import { THEME } from '../../theme/variables/airbitz.js'
 /**
  * Use this component just like its HTML equivalent.
  */
-export function B(props: { children: Node }) {
+export function B(props: { children: React.Node }) {
   return <Text style={tweakRules.bold}>{props.children}</Text>
 }
 

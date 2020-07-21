@@ -2,7 +2,7 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -55,7 +55,7 @@ type State = {
   touchIdText: string
 }
 
-export default class SettingsOverview extends Component<Props, State> {
+export default class SettingsOverview extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

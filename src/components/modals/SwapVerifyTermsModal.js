@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeSwapConfig, type EdgeSwapInfo } from 'edge-core-js/types'
-import React from 'react'
+import * as React from 'react'
 import { Image, Linking, Text, View } from 'react-native'
 
 import { swapPluginIcons } from '../../assets/images/exchange'

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
@@ -12,7 +12,7 @@ export type Props = {
   useErrorStyle: boolean
 }
 
-export class CryptoExchangeMessageBoxComponent extends Component<Props> {
+export class CryptoExchangeMessageBoxComponent extends React.Component<Props> {
   constructor(props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)

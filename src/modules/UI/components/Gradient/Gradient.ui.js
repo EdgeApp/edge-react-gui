@@ -1,7 +1,6 @@
 // @flow
 
-import type { Node } from 'react'
-import React, { PureComponent } from 'react'
+import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -11,13 +10,13 @@ const UPPER_LEFT = { x: 0, y: 0 }
 const UPPER_RIGHT = { x: 1, y: 0 }
 
 export type OwnProps = {
-  children?: Node,
+  children?: React.Node,
   reverse?: boolean,
   style?: StyleSheet.Styles
 }
 type Props = OwnProps & ThemeProps
 
-class GradientComponent extends PureComponent<Props> {
+class GradientComponent extends React.PureComponent<Props> {
   render() {
     const { children, reverse, theme, style } = this.props
     const colors = [theme.background1, theme.background2]

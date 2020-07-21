@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
@@ -30,7 +30,7 @@ const modifiedMenuDropDownStyle = {
   }
 }
 
-export class WalletListMenu extends Component<Props> {
+export class WalletListMenu extends React.Component<Props> {
   options: Array<{ value: string, label: string }>
 
   constructor(props: Props) {

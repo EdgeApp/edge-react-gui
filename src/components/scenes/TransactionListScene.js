@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Alert, Animated, FlatList, Image, StyleSheet, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
@@ -69,7 +69,7 @@ type State = {
 
 const emptyArray = []
 
-export class TransactionList extends Component<Props, State> {
+export class TransactionList extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

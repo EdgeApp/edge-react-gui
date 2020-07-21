@@ -1,7 +1,7 @@
 // @flow
 
 import { createSimpleConfirmModal } from 'edge-components'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -28,7 +28,7 @@ type Props = {
 }
 type State = {}
 
-export class ExchangeQuoteComponent extends Component<Props, State> {
+export class ExchangeQuoteComponent extends React.Component<Props, State> {
   renderBottom = () => {
     if (this.props.isTop) {
       return (

@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgePluginMap, type EdgeSwapConfig } from 'edge-core-js/types'
-import React, { type Node } from 'react'
+import * as React from 'react'
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -28,8 +28,8 @@ export function SwapPreferredModal(props: Props) {
     .sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
     .filter(pluginId => exchanges[pluginId].enabled)
 
-  function renderRow(pluginId: string | void): Node {
-    let check: Node | void
+  function renderRow(pluginId: string | void): React.Node {
+    let check: React.Node | void
     if (selected === pluginId) {
       check = <AntDesignIcon name="check" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.icon} />
     }

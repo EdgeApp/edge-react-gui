@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Linking, Text } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -22,7 +22,7 @@ type Props = {
   bridge: AirshipBridge<mixed>
 }
 
-class HelpModal extends Component<Props> {
+class HelpModal extends React.Component<Props> {
   webview: WebView | void
 
   render() {

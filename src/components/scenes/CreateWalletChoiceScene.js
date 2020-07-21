@@ -1,6 +1,6 @@
 // @flow
 
-import React, { PureComponent } from 'react'
+import * as React from 'react'
 import { Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
@@ -21,7 +21,7 @@ type CreateWalletChoiceProps = {
   selectedWalletType: CreateWalletType
 }
 
-export class CreateWalletChoiceComponent extends PureComponent<CreateWalletChoiceProps> {
+export class CreateWalletChoiceComponent extends React.PureComponent<CreateWalletChoiceProps> {
   onSelectNew = () => {
     const { selectedWalletType } = this.props
     Actions[Constants.CREATE_WALLET_SELECT_FIAT]({ selectedWalletType })

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { View } from 'react-native'
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 
 export const TEN_MINUTES = 600
 
-export class CircleTimer extends Component<Props> {
+export class CircleTimer extends React.Component<Props> {
   componentDidMount() {
     setTimeout(this.timerTick, 1000)
   }

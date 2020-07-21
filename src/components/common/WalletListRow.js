@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -46,7 +46,7 @@ type DispatchProps = {
 }
 type Props = OwnProps & StateProps & DispatchProps
 
-class WalletListRowComponent extends Component<Props> {
+class WalletListRowComponent extends React.Component<Props> {
   _onPressSelectWallet = (walletId, currencyCode, publicAddress) => {
     this.props.selectWallet(walletId, currencyCode)
     // if it's EOS then we need to see if activated, if not then it will get routed somewhere else

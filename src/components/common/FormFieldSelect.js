@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 
 import { Select } from '../materialWrappers/Select.js'
 
@@ -17,7 +17,7 @@ type FormFieldSelectProps = {
   onChangeText(string, number, any): void
 }
 
-class FormFieldSelect extends Component<FormFieldSelectProps> {
+class FormFieldSelect extends React.Component<FormFieldSelectProps> {
   static defaultProps = {
     label: ''
   }

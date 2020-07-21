@@ -1,6 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import React, { Component } from 'react'
+import * as React from 'react'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
@@ -36,9 +36,9 @@ type State = {
  autoFocus: boolean
 }
 
-class FormField extends Component<Props, State> {
+class FormField extends React.Component<Props, State> {
 */
-export class FormField extends Component {
+export class FormField extends React.Component {
   static defaultProps = {
     autoCapitalize: 'none',
     autoCorrect: false,

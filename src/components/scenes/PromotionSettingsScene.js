@@ -1,7 +1,7 @@
 // @flow
 
 import { createInputModal } from 'edge-components'
-import React from 'react'
+import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { TextField } from 'react-native-material-textfield'
 
@@ -30,7 +30,7 @@ export type Props = {
   style?: StyleSheet.Styles,
   onChangePin: (pin: string) => mixed
 }
-export class PinInput extends Component<Props> {
+export class PinInput extends React.Component<Props> {
   textField: any
 
   render() {

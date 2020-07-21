@@ -1,6 +1,6 @@
 // @flow
 
-import { Component } from 'react'
+import * as React from 'react'
 import { AppState } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -20,7 +20,7 @@ type Props = {
   logout: () => void
 }
 
-class AutoLogoutComponent extends Component<Props, State> {
+class AutoLogoutComponent extends React.Component<Props, State> {
   state = {
     timestamp: new Date(),
     appState: 'active'

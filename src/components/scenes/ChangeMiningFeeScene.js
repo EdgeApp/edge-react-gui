@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeCurrencyWallet } from 'edge-core-js/types'
-import React, { type Node, Component } from 'react'
+import * as React from 'react'
 import { ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { connect } from 'react-redux'
@@ -37,7 +37,7 @@ type State = {
   customNetworkFee: Object
 }
 
-export class ChangeMiningFee extends Component<Props, State> {
+export class ChangeMiningFee extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { networkFeeOption = 'standard', customNetworkFee = {} } = props
@@ -97,7 +97,7 @@ export class ChangeMiningFee extends Component<Props, State> {
     )
   }
 
-  renderCustomFee(customFormat: Array<string>): Node {
+  renderCustomFee(customFormat: Array<string>): React.Node {
     const { networkFeeOption, customNetworkFee } = this.state
     if (networkFeeOption !== 'custom') return null
 

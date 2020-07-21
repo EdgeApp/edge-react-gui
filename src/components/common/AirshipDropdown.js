@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type Node, Component } from 'react'
+import * as React from 'react'
 import { Animated, Dimensions, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
@@ -12,7 +12,7 @@ const slideOutTime = 500
 
 type Props = {
   bridge: AirshipBridge<void>,
-  children: Node,
+  children: React.Node,
 
   backgroundColor: string,
 
@@ -28,7 +28,7 @@ type Props = {
 /**
  * A notification that slides down from the top of the screen.
  */
-export class AirshipDropdown extends Component<Props> {
+export class AirshipDropdown extends React.Component<Props> {
   offset: Animated.Value
   timeout: TimeoutID | void
 

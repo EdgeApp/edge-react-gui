@@ -3,7 +3,8 @@
 // todo: enable @react-native-community/netinfo for react-native >= 0.60 or figure out how to use with Jetifier for current version
 // "@react-native-community/netinfo": "3.2.1"
 // import NetInfo from '@react-native-community/netinfo'
-import { Component } from 'react'
+
+import * as React from 'react'
 import { connect } from 'react-redux'
 
 import s from '../../locales/strings'
@@ -16,7 +17,7 @@ type Props = {
 
 const NetInfo = {}
 
-class NetworkActivityComponent extends Component<Props> {
+class NetworkActivityComponent extends React.Component<Props> {
   netInfoUnsubscribe: Function | null = null
 
   componentDidMount() {

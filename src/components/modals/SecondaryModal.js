@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -16,7 +16,7 @@ export type Props = {
   onBackdropPress: () => void,
   onModalHide: () => void
 }
-export class SecondaryModal extends Component<Props> {
+export class SecondaryModal extends React.Component<Props> {
   render() {
     const { error, isSweeping, isActive, onBackButtonPress, onBackdropPress, onModalHide } = this.props
 

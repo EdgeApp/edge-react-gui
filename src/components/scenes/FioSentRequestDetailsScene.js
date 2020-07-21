@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import * as intl from '../../locales/intl.js'
@@ -33,7 +33,7 @@ type LocalState = {
   focused: boolean
 }
 
-export class FioSentRequestDetailsComponent extends Component<Props, LocalState> {
+export class FioSentRequestDetailsComponent extends React.Component<Props, LocalState> {
   constructor(props: Props) {
     super(props)
     const state: LocalState = {

@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -42,7 +42,7 @@ type LocalState = {
   loading: boolean
 }
 
-class SelectFioAddress extends Component<Props, LocalState> {
+class SelectFioAddress extends React.Component<Props, LocalState> {
   constructor(props: Props) {
     super(props)
     this.state = {

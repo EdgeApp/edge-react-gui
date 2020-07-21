@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
@@ -24,7 +24,7 @@ type State = {
   personName: string
 }
 
-export class TransactionDetailsPersonInput extends Component<Props, State> {
+export class TransactionDetailsPersonInput extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = { personName: props.personName }

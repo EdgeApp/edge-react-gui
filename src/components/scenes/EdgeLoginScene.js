@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeLobby } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
@@ -20,7 +20,7 @@ type EdgeLoginSceneProps = {
   decline(): void
 }
 
-export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
+export default class EdgeLoginScene extends React.Component<EdgeLoginSceneProps> {
   renderBody() {
     let message = this.props.error
     if (!this.props.error) {

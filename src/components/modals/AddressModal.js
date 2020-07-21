@@ -2,7 +2,7 @@
 
 import { FormField, MaterialInputStyle, TertiaryButton } from 'edge-components'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import {
   ActivityIndicator,
   Clipboard,
@@ -72,7 +72,7 @@ type State = {
 
 type Props = StateProps & OwnProps & DispatchProps
 
-class AddressModalConnected extends Component<Props, State> {
+class AddressModalConnected extends React.Component<Props, State> {
   fioCheckQueue: number = 0
 
   constructor(props: Props) {

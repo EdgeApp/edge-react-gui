@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type Node } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -27,7 +27,7 @@ type FioDomainNameProps = {
 type FioNameProps = {
   name: string,
   expiration: string,
-  icon: Node
+  icon: React.Node
 }
 
 const ionIconSize = THEME.rem(2.375)

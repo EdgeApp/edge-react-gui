@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js/src/types/types'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -55,7 +55,7 @@ type State = {
   memo: string
 }
 
-export class FioRequestConfirmationConnected extends Component<Props, State> {
+export class FioRequestConfirmationConnected extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

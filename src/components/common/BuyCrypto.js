@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
@@ -17,7 +17,7 @@ export type Props = {
   wallet: GuiWallet
 }
 
-export default class BuyCrypto extends Component<Props> {
+export default class BuyCrypto extends React.Component<Props> {
   getCurrencyName = () => {
     const { wallet } = this.props
     return wallet.currencyNames[wallet.currencyCode]

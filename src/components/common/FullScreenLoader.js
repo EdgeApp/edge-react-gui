@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View, ViewPropTypes } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -11,7 +11,7 @@ type Props = {
   size?: 'large' | 'small'
 }
 
-class FullScreenLoader extends Component<Props> {
+class FullScreenLoader extends React.Component<Props> {
   render() {
     const { size, indicatorStyles } = this.props
     return (

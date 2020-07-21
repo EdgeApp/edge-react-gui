@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Alert, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
@@ -27,7 +27,7 @@ type State = {
   walletName: string
 }
 
-export class CreateWalletName extends Component<Props, State> {
+export class CreateWalletName extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     let walletName = ''
@@ -106,7 +106,7 @@ export type WalletNameInputProps = {
   onNext: () => void
 }
 
-class WalletNameInput extends Component<WalletNameInputProps> {
+class WalletNameInput extends React.Component<WalletNameInputProps> {
   render() {
     const MaterialInputOnWhiteStyle = {
       ...MaterialInputOnWhite,

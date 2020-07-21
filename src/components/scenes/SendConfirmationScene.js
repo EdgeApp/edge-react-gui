@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
@@ -98,7 +98,7 @@ type State = {|
   fioSender: FioSenderInfo
 |}
 
-export class SendConfirmation extends Component<Props, State> {
+export class SendConfirmation extends React.Component<Props, State> {
   pinInput: any
   flipInput: any
 

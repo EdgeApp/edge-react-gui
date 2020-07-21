@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, Text, View } from 'react-native'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
 
@@ -31,7 +31,7 @@ export type Props = {
   exchangeRate: number
 }
 
-export default class ControlPanel extends Component<Props> {
+export default class ControlPanel extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, {
       primaryDisplayDenomination: true,

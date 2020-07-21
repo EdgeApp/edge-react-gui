@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react'
 import { Linking, Platform } from 'react-native'
 import * as StoreReview from 'react-native-store-review'
 import { sprintf } from 'sprintf-js'

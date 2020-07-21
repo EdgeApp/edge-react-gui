@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 
 import THEME from '../../../../theme/variables/airbitz.js'
@@ -10,7 +10,7 @@ type Props = {
   iconName: string
 }
 
-export default class OptionIcon extends Component<Props> {
+export default class OptionIcon extends React.Component<Props> {
   render() {
     return (
       <FAIcon

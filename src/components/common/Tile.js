@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type Node, PureComponent } from 'react'
+import * as React from 'react'
 import { Clipboard, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
@@ -11,7 +11,7 @@ import { showToast } from '../services/AirshipInstance.js'
 
 type OwnProps = {
   body?: string,
-  children?: Node,
+  children?: React.Node,
   error?: boolean,
   onPress?: () => void,
   title: string,
@@ -19,7 +19,7 @@ type OwnProps = {
 }
 type Props = OwnProps & ThemeProps
 
-class TileComponent extends PureComponent<Props> {
+class TileComponent extends React.PureComponent<Props> {
   copy = () => {
     if (!this.props.body) return
     Clipboard.setString(this.props.body)

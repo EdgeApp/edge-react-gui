@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { asObject, asString } from 'cleaners'
 import { createInputModal } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js/types'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { FlatList, Image, Platform, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -94,7 +94,7 @@ const MODAL_DATA_FILE = 'pluginModalTracker.json'
 const DEVELOPER_PLUGIN_KEY = 'developerPlugin'
 const asDeveloperUri = asObject({ uri: asString })
 
-class GuiPluginList extends Component<Props, State> {
+class GuiPluginList extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeDenomination } from 'edge-core-js'
-import React, { PureComponent } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
@@ -42,7 +42,7 @@ export type DispatchProps = {
 
 type Props = OwnProps & StateProps & DispatchProps
 
-export class WalletListTokenRow extends PureComponent<Props> {
+export class WalletListTokenRow extends React.PureComponent<Props> {
   selectWallet = () => {
     const { parentId: walletId, currencyCode } = this.props
     this.props.selectWallet(walletId, currencyCode)

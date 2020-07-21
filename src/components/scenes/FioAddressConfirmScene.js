@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Alert, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
@@ -38,7 +38,7 @@ export type NavigationProps = {
 
 type Props = NavigationProps & StateProps
 
-export class FioAddressConfirmScene extends Component<Props, State> {
+export class FioAddressConfirmScene extends React.Component<Props, State> {
   state: State = {
     balance: null,
     sliderDisabled: false,

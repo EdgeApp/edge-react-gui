@@ -1,7 +1,6 @@
 // @flow
 
-import type { Node } from 'react'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
@@ -13,12 +12,12 @@ type FullScreenTransitionState = {
 }
 
 type FullScreenTransitionProps = {
-  image: Node,
-  text: Node,
+  image: React.Node,
+  text: React.Node,
   onDone: Function
 }
 
-export class FullScreenTransitionComponent extends Component<FullScreenTransitionProps, FullScreenTransitionState> {
+export class FullScreenTransitionComponent extends React.Component<FullScreenTransitionProps, FullScreenTransitionState> {
   constructor(props: FullScreenTransitionProps) {
     super(props)
     this.state = {

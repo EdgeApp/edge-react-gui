@@ -2,7 +2,7 @@
 
 import { FormField, MaterialInputStyle } from 'edge-components'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { FlatList, Image, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -50,7 +50,7 @@ const newDomainItem = {
   label: s.strings.fio_address_list_register_domain
 }
 
-class DomainListModalConnected extends Component<Props, State> {
+class DomainListModalConnected extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

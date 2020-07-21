@@ -2,7 +2,7 @@
 import { bns } from 'biggystring'
 import { createSimpleConfirmModal } from 'edge-components'
 import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
-import React from 'react'
+import * as React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'

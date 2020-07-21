@@ -2,7 +2,7 @@
 
 import { type Disklet } from 'disklet'
 import { type EdgeContext, type EdgeUserInfo } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
@@ -26,7 +26,7 @@ type State = {
   mostRecentUsernames: Array<string>
 }
 
-export default class UserList extends Component<Props, State> {
+export default class UserList extends React.Component<Props, State> {
   cleanups: Array<() => mixed> = []
 
   constructor(props: Props) {

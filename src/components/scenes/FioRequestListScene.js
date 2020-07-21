@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
@@ -58,7 +58,7 @@ export type OwnProps = {
 
 type Props = OwnProps & StateProps & DispatchProps
 
-export class FioRequestList extends Component<Props, LocalState> {
+export class FioRequestList extends React.Component<Props, LocalState> {
   headerIconSize = THEME.rem(1.375)
   willFocusSubscription: { remove: () => void } | null = null
 

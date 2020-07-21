@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type Node, Component } from 'react'
+import * as React from 'react'
 import { Dimensions, Platform, StyleSheet, Text, View } from 'react-native'
 import Modal from 'react-native-modal'
 
@@ -9,10 +9,10 @@ import { styles } from './styles.js'
 
 // CONTAINER /////////////////////////////////////////////////////////////////////////////
 export type ContainerProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Container extends Component<ContainerProps> {
+export class Container extends React.Component<ContainerProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -25,10 +25,10 @@ export class Container extends Component<ContainerProps> {
 
 // HEADER /////////////////////////////////////////////////////////////////////////////
 export type HeaderProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Header extends Component<HeaderProps> {
+export class Header extends React.Component<HeaderProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -43,10 +43,10 @@ export class Header extends Component<HeaderProps> {
 
 // FOOTER /////////////////////////////////////////////////////////////////////////////
 export type FooterProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Footer extends Component<FooterProps> {
+export class Footer extends React.Component<FooterProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -59,10 +59,10 @@ export class Footer extends Component<FooterProps> {
 
 // ICON /////////////////////////////////////////////////////////////////////////////
 export type IconProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Icon extends Component<IconProps> {
+export class Icon extends React.Component<IconProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -75,10 +75,10 @@ export class Icon extends Component<IconProps> {
 
 // MESSAGE /////////////////////////////////////////////////////////////////////////////
 export type MessageProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Message extends Component<MessageProps> {
+export class Message extends React.Component<MessageProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -91,10 +91,10 @@ export class Message extends Component<MessageProps> {
 
 // ITEM /////////////////////////////////////////////////////////////////////////////
 type ItemProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Item extends Component<ItemProps> {
+export class Item extends React.Component<ItemProps> {
   render() {
     const { children, style, ...props } = this.props
 
@@ -108,10 +108,10 @@ export class Item extends Component<ItemProps> {
 
 // ROW /////////////////////////////////////////////////////////////////////////////
 type RowProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Row extends Component<RowProps> {
+export class Row extends React.Component<RowProps> {
   render() {
     const { children, style, ...props } = this.props
 
@@ -125,7 +125,7 @@ export class Row extends Component<RowProps> {
 
 // NON_INTERACTIVE_MODAL /////////////////////////////////////////////////////////////////////////////
 export type Props = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles,
   durationInSeconds: number,
   isActive: boolean,
@@ -135,7 +135,7 @@ export type Props = {
   onModalHide: () => void,
   onModalShow: () => void
 }
-export class NonInteractiveModal extends Component<Props> {
+export class NonInteractiveModal extends React.Component<Props> {
   static Header = Header
   static Footer = Footer
   static Icon = Icon

@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeAccount } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -37,7 +37,7 @@ type State = {
   cleanedPrivateKey: string
 }
 
-class CreateWalletImportComponent extends Component<Props, State> {
+class CreateWalletImportComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

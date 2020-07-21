@@ -1,7 +1,7 @@
 // @flow
 
 import { log10 } from 'biggystring'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { View } from 'react-native'
 
 import * as intl from '../../../../locales/intl.js'
@@ -17,7 +17,7 @@ type Props = {
   secondaryDisplayAmount: string | number
 }
 
-export default class ExchangeRate extends Component<Props> {
+export default class ExchangeRate extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
     const diffElement = UTILS.getObjectDiff(this.props, nextProps, {
       primaryInfo: true,

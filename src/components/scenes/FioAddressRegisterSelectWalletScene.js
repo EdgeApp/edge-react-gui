@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeDenomination, type EdgeTransaction } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Alert, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
@@ -54,7 +54,7 @@ type LocalState = {
 
 type Props = NavigationProps & StateProps & DispatchProps
 
-export class FioAddressRegisterSelectWalletScene extends Component<Props, LocalState> {
+export class FioAddressRegisterSelectWalletScene extends React.Component<Props, LocalState> {
   state: LocalState = {
     loading: false,
     activationCost: 40,
