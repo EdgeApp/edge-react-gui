@@ -1,7 +1,7 @@
 /* eslint-disable quote-props */
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
 import slowlog from 'react-native-slowlog'
@@ -26,7 +26,7 @@ type State = {
   pageY: number
 }
 
-export class MenuDropDown extends Component<Props, State> {
+export class MenuDropDown extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

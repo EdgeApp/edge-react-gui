@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Animated, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
@@ -39,7 +39,7 @@ const getInitialState = (props: Props) => ({
   secondaryDisplayAmount: props.secondaryDisplayAmount || ''
 })
 
-export default class FlipInput extends Component<Props, State> {
+export default class FlipInput extends React.Component<Props, State> {
   animatedValue: Animated.Value
   frontInterpolate: Animated.Value
   backInterpolate: Animated.Value

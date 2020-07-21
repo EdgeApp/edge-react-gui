@@ -1,16 +1,15 @@
 // @flow
 
-import type { Node } from 'react'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, Text as RNText, TouchableHighlight, View } from 'react-native'
 
 import styles, { rawStyles } from './styles.js'
 
 export type TextProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.style
 }
-export class Text extends Component<TextProps> {
+export class Text extends React.Component<TextProps> {
   render() {
     const { children, style, ...props } = this.props
 
@@ -23,10 +22,10 @@ export class Text extends Component<TextProps> {
 }
 
 export type RowProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.style
 }
-export class Row extends Component<RowProps> {
+export class Row extends React.Component<RowProps> {
   render() {
     const { children, style, ...props } = this.props
 
@@ -39,10 +38,10 @@ export class Row extends Component<RowProps> {
 }
 
 export type ItemProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.style
 }
-export class Item extends Component<ItemProps> {
+export class Item extends React.Component<ItemProps> {
   render() {
     const { children, style, ...props } = this.props
 
@@ -55,10 +54,10 @@ export class Item extends Component<ItemProps> {
 }
 
 export type LeftProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.style
 }
-export class Left extends Component<LeftProps> {
+export class Left extends React.Component<LeftProps> {
   render() {
     const { children, style, ...props } = this.props
 
@@ -71,10 +70,10 @@ export class Left extends Component<LeftProps> {
 }
 
 export type CenterProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.style
 }
-export class Center extends Component<CenterProps> {
+export class Center extends React.Component<CenterProps> {
   render() {
     const { children, style, ...props } = this.props
 
@@ -87,10 +86,10 @@ export class Center extends Component<CenterProps> {
 }
 
 export type RightProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.style
 }
-export class Right extends Component<RightProps> {
+export class Right extends React.Component<RightProps> {
   render() {
     const { children, style, ...props } = this.props
 
@@ -103,12 +102,12 @@ export class Right extends Component<RightProps> {
 }
 
 export type ButtonProps = {
-  children: Node,
+  children: React.Node,
   onPress: Function,
   underlayColor?: string,
   style?: StyleSheet.style
 }
-export class Button extends Component<ButtonProps> {
+export class Button extends React.Component<ButtonProps> {
   static Row = Row
   static Item = Item
   static Left = Left

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Dropdown } from 'react-native-material-dropdown'
 
 import THEME from '../../theme/variables/airbitz'
@@ -26,7 +26,7 @@ type State = {
   autoFocus: boolean
 }
 
-class Select extends Component<Props, State> {
+class Select extends React.Component<Props, State> {
   defaultFontSize = 16
   defaultLabelFontSize = 12
 

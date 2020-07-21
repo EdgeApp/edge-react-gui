@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
@@ -26,7 +26,7 @@ export type PasswordRecoveryReminderModalProps = PasswordRecoveryReminderModalOw
   PasswordRecoveryReminderModalStateProps &
   PasswordRecoveryReminderModalDispatchProps
 
-export class PasswordRecoveryReminderModalComponent extends Component<PasswordRecoveryReminderModalProps> {
+export class PasswordRecoveryReminderModalComponent extends React.Component<PasswordRecoveryReminderModalProps> {
   render() {
     const { isVisible, hidePasswordRecoveryReminderModal, onGoToPasswordRecoveryScene } = this.props
     return (

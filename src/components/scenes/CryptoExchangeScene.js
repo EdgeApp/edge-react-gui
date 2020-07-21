@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import { type EdgeAccount } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Alert, Keyboard, StyleSheet, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import slowlog from 'react-native-slowlog'
@@ -75,7 +75,7 @@ type State = {
   toExchangeAmount: string
 }
 
-class CryptoExchangeComponent extends Component<Props, State> {
+class CryptoExchangeComponent extends React.Component<Props, State> {
   fromAmountNative: string
   fromAmountDisplay: string
   toAmountNative: string

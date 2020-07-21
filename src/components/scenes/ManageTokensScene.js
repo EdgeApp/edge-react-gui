@@ -2,7 +2,7 @@
 
 import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
@@ -39,7 +39,7 @@ export type State = {
   combinedCurrencyInfos: Array<EdgeMetaToken>
 }
 
-export default class ManageTokens extends Component<ManageTokensProps, State> {
+export default class ManageTokens extends React.Component<ManageTokensProps, State> {
   constructor(props: ManageTokensProps) {
     super(props)
     this.state = {

@@ -1,7 +1,6 @@
 // @flow
 
-import type { Node } from 'react'
-import React from 'react'
+import * as React from 'react'
 import { Text } from 'react-native'
 
 import { dayText } from '../../styles/common/textStyles.js'
@@ -10,7 +9,7 @@ import { SettingsRow } from './SettingsRow.js'
 
 type Props = {
   disabled?: boolean,
-  icon?: Node,
+  icon?: React.Node,
   text: string,
   right: string,
   onPress: () => void
@@ -19,7 +18,7 @@ type Props = {
 /**
  * A settings row with a smaller text on the right side.
  */
-export function SettingsLabelRow(props: Props): Node {
+export function SettingsLabelRow(props: Props): React.Node {
   const { disabled, icon, text, right, onPress } = props
 
   return <SettingsRow disabled={disabled} icon={icon} text={text} right={<Text style={styles.labelText}>{right}</Text>} onPress={onPress} />

@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Platform, StyleSheet, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 
 import s from '../../locales/strings.js'
@@ -22,7 +22,7 @@ type State = {
   notes: string
 }
 
-export class TransactionDetailsNotesInput extends Component<Props, State> {
+export class TransactionDetailsNotesInput extends React.Component<Props, State> {
   notesInput: TextInput
 
   constructor(props: Props) {

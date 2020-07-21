@@ -1,6 +1,6 @@
 // @flow
 
-import { Component } from 'react'
+import * as React from 'react'
 import Contacts from 'react-native-contacts'
 import { connect } from 'react-redux'
 
@@ -185,7 +185,7 @@ const merchantPartners = [
   }
 ]
 
-class ContactsLoaderComponent extends Component<Props> {
+class ContactsLoaderComponent extends React.Component<Props> {
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const { contactsPermission } = nextProps
 

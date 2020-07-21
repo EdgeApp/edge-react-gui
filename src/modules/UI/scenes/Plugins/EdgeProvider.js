@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeSpendTarget, EdgeTransaction, JsonObject } from 'edge-core-js'
-import React from 'react'
+import * as React from 'react'
 import { Linking } from 'react-native'
 import Mailer from 'react-native-mail'
 import { Actions } from 'react-native-router-flux'

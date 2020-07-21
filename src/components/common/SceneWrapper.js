@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type Node, Component } from 'react'
+import * as React from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
@@ -19,7 +19,7 @@ type Props = {
   // or a function that accepts the current gap and returns an element.
   // The function will be called on each render, allowing the scene to react
   // to changes in the gap.
-  children: Node | ((gap: SafeAreaGap) => Node),
+  children: React.Node | ((gap: SafeAreaGap) => React.Node),
 
   // True if this scene should shrink to avoid the keyboard:
   avoidKeyboard?: boolean,
@@ -46,7 +46,7 @@ type Props = {
  *
  * Also draws a common gradient background under the scene.
  */
-export class SceneWrapper extends Component<Props> {
+export class SceneWrapper extends React.Component<Props> {
   render() {
     const { avoidKeyboard = false, hasHeader = true, hasTabs = true } = this.props
 

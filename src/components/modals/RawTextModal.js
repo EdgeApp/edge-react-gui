@@ -1,7 +1,7 @@
 // @flow
 
 import { PrimaryButton } from 'edge-components'
-import React, { type Node, Component } from 'react'
+import * as React from 'react'
 import { Clipboard, ScrollView, View } from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
@@ -14,12 +14,12 @@ import { type AirshipBridge, AirshipModal, ContentArea, IconCircle } from './mod
 type OwnProps = {
   bridge: AirshipBridge<void>,
   body: string,
-  icon?: Node,
+  icon?: React.Node,
   title: string
 }
 type Props = OwnProps & ThemeProps
 
-export class RawTextModalComponent extends Component<Props> {
+export class RawTextModalComponent extends React.Component<Props> {
   copyToClipboard = () => {
     Clipboard.setString(this.props.body)
     showToast(s.strings.fragment_copied)

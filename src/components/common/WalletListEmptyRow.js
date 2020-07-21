@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, StyleSheet, TouchableHighlight, View } from 'react-native'
 
 import { type WalletListMenuKey } from '../../actions/WalletListMenuActions.js'
@@ -13,7 +13,7 @@ type Props = {
   executeWalletRowOption?: (walletId: string, option: WalletListMenuKey) => void
 }
 
-export class WalletListEmptyRow extends Component<Props> {
+export class WalletListEmptyRow extends React.Component<Props> {
   render() {
     const { walletId, executeWalletRowOption } = this.props
     return (

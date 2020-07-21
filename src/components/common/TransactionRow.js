@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
@@ -39,7 +39,7 @@ type Props = TransactionRowOwnProps & TransactionRowStateProps
 
 type State = {}
 
-export class TransactionRowComponent extends Component<Props, State> {
+export class TransactionRowComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)

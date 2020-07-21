@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
@@ -39,7 +39,7 @@ export type FioConnectWalletConfirmDispatchProps = {
 
 type Props = FioConnectWalletConfirmStateProps & FioConnectWalletConfirmDispatchProps & FioConnectWalletConfirmRouteProps
 
-export class FioConnectWalletConfirmScene extends Component<Props, State> {
+export class FioConnectWalletConfirmScene extends React.Component<Props, State> {
   state = {
     acknowledge: false,
     connectWalletsLoading: false

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { PureComponent } from 'react'
+import * as React from 'react'
 import { Animated, Easing, View } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -19,7 +19,7 @@ type ProgressBarState = {
   isWalletProgressVisible: boolean
 }
 
-export class ProgressBar extends PureComponent<ProgressBarProps, ProgressBarState> {
+export class ProgressBar extends React.PureComponent<ProgressBarProps, ProgressBarState> {
   animation: Animated.Value
 
   constructor(props: ProgressBarProps) {

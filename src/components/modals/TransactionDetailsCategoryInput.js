@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 
 import s from '../../locales/strings.js'
@@ -32,7 +32,7 @@ type State = {
   subCategory: string
 }
 
-export class TransactionDetailsCategoryInput extends Component<Props, State> {
+export class TransactionDetailsCategoryInput extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { category, subCategory } = props

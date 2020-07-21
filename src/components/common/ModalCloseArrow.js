@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 

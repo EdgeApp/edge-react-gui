@@ -1,13 +1,13 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Text } from 'react-native'
 
 import { scale } from '../../../../util/scaling.js'
 import { getObjectDiff } from '../../../../util/utils.js'
 import styles from './style'
 
-export default class FormattedText extends Component {
+export default class FormattedText extends React.Component {
   shouldComponentUpdate(nextProps) {
     const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
     return !!diffElement

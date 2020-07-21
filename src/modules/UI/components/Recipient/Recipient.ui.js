@@ -1,16 +1,15 @@
 // @flow
 
-import type { Node } from 'react'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, Text as RNText, View } from 'react-native'
 
 import styles from './styles'
 
 export type TextProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Text extends Component<TextProps> {
+export class Text extends React.Component<TextProps> {
   render() {
     const { children, style, ...props } = this.props
 
@@ -23,10 +22,10 @@ export class Text extends Component<TextProps> {
 }
 
 export type RowProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Row extends Component<RowProps> {
+export class Row extends React.Component<RowProps> {
   render() {
     const { children, style, ...props } = this.props
 
@@ -39,10 +38,10 @@ export class Row extends Component<RowProps> {
 }
 
 export type ItemProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Item extends Component<ItemProps> {
+export class Item extends React.Component<ItemProps> {
   render() {
     const { children, style, ...props } = this.props
 
@@ -55,10 +54,10 @@ export class Item extends Component<ItemProps> {
 }
 
 export type Props = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Recipient extends Component<Props> {
+export class Recipient extends React.Component<Props> {
   static Item = Item
   static Row = Row
   static Text = Text

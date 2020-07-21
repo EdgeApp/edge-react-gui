@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
@@ -72,7 +72,7 @@ type State = {
   createdWallet: Promise<EdgeCurrencyWallet>
 }
 
-export class CreateWalletAccountSelect extends Component<Props, State> {
+export class CreateWalletAccountSelect extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { selectedFiat, selectedWalletType, createAccountBasedWallet, accountName } = props

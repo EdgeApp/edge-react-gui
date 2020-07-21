@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { TextField } from 'react-native-material-textfield'
 
 import { scale } from '../../util/scaling.js'
@@ -41,7 +41,7 @@ type State = {
   inputText: string
 }
 
-class InputWithAutoFocus extends Component<Props, State> {
+class InputWithAutoFocus extends React.Component<Props, State> {
   static defaultProps = {
     autoCapitalize: 'none',
     autoCorrect: false,

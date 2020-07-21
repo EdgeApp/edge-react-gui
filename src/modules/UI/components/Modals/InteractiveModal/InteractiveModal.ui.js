@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type Node, Component } from 'react'
+import * as React from 'react'
 import { Dimensions, Platform, StyleSheet, Text, View } from 'react-native'
 import Modal from 'react-native-modal'
 
@@ -8,10 +8,10 @@ import { styles } from './styles.js'
 
 // CONTAINER /////////////////////////////////////////////////////////////////////////////
 export type ContainerProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Container extends Component<ContainerProps> {
+export class Container extends React.Component<ContainerProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -24,10 +24,10 @@ export class Container extends Component<ContainerProps> {
 
 // HEADER /////////////////////////////////////////////////////////////////////////////
 export type HeaderProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Header extends Component<HeaderProps> {
+export class Header extends React.Component<HeaderProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -50,7 +50,7 @@ export class Header extends Component<HeaderProps> {
 type AndroidHackSpacerProps = {
   style?: StyleSheet.Styles
 }
-export class AndroidHackSpacer extends Component<AndroidHackSpacerProps> {
+export class AndroidHackSpacer extends React.Component<AndroidHackSpacerProps> {
   render() {
     return <View style={styles.androidHackSpacer} />
   }
@@ -58,10 +58,10 @@ export class AndroidHackSpacer extends Component<AndroidHackSpacerProps> {
 
 // ICON /////////////////////////////////////////////////////////////////////////////
 export type IconProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Icon extends Component<IconProps> {
+export class Icon extends React.Component<IconProps> {
   static AndroidHackSpacer = AndroidHackSpacer
   render() {
     const { children, style, ...props } = this.props
@@ -75,10 +75,10 @@ export class Icon extends Component<IconProps> {
 
 // TITLE /////////////////////////////////////////////////////////////////////////////
 type TitleProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Title extends Component<TitleProps> {
+export class Title extends React.Component<TitleProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -91,10 +91,10 @@ export class Title extends Component<TitleProps> {
 
 // DESCRIPTION /////////////////////////////////////////////////////////////////////////////
 export type DescriptionProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Description extends Component<DescriptionProps> {
+export class Description extends React.Component<DescriptionProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -107,10 +107,10 @@ export class Description extends Component<DescriptionProps> {
 
 // BODY /////////////////////////////////////////////////////////////////////////////
 type BodyProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Body extends Component<BodyProps> {
+export class Body extends React.Component<BodyProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -123,10 +123,10 @@ export class Body extends Component<BodyProps> {
 
 // FOOTER /////////////////////////////////////////////////////////////////////////////
 type FooterProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Footer extends Component<FooterProps> {
+export class Footer extends React.Component<FooterProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -139,10 +139,10 @@ export class Footer extends Component<FooterProps> {
 
 // Item /////////////////////////////////////////////////////////////////////////////
 type ItemProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Item extends Component<ItemProps> {
+export class Item extends React.Component<ItemProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -155,10 +155,10 @@ export class Item extends Component<ItemProps> {
 
 // Row /////////////////////////////////////////////////////////////////////////////
 type RowProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-export class Row extends Component<RowProps> {
+export class Row extends React.Component<RowProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -172,11 +172,11 @@ export class Row extends Component<RowProps> {
 // INTERACTIVE_MODAL /////////////////////////////////////////////////////////////////////////////
 type Props = {
   isActive?: boolean,
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles,
   legacy?: boolean
 }
-export class InteractiveModal extends Component<Props> {
+export class InteractiveModal extends React.Component<Props> {
   static Icon = Icon
   static Title = Title
   static Description = Description

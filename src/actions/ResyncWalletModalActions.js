@@ -1,7 +1,7 @@
 // @flow
 
 import { createYesNoModal } from 'edge-components'
-import React from 'react'
+import * as React from 'react'
 
 import { launchModal } from '../components/common/ModalProvider.js'
 import { RESYNC } from '../constants/indexConstants.js'

@@ -2,7 +2,7 @@
 
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { ChangePasswordScreen } from 'edge-login-ui-rn'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz'
@@ -26,7 +26,7 @@ export type ChangePasswordStateProps = {
 
 type ChangePasswordComponent = ChangePasswordOwnProps & ChangePasswordDispatchProps & ChangePasswordStateProps
 
-export class ChangePassword extends Component<ChangePasswordComponent> {
+export class ChangePassword extends React.Component<ChangePasswordComponent> {
   onComplete = () => {
     this.props.onComplete()
   }

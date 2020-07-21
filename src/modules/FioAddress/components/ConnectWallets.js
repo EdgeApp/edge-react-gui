@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, Switch, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -34,7 +34,7 @@ export type OwnProps = {
   disabled: boolean
 }
 
-class ConnectWallets extends Component<FioConnectWalletStateProps & OwnProps, LocalState> {
+class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnProps, LocalState> {
   state = {
     connectWalletsMap: {},
     disconnectWalletsMap: {},

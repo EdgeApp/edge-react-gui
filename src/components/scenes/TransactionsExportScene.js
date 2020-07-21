@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeCurrencyWallet, EdgeGetTransactionsOptions } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Platform, StyleSheet, View } from 'react-native'
 import RNFS from 'react-native-fs'
 import Mailer from 'react-native-mail'
@@ -24,7 +24,7 @@ type StateProps = {
 
 type Props = StateProps & PassedProps
 
-export class TransactionsExportSceneComponent extends Component<Props> {
+export class TransactionsExportSceneComponent extends React.Component<Props> {
   render() {
     return (
       <SceneWrapper background="body">

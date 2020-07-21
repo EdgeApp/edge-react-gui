@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeAccount } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Alert, FlatList, Image, Keyboard, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -27,7 +27,7 @@ type State = {
   searchTerm: string
 }
 
-class CreateWalletSelectCryptoComponent extends Component<Props, State> {
+class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

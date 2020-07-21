@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 
 import iconImage from '../../assets/images/otp/OTP-badge.png'
@@ -12,7 +12,7 @@ type OtpHeroProps = {
   enabled: boolean
 }
 
-export default class OtpHero extends Component<OtpHeroProps> {
+export default class OtpHero extends React.Component<OtpHeroProps> {
   renderText = () => {
     if (this.props.enabled) {
       return <Text style={styles.bodyText}>{s.strings.title_otp_enabled}</Text>

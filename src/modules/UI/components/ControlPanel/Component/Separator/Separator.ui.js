@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import styles from './styles.js'
@@ -8,7 +8,7 @@ import styles from './styles.js'
 export type SeparatorProps = {
   style?: StyleSheet.style
 }
-export class Separator extends Component<SeparatorProps> {
+export class Separator extends React.Component<SeparatorProps> {
   render() {
     const { style, ...props } = this.props
 

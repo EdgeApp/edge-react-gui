@@ -1,13 +1,13 @@
 // @flow
 
-import React, { type ChildrenArray, type Node } from 'react'
+import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
 
 type Props = {
-  children: ChildrenArray<Node>
+  children: React.ChildrenArray<React.Node>
 }
 
 export const iconSize = THEME.rem(3.5)

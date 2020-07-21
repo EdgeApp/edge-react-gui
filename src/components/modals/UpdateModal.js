@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
 
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
@@ -17,7 +17,7 @@ type Props = {
   onSkip(): void
 }
 
-export class UpdateModal extends Component<Props> {
+export class UpdateModal extends React.Component<Props> {
   render() {
     const { bridge } = this.props
 

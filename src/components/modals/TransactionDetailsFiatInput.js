@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
@@ -24,7 +24,7 @@ type State = {
   amount: string
 }
 
-export class TransactionDetailsFiatInput extends Component<Props, State> {
+export class TransactionDetailsFiatInput extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = { amount: props.amount }

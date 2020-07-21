@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { TextField } from 'react-native-material-textfield'
 
@@ -53,7 +53,7 @@ export type Props = {
 }
 export type State = {}
 
-export class PasswordInput extends Component<Props, State> {
+export class PasswordInput extends React.Component<Props, State> {
   render() {
     const props = { ...DEFAULTS, ...this.props }
     return <TextField {...props} />

@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeCurrencyInfo } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -29,7 +29,7 @@ type State = {
   hours: { [hours: string]: boolean }
 }
 
-export class CurrencyNotificationComponent extends Component<Props, State> {
+export class CurrencyNotificationComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

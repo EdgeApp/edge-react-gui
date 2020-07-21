@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
 
 import * as Constants from '../../../../constants/indexConstants'
@@ -30,7 +30,7 @@ export type Props = {
   onNext: () => void
 }
 
-export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
+export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props> {
   launchSelector = () => {
     this.props.launchWalletSelector()
   }

@@ -1,7 +1,7 @@
 // @flow
 
 import { isEqual } from 'lodash'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Text } from 'react-native'
 
 import * as Constants from '../../../../constants/indexConstants.js'
@@ -30,7 +30,7 @@ type State = {
   password: string
 }
 
-export class PasswordReminderModal extends Component<Props, State> {
+export class PasswordReminderModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
 

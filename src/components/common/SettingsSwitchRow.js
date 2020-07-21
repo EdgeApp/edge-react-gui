@@ -1,13 +1,13 @@
 // @flow
 
-import React, { type Node } from 'react'
+import * as React from 'react'
 import { Switch } from 'react-native'
 
 import { SettingsRow } from './SettingsRow.js'
 
 type Props = {
   disabled?: boolean,
-  icon?: Node,
+  icon?: React.Node,
   text: string,
   value: boolean,
   onPress: () => void
@@ -16,7 +16,7 @@ type Props = {
 /**
  * A settings row with a switch component on the right side.
  */
-export function SettingsSwitchRow(props: Props): Node {
+export function SettingsSwitchRow(props: Props): React.Node {
   const { disabled = false, icon, text, value, onPress } = props
 
   const right = <Switch disabled={disabled} onChange={onPress} value={value} />

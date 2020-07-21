@@ -1,13 +1,13 @@
 // @flow
 
-import React, { type ComponentType } from 'react'
+import * as React from 'react'
 import { Dimensions, Platform } from 'react-native'
 import Modal from 'react-native-modal'
 
 export type ModalProps<Result> = { onDone(result: Result): mixed }
 
 type QueueEntry = {
-  Component: ComponentType<any>,
+  Component: React.ComponentType<any>,
   onDone: (result: any) => mixed,
   modalProps: Object
 }
@@ -67,7 +67,7 @@ export class ModalProvider extends React.Component<{}, State> {
     this.setState({ isHiding: false, queue: this.state.queue.slice(1) })
   }
 
-  launchModal<Result>(Component: ComponentType<ModalProps<Result>>, modalProps: Object): Promise<Result> {
+  launchModal<Result>(Component: React.ComponentType<ModalProps<Result>>, modalProps: Object): Promise<Result> {
     return new Promise(resolve =>
       // Push the component onto the end of the queue:
       this.setState({
@@ -106,6 +106,6 @@ function getInstance() {
  * Receives a single prop, `onDone`, which it should call to hide itself.
  * The value passed to `onDone` becomes the returned promise result.
  */
-export async function launchModal<Result>(Component: ComponentType<ModalProps<Result>>, modalProps: Object = {}): Promise<Result> {
+export async function launchModal<Result>(Component: React.ComponentType<ModalProps<Result>>, modalProps: Object = {}): Promise<Result> {
   return getInstance().launchModal(Component, modalProps)
 }

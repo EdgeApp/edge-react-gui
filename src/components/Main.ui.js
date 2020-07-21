@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
@@ -136,7 +136,7 @@ type StateProps = {}
 
 type Props = DispatchProps & StateProps
 
-export class MainComponent extends Component<Props> {
+export class MainComponent extends React.Component<Props> {
   backPressedOnce: boolean
 
   constructor(props: Props) {

@@ -1,8 +1,7 @@
 // @flow
 
 import { createYesNoModal } from 'edge-components'
-import type { Node } from 'react'
-import React from 'react'
+import * as React from 'react'
 import { Alert, Linking, TouchableOpacity } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
@@ -14,7 +13,7 @@ import { launchModal } from './ModalProvider.js'
 type AddressTextWithBlockExplorerModalProps = {
   address: string,
   addressExplorer: string | null,
-  children: Node
+  children: React.Node
 }
 
 const AddressTextWithBlockExplorerModal = (props: AddressTextWithBlockExplorerModalProps) => {

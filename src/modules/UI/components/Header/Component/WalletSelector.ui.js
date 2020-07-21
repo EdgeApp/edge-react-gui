@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import slowlog from 'react-native-slowlog'
 
 import * as Constants from '../../../../../constants/indexConstants'
@@ -21,7 +21,7 @@ export type DispatchProps = {
 
 type Props = StateProps & DispatchProps
 
-export default class WalletSelector extends Component<Props, State> {
+export default class WalletSelector extends React.Component<Props, State> {
   constructor(props: any) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)

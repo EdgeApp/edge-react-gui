@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { FlatList, StyleSheet, TouchableHighlight, View } from 'react-native'
 
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -21,7 +21,7 @@ type Props = {
   categories: Array<string>
 }
 
-class SubCategorySelect extends Component<Props, State> {
+class SubCategorySelect extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

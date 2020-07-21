@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 
 import * as intl from '../../locales/intl.js'
@@ -50,7 +50,7 @@ type Props = StateProps & OwnProps
 
 const DIVIDE_PRECISION = 18
 
-export class CryptoExchangeWalletListRow extends Component<Props, LocalState> {
+export class CryptoExchangeWalletListRow extends React.Component<Props, LocalState> {
   constructor(props: Props) {
     super(props)
     this.state = {

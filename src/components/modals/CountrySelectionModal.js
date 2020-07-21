@@ -1,7 +1,7 @@
 // @flow
 
 import { FormField, MaterialInputStyle } from 'edge-components'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { FlatList, Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { getCountry } from 'react-native-localize'
 
@@ -23,7 +23,7 @@ type CountrySelectionModalState = {
   countryCode: string
 }
 
-export class CountrySelectionModal extends Component<CountrySelectionModalProps, CountrySelectionModalState> {
+export class CountrySelectionModal extends React.Component<CountrySelectionModalProps, CountrySelectionModalState> {
   constructor(props: CountrySelectionModalProps) {
     super(props)
     const deviceCountry = getCountry() // "US"

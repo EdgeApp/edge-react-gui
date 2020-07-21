@@ -2,7 +2,7 @@
 
 import { PrimaryButton, SecondaryButton, TertiaryButton } from 'edge-components'
 import { type EdgeTransaction } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Clipboard, Linking } from 'react-native'
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
@@ -20,7 +20,7 @@ export type AdvancedTransactionDetailsModalOwnProps = {
   signedTx?: string
 }
 
-export class AdvancedTransactionDetailsModal extends Component<AdvancedTransactionDetailsModalOwnProps> {
+export class AdvancedTransactionDetailsModal extends React.Component<AdvancedTransactionDetailsModalOwnProps> {
   handleClick = () => {
     if (this.props.txExplorerUrl) {
       Linking.canOpenURL(this.props.txExplorerUrl).then(supported => {

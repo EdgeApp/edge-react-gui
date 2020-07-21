@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeMetaToken } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
@@ -27,7 +27,7 @@ export type Props = {
   goToEditTokenScene: string => void
 }
 
-class ManageTokenRow extends Component<Props, State> {
+class ManageTokenRow extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

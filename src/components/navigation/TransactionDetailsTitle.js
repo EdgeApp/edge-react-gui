@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeTransaction } from 'edge-core-js'
-import React from 'react'
+import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'

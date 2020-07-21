@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type Node } from 'react'
+import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
@@ -8,7 +8,7 @@ import { nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz'
 
 type Props = {
-  icon?: Node,
+  icon?: React.Node,
   text: string
 }
 

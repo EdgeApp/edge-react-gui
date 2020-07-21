@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeCurrencyInfo } from 'edge-core-js'
-import React from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Dimensions, Platform, Text, TouchableOpacity, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Modal from 'react-native-modal'
@@ -22,7 +22,7 @@ const gradientStart = { x: 0, y: 0 }
 const gradientEnd = { x: 1, y: 0 }
 const gradientColors = [THEME.COLORS.GRADIENT.DARK, THEME.COLORS.GRADIENT.LIGHT]
 
-export class StaticModalComponent extends Component<Props> {
+export class StaticModalComponent extends React.Component<Props> {
   reset: TimeoutID
   shouldComponentUpdate(nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })

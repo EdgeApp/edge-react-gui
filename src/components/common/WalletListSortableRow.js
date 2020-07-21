@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -34,7 +34,7 @@ type StateProps = {
 }
 type Props = OwnProps & StateProps
 
-class WalletListSortableRowComponent extends Component<Props> {
+class WalletListSortableRowComponent extends React.Component<Props> {
   render() {
     const { guiWallet, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
     // $FlowFixMe react-native-sortable-listview sneakily injects this prop:

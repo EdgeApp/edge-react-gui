@@ -1,7 +1,6 @@
 // @flow
 
-import type { Node } from 'react'
-import React from 'react'
+import * as React from 'react'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -9,7 +8,7 @@ import { SettingsRow } from './SettingsRow.js'
 
 type Props = {
   disabled?: boolean,
-  icon?: Node,
+  icon?: React.Node,
   text: string,
   isSelected: boolean,
   onPress: () => void
@@ -18,7 +17,7 @@ type Props = {
 /**
  * A settings row with a radio selector on the right side.
  */
-export function SettingsRadioRow(props: Props): Node {
+export function SettingsRadioRow(props: Props): React.Node {
   const { disabled, icon, text, isSelected, onPress } = props
 
   const radio = isSelected ? (

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, Text } from 'react-native'
 
 import { THEME } from '../../../../../theme/variables/airbitz.js'
@@ -18,7 +18,7 @@ export type Props = {
 }
 export type State = {}
 
-export class Title extends Component<Props, State> {
+export class Title extends React.Component<Props, State> {
   render() {
     return <Text style={[styles.title, this.props.style]}>{this.props.children}</Text>
   }

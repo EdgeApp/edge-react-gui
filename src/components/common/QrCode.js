@@ -2,7 +2,7 @@
 
 import { Shape, Surface, Transform } from '@react-native-community/art'
 import qrcodeGenerator from 'qrcode-generator'
-import React from 'react'
+import * as React from 'react'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 

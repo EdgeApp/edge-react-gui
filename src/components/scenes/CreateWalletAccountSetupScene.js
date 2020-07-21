@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
@@ -52,7 +52,7 @@ type State = {
   accountHandle: string
 }
 
-export class CreateWalletAccountSetup extends Component<Props, State> {
+export class CreateWalletAccountSetup extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

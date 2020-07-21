@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Alert, Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
@@ -22,7 +22,7 @@ export type NavProps = {
 
 type Props = NavProps
 
-export class FioAddressRegisteredScene extends Component<Props> {
+export class FioAddressRegisteredScene extends React.Component<Props> {
   componentDidMount() {
     const { fioAddressName } = this.props
     if (!fioAddressName) {

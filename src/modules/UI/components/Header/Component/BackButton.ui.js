@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
 
 import * as Constants from '../../../../../constants/indexConstants.js'
@@ -15,7 +15,7 @@ export type Props = {
   onPress: () => mixed,
   label?: string
 }
-export default class BackButton extends Component<Props> {
+export default class BackButton extends React.Component<Props> {
   static defaultProps = {
     withArrow: false,
     onPress: () => {}

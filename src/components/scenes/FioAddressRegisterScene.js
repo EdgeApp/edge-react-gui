@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
@@ -51,7 +51,7 @@ export type DispatchProps = {
 
 type Props = StateProps & DispatchProps
 
-export class FioAddressRegisterScene extends Component<Props, State> {
+export class FioAddressRegisterScene extends React.Component<Props, State> {
   fioCheckQueue: number = 0
   clearButtonMode = 'while-editing'
   returnKeyType = 'next'

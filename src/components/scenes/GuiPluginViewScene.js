@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react'
 import { Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
 import { connect } from 'react-redux'
