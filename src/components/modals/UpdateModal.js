@@ -26,8 +26,8 @@ export class UpdateModal extends React.Component<Props> {
         <IconCircle>
           <View
             style={{
-              width: '100%',
-              height: '100%',
+              width: THEME.rem(3.5),
+              height: THEME.rem(3.5),
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: THEME.COLORS.PRIMARY
