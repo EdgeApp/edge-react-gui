@@ -392,8 +392,6 @@ const strings = {
   transaction_details_copy_raw_hex_message: 'Copied transaction raw hex',
   transaction_details_tx_id_modal_title: 'Transaction ID',
   transaction_details_show_advanced_block_explorer: 'Show in Block Explorer',
-  transaction_details_copy_tx_id: 'Copy Transaction ID',
-  transaction_details_copy_signed_tx: 'Copy Signed Raw Hex',
   transaction_history_permission: 'Would you like to share the entire transaction history of %s with this partner?',
   transaction_details_fiat_modal_header: '%s Amount',
   transaction_details_fiat_label: 'Choose an amount',
