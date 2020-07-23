@@ -344,16 +344,17 @@ export const getFioAddressCache = async (account: EdgeAccount): Promise<FioAddre
 }
 
 export const checkRecordSendFee = async (fioWallet: EdgeCurrencyWallet, fioAddress: string) => {
+  let getFeeResult
   try {
-    const getFeeResult = await fioWallet.otherMethods.fioAction('getFee', {
+    getFeeResult = await fioWallet.otherMethods.fioAction('getFee', {
       endPoint: 'record_obt_data',
       fioAddress: fioAddress
     })
-    if (getFeeResult.fee) {
-      throw new Error(s.strings.fio_no_bundled_err_msg)
-    }
   } catch (e) {
     throw new Error(s.strings.fio_get_fee_err_msg)
+  }
+  if (getFeeResult.fee !== 0) {
+    throw new Error(s.strings.fio_no_bundled_err_msg)
   }
 }
 
