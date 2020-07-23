@@ -71,9 +71,28 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
     }
   }
 
-  toggleExportQbo = () => this.setState({ isExportQbo: !this.state.isExportQbo })
+  toggleExportAndroid() {
+    this.setState({
+      isExportCsv: !this.state.isExportCsv,
+      isExportQbo: !this.state.isExportQbo
+    })
+  }
 
-  toggleExportCsv = () => this.setState({ isExportCsv: !this.state.isExportCsv })
+  toggleExportQbo = () => {
+    if (Platform.OS === 'ios') {
+      this.setState({ isExportQbo: !this.state.isExportQbo })
+      return
+    }
+    this.toggleExportAndroid()
+  }
+
+  toggleExportCsv = () => {
+    if (Platform.OS === 'ios') {
+      this.setState({ isExportCsv: !this.state.isExportCsv })
+      return
+    }
+    this.toggleExportAndroid()
+  }
 
   setThisMonth = () => {
     this.setState({
@@ -91,9 +110,13 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
   }
 
   exportFile = async () => {
-    const { startDate, endDate } = this.state
+    const { startDate, endDate, isExportQbo, isExportCsv } = this.state
     if (startDate.getTime() > endDate.getTime()) {
       return showError(s.strings.export_transaction_error)
+    }
+    if (Platform.OS === 'android' && isExportQbo && isExportCsv) {
+      showError(s.strings.export_transaction_export_error_2)
+      return
     }
     this.exportFiles()
     this.closeDatePicker()
@@ -250,7 +273,14 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
         this.openShareApp(paths, subject || '')
         return
       }
-      this.openMailApp(files, subject || '')
+
+      const androidExport = this.state.isExportQbo ? files.qbo : files.csv
+      if (androidExport) {
+        this.openMailApp(androidExport.path, `Share Transactions ${androidExport.format}`, androidExport.format.toLowerCase())
+        return
+      } else {
+        throw new Error(s.strings.export_transaction_export_error_3)
+      }
     } catch (error) {
       console.log(error.message)
     }
@@ -273,14 +303,10 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
       })
   }
 
-  openMailApp = (files: Files, subject: string) => {
-    const attachments = []
-    for (const file in files) {
-      const { path, format } = files[file]
-      attachments.push({
-        path,
-        type: format
-      })
+  openMailApp = (path: string, subject: string, fileType: string) => {
+    const attachment = {
+      path: path, // The absolute path of the file from which to read data.
+      type: fileType // Mime Type: jpg, png, doc, ppt, html, pdf
     }
     Mailer.mail(
       {
@@ -288,7 +314,7 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
         recipients: [''],
         body: ' ',
         isHTML: true,
-        attachments
+        attachment
       },
       (error, event) => {
         if (error) {

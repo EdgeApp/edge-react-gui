@@ -9510,15 +9510,10 @@ react-native-localize@^1.4.0:
   resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-1.4.0.tgz#4653596d066d0941c48f5404dc1c0d08b6950443"
   integrity sha512-W2MQxm6hzD549ZbZcbWzWtYJseY7S7WR2WgsNhm9ULmbwP7tXFfOTbkJjQoqgPXYSXogKN3srXhntVsNZL0Ksw==
 
-react-native-mail@^3.0.5:
+react-native-mail@3.0.7, react-native-mail@^3.0.5:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-3.0.7.tgz#07e6aca43f6f1f85f3e58e96e7fcd16b31a927b8"
   integrity sha512-FHe4kKJKAGuCPPWcDwaRSjdUhEE4IWIsVtTZ05dgD/MgOm00isYmM20zuJHla7oiHVQ2HmzGji76g6IuhIrCjw==
-
-react-native-mail@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-5.0.1.tgz#4fe1dfe319c48fd40e513825e78924c23141197b"
-  integrity sha512-MtYA2HlvAFqWwrEH0vTecsSOECi3joW2fxXoMa9TaIa95hs3nyWGX4YBKfBGH8/hE0L0ONh9pY9fKHcCT80Avg==
 
 react-native-material-buttons@^0.5.0:
   version "0.5.0"
