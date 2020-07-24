@@ -3783,10 +3783,9 @@ edge-core-js@^0.17.6:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.11:
-  version "0.7.11"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.11.tgz#e0a1a19102ab99b77c6d0096311bc83e082312fa"
-  integrity sha512-fgm9WDznwT/dI1hTJ13SD2Yu8TSfEF4Rv/qcPNDJ4aEzP7QKaMFjAOJ365GAhjggu6VcI2Cmv3GaegX0Spdl8A==
+"edge-currency-accountbased@git://github.com/EdgeApp/edge-currency-accountbased.git#kylan/incrementalTelos":
+  version "0.7.15"
+  resolved "git://github.com/EdgeApp/edge-currency-accountbased.git#5e50a5d01c462c7f9d10a42ca944b1d87d7b1c4a"
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.0.2"
