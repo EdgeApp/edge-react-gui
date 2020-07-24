@@ -114,7 +114,7 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
     const { isCheckingHandleAvailability, handleAvailableStatus, selectedWalletType, currencyConfigs } = this.props
     const { accountHandle } = this.state
     const { currencyCode } = selectedWalletType
-    const walletTypeValue = selectedWalletType.value.replace('wallet:', '')
+    const walletTypeValue = selectedWalletType.walletType.replace('wallet:', '')
     const { symbolImage } = currencyConfigs[walletTypeValue].currencyInfo
     const isHandleAvailable: boolean = handleAvailableStatus === 'AVAILABLE'
     const validityIcon = isHandleAvailable ? validIcon : invalidIcon
