@@ -39,6 +39,7 @@ export const edgeDark: Theme = {
   selectButtonOutline: pallete.edgeMint,
   selectButtonText: pallete.edgeMint,
   modalBody: pallete.edgeNavy,
+  modalClose: pallete.white,
   headerText: pallete.white,
   primaryText: pallete.white,
   secondaryText: pallete.blueGray,

@@ -25,11 +25,10 @@ import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils.js'
-import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { Tile } from '../common/Tile.js'
-import { createAdvancedTransactionDetailsModal } from '../modals/AdvancedTransactionDetailsModal.js'
 import { RawTextModal } from '../modals/RawTextModal.js'
+import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
 import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInput.js'
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
@@ -218,13 +217,18 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openAdvancedDetails = async () => {
-    const { edgeTransaction, currencyInfo } = this.props
-    await launchModal(
-      createAdvancedTransactionDetailsModal({
-        txExplorerUrl: currencyInfo ? sprintf(currencyInfo.transactionExplorer, edgeTransaction.txid) : null,
-        ...edgeTransaction
-      })
-    )
+    const { currencyInfo } = this.props
+    Airship.show(bridge => (
+      <TransactionAdvanceDetails
+        bridge={bridge}
+        feeRateUsed={this.props.edgeTransaction.feeRateUsed}
+        networkFeeOption={this.props.edgeTransaction.networkFeeOption}
+        requestedCustomFee={this.props.edgeTransaction.requestedCustomFee}
+        signedTx={this.props.edgeTransaction.signedTx}
+        txid={this.props.edgeTransaction.txid}
+        url={currencyInfo ? sprintf(currencyInfo.transactionExplorer, this.props.edgeTransaction.txid) : undefined}
+      />
+    ))
   }
 
   renderExchangeData = () => {
