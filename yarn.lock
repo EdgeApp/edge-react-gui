@@ -3788,10 +3788,9 @@ edge-core-js@^0.17.9:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.15:
+"edge-currency-accountbased@git://github.com/EdgeApp/edge-currency-accountbased.git#kylan/incrementalTelos":
   version "0.7.15"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.15.tgz#16c6435ddb870453ec4a21a05fb4fc5cb26b969e"
-  integrity sha512-rG2HzPqZWhTqFqPY0wO64F67L3IxPqrNtj4ldGeWoFr7G88fShXZuRHd2F1+RKxI347pQnp9XtRWSq0S/FbWnw==
+  resolved "git://github.com/EdgeApp/edge-currency-accountbased.git#5e50a5d01c462c7f9d10a42ca944b1d87d7b1c4a"
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.0.2"
@@ -3849,10 +3848,9 @@ edge-currency-monero@^0.2.5:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.4:
-  version "0.11.4"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.4.tgz#69611709faa68246f8156a3248076295b724eada"
-  integrity sha512-u8JJFX0aTVoWb7cyNasQxMWxgSEFHCnrrmkThi/d2fBPFoCIkjq7PzqHXDPXge7YenSS48NmanYVjKTtoeeoRQ==
+"edge-exchange-plugins@git://github.com/EdgeApp/edge-exchange-plugins.git#067df72":
+  version "0.11.5"
+  resolved "git://github.com/EdgeApp/edge-exchange-plugins.git#067df72a77f316fcfb3ed29e5340fc93b031f1d1"
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.2.0"
