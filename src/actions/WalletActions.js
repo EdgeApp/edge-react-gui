@@ -21,7 +21,7 @@ import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
-import { getCurrencyInfos, makeGuiWalletType } from '../util/CurrencyInfoHelpers.js'
+import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 import * as UTILS from '../util/utils'
 import { addTokenAsync } from './AddTokenActions.js'
 
@@ -95,7 +95,7 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
       const currencyInfos = getCurrencyInfos(state.core.account)
       const currencyInfo = currencyInfos.find(info => info.currencyCode === currencyCode)
       if (!currencyInfo) throw new Error('CannotFindCurrencyInfo')
-      const selectedWalletType = makeGuiWalletType(currencyInfo)
+      const selectedWalletType = makeCreateWalletType(currencyInfo)
       const createWalletAccountSetupSceneProps = {
         accountHandle: guiWallet.name,
         selectedWalletType,
