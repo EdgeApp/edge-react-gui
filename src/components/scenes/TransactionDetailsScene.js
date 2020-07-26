@@ -20,7 +20,6 @@ import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButto
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getSelectedWallet, getWallet } from '../../modules/UI/selectors.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
@@ -444,7 +443,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
                   {thumbnailPath ? (
                     <Image style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
                   ) : (
-                    <IonIcon style={styles.tileAvatarIcon} name="ios-contact" size={THEME.rem(2)} />
+                    <IonIcon style={styles.tileAvatarIcon} name="ios-contact" size={theme.rem(2)} />
                   )}
                   <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
                 </View>

@@ -8,6 +8,8 @@ export type Theme = {
   background1: string,
   background2: string,
   modalBody: string,
+  modalBackgroundShadow: string,
+  modalBackgroundShadowOpacity: number,
 
   // Text colors:
   accentTextNegative: string,
