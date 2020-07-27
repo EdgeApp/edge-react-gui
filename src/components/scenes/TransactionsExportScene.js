@@ -4,6 +4,7 @@ import DateTimePicker from '@react-native-community/datetimepicker'
 import type { EdgeCurrencyWallet, EdgeGetTransactionsOptions } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Appearance } from 'react-native-appearance'
 import RNFS from 'react-native-fs'
 import Mailer from 'react-native-mail'
 import Share from 'react-native-share'
@@ -23,6 +24,7 @@ import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { showActivity, showError } from '../services/AirshipInstance.js'
 
 const rightArrow = <AntDesign name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
+const colorScheme = Appearance.getColorScheme()
 
 type Files = {
   qbo?: {
@@ -168,7 +170,7 @@ export class TransactionsExportSceneComponent extends PureComponent<Props, State
           </TouchableWithoutFeedback>
         </ScrollView>
         {datePicker !== null && (
-          <View>
+          <View style={Platform.OS === 'ios' ? styles.pickerContainer : undefined}>
             {Platform.OS === 'ios' && (
               <TouchableWithoutFeedback onPress={() => this.setState({ datePicker: null })}>
                 <View style={styles.accessoryView}>
@@ -340,15 +342,14 @@ const rawStyles = {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: THEME.COLORS.WHITE
-  },
-  accessoryBtn: {
-    paddingVertical: THEME.rem(0.5),
-    paddingHorizontal: THEME.rem(1)
+    backgroundColor: colorScheme === 'dark' ? THEME.COLORS.PRIMARY : THEME.COLORS.WHITE
   },
   accessoryText: {
-    color: THEME.COLORS.ACCENT_BLUE,
+    color: colorScheme === 'dark' ? THEME.COLORS.WHITE : THEME.COLORS.ACCENT_BLUE,
     fontSize: THEME.rem(1)
+  },
+  pickerContainer: {
+    backgroundColor: colorScheme === 'dark' ? THEME.COLORS.PRIMARY : THEME.COLORS.WHITE
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
