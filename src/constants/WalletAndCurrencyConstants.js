@@ -320,10 +320,6 @@ export const WALLET_LIST_MENU: {
   value: WalletListMenuKey
 }[] = [
   {
-    label: s.strings.fragment_wallets_sort,
-    value: 'sort'
-  },
-  {
     label: s.strings.string_rename,
     value: 'rename'
   },

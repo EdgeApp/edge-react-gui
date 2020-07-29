@@ -7,6 +7,7 @@ import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
@@ -94,9 +95,6 @@ class WalletListComponent extends React.Component<Props, State> {
   }
 
   executeWalletRowOption = (walletId: string, option: WalletListMenuKey, currencyCode?: string) => {
-    if (option === 'sort') {
-      return this.setState({ sorting: true })
-    }
     if (currencyCode == null && this.props.wallets[walletId] != null) {
       currencyCode = this.props.wallets[walletId].currencyCode
     }
@@ -109,6 +107,7 @@ class WalletListComponent extends React.Component<Props, State> {
     const loading = Object.keys(wallets).length <= 0
 
     const walletIcon = <Image source={WalletIcon} style={styles.walletIcon} />
+    const sort = () => this.setState({ sorting: true })
 
     return (
       <SceneWrapper background="body">
@@ -122,10 +121,15 @@ class WalletListComponent extends React.Component<Props, State> {
         />
         <View /* header stack */>
           <SettingsHeaderRow icon={walletIcon} text={s.strings.fragment_wallets_header} />
-          <CrossFade activeKey={sorting ? 'doneButton' : 'addButton'}>
-            <TouchableOpacity key="addButton" style={styles.headerButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
-              <Ionicon name="md-add" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
-            </TouchableOpacity>
+          <CrossFade activeKey={sorting ? 'doneButton' : 'defaultButtons'}>
+            <View key="defaultButtons" style={[styles.headerButton, styles.defaultButtons]}>
+              <TouchableOpacity style={styles.addButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
+                <Ionicon name="md-add" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={sort}>
+                <MaterialIcons name="swap-vert" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
+              </TouchableOpacity>
+            </View>
             <TouchableOpacity key="doneButton" style={styles.headerButton} onPress={this.disableSorting}>
               <T style={nightText()}>{s.strings.string_done_cap}</T>
             </TouchableOpacity>
@@ -219,6 +223,13 @@ const rawStyles = {
     flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: THEME.rem(1)
+  },
+  defaultButtons: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  addButton: {
+    marginRight: THEME.rem(0.75)
   },
   walletIcon: {
     width: THEME.rem(1.375),
