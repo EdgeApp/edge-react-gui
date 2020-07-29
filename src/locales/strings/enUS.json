@@ -452,6 +452,7 @@
   "buy_crypto_modal_exchange": "Exchange",
   "exchange_crypto_modal_message": "Your %s wallet is empty. Would you like to exchange another crypto into %s?",
   "private_key_modal_sweep_from_private_address": "Sweep Funds From Private Key",
+  "private_key_modal_sweep_from_private_address_message": "This process needs an on-chain transaction from the original wallet to Edge. Mining fees are applied and depend on the network status",
   "private_key_modal_import": "Import",
   "private_key_modal_cancel": "Cancel",
   "private_key_modal_success": "Private key successfully swept",
