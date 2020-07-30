@@ -37,7 +37,11 @@ class TileComponent extends React.PureComponent<Props> {
             {type === 'editable' && <FontAwesome name="edit" style={styles.editIcon} />}
             {type === 'copy' && <FontAwesome name="copy" style={styles.editIcon} />}
             <Text style={error ? styles.textHeaderError : styles.textHeader}>{title}</Text>
-            {typeof body === 'string' && <Text style={styles.textBody}>{body}</Text>}
+            {typeof body === 'string' && (
+              <Text style={styles.textBody} numberOfLines={3}>
+                {body}
+              </Text>
+            )}
             {children}
           </View>
           {type === 'touchable' && (

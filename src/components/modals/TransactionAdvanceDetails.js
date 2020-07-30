@@ -7,8 +7,9 @@ import Entypo from 'react-native-vector-icons/Entypo'
 
 import s from '../../locales/strings.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
+import { AirshipModal } from '../common/AirshipModalThemed.js'
 import { Tile } from '../common/Tile.js'
-import { type AirshipBridge, AirshipModal } from './modalParts'
+import { type AirshipBridge } from './modalParts'
 
 const localizedFeeText = {
   satPerVByte: s.strings.transaction_details_advance_details_satpervbyte,
@@ -108,13 +109,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
                   {feeRateUsed ? this.renderFees(styles, s.strings.transaction_details_advance_details_fee_used, feeRateUsed) : null}
                 </Tile>
               )}
-              {signedTx && signedTx !== '' ? (
-                <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes}>
-                  <Text style={styles.text} numberOfLines={3}>
-                    {signedTx}
-                  </Text>
-                </Tile>
-              ) : null}
+              {signedTx && signedTx !== '' ? <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} /> : null}
             </ScrollView>
           </View>
           <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
