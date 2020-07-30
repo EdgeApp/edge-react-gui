@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeCurrencyInfo } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -23,7 +23,7 @@ type Props = NavigationProps & StateProps & DispatchProps
 
 type State = {}
 
-export class NotificationComponent extends Component<Props, State> {
+export class NotificationComponent extends React.Component<Props, State> {
   render() {
     const rightArrow = <AntDesignIcon name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
 

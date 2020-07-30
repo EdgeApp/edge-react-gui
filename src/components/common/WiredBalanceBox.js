@@ -1,6 +1,6 @@
 // @flow
 
-import React, { PureComponent } from 'react'
+import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
@@ -30,7 +30,7 @@ type WiredBalanceBoxOwnProps = {
   exchangeRates?: { [string]: number }
 }
 
-class BalanceBox extends PureComponent<BalanceBoxProps, BalanceBoxState> {
+class BalanceBox extends React.PureComponent<BalanceBoxProps, BalanceBoxState> {
   constructor(props: BalanceBoxProps) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)

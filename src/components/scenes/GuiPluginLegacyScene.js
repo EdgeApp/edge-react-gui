@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeCurrencyWallet, type EdgeMetadata } from 'edge-core-js'
-import React from 'react'
+import * as React from 'react'
 import { BackHandler, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { WebView } from 'react-native-webview'

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
@@ -18,7 +18,7 @@ type State = {
   collapsed: boolean
 }
 
-export class ExpandableBoxComponent extends Component<Props, State> {
+export class ExpandableBoxComponent extends React.Component<Props, State> {
   constructor(props: any) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)

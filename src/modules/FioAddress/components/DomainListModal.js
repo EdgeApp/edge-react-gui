@@ -2,7 +2,7 @@
 
 import { FormField, MaterialInputStyle } from 'edge-components'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { FlatList, Image, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -11,7 +11,6 @@ import { type AirshipBridge, AirshipModal, dayText, IconCircle, THEME } from '..
 import { showError } from '../../../components/services/AirshipInstance'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
-import { styles as fioAddressRegisterStyles } from '../../../styles/scenes/FioAddressRegisterStyle'
 import type { State as StateType } from '../../../types/reduxTypes'
 import type { FioDomain, FlatListItem } from '../../../types/types.js'
 import { scale } from '../../../util/scaling.js'
@@ -51,7 +50,7 @@ const newDomainItem = {
   label: s.strings.fio_address_list_register_domain
 }
 
-class DomainListModalConnected extends Component<Props, State> {
+class DomainListModalConnected extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -126,11 +125,11 @@ class DomainListModalConnected extends Component<Props, State> {
     if (createNew) {
       return (
         <TouchableHighlight onPress={this.createNew} underlayColor={THEME.COLORS.TRANSPARENT}>
-          <View style={[styles.rowContainerTop, fioAddressRegisterStyles.domainListRowContainerTop]}>
+          <View style={[styles.rowContainerTop, styles.domainListRowContainerTop]}>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsRow}>
-                <T style={fioAddressRegisterStyles.domainListRowName}>{label}</T>
-                <Icon type={Constants.FONT_AWESOME} name={Constants.ANGLE_RIGHT} size={fioAddressRegisterStyles.domainListRowName.fontSize} />
+                <T style={styles.domainListRowName}>{label}</T>
+                <Icon type={Constants.FONT_AWESOME} name={Constants.ANGLE_RIGHT} size={THEME.rem(1)} />
               </View>
             </View>
           </View>
@@ -140,11 +139,11 @@ class DomainListModalConnected extends Component<Props, State> {
     if (value) {
       return (
         <TouchableHighlight onPress={() => this.selectItem(value)} underlayColor={THEME.COLORS.TRANSPARENT}>
-          <View style={[styles.rowContainerTop, fioAddressRegisterStyles.domainListRowContainerTop]}>
+          <View style={[styles.rowContainerTop, styles.domainListRowContainerTop]}>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsRow}>
-                <T style={fioAddressRegisterStyles.domainListRowName}>{label}</T>
-                <T style={fioAddressRegisterStyles.domainListRowFree}>{value.isFree ? s.strings.fio_domain_free : ''}</T>
+                <T style={styles.domainListRowName}>{label}</T>
+                <T style={styles.domainListRowFree}>{value.isFree ? s.strings.fio_domain_free : ''}</T>
               </View>
             </View>
           </View>
@@ -210,6 +209,24 @@ const rawStyles = {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  domainListRowName: {
+    flex: 1,
+    fontSize: THEME.rem(1),
+    color: THEME.COLORS.SECONDARY
+  },
+  domainListRowFree: {
+    flex: 1,
+    fontSize: THEME.rem(0.75),
+    textTransform: 'uppercase',
+    color: THEME.COLORS.ACCENT_RED,
+    textAlign: 'right'
+  },
+  domainListRowContainerTop: {
+    height: 'auto',
+    paddingLeft: THEME.rem(0.75),
+    paddingRight: THEME.rem(0.75),
+    paddingVertical: THEME.rem(0.75)
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

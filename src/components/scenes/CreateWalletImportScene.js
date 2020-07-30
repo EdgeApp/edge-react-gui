@@ -1,8 +1,8 @@
 // @flow
 
 import { type EdgeAccount } from 'edge-core-js'
-import React, { Component } from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import * as React from 'react'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -13,9 +13,11 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { errorModal } from '../../modules/UI/components/Modals/ErrorModal.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import styles from '../../styles/scenes/CreateWalletStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../theme/variables/platform.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type CreateWalletType } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import { FormField } from '../common/FormField.js'
 import { launchModal } from '../common/ModalProvider.js'
 
@@ -35,7 +37,7 @@ type State = {
   cleanedPrivateKey: string
 }
 
-class CreateWalletImportComponent extends Component<Props, State> {
+class CreateWalletImportComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -115,6 +117,42 @@ class CreateWalletImportComponent extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  scene: {
+    flex: 1,
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  gradient: {
+    height: THEME.HEADER,
+    width: '100%',
+    position: 'absolute'
+  },
+  view: {
+    position: 'relative',
+    top: THEME.HEADER,
+    paddingHorizontal: 20,
+    height: PLATFORM.usableHeight
+  },
+  createWalletPromptArea: {
+    paddingTop: scale(16),
+    paddingBottom: scale(8)
+  },
+  instructionalText: {
+    fontSize: scale(16),
+    textAlign: 'center',
+    color: THEME.COLORS.GRAY_1
+  },
+  buttons: {
+    marginTop: scale(24),
+    flexDirection: 'row'
+  },
+  next: {
+    marginLeft: scale(1),
+    flex: 1
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const CreateWalletImportScene = connect(
   (state: ReduxState): StateProps => ({

@@ -1237,10 +1237,10 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-4.68.2.tgz#3ba74680927807f83d9f0bfd7da45f192d2c0893"
   integrity sha512-iFwGIzPmAMDvxVLtTvBUo0DCWz8vVaD0C4IsprNaXbxu+AsDmlc9kO9CKLB5YFEZblKNNKqJMJDfKvg5brIpTw==
 
-"@react-native-community/art@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@react-native-community/art/-/art-1.0.2.tgz#38671edcf4eb3d820d62dc5ba3a151d75352f847"
-  integrity sha512-GFqRy5DfHmD0LF+cIn1TPeNienFNTuLsv3SNq1vsg2J04l51ESSAUq7dY35cCE/g6Hfi9t8zx+A9sEMplRKZ0g==
+"@react-native-community/art@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/art/-/art-1.2.0.tgz#386d95393f6042d9006f9d4bc6063fb898794460"
+  integrity sha512-a+ZcRGl/BzLa89yi33Mbn5SHavsEXqKUMdbfLf3U8MDLElndPqUetoJyGkv63+BcPO49UMWiQRP1YUz6/zfJ+A==
   dependencies:
     art "^0.10.3"
     invariant "^2.2.4"
@@ -3635,7 +3635,7 @@ diffie-hellman@^5.0.0:
     miller-rabin "^4.0.0"
     randombytes "^2.0.0"
 
-disklet@^0.4.4, disklet@^0.4.5:
+disklet@^0.4.5:
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/disklet/-/disklet-0.4.5.tgz#f62546a94f939cca4dd20d9c3d5c5e43c9529441"
   integrity sha512-ivPnHcgFOR5kXcAhR2pMrwtNfNAtoWW0SZ0laSFCr4vboU28PERUKLtUeCC0PWh/X3ykZ+3UFE5doALSOuthnQ==
@@ -3788,10 +3788,10 @@ edge-core-js@^0.17.9:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.14:
-  version "0.7.14"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.14.tgz#6100142e3445de6b79996440160b9f3ffdbd4007"
-  integrity sha512-Ji9JWO3kHHHYPSA8TiMunoriVZ9wFWXWCxvxvm5iqxwzzuzj9PaepqNVRvzTGRyooVbuzHak5wTCFAPdEoPJkw==
+edge-currency-accountbased@^0.7.16:
+  version "0.7.16"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.16.tgz#33d6ec0036437e631eb318e38624f85fb5bf61b9"
+  integrity sha512-4E4T2r9W80K+raROSMDMNIa2iQKLcxzIMfxIcCkvnw4WGrJ5jZglYdXE0G3eFAUGgwoAXaZOovfzhrFGaiSddA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.0.2"
@@ -3816,10 +3816,10 @@ edge-currency-accountbased@^0.7.14:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.8.5:
-  version "4.8.5"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.8.5.tgz#1b5f670992d808e2b704a3ce1ee88851030d6e53"
-  integrity sha512-1N8ZyYU11tdDLyXZb5iFq4JF2aC/ghzc7rtwESHaiE3OxX8xSusiP7K5eq11oCEkwoyjwLaWEqN7rg4Ra78bQA==
+edge-currency-bitcoin@^4.8.6:
+  version "4.8.6"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.8.6.tgz#a29f3d64d865a53beca7422f6db55d00c8be0d7a"
+  integrity sha512-5L4EA6uek8sUrIKYcdtSASjxze25u03/f1wzXsvxJhRdcYE72kkyv0WCkHTJZZNyK9RNfM2pBfxAu8+ciW0Ahg==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3849,10 +3849,10 @@ edge-currency-monero@^0.2.5:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.4:
-  version "0.11.4"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.4.tgz#69611709faa68246f8156a3248076295b724eada"
-  integrity sha512-u8JJFX0aTVoWb7cyNasQxMWxgSEFHCnrrmkThi/d2fBPFoCIkjq7PzqHXDPXge7YenSS48NmanYVjKTtoeeoRQ==
+edge-exchange-plugins@^0.11.5:
+  version "0.11.5"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.5.tgz#590d65e0bbca43196130bbe8d406d0e9dca95905"
+  integrity sha512-TFEC59eOO6gXphQlK72YQjoIQl6g8fyxW6nRnxKo/9mY28kokz6QHASnZBJ0W9dmOHu8WaWfqUjJmzKSUABtbA==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.2.0"
@@ -3900,9 +3900,9 @@ edge-login-ui-rn@^0.6.11:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#25044c4":
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#b864613":
   version "0.1.2"
-  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#25044c42b083eaaf71e6cc424bc55108faa46423"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#b864613c7fd62949b80c6f6616b6180abc1a6bd5"
   dependencies:
     cleaners "^0.2.0"
     js-sha256 "^0.9.0"
@@ -5431,9 +5431,9 @@ globals@^12.1.0:
     type-fest "^0.8.1"
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.3, graceful-fs@^4.1.6, graceful-fs@^4.1.9:
-  version "4.1.15"
-  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
-  integrity sha512-6uHUhOPEBgQ24HM+r6b/QwWfZq+yiFcipKFrOFiBEnWdy5sdzYoi+pJeQaPI5qOLRFqWmAXUPQNsielzdLoecA==
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
+  integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
 groestl-hash-js@^1.0.0:
   version "1.0.0"
@@ -7207,15 +7207,10 @@ lodash.union@^4.6.0:
   resolved "https://registry.yarnpkg.com/lodash.union/-/lodash.union-4.6.0.tgz#48bb5088409f16f1821666641c44dd1aaae3cd88"
   integrity sha1-SLtQiECfFvGCFmZkHETdGqrjzYg=
 
-lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.2, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.6.1:
-  version "4.17.14"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.14.tgz#9ce487ae66c96254fe20b599f21b6816028078ba"
-  integrity sha512-mmKYbW3GLuJeX+iGP+Y7Gp1AiGHGbXHCOh/jZmrawMmsE7MS4znI3RL2FsjbqOyMayHInjOeykW7PEajUk1/xw==
-
-lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.6.1:
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
 log-symbols@^4.0.0:
   version "4.0.0"
@@ -9450,7 +9445,7 @@ react-native-keyboard-aware-scroll-view@^0.9.1:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
 
-react-native-linear-gradient@^2.0.0, react-native-linear-gradient@^2.4.0:
+react-native-linear-gradient@^2.0.0, react-native-linear-gradient@^2.4.0, react-native-linear-gradient@^2.5.6:
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
   integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
@@ -9518,10 +9513,10 @@ react-native-modal@^11.0.1:
     prop-types "^15.6.2"
     react-native-animatable "^1.3.1"
 
-react-native-patina@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.0.tgz#6e8ef787138f4d3bb91c99db29f6d0455c9ab2f9"
-  integrity sha512-ZrEQExgRDXBjMBEoCGkEh9B4T90xBGhMnRHX3xy1UcAVSxH/BUOb/D/xlCnE3aZRuzOazvniWCzmk1XVGT0+oQ==
+react-native-patina@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.1.tgz#9891541e731450df8a067e44010127627cd988a9"
+  integrity sha512-9ACbyuvsiDQo9Y6MqXKzaG30RCgobPUC9bB5IyvKKu7vR4Fz2NrSuOQVFq9HLiiiUowVm5xYwLlR0eoy3zhMRg==
 
 react-native-permissions@1.0.6:
   version "1.0.6"
@@ -9533,10 +9528,10 @@ react-native-popup-menu@0.13.3:
   resolved "https://registry.yarnpkg.com/react-native-popup-menu/-/react-native-popup-menu-0.13.3.tgz#3f4203945acb4954d08d5b50a0345ccc18657eba"
   integrity sha1-P0IDlFrLSVTQjVtQoDRczBhlfro=
 
-react-native-randombytes@^3.5.0:
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/react-native-randombytes/-/react-native-randombytes-3.5.1.tgz#7e4518204460079c8b3b533c701746c86b809c89"
-  integrity sha512-yTvK2at9nwlqaYcf2hi1rxnt/WW7Ck872NnsqzD6IdWutF2Z3uL3a2kGd8SVCSG5JO2B+VCTS6VjHispdUGKAg==
+react-native-randombytes@^3.5.3:
+  version "3.5.3"
+  resolved "https://registry.yarnpkg.com/react-native-randombytes/-/react-native-randombytes-3.5.3.tgz#b3bdcd11473cce106551a586244b98855e443cd1"
+  integrity sha512-n/7QwMrRJxHr+/3mt2KxqqacGylM+ssW+FfBTgXGzvwq5KzSohooEWf6Z6MTSByuJ/izP9VbSPtwomPwzvupKQ==
   dependencies:
     buffer "^4.9.1"
     sjcl "^1.0.3"
@@ -9603,10 +9598,10 @@ react-native-slowlog@^1.0.2:
   dependencies:
     deprecated-react-native-listview "^0.0.5"
 
-react-native-sound@^0.10.12:
-  version "0.10.12"
-  resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.10.12.tgz#f912d6f9d6e9e2b42b391e0226787628d940f01a"
-  integrity sha512-lhvzZ+ekNSHW9s4FjmxxGAQmd7yDT9FnHgJNP824cMyHRrTES/LgHnSOxES/1FWVoaQ8FdfbEHkWd2rN0G/L9A==
+react-native-sound@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/react-native-sound/-/react-native-sound-0.11.0.tgz#ad60b55ba8c6dc89917f381ad3713f2738de530f"
+  integrity sha512-4bGAZfni6E2L695NQjOZwNLBQGXgBGYC4Sy+h99K5h0HqNZjCqR0+aLel+ezASxEJDpaH83gylNObXpiqJgdwg==
 
 react-native-store-review@^0.1.5:
   version "0.1.5"

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 
 import s from '../../locales/strings'
@@ -16,7 +16,7 @@ type Props = {
   onPress(): Promise<void>
 }
 
-export class WalletListModalCreateRow extends Component<Props> {
+export class WalletListModalCreateRow extends React.Component<Props> {
   render() {
     const { image, currencyCode, name, type, onPress } = this.props
     return (

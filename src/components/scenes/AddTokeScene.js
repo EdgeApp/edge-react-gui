@@ -1,7 +1,7 @@
 // @flow
 
 import _ from 'lodash'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
@@ -50,7 +50,7 @@ type State = {
 
 export type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
 
-export class AddToken extends Component<AddTokenProps, State> {
+export class AddToken extends React.Component<AddTokenProps, State> {
   constructor(props: AddTokenProps) {
     super(props)
     const { currencyName, currencyCode, contractAddress, decimalPlaces } = props

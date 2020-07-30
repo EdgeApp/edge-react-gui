@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import slowlog from 'react-native-slowlog'
@@ -18,8 +18,7 @@ import { addToFioAddressCache } from '../../modules/FioAddress/util.js'
 import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioRequest/components/FioRequestRow'
 import { getExchangeDenomination } from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { styles as requestListStyles } from '../../styles/scenes/FioRequestListStyle'
-import { THEME } from '../../theme/variables/airbitz'
+import { THEME } from '../../theme/variables/airbitz.js'
 import type { State } from '../../types/reduxTypes'
 import type { FioRequest, GuiWallet } from '../../types/types'
 import { scale } from '../../util/scaling.js'
@@ -59,7 +58,7 @@ export type OwnProps = {
 
 type Props = OwnProps & StateProps & DispatchProps
 
-export class FioRequestList extends Component<Props, LocalState> {
+export class FioRequestList extends React.Component<Props, LocalState> {
   headerIconSize = THEME.rem(1.375)
   willFocusSubscription: { remove: () => void } | null = null
 
@@ -388,12 +387,12 @@ export class FioRequestList extends Component<Props, LocalState> {
 
   renderHiddenItem = (rowObj: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
     return (
-      <View style={requestListStyles.rowBack}>
+      <View style={styles.rowBack}>
         <TouchableOpacity
-          style={[requestListStyles.backRightBtn, requestListStyles.backRightBtnRight]}
+          style={[styles.backRightBtn, styles.backRightBtnRight]}
           onPress={_ => this.rejectRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payer_fio_address)}
         >
-          <T style={requestListStyles.backTextWhite}>{s.strings.swap_terms_reject_button}</T>
+          <T style={styles.backTextWhite}>{s.strings.swap_terms_reject_button}</T>
         </TouchableOpacity>
       </View>
     )
@@ -404,17 +403,17 @@ export class FioRequestList extends Component<Props, LocalState> {
 
     return (
       <SceneWrapper>
-        {rejectLoading && <FullScreenLoader indicatorStyles={requestListStyles.rejectLoading} />}
-        <View style={requestListStyles.scene}>
-          <View style={requestListStyles.row}>
-            <SettingsHeaderRow icon={<Image source={fioRequestsIcon} style={requestListStyles.iconImage} />} text={s.strings.fio_pending_requests} />
+        {rejectLoading && <FullScreenLoader indicatorStyles={styles.rejectLoading} />}
+        <View style={styles.scene}>
+          <View style={styles.row}>
+            <SettingsHeaderRow icon={<Image source={fioRequestsIcon} style={styles.iconImage} />} text={s.strings.fio_pending_requests} />
             {!loadingPending && !fioRequestsPending.length ? (
-              <View style={requestListStyles.emptyListContainer}>
-                <T style={requestListStyles.text}>{s.strings.fio_no_requests_label}</T>
+              <View style={styles.emptyListContainer}>
+                <T style={styles.text}>{s.strings.fio_no_requests_label}</T>
               </View>
             ) : null}
-            <View style={requestListStyles.container}>
-              {loadingPending && <ActivityIndicator style={requestListStyles.loading} size="small" />}
+            <View style={styles.container}>
+              {loadingPending && <ActivityIndicator style={styles.loading} size="small" />}
               <SwipeListView
                 useSectionList
                 sections={this.pendingRequestHeaders()}
@@ -422,22 +421,22 @@ export class FioRequestList extends Component<Props, LocalState> {
                 keyExtractor={this.listKeyExtractor}
                 renderHiddenItem={this.renderHiddenItem}
                 renderSectionHeader={this.headerRowUsingTitle}
-                rightOpenValue={requestListStyles.swipeRow.right}
+                rightOpenValue={scale(-75)}
                 disableRightSwipe
               />
             </View>
           </View>
-          <View style={requestListStyles.row}>
+          <View style={styles.row}>
             <SettingsHeaderRow icon={<IonIcon name="ios-send" color={THEME.COLORS.WHITE} size={this.headerIconSize} />} text={s.strings.fio_sent_requests} />
             {!loadingSent && !fioRequestsSent.length ? (
-              <View style={requestListStyles.emptyListContainer}>
-                <T style={requestListStyles.text}>{s.strings.fio_no_requests_label}</T>
+              <View style={styles.emptyListContainer}>
+                <T style={styles.text}>{s.strings.fio_no_requests_label}</T>
               </View>
             ) : null}
-            <View style={requestListStyles.scrollView}>
-              <View style={requestListStyles.container}>
-                <View style={requestListStyles.requestsWrap}>
-                  {loadingSent && <ActivityIndicator style={requestListStyles.loading} size="small" />}
+            <View style={styles.scrollView}>
+              <View style={styles.container}>
+                <View style={styles.requestsWrap}>
+                  {loadingSent && <ActivityIndicator style={styles.loading} size="small" />}
                   <FlatList
                     style={styles.transactionsScrollWrap}
                     data={fioRequestsSent}
@@ -457,6 +456,75 @@ export class FioRequestList extends Component<Props, LocalState> {
 }
 
 const rawStyles = {
+  scene: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    backgroundColor: THEME.COLORS.GRAY_4
+  },
+  requestsWrap: {
+    flex: 1
+  },
+  scrollView: {
+    flex: 1
+  },
+  container: {
+    flex: 1,
+    alignItems: 'stretch'
+  },
+  backRightBtn: {
+    alignItems: 'center',
+    bottom: 0,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    width: scale(75)
+  },
+  backRightBtnRight: {
+    backgroundColor: THEME.COLORS.ACCENT_RED,
+    right: 0
+  },
+  backTextWhite: {
+    color: THEME.COLORS.WHITE
+  },
+  rowBack: {
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.GRAY_3,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: scale(15)
+  },
+  row: {
+    height: '50%'
+  },
+  text: {
+    fontSize: scale(14),
+    fontWeight: 'normal'
+  },
+  transactionLogo: {
+    width: scale(44),
+    height: scale(44)
+  },
+  emptyListContainer: {
+    paddingVertical: scale(30),
+    paddingHorizontal: scale(20),
+    opacity: 0.5
+  },
+  iconImage: {
+    width: scale(22),
+    height: scale(22)
+  },
+  rejectLoading: {
+    paddingBottom: scale(130)
+  },
+  loading: {
+    flex: 1,
+    marginTop: scale(40),
+    alignSelf: 'center'
+  },
+
   transactionsScrollWrap: {
     flex: 1
   },

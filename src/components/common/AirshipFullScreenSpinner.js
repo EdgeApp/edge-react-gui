@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Animated, StyleSheet, Text, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
@@ -20,7 +20,7 @@ type Props = {
   activity?: Promise<mixed>
 }
 
-export class AirshipFullScreenSpinner extends Component<Props> {
+export class AirshipFullScreenSpinner extends React.Component<Props> {
   opacity: Animated.Value
 
   constructor(props: Props) {

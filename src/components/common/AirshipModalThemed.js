@@ -1,15 +1,14 @@
 // @flow
 
 import * as React from 'react'
-import { Animated, BackHandler, Dimensions, StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import { Animated, BackHandler, Dimensions, TouchableWithoutFeedback } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
-import { THEME } from '../../theme/variables/airbitz.js'
-import { scale } from '../../util/scaling.js'
+import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { KeyboardTracker } from './KeyboardTracker.js'
 import { type SafeAreaGap, LayoutContext } from './LayoutContext.js'
 
-type Props = {
+type OwnProps = {
   bridge: AirshipBridge<any>,
   children: React.Node | ((gap: SafeAreaGap) => React.Node),
 
@@ -27,11 +26,13 @@ type Props = {
   padding?: number
 }
 
+type Props = OwnProps & ThemeProps
+
 /**
  * A modal that slides a modal up from the bottom of the screen
  * and dims the rest of the app.
  */
-export class AirshipModal extends React.Component<Props> {
+class AirshipModalComponent extends React.Component<Props> {
   backHandler: { remove(): mixed } | void
   opacity: Animated.Value
   offset: Animated.Value
@@ -51,7 +52,7 @@ export class AirshipModal extends React.Component<Props> {
     // Animate in:
     Animated.parallel([
       Animated.timing(this.opacity, {
-        toValue: THEME.OPACITY.MODAL_DARKNESS,
+        toValue: this.props.theme.modalBackgroundShadowOpacity,
         duration: 300,
         useNativeDriver: true
       }),
@@ -105,7 +106,8 @@ export class AirshipModal extends React.Component<Props> {
    * Draws the actual visual elements, given the current layout information:
    */
   renderModal(height: number, gap: SafeAreaGap, keyboardAnimation: Animated.Value, keyboardLayout: number) {
-    const { children, center, icon, padding = 0 } = this.props
+    const { children, center, icon, padding = 0, theme } = this.props
+    const styles = getStyles(theme)
 
     // Set up the dynamic CSS values:
     const screenPadding = {
@@ -120,7 +122,7 @@ export class AirshipModal extends React.Component<Props> {
       : [
           styles.bottomBody,
           {
-            marginTop: icon && keyboardLayout > 0 ? THEME.rem(1.75) : 0,
+            marginTop: icon && keyboardLayout > 0 ? theme.rem(1.75) : 0,
             marginBottom: -keyboardLayout,
             maxHeight: keyboardLayout + 0.75 * (height - gap.bottom - gap.top),
             paddingBottom: keyboardLayout + padding,
@@ -151,72 +153,76 @@ export class AirshipModal extends React.Component<Props> {
   }
 }
 
-const borderRadius = scale(16)
-const commonBody = {
-  // Layout:
-  flexShrink: 1,
-  width: 500,
-
-  // Visuals:
-  backgroundColor: THEME.COLORS.WHITE,
-  shadowOpacity: 1,
-  shadowOffset: {
-    width: 0,
-    height: scale(2)
-  },
-  shadowRadius: scale(4),
-
-  // Children:
-  alignItems: 'stretch',
-  flexDirection: 'column',
-  justifyContent: 'flex-start'
-}
-
-const styles = StyleSheet.create({
-  bottomBody: {
-    ...commonBody,
-
+const getStyles = cacheStyles(theme => {
+  const { rem } = theme
+  const borderRadius = rem(1)
+  const commonBody = {
     // Layout:
-    alignSelf: 'flex-end',
+    flexShrink: 1,
+    width: 500,
 
     // Visuals:
-    borderTopLeftRadius: borderRadius,
-    borderTopRightRadius: borderRadius
-  },
-
-  centerBody: {
-    ...commonBody,
-
-    // Layout:
-    alignSelf: 'center',
-    marginHorizontal: scale(12),
-
-    // Visuals:
-    borderRadius: borderRadius
-  },
-
-  darkness: {
-    // Layout:
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    top: 0,
-
-    // Visuals:
-    backgroundColor: THEME.COLORS.SHADOW
-  },
-
-  screen: {
-    // Layout:
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    top: 0,
+    backgroundColor: theme.modalBody,
+    shadowOpacity: 1,
+    shadowOffset: {
+      width: 0,
+      height: rem(0.125)
+    },
+    shadowRadius: rem(0.25),
 
     // Children:
-    flexDirection: 'row',
-    justifyContent: 'center'
+    alignItems: 'stretch',
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
+  }
+  return {
+    bottomBody: {
+      ...commonBody,
+
+      // Layout:
+      alignSelf: 'flex-end',
+
+      // Visuals:
+      borderTopLeftRadius: borderRadius,
+      borderTopRightRadius: borderRadius
+    },
+
+    centerBody: {
+      ...commonBody,
+
+      // Layout:
+      alignSelf: 'center',
+      marginHorizontal: rem(0.75),
+
+      // Visuals:
+      borderRadius: borderRadius
+    },
+
+    darkness: {
+      // Layout:
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      top: 0,
+
+      // Visuals:
+      backgroundColor: theme.modalBackgroundShadow
+    },
+
+    screen: {
+      // Layout:
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      top: 0,
+
+      // Children:
+      flexDirection: 'row',
+      justifyContent: 'center'
+    }
   }
 })
+
+export const AirshipModal = withTheme(AirshipModalComponent)

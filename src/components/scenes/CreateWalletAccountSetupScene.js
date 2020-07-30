@@ -1,7 +1,7 @@
 // @flow
 
-import React, { Component } from 'react'
-import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
+import * as React from 'react'
+import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
@@ -16,7 +16,7 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import type { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletReducer.js'
-import styles from '../../styles/scenes/CreateWalletStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
@@ -52,7 +52,7 @@ type State = {
   accountHandle: string
 }
 
-export class CreateWalletAccountSetup extends Component<Props, State> {
+export class CreateWalletAccountSetup extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -159,3 +159,48 @@ export class CreateWalletAccountSetup extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  scrollableGradient: {
+    height: THEME.HEADER
+  },
+  scrollableView: {
+    position: 'relative',
+    paddingHorizontal: 20
+  },
+  createWalletPromptArea: {
+    paddingTop: scale(16),
+    paddingBottom: scale(8)
+  },
+  instructionalText: {
+    fontSize: scale(16),
+    textAlign: 'center',
+    color: THEME.COLORS.GRAY_1
+  },
+  handleRequirementsText: {
+    fontSize: scale(16),
+    textAlign: 'left',
+    color: THEME.COLORS.GRAY_1
+  },
+  buttons: {
+    marginTop: scale(24),
+    flexDirection: 'row'
+  },
+  next: {
+    marginLeft: scale(1),
+    flex: 1
+  },
+  currencyLogo: {
+    alignSelf: 'center',
+    marginTop: scale(24),
+    height: scale(64),
+    width: scale(64)
+  },
+  feedbackIcon: {
+    alignSelf: 'flex-end',
+    marginTop: scale(43),
+    width: scale(25),
+    height: scale(25)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import { showHelpModal } from '../../../../../components/modals/HelpModal.js'
@@ -10,7 +10,7 @@ import styles from '../style'
 
 type Props = {}
 
-export default class HelpButton extends Component<Props> {
+export default class HelpButton extends React.Component<Props> {
   render() {
     return (
       <TouchableOpacity style={styles.sideTextWrap} onPress={() => showHelpModal()}>

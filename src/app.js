@@ -2,7 +2,7 @@
 /* global __DEV__ */
 
 import { Client } from 'bugsnag-react-native'
-import React from 'react'
+import * as React from 'react'
 import { Platform, StatusBar, Text, TextInput } from 'react-native'
 import RNFS from 'react-native-fs'
 

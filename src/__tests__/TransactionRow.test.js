@@ -1,7 +1,7 @@
 /* globals describe it expect */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-import React from 'react'
+import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { TransactionRowComponent } from '../components/common/TransactionRow.js'

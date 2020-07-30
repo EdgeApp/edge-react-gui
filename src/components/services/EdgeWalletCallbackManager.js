@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
-import React from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../actions/TransactionListActions.js'

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { connect } from 'react-redux'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
@@ -14,7 +14,7 @@ type DispatchProps = {
   onSelectWallet(string, string): void
 }
 
-class HeaderWalletSelectorConnected extends Component<DispatchProps> {
+class HeaderWalletSelectorConnected extends React.Component<DispatchProps> {
   onPress = () => {
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {

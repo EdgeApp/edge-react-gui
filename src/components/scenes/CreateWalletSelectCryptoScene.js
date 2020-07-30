@@ -1,15 +1,15 @@
 // @flow
 
 import { type EdgeAccount } from 'edge-core-js'
-import React, { Component } from 'react'
-import { Alert, FlatList, Image, Keyboard, TouchableHighlight, View } from 'react-native'
+import * as React from 'react'
+import { Alert, FlatList, Image, Keyboard, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { CREATE_WALLET_CHOICE, CREATE_WALLET_SELECT_FIAT, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import styles, { styles as stylesRaw } from '../../styles/scenes/CreateWalletStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type CreateWalletType, type FlatListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
@@ -27,7 +27,7 @@ type State = {
   searchTerm: string
 }
 
-class CreateWalletSelectCryptoComponent extends Component<Props, State> {
+class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -143,11 +143,7 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
 
     return (
       <View style={[styles.singleCryptoTypeWrap, walletType === this.state.selectedWalletType && styles.selectedItem]}>
-        <TouchableHighlight
-          style={styles.singleCryptoType}
-          onPress={() => this.handleSelectWalletType(data.item)}
-          underlayColor={stylesRaw.underlayColor.color}
-        >
+        <TouchableHighlight style={styles.singleCryptoType} onPress={() => this.handleSelectWalletType(data.item)} underlayColor={THEME.COLORS.GRAY_4}>
           <View style={styles.cryptoTypeInfoWrap}>
             <View style={styles.cryptoTypeLeft}>
               <View style={styles.cryptoTypeLogo}>
@@ -173,6 +169,66 @@ class CreateWalletSelectCryptoComponent extends Component<Props, State> {
     return item.walletType
   }
 }
+
+const rawStyles = {
+  content: {
+    backgroundColor: THEME.COLORS.WHITE,
+    flex: 1,
+    paddingHorizontal: scale(20)
+  },
+  picker: {
+    fontFamily: THEME.FONTS.DEFAULT,
+    height: scale(50),
+    padding: scale(5)
+  },
+  resultList: {
+    backgroundColor: THEME.COLORS.WHITE,
+    borderTopColor: THEME.COLORS.GRAY_3,
+    borderTopWidth: 1,
+    flex: 1
+  },
+  selectedItem: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    borderLeftWidth: scale(1),
+    borderLeftColor: THEME.COLORS.GRAY_3,
+    borderRightWidth: scale(1),
+    borderRightColor: THEME.COLORS.GRAY_3
+  },
+  singleCryptoType: {
+    height: scale(60),
+    borderBottomWidth: scale(1),
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    paddingVertical: scale(10),
+    paddingHorizontal: scale(15)
+  },
+  singleCryptoTypeWrap: {
+    flexDirection: 'column',
+    flex: 1
+  },
+  cryptoTypeInfoWrap: {
+    flexDirection: 'row',
+    height: scale(40),
+    flex: 1,
+    justifyContent: 'space-between'
+  },
+  cryptoTypeLeft: {
+    flexDirection: 'row'
+  },
+  cryptoTypeLogo: {
+    width: scale(40),
+    height: scale(40),
+    marginRight: scale(10)
+  },
+  cryptoTypeLeftTextWrap: {
+    justifyContent: 'center'
+  },
+  cryptoTypeName: {
+    fontSize: scale(16),
+    color: THEME.COLORS.GRAY_1,
+    textAlignVertical: 'center'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const CreateWalletSelectCryptoScene = connect(
   (state: ReduxState): StateProps => ({

@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Animated, StyleSheet, Text, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
@@ -26,7 +26,7 @@ type Props = {
 /**
  * A semi-transparent message overlay.
  */
-export class AirshipToast extends Component<Props> {
+export class AirshipToast extends React.Component<Props> {
   opacity: Animated.Value
 
   constructor(props: Props) {

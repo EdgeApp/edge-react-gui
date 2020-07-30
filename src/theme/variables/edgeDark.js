@@ -20,6 +20,8 @@ const pallete = {
   white: '#FFFFFF',
   whiteOp10: 'rgba(255, 255, 255, .1)',
 
+  black: '#000000',
+
   darkGray: '#4A5157',
   gray: '#87939E',
   lightGray: '#D9E3ED',
@@ -39,6 +41,9 @@ export const edgeDark: Theme = {
   selectButtonOutline: pallete.edgeMint,
   selectButtonText: pallete.edgeMint,
   modalBody: pallete.edgeNavy,
+  modalClose: pallete.white,
+  modalBackgroundShadow: pallete.black,
+  modalBackgroundShadowOpacity: 0.7,
   headerText: pallete.white,
   primaryText: pallete.white,
   secondaryText: pallete.blueGray,

@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import type { RefObject } from 'react-native'
 import { ActivityIndicator, Clipboard, Dimensions, InputAccessoryView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -83,7 +83,7 @@ export type State = {
 
 const inputAccessoryViewID: string = 'cancelHeaderId'
 
-export class Request extends Component<Props, State> {
+export class Request extends React.Component<Props, State> {
   amounts: ExchangedFlipInputAmounts
   flipInput: RefObject | null = null
 

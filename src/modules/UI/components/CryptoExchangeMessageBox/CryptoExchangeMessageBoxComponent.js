@@ -1,25 +1,26 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 
+import { THEME } from '../../../../theme/variables/airbitz.js'
+import { scale } from '../../../../util/scaling.js'
+
 export type Props = {
   message: string,
-  style: StyleSheet.Styles,
   useErrorStyle: boolean
 }
 
-export class CryptoExchangeMessageBoxComponent extends Component<Props> {
+export class CryptoExchangeMessageBoxComponent extends React.Component<Props> {
   constructor(props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
   }
 
   render() {
-    const { container, containerError, text, textError } = this.props.style
-    const viewStyle = [container, this.props.useErrorStyle ? containerError : null]
-    const textStyle = [text, this.props.useErrorStyle ? textError : null]
+    const viewStyle = [styles.container, this.props.useErrorStyle ? styles.containerError : null]
+    const textStyle = [styles.text, this.props.useErrorStyle ? styles.textError : null]
 
     return (
       <View style={viewStyle}>
@@ -28,3 +29,36 @@ export class CryptoExchangeMessageBoxComponent extends Component<Props> {
     )
   }
 }
+
+const rawStyles = {
+  container: {
+    display: 'flex',
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    height: scale(26),
+    backgroundColor: THEME.COLORS.PRIMARY
+  },
+  containerError: {
+    display: 'flex',
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    height: scale(26),
+    backgroundColor: THEME.COLORS.GRAY_4
+  },
+  text: {
+    color: THEME.COLORS.ACCENT_MINT,
+    textAlign: 'center',
+    marginRight: '2%',
+    marginLeft: '2%'
+  },
+  textError: {
+    color: THEME.COLORS.PRIMARY,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    fontSize: scale(10)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

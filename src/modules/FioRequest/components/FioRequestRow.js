@@ -1,15 +1,14 @@
 // @flow
 
 import type { EdgeDenomination } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import fioRequestsIcon from '../../../assets/images/fio/fio_sent_request.png'
 import * as intl from '../../../locales/intl.js'
 import s from '../../../locales/strings'
-import { styles as requestListStyles } from '../../../styles/scenes/FioRequestListStyle'
-import THEME from '../../../theme/variables/airbitz'
+import { THEME } from '../../../theme/variables/airbitz.js'
 import type { State } from '../../../types/reduxTypes'
 import type { FioRequest } from '../../../types/types'
 import { scale } from '../../../util/scaling.js'
@@ -35,7 +34,7 @@ type StateProps = {
 
 type Props = OwnProps & StateProps
 
-class FioRequestRow extends Component<Props> {
+class FioRequestRow extends React.Component<Props> {
   underlayColor = THEME.COLORS.ROW_PRESSED
   minimumFontScale = 0.6
 
@@ -133,7 +132,7 @@ class FioRequestRow extends Component<Props> {
           <View style={styles.transactionInfoWrap}>
             <View style={styles.transactionLeft}>
               <View style={styles.transactionLeftLogoWrap}>
-                <Image style={[styles.transactionLogo, requestListStyles.transactionLogo]} source={fioRequestsIcon} />
+                <Image style={styles.transactionLogo} source={fioRequestsIcon} />
               </View>
             </View>
 
@@ -234,8 +233,8 @@ const rawStyles = {
     flexDirection: 'row'
   },
   transactionLogo: {
-    width: scale(40),
-    height: scale(40),
+    width: scale(44),
+    height: scale(44),
     borderRadius: scale(20),
     marginRight: scale(10)
   },

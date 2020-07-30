@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
 
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
@@ -17,7 +17,7 @@ type Props = {
   onSkip(): void
 }
 
-export class UpdateModal extends Component<Props> {
+export class UpdateModal extends React.Component<Props> {
   render() {
     const { bridge } = this.props
 
@@ -26,8 +26,8 @@ export class UpdateModal extends Component<Props> {
         <IconCircle>
           <View
             style={{
-              width: '100%',
-              height: '100%',
+              width: THEME.rem(3.5),
+              height: THEME.rem(3.5),
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: THEME.COLORS.PRIMARY

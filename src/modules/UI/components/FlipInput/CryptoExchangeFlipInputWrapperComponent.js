@@ -1,17 +1,18 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
 
 import * as Constants from '../../../../constants/indexConstants'
+import { THEME } from '../../../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../../../types/types.js'
-import { TextAndIconButton } from '../Buttons/TextAndIconButton.ui.js'
+import { scale } from '../../../../util/scaling.js'
+import { TextAndIconButton, TextAndIconButtonStyle } from '../Buttons/TextAndIconButton.ui.js'
 import { WalletNameHeader } from '../Header/Component/WalletNameHeader.ui'
 import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from './ExchangedFlipInput2.js'
 
 export type Props = {
-  style: StyleSheet.Styles,
   guiWallet: GuiWallet,
   buttonText: string,
   currencyLogo: string,
@@ -28,7 +29,8 @@ export type Props = {
   onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void,
   onNext: () => void
 }
-export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
+
+export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props> {
   launchSelector = () => {
     this.props.launchWalletSelector()
   }
@@ -37,22 +39,21 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
     this.props.onCryptoExchangeAmountChanged(amounts)
   }
 
-  renderLogo = (style: StyleSheet.Styles, logo: string) => {
+  renderLogo = (logo: string) => {
     return (
-      <View style={style.iconContainer}>
-        <Image style={style.currencyIcon} source={{ uri: logo || '' }} />
+      <View style={styles.iconContainer}>
+        <Image style={styles.currencyIcon} source={{ uri: logo || '' }} />
       </View>
     )
   }
 
   render() {
-    const style: StyleSheet.Styles = this.props.style
     const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, overridePrimaryExchangeAmount } = this.props
 
     if (this.props.isThinking) {
       return (
-        <View style={[style.containerNoFee, style.containerNoWalletSelected]}>
-          <View style={style.topRow}>
+        <View style={[styles.containerNoFee, styles.containerNoWalletSelected]}>
+          <View style={styles.topRow}>
             <ActivityIndicator />
           </View>
         </View>
@@ -61,14 +62,9 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
 
     if (!this.props.guiWallet || this.props.guiWallet.id === '' || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
       return (
-        <View style={[style.containerNoFee, style.containerNoWalletSelected]}>
-          <View style={style.topRow}>
-            <TextAndIconButton
-              style={style.noWalletSelected}
-              onPress={this.launchSelector}
-              icon={Constants.KEYBOARD_ARROW_DOWN}
-              title={this.props.buttonText}
-            />
+        <View style={[styles.containerNoFee, styles.containerNoWalletSelected]}>
+          <View style={styles.topRow}>
+            <TextAndIconButton style={noWalletSelectedStyle} onPress={this.launchSelector} icon={Constants.KEYBOARD_ARROW_DOWN} title={this.props.buttonText} />
           </View>
         </View>
       )
@@ -81,10 +77,10 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
 
     if (!this.props.isFocused) {
       return (
-        <View style={style.containerSelectedWalletNotFocus}>
-          {this.renderLogo(style, this.props.currencyLogo)}
-          <View style={style.topRow}>
-            <TextAndIconButton style={style.walletSelector} onPress={this.props.focusMe} icon={Constants.KEYBOARD_ARROW_DOWN} title={titleComp} />
+        <View style={styles.containerSelectedWalletNotFocus}>
+          {this.renderLogo(this.props.currencyLogo)}
+          <View style={styles.topRow}>
+            <TextAndIconButton style={TextAndIconButtonStyle} onPress={this.props.focusMe} icon={Constants.KEYBOARD_ARROW_DOWN} title={titleComp} />
           </View>
         </View>
       )
@@ -109,3 +105,55 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
     )
   }
 }
+
+const noWalletSelectedStyle = {
+  ...TextAndIconButtonStyle,
+  textContainer: {},
+  inner: {
+    ...TextAndIconButtonStyle.inner,
+    width: '100%',
+    justifyContent: 'center'
+  }
+}
+
+const rawStyles = {
+  containerNoFee: {
+    width: '90%',
+    backgroundColor: THEME.COLORS.OPACITY_WHITE,
+    borderRadius: 3
+  },
+  containerNoWalletSelected: {
+    paddingVertical: scale(10),
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  containerSelectedWalletNotFocus: {
+    width: '90%',
+    paddingVertical: scale(10),
+    backgroundColor: THEME.COLORS.OPACITY_WHITE,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  topRow: {
+    height: scale(34),
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  },
+  iconContainer: {
+    height: scale(29),
+    width: scale(29),
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    borderRadius: 15,
+    marginRight: scale(8),
+    marginLeft: scale(12)
+  },
+  currencyIcon: {
+    height: scale(25),
+    width: scale(25),
+    resizeMode: 'contain'
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

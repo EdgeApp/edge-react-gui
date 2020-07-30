@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgeAccount } from 'edge-core-js/types'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
@@ -40,7 +40,7 @@ type Props = OwnProps & StateProps & DispatchProps
 
 type State = {}
 
-export class CryptoExchangeQuoteScreenComponent extends Component<Props, State> {
+export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
   calledApprove: true
 
   componentDidMount = () => {

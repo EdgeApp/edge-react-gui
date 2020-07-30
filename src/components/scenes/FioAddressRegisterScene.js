@@ -1,8 +1,8 @@
 // @flow
 
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
-import { ActivityIndicator, Image, ScrollView, TouchableOpacity, View } from 'react-native'
+import * as React from 'react'
+import { ActivityIndicator, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import fioAddressIcon from '../../assets/images/list_fioAddress.png'
@@ -10,15 +10,13 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { TextAndIconButton } from '../../modules/UI/components/Buttons/TextAndIconButton.ui.js'
+import { TextAndIconButton, TextAndIconButtonStyle } from '../../modules/UI/components/Buttons/TextAndIconButton.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import styles from '../../styles/scenes/CreateWalletStyle.js'
-import { styles as CryptoExchangeSceneStyle } from '../../styles/scenes/CryptoExchangeSceneStyles'
-import { styles as fioAddressStyles } from '../../styles/scenes/FioAddressRegisterStyle'
-import THEME from '../../theme/variables/airbitz'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../theme/variables/platform.js'
 import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
@@ -53,7 +51,7 @@ export type DispatchProps = {
 
 type Props = StateProps & DispatchProps
 
-export class FioAddressRegisterScene extends Component<Props, State> {
+export class FioAddressRegisterScene extends React.Component<Props, State> {
   fioCheckQueue: number = 0
   clearButtonMode = 'while-editing'
   returnKeyType = 'next'
@@ -261,27 +259,13 @@ export class FioAddressRegisterScene extends Component<Props, State> {
 
     let icon = null
     if ((!isValid || isAvailable === false) && touched) {
-      icon = (
-        <Icon
-          style={[fioAddressStyles.statusIcon, fioAddressStyles.statusIconError]}
-          type={Constants.MATERIAL_COMMUNITY}
-          name={Constants.CLOSE_CIRCLE_ICON}
-          size={25}
-        />
-      )
+      icon = <Icon style={[styles.statusIcon, styles.statusIconError]} type={Constants.MATERIAL_COMMUNITY} name={Constants.CLOSE_CIRCLE_ICON} size={25} />
     }
     if (isValid && isAvailable && touched) {
-      icon = (
-        <Icon
-          style={[fioAddressStyles.statusIcon, fioAddressStyles.statusIconOk]}
-          type={Constants.MATERIAL_COMMUNITY}
-          name={Constants.CHECK_CIRCLE_ICON}
-          size={25}
-        />
-      )
+      icon = <Icon style={[styles.statusIcon, styles.statusIconOk]} type={Constants.MATERIAL_COMMUNITY} name={Constants.CHECK_CIRCLE_ICON} size={25} />
     }
 
-    return <View style={fioAddressStyles.statusIconContainer}>{loading ? <ActivityIndicator style={fioAddressStyles.statusIcon} size="small" /> : icon}</View>
+    return <View style={styles.statusIconContainer}>{loading ? <ActivityIndicator style={styles.statusIcon} size="small" /> : icon}</View>
   }
 
   renderFioWallets() {
@@ -292,14 +276,12 @@ export class FioAddressRegisterScene extends Component<Props, State> {
         selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name
       }`
       return (
-        <View style={styles.blockPadding}>
-          <TextAndIconButton
-            style={{ ...CryptoExchangeSceneStyle.flipWrapper.walletSelector, container: fioAddressStyles.selectWalletBtn }}
-            onPress={this.selectFioWallet}
-            icon={Constants.KEYBOARD_ARROW_DOWN}
-            title={title}
-          />
-        </View>
+        <TextAndIconButton
+          style={{ ...TextAndIconButtonStyle, container: styles.selectWalletBtn }}
+          onPress={this.selectFioWallet}
+          icon={Constants.KEYBOARD_ARROW_DOWN}
+          title={title}
+        />
       )
     }
   }
@@ -318,7 +300,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
       ...MaterialInputOnWhite,
       container: {
         ...MaterialInputOnWhite.container,
-        ...fioAddressStyles.inputContainer,
+        ...styles.inputContainer,
         width: this.state.inputWidth
       }
     }
@@ -328,19 +310,19 @@ export class FioAddressRegisterScene extends Component<Props, State> {
         <Gradient style={styles.scrollableGradient} />
         <ScrollView ref="_scrollView">
           <View style={styles.scrollableView}>
-            <Image source={fioAddressIcon} style={fioAddressStyles.image} resizeMode="cover" />
-            <View style={[styles.createWalletPromptArea, fioAddressStyles.paddings, fioAddressStyles.title]}>
+            <Image source={fioAddressIcon} style={styles.image} resizeMode="cover" />
+            <View style={[styles.createWalletPromptArea, styles.paddings, styles.title]}>
               <T style={styles.instructionalText}>{s.strings.fio_address_first_screen_title}</T>
             </View>
-            <View style={[styles.createWalletPromptArea, fioAddressStyles.paddings]}>
+            <View style={[styles.createWalletPromptArea, styles.paddings]}>
               <T style={styles.handleRequirementsText}>{s.strings.fio_address_features}</T>
             </View>
-            <View style={[styles.createWalletPromptArea, fioAddressStyles.paddings]}>
+            <View style={[styles.createWalletPromptArea, styles.paddings]}>
               <T style={styles.handleRequirementsText}>{s.strings.fio_address_first_screen_end}</T>
             </View>
 
-            <View style={fioAddressStyles.formFieldView} ref="_fieldView" onLayout={this.fieldViewOnLayout}>
-              <View style={fioAddressStyles.formFieldViewContainer}>
+            <View style={styles.formFieldView} ref="_fieldView" onLayout={this.fieldViewOnLayout}>
+              <View style={styles.formFieldViewContainer}>
                 <FormField
                   style={materialInputOnWhiteStyle}
                   clearButtonMode={this.clearButtonMode}
@@ -359,12 +341,12 @@ export class FioAddressRegisterScene extends Component<Props, State> {
                   error={chooseHandleErrorMessage}
                   disabled={walletLoading || domainsLoading}
                 />
-                <TouchableOpacity style={fioAddressStyles.domain} onPress={this.selectFioDomain} disabled={domainsLoading}>
+                <TouchableOpacity style={styles.domain} onPress={this.selectFioDomain} disabled={domainsLoading}>
                   <View onLayout={this.domainOnLayout}>
                     {domainsLoading ? (
                       <ActivityIndicator size="small" />
                     ) : (
-                      <T style={fioAddressStyles.domainText}>
+                      <T style={styles.domainText}>
                         {Constants.FIO_ADDRESS_DELIMITER}
                         {selectedDomain.name}
                       </T>
@@ -377,7 +359,7 @@ export class FioAddressRegisterScene extends Component<Props, State> {
 
             {this.renderFioWallets()}
             {this.renderButton()}
-            <View style={fioAddressStyles.bottomSpace} />
+            <View style={styles.bottomSpace} />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -385,4 +367,121 @@ export class FioAddressRegisterScene extends Component<Props, State> {
   }
 }
 
-const calcInputWidth = (domainWidth: number) => fioAddressStyles.formFieldViewContainer.width - scale(33) - domainWidth
+const calcInputWidth = (domainWidth: number) => styles.formFieldViewContainer.width - scale(33) - domainWidth
+
+const rawStyles = {
+  scrollableGradient: {
+    height: THEME.HEADER
+  },
+  scrollableView: {
+    position: 'relative',
+    paddingHorizontal: 20
+  },
+  createWalletPromptArea: {
+    paddingTop: scale(16),
+    paddingBottom: scale(8)
+  },
+  instructionalText: {
+    fontSize: scale(16),
+    textAlign: 'center',
+    color: THEME.COLORS.GRAY_1
+  },
+  handleRequirementsText: {
+    fontSize: scale(16),
+    textAlign: 'left',
+    color: THEME.COLORS.GRAY_1
+  },
+  buttons: {
+    marginTop: scale(24),
+    flexDirection: 'row'
+  },
+  next: {
+    marginLeft: scale(1),
+    flex: 1
+  },
+
+  image: {
+    alignSelf: 'center',
+    marginTop: scale(24),
+    height: scale(50),
+    width: scale(55)
+  },
+  title: {
+    paddingTop: scale(24)
+  },
+  paddings: {
+    paddingVertical: scale(8)
+  },
+  inputContainer: {
+    width: 'auto',
+    marginTop: 0,
+    marginBottom: 0
+  },
+  statusIconError: {
+    color: THEME.COLORS.ACCENT_RED
+  },
+  statusIconOk: {
+    color: THEME.COLORS.ACCENT_MINT
+  },
+  formFieldView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: scale(14),
+    marginBottom: scale(12)
+  },
+  formFieldViewContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: PLATFORM.deviceWidth - scale(30) - scale(40)
+  },
+  statusIconContainer: {
+    width: scale(25),
+    height: scale(25)
+  },
+  statusIcon: {
+    alignSelf: 'flex-end',
+    marginTop: scale(29),
+    width: scale(25),
+    height: scale(25)
+  },
+  bottomSpace: {
+    paddingBottom: scale(500)
+  },
+  selectWalletBlock: {
+    marginTop: scale(48),
+    paddingHorizontal: scale(18),
+    paddingBottom: scale(10),
+    backgroundColor: THEME.COLORS.GRAY_3
+  },
+  selectWalletBtn: {
+    marginTop: scale(15),
+    paddingVertical: scale(10),
+    paddingHorizontal: scale(5),
+    backgroundColor: THEME.COLORS.BLUE_3
+  },
+  domain: {
+    marginTop: scale(24),
+    marginLeft: scale(5),
+    paddingHorizontal: scale(10),
+    paddingVertical: scale(4),
+    borderRadius: scale(5),
+    borderColor: THEME.COLORS.BLUE_3,
+    borderWidth: scale(2)
+  },
+  domainText: {
+    color: THEME.COLORS.BLUE_3,
+    fontSize: scale(16)
+  },
+  domainListRowName: {
+    flex: 1,
+    fontSize: THEME.rem(1),
+    color: THEME.COLORS.SECONDARY
+  },
+  domainListRowContainerTop: {
+    height: 'auto',
+    paddingLeft: THEME.rem(0.75),
+    paddingRight: THEME.rem(0.75),
+    paddingVertical: THEME.rem(0.75)
+  }
+}
+export const styles: typeof rawStyles = StyleSheet.create(rawStyles)

@@ -1,10 +1,10 @@
 // @flow
 
-import { type ChildrenArray, type Node, Component } from 'react'
+import * as React from 'react'
 import { type KeyboardEvent, Animated, Keyboard, Platform } from 'react-native'
 
 type Props = {
-  children: (animation: Animated.Value, layout: number) => ChildrenArray<Node>,
+  children: (animation: Animated.Value, layout: number) => React.ChildrenArray<React.Node>,
   downValue?: number,
   upValue?: number | ((keyboardHeight: number) => number)
 }
@@ -27,7 +27,7 @@ type Props = {
  * to make layout updates in preparation for the animation, like adding
  * extra space to the bottom of your component so a gap doesn't appear.
  */
-export class KeyboardTracker extends Component<Props> {
+export class KeyboardTracker extends React.Component<Props> {
   animation: Animated.Value
   animationGoal: number
   nextDuration: number

@@ -1,7 +1,7 @@
 // @flow
 
 import { PrimaryButton } from 'edge-components'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Text } from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
@@ -13,7 +13,7 @@ type Props = {
   buttonText: string
 }
 
-export class SimpleConfirmationModal extends Component<Props> {
+export class SimpleConfirmationModal extends React.Component<Props> {
   render() {
     const { bridge, buttonText, text } = this.props
     return (

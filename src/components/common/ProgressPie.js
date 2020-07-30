@@ -1,7 +1,7 @@
 // @flow
 
 import { Shape, Surface } from '@react-native-community/art'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Animated } from 'react-native'
 
 const CIRCLE = Math.PI * 2
@@ -12,7 +12,7 @@ type Props = {
   size: number
 }
 
-export class ProgressPie extends Component<Props> {
+export class ProgressPie extends React.Component<Props> {
   progressAnimation: Animated.Value
   progressTarget: number
 
@@ -51,7 +51,7 @@ export class ProgressPie extends Component<Props> {
 /**
  * This is a separate component so we can animate its props.
  */
-class PieShape extends Component<{ color: string, progress: number, radius: number }> {
+class PieShape extends React.Component<{ color: string, progress: number, radius: number }> {
   render() {
     const { color, progress, radius } = this.props
 

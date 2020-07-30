@@ -1,13 +1,13 @@
 // @flow
 
 import { type EdgeCurrencyInfo } from 'edge-core-js'
-import React from 'react'
-import { Image, View } from 'react-native'
+import * as React from 'react'
+import { Image, StyleSheet, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { styles } from '../../styles/MainStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 
 type Props = {
   currencyInfo: EdgeCurrencyInfo,
@@ -26,3 +26,25 @@ export function CurrencySettingsTitle(props: Props) {
     </View>
   )
 }
+
+const rawStyles = {
+  titleWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%'
+  },
+  titleImage: {
+    height: 25,
+    width: 25,
+    marginRight: 8,
+    resizeMode: 'contain'
+  },
+  titleStyle: {
+    alignSelf: 'center',
+    fontSize: 20,
+    color: THEME.COLORS.WHITE,
+    fontFamily: THEME.FONTS.DEFAULT
+  }
+}
+const styles = StyleSheet.create(rawStyles)

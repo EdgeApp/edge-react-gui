@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgePluginMap, type EdgeSwapConfig } from 'edge-core-js/types'
-import React, { type Node, Component } from 'react'
+import * as React from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
@@ -43,7 +43,7 @@ type State = {
   needsActivation: { [pluginId: string]: boolean }
 }
 
-export class SwapSettings extends Component<Props, State> {
+export class SwapSettings extends React.Component<Props, State> {
   cleanups: Array<() => mixed> = []
   sortedIds: Array<string>
 
@@ -123,7 +123,7 @@ export class SwapSettings extends Component<Props, State> {
     return <SettingsSwitchRow key={pluginId} icon={logo} text={displayName} value={this.state.enabled[pluginId]} onPress={handlePress} />
   }
 
-  renderPluginIcon(pluginId: string): Node {
+  renderPluginIcon(pluginId: string): React.Node {
     const logoSource = getSwapPluginIcon(pluginId)
     return <Image resizeMode="contain" style={styles.swapIcon} source={logoSource} />
   }

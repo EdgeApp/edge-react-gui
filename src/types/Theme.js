@@ -8,6 +8,8 @@ export type Theme = {
   background1: string,
   background2: string,
   modalBody: string,
+  modalBackgroundShadow: string,
+  modalBackgroundShadowOpacity: number,
 
   // Text colors:
   accentTextNegative: string,
@@ -23,6 +25,7 @@ export type Theme = {
   tileMore: string,
 
   // Button colors:
+  modalClose: string,
   cancelButton: string,
   primaryButton: string,
   primaryButtonText: string,

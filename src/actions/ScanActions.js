@@ -2,7 +2,7 @@
 
 import { createThreeButtonModal, createYesNoModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
-import React from 'react'
+import * as React from 'react'
 import { Alert, Linking } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'

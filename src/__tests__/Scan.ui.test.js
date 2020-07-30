@@ -1,7 +1,7 @@
 // @flow
 /* globals jest describe it expect */
 
-import React from 'react'
+import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { Scan } from '../components/scenes/ScanScene.js'

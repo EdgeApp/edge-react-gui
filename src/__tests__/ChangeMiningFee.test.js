@@ -1,7 +1,7 @@
 /* globals jest describe it expect */
 // @flow
 
-import React from 'react'
+import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { ChangeMiningFee } from '../components/scenes/ChangeMiningFeeScene.js'

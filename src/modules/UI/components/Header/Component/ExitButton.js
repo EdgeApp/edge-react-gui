@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
@@ -10,7 +10,7 @@ import styles from '../style'
 
 type Props = {}
 
-class ExitButton extends Component<Props> {
+class ExitButton extends React.Component<Props> {
   popThis = () => {
     Actions.pop()
   }

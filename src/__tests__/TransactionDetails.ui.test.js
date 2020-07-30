@@ -2,7 +2,7 @@
 /* globals jest describe it expect */
 
 import { type EdgeCurrencyWallet } from 'edge-core-js'
-import React from 'react'
+import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { TransactionDetailsComponent } from '../components/scenes/TransactionDetailsScene.js'

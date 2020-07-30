@@ -2,7 +2,7 @@
 
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { ChangePinScreen } from 'edge-login-ui-rn'
-import React, { Component } from 'react'
+import * as React from 'react'
 
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
@@ -24,7 +24,7 @@ export type ChangePinStateProps = {
 
 type ChangePinComponentProps = ChangePinOwnProps & ChangePinDispatchProps & ChangePinStateProps
 
-export default class ChangePassword extends Component<ChangePinComponentProps> {
+export default class ChangePassword extends React.Component<ChangePinComponentProps> {
   onComplete = () => {
     this.props.onComplete()
   }

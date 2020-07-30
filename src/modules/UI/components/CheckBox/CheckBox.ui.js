@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, View } from 'react-native'
 
 import Checkmark from '../../../../assets/images/manageTokens/check_mark.png'
@@ -10,7 +10,7 @@ export type Props = {
   enabled: boolean
 }
 
-class CheckBox extends Component<Props> {
+class CheckBox extends React.Component<Props> {
   render() {
     const { enabled } = this.props
 

@@ -3,7 +3,7 @@
 import { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Keyboard, Linking, Platform, StatusBar, StyleSheet, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
 import { getBundleId } from 'react-native-device-info'
@@ -46,7 +46,7 @@ type State = {
 
 let firstRun = true
 
-class LoginSceneComponent extends Component<Props, State> {
+class LoginSceneComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
 

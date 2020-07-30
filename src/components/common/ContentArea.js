@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type Node } from 'react'
+import * as React from 'react'
 import { View } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -12,7 +12,7 @@ type BackgroundOptions =
   | 'tray' // Off-white tray area
 
 type Props = {
-  children: Node,
+  children: React.Node,
   background?: BackgroundOptions,
 
   // True if we should expand to fill all available space,

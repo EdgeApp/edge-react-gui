@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { sprintf } from 'sprintf-js'
 
 import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
@@ -24,7 +24,7 @@ export type Props = {
   uniqueIdentifierChanged: (uniqueIdentifier: string) => void,
   keyboardType: ?string
 }
-export class UniqueIdentifierModal extends Component<Props> {
+export class UniqueIdentifierModal extends React.Component<Props> {
   render() {
     const {
       currencyCode,

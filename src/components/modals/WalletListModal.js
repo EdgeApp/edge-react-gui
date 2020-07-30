@@ -2,7 +2,7 @@
 
 import { FormField, MaterialInputStyle } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { FlatList, View } from 'react-native'
 import { connect } from 'react-redux'
 
@@ -73,7 +73,7 @@ type State = {
 
 type Props = StateProps & OwnProps & DispatchProps
 
-class WalletListModalConnected extends Component<Props, State> {
+class WalletListModalConnected extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

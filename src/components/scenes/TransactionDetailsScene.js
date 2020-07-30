@@ -2,8 +2,8 @@
 
 import { abs, bns, sub } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
-import React, { Component } from 'react'
-import { Image, Linking, Platform, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import * as React from 'react'
+import { Image, Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import slowlog from 'react-native-slowlog'
@@ -20,16 +20,14 @@ import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButto
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getSelectedWallet, getWallet } from '../../modules/UI/selectors.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils.js'
-import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { Tile } from '../common/Tile.js'
-import { createAdvancedTransactionDetailsModal } from '../modals/AdvancedTransactionDetailsModal.js'
 import { RawTextModal } from '../modals/RawTextModal.js'
+import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
 import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInput.js'
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
@@ -67,8 +65,7 @@ type State = {
   bizId: number,
   miscJson: any, // core receives this as a string
   category: string,
-  subCategory: string,
-  styles: StyleSheet
+  subCategory: string
 }
 
 const categories = {
@@ -104,7 +101,7 @@ type FiatCurrentAmountUI = {
 }
 
 // Only exported for unit-testing purposes
-export class TransactionDetailsComponent extends Component<Props, State> {
+export class TransactionDetailsComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { thumbnailPath } = props
@@ -124,8 +121,7 @@ export class TransactionDetailsComponent extends Component<Props, State> {
       thumbnailPath,
       direction,
       bizId: 0,
-      miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : '',
-      styles: getStyles(props.theme)
+      miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : ''
     }
     slowlog(this, /.*/, global.slowlogOptions)
   }
@@ -155,10 +151,6 @@ export class TransactionDetailsComponent extends Component<Props, State> {
       }
     }
     return { category: defaultCategory, subCategory: '' }
-  }
-
-  static getDerivedStateFromProps(props: Props) {
-    return { styles: getStyles(props.theme) }
   }
 
   componentDidMount() {
@@ -224,19 +216,24 @@ export class TransactionDetailsComponent extends Component<Props, State> {
   }
 
   openAdvancedDetails = async () => {
-    const { edgeTransaction, currencyInfo } = this.props
-    await launchModal(
-      createAdvancedTransactionDetailsModal({
-        txExplorerUrl: currencyInfo ? sprintf(currencyInfo.transactionExplorer, edgeTransaction.txid) : null,
-        ...edgeTransaction
-      })
-    )
+    const { currencyInfo } = this.props
+    Airship.show(bridge => (
+      <TransactionAdvanceDetails
+        bridge={bridge}
+        feeRateUsed={this.props.edgeTransaction.feeRateUsed}
+        networkFeeOption={this.props.edgeTransaction.networkFeeOption}
+        requestedCustomFee={this.props.edgeTransaction.requestedCustomFee}
+        signedTx={this.props.edgeTransaction.signedTx}
+        txid={this.props.edgeTransaction.txid}
+        url={currencyInfo ? sprintf(currencyInfo.transactionExplorer, this.props.edgeTransaction.txid) : undefined}
+      />
+    ))
   }
 
   renderExchangeData = () => {
     const { destinationDenomination, destinationWallet, edgeTransaction, guiWallet, walletDefaultDenomProps, theme } = this.props
-    const { styles } = this.state
     const { swapData, spendTargets } = edgeTransaction
+    const styles = getStyles(theme)
 
     if (!swapData || !spendTargets || !destinationDenomination) return null
 
@@ -413,9 +410,10 @@ export class TransactionDetailsComponent extends Component<Props, State> {
 
   // Render
   render() {
-    const { guiWallet, edgeTransaction } = this.props
-    const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory, styles } = this.state
+    const { guiWallet, edgeTransaction, theme } = this.props
+    const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory } = this.state
     const { fiatCurrencyCode } = guiWallet
+    const styles = getStyles(theme)
 
     const crypto: FiatCryptoAmountUI = direction === 'receive' ? this.getReceivedCryptoAmount() : this.getSentCryptoAmount()
     const fiatSymbol = UTILS.getFiatSymbol(guiWallet.fiatCurrencyCode)
@@ -445,7 +443,7 @@ export class TransactionDetailsComponent extends Component<Props, State> {
                   {thumbnailPath ? (
                     <Image style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
                   ) : (
-                    <IonIcon style={styles.tileAvatarIcon} name="ios-contact" size={THEME.rem(2)} />
+                    <IonIcon style={styles.tileAvatarIcon} name="ios-contact" size={theme.rem(2)} />
                   )}
                   <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
                 </View>
@@ -484,7 +482,6 @@ export class TransactionDetailsComponent extends Component<Props, State> {
               <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
                 <FormattedText style={styles.textTransactionData}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
               </TouchableWithoutFeedback>
-              <View style={styles.spacer} />
               <View style={styles.saveButtonContainer}>
                 <PrimaryButton2 style={styles.saveButton} onPress={this.onSaveTxDetails}>
                   <PrimaryButton2.Text>{s.strings.string_save}</PrimaryButton2.Text>

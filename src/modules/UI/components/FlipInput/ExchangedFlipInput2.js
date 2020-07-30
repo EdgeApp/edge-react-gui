@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import React, { Component } from 'react'
+import * as React from 'react'
 import slowlog from 'react-native-slowlog'
 
 import type { GuiCurrencyInfo } from '../../../../types/types.js'
@@ -117,7 +117,7 @@ function propsToState(props: Props): State {
   return { primaryInfo, secondaryInfo, exchangeSecondaryToPrimaryRatio, overridePrimaryDecimalAmount }
 }
 
-export class ExchangedFlipInput extends Component<Props, State> {
+export class ExchangedFlipInput extends React.Component<Props, State> {
   flipInput: any
   toggleCryptoOnTop: any
 

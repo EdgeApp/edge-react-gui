@@ -367,6 +367,9 @@ Object {
       "REP": Object {
         "denomination": "1000000000000000000",
       },
+      "REPV2": Object {
+        "denomination": "1000000000000000000",
+      },
       "RIF": Object {
         "denomination": "1000000000000000000",
       },

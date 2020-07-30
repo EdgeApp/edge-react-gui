@@ -1,6 +1,6 @@
 // @flow
 
-import React, { PureComponent } from 'react'
+import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 import s from '../../../../locales/strings'
@@ -13,7 +13,7 @@ export type Props = {
   fioAddressModal(): mixed,
   shareViaShare(): mixed
 }
-export class ShareButtons extends PureComponent<Props> {
+export class ShareButtons extends React.PureComponent<Props> {
   render() {
     const { copyToClipboard, shareViaShare, fioAddressModal } = this.props
 

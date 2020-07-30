@@ -1,16 +1,15 @@
 // @flow
 
-import React, { Component } from 'react'
-import type { Node } from 'react-native'
+import * as React from 'react'
 import { StyleSheet, Text as RNText, TouchableHighlight, View } from 'react-native'
 
 import { rawStyles, styles } from './style.js'
 
 export type TextProps = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles
 }
-class Text extends Component<TextProps> {
+class Text extends React.Component<TextProps> {
   render() {
     const { children, style, ...props } = this.props
     return (
@@ -22,11 +21,11 @@ class Text extends Component<TextProps> {
 }
 
 export type Props = {
-  children: Node,
+  children: React.Node,
   style?: StyleSheet.Styles,
   onPress?: () => mixed
 }
-export class PrimaryButton2 extends Component<Props> {
+export class PrimaryButton2 extends React.Component<Props> {
   static Text = Text
   render() {
     const { children, style, ...props } = this.props

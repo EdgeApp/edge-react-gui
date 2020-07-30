@@ -1,7 +1,7 @@
 // @flow
 
 import { createStaticModal, createYesNoModal } from 'edge-components'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Clipboard, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
@@ -34,7 +34,7 @@ type State = {
   messageModalComponent?: any
 }
 
-export default class OtpSettingsScene extends Component<Props, State> {
+export default class OtpSettingsScene extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {

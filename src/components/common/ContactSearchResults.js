@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { FlatList, Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 
 import ContactImage from '../../assets/images/contact.png'
@@ -21,7 +21,7 @@ type FlatListItem = {
   index: number
 }
 
-export class ContactSearchResults extends Component<Props> {
+export class ContactSearchResults extends React.Component<Props> {
   render() {
     const filteredArray = []
     const { contacts, currentPayeeText } = this.props

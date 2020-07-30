@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
@@ -17,7 +17,7 @@ type State = {
   pressed: boolean
 }
 
-export class TextAndIconButton extends Component<Props, State> {
+export class TextAndIconButton extends React.Component<Props, State> {
   UNSAFE_componentWillMount() {
     this.setState({
       pressed: false

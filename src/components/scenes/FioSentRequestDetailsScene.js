@@ -1,7 +1,7 @@
 // @flow
 
-import React, { Component } from 'react'
-import { View } from 'react-native'
+import * as React from 'react'
+import { StyleSheet, View } from 'react-native'
 
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
@@ -9,8 +9,9 @@ import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import { styles } from '../../styles/scenes/FioSentRequestDetailsStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import type { FioRequest } from '../../types/types'
+import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 
 export type NavigationProps = {
@@ -32,7 +33,7 @@ type LocalState = {
   focused: boolean
 }
 
-export class FioSentRequestDetailsComponent extends Component<Props, LocalState> {
+export class FioSentRequestDetailsComponent extends React.Component<Props, LocalState> {
   constructor(props: Props) {
     super(props)
     const state: LocalState = {
@@ -121,3 +122,43 @@ export class FioSentRequestDetailsComponent extends Component<Props, LocalState>
     )
   }
 }
+
+const rawStyles = {
+  line: {
+    backgroundColor: THEME.COLORS.WHITE,
+    height: 0,
+    paddingLeft: scale(50),
+    paddingRight: scale(50)
+  },
+  row: {
+    height: scale(100),
+    justifyContent: 'space-around',
+    paddingTop: scale(40)
+  },
+  lineRow: {
+    justifyContent: 'center',
+    paddingLeft: scale(50),
+    paddingRight: scale(50),
+    paddingTop: 0
+  },
+  title: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16),
+    fontWeight: 'normal',
+    textAlign: 'center'
+  },
+  text: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(13),
+    fontWeight: 'normal',
+    textAlign: 'center',
+    paddingHorizontal: scale(20)
+  },
+  titleRejected: {
+    color: THEME.COLORS.ACCENT_RED
+  },
+  titleReceived: {
+    color: THEME.COLORS.ACCENT_MINT
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

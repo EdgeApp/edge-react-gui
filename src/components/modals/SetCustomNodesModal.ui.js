@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Platform, StyleSheet, TextInput, View } from 'react-native'
 
 import { MATERIAL_COMMUNITY, SERVER } from '../../constants/indexConstants.js'
@@ -30,7 +30,7 @@ export type SetCustomNodesModalState = {
 
 export type SetCustomNodeModalProps = SetCustomNodesModalOwnProps
 
-export class SetCustomNodesModal extends Component<SetCustomNodeModalProps, SetCustomNodesModalState> {
+export class SetCustomNodesModal extends React.Component<SetCustomNodeModalProps, SetCustomNodesModalState> {
   constructor(props: SetCustomNodeModalProps) {
     super(props)
     const { electrumServers } = this.props

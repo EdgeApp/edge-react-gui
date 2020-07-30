@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react'
 import { Text } from 'react-native'
 
 import { EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/IconConstants.js'

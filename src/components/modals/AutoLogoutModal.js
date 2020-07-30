@@ -1,7 +1,7 @@
 // @flow
 
 import { PrimaryButton, SecondaryButton } from 'edge-components'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Picker, Text, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -18,7 +18,7 @@ type Props = {
 
 type State = DisplayTime
 
-export class AutoLogoutModal extends Component<Props, State> {
+export class AutoLogoutModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { autoLogoutTimeInSeconds } = this.props

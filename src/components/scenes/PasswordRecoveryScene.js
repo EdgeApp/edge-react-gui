@@ -1,7 +1,7 @@
 // @flow
 
 import { PasswordRecoveryScreen } from 'edge-login-ui-rn'
-import React, { Component } from 'react'
+import * as React from 'react'
 
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
@@ -11,7 +11,7 @@ type Props = {
   showHeader: boolean,
   onComplete(): void
 }
-export default class PasswordRecovery extends Component<Props> {
+export default class PasswordRecovery extends React.Component<Props> {
   render() {
     return (
       <SceneWrapper hasTabs={false} background="body">

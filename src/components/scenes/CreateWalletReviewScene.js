@@ -1,7 +1,7 @@
 // @flow
 
-import React, { Component } from 'react'
-import { ActivityIndicator, Image, Keyboard, View } from 'react-native'
+import * as React from 'react'
+import { ActivityIndicator, Image, Keyboard, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -14,9 +14,11 @@ import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryBu
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import styles from '../../styles/scenes/CreateWalletStyle.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { PLATFORM } from '../../theme/variables/platform.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
+import { scale } from '../../util/scaling.js'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { FullScreenTransitionComponent } from '../common/FullScreenTransition.js'
 
@@ -38,7 +40,7 @@ type State = {
   isAnimationVisible: boolean
 }
 
-class CreateWalletReviewComponent extends Component<Props, State> {
+class CreateWalletReviewComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -113,6 +115,71 @@ class CreateWalletReviewComponent extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  scene: {
+    flex: 1,
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  gradient: {
+    height: THEME.HEADER,
+    width: '100%',
+    position: 'absolute'
+  },
+  view: {
+    position: 'relative',
+    top: THEME.HEADER,
+    paddingHorizontal: 20,
+    height: PLATFORM.usableHeight
+  },
+  currencyLogo: {
+    alignSelf: 'center',
+    marginTop: scale(24),
+    height: scale(64),
+    width: scale(64)
+  },
+  instructionalArea: {
+    paddingVertical: scale(16),
+    paddingHorizontal: scale(20)
+  },
+  instructionalText: {
+    fontSize: scale(16),
+    textAlign: 'center',
+    color: THEME.COLORS.GRAY_1
+  },
+  reviewArea: {
+    paddingVertical: scale(18)
+  },
+  reviewAreaText: {
+    fontSize: scale(16),
+    lineHeight: scale(24),
+    color: THEME.COLORS.BLACK
+  },
+  text: {
+    color: THEME.COLORS.WHITE
+  },
+  buttons: {
+    marginTop: scale(24),
+    flexDirection: 'row'
+  },
+  create: {
+    flex: 1
+  },
+  cancel: {
+    flex: 1,
+    marginRight: scale(2),
+    backgroundColor: THEME.COLORS.GRAY_2,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 3
+  },
+  createWalletImportTransitionText: {
+    fontSize: 24,
+    textAlign: 'center',
+    color: THEME.COLORS.SECONDARY
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const CreateWalletReviewScene = connect(
   (state: ReduxState): StateProps => ({

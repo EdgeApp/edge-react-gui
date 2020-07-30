@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Clipboard, Linking, Platform, Text } from 'react-native'
 
 import { EYE_ICON, ION_ICONS } from '../../constants/IconConstants.js'
@@ -28,7 +28,7 @@ type XPubModalState = {}
 
 type XPubModalComponentProps = XPubModalOwnProps & XPubModalStateProps & XPubModalDispatchProps
 
-export default class XPubModal extends Component<XPubModalComponentProps, XPubModalState> {
+export default class XPubModal extends React.Component<XPubModalComponentProps, XPubModalState> {
   _onPressCopy = () => {
     try {
       this.props.onExit()

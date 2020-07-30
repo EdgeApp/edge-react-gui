@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Image, Platform, ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
@@ -33,7 +33,7 @@ export type Props = {
   logout: (username?: string) => void,
   usersView: boolean
 }
-export default class Main extends Component<Props> {
+export default class Main extends React.Component<Props> {
   render() {
     const { usersView } = this.props
 

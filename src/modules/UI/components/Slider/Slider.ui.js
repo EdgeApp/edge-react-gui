@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import NativeSlider from 'react-native-slider'
 import slowlog from 'react-native-slowlog'
@@ -30,7 +30,7 @@ type State = {
   value: number
 }
 
-export class Slider extends Component<Props, State> {
+export class Slider extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
 

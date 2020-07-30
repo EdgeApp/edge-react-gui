@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react'
 import { AppState } from 'react-native'
 import RNPermissions from 'react-native-permissions'
 import { connect } from 'react-redux'

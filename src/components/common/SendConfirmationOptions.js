@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Keyboard, StyleSheet, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
 
@@ -27,7 +27,7 @@ type Props = {
   isEditable: boolean
 }
 
-export default class SendConfirmationOptions extends Component<Props> {
+export default class SendConfirmationOptions extends React.Component<Props> {
   handleMenuOptions(key: Option | string) {
     switch (key) {
       case CHANGE_MINING_FEE:

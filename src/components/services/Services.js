@@ -3,7 +3,7 @@
 
 import { makeReactNativeDisklet } from 'disklet'
 import { type EdgeContext } from 'edge-core-js/types'
-import React, { PureComponent } from 'react'
+import * as React from 'react'
 import { MenuProvider } from 'react-native-popup-menu'
 import { Provider } from 'react-redux'
 import { type Store, applyMiddleware, compose, createStore } from 'redux'
@@ -34,7 +34,7 @@ type Props = { context: EdgeContext }
  * Provides various global services to the application,
  * including the Redux store, pop-up menus, modals, etc.
  */
-export class Services extends PureComponent<Props> {
+export class Services extends React.PureComponent<Props> {
   store: Store<State, Action>
   dispatch: Dispatch
 

@@ -2,7 +2,7 @@
 
 import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
@@ -50,7 +50,7 @@ type State = {
   enabled?: boolean
 }
 
-class EditTokenComponent extends Component<Props, State> {
+class EditTokenComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const tokenInfoIndex = _.findIndex(props.customTokens, item => item.currencyCode === props.currencyCode)

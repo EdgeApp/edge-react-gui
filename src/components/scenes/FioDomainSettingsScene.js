@@ -3,8 +3,8 @@
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import * as React from 'react'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants'
@@ -14,7 +14,7 @@ import { getRenewalFee, renewFioName } from '../../modules/FioAddress/util'
 import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
-import { styles } from '../../styles/scenes/FioAddressSettingsStyle'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError, showToast } from '../services/AirshipInstance'
@@ -48,7 +48,7 @@ export type NavigationProps = {
 
 type Props = NavigationProps & StateProps & DispatchProps
 
-export class FioDomainSettingsScene extends Component<Props, State> {
+export class FioDomainSettingsScene extends React.Component<Props, State> {
   state: State = {
     showRenew: false,
     renewError: '',
@@ -159,7 +159,6 @@ export class FioDomainSettingsScene extends Component<Props, State> {
         <View style={styles.spacer} />
         {displayFee ? (
           <View>
-            <View style={styles.balanceText} />
             <T style={styles.title}>{s.strings.fio_address_confirm_screen_balance_label}</T>
             <T style={displayFee > balance ? styles.balanceTitleDisabled : styles.balanceTitle}>
               {balance ? balance.toFixed(2) : '0'} {balance ? s.strings.fio_address_confirm_screen_fio_label : ''}
@@ -197,7 +196,7 @@ export class FioDomainSettingsScene extends Component<Props, State> {
         {this.renderFeeAndBalance()}
         {showRenew && renewalFee !== null && !feeLoading ? (
           <View style={styles.blockPadding}>
-            <Scene.Footer style={styles.footer}>
+            <Scene.Footer>
               <Slider
                 forceUpdateGuiCounter={0}
                 resetSlider={false}
@@ -213,3 +212,49 @@ export class FioDomainSettingsScene extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  info: {
+    backgroundColor: THEME.COLORS.SECONDARY,
+    paddingVertical: THEME.rem(1),
+    paddingHorizontal: THEME.rem(1),
+    marginBottom: THEME.rem(0.25)
+  },
+  title: {
+    color: THEME.COLORS.TRANSACTION_DETAILS_GREY_1,
+    marginBottom: THEME.rem(0.25),
+    fontSize: THEME.rem(0.75),
+    fontWeight: 'normal',
+    textAlign: 'left'
+  },
+  content: {
+    color: THEME.COLORS.WHITE,
+    fontSize: THEME.rem(1),
+    textAlign: 'left'
+  },
+  texts: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  balanceTitle: {
+    fontSize: THEME.rem(1),
+    color: THEME.COLORS.WHITE,
+    textAlign: 'center'
+  },
+  balanceTitleDisabled: {
+    fontSize: THEME.rem(1),
+    color: THEME.COLORS.ACCENT_RED,
+    fontWeight: 'normal',
+    textAlign: 'center'
+  },
+  blockPadding: {
+    paddingTop: THEME.rem(2),
+    paddingLeft: THEME.rem(1.25),
+    paddingRight: THEME.rem(1.25)
+  },
+  spacer: {
+    paddingTop: THEME.rem(1.25)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

@@ -3,15 +3,16 @@
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
-import React, { Component } from 'react'
-import { Alert, View } from 'react-native'
+import * as React from 'react'
+import { Alert, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
-import { styles } from '../../styles/scenes/FioAddressConfirmStyle'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { scale } from '../../util/scaling.js'
 import { getFeeDisplayed, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -37,7 +38,7 @@ export type NavigationProps = {
 
 type Props = NavigationProps & StateProps
 
-export class FioAddressConfirmScene extends Component<Props, State> {
+export class FioAddressConfirmScene extends React.Component<Props, State> {
   state: State = {
     balance: null,
     sliderDisabled: false,
@@ -170,10 +171,9 @@ export class FioAddressConfirmScene extends Component<Props, State> {
             ) : null}
           </View>
           <View style={styles.blockPadding}>
-            <Scene.Footer style={styles.footer}>
+            <Scene.Footer>
               <Slider
                 resetSlider={false}
-                parentStyle={styles.sliderStyle}
                 onSlidingComplete={this.saveFioAddress}
                 sliderDisabled={(!balance && !!fee) || (balance !== null && fee > balance)}
                 showSpinner={loading}
@@ -186,3 +186,50 @@ export class FioAddressConfirmScene extends Component<Props, State> {
     )
   }
 }
+
+const rawStyles = {
+  scene: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch'
+  },
+  info: {
+    paddingTop: scale(30),
+    paddingLeft: scale(6),
+    paddingRight: scale(6)
+  },
+  toggleButton: {
+    backgroundColor: THEME.COLORS.PRIMARY,
+    height: scale(58),
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+  },
+  title: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16),
+    fontWeight: 'normal',
+    textAlign: 'center'
+  },
+  titleDisabled: {
+    color: THEME.COLORS.ACCENT_RED,
+    fontSize: scale(16),
+    fontWeight: 'normal',
+    textAlign: 'center'
+  },
+  titleLarge: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(22),
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  blockPadding: {
+    paddingTop: scale(54),
+    paddingLeft: scale(20),
+    paddingRight: scale(20)
+  },
+  spacer: {
+    paddingTop: scale(20)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

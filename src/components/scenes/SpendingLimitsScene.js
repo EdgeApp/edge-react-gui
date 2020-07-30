@@ -1,7 +1,7 @@
 // @flow
 
 import { Gradient, Scene } from 'edge-components'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, Switch } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -26,7 +26,7 @@ export type SpendingLimitsState = {
   transactionAmount: number,
   transactionIsEnabled: boolean
 }
-export class SpendingLimitsComponent extends Component<SpendingLimitsOwnProps, SpendingLimitsState> {
+export class SpendingLimitsComponent extends React.Component<SpendingLimitsOwnProps, SpendingLimitsState> {
   constructor(props: SpendingLimitsOwnProps) {
     super(props)
     this.state = {

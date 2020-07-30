@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import OpenAppSettings from 'react-native-app-settings'
 import { RNCamera } from 'react-native-camera'
@@ -34,7 +34,7 @@ type Props = {
   selectFromWalletForExchange: (walletId: string, currencyCode: string) => void
 }
 
-export class Scan extends Component<Props> {
+export class Scan extends React.Component<Props> {
   constructor(props: Props) {
     super(props)
     slowlog(this, /.*/, global.slowlogOptions)
