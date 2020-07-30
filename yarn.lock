@@ -3900,9 +3900,9 @@ edge-login-ui-rn@^0.6.11:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#25044c4":
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#b864613":
   version "0.1.2"
-  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#25044c42b083eaaf71e6cc424bc55108faa46423"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#b864613c7fd62949b80c6f6616b6180abc1a6bd5"
   dependencies:
     cleaners "^0.2.0"
     js-sha256 "^0.9.0"
