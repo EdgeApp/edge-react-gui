@@ -1,5 +1,18 @@
 # edge-react-gui
 
+## 1.16.3 (2020-07-30)
+
+- Add additional fee data to transaction details
+- Upgrade edge-currency-bitcoin to v4.8.6
+  - Tweak electrumwss server scoring logic so negative scores don't get reset
+- Upgrade edge-currency-accountbased to v0.7.16
+  - Add REPv2 ERC20 token
+  - Add new Tezos API service
+- Upgrade edge-exchange-plugins to v0.11.5
+  - Add REPv2 exchange rate
+  - Prevent Totle plugin from returning arbitrage quotes for transfers
+- Upgrade Wyre plugin
+
 ## 1.16.2 (2020-07-17)
 
 - Upgrade Wyre plugin
