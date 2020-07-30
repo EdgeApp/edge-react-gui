@@ -106,6 +106,7 @@ export const WALLET_TYPE_ORDER = [
   'wallet:smartcash',
   'wallet:groestlcoin',
   'wallet:zcoin',
+  'wallet:zcoins',
   'wallet:ufo'
 ]
 
@@ -308,6 +309,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   BAT: {
     showEarnInterestCard: true
+  },
+  XZC: {
+    customTxTitle: s.strings.fragment_transaction_list_mint_tx_title
   }
 }
 

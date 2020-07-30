@@ -29,6 +29,7 @@ import com.reactnativecommunity.webview.RNCWebViewPackage;
 import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 import com.rnfs.RNFSPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
+import com.zcoin.sigma.RNZcoinSigmaPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
@@ -77,7 +78,8 @@ public class MainApplication extends Application implements ReactApplication {
               new RNDeviceInfo(),
               new ReactNativeContacts(),
               new RNCameraPackage(),
-              new ExtraDimensionsPackage());
+              new ExtraDimensionsPackage(),
+              new RNZcoinSigmaPackage());
         }
 
         @Override

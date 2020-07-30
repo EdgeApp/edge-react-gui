@@ -171,6 +171,7 @@
     "react-native-v8": ">=0.59.10-patch.0 <0.59.11",
     "react-native-vector-icons": "^6.1.0",
     "react-native-webview": "git://github.com/swansontec/react-native-webview#edge-version",
+    "react-native-zcoin-sigma": "git://github.com/zcoinofficial/react-native-zcoin-sigma#19ee21a6ac18bf67b3ea6e6b988e0c4ad33987bd",
     "react-redux": "^5.0.5",
     "redux": "^3.7.1",
     "redux-thunk": "^2.2.0",

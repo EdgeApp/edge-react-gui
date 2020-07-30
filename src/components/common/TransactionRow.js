@@ -9,6 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import receivedTypeImage from '../../assets/images/transactions/transaction-type-received.png'
 import sentTypeImage from '../../assets/images/transactions/transaction-type-sent.png'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -80,6 +81,9 @@ export class TransactionRowComponent extends React.Component<Props, State> {
     } else {
       txName = s.strings.fragment_transaction_list_receive_prefix + currencyName
       txImage = receivedTypeImage
+    }
+    if (tx.otherParams.needCustomTxTitle) {
+      txName = getSpecialCurrencyInfo(this.props.selectedCurrencyCode).customTxTitle
     }
 
     if (tx.metadata && tx.metadata.name) {

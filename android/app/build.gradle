@@ -192,6 +192,7 @@ dependencies {
     implementation project(':react-native-tcp')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-webview')
+    implementation project(':react-native-zcoin-sigma')
 
     // Add v8-android - prebuilt libv8android.so into APK
     implementation 'org.chromium:v8-android:+'
