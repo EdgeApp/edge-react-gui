@@ -93,6 +93,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   REP: {
     denomination: '1000000000000000000'
   },
+  REPV2: {
+    denomination: '1000000000000000000'
+  },
   WINGS: {
     denomination: '1000000000000000000'
   },
@@ -267,6 +270,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   ETC: 'object',
   UFO: 'object',
   REP: 'object',
+  REPV2: 'object',
   WINGS: 'object',
   AGLD: 'object',
   IND: 'object',
