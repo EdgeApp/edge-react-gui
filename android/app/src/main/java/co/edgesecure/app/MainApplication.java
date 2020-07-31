@@ -12,6 +12,8 @@ import com.bitgo.randombytes.RandomBytesPackage;
 import com.bugsnag.BugsnagReactNative;
 import com.chirag.RNMail.RNMail;
 import com.facebook.react.ReactApplication;
+import io.expo.appearance.RNCAppearancePackage;
+import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.modules.i18nmanager.I18nUtil;
@@ -52,6 +54,8 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new RNCAppearancePackage(),
+            new RNDateTimePickerPackage(),
               new RNLocalizePackage(),
               new ARTPackage(),
               new AsyncStoragePackage(),

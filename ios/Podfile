@@ -53,4 +53,8 @@ target 'edge' do
   pod 'RNStoreReview', :path => '../node_modules/react-native-store-review/ios'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
+  pod 'react-native-appearance', :path => '../node_modules/react-native-appearance'
+
 end
