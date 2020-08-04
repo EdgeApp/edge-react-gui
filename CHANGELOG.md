@@ -1,5 +1,11 @@
 # edge-react-gui
 
+## 1.16.4 (2020-08-04)
+
+- Upgrade edge-currency-accountbased to v0.7.17
+  - FIO checkTransactions algorithm update to page transactions
+  - Fix REPv2 token address
+
 ## 1.16.3 (2020-07-30)
 
 - Add additional fee data to transaction details
