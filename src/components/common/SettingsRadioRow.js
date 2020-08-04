@@ -23,9 +23,9 @@ function SettingsRadioRowComponent(props: Props): Node {
   const { disabled, icon, text, isSelected, onPress, theme } = props
 
   const radio = isSelected ? (
-    <IonIcon size={theme.rem(1.25)} color={theme.settingsIconMintColor} name="ios-radio-button-on" />
+    <IonIcon size={theme.rem(1.25)} color={theme.iconTappable} name="ios-radio-button-on" />
   ) : (
-    <IonIcon size={theme.rem(1.25)} color={theme.settingsIconColor} name="ios-radio-button-off" />
+    <IonIcon size={theme.rem(1.25)} color={theme.icon} name="ios-radio-button-off" />
   )
 
   return <SettingsRow disabled={disabled} icon={icon} text={text} right={radio} onPress={onPress} />

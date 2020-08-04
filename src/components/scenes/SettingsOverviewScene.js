@@ -165,18 +165,18 @@ class SettingsOverviewComponent extends Component<Props, State> {
     }
     const autoLogoutRightText = autoLogout.value === 0 ? s.strings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
 
-    const rightArrow = <AntDesignIcon name="right" color={theme.settingsIconColor} size={theme.rem(1)} />
+    const rightArrow = <AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />
 
     return (
       <SceneWrapper hasTabs={false}>
         <ScrollView>
           <SettingsHeaderRow
-            icon={<FontAwesomeIcon name="user-o" color={theme.settingsIconColor} size={iconSize} />}
+            icon={<FontAwesomeIcon name="user-o" color={theme.icon} size={iconSize} />}
             text={`${s.strings.settings_account_title_cap}: ${this.props.username}`}
           />
           <SettingsRow
             text={s.strings[this.props.lockButton]}
-            right={<IonIcon name={this.props.lockButtonIcon} color={theme.settingsIconMintColor} size={iconSize} />}
+            right={<IonIcon name={this.props.lockButtonIcon} color={theme.iconTappable} size={iconSize} />}
             onPress={this.showConfirmPasswordModal}
           />
           <SettingsRow
@@ -195,10 +195,7 @@ class SettingsOverviewComponent extends Component<Props, State> {
             marginBottom={false}
           />
 
-          <SettingsHeaderRow
-            icon={<IonIcon name="ios-options" color={theme.settingsIconColor} size={iconSize} />}
-            text={s.strings.settings_options_title_cap}
-          />
+          <SettingsHeaderRow icon={<IonIcon name="ios-options" color={theme.icon} size={iconSize} />} text={s.strings.settings_options_title_cap} />
           <SettingsRow text={s.strings.settings_exchange_settings} right={rightArrow} onPress={this._onPressExchangeSettings} />
           <SettingsRow text={s.strings.spending_limits} right={rightArrow} onPress={this._onPressSpendingLimits} />
           <SettingsLabelRow
@@ -273,10 +270,10 @@ const getStyles = cacheStyles(theme => {
       width: '100%',
       height: theme.rem(3),
       borderRadius: theme.rem(1.5),
-      backgroundColor: theme.settingsButtonBackgroud
+      backgroundColor: theme.primaryButton
     },
     buttonText: {
-      color: theme.settingsButtonText
+      color: theme.primaryButtonText
     }
   }
 })

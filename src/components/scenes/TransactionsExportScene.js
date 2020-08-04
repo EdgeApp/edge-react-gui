@@ -146,7 +146,7 @@ class TransactionsExportSceneComponent extends PureComponent<Props, State> {
     const { theme } = this.props
     const styles = getStyles(theme)
     const iconSize = theme.rem(1.25)
-    const rightArrow = <AntDesign name="right" color={theme.settingsIconColor} size={theme.rem(1)} />
+    const rightArrow = <AntDesign name="right" color={theme.icon} size={theme.rem(1)} />
 
     const walletName = `${this.props.sourceWallet.name || s.strings.string_no_wallet_name} (${this.props.currencyCode})`
     const startDateString = formatExpDate(startDate)
@@ -158,18 +158,12 @@ class TransactionsExportSceneComponent extends PureComponent<Props, State> {
           <TouchableWithoutFeedback onPress={this.closeDatePicker}>
             <View>
               <SettingsRow text={walletName} onPress={this.closeDatePicker} />
-              <SettingsHeaderRow
-                icon={<Entypo name="calendar" color={theme.settingsIconColor} size={iconSize} />}
-                text={s.strings.export_transaction_date_range}
-              />
+              <SettingsHeaderRow icon={<Entypo name="calendar" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_date_range} />
               <SettingsRow text={s.strings.export_transaction_this_month} right={rightArrow} onPress={this.setThisMonth} />
               <SettingsRow text={s.strings.export_transaction_last_month} right={rightArrow} onPress={this.setLastMonth} />
               <SettingsLabelRow text={s.strings.string_start} right={startDateString} onPress={this.showStartDatePicker} />
               <SettingsLabelRow text={s.strings.string_end} right={endDateString} onPress={this.showEndDatePicker} />
-              <SettingsHeaderRow
-                icon={<Entypo name="export" color={theme.settingsIconColor} size={iconSize} />}
-                text={s.strings.export_transaction_export_type}
-              />
+              <SettingsHeaderRow icon={<Entypo name="export" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_export_type} />
               <SettingsSwitchRow key="exportQbo" text={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.toggleExportQbo} />
               <SettingsSwitchRow key="exportCsv" text={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.toggleExportCsv} />
               {!disabledExport && (

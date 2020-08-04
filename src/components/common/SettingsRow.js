@@ -27,7 +27,7 @@ function SettingsRowComponent(props: Props): Node {
   const rowMarginBottom = marginBottom ? styles.marginBottom : null
 
   return (
-    <TouchableHighlight onPress={onPress} underlayColor={theme.transparent}>
+    <TouchableHighlight onPress={onPress} underlayColor={theme.settingsRowPressed}>
       <View style={[styles.row, rowMarginBottom]}>
         {icon != null ? <View style={styles.paddingLeftIcon}>{icon}</View> : undefined}
         <Text style={disabled ? styles.disabledText : styles.text}>{text}</Text>
@@ -61,7 +61,7 @@ const getStyles = cacheStyles(theme => ({
   },
   disabledText: {
     ...dayText('row-left'),
-    color: theme.disabledText,
+    color: theme.deactivatedText,
     flexGrow: 1
   },
   paddingLeftIcon: {

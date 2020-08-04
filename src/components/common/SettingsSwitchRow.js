@@ -21,12 +21,12 @@ type Props = OwnProps & ThemeProps
  */
 function SettingsSwitchRowComponent(props: Props): Node {
   const { disabled = false, icon, text, theme, value, onPress } = props
-  const { settingsSwitchEnabledBackground, settingsSwitchDisabledBackground } = theme
+  const { toggleButton, toggleButtonOff } = theme
   const trackColor = {
-    false: settingsSwitchDisabledBackground,
-    true: settingsSwitchEnabledBackground
+    false: toggleButtonOff,
+    true: toggleButton
   }
-  const ios_backgroundColor = settingsSwitchDisabledBackground
+  const ios_backgroundColor = toggleButtonOff
 
   const right = <Switch disabled={disabled} onChange={onPress} value={value} ios_backgroundColor={ios_backgroundColor} trackColor={trackColor} />
   return <SettingsRow disabled={disabled} icon={icon} text={text} right={right} onPress={onPress} />

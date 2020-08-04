@@ -35,8 +35,8 @@ export class PromotionSettingsComponent extends Component<Props> {
     const { accountReferral, deviceReferral, removePromotion, theme } = this.props
     const styles = getStyles(theme)
 
-    const addIcon = <AntDesignIcon name="pluscircleo" color={theme.settingsIconMintColor} size={theme.rem(1)} />
-    const deleteIcon = <AntDesignIcon name="close" color={theme.settingsIconMintColor} size={theme.rem(1)} />
+    const addIcon = <AntDesignIcon name="pluscircleo" color={theme.iconTappable} size={theme.rem(1)} />
+    const deleteIcon = <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} />
 
     return (
       <SceneWrapper hasTabs={false}>

@@ -86,7 +86,7 @@ export class NotificationComponent extends Component<Props, State> {
     const { theme } = this.props
     const { enabled } = this.state
     const styles = getStyles(theme)
-    const rightArrow = <AntDesignIcon name="right" color={theme.settingsIconColor} size={theme.rem(1)} />
+    const rightArrow = <AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />
 
     return (
       <SceneWrapper hasTabs={false}>

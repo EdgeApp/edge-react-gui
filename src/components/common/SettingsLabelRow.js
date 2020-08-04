@@ -31,7 +31,7 @@ const getStyles = cacheStyles(theme => ({
   labelText: {
     ...dayText('bold', 'small'),
     fontSize: theme.rem(1),
-    color: theme.settingsTextMintColor
+    color: theme.textLink
   }
 }))
 

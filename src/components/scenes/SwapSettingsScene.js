@@ -147,7 +147,7 @@ export class SwapSettings extends Component<Props, State> {
         ? {
             instructions: s.strings.swap_preferred_promo_instructions,
             handlePress: () => this.props.removePromotion(swapSource.installerId),
-            right: <AntDesignIcon name="close" color={theme.settingsIconColor} size={iconSize} style={styles.swapIcon} />
+            right: <AntDesignIcon name="close" color={theme.icon} size={iconSize} style={styles.swapIcon} />
           }
         : {
             instructions: s.strings.swap_preferred_instructions,
@@ -164,7 +164,7 @@ export class SwapSettings extends Component<Props, State> {
           }
         : {
             text: s.strings.swap_preferred_cheapest,
-            icon: <AntDesignIcon name="barschart" color={theme.settingsIconColor} size={iconSize} style={styles.swapIcon} />
+            icon: <AntDesignIcon name="barschart" color={theme.icon} size={iconSize} style={styles.swapIcon} />
           }
 
     return (
@@ -181,7 +181,7 @@ export class SwapSettings extends Component<Props, State> {
 
 const getStyles = cacheStyles(theme => ({
   instructionArea: {
-    backgroundColor: theme.settingsHeaderRowBackground,
+    backgroundColor: theme.settingsRowSubHeader,
     padding: theme.rem(1)
   },
   instructionText: {
