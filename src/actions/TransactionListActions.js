@@ -74,6 +74,7 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
       startEntries = nextEndIndex - nextStartIndex + 1
     }
     // If startEntries is undefined / null, this means query until the end of the transaction list
+    console.log(`getandmerge ${JSON.stringify(state.ui.wallets.byId[walletId])}`)
     getAndMergeTransactions(state, dispatch, walletId, currencyCode, {
       startEntries,
       startIndex: nextStartIndex
@@ -98,8 +99,8 @@ const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletI
     key = transactionsWithKeys.length // and fast forward the counter
   }
   try {
-    const numTransactions = await wallet.getNumTransactions({ currencyCode }) // get number of transactions on wallet
     const transactions = await wallet.getTransactions({ ...options, currencyCode }) // get transactions from certain range
+    const numTransactions = await wallet.getNumTransactions({ currencyCode }) // get number of transactions on wallet
 
     for (const tx of transactions) {
       // for each transaction, add some meta info
