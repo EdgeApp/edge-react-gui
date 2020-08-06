@@ -1,13 +1,12 @@
 // @flow
 
-import React, { type Node } from 'react'
+import * as React from 'react'
 import { Text, View } from 'react-native'
 
-import { nightText } from '../../styles/common/textStyles.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 
 type OwnProps = {
-  icon?: Node,
+  icon?: React.Node,
   text: string
 }
 
@@ -16,7 +15,7 @@ type Props = OwnProps & ThemeProps
 /**
  * A blue header row in a settings scene.
  */
-export function SettingsHeaderRowComponent(props: Props): Node {
+export function SettingsHeaderRowComponent(props: Props): React.Node {
   const { icon, text, theme } = props
   const styles = getStyles(theme)
 
@@ -42,9 +41,11 @@ const getStyles = cacheStyles(theme => ({
   },
 
   text: {
-    ...nightText('row-left'),
+    flexShrink: 1,
     flexGrow: 1,
+    fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
+    textAlign: 'left',
     color: theme.primaryText
   },
 

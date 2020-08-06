@@ -1,16 +1,15 @@
 // @flow
 
-import React, { type Node } from 'react'
+import * as React from 'react'
 import { Text, TouchableHighlight, View } from 'react-native'
 
-import { dayText } from '../../styles/common/textStyles.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 
 type OwnProps = {
   disabled?: boolean, // Show with grey style
-  icon?: Node,
-  text: string | Node,
-  right?: Node,
+  icon?: React.Node,
+  text: string | React.Node,
+  right?: React.Node,
   onPress?: () => void,
   marginBottom?: boolean
 }
@@ -21,7 +20,7 @@ type Props = OwnProps & ThemeProps
  * A settings row features tappable text, as well as an optional icon
  * on the left and another optional component on the right.
  */
-function SettingsRowComponent(props: Props): Node {
+function SettingsRowComponent(props: Props): React.Node {
   const { disabled = false, icon, marginBottom = true, text, theme, right, onPress } = props
   const styles = getStyles(theme)
   const rowMarginBottom = marginBottom ? styles.marginBottom : null
@@ -55,12 +54,17 @@ const getStyles = cacheStyles(theme => ({
     marginBottom: theme.rem(1 / 16)
   },
   text: {
-    ...dayText('row-left'),
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    textAlign: 'left',
+    flexShrink: 1,
     color: theme.primaryText,
     flexGrow: 1
   },
   disabledText: {
-    ...dayText('row-left'),
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    textAlign: 'left',
     color: theme.deactivatedText,
     flexGrow: 1
   },

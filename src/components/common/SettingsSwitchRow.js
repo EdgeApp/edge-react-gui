@@ -1,6 +1,6 @@
 // @flow
 
-import React, { type Node } from 'react'
+import * as React from 'react'
 import { Switch } from 'react-native'
 
 import { type ThemeProps, withTheme } from '../../theme/ThemeContext.js'
@@ -8,7 +8,7 @@ import { SettingsRow } from './SettingsRow.js'
 
 type OwnProps = {
   disabled?: boolean,
-  icon?: Node,
+  icon?: React.Node,
   text: string,
   value: boolean,
   onPress: () => void
@@ -19,7 +19,7 @@ type Props = OwnProps & ThemeProps
 /**
  * A settings row with a switch component on the right side.
  */
-function SettingsSwitchRowComponent(props: Props): Node {
+function SettingsSwitchRowComponent(props: Props): React.Node {
   const { disabled = false, icon, text, theme, value, onPress } = props
   const { toggleButton, toggleButtonOff } = theme
   const trackColor = {

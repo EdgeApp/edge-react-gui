@@ -1,7 +1,7 @@
 // @flow
 
 import { createInputModal } from 'edge-components'
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Text, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
@@ -9,7 +9,6 @@ import { sprintf } from 'sprintf-js'
 
 import { activatePromotion, removePromotion } from '../../actions/AccountReferralActions.js'
 import s from '../../locales/strings.js'
-import { dayText } from '../../styles/common/textStyles.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
@@ -30,7 +29,7 @@ type DispatchProps = {
 }
 type Props = StateProps & DispatchProps & ThemeProps
 
-export class PromotionSettingsComponent extends Component<Props> {
+export class PromotionSettingsComponent extends React.Component<Props> {
   render() {
     const { accountReferral, deviceReferral, removePromotion, theme } = this.props
     const styles = getStyles(theme)
@@ -101,7 +100,7 @@ const getStyles = cacheStyles(theme => ({
     padding: theme.rem(0.5)
   },
   textRow: {
-    ...dayText(),
+    fontFamily: theme.fontFaceDefault,
     color: theme.primaryText,
     margin: theme.rem(0.5)
   }

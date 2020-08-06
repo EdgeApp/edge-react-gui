@@ -1,7 +1,7 @@
 // @flow
 
 import { type EdgePluginMap, type EdgeSwapConfig } from 'edge-core-js/types'
-import React, { type Node, Component } from 'react'
+import * as React from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
@@ -10,7 +10,6 @@ import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferra
 import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
-import { dayText } from '../../styles/common/textStyles.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
@@ -43,7 +42,7 @@ type State = {
   needsActivation: { [pluginId: string]: boolean }
 }
 
-export class SwapSettings extends Component<Props, State> {
+export class SwapSettings extends React.Component<Props, State> {
   cleanups: Array<() => mixed> = []
   sortedIds: Array<string>
 
@@ -124,7 +123,7 @@ export class SwapSettings extends Component<Props, State> {
     return <SettingsSwitchRow key={pluginId} icon={logo} text={displayName} value={this.state.enabled[pluginId]} onPress={handlePress} />
   }
 
-  renderPluginIcon(pluginId: string): Node {
+  renderPluginIcon(pluginId: string): React.Node {
     const { theme } = this.props
     const logoSource = getSwapPluginIcon(pluginId, theme)
     const styles = getStyles(theme)
@@ -185,7 +184,9 @@ const getStyles = cacheStyles(theme => ({
     padding: theme.rem(1)
   },
   instructionText: {
-    ...dayText('center'),
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    textAlign: 'center',
     color: theme.primaryText
   },
   swapIcon: {

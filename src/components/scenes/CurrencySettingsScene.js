@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenominationKeyRequest } from '../../actions/SettingsActions.js'
 import s from '../../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
-import { dayText } from '../../styles/common/textStyles.js'
 import { type ThemeProps, withTheme } from '../../theme/ThemeContext.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { GuiDenomination } from '../../types/types.js'
@@ -113,7 +112,7 @@ export class CurrencySettingsComponent extends React.Component<Props, State> {
           {this.props.denominations.map(denomination => {
             const key = denomination.multiplier
             const left = (
-              <Text style={{ ...dayText('row-left'), color: theme.primaryText }}>
+              <Text style={{ fontFamily: theme.fontFaceDefault, fontSize: theme.rem(1), textAlign: 'left', flexShrink: 1, color: theme.primaryText }}>
                 <Text style={{ fontFamily: theme.fontFaceSymbols }}>{denomination.symbol}</Text> - {denomination.name}
               </Text>
             )
