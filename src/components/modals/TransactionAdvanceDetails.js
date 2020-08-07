@@ -30,6 +30,7 @@ type OwnProps = {
   feeRateUsed?: Object,
   signedTx: string,
   txid: string,
+  txSecret?: string,
   url?: string
 }
 
@@ -84,7 +85,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
   }
 
   render() {
-    const { bridge, feeRateUsed, networkFeeOption, signedTx, theme, txid, url } = this.props
+    const { bridge, feeRateUsed, networkFeeOption, signedTx, theme, txid, txSecret, url } = this.props
     const styles = getStyles(theme)
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
@@ -109,6 +110,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
                   {feeRateUsed ? this.renderFees(styles, s.strings.transaction_details_advance_details_fee_used, feeRateUsed) : null}
                 </Tile>
               )}
+              {txSecret && <Tile type="copy" title={s.strings.transaction_details_advance_details_txSecret} body={txSecret} />}
               {signedTx && signedTx !== '' ? <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} /> : null}
             </ScrollView>
           </View>
