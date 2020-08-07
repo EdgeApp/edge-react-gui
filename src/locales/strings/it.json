@@ -386,6 +386,7 @@
   "transaction_details_advance_details_fee_used": "Commissione Usata",
   "transaction_details_advance_details_show_explorer": "Mostra nell'Explorer",
   "transaction_details_advance_details_raw_txbytes": "Bytes di transazione grezza (Raw)",
+  "transaction_details_advance_details_txSecret": "",
   "transaction_details_advance_details_satpervbyte": "Sats / VByte",
   "transaction_details_advance_details_gasprice": "Prezzo Gas Gwei",
   "transaction_details_advance_details_gaslimit": "Limite Gas",
