@@ -225,6 +225,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
         requestedCustomFee={this.props.edgeTransaction.requestedCustomFee}
         signedTx={this.props.edgeTransaction.signedTx}
         txid={this.props.edgeTransaction.txid}
+        txSecret={this.props.edgeTransaction.txSecret}
         url={currencyInfo ? sprintf(currencyInfo.transactionExplorer, this.props.edgeTransaction.txid) : undefined}
       />
     ))
