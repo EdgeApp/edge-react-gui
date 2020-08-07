@@ -386,6 +386,7 @@
   "transaction_details_advance_details_fee_used": "verwendete Gebühr",
   "transaction_details_advance_details_show_explorer": "Im Explorer anzeigen",
   "transaction_details_advance_details_raw_txbytes": "reine Transaktions-Bytes",
+  "transaction_details_advance_details_txSecret": "",
   "transaction_details_advance_details_satpervbyte": "Sats / VByte",
   "transaction_details_advance_details_gasprice": "Gaspreis Gwei",
   "transaction_details_advance_details_gaslimit": "Gaslimit",
