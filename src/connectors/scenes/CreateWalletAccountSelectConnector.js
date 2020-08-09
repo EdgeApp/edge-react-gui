@@ -11,6 +11,7 @@ import {
 } from '../../actions/CreateWalletActions.js'
 import {
   type AccountPaymentParams,
+  type CreateWalletAccountSelectDispatchProps,
   type CreateWalletAccountSelectOwnProps,
   CreateWalletAccountSelect
 } from '../../components/scenes/CreateWalletAccountSelectScene'
@@ -51,7 +52,7 @@ const mapStateToProps = (state: State, ownProps: CreateWalletAccountSelectOwnPro
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch): CreateWalletAccountSelectDispatchProps => ({
   createAccountTransaction: (createdWalletId: string, accountName: string, paymentWalletId: string) =>
     dispatch(createAccountTransaction(createdWalletId, accountName, paymentWalletId)),
   fetchAccountActivationInfo: (currencyCode: string) => dispatch(fetchAccountActivationInfo(currencyCode)),

@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -39,7 +39,7 @@ export type CreateWalletAccountSelectStateProps = {
   paymentDenominationSymbol: string,
   existingCoreWallet: EdgeCurrencyWallet,
   walletAccountActivationQuoteError: string,
-  currencyConfigs: Object
+  currencyConfigs: { [string]: EdgeCurrencyConfig }
 }
 
 export type CreateWalletAccountSelectOwnProps = {
@@ -52,10 +52,10 @@ export type CreateWalletAccountSelectOwnProps = {
 
 export type CreateWalletAccountSelectDispatchProps = {
   createAccountBasedWallet: (string, string, string, boolean, boolean) => any,
-  fetchAccountActivationInfo: string => void,
-  createAccountTransaction: (string, string, string) => void,
-  fetchWalletAccountActivationPaymentInfo: (AccountPaymentParams, EdgeCurrencyWallet) => void,
-  setWalletAccountActivationQuoteError: string => void
+  fetchAccountActivationInfo: string => any,
+  createAccountTransaction: (string, string, string) => any,
+  fetchWalletAccountActivationPaymentInfo: (AccountPaymentParams, EdgeCurrencyWallet) => any,
+  setWalletAccountActivationQuoteError: string => any
 }
 
 type Props = CreateWalletAccountSelectOwnProps & CreateWalletAccountSelectDispatchProps & CreateWalletAccountSelectStateProps

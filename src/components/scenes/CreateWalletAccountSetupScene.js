@@ -1,5 +1,6 @@
 // @flow
 
+import { type EdgeCurrencyConfig } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -35,11 +36,11 @@ export type CreateWalletAccountSetupOwnProps = {
 export type CreateWalletAccountSetupStateProps = {
   handleAvailableStatus: HandleAvailableStatus,
   isCheckingHandleAvailability: boolean,
-  currencyConfigs: Object
+  currencyConfigs: { [string]: EdgeCurrencyConfig }
 }
 
 export type CreateWalletAccountSetupDispatchProps = {
-  checkHandleAvailability: string => void
+  checkHandleAvailability: string => any
 }
 
 type Props = CreateWalletAccountSetupOwnProps & CreateWalletAccountSetupDispatchProps & CreateWalletAccountSetupStateProps
@@ -110,7 +111,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     )
   }
 
-  render () {
+  render() {
     const { isCheckingHandleAvailability, handleAvailableStatus, selectedWalletType, currencyConfigs } = this.props
     const { accountHandle } = this.state
     const { currencyCode } = selectedWalletType
@@ -133,7 +134,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
         <Gradient style={styles.scrollableGradient} />
         <ScrollView>
           <View style={styles.scrollableView}>
-            <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode={'cover'} />
+            <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
             <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
               <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, currencyCode)}</Text>
             </View>
