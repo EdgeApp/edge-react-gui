@@ -36,7 +36,7 @@ export type CreateWalletAccountSetupOwnProps = {
 export type CreateWalletAccountSetupStateProps = {
   handleAvailableStatus: HandleAvailableStatus,
   isCheckingHandleAvailability: boolean,
-  currencyConfigs: { [string]: EdgeCurrencyConfig }
+  currencyConfigs: { [key: string]: EdgeCurrencyConfig }
 }
 
 export type CreateWalletAccountSetupDispatchProps = {

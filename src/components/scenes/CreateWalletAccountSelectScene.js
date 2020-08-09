@@ -33,13 +33,13 @@ export type CreateWalletAccountSelectStateProps = {
   paymentAddress: string,
   amount: string,
   expireTime: string,
-  supportedCurrencies: { [string]: boolean },
+  supportedCurrencies: { [currencyCode: string]: boolean },
   activationCost: string,
   isCreatingWallet: boolean,
   paymentDenominationSymbol: string,
   existingCoreWallet: EdgeCurrencyWallet,
   walletAccountActivationQuoteError: string,
-  currencyConfigs: { [string]: EdgeCurrencyConfig }
+  currencyConfigs: { [key: string]: EdgeCurrencyConfig }
 }
 
 export type CreateWalletAccountSelectOwnProps = {
