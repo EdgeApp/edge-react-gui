@@ -8,7 +8,7 @@ import { scale } from '../../../../util/scaling.js'
 export const styles = StyleSheet.create({
   container: {
     width: '90%',
-    minHeight: Platform.OS === 'ios' ? scale(110) : scale(120),
+    minHeight: Platform.OS === 'ios' ? THEME.rem(7.875) : THEME.rem(8.5),
     backgroundColor: THEME.COLORS.BLUE_3,
     borderRadius: 5,
     flexDirection: 'column',
@@ -85,7 +85,7 @@ export const top = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: scale(8),
+    paddingBottom: scale(4),
     borderBottomColor: THEME.COLORS.OPAQUE_WHITE,
     borderBottomWidth: scale(1)
   },
@@ -97,16 +97,21 @@ export const top = StyleSheet.create({
   },
   amount: {
     width: '100%',
-    fontSize: scale(15),
+    fontSize: THEME.rem(1.5),
     color: THEME.COLORS.WHITE,
     fontFamily: THEME.FONTS.SYMBOLS,
     textAlign: 'right',
     padding: 0
   },
   currencyCode: {
-    fontSize: scale(15),
+    fontSize: THEME.rem(1.5),
     color: THEME.COLORS.WHITE,
     textAlign: 'left'
+  },
+  textInput: {
+    position: 'absolute',
+    width: 0,
+    height: 0
   }
 })
 

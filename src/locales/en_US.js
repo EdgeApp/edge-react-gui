@@ -716,6 +716,7 @@ const strings = {
   export_transaction_csv: 'CSV',
   string_export: 'Export',
   string_no_wallet_name: 'No Wallet Name',
+  string_enter_amount: 'Enter Amount',
   export_transaction_error: 'Start date should be earlier than the end date',
   export_transaction_export_error: 'No transactions in the date range chosen',
   export_transaction_export_error_2: 'Select only one export type on android',
