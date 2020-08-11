@@ -59,6 +59,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
 
   openProveUrl = () => {
     const { recipientAddress, txid, txSecret } = this.props
+    // Early return to satisfy flow. Button isn't visible without all params present.
     if (!recipientAddress || !txid || !txSecret) return
     const url = `https://blockchair.com/monero/transaction/${txid}?address=${recipientAddress}&viewkey=${txSecret}&txprove=1`
     if (url) {
