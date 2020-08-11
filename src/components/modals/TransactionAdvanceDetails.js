@@ -31,6 +31,7 @@ type OwnProps = {
   signedTx: string,
   txid: string,
   txSecret?: string,
+  recipientAddress?: string,
   url?: string
 }
 
@@ -39,6 +40,28 @@ type Props = OwnProps & ThemeProps
 class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
   openUrl = () => {
     const { url } = this.props
+    if (url) {
+      if (Platform.OS === 'ios') {
+        return SafariView.isAvailable()
+          .then(SafariView.show({ url }))
+          .catch(error => {
+            Linking.openURL(url)
+            console.log(error)
+          })
+      }
+      Linking.canOpenURL(url).then(supported => {
+        if (supported) {
+          Linking.openURL(url)
+        }
+      })
+    }
+  }
+
+  openProveUrl = () => {
+    const { recipientAddress, txid, txSecret } = this.props
+    // Early return to satisfy flow. Button isn't visible without all params present.
+    if (!recipientAddress || !txid || !txSecret) return
+    const url = `https://blockchair.com/monero/transaction/${txid}?address=${recipientAddress}&viewkey=${txSecret}&txprove=1`
     if (url) {
       if (Platform.OS === 'ios') {
         return SafariView.isAvailable()
@@ -85,7 +108,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
   }
 
   render() {
-    const { bridge, feeRateUsed, networkFeeOption, signedTx, theme, txid, txSecret, url } = this.props
+    const { bridge, feeRateUsed, networkFeeOption, signedTx, theme, txid, txSecret, recipientAddress, url } = this.props
     const styles = getStyles(theme)
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
@@ -111,6 +134,14 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
                 </Tile>
               )}
               {txSecret && <Tile type="copy" title={s.strings.transaction_details_advance_details_txSecret} body={txSecret} />}
+              {txSecret && recipientAddress && txid && (
+                <Tile
+                  type="touchable"
+                  title={s.strings.transaction_details_advance_details_payment_proof}
+                  body={s.strings.transaction_details_advance_details_show_explorer}
+                  onPress={this.openProveUrl}
+                />
+              )}
               {signedTx && signedTx !== '' ? <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} /> : null}
             </ScrollView>
           </View>

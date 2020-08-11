@@ -406,6 +406,7 @@ const strings = {
   transaction_details_advance_details_show_explorer: 'Show in Explorer',
   transaction_details_advance_details_raw_txbytes: 'Raw Transaction Bytes',
   transaction_details_advance_details_txSecret: 'Transaction Key',
+  transaction_details_advance_details_payment_proof: 'Payment Proof',
   transaction_details_advance_details_satpervbyte: 'Sats / VByte',
   transaction_details_advance_details_gasprice: 'Gas Price Gwei',
   transaction_details_advance_details_gaslimit: 'Gas Limit',
