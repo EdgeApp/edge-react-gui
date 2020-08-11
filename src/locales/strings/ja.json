@@ -387,6 +387,7 @@
   "transaction_details_advance_details_show_explorer": "",
   "transaction_details_advance_details_raw_txbytes": "",
   "transaction_details_advance_details_txSecret": "",
+  "transaction_details_advance_details_payment_proof": "",
   "transaction_details_advance_details_satpervbyte": "",
   "transaction_details_advance_details_gasprice": "",
   "transaction_details_advance_details_gaslimit": "",
