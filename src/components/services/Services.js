@@ -80,7 +80,7 @@ export class Services extends React.PureComponent<Props> {
       <Provider store={this.store}>
         <>
           {this.renderGui()}
-          <Airship />
+          <Airship avoidAndroidKeyboard statusBarTranslucent />
           <AutoLogout />
           <ContactsLoader />
           <DeepLinkingManager />
