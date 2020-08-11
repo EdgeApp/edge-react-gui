@@ -1,6 +1,9 @@
 // @flow
 
 export type Theme = {
+  // Theme name
+  themeId: string,
+
   // The app scaling factor, which is the height of "normal" text:
   rem(size: number): number,
 

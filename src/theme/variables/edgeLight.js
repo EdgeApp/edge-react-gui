@@ -20,7 +20,7 @@ const palette = {
   whiteBlue: '#EEF3F6',
   lightestBlue: '#D1ECFF',
   edgeNavy: '#0D2145',
-  edgeBlue: '#0E4B75 ',
+  edgeBlue: '#0E4B75',
   edgeMint: '#66EDA8',
   gray: '#87939E',
   lightGray: '#DBDBDB',
@@ -42,7 +42,9 @@ const palette = {
   transparent: 'rgba(255, 255, 255, 0)'
 }
 
-export const edgeDark: Theme = {
+export const edgeLight: Theme = {
+  themeId: 'edgelight',
+
   rem(size: number): number {
     return Math.round(scale(16) * size)
   },

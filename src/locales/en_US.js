@@ -221,6 +221,7 @@ const strings = {
   settings_account_title_cap: 'Account',
   settings_button_change_password: 'Change Password',
   settings_developer_mode: 'Developer Mode',
+  settings_dark_theme: 'Dark Theme',
   settings_button_lock_settings: 'Tap to Lock Account Settings',
   settings_button_password_recovery: 'Set Up Password Recovery',
   settings_button_logout: 'Logout',
