@@ -4,7 +4,7 @@ import { getUniqueId } from 'react-native-device-info'
 import firebase from 'react-native-firebase'
 
 import ENV from '../../env.json'
-
+import { asyncWaterfall } from './utils.js'
 export type TrackingEvent =
   | 'ActivateWalletCancel'
   | 'ActivateWalletSelect'
@@ -90,7 +90,7 @@ async function logToFirebase(event: TrackingEvent, values: TrackingValues) {
  * Send a tracking event to the util server.
  */
 async function logToUtilServer(event: TrackingEvent, values: TrackingValues) {
-  fetch('https://util1.edge.app/api/v1/event', {
+  utilWaterfall('api/v1/event', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -98,4 +98,18 @@ async function logToUtilServer(event: TrackingEvent, values: TrackingValues) {
     },
     body: JSON.stringify({ ...values, event })
   })
+}
+
+export async function utilWaterfall(path: string, options?: any): Promise<any> {
+  const utilServers = ['https://util2.edge.app/', 'https://util1.edge.app/']
+  const funcs = utilServers.map(server => async () => {
+    const result = await fetch(server + path, options)
+    if (typeof result !== 'object') {
+      const msg = `Invalid return value ${path} in ${server}`
+      console.log(msg)
+      throw new Error(msg)
+    }
+    return result
+  })
+  return asyncWaterfall(funcs)
 }
