@@ -11,25 +11,24 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../../modules/UI/selectors'
-import { THEME } from '../../theme/variables/airbitz'
+import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { type State as ReduxState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SettingsRow } from '../common/SettingsRow.js'
 import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { showError } from '../services/AirshipInstance.js'
 
-type NavigationProps = {}
 type StateProps = {
   currencyInfos: Array<EdgeCurrencyInfo>,
   userId: string
 }
-type DispatchProps = {}
-type Props = NavigationProps & StateProps & DispatchProps
 
 type State = {
   enabled: boolean,
   loading: boolean
 }
+
+type Props = StateProps & ThemeProps
 
 export class NotificationComponent extends React.Component<Props, State> {
   mounted: boolean
@@ -84,11 +83,13 @@ export class NotificationComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const rightArrow = <AntDesignIcon name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
+    const { theme } = this.props
     const { enabled } = this.state
+    const styles = getStyles(theme)
+    const rightArrow = <AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />
 
     return (
-      <SceneWrapper background="body" hasTabs={false}>
+      <SceneWrapper hasTabs={false}>
         {this.state.loading ? (
           <ActivityIndicator style={styles.loader} size="large" />
         ) : (
@@ -113,17 +114,16 @@ export const NotificationScene = connect((state: ReduxState): StateProps => {
     currencyInfos: getActiveWalletCurrencyInfos(state),
     userId: state.core.account.rootLoginId
   }
-})(NotificationComponent)
+})(withTheme(NotificationComponent))
 
-const iconSize = THEME.rem(1.375)
-const styles = {
+const getStyles = cacheStyles(theme => ({
   currencyLogo: {
-    height: iconSize,
-    width: iconSize,
+    height: theme.rem(1.25),
+    width: theme.rem(1.25),
     resizeMode: 'contain'
   },
   loader: {
     flex: 1,
     alignSelf: 'center'
   }
-}
+}))

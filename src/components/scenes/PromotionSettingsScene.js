@@ -2,14 +2,14 @@
 
 import { createInputModal } from 'edge-components'
 import * as React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { activatePromotion, removePromotion } from '../../actions/AccountReferralActions.js'
 import s from '../../locales/strings.js'
-import { dayText } from '../../styles/common/textStyles.js'
+import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type AccountReferral, type DeviceReferral } from '../../types/ReferralTypes.js'
@@ -27,17 +27,18 @@ type DispatchProps = {
   activatePromotion(installerId: string): Promise<void>,
   removePromotion(installerId: string): Promise<void>
 }
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & ThemeProps
 
 export class PromotionSettingsComponent extends React.Component<Props> {
   render() {
-    const { accountReferral, deviceReferral, removePromotion } = this.props
+    const { accountReferral, deviceReferral, removePromotion, theme } = this.props
+    const styles = getStyles(theme)
 
-    const addIcon = <AntDesignIcon name="pluscircleo" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
-    const deleteIcon = <AntDesignIcon name="close" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />
+    const addIcon = <AntDesignIcon name="pluscircleo" color={theme.iconTappable} size={theme.rem(1)} />
+    const deleteIcon = <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} />
 
     return (
-      <SceneWrapper background="body" hasTabs={false}>
+      <SceneWrapper hasTabs={false}>
         <SettingsHeaderRow text={s.strings.settings_promotion_affiliation_header} />
         <View style={styles.textBlock}>
           <Text style={styles.textRow}>
@@ -93,17 +94,17 @@ export class PromotionSettingsComponent extends React.Component<Props> {
   }
 }
 
-const space = THEME.rem(0.5)
-const rawStyles = {
+const getStyles = cacheStyles(theme => ({
   textBlock: {
-    padding: space
+    backgroundColor: theme.settingsRowBackground,
+    padding: theme.rem(0.5)
   },
   textRow: {
-    ...dayText(),
-    margin: space
+    fontFamily: theme.fontFaceDefault,
+    color: theme.primaryText,
+    margin: theme.rem(0.5)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 export const PromotionSettingsScene = connect(
   (state: ReduxState): StateProps => ({
@@ -118,4 +119,4 @@ export const PromotionSettingsScene = connect(
       return dispatch(removePromotion(installerId))
     }
   })
-)(PromotionSettingsComponent)
+)(withTheme(PromotionSettingsComponent))

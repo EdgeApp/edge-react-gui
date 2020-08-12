@@ -72,7 +72,7 @@ const getStyles = cacheStyles(theme => ({
     alignItems: 'center'
   },
   arrowIcon: {
-    color: theme.primaryText,
+    color: theme.iconTappable,
     height: theme.rem(1),
     marginHorizontal: theme.rem(0.5),
     textAlign: 'center'
@@ -83,7 +83,7 @@ const getStyles = cacheStyles(theme => ({
     margin: theme.rem(0.25)
   },
   textHeaderError: {
-    color: theme.accentTextNegative,
+    color: theme.dangerText,
     fontSize: theme.rem(0.75),
     margin: theme.rem(0.25)
   },
@@ -94,7 +94,7 @@ const getStyles = cacheStyles(theme => ({
   },
   editIcon: {
     position: 'absolute',
-    color: theme.tileIcon,
+    color: theme.iconTappable,
     width: theme.rem(0.75),
     height: theme.rem(0.75),
     top: theme.rem(0.25),

@@ -71,7 +71,7 @@ PODS:
   - react-native-firebase (4.3.8):
     - Firebase/Core
     - React
-  - react-native-mail (3.0.7):
+  - react-native-mail (5.0.1):
     - React
   - react-native-randombytes (3.5.3):
     - React
@@ -312,7 +312,7 @@ SPEC CHECKSUMS:
   react-native-contacts: f6e5c518598762081ff9cf7c70db36f71668538e
   react-native-fast-crypto: aed797071793e23416d6e8c7c1c5dadb63036a0c
   react-native-firebase: c20ee01585998768935fc2cff74ff8e9740f1a73
-  react-native-mail: 021d8ee60e374609f5689ef354dc8e36839a9ba6
+  react-native-mail: 685104c633d50ea3e15595acc89ab0eb9ee9cfd2
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b

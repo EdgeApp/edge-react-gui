@@ -39,7 +39,7 @@ export function ThemedModal(props: Props) {
     <AirshipModal
       bridge={bridge}
       onCancel={onCancel}
-      backgroundColor={theme.modalBody}
+      backgroundColor={theme.modal}
       borderRadius={theme.rem(1)}
       margin={[theme.rem(iconRem / 2), 0, 0]}
       padding={packEdges(paddingRem).map(theme.rem)}

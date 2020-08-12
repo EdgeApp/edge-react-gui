@@ -33,6 +33,7 @@ import { FioAddressRegisteredScene } from '../components/scenes/FioAddressRegist
 import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConfirmationScene.js'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
+import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
@@ -62,7 +63,6 @@ import Scan from '../connectors/scenes/ScanConnector'
 import SendConfirmation from '../connectors/scenes/SendConfirmationConnector.js'
 import SettingsOverview from '../connectors/scenes/SettingsOverviewConnector'
 import TransactionListConnector from '../connectors/scenes/TransactionListConnector'
-import TransactionsExportSceneConnector from '../connectors/scenes/TransactionsExportSceneConnector'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
@@ -360,7 +360,7 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key={Constants.TRANSACTIONS_EXPORT}
                 navTransparent
-                component={ifLoggedIn(TransactionsExportSceneConnector)}
+                component={ifLoggedIn(TransactionsExportScene)}
                 renderTitle={this.renderTitle(s.strings.title_export_transactions)}
                 renderLeftButton={this.renderBackButton(s.strings.title_wallets)}
                 renderRightButton={this.renderEmptyButton()}

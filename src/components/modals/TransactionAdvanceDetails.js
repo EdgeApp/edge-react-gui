@@ -146,7 +146,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
         </View>
         <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
           <View style={styles.headerContainer}>
-            <Entypo name="chevron-thin-down" size={theme.rem(1.25)} color={theme.modalClose} />
+            <Entypo name="chevron-thin-down" size={theme.rem(1.25)} color={theme.modalCloseIcon} />
           </View>
         </TouchableWithoutFeedback>
       </ThemedModal>

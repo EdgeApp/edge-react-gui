@@ -482,7 +482,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
               {this.renderExchangeData()}
               <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
               <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
-                <FormattedText style={styles.textTransactionData}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
+                <FormattedText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
               </TouchableWithoutFeedback>
               <View style={styles.saveButtonContainer}>
                 <PrimaryButton2 style={styles.saveButton} onPress={this.onSaveTxDetails}>
@@ -533,11 +533,11 @@ const getStyles = cacheStyles(theme => ({
     fontSize: theme.rem(1)
   },
   tileTextPriceChangeUp: {
-    color: theme.accentTextPositive,
+    color: theme.positiveText,
     fontSize: theme.rem(1)
   },
   tileTextPriceChangeDown: {
-    color: theme.accentTextNegative,
+    color: theme.negativeText,
     fontSize: theme.rem(1)
   },
   tileCategory: {
@@ -545,11 +545,11 @@ const getStyles = cacheStyles(theme => ({
     paddingVertical: theme.rem(0.25),
     marginVertical: theme.rem(0.25),
     borderWidth: 1,
-    borderColor: theme.selectButtonOutline,
+    borderColor: theme.secondaryButtonOutline,
     borderRadius: 3
   },
   tileCategoryText: {
-    color: theme.selectButtonText,
+    color: theme.secondaryButtonText,
     fontSize: theme.rem(1)
   },
   tileSubCategoryText: {
@@ -557,8 +557,8 @@ const getStyles = cacheStyles(theme => ({
     marginHorizontal: theme.rem(0.75),
     color: theme.primaryText
   },
-  textTransactionData: {
-    color: theme.selectButtonText,
+  textAdvancedTransaction: {
+    color: theme.textLink,
     marginVertical: theme.rem(1.25),
     fontSize: theme.rem(1),
     width: '100%',

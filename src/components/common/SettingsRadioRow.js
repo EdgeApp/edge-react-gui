@@ -3,10 +3,10 @@
 import * as React from 'react'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { THEME } from '../../theme/variables/airbitz.js'
+import { type ThemeProps, withTheme } from '../../theme/ThemeContext.js'
 import { SettingsRow } from './SettingsRow.js'
 
-type Props = {
+type OwnProps = {
   disabled?: boolean,
   icon?: React.Node,
   text: string,
@@ -14,17 +14,21 @@ type Props = {
   onPress: () => void
 }
 
+type Props = OwnProps & ThemeProps
+
 /**
  * A settings row with a radio selector on the right side.
  */
-export function SettingsRadioRow(props: Props): React.Node {
-  const { disabled, icon, text, isSelected, onPress } = props
+function SettingsRadioRowComponent(props: Props): React.Node {
+  const { disabled, icon, text, isSelected, onPress, theme } = props
 
   const radio = isSelected ? (
-    <IonIcon size={THEME.rem(1.414)} color={THEME.COLORS.SECONDARY} name="ios-radio-button-on" />
+    <IonIcon size={theme.rem(1.25)} color={theme.iconTappable} name="ios-radio-button-on" />
   ) : (
-    <IonIcon size={THEME.rem(1.414)} color={THEME.COLORS.GRAY_1} name="ios-radio-button-off" />
+    <IonIcon size={theme.rem(1.25)} color={theme.icon} name="ios-radio-button-off" />
   )
 
   return <SettingsRow disabled={disabled} icon={icon} text={text} right={radio} onPress={onPress} />
 }
+
+export const SettingsRadioRow = withTheme(SettingsRadioRowComponent)
