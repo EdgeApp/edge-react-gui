@@ -7,8 +7,8 @@ import Entypo from 'react-native-vector-icons/Entypo'
 
 import s from '../../locales/strings.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
-import { AirshipModal } from '../common/AirshipModalThemed.js'
 import { Tile } from '../common/Tile.js'
+import { ThemedModal } from '../themed/ThemedModal.js'
 import { type AirshipBridge } from './modalParts'
 
 const localizedFeeText = {
@@ -111,57 +111,50 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
     const { bridge, feeRateUsed, networkFeeOption, signedTx, theme, txid, txSecret, recipientAddress, url } = this.props
     const styles = getStyles(theme)
     return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
-        <View style={styles.container}>
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>{s.strings.transaction_details_advance_details_header}</Text>
-          </View>
-          <View style={styles.body}>
-            <ScrollView>
-              <Tile type="copy" title={s.strings.transaction_details_tx_id_modal_title} body={txid} />
-              {url && (
-                <Tile
-                  type="touchable"
-                  title={s.strings.transaction_details_tx_id_modal_title}
-                  body={s.strings.transaction_details_advance_details_show_explorer}
-                  onPress={this.openUrl}
-                />
-              )}
-              {(networkFeeOption || feeRateUsed) && (
-                <Tile type="static" title={s.strings.transaction_details_advance_details_fee_info}>
-                  {networkFeeOption ? this.renderFeeOptions(styles) : null}
-                  {feeRateUsed ? this.renderFees(styles, s.strings.transaction_details_advance_details_fee_used, feeRateUsed) : null}
-                </Tile>
-              )}
-              {txSecret && <Tile type="copy" title={s.strings.transaction_details_advance_details_txSecret} body={txSecret} />}
-              {txSecret && recipientAddress && txid && (
-                <Tile
-                  type="touchable"
-                  title={s.strings.transaction_details_advance_details_payment_proof}
-                  body={s.strings.transaction_details_advance_details_show_explorer}
-                  onPress={this.openProveUrl}
-                />
-              )}
-              {signedTx && signedTx !== '' ? <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} /> : null}
-            </ScrollView>
-          </View>
-          <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
-            <View style={styles.headerContainer}>
-              <Entypo name="chevron-thin-down" size={theme.rem(1.25)} color={theme.modalClose} />
-            </View>
-          </TouchableWithoutFeedback>
+      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={0}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>{s.strings.transaction_details_advance_details_header}</Text>
         </View>
-      </AirshipModal>
+        <View style={styles.body}>
+          <ScrollView>
+            <Tile type="copy" title={s.strings.transaction_details_tx_id_modal_title} body={txid} />
+            {url && (
+              <Tile
+                type="touchable"
+                title={s.strings.transaction_details_tx_id_modal_title}
+                body={s.strings.transaction_details_advance_details_show_explorer}
+                onPress={this.openUrl}
+              />
+            )}
+            {(networkFeeOption || feeRateUsed) && (
+              <Tile type="static" title={s.strings.transaction_details_advance_details_fee_info}>
+                {networkFeeOption ? this.renderFeeOptions(styles) : null}
+                {feeRateUsed ? this.renderFees(styles, s.strings.transaction_details_advance_details_fee_used, feeRateUsed) : null}
+              </Tile>
+            )}
+            {txSecret && <Tile type="copy" title={s.strings.transaction_details_advance_details_txSecret} body={txSecret} />}
+            {txSecret && recipientAddress && txid && (
+              <Tile
+                type="touchable"
+                title={s.strings.transaction_details_advance_details_payment_proof}
+                body={s.strings.transaction_details_advance_details_show_explorer}
+                onPress={this.openProveUrl}
+              />
+            )}
+            {signedTx && signedTx !== '' ? <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} /> : null}
+          </ScrollView>
+        </View>
+        <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
+          <View style={styles.headerContainer}>
+            <Entypo name="chevron-thin-down" size={theme.rem(1.25)} color={theme.modalClose} />
+          </View>
+        </TouchableWithoutFeedback>
+      </ThemedModal>
     )
   }
 }
 
 const getStyles = cacheStyles(theme => ({
-  container: {
-    backgroundColor: theme.modalBody,
-    borderTopLeftRadius: theme.rem(1),
-    borderTopRightRadius: theme.rem(1)
-  },
   headerContainer: {
     height: theme.rem(3.75),
     justifyContent: 'center',
