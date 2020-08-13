@@ -3,12 +3,14 @@
 import { type EdgeCurrencyWallet } from 'edge-core-js/types'
 import * as React from 'react'
 import { ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { connect } from 'react-redux'
 
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions.js'
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
+import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { getGuiMakeSpendInfo } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
 import { type FeeOption } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { dayText, nightText } from '../../styles/common/textStyles.js'
@@ -62,9 +64,10 @@ export class ChangeMiningFee extends React.Component<Props, State> {
     }
   }
 
-  componentWillUnmount() {
+  onSubmit = () => {
     const { networkFeeOption, customNetworkFee } = this.state
     this.props.onSubmit(networkFeeOption, customNetworkFee)
+    Actions.pop()
   }
 
   render() {
@@ -79,6 +82,9 @@ export class ChangeMiningFee extends React.Component<Props, State> {
           {customFormat != null ? this.renderRadioRow('custom', s.strings.mining_fee_custom_label_choice) : null}
           {customFormat != null ? this.renderCustomFee(customFormat) : null}
           {this.renderFeeWarning()}
+          <PrimaryButton onPress={this.onSubmit} style={styles.saveButton}>
+            <PrimaryButton.Text>{s.strings.save}</PrimaryButton.Text>
+          </PrimaryButton>
         </ScrollView>
       </SceneWrapper>
     )
@@ -174,6 +180,10 @@ const rawStyles = {
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'space-between'
+  },
+
+  saveButton: {
+    marginTop: THEME.rem(1.25)
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
