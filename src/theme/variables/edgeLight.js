@@ -53,7 +53,7 @@ export const edgeLight: Theme = {
 
   icon: palette.black,
   iconTappable: palette.edgeBlue,
-  warningIcon: palette.accentOrange, // Not used
+  // warningIcon: palette.accentOrange,
 
   // Background
   backgroundGradientLeft: palette.lightestGray,
@@ -64,106 +64,106 @@ export const edgeLight: Theme = {
   modalShadow: palette.blackOp50,
   modalBackgroundShadowOpacity: 0.7,
   modalCloseIcon: palette.edgeMint,
-  modalFullGradientLeft: palette.white, // Not used
-  modalFullGradientRight: palette.white, // Not used
+  // modalFullGradientLeft: palette.white,
+  // modalFullGradientRight: palette.white,
 
   // Tile
-  listHeaderBackground: palette.white, // Not used
+  // listHeaderBackground: palette.white,
   tileBackground: palette.white,
-  tileBackgroundMuted: palette.mutedGray, // Not used
-  listSectionHeaderBackground: palette.white, // Not used
+  // tileBackgroundMuted: palette.mutedGray,
+  // listSectionHeaderBackground: palette.white,
 
   // Text
   primaryText: palette.black,
   secondaryText: palette.gray,
-  warningText: palette.accentOrange, // Not used
+  // warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
   negativeText: palette.accentRed,
   dangerText: palette.accentRed,
   textLink: palette.edgeBlue,
   deactivatedText: palette.gray,
-  listHeaderText: palette.black, // Not used
+  // listHeaderText: palette.black,
 
   // Header
-  headerText: palette.black, // Not used
-  hamburgerButton: palette.black, // Not used
-  backButton: palette.black, // Not used
+  // headerText: palette.black,
+  // hamburgerButton: palette.black,
+  // backButton: palette.black,
 
   // Buttons
   // Should add palette when pressed
   primaryButtonOutline: palette.transparent,
   primaryButton: palette.edgeBlue,
   primaryButtonText: palette.edgeBlue,
-  primaryButtonDeactivated: palette.gray, // Not used
+  // primaryButtonDeactivated: palette.gray,
 
   secondaryButtonOutline: palette.edgeBlue,
   secondaryButton: palette.transparent,
   secondaryButtonText: palette.edgeBlue,
 
-  tertiaryButtonOutline: palette.edgeBlue, // Not used
-  tertiaryButton: palette.transparent, // Not used
-  tertiaryButtonText: palette.edgeBlue, // Not used
+  // tertiaryButtonOutline: palette.edgeBlue,
+  // tertiaryButton: palette.transparent,
+  // tertiaryButtonText: palette.edgeBlue,
 
-  glassButton: palette.blackOp10, // Not used
-  glassButtonDark: palette.blackOp50, // Not used
-  glassButtonDarkIcon: palette.white, // Not used
-  glassButtonIcon: palette.edgeBlue, // Not used
+  // glassButton: palette.blackOp10,
+  // glassButtonDark: palette.blackOp50,
+  // glassButtonDarkIcon: palette.white,
+  // glassButtonIcon: palette.edgeBlue,
 
-  dangerButtonOutline: palette.transparent, // Not used
-  dangerButton: palette.accentRed, // Not used
-  dangerButtonText: palette.white, // Not used
+  // dangerButtonOutline: palette.transparent,
+  // dangerButton: palette.accentRed,
+  // dangerButtonText: palette.white,
 
-  cardBackground: palette.white, // Not used
-  cardShadow: palette.blackOp25, // Not used
+  // cardBackground: palette.white,
+  // cardShadow: palette.blackOp25,
 
-  tabBarBackground: palette.white, // Not used
-  tabBarIcon: palette.gray, // Not used
-  tabBarIconHighlighted: palette.edgeBlue, // Not used
+  // tabBarBackground: palette.white,
+  // tabBarIcon: palette.gray,
+  // tabBarIconHighlighted: palette.edgeBlue,
 
-  sliderTabSend: palette.accentRed, // Not used
-  sliderTabRequest: palette.accentGreen, // Not used
-  sliderTabMore: palette.accentBlue, // Not used
+  // sliderTabSend: palette.accentRed,
+  // sliderTabRequest: palette.accentGreen,
+  // sliderTabMore: palette.accentBlue,
 
-  pinOutline: palette.edgeBlue, // Not used
-  pinFilled: palette.edgeBlue, // Not used
+  // pinOutline: palette.edgeBlue,
+  // pinFilled: palette.edgeBlue,
 
-  radioButtonOutline: palette.edgeNavy, // Not used
-  radioButtonFilled: palette.edgeBlue, // Not used
+  // radioButtonOutline: palette.edgeNavy,
+  // radioButtonFilled: palette.edgeBlue,
 
   toggleButton: palette.accentGreen,
   toggleButtonOff: palette.gray,
-  toggleButtonThumb: palette.white, // Not used
+  // toggleButtonThumb: palette.white,
 
-  warningBubble: palette.accentOrange, // Not used
+  // warningBubble: palette.accentOrange,
 
   // Confirmation slider
-  confirmationSlider: palette.blackOp10, // Not used
-  confirmationSliderText: palette.edgeBlue, // Not used
-  confirmationSliderArrow: palette.white, // Not used
-  confirmationSliderThumb: palette.edgeBlue, // Not used
-  confirmationSliderTextDeactivated: palette.gray, // Not used
-  confirmationThumbDeactivated: palette.gray, // Not used
+  // confirmationSlider: palette.blackOp10,
+  // confirmationSliderText: palette.edgeBlue,
+  // confirmationSliderArrow: palette.white,
+  // confirmationSliderThumb: palette.edgeBlue,
+  // confirmationSliderTextDeactivated: palette.gray,
+  // confirmationThumbDeactivated: palette.gray,
 
   // Lines
-  lineDivider: palette.edgeBlue, // Not used
-  textInputLine: palette.gray, // Not used
-  orLine: palette.gray, // Not used
-  tileDivider: palette.gray, // Not used
+  // lineDivider: palette.edgeBlue,
+  // textInputLine: palette.gray,
+  // orLine: palette.gray,
+  // tileDivider: palette.gray,
 
   // Notifications
-  notificationBackground: palette.grayOp80, // Not used
-  messageBanner: palette.grayOp80, // Not used
-  bubble: palette.whiteOp10, // Not used
+  // notificationBackground: palette.grayOp80,
+  // messageBanner: palette.grayOp80,
+  // bubble: palette.whiteOp10,
 
   // Alert Modal
-  securityAlertModalHeaderIcon: palette.accentOrange, // Not used
-  securityAlertModalRowBorder: palette.lightGray, // Not used
-  securityAlertModalWarningIcon: palette.accentOrange, // Not used
-  securityAlertModalDangerIcon: palette.accentRed, // Not used
-  securityAlertModalBackground: palette.white, // Not used
-  securityAlertModalText: palette.black, // Not used
-  securityAlertModalLine: palette.lightGray, // Not used
-  securityAlertModalHeaderIconShadow: palette.accentOrangeOp30, // Not used
+  // securityAlertModalHeaderIcon: palette.accentOrange,
+  // securityAlertModalRowBorder: palette.lightGray,
+  // securityAlertModalWarningIcon: palette.accentOrange,
+  // securityAlertModalDangerIcon: palette.accentRed,
+  // securityAlertModalBackground: palette.white,
+  // securityAlertModalText: palette.black,
+  // securityAlertModalLine: palette.lightGray,
+  // securityAlertModalHeaderIconShadow: palette.accentOrangeOp30,
 
   // Settings Row
   settingsRowBackground: palette.white,
@@ -179,7 +179,7 @@ export const edgeLight: Theme = {
   keyboardTopViewTextDark: palette.white,
   datetimepickerBackgroundLight: palette.white,
   datetimepickerBackgroundDark: palette.edgeBlue,
-  pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links // Not used
+  // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
 
   // Fonts
   fontFaceDefault: 'SourceSansPro-Black',
