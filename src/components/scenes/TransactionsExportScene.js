@@ -347,14 +347,14 @@ const getStyles = cacheStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: colorScheme === 'dark' ? theme.keyboardTopViewBackgroundDark : theme.keyboardTopViewBackgroundDefault
+    backgroundColor: colorScheme === 'dark' ? theme.keyboardTopViewBackgroundDark : theme.keyboardTopViewBackgroundLight
   },
   accessoryText: {
-    color: colorScheme === 'dark' ? theme.keyboardTopViewTextDark : theme.keyboardTopViewTextDefault,
+    color: colorScheme === 'dark' ? theme.keyboardTopViewTextDark : theme.keyboardTopViewTextLight,
     fontSize: theme.rem(1)
   },
   pickerContainer: {
-    backgroundColor: colorScheme === 'dark' ? theme.datetimepickerBackgroundDark : theme.datetimepickerBackgroundDefault
+    backgroundColor: colorScheme === 'dark' ? theme.datetimepickerBackgroundDark : theme.datetimepickerBackgroundLight
   }
 }))
 
