@@ -1,6 +1,9 @@
 // @flow
 
 export type Theme = {
+  // Theme name
+  themeId: string,
+
   // The app scaling factor, which is the height of "normal" text:
   rem(size: number): number,
 
@@ -71,9 +74,9 @@ export type Theme = {
   tabBarIcon: string,
   tabBarIconHighlighted: string,
 
-  sendTab: string, // sliderTabSend
-  requestTab: string, // "
-  moreTab: string, // "
+  sliderTabSend: string,
+  sliderTabRequest: string,
+  sliderTabMore: string,
 
   pinOutline: string,
   pinFilled: string,

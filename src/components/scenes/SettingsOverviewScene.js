@@ -13,7 +13,9 @@ import * as Constants from '../../constants/indexConstants'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
+import { type ThemeProps, cacheStyles, changeTheme, getTheme, withTheme } from '../../theme/ThemeContext.js'
+import { edgeDark } from '../../theme/variables/edgeDark.js'
+import { edgeLight } from '../../theme/variables/edgeLight.js'
 import { type Action } from '../../types/reduxTypes.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -52,7 +54,8 @@ type StateProps = {
 }
 
 type State = {
-  touchIdText: string
+  touchIdText: string,
+  darkTheme: boolean
 }
 
 type Props = StateProps & ThemeProps
@@ -60,8 +63,10 @@ type Props = StateProps & ThemeProps
 class SettingsOverviewComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
+    const theme = getTheme()
     this.state = {
-      touchIdText: s.strings.settings_button_use_touchID
+      touchIdText: s.strings.settings_button_use_touchID,
+      darkTheme: theme.themeId === 'edgedark'
     }
   }
 
@@ -141,6 +146,12 @@ class SettingsOverviewComponent extends React.Component<Props, State> {
 
   onDeveloperPress = () => {
     this.props.toggleDeveloperMode(!this.props.developerModeOn)
+  }
+
+  onDarkThemePress = () => {
+    this.setState({ darkTheme: !this.state.darkTheme }, () => {
+      this.state.darkTheme ? changeTheme(edgeDark) : changeTheme(edgeLight)
+    })
   }
 
   showAutoLogoutModal = async () => {
@@ -225,6 +236,9 @@ class SettingsOverviewComponent extends React.Component<Props, State> {
 
           <SettingsRow text={s.strings.title_promotion_settings} right={rightArrow} onPress={this._onPressPromotionSettings} />
           <SettingsSwitchRow key="developerMode" text={s.strings.settings_developer_mode} value={this.props.developerModeOn} onPress={this.onDeveloperPress} />
+          {this.props.developerModeOn && (
+            <SettingsSwitchRow key="darkTheme" text={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.onDarkThemePress} />
+          )}
           <SettingsRow onPress={this.showRestoreWalletModal} text={s.strings.restore_wallets_modal_title} />
           <SettingsRow text={s.strings.title_terms_of_service} onPress={Actions[Constants.TERMS_OF_SERVICE]} right={rightArrow} />
 
