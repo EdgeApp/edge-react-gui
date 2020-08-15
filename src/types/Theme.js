@@ -21,11 +21,14 @@ export type Theme = {
   modalShadow: string,
   modalBackgroundShadowOpacity: number,
   modalCloseIcon: string,
+  modalFullGradientLeft: string,
+  modalFullGradientRight: string,
 
   // Tile
   listHeaderBackground: string,
   tileBackground: string,
   tileBackgroundMuted: string, // change from mutedTileBackground
+  listSectionHeaderBackground: string,
 
   // Settings Row
   settingsRowBackground: string,
@@ -42,6 +45,7 @@ export type Theme = {
   dangerText: string,
   textLink: string,
   deactivatedText: string,
+  listHeaderText: string,
 
   // Header
   headerText: string,
@@ -66,6 +70,10 @@ export type Theme = {
   glassButtonIcon: string,
   glassButtonDark: string,
   glassButtonDarkIcon: string,
+
+  dangerButtonOutline: string,
+  dangerButton: string,
+  dangerButtonText: string,
 
   cardBackground: string,
   cardShadow: string,
@@ -107,6 +115,7 @@ export type Theme = {
   // Notifications
   notificationBackground: string,
   messageBanner: string,
+  bubble: string,
 
   // Alert Modal
   securityAlertModalHeaderIcon: string,
@@ -119,11 +128,11 @@ export type Theme = {
   securityAlertModalHeaderIconShadow: string,
 
   // Misc
-  keyboardTopViewBackgroundDefault: string,
+  keyboardTopViewBackgroundLight: string,
   keyboardTopViewBackgroundDark: string,
-  keyboardTopViewTextDefault: string,
+  keyboardTopViewTextLight: string,
   keyboardTopViewTextDark: string,
-  datetimepickerBackgroundDefault: string,
+  datetimepickerBackgroundLight: string,
   datetimepickerBackgroundDark: string,
   pressedOpacity: number,
 
