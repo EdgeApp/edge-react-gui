@@ -202,6 +202,7 @@
   "settings_account_title_cap": "Benutzerkonto",
   "settings_button_change_password": "Passwort ändern",
   "settings_developer_mode": "Entwickler-Modus",
+  "settings_dark_theme": "",
   "settings_button_lock_settings": "Tippen um Benutzerkontoeinstellungen zu sperren",
   "settings_button_password_recovery": "Passwortwiederherstellung einrichten",
   "settings_button_logout": "Ausloggen",
