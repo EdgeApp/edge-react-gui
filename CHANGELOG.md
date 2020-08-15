@@ -1,5 +1,34 @@
 # edge-react-gui
 
+## 1.16.5 (2020-08-13)
+
+- Visual enhancements
+- Export transactions with adjustable date range
+- FIO address length can mpw be more than 16 characters
+- Show parent currency transaction fee for token exchanges
+- Link to prove sending Monero transaction in block explorer
+- Added ability to enable/disable all notifications at the same time
+- View Monero view key in wallet options
+- Save additional numTransactions field in walletLocalData to resolve transaction list not displaying all transactions
+- Added Save button to change mining fee
+- Upgrade edge-components to v0.0.28
+  - Fix compatibility with Flow v0.84.0
+- Upgrade edge-currency-accountbased to v0.7.18
+  - Disable asyncWaterfall for some FIO operations
+  - Save numTransactions in localWalletData
+  - Add cleaners to Etherscan get tx api responses
+  - FIO checkTransactions algorithm update to page transactions
+  - Fix REPv2 token address
+- Upgrade edge-currency-monero to v0.2.6
+  - Export private view key via getDisplayPublicSeed()
+  - Update transaction explorer to Blockchair
+- Upgrade edge-exchange-plugins to v0.11.6
+  - Display parent currency and fiat fee for token swaps
+  - Add CoinGecko
+- Upgrade edge-login-ui-rn to v0.6.13
+  - Enforce Flow typing & other cleanups throughout the codebase
+  - Prevent the welcome screen from flickering at startup
+
 ## 1.16.4 (2020-08-04)
 
 - Upgrade edge-currency-accountbased to v0.7.17
@@ -452,7 +481,7 @@
 - Big performance boost when logging in and syncing wallets
 - Add support for Monero bulletproofs which fixes Monero spending
 - Allow users to enable/disable exchange providers
-- Fix occasional "Token is not supported" error in Exchange screen
+- Fix occasional Token is not supported error in Exchange screen
 - Enable viewing xpub for more currencies
 - Fix crash on large accounts when tapping top right menu button immediately after login
 - Fix hang when using Simplex from some Android devices
@@ -482,7 +511,7 @@
 ## 1.3.4
 
 - Fix Payment Protocol support on Android
-- Change DGB P2SH address to "S" address
+- Change DGB P2SH address to S address
 - Prevent TouchID button from being tapped after login
 - Prevent create wallet button Done button from being tapped multiple times
 - Fix white screen hang upon login if an incoming transaction happens
@@ -535,7 +564,7 @@ edge-currency-bitcoin:
 - Fix Cancel of sweeping private key not re-enabling scanner
 - Fix several crashes
 - Add cards to empty LTC, BTC, ETH, and BCH wallets to show user link to buy with credit card
-- Do not show "No Amount Specified" error when user first scans Monero/XRP QR codes
+- Do not show No Amount Specified error when user first scans Monero/XRP QR codes
 
 ## 1.2.4
 
@@ -545,7 +574,7 @@ edge-currency-bitcoin:
 - Remove IMP fiat currency since we don't have exchange rates for it
 - Make show account balance toggle persistent
 - Make progress bar start at about 10%
-- Change settings for password recovery to show "Setup Password Recovery"
+- Change settings for password recovery to show Setup Password Recovery
 - Fix dropdown for iPhone X
 
 edge-currency-bitcoin:

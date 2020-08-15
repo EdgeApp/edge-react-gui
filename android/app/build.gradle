@@ -166,6 +166,9 @@ if (hasProperty('storeFile')) {
 }
 
 dependencies {
+    implementation project(':@react-native-community_blur')
+    implementation project(':react-native-appearance')
+    implementation project(':@react-native-community_datetimepicker')
     implementation project(':react-native-localize')
     implementation project(':@react-native-community_art')
     implementation project(':@react-native-community_async-storage')

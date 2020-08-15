@@ -162,7 +162,7 @@ const getStyles = cacheStyles(theme => {
     width: 500,
 
     // Visuals:
-    backgroundColor: theme.modalBody,
+    backgroundColor: theme.modal,
     shadowOpacity: 1,
     shadowOffset: {
       width: 0,
@@ -207,7 +207,7 @@ const getStyles = cacheStyles(theme => {
       top: 0,
 
       // Visuals:
-      backgroundColor: theme.modalBackgroundShadow
+      backgroundColor: theme.modalShadow
     },
 
     screen: {

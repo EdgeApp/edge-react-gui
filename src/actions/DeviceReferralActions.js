@@ -5,7 +5,7 @@ import { asArray, asObject, asOptional, asString } from 'cleaners'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { type DeviceReferral } from '../types/ReferralTypes.js'
 import { asCurrencyCode, asMessageTweak, asPluginTweak } from '../types/TweakTypes.js'
-import { logEvent } from '../util/tracking.js'
+import { logEvent, utilWaterfall } from '../util/tracking.js'
 
 const DEVICE_REFERRAL_FILE = 'utilityServer.json'
 
@@ -31,7 +31,7 @@ export const loadDeviceReferral = () => async (dispatch: Dispatch, getState: Get
   // Now try the network:
   try {
     console.log('Fetching app install reason')
-    const reply = await fetch('https://util1.edge.app/ref')
+    const reply = await utilWaterfall('ref')
     if (!reply.ok) {
       throw new Error(`Util server returned status code ${reply.status}`)
     }

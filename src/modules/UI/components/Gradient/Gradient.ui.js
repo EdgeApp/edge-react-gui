@@ -19,8 +19,8 @@ type Props = OwnProps & ThemeProps
 class GradientComponent extends React.PureComponent<Props> {
   render() {
     const { children, reverse, theme, style } = this.props
-    const colors = [theme.background1, theme.background2]
-    const reverseColors = [theme.background2, theme.background1]
+    const colors = [theme.backgroundGradientLeft, theme.backgroundGradientRight]
+    const reverseColors = [theme.backgroundGradientRight, theme.backgroundGradientLeft]
     return (
       <LinearGradient style={style} start={UPPER_LEFT} end={UPPER_RIGHT} colors={reverse ? reverseColors : colors}>
         {children}

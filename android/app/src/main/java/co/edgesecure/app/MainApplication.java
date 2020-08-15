@@ -11,6 +11,7 @@ import com.BV.LinearGradient.LinearGradientPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.bugsnag.BugsnagReactNative;
 import com.chirag.RNMail.RNMail;
+import com.cmcewen.blurview.BlurViewPackage;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -21,6 +22,7 @@ import com.krazylabs.OpenAppSettingsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.peel.react.TcpSocketsModule;
+import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 import com.reactcommunity.rnlocalize.RNLocalizePackage;
 import com.reactlibrary.DiskletPackage;
 import com.reactnativecommunity.art.ARTPackage;
@@ -30,11 +32,11 @@ import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 import com.rnfs.RNFSPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.zmxv.RNSound.RNSoundPackage;
+import io.expo.appearance.RNCAppearancePackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import io.invertase.firebase.instanceid.RNFirebaseInstanceIdPackage;
-
 import java.util.Arrays;
 import java.util.List;
 import org.reactnative.camera.RNCameraPackage;
@@ -52,6 +54,9 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+              new BlurViewPackage(),
+              new RNCAppearancePackage(),
+              new RNDateTimePickerPackage(),
               new RNLocalizePackage(),
               new ARTPackage(),
               new AsyncStoragePackage(),

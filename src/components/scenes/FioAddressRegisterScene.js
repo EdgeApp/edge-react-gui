@@ -55,7 +55,6 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
   fioCheckQueue: number = 0
   clearButtonMode = 'while-editing'
   returnKeyType = 'next'
-  inputMaxLength = 15
 
   state = {
     selectedWallet: null,
@@ -336,7 +335,6 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
                   selectionColor={THEME.COLORS.ACCENT_MINT}
                   label={s.strings.fio_address_choose_label}
                   value={fioAddress}
-                  maxLength={this.inputMaxLength}
                   returnKeyType={this.returnKeyType}
                   error={chooseHandleErrorMessage}
                   disabled={walletLoading || domainsLoading}

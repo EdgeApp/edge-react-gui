@@ -284,6 +284,7 @@ export const showLegacyAddressModal = () => async (dispatch: Dispatch, getState:
 export const privateKeyModalActivated = () => async (dispatch: Dispatch, getState: GetState) => {
   const privateKeyModal = createYesNoModal({
     title: s.strings.private_key_modal_sweep_from_private_address,
+    message: s.strings.private_key_modal_sweep_from_private_address_message,
     icon: <Icon style={{ transform: [{ rotate: '270deg' }] }} type={ION_ICONS} name={KEY_ICON} size={30} />,
     noButtonText: s.strings.private_key_modal_cancel,
     yesButtonText: s.strings.private_key_modal_import

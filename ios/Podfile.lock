@@ -10,7 +10,7 @@ PODS:
   - disklet (0.4.5):
     - React
   - DoubleConversion (1.1.6)
-  - edge-login-ui-rn (0.6.11):
+  - edge-login-ui-rn (0.6.13):
     - React
   - Firebase/Core (5.3.0):
     - Firebase/CoreOnly
@@ -52,6 +52,10 @@ PODS:
   - Protobuf (3.12.0)
   - React (0.59.10):
     - React/Core (= 0.59.10)
+  - react-native-appearance (0.3.4):
+    - React
+  - react-native-blur (0.8.0):
+    - React
   - react-native-camera (1.13.1):
     - React
     - react-native-camera/RCT (= 1.13.1)
@@ -67,7 +71,7 @@ PODS:
   - react-native-firebase (4.3.8):
     - Firebase/Core
     - React
-  - react-native-mail (3.0.7):
+  - react-native-mail (5.0.1):
     - React
   - react-native-randombytes (3.5.3):
     - React
@@ -134,6 +138,8 @@ PODS:
     - React
   - RNCAsyncStorage (1.6.2):
     - React
+  - RNDateTimePicker (2.5.0):
+    - React
   - RNDeviceInfo (5.6.1):
     - React
   - RNFS (2.13.3):
@@ -165,6 +171,8 @@ DEPENDENCIES:
   - Firebase/Messaging
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - react-native-appearance (from `../node_modules/react-native-appearance`)
+  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-fast-crypto (from `../node_modules/react-native-fast-crypto`)
@@ -189,6 +197,7 @@ DEPENDENCIES:
   - "ReactNativeART (from `../node_modules/@react-native-community/art`)"
   - ReactNativePermissions (from `../node_modules/react-native-permissions`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNLocalize (from `../node_modules/react-native-localize`)
@@ -228,6 +237,10 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
+  react-native-appearance:
+    :path: "../node_modules/react-native-appearance"
+  react-native-blur:
+    :path: "../node_modules/@react-native-community/blur"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
   react-native-contacts:
@@ -254,6 +267,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-permissions"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNFS:
@@ -279,7 +294,7 @@ SPEC CHECKSUMS:
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   disklet: 4f586f90b70fdb46f06614a5b7342eda5c90f253
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
-  edge-login-ui-rn: bda9d63e6d83ad22a639f08368cc14bb0bbf770f
+  edge-login-ui-rn: 013752f40d558b709807f11d8f7bf3cda3f2c79f
   Firebase: 68afeeb05461db02d7c9e3215cda28068670f4aa
   FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
   FirebaseCore: 62f1b792a49bb9e8b4073f24606d2c93ffc352f0
@@ -291,11 +306,13 @@ SPEC CHECKSUMS:
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   Protobuf: 2793fcd0622a00b546c60e7cbbcc493e043e9bb9
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
+  react-native-appearance: 0f0e5fc2fcef70e03d48c8fe6b00b9158c2ba8aa
+  react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
   react-native-contacts: f6e5c518598762081ff9cf7c70db36f71668538e
   react-native-fast-crypto: aed797071793e23416d6e8c7c1c5dadb63036a0c
   react-native-firebase: c20ee01585998768935fc2cff74ff8e9740f1a73
-  react-native-mail: 021d8ee60e374609f5689ef354dc8e36839a9ba6
+  react-native-mail: 685104c633d50ea3e15595acc89ab0eb9ee9cfd2
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
@@ -304,6 +321,7 @@ SPEC CHECKSUMS:
   ReactNativeART: 78edc68dd4a1e675338cd0cd113319cf3a65f2ab
   ReactNativePermissions: bf462424ca7823d1b8e6cb463184d6e7f151971b
   RNCAsyncStorage: 60a80e72d95bf02a01cace55d3697d9724f0d77f
+  RNDateTimePicker: a8000390e7a4fe23d9f36492ded9282640721c82
   RNDeviceInfo: b6e650fbd234732c759544218657d549b4339038
   RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
   RNLocalize: b6df30cc25ae736d37874f9bce13351db2f56796
@@ -314,6 +332,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: bccb5f8797ef2ddff8d5531850eb71ce326573b8
+PODFILE CHECKSUM: 08d7925f21ad0118fdb477099b500ec9a735726d
 
 COCOAPODS: 1.9.3

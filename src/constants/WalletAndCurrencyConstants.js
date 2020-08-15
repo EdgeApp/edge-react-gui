@@ -374,7 +374,8 @@ export const WALLET_LIST_MENU: {
       'DOGE',
       'RVN',
       'RBTC',
-      'TBTC'
+      'TBTC',
+      'XMR'
     ],
     label: s.strings.fragment_wallets_view_xpub,
     value: 'viewXPub'
