@@ -202,6 +202,7 @@
   "settings_account_title_cap": "Cuenta",
   "settings_button_change_password": "Cambiar contraseña",
   "settings_developer_mode": "Modo desarrollador",
+  "settings_dark_theme": "",
   "settings_button_lock_settings": "Pulsar para bloquear la configuración de la cuenta",
   "settings_button_password_recovery": "Configurar recuperación de contraseña",
   "settings_button_logout": "Salir",
