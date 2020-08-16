@@ -7,7 +7,6 @@ import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
@@ -16,6 +15,7 @@ import { linkReferralWithCurrencies, toggleAccountBalanceVisibility, updateActiv
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import otpIcon from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
+import { Fontello } from '../../assets/vector/index.js'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
@@ -127,7 +127,7 @@ class WalletListComponent extends React.Component<Props, State> {
                 <Ionicon name="md-add" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
               </TouchableOpacity>
               <TouchableOpacity onPress={sort}>
-                <MaterialIcons name="swap-vert" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
+                <Fontello name="sort" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
               </TouchableOpacity>
             </View>
             <TouchableOpacity key="doneButton" style={styles.headerButton} onPress={this.disableSorting}>
