@@ -478,7 +478,8 @@
       "IL"
     ],
     "sortIndex": 2,
-    "title": "Israeli Bank Transfer"
+    "title": "Israeli Bank Transfer",
+    "description": "Fee: 6.95% / Settlement: 1 - 48hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited"
   },
   {
     "id": "safello.bank",
