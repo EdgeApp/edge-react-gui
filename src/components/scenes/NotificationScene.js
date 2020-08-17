@@ -11,7 +11,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../../modules/UI/selectors'
-import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { type State as ReduxState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SettingsRow } from '../common/SettingsRow.js'
@@ -109,14 +109,7 @@ export class NotificationComponent extends React.Component<Props, State> {
   }
 }
 
-export const NotificationScene = connect((state: ReduxState): StateProps => {
-  return {
-    currencyInfos: getActiveWalletCurrencyInfos(state),
-    userId: state.core.account.rootLoginId
-  }
-})(withTheme(NotificationComponent))
-
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   currencyLogo: {
     height: theme.rem(1.25),
     width: theme.rem(1.25),
@@ -127,3 +120,10 @@ const getStyles = cacheStyles(theme => ({
     alignSelf: 'center'
   }
 }))
+
+export const NotificationScene = connect((state: ReduxState): StateProps => {
+  return {
+    currencyInfos: getActiveWalletCurrencyInfos(state),
+    userId: state.core.account.rootLoginId
+  }
+})(withTheme(NotificationComponent))

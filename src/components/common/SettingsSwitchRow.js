@@ -26,9 +26,9 @@ function SettingsSwitchRowComponent(props: Props): React.Node {
     false: toggleButtonOff,
     true: toggleButton
   }
-  const ios_backgroundColor = toggleButtonOff
+  const iosBackgroundColor = toggleButtonOff
 
-  const right = <Switch disabled={disabled} onChange={onPress} value={value} ios_backgroundColor={ios_backgroundColor} trackColor={trackColor} />
+  const right = <Switch disabled={disabled} onChange={onPress} value={value} ios_backgroundColor={iosBackgroundColor} trackColor={trackColor} />
   return <SettingsRow disabled={disabled} icon={icon} text={text} right={right} onPress={onPress} />
 }
 

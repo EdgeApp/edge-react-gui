@@ -16,7 +16,7 @@ import { formatExpDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import type { State as StateType } from '../../types/reduxTypes.js'
 import { sanitizeForFilename } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -337,7 +337,7 @@ class TransactionsExportSceneComponent extends PureComponent<Props, State> {
   }
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   bottomArea: {
     padding: theme.rem(1.5)
   },

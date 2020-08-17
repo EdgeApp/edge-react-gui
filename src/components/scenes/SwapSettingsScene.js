@@ -10,7 +10,7 @@ import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferra
 import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
-import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
@@ -178,7 +178,7 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   instructionArea: {
     backgroundColor: theme.settingsRowSubHeader,
     padding: theme.rem(1)
