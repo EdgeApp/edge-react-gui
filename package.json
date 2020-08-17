@@ -131,7 +131,7 @@
     "edge-currency-bitcoin": "^4.8.6",
     "edge-currency-monero": "^0.2.6",
     "edge-exchange-plugins": "^0.11.6",
-    "edge-login-ui-rn": "^0.6.13",
+    "edge-login-ui-rn": "^0.6.14",
     "lodash": "^4.17.19",
     "qrcode-generator": "^1.4.4",
     "react": "16.8.3",

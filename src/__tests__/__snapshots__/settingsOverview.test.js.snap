@@ -1,13 +1,317 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`MyComponent should render Locked SettingsOverview 1`] = `
-<Context.Consumer>
-  [Function]
-</Context.Consumer>
+<SettingsOverviewComponent
+  account={
+    Object {
+      "currencyConfig": Object {},
+    }
+  }
+  autoLogoutTimeInSeconds={0}
+  confirmPassword={[Function]}
+  confirmPasswordError=""
+  defaultFiat=""
+  dispatchUpdateEnableTouchIdEnable={[Function]}
+  isLocked={true}
+  lockButton=""
+  lockButtonIcon="ios-lock"
+  lockSettings={[Function]}
+  onTogglePinLoginEnabled={[Function]}
+  pinLoginEnabled={false}
+  resetConfirmPasswordError={[Function]}
+  resetSendLogsStatus={[Function]}
+  sendLogs={[Function]}
+  sendLogsStatus=""
+  setAutoLogoutTimeInSeconds={[Function]}
+  showRestoreWalletsModal={[Function]}
+  supportsTouchId={false}
+  theme={
+    Object {
+      "backButton": "#FFFFFF",
+      "backgroundGradientLeft": "#0C446A",
+      "backgroundGradientRight": "#0D2145",
+      "bubble": "rgba(255, 255, 255, .1)",
+      "cardBackground": "#0E4B75",
+      "cardShadow": "rgba(0, 0, 0, .25)",
+      "confirmationSlider": "rgba(255, 255, 255, .1)",
+      "confirmationSliderArrow": "#0E4B75",
+      "confirmationSliderText": "#66EDA8",
+      "confirmationSliderTextDeactivated": "#87939E",
+      "confirmationSliderThumb": "#66EDA8",
+      "confirmationThumbDeactivated": "#87939E",
+      "dangerButton": "#FFFFFF",
+      "dangerButtonOutline": "rgba(255, 255, 255, 0)",
+      "dangerButtonText": "#E85466",
+      "dangerText": "#E85466",
+      "datetimepickerBackgroundDark": "#0E4B75",
+      "datetimepickerBackgroundLight": "#FFFFFF",
+      "deactivatedText": "#87939E",
+      "fontFaceBold": "SourceSansPro-Bold",
+      "fontFaceDefault": "SourceSansPro-Black",
+      "fontFaceSymbols": "SourceSansPro-Black",
+      "glassButton": "rgba(255, 255, 255, .1)",
+      "glassButtonDark": "rgba(0, 0, 0, .5)",
+      "glassButtonDarkIcon": "#FFFFFF",
+      "glassButtonIcon": "#FFFFFF",
+      "hamburgerButton": "#FFFFFF",
+      "headerText": "#FFFFFF",
+      "icon": "#FFFFFF",
+      "iconTappable": "#66EDA8",
+      "keyboardTopViewBackgroundDark": "#0E4B75",
+      "keyboardTopViewBackgroundLight": "#FFFFFF",
+      "keyboardTopViewTextDark": "#FFFFFF",
+      "keyboardTopViewTextLight": "#0073D9",
+      "lineDivider": "#A4C7DF",
+      "listHeaderBackground": "#0D2145",
+      "listHeaderText": "#FFFFFF",
+      "listSectionHeaderBackground": "#0D2145",
+      "messageBanner": "rgba(135, 147, 158, .8)",
+      "modal": "#003B65",
+      "modalBackgroundShadowOpacity": 0.7,
+      "modalCloseIcon": "#66EDA8",
+      "modalFullGradientLeft": "#0C446A",
+      "modalFullGradientRight": "#0D2145",
+      "modalShadow": "rgba(0, 0, 0, .5)",
+      "negativeText": "#E85466",
+      "notificationBackground": "rgba(217, 227, 237, .75)",
+      "orLine": "#A4C7DF",
+      "pinFilled": "#FFFFFF",
+      "pinOutline": "#FFFFFF",
+      "positiveText": "#77C513",
+      "pressedOpacity": 0.25,
+      "primaryButton": "#66EDA8",
+      "primaryButtonDeactivated": "#87939E",
+      "primaryButtonOutline": "rgba(255, 255, 255, 0)",
+      "primaryButtonText": "#0E4B75",
+      "primaryText": "#FFFFFF",
+      "radioButtonFilled": "#66EDA8",
+      "radioButtonOutline": "#D9E3ED",
+      "rem": [Function],
+      "secondaryButton": "rgba(255, 255, 255, 0)",
+      "secondaryButtonOutline": "#66EDA8",
+      "secondaryButtonText": "#66EDA8",
+      "secondaryText": "#A4C7DF",
+      "securityAlertModalBackground": "#FFFFFF",
+      "securityAlertModalDangerIcon": "#E85466",
+      "securityAlertModalHeaderIcon": "#F1AA19",
+      "securityAlertModalHeaderIconShadow": "rgba(241, 170, 25, .3)",
+      "securityAlertModalLine": "#D9E3ED",
+      "securityAlertModalRowBorder": "#D9E3ED",
+      "securityAlertModalText": "#000000",
+      "securityAlertModalWarningIcon": "#F1AA19",
+      "settingsChangellyLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeChangelly.png",
+      },
+      "settingsChangenowLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeChangenow.png",
+      },
+      "settingsCoinswitchLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeCoinswitch.png",
+      },
+      "settingsDefaultLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeDefault.png",
+      },
+      "settingsFaastLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeFaast.png",
+      },
+      "settingsFoxExchangeLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeFoxExchange.png",
+      },
+      "settingsGodexLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeGodex.png",
+      },
+      "settingsRowBackground": "#0E4B75",
+      "settingsRowHeaderBackground": "#0D2145",
+      "settingsRowPressed": "rgba(255, 255, 255, 0)",
+      "settingsRowSubHeader": "rgba(255, 255, 255, 0)",
+      "settingsSwitchainLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeSwitchain.png",
+      },
+      "settingsTotleLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeTotle.png",
+      },
+      "sliderTabMore": "#0073D9",
+      "sliderTabRequest": "#77C513",
+      "sliderTabSend": "#E85466",
+      "tabBarBackground": "#0D2145",
+      "tabBarIcon": "#FFFFFF",
+      "tabBarIconHighlighted": "#66EDA8",
+      "tertiaryButton": "rgba(255, 255, 255, 0)",
+      "tertiaryButtonOutline": "#66EDA8",
+      "tertiaryButtonText": "#66EDA8",
+      "textInputLine": "#A4C7DF",
+      "textLink": "#66EDA8",
+      "themeId": "edgedark",
+      "tileBackground": "#0E4B75",
+      "tileBackgroundMuted": "#2F5E89",
+      "tileDivider": "#A4C7DF",
+      "toggleButton": "#66EDA8",
+      "toggleButtonOff": "#87939E",
+      "toggleButtonThumb": "#FFFFFF",
+      "warningBubble": "#F1AA19",
+      "warningIcon": "#F1AA19",
+      "warningText": "#F1AA19",
+    }
+  }
+  touchIdEnabled={false}
+  username=""
+/>
 `;
 
 exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
-<Context.Consumer>
-  [Function]
-</Context.Consumer>
+<SettingsOverviewComponent
+  account={
+    Object {
+      "currencyConfig": Object {},
+    }
+  }
+  autoLogoutTimeInSeconds={0}
+  confirmPassword={[Function]}
+  confirmPasswordError=""
+  defaultFiat=""
+  dispatchUpdateEnableTouchIdEnable={[Function]}
+  isLocked={false}
+  lockButton=""
+  lockButtonIcon="ios-unlock"
+  lockSettings={[Function]}
+  onTogglePinLoginEnabled={[Function]}
+  pinLoginEnabled={false}
+  resetConfirmPasswordError={[Function]}
+  resetSendLogsStatus={[Function]}
+  sendLogs={[Function]}
+  sendLogsStatus=""
+  setAutoLogoutTimeInSeconds={[Function]}
+  showRestoreWalletsModal={[Function]}
+  supportsTouchId={false}
+  theme={
+    Object {
+      "backButton": "#FFFFFF",
+      "backgroundGradientLeft": "#0C446A",
+      "backgroundGradientRight": "#0D2145",
+      "bubble": "rgba(255, 255, 255, .1)",
+      "cardBackground": "#0E4B75",
+      "cardShadow": "rgba(0, 0, 0, .25)",
+      "confirmationSlider": "rgba(255, 255, 255, .1)",
+      "confirmationSliderArrow": "#0E4B75",
+      "confirmationSliderText": "#66EDA8",
+      "confirmationSliderTextDeactivated": "#87939E",
+      "confirmationSliderThumb": "#66EDA8",
+      "confirmationThumbDeactivated": "#87939E",
+      "dangerButton": "#FFFFFF",
+      "dangerButtonOutline": "rgba(255, 255, 255, 0)",
+      "dangerButtonText": "#E85466",
+      "dangerText": "#E85466",
+      "datetimepickerBackgroundDark": "#0E4B75",
+      "datetimepickerBackgroundLight": "#FFFFFF",
+      "deactivatedText": "#87939E",
+      "fontFaceBold": "SourceSansPro-Bold",
+      "fontFaceDefault": "SourceSansPro-Black",
+      "fontFaceSymbols": "SourceSansPro-Black",
+      "glassButton": "rgba(255, 255, 255, .1)",
+      "glassButtonDark": "rgba(0, 0, 0, .5)",
+      "glassButtonDarkIcon": "#FFFFFF",
+      "glassButtonIcon": "#FFFFFF",
+      "hamburgerButton": "#FFFFFF",
+      "headerText": "#FFFFFF",
+      "icon": "#FFFFFF",
+      "iconTappable": "#66EDA8",
+      "keyboardTopViewBackgroundDark": "#0E4B75",
+      "keyboardTopViewBackgroundLight": "#FFFFFF",
+      "keyboardTopViewTextDark": "#FFFFFF",
+      "keyboardTopViewTextLight": "#0073D9",
+      "lineDivider": "#A4C7DF",
+      "listHeaderBackground": "#0D2145",
+      "listHeaderText": "#FFFFFF",
+      "listSectionHeaderBackground": "#0D2145",
+      "messageBanner": "rgba(135, 147, 158, .8)",
+      "modal": "#003B65",
+      "modalBackgroundShadowOpacity": 0.7,
+      "modalCloseIcon": "#66EDA8",
+      "modalFullGradientLeft": "#0C446A",
+      "modalFullGradientRight": "#0D2145",
+      "modalShadow": "rgba(0, 0, 0, .5)",
+      "negativeText": "#E85466",
+      "notificationBackground": "rgba(217, 227, 237, .75)",
+      "orLine": "#A4C7DF",
+      "pinFilled": "#FFFFFF",
+      "pinOutline": "#FFFFFF",
+      "positiveText": "#77C513",
+      "pressedOpacity": 0.25,
+      "primaryButton": "#66EDA8",
+      "primaryButtonDeactivated": "#87939E",
+      "primaryButtonOutline": "rgba(255, 255, 255, 0)",
+      "primaryButtonText": "#0E4B75",
+      "primaryText": "#FFFFFF",
+      "radioButtonFilled": "#66EDA8",
+      "radioButtonOutline": "#D9E3ED",
+      "rem": [Function],
+      "secondaryButton": "rgba(255, 255, 255, 0)",
+      "secondaryButtonOutline": "#66EDA8",
+      "secondaryButtonText": "#66EDA8",
+      "secondaryText": "#A4C7DF",
+      "securityAlertModalBackground": "#FFFFFF",
+      "securityAlertModalDangerIcon": "#E85466",
+      "securityAlertModalHeaderIcon": "#F1AA19",
+      "securityAlertModalHeaderIconShadow": "rgba(241, 170, 25, .3)",
+      "securityAlertModalLine": "#D9E3ED",
+      "securityAlertModalRowBorder": "#D9E3ED",
+      "securityAlertModalText": "#000000",
+      "securityAlertModalWarningIcon": "#F1AA19",
+      "settingsChangellyLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeChangelly.png",
+      },
+      "settingsChangenowLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeChangenow.png",
+      },
+      "settingsCoinswitchLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeCoinswitch.png",
+      },
+      "settingsDefaultLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeDefault.png",
+      },
+      "settingsFaastLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeFaast.png",
+      },
+      "settingsFoxExchangeLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeFoxExchange.png",
+      },
+      "settingsGodexLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeGodex.png",
+      },
+      "settingsRowBackground": "#0E4B75",
+      "settingsRowHeaderBackground": "#0D2145",
+      "settingsRowPressed": "rgba(255, 255, 255, 0)",
+      "settingsRowSubHeader": "rgba(255, 255, 255, 0)",
+      "settingsSwitchainLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeSwitchain.png",
+      },
+      "settingsTotleLogo": Object {
+        "testUri": "../../../src/assets/images/exchange/settingsExchangeTotle.png",
+      },
+      "sliderTabMore": "#0073D9",
+      "sliderTabRequest": "#77C513",
+      "sliderTabSend": "#E85466",
+      "tabBarBackground": "#0D2145",
+      "tabBarIcon": "#FFFFFF",
+      "tabBarIconHighlighted": "#66EDA8",
+      "tertiaryButton": "rgba(255, 255, 255, 0)",
+      "tertiaryButtonOutline": "#66EDA8",
+      "tertiaryButtonText": "#66EDA8",
+      "textInputLine": "#A4C7DF",
+      "textLink": "#66EDA8",
+      "themeId": "edgedark",
+      "tileBackground": "#0E4B75",
+      "tileBackgroundMuted": "#2F5E89",
+      "tileDivider": "#A4C7DF",
+      "toggleButton": "#66EDA8",
+      "toggleButtonOff": "#87939E",
+      "toggleButtonThumb": "#FFFFFF",
+      "warningBubble": "#F1AA19",
+      "warningIcon": "#F1AA19",
+      "warningText": "#F1AA19",
+    }
+  }
+  touchIdEnabled={false}
+  username=""
+/>
 `;
