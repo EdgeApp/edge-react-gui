@@ -73,7 +73,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     const theme = getTheme()
     this.state = {
       touchIdText: s.strings.settings_button_use_touchID,
-      darkTheme: theme.themeId === 'edgedark'
+      darkTheme: theme === edgeDark
     }
   }
 

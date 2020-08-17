@@ -43,8 +43,6 @@ const palette = {
 }
 
 export const edgeLight: Theme = {
-  themeId: 'edgelight',
-
   rem(size: number): number {
     return Math.round(scale(16) * size)
   },

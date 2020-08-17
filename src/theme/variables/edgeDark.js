@@ -45,8 +45,6 @@ const palette = {
 }
 
 export const edgeDark: Theme = {
-  themeId: 'edgedark',
-
   rem(size: number): number {
     return Math.round(scale(16) * size)
   },
