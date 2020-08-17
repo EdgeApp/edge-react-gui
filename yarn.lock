@@ -3776,10 +3776,10 @@ edge-components@^0.0.28:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.9:
-  version "0.17.9"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.9.tgz#a7ff5fd795789b131ca34b8204a18c147671308f"
-  integrity sha512-CYrQuec+WtvyN/GR5uiN47e8EllH9n05k3xCc3USx0Ug9L1BeGWR+XmXbqwQNbTx8t3ZDN5Ue2QU8zKf2JELOQ==
+edge-core-js@^0.17.10:
+  version "0.17.10"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.10.tgz#74fa64092e709ce730a49bccce32a6bd70781935"
+  integrity sha512-IN7UR59DH2mmdGxEpoFjF+6s5WQqunDuWjggaDhr/Z2TAOoJizzejkH/esiGteeTovjcPJNTYSp8aW3uS2Sneg==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3798,7 +3798,7 @@ edge-core-js@^0.17.9:
     redux "^3.6.0"
     redux-keto "^0.3.3"
     redux-pixies "^0.3.6"
-    rfc4648 "^1.1.0"
+    rfc4648 "^1.4.0"
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
@@ -10297,10 +10297,10 @@ ret@~0.1.10:
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
   integrity sha512-TTlYpa+OL+vMMNG24xSlQGEJ3B/RzEfUlLct7b5G/ytav+wPrplCpVMFuwzXbkecJrb6IYo1iFb0S9v37754mg==
 
-rfc4648@^1.0.0, rfc4648@^1.1.0, rfc4648@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/rfc4648/-/rfc4648-1.3.0.tgz#2a69c76f05bc0e388feab933672de9b492af95f1"
-  integrity sha512-x36K12jOflpm1V8QjPq3I+pt7Z1xzeZIjiC8J2Oxd7bE1efTrOG241DTYVJByP/SxR9jl1t7iZqYxDX864jgBQ==
+rfc4648@^1.0.0, rfc4648@^1.1.0, rfc4648@^1.3.0, rfc4648@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/rfc4648/-/rfc4648-1.4.0.tgz#c75b2856ad2e2d588b6ddb985d556f1f7f2a2abd"
+  integrity sha512-3qIzGhHlMHA6PoT6+cdPKZ+ZqtxkIvg8DZGKA5z6PQ33/uuhoJ+Ws/D/J9rXW6gXodgH8QYlz2UCl+sdUDmNIg==
 
 rimraf@2.6.3, rimraf@^2.6.3:
   version "2.6.3"
