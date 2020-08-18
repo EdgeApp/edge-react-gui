@@ -247,6 +247,7 @@
     "cryptoCodes": [
       "BTC",
       "BCH",
+      "BSV",
       "ETH",
       "LTC",
       "XRP"
