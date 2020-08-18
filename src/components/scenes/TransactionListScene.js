@@ -127,6 +127,8 @@ export class TransactionList extends React.Component<Props, State> {
         return <BuyCrypto wallet={wallet} />
       case 'XRP':
         return <BuyCrypto wallet={wallet} />
+      case 'BSV':
+        return <BuyCrypto wallet={wallet} />
       default:
         return null
     }

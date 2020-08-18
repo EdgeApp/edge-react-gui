@@ -183,6 +183,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isImportKeySupported: false,
     showEarnInterestCard: true
   },
+  BSV: {
+    displayBuyCrypto: true
+  },
   LTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
