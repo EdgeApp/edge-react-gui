@@ -50,7 +50,15 @@ pipeline {
         // Fix version for branchs that are not "master" or "develop"
         script {
           def packageJson = readJSON file: "./package.json"
-          if (BRANCH_NAME != "master" && BRANCH_NAME != "develop" && BRANCH_NAME != "test" && BRANCH_NAME != "yolo") {
+          if (
+            BRANCH_NAME != "develop" &&
+            BRANCH_NAME != "master" &&
+            BRANCH_NAME != "test-feta" &&
+            BRANCH_NAME != "test-gouda" &&
+            BRANCH_NAME != "test-paneer" &&
+            BRANCH_NAME != "test" &&
+            BRANCH_NAME != "yolo"
+          ) {
             def cleanBranch = BRANCH_NAME.replaceAll('/', '-')
             packageJson.version = "${packageJson.version}-${cleanBranch}".inspect()
             writeJSON file: "./package.json", json: packageJson
@@ -97,8 +105,11 @@ pipeline {
     stage ("Build") {
       when {
         anyOf {
-          branch 'master'
           branch 'develop'
+          branch 'master'
+          branch 'test-feta'
+          branch 'test-gouda'
+          branch 'test-paneer'
           branch 'test'
           branch 'yolo'
         }
