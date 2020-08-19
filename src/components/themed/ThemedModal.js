@@ -43,7 +43,7 @@ export function ThemedModal(props: Props) {
       borderRadius={theme.rem(1)}
       margin={[theme.rem(iconRem / 2), 0, 0]}
       padding={packEdges(paddingRem).map(theme.rem)}
-      underlay={<BlurView blurType="light" style={StyleSheet.absoluteFill} />}
+      underlay={<BlurView blurType={theme.modalBlurType} style={StyleSheet.absoluteFill} />}
     >
       {children}
     </AirshipModal>

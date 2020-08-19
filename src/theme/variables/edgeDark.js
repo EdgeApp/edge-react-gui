@@ -60,8 +60,7 @@ export const edgeDark: Theme = {
 
   // Modal
   modal: palette.royalBlue,
-  modalShadow: palette.blackOp50,
-  modalBackgroundShadowOpacity: 0.7,
+  modalBlurType: 'light',
   modalCloseIcon: palette.edgeMint,
   // modalFullGradientLeft: palette.darkBlue,
   // modalFullGradientRight: palette.edgeNavy,

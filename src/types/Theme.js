@@ -16,8 +16,7 @@ export type Theme = {
 
   // Modal
   modal: string,
-  modalShadow: string,
-  modalBackgroundShadowOpacity: number,
+  modalBlurType: 'light' | 'dark',
   modalCloseIcon: string,
   // modalFullGradientLeft: string,
   // modalFullGradientRight: string,
