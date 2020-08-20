@@ -22,17 +22,7 @@ import { showResyncWalletModal } from './ResyncWalletModalActions.js'
 import { showSplitWalletModal } from './SplitWalletModalActions.js'
 import { refreshWallet } from './WalletActions.js'
 
-export type WalletListMenuKey =
-  | 'sort'
-  | 'rename'
-  | 'delete'
-  | 'resync'
-  | 'exportWalletTransactions'
-  | 'getSeed'
-  | 'split'
-  | 'manageTokens'
-  | 'viewXPub'
-  | 'getRawKeys'
+export type WalletListMenuKey = 'rename' | 'delete' | 'resync' | 'exportWalletTransactions' | 'getSeed' | 'split' | 'manageTokens' | 'viewXPub' | 'getRawKeys'
 
 export function walletListMenuAction(walletId: string, option: WalletListMenuKey, currencyCode?: string) {
   switch (option) {
