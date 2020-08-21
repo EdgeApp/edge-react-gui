@@ -311,6 +311,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   BAT: {
     showEarnInterestCard: true
+  },
+  FIO: {
+    noChangeMiningFee: true
   }
 }
 
