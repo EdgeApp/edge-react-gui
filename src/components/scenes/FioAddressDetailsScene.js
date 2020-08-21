@@ -103,6 +103,7 @@ export class FioAddressDetailsScene extends React.Component<Props, LocalState> {
       <SettingsRow
         icon={icon}
         text={displayName}
+        rowStyles={styles.settingsRow}
         onPress={this._onPressAccountSettings}
         right={<AntDesignIcon name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />}
       />
@@ -164,6 +165,9 @@ const rawStyles = {
   settingsText: {
     color: THEME.COLORS.GRAY_1,
     fontSize: THEME.rem(1)
+  },
+  settingsRow: {
+    backgroundColor: THEME.COLORS.WHITE
   },
   warning: {
     color: THEME.COLORS.ACCENT_RED

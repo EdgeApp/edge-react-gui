@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Text, TouchableHighlight, View } from 'react-native'
+import { Text, TouchableHighlight, View, ViewPropTypes } from 'react-native'
 
 import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 
@@ -10,6 +10,7 @@ type OwnProps = {
   icon?: React.Node,
   text: string | React.Node,
   right?: React.Node,
+  rowStyles?: ViewPropTypes.style,
   onPress?: () => void,
   marginBottom?: boolean
 }
@@ -21,13 +22,13 @@ type Props = OwnProps & ThemeProps
  * on the left and another optional component on the right.
  */
 function SettingsRowComponent(props: Props): React.Node {
-  const { disabled = false, icon, marginBottom = true, text, theme, right, onPress } = props
+  const { disabled = false, icon, marginBottom = true, text, theme, right, rowStyles = {}, onPress } = props
   const styles = getStyles(theme)
   const rowMarginBottom = marginBottom ? styles.marginBottom : null
 
   return (
     <TouchableHighlight onPress={onPress} underlayColor={theme.settingsRowPressed}>
-      <View style={[styles.row, rowMarginBottom]}>
+      <View style={[styles.row, rowMarginBottom, rowStyles]}>
         {icon != null ? <View style={styles.paddingLeftIcon}>{icon}</View> : undefined}
         <Text style={disabled ? styles.disabledText : styles.text}>{text}</Text>
         {right != null ? <View style={styles.paddingRightIcon}>{right}</View> : undefined}
