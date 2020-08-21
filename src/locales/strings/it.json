@@ -670,6 +670,7 @@
   "export_transaction_csv": "CSV",
   "string_export": "Esporta",
   "string_no_wallet_name": "Nessun nome portafoglio",
+  "string_enter_amount": "",
   "export_transaction_error": "La data d'inizio non può essere successiva alla data di fine",
   "export_transaction_export_error": "Nessuna transazione nell'intervallo di date scelto",
   "export_transaction_export_error_2": "Seleziona un solo tipo di esportazione su Android",
