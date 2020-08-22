@@ -216,6 +216,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 Object {
                   "color": "#87939E",
                   "flexGrow": 1,
+                  "flexShrink": 1,
                   "fontFamily": "SourceSansPro-Black",
                   "fontSize": 22,
                   "textAlign": "left",
@@ -287,6 +288,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 Object {
                   "color": "#87939E",
                   "flexGrow": 1,
+                  "flexShrink": 1,
                   "fontFamily": "SourceSansPro-Black",
                   "fontSize": 22,
                   "textAlign": "left",
@@ -358,6 +360,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 Object {
                   "color": "#87939E",
                   "flexGrow": 1,
+                  "flexShrink": 1,
                   "fontFamily": "SourceSansPro-Black",
                   "fontSize": 22,
                   "textAlign": "left",
@@ -427,6 +430,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 Object {
                   "color": "#87939E",
                   "flexGrow": 1,
+                  "flexShrink": 1,
                   "fontFamily": "SourceSansPro-Black",
                   "fontSize": 22,
                   "textAlign": "left",
