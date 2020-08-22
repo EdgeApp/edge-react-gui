@@ -3,7 +3,6 @@
 import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
 
-import * as Constants from '../../constants/indexConstants.js'
 import { CORE_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import type { Action } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, MostRecentWallet } from '../../types/types.js'
@@ -28,7 +27,6 @@ export const initialState = {
   otpResetDate: null,
   otpResetPending: false,
   confirmPasswordError: '',
-  sendLogsStatus: Constants.REQUEST_STATUS.PENDING,
   isAccountBalanceVisible: true,
   mostRecentWallets: [],
   spendingLimits: {
@@ -93,7 +91,6 @@ export type SettingsState = {
     supportedWalletTypes: Array<string>
   },
   confirmPasswordError: string,
-  sendLogsStatus: string,
   isAccountBalanceVisible: boolean,
   mostRecentWallets: Array<MostRecentWallet>,
   spendingLimits: {
@@ -448,34 +445,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return {
         ...state,
         autoLogoutTimeInSeconds
-      }
-    }
-
-    case 'LOGS/SEND_LOGS_REQUEST': {
-      return {
-        ...state,
-        sendLogsStatus: Constants.REQUEST_STATUS.LOADING
-      }
-    }
-
-    case 'LOGS/SEND_LOGS_FAILURE': {
-      return {
-        ...state,
-        sendLogsStatus: Constants.REQUEST_STATUS.FAILURE
-      }
-    }
-
-    case 'LOGS/SEND_LOGS_SUCCESS': {
-      return {
-        ...state,
-        sendLogsStatus: Constants.REQUEST_STATUS.SUCCESS
-      }
-    }
-
-    case 'LOGS/SEND_LOGS_PENDING': {
-      return {
-        ...state,
-        sendLogsStatus: Constants.REQUEST_STATUS.PENDING
       }
     }
 

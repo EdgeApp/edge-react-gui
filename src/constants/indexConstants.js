@@ -2,7 +2,6 @@
 
 export * from './SceneKeys'
 export * from './IconConstants'
-export { REQUEST_STATUS } from './RequestStatusConstants'
 export * from './WalletAndCurrencyConstants.js'
 export * from './CountryConstants.js'
 
