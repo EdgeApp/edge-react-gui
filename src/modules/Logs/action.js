@@ -10,8 +10,6 @@ import * as LOGGER from '../../util/logger'
 import * as LOGS_API from './api'
 
 export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: GetState) => {
-  dispatch({ type: 'LOGS/SEND_LOGS_REQUEST', text })
-
   const state = getState()
   const { account } = state.core
   let walletDump = ''
@@ -66,15 +64,7 @@ device: ${getBrand()} ${getDeviceId()}
     .then(() => LOGGER.log(walletDump))
     .then(() => LOGGER.readLogs())
     .then(logs => LOGS_API.sendLogs(logs))
-    .then(result => dispatch({ type: 'LOGS/SEND_LOGS_SUCCESS', result }))
-    .catch(error => {
-      dispatch({ type: 'LOGS/SEND_LOGS_FAILURE', error })
+    .catch(() => {
       throw new Error(s.strings.settings_modal_send_logs_failure)
     })
-}
-
-export const resetSendLogsStatus = () => (dispatch: Dispatch) => {
-  setTimeout(function () {
-    dispatch({ type: 'LOGS/SEND_LOGS_PENDING' })
-  }, 100)
 }

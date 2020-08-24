@@ -75,7 +75,6 @@ type NoDataActionName =
   | 'ENABLE_SCAN'
   | 'HIDE_PASSWORD_RECOVERY_MODAL'
   | 'INVALIDATE_EDGE_LOBBY'
-  | 'LOGS/SEND_LOGS_PENDING'
   | 'MANAGE_TOKENS_START'
   | 'MANAGE_TOKENS_SUCCESS'
   | 'OPEN_SELECT_USER'
@@ -163,9 +162,6 @@ export type Action =
   | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
   | { type: 'LOGIN', data: EdgeAccount }
   | { type: 'LOGOUT', data: { username?: string } }
-  | { type: 'LOGS/SEND_LOGS_REQUEST', text: string }
-  | { type: 'LOGS/SEND_LOGS_SUCCESS', result: string }
-  | { type: 'LOGS/SEND_LOGS_FAILURE', error: Error }
   | { type: 'MESSAGE_TWEAK_HIDDEN', data: { messageId: string, source: TweakSource } }
   | {
       type: 'OPEN_VIEWXPUB_WALLET_MODAL',

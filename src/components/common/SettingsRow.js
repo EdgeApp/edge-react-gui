@@ -54,19 +54,20 @@ const getStyles = cacheStyles(theme => ({
     marginBottom: theme.rem(1 / 16)
   },
   text: {
+    color: theme.primaryText,
+    flexGrow: 1,
+    flexShrink: 1,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
-    textAlign: 'left',
-    flexShrink: 1,
-    color: theme.primaryText,
-    flexGrow: 1
+    textAlign: 'left'
   },
   disabledText: {
+    color: theme.deactivatedText,
+    flexGrow: 1,
+    flexShrink: 1,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
-    textAlign: 'left',
-    color: theme.deactivatedText,
-    flexGrow: 1
+    textAlign: 'left'
   },
   paddingLeftIcon: {
     paddingRight: theme.rem(0.75)

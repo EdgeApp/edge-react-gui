@@ -471,7 +471,6 @@ Object {
         "supportedWalletTypes": Array [],
       },
       "preferredSwapPluginId": "",
-      "sendLogsStatus": "pending",
       "spendingLimits": Object {
         "transaction": Object {
           "amount": 0,

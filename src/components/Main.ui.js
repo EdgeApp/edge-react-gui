@@ -61,7 +61,6 @@ import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConn
 import Request from '../connectors/scenes/RequestConnector.js'
 import Scan from '../connectors/scenes/ScanConnector'
 import SendConfirmation from '../connectors/scenes/SendConfirmationConnector.js'
-import SettingsOverview from '../connectors/scenes/SettingsOverviewConnector'
 import TransactionListConnector from '../connectors/scenes/TransactionListConnector'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
@@ -96,6 +95,7 @@ import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
 import { NotificationScene } from './scenes/NotificationScene'
+import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
 import { showToast } from './services/AirshipInstance.js'
@@ -517,7 +517,7 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.SETTINGS_OVERVIEW}
               navTransparent
               onEnter={() => this.props.showReEnableOtpModal()}
-              component={ifLoggedIn(SettingsOverview)}
+              component={ifLoggedIn(SettingsScene)}
               renderTitle={this.renderTitle(s.strings.title_settings)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}

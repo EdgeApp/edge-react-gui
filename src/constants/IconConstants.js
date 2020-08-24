@@ -32,7 +32,6 @@ export const SHOPPING_CART = 'shopping-cart'
 // Ionic
 export const ION_ICONS = 'ionIcons'
 export const CLOSE_ICON = 'ios-close'
-export const UNLOCKED_ICON = 'ios-unlock'
 export const LOCKED_ICON = 'ios-lock'
 export const EYE_ICON = 'eye'
 export const MAIL = 'ios-mail'
