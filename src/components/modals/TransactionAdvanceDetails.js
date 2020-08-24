@@ -6,9 +6,9 @@ import SafariView from 'react-native-safari-view'
 import Entypo from 'react-native-vector-icons/Entypo'
 
 import s from '../../locales/strings.js'
-import { Tile } from '../common/Tile.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
+import { Tile } from '../themed/Tile.js'
 import { type AirshipBridge } from './modalParts'
 
 const localizedFeeText = {

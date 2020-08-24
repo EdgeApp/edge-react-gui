@@ -19,12 +19,12 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import type { State as StateType } from '../../types/reduxTypes.js'
 import { sanitizeForFilename } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
-import { SettingsLabelRow } from '../common/SettingsLabelRow.js'
-import { SettingsRow } from '../common/SettingsRow.js'
-import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { showActivity, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
+import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
+import { SettingsRow } from '../themed/SettingsRow.js'
+import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
 const colorScheme = Appearance.getColorScheme()
 

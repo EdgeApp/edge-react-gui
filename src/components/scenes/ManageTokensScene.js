@@ -17,7 +17,7 @@ import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import ManageTokenRow from '../common/ManageTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
+import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 
 export type ManageTokensOwnProps = {
   guiWallet: GuiWallet

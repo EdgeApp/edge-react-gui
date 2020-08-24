@@ -11,12 +11,12 @@ import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { GuiDenomination } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
-import { SettingsRadioRow } from '../common/SettingsRadioRow.js'
-import { SettingsRow } from '../common/SettingsRow.js'
-import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { SetCustomNodesModal } from '../modals/SetCustomNodesModal.ui.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
+import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
+import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
+import { SettingsRow } from '../themed/SettingsRow.js'
+import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
 type NavigationProps = {
   currencyInfo: EdgeCurrencyInfo

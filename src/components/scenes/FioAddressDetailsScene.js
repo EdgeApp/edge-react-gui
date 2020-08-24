@@ -16,9 +16,9 @@ import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow'
-import { SettingsRow } from '../common/SettingsRow'
 import { showError } from '../services/AirshipInstance'
+import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
+import { SettingsRow } from '../themed/SettingsRow.js'
 
 export type StateProps = {
   fioWallets: EdgeCurrencyWallet[]

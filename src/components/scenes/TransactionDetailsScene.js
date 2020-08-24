@@ -24,7 +24,6 @@ import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { Tile } from '../common/Tile.js'
 import { RawTextModal } from '../modals/RawTextModal.js'
 import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
@@ -33,6 +32,7 @@ import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesI
 import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPersonInput.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {
   edgeTransaction: EdgeTransaction,

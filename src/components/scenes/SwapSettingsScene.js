@@ -15,12 +15,12 @@ import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
-import { SettingsRow } from '../common/SettingsRow.js'
-import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { SwapPreferredModal } from '../modals/SwapPreferredModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
+import { SettingsRow } from '../themed/SettingsRow.js'
+import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
 type DispatchProps = {
   changePreferredSwapPlugin(pluginId: string | void): void,

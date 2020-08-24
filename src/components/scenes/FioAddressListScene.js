@@ -18,8 +18,8 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import type { FioAddress, FioDomain } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow'
 import { showError } from '../services/AirshipInstance'
+import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 
 export type StateProps = {
   fioAddresses: FioAddress[],

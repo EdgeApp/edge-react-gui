@@ -33,7 +33,6 @@ import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
 import { WalletListEmptyRow } from '../common/WalletListEmptyRow.js'
 import { WalletListFooter } from '../common/WalletListFooter.js'
 import { WalletListRow } from '../common/WalletListRow.js'
@@ -41,6 +40,7 @@ import { WalletListSortableRow } from '../common/WalletListSortableRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
 import { TwoButtonSimpleConfirmationModal } from '../modals/TwoButtonSimpleConfirmationModal.js'
 import { Airship } from '../services/AirshipInstance.js'
+import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 
 type StateProps = {
   accountMessages: MessageTweak[],

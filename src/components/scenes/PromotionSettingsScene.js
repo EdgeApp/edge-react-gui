@@ -14,10 +14,10 @@ import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.
 import { type AccountReferral, type DeviceReferral } from '../../types/ReferralTypes.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
-import { SettingsRow } from '../common/SettingsRow.js'
 import { showActivity } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
+import { SettingsRow } from '../themed/SettingsRow.js'
 
 type StateProps = {
   accountReferral: AccountReferral,
