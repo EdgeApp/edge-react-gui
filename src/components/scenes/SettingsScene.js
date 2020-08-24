@@ -3,7 +3,7 @@
 import type { EdgeAccount } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { Image, ScrollView, View } from 'react-native'
+import { Image, ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
@@ -25,7 +25,6 @@ import * as Constants from '../../constants/indexConstants'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { edgeDark } from '../../theme/variables/edgeDark.js'
 import { edgeLight } from '../../theme/variables/edgeLight.js'
 import type { Dispatch, State as RootState } from '../../types/reduxTypes.js'
@@ -38,6 +37,7 @@ import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
+import { PrimaryButton } from '../themed/ThemedButtons.js'
 
 type StateProps = {
   account: EdgeAccount,
@@ -242,12 +242,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           )}
           <SettingsRow onPress={this.props.showRestoreWalletsModal} text={s.strings.restore_wallets_modal_title} />
           <SettingsRow text={s.strings.title_terms_of_service} onPress={Actions[Constants.TERMS_OF_SERVICE]} right={rightArrow} />
-
-          <View style={styles.bottomArea}>
-            <PrimaryButton onPress={this.props.showSendLogsModal} style={styles.button}>
-              <PrimaryButton.Text style={styles.buttonText}>{s.strings.settings_button_send_logs}</PrimaryButton.Text>
-            </PrimaryButton>
-          </View>
+          <PrimaryButton onPress={this.props.showSendLogsModal} label={s.strings.settings_button_send_logs} marginRem={2} />
         </ScrollView>
       </SceneWrapper>
     )
@@ -269,18 +264,6 @@ const getStyles = cacheStyles((theme: Theme) => {
       height: iconSize,
       width: iconSize,
       resizeMode: 'contain'
-    },
-    bottomArea: {
-      padding: theme.rem(2)
-    },
-    button: {
-      width: '100%',
-      height: theme.rem(3),
-      borderRadius: theme.rem(1.5),
-      backgroundColor: theme.primaryButton
-    },
-    buttonText: {
-      color: theme.primaryButtonText
     }
   }
 })
