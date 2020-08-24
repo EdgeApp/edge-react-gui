@@ -1351,70 +1351,48 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           </View>
         </View>
         <View
+          accessible={true}
+          isTVSelectable={true}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             Object {
-              "padding": 45,
+              "alignItems": "center",
+              "backgroundColor": "#66EDA8",
+              "borderColor": "rgba(255, 255, 255, 0)",
+              "borderRadius": 34,
+              "borderWidth": 2,
+              "flexDirection": "row",
+              "justifyContent": "center",
+              "marginBottom": 45,
+              "marginLeft": 45,
+              "marginRight": 45,
+              "marginTop": 45,
+              "opacity": 1,
+              "paddingBottom": 11,
+              "paddingLeft": 11,
+              "paddingRight": 11,
+              "paddingTop": 11,
             }
           }
         >
-          <View
-            accessible={true}
-            isTVSelectable={true}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
+          <Text
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "borderRadius": 5,
-                  "flex": -1,
-                  "justifyContent": "center",
-                  "padding": 14,
-                },
-                Object {
-                  "backgroundColor": "#0E4B75",
-                },
-                Object {
-                  "backgroundColor": "#66EDA8",
-                  "borderRadius": 34,
-                  "height": 67,
-                  "width": "100%",
-                },
-              ]
+              Object {
+                "color": "#0E4B75",
+                "fontFamily": "SourceSansPro-Black",
+                "fontSize": 22,
+                "lineHeight": 45,
+                "marginHorizontal": 11,
+              }
             }
           >
-            <View
-              style={null}
-            >
-              <Text
-                ellipsizeMode="middle"
-                numberOfLines={1}
-                style={
-                  Array [
-                    Object {
-                      "fontFamily": "SourceSansPro-Black",
-                      "fontSize": 25.28239436619718,
-                      "lineHeight": 25.28239436619718,
-                      "position": "relative",
-                      "top": 1,
-                    },
-                    Object {
-                      "color": "#FFFFFF",
-                    },
-                    Object {
-                      "color": "#0E4B75",
-                    },
-                  ]
-                }
-              >
-                Send Logs
-              </Text>
-            </View>
-          </View>
+            Send Logs
+          </Text>
         </View>
       </View>
     </RCTScrollView>
@@ -2773,70 +2751,48 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           </View>
         </View>
         <View
+          accessible={true}
+          isTVSelectable={true}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             Object {
-              "padding": 45,
+              "alignItems": "center",
+              "backgroundColor": "#66EDA8",
+              "borderColor": "rgba(255, 255, 255, 0)",
+              "borderRadius": 34,
+              "borderWidth": 2,
+              "flexDirection": "row",
+              "justifyContent": "center",
+              "marginBottom": 45,
+              "marginLeft": 45,
+              "marginRight": 45,
+              "marginTop": 45,
+              "opacity": 1,
+              "paddingBottom": 11,
+              "paddingLeft": 11,
+              "paddingRight": 11,
+              "paddingTop": 11,
             }
           }
         >
-          <View
-            accessible={true}
-            isTVSelectable={true}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
+          <Text
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "borderRadius": 5,
-                  "flex": -1,
-                  "justifyContent": "center",
-                  "padding": 14,
-                },
-                Object {
-                  "backgroundColor": "#0E4B75",
-                },
-                Object {
-                  "backgroundColor": "#66EDA8",
-                  "borderRadius": 34,
-                  "height": 67,
-                  "width": "100%",
-                },
-              ]
+              Object {
+                "color": "#0E4B75",
+                "fontFamily": "SourceSansPro-Black",
+                "fontSize": 22,
+                "lineHeight": 45,
+                "marginHorizontal": 11,
+              }
             }
           >
-            <View
-              style={null}
-            >
-              <Text
-                ellipsizeMode="middle"
-                numberOfLines={1}
-                style={
-                  Array [
-                    Object {
-                      "fontFamily": "SourceSansPro-Black",
-                      "fontSize": 25.28239436619718,
-                      "lineHeight": 25.28239436619718,
-                      "position": "relative",
-                      "top": 1,
-                    },
-                    Object {
-                      "color": "#FFFFFF",
-                    },
-                    Object {
-                      "color": "#0E4B75",
-                    },
-                  ]
-                }
-              >
-                Send Logs
-              </Text>
-            </View>
-          </View>
+            Send Logs
+          </Text>
         </View>
       </View>
     </RCTScrollView>

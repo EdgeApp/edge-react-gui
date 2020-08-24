@@ -218,31 +218,17 @@ exports[`TransactionDetails.ui should render 1`] = `
             View Advanced Transaction Data
           </FormattedText>
         </TouchableWithoutFeedback>
-        <View
-          style={
-            Object {
-              "alignItems": "center",
-              "justifyContent": "center",
-              "paddingBottom": 22,
-              "width": "100%",
-            }
+        <PrimaryButton
+          label="Save"
+          marginRem={
+            Array [
+              0,
+              2,
+              2,
+            ]
           }
-        >
-          <PrimaryButton2
-            onPress={[Function]}
-            style={
-              Object {
-                "borderRadius": 34,
-                "height": 67,
-                "width": "80%",
-              }
-            }
-          >
-            <Text>
-              Save
-            </Text>
-          </PrimaryButton2>
-        </View>
+          onPress={[Function]}
+        />
       </View>
     </ScrollViewMock>
   </SceneWrapper>
@@ -467,31 +453,17 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             View Advanced Transaction Data
           </FormattedText>
         </TouchableWithoutFeedback>
-        <View
-          style={
-            Object {
-              "alignItems": "center",
-              "justifyContent": "center",
-              "paddingBottom": 22,
-              "width": "100%",
-            }
+        <PrimaryButton
+          label="Save"
+          marginRem={
+            Array [
+              0,
+              2,
+              2,
+            ]
           }
-        >
-          <PrimaryButton2
-            onPress={[Function]}
-            style={
-              Object {
-                "borderRadius": 34,
-                "height": 67,
-                "width": "80%",
-              }
-            }
-          >
-            <Text>
-              Save
-            </Text>
-          </PrimaryButton2>
-        </View>
+          onPress={[Function]}
+        />
       </View>
     </ScrollViewMock>
   </SceneWrapper>
@@ -716,31 +688,17 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             View Advanced Transaction Data
           </FormattedText>
         </TouchableWithoutFeedback>
-        <View
-          style={
-            Object {
-              "alignItems": "center",
-              "justifyContent": "center",
-              "paddingBottom": 22,
-              "width": "100%",
-            }
+        <PrimaryButton
+          label="Save"
+          marginRem={
+            Array [
+              0,
+              2,
+              2,
+            ]
           }
-        >
-          <PrimaryButton2
-            onPress={[Function]}
-            style={
-              Object {
-                "borderRadius": 34,
-                "height": 67,
-                "width": "80%",
-              }
-            }
-          >
-            <Text>
-              Save
-            </Text>
-          </PrimaryButton2>
-        </View>
+          onPress={[Function]}
+        />
       </View>
     </ScrollViewMock>
   </SceneWrapper>
@@ -965,31 +923,17 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             View Advanced Transaction Data
           </FormattedText>
         </TouchableWithoutFeedback>
-        <View
-          style={
-            Object {
-              "alignItems": "center",
-              "justifyContent": "center",
-              "paddingBottom": 22,
-              "width": "100%",
-            }
+        <PrimaryButton
+          label="Save"
+          marginRem={
+            Array [
+              0,
+              2,
+              2,
+            ]
           }
-        >
-          <PrimaryButton2
-            onPress={[Function]}
-            style={
-              Object {
-                "borderRadius": 34,
-                "height": 67,
-                "width": "80%",
-              }
-            }
-          >
-            <Text>
-              Save
-            </Text>
-          </PrimaryButton2>
-        </View>
+          onPress={[Function]}
+        />
       </View>
     </ScrollViewMock>
   </SceneWrapper>
