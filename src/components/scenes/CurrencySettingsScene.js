@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenominationKeyRequest } from '../../actions/SettingsActions.js'
 import s from '../../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
-import { type ThemeProps, withTheme } from '../../theme/ThemeContext.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { GuiDenomination } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -17,6 +16,7 @@ import { SettingsRadioRow } from '../common/SettingsRadioRow.js'
 import { SettingsRow } from '../common/SettingsRow.js'
 import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { SetCustomNodesModal } from '../modals/SetCustomNodesModal.ui.js'
+import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 
 type NavigationProps = {
   currencyInfo: EdgeCurrencyInfo

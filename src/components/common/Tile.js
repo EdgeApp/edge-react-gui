@@ -6,8 +6,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { showToast } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 type OwnProps = {
   body?: string,

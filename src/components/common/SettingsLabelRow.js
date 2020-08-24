@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Text } from 'react-native'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { SettingsRow } from './SettingsRow.js'
 
 type OwnProps = {

@@ -10,7 +10,6 @@ import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferra
 import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
@@ -21,6 +20,7 @@ import { SettingsRow } from '../common/SettingsRow.js'
 import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { SwapPreferredModal } from '../modals/SwapPreferredModal.js'
 import { Airship } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 type DispatchProps = {
   changePreferredSwapPlugin(pluginId: string | void): void,

@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Text, View } from 'react-native'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 type OwnProps = {
   icon?: React.Node,

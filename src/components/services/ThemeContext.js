@@ -2,8 +2,8 @@
 
 import { cacheStyles, makeThemeContext } from 'react-native-patina'
 
-import { type Theme } from '../types/Theme.js'
-import { edgeDark } from './variables/edgeDark.js'
+import { edgeDark } from '../../theme/variables/edgeDark.js'
+import { type Theme } from '../../types/Theme.js'
 
 export type { Theme }
 export { cacheStyles }

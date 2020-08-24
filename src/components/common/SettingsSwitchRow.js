@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Switch } from 'react-native'
 
-import { type ThemeProps, withTheme } from '../../theme/ThemeContext.js'
+import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { SettingsRow } from './SettingsRow.js'
 
 type OwnProps = {

@@ -16,7 +16,6 @@ import { formatExpDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import type { State as StateType } from '../../types/reduxTypes.js'
 import { sanitizeForFilename } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -25,6 +24,7 @@ import { SettingsLabelRow } from '../common/SettingsLabelRow.js'
 import { SettingsRow } from '../common/SettingsRow.js'
 import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { showActivity, showError } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 const colorScheme = Appearance.getColorScheme()
 

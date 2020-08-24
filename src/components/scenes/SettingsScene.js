@@ -26,7 +26,6 @@ import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstan
 import s from '../../locales/strings'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { type Theme, type ThemeProps, cacheStyles, changeTheme, getTheme, withTheme } from '../../theme/ThemeContext.js'
 import { edgeDark } from '../../theme/variables/edgeDark.js'
 import { edgeLight } from '../../theme/variables/edgeLight.js'
 import type { Dispatch, State as RootState } from '../../types/reduxTypes.js'
@@ -38,6 +37,7 @@ import { SettingsRow } from '../common/SettingsRow.js'
 import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
 import { Airship, showToast } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
 
 type StateProps = {
   account: EdgeAccount,

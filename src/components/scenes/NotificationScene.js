@@ -11,12 +11,12 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../../modules/UI/selectors'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { type State as ReduxState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SettingsRow } from '../common/SettingsRow.js'
 import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { showError } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 type StateProps = {
   currencyInfos: Array<EdgeCurrencyInfo>,

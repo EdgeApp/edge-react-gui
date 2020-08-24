@@ -5,8 +5,8 @@ import * as React from 'react'
 import { type ViewStyle, StyleSheet } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 
-import { useTheme } from '../../theme/ThemeContext.js'
 import { packEdges, unpackEdges } from '../../util/edges.js'
+import { useTheme } from '../services/ThemeContext.js'
 
 // Sneak the BlurView over to the login UI:
 global.ReactNativeBlurView = BlurView
