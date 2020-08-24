@@ -3776,10 +3776,10 @@ edge-components@^0.0.28:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.10:
-  version "0.17.10"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.10.tgz#74fa64092e709ce730a49bccce32a6bd70781935"
-  integrity sha512-IN7UR59DH2mmdGxEpoFjF+6s5WQqunDuWjggaDhr/Z2TAOoJizzejkH/esiGteeTovjcPJNTYSp8aW3uS2Sneg==
+edge-core-js@^0.17.11:
+  version "0.17.11"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.11.tgz#a20da97ce5ad2f485967eb1cb703ade0c3d6983e"
+  integrity sha512-P5jgGKJA5rpbMja/8QhaTkFgzCxhEEDQXUxV4ujRoQMeH1d8zy7j+uA5swfFakGEI/xGHziyopbgjboVrdAvpQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3791,12 +3791,12 @@ edge-core-js@^0.17.10:
     esm "^3.2.4"
     ethereumjs-tx "^1.3.7"
     ethereumjs-util "^5.2.0"
-    hash.js "^1.0.3"
+    hash.js "^1.1.7"
     hmac-drbg "^1.0.1"
     json-csv "^1.5.0"
     node-fetch "^2.0.0"
     redux "^3.6.0"
-    redux-keto "^0.3.3"
+    redux-keto "^0.3.4"
     redux-pixies "^0.3.6"
     rfc4648 "^1.4.0"
     scrypt-js "^2.0.3"
@@ -5591,7 +5591,7 @@ hash-base@3.0.4, hash-base@^3.0.0:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-hash.js@^1.0.0, hash.js@^1.0.3:
+hash.js@^1.0.0, hash.js@^1.0.3, hash.js@^1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/hash.js/-/hash.js-1.1.7.tgz#0babca538e8d4ee4a0f8988d68866537a003cf42"
   integrity sha512-taOaskGt4z4SOANNseOviYDvjEJinIkRgmp7LbKP2YTTmVxWBl87s/uzK9r+44BclBSp2X7K1hqeNfz9JbBeXA==
@@ -10026,10 +10026,10 @@ recompose@^0.26.0:
     hoist-non-react-statics "^2.3.1"
     symbol-observable "^1.0.4"
 
-redux-keto@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/redux-keto/-/redux-keto-0.3.3.tgz#db31fbfcbab11784cd2992d7ce204f6e50807969"
-  integrity sha512-JRbMmmhFHLXCl2J3Hb8zCTdM5O0jtY70mRnh/83xArCWeuWQoJK8adzUXiw9egEi//e7ti1Y/FzJlYbZYOSn8A==
+redux-keto@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/redux-keto/-/redux-keto-0.3.4.tgz#1bf78a36736dc181dd419b10e57116dea17fa3a5"
+  integrity sha512-16q/QujMkv+zdsVRExJuGbl6grXZLoRakBbQR5E9DmEAPIeJoXtjmc6L3bCMUVjBfF+0XFQyJDZwjhS2guh+ng==
 
 redux-pixies@^0.3.6:
   version "0.3.6"
