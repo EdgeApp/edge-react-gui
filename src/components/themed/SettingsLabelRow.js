@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Text } from 'react-native'
 
-import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { SettingsRow } from './SettingsRow.js'
 
 type OwnProps = {
@@ -26,7 +26,7 @@ export function SettingsLabelRowComponent(props: Props): React.Node {
   return <SettingsRow disabled={disabled} icon={icon} text={text} right={<Text style={styles.labelText}>{right}</Text>} onPress={onPress} />
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   labelText: {
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),

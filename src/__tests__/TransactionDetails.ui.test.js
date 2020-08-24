@@ -6,7 +6,7 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { TransactionDetailsComponent } from '../components/scenes/TransactionDetailsScene.js'
-import { getTheme } from '../theme/ThemeContext.js'
+import { getTheme } from '../components/services/ThemeContext.js'
 import { type GuiWallet } from '../types/types.js'
 
 const typeHack: any = {

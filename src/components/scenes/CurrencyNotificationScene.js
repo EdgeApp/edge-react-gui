@@ -11,8 +11,8 @@ import s from '../../locales/strings.js'
 import { enableNotifications, fetchSettings } from '../../modules/Notifications/action'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { showError } from '../services/AirshipInstance'
+import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
 type NavigationProps = {
   currencyInfo: EdgeCurrencyInfo

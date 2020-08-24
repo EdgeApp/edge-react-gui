@@ -19,13 +19,11 @@ import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/S
 import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getSelectedWallet, getWallet } from '../../modules/UI/selectors.js'
-import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { Tile } from '../common/Tile.js'
 import { RawTextModal } from '../modals/RawTextModal.js'
 import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
@@ -33,6 +31,8 @@ import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInp
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
 import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPersonInput.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {
   edgeTransaction: EdgeTransaction,
@@ -497,7 +497,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   tilesContainer: {
     flex: 1,
     width: '100%',
