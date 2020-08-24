@@ -103,6 +103,9 @@ export const top = StyleSheet.create({
     textAlign: 'right',
     padding: 0
   },
+  amountPlaceholder: {
+    color: THEME.COLORS.GRAY_2
+  },
   currencyCode: {
     fontSize: THEME.rem(1.5),
     color: THEME.COLORS.WHITE,
