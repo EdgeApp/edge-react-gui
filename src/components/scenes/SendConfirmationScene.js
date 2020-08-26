@@ -123,8 +123,18 @@ export class SendConfirmation extends React.Component<Props, State> {
         memo: props.guiMakeSpendInfo && props.guiMakeSpendInfo.fioPendingRequest ? props.guiMakeSpendInfo.fioPendingRequest.content.memo : '',
         memoError: ''
       },
-      isFiatOnTop: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0')),
-      isFocus: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0'))
+      isFiatOnTop: !!(
+        props.guiMakeSpendInfo &&
+        props.guiMakeSpendInfo.nativeAmount &&
+        bns.eq(props.guiMakeSpendInfo.nativeAmount, '0') &&
+        props.currencyCode !== 'EBST'
+      ),
+      isFocus: !!(
+        props.guiMakeSpendInfo &&
+        props.guiMakeSpendInfo.nativeAmount &&
+        bns.eq(props.guiMakeSpendInfo.nativeAmount, '0') &&
+        props.currencyCode !== 'EBST'
+      )
     }
     this.flipInput = React.createRef()
   }
