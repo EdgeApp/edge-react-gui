@@ -139,18 +139,7 @@ const getInitialState = (props: Props) => {
   if (props.overridePrimaryDecimalAmount === '') return state
 
   const primaryDecimalAmount = sanitizeDecimalAmount(props.overridePrimaryDecimalAmount, props.primaryInfo.maxEntryDecimals)
-  const stateAmounts = setPrimaryToSecondary(props, primaryDecimalAmount)
-  const inputCursor = {
-    selectionPrimary: {
-      start: stateAmounts.primaryDecimalAmount.length,
-      end: stateAmounts.primaryDecimalAmount.length
-    },
-    selectionSecondary: {
-      start: stateAmounts.secondaryDecimalAmount.length,
-      end: stateAmounts.secondaryDecimalAmount.length
-    }
-  }
-  return Object.assign(state, stateAmounts, inputCursor)
+  return Object.assign(state, setPrimaryToSecondary(props, primaryDecimalAmount))
 }
 
 export class FlipInput extends React.Component<Props, State> {
@@ -217,7 +206,7 @@ export class FlipInput extends React.Component<Props, State> {
     }
   }
 
-  resetInputCursor() {
+  resetInputCursor = () => {
     this.setState({
       selectionPrimary: {
         start: this.state.primaryDecimalAmount.length,
@@ -237,20 +226,17 @@ export class FlipInput extends React.Component<Props, State> {
       nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter
     ) {
       const result = setPrimaryToSecondary(nextProps, sanitizeDecimalAmount(nextProps.overridePrimaryDecimalAmount, nextProps.primaryInfo.maxEntryDecimals))
-      this.setState(
-        {
-          ...result,
-          overridePrimaryDecimalAmount: nextProps.overridePrimaryDecimalAmount,
-          forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
-        },
-        () => this.resetInputCursor()
-      )
+      this.setState({
+        ...result,
+        overridePrimaryDecimalAmount: nextProps.overridePrimaryDecimalAmount,
+        forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
+      })
     } else {
       // Checks and apply exchange rates
       if (!this.state.isToggled) {
-        this.setState(setPrimaryToSecondary(nextProps, this.state.primaryDecimalAmount), () => this.resetInputCursor())
+        this.setState(setPrimaryToSecondary(nextProps, this.state.primaryDecimalAmount))
       } else {
-        this.setState(setSecondaryToPrimary(nextProps, this.state.secondaryDecimalAmount), () => this.resetInputCursor())
+        this.setState(setSecondaryToPrimary(nextProps, this.state.secondaryDecimalAmount))
       }
     }
     if (nextProps.primaryInfo.currencyCode !== this.props.primaryInfo.currencyCode) {
@@ -294,7 +280,6 @@ export class FlipInput extends React.Component<Props, State> {
     const result = setPrimaryToSecondary(this.props, sanitizeDecimalAmount(amount, this.props.primaryInfo.maxEntryDecimals))
     this.setState(result, () => {
       this.props.onAmountChanged(result.primaryDecimalAmount)
-      this.resetInputCursor()
     })
   }
 
@@ -302,7 +287,6 @@ export class FlipInput extends React.Component<Props, State> {
     const result = setSecondaryToPrimary(this.props, sanitizeDecimalAmount(amount, this.props.secondaryInfo.maxEntryDecimals))
     this.setState(result, () => {
       this.props.onAmountChanged(result.primaryDecimalAmount)
-      this.resetInputCursor()
     })
   }
 
@@ -367,6 +351,7 @@ export class FlipInput extends React.Component<Props, State> {
               keyboardType="numeric"
               returnKeyType={this.props.topReturnKeyType || 'done'}
               selection={this.state.selectionPrimary}
+              onSelectionChange={this.resetInputCursor}
               ref={this.getTextInputFrontRef}
               onFocus={this.textInputFrontFocusTrue}
               onBlur={this.textInputFrontFocusFalse}
@@ -417,6 +402,7 @@ export class FlipInput extends React.Component<Props, State> {
               keyboardType="numeric"
               returnKeyType={this.props.topReturnKeyType || 'done'}
               selection={this.state.selectionSecondary}
+              onSelectionChange={this.resetInputCursor}
               ref={this.getTextInputBackRef}
               onFocus={this.textInputBackFocusTrue}
               onBlur={this.textInputBackFocusFalse}
