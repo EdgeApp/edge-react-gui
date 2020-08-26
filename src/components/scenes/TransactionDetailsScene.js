@@ -16,7 +16,6 @@ import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../.
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/Settings/selectors.js'
-import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getSelectedWallet, getWallet } from '../../modules/UI/selectors.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
@@ -32,6 +31,7 @@ import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesI
 import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPersonInput.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { PrimaryButton } from '../themed/ThemedButtons.js'
 import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {
@@ -484,11 +484,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
               <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
                 <FormattedText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
               </TouchableWithoutFeedback>
-              <View style={styles.saveButtonContainer}>
-                <PrimaryButton2 style={styles.saveButton} onPress={this.onSaveTxDetails}>
-                  <PrimaryButton2.Text>{s.strings.string_save}</PrimaryButton2.Text>
-                </PrimaryButton2>
-              </View>
+              <PrimaryButton onPress={this.onSaveTxDetails} label={s.strings.string_save} marginRem={[0, 2, 2]} />
             </View>
           </ScrollView>
         </SceneWrapper>
@@ -563,17 +559,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1),
     width: '100%',
     textAlign: 'center'
-  },
-  saveButtonContainer: {
-    width: '100%',
-    paddingBottom: theme.rem(1),
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  saveButton: {
-    width: '80%',
-    borderRadius: theme.rem(1.5),
-    height: theme.rem(3)
   }
 }))
 
