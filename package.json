@@ -193,7 +193,7 @@
     "body-parser": "^1.18.2",
     "edge-plugin-bitrefill": "https://github.com/EdgeApp/edge-plugin-bitrefill.git#2627b9d",
     "edge-plugin-bity": "https://github.com/EdgeApp/edge-plugin-bity.git#2a2015c",
-    "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#653587d",
+    "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#868cc7b",
     "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#b864613",
     "eslint": "^7.1.0",
     "eslint-config-standard-kit": "^0.14.4",
