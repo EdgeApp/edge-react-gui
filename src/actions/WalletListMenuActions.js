@@ -217,7 +217,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
           if (resolveValue) {
             const keys = account.allKeys.find(key => key.id === walletId)
             const seed = keys ? JSON.stringify(keys.keys, null, 2) : ''
-            Airship.show(bridge => <RawTextModal bridge={bridge} body={seed} title={s.strings.string_raw_keys} icon={icon} />)
+            Airship.show(bridge => <RawTextModal bridge={bridge} body={seed} title={s.strings.string_raw_keys} icon={icon} disableCopy />)
           }
         } catch (error) {
           showError(error)

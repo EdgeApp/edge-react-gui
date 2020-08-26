@@ -15,7 +15,8 @@ type OwnProps = {
   bridge: AirshipBridge<void>,
   body: string,
   icon?: React.Node,
-  title: string
+  title: string,
+  disableCopy?: boolean
 }
 type Props = OwnProps & ThemeProps
 
@@ -27,7 +28,7 @@ export class RawTextModalComponent extends React.Component<Props> {
   }
 
   render() {
-    const { body, bridge, icon, theme, title } = this.props
+    const { body, bridge, icon, theme, title, disableCopy } = this.props
     const styles = getStyles(theme)
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve()}>
@@ -39,9 +40,11 @@ export class RawTextModalComponent extends React.Component<Props> {
           </ScrollView>
         </ContentArea>
         <View style={styles.buttonContainer}>
-          <PrimaryButton style={styles.buttonLeft} onPress={this.copyToClipboard}>
-            <PrimaryButton.Text>{s.strings.fragment_request_copy_title}</PrimaryButton.Text>
-          </PrimaryButton>
+          {!disableCopy && (
+            <PrimaryButton style={styles.buttonLeft} onPress={this.copyToClipboard}>
+              <PrimaryButton.Text>{s.strings.fragment_request_copy_title}</PrimaryButton.Text>
+            </PrimaryButton>
+          )}
           <PrimaryButton style={styles.buttonRight} onPress={() => bridge.resolve()}>
             <PrimaryButton.Text>{s.strings.string_ok_cap}</PrimaryButton.Text>
           </PrimaryButton>
