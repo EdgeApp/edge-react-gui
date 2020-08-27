@@ -3776,10 +3776,10 @@ edge-components@^0.0.28:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.9:
-  version "0.17.9"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.9.tgz#a7ff5fd795789b131ca34b8204a18c147671308f"
-  integrity sha512-CYrQuec+WtvyN/GR5uiN47e8EllH9n05k3xCc3USx0Ug9L1BeGWR+XmXbqwQNbTx8t3ZDN5Ue2QU8zKf2JELOQ==
+edge-core-js@^0.17.11:
+  version "0.17.11"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.11.tgz#a20da97ce5ad2f485967eb1cb703ade0c3d6983e"
+  integrity sha512-P5jgGKJA5rpbMja/8QhaTkFgzCxhEEDQXUxV4ujRoQMeH1d8zy7j+uA5swfFakGEI/xGHziyopbgjboVrdAvpQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3791,21 +3791,21 @@ edge-core-js@^0.17.9:
     esm "^3.2.4"
     ethereumjs-tx "^1.3.7"
     ethereumjs-util "^5.2.0"
-    hash.js "^1.0.3"
+    hash.js "^1.1.7"
     hmac-drbg "^1.0.1"
     json-csv "^1.5.0"
     node-fetch "^2.0.0"
     redux "^3.6.0"
-    redux-keto "^0.3.3"
+    redux-keto "^0.3.4"
     redux-pixies "^0.3.6"
-    rfc4648 "^1.1.0"
+    rfc4648 "^1.4.0"
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.18:
-  version "0.7.18"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.18.tgz#488c09cd46284c50f53cf286313095baf18ceb77"
-  integrity sha512-H5tBYrNJxU2JfcaQiyjfwOAuVylOJLTAKzokgizejsG9TokPrOVTNvTddVhZRpsXZqRCx1MSrMc3Un7EgMEscA==
+edge-currency-accountbased@^0.7.20:
+  version "0.7.20"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.20.tgz#09c87c346377376172f907150b01e3d0871d6e59"
+  integrity sha512-lQSrNpmdEixF+C7QNi7IYbA+wX+HhumeFRQ04L4+mhQowY2nKu/wePojyqtwY9J2dblw2gBzXpbgqn5g8g53hw==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.0.2"
@@ -3830,10 +3830,10 @@ edge-currency-accountbased@^0.7.18:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.8.6:
-  version "4.8.6"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.8.6.tgz#a29f3d64d865a53beca7422f6db55d00c8be0d7a"
-  integrity sha512-5L4EA6uek8sUrIKYcdtSASjxze25u03/f1wzXsvxJhRdcYE72kkyv0WCkHTJZZNyK9RNfM2pBfxAu8+ciW0Ahg==
+edge-currency-bitcoin@^4.9.0:
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.0.tgz#79a3e76a131d5ad51d0920c3b0626b92f4b68763"
+  integrity sha512-Vh7PMCAVH8wkpsGbxYDsJLhY3WSRtFC435JWds+ecpvXF9yX/ED//RI/cbv7vXgYnX5SDauQTuKR1gKVAKIl8Q==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3875,15 +3875,15 @@ edge-exchange-plugins@^0.11.6:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.6.13:
-  version "0.6.13"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.13.tgz#6f47a81b0c79596225f38e50bf318692f01ff474"
-  integrity sha512-gVn/hEF9HCHcrhR+vuV3z+9dQVglreHahnfKZNcOo5SLKoTVvelgrwekcZRpFsIC0dEiewf97umVLkuIiqFUkQ==
+edge-login-ui-rn@^0.6.14:
+  version "0.6.14"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.14.tgz#7c7183d5e462ad3dc15946fd3a4933e4ec314b79"
+  integrity sha512-Shdyq2b4WyE2FIKLzg3AKHlWfWWIjLazbfjhU0O6XfWKwlpW3uztjSqpb82+ztyC0ndNPlDaKQEJfC4ErFDECQ==
   dependencies:
-    edge-components "^0.0.28"
     material-ui "^0.20.0"
     moment "^2.19.3"
     qrcode-generator "^1.4.4"
+    react-native-airship "^0.2.1"
     react-native-device-info "^0.11.0"
     react-native-extra-dimensions-android "^1.2.5"
     react-native-keyboard-aware-scroll-view "^0.9.1"
@@ -3891,6 +3891,7 @@ edge-login-ui-rn@^0.6.13:
     react-native-mail "^3.0.5"
     react-native-material-textfield "git://github.com/EdgeApp/react-native-material-textfield.git"
     react-native-modal "^11.0.1"
+    react-native-patina "^0.1.2"
     react-native-vector-icons "^6.1.0"
     react-redux "^5.0.7"
     redux "~3.5.2"
@@ -3908,9 +3909,9 @@ edge-login-ui-rn@^0.6.13:
   version "0.0.1"
   resolved "https://github.com/EdgeApp/edge-plugin-bity.git#2a2015ccc1099cc6eedbcab02eb1904c5c2838fd"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#04e0b82":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#868cc7b":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#04e0b822ce64c04e620851f9788c83af359bc97a"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#868cc7bb486f8e0d3e72f93406a33dedc90a55b3"
   dependencies:
     moment "^2.22.2"
 
@@ -5590,7 +5591,7 @@ hash-base@3.0.4, hash-base@^3.0.0:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-hash.js@^1.0.0, hash.js@^1.0.3:
+hash.js@^1.0.0, hash.js@^1.0.3, hash.js@^1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/hash.js/-/hash.js-1.1.7.tgz#0babca538e8d4ee4a0f8988d68866537a003cf42"
   integrity sha512-taOaskGt4z4SOANNseOviYDvjEJinIkRgmp7LbKP2YTTmVxWBl87s/uzK9r+44BclBSp2X7K1hqeNfz9JbBeXA==
@@ -9591,10 +9592,10 @@ react-native-modal@^11.0.1:
     prop-types "^15.6.2"
     react-native-animatable "^1.3.1"
 
-react-native-patina@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.1.tgz#9891541e731450df8a067e44010127627cd988a9"
-  integrity sha512-9ACbyuvsiDQo9Y6MqXKzaG30RCgobPUC9bB5IyvKKu7vR4Fz2NrSuOQVFq9HLiiiUowVm5xYwLlR0eoy3zhMRg==
+react-native-patina@^0.1.2, react-native-patina@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.3.tgz#1704aa63f08dcd09534b2b01a29ee7e1fb046a49"
+  integrity sha512-R1vWHseI9pNLGYxQCLbqCJmjjOVJoChoLz8uH2o19SYFdb+VnhfBGZSlDks3RKFHgUkFcvQg/biMCr+mNfBoQA==
 
 react-native-permissions@1.0.6:
   version "1.0.6"
@@ -10025,10 +10026,10 @@ recompose@^0.26.0:
     hoist-non-react-statics "^2.3.1"
     symbol-observable "^1.0.4"
 
-redux-keto@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/redux-keto/-/redux-keto-0.3.3.tgz#db31fbfcbab11784cd2992d7ce204f6e50807969"
-  integrity sha512-JRbMmmhFHLXCl2J3Hb8zCTdM5O0jtY70mRnh/83xArCWeuWQoJK8adzUXiw9egEi//e7ti1Y/FzJlYbZYOSn8A==
+redux-keto@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/redux-keto/-/redux-keto-0.3.4.tgz#1bf78a36736dc181dd419b10e57116dea17fa3a5"
+  integrity sha512-16q/QujMkv+zdsVRExJuGbl6grXZLoRakBbQR5E9DmEAPIeJoXtjmc6L3bCMUVjBfF+0XFQyJDZwjhS2guh+ng==
 
 redux-pixies@^0.3.6:
   version "0.3.6"
@@ -10297,10 +10298,10 @@ ret@~0.1.10:
   resolved "https://registry.yarnpkg.com/ret/-/ret-0.1.15.tgz#b8a4825d5bdb1fc3f6f53c2bc33f81388681c7bc"
   integrity sha512-TTlYpa+OL+vMMNG24xSlQGEJ3B/RzEfUlLct7b5G/ytav+wPrplCpVMFuwzXbkecJrb6IYo1iFb0S9v37754mg==
 
-rfc4648@^1.0.0, rfc4648@^1.1.0, rfc4648@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/rfc4648/-/rfc4648-1.3.0.tgz#2a69c76f05bc0e388feab933672de9b492af95f1"
-  integrity sha512-x36K12jOflpm1V8QjPq3I+pt7Z1xzeZIjiC8J2Oxd7bE1efTrOG241DTYVJByP/SxR9jl1t7iZqYxDX864jgBQ==
+rfc4648@^1.0.0, rfc4648@^1.1.0, rfc4648@^1.3.0, rfc4648@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/rfc4648/-/rfc4648-1.4.0.tgz#c75b2856ad2e2d588b6ddb985d556f1f7f2a2abd"
+  integrity sha512-3qIzGhHlMHA6PoT6+cdPKZ+ZqtxkIvg8DZGKA5z6PQ33/uuhoJ+Ws/D/J9rXW6gXodgH8QYlz2UCl+sdUDmNIg==
 
 rimraf@2.6.3, rimraf@^2.6.3:
   version "2.6.3"

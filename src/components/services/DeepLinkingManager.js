@@ -5,6 +5,7 @@ import * as React from 'react'
 import { Linking } from 'react-native'
 import { connect } from 'react-redux'
 
+import ENV from '../../../env.json'
 import { launchDeepLink, retryPendingDeepLink } from '../../actions/DeepLinkingActions.js'
 import { type WalletsState } from '../../reducers/scenes/WalletsReducer.js'
 import { type DeepLink, parseDeepLink } from '../../types/DeepLink.js'
@@ -31,6 +32,7 @@ class DeepLinkingManagerComponent extends React.Component<Props> {
     Linking.addEventListener('url', this.handleLinkEvent)
     Linking.getInitialURL()
       .then(url => {
+        if (url == null && ENV.YOLO_DEEP_LINK != null) url = ENV.YOLO_DEEP_LINK
         if (url != null) this.props.launchDeepLink(parseDeepLink(url))
       })
       .catch(showError)

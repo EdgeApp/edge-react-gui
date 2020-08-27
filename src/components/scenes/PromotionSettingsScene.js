@@ -9,15 +9,15 @@ import { sprintf } from 'sprintf-js'
 
 import { activatePromotion, removePromotion } from '../../actions/AccountReferralActions.js'
 import s from '../../locales/strings.js'
-import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type AccountReferral, type DeviceReferral } from '../../types/ReferralTypes.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
-import { SettingsRow } from '../common/SettingsRow.js'
 import { showActivity } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
+import { SettingsRow } from '../themed/SettingsRow.js'
 
 type StateProps = {
   accountReferral: AccountReferral,
@@ -94,7 +94,7 @@ export class PromotionSettingsComponent extends React.Component<Props> {
   }
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   textBlock: {
     backgroundColor: theme.settingsRowBackground,
     padding: theme.rem(0.5)

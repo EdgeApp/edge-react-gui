@@ -183,6 +183,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isImportKeySupported: false,
     showEarnInterestCard: true
   },
+  BSV: {
+    displayBuyCrypto: true
+  },
   LTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
@@ -308,6 +311,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   BAT: {
     showEarnInterestCard: true
+  },
+  FIO: {
+    noChangeMiningFee: true
   }
 }
 
@@ -319,10 +325,6 @@ export const WALLET_LIST_MENU: {
   label: string,
   value: WalletListMenuKey
 }[] = [
-  {
-    label: s.strings.fragment_wallets_sort,
-    value: 'sort'
-  },
   {
     label: s.strings.string_rename,
     value: 'rename'

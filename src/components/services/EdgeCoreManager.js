@@ -10,11 +10,11 @@ import { Alert, AppState } from 'react-native'
 import SplashScreen from 'react-native-smart-splash-screen'
 
 import ENV from '../../../env.json'
-import { ThemeProvider } from '../../theme/ThemeContext.js'
 import { allPlugins } from '../../util/corePlugins.js'
 import { fakeUser } from '../../util/fake-user.js'
 import { LoadingScene } from '../scenes/LoadingScene.js'
 import { Services } from './Services.js'
+import { ThemeProvider } from './ThemeContext.js'
 
 type Props = {
   onLoad: (context: EdgeContext) => mixed,

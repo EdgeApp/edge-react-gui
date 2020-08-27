@@ -90,7 +90,7 @@ async function logToFirebase(event: TrackingEvent, values: TrackingValues) {
  * Send a tracking event to the util server.
  */
 async function logToUtilServer(event: TrackingEvent, values: TrackingValues) {
-  utilWaterfall('api/v1/event', {
+  fetch('https://util2.edge.app/api/v1/event', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -8,9 +8,19 @@ import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
-import { showError } from '../components/services/AirshipInstance.js'
-import { EXCLAMATION, FEE_ALERT_THRESHOLD, MATERIAL_COMMUNITY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
+import { ThreeButtonSimpleConfirmationModal } from '../components/modals/ThreeButtonSimpleConfirmationModal.js'
+import { Airship, showError } from '../components/services/AirshipInstance.js'
+import {
+  EXCHANGE_SCENE,
+  EXCLAMATION,
+  FEE_ALERT_THRESHOLD,
+  MATERIAL_COMMUNITY,
+  PLUGIN_BUY,
+  SEND_CONFIRMATION,
+  TRANSACTION_DETAILS
+} from '../constants/indexConstants'
 import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { addToFioAddressCache, checkRecordSendFee, recordSend } from '../modules/FioAddress/util'
@@ -145,6 +155,33 @@ export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | Ed
     })
     .catch(e => {
       console.log(e)
+      if (e.name === 'InsufficientFundsError' && e.currencyCode != null && spendInfo.currencyCode !== e.currencyCode) {
+        const createBuyExchangeModal = (currencyCode: string) => {
+          return Airship.show(bridge => (
+            <ThreeButtonSimpleConfirmationModal
+              bridge={bridge}
+              title={s.strings.buy_crypto_modal_title}
+              subTitle={sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}
+              cancelText={s.strings.buy_crypto_decline}
+              oneText={sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode)}
+              twoText={s.strings.buy_crypto_modal_exchange}
+            />
+          ))
+        }
+        createBuyExchangeModal(e.currencyCode).then(result => {
+          switch (result) {
+            case 'one':
+              Actions.jump(PLUGIN_BUY)
+              return
+            case 'two':
+              dispatch(selectWalletForExchange(walletId, e.currencyCode, 'to'))
+              Actions.jump(EXCHANGE_SCENE)
+              break
+            default:
+              break
+          }
+        })
+      }
       return dispatch(updateTransaction(null, guiMakeSpendInfoClone, forceUpdateGui, e))
     })
 }

@@ -250,6 +250,57 @@ describe('Integration with functionality', function () {
       expect(intl.truncateDecimals(input, precision, allowBlank)).toBe(expected)
     })
   })
+
+  describe('truncateDecimalsPeriod', function () {
+    test('', function () {
+      const input = '1'
+      const precision = 0
+      const expected = '1'
+      expect(intl.truncateDecimalsPeriod(input, precision)).toBe(expected)
+    })
+    test('1 => 1', function () {
+      const input = '1'
+      const precision = 8
+      const expected = '1'
+      expect(intl.truncateDecimalsPeriod(input, precision)).toBe(expected)
+    })
+
+    test('1.0 => 1', function () {
+      const input = '1.0'
+      const precision = 1
+      const expected = '1.0'
+      expect(intl.truncateDecimalsPeriod(input, precision)).toBe(expected)
+    })
+
+    test('1.123456789 => 1.0', function () {
+      const input = '1.123456789'
+      const precision = 1
+      const expected = '1.1'
+      expect(intl.truncateDecimalsPeriod(input, precision)).toBe(expected)
+    })
+
+    test('1.19 => 1.0', function () {
+      const input = '1.19'
+      const precision = 1
+      const expected = '1.1'
+      expect(intl.truncateDecimalsPeriod(input, precision)).toBe(expected)
+    })
+
+    test("allowBlank=true '' => ''", function () {
+      const input = ''
+      const precision = 1
+      const expected = ''
+      const allowBlank = true
+      expect(intl.truncateDecimalsPeriod(input, precision, allowBlank)).toBe(expected)
+    })
+    test("allowBlank=false '' => 0", function () {
+      const input = ''
+      const precision = 1
+      const expected = '0'
+      const allowBlank = false
+      expect(intl.truncateDecimalsPeriod(input, precision, allowBlank)).toBe(expected)
+    })
+  })
 })
 
 describe('Integration with default numbers formatting', function () {

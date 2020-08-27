@@ -43,8 +43,8 @@ import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
-import { SimpleConfirmationModal } from '../modals/SimpleConfirmationModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 
 const buyPluginJson = asGuiPluginJson(require('../../constants/plugins/buyPluginList.json'))
@@ -126,7 +126,13 @@ class GuiPluginList extends React.Component<Props, State> {
         const newNumber = timesPluginWarningModalViewed + 1
         if (newNumber === 3) {
           await Airship.show(bridge => (
-            <SimpleConfirmationModal bridge={bridge} text={s.strings.plugin_provider_disclaimer} buttonText={s.strings.string_ok_cap} />
+            <ButtonsModal
+              bridge={bridge}
+              message={s.strings.plugin_provider_disclaimer}
+              buttons={{
+                ok: { label: s.strings.string_ok_cap }
+              }}
+            />
           ))
         }
         const newText = JSON.stringify({
@@ -140,7 +146,15 @@ class GuiPluginList extends React.Component<Props, State> {
       }
       const text = JSON.stringify(json)
       await account.disklet.setText(MODAL_DATA_FILE, text)
-      await Airship.show(bridge => <SimpleConfirmationModal bridge={bridge} text={s.strings.plugin_provider_disclaimer} buttonText={s.strings.string_ok_cap} />)
+      await Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          message={s.strings.plugin_provider_disclaimer}
+          buttons={{
+            ok: { label: s.strings.string_ok_cap }
+          }}
+        />
+      ))
     }
   }
 

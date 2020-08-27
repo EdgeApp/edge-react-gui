@@ -94,7 +94,11 @@ class FioRequestRow extends React.Component<Props> {
   requestedField = () => {
     const { displayDenomination, fioRequest } = this.props
     const name = displayDenomination.name || fioRequest.content.token_code
-    return `${s.strings.title_fio_requested} ${name}`
+    return (
+      <T style={styles.transactionPendingTime}>
+        {s.strings.title_fio_requested} {name}
+      </T>
+    )
   }
 
   showStatus = (status: string) => {
@@ -139,7 +143,7 @@ class FioRequestRow extends React.Component<Props> {
             <View style={styles.transactionRight}>
               <View style={[styles.transactionDetailsRow, fioRequest.content.memo ? styles.transactionDetailsRowMargin : null]}>
                 <T style={styles.transactionPartner} adjustsFontSizeToFit minimumFontScale={this.minimumFontScale}>
-                  {isSent ? fioRequest.payer_fio_address : this.requestedField()}
+                  {isSent ? fioRequest.payer_fio_address : fioRequest.payee_fio_address}
                 </T>
                 {this.currencyField(fioRequest.content.amount, isSent ? fioRequest.status : '')}
               </View>
@@ -149,7 +153,9 @@ class FioRequestRow extends React.Component<Props> {
                   {this.props.fiatSymbol} {this.props.fiatAmount}
                 </T>
               </View>
-              {isSent ? <View style={[styles.transactionDetailsRow, styles.transactionDetailsRowMargin]}>{this.showStatus(fioRequest.status)}</View> : null}
+              <View style={[styles.transactionDetailsRow, styles.transactionDetailsRowMargin]}>
+                {isSent ? this.showStatus(fioRequest.status) : this.requestedField()}
+              </View>
             </View>
           </View>
         </TouchableHighlight>

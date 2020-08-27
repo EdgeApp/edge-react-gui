@@ -169,12 +169,6 @@ export const getConfirmPasswordErrorMessage = (state: State) => {
   return settings.confirmPasswordError
 }
 
-export const getSendLogsStatus = (state: State) => {
-  const settings = getSettings(state)
-  const sendLogsStatus = settings.sendLogsStatus
-  return sendLogsStatus
-}
-
 export const getPinLoginEnabled = (state: State) => {
   const settings = getSettings(state)
   const pinLoginEnabled = settings.pinLoginEnabled

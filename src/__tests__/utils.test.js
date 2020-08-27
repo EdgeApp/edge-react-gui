@@ -1,6 +1,7 @@
 // @flow
 /* globals describe test expect */
 
+import { sanitizeDecimalAmount } from '../modules/UI/components/FlipInput/FlipInput2.ui.js'
 import {
   autoCorrectDate,
   convertDisplayToNative,
@@ -631,5 +632,31 @@ describe('autoCorrectDate', () => {
 
   test('if given valid past date', () => {
     expect(autoCorrectDate(validPastDateInSeconds, currentDateInSeconds)).toEqual(validPastDateInSeconds)
+  })
+})
+
+describe('Sanitize Decimal Amount', function () {
+  const maxEntryDecimals = 2
+  test('Replace all commas into periods', function () {
+    const input = ','
+    const expected = '.'
+    expect(sanitizeDecimalAmount(input, maxEntryDecimals)).toBe(expected)
+  })
+  test('Remove characters except numbers and decimal separator', function () {
+    const input = 'qwertyuiopasdfghjklzxcvbnm1234567890,.'
+    const expected = '1234567890.'
+    expect(sanitizeDecimalAmount(input, maxEntryDecimals)).toBe(expected)
+  })
+
+  test('Trunctuate Decimals', function () {
+    const input = '.13213'
+    const expected = '.13'
+    expect(sanitizeDecimalAmount(input, maxEntryDecimals)).toBe(expected)
+  })
+
+  test('Remove additional decimal separator', function () {
+    const input = '123.456.789'
+    const expected = '123.45'
+    expect(sanitizeDecimalAmount(input, maxEntryDecimals)).toBe(expected)
   })
 })

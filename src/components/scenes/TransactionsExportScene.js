@@ -16,15 +16,15 @@ import { formatExpDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
 import type { State as StateType } from '../../types/reduxTypes.js'
 import { sanitizeForFilename } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
-import { SettingsLabelRow } from '../common/SettingsLabelRow.js'
-import { SettingsRow } from '../common/SettingsRow.js'
-import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { showActivity, showError } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
+import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
+import { SettingsRow } from '../themed/SettingsRow.js'
+import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
 const colorScheme = Appearance.getColorScheme()
 
@@ -337,7 +337,7 @@ class TransactionsExportSceneComponent extends PureComponent<Props, State> {
   }
 }
 
-const getStyles = cacheStyles(theme => ({
+const getStyles = cacheStyles((theme: Theme) => ({
   bottomArea: {
     padding: theme.rem(1.5)
   },
@@ -347,14 +347,14 @@ const getStyles = cacheStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: colorScheme === 'dark' ? theme.keyboardTopViewBackgroundDark : theme.keyboardTopViewBackgroundDefault
+    backgroundColor: colorScheme === 'dark' ? theme.keyboardTopViewBackgroundDark : theme.keyboardTopViewBackgroundLight
   },
   accessoryText: {
-    color: colorScheme === 'dark' ? theme.keyboardTopViewTextDark : theme.keyboardTopViewTextDefault,
+    color: colorScheme === 'dark' ? theme.keyboardTopViewTextDark : theme.keyboardTopViewTextLight,
     fontSize: theme.rem(1)
   },
   pickerContainer: {
-    backgroundColor: colorScheme === 'dark' ? theme.datetimepickerBackgroundDark : theme.datetimepickerBackgroundDefault
+    backgroundColor: colorScheme === 'dark' ? theme.datetimepickerBackgroundDark : theme.datetimepickerBackgroundLight
   }
 }))
 

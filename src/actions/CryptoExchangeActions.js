@@ -10,12 +10,14 @@ import {
   type EdgeSwapResult,
   errorNames
 } from 'edge-core-js/types'
+import * as React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { trackConversion } from '../actions/TrackingActions.js'
-import { showError } from '../components/services/AirshipInstance.js'
+import { ThreeButtonSimpleConfirmationModal } from '../components/modals/ThreeButtonSimpleConfirmationModal.js'
+import { Airship, showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import * as intl from '../locales/intl.js'
 import s from '../locales/strings.js'
@@ -38,9 +40,9 @@ export type SetNativeAmountInfo = {
 export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (dispatch: Dispatch, getState: GetState) => {
   Actions[Constants.EXCHANGE_QUOTE_PROCESSING_SCENE]()
 
+  const state = getState()
+  const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
   try {
-    const state = getState()
-    const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
     if (fromWallet == null || toWallet == null) {
       throw new Error('No wallet selected') // Should never happen
     }
@@ -65,6 +67,35 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
   } catch (error) {
     Actions.popTo(Constants.EXCHANGE_SCENE)
+    if (error.name === 'InsufficientFundsError' && error.currencyCode != null && fromCurrencyCode !== error.currencyCode) {
+      const createBuyExchangeModal = (currencyCode: string) => {
+        return Airship.show(bridge => (
+          <ThreeButtonSimpleConfirmationModal
+            bridge={bridge}
+            title={s.strings.buy_crypto_modal_title}
+            subTitle={sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}
+            cancelText={s.strings.buy_crypto_decline}
+            oneText={sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode)}
+            twoText={s.strings.buy_crypto_modal_exchange}
+          />
+        ))
+      }
+      createBuyExchangeModal(error.currencyCode).then(result => {
+        switch (result) {
+          case 'one':
+            Actions.jump(Constants.PLUGIN_BUY)
+            return
+          case 'two':
+            dispatch({ type: 'SHIFT_COMPLETE' })
+            if (fromWallet != null) {
+              dispatch(selectWalletForExchange(fromWallet.id, error.currencyCode, 'to'))
+            }
+            break
+          default:
+            break
+        }
+      })
+    }
     dispatch(processSwapQuoteError(error))
   }
 }

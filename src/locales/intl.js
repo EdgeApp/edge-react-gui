@@ -104,11 +104,37 @@ export function isValidInput(value: string): boolean {
  * @param input
  */
 export function prettifyNumber(input: string): string {
-  let out = input.replace(/^0+/, '')
-  if (out.startsWith(locale.decimalSeparator)) {
-    out = '0' + out
+  input = input.replace(/^0+/, '')
+  if (input.startsWith('.')) {
+    input = '0' + input
   }
-  return out
+  if (input === '') {
+    return '0'
+  }
+  return input
+}
+
+/**
+ * Should change UTILS.truncateDecimals
+ * @param input
+ * @param precision
+ * @param allowBlank
+ * @returns {string}
+ */
+export function truncateDecimalsPeriod(input: string, precision?: number, allowBlank?: boolean = false): string {
+  if (input === '') {
+    if (allowBlank) {
+      input = ''
+    } else {
+      input = '0'
+    }
+  }
+
+  if (!input.includes('.')) {
+    return input
+  }
+  const [integers, decimals] = input.split('.')
+  return `${integers}.${decimals.slice(0, precision)}`
 }
 
 /**

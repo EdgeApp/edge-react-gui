@@ -17,7 +17,7 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow'
-import { SettingsRow } from '../common/SettingsRow'
+import { SettingsRow } from '../common/SettingsRow.js'
 import { showError } from '../services/AirshipInstance'
 
 export type StateProps = {

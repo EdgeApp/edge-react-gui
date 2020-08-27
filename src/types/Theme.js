@@ -1,5 +1,6 @@
 // @flow
 
+// Commented themes are not used
 export type Theme = {
   // The app scaling factor, which is the height of "normal" text:
   rem(size: number): number,
@@ -7,7 +8,7 @@ export type Theme = {
   // Icons
   icon: string,
   iconTappable: string,
-  warningIcon: string,
+  // warningIcon: string,
 
   // Background
   backgroundGradientLeft: string,
@@ -15,14 +16,16 @@ export type Theme = {
 
   // Modal
   modal: string,
-  modalShadow: string,
-  modalBackgroundShadowOpacity: number,
+  modalBlurType: 'light' | 'dark',
   modalCloseIcon: string,
+  // modalFullGradientLeft: string,
+  // modalFullGradientRight: string,
 
   // Tile
-  listHeaderBackground: string,
+  // listHeaderBackground: string,
   tileBackground: string,
-  tileBackgroundMuted: string, // change from mutedTileBackground
+  // tileBackgroundMuted: string, // change from mutedTileBackground
+  // listSectionHeaderBackground: string,
 
   // Settings Row
   settingsRowBackground: string,
@@ -33,96 +36,102 @@ export type Theme = {
   // Text
   primaryText: string,
   secondaryText: string,
-  warningText: string,
+  // warningText: string,
   positiveText: string,
   negativeText: string,
   dangerText: string,
   textLink: string,
   deactivatedText: string,
+  // listHeaderText: string,
 
   // Header
-  headerText: string,
-  hamburgerButton: string,
-  backButton: string,
+  // headerText: string,
+  // hamburgerButton: string,
+  // backButton: string,
 
   // Buttons
   primaryButtonOutline: string,
   primaryButton: string,
   primaryButtonText: string,
-  primaryButtonDeactivated: string,
+  // primaryButtonDeactivated: string,
 
   secondaryButtonOutline: string,
   secondaryButton: string,
   secondaryButtonText: string,
 
-  tertiaryButtonOutline: string,
-  tertiaryButton: string,
-  tertiaryButtonText: string,
+  // tertiaryButtonOutline: string,
+  // tertiaryButton: string,
+  // tertiaryButtonText: string,
 
-  glassButton: string,
-  glassButtonIcon: string,
-  glassButtonDark: string,
-  glassButtonDarkIcon: string,
+  // glassButton: string,
+  // glassButtonIcon: string,
+  // glassButtonDark: string,
+  // glassButtonDarkIcon: string,
 
-  cardBackground: string,
-  cardShadow: string,
+  // dangerButtonOutline: string,
+  // dangerButton: string,
+  // dangerButtonText: string,
 
-  tabBarBackground: string,
-  tabBarIcon: string,
-  tabBarIconHighlighted: string,
+  // cardBackground: string,
+  // cardShadow: string,
 
-  sendTab: string, // sliderTabSend
-  requestTab: string, // "
-  moreTab: string, // "
+  // tabBarBackground: string,
+  // tabBarIcon: string,
+  // tabBarIconHighlighted: string,
 
-  pinOutline: string,
-  pinFilled: string,
+  // sliderTabSend: string,
+  // sliderTabRequest: string,
+  // sliderTabMore: string,
 
-  radioButtonOutline: string,
-  radioButtonFilled: string,
+  // pinOutline: string,
+  // pinFilled: string,
+
+  // radioButtonOutline: string,
+  // radioButtonFilled: string,
 
   toggleButton: string,
   toggleButtonOff: string,
-  toggleButtonThumb: string,
+  // toggleButtonThumb: string,
 
-  warningBubble: string,
+  // warningBubble: string,
 
   // Confirmation slider
-  confirmationSlider: string,
-  confirmationSliderText: string,
-  confirmationSliderArrow: string,
-  confirmationSliderThumb: string,
-  confirmationSliderTextDeactivated: string,
-  confirmationThumbDeactivated: string,
+  // confirmationSlider: string,
+  // confirmationSliderText: string,
+  // confirmationSliderArrow: string,
+  // confirmationSliderThumb: string,
+  // confirmationSliderTextDeactivated: string,
+  // confirmationThumbDeactivated: string,
 
   // Lines
-  lineDivider: string, // change from listDivider
-  textInputLine: string,
-  orLine: string,
-  tileDivider: string,
+  // lineDivider: string, // change from listDivider
+  // textInputLine: string,
+  // orLine: string,
+  // tileDivider: string,
 
   // Notifications
-  notificationBackground: string,
-  messageBanner: string,
+  // notificationBackground: string,
+  // messageBanner: string,
+  // bubble: string,
 
   // Alert Modal
-  securityAlertModalHeaderIcon: string,
-  securityAlertModalRowBorder: string,
-  securityAlertModalWarningIcon: string,
-  securityAlertModalDangerIcon: string,
-  securityAlertModalBackground: string,
-  securityAlertModalText: string,
-  securityAlertModalLine: string,
-  securityAlertModalHeaderIconShadow: string,
+  // securityAlertModalHeaderIcon: string,
+  // securityAlertModalRowBorder: string,
+  // securityAlertModalWarningIcon: string,
+  // securityAlertModalDangerIcon: string,
+  // securityAlertModalBackground: string,
+  // securityAlertModalText: string,
+  // securityAlertModalLine: string,
+  // securityAlertModalHeaderIconShadow: string,
 
   // Misc
-  keyboardTopViewBackgroundDefault: string,
+  keyboardTopViewBackgroundLight: string,
   keyboardTopViewBackgroundDark: string,
-  keyboardTopViewTextDefault: string,
+  keyboardTopViewTextLight: string,
   keyboardTopViewTextDark: string,
-  datetimepickerBackgroundDefault: string,
+  datetimepickerBackgroundLight: string,
   datetimepickerBackgroundDark: string,
-  pressedOpacity: number,
+  // pressedOpacity: number,
 
   // Fonts
   fontFaceDefault: string,

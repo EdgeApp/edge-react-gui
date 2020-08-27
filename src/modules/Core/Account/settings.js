@@ -234,6 +234,15 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   OXT: {
     denomination: '1000000000000000000'
   },
+  SNX: {
+    denomination: '1000000000000000000'
+  },
+  SBTC: {
+    denomination: '1000000000000000000'
+  },
+  SUSD: {
+    denomination: '1000000000000000000'
+  },
   COMP: {
     denomination: '1000000000000000000'
   },
@@ -318,6 +327,9 @@ export const SYNCED_ACCOUNT_TYPES = {
   MET: 'object',
   COMP: 'object',
   OXT: 'object',
+  SNX: 'object',
+  SUSD: 'object',
+  SBTC: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   mostRecentWallets: 'object',
   passwordRecoveryRemindersShown: 'object'

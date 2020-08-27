@@ -1,79 +1,67 @@
 // @flow
 
 import * as React from 'react'
-import { Text, TouchableHighlight, View } from 'react-native'
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 
-import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
+import { dayText } from '../../styles/common/textStyles.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 
-type OwnProps = {
+type Props = {
   disabled?: boolean, // Show with grey style
   icon?: React.Node,
   text: string | React.Node,
   right?: React.Node,
-  onPress?: () => void,
-  marginBottom?: boolean
+  onPress?: () => void
 }
-
-type Props = OwnProps & ThemeProps
 
 /**
  * A settings row features tappable text, as well as an optional icon
  * on the left and another optional component on the right.
  */
-function SettingsRowComponent(props: Props): React.Node {
-  const { disabled = false, icon, marginBottom = true, text, theme, right, onPress } = props
-  const styles = getStyles(theme)
-  const rowMarginBottom = marginBottom ? styles.marginBottom : null
+export function SettingsRow(props: Props): React.Node {
+  const { disabled = false, icon, text, right, onPress } = props
 
   return (
-    <TouchableHighlight onPress={onPress} underlayColor={theme.settingsRowPressed}>
-      <View style={[styles.row, rowMarginBottom]}>
-        {icon != null ? <View style={styles.paddingLeftIcon}>{icon}</View> : undefined}
+    <TouchableHighlight onPress={onPress} underlayColor={THEME.COLORS.TRANSPARENT}>
+      <View style={styles.row}>
+        {icon != null ? <View style={styles.padding}>{icon}</View> : undefined}
         <Text style={disabled ? styles.disabledText : styles.text}>{text}</Text>
-        {right != null ? <View style={styles.paddingRightIcon}>{right}</View> : undefined}
+        {right != null ? <View style={styles.padding}>{right}</View> : undefined}
       </View>
     </TouchableHighlight>
   )
 }
 
-const getStyles = cacheStyles(theme => ({
+const commonText = {
+  ...dayText('row-left'),
+  color: THEME.COLORS.GRAY_1,
+  flexGrow: 1,
+  padding: THEME.rem(0.5)
+}
+
+const rawStyles = {
   row: {
     // Appearance:
-    backgroundColor: theme.settingsRowBackground,
+    backgroundColor: THEME.COLORS.WHITE,
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    borderBottomWidth: THEME.rem(1 / 16),
 
     // Layout:
-    minHeight: theme.rem(2.75),
-    padding: theme.rem(0.75),
+    minHeight: THEME.rem(3.25),
+    paddingLeft: THEME.rem(0.5),
+    paddingRight: THEME.rem(0.5),
 
     // Children:
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-start'
   },
-  marginBottom: {
-    marginBottom: theme.rem(1 / 16)
-  },
-  text: {
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1),
-    textAlign: 'left',
-    flexShrink: 1,
-    color: theme.primaryText,
-    flexGrow: 1
-  },
-  disabledText: {
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1),
-    textAlign: 'left',
-    color: theme.deactivatedText,
-    flexGrow: 1
-  },
-  paddingLeftIcon: {
-    paddingRight: theme.rem(0.75)
-  },
-  paddingRightIcon: {
-    paddingLeft: theme.rem(0.75)
-  }
-}))
 
-export const SettingsRow = withTheme(SettingsRowComponent)
+  text: commonText,
+  disabledText: { ...commonText, color: THEME.COLORS.GRAY_2 },
+
+  padding: {
+    padding: THEME.rem(0.5)
+  }
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

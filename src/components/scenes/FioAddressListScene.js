@@ -18,7 +18,7 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import type { FioAddress, FioDomain } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow'
+import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
 import { showError } from '../services/AirshipInstance'
 
 export type StateProps = {

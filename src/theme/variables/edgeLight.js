@@ -15,141 +15,140 @@ import { type Theme } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
 
 const palette = {
-  white: '#FFFFFF',
   black: '#000000',
-  royalBlue: '#003B65',
-  darkBlue: '#0C446A',
+  white: '#FFFFFF',
+  whiteBlue: '#EEF3F6',
+  lightestBlue: '#D1ECFF',
   edgeNavy: '#0D2145',
   edgeBlue: '#0E4B75',
   edgeMint: '#66EDA8',
-  blueGray: '#A4C7DF',
   gray: '#87939E',
-  lightGray: '#D9E3ED',
+  lightGray: '#DBDBDB',
+  lightestGray: '#F6F6F6',
   mutedBlue: '#2F5E89',
+  mutedGray: '#EDEDED',
   accentGreen: '#77C513',
   accentRed: '#E85466',
   accentBlue: '#0073D9',
-  accentOrange: '#F1AA19',
-  darkBlueNavyGradient1: '#0C446A',
-  darkBlueNavyGradient2: '#0D2145',
+  accentOrange: '#FF8A00',
 
   blackOp25: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
-
-  whiteOp10: 'rgba(255, 255, 255, .1)',
-
+  blackOp10: 'rgba(0, 0, 0, .1)',
   grayOp80: 'rgba(135, 147, 158, .8)',
+  whiteOp10: 'rgba(255, 255, 255, 0.1)',
   accentOrangeOp30: 'rgba(241, 170, 25, .3)',
   lightGrayOp75: 'rgba(217, 227, 237, .75)',
   transparent: 'rgba(255, 255, 255, 0)'
 }
 
-export const edgeDark: Theme = {
+export const edgeLight: Theme = {
   rem(size: number): number {
     return Math.round(scale(16) * size)
   },
 
   // Icons
-  icon: palette.white,
-  iconTappable: palette.edgeMint,
+
+  icon: palette.black,
+  iconTappable: palette.edgeBlue,
   // warningIcon: palette.accentOrange,
 
   // Background
-  backgroundGradientLeft: palette.darkBlue,
-  backgroundGradientRight: palette.edgeNavy,
+  backgroundGradientLeft: palette.lightestGray,
+  backgroundGradientRight: palette.lightestGray,
 
   // Modal
-  modal: palette.royalBlue,
-  modalBlurType: 'light',
+  modal: palette.lightestGray,
+  modalBlurType: 'dark',
   modalCloseIcon: palette.edgeMint,
-  // modalFullGradientLeft: palette.darkBlue,
-  // modalFullGradientRight: palette.edgeNavy,
+  // modalFullGradientLeft: palette.white,
+  // modalFullGradientRight: palette.white,
 
   // Tile
-  // listHeaderBackground: palette.edgeNavy,
-  tileBackground: palette.edgeBlue,
-  // tileBackgroundMuted: palette.mutedBlue,
-  // listSectionHeaderBackground: palette.edgeNavy,
+  // listHeaderBackground: palette.white,
+  tileBackground: palette.white,
+  // tileBackgroundMuted: palette.mutedGray,
+  // listSectionHeaderBackground: palette.white,
 
   // Text
-  primaryText: palette.white,
-  secondaryText: palette.blueGray,
+  primaryText: palette.black,
+  secondaryText: palette.gray,
   // warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
   negativeText: palette.accentRed,
   dangerText: palette.accentRed,
-  textLink: palette.edgeMint,
+  textLink: palette.edgeBlue,
   deactivatedText: palette.gray,
-  // listHeaderText: palette.white,
+  // listHeaderText: palette.black,
 
   // Header
-  // headerText: palette.white,
-  // hamburgerButton: palette.white,
-  // backButton: palette.white,
+  // headerText: palette.black,
+  // hamburgerButton: palette.black,
+  // backButton: palette.black,
 
   // Buttons
   // Should add palette when pressed
   primaryButtonOutline: palette.transparent,
-  primaryButton: palette.edgeMint,
+  primaryButton: palette.edgeBlue,
   primaryButtonText: palette.edgeBlue,
   // primaryButtonDeactivated: palette.gray,
 
-  secondaryButtonOutline: palette.edgeMint,
+  secondaryButtonOutline: palette.edgeBlue,
   secondaryButton: palette.transparent,
-  secondaryButtonText: palette.edgeMint,
+  secondaryButtonText: palette.edgeBlue,
 
-  // tertiaryButtonOutline: palette.edgeMint,
+  // tertiaryButtonOutline: palette.edgeBlue,
   // tertiaryButton: palette.transparent,
-  // tertiaryButtonText: palette.edgeMint,
+  // tertiaryButtonText: palette.edgeBlue,
 
-  // glassButton: palette.whiteOp10,
-  // glassButtonIcon: palette.white,
+  // glassButton: palette.blackOp10,
   // glassButtonDark: palette.blackOp50,
   // glassButtonDarkIcon: palette.white,
+  // glassButtonIcon: palette.edgeBlue,
 
   // dangerButtonOutline: palette.transparent,
-  // dangerButton: palette.white,
-  // dangerButtonText: palette.accentRed,
+  // dangerButton: palette.accentRed,
+  // dangerButtonText: palette.white,
 
-  // cardBackground: palette.edgeBlue,
+  // cardBackground: palette.white,
   // cardShadow: palette.blackOp25,
 
-  // tabBarBackground: palette.edgeNavy,
-  // tabBarIcon: palette.white,
-  // tabBarIconHighlighted: palette.edgeMint,
+  // tabBarBackground: palette.white,
+  // tabBarIcon: palette.gray,
+  // tabBarIconHighlighted: palette.edgeBlue,
 
   // sliderTabSend: palette.accentRed,
   // sliderTabRequest: palette.accentGreen,
   // sliderTabMore: palette.accentBlue,
 
-  // pinOutline: palette.white,
-  // pinFilled: palette.white,
+  // pinOutline: palette.edgeBlue,
+  // pinFilled: palette.edgeBlue,
 
-  // radioButtonOutline: palette.lightGray,
-  // radioButtonFilled: palette.edgeMint,
+  // radioButtonOutline: palette.edgeNavy,
+  // radioButtonFilled: palette.edgeBlue,
 
-  toggleButton: palette.edgeMint,
+  toggleButton: palette.accentGreen,
   toggleButtonOff: palette.gray,
   // toggleButtonThumb: palette.white,
 
   // warningBubble: palette.accentOrange,
 
   // Confirmation slider
-  // confirmationSlider: palette.whiteOp10,
-  // confirmationSliderText: palette.edgeMint,
-  // confirmationSliderArrow: palette.edgeBlue,
-  // confirmationSliderThumb: palette.edgeMint,
+  // confirmationSlider: palette.blackOp10,
+  // confirmationSliderText: palette.edgeBlue,
+  // confirmationSliderArrow: palette.white,
+  // confirmationSliderThumb: palette.edgeBlue,
   // confirmationSliderTextDeactivated: palette.gray,
   // confirmationThumbDeactivated: palette.gray,
 
   // Lines
-  // lineDivider: palette.blueGray,
-  // textInputLine: palette.blueGray,
-  // orLine: palette.blueGray,
-  // tileDivider: palette.blueGray,
+  // lineDivider: palette.edgeBlue,
+  // textInputLine: palette.gray,
+  // orLine: palette.gray,
+  // tileDivider: palette.gray,
 
   // Notifications
-  // notificationBackground: palette.lightGrayOp75,
+  // notificationBackground: palette.grayOp80,
   // messageBanner: palette.grayOp80,
   // bubble: palette.whiteOp10,
 
@@ -164,9 +163,9 @@ export const edgeDark: Theme = {
   // securityAlertModalHeaderIconShadow: palette.accentOrangeOp30,
 
   // Settings Row
-  settingsRowBackground: palette.edgeBlue,
+  settingsRowBackground: palette.white,
   settingsRowPressed: palette.transparent,
-  settingsRowHeaderBackground: palette.edgeNavy,
+  settingsRowHeaderBackground: palette.lightGray,
   settingsRowSubHeader: palette.transparent,
 
   // Misc

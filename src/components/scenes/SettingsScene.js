@@ -3,65 +3,77 @@
 import type { EdgeAccount } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { Image, ScrollView, View } from 'react-native'
+import { Image, ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
 
+import {
+  checkCurrentPassword,
+  lockSettings,
+  setAutoLogoutTimeInSecondsRequest,
+  setDeveloperModeOn,
+  showRestoreWalletsModal,
+  showSendLogsModal,
+  showUnlockSettingsModal,
+  togglePinLoginEnabled,
+  updateTouchIdEnabled
+} from '../../actions/SettingsActions'
 import * as Constants from '../../constants/indexConstants'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { type ThemeProps, cacheStyles, withTheme } from '../../theme/ThemeContext.js'
-import { type Action } from '../../types/reduxTypes.js'
+import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
+import { edgeDark } from '../../theme/variables/edgeDark.js'
+import { edgeLight } from '../../theme/variables/edgeLight.js'
+import type { Dispatch, State as RootState } from '../../types/reduxTypes.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
-import { SettingsLabelRow } from '../common/SettingsLabelRow.js'
-import { SettingsRow } from '../common/SettingsRow.js'
-import { SettingsSwitchRow } from '../common/SettingsSwitchRow.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
 import { Airship, showToast } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
+import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
+import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
+import { SettingsRow } from '../themed/SettingsRow.js'
+import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
+import { PrimaryButton } from '../themed/ThemedButtons.js'
 
 type StateProps = {
-  defaultFiat: string,
-  autoLogoutTimeInSeconds: number,
-  username: string,
   account: EdgeAccount,
+  autoLogoutTimeInSeconds: number,
+  defaultFiat: string,
+  developerModeOn: boolean,
+  isLocked: boolean,
   pinLoginEnabled: boolean,
   supportsTouchId: boolean,
-  touchIdEnabled: boolean,
-  lockButton: string,
-  lockButtonIcon: string,
-  isLocked: boolean,
-  confirmPasswordError: string,
-  developerModeOn: boolean,
-  setAutoLogoutTimeInSeconds(number): void,
-  confirmPassword(string): void,
-  lockSettings(): void,
-  dispatchUpdateEnableTouchIdEnable(boolean, EdgeAccount): void,
-  resetConfirmPasswordError(Object): void,
-  onTogglePinLoginEnabled(enableLogin: boolean): void,
-  otpResetDate: string,
-  showReEnableOtpModal: () => Promise<Action>,
-  showUnlockSettingsModal: () => void,
-  showSendLogsModal: () => void,
-  showRestoreWalletsModal: () => void,
-  toggleDeveloperMode(boolean): void
+  touchIdEnabled: boolean
 }
+type DispatchProps = {
+  confirmPassword(password: string): void,
+  dispatchUpdateEnableTouchIdEnable(arg: boolean, account: EdgeAccount): void,
+  lockSettings(): void,
+  onTogglePinLoginEnabled(enableLogin: boolean): void,
+  setAutoLogoutTimeInSeconds(number): void,
+  showRestoreWalletsModal: () => void,
+  showSendLogsModal: () => void,
+  showUnlockSettingsModal: () => void,
+  toggleDeveloperMode(developerModeOn: boolean): void
+}
+type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
-  touchIdText: string
+  touchIdText: string,
+  darkTheme: boolean
 }
 
-type Props = StateProps & ThemeProps
-
-class SettingsOverviewComponent extends React.Component<Props, State> {
+export class SettingsSceneComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
+    const theme = getTheme()
     this.state = {
-      touchIdText: s.strings.settings_button_use_touchID
+      touchIdText: s.strings.settings_button_use_touchID,
+      darkTheme: theme === edgeDark
     }
   }
 
@@ -121,12 +133,6 @@ class SettingsOverviewComponent extends React.Component<Props, State> {
     Actions.push(Constants.PROMOTION_SETTINGS)
   }
 
-  _onPressOpenLogoffTime = () => {}
-
-  _onPressOpenDefaultCurrency = () => {}
-
-  _onPressOpenChangeCategories = () => {}
-
   _onTogglePinLogin = () => {
     this.props.onTogglePinLoginEnabled(!this.props.pinLoginEnabled)
   }
@@ -143,6 +149,12 @@ class SettingsOverviewComponent extends React.Component<Props, State> {
     this.props.toggleDeveloperMode(!this.props.developerModeOn)
   }
 
+  onDarkThemePress = () => {
+    this.setState({ darkTheme: !this.state.darkTheme }, () => {
+      this.state.darkTheme ? changeTheme(edgeDark) : changeTheme(edgeLight)
+    })
+  }
+
   showAutoLogoutModal = async () => {
     const result = await Airship.show(bridge => <AutoLogoutModal autoLogoutTimeInSeconds={this.props.autoLogoutTimeInSeconds} bridge={bridge} />)
 
@@ -152,7 +164,7 @@ class SettingsOverviewComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { account, theme } = this.props
+    const { account, theme, isLocked } = this.props
     const iconSize = theme.rem(1.25)
     const styles = getStyles(theme)
 
@@ -172,11 +184,11 @@ class SettingsOverviewComponent extends React.Component<Props, State> {
         <ScrollView>
           <SettingsHeaderRow
             icon={<FontAwesomeIcon name="user-o" color={theme.icon} size={iconSize} />}
-            text={`${s.strings.settings_account_title_cap}: ${this.props.username}`}
+            text={`${s.strings.settings_account_title_cap}: ${account.username}`}
           />
           <SettingsRow
-            text={s.strings[this.props.lockButton]}
-            right={<IonIcon name={this.props.lockButtonIcon} color={theme.iconTappable} size={iconSize} />}
+            text={isLocked ? s.strings.settings_button_unlock_settings : s.strings.settings_button_lock_settings}
+            right={<IonIcon name={isLocked ? 'ios-lock' : 'ios-unlock'} color={theme.iconTappable} size={iconSize} />}
             onPress={this.showConfirmPasswordModal}
           />
           <SettingsRow
@@ -225,14 +237,12 @@ class SettingsOverviewComponent extends React.Component<Props, State> {
 
           <SettingsRow text={s.strings.title_promotion_settings} right={rightArrow} onPress={this._onPressPromotionSettings} />
           <SettingsSwitchRow key="developerMode" text={s.strings.settings_developer_mode} value={this.props.developerModeOn} onPress={this.onDeveloperPress} />
-          <SettingsRow onPress={this.showRestoreWalletModal} text={s.strings.restore_wallets_modal_title} />
+          {this.props.developerModeOn && (
+            <SettingsSwitchRow key="darkTheme" text={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.onDarkThemePress} />
+          )}
+          <SettingsRow onPress={this.props.showRestoreWalletsModal} text={s.strings.restore_wallets_modal_title} />
           <SettingsRow text={s.strings.title_terms_of_service} onPress={Actions[Constants.TERMS_OF_SERVICE]} right={rightArrow} />
-
-          <View style={styles.bottomArea}>
-            <PrimaryButton onPress={this.showSendLogsModal} style={styles.button}>
-              <PrimaryButton.Text style={styles.buttonText}>{s.strings.settings_button_send_logs}</PrimaryButton.Text>
-            </PrimaryButton>
-          </View>
+          <PrimaryButton onPress={this.props.showSendLogsModal} label={s.strings.settings_button_send_logs} marginRem={2} />
         </ScrollView>
       </SceneWrapper>
     )
@@ -245,37 +255,57 @@ class SettingsOverviewComponent extends React.Component<Props, State> {
       this.props.showUnlockSettingsModal()
     }
   }
-
-  showSendLogsModal = () => {
-    this.props.showSendLogsModal()
-  }
-
-  showRestoreWalletModal = () => {
-    this.props.showRestoreWalletsModal()
-  }
 }
 
-const getStyles = cacheStyles(theme => {
+const getStyles = cacheStyles((theme: Theme) => {
   const iconSize = theme.rem(1.25)
   return {
     currencyLogo: {
       height: iconSize,
       width: iconSize,
       resizeMode: 'contain'
-    },
-    bottomArea: {
-      padding: theme.rem(2)
-    },
-    button: {
-      width: '100%',
-      height: theme.rem(3),
-      borderRadius: theme.rem(1.5),
-      backgroundColor: theme.primaryButton
-    },
-    buttonText: {
-      color: theme.primaryButtonText
     }
   }
 })
 
-export default withTheme(SettingsOverviewComponent)
+export const SettingsScene = connect(
+  (state: RootState): StateProps => ({
+    account: state.core.account,
+    autoLogoutTimeInSeconds: SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state),
+    defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
+    developerModeOn: state.ui.settings.developerModeOn,
+    isLocked: SETTINGS_SELECTORS.getSettingsLock(state),
+    pinLoginEnabled: SETTINGS_SELECTORS.getPinLoginEnabled(state),
+    supportsTouchId: SETTINGS_SELECTORS.getIsTouchIdSupported(state),
+    touchIdEnabled: SETTINGS_SELECTORS.getIsTouchIdEnabled(state)
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    confirmPassword(arg: string) {
+      dispatch(checkCurrentPassword(arg))
+    },
+    dispatchUpdateEnableTouchIdEnable(arg: boolean, account: EdgeAccount) {
+      dispatch(updateTouchIdEnabled(arg, account))
+    },
+    lockSettings() {
+      dispatch(lockSettings())
+    },
+    onTogglePinLoginEnabled(enableLogin: boolean) {
+      dispatch(togglePinLoginEnabled(enableLogin))
+    },
+    setAutoLogoutTimeInSeconds(autoLogoutTimeInSeconds: number) {
+      dispatch(setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds))
+    },
+    showRestoreWalletsModal() {
+      dispatch(showRestoreWalletsModal())
+    },
+    showSendLogsModal() {
+      dispatch(showSendLogsModal())
+    },
+    showUnlockSettingsModal() {
+      dispatch(showUnlockSettingsModal())
+    },
+    toggleDeveloperMode(developerModeOn: boolean) {
+      dispatch(setDeveloperModeOn(developerModeOn))
+    }
+  })
+)(withTheme(SettingsSceneComponent))
