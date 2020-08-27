@@ -1,5 +1,38 @@
 # edge-react-gui
 
+## 1.16.6 (2020-08-26)
+
+- Added Synthetix ERC20 tokens SNX, SBTC, and SUSD
+- Add support for Anypay payment protoco
+- Add BSV buy support from Simplex
+- New flip input design
+- Theming enhancements and fixes
+- Update partner descriptions
+- Upgrade edge-core-js to v0.17.11
+  - (feature) Add a login voucher system. When a new device tries to log into an account with 2-factor security, the server can issue a voucher along with the OtpError. Existing devices with the 2-factor token can then log in and either approve or deny the voucher using EdgeAccount.approveVoucher or EdgeAccount.rejectVoucher. The EdgeLoginMessages type also includes a list of pending vouchers now.
+  - Upgrade to hash.js v1.1.7 and redux-keto v0.3.4.
+  - (feature) Allow users to pass 6-digit OTP codes directly. This means EdgeAccountOptions.otp is deprecated for passing the secret. Use EdgeAccountOptions.otpKey to pass the secret, or EdgeAccountOptions.otp to pass the 6-digit code.
+  - (feature) Save usernames for first-time logins that fail 2fa.
+  - (feature) Save & return the account creation date as EdgeAccount.created.
+  - Harden server response parsing.
+  - Upgrade to hash.js v1.1.7 and redux-keto v0.3.4.
+  - Upgrade many dev dependencies.
+- Upgrade edge-currency-bitcoin to v4.9.0
+  - Add support for Anypay payment protocol
+- Upgrade edge-currency-accountbased to v0.7.20
+  - Add Synthetix ERC20 tokens (SNX, SBTC, and SUSD)
+  - Use eth_estimategas and eth_getcode to improve ETH and ERC20 token transaction fee estimation
+  - Pass parent currency code in error when there's insufficient parent currency to pay transaction fee
+  - Save FIO tx fee between makeSpend() requests to the same address to reduce network calls
+  - Increase timeout on network-dependent block height test
+- Upgrade edge-login-ui-rn to v0.6.14
+  - Use react-native-airship to power more modals
+  - Fix the header "skip" buttons on the password recovery workflow
+  - Many internal cleanups & refactorings
+- Upgrade edge-plugin-simplex to commit #653587d
+  - Add BSV support
+  - Improve error handling
+
 ## 1.16.5 (2020-08-13)
 
 - Visual enhancements
