@@ -3,8 +3,9 @@
 ## 1.16.6 (2020-08-26)
 
 - Added Synthetix ERC20 tokens SNX, SBTC, and SUSD
-- Add support for Anypay payment protoco
-- Add BSV buy support from Simplex
+- Add support for Anypay pay: protocol
+- Use eth_estimategas and eth_getcode to improve ETH and ERC20 token transaction gas limit estimation
+- Add BSV buy support for Simplex
 - New flip input design
 - Theming enhancements and fixes
 - Update partner descriptions
