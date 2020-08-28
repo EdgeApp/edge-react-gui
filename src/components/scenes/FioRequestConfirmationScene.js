@@ -52,7 +52,8 @@ type State = {
   walletAddresses: { fioAddress: string, fioWallet: EdgeCurrencyWallet }[],
   fioAddressFrom: string,
   fioAddressTo: string,
-  memo: string
+  memo: string,
+  settingFioAddressTo: boolean
 }
 
 export class FioRequestConfirmationConnected extends React.Component<Props, State> {
@@ -63,7 +64,8 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       fioAddressFrom: '',
       walletAddresses: [],
       fioAddressTo: '',
-      memo: ''
+      memo: '',
+      settingFioAddressTo: false
     }
   }
 
@@ -133,7 +135,9 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         Actions.popTo(Constants.REQUEST)
       } catch (error) {
         this.setState({ loading: false })
-        showError(`${s.strings.fio_request_error_header}. ${error.json ? JSON.stringify(error.json.fields[0].error) : ''}`)
+        showError(
+          `${s.strings.fio_request_error_header}. ${error.json && error.json.fields && error.json.fields[0] ? JSON.stringify(error.json.fields[0].error) : ''}`
+        )
       }
     } else {
       showError(s.strings.fio_wallet_missing_for_fio_address)
@@ -162,6 +166,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   openFioAddressToModal = async () => {
+    this.setState({ settingFioAddressTo: true })
     const fioAddressTo = await Airship.show(bridge => (
       <AddressModal
         bridge={bridge}
@@ -172,11 +177,19 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         isFioOnly
       />
     ))
-    if (fioAddressTo === null) return
-    if (!(await this.props.fioPlugin.otherMethods.doesAccountExist(fioAddressTo)))
+    if (fioAddressTo === null) {
+      this.setState({ settingFioAddressTo: false })
+      return
+    }
+    if (!(await this.props.fioPlugin.otherMethods.doesAccountExist(fioAddressTo))) {
+      this.setState({ settingFioAddressTo: false })
       return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
-    if (this.state.fioAddressFrom === fioAddressTo) return showError(s.strings.fio_confirm_request_error_to_same)
-    this.setState({ fioAddressTo: fioAddressTo || '' })
+    }
+    if (this.state.fioAddressFrom === fioAddressTo) {
+      this.setState({ settingFioAddressTo: false })
+      return showError(s.strings.fio_confirm_request_error_to_same)
+    }
+    this.setState({ fioAddressTo: fioAddressTo || '', settingFioAddressTo: false })
   }
 
   openMemoModal = async () => {
@@ -191,7 +204,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
   render() {
     const { primaryCurrencyInfo, secondaryCurrencyInfo } = this.props
-    const { fioAddressFrom, fioAddressTo, loading, memo } = this.state
+    const { fioAddressFrom, fioAddressTo, loading, memo, settingFioAddressTo } = this.state
     if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
     let cryptoAmount, exchangeAmount
     try {
@@ -219,7 +232,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
             <View style={styles.tileContainer}>
               <Image style={styles.tileIcon} source={editIcon} />
               <Text style={fioAddressTo.length > 0 ? styles.tileTextHeader : styles.tileTextHeaderError}>{s.strings.fio_confirm_request_to}</Text>
-              <Text style={styles.tileTextBody}>{fioAddressTo}</Text>
+              <Text style={styles.tileTextBody}>{settingFioAddressTo ? s.strings.resolving : fioAddressTo}</Text>
             </View>
           </TouchableWithoutFeedback>
           <View style={styles.tileContainer}>
