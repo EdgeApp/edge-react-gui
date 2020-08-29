@@ -290,6 +290,7 @@ export class EdgeProvider extends Bridgeable {
       }
 
       edgeSpendTargets.push({ ...spendTarget, nativeAmount })
+      console.log(`requestSpend currencycode ${currencyCode} and spendTarget.publicAddress ${spendTarget.publicAddress || ''}`)
     }
     info.spendTargets = edgeSpendTargets
 
@@ -299,6 +300,7 @@ export class EdgeProvider extends Bridgeable {
 
   // Request that the user spend to a URI
   async requestSpendUri(uri: string, options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | void> {
+    console.log(`requestSpendUri ${uri}`)
     const { currencyWallets = {} } = this._state.core.account
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = currencyWallets[guiWallet.id]
