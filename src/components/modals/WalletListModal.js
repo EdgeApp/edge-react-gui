@@ -14,8 +14,7 @@ import s from '../../locales/strings.js'
 import { setEnabledTokens } from '../../modules/Core/Wallets/EnabledTokens.js'
 import { getActiveWalletIds } from '../../modules/UI/selectors.js'
 import type { State as StateType } from '../../types/reduxTypes.js'
-import type { FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
-import { type CreateWalletType } from '../../types/types.js'
+import type { CreateWalletType, CustomTokenInfo, FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
 import { getCreateWalletType, getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { type TokenSelectObject } from '../common/CryptoExchangeWalletListTokenRow.js'
@@ -32,7 +31,8 @@ type StateProps = {
   activeWalletIds: Array<string>,
   mostRecentWallets: Array<MostRecentWallet>,
   account: EdgeAccount,
-  defaultIsoFiat: string
+  defaultIsoFiat: string,
+  customTokens: Array<CustomTokenInfo>
 }
 
 type OwnProps = {
@@ -251,7 +251,7 @@ class WalletListModalConnected extends React.Component<Props, State> {
         const tokenCodesString = enabledTokens.toString().toLowerCase()
         const tokenNamesObject = {}
         enabledTokens.forEach(token => {
-          tokenNamesObject[token] = currencyNames[token]
+          tokenNamesObject[token] = currencyNames[token] || this.props.customTokens.find(item => item.currencyCode === token)
         })
         const tokenNameString = JSON.stringify(tokenNamesObject).toLowerCase()
         if (
@@ -428,7 +428,8 @@ const WalletListModal = connect(
         : getActiveWalletIds(state),
       mostRecentWallets: state.ui.settings.mostRecentWallets,
       account: state.core.account,
-      defaultIsoFiat: state.ui.settings.defaultIsoFiat
+      defaultIsoFiat: state.ui.settings.defaultIsoFiat,
+      customTokens: state.ui.settings.customTokens
     }
   },
   (dispatch: Dispatch): DispatchProps => ({

@@ -134,7 +134,9 @@ export class CryptoExchangeWalletListRow extends React.Component<Props, LocalSta
                 })
               : false
             const { name } = this.props.wallet
-            const token = this.props.wallet.metaTokens.find(item => item.currencyCode === property)
+            const standardToken = this.props.wallet.metaTokens.find(item => item.currencyCode === property)
+            const customToken = this.props.customTokens.find(item => item.currencyCode === property)
+            const token = standardToken || customToken
             const searchFilterLowerCase = searchFilter.toLowerCase()
             const walletNameString = name.toLowerCase()
             const currencyNameString = token ? token.currencyName.toLowerCase() : ''
@@ -153,7 +155,7 @@ export class CryptoExchangeWalletListRow extends React.Component<Props, LocalSta
               if (!this.props.denomination || !this.props.denomination.multiplier) {
                 return []
               }
-              const tokenImage = token ? token.symbolImage : ''
+              const tokenImage = token && token.symbolImage ? token.symbolImage : ''
               const nativeAmount = metaTokenBalances[property]
               const disabled = this.props.excludedCurrencyCode.includes(property) || this.props.disableZeroBalance
               tokens.push(
