@@ -43,6 +43,17 @@ export type FioAddresses = {
   }
 }
 
+export const FIO_NO_BUNDLED_ERR_CODE = 'FIO_NO_BUNDLED_ERR_CODE'
+export class FioError extends Error {
+  code: string
+  message: string
+
+  constructor(message: string, code: string) {
+    super(message)
+    this.code = code
+    this.name = 'FioError'
+  }
+}
 /**
  * Get connected wallets from disklet
  *
@@ -354,7 +365,7 @@ export const checkRecordSendFee = async (fioWallet: EdgeCurrencyWallet, fioAddre
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
   if (getFeeResult.fee !== 0) {
-    throw new Error(s.strings.fio_no_bundled_err_msg)
+    throw new FioError(`${s.strings.fio_no_bundled_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`, FIO_NO_BUNDLED_ERR_CODE)
   }
 }
 
