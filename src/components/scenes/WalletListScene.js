@@ -11,7 +11,6 @@ import { connect } from 'react-redux'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
 import { linkReferralWithCurrencies, toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
-import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
 import { Fontello } from '../../assets/vector/index.js'
 import XPubModal from '../../connectors/XPubModalConnector.js'
@@ -49,7 +48,6 @@ type DispatchProps = {
   hideMessageTweak(messageId: string, source: TweakSource): void,
   toggleAccountBalanceVisibility(): void,
   updateActiveWalletsOrder(walletIds: string[]): void,
-  walletRowOption(walletId: string, option: WalletListMenuKey, currencyCode?: string): void,
   linkReferralWithCurrencies(string): void
 }
 type Props = StateProps & DispatchProps
@@ -65,13 +63,6 @@ class WalletListComponent extends React.Component<Props, State> {
     this.state = {
       sorting: false
     }
-  }
-
-  executeWalletRowOption = (walletId: string, option: WalletListMenuKey, currencyCode?: string) => {
-    if (currencyCode == null && this.props.wallets[walletId] != null) {
-      currencyCode = this.props.wallets[walletId].currencyCode
-    }
-    return this.props.walletRowOption(walletId, option, currencyCode)
   }
 
   render() {
@@ -144,9 +135,9 @@ class WalletListComponent extends React.Component<Props, State> {
     const guiWallet = wallets[data.item.key]
 
     return guiWallet != null ? (
-      <WalletListRow guiWallet={guiWallet} executeWalletRowOption={this.executeWalletRowOption} showBalance={getIsAccountBalanceVisible} />
+      <WalletListRow guiWallet={guiWallet} showBalance={getIsAccountBalanceVisible} />
     ) : (
-      <WalletListEmptyRow walletId={data.item.key} executeWalletRowOption={this.executeWalletRowOption} />
+      <WalletListEmptyRow walletId={data.item.key} />
     )
   }
 
@@ -275,9 +266,6 @@ export const WalletListScene = connect(
     },
     updateActiveWalletsOrder(activeWalletIds) {
       dispatch(updateActiveWalletsOrder(activeWalletIds))
-    },
-    walletRowOption(walletId, option, currencyCode) {
-      dispatch(walletListMenuAction(walletId, option, currencyCode))
     },
     linkReferralWithCurrencies(uri) {
       dispatch(linkReferralWithCurrencies(uri))

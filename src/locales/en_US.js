@@ -272,6 +272,7 @@ const strings = {
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
   string_delete: 'Delete',
+  string_delete_wallet: 'Delete Wallet',
   satPerByte: 'Satoshi Per Byte',
   gasLimit: 'Gas Limit',
   gasPrice: 'Gas Price (Gwei)',

@@ -8,7 +8,7 @@ export type Theme = {
   // Icons
   icon: string,
   iconTappable: string,
-  // warningIcon: string,
+  warningIcon: string,
 
   // Background
   backgroundGradientLeft: string,
@@ -36,7 +36,7 @@ export type Theme = {
   // Text
   primaryText: string,
   secondaryText: string,
-  // warningText: string,
+  warningText: string,
   positiveText: string,
   negativeText: string,
   dangerText: string,

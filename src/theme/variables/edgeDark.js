@@ -52,7 +52,7 @@ export const edgeDark: Theme = {
   // Icons
   icon: palette.white,
   iconTappable: palette.edgeMint,
-  // warningIcon: palette.accentOrange,
+  warningIcon: palette.accentOrange,
 
   // Background
   backgroundGradientLeft: palette.darkBlue,
@@ -74,7 +74,7 @@ export const edgeDark: Theme = {
   // Text
   primaryText: palette.white,
   secondaryText: palette.blueGray,
-  // warningText: palette.accentOrange,
+  warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
   negativeText: palette.accentRed,
   dangerText: palette.accentRed,
