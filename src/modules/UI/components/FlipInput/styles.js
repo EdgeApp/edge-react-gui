@@ -104,12 +104,14 @@ export const top = StyleSheet.create({
     padding: 0
   },
   amountPlaceholder: {
-    color: THEME.COLORS.GRAY_2
+    color: THEME.COLORS.GRAY_2,
+    fontSize: Platform.OS === 'ios' ? THEME.rem(1.5) : THEME.rem(1)
   },
   currencyCode: {
     fontSize: THEME.rem(1.5),
     color: THEME.COLORS.WHITE,
-    textAlign: 'left'
+    textAlign: 'left',
+    marginRight: THEME.rem(0.5)
   },
   textInput: {
     position: 'absolute',
