@@ -269,7 +269,6 @@ const strings = {
   settings_promotion_account_normal: 'This account was created normally.',
   settings_promotion_account_installer: 'This account was created via %s.',
   settings_notifications: 'Notifications',
-  settings_currency_notifications: '%s Notifications',
   settings_currency_notifications_percent_change_hour: '%1$s%% change within 1 hour',
   settings_currency_notifications_percent_change_hours: '%1$s%% change within %2$s hours',
   string_cancel_cap: 'Cancel',

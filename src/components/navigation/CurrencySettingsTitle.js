@@ -3,26 +3,22 @@
 import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Image, StyleSheet, View } from 'react-native'
-import { sprintf } from 'sprintf-js'
 
-import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 
 type Props = {
-  currencyInfo: EdgeCurrencyInfo,
-  titleString?: string
+  currencyInfo: EdgeCurrencyInfo
 }
 
 export function CurrencySettingsTitle(props: Props) {
-  const { currencyInfo, titleString = s.strings.title_crypto_settings } = props
-  const { displayName, symbolImage = '' } = currencyInfo
-
-  const title = sprintf(titleString, displayName)
+  const { displayName, symbolImage = '' } = props.currencyInfo
   return (
     <View style={styles.titleWrapper}>
       <Image style={styles.titleImage} source={{ uri: symbolImage }} />
-      <T style={styles.titleStyle}>{title}</T>
+      <T numberOfLines={1} style={styles.titleStyle}>
+        {displayName}
+      </T>
     </View>
   )
 }
@@ -32,17 +28,18 @@ const rawStyles = {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%'
+    width: '100%',
+    paddingHorizontal: THEME.rem(0.75)
   },
   titleImage: {
-    height: 25,
-    width: 25,
-    marginRight: 8,
+    height: THEME.rem(1.5),
+    width: THEME.rem(1.5),
+    marginRight: THEME.rem(0.5),
     resizeMode: 'contain'
   },
   titleStyle: {
     alignSelf: 'center',
-    fontSize: 20,
+    fontSize: THEME.rem(1.25),
     color: THEME.COLORS.WHITE,
     fontFamily: THEME.FONTS.DEFAULT
   }
