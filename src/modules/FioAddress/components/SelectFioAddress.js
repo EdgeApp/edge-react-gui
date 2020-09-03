@@ -97,7 +97,7 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
   }
 
   setFioAddress = async (fioAddress: string, fioWallet?: EdgeCurrencyWallet | null) => {
-    const { fioWallets } = this.props
+    const { fioWallets, fioRequest, currencyCode } = this.props
     if (!fioWallet) {
       fioWallet = await findWalletByFioAddress(fioWallets, fioAddress)
     }
@@ -110,7 +110,9 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
     }
 
     try {
-      await checkRecordSendFee(fioWallet, fioAddress)
+      if (fioRequest || currencyCode === Constants.FIO_STR) {
+        await checkRecordSendFee(fioWallet, fioAddress)
+      }
     } catch (e) {
       error = e.message
       showError(e.message)

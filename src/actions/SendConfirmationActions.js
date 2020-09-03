@@ -16,6 +16,7 @@ import {
   EXCHANGE_SCENE,
   EXCLAMATION,
   FEE_ALERT_THRESHOLD,
+  FIO_STR,
   MATERIAL_COMMUNITY,
   PLUGIN_BUY,
   SEND_CONFIRMATION,
@@ -23,7 +24,7 @@ import {
 } from '../constants/indexConstants'
 import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
-import { addToFioAddressCache, checkRecordSendFee, recordSend } from '../modules/FioAddress/util'
+import { addToFioAddressCache, recordSend } from '../modules/FioAddress/util'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
@@ -41,7 +42,8 @@ export type FioSenderInfo = {
   fioWallet: EdgeCurrencyWallet | null,
   fioError: string,
   memo: string,
-  memoError: string
+  memoError: string,
+  skipRecord?: boolean
 }
 
 export const newSpendInfo = (spendInfo: EdgeSpendInfo, authRequired: AuthType) => ({
@@ -332,7 +334,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
 
     // fio
     if (fioSender) {
-      const { fioAddress, fioWallet, memo } = fioSender
+      const { fioAddress, fioWallet, memo, skipRecord } = fioSender
       const payeeFioAddress = guiMakeSpendInfo.fioAddress
       if (payeeFioAddress && fioAddress && fioWallet) {
         if (guiMakeSpendInfo.fioPendingRequest) {
@@ -352,7 +354,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
           } catch (e) {
             showError(e.message)
           }
-        } else if (guiMakeSpendInfo.publicAddress || publicAddress) {
+        } else if ((guiMakeSpendInfo.publicAddress || publicAddress) && (!skipRecord || edgeSignedTransaction.currencyCode === FIO_STR)) {
           const payerPublicAddress = wallet.publicWalletInfo.keys.publicKey
           const amount = guiMakeSpendInfo.nativeAmount || '0'
           let chainCode
@@ -360,7 +362,6 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
             chainCode = edgeSignedTransaction.wallet.currencyInfo.currencyCode
           }
           try {
-            await checkRecordSendFee(fioWallet, fioAddress)
             recordSend(fioWallet, fioAddress, {
               payeeFioAddress,
               payerPublicAddress,
