@@ -596,6 +596,8 @@
   "fio_renew_err_msg": "",
   "fio_renew_fee_label": "",
   "fio_no_bundled_err_msg": "",
+  "fio_no_bundled_non_fio_err_msg": "",
+  "fio_no_bundled_renew_err_msg": "",
   "fio_no_requests_label": "",
   "fio_reject_request_title": "",
   "fio_reject_request_message": "",
