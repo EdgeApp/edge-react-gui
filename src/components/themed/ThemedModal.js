@@ -11,8 +11,8 @@ import { useTheme } from '../services/ThemeContext.js'
 // Sneak the BlurView over to the login UI:
 global.ReactNativeBlurView = BlurView
 
-type Props = {
-  bridge: AirshipBridge<any>,
+type Props<T> = {
+  bridge: AirshipBridge<T>,
   children?: React.Node,
   onCancel: () => void,
 
@@ -28,7 +28,7 @@ type Props = {
 /**
  * The Airship modal, but connected to our theming system.
  */
-export function ThemedModal(props: Props) {
+export function ThemedModal<T>(props: Props<T>) {
   const { bridge, children = null, iconRem = 0, onCancel } = props
   const paddingRem = unpackEdges(props.paddingRem ?? 1)
   const theme = useTheme()

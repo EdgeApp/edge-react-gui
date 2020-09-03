@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Animated, Dimensions, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
-import { type AirshipBridge } from 'react-native-airship'
+import { type AirshipBridge, type Unsubscribe } from 'react-native-airship'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { LayoutContext } from './LayoutContext.js'
@@ -31,6 +31,8 @@ type Props = {
 export class AirshipDropdown extends React.Component<Props> {
   offset: Animated.Value
   timeout: TimeoutID | void
+  unclear: Unsubscribe
+  unresult: Unsubscribe
 
   constructor(props: Props) {
     super(props)
@@ -60,7 +62,8 @@ export class AirshipDropdown extends React.Component<Props> {
     })
 
     // Animate out:
-    bridge.onResult(() => {
+    this.unclear = bridge.on('clear', bridge.resolve)
+    this.unresult = bridge.on('result', () => {
       if (this.timeout != null) clearTimeout(this.timeout)
       Animated.timing(this.offset, {
         toValue: this.hiddenOffset(),
@@ -68,6 +71,11 @@ export class AirshipDropdown extends React.Component<Props> {
         useNativeDriver: true
       }).start(() => bridge.remove())
     })
+  }
+
+  componentDidUnmount() {
+    if (this.unclear != null) this.unclear()
+    if (this.unresult != null) this.unresult()
   }
 
   render() {
