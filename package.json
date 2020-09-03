@@ -120,7 +120,7 @@
     "async-lock": "^1.1.2",
     "biggystring": "^3.0.2",
     "bugsnag-react-native": "^2.10.2",
-    "cleaners": "^0.2.0",
+    "cleaners": "^0.3.1",
     "core-js": "^2.5.2",
     "dateformat": "^3.0.3",
     "detect-bundler": "^1.0.0",
