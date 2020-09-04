@@ -55,7 +55,8 @@ type EdgeRequestSpendOptions = {
   // This overrides any parameters specified in a URI
   uniqueIdentifier?: string,
 
-  customNetworkFee?: EdgeNetworkFee
+  customNetworkFee?: EdgeNetworkFee,
+  orderId?: string
 }
 
 type EdgeGetReceiveAddressOptions = {
@@ -269,7 +270,7 @@ export class EdgeProvider extends Bridgeable {
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = currencyWallets[guiWallet.id]
 
-    const { currencyCode = coreWallet.currencyInfo.currencyCode, customNetworkFee, metadata, lockInputs = true, uniqueIdentifier } = options
+    const { currencyCode = coreWallet.currencyInfo.currencyCode, customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
 
     // Prepare the internal spend request:
     const info: GuiMakeSpendInfo = {
@@ -295,7 +296,7 @@ export class EdgeProvider extends Bridgeable {
     info.spendTargets = edgeSpendTargets
 
     // Launch:
-    return this._makeSpendRequest(info, coreWallet)
+    return this._makeSpendRequest(info, coreWallet, orderId)
   }
 
   // Request that the user spend to a URI
@@ -306,7 +307,7 @@ export class EdgeProvider extends Bridgeable {
     const coreWallet = currencyWallets[guiWallet.id]
     const result = await coreWallet.parseUri(uri)
 
-    const { currencyCode = result.currencyCode, customNetworkFee, metadata, lockInputs = true, uniqueIdentifier } = options
+    const { currencyCode = result.currencyCode, customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
 
     // Prepare the internal spend request:
     const info: GuiMakeSpendInfo = {
@@ -320,7 +321,7 @@ export class EdgeProvider extends Bridgeable {
     }
 
     // Launch:
-    return this._makeSpendRequest(info, coreWallet)
+    return this._makeSpendRequest(info, coreWallet, orderId)
   }
 
   // log body and signature and pubic address and final message (returned from signMessage)
@@ -339,7 +340,7 @@ export class EdgeProvider extends Bridgeable {
   /**
    * Internal helper to launch the send confirmation scene.
    */
-  async _makeSpendRequest(guiMakeSpendInfo: GuiMakeSpendInfo, coreWallet: EdgeCurrencyWallet): Promise<EdgeTransaction | void> {
+  async _makeSpendRequest(guiMakeSpendInfo: GuiMakeSpendInfo, coreWallet: EdgeCurrencyWallet, orderId?: string): Promise<EdgeTransaction | void> {
     const transaction: EdgeTransaction | void = await new Promise((resolve, reject) => {
       guiMakeSpendInfo.onDone = (error: Error | null, transaction?: EdgeTransaction) => {
         error ? reject(error) : resolve(transaction)
@@ -359,12 +360,15 @@ export class EdgeProvider extends Bridgeable {
       Actions.pop()
 
       const exchangeAmount = await coreWallet.nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
-      trackConversion('EdgeProviderConversion', {
-        pluginId: this._plugin.storeId,
-        account: this._state.core.account,
-        currencyCode: transaction.currencyCode,
-        exchangeAmount: Number(bns.abs(exchangeAmount))
-      })
+      this._dispatch(
+        trackConversion('EdgeProviderConversion', {
+          pluginId: this._plugin.storeId,
+          orderId,
+          account: this._state.core.account,
+          currencyCode: transaction.currencyCode,
+          exchangeAmount: Number(bns.abs(exchangeAmount))
+        })
+      )
     }
     return transaction
   }

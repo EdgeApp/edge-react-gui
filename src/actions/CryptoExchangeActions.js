@@ -342,12 +342,16 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
       Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes)
     }, 1)
     const exchangeAmount = await toWallet.nativeToDenomination(toNativeAmount, toCurrencyCode)
-    trackConversion('SwapSuccess', {
+    const trackConversionOpts: { [key: string]: any } = {
       account,
       pluginId,
       currencyCode: toCurrencyCode,
       exchangeAmount: Number(exchangeAmount)
-    })
+    }
+    if (result.orderId != null) {
+      trackConversionOpts.orderId = result.orderId
+    }
+    dispatch(trackConversion('SwapSuccess', trackConversionOpts))
   } catch (error) {
     console.log(error)
     logEvent('SwapFailed')
