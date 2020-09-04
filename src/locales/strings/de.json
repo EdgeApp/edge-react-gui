@@ -250,7 +250,6 @@
   "settings_promotion_account_normal": "Dieses Konto wurde normal erstellt.",
   "settings_promotion_account_installer": "Dieses Konto wurde über %s erstellt.",
   "settings_notifications": "Benachrichtigungen",
-  "settings_currency_notifications": "%s Benachrichtigungen",
   "settings_currency_notifications_percent_change_hour": "%1$s%% Änderung innerhalb von 1 Stunde",
   "settings_currency_notifications_percent_change_hours": "%1$s%% Änderung innerhalb von %2$s Stunden",
   "string_cancel_cap": "Abbrechen",
