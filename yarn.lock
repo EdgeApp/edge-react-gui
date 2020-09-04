@@ -9411,12 +9411,13 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.0, react-lifecycles-com
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-airship@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.1.tgz#b1cd8add45bf2a0d9428f92fcb345322c25ecaa4"
-  integrity sha512-o2JLjxo8q0nBpFXTsqG5Ps1uc1otBc791iflpnBoRn+/XwgYao36dllC2Si/5Ec4z6SDgbUaMsmOIS7FlczEpQ==
+react-native-airship@^0.2.1, react-native-airship@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.2.tgz#fed7301f31894f969e099d8be136d513c933e369"
+  integrity sha512-XUkNTF5lkJqQW9is4lXpblg9oBCoOY5go7ENsDmwZNONdA1Kn4+g6cXVHCv1orr6RpD7MNoag2zvxyPf4sfJLw==
   dependencies:
     react-native-safe-area-view "^0.14.9"
+    yavent "^0.1.1"
 
 react-native-animatable@^1.3.1:
   version "1.3.2"
@@ -12601,6 +12602,11 @@ yargs@^9.0.0:
     which-module "^2.0.0"
     y18n "^3.2.1"
     yargs-parser "^7.0.0"
+
+yavent@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/yavent/-/yavent-0.1.1.tgz#cc6458d24ded144da7126b8445163b11b967646f"
+  integrity sha512-jeFpwxVlI7AM9D+a+K36gmKV7lE41Nq0LZ48NhLQ+dKSWkf4GzxKn9NZ3yat/EsvEfNkKBdY1JTNNuXi0TdRuA==
 
 zxcvbn@^4.4.2:
   version "4.4.2"

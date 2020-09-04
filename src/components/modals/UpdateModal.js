@@ -10,7 +10,7 @@ import { LadderLayout } from '../common/LadderLayout'
 import { type AirshipBridge, AirshipModal, dayText, IconCircle, textSize, THEME } from './modalParts.js'
 
 type Props = {
-  bridge: AirshipBridge<mixed>,
+  bridge: AirshipBridge<void>,
   newVersion: string,
   released: string,
   onUpdate(): void,

@@ -2,15 +2,15 @@
 
 import * as React from 'react'
 import { Animated, BackHandler, Dimensions, StyleSheet, TouchableWithoutFeedback } from 'react-native'
-import { type AirshipBridge } from 'react-native-airship'
+import { type AirshipBridge, type Unsubscribe } from 'react-native-airship'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
 import { KeyboardTracker } from './KeyboardTracker.js'
 import { type SafeAreaGap, LayoutContext } from './LayoutContext.js'
 
-type Props = {
-  bridge: AirshipBridge<any>,
+type Props<T> = {
+  bridge: AirshipBridge<T>,
   children: React.Node | ((gap: SafeAreaGap) => React.Node),
 
   // True to have the modal float in the center of the screen,
@@ -31,12 +31,14 @@ type Props = {
  * A modal that slides a modal up from the bottom of the screen
  * and dims the rest of the app.
  */
-export class AirshipModal extends React.Component<Props> {
+export class AirshipModal<T> extends React.Component<Props<T>> {
   backHandler: { remove(): mixed } | void
   opacity: Animated.Value
   offset: Animated.Value
+  unclear: Unsubscribe
+  unresult: Unsubscribe
 
-  constructor(props: Props) {
+  constructor(props: Props<T>) {
     super(props)
     this.opacity = new Animated.Value(0)
     this.offset = new Animated.Value(Dimensions.get('window').height)
@@ -63,7 +65,8 @@ export class AirshipModal extends React.Component<Props> {
     ]).start()
 
     // Animate out:
-    this.props.bridge.onResult(() =>
+    this.unclear = this.props.bridge.on('clear', this.props.onCancel)
+    this.unresult = this.props.bridge.on('result', () =>
       Animated.parallel([
         Animated.timing(this.opacity, {
           toValue: 0,
@@ -80,7 +83,9 @@ export class AirshipModal extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    if (this.backHandler) this.backHandler.remove()
+    if (this.backHandler != null) this.backHandler.remove()
+    if (this.unclear != null) this.unclear()
+    if (this.unresult != null) this.unresult()
   }
 
   render() {

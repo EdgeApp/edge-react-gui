@@ -136,7 +136,7 @@
     "qrcode-generator": "^1.4.4",
     "react": "16.8.3",
     "react-native": "0.59.10",
-    "react-native-airship": "^0.2.1",
+    "react-native-airship": "^0.2.2",
     "react-native-app-settings": "git://github.com/swansontec/react-native-app-settings#fix-rn59",
     "react-native-appearance": "^0.3.4",
     "react-native-camera": "git://github.com/EdgeApp/react-native-camera.git#edge-fixes",

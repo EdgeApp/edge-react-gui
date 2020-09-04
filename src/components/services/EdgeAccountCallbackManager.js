@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import { updateWalletsRequest } from '../../modules/Core/Wallets/action.js'
 import { updateExchangeRates } from '../../modules/ExchangeRates/action.js'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { Airship } from './AirshipInstance.js'
 
 type EdgeAccountCallbackManagerStateProps = {
   account: EdgeAccount
@@ -37,6 +38,7 @@ class EdgeAccountCallbackManager extends React.Component<Props> {
 
     account.watch('loggedIn', () => {
       if (account.loggedIn === false) {
+        Airship.clear()
         console.log('onLoggedOut')
       }
     })
