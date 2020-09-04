@@ -359,12 +359,14 @@ export class EdgeProvider extends Bridgeable {
       Actions.pop()
 
       const exchangeAmount = await coreWallet.nativeToDenomination(transaction.nativeAmount, transaction.currencyCode)
-      trackConversion('EdgeProviderConversion', {
-        pluginId: this._plugin.storeId,
-        account: this._state.core.account,
-        currencyCode: transaction.currencyCode,
-        exchangeAmount: Number(bns.abs(exchangeAmount))
-      })
+      this._dispatch(
+        trackConversion('EdgeProviderConversion', {
+          pluginId: this._plugin.storeId,
+          account: this._state.core.account,
+          currencyCode: transaction.currencyCode,
+          exchangeAmount: Number(bns.abs(exchangeAmount))
+        })
+      )
     }
     return transaction
   }
