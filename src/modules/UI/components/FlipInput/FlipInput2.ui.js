@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { Animated, Image, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { Animated, Image, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
@@ -340,9 +340,15 @@ export class FlipInput extends React.Component<Props, State> {
         <View style={top.row} key="top">
           <Text style={top.currencyCode}>{fieldInfo.currencyCode}</Text>
           <View style={top.amountContainer}>
-            <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} ellipsizeMode="middle" adjustsFontSizeToFit>
-              {displayAmountString}
-            </Text>
+            {Platform.OS === 'ios' ? (
+              <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} adjustsFontSizeToFit>
+                {displayAmountString}
+              </Text>
+            ) : (
+              <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} ellipsizeMode="middle">
+                {displayAmountString}
+              </Text>
+            )}
             <TextInput
               style={top.textInput}
               value={decimalAmount}
@@ -391,9 +397,15 @@ export class FlipInput extends React.Component<Props, State> {
         <View style={top.row} key="top">
           <Text style={top.currencyCode}>{fieldInfo.currencyName}</Text>
           <View style={top.amountContainer}>
-            <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} ellipsizeMode="middle" adjustsFontSizeToFit>
-              {displayAmountString}
-            </Text>
+            {Platform.OS === 'ios' ? (
+              <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} adjustsFontSizeToFit>
+                {displayAmountString}
+              </Text>
+            ) : (
+              <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} ellipsizeMode="middle">
+                {displayAmountString}
+              </Text>
+            )}
             <TextInput
               style={top.textInput}
               value={decimalAmount}
