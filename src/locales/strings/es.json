@@ -250,7 +250,6 @@
   "settings_promotion_account_normal": "Esta cuenta fue creada normalmente.",
   "settings_promotion_account_installer": "Esta cuenta fue creada a través de %s.",
   "settings_notifications": "Notificaciones",
-  "settings_currency_notifications": "Notificaciones de %s",
   "settings_currency_notifications_percent_change_hour": "%1$s%% cambio en 1 hora",
   "settings_currency_notifications_percent_change_hours": "%1$s%% cambio en %2$s horas",
   "string_cancel_cap": "Cancelar",
