@@ -12,11 +12,12 @@ export const trackConversion = (
   opts: {
     currencyCode: string,
     exchangeAmount: number,
-    pluginId: string
+    pluginId: string,
+    orderId?: string
   }
 ) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const { currencyCode, exchangeAmount, pluginId } = opts
+  const { currencyCode, exchangeAmount, pluginId, orderId } = opts
 
   // Look up the dollar value:
   const { account } = state.core
@@ -27,6 +28,7 @@ export const trackConversion = (
   return logEvent(event, {
     dollarValue,
     pluginId,
+    orderId,
     ...makeTrackingValues(accountReferral)
   })
 }

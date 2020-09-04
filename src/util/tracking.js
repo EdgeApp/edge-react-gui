@@ -24,7 +24,8 @@ export type TrackingValues = {
   currencyCode?: string, // Wallet currency code
   dollarValue?: number, // Conversion amount, in USD
   installerId?: string, // Account installerId
-  pluginId?: string // Plugin that provided the conversion
+  pluginId?: string, // Plugin that provided the conversion
+  orderId?: string // Unique order identifier provided by plugin
 }
 
 // Set up the global Firebase instance at boot:

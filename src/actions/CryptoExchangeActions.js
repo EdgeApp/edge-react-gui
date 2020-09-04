@@ -348,6 +348,9 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
       currencyCode: toCurrencyCode,
       exchangeAmount: Number(exchangeAmount)
     }
+    if (result.orderId != null) {
+      trackConversionOpts.orderId = result.orderId
+    }
     dispatch(trackConversion('SwapSuccess', trackConversionOpts))
   } catch (error) {
     console.log(error)
