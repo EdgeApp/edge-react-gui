@@ -101,6 +101,13 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     displayName: 'Transak',
     permissions: ['camera']
   },
+  bitaccess: {
+    pluginId: 'bitaccess',
+    storeId: 'bitaccess',
+    baseUri: 'https://edge.bitaccessbtm.com',
+    displayName: 'Bitaccess',
+    permissions: ['location', 'camera']
+  },
   custom: {
     pluginId: 'custom',
     storeId: 'custom',

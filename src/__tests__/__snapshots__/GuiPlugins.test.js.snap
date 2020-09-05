@@ -280,6 +280,28 @@ Limit: Unlimited",
   Object {
     "cryptoCodes": Array [
       "BTC",
+      "ETH",
+      "LINK",
+      "DAI",
+      "LTC",
+    ],
+    "deepPath": "",
+    "deepQuery": Object {
+      "country": "US",
+    },
+    "description": "Fee: Varies / Settlement: 10 - 20min
+Limit: Varies",
+    "partnerIconPath": "https://developer.airbitz.co/content/mktg/bitaccess.png",
+    "paymentTypeLogoKey": "cash",
+    "paymentTypes": Array [
+      "cash",
+    ],
+    "pluginId": "bitaccess",
+    "title": "Cash",
+  },
+  Object {
+    "cryptoCodes": Array [
+      "BTC",
       "DASH",
       "DOGE",
       "ETH",
