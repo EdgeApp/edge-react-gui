@@ -1,5 +1,25 @@
 # edge-react-gui
 
+## 1.16.7 (2020-09-05)
+
+- Add Bitaccess support
+- Fix for modals persisting on auto-logout
+- Various text and translation fixes
+- Record orderIds to util server
+- Upgrade edge-core-js to v0.17.12
+  - (feature) Add a keyLoginEnabled flag to EdgeUserInfo
+  - (feature) Add a lastLogin date to EdgeUserInfo and EdgeAccount
+- Upgrade edge-currency-bitcoin to v4.9.1
+  - Replace logger with EdgeLog
+- Upgrade edge-currency-accountbased to v0.7.20
+  - Update ETH gas price sanity check values
+  - Added free FIO address link
+  - Updated FIO api urls to remove port
+- Upgrade edge-login-ui-rn to v0.6.15
+  - Do not enable touch for users without locally-stored data
+  - Fix the modal title size
+  - Upgrade to react-native-patina v0.1.3
+
 ## 1.16.6 (2020-08-26)
 
 - Added Synthetix ERC20 tokens SNX, SBTC, and SUSD
