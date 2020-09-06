@@ -19,7 +19,7 @@ export function showHelpModal(): Promise<mixed> {
 }
 
 type Props = {
-  bridge: AirshipBridge<mixed>
+  bridge: AirshipBridge<void>
 }
 
 class HelpModal extends React.Component<Props> {

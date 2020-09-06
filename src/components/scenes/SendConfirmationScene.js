@@ -10,10 +10,11 @@ import { sprintf } from 'sprintf-js'
 
 import { type FioSenderInfo } from '../../actions/SendConfirmationActions'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
-import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
+import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIO_STR, getSpecialCurrencyInfo } from '../../constants/indexConstants'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { SelectFioAddressConnector as SelectFioAddress } from '../../modules/FioAddress/components/SelectFioAddress'
+import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import ExchangeRate from '../../modules/UI/components/ExchangeRate/ExchangeRate.ui.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
@@ -30,6 +31,8 @@ import { scale } from '../../util/scaling.js'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
 import { AddressTextWithBlockExplorerModal } from '../common/AddressTextWithBlockExplorerModal'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { ButtonsModal } from '../modals/ButtonsModal'
+import { Airship, showError } from '../services/AirshipInstance'
 
 const DIVIDE_PRECISION = 18
 
@@ -375,10 +378,39 @@ export class SendConfirmation extends React.Component<Props, State> {
     )
   }
 
-  signBroadcastAndSave = () => {
-    const { guiMakeSpendInfo } = this.props
+  signBroadcastAndSave = async () => {
+    const { guiMakeSpendInfo, currencyCode } = this.props
     if (guiMakeSpendInfo && (guiMakeSpendInfo.isSendUsingFioAddress || guiMakeSpendInfo.fioPendingRequest)) {
-      return this.props.signBroadcastAndSave(this.state.fioSender)
+      const { fioSender } = this.state
+      if (fioSender.fioWallet && fioSender.fioAddress && !guiMakeSpendInfo.fioPendingRequest) {
+        try {
+          await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
+        } catch (e) {
+          if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && currencyCode !== FIO_STR) {
+            const answer = await Airship.show(bridge => (
+              <ButtonsModal
+                bridge={bridge}
+                title={s.strings.fio_no_bundled_err_msg}
+                message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`}
+                buttons={{
+                  ok: { label: s.strings.legacy_address_modal_continue },
+                  cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+                }}
+              />
+            ))
+            if (answer === 'ok') {
+              fioSender.skipRecord = true
+              this.props.signBroadcastAndSave(fioSender)
+            }
+            return
+          }
+
+          showError(e.message)
+          return
+        }
+      }
+
+      return this.props.signBroadcastAndSave(fioSender)
     }
     this.props.signBroadcastAndSave()
   }

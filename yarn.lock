@@ -2946,6 +2946,11 @@ cleaners@^0.2.1:
   resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.2.1.tgz#535849cfabc91e3ae1fc872b43d450446cd1a1a1"
   integrity sha512-DSz39+aAcvfqwruSz7H7xY9kE3tRbMTiq2GQtZHpNWox2npyoQGdMUYR7pYgApJNSDY5Q9GNRo+JyncxI5USIA==
 
+cleaners@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.1.tgz#f8fe89d76b1731e07258148a1648ea251d72096d"
+  integrity sha512-PIV0B/TVBnTJlcQtjkLtUOnzBlKUT9QTL/LVw4M22vlgrm+/858oNK3w2umc3Ll9Q9hT2oTCURUOsiSDOpT9bA==
+
 cli-cursor@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/cli-cursor/-/cli-cursor-2.1.0.tgz#b35dac376479facc3e94747d41d0d0f5238ffcb5"
@@ -3776,10 +3781,10 @@ edge-components@^0.0.28:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.11:
-  version "0.17.11"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.11.tgz#a20da97ce5ad2f485967eb1cb703ade0c3d6983e"
-  integrity sha512-P5jgGKJA5rpbMja/8QhaTkFgzCxhEEDQXUxV4ujRoQMeH1d8zy7j+uA5swfFakGEI/xGHziyopbgjboVrdAvpQ==
+edge-core-js@^0.17.12:
+  version "0.17.12"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.12.tgz#7c90c9aa74819d207c4fd91d86697d2cfe3e0675"
+  integrity sha512-6sJRfKiDz75PMJ3PMPjIBavFwyf/O7h5QQUCCQtGPW6TEbsTdIY72mb2IsgtqoTtY/bj9IqA1FAV18VKRYUTDA==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3802,10 +3807,10 @@ edge-core-js@^0.17.11:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.20:
-  version "0.7.20"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.20.tgz#09c87c346377376172f907150b01e3d0871d6e59"
-  integrity sha512-lQSrNpmdEixF+C7QNi7IYbA+wX+HhumeFRQ04L4+mhQowY2nKu/wePojyqtwY9J2dblw2gBzXpbgqn5g8g53hw==
+edge-currency-accountbased@^0.7.22:
+  version "0.7.22"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.22.tgz#dd0a369dd7e7aaaaf5a03db9700eaa34d419a635"
+  integrity sha512-pH5puv5tv75R12MyaPK1LJMr3OAibCaAP+X15GnjjaLAbaGMCEx0GrjdZzpvX4UhDHChfu0t7XX+mUzZlGIPzg==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.0.2"
@@ -3830,10 +3835,10 @@ edge-currency-accountbased@^0.7.20:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.9.0:
-  version "4.9.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.0.tgz#79a3e76a131d5ad51d0920c3b0626b92f4b68763"
-  integrity sha512-Vh7PMCAVH8wkpsGbxYDsJLhY3WSRtFC435JWds+ecpvXF9yX/ED//RI/cbv7vXgYnX5SDauQTuKR1gKVAKIl8Q==
+edge-currency-bitcoin@^4.9.1:
+  version "4.9.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.1.tgz#2c5e0d011f4dbfc5974414fb2585d7d41c256a44"
+  integrity sha512-zwHnT35QEJnwVyQH4SasSqxgJda6haMycDtaPK1qWypR5Q6cQ5OIaxeXAP3BDjFdVk+23ODMJM1vtSCQp00bKg==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -3875,11 +3880,12 @@ edge-exchange-plugins@^0.11.6:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.6.14:
-  version "0.6.14"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.14.tgz#7c7183d5e462ad3dc15946fd3a4933e4ec314b79"
-  integrity sha512-Shdyq2b4WyE2FIKLzg3AKHlWfWWIjLazbfjhU0O6XfWKwlpW3uztjSqpb82+ztyC0ndNPlDaKQEJfC4ErFDECQ==
+edge-login-ui-rn@^0.6.15:
+  version "0.6.15"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.15.tgz#e71abe67cc56ce2bba687602f7a217ae71425ac8"
+  integrity sha512-DaSe8zvDUlSu7Y5eGp0zKycGjq3RkzkDPXg0pC6zfytUroLtPRLgnJoeA64WTGABe6+VJy0KuQVWt/rgo9NNgw==
   dependencies:
+    cleaners "^0.3.1"
     material-ui "^0.20.0"
     moment "^2.19.3"
     qrcode-generator "^1.4.4"
@@ -3891,7 +3897,7 @@ edge-login-ui-rn@^0.6.14:
     react-native-mail "^3.0.5"
     react-native-material-textfield "git://github.com/EdgeApp/react-native-material-textfield.git"
     react-native-modal "^11.0.1"
-    react-native-patina "^0.1.2"
+    react-native-patina "^0.1.3"
     react-native-vector-icons "^6.1.0"
     react-redux "^5.0.7"
     redux "~3.5.2"
@@ -9405,12 +9411,13 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.0, react-lifecycles-com
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-airship@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.1.tgz#b1cd8add45bf2a0d9428f92fcb345322c25ecaa4"
-  integrity sha512-o2JLjxo8q0nBpFXTsqG5Ps1uc1otBc791iflpnBoRn+/XwgYao36dllC2Si/5Ec4z6SDgbUaMsmOIS7FlczEpQ==
+react-native-airship@^0.2.1, react-native-airship@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.2.tgz#fed7301f31894f969e099d8be136d513c933e369"
+  integrity sha512-XUkNTF5lkJqQW9is4lXpblg9oBCoOY5go7ENsDmwZNONdA1Kn4+g6cXVHCv1orr6RpD7MNoag2zvxyPf4sfJLw==
   dependencies:
     react-native-safe-area-view "^0.14.9"
+    yavent "^0.1.1"
 
 react-native-animatable@^1.3.1:
   version "1.3.2"
@@ -9592,7 +9599,7 @@ react-native-modal@^11.0.1:
     prop-types "^15.6.2"
     react-native-animatable "^1.3.1"
 
-react-native-patina@^0.1.2, react-native-patina@^0.1.3:
+react-native-patina@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.3.tgz#1704aa63f08dcd09534b2b01a29ee7e1fb046a49"
   integrity sha512-R1vWHseI9pNLGYxQCLbqCJmjjOVJoChoLz8uH2o19SYFdb+VnhfBGZSlDks3RKFHgUkFcvQg/biMCr+mNfBoQA==
@@ -12595,6 +12602,11 @@ yargs@^9.0.0:
     which-module "^2.0.0"
     y18n "^3.2.1"
     yargs-parser "^7.0.0"
+
+yavent@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/yavent/-/yavent-0.1.1.tgz#cc6458d24ded144da7126b8445163b11b967646f"
+  integrity sha512-jeFpwxVlI7AM9D+a+K36gmKV7lE41Nq0LZ48NhLQ+dKSWkf4GzxKn9NZ3yat/EsvEfNkKBdY1JTNNuXi0TdRuA==
 
 zxcvbn@^4.4.2:
   version "4.4.2"

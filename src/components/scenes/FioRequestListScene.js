@@ -112,16 +112,19 @@ export class FioRequestList extends React.Component<Props, LocalState> {
         for (const wallet of fioWallets) {
           const fioPublicKey = wallet.publicWalletInfo.keys.publicKey
           const fioAddresses = await wallet.otherMethods.getFioAddresses()
+          const approveNeededFioRequests = await wallet.otherMethods.getApproveNeededFioRequests()
           if (fioAddresses.length > 0) {
             try {
               const { requests } = await wallet.otherMethods.fioAction('getPendingFioRequests', { fioPublicKey })
               if (requests) {
                 fioRequestsPending = [
                   ...fioRequestsPending,
-                  ...requests.map(request => {
-                    request.fioWalletId = wallet.id
-                    return request
-                  })
+                  ...requests
+                    .filter(request => !approveNeededFioRequests[request.fio_request_id])
+                    .map(request => {
+                      request.fioWalletId = wallet.id
+                      return request
+                    })
                 ]
               } else {
                 showError(s.strings.fio_get_requests_error)

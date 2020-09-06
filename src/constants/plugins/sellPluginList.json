@@ -445,6 +445,38 @@
       "utm_medium": "Wallet"
     }
   },
+  {
+    "id": "bitaccess",
+    "pluginId": "bitaccess",
+    "paymentTypes": [
+      "cash"
+    ],
+    "description": "Fee: Varies / Settlement: 10 - 20min\nLimit: Varies",
+    "title": "Cash",
+    "partnerIconPath": "https://developer.airbitz.co/content/mktg/bitaccess.png",
+    "forCountries": [
+      "US",
+      "CA",
+      "HR",
+      "NL",
+      "NG",
+      "ES",
+      "VN",
+      "CH",
+      "GB"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "ETH",
+      "LINK",
+      "DAI",
+      "LTC"
+    ],
+    "paymentTypeLogoKey": "cash",
+    "deepQuery": {
+      "country": "US"
+    }
+  },
   "----- Sorting -----",
   {
     "id": "simplex",
@@ -469,6 +501,10 @@
   {
     "id": "safello.bank",
     "sortIndex": 2
+  },
+  {
+    "id": "bitaccess",
+    "sortIndex": 4.5
   },
   "----- iOS specifics -----",
   "----- Country Specifics -----",
@@ -495,5 +531,77 @@
       "DK"
     ],
     "title": "DKK Bank Transfer"
+  },
+  {
+    "id": "bitaccess",
+    "forCountries": [
+      "CA"
+    ],
+    "deepQuery": {
+      "country": "CA"
+    }
+  },
+  {
+    "id": "bitaccess",
+    "forCountries": [
+      "HR"
+    ],
+    "deepQuery": {
+      "country": "HR"
+    }
+  },
+  {
+    "id": "bitaccess",
+    "forCountries": [
+      "NL"
+    ],
+    "deepQuery": {
+      "country": "NL"
+    }
+  },
+  {
+    "id": "bitaccess",
+    "forCountries": [
+      "NG"
+    ],
+    "deepQuery": {
+      "country": "NG"
+    }
+  },
+  {
+    "id": "bitaccess",
+    "forCountries": [
+      "ES"
+    ],
+    "deepQuery": {
+      "country": "ES"
+    }
+  },
+  {
+    "id": "bitaccess",
+    "forCountries": [
+      "GB"
+    ],
+    "deepQuery": {
+      "country": "GB"
+    }
+  },
+  {
+    "id": "bitaccess",
+    "forCountries": [
+      "CH"
+    ],
+    "deepQuery": {
+      "country": "CH"
+    }
+  },
+  {
+    "id": "bitaccess",
+    "forCountries": [
+      "VN"
+    ],
+    "deepQuery": {
+      "country": "VN"
+    }
   }
 ]

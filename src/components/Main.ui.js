@@ -607,7 +607,7 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.CURRENCY_NOTIFICATION_SETTINGS}
               navTransparent
               component={ifLoggedIn(CurrencyNotificationScene)}
-              renderTitle={props => <CurrencySettingsTitle currencyInfo={props.currencyInfo} titleString={s.strings.settings_currency_notifications} />}
+              renderTitle={props => <CurrencySettingsTitle currencyInfo={props.currencyInfo} />}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
