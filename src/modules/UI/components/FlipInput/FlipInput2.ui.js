@@ -2,10 +2,11 @@
 
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { Animated, Image, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { Animated, Image, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
+import { Txt } from '../../../../components/themed/Txt.js'
 import * as Constants from '../../../../constants/indexConstants'
 import * as intl from '../../../../locales/intl.js'
 import s from '../../../../locales/strings.js'
@@ -347,17 +348,9 @@ export class FlipInput extends React.Component<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={this.textInputFrontFocus}>
         <View style={top.row} key="top">
-          <Text style={top.currencyCode}>{fieldInfo.currencyCode}</Text>
+          <Txt style={top.currencyCode}>{fieldInfo.currencyCode}</Txt>
           <View style={top.amountContainer}>
-            {Platform.OS === 'ios' ? (
-              <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} adjustsFontSizeToFit>
-                {displayAmountString}
-              </Text>
-            ) : (
-              <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} ellipsizeMode="middle">
-                {displayAmountString}
-              </Text>
-            )}
+            <Txt style={[top.amount, displayAmountStyle]}>{displayAmountString}</Txt>
             <TextInput
               style={top.textInput}
               value={decimalAmount}
@@ -404,17 +397,9 @@ export class FlipInput extends React.Component<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={this.textInputBackFocus}>
         <View style={top.row} key="top">
-          <Text style={top.currencyCode}>{fieldInfo.currencyName}</Text>
+          <Txt style={top.currencyCode}>{fieldInfo.currencyName}</Txt>
           <View style={top.amountContainer}>
-            {Platform.OS === 'ios' ? (
-              <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} adjustsFontSizeToFit>
-                {displayAmountString}
-              </Text>
-            ) : (
-              <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} ellipsizeMode="middle">
-                {displayAmountString}
-              </Text>
-            )}
+            <Txt style={[top.amount, displayAmountStyle]}>{displayAmountString}</Txt>
             <TextInput
               style={top.textInput}
               value={decimalAmount}
@@ -441,11 +426,9 @@ export class FlipInput extends React.Component<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={this.onToggleFlipInput} key="bottom">
         <View style={bottom.row}>
-          <Text style={bottom.currencyCode}>{fieldInfo.currencyCode}</Text>
+          <Txt style={bottom.currencyCode}>{fieldInfo.currencyCode}</Txt>
           <View style={top.amountContainer}>
-            <Text style={[bottom.amount, !amount && bottom.alert]} numberOfLines={1} ellipsizeMode="tail">
-              {amount}
-            </Text>
+            <Txt style={[bottom.amount, !amount && bottom.alert]}>{amount}</Txt>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -467,7 +450,7 @@ export class FlipInput extends React.Component<Props, State> {
           <View style={styles.flipContainerHeader}>
             <Image style={styles.flipContainerHeaderIcon} source={{ uri: headerLogo || '' }} />
             <View style={styles.flipContainerHeaderTextContainer}>
-              <Text style={styles.flipContainerHeaderText}>{headerText}</Text>
+              <Txt style={styles.flipContainerHeaderText}>{headerText}</Txt>
               {headerCallback && <FAIcon style={styles.flipContainerHeaderTextDropDown} name={Constants.KEYBOARD_ARROW_DOWN} size={scale(20)} />}
             </View>
           </View>

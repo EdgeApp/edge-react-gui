@@ -98,7 +98,6 @@ export const top = StyleSheet.create({
   amount: {
     width: '100%',
     fontSize: THEME.rem(1.5),
-    color: THEME.COLORS.WHITE,
     fontFamily: THEME.FONTS.SYMBOLS,
     textAlign: 'right',
     padding: 0
