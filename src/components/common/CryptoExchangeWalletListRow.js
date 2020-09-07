@@ -197,15 +197,8 @@ export class CryptoExchangeWalletListRow extends React.Component<Props, LocalSta
       currencyCodeString.includes(searchFilterLowerCase)
     const mostRecentUsedCheck = isMostRecentWallet ? currencyCodeString === currencyCodeFilter.toLowerCase() : true
 
-    if (!checkAllowedCurrencyCodes || checkExcludeCurrencyCodes) {
-      return null
-    }
-    if (searchFilter === '' && !filterMatched) {
-      return null
-    }
-    if (!mostRecentUsedCheck) {
-      return null
-    }
+    if (!checkAllowedCurrencyCodes || checkExcludeCurrencyCodes || !filterMatched || !mostRecentUsedCheck) return null
+
     return (
       <TouchableHighlight underlayColor={THEME.COLORS.TRANSPARENT} onPress={this.onPress}>
         <View style={styles.rowContainerTop}>
