@@ -304,6 +304,7 @@ const strings = {
   string_first_zcoin_wallet_name: 'My Zcoin',
   string_first_stellar_wallet_name: 'My Stellar',
   string_first_tezos_wallet_name: 'My Tezos',
+  string_first_tron_wallet_name: 'My Tron',
   string_first_rsk_wallet_name: 'My RSK',
   string_first_bnb_wallet_name: 'My BNB',
   string_first_eboost_wallet_name: 'My eBoost',
