@@ -225,20 +225,20 @@ export const addPublicAddresses = async (
   fioAddress: string,
   publicAddresses: { token_code: string, chain_code: string, public_address: string }[]
 ) => {
-  let maxFee: number
+  let getFeeRes: { fee: number }
   try {
-    const { fee } = await fioWallet.otherMethods.fioAction('getFeeForAddPublicAddress', {
+    getFeeRes = await fioWallet.otherMethods.fioAction('getFeeForAddPublicAddress', {
       fioAddress
     })
-    maxFee = fee
   } catch (e) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
+  if (getFeeRes.fee) throw new Error(s.strings.fio_no_bundled_err_msg)
   try {
     await fioWallet.otherMethods.fioAction('addPublicAddresses', {
       fioAddress,
       publicAddresses,
-      maxFee
+      maxFee: getFeeRes.fee
     })
   } catch (e) {
     throw new Error(s.strings.fio_connect_wallets_err)
