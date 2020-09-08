@@ -33,6 +33,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   DOGE: s.strings.string_first_doge_wallet_name,
   EBST: s.strings.string_first_eboost_wallet_name,
   EOS: s.strings.string_first_eos_wallet_name,
+  TLOS: s.strings.string_first_telos_wallet_name,
   ETH: s.strings.string_first_ethereum_wallet_name,
   FIO: s.strings.string_first_fio_wallet_name,
   FTC: s.strings.string_first_feather_coin_wallet_name,
@@ -135,6 +136,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   RVN: 'ravencoin',
   SMART: 'smartcash',
   TBTC: 'bitcointestnet',
+  TLOS: 'telos',
   UFO: 'ufo',
   VTC: 'vertcoin',
   XLM: 'stellar',
@@ -241,6 +243,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isImportKeySupported: false
   },
   EOS: {
+    isAccountActivationRequired: true,
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
@@ -250,6 +253,18 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       identifierKeyboardType: 'default'
     },
     isImportKeySupported: false
+  },
+  TLOS: {
+    isAccountActivationRequired: true,
+    dummyPublicAddress: 'edgecreator2',
+    needsAccountNameSetup: true,
+    noChangeMiningFee: true,
+    uniqueIdentifier: {
+      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
+      identifierName: s.strings.unique_identifier_memo,
+      identifierKeyboardType: 'default'
+    },
+    isImportKeySupported: true
   },
   ETH: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',

@@ -29,6 +29,7 @@ export const currencyPlugins = {
   // edge-currency-accountbased:
   binance: true,
   eos: true,
+  telos: true,
   ethereum: ENV.ETHEREUM_INIT,
   ethereumclassic: true,
   fio: ENV.FIO_INIT || true,
@@ -68,6 +69,7 @@ export const ratePlugins = {
   coinbase: true,
   coincap: true,
   coinmonitor: true,
+  coingecko: true,
   constantRate: true,
   coincapLegacy: false,
   nomics: ENV.NOMICS_INIT,
