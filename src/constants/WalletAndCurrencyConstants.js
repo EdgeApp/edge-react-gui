@@ -51,6 +51,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   XRP: s.strings.string_first_ripple_wallet_name,
   XTZ: s.strings.string_first_tezos_wallet_name,
   TRX: s.strings.string_first_tron_wallet_name,
+  NEO: s.strings.string_first_neo_wallet_name,
   XZC: s.strings.string_first_zcoin_wallet_name
 }
 
@@ -145,6 +146,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   XRP: 'ripple',
   XTZ: 'tezos',
   TRX: 'tron',
+  NEO: 'neo',
   XZC: 'zcoin'
 }
 
@@ -395,7 +397,8 @@ export const WALLET_LIST_MENU: {
       'RBTC',
       'TBTC',
       'XMR',
-      'TRX'
+      'TRX',
+      'NEO'
     ],
     label: s.strings.fragment_wallets_view_xpub,
     value: 'viewXPub'

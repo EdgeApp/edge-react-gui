@@ -973,6 +973,54 @@
   optionalDependencies:
     "@ledgerhq/hw-transport-node-hid" "^4.63.2"
 
+"@cityofzion/neon-api@^4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@cityofzion/neon-api/-/neon-api-4.8.1.tgz#c173eae102e5edc15e824016d0173131dce10fea"
+  integrity sha512-OcJRa14eKJ7IuLXPUVRd//I8OHZpmXZwfIwo/vwooJk1yIYLqajBJqYvphbzZb2htacwlwouzpT1FqCjLR2g+w==
+  dependencies:
+    "@types/node" "14.0.1"
+    axios "0.19.2"
+    isomorphic-ws "4.0.1"
+    ws "7.3.0"
+
+"@cityofzion/neon-core@^4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@cityofzion/neon-core/-/neon-core-4.8.1.tgz#c0d5a119cdbba10195da6430db0f266ef76278f9"
+  integrity sha512-VjPLeCPUpKxwiwD/A3l39ll0WTvRWedcC+Ww2WRHr2zfTxvqyt+AxytdFFL6oD/ZiFynZXnoki1l3/emGIafyQ==
+  dependencies:
+    "@types/bn.js" "4.11.6"
+    "@types/bs58" "4.0.1"
+    "@types/crypto-js" "3.1.46"
+    "@types/elliptic" "6.4.12"
+    axios "0.19.2"
+    bignumber.js "7.2.1"
+    bn.js "5.1.1"
+    bs58 "4.0.1"
+    bs58check "2.1.2"
+    crypto-js "3.3.0"
+    elliptic "6.5.3"
+    loglevel "1.6.8"
+    loglevel-plugin-prefix "0.8.4"
+    scrypt-js "3.0.0"
+    secure-random "1.1.2"
+    wif "2.0.6"
+
+"@cityofzion/neon-js@^4.7.2":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@cityofzion/neon-js/-/neon-js-4.8.1.tgz#91dd3d4953bdb64d0675a0d670f25646e4427f05"
+  integrity sha512-FmBuIYLwiHGrzy4vZGBksWVFoeOelYYRhMIIp7w2tHUhJN5K66XiW4a0bRca8BWshUaII1C7x5ATjFH6IqQfvQ==
+  dependencies:
+    "@cityofzion/neon-api" "^4.8.1"
+    "@cityofzion/neon-core" "^4.8.1"
+    "@cityofzion/neon-nep5" "^4.8.1"
+
+"@cityofzion/neon-nep5@^4.8.1":
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/@cityofzion/neon-nep5/-/neon-nep5-4.8.1.tgz#e3daead4d5da68fe568e195dbe1ef9d6513916b2"
+  integrity sha512-UHLQKiZDX3YtPpty4SB+PB5kRRaWLtMMyWp+gUTLkq+J9xLf5V2VhRGbF0L5lhKL8j12aKsEWBk9qRCOTiPXtg==
+  dependencies:
+    "@cityofzion/neon-core" "^4.8.1"
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.3.tgz#099139eaec7ebf07a27c1786a3ff64f39464d2ef"
@@ -1371,10 +1419,36 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/bn.js@*", "@types/bn.js@4.11.6":
+  version "4.11.6"
+  resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-4.11.6.tgz#c306c70d9358aaea33cd4eda092a742b9505967c"
+  integrity sha512-pqr857jrp2kPuO9uRjZ3PwnJTjoQy+fcdxvBTvHm6dkmEL9q+hDD/2j/0ELOBPtPnS8LjCX0gI9nbl8lVkadpg==
+  dependencies:
+    "@types/node" "*"
+
+"@types/bs58@4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@types/bs58/-/bs58-4.0.1.tgz#3d51222aab067786d3bc3740a84a7f5a0effaa37"
+  integrity sha512-yfAgiWgVLjFCmRv8zAcOIHywYATEwiTVccTLnRp6UxTNavT55M9d/uhK3T03St/+8/z/wW+CRjGKUNmEqoHHCA==
+  dependencies:
+    base-x "^3.0.6"
+
 "@types/color-name@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
   integrity sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
+
+"@types/crypto-js@3.1.46":
+  version "3.1.46"
+  resolved "https://registry.yarnpkg.com/@types/crypto-js/-/crypto-js-3.1.46.tgz#7469f88b6a574046d7e1265a4d043c57a2c61778"
+  integrity sha512-w1rUo6jY6dhNQXOl85UAvJHPX8pIqzfUH2E1+HxU3Z4HsuAaiYPkogEplJqD5QmtDtWC5MUkULtJEvpX5501xQ==
+
+"@types/elliptic@6.4.12":
+  version "6.4.12"
+  resolved "https://registry.yarnpkg.com/@types/elliptic/-/elliptic-6.4.12.tgz#e8add831f9cc9a88d9d84b3733ff669b68eaa124"
+  integrity sha512-gP1KsqoouLJGH6IJa28x7PXb3cRqh83X8HCLezd2dF+XcAIMKYv53KV+9Zn6QA561E120uOqZBQ+Jy/cl+fviw==
+  dependencies:
+    "@types/bn.js" "*"
 
 "@types/estree@0.0.39":
   version "0.0.39"
@@ -1415,6 +1489,11 @@
   version "11.11.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-11.11.6.tgz#df929d1bb2eee5afdda598a41930fe50b43eaa6a"
   integrity sha512-Exw4yUWMBXM3X+8oqzJNRqZSwUAaS4+7NdvHqQuFi/d+synz++xmX3QIf+BFqneW8N31R8Ky+sikfZUXq07ggQ==
+
+"@types/node@14.0.1":
+  version "14.0.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.1.tgz#5d93e0a099cd0acd5ef3d5bde3c086e1f49ff68c"
+  integrity sha512-FAYBGwC+W6F9+huFIDtn43cpy7+SzG+atzRiTfdp3inUKL2hXnd4rG8hylJLIh4+hqrQy1P17kvJByE/z825hA==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -2081,7 +2160,7 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.9.1.tgz#7e33d8f7d449b3f673cd72deb9abdc552dbe528e"
   integrity sha512-wMHVg2EOHaMRxbzgFJ9gtjOOCrI80OHLG14rxi28XwOW8ux6IiEbRCGGGqCtdAIg4FQCbW20k9RsT4y3gJlFug==
 
-axios@0.19.0, axios@^0.18.0, axios@^0.19.0:
+axios@0.19.0, axios@0.19.2, axios@^0.18.0, axios@^0.19.0:
   version "0.19.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.19.0.tgz#8e09bff3d9122e133f7b8101c8fbdd00ed3d2ab8"
   integrity sha512-1uvKqKQta3KBxIz14F2v06AEHZ/dIoeKfbTRkK1E5oqjDnuEerLmYTgJB5AiQZHJcljpg1TuRzdjDR06qNk0DQ==
@@ -2233,7 +2312,7 @@ base-64@^0.1.0:
   resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
   integrity sha1-eAqZyE59YAJgNhURxId2E78k9rs=
 
-base-x@3.0.4, base-x@^1.0.1, base-x@^1.0.4, base-x@^3.0.2:
+base-x@3.0.4, base-x@^1.0.1, base-x@^1.0.4, base-x@^3.0.2, base-x@^3.0.6:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.4.tgz#94c1788736da065edb1d68808869e357c977fa77"
   integrity sha512-UYOadoSIkEI/VrRGSG6qp93rp2WdokiAiNYDfGW5qURAY8GiAQkvMbwNNSDYiVJopqv4gCna7xqf4rrNGp+5AA==
@@ -2317,15 +2396,15 @@ bigi@1.4.2, bigi@^1.1.0, bigi@^1.4.2:
   resolved "https://registry.yarnpkg.com/bigi/-/bigi-1.4.2.tgz#9c665a95f88b8b08fc05cfd731f561859d725825"
   integrity sha1-nGZalfiLiwj8Bc/XMfVhhZ1yWCU=
 
+bignumber.js@7.2.1, bignumber.js@^7.2.1:
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-7.2.1.tgz#80c048759d826800807c4bfd521e50edbba57a5f"
+  integrity sha512-S4XzBk5sMB+Rcb/LNcpzXr57VRTxgAvaAEDAl1AwRx27j00hT84O6OkteE7u8UB3NuaaygCRrEpqox4uDOrbdQ==
+
 bignumber.js@^4.0.0, bignumber.js@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-4.1.0.tgz#db6f14067c140bd46624815a7916c92d9b6c24b1"
   integrity sha512-eJzYkFYy9L4JzXsbymsFn3p54D+llV27oTQ+ziJG7WFRheJcNZilgVXMG0LoZtlQSKBsJdWtLFqOD0u+U0jZKA==
-
-bignumber.js@^7.2.1:
-  version "7.2.1"
-  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-7.2.1.tgz#80c048759d826800807c4bfd521e50edbba57a5f"
-  integrity sha512-S4XzBk5sMB+Rcb/LNcpzXr57VRTxgAvaAEDAl1AwRx27j00hT84O6OkteE7u8UB3NuaaygCRrEpqox4uDOrbdQ==
 
 binary-extensions@^1.0.0:
   version "1.13.1"
@@ -2386,7 +2465,7 @@ bluebird@^3.5.5:
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.5.tgz#a8d0afd73251effbbd5fe384a77d73003c17a71f"
   integrity sha512-5am6HnnfN+urzt4yfg7IgTbotDjIT/u8AJpEt0sIU9FtXfVeezXAPKswrG+xKUCOYAINpSdgZVDU6QFh+cuH3w==
 
-bn.js@4.11.8, bn.js@^3.1.1, bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.10.0, bn.js@^4.11.0, bn.js@^4.11.3, bn.js@^4.11.7, bn.js@^4.11.8, bn.js@^4.4.0:
+bn.js@4.11.8, bn.js@5.1.1, bn.js@^3.1.1, bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.10.0, bn.js@^4.11.0, bn.js@^4.11.3, bn.js@^4.11.7, bn.js@^4.11.8, bn.js@^4.4.0:
   version "4.11.8"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
   integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
@@ -3405,6 +3484,11 @@ crypto-browserify@^3.11.0, crypto-browserify@^3.12.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
+crypto-js@3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.3.0.tgz#846dd1cce2f68aacfa156c8578f926a609b7976b"
+  integrity sha512-DIT51nX0dCfKltpRiXV+/TVZq+Qq2NgF4644+K7Ttnla7zEzqc+kjJyiB96BHNyUTBxyjzRcZYpUdZa+QAqi6Q==
+
 crypto-js@^3.1.9-1:
   version "3.1.9-1"
   resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
@@ -3812,11 +3896,12 @@ edge-core-js@^0.17.12:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-"edge-currency-accountbased@https://github.com/EdgeApp/edge-currency-accountbased.git#fab2282":
+"edge-currency-accountbased@https://github.com/EdgeApp/edge-currency-accountbased.git#a34ffcb":
   version "0.7.22"
-  resolved "https://github.com/EdgeApp/edge-currency-accountbased.git#fab2282e4437cc19b4f1f22f283ac55f0fd8ca3d"
+  resolved "https://github.com/EdgeApp/edge-currency-accountbased.git#a34ffcb86f357be09f8a53dea6e488e82ad68709"
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
+    "@cityofzion/neon-js" "^4.7.2"
     "@fioprotocol/fiosdk" "^1.0.2"
     base-x "^1.0.4"
     biggystring "^3.0.0"
@@ -6343,6 +6428,11 @@ isomorphic-fetch@^2.1.1, isomorphic-fetch@^2.2.1:
     node-fetch "^1.0.1"
     whatwg-fetch ">=0.10.0"
 
+isomorphic-ws@4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/isomorphic-ws/-/isomorphic-ws-4.0.1.tgz#55fd4cd6c5e6491e76dc125938dd863f5cd4f2dc"
+  integrity sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==
+
 isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
@@ -7318,6 +7408,16 @@ log-update@^4.0.0:
     cli-cursor "^3.1.0"
     slice-ansi "^4.0.0"
     wrap-ansi "^6.2.0"
+
+loglevel-plugin-prefix@0.8.4:
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/loglevel-plugin-prefix/-/loglevel-plugin-prefix-0.8.4.tgz#2fe0e05f1a820317d98d8c123e634c1bd84ff644"
+  integrity sha512-WpG9CcFAOjz/FtNht+QJeGpvVl/cdR6P0z6OcXSkr8wFJOsV2GRj2j10JLfjuA4aYkcKCNIEqRGCyTife9R8/g==
+
+loglevel@1.6.8:
+  version "1.6.8"
+  resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.8.tgz#8a25fb75d092230ecd4457270d80b54e28011171"
+  integrity sha512-bsU7+gc9AJ2SqpzxwU3+1fedl8zAntbtC5XYlt3s2j1hJcn2PsXSmgN8TaLG/J1/2mod4+cE/3vNL70/c1RNCA==
 
 long@4.0.0, long@^2.2.3, long@^4.0.0, long@~3:
   version "4.0.0"
@@ -10613,6 +10713,11 @@ scrypt-js@2.0.4, scrypt-js@^2.0.3:
   resolved "https://registry.yarnpkg.com/scrypt-js/-/scrypt-js-2.0.4.tgz#32f8c5149f0797672e551c07e230f834b6af5f16"
   integrity sha512-4KsaGcPnuhtCZQCxFxN3GVYIhKFPTdLd8PLC552XwbMndtD0cjRFAhDuuydXQ0h08ZfPgzqe6EKHozpuH74iDw==
 
+scrypt-js@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/scrypt-js/-/scrypt-js-3.0.0.tgz#52361c1f272eeaab09ec1f806ea82078bca58b15"
+  integrity sha512-7CC7aufwukEvqdmllR0ny0QaSg0+S22xKXrXz3ZahaV6J+fgD2YAtrjtImuoDWog17/Ty9Q4HBmnXEXJ3JkfQA==
+
 scrypt.js@0.3.0, scrypt.js@^0.2.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/scrypt.js/-/scrypt.js-0.3.0.tgz#6c62d61728ad533c8c376a2e5e3e86d41a95c4c0"
@@ -10650,7 +10755,7 @@ secp256k1@^3.0.1, secp256k1@^3.7.1:
     nan "^2.14.0"
     safe-buffer "^5.1.2"
 
-secure-random@^1.1.2:
+secure-random@1.1.2, secure-random@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/secure-random/-/secure-random-1.1.2.tgz#ed103b460a851632d420d46448b2a900a41e7f7c"
   integrity sha512-H2bdSKERKdBV1SwoqYm6C0y+9EA94v6SUBOWO8kDndc4NoUih7Dv6Tsgma7zO1lv27wIvjlD0ZpMQk7um5dheQ==
@@ -12340,7 +12445,7 @@ wide-align@^1.1.0:
   dependencies:
     string-width "^1.0.2 || 2"
 
-wif@^2.0.6:
+wif@2.0.6, wif@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/wif/-/wif-2.0.6.tgz#08d3f52056c66679299726fade0d432ae74b4704"
   integrity sha1-CNP1IFbGZnkplyb63g1DKudLRwQ=
@@ -12424,6 +12529,11 @@ write@1.0.3:
   integrity sha512-/lg70HAjtkUgWPVZhZcm+T4hkL8Zbtp1nFNOn3lRrxnlv50SRBv7cR7RqR+GMsd3hUXy9hWBo4CHTbFTcOYwig==
   dependencies:
     mkdirp "^0.5.1"
+
+ws@7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.3.0.tgz#4b2f7f219b3d3737bc1a2fbf145d825b94d38ffd"
+  integrity sha512-iFtXzngZVXPGgpTlP1rBqsUK82p9tKqsWRPg5L56egiljujJT3vGAYnHANvFxBieXrTFavhzhxW52jnaWV+w2w==
 
 ws@^1.1.0, ws@^1.1.5:
   version "1.1.5"
