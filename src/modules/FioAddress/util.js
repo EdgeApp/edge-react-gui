@@ -487,10 +487,11 @@ export const getRegInfo = async (
   }
 
   try {
-    const referralCode = isFallback ? fioPlugin.currencyInfo.defaultSettings.fallbackRef : fioPlugin.currencyInfo.defaultSettings.defaultRef
+    // todo: temporary commented to use fallback referral code by default.
+    // const referralCode = isFallback ? fioPlugin.currencyInfo.defaultSettings.fallbackRef : fioPlugin.currencyInfo.defaultSettings.defaultRef
     const buyAddressResponse: BuyAddressResponse = await fioPlugin.otherMethods.buyAddressRequest({
       address: fioAddress,
-      referralCode,
+      referralCode: fioPlugin.currencyInfo.defaultSettings.fallbackRef,
       publicKey: selectedWallet.publicWalletInfo.keys.publicKey
     })
 

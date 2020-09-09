@@ -589,6 +589,7 @@ const strings = {
     'Similar to website names, your FIO Address can be used to send you tokens/coins without ever having to see or send your public key.',
   fio_address_reg_domain_label: 'Want to register your own FIO Domain such as @mydomain?',
   fio_address_reg_domain: 'Register FIO Domain',
+  fio_address_reg_free: 'Register Free FIO Address',
   fio_domain_label: 'FIO Domain',
   fio_domain_free: 'Free',
   fio_address_wallet_selection_text:
@@ -695,6 +696,7 @@ const strings = {
   fio_sender_memo_placeholder: 'Your message.',
   scan_address_modal_title: 'Enter Recipient FIO, ENS, or Public Address',
   address_modal_default_header: 'Enter Address',
+  open_url_err: 'Can not open this url - %s',
   // Unstoppable resolution error codes
   resolving: 'Resolving...',
   UnregisteredDomain: 'Domain %1$s is not registered',
