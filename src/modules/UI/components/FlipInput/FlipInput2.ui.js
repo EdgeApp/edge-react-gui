@@ -201,7 +201,16 @@ export class FlipInput extends React.Component<Props, State> {
 
     if (this.props.isFocus) {
       setTimeout(() => {
-        this.textInputBack && this.textInputBack.focus()
+        if (this.state.isToggled) {
+          const { exchangeSecondaryToPrimaryRatio } = this.props
+          if (bns.eq(exchangeSecondaryToPrimaryRatio, '0') || exchangeSecondaryToPrimaryRatio === '') {
+            this.toggleCryptoOnTop()
+          } else {
+            this.textInputBack && this.textInputBack.focus()
+          }
+        } else {
+          this.textInputFront && this.textInputFront.focus()
+        }
       }, 650)
     }
   }
