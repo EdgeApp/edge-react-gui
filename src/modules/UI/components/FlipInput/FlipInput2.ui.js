@@ -80,6 +80,11 @@ export type FlipInputOwnProps = {
 
 type Props = FlipInputOwnProps
 
+const resetInputCursor = {
+  selectionPrimary: { start: 0, end: 0 },
+  selectionSecondary: { start: 0, end: 0 }
+}
+
 export const sanitizeDecimalAmount = (amount: string, maxEntryDecimals: number): string => {
   // Replace all commas into periods
   amount = amount.replace(',', '.')
@@ -139,7 +144,7 @@ const getInitialState = (props: Props) => {
   if (props.overridePrimaryDecimalAmount === '') return state
 
   const primaryDecimalAmount = sanitizeDecimalAmount(props.overridePrimaryDecimalAmount, props.primaryInfo.maxEntryDecimals)
-  return Object.assign(state, setPrimaryToSecondary(props, primaryDecimalAmount))
+  return Object.assign(state, { ...setPrimaryToSecondary(props, primaryDecimalAmount), ...resetInputCursor })
 }
 
 export class FlipInput extends React.Component<Props, State> {
@@ -215,7 +220,7 @@ export class FlipInput extends React.Component<Props, State> {
     }
   }
 
-  resetInputCursor = () => {
+  changeInputCursor = () => {
     this.setState({
       selectionPrimary: {
         start: this.state.primaryDecimalAmount.length,
@@ -238,14 +243,15 @@ export class FlipInput extends React.Component<Props, State> {
       this.setState({
         ...result,
         overridePrimaryDecimalAmount: nextProps.overridePrimaryDecimalAmount,
-        forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
+        forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter,
+        ...resetInputCursor
       })
     } else {
       // Checks and apply exchange rates
       if (!this.state.isToggled) {
-        this.setState(setPrimaryToSecondary(nextProps, this.state.primaryDecimalAmount))
+        this.setState({ ...setPrimaryToSecondary(nextProps, this.state.primaryDecimalAmount), ...resetInputCursor })
       } else {
-        this.setState(setSecondaryToPrimary(nextProps, this.state.secondaryDecimalAmount))
+        this.setState({ ...setSecondaryToPrimary(nextProps, this.state.secondaryDecimalAmount), ...resetInputCursor })
       }
     }
     if (nextProps.primaryInfo.currencyCode !== this.props.primaryInfo.currencyCode) {
@@ -366,7 +372,7 @@ export class FlipInput extends React.Component<Props, State> {
               keyboardType="numeric"
               returnKeyType={this.props.topReturnKeyType || 'done'}
               selection={this.state.selectionPrimary}
-              onSelectionChange={this.resetInputCursor}
+              onSelectionChange={this.changeInputCursor}
               ref={this.getTextInputFrontRef}
               onFocus={this.textInputFrontFocusTrue}
               onBlur={this.textInputFrontFocusFalse}
@@ -423,7 +429,7 @@ export class FlipInput extends React.Component<Props, State> {
               keyboardType="numeric"
               returnKeyType={this.props.topReturnKeyType || 'done'}
               selection={this.state.selectionSecondary}
-              onSelectionChange={this.resetInputCursor}
+              onSelectionChange={this.changeInputCursor}
               ref={this.getTextInputBackRef}
               onFocus={this.textInputBackFocusTrue}
               onBlur={this.textInputBackFocusFalse}
