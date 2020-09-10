@@ -637,6 +637,7 @@
   "err_token_not_in_wallet_title": "No %s Wallet",
   "err_token_not_in_wallet_msg": "Your account does not have a %s wallet to pay this request",
   "err_no_address_title": "No FIO Address found.",
+  "err_address_not_linked_title": "Recipient address does not have a linked %s wallet",
   "fio_connect_no_wallets": "There are no wallets",
   "fio_connect_checkbox_text": "I acknowledge that, once connected, one address from each connected wallet will become public",
   "fio_connect_wallets_err": "There was an issue during operation execution. Please try later.",

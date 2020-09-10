@@ -125,7 +125,7 @@ const isWalletConnected = async (
       chainCode
     })
 
-    if (publicAddress === '0') return false
+    if (publicAddress === '0' || !publicAddress) return false
 
     const receiveAddress = await wallet.getReceiveAddress()
     if (publicAddress === receiveAddress.publicAddress) return true
@@ -313,19 +313,24 @@ export const makeConnectWallets = (wallets: { [walletId: string]: GuiWallet }, c
 }
 
 export const checkPubAddress = async (fioPlugin: EdgeCurrencyConfig, fioAddress: string, chainCode: string, tokenCode: string): Promise<string> => {
-  const isFioAddress = await fioPlugin.otherMethods.isFioAddressValid(fioAddress)
   try {
-    if (isFioAddress) {
-      const { public_address: publicAddress } = await fioPlugin.otherMethods.getConnectedPublicAddress(fioAddress.toLowerCase(), chainCode, tokenCode)
-      if (publicAddress && publicAddress.length > 1) {
-        return publicAddress
-      }
-    }
+    const { public_address: publicAddress } = await fioPlugin.otherMethods.getConnectedPublicAddress(fioAddress.toLowerCase(), chainCode, tokenCode)
+    return publicAddress
   } catch (e) {
-    throw new Error(s.strings.err_no_address_title)
+    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
+      throw new FioError(s.strings.fio_error_invalid_address, fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS)
+    }
+    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_EXIST) {
+      throw new FioError(s.strings.send_fio_request_error_addr_not_exist, fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_EXIST)
+    }
+    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_LINKED) {
+      throw new FioError(
+        sprintf(s.strings.err_address_not_linked_title, tokenCode),
+        fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_LINKED
+      )
+    }
+    throw new Error(s.strings.fio_connect_wallets_err)
   }
-
-  return ''
 }
 
 export const addToFioAddressCache = async (account: EdgeAccount, fioAddressesToAdd: string[]): Promise<FioAddresses> => {
