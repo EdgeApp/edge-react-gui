@@ -870,7 +870,7 @@ export class MainComponent extends React.Component<Props> {
     }
     if (this.isCurrentScene(Constants.FIO_ADDRESS_REGISTER)) {
       if (Actions.currentParams.noAddresses) {
-        Actions.popTo(Constants.WALLET_LIST_SCENE)
+        Actions.jump(Constants.WALLET_LIST_SCENE)
         return true
       }
     }
