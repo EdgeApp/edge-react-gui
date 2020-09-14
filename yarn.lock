@@ -3875,16 +3875,15 @@ edge-exchange-plugins@^0.11.6:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.6.15:
-  version "0.6.15"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.15.tgz#e71abe67cc56ce2bba687602f7a217ae71425ac8"
-  integrity sha512-DaSe8zvDUlSu7Y5eGp0zKycGjq3RkzkDPXg0pC6zfytUroLtPRLgnJoeA64WTGABe6+VJy0KuQVWt/rgo9NNgw==
+edge-login-ui-rn@^0.6.16:
+  version "0.6.16"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.16.tgz#a5fd1681153855b12e62253f2655c5bf88444146"
+  integrity sha512-WteC4OoMCalDqEiRn6ZIEC6gM/7Hqa2GF+D9ssK1r6o0+am79CyryCgPZEBbK462YjxF9f1WeRVkdpeneVl+Dw==
   dependencies:
     cleaners "^0.3.1"
     material-ui "^0.20.0"
-    moment "^2.19.3"
     qrcode-generator "^1.4.4"
-    react-native-airship "^0.2.1"
+    react-native-airship "^0.2.2"
     react-native-device-info "^0.11.0"
     react-native-extra-dimensions-android "^1.2.5"
     react-native-keyboard-aware-scroll-view "^0.9.1"
@@ -7968,7 +7967,7 @@ mkdirp@0.5.1, mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
-moment@^2.19.3, moment@^2.22.2:
+moment@^2.22.2:
   version "2.22.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
   integrity sha1-PCV/mDn8DpP/UxSWMiOeuQeD/2Y=
@@ -9406,7 +9405,7 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.0, react-lifecycles-com
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-airship@^0.2.1, react-native-airship@^0.2.2:
+react-native-airship@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.2.tgz#fed7301f31894f969e099d8be136d513c933e369"
   integrity sha512-XUkNTF5lkJqQW9is4lXpblg9oBCoOY5go7ENsDmwZNONdA1Kn4+g6cXVHCv1orr6RpD7MNoag2zvxyPf4sfJLw==
