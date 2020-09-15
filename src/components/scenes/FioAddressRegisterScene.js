@@ -4,6 +4,7 @@ import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { sprintf } from 'sprintf-js'
 
 import fioAddressIcon from '../../assets/images/list_fioAddress.png'
 import * as Constants from '../../constants/indexConstants'
@@ -19,6 +20,7 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { scale } from '../../util/scaling.js'
+import { openLink } from '../../util/utils'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
@@ -36,7 +38,8 @@ export type State = {
   domainsLoading: boolean,
   isAvailable: boolean | null,
   fieldPos: number,
-  inputWidth: number
+  inputWidth: number,
+  showFreeAddressLink: boolean
 }
 
 export type StateProps = {
@@ -68,12 +71,14 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
     walletLoading: false,
     domainsLoading: true,
     fieldPos: 200,
-    inputWidth: scale(200)
+    inputWidth: scale(200),
+    showFreeAddressLink: false
   }
 
   componentDidMount() {
     const { fioWallets } = this.props
     this.getPublicDomains()
+    this.checkFreeAddress()
     if (fioWallets.length > 0) {
       this.setState({
         selectedWallet: fioWallets[0]
@@ -83,10 +88,23 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
     }
   }
 
+  checkFreeAddress = async () => {
+    try {
+      const { fioPlugin } = this.props
+      const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.freeAddressRef)
+      if (publicDomains.findIndex((publicDomain: FioPublicDomain) => publicDomain.free) > -1) {
+        this.setState({ showFreeAddressLink: true })
+      }
+    } catch (e) {
+      //
+      console.log(e)
+    }
+  }
+
   getPublicDomains = async () => {
     const { fioPlugin } = this.props
     try {
-      const publicDomains = await fioPlugin.otherMethods.getDomains()
+      const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.fallbackRef)
       const publicDomainsConverted = publicDomains
         .sort(publicDomain => (publicDomain.domain === Constants.FIO_DOMAIN_DEFAULT.name ? -1 : 1))
         .map((publicDomain: FioPublicDomain) => ({
@@ -119,6 +137,21 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
     } catch (e) {
       this.setState({ walletLoading: false })
       showError(s.strings.create_wallet_failed_message)
+    }
+  }
+
+  registerFreeAddress = () => {
+    const { fioPlugin, fioWallets } = this.props
+    const { selectedWallet } = this.state
+    if (!fioPlugin) return
+    if (!fioWallets.length) return
+    if (!selectedWallet) return
+    const publicKey = selectedWallet.publicWalletInfo.keys.publicKey
+    const url = `${fioPlugin.currencyInfo.defaultSettings.fioAddressRegUrl}${fioPlugin.currencyInfo.defaultSettings.freeAddressRef}?publicKey=${publicKey}`
+    try {
+      openLink(url)
+    } catch (e) {
+      showError(sprintf(s.strings.open_url_err, url))
     }
   }
 
@@ -286,7 +319,7 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
   }
 
   render() {
-    const { fioAddress, selectedDomain, touched, isAvailable, domainsLoading, walletLoading } = this.state
+    const { fioAddress, selectedDomain, touched, isAvailable, domainsLoading, walletLoading, showFreeAddressLink } = this.state
     let chooseHandleErrorMessage = ''
     if (touched && !this.props.isConnected) {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_cant_check
@@ -357,6 +390,15 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
 
             {this.renderFioWallets()}
             {this.renderButton()}
+            {this.props.fioWallets.length && showFreeAddressLink ? (
+              <View style={[styles.createWalletPromptArea, styles.paddings]}>
+                <TouchableOpacity onPress={this.registerFreeAddress} underlayColor={`${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`}>
+                  <View>
+                    <T style={styles.link}>{s.strings.fio_address_reg_free}</T>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            ) : null}
             <View style={styles.bottomSpace} />
           </View>
         </ScrollView>
@@ -480,6 +522,11 @@ const rawStyles = {
     paddingLeft: THEME.rem(0.75),
     paddingRight: THEME.rem(0.75),
     paddingVertical: THEME.rem(0.75)
+  },
+  link: {
+    padding: THEME.rem(0.125),
+    color: THEME.COLORS.ACCENT_BLUE,
+    textAlign: 'center'
   }
 }
 export const styles: typeof rawStyles = StyleSheet.create(rawStyles)
