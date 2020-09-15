@@ -231,11 +231,8 @@ class AddressModalConnected extends React.Component<Props, State> {
       this.fioCheckQueue = 0
       try {
         const { currencyCode, coreWallet, fioPlugin } = this.props
-        const publicAddress = await checkPubAddress(fioPlugin, uri.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
+        await checkPubAddress(fioPlugin, uri.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
         this.setStatusLabel(s.strings.fragment_send_address)
-        if (!publicAddress) {
-          return this.setState({ fieldError: s.strings.err_no_address_title })
-        }
       } catch (e) {
         this.setStatusLabel(s.strings.fragment_send_address)
         return this.setState({ fieldError: e.message })
