@@ -291,7 +291,11 @@ export class EdgeProvider extends Bridgeable {
       }
 
       edgeSpendTargets.push({ ...spendTarget, nativeAmount })
-      console.log(`requestSpend currencycode ${currencyCode} and spendTarget.publicAddress ${spendTarget.publicAddress || ''}`)
+      console.log(
+        `requestSpend currencycode ${currencyCode} and spendTarget.publicAddress ${spendTarget.publicAddress || ''} and uniqueIdentifier ${
+          uniqueIdentifier || ''
+        }`
+      )
     }
     info.spendTargets = edgeSpendTargets
 
