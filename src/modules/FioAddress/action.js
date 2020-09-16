@@ -28,7 +28,7 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
     for (const wallet of fioWallets) {
       const walletId = wallet.id
       const walletFioAddresses = await wallet.otherMethods.getFioAddresses()
-      fioAddresses = [...fioAddresses, ...walletFioAddresses]
+      fioAddresses = [...fioAddresses, ...walletFioAddresses.map(({ name, expiration }) => ({ name, expiration, walletId }))]
       const walletFioDomains = await wallet.otherMethods.getFioDomains()
       fioDomains = [...fioDomains, ...walletFioDomains.map(({ name, expiration, isPublic }) => ({ name, expiration, isPublic, walletId }))]
     }

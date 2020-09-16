@@ -69,7 +69,7 @@ export class FioAddressDetailsScene extends React.Component<Props, LocalState> {
     const { fioAddressName, expiration } = this.props
     const { fioWallet } = this.state
     if (fioWallet) {
-      Actions[Constants.FIO_ADDRESS_SETTINGS]({ fioWallet, fioAddressName, expiration: intl.formatExpDate(expiration) })
+      Actions[Constants.FIO_ADDRESS_SETTINGS]({ fioWallet, fioAddressName, expiration: intl.formatExpDate(expiration), refreshAfterRenew: true })
     } else {
       showError(s.strings.fio_wallet_missing_for_fio_address)
     }

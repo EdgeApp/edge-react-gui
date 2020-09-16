@@ -25,6 +25,7 @@ import { scale } from '../../util/scaling.js'
 import FullScreenLoader from '../common/FullScreenLoader'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
+import { ButtonsModal } from '../modals/ButtonsModal'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance.js'
@@ -195,7 +196,25 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       try {
         const { fee } = await fioWallet.otherMethods.fioAction('getFeeForRejectFundsRequest', { payerFioAddress })
         if (fee) {
-          showError(`${s.strings.fio_no_bundled_err_title}. ${s.strings.fio_no_bundled_err_msg}`)
+          this.setState({ rejectLoading: false })
+          const answer = await Airship.show(bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={s.strings.fio_no_bundled_err_msg}
+              message={s.strings.fio_no_bundled_renew_err_msg}
+              buttons={{
+                ok: { label: s.strings.title_fio_renew_address },
+                cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+              }}
+            />
+          ))
+          if (answer === 'ok') {
+            return Actions[Constants.FIO_ADDRESS_SETTINGS]({
+              showRenew: true,
+              fioWallet,
+              fioAddressName: payerFioAddress
+            })
+          }
         } else {
           await fioWallet.otherMethods.fioAction('rejectFundsRequest', { fioRequestId: request.fio_request_id, payerFioAddress })
           this.removeFioPendingRequest(request.fio_request_id)

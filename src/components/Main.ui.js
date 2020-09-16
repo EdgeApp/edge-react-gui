@@ -30,6 +30,7 @@ import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene.js
 import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene.js'
 import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene.js'
 import { FioAddressRegisteredScene } from '../components/scenes/FioAddressRegisteredScene'
+import { FioAddressSettingsScene } from '../components/scenes/FioAddressSettingsScene'
 import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConfirmationScene.js'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
@@ -50,7 +51,6 @@ import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetai
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegisterConnector'
 import { FioAddressRegisterSelectWalletConnector } from '../connectors/scenes/FioAddressRegisterSelectWalletConnector'
-import { FioAddressSettingsConnector } from '../connectors/scenes/FioAddressSettingsConnector'
 import { FioConnectWalletConfirmConnector } from '../connectors/scenes/FioConnectWalletConfirmConnector'
 import { FioDomainSettingsConnector } from '../connectors/scenes/FioDomainSettingsConnector'
 import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
@@ -703,10 +703,13 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={this.renderMenuButton()}
               onLeft={Actions.pop}
             />
+          </Stack>
+
+          <Stack key={Constants.FIO_ADDRESS_SETTINGS}>
             <Scene
               key={Constants.FIO_ADDRESS_SETTINGS}
               navTransparent
-              component={FioAddressSettingsConnector}
+              component={FioAddressSettingsScene}
               renderTitle={this.renderTitle(s.strings.title_fio_address_settings)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderMenuButton()}
