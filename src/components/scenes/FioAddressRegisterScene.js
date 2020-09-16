@@ -163,8 +163,8 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
         if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
         const fullAddress = `${fioAddress}${Constants.FIO_ADDRESS_DELIMITER}${selectedDomain.name}`
         if (selectedDomain.isFree) {
-          Actions[Constants.FIO_ADDRESS_CONFIRM]({
-            fioAddressName: fullAddress,
+          Actions[Constants.FIO_NAME_CONFIRM]({
+            fioName: fullAddress,
             paymentWallet: selectedWallet,
             fee: 0,
             ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey

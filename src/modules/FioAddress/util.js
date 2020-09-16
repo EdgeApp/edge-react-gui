@@ -490,13 +490,56 @@ export const getRegInfo = async (
       }
     }
   }
+  // todo: temporary commented to use fallback referral code by default.
+  // const referralCode = isFallback ? fioPlugin.currencyInfo.defaultSettings.fallbackRef : fioPlugin.currencyInfo.defaultSettings.defaultRef
+  return buyAddressRequest(fioPlugin, fioAddress, fioPlugin.currencyInfo.defaultSettings.fallbackRef, selectedWallet, activationCost)
+}
+
+/**
+ *
+ * @param fioPlugin
+ * @param fioDomain
+ * @param selectedWallet
+ * @param displayDenomination
+ * @returns {Promise<{activationCost: number, supportedCurrencies:{[string]: boolean}, paymentInfo: {[string]: {amount: string, address: string}}}>}
+ */
+export const getDomainRegInfo = async (
+  fioPlugin: EdgeCurrencyConfig,
+  fioDomain: string,
+  selectedWallet: EdgeCurrencyWallet,
+  displayDenomination: EdgeDenomination
+): Promise<{
+  supportedCurrencies: { [currencyCode: string]: boolean },
+  activationCost: number,
+  paymentInfo: { [currencyCode: string]: { amount: string, address: string } }
+}> => {
+  let activationCost = 0
 
   try {
-    // todo: temporary commented to use fallback referral code by default.
-    // const referralCode = isFallback ? fioPlugin.currencyInfo.defaultSettings.fallbackRef : fioPlugin.currencyInfo.defaultSettings.defaultRef
+    const fee = await selectedWallet.otherMethods.getFee('registerFioDomain')
+    activationCost = parseFloat(truncateDecimals(bns.div(`${fee}`, displayDenomination.multiplier, 18), 6))
+  } catch (e) {
+    throw new Error(s.strings.fio_get_fee_err_msg)
+  }
+
+  return buyAddressRequest(fioPlugin, fioDomain, fioPlugin.currencyInfo.defaultSettings.defaultRef, selectedWallet, activationCost)
+}
+
+const buyAddressRequest = async (
+  fioPlugin: EdgeCurrencyConfig,
+  address: string,
+  referralCode: string,
+  selectedWallet: EdgeCurrencyWallet,
+  activationCost: number
+): Promise<{
+  supportedCurrencies: { [currencyCode: string]: boolean },
+  activationCost: number,
+  paymentInfo: { [currencyCode: string]: { amount: string, address: string } }
+}> => {
+  try {
     const buyAddressResponse: BuyAddressResponse = await fioPlugin.otherMethods.buyAddressRequest({
-      address: fioAddress,
-      referralCode: fioPlugin.currencyInfo.defaultSettings.fallbackRef,
+      address,
+      referralCode,
       publicKey: selectedWallet.publicWalletInfo.keys.publicKey
     })
 
@@ -534,7 +577,6 @@ export const getRegInfo = async (
   } catch (e) {
     console.log(e)
   }
-
   throw new Error(s.strings.fio_get_reg_info_err_msg)
 }
 
