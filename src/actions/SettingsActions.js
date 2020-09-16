@@ -23,7 +23,6 @@ import { convertCurrency } from '../modules/UI/selectors.js'
 import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
-import { disableOtp, keepOtp } from './OtpActions.js'
 
 export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -190,9 +189,9 @@ export const showReEnableOtpModal = () => async (dispatch: Dispatch, getState: G
   if (resolveValue === true) {
     // true on positive, false on negative
     // let 2FA expire
-    dispatch(keepOtp())
+    account.cancelOtpReset()
   } else if (resolveValue === false) {
-    dispatch(disableOtp())
+    account.disableOtp()
   } // if default of null (press backdrop) do not change anything and keep reminding
 }
 

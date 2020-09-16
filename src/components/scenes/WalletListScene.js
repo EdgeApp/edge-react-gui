@@ -10,16 +10,14 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
-import { disableOtp, keepOtp } from '../../actions/OtpActions.js'
 import { linkReferralWithCurrencies, toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
-import otpIcon from '../../assets/images/otp/OTP-badge_sm.png'
 import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
 import { Fontello } from '../../assets/vector/index.js'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { getDefaultIsoFiat, getIsAccountBalanceVisible, getOtpResetPending } from '../../modules/Settings/selectors.js'
+import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
@@ -38,8 +36,6 @@ import { WalletListFooter } from '../common/WalletListFooter.js'
 import { WalletListRow } from '../common/WalletListRow.js'
 import { WalletListSortableRow } from '../common/WalletListSortableRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
-import { TwoButtonSimpleConfirmationModal } from '../modals/TwoButtonSimpleConfirmationModal.js'
-import { Airship } from '../services/AirshipInstance.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 
 type StateProps = {
@@ -47,7 +43,6 @@ type StateProps = {
   accountReferral: AccountReferral,
   activeWalletIds: Array<string>,
   exchangeRates: Object,
-  otpResetPending: boolean,
   wallets: { [walletId: string]: GuiWallet }
 }
 type DispatchProps = {
@@ -55,8 +50,6 @@ type DispatchProps = {
   toggleAccountBalanceVisibility(): void,
   updateActiveWalletsOrder(walletIds: Array<string>): void,
   walletRowOption(walletId: string, option: WalletListMenuKey, currencyCode?: string): void,
-  disableOtp(): void,
-  keepOtp(): void,
   linkReferralWithCurrencies(string): void
 }
 type Props = StateProps & DispatchProps
@@ -71,26 +64,6 @@ class WalletListComponent extends React.Component<Props, State> {
     slowlog(this, /.*/, global.slowlogOptions)
     this.state = {
       sorting: false
-    }
-  }
-
-  componentDidMount() {
-    this.checkOtpResetPendingModal()
-  }
-
-  checkOtpResetPendingModal = async () => {
-    if (this.props.otpResetPending) {
-      const resolved = await Airship.show(bridge => (
-        <TwoButtonSimpleConfirmationModal
-          bridge={bridge}
-          icon={<Image source={otpIcon} />}
-          title={s.strings.otp_modal_reset_headline}
-          subTitle={s.strings.otp_modal_reset_description}
-          cancelText={s.strings.request_review_answer_no}
-          doneText={s.strings.request_review_answer_yes}
-        />
-      ))
-      resolved ? this.props.keepOtp() : this.props.disableOtp()
     }
   }
 
@@ -290,7 +263,6 @@ export const WalletListScene = connect(
       accountReferral: state.account.accountReferral,
       activeWalletIds,
       exchangeRates: state.exchangeRates,
-      otpResetPending: getOtpResetPending(state),
       wallets: state.ui.wallets.byId
     }
   },
@@ -306,12 +278,6 @@ export const WalletListScene = connect(
     },
     walletRowOption(walletId, option, currencyCode) {
       dispatch(walletListMenuAction(walletId, option, currencyCode))
-    },
-    disableOtp() {
-      dispatch(disableOtp())
-    },
-    keepOtp() {
-      dispatch(keepOtp())
     },
     linkReferralWithCurrencies(uri) {
       dispatch(linkReferralWithCurrencies(uri))

@@ -17,11 +17,6 @@ export const setPINMode = (pinMode: boolean) => ({
   data: { pinMode }
 })
 
-export const setOTPMode = (otpMode: boolean) => ({
-  type: 'UI/SETTINGS/SET_OTP_MODE',
-  data: { otpMode }
-})
-
 export const setDefaultFiat = (defaultFiat: string) => ({
   type: 'UI/SETTINGS/SET_DEFAULT_FIAT',
   data: { defaultFiat }
@@ -63,11 +58,6 @@ export const addTouchIdInfo = (touchIdInfo: GuiTouchIdInfo) => ({
 export const updateTouchIdEnabled = (bool: boolean) => ({
   type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS',
   data: { isTouchEnabled: bool }
-})
-
-export const updateOtpInfo = (otpInfo: { enabled: boolean, otpKey: ?string }) => ({
-  type: 'UI/SETTINGS/OTP_SETTINGS',
-  data: otpInfo
 })
 
 export const setAccountBalanceVisibility = (isAccountBalanceVisible: boolean) => ({

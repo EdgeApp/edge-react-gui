@@ -15,8 +15,6 @@ import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo } from '../../types/types.js'
 import { runWithTimeout } from '../../util/utils.js'
 import {
-  CORE_DEFAULTS,
-  getCoreSettings,
   getLocalSettings,
   getSyncedSettings,
   LOCAL_ACCOUNT_DEFAULTS,
@@ -67,12 +65,10 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     touchIdInfo: touchIdInfo,
     walletId: '',
     currencyCode: '',
-    otpInfo: { enabled: account.otpKey != null, otpKey: account.otpKey, otpResetPending: false },
     autoLogoutTimeInSeconds: 3600,
     bluetoothMode: false,
     pinLoginEnabled: false,
     pinMode: false,
-    otpMode: false,
     countryCode: '',
     customTokens: [],
     defaultFiat: '',
@@ -152,12 +148,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       accountInitObject.defaultFiat = defaultFiat
       accountInitObject.defaultIsoFiat = 'iso:' + defaultFiat
     }
-
-    const coreSettings = await getCoreSettings(account)
-    const coreDefaults = CORE_DEFAULTS
-    const coreFinal = { ...coreDefaults, ...coreSettings }
-    accountInitObject.pinMode = coreFinal.pinMode
-    accountInitObject.otpMode = coreFinal.otpMode
 
     dispatch({
       type: 'ACCOUNT_INIT_COMPLETE',

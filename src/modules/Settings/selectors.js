@@ -158,12 +158,6 @@ export const getPinLoginEnabled = (state: State) => {
   return pinLoginEnabled
 }
 
-export const getOtpResetPending = (state: State) => {
-  const settings = getSettings(state)
-  const otpResetPending = settings.otpResetPending
-  return otpResetPending
-}
-
 export const getIsAccountBalanceVisible = (state: State) => {
   const settings = getSettings(state)
   return settings.isAccountBalanceVisible
