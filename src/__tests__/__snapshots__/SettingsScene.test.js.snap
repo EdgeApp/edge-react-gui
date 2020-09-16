@@ -363,7 +363,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 }
               }
             >
-              Setup 2 Factor
+              Set Up 2-Factor Security
             </Text>
             <View
               style={
@@ -1759,7 +1759,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 }
               }
             >
-              Setup 2 Factor
+              Set Up 2-Factor Security
             </Text>
             <View
               style={
