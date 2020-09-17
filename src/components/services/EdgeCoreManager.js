@@ -7,6 +7,7 @@ import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
 import * as React from 'react'
 import { Alert, AppState } from 'react-native'
+import { getBrand, getDeviceId } from 'react-native-device-info'
 import SplashScreen from 'react-native-smart-splash-screen'
 
 import ENV from '../../../env.json'
@@ -29,6 +30,7 @@ type State = {
 const contextOptions = {
   apiKey: ENV.AIRBITZ_API_KEY,
   appId: '',
+  deviceDescription: `${getBrand()} ${getDeviceId()}`,
   plugins: allPlugins
 }
 
