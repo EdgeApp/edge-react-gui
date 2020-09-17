@@ -14,6 +14,8 @@
   "plugins": ["react-native", "react", "simple-import-sort"],
   "rules": {
     "camelcase": "warn",
+    "flowtype/array-style-complex-type": ["error", "verbose"],
+    "flowtype/array-style-simple-type": ["error", "shorthand"],
     "flowtype/require-valid-file-annotation": [2, "always"],
     "no-var": "error",
     "react-native/no-inline-styles": 0,
