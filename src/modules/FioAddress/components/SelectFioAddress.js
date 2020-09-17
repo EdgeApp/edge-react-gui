@@ -3,21 +3,24 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { AddressModal } from '../../../components/modals/AddressModal'
+import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { TransactionDetailsNotesInput } from '../../../components/modals/TransactionDetailsNotesInput'
 import { Airship, showError } from '../../../components/services/AirshipInstance'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
 import { THEME } from '../../../theme/variables/airbitz.js'
-import type { State } from '../../../types/reduxTypes'
-import type { FioRequest, GuiWallet } from '../../../types/types'
+import type { Dispatch, State } from '../../../types/reduxTypes'
+import type { FioAddress, FioRequest, GuiWallet } from '../../../types/types'
 import { scale } from '../../../util/scaling.js'
 import { TextAndIconButton, TextAndIconButtonStyle } from '../../UI/components/Buttons/TextAndIconButton.ui.js'
 import Text from '../../UI/components/FormattedText/FormattedText.ui.js'
 import * as UI_SELECTORS from '../../UI/selectors.js'
-import { checkRecordSendFee, findWalletByFioAddress } from '../util'
+import { refreshAllFioAddresses } from '../action'
+import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../util'
 
 export type SelectFioAddressOwnProps = {
   selected: string,
@@ -31,31 +34,68 @@ export type SelectFioAddressOwnProps = {
 
 export type SelectFioAddressProps = {
   loading: boolean,
+  fioAddresses: FioAddress[],
   fioWallets: EdgeCurrencyWallet[],
   selectedWallet: GuiWallet,
   currencyCode: string
 }
 
-type Props = SelectFioAddressOwnProps & SelectFioAddressProps
+export type DispatchProps = {
+  refreshAllFioAddresses: () => void
+}
+
+type Props = SelectFioAddressOwnProps & SelectFioAddressProps & DispatchProps
 
 type LocalState = {
-  loading: boolean
+  loading: boolean,
+  expirationUpdated: boolean,
+  prevFioAddresses: FioAddress[]
 }
 
 class SelectFioAddress extends React.Component<Props, LocalState> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      loading: false
+      loading: false,
+      expirationUpdated: false,
+      prevFioAddresses: props.fioAddresses
     }
   }
 
+  static getDerivedStateFromProps(props: Props, state: LocalState) {
+    const { fioAddresses, selected } = props
+    const { prevFioAddresses } = state
+    if (fioAddresses.length !== prevFioAddresses.length) {
+      return {
+        prevFioAddresses: fioAddresses
+      }
+    }
+    const fioAddress = fioAddresses.find(({ name }) => name === selected)
+    const prevFioAddress = prevFioAddresses.find(({ name }) => name === selected)
+    if (fioAddress && prevFioAddress && fioAddress.expiration !== prevFioAddress.expiration) {
+      return {
+        expirationUpdated: true,
+        prevFioAddresses: fioAddresses
+      }
+    }
+    return null
+  }
+
   componentDidMount() {
-    const { fioRequest, isSendUsingFioAddress } = this.props
+    const { fioRequest, isSendUsingFioAddress, refreshAllFioAddresses } = this.props
+    refreshAllFioAddresses()
     if (fioRequest) {
       this.setFioAddress(fioRequest.payer_fio_address)
     } else if (isSendUsingFioAddress) {
       this.setDefaultFioAddress()
+    }
+  }
+
+  componentDidUpdate() {
+    const { expirationUpdated } = this.state
+    if (expirationUpdated) {
+      this.setState({ expirationUpdated: false })
+      this.setFioAddress(this.props.selected)
     }
   }
 
@@ -97,9 +137,17 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
   }
 
   setFioAddress = async (fioAddress: string, fioWallet?: EdgeCurrencyWallet | null) => {
-    const { fioWallets, fioRequest, currencyCode } = this.props
+    const { fioWallets, fioAddresses, fioRequest, currencyCode } = this.props
     if (!fioWallet) {
-      fioWallet = await findWalletByFioAddress(fioWallets, fioAddress)
+      if (fioAddresses && fioAddress.length) {
+        const selectedFioAddress = fioAddresses.find(({ name }) => name === fioAddress)
+        if (selectedFioAddress) {
+          fioWallet = fioWallets.find(({ id }) => id === selectedFioAddress.walletId)
+        }
+      }
+      if (!fioWallet) {
+        fioWallet = await findWalletByFioAddress(fioWallets, fioAddress)
+      }
     }
     let error = ''
 
@@ -114,8 +162,31 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
         await checkRecordSendFee(fioWallet, fioAddress)
       }
     } catch (e) {
-      error = e.message
-      showError(e.message)
+      if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE) {
+        this.props.onSelect(fioAddress, fioWallet, e.message)
+        const answer = await Airship.show(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={s.strings.fio_no_bundled_err_msg}
+            message={s.strings.fio_no_bundled_renew_err_msg}
+            buttons={{
+              ok: { label: s.strings.title_fio_renew_address },
+              cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+            }}
+          />
+        ))
+        if (answer === 'ok') {
+          return Actions[Constants.FIO_ADDRESS_SETTINGS]({
+            showRenew: true,
+            fioWallet,
+            fioAddressName: fioAddress
+          })
+        }
+        error = e.message
+      } else {
+        error = e.message
+        showError(e.message)
+      }
     }
     this.props.onSelect(fioAddress, fioWallet, error)
   }
@@ -249,10 +320,12 @@ const mapStateToProps = (state: State): SelectFioAddressProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
   const fioWallets: EdgeCurrencyWallet[] = UI_SELECTORS.getFioWallets(state)
+  const fioAddresses = state.ui.scenes.fioAddress.fioAddresses
 
   if (!guiWallet || !currencyCode) {
     return {
       loading: true,
+      fioAddresses,
       fioWallets,
       currencyCode,
       selectedWallet: guiWallet
@@ -261,10 +334,17 @@ const mapStateToProps = (state: State): SelectFioAddressProps => {
 
   return {
     loading: false,
+    fioAddresses,
     fioWallets,
     currencyCode,
     selectedWallet: guiWallet
   }
 }
 
-export const SelectFioAddressConnector = connect(mapStateToProps, {})(SelectFioAddress)
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+  refreshAllFioAddresses: () => {
+    dispatch(refreshAllFioAddresses())
+  }
+})
+
+export const SelectFioAddressConnector = connect(mapStateToProps, mapDispatchToProps)(SelectFioAddress)

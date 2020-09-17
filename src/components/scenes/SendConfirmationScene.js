@@ -379,13 +379,15 @@ export class SendConfirmation extends React.Component<Props, State> {
   }
 
   signBroadcastAndSave = async () => {
-    const { guiMakeSpendInfo, currencyCode } = this.props
+    const { guiMakeSpendInfo, currencyCode, updateSpendPending } = this.props
     if (guiMakeSpendInfo && (guiMakeSpendInfo.isSendUsingFioAddress || guiMakeSpendInfo.fioPendingRequest)) {
       const { fioSender } = this.state
       if (fioSender.fioWallet && fioSender.fioAddress && !guiMakeSpendInfo.fioPendingRequest) {
+        updateSpendPending(true)
         try {
           await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
         } catch (e) {
+          updateSpendPending(false)
           if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && currencyCode !== FIO_STR) {
             const answer = await Airship.show(bridge => (
               <ButtonsModal
@@ -408,6 +410,7 @@ export class SendConfirmation extends React.Component<Props, State> {
           showError(e.message)
           return
         }
+        updateSpendPending(false)
       }
 
       return this.props.signBroadcastAndSave(fioSender)
