@@ -22,18 +22,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
     }
   }
   style={
-    Array [
-      Object {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      },
-      Object {
-        "padding": 0,
-      },
-    ]
+    Object {
+      "bottom": 0,
+      "left": 0,
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
+    }
   }
 >
   <View
@@ -48,6 +43,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         Object {
           "bottom": 0,
           "left": 0,
+          "padding": 0,
           "right": 0,
           "top": 64,
         },
@@ -1422,18 +1418,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
     }
   }
   style={
-    Array [
-      Object {
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
-      },
-      Object {
-        "padding": 0,
-      },
-    ]
+    Object {
+      "bottom": 0,
+      "left": 0,
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
+    }
   }
 >
   <View
@@ -1448,6 +1439,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         Object {
           "bottom": 0,
           "left": 0,
+          "padding": 0,
           "right": 0,
           "top": 64,
         },

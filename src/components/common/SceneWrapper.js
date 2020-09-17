@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Animated, StyleSheet, View } from 'react-native'
+import { Animated, ScrollView, StyleSheet, View } from 'react-native'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { getHeaderHeight, THEME } from '../../theme/variables/airbitz.js'
@@ -37,7 +37,10 @@ type Props = {
   hasTabs?: boolean,
 
   // Padding to add inside the scene border:
-  padding?: number
+  padding?: number,
+
+  // True to make the scene scrolling (if avoidKeyboard is false):
+  scroll?: boolean
 }
 
 /**
@@ -78,21 +81,25 @@ export class SceneWrapper extends React.Component<Props> {
    * Render the scene wrapper component, given various items from the context.
    */
   renderScene(gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number) {
-    const { children, background = 'header', bodySplit = 0, padding = 0 } = this.props
+    const { children, background = 'header', bodySplit = 0, padding = 0, scroll = false } = this.props
 
     // Render the scene container:
     const finalChildren = typeof children === 'function' ? children({ ...gap, bottom: keyboardHeight }) : children
     const scene =
       keyboardAnimation != null ? (
-        <Animated.View style={[styles.scene, { ...gap, maxHeight: keyboardAnimation }]}>{finalChildren}</Animated.View>
+        <Animated.View style={[styles.scene, { ...gap, maxHeight: keyboardAnimation, padding }]}>{finalChildren}</Animated.View>
+      ) : scroll ? (
+        <ScrollView style={{ position: 'absolute', ...gap }} contentContainerStyle={{ padding }}>
+          {finalChildren}
+        </ScrollView>
       ) : (
-        <View style={[styles.scene, gap]}>{finalChildren}</View>
+        <View style={[styles.scene, { ...gap, padding }]}>{finalChildren}</View>
       )
 
     // Render the background, if any:
     if (background === 'none') return scene
     return (
-      <Gradient reverse={background === 'drawer'} style={[styles.gradient, { padding }]}>
+      <Gradient reverse={background === 'drawer'} style={styles.gradient}>
         {background === 'body' && <View style={[styles.body, { top: gap.top + bodySplit }]} />}
         {scene}
       </Gradient>
