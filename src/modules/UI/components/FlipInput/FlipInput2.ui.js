@@ -342,19 +342,20 @@ export class FlipInput extends React.Component<Props, State> {
     }
   }
 
-  topRowFront = (fieldInfo: FlipInputFieldInfo, onChangeText: string => void, displayAmount: string, decimalAmount: string) => {
-    const displayAmountString = !decimalAmount || decimalAmount.match(/^0*$/) ? s.strings.string_enter_amount : displayAmount
+  topRowFront = () => {
+    const { primaryDisplayAmount, primaryDecimalAmount } = this.state
+    const displayAmountString = !primaryDecimalAmount || primaryDecimalAmount.match(/^0*$/) ? s.strings.string_enter_amount : primaryDisplayAmount
     const displayAmountStyle = displayAmountString === s.strings.string_enter_amount ? top.amountPlaceholder : null
     return (
       <TouchableWithoutFeedback onPress={this.textInputFrontFocus}>
         <View style={top.row} key="top">
-          <Txt style={top.currencyCode}>{fieldInfo.currencyCode}</Txt>
+          <Txt style={top.currencyCode}>{this.props.primaryInfo.currencyCode}</Txt>
           <View style={top.amountContainer}>
             <Txt style={[top.amount, displayAmountStyle]}>{displayAmountString}</Txt>
             <TextInput
               style={top.textInput}
-              value={decimalAmount}
-              onChangeText={onChangeText}
+              value={primaryDecimalAmount}
+              onChangeText={this.onPrimaryAmountChange}
               autoCorrect={false}
               keyboardType="numeric"
               returnKeyType={this.props.topReturnKeyType || 'done'}
@@ -391,19 +392,20 @@ export class FlipInput extends React.Component<Props, State> {
     }
   }
 
-  topRowBack = (fieldInfo: FlipInputFieldInfo, onChangeText: string => void, displayAmount: string, decimalAmount: string) => {
-    const displayAmountString = !decimalAmount || decimalAmount.match(/^0*$/) ? s.strings.string_enter_amount : displayAmount
+  topRowBack = () => {
+    const { secondaryDisplayAmount, secondaryDecimalAmount } = this.state
+    const displayAmountString = !secondaryDecimalAmount || secondaryDecimalAmount.match(/^0*$/) ? s.strings.string_enter_amount : secondaryDisplayAmount
     const displayAmountStyle = displayAmountString === s.strings.string_enter_amount ? top.amountPlaceholder : null
     return (
       <TouchableWithoutFeedback onPress={this.textInputBackFocus}>
         <View style={top.row} key="top">
-          <Txt style={top.currencyCode}>{fieldInfo.currencyName}</Txt>
+          <Txt style={top.currencyCode}>{this.props.secondaryInfo.currencyName}</Txt>
           <View style={top.amountContainer}>
             <Txt style={[top.amount, displayAmountStyle]}>{displayAmountString}</Txt>
             <TextInput
               style={top.textInput}
-              value={decimalAmount}
-              onChangeText={onChangeText}
+              value={secondaryDecimalAmount}
+              onChangeText={this.onSecondaryAmountChange}
               autoCorrect={false}
               keyboardType="numeric"
               returnKeyType={this.props.topReturnKeyType || 'done'}
@@ -464,7 +466,7 @@ export class FlipInput extends React.Component<Props, State> {
               <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={scale(26)} />
             </View>
             <View style={styles.rows}>
-              {this.topRowFront(primaryInfo, this.onPrimaryAmountChange, this.state.primaryDisplayAmount, this.state.primaryDecimalAmount)}
+              {this.topRowFront()}
               {this.bottomRow(secondaryInfo, this.state.secondaryDisplayAmount)}
             </View>
           </Animated.View>
@@ -476,7 +478,7 @@ export class FlipInput extends React.Component<Props, State> {
               <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={scale(26)} />
             </View>
             <View style={styles.rows}>
-              {this.topRowBack(secondaryInfo, this.onSecondaryAmountChange, this.state.secondaryDisplayAmount, this.state.secondaryDecimalAmount)}
+              {this.topRowBack()}
               {this.bottomRow(primaryInfo, this.state.primaryDisplayAmount)}
             </View>
           </Animated.View>
