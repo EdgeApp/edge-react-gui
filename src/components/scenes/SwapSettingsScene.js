@@ -97,7 +97,7 @@ export class SwapSettings extends React.Component<Props, State> {
   render() {
     const styles = getStyles(this.props.theme)
     return (
-      <SceneWrapper hasTabs={false}>
+      <SceneWrapper background="theme" hasTabs={false}>
         <ScrollView contentContainerStyle={{ paddingBottom: this.props.theme.rem(4) }}>
           <View style={styles.instructionArea}>
             <Text style={styles.instructionText}>{s.strings.settings_exchange_instruction}</Text>

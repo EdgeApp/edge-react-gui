@@ -95,7 +95,7 @@ export class CurrencySettingsComponent extends React.Component<Props, State> {
   render() {
     const { theme } = this.props
     return (
-      <SceneWrapper hasTabs={false}>
+      <SceneWrapper background="theme" hasTabs={false}>
         <ScrollView>
           {this.props.defaultElectrumServer.length !== 0 && (
             <SetCustomNodesModal

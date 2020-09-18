@@ -55,7 +55,6 @@ import { FioDomainSettingsConnector } from '../connectors/scenes/FioDomainSettin
 import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
 import { FioSentRequestConnector } from '../connectors/scenes/FioSentRequestConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
-import OtpSettingsSceneConnector from '../connectors/scenes/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConnector.js'
 import Request from '../connectors/scenes/RequestConnector.js'
 import Scan from '../connectors/scenes/ScanConnector'
@@ -97,6 +96,7 @@ import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
 import { NotificationScene } from './scenes/NotificationScene'
+import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
@@ -543,7 +543,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.OTP_SETUP}
               navTransparent
-              component={ifLoggedIn(OtpSettingsSceneConnector)}
+              component={ifLoggedIn(OtpSettingsScene)}
               renderTitle={this.renderTitle(s.strings.title_otp)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}

@@ -174,7 +174,7 @@ export class FioDomainSettingsScene extends React.Component<Props, State> {
     const { feeLoading, displayFee, balance, renewalFee, renewLoading, showRenew } = this.state
 
     return (
-      <SceneWrapper>
+      <SceneWrapper background="header">
         <View style={styles.info}>
           <T style={styles.title}>{s.strings.fio_domain_label}</T>
           <T style={styles.content}>

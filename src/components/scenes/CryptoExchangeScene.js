@@ -142,7 +142,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     const fromHeaderText = sprintf(s.strings.exchange_from_wallet, this.props.fromWallet.name)
     const toHeaderText = sprintf(s.strings.exchange_to_wallet, this.props.toWallet.name)
     return (
-      <SceneWrapper>
+      <SceneWrapper background="header">
         <KeyboardAwareScrollView style={styles.mainScrollView} keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollViewContentContainer}>
           <CryptoExchangeMessageConnector />
           <View style={styles.shim} />

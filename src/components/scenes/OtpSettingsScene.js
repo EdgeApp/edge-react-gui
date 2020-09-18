@@ -1,200 +1,200 @@
 // @flow
 
-import { createStaticModal, createYesNoModal } from 'edge-components'
+import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Clipboard, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Clipboard, Text, TouchableOpacity, View } from 'react-native'
+import { cacheStyles } from 'react-native-patina'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import { connect } from 'react-redux'
 
-import iconImage from '../../assets/images/otp/OTP-badge_sm.png'
-import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { TertiaryButton } from '../../modules/UI/components/Buttons/TertiaryButton.ui.js'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { scale } from '../../util/scaling.js'
-import { ExpandableBoxComponent } from '../common/ExpandableBoxComponent.js'
-import { launchModal } from '../common/ModalProvider.js'
-import OtpHeroComponent from '../common/OtpHeroComponent.js'
+import { B } from '../../styles/common/textStyles.js'
+import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { StaticModalComponent } from '../modals/StaticModalComponent.js'
-import { showToast } from '../services/AirshipInstance.js'
+import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { Airship, showActivity, showError, showToast } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, withTheme } from '../services/ThemeContext.js'
+import { PrimaryButton, SecondaryButton } from '../themed/ThemedButtons.js'
 
-type Props = {
-  isOtpEnabled: boolean,
-  otpKey?: string,
-  otpResetDate?: string,
-  enableOtp(): void,
-  disableOtp(): void
+type OwnProps = {}
+type StateProps = {
+  account: EdgeAccount
 }
+type DispatchProps = {}
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type State = {
-  showMessageModal: boolean,
-  messageModalMessage: string | null,
-  messageModalComponent?: any
+  otpKey?: string,
+  showKey: boolean
 }
 
-export default class OtpSettingsScene extends React.Component<Props, State> {
+class OtpSettingsSceneComponent extends React.Component<Props, State> {
+  cleanups: Array<() => mixed> | void
+
   constructor(props: Props) {
     super(props)
+    const { account } = props
     this.state = {
-      showMessageModal: false,
-      messageModalMessage: ''
+      otpKey: account.otpKey,
+      showKey: false
     }
   }
 
-  cancelStatic = () => {
-    this.setState({
-      showMessageModal: false,
-      messageModalMessage: ''
-    })
+  componentDidMount() {
+    const { account } = this.props
+    this.cleanups = [account.watch('otpKey', otpKey => this.setState({ otpKey }))]
   }
 
-  onPressDisable = async () => {
-    // Use `launchModal` to put the modal component on screen:
-    const confirmDisableModal = createYesNoModal({
-      title: s.strings.otp_modal_headline,
-      message: s.strings.otp_modal_body,
-      icon: <Image source={iconImage} />,
-      yesButtonText: s.strings.otp_disable,
-      noButtonText: s.strings.string_cancel_cap
-    })
-
-    const resolveValue = await launchModal(confirmDisableModal)
-    if (resolveValue) {
-      this.props.disableOtp()
-      this.onConfirmDisable()
-    }
+  componentWillUnmount() {
+    if (this.cleanups != null) this.cleanups.forEach(f => f())
   }
 
-  onConfirmDisable = async () => {
-    const afterDisableModal = createStaticModal({
-      message: s.strings.otp_disabled_modal,
-      icon: <Icon style={styles.icon} name={Constants.CHECK_CIRCLE} size={scale(36)} type={Constants.SIMPLE_ICONS} />,
-      modalDismissTimerSeconds: 8
-    })
+  handleDisable = (): void => {
+    const { account } = this.props
 
-    await launchModal(afterDisableModal)
+    Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.otp_modal_headline}
+        message={s.strings.otp_modal_body}
+        buttons={{
+          ok: { label: s.strings.otp_disable },
+          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+        }}
+      />
+    ))
+      .then(button => {
+        if (button === 'ok') return showActivity(s.strings.otp_disable, account.disableOtp())
+      })
+      .catch(showError)
   }
 
-  onPressEnable = () => {
-    this.setState(
-      {
-        showMessageModal: true,
-        messageModalMessage: null,
-        messageModalComponent: (
-          <Text style={{ textAlign: 'center' }}>
-            <T>
-              {s.strings.otp_enabled_modal_part_one} <T isBold>{s.strings.otp_enabled_modal_part_two}</T>
-            </T>
-          </Text>
-        )
-      },
-      this.props.enableOtp
-    )
+  handleEnable = (): void => {
+    const { account } = this.props
+    showActivity(s.strings.otp_enable, account.enableOtp()).catch(showError)
   }
 
-  renderButton = () => {
-    if (this.props.isOtpEnabled) {
-      return (
-        <TertiaryButton onPress={this.onPressDisable}>
-          <TertiaryButton.Text>{s.strings.otp_disable}</TertiaryButton.Text>
-        </TertiaryButton>
-      )
-    }
-    return (
-      <PrimaryButton onPress={this.onPressEnable}>
-        <PrimaryButton.Text>{s.strings.otp_enable}</PrimaryButton.Text>
-      </PrimaryButton>
-    )
+  handleToggleKey = (): void => {
+    this.setState(state => ({ showKey: !state.showKey }))
   }
 
-  onCopyOtpKey = () => {
-    Clipboard.setString(this.props.otpKey)
+  handleCopyKey = () => {
+    const { otpKey = '' } = this.state
+    Clipboard.setString(otpKey)
     showToast(s.strings.otp_copied_msg)
   }
 
-  renderKeyBox = (styles: Object) => {
-    if (this.props.isOtpEnabled) {
-      return (
-        <ExpandableBoxComponent showMessage={s.strings.otp_show_code} hideMessage={s.strings.otp_hide_code}>
-          <TouchableOpacity onPress={this.onCopyOtpKey}>
-            <Text style={styles.keyText}>{this.props.otpKey}</Text>
-          </TouchableOpacity>
-        </ExpandableBoxComponent>
-      )
-    }
-    return null
+  render() {
+    const { theme } = this.props
+    const { otpKey } = this.state
+    const styles = getStyles(theme)
+
+    return (
+      <SceneWrapper background="theme" padding={theme.rem(0.5)} scroll>
+        <AntDesignIcon name="lock" style={styles.icon} />
+        <Text style={styles.titleText}>{otpKey != null ? s.strings.title_otp_enabled : s.strings.title_otp_disabled}</Text>
+
+        <Text style={styles.messageText}>{s.strings.otp_description}</Text>
+        <Text style={styles.messageText}>{s.strings.otp_description_2}</Text>
+        {otpKey != null ? (
+          <Text style={styles.messageText}>
+            <B>{s.strings.otp_enabled_message}</B>
+          </Text>
+        ) : null}
+
+        {otpKey != null ? this.renderKey(otpKey) : null}
+        {otpKey != null ? (
+          <SecondaryButton label={s.strings.otp_disable} marginRem={0.5} onPress={this.handleDisable} />
+        ) : (
+          <PrimaryButton label={s.strings.otp_enable} marginRem={0.5} onPress={this.handleEnable} />
+        )}
+      </SceneWrapper>
+    )
   }
 
-  renderMiddle(styles: Object) {
-    const message = this.props.isOtpEnabled ? s.strings.otp_enabled_description : s.strings.otp_description
+  renderKey(otpKey: string) {
+    const { theme } = this.props
+    const { showKey } = this.state
+    const styles = getStyles(theme)
+
     return (
-      <View style={styles.middle}>
-        <Text style={styles.middleText}>{message}</Text>
-        <View style={styles.shim} />
-        {this.renderKeyBox(styles)}
+      <View style={styles.keyArea}>
+        <TouchableOpacity style={styles.keyToggle} onPress={this.handleToggleKey}>
+          <Text style={styles.keyToggleText}>{showKey ? s.strings.otp_hide_code : s.strings.otp_show_code}</Text>
+          <AntDesignIcon name={showKey ? 'up' : 'down'} style={styles.keyToggleIcon} />
+        </TouchableOpacity>
+        {showKey ? (
+          <TouchableOpacity onPress={this.handleCopyKey}>
+            <Text style={styles.keyText}>{otpKey}</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     )
   }
-
-  render() {
-    console.log('this.state.showMessageModal: ', this.state.showMessageModal)
-    return (
-      <>
-        <SceneWrapper hasTabs={false} background="body">
-          <View style={styles.body}>
-            <OtpHeroComponent enabled={this.props.isOtpEnabled} />
-            {this.renderMiddle(styles)}
-            <View style={styles.buttonContainer}>{this.renderButton()}</View>
-          </View>
-        </SceneWrapper>
-        <StaticModalComponent
-          cancel={this.cancelStatic}
-          body={this.state.messageModalMessage || ''}
-          bodyComponent={this.state.messageModalComponent}
-          isVisible={this.state.showMessageModal}
-          modalDismissTimerSeconds={10}
-        />
-      </>
-    )
-  }
 }
 
-const rawStyles = {
-  body: {
-    backgroundColor: THEME.COLORS.WHITE,
-    flex: 1,
-    padding: scale(18)
-  },
-  shim: {
-    height: scale(10)
-  },
-  middle: {
-    width: '100%',
-    minHeight: scale(200)
-  },
-  middleText: {
-    width: '100%',
-    fontSize: scale(18),
-    textAlign: 'center',
-    fontFamily: THEME.FONTS.DEFAULT,
-    color: THEME.COLORS.GRAY_2
-  },
-  keyText: {
-    width: '100%',
-    fontSize: scale(18),
-    textAlign: 'center',
-    fontFamily: THEME.FONTS.DEFAULT,
-    color: THEME.COLORS.ACCENT_BLUE,
-    textDecorationLine: 'underline'
-  },
-  buttonContainer: {
-    width: '100%',
-    height: scale(THEME.BUTTONS.HEIGHT)
+const getStyles = cacheStyles((theme: Theme) => ({
+  scrollContainer: {
+    padding: theme.rem(0.5)
   },
   icon: {
-    color: THEME.COLORS.WHITE
+    alignSelf: 'center',
+    color: theme.primaryText,
+    fontSize: theme.rem(2),
+    margin: theme.rem(0.5)
+  },
+  titleText: {
+    color: theme.primaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1.25),
+    margin: theme.rem(0.5),
+    textAlign: 'center'
+  },
+  messageText: {
+    color: theme.primaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    margin: theme.rem(0.5),
+    textAlign: 'left'
+  },
+  keyArea: {
+    backgroundColor: theme.tileBackground,
+    borderRadius: theme.rem(0.5),
+    margin: theme.rem(0.5),
+    padding: theme.rem(0.5)
+  },
+  keyToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  keyToggleText: {
+    color: theme.primaryText,
+    flexShrink: 1,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    margin: theme.rem(0.5)
+  },
+  keyToggleIcon: {
+    color: theme.primaryText,
+    fontSize: theme.rem(1),
+    margin: theme.rem(0.5)
+  },
+  keyText: {
+    color: theme.textLink,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    textAlign: 'center',
+    textDecorationLine: 'underline',
+    margin: theme.rem(0.5)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+export const OtpSettingsScene = withTheme(
+  connect(
+    (state: ReduxState): StateProps => ({
+      account: state.core.account
+    }),
+    (dispatch: Dispatch): DispatchProps => ({})
+  )(OtpSettingsSceneComponent)
+)

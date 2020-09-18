@@ -7,12 +7,6 @@ import { showError } from '../../../components/services/AirshipInstance.js'
 import type { MostRecentWallet, PasswordReminder } from '../../../types/types.js'
 import { categories } from './subcategories.js'
 
-// Default Core Settings
-export const CORE_DEFAULTS = {
-  otpMode: false,
-  pinMode: false
-}
-
 export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
   '20': false,
   '200': false,
@@ -537,15 +531,6 @@ export const getLocalSettings = (account: EdgeAccount) => {
 export const setLocalSettings = (account: EdgeAccount, settings: Object) => {
   const text = JSON.stringify(settings)
   return account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
-}
-
-export const getCoreSettings = (account: EdgeAccount): Promise<{ otpMode: boolean, pinMode: boolean }> => {
-  // eslint-disable-line no-unused-vars
-  const coreSettings: { otpMode: boolean, pinMode: boolean } = CORE_DEFAULTS
-  // TODO: Get each setting separately,
-  // build up settings object,
-  // return settings object
-  return Promise.resolve(coreSettings)
 }
 
 export const updateCurrencySettings = (currentSettings: Object, currencyCode: string, newSettings: Object) => {

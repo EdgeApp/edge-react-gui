@@ -209,7 +209,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
     }
 
     return (
-      <SceneWrapper>
+      <SceneWrapper background="header">
         <View style={styles.info}>
           <T style={styles.title}>{s.strings.fio_address_register_form_field_label}</T>
           <T style={styles.content}>{fioAddressName}</T>

@@ -1,941 +1,929 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TransactionDetails.ui should render 1`] = `
-<React.Fragment>
-  <SceneWrapper
-    background="header"
-    bodySplit={33.709859154929575}
-  >
-    <ScrollViewMock>
-      <View
-        style={
-          Object {
-            "flex": 1,
-            "flexDirection": "column",
-            "width": "100%",
-          }
+<SceneWrapper
+  background="theme"
+>
+  <ScrollViewMock>
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "flexDirection": "column",
+          "width": "100%",
         }
+      }
+    >
+      <WithTheme(TileComponent)
+        onPress={[Function]}
+        title="Sender Name"
+        type="editable"
       >
-        <WithTheme(TileComponent)
-          onPress={[Function]}
-          title="Sender Name"
-          type="editable"
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
+            }
+          }
         >
-          <View
+          <Image
+            source={
+              Object {
+                "uri": "thumb/nail/path",
+              }
+            }
             style={
               Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
+                "borderRadius": 22,
+                "height": 45,
+                "marginRight": 11,
+                "width": 45,
+              }
+            }
+          />
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22,
               }
             }
           >
-            <Image
-              source={
-                Object {
-                  "uri": "thumb/nail/path",
-                }
-              }
-              style={
-                Object {
-                  "borderRadius": 22,
-                  "height": 45,
-                  "marginRight": 11,
-                  "width": 45,
-                }
-              }
-            />
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              Sender
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          body="₿ 0.00000123"
-          title="Bitcoin Amount"
-          type="static"
-        />
-        <WithTheme(TileComponent)
-          onPress={[Function]}
-          title="Amount in iso:USD"
-          type="editable"
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
-              }
+            Sender
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        body="₿ 0.00000123"
+        title="Bitcoin Amount"
+        type="static"
+      />
+      <WithTheme(TileComponent)
+        onPress={[Function]}
+        title="Amount in iso:USD"
+        type="editable"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
             }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              $ 
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              0.00
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          title="Amount at Current Price"
-          type="static"
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
-              }
-            }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              $ 
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flex": 1,
-                  "fontSize": 22,
-                }
-              }
-            >
-              120.00
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#77C513",
-                  "fontSize": 22,
-                }
-              }
-            >
-              0
-              %
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          onPress={[Function]}
-          title="Category"
-          type="editable"
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
-              }
-            }
-          >
-            <View
-              style={
-                Object {
-                  "borderColor": "#66EDA8",
-                  "borderRadius": 3,
-                  "borderWidth": 1,
-                  "marginVertical": 6,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 6,
-                }
-              }
-            >
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  }
-                }
-              >
-                Income
-              </FormattedText>
-            </View>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "marginHorizontal": 17,
-                  "marginVertical": 6,
-                }
-              }
-            >
-              
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          body=""
-          onPress={[Function]}
-          title="Notes"
-          type="editable"
-        />
-        <TouchableWithoutFeedback
-          onPress={[Function]}
+          }
         >
           <FormattedText
             style={
               Object {
-                "color": "#66EDA8",
+                "color": "#FFFFFF",
                 "fontSize": 22,
-                "marginVertical": 28,
-                "textAlign": "center",
-                "width": "100%",
               }
             }
           >
-            View Advanced Transaction Data
+            $ 
           </FormattedText>
-        </TouchableWithoutFeedback>
-        <PrimaryButton
-          label="Save"
-          marginRem={
-            Array [
-              0,
-              2,
-              2,
-            ]
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              }
+            }
+          >
+            0.00
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        title="Amount at Current Price"
+        type="static"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
+            }
           }
-          onPress={[Function]}
-        />
-      </View>
-    </ScrollViewMock>
-  </SceneWrapper>
-</React.Fragment>
+        >
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              }
+            }
+          >
+            $ 
+          </FormattedText>
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flex": 1,
+                "fontSize": 22,
+              }
+            }
+          >
+            120.00
+          </FormattedText>
+          <FormattedText
+            style={
+              Object {
+                "color": "#77C513",
+                "fontSize": 22,
+              }
+            }
+          >
+            0
+            %
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        onPress={[Function]}
+        title="Category"
+        type="editable"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "borderColor": "#66EDA8",
+                "borderRadius": 3,
+                "borderWidth": 1,
+                "marginVertical": 6,
+                "paddingHorizontal": 11,
+                "paddingVertical": 6,
+              }
+            }
+          >
+            <FormattedText
+              style={
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                }
+              }
+            >
+              Income
+            </FormattedText>
+          </View>
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "marginHorizontal": 17,
+                "marginVertical": 6,
+              }
+            }
+          >
+            
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        body=""
+        onPress={[Function]}
+        title="Notes"
+        type="editable"
+      />
+      <TouchableWithoutFeedback
+        onPress={[Function]}
+      >
+        <FormattedText
+          style={
+            Object {
+              "color": "#66EDA8",
+              "fontSize": 22,
+              "marginVertical": 28,
+              "textAlign": "center",
+              "width": "100%",
+            }
+          }
+        >
+          View Advanced Transaction Data
+        </FormattedText>
+      </TouchableWithoutFeedback>
+      <PrimaryButton
+        label="Save"
+        marginRem={
+          Array [
+            0,
+            2,
+            2,
+          ]
+        }
+        onPress={[Function]}
+      />
+    </View>
+  </ScrollViewMock>
+</SceneWrapper>
 `;
 
 exports[`TransactionDetails.ui should render with negative nativeAmount and fiatAmount 1`] = `
-<React.Fragment>
-  <SceneWrapper
-    background="header"
-    bodySplit={33.709859154929575}
-  >
-    <ScrollViewMock>
-      <View
-        style={
-          Object {
-            "flex": 1,
-            "flexDirection": "column",
-            "width": "100%",
-          }
+<SceneWrapper
+  background="theme"
+>
+  <ScrollViewMock>
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "flexDirection": "column",
+          "width": "100%",
         }
+      }
+    >
+      <WithTheme(TileComponent)
+        onPress={[Function]}
+        title="Recipient Name"
+        type="editable"
       >
-        <WithTheme(TileComponent)
-          onPress={[Function]}
-          title="Recipient Name"
-          type="editable"
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
+            }
+          }
         >
-          <View
+          <Image
+            source={
+              Object {
+                "uri": "thumb/nail/path",
+              }
+            }
             style={
               Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
+                "borderRadius": 22,
+                "height": 45,
+                "marginRight": 11,
+                "width": 45,
+              }
+            }
+          />
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22,
               }
             }
           >
-            <Image
-              source={
-                Object {
-                  "uri": "thumb/nail/path",
-                }
-              }
-              style={
-                Object {
-                  "borderRadius": 22,
-                  "height": 45,
-                  "marginRight": 11,
-                  "width": 45,
-                }
-              }
-            />
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              Recipient
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          body="₿ 0.00000122 (+ 0 fee)"
-          title="Bitcoin Amount"
-          type="static"
-        />
-        <WithTheme(TileComponent)
-          onPress={[Function]}
-          title="Amount in iso:USD"
-          type="editable"
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
-              }
+            Recipient
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        body="₿ 0.00000122 (+ 0 fee)"
+        title="Bitcoin Amount"
+        type="static"
+      />
+      <WithTheme(TileComponent)
+        onPress={[Function]}
+        title="Amount in iso:USD"
+        type="editable"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
             }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              $ 
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              6392.93
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          title="Amount at Current Price"
-          type="static"
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
-              }
-            }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              $ 
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flex": 1,
-                  "fontSize": 22,
-                }
-              }
-            >
-              120.00
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#E85466",
-                  "fontSize": 22,
-                }
-              }
-            >
-              - 98.12
-              %
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          onPress={[Function]}
-          title="Category"
-          type="editable"
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
-              }
-            }
-          >
-            <View
-              style={
-                Object {
-                  "borderColor": "#66EDA8",
-                  "borderRadius": 3,
-                  "borderWidth": 1,
-                  "marginVertical": 6,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 6,
-                }
-              }
-            >
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  }
-                }
-              >
-                Expense
-              </FormattedText>
-            </View>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "marginHorizontal": 17,
-                  "marginVertical": 6,
-                }
-              }
-            >
-              
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          body=""
-          onPress={[Function]}
-          title="Notes"
-          type="editable"
-        />
-        <TouchableWithoutFeedback
-          onPress={[Function]}
+          }
         >
           <FormattedText
             style={
               Object {
-                "color": "#66EDA8",
+                "color": "#FFFFFF",
                 "fontSize": 22,
-                "marginVertical": 28,
-                "textAlign": "center",
-                "width": "100%",
               }
             }
           >
-            View Advanced Transaction Data
+            $ 
           </FormattedText>
-        </TouchableWithoutFeedback>
-        <PrimaryButton
-          label="Save"
-          marginRem={
-            Array [
-              0,
-              2,
-              2,
-            ]
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              }
+            }
+          >
+            6392.93
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        title="Amount at Current Price"
+        type="static"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
+            }
           }
-          onPress={[Function]}
-        />
-      </View>
-    </ScrollViewMock>
-  </SceneWrapper>
-</React.Fragment>
+        >
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              }
+            }
+          >
+            $ 
+          </FormattedText>
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flex": 1,
+                "fontSize": 22,
+              }
+            }
+          >
+            120.00
+          </FormattedText>
+          <FormattedText
+            style={
+              Object {
+                "color": "#E85466",
+                "fontSize": 22,
+              }
+            }
+          >
+            - 98.12
+            %
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        onPress={[Function]}
+        title="Category"
+        type="editable"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "borderColor": "#66EDA8",
+                "borderRadius": 3,
+                "borderWidth": 1,
+                "marginVertical": 6,
+                "paddingHorizontal": 11,
+                "paddingVertical": 6,
+              }
+            }
+          >
+            <FormattedText
+              style={
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                }
+              }
+            >
+              Expense
+            </FormattedText>
+          </View>
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "marginHorizontal": 17,
+                "marginVertical": 6,
+              }
+            }
+          >
+            
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        body=""
+        onPress={[Function]}
+        title="Notes"
+        type="editable"
+      />
+      <TouchableWithoutFeedback
+        onPress={[Function]}
+      >
+        <FormattedText
+          style={
+            Object {
+              "color": "#66EDA8",
+              "fontSize": 22,
+              "marginVertical": 28,
+              "textAlign": "center",
+              "width": "100%",
+            }
+          }
+        >
+          View Advanced Transaction Data
+        </FormattedText>
+      </TouchableWithoutFeedback>
+      <PrimaryButton
+        label="Save"
+        marginRem={
+          Array [
+            0,
+            2,
+            2,
+          ]
+        }
+        onPress={[Function]}
+      />
+    </View>
+  </ScrollViewMock>
+</SceneWrapper>
 `;
 
 exports[`TransactionDetails.ui should render with tx date off by 1000x in future 1`] = `
-<React.Fragment>
-  <SceneWrapper
-    background="header"
-    bodySplit={33.709859154929575}
-  >
-    <ScrollViewMock>
-      <View
-        style={
-          Object {
-            "flex": 1,
-            "flexDirection": "column",
-            "width": "100%",
-          }
+<SceneWrapper
+  background="theme"
+>
+  <ScrollViewMock>
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "flexDirection": "column",
+          "width": "100%",
         }
+      }
+    >
+      <WithTheme(TileComponent)
+        onPress={[Function]}
+        title="Sender Name"
+        type="editable"
       >
-        <WithTheme(TileComponent)
-          onPress={[Function]}
-          title="Sender Name"
-          type="editable"
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
+            }
+          }
         >
-          <View
+          <Image
+            source={
+              Object {
+                "uri": "thumb/nail/path",
+              }
+            }
             style={
               Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
+                "borderRadius": 22,
+                "height": 45,
+                "marginRight": 11,
+                "width": 45,
+              }
+            }
+          />
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22,
               }
             }
           >
-            <Image
-              source={
-                Object {
-                  "uri": "thumb/nail/path",
-                }
-              }
-              style={
-                Object {
-                  "borderRadius": 22,
-                  "height": 45,
-                  "marginRight": 11,
-                  "width": 45,
-                }
-              }
-            />
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              Sender
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          body="₿ 0.00000123"
-          title="Bitcoin Amount"
-          type="static"
-        />
-        <WithTheme(TileComponent)
-          onPress={[Function]}
-          title="Amount in iso:USD"
-          type="editable"
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
-              }
+            Sender
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        body="₿ 0.00000123"
+        title="Bitcoin Amount"
+        type="static"
+      />
+      <WithTheme(TileComponent)
+        onPress={[Function]}
+        title="Amount in iso:USD"
+        type="editable"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
             }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              $ 
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              0.00
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          title="Amount at Current Price"
-          type="static"
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
-              }
-            }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              $ 
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flex": 1,
-                  "fontSize": 22,
-                }
-              }
-            >
-              120.00
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#77C513",
-                  "fontSize": 22,
-                }
-              }
-            >
-              0
-              %
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          onPress={[Function]}
-          title="Category"
-          type="editable"
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
-              }
-            }
-          >
-            <View
-              style={
-                Object {
-                  "borderColor": "#66EDA8",
-                  "borderRadius": 3,
-                  "borderWidth": 1,
-                  "marginVertical": 6,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 6,
-                }
-              }
-            >
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  }
-                }
-              >
-                Income
-              </FormattedText>
-            </View>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "marginHorizontal": 17,
-                  "marginVertical": 6,
-                }
-              }
-            >
-              
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          body=""
-          onPress={[Function]}
-          title="Notes"
-          type="editable"
-        />
-        <TouchableWithoutFeedback
-          onPress={[Function]}
+          }
         >
           <FormattedText
             style={
               Object {
-                "color": "#66EDA8",
+                "color": "#FFFFFF",
                 "fontSize": 22,
-                "marginVertical": 28,
-                "textAlign": "center",
-                "width": "100%",
               }
             }
           >
-            View Advanced Transaction Data
+            $ 
           </FormattedText>
-        </TouchableWithoutFeedback>
-        <PrimaryButton
-          label="Save"
-          marginRem={
-            Array [
-              0,
-              2,
-              2,
-            ]
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              }
+            }
+          >
+            0.00
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        title="Amount at Current Price"
+        type="static"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
+            }
           }
-          onPress={[Function]}
-        />
-      </View>
-    </ScrollViewMock>
-  </SceneWrapper>
-</React.Fragment>
+        >
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              }
+            }
+          >
+            $ 
+          </FormattedText>
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flex": 1,
+                "fontSize": 22,
+              }
+            }
+          >
+            120.00
+          </FormattedText>
+          <FormattedText
+            style={
+              Object {
+                "color": "#77C513",
+                "fontSize": 22,
+              }
+            }
+          >
+            0
+            %
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        onPress={[Function]}
+        title="Category"
+        type="editable"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "borderColor": "#66EDA8",
+                "borderRadius": 3,
+                "borderWidth": 1,
+                "marginVertical": 6,
+                "paddingHorizontal": 11,
+                "paddingVertical": 6,
+              }
+            }
+          >
+            <FormattedText
+              style={
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                }
+              }
+            >
+              Income
+            </FormattedText>
+          </View>
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "marginHorizontal": 17,
+                "marginVertical": 6,
+              }
+            }
+          >
+            
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        body=""
+        onPress={[Function]}
+        title="Notes"
+        type="editable"
+      />
+      <TouchableWithoutFeedback
+        onPress={[Function]}
+      >
+        <FormattedText
+          style={
+            Object {
+              "color": "#66EDA8",
+              "fontSize": 22,
+              "marginVertical": 28,
+              "textAlign": "center",
+              "width": "100%",
+            }
+          }
+        >
+          View Advanced Transaction Data
+        </FormattedText>
+      </TouchableWithoutFeedback>
+      <PrimaryButton
+        label="Save"
+        marginRem={
+          Array [
+            0,
+            2,
+            2,
+          ]
+        }
+        onPress={[Function]}
+      />
+    </View>
+  </ScrollViewMock>
+</SceneWrapper>
 `;
 
 exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1`] = `
-<React.Fragment>
-  <SceneWrapper
-    background="header"
-    bodySplit={33.709859154929575}
-  >
-    <ScrollViewMock>
-      <View
-        style={
-          Object {
-            "flex": 1,
-            "flexDirection": "column",
-            "width": "100%",
-          }
+<SceneWrapper
+  background="theme"
+>
+  <ScrollViewMock>
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "flexDirection": "column",
+          "width": "100%",
         }
+      }
+    >
+      <WithTheme(TileComponent)
+        onPress={[Function]}
+        title="Sender Name"
+        type="editable"
       >
-        <WithTheme(TileComponent)
-          onPress={[Function]}
-          title="Sender Name"
-          type="editable"
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
+            }
+          }
         >
-          <View
+          <Image
+            source={
+              Object {
+                "uri": "thumb/nail/path",
+              }
+            }
             style={
               Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
+                "borderRadius": 22,
+                "height": 45,
+                "marginRight": 11,
+                "width": 45,
+              }
+            }
+          />
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22,
               }
             }
           >
-            <Image
-              source={
-                Object {
-                  "uri": "thumb/nail/path",
-                }
-              }
-              style={
-                Object {
-                  "borderRadius": 22,
-                  "height": 45,
-                  "marginRight": 11,
-                  "width": 45,
-                }
-              }
-            />
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              Sender
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          body="₿ 0.00000123"
-          title="Bitcoin Amount"
-          type="static"
-        />
-        <WithTheme(TileComponent)
-          onPress={[Function]}
-          title="Amount in iso:USD"
-          type="editable"
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
-              }
+            Sender
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        body="₿ 0.00000123"
+        title="Bitcoin Amount"
+        type="static"
+      />
+      <WithTheme(TileComponent)
+        onPress={[Function]}
+        title="Amount in iso:USD"
+        type="editable"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
             }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              $ 
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              0.00
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          title="Amount at Current Price"
-          type="static"
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
-              }
-            }
-          >
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "fontSize": 22,
-                }
-              }
-            >
-              $ 
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "flex": 1,
-                  "fontSize": 22,
-                }
-              }
-            >
-              120.00
-            </FormattedText>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#77C513",
-                  "fontSize": 22,
-                }
-              }
-            >
-              0
-              %
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          onPress={[Function]}
-          title="Category"
-          type="editable"
-        >
-          <View
-            style={
-              Object {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "margin": 6,
-              }
-            }
-          >
-            <View
-              style={
-                Object {
-                  "borderColor": "#66EDA8",
-                  "borderRadius": 3,
-                  "borderWidth": 1,
-                  "marginVertical": 6,
-                  "paddingHorizontal": 11,
-                  "paddingVertical": 6,
-                }
-              }
-            >
-              <FormattedText
-                style={
-                  Object {
-                    "color": "#66EDA8",
-                    "fontSize": 22,
-                  }
-                }
-              >
-                Income
-              </FormattedText>
-            </View>
-            <FormattedText
-              style={
-                Object {
-                  "color": "#FFFFFF",
-                  "marginHorizontal": 17,
-                  "marginVertical": 6,
-                }
-              }
-            >
-              
-            </FormattedText>
-          </View>
-        </WithTheme(TileComponent)>
-        <WithTheme(TileComponent)
-          body=""
-          onPress={[Function]}
-          title="Notes"
-          type="editable"
-        />
-        <TouchableWithoutFeedback
-          onPress={[Function]}
+          }
         >
           <FormattedText
             style={
               Object {
-                "color": "#66EDA8",
+                "color": "#FFFFFF",
                 "fontSize": 22,
-                "marginVertical": 28,
-                "textAlign": "center",
-                "width": "100%",
               }
             }
           >
-            View Advanced Transaction Data
+            $ 
           </FormattedText>
-        </TouchableWithoutFeedback>
-        <PrimaryButton
-          label="Save"
-          marginRem={
-            Array [
-              0,
-              2,
-              2,
-            ]
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              }
+            }
+          >
+            0.00
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        title="Amount at Current Price"
+        type="static"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
+            }
           }
-          onPress={[Function]}
-        />
-      </View>
-    </ScrollViewMock>
-  </SceneWrapper>
-</React.Fragment>
+        >
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "fontSize": 22,
+              }
+            }
+          >
+            $ 
+          </FormattedText>
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "flex": 1,
+                "fontSize": 22,
+              }
+            }
+          >
+            120.00
+          </FormattedText>
+          <FormattedText
+            style={
+              Object {
+                "color": "#77C513",
+                "fontSize": 22,
+              }
+            }
+          >
+            0
+            %
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        onPress={[Function]}
+        title="Category"
+        type="editable"
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "margin": 6,
+            }
+          }
+        >
+          <View
+            style={
+              Object {
+                "borderColor": "#66EDA8",
+                "borderRadius": 3,
+                "borderWidth": 1,
+                "marginVertical": 6,
+                "paddingHorizontal": 11,
+                "paddingVertical": 6,
+              }
+            }
+          >
+            <FormattedText
+              style={
+                Object {
+                  "color": "#66EDA8",
+                  "fontSize": 22,
+                }
+              }
+            >
+              Income
+            </FormattedText>
+          </View>
+          <FormattedText
+            style={
+              Object {
+                "color": "#FFFFFF",
+                "marginHorizontal": 17,
+                "marginVertical": 6,
+              }
+            }
+          >
+            
+          </FormattedText>
+        </View>
+      </WithTheme(TileComponent)>
+      <WithTheme(TileComponent)
+        body=""
+        onPress={[Function]}
+        title="Notes"
+        type="editable"
+      />
+      <TouchableWithoutFeedback
+        onPress={[Function]}
+      >
+        <FormattedText
+          style={
+            Object {
+              "color": "#66EDA8",
+              "fontSize": 22,
+              "marginVertical": 28,
+              "textAlign": "center",
+              "width": "100%",
+            }
+          }
+        >
+          View Advanced Transaction Data
+        </FormattedText>
+      </TouchableWithoutFeedback>
+      <PrimaryButton
+        label="Save"
+        marginRem={
+          Array [
+            0,
+            2,
+            2,
+          ]
+        }
+        onPress={[Function]}
+      />
+    </View>
+  </ScrollViewMock>
+</SceneWrapper>
 `;

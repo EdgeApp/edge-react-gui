@@ -2,6 +2,7 @@
 
 exports[`Request should render with loaded props 1`] = `
 <SceneWrapper
+  background="header"
   hasTabs={false}
 >
   <View

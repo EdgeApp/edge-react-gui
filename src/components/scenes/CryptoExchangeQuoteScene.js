@@ -173,7 +173,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const { fromWallet, toWallet } = swapInfo.request
 
     return (
-      <SceneWrapper>
+      <SceneWrapper background="header">
         <ScrollView>
           <View style={styles.topLogoRow}>
             <Image source={swapPluginLogos[pluginId]} resizeMode="contain" style={styles.logoImage} />
