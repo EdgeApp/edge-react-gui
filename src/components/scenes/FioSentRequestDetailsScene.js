@@ -104,7 +104,7 @@ export class FioSentRequestDetailsComponent extends React.Component<Props, Local
 
   render() {
     return (
-      <SceneWrapper>
+      <SceneWrapper background="header">
         <SafeAreaView>
           <View>{this.amountField()}</View>
           <View style={styles.row}>

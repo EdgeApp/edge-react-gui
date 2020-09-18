@@ -187,7 +187,7 @@ class FioNameConfirm extends React.PureComponent<Props, LocalState> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper>
+      <SceneWrapper background="theme">
         <View style={styles.scene}>
           <View style={styles.info}>
             <T style={styles.title}>{this.isFioAddress() ? s.strings.fio_address_confirm_screen_label : s.strings.fio_domain_label}</T>

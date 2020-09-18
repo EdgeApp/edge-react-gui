@@ -9,8 +9,9 @@ import { KeyboardTracker } from './KeyboardTracker.js'
 import { type SafeAreaGap, LayoutContext } from './LayoutContext.js'
 
 type BackgroundOptions =
-  | 'header' // Header area covers the screen (default)
-  | 'body' // Seprate header and content areas
+  | 'theme' // Whatever the current theme specifies (default)
+  | 'header' // Dark header area covers the screen
+  | 'body' // Seprate dark header and white content areas
   | 'none' // Do not render any background elements
   | 'drawer' // Reverse gradient for the drawer
 
@@ -81,7 +82,7 @@ export class SceneWrapper extends React.Component<Props> {
    * Render the scene wrapper component, given various items from the context.
    */
   renderScene(gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number) {
-    const { children, background = 'header', bodySplit = 0, padding = 0, scroll = false } = this.props
+    const { children, background = 'theme', bodySplit = 0, padding = 0, scroll = false } = this.props
 
     // Render the scene container:
     const finalChildren = typeof children === 'function' ? children({ ...gap, bottom: keyboardHeight }) : children
@@ -98,6 +99,9 @@ export class SceneWrapper extends React.Component<Props> {
 
     // Render the background, if any:
     if (background === 'none') return scene
+    if (background === 'theme') {
+      return <Gradient style={styles.gradient}>{scene}</Gradient>
+    }
     return (
       <Gradient reverse={background === 'drawer'} style={styles.gradient}>
         {background === 'body' && <View style={[styles.body, { top: gap.top + bodySplit }]} />}

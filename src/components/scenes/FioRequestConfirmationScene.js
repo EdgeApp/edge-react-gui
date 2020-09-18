@@ -250,7 +250,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     const fiatName = secondaryCurrencyInfo.displayDenomination.name
 
     return (
-      <SceneWrapper>
+      <SceneWrapper background="header">
         <View style={styles.container}>
           <TouchableWithoutFeedback onPress={this.openFioAddressFromModal}>
             <View style={styles.tileContainer}>

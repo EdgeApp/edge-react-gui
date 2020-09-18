@@ -73,7 +73,7 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
     }
 
     return (
-      <SceneWrapper hasTabs={false}>
+      <SceneWrapper background="theme" hasTabs={false}>
         <ScrollView>{rows}</ScrollView>
       </SceneWrapper>
     )

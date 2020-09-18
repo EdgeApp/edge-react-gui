@@ -180,7 +180,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     const rightArrow = <AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />
 
     return (
-      <SceneWrapper hasTabs={false}>
+      <SceneWrapper background="theme" hasTabs={false}>
         <ScrollView>
           <SettingsHeaderRow
             icon={<FontAwesomeIcon name="user-o" color={theme.icon} size={iconSize} />}

@@ -159,7 +159,7 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
     const { acknowledge, connectWalletsLoading, showSlider } = this.state
 
     return (
-      <SceneWrapper>
+      <SceneWrapper background="header">
         <ScrollView>
           <View style={styles.info}>
             <T style={styles.title}>{s.strings.fio_address_register_form_field_label}</T>

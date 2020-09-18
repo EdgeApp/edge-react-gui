@@ -112,7 +112,7 @@ export class FioAddressDetailsScene extends React.Component<Props, LocalState> {
   render() {
     const { fioAddressName, expiration } = this.props
     return (
-      <SceneWrapper>
+      <SceneWrapper background="header">
         <T style={styles.expiration}>
           {`${s.strings.fio_address_details_screen_expires} `}
           {intl.formatExpDate(expiration)}

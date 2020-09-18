@@ -38,7 +38,7 @@ export class PromotionSettingsComponent extends React.Component<Props> {
     const deleteIcon = <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} />
 
     return (
-      <SceneWrapper hasTabs={false}>
+      <SceneWrapper background="theme" hasTabs={false}>
         <SettingsHeaderRow text={s.strings.settings_promotion_affiliation_header} />
         <View style={styles.textBlock}>
           <Text style={styles.textRow}>

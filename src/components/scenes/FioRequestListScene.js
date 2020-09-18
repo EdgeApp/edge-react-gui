@@ -424,7 +424,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     const { loadingPending, loadingSent, rejectLoading, fioRequestsPending, fioRequestsSent } = this.state
 
     return (
-      <SceneWrapper>
+      <SceneWrapper background="header">
         {rejectLoading && <FullScreenLoader indicatorStyles={styles.rejectLoading} />}
         <View style={styles.scene}>
           <View style={styles.row}>

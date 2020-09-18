@@ -53,7 +53,7 @@ export class FioAddressRegisteredScene extends React.Component<Props> {
   render() {
     const { fioName, expiration } = this.props
     return (
-      <SceneWrapper>
+      <SceneWrapper background="header">
         <View style={styles.view}>
           <View style={styles.texts}>
             <View style={styles.image}>

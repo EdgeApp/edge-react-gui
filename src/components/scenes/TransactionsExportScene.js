@@ -153,7 +153,7 @@ class TransactionsExportSceneComponent extends PureComponent<Props, State> {
     const endDateString = formatExpDate(endDate)
     const disabledExport = !isExportQbo && !isExportCsv
     return (
-      <SceneWrapper>
+      <SceneWrapper background="theme">
         <ScrollView>
           <TouchableWithoutFeedback onPress={this.closeDatePicker}>
             <View>

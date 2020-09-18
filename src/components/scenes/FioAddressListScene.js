@@ -89,7 +89,7 @@ export class FioAddressListScene extends React.Component<Props> {
 
     if (!fioAddresses.length) {
       return (
-        <SceneWrapper>
+        <SceneWrapper background="header">
           <Gradient style={styles.gradient} />
           <ActivityIndicator style={styles.loading} size="large" />
         </SceneWrapper>

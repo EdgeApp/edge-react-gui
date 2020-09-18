@@ -11,7 +11,7 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 
 export function CryptoExchangeQuoteProcessingScreenComponent(props: {}) {
   return (
-    <SceneWrapper hasTabs={false}>
+    <SceneWrapper background="header" hasTabs={false}>
       <View style={styles.top}>
         <ActivityIndicator />
       </View>

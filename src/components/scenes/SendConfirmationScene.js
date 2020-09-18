@@ -240,7 +240,7 @@ export class SendConfirmation extends React.Component<Props, State> {
     const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
     return (
       <>
-        <SceneWrapper>
+        <SceneWrapper background="header">
           <View style={styles.mainScrollView}>
             <View style={[styles.balanceContainer, styles.error]}>
               <Text style={styles.balanceText}>

@@ -2,6 +2,7 @@
 
 exports[`CurrencySettings should render 1`] = `
 <SceneWrapper
+  background="theme"
   hasTabs={false}
 >
   <ScrollViewMock>
