@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Alert, Image, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import fioAddressDetailsIcon from '../../assets/images/details_fioAddress.png'
@@ -14,7 +14,7 @@ import { scale } from '../../util/scaling'
 import { SceneWrapper } from '../common/SceneWrapper'
 
 export type NavProps = {
-  fioAddressName: string,
+  fioName: string,
   expiration: string,
   feeCollected: number,
   navigation: any
@@ -24,14 +24,9 @@ type Props = NavProps
 
 export class FioAddressRegisteredScene extends React.Component<Props> {
   componentDidMount() {
-    const { fioAddressName } = this.props
-    if (!fioAddressName) {
-      Alert.alert(s.strings.fio_address_details_screen_alert_title, s.strings.fio_address_details_screen_alert_message, [
-        { text: s.strings.fio_address_details_screen_alert_button }
-      ])
-    }
+    const { fioName } = this.props
     this.props.navigation.setParams({
-      renderTitle: this.renderTitle(fioAddressName)
+      renderTitle: this.renderTitle(fioName)
     })
   }
 
@@ -48,7 +43,7 @@ export class FioAddressRegisteredScene extends React.Component<Props> {
       <View style={styles.buttons}>
         <TouchableHighlight style={styles.bottomButton} onPress={Actions[Constants.FIO_ADDRESS_LIST]} underlayColor={THEME.COLORS.SECONDARY}>
           <View style={styles.bottomButtonTextWrap}>
-            <T style={styles.bottomButtonText}>{s.strings.fio_address_list}</T>
+            <T style={styles.bottomButtonText}>{s.strings.title_fio_names}</T>
           </View>
         </TouchableHighlight>
       </View>
@@ -56,7 +51,7 @@ export class FioAddressRegisteredScene extends React.Component<Props> {
   }
 
   render() {
-    const { fioAddressName, expiration } = this.props
+    const { fioName, expiration } = this.props
     return (
       <SceneWrapper>
         <View style={styles.view}>
@@ -65,7 +60,7 @@ export class FioAddressRegisteredScene extends React.Component<Props> {
               <Image source={fioAddressDetailsIcon} />
             </View>
             <T style={styles.text}>{s.strings.fio_address_details_screen_registered}</T>
-            <T style={styles.title}>{fioAddressName}</T>
+            <T style={styles.title}>{fioName}</T>
             <T style={styles.text}>
               {`${s.strings.fio_address_details_screen_expires} `}
               {intl.formatExpDate(expiration)}

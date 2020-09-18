@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -72,21 +72,6 @@ export class FioAddressListScene extends React.Component<Props> {
     this.willFocusSubscription && this.willFocusSubscription.remove()
   }
 
-  registerDomain = async () => {
-    const { fioPlugin, fioWallets } = this.props
-    if (!fioPlugin) return
-    const publicKey = fioWallets[0].publicWalletInfo.keys.publicKey
-    const url = await fioPlugin.otherMethods.getRegDomainUrl(publicKey)
-    Linking.canOpenURL(url).then(supported => {
-      if (supported) {
-        Linking.openURL(url)
-      } else {
-        console.log("Don't know how to open URI: " + url)
-        showError("Don't know how to open URI: " + url)
-      }
-    })
-  }
-
   onAddressPress = (fioAddress: FioAddress) => {
     const { name, expiration } = fioAddress
     Actions[Constants.FIO_ADDRESS_DETAILS]({ fioAddressName: name, expiration })
@@ -145,15 +130,15 @@ export class FioAddressListScene extends React.Component<Props> {
               </Button.Center>
             </Button>
           </View>
-
-          <View style={styles.domainVew}>
-            <T>{s.strings.fio_address_reg_domain_label}</T>
+          <View style={styles.button}>
+            <Button onPress={Actions[Constants.FIO_DOMAIN_REGISTER]} style={styles.toggleButton} underlayColor={`${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`}>
+              <Button.Center>
+                <Button.Text>
+                  <T>{s.strings.fio_address_list_domain_register}</T>
+                </Button.Text>
+              </Button.Center>
+            </Button>
           </View>
-          <TouchableOpacity onPress={this.registerDomain} underlayColor={`${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`}>
-            <View>
-              <T style={styles.link}>{s.strings.fio_address_reg_domain}</T>
-            </View>
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     )
@@ -185,7 +170,8 @@ const rawStyles = {
     marginLeft: scale(5)
   },
   button: {
-    padding: scale(10)
+    paddingVertical: THEME.rem(0.33),
+    paddingHorizontal: THEME.rem(0.66)
   },
   toggleButton: {
     backgroundColor: THEME.COLORS.PRIMARY,

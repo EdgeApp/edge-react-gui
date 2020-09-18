@@ -3,12 +3,12 @@
 import { FormField, MaterialInputStyle } from 'edge-components'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, Image, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { FlatList, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import fioAddressIcon from '../../../assets/images/list_fioAddress.png'
 import { type AirshipBridge, AirshipModal, dayText, IconCircle, THEME } from '../../../components/modals/modalParts.js'
-import { showError } from '../../../components/services/AirshipInstance'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
 import type { State as StateType } from '../../../types/reduxTypes'
@@ -104,27 +104,12 @@ class DomainListModalConnected extends React.Component<Props, State> {
     return filteredRecords
   }
 
-  createNew = async () => {
-    const { fioPlugin, fioWallets } = this.props
-    if (!fioPlugin) return
-    const publicKey = fioWallets[0].publicWalletInfo.keys.publicKey
-    const url = await fioPlugin.otherMethods.getRegDomainUrl(publicKey)
-    Linking.canOpenURL(url).then(supported => {
-      if (supported) {
-        Linking.openURL(url)
-      } else {
-        console.log("Don't know how to open URI: " + url)
-        showError("Don't know how to open URI: " + url)
-      }
-    })
-  }
-
   selectItem = (value: any) => this.props.bridge.resolve(value)
   renderItem = ({ item }: FlatListItem<Item>) => {
     const { value, label, createNew } = item
     if (createNew) {
       return (
-        <TouchableHighlight onPress={this.createNew} underlayColor={THEME.COLORS.TRANSPARENT}>
+        <TouchableHighlight onPress={Actions[Constants.FIO_DOMAIN_REGISTER]} underlayColor={THEME.COLORS.TRANSPARENT}>
           <View style={[styles.rowContainerTop, styles.domainListRowContainerTop]}>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsRow}>

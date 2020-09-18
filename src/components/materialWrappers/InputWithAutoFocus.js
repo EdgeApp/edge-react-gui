@@ -34,7 +34,8 @@ type Props = {
   maxLength?: number,
   multiline?: boolean,
   numberOfLines?: number,
-  suffix?: string
+  suffix?: string,
+  prefix?: string
 }
 
 type State = {
@@ -86,7 +87,8 @@ class InputWithAutoFocus extends React.Component<Props, State> {
       secureTextEntry,
       returnKeyType,
       autoCorrect,
-      suffix
+      suffix,
+      prefix
     } = this.props
     return (
       <TextField
@@ -119,6 +121,7 @@ class InputWithAutoFocus extends React.Component<Props, State> {
         multiline={this.props.multiline}
         autoCorrect={autoCorrect}
         suffix={suffix}
+        prefix={prefix}
       />
     )
   }
