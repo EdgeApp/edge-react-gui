@@ -519,7 +519,6 @@
   "fio_address_first_screen_title": "Enviar y recibir con una dirección FIO fácil de recordar!",
   "fio_address_features": "• Funciona con todos los tokens y monedas\n• Asegurado desde su cartera\n• Completamente descentralizado",
   "fio_address_first_screen_end": "Similar a las direcciones web, tu dirección FIO puede ser usada para enviarte tokens y monedas sin ni siquiera ver o enviar tu clave pública.",
-  "fio_address_reg_domain_label": "Quieres registrar tu propio dominio FIO como @midominio?",
   "fio_address_reg_domain": "Registrar dominio FIO",
   "fio_domain_label": "Dominio FIO",
   "fio_address_wallet_selection_text": "La dirección FIO requiere una cuota anual. Este pago es requerido por el Protocolo FIO y no un requisito de Edge. El costo anual actual es equivalente a %s FIO, pero puede fluctuar en el futuro. Cada dirección FIO incluye un número de acciones gratuitas, tales como solicitudes de pago, donde se renuncia a la cuota de minería. Seleccione una cartera para pagar:",
