@@ -244,12 +244,15 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
   const spendInfo = state.ui.scenes.sendConfirmation.spendInfo
   const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo
 
-  try {
-    if (guiMakeSpendInfo.beforeTransaction) {
-      await guiMakeSpendInfo.beforeTransaction()
+  if (guiMakeSpendInfo.beforeTransaction) {
+    dispatch(updateSpendPending(true))
+    try {
+      guiMakeSpendInfo.beforeTransaction && (await guiMakeSpendInfo.beforeTransaction())
+    } catch (e) {
+      dispatch(updateSpendPending(false))
+      return
     }
-  } catch (e) {
-    return
+    dispatch(updateSpendPending(false))
   }
 
   if (!spendInfo) throw new Error(s.strings.invalid_spend_request)
@@ -312,21 +315,9 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
       }
     }
     await wallet.saveTxMetadata(edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetadata)
-    dispatch(updateSpendPending(false))
 
     edgeSignedTransaction.metadata = edgeMetadata
     edgeSignedTransaction.wallet = wallet
-
-    playSendSound().catch(error => console.log(error)) // Fail quietly
-    if (!guiMakeSpendInfo.dismissAlert) {
-      Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
-        {
-          onPress() {},
-          style: 'default',
-          text: s.strings.string_ok
-        }
-      ])
-    }
 
     if (guiMakeSpendInfo.fioAddress) {
       addToFioAddressCache(account, [guiMakeSpendInfo.fioAddress])
@@ -377,6 +368,18 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
           }
         }
       }
+    }
+    dispatch(updateSpendPending(false))
+
+    playSendSound().catch(error => console.log(error)) // Fail quietly
+    if (!guiMakeSpendInfo.dismissAlert) {
+      Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
+        {
+          onPress() {},
+          style: 'default',
+          text: s.strings.string_ok
+        }
+      ])
     }
 
     if (guiMakeSpendInfo.onDone) {
