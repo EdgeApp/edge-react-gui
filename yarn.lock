@@ -3776,10 +3776,10 @@ edge-components@^0.0.28:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.13:
-  version "0.17.13"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.13.tgz#f0b91ca95e0eb917d7b93e081c72bb2397dbcb88"
-  integrity sha512-6lrDxqNBkzWM02GS2gAPBOu4X0G+GND2w7ww1V7cQk/0wkNGF79fdxPMCk7eI4bGqL8Onl/e5/yM98zNe4altg==
+edge-core-js@^0.17.14:
+  version "0.17.14"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.14.tgz#b805bcf47e8dde857a47787bfbd45a2699abade7"
+  integrity sha512-2tR2yZL5OrOPT9kJ7Hymm/Ew0weJqjbxiQjFAfVukL/EEGgL0rfJYm3cJpotUQXMJE+q8X6YJSNtMtUHx77H3Q==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3794,7 +3794,7 @@ edge-core-js@^0.17.13:
     hash.js "^1.1.7"
     hmac-drbg "^1.0.1"
     json-csv "^1.5.0"
-    node-fetch "^2.0.0"
+    node-fetch "^2.6.1"
     redux "^3.6.0"
     redux-keto "^0.3.4"
     redux-pixies "^0.3.6"
@@ -8127,10 +8127,10 @@ node-fetch@^1.0.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-fetch@^2.0.0, node-fetch@^2.2.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.3.0.tgz#1a1d940bbfb916a1d3e0219f037e89e71f8c5fa5"
-  integrity sha512-MOd8pV3fxENbryESLgVIeaGKrdl+uaYhCSSVkjeOb/31/njTpcis5aWfdqgNlHIrKOLRbMnfPINPOML2CIFeXA==
+node-fetch@^2.2.0, node-fetch@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
+  integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
 
 node-hid@^0.7.9:
   version "0.7.9"
