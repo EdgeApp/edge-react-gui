@@ -30,6 +30,7 @@ import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene.js
 import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene.js'
 import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene.js'
 import { FioAddressRegisteredScene } from '../components/scenes/FioAddressRegisteredScene'
+import { FioAddressSettingsScene } from '../components/scenes/FioAddressSettingsScene'
 import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConfirmationScene.js'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
@@ -45,18 +46,15 @@ import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateW
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
-import { FioAddressConfirmConnector } from '../connectors/scenes/FioAddressConfirmConnector'
 import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetailsConnector'
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegisterConnector'
 import { FioAddressRegisterSelectWalletConnector } from '../connectors/scenes/FioAddressRegisterSelectWalletConnector'
-import { FioAddressSettingsConnector } from '../connectors/scenes/FioAddressSettingsConnector'
 import { FioConnectWalletConfirmConnector } from '../connectors/scenes/FioConnectWalletConfirmConnector'
 import { FioDomainSettingsConnector } from '../connectors/scenes/FioDomainSettingsConnector'
 import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
 import { FioSentRequestConnector } from '../connectors/scenes/FioSentRequestConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
-import OtpSettingsSceneConnector from '../connectors/scenes/OtpSettingsSceneConnector.js'
 import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConnector.js'
 import Request from '../connectors/scenes/RequestConnector.js'
 import Scan from '../connectors/scenes/ScanConnector'
@@ -90,11 +88,15 @@ import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { CurrencyNotificationScene } from './scenes/CurrencyNotificationScene'
 import { EditTokenScene } from './scenes/EditTokenScene.js'
+import { FioDomainRegisterScene } from './scenes/FioDomainRegisterScene'
+import { FioDomainRegisterSelectWalletScene } from './scenes/FioDomainRegisterSelectWalletScene'
+import { FioNameConfirmScene } from './scenes/FioNameConfirmScene'
 import { GuiPluginLegacyScene, renderLegacyPluginBackButton } from './scenes/GuiPluginLegacyScene.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
 import { NotificationScene } from './scenes/NotificationScene'
+import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
@@ -541,7 +543,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.OTP_SETUP}
               navTransparent
-              component={ifLoggedIn(OtpSettingsSceneConnector)}
+              component={ifLoggedIn(OtpSettingsScene)}
               renderTitle={this.renderTitle(s.strings.title_otp)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -673,11 +675,41 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={Constants.FIO_ADDRESS_CONFIRM}>
+          <Stack key={Constants.FIO_DOMAIN_REGISTER}>
             <Scene
-              key={Constants.FIO_ADDRESS_CONFIRM}
+              key={Constants.FIO_DOMAIN_REGISTER}
               navTransparent
-              component={ifLoggedIn(FioAddressConfirmConnector)}
+              component={ifLoggedIn(FioDomainRegisterScene)}
+              renderTitle={this.renderTitle(s.strings.title_register_fio_domain)}
+              renderLeftButton={this.renderBackButton()}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key={Constants.FIO_DOMAIN_REGISTER_SELECT_WALLET}
+              navTransparent
+              component={ifLoggedIn(FioDomainRegisterSelectWalletScene)}
+              renderTitle={this.renderTitle(s.strings.title_register_fio_domain)}
+              renderLeftButton={this.renderBackButton()}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+            <Scene
+              key={Constants.FIO_DOMAIN_CONFIRM}
+              navTransparent
+              component={ifLoggedIn(FioNameConfirmScene)}
+              renderTitle={this.renderTitle(s.strings.title_register_fio_domain)}
+              renderLeftButton={this.renderBackButton()}
+              renderRightButton={this.renderEmptyButton()}
+              onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key={Constants.FIO_NAME_CONFIRM}>
+            <Scene
+              key={Constants.FIO_NAME_CONFIRM}
+              navTransparent
+              component={ifLoggedIn(FioNameConfirmScene)}
               renderTitle={this.renderTitle(s.strings.title_fio_address_confirmation)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
@@ -703,10 +735,13 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={this.renderMenuButton()}
               onLeft={Actions.pop}
             />
+          </Stack>
+
+          <Stack key={Constants.FIO_ADDRESS_SETTINGS}>
             <Scene
               key={Constants.FIO_ADDRESS_SETTINGS}
               navTransparent
-              component={FioAddressSettingsConnector}
+              component={FioAddressSettingsScene}
               renderTitle={this.renderTitle(s.strings.title_fio_address_settings)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderMenuButton()}
@@ -870,7 +905,7 @@ export class MainComponent extends React.Component<Props> {
     }
     if (this.isCurrentScene(Constants.FIO_ADDRESS_REGISTER)) {
       if (Actions.currentParams.noAddresses) {
-        Actions.popTo(Constants.WALLET_LIST_SCENE)
+        Actions.jump(Constants.WALLET_LIST_SCENE)
         return true
       }
     }

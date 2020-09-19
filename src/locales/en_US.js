@@ -21,6 +21,7 @@ const strings = {
   network_alert_title: 'No Internet connection',
   fio_network_alert_text: 'FIO functionality requires internet connection.',
   fio_address_choose_label: 'Choose a FIO Address',
+  fio_domain_choose_label: 'Choose a FIO Domain',
   fio_address_choose_domain_label: 'Choose FIO Domain for Your Address',
 
   // Error messages:
@@ -234,7 +235,7 @@ const strings = {
   swap_preferred_instructions: 'When multiple exchanges can fill an order, prefer:',
   swap_preferred_promo_instructions: 'When multiple exchanges can fill an order, the current promotion always prefers:',
   settings_button_send_logs: 'Send Logs',
-  settings_button_setup_two_factor: 'Setup 2 Factor',
+  settings_button_setup_two_factor: 'Set Up 2-Factor Security',
   settings_button_unlock_settings: 'Tap to Unlock Account Settings',
   settings_button_use_touchID: 'Use TouchID',
   settings_button_use_faceID: 'Use FaceID',
@@ -362,8 +363,9 @@ const strings = {
   title_password_recovery: 'Password Recovery',
   title_plugin_buy: 'Buy Cryptocurrency',
   title_plugin_sell: 'Sell Cryptocurrency',
-  title_otp: '2FA',
+  title_otp: '2-Factor Security',
   title_register_fio_address: 'Register FIO Address',
+  title_register_fio_domain: 'Register FIO Domain',
   title_request: 'Request',
   title_send: 'Send',
   title_settings: 'Settings',
@@ -429,27 +431,26 @@ const strings = {
   fragment_tx_detail_mining_fee_with_denom: '+ %1f %2s fee',
   confirm_password_text: 'Confirm Password',
 
-  title_otp_keep_modal: 'Two-Factor Authentication (2FA)',
+  // OTP settings scene:
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
-  otp_description:
-    'Two factor authentication (2FA) prevents unauthorized access from other devices, even if your username and password is compromised. You can scan a QR code or type in an authentication code to seamlessly authorize other devices.',
-  otp_enabled_description: 'You can scan a QR code or type in the authentication code to seamlessly authorize other devices.',
-  otp_show_code: 'Show authentication code',
-  otp_hide_code: 'Hide authentication code',
+  otp_description: 'Two factor authentication (2FA) prevents unauthorized access from other devices, even if your username and password are compromised.',
+  otp_description_2: 'If you download Edge on a new device, you can allow or deny the login from your current device, or you can enter the backup code below.',
+  otp_enabled_message: 'If you lose your phone or uninstall the app, it will take 7 days to access your account without the backup code.',
   otp_disable: 'Disable 2FA',
-  otp_keep: 'Keep 2FA',
   otp_enable: 'Enable 2FA',
-  otp_enabled_modal_part_one: '2FA has been enabled. A unique authentication code will be generated.',
-  otp_enabled_modal_part_two:
-    'If you lose your phone or uninstall the app, it will take 7 days to disable 2FA and access your account from another device without the authentication code.',
-  otp_disabled_modal: '2FA has been disabled. You can enable it again by tapping on "Enable 2FA" at any time.',
+  otp_show_code: 'Show backup code',
+  otp_hide_code: 'Hide backup code',
+  otp_copied_msg: '2FA code successfully copied to clipboard',
   otp_modal_headline: 'Are you sure you want to disable 2FA?',
+  otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.',
+
+  // 2fa reset warning modal:
+  title_otp_keep_modal: 'Two-Factor Authentication (2FA)',
   otp_modal_reset_headline: '2FA Reset Requested',
   otp_modal_reset_description:
     'An attempt to login to your account was made by another device and a 2FA reset has been requested. \n\nIf you did not make the request, click "Keep 2FA". Then go to the "Settings" and change your password and PIN. \n\nIf you did request the reset, \nclick on "Disable 2FA".',
-  otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.',
-  otp_copied_msg: '2FA code successfully copied to clipboard',
+  otp_keep: 'Keep 2FA',
 
   word_to_in_convert_from_to_string: 'to',
 
@@ -586,12 +587,17 @@ const strings = {
   fio_address_features: '• Works across all tokens and coins\n• Secured from your wallet\n• Completely decentralized',
   fio_address_first_screen_end:
     'Similar to website names, your FIO Address can be used to send you tokens/coins without ever having to see or send your public key.',
-  fio_address_reg_domain_label: 'Want to register your own FIO Domain such as @mydomain?',
   fio_address_reg_domain: 'Register FIO Domain',
+  fio_domain_reg_text: 'Note that you need to use FIO to register an address on a custom domain.',
+  fio_domain_reg_descr:
+    'FIO Addresses consist of a username and a domain. If you purchase your custom domain, only you will able to register FIO Addresses on it. FIO Address registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.',
+  fio_address_reg_free: 'Register Free FIO Address',
   fio_domain_label: 'FIO Domain',
   fio_domain_free: 'Free',
   fio_address_wallet_selection_text:
     'FIO Address requires an annual fee. This payment is required by the FIO Protocol and not a requirement of Edge. The current annual cost is equivalent to %s FIO, but may fluctuate in the future. Each FIO Address includes a number of free actions, such as payment requests, where the mining fee is waived. Select a wallet to pay from:',
+  fio_domain_wallet_selection_text:
+    'FIO Domains require an annual fee. This payment is required by the FIO Protocol and not a requirement of Edge. The current annual cost is equivalent to %s FIO, but may fluctuate in the future. Select a wallet to pay from:',
   fio_address_list: 'Fio Address List',
   fio_address_register_first_free: 'Register First Free FIO Address',
   fio_address_register_custom_domain: 'Register custom domain',
@@ -605,7 +611,7 @@ const strings = {
   fio_address_register_default_fio_wallet_name: 'FIO Wallet',
   fio_address_register_no_wallet_name: 'No wallet name',
   fio_address_register_select_wallet: 'Connect to FIO Wallet',
-  fio_address_register_pending: 'Your FIO Address will be registered as soon as payment is received. Tap FIO Names in few minutes.',
+  fio_address_register_pending: 'Your %s will be registered as soon as payment is received. Tap FIO Names in few minutes.',
   fio_address_register_pending_free: 'Your free FIO Address will be registered in a few seconds. Tap FIO Names to see your address.',
   fio_address_register_metadata_name: 'FIO Registration',
   fio_address_register_pay_title: 'You have already registered a free address for that domain.',
@@ -629,6 +635,7 @@ const strings = {
   fio_address_details_connect_to_wallets: 'Choose wallets to connect to your FIO address',
   fio_address_details_screen_connect_to_wallets: 'Connect to Wallets',
   fio_address_list_screen_button_register: 'Register New FIO Address',
+  fio_address_list_domain_register: 'Register Custom FIO Domain',
   fio_address_list_register_domain: 'Register New Domain',
   fio_get_fee_err_msg: 'There was an issue getting the FIO fee. Please try again later.',
   fio_get_reg_info_err_msg: 'There was an issue getting registration information.',
@@ -680,6 +687,7 @@ const strings = {
   err_token_not_in_wallet_title: 'No %s Wallet',
   err_token_not_in_wallet_msg: 'Your account does not have a %s wallet to pay this request',
   err_no_address_title: 'No FIO Address found.',
+  err_address_not_linked_title: 'Recipient address does not have a linked %s wallet',
   fio_connect_no_wallets: 'There are no wallets',
   fio_connect_checkbox_text: 'I acknowledge that, once connected, one address from each connected wallet will become public',
   fio_connect_wallets_err: 'There was an issue during operation execution. Please try later.',
@@ -694,6 +702,7 @@ const strings = {
   fio_sender_memo_placeholder: 'Your message.',
   scan_address_modal_title: 'Enter Recipient FIO, ENS, or Public Address',
   address_modal_default_header: 'Enter Address',
+  open_url_err: 'Can not open this url - %s',
   // Unstoppable resolution error codes
   resolving: 'Resolving...',
   UnregisteredDomain: 'Domain %1$s is not registered',

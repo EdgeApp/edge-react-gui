@@ -1,5 +1,42 @@
 # edge-react-gui
 
+## 1.17.0 (2020-09-18)
+
+- Add 2FA voucher support to allow your device to approve a login from another device
+- Re-theme 2FA screens
+- Register FIO domains
+- FIO usability fixes
+- Refactor flip input to address crashes on Android
+- Wallet custom token filter fix
+- Add unique identifier requestSpend logging to EdgeProvider
+- Remove dummy address from Wyre widget launch
+- Upgrade edge-core-js to v0.17.14
+  - (feature) Expose an EdgeAccount.pendingVouchers field
+  - (feature) Expose as EdgeUserInfo.voucherId field
+  - (fix) Don't crash when using a barcode to log into accounts with pending OTP resets
+  - (fix) Correctly expire any vouchers on the device while doing a barcode login
+  - (fix) Upgrade to node-fetch v2.6.1
+  - (fix) Switch to the new voucher endpoint
+  - (fix) Always return OtpError.voucherId when available
+- Upgrade edge-currency-accountbased to v0.7.25
+  - FIO register domain
+  - Added free FIO address link
+  - Upgrade FIO SDK to v1.1.0
+  - Retry failed FIO tx broadcasts
+  - FIO check pub address error handling
+  - Updated FIO api urls to remove port #
+  - Update FIO explorer
+  - Update EOS explorer
+- Upgrade edge-exchange-plugins to v0.11.7
+  - Enable Changelly order status URL
+  - Pass last Totle tx as orderId
+- Upgrade edge-login-ui-rn to v0.6.16
+  - Fix a race condition that could lead to an infinite login loop
+  - Upgrade to the latest react-native-airship
+  - Remove unused TouchId logic from the password login screen
+  - Re-theme and add voucher support to the OTP reset alert, OTP error screen, and related modals
+  - Route to a security alert screen after logging into an account with pending issues
+
 ## 1.16.7 (2020-09-05)
 
 - Add Bitaccess support

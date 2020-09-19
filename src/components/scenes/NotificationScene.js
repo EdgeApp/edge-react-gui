@@ -89,7 +89,7 @@ export class NotificationComponent extends React.Component<Props, State> {
     const rightArrow = <AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />
 
     return (
-      <SceneWrapper hasTabs={false}>
+      <SceneWrapper background="theme" hasTabs={false}>
         {this.state.loading ? (
           <ActivityIndicator style={styles.loader} size="large" />
         ) : (

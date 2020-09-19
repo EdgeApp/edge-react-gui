@@ -147,23 +147,6 @@ export const getDefaultIsoFiat = (state: State) => {
   return defaultIsoFiat
 }
 
-export const getIsOtpEnabled = (state: State) => {
-  const settings = getSettings(state)
-  const enabled: boolean = settings.isOtpEnabled
-  return enabled
-}
-export const getOtpKey = (state: State) => {
-  const settings = getSettings(state)
-  const otpKey: string = settings.otpKey || ''
-  return otpKey
-}
-
-export const getOtpResetDate = (state: State) => {
-  const settings = getSettings(state)
-  const otpResetDate = settings.otpResetDate
-  return otpResetDate
-}
-
 export const getConfirmPasswordErrorMessage = (state: State) => {
   const settings = getSettings(state)
   return settings.confirmPasswordError
@@ -173,12 +156,6 @@ export const getPinLoginEnabled = (state: State) => {
   const settings = getSettings(state)
   const pinLoginEnabled = settings.pinLoginEnabled
   return pinLoginEnabled
-}
-
-export const getOtpResetPending = (state: State) => {
-  const settings = getSettings(state)
-  const otpResetPending = settings.otpResetPending
-  return otpResetPending
 }
 
 export const getIsAccountBalanceVisible = (state: State) => {

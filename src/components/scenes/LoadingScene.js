@@ -7,7 +7,7 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 
 export const LoadingScene = () => {
   return (
-    <SceneWrapper hasHeader={false} hasTabs={false}>
+    <SceneWrapper background="header" hasHeader={false} hasTabs={false}>
       <View style={styles.container}>
         <ActivityIndicator size="large" />
       </View>

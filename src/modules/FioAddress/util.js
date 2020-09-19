@@ -125,7 +125,7 @@ const isWalletConnected = async (
       chainCode
     })
 
-    if (publicAddress === '0') return false
+    if (publicAddress === '0' || !publicAddress) return false
 
     const receiveAddress = await wallet.getReceiveAddress()
     if (publicAddress === receiveAddress.publicAddress) return true
@@ -186,30 +186,52 @@ export const updatePubAddressesForFioAddress = async (
   fioWallet: EdgeCurrencyWallet | null,
   fioAddress: string,
   publicAddresses: { walletId: string, chainCode: string, tokenCode: string, publicAddress: string }[]
-) => {
+): Promise<{ updatedCcWallets: { fullCurrencyCode: string, walletId: string, isConnection: boolean }[], error?: Error | FioError | null }> => {
   if (!fioWallet) throw new Error(s.strings.fio_connect_wallets_err)
   const connectedWalletsFromDisklet = await getConnectedWalletsForFioAddress(fioWallet, fioAddress)
-  let publicAddressesToConnect = []
+  let updatedCcWallets = []
+  const iteration = {
+    publicAddressesToConnect: [],
+    ccWalletMap: []
+  }
   const limitPerCall = 5
   for (const { walletId, chainCode, tokenCode, publicAddress } of publicAddresses) {
     const fullCurrencyCode = `${chainCode}:${tokenCode}`
     connectedWalletsFromDisklet[fullCurrencyCode] = { walletId, publicAddress }
-    publicAddressesToConnect.push({
+    iteration.ccWalletMap.push({
+      fullCurrencyCode,
+      walletId,
+      isConnection: publicAddress && publicAddress !== '0'
+    })
+    iteration.publicAddressesToConnect.push({
       token_code: tokenCode,
       chain_code: chainCode,
       public_address: publicAddress
     })
-    if (publicAddressesToConnect.length === limitPerCall) {
-      await addPublicAddresses(fioWallet, fioAddress, publicAddressesToConnect)
-      await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
-      publicAddressesToConnect = []
+    if (iteration.publicAddressesToConnect.length === limitPerCall) {
+      try {
+        await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddressesToConnect)
+        await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
+        updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletMap]
+        iteration.publicAddressesToConnect = []
+        iteration.ccWalletMap = []
+      } catch (e) {
+        return { updatedCcWallets, error: e }
+      }
     }
   }
 
-  if (publicAddressesToConnect.length) {
-    await addPublicAddresses(fioWallet, fioAddress, publicAddressesToConnect)
-    await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
+  if (iteration.publicAddressesToConnect.length) {
+    try {
+      await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddressesToConnect)
+      await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
+      updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletMap]
+    } catch (e) {
+      return { updatedCcWallets, error: e }
+    }
   }
+
+  return { updatedCcWallets }
 }
 
 /**
@@ -225,20 +247,20 @@ export const addPublicAddresses = async (
   fioAddress: string,
   publicAddresses: { token_code: string, chain_code: string, public_address: string }[]
 ) => {
-  let maxFee: number
+  let getFeeRes: { fee: number }
   try {
-    const { fee } = await fioWallet.otherMethods.fioAction('getFeeForAddPublicAddress', {
+    getFeeRes = await fioWallet.otherMethods.fioAction('getFeeForAddPublicAddress', {
       fioAddress
     })
-    maxFee = fee
   } catch (e) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
+  if (getFeeRes.fee) throw new FioError(s.strings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
   try {
     await fioWallet.otherMethods.fioAction('addPublicAddresses', {
       fioAddress,
       publicAddresses,
-      maxFee
+      maxFee: getFeeRes.fee
     })
   } catch (e) {
     throw new Error(s.strings.fio_connect_wallets_err)
@@ -313,19 +335,24 @@ export const makeConnectWallets = (wallets: { [walletId: string]: GuiWallet }, c
 }
 
 export const checkPubAddress = async (fioPlugin: EdgeCurrencyConfig, fioAddress: string, chainCode: string, tokenCode: string): Promise<string> => {
-  const isFioAddress = await fioPlugin.otherMethods.isFioAddressValid(fioAddress)
   try {
-    if (isFioAddress) {
-      const { public_address: publicAddress } = await fioPlugin.otherMethods.getConnectedPublicAddress(fioAddress.toLowerCase(), chainCode, tokenCode)
-      if (publicAddress && publicAddress.length > 1) {
-        return publicAddress
-      }
-    }
+    const { public_address: publicAddress } = await fioPlugin.otherMethods.getConnectedPublicAddress(fioAddress.toLowerCase(), chainCode, tokenCode)
+    return publicAddress
   } catch (e) {
-    throw new Error(s.strings.err_no_address_title)
+    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
+      throw new FioError(s.strings.fio_error_invalid_address, fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS)
+    }
+    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_EXIST) {
+      throw new FioError(s.strings.send_fio_request_error_addr_not_exist, fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_EXIST)
+    }
+    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_LINKED) {
+      throw new FioError(
+        sprintf(s.strings.err_address_not_linked_title, tokenCode),
+        fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_ADDRESS_IS_NOT_LINKED
+      )
+    }
+    throw new Error(s.strings.fio_connect_wallets_err)
   }
-
-  return ''
 }
 
 export const addToFioAddressCache = async (account: EdgeAccount, fioAddressesToAdd: string[]): Promise<FioAddresses> => {
@@ -354,7 +381,8 @@ export const getFioAddressCache = async (account: EdgeAccount): Promise<FioAddre
   }
 }
 
-export const checkRecordSendFee = async (fioWallet: EdgeCurrencyWallet, fioAddress: string) => {
+export const checkRecordSendFee = async (fioWallet: EdgeCurrencyWallet | null, fioAddress: string) => {
+  if (!fioWallet) throw new Error(s.strings.fio_wallet_missing_for_fio_address)
   let getFeeResult
   try {
     getFeeResult = await fioWallet.otherMethods.fioAction('getFee', {
@@ -485,11 +513,55 @@ export const getRegInfo = async (
       }
     }
   }
+  // todo: temporary commented to use fallback referral code by default.
+  // const referralCode = isFallback ? fioPlugin.currencyInfo.defaultSettings.fallbackRef : fioPlugin.currencyInfo.defaultSettings.defaultRef
+  return buyAddressRequest(fioPlugin, fioAddress, fioPlugin.currencyInfo.defaultSettings.fallbackRef, selectedWallet, activationCost)
+}
+
+/**
+ *
+ * @param fioPlugin
+ * @param fioDomain
+ * @param selectedWallet
+ * @param displayDenomination
+ * @returns {Promise<{activationCost: number, supportedCurrencies:{[string]: boolean}, paymentInfo: {[string]: {amount: string, address: string}}}>}
+ */
+export const getDomainRegInfo = async (
+  fioPlugin: EdgeCurrencyConfig,
+  fioDomain: string,
+  selectedWallet: EdgeCurrencyWallet,
+  displayDenomination: EdgeDenomination
+): Promise<{
+  supportedCurrencies: { [currencyCode: string]: boolean },
+  activationCost: number,
+  paymentInfo: { [currencyCode: string]: { amount: string, address: string } }
+}> => {
+  let activationCost = 0
 
   try {
-    const referralCode = isFallback ? fioPlugin.currencyInfo.defaultSettings.fallbackRef : fioPlugin.currencyInfo.defaultSettings.defaultRef
+    const fee = await selectedWallet.otherMethods.getFee('registerFioDomain')
+    activationCost = parseFloat(truncateDecimals(bns.div(`${fee}`, displayDenomination.multiplier, 18), 6))
+  } catch (e) {
+    throw new Error(s.strings.fio_get_fee_err_msg)
+  }
+
+  return buyAddressRequest(fioPlugin, fioDomain, fioPlugin.currencyInfo.defaultSettings.defaultRef, selectedWallet, activationCost)
+}
+
+const buyAddressRequest = async (
+  fioPlugin: EdgeCurrencyConfig,
+  address: string,
+  referralCode: string,
+  selectedWallet: EdgeCurrencyWallet,
+  activationCost: number
+): Promise<{
+  supportedCurrencies: { [currencyCode: string]: boolean },
+  activationCost: number,
+  paymentInfo: { [currencyCode: string]: { amount: string, address: string } }
+}> => {
+  try {
     const buyAddressResponse: BuyAddressResponse = await fioPlugin.otherMethods.buyAddressRequest({
-      address: fioAddress,
+      address,
       referralCode,
       publicKey: selectedWallet.publicWalletInfo.keys.publicKey
     })
@@ -528,7 +600,6 @@ export const getRegInfo = async (
   } catch (e) {
     console.log(e)
   }
-
   throw new Error(s.strings.fio_get_reg_info_err_msg)
 }
 

@@ -255,7 +255,7 @@ export class Request extends React.Component<Props, State> {
     const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
 
     return (
-      <SceneWrapper hasTabs={false}>
+      <SceneWrapper background="header" hasTabs={false}>
         <View style={styles.exchangeRateContainer}>
           <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={exchangeSecondaryToPrimaryRatio} />
         </View>

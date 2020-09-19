@@ -5,8 +5,9 @@ import * as React from 'react'
 import { ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
+import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
+import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import type { CcWalletMap } from '../../reducers/FioReducer'
@@ -14,11 +15,13 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import type { FioConnectionWalletItem } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { showError, showToast } from '../services/AirshipInstance'
+import { ButtonsModal } from '../modals/ButtonsModal'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 
 export type State = {
   acknowledge: boolean,
-  connectWalletsLoading: boolean
+  connectWalletsLoading: boolean,
+  showSlider: boolean
 }
 
 export type FioConnectWalletConfirmStateProps = {
@@ -42,7 +45,8 @@ type Props = FioConnectWalletConfirmStateProps & FioConnectWalletConfirmDispatch
 export class FioConnectWalletConfirmScene extends React.Component<Props, State> {
   state = {
     acknowledge: false,
-    connectWalletsLoading: false
+    connectWalletsLoading: false,
+    showSlider: true
   }
 
   confirm = async (): Promise<void> => {
@@ -53,7 +57,6 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
       try {
         const pubAddresses = []
         walletsToConnect.forEach((wallet: FioConnectionWalletItem) => {
-          newCcWalletMap[wallet.fullCurrencyCode] = wallet.id
           pubAddresses.push({
             walletId: wallet.id,
             tokenCode: wallet.currencyCode,
@@ -62,7 +65,6 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
           })
         })
         walletsToDisconnect.forEach((wallet: FioConnectionWalletItem) => {
-          newCcWalletMap[wallet.fullCurrencyCode] = ''
           pubAddresses.push({
             walletId: wallet.id,
             tokenCode: wallet.currencyCode,
@@ -70,8 +72,41 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
             publicAddress: '0'
           })
         })
-        await updatePubAddressesForFioAddress(fioWallet, fioAddressName, pubAddresses)
-        updateConnectedWallets(fioAddressName, newCcWalletMap)
+        const { updatedCcWallets, error } = await updatePubAddressesForFioAddress(fioWallet, fioAddressName, pubAddresses)
+        if (updatedCcWallets.length) {
+          for (const { fullCurrencyCode, walletId, isConnection } of updatedCcWallets) {
+            newCcWalletMap[fullCurrencyCode] = isConnection ? walletId : ''
+          }
+          updateConnectedWallets(fioAddressName, newCcWalletMap)
+        }
+
+        if (error) {
+          if (updatedCcWallets.length) {
+            const walletsToConnectLeft = []
+            const walletsToDisconnectLeft = []
+            for (const walletToConnect of walletsToConnect) {
+              if (
+                updatedCcWallets.findIndex(
+                  ({ walletId, fullCurrencyCode }) => walletId === walletToConnect.id && fullCurrencyCode === walletToConnect.fullCurrencyCode
+                ) < 0
+              ) {
+                walletsToConnectLeft.push(walletToConnect)
+              }
+            }
+            for (const walletToDisconnect of walletsToDisconnect) {
+              if (
+                updatedCcWallets.findIndex(
+                  ({ walletId, fullCurrencyCode }) => walletId === walletToDisconnect.id && fullCurrencyCode === walletToDisconnect.fullCurrencyCode
+                ) < 0
+              ) {
+                walletsToDisconnectLeft.push(walletToDisconnect)
+              }
+            }
+            Actions.refresh({ fioWallet, fioAddressName, walletsToConnect: walletsToConnectLeft, walletsToDisconnect: walletsToDisconnectLeft })
+            this.resetSlider()
+          }
+          throw error
+        }
         if (walletsToConnect.length) {
           showToast(s.strings.fio_connect_wallets_success)
         } else {
@@ -79,12 +114,38 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
         }
         Actions.pop()
       } catch (e) {
+        if (e.code === FIO_NO_BUNDLED_ERR_CODE) {
+          this.setState({ connectWalletsLoading: false })
+          const answer = await Airship.show(bridge => (
+            <ButtonsModal
+              bridge={bridge}
+              title={s.strings.fio_no_bundled_err_msg}
+              message={s.strings.fio_no_bundled_renew_err_msg}
+              buttons={{
+                ok: { label: s.strings.title_fio_renew_address },
+                cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+              }}
+            />
+          ))
+          if (answer === 'ok') {
+            Actions[Constants.FIO_ADDRESS_SETTINGS]({
+              showRenew: true,
+              fioWallet,
+              fioAddressName: fioAddressName
+            })
+          }
+          return
+        }
         showError(e.message)
       }
       this.setState({ connectWalletsLoading: false })
     } else {
       showError(s.strings.fio_network_alert_text)
     }
+  }
+
+  resetSlider = (): void => {
+    this.setState({ showSlider: false }, () => this.setState({ showSlider: true }))
   }
 
   check = (): void => {
@@ -95,10 +156,10 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
 
   render() {
     const { fioAddressName, walletsToConnect, walletsToDisconnect } = this.props
-    const { acknowledge, connectWalletsLoading } = this.state
+    const { acknowledge, connectWalletsLoading, showSlider } = this.state
 
     return (
-      <SceneWrapper>
+      <SceneWrapper background="header">
         <ScrollView>
           <View style={styles.info}>
             <T style={styles.title}>{s.strings.fio_address_register_form_field_label}</T>
@@ -139,13 +200,15 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
             </TouchableWithoutFeedback>
             <View style={styles.spacer} />
             <View style={styles.spacer} />
-            <Slider
-              resetSlider
-              onSlidingComplete={this.confirm}
-              sliderDisabled={!acknowledge}
-              disabledText={s.strings.send_confirmation_slide_to_confirm}
-              showSpinner={connectWalletsLoading}
-            />
+            {showSlider && (
+              <Slider
+                resetSlider
+                onSlidingComplete={this.confirm}
+                sliderDisabled={!acknowledge}
+                disabledText={s.strings.send_confirmation_slide_to_confirm}
+                showSpinner={connectWalletsLoading}
+              />
+            )}
             <View style={styles.spacer} />
             <View style={styles.spacer} />
           </View>

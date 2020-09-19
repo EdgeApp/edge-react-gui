@@ -3,7 +3,7 @@
 import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
 
-import { CORE_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
+import { LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import type { Action } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, MostRecentWallet } from '../../types/types.js'
 import { spendingLimits } from '../SpendingLimitsReducer.js'
@@ -11,7 +11,7 @@ import { spendingLimits } from '../SpendingLimitsReducer.js'
 export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
   ...LOCAL_ACCOUNT_DEFAULTS,
-  ...CORE_DEFAULTS,
+  pinMode: false,
   changesLocked: true,
   plugins: {
     allCurrencyInfos: [],
@@ -22,10 +22,6 @@ export const initialState = {
   loginStatus: null,
   isTouchSupported: false,
   isTouchEnabled: false,
-  isOtpEnabled: false,
-  otpKey: null,
-  otpResetDate: null,
-  otpResetPending: false,
   confirmPasswordError: '',
   isAccountBalanceVisible: true,
   mostRecentWallets: [],
@@ -72,19 +68,14 @@ export type SettingsState = {
   customTokens: Array<CustomTokenInfo>,
   defaultFiat: string,
   defaultIsoFiat: string,
-  isOtpEnabled: boolean,
   isTouchEnabled: boolean,
   countryCode: string,
   isTouchSupported: boolean,
   loginStatus: boolean | null,
   merchantMode: boolean,
   preferredSwapPluginId: string | void,
-  otpKey: string | null,
-  otpResetPending: boolean,
-  otpMode: boolean,
   pinMode: boolean,
   pinLoginEnabled: boolean,
-  otpResetDate: ?string,
   plugins: {
     [pluginId: string]: EdgeCurrencyInfo,
     allCurrencyInfos: Array<EdgeCurrencyInfo>,
@@ -195,7 +186,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       const account: EdgeAccount = action.data.account
       const {
         touchIdInfo,
-        otpInfo,
         autoLogoutTimeInSeconds,
         defaultFiat,
         defaultIsoFiat,
@@ -206,7 +196,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         bluetoothMode,
         pinMode,
         pinLoginEnabled,
-        otpMode,
         denominationKeys,
         customTokensSettings,
         isAccountBalanceVisible,
@@ -217,9 +206,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       let newState = {
         ...state,
         loginStatus: true,
-        isOtpEnabled: otpInfo.enabled,
-        otpKey: otpInfo.otpKey,
-        otpResetPending: otpInfo.otpResetPending,
         autoLogoutTimeInSeconds,
         isTouchEnabled: touchIdInfo ? touchIdInfo.isTouchEnabled : false,
         isTouchSupported: touchIdInfo ? touchIdInfo.isTouchSupported : false,
@@ -232,8 +218,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         bluetoothMode,
         pinMode,
         pinLoginEnabled,
-        otpMode,
-        otpResetDate: account.otpResetDate,
         isAccountBalanceVisible,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
@@ -402,14 +386,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'DISABLE_OTP_RESET': {
-      return {
-        ...state,
-        otpResetDate: null,
-        otpResetPending: false
-      }
-    }
-
     case 'UI/SETTINGS/UPDATE_SETTINGS': {
       if (!action.data) throw new Error('Invalid action')
       const { settings } = action.data
@@ -428,15 +404,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return {
         ...state,
         pinMode
-      }
-    }
-
-    case 'UI/SETTINGS/SET_OTP_MODE': {
-      if (!action.data) throw new Error('Invalid action')
-      const { otpMode } = action.data
-      return {
-        ...state,
-        otpMode
       }
     }
 
@@ -485,16 +452,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return {
         ...state,
         changesLocked: action.data
-      }
-    }
-
-    case 'UI/SETTINGS/OTP_SETTINGS': {
-      if (!action.data) throw new Error('Invalid action')
-      return {
-        ...state,
-        isOtpEnabled: action.data.enabled,
-        otpKey: action.data.otpKey,
-        otpResetPending: action.data.otpResetPending
       }
     }
 

@@ -2,7 +2,9 @@
 
 exports[`SendConfirmation should render with destination 1`] = `
 <React.Fragment>
-  <SceneWrapper>
+  <SceneWrapper
+    background="header"
+  >
     <View
       style={
         Object {
@@ -279,7 +281,9 @@ exports[`SendConfirmation should render with destination 1`] = `
 
 exports[`SendConfirmation should render with standard props 1`] = `
 <React.Fragment>
-  <SceneWrapper>
+  <SceneWrapper
+    background="header"
+  >
     <View
       style={
         Object {
@@ -541,7 +545,9 @@ exports[`SendConfirmation should render with standard props 1`] = `
 
 exports[`SendConfirmation should render with unique identifier button with "ADD" text (XMR) 1`] = `
 <React.Fragment>
-  <SceneWrapper>
+  <SceneWrapper
+    background="header"
+  >
     <View
       style={
         Object {
@@ -783,7 +789,9 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
 
 exports[`SendConfirmation should render with unique identifier button with "ADD" text (XRP) 1`] = `
 <React.Fragment>
-  <SceneWrapper>
+  <SceneWrapper
+    background="header"
+  >
     <View
       style={
         Object {

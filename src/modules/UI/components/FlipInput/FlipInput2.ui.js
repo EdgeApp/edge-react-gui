@@ -2,10 +2,11 @@
 
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { Animated, Image, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { type Event, Animated, Image, Platform, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
+import { Txt } from '../../../../components/themed/Txt.js'
 import * as Constants from '../../../../constants/indexConstants'
 import * as intl from '../../../../locales/intl.js'
 import s from '../../../../locales/strings.js'
@@ -38,15 +39,7 @@ type State = {
   secondaryDisplayAmount: string, // Actual display amount including 1000s separator and localized for region
   primaryDecimalAmount: string,
   secondaryDecimalAmount: string,
-  rerenderCounter: number,
-  selectionPrimary?: {
-    start: number,
-    end: number
-  },
-  selectionSecondary?: {
-    start: number,
-    end: number
-  }
+  rerenderCounter: number
 }
 
 export type FlipInputOwnProps = {
@@ -80,6 +73,13 @@ export type FlipInputOwnProps = {
 
 type Props = FlipInputOwnProps
 
+type Amounts = {
+  primaryDecimalAmount: string,
+  primaryDisplayAmount: string,
+  secondaryDecimalAmount: string,
+  secondaryDisplayAmount: string
+}
+
 export const sanitizeDecimalAmount = (amount: string, maxEntryDecimals: number): string => {
   // Replace all commas into periods
   amount = amount.replace(',', '.')
@@ -91,8 +91,20 @@ export const sanitizeDecimalAmount = (amount: string, maxEntryDecimals: number):
   return intl.truncateDecimalsPeriod(amount, maxEntryDecimals)
 }
 
+const checkKeyPress = (keyPressed: string, decimalAmount: string) => {
+  if (keyPressed === '.' && decimalAmount.includes('.')) {
+    return false
+  }
+
+  if (keyPressed.match(/[^0-9.]/)) {
+    return false
+  }
+
+  return true
+}
+
 // Assumes a US locale decimal input
-const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string) => {
+const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string): Amounts => {
   // Formats into locale specific format. Add currency symbol
   const primaryDisplayAmount = addCurrencySymbol(props.primaryInfo.currencySymbol, intl.formatNumberInput(intl.prettifyNumber(primaryDecimalAmount)))
 
@@ -110,7 +122,7 @@ const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string) => {
 }
 
 // Pretty much the same as setPrimaryToSecondary
-const setSecondaryToPrimary = (props: Props, secondaryDecimalAmount: string) => {
+const setSecondaryToPrimary = (props: Props, secondaryDecimalAmount: string): Amounts => {
   const secondaryDisplayAmount = addCurrencySymbol(props.secondaryInfo.currencySymbol, intl.formatNumberInput(intl.prettifyNumber(secondaryDecimalAmount)))
   let primaryDecimalAmount = props.exchangeSecondaryToPrimaryRatio === '0' ? '0' : bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, 18)
   primaryDecimalAmount = UTILS.truncateDecimals(primaryDecimalAmount, props.primaryInfo.maxConversionDecimals)
@@ -201,22 +213,18 @@ export class FlipInput extends React.Component<Props, State> {
 
     if (this.props.isFocus) {
       setTimeout(() => {
-        this.textInputBack && this.textInputBack.focus()
+        if (this.state.isToggled) {
+          const { exchangeSecondaryToPrimaryRatio } = this.props
+          if (bns.eq(exchangeSecondaryToPrimaryRatio, '0') || exchangeSecondaryToPrimaryRatio === '') {
+            this.toggleCryptoOnTop()
+          } else {
+            this.textInputBack && this.textInputBack.focus()
+          }
+        } else {
+          this.textInputFront && this.textInputFront.focus()
+        }
       }, 650)
     }
-  }
-
-  resetInputCursor = () => {
-    this.setState({
-      selectionPrimary: {
-        start: this.state.primaryDecimalAmount.length,
-        end: this.state.primaryDecimalAmount.length
-      },
-      selectionSecondary: {
-        start: this.state.secondaryDecimalAmount.length,
-        end: this.state.secondaryDecimalAmount.length
-      }
-    })
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
@@ -240,7 +248,7 @@ export class FlipInput extends React.Component<Props, State> {
       }
     }
     if (nextProps.primaryInfo.currencyCode !== this.props.primaryInfo.currencyCode) {
-      setTimeout(() => this.onPrimaryAmountChange('0'), 50)
+      setTimeout(() => this.onKeyPress('0', '', this.props.primaryInfo.maxEntryDecimals, setPrimaryToSecondary), 50)
     }
   }
 
@@ -274,20 +282,6 @@ export class FlipInput extends React.Component<Props, State> {
         tension: 10
       }).start()
     }
-  }
-
-  onPrimaryAmountChange = (amount: string) => {
-    const result = setPrimaryToSecondary(this.props, sanitizeDecimalAmount(amount, this.props.primaryInfo.maxEntryDecimals))
-    this.setState(result, () => {
-      this.props.onAmountChanged(result.primaryDecimalAmount)
-    })
-  }
-
-  onSecondaryAmountChange = (amount: string) => {
-    const result = setSecondaryToPrimary(this.props, sanitizeDecimalAmount(amount, this.props.secondaryInfo.maxEntryDecimals))
-    this.setState(result, () => {
-      this.props.onAmountChanged(result.primaryDecimalAmount)
-    })
   }
 
   textInputTopFocus = () => {
@@ -332,32 +326,48 @@ export class FlipInput extends React.Component<Props, State> {
     }
   }
 
-  topRowFront = (fieldInfo: FlipInputFieldInfo, onChangeText: string => void, displayAmount: string, decimalAmount: string) => {
-    const displayAmountString = !decimalAmount || decimalAmount.match(/^0*$/) ? s.strings.string_enter_amount : displayAmount
+  onKeyPress(keyPressed: string, decimalAmount: string, maxEntryDecimals: number, setAmounts: (Props, string) => Amounts) {
+    keyPressed = keyPressed.replace(',', '.')
+    if (keyPressed === 'Backspace') {
+      this.setStateAmounts(intl.truncateDecimals(decimalAmount.slice(0, -1), maxEntryDecimals), setAmounts)
+    } else if (checkKeyPress(keyPressed, decimalAmount)) {
+      this.setStateAmounts(intl.truncateDecimals(decimalAmount + keyPressed, maxEntryDecimals), setAmounts)
+    }
+  }
+
+  setStateAmounts(decimalAmount: string, setAmounts: (Props, string) => Amounts) {
+    const amounts = setAmounts(this.props, decimalAmount)
+    this.setState(amounts, () => this.props.onAmountChanged(amounts.primaryDecimalAmount))
+  }
+
+  onPrimaryChangeText = (value: string) => {
+    // Hack on android where to only get the number farthest to the right
+    if (Platform.OS === 'ios') return
+    if (value.match(/[^0-9]/)) return
+    this.onKeyPress(value.slice(value.length - 1), this.state.primaryDecimalAmount, this.props.primaryInfo.maxEntryDecimals, setPrimaryToSecondary)
+  }
+
+  onPrimaryKeyPress = (e: Event) =>
+    this.onKeyPress(e.nativeEvent.key, this.state.primaryDecimalAmount, this.props.primaryInfo.maxEntryDecimals, setPrimaryToSecondary)
+
+  topRowFront = () => {
+    const { primaryDisplayAmount, primaryDecimalAmount } = this.state
+    const displayAmountString = !primaryDecimalAmount || primaryDecimalAmount.match(/^0*$/) ? s.strings.string_enter_amount : primaryDisplayAmount
     const displayAmountStyle = displayAmountString === s.strings.string_enter_amount ? top.amountPlaceholder : null
     return (
       <TouchableWithoutFeedback onPress={this.textInputFrontFocus}>
         <View style={top.row} key="top">
-          <Text style={top.currencyCode}>{fieldInfo.currencyCode}</Text>
+          <Txt style={top.currencyCode}>{this.props.primaryInfo.currencyCode}</Txt>
           <View style={top.amountContainer}>
-            {Platform.OS === 'ios' ? (
-              <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} adjustsFontSizeToFit>
-                {displayAmountString}
-              </Text>
-            ) : (
-              <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} ellipsizeMode="middle">
-                {displayAmountString}
-              </Text>
-            )}
+            <Txt style={[top.amount, displayAmountStyle]}>{displayAmountString}</Txt>
             <TextInput
               style={top.textInput}
-              value={decimalAmount}
-              onChangeText={onChangeText}
+              value=""
+              onChangeText={this.onPrimaryChangeText}
+              onKeyPress={this.onPrimaryKeyPress}
               autoCorrect={false}
               keyboardType="numeric"
               returnKeyType={this.props.topReturnKeyType || 'done'}
-              selection={this.state.selectionPrimary}
-              onSelectionChange={this.resetInputCursor}
               ref={this.getTextInputFrontRef}
               onFocus={this.textInputFrontFocusTrue}
               onBlur={this.textInputFrontFocusFalse}
@@ -389,32 +399,34 @@ export class FlipInput extends React.Component<Props, State> {
     }
   }
 
-  topRowBack = (fieldInfo: FlipInputFieldInfo, onChangeText: string => void, displayAmount: string, decimalAmount: string) => {
-    const displayAmountString = !decimalAmount || decimalAmount.match(/^0*$/) ? s.strings.string_enter_amount : displayAmount
+  onSecondaryChangeText = (value: string) => {
+    // Hack on android where to only get the number farthest to the right
+    if (Platform.OS === 'ios') return
+    if (value.match(/[^0-9]/)) return
+    this.onKeyPress(value.slice(value.length - 1), this.state.secondaryDecimalAmount, this.props.secondaryInfo.maxEntryDecimals, setSecondaryToPrimary)
+  }
+
+  onSecondaryKeyPress = (e: Event) =>
+    this.onKeyPress(e.nativeEvent.key, this.state.secondaryDecimalAmount, this.props.secondaryInfo.maxEntryDecimals, setSecondaryToPrimary)
+
+  topRowBack = () => {
+    const { secondaryDisplayAmount, secondaryDecimalAmount } = this.state
+    const displayAmountString = !secondaryDecimalAmount || secondaryDecimalAmount.match(/^0*$/) ? s.strings.string_enter_amount : secondaryDisplayAmount
     const displayAmountStyle = displayAmountString === s.strings.string_enter_amount ? top.amountPlaceholder : null
     return (
       <TouchableWithoutFeedback onPress={this.textInputBackFocus}>
         <View style={top.row} key="top">
-          <Text style={top.currencyCode}>{fieldInfo.currencyName}</Text>
+          <Txt style={top.currencyCode}>{this.props.secondaryInfo.currencyName}</Txt>
           <View style={top.amountContainer}>
-            {Platform.OS === 'ios' ? (
-              <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} adjustsFontSizeToFit>
-                {displayAmountString}
-              </Text>
-            ) : (
-              <Text style={[top.amount, displayAmountStyle]} numberOfLines={1} ellipsizeMode="middle">
-                {displayAmountString}
-              </Text>
-            )}
+            <Txt style={[top.amount, displayAmountStyle]}>{displayAmountString}</Txt>
             <TextInput
               style={top.textInput}
-              value={decimalAmount}
-              onChangeText={onChangeText}
+              value=""
+              onChangeText={this.onSecondaryChangeText}
+              onKeyPress={this.onSecondaryKeyPress}
               autoCorrect={false}
               keyboardType="numeric"
               returnKeyType={this.props.topReturnKeyType || 'done'}
-              selection={this.state.selectionSecondary}
-              onSelectionChange={this.resetInputCursor}
               ref={this.getTextInputBackRef}
               onFocus={this.textInputBackFocusTrue}
               onBlur={this.textInputBackFocusFalse}
@@ -432,11 +444,9 @@ export class FlipInput extends React.Component<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={this.onToggleFlipInput} key="bottom">
         <View style={bottom.row}>
-          <Text style={bottom.currencyCode}>{fieldInfo.currencyCode}</Text>
+          <Txt style={bottom.currencyCode}>{fieldInfo.currencyCode}</Txt>
           <View style={top.amountContainer}>
-            <Text style={[bottom.amount, !amount && bottom.alert]} numberOfLines={1} ellipsizeMode="tail">
-              {amount}
-            </Text>
+            <Txt style={[bottom.amount, !amount && bottom.alert]}>{amount}</Txt>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -458,7 +468,7 @@ export class FlipInput extends React.Component<Props, State> {
           <View style={styles.flipContainerHeader}>
             <Image style={styles.flipContainerHeaderIcon} source={{ uri: headerLogo || '' }} />
             <View style={styles.flipContainerHeaderTextContainer}>
-              <Text style={styles.flipContainerHeaderText}>{headerText}</Text>
+              <Txt style={styles.flipContainerHeaderText}>{headerText}</Txt>
               {headerCallback && <FAIcon style={styles.flipContainerHeaderTextDropDown} name={Constants.KEYBOARD_ARROW_DOWN} size={scale(20)} />}
             </View>
           </View>
@@ -472,7 +482,7 @@ export class FlipInput extends React.Component<Props, State> {
               <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={scale(26)} />
             </View>
             <View style={styles.rows}>
-              {this.topRowFront(primaryInfo, this.onPrimaryAmountChange, this.state.primaryDisplayAmount, this.state.primaryDecimalAmount)}
+              {this.topRowFront()}
               {this.bottomRow(secondaryInfo, this.state.secondaryDisplayAmount)}
             </View>
           </Animated.View>
@@ -484,7 +494,7 @@ export class FlipInput extends React.Component<Props, State> {
               <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={scale(26)} />
             </View>
             <View style={styles.rows}>
-              {this.topRowBack(secondaryInfo, this.onSecondaryAmountChange, this.state.secondaryDisplayAmount, this.state.secondaryDecimalAmount)}
+              {this.topRowBack()}
               {this.bottomRow(primaryInfo, this.state.primaryDisplayAmount)}
             </View>
           </Animated.View>

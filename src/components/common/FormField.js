@@ -90,6 +90,7 @@ export class FormField extends React.Component {
           autoFocus={this.state.autoFocus}
           multiline={this.props.multiline}
           suffix={this.props.suffix}
+          prefix={this.props.prefix}
         />
       )
     } else {
@@ -121,6 +122,7 @@ export class FormField extends React.Component {
           autoCorrect={this.props.autoCorrect || false}
           multiline={this.props.multiline}
           suffix={this.props.suffix}
+          prefix={this.props.prefix}
         />
       )
     }

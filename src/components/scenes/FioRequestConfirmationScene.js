@@ -24,6 +24,7 @@ import { emptyCurrencyInfo } from '../../types/types'
 import { getDenomFromIsoCode } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AddressModal } from '../modals/AddressModal.js'
+import { ButtonsModal } from '../modals/ButtonsModal'
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 
@@ -53,7 +54,8 @@ type State = {
   fioAddressFrom: string,
   fioAddressTo: string,
   memo: string,
-  settingFioAddressTo: boolean
+  settingFioAddressTo: boolean,
+  showSlider: boolean
 }
 
 export class FioRequestConfirmationConnected extends React.Component<Props, State> {
@@ -65,7 +67,8 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       walletAddresses: [],
       fioAddressTo: '',
       memo: '',
-      settingFioAddressTo: false
+      settingFioAddressTo: false,
+      showSlider: true
     }
   }
 
@@ -97,6 +100,10 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     }
   }
 
+  resetSlider = (): void => {
+    this.setState({ showSlider: false }, () => this.setState({ showSlider: true }))
+  }
+
   onConfirm = async () => {
     const { walletAddresses, fioAddressFrom } = this.state
     const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
@@ -113,9 +120,32 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         this.setState({ loading: true })
         try {
           const getFeeRes = await fioWallet.otherMethods.fioAction('getFee', { endPoint: 'new_funds_request', fioAddress: this.state.fioAddressFrom })
-          if (getFeeRes.fee) return showError(s.strings.fio_no_bundled_err_msg)
+          if (getFeeRes.fee) {
+            this.setState({ loading: false })
+            this.resetSlider()
+            const answer = await Airship.show(bridge => (
+              <ButtonsModal
+                bridge={bridge}
+                title={s.strings.fio_no_bundled_err_msg}
+                message={s.strings.fio_no_bundled_renew_err_msg}
+                buttons={{
+                  ok: { label: s.strings.title_fio_renew_address },
+                  cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+                }}
+              />
+            ))
+            if (answer === 'ok') {
+              Actions[Constants.FIO_ADDRESS_SETTINGS]({
+                showRenew: true,
+                fioWallet,
+                fioAddressName: this.state.fioAddressFrom
+              })
+            }
+            return
+          }
         } catch (e) {
           this.setState({ loading: false })
+          this.resetSlider()
           return showError(s.strings.fio_get_fee_err_msg)
         }
         // send fio request
@@ -135,6 +165,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         Actions.popTo(Constants.REQUEST)
       } catch (error) {
         this.setState({ loading: false })
+        this.resetSlider()
         showError(
           `${s.strings.fio_request_error_header}. ${error.json && error.json.fields && error.json.fields[0] ? JSON.stringify(error.json.fields[0].error) : ''}`
         )
@@ -204,7 +235,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
   render() {
     const { primaryCurrencyInfo, secondaryCurrencyInfo } = this.props
-    const { fioAddressFrom, fioAddressTo, loading, memo, settingFioAddressTo } = this.state
+    const { fioAddressFrom, fioAddressTo, loading, memo, settingFioAddressTo, showSlider } = this.state
     if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
     let cryptoAmount, exchangeAmount
     try {
@@ -219,7 +250,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     const fiatName = secondaryCurrencyInfo.displayDenomination.name
 
     return (
-      <SceneWrapper>
+      <SceneWrapper background="header">
         <View style={styles.container}>
           <TouchableWithoutFeedback onPress={this.openFioAddressFromModal}>
             <View style={styles.tileContainer}>
@@ -246,7 +277,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
               <Text style={styles.tileTextBody}>{memo}</Text>
             </View>
           </TouchableWithoutFeedback>
-          {fioAddressFrom.length > 0 && fioAddressTo.length > 0 ? (
+          {fioAddressFrom.length > 0 && fioAddressTo.length > 0 && showSlider ? (
             <Slider
               resetSlider={false}
               parentStyle={styles.sliderStyle}

@@ -6,21 +6,27 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
+import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings'
+import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { getRenewalFee, renewFioName } from '../../modules/FioAddress/util'
+import { getDisplayDenomination } from '../../modules/Settings/selectors'
 import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import type { Dispatch, State } from '../../types/reduxTypes'
+import type { FioAddress } from '../../types/types'
 import { truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError, showToast } from '../services/AirshipInstance'
 
 const DIVIDE_PRECISION = 18
 
-export type State = {
+export type LocalState = {
   showRenew: boolean,
   renewError: string,
   feeLoading: boolean,
@@ -31,6 +37,7 @@ export type State = {
 }
 
 export type StateProps = {
+  fioAddresses: FioAddress[],
   denominationMultiplier: string,
   isConnected: boolean
 }
@@ -42,13 +49,15 @@ export type DispatchProps = {
 export type NavigationProps = {
   fioWallet: EdgeCurrencyWallet,
   fioAddressName: string,
-  expiration: string
+  expiration?: string,
+  showRenew?: boolean,
+  refreshAfterRenew?: boolean
 }
 
 type Props = NavigationProps & StateProps & DispatchProps
 
-export class FioAddressSettingsScene extends React.Component<Props, State> {
-  state: State = {
+class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
+  state: LocalState = {
     showRenew: false,
     renewError: '',
     feeLoading: false,
@@ -56,6 +65,15 @@ export class FioAddressSettingsScene extends React.Component<Props, State> {
     renewLoading: false,
     displayFee: 0,
     balance: 0
+  }
+
+  componentDidMount(): * {
+    const { showRenew, refreshAllFioAddresses } = this.props
+    refreshAllFioAddresses()
+    if (showRenew) {
+      this.setBalance()
+      this.setFee()
+    }
   }
 
   setFee = async (): Promise<void> => {
@@ -89,6 +107,13 @@ export class FioAddressSettingsScene extends React.Component<Props, State> {
     }
   }
 
+  getExpiration = (): string => {
+    const { fioAddresses, fioAddressName } = this.props
+    const fioAddress = fioAddresses.find(({ name }) => fioAddressName === name)
+    if (fioAddress) return intl.formatExpDate(fioAddress.expiration)
+    return ''
+  }
+
   formatFio(val: string): number {
     return parseFloat(truncateDecimals(bns.div(val, this.props.denominationMultiplier, DIVIDE_PRECISION), 6))
   }
@@ -99,7 +124,7 @@ export class FioAddressSettingsScene extends React.Component<Props, State> {
   }
 
   onConfirm = async () => {
-    const { fioWallet, fioAddressName, isConnected, refreshAllFioAddresses } = this.props
+    const { fioWallet, fioAddressName, isConnected, refreshAllFioAddresses, refreshAfterRenew } = this.props
     const { renewalFee } = this.state
 
     if (!isConnected) {
@@ -128,9 +153,11 @@ export class FioAddressSettingsScene extends React.Component<Props, State> {
       this.setState({ showRenew: false })
       showToast(s.strings.fio_request_renew_ok_text)
       Actions.pop()
-      window.requestAnimationFrame(() => {
-        Actions.refresh({ fioAddressName, expiration: intl.formatExpDate(expiration) })
-      })
+      if (refreshAfterRenew) {
+        window.requestAnimationFrame(() => {
+          Actions.refresh({ fioAddressName, expiration: intl.formatExpDate(expiration) })
+        })
+      }
     } catch (e) {
       showError(e.message)
       this.setState({ renewError: e.message })
@@ -173,11 +200,16 @@ export class FioAddressSettingsScene extends React.Component<Props, State> {
   }
 
   render() {
-    const { fioAddressName, expiration } = this.props
+    const { fioAddressName } = this.props
+    let { expiration } = this.props
     const { feeLoading, displayFee, balance, renewalFee, renewLoading, showRenew } = this.state
 
+    if (!expiration) {
+      expiration = this.getExpiration()
+    }
+
     return (
-      <SceneWrapper>
+      <SceneWrapper background="header">
         <View style={styles.info}>
           <T style={styles.title}>{s.strings.fio_address_register_form_field_label}</T>
           <T style={styles.content}>{fioAddressName}</T>
@@ -258,3 +290,23 @@ const rawStyles = {
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+
+const mapStateToProps = (state: State) => {
+  const displayDenomination = getDisplayDenomination(state, FIO_STR)
+
+  const out: StateProps = {
+    fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+    denominationMultiplier: displayDenomination.multiplier,
+    isConnected: state.network.isConnected
+  }
+
+  return out
+}
+
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+  refreshAllFioAddresses: () => {
+    dispatch(refreshAllFioAddresses())
+  }
+})
+
+export const FioAddressSettingsScene = connect(mapStateToProps, mapDispatchToProps)(FioAddressSettingsComponent)

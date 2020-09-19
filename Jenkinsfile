@@ -17,7 +17,7 @@ def build (platform) {
 pipeline {
   agent any
   tools {
-    nodejs "v12.6.0"
+    nodejs "stable"
   }
   options {
     timestamps()
