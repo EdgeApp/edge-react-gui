@@ -401,7 +401,7 @@ export const setPreferredSwapPluginId = (account: EdgeAccount, pluginId: string 
   })
 }
 
-export const setMostRecentWalletsSelected = (account: EdgeAccount, mostRecentWallets: Array<MostRecentWallet>) =>
+export const setMostRecentWalletsSelected = (account: EdgeAccount, mostRecentWallets: MostRecentWallet[]) =>
   getSyncedSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { mostRecentWallets })
     return setSyncedSettings(account, updatedSettings)
@@ -482,7 +482,7 @@ export async function setSyncedSettings(account: EdgeAccount, settings: Object):
   await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
 }
 
-export type CategoriesFile = { categories: Array<string> }
+export type CategoriesFile = { categories: string[] }
 
 export async function setSubcategoriesRequest(account: EdgeAccount, subcategories: CategoriesFile) {
   // const subcats = await getSyncedSubcategories(account)

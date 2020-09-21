@@ -11,10 +11,10 @@ export type TransactionListState = {
   +currentWalletId: string,
   +numTransactions: number,
   +transactionIdMap: { [txid: string]: TransactionListTx },
-  +transactions: Array<TransactionListTx>
+  +transactions: TransactionListTx[]
 }
 
-const transactions = (state = [], action: Action): Array<TransactionListTx> => {
+const transactions = (state = [], action: Action): TransactionListTx[] => {
   if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {

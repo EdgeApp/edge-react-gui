@@ -19,7 +19,7 @@ import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 
 type TransactionRowOwnProps = {
-  transactions: Array<TransactionListTx>,
+  transactions: TransactionListTx[],
   transaction: TransactionListTx,
   selectedCurrencyCode: string,
   contacts: ContactsState,
@@ -56,7 +56,7 @@ export class TransactionRowComponent extends React.Component<Props, State> {
 
   render() {
     global.pcount && global.pcount('TransactionRow:render')
-    const completedTxList: Array<TransactionListTx> = this.props.transactions
+    const completedTxList: TransactionListTx[] = this.props.transactions
     // $FlowFixMe
     const tx = this.props.transaction.item
 

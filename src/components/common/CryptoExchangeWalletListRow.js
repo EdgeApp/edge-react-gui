@@ -18,7 +18,7 @@ import { type TokenSelectObject, CryptoExchangeWalletListTokenRow } from './Cryp
 
 export type StateProps = {
   denomination: EdgeDenomination,
-  customTokens: Array<CustomTokenInfo>,
+  customTokens: CustomTokenInfo[],
   settings: Object,
   exchangeRates: { [string]: number },
   headerLabel?: string
@@ -27,15 +27,15 @@ export type StateProps = {
 export type OwnProps = {
   wallet: GuiWallet,
   onPress(GuiWallet): void,
-  excludedCurrencyCode: Array<string>,
+  excludedCurrencyCode: string[],
   onTokenPress(TokenSelectObject): void,
-  excludedTokens: Array<string>,
+  excludedTokens: string[],
   disableZeroBalance: boolean,
   searchFilter: string,
   currencyCodeFilter: string,
   isMostRecentWallet?: boolean,
-  allowedCurrencyCodes?: Array<string>,
-  excludeCurrencyCodes?: Array<string>
+  allowedCurrencyCodes?: string[],
+  excludeCurrencyCodes?: string[]
 }
 
 type LocalState = {

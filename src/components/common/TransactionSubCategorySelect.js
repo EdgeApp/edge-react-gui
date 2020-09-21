@@ -9,16 +9,16 @@ import type { SubcategorySearchResultData } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 
 type State = {
-  subcategories: Array<string>,
-  filteredSubcategories: Array<string>,
+  subcategories: string[],
+  filteredSubcategories: string[],
   enteredSubcategory: string
 }
 type Props = {
   bottomGap: number,
-  subcategoriesList: Array<string>,
+  subcategoriesList: string[],
   enteredSubcategory: string,
   onPressFxn: (input: string) => void,
-  categories: Array<string>
+  categories: string[]
 }
 
 class SubCategorySelect extends React.Component<Props, State> {
@@ -59,7 +59,7 @@ class SubCategorySelect extends React.Component<Props, State> {
     )
   }
 
-  renderSubcategory = (data: SubcategorySearchResultData, filterArray: Array<any>) => {
+  renderSubcategory = (data: SubcategorySearchResultData, filterArray: any[]) => {
     const renderAdd = () => {
       if (filterArray.find(item => item === data.item)) {
         return (

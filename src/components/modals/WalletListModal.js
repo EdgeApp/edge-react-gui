@@ -28,20 +28,20 @@ export type WalletListResult = {
 
 type StateProps = {
   wallets: { [string]: GuiWallet },
-  activeWalletIds: Array<string>,
-  mostRecentWallets: Array<MostRecentWallet>,
+  activeWalletIds: string[],
+  mostRecentWallets: MostRecentWallet[],
   account: EdgeAccount,
   defaultIsoFiat: string,
-  customTokens: Array<CustomTokenInfo>
+  customTokens: CustomTokenInfo[]
 }
 
 type OwnProps = {
   bridge: AirshipBridge<WalletListResult>,
   headerTitle: string,
   showCreateWallet?: boolean,
-  excludeWalletIds?: Array<string>,
-  allowedCurrencyCodes?: Array<string>,
-  excludeCurrencyCodes?: Array<string>
+  excludeWalletIds?: string[],
+  allowedCurrencyCodes?: string[],
+  excludeCurrencyCodes?: string[]
 }
 
 type DispatchProps = {
@@ -66,9 +66,9 @@ type Record = {
 
 type State = {
   input: string,
-  records: Array<Record>,
-  allowedCurrencyCodes?: Array<string>,
-  excludeCurrencyCodes?: Array<string>
+  records: Record[],
+  allowedCurrencyCodes?: string[],
+  excludeCurrencyCodes?: string[]
 }
 
 type Props = StateProps & OwnProps & DispatchProps
@@ -179,7 +179,7 @@ class WalletListModalConnected extends React.Component<Props, State> {
     }
   }
 
-  setWalletRecordsLabel = (records: Array<Record>, header: string): Array<Record> => {
+  setWalletRecordsLabel = (records: Record[], header: string): Record[] => {
     return records.map((record: Record, i: number) => {
       if (i === 0) {
         return {
@@ -194,7 +194,7 @@ class WalletListModalConnected extends React.Component<Props, State> {
   getMostRecentlyUsedWalletRecords = (size: number) => {
     const { mostRecentWallets } = this.props
     const { records } = this.state
-    const mostRecentWalletRecords: Array<Record> = []
+    const mostRecentWalletRecords: Record[] = []
     let i = 0
     while (mostRecentWalletRecords.length < size) {
       if (!mostRecentWallets[i]) {

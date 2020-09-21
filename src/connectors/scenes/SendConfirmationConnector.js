@@ -51,7 +51,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const balanceInFiat = fiatPerCrypto * parseFloat(balanceInCryptoDisplay)
 
   const plugins: Object = getPlugins(state)
-  const allCurrencyInfos: Array<EdgeCurrencyInfo> = plugins.allCurrencyInfos
+  const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
   const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
 
   if (guiWallet) {

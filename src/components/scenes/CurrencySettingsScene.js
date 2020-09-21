@@ -22,16 +22,16 @@ type NavigationProps = {
   currencyInfo: EdgeCurrencyInfo
 }
 type StateProps = {
-  denominations: Array<GuiDenomination>,
+  denominations: GuiDenomination[],
   selectedDenominationKey: string,
-  electrumServers: Array<string>,
+  electrumServers: string[],
   disableFetchingServers: boolean,
   defaultElectrumServer: string
 }
 type DispatchProps = {
   disableCustomNodes(): void,
   enableCustomNodes(): void,
-  saveCustomNodesList(nodes: Array<string>): void,
+  saveCustomNodesList(nodes: string[]): void,
   selectDenomination(string): void
 }
 type Props = NavigationProps & StateProps & DispatchProps & ThemeProps
@@ -169,7 +169,7 @@ export const CurrencySettingsScene = connect(
     selectDenomination(denominationKey) {
       dispatch(setDenominationKeyRequest(ownProps.currencyInfo.currencyCode, denominationKey))
     },
-    saveCustomNodesList(nodesList: Array<string>) {
+    saveCustomNodesList(nodesList: string[]) {
       dispatch(saveCustomNodesList(ownProps.currencyInfo.currencyCode, nodesList))
     }
   })

@@ -18,7 +18,7 @@ type Wallet = {
   primaryNativeBalance: string,
   fiatCurrencyCode: string
 }
-type Wallets = Array<Wallet>
+type Wallets = Wallet[]
 function formatWallet(w: GuiWallet): Wallet {
   return {
     id: w.id,
@@ -50,7 +50,7 @@ type Address = {
 }
 
 // TODO: either get rid of PluginBridge class or refactor out these globals
-let navStack: Array<string> = []
+let navStack: string[] = []
 // $FlowFixMe
 let _context: Context = null
 

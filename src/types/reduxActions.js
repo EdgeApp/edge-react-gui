@@ -121,7 +121,7 @@ export type Action =
         walletId: string,
         tokenObj: CustomTokenInfo,
         settings: Object,
-        enabledTokens: Array<string>
+        enabledTokens: string[]
       }
     }
   | {
@@ -129,8 +129,8 @@ export type Action =
       data: {
         walletId: string,
         code: string,
-        coreWalletsToUpdate: Array<EdgeCurrencyWallet>,
-        enabledTokensOnWallet: Array<string>,
+        coreWalletsToUpdate: EdgeCurrencyWallet[],
+        enabledTokensOnWallet: string[],
         oldCurrencyCode: string,
         setSettings: Object,
         tokenObj: CustomTokenInfo
@@ -143,8 +143,8 @@ export type Action =
   | {
       type: 'CORE/WALLETS/UPDATE_WALLETS',
       data: {
-        activeWalletIds: Array<string>,
-        archivedWalletIds: Array<string>,
+        activeWalletIds: string[],
+        archivedWalletIds: string[],
         currencyWallets: { [id: string]: EdgeCurrencyWallet },
         receiveAddresses: { [id: string]: EdgeReceiveAddress }
       }
@@ -154,7 +154,7 @@ export type Action =
   | { type: 'DEVICE_REFERRAL_LOADED', data: DeviceReferral }
   | {
       type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
-      data: { activeWalletIds: Array<string> }
+      data: { activeWalletIds: string[] }
     }
   | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
   | { type: 'LOGIN', data: EdgeAccount }
@@ -169,7 +169,7 @@ export type Action =
       data: {
         tokenObj: CustomTokenInfo,
         oldCurrencyCode: string,
-        coreWalletsToUpdate: Array<EdgeCurrencyWallet>
+        coreWalletsToUpdate: EdgeCurrencyWallet[]
       }
     }
   | { type: 'PERMISSIONS/UPDATE', data: PermissionsState }
@@ -185,7 +185,7 @@ export type Action =
         wallet: GuiWallet
       }
     }
-  | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS', data: { contacts: Array<GuiContact> } }
+  | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS', data: { contacts: GuiContact[] } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
   | { type: 'OPEN_WALLET_SELECTOR_MODAL', data: 'from' | 'to' }
   | { type: 'PARSE_URI_SUCCEEDED', data: { parsedUri: EdgeParsedUri } }
@@ -212,7 +212,7 @@ export type Action =
   | { type: 'UPDATE_SWAP_QUOTE', data: GuiSwapInfo }
   | {
       type: 'UPDATE_WALLET_ENABLED_TOKENS',
-      data: { walletId: string, tokens: Array<string> }
+      data: { walletId: string, tokens: string[] }
     }
   | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: string }
   | { type: 'NETWORK/NETWORK_STATUS', data: { isConnected: boolean } }

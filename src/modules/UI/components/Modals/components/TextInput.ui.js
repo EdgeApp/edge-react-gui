@@ -16,7 +16,7 @@ export type Props = {
   affixTextStyle?: StyleSheet.Styles,
   animationDuration?: number,
   baseColor?: string,
-  characterRestriction?: Array<string>,
+  characterRestriction?: string[],
   containerStyle?: StyleSheet.Styles,
   disabled?: boolean,
   disabledLineType?: string,

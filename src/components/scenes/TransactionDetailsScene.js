@@ -38,14 +38,14 @@ type OwnProps = {
   thumbnailPath?: string
 }
 type StateProps = {
-  contacts: Array<GuiContact>,
+  contacts: GuiContact[],
   currencyCode: string,
   currencyInfo?: EdgeCurrencyInfo,
   currentFiatAmount: number,
   destinationDenomination?: EdgeDenomination,
   destinationWallet?: GuiWallet,
   guiWallet: GuiWallet,
-  subcategoriesList: Array<string>,
+  subcategoriesList: string[],
   walletDefaultDenomProps: EdgeDenomination
 }
 type DispatchProps = {

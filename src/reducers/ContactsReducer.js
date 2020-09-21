@@ -3,7 +3,7 @@
 import type { Action } from '../types/reduxTypes.js'
 import type { GuiContact } from '../types/types.js'
 
-export type ContactsState = Array<GuiContact>
+export type ContactsState = GuiContact[]
 
 export const initialState = []
 

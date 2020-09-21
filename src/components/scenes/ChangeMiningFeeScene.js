@@ -56,7 +56,7 @@ export class ChangeMiningFee extends React.Component<Props, State> {
     }
   }
 
-  getCustomFormat(): Array<string> | void {
+  getCustomFormat(): string[] | void {
     const { wallet } = this.props
     if (wallet.currencyInfo.defaultSettings != null) {
       const { customFeeSettings } = wallet.currencyInfo.defaultSettings
@@ -103,7 +103,7 @@ export class ChangeMiningFee extends React.Component<Props, State> {
     )
   }
 
-  renderCustomFee(customFormat: Array<string>): React.Node {
+  renderCustomFee(customFormat: string[]): React.Node {
     const { networkFeeOption, customNetworkFee } = this.state
     if (networkFeeOption !== 'custom') return null
 

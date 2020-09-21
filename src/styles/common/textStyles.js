@@ -15,7 +15,7 @@ export function B(props: { children: React.Node }) {
 /**
  * Use this function to build a text style for use on a light background.
  */
-export function dayText(...rules: Array<$Keys<typeof dayRules>>): Object {
+export function dayText(...rules: $Keys<typeof dayRules>[]): Object {
   const base: Object = {
     color: THEME.COLORS.BLACK,
     fontFamily: THEME.FONTS.DEFAULT,
@@ -27,7 +27,7 @@ export function dayText(...rules: Array<$Keys<typeof dayRules>>): Object {
 /**
  * Use this function to build a text style for use on a dark background.
  */
-export function nightText(...rules: Array<$Keys<typeof nightRules>>): Object {
+export function nightText(...rules: $Keys<typeof nightRules>[]): Object {
   const base: Object = {
     color: THEME.COLORS.WHITE,
     fontFamily: THEME.FONTS.DEFAULT,

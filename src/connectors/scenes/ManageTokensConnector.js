@@ -13,7 +13,7 @@ const mapStateToProps = (state: State, ownProps: ManageTokensOwnProps): ManageTo
   settingsCustomTokens: state.ui.settings.customTokens
 })
 const mapDispatchToProps = (dispatch: Dispatch): ManageTokensDispatchProps => ({
-  setEnabledTokensList: (walletId: string, enabledTokens: Array<string>, oldEnabledTokensList: Array<string>) => {
+  setEnabledTokensList: (walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) => {
     dispatch(setWalletEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
     dispatch(checkEnabledTokensArray(walletId, enabledTokens))
   }

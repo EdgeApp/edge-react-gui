@@ -22,12 +22,12 @@ export type GuiWallet = {
   currencyCode: string,
   isoFiatCurrencyCode: string,
   fiatCurrencyCode: string,
-  denominations: Array<EdgeDenomination>,
+  denominations: EdgeDenomination[],
   allDenominations: { [currencyCode: string]: { [denomination: string]: EdgeDenomination } },
   symbolImage: string | void,
   symbolImageDarkMono: string | void,
-  metaTokens: Array<EdgeMetaToken>,
-  enabledTokens: Array<string>,
+  metaTokens: EdgeMetaToken[],
+  enabledTokens: string[],
   receiveAddress: EdgeReceiveAddress,
   addressLoadingProgress?: number,
   blockHeight: number | null
@@ -43,8 +43,8 @@ export type GuiCurrencyInfo = {
 
 export type GuiContact = {
   hasThumbnail: boolean,
-  emailAddresses: Array<string>,
-  postalAddresses: Array<string>,
+  emailAddresses: string[],
+  postalAddresses: string[],
   middleName: string,
   company: string,
   jobTitle: string,
@@ -84,7 +84,7 @@ export type CustomTokenInfo = {
   multiplier: string,
   denomination: string, // eventually change to mandatory
   isVisible?: boolean, // eventually change to mandatory,
-  denominations: Array<EdgeDenomination>,
+  denominations: EdgeDenomination[],
   walletType?: string
 }
 
@@ -97,7 +97,7 @@ export type CreateWalletType = {
 }
 export type CustomNodeSetting = {
   isEnabled: boolean,
-  nodesList: Array<string>
+  nodesList: string[]
 }
 export type CurrencySetting = {
   denomination: string

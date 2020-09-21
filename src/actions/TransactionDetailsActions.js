@@ -8,7 +8,7 @@ import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
 import { refreshTransactionsRequest } from './TransactionListActions.js'
 
-export const setSubcategories = (subcategories: Array<string>) => ({
+export const setSubcategories = (subcategories: string[]) => ({
   type: 'SET_TRANSACTION_SUBCATEGORIES',
   data: { subcategories }
 })

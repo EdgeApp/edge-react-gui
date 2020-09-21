@@ -23,7 +23,7 @@ export type Props = {
     item: any
   },
   enabled?: boolean,
-  enabledList: Array<string>,
+  enabledList: string[],
   goToEditTokenScene: string => void
 }
 

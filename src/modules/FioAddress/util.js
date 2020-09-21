@@ -185,8 +185,8 @@ export const refreshConnectedWalletsForFioAddress = async (
 export const updatePubAddressesForFioAddress = async (
   fioWallet: EdgeCurrencyWallet | null,
   fioAddress: string,
-  publicAddresses: { walletId: string, chainCode: string, tokenCode: string, publicAddress: string }[]
-): Promise<{ updatedCcWallets: { fullCurrencyCode: string, walletId: string, isConnection: boolean }[], error?: Error | FioError | null }> => {
+  publicAddresses: Array<{ walletId: string, chainCode: string, tokenCode: string, publicAddress: string }>
+): Promise<{ updatedCcWallets: Array<{ fullCurrencyCode: string, walletId: string, isConnection: boolean }>, error?: Error | FioError | null }> => {
   if (!fioWallet) throw new Error(s.strings.fio_connect_wallets_err)
   const connectedWalletsFromDisklet = await getConnectedWalletsForFioAddress(fioWallet, fioAddress)
   let updatedCcWallets = []
@@ -245,7 +245,7 @@ export const updatePubAddressesForFioAddress = async (
 export const addPublicAddresses = async (
   fioWallet: EdgeCurrencyWallet,
   fioAddress: string,
-  publicAddresses: { token_code: string, chain_code: string, public_address: string }[]
+  publicAddresses: Array<{ token_code: string, chain_code: string, public_address: string }>
 ) => {
   let getFeeRes: { fee: number }
   try {

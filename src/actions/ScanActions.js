@@ -186,7 +186,7 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
 
       // PUBLIC ADDRESS URI
       const nativeAmount = parsedUri.nativeAmount || '0'
-      const spendTargets: Array<EdgeSpendTarget> = [
+      const spendTargets: EdgeSpendTarget[] = [
         {
           publicAddress: parsedUri.publicAddress,
           nativeAmount

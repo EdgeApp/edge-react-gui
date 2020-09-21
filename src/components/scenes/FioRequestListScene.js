@@ -261,7 +261,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       return
     }
     const { wallets, onSelectWallet } = this.props
-    const availableWallets: { id: string, currencyCode: string }[] = []
+    const availableWallets: Array<{ id: string, currencyCode: string }> = []
     for (const walletKey: string of Object.keys(wallets)) {
       if (wallets[walletKey].currencyCode.toUpperCase() === fioRequest.content.token_code.toUpperCase()) {
         availableWallets.push({ id: wallets[walletKey].id, currencyCode: wallets[walletKey].currencyCode })
@@ -357,7 +357,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
 
   pendingRequestHeaders = () => {
     const { fioRequestsPending } = this.state
-    const headers: { title: string, data: FioRequest[] }[] = []
+    const headers: Array<{ title: string, data: FioRequest[] }> = []
     let requestsInSection: FioRequest[] = []
     let previousTimestamp = 0
     let previousTitle = ''

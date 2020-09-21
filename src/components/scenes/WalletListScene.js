@@ -41,14 +41,14 @@ import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 type StateProps = {
   accountMessages: MessageTweak[],
   accountReferral: AccountReferral,
-  activeWalletIds: Array<string>,
+  activeWalletIds: string[],
   exchangeRates: Object,
   wallets: { [walletId: string]: GuiWallet }
 }
 type DispatchProps = {
   hideMessageTweak(messageId: string, source: TweakSource): void,
   toggleAccountBalanceVisibility(): void,
-  updateActiveWalletsOrder(walletIds: Array<string>): void,
+  updateActiveWalletsOrder(walletIds: string[]): void,
   walletRowOption(walletId: string, option: WalletListMenuKey, currencyCode?: string): void,
   linkReferralWithCurrencies(string): void
 }

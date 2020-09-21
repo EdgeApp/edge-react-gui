@@ -23,20 +23,20 @@ export type ManageTokensOwnProps = {
   guiWallet: GuiWallet
 }
 export type ManageTokensDispatchProps = {
-  setEnabledTokensList: (string, Array<string>, Array<string>) => void
+  setEnabledTokensList: (string, string[], string[]) => void
 }
 
 export type ManageTokensStateProps = {
   guiWallet: GuiWallet,
   manageTokensPending: boolean,
-  settingsCustomTokens: Array<CustomTokenInfo>
+  settingsCustomTokens: CustomTokenInfo[]
 }
 
 export type ManageTokensProps = ManageTokensOwnProps & ManageTokensDispatchProps & ManageTokensStateProps
 
 export type State = {
-  enabledList: Array<string>,
-  combinedCurrencyInfos: Array<EdgeMetaToken>
+  enabledList: string[],
+  combinedCurrencyInfos: EdgeMetaToken[]
 }
 
 export default class ManageTokens extends React.Component<ManageTokensProps, State> {
@@ -63,7 +63,7 @@ export default class ManageTokens extends React.Component<ManageTokensProps, Sta
 
   saveEnabledTokenList = () => {
     const { id } = this.props.guiWallet
-    const disabledList: Array<string> = []
+    const disabledList: string[] = []
     // get disabled list
     for (const val of this.state.combinedCurrencyInfos) {
       if (this.state.enabledList.indexOf(val.currencyCode) === -1) disabledList.push(val.currencyCode)

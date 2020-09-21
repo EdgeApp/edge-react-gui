@@ -18,7 +18,7 @@ export type GuiMakeSpendInfo = {
   networkFeeOption?: FeeOption,
   customNetworkFee?: Object,
   publicAddress?: string,
-  spendTargets?: Array<EdgeSpendTarget>,
+  spendTargets?: EdgeSpendTarget[],
   lockInputs?: boolean,
   uniqueIdentifier?: string,
   otherParams?: Object,

@@ -32,7 +32,7 @@ type OwnProps = {
   showBalance: boolean | Function
 }
 type StateProps = {
-  customTokens: Array<CustomTokenInfo>,
+  customTokens: CustomTokenInfo[],
   displayDenomination: GuiDenomination,
   exchangeDenomination: GuiDenomination,
   exchangeRates: { [string]: number },

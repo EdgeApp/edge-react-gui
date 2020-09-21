@@ -35,7 +35,7 @@ export type Props = {
   errorColor?: string,
   disabledLineType?: string,
   animationDuration?: number,
-  characterRestriction?: Array<string>,
+  characterRestriction?: string[],
   disabled?: boolean,
   editable?: boolean,
   multiline?: boolean,

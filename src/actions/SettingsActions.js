@@ -219,7 +219,7 @@ export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dis
   }
 }
 
-export const saveCustomNodesList = (currencyCode: string, nodesList: Array<string>) => async (dispatch: Dispatch, getState: GetState) => {
+export const saveCustomNodesList = (currencyCode: string, nodesList: string[]) => async (dispatch: Dispatch, getState: GetState) => {
   const state: State = getState()
   const { account } = state.core
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]

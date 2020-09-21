@@ -15,7 +15,7 @@ const getTime = () => new Date().toISOString()
 
 const isObject = (item: any) => typeof item === 'object' && item !== null
 
-const normalize = (...info: Array<any>) => `${getTime()} | ${info.map(item => (isObject(item) ? JSON.stringify(item) : item)).join(' ')}`
+const normalize = (...info: any[]) => `${getTime()} | ${info.map(item => (isObject(item) ? JSON.stringify(item) : item)).join(' ')}`
 
 const lock = new AsyncLock({ maxPending: 100000 })
 // function saveToBuffer (log: string) {
@@ -128,7 +128,7 @@ async function request(data: string) {
   })
 }
 
-export async function logToServer(...info: Array<any>) {
+export async function logToServer(...info: any[]) {
   const args = info[0]
   let logs = ''
   for (const item of args) {

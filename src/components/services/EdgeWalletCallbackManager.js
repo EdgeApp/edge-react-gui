@@ -16,11 +16,11 @@ type EdgeWalletCallbackManagerStateProps = {
 
 type EdgeWalletCallbackManagerDispatchProps = {
   refreshReceiveAddressRequest: (id: string) => void,
-  refreshTransactionsRequest: (id: string, transactions: Array<EdgeTransaction>) => void,
+  refreshTransactionsRequest: (id: string, transactions: EdgeTransaction[]) => void,
   refreshWallet: (id: string) => void,
   checkPasswordRecovery: () => void,
   updateWalletLoadingProgress: (id: string, transactionCount: number) => void,
-  newTransactionsRequest: (id: string, transactions: Array<EdgeTransaction>) => void
+  newTransactionsRequest: (id: string, transactions: EdgeTransaction[]) => void
 }
 
 type Props = EdgeWalletCallbackManagerStateProps & EdgeWalletCallbackManagerDispatchProps
@@ -108,7 +108,7 @@ const mapDispatchToProps = (dispatch: Dispatch): EdgeWalletCallbackManagerDispat
     refreshWallet: id => dispatch(refreshWallet(id)),
     checkPasswordRecovery: () => dispatch(checkPasswordRecovery()),
     updateWalletLoadingProgress: (id, transactionCount) => dispatch(updateWalletLoadingProgress(id, transactionCount)),
-    newTransactionsRequest: (walletId: string, transactions: Array<EdgeTransaction>) => dispatch(newTransactionsRequest(walletId, transactions))
+    newTransactionsRequest: (walletId: string, transactions: EdgeTransaction[]) => dispatch(newTransactionsRequest(walletId, transactions))
   }
 }
 

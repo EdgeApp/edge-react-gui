@@ -35,7 +35,7 @@ const BALANCE_BOX_OPACITY = 0.9
 export type StateProps = {
   loading: boolean,
   displayDenomination: EdgeDenomination,
-  transactions: Array<TransactionListTx>,
+  transactions: TransactionListTx[],
   selectedWalletId: string,
   selectedCurrencyCode: string,
   isoFiatCurrencyCode: string,

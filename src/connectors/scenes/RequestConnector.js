@@ -21,7 +21,7 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
 
   const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
-  const allCurrencyInfos: Array<EdgeCurrencyInfo> = plugins.allCurrencyInfos
+  const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
   const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
   const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
 
