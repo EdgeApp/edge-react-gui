@@ -6,7 +6,7 @@ import { type Event, Animated, Image, Platform, TextInput, TouchableWithoutFeedb
 import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
-import { Txt } from '../../../../components/themed/Txt.js'
+import { EdgeText } from '../../../../components/themed/EdgeText.js'
 import * as Constants from '../../../../constants/indexConstants'
 import * as intl from '../../../../locales/intl.js'
 import s from '../../../../locales/strings.js'
@@ -357,9 +357,9 @@ export class FlipInput extends React.Component<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={this.textInputFrontFocus}>
         <View style={top.row} key="top">
-          <Txt style={top.currencyCode}>{this.props.primaryInfo.currencyCode}</Txt>
+          <EdgeText style={top.currencyCode}>{this.props.primaryInfo.currencyCode}</EdgeText>
           <View style={top.amountContainer}>
-            <Txt style={[top.amount, displayAmountStyle]}>{displayAmountString}</Txt>
+            <EdgeText style={[top.amount, displayAmountStyle]}>{displayAmountString}</EdgeText>
             <TextInput
               style={top.textInput}
               value=""
@@ -416,9 +416,9 @@ export class FlipInput extends React.Component<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={this.textInputBackFocus}>
         <View style={top.row} key="top">
-          <Txt style={top.currencyCode}>{this.props.secondaryInfo.currencyName}</Txt>
+          <EdgeText style={top.currencyCode}>{this.props.secondaryInfo.currencyName}</EdgeText>
           <View style={top.amountContainer}>
-            <Txt style={[top.amount, displayAmountStyle]}>{displayAmountString}</Txt>
+            <EdgeText style={[top.amount, displayAmountStyle]}>{displayAmountString}</EdgeText>
             <TextInput
               style={top.textInput}
               value=""
@@ -444,9 +444,9 @@ export class FlipInput extends React.Component<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={this.onToggleFlipInput} key="bottom">
         <View style={bottom.row}>
-          <Txt style={bottom.currencyCode}>{fieldInfo.currencyCode}</Txt>
+          <EdgeText style={bottom.currencyCode}>{fieldInfo.currencyCode}</EdgeText>
           <View style={top.amountContainer}>
-            <Txt style={[bottom.amount, !amount && bottom.alert]}>{amount}</Txt>
+            <EdgeText style={[bottom.amount, !amount && bottom.alert]}>{amount}</EdgeText>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -468,7 +468,7 @@ export class FlipInput extends React.Component<Props, State> {
           <View style={styles.flipContainerHeader}>
             <Image style={styles.flipContainerHeaderIcon} source={{ uri: headerLogo || '' }} />
             <View style={styles.flipContainerHeaderTextContainer}>
-              <Txt style={styles.flipContainerHeaderText}>{headerText}</Txt>
+              <EdgeText style={styles.flipContainerHeaderText}>{headerText}</EdgeText>
               {headerCallback && <FAIcon style={styles.flipContainerHeaderTextDropDown} name={Constants.KEYBOARD_ARROW_DOWN} size={scale(20)} />}
             </View>
           </View>
