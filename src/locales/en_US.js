@@ -285,6 +285,7 @@ const strings = {
   string_first_dash_wallet_name: 'My Dash',
   string_first_digibyte_wallet_name: 'My DigiByte',
   string_first_eos_wallet_name: 'My EOS',
+  string_first_telos_wallet_name: 'My Telos',
   string_first_feather_coin_wallet_name: 'My Feather Coin',
   string_first_fio_wallet_name: 'My FIO',
   string_first_groestlcoin_wallet_name: 'My Groestlcoin',

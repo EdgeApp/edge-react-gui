@@ -11,6 +11,7 @@ import {
 } from '../../actions/CreateWalletActions.js'
 import {
   type AccountPaymentParams,
+  type CreateWalletAccountSelectDispatchProps,
   type CreateWalletAccountSelectOwnProps,
   CreateWalletAccountSelect
 } from '../../components/scenes/CreateWalletAccountSelectScene'
@@ -27,6 +28,7 @@ const mapStateToProps = (state: State, ownProps: CreateWalletAccountSelectOwnPro
   const isCreatingWallet = state.ui.scenes.createWallet.isCreatingWallet
   const existingCoreWallet = ownProps.existingWalletId ? currencyWallets[ownProps.existingWalletId] : null
   const paymentDenomination = currencyCode ? getDefaultDenomination(state, currencyCode) : {}
+
   let paymentDenominationSymbol
   if (paymentDenomination) {
     paymentDenominationSymbol = paymentDenomination.symbol ? paymentDenomination.symbol : ''
@@ -45,11 +47,12 @@ const mapStateToProps = (state: State, ownProps: CreateWalletAccountSelectOwnPro
     isCreatingWallet,
     paymentDenominationSymbol,
     existingCoreWallet,
-    walletAccountActivationQuoteError
+    walletAccountActivationQuoteError,
+    currencyConfigs: state.core.account.currencyConfig
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch): CreateWalletAccountSelectDispatchProps => ({
   createAccountTransaction: (createdWalletId: string, accountName: string, paymentWalletId: string) =>
     dispatch(createAccountTransaction(createdWalletId, accountName, paymentWalletId)),
   fetchAccountActivationInfo: (currencyCode: string) => dispatch(fetchAccountActivationInfo(currencyCode)),
