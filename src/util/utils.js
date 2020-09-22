@@ -619,3 +619,25 @@ export async function openLink(url: string): Promise<void> {
     throw new Error(`Don't know how to open URI: ${url}`)
   }
 }
+
+export function debounce(func: Function, wait: number, immediate: boolean): any {
+  let timeout
+
+  return function executedFunction() {
+    const context = this
+    const args = arguments
+
+    const later = function () {
+      timeout = null
+      if (!immediate) func.apply(context, args)
+    }
+
+    const callNow = immediate && !timeout
+
+    if (timeout) clearTimeout(timeout)
+
+    timeout = setTimeout(later, wait)
+
+    if (callNow) func.apply(context, args)
+  }
+}

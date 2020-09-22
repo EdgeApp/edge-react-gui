@@ -55,6 +55,7 @@ export const createCurrencyWallet = (
     })
 }
 
+// can move to component in the future, just account and currencyConfig, etc to component through connector
 export const fetchAccountActivationInfo = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
@@ -62,9 +63,9 @@ export const fetchAccountActivationInfo = (currencyCode: string) => async (dispa
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
     const supportedCurrencies = currencyPlugin.otherMethods.getActivationSupportedCurrencies()
-    const activationCost = currencyPlugin.otherMethods.getActivationCost()
+    const activationCost = currencyPlugin.otherMethods.getActivationCost(currencyCode)
     const activationInfo = await Promise.all([supportedCurrencies, activationCost])
-    const modifiedSupportedCurrencies = { ...activationInfo[0], FTC: false }
+    const modifiedSupportedCurrencies = { ...activationInfo[0].result, FTC: false }
     dispatch({
       type: 'ACCOUNT_ACTIVATION_INFO',
       data: {
@@ -88,7 +89,7 @@ export const fetchWalletAccountActivationPaymentInfo = (paymentParams: AccountPa
         type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR',
         data: 'Network Timeout'
       })
-    }, 12000)
+    }, 26000)
     createdCoreWallet.otherMethods
       .getAccountActivationQuote(paymentParams)
       .then(activationQuote => {
@@ -118,11 +119,12 @@ export const checkHandleAvailability = (currencyCode: string, accountName: strin
     if (data.result === 'AccountAvailable') {
       dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data: 'AVAILABLE' })
     }
-  } catch (e) {
+  } catch (error) {
+    console.log('checkHandleAvailability error: ', error)
     let data = 'UNKNOWN_ERROR'
-    if (e.name === 'ErrorAccountUnavailable') {
+    if (error.name === 'ErrorAccountUnavailable') {
       data = 'UNAVAILABLE'
-    } else if (e.name === 'ErrorInvalidAccountName') {
+    } else if (error.name === 'ErrorInvalidAccountName') {
       data = 'INVALID'
     }
     dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data })

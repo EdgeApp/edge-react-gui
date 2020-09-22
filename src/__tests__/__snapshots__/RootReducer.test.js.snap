@@ -397,6 +397,9 @@ Object {
       "SUSD": Object {
         "denomination": "1000000000000000000",
       },
+      "TLOS": Object {
+        "denomination": "10000",
+      },
       "TUSD": Object {
         "denomination": "1000000000000000000",
       },
