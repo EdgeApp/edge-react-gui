@@ -1,5 +1,10 @@
 # edge-react-gui
 
+## 1.17.1 (2020-09-22)
+
+- Upgrade edge-login-ui-rn to v0.6.18
+  - rn: Fix a crash when rendering the SecondaryButton. This would occur when the 2fa reminder modal popped up.
+
 ## 1.17.0 (2020-09-18)
 
 - Add 2FA voucher support to allow your device to approve a login from another device
