@@ -12,7 +12,7 @@ import { getObjectDiff } from '../../../../util/utils.js'
 
 export type StateProps = {
   style: StyleSheet.Styles,
-  data: Array<Object>
+  data: Object[]
 }
 
 export type DispatchProps = {

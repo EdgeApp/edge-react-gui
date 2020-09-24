@@ -22,8 +22,8 @@ type Props = {
 }
 
 type State = {
-  localUsers: Array<EdgeUserInfo>,
-  mostRecentUsernames: Array<string>
+  localUsers: EdgeUserInfo[],
+  mostRecentUsernames: string[]
 }
 
 export default class UserList extends React.Component<Props, State> {
@@ -114,7 +114,7 @@ export default class UserList extends React.Component<Props, State> {
     return lastUsers.slice(0, 4)
   }
 
-  sortUsernames = (usernames: Array<string>): Array<string> => {
+  sortUsernames = (usernames: string[]): string[] => {
     return usernames.sort((a: string, b: string) => {
       const stringA = a.toUpperCase()
       const stringB = b.toUpperCase()

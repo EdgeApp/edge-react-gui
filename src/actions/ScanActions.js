@@ -39,8 +39,6 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { GuiWallet } from '../types/types.js'
 import { denominationToDecimalPlaces, noOp } from '../util/utils.js'
 import { launchDeepLink } from './DeepLinkingActions.js'
-import { sweepPrivateKeyFail, sweepPrivateKeyStart, sweepPrivateKeySuccess } from './PrivateKeyModalActions.js'
-import { secondaryModalActivated } from './SecondaryModalActions.js'
 import { paymentProtocolUriReceived } from './SendConfirmationActions.js'
 
 export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, link: ReturnAddressLink) => {
@@ -186,7 +184,7 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
 
       // PUBLIC ADDRESS URI
       const nativeAmount = parsedUri.nativeAmount || '0'
-      const spendTargets: Array<EdgeSpendTarget> = [
+      const spendTargets: EdgeSpendTarget[] = [
         {
           publicAddress: parsedUri.publicAddress,
           nativeAmount
@@ -296,8 +294,8 @@ export const privateKeyModalActivated = () => async (dispatch: Dispatch, getStat
     return
   }
   setTimeout(() => {
-    dispatch(sweepPrivateKeyStart())
-    dispatch(secondaryModalActivated())
+    dispatch({ type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_START' })
+    dispatch({ type: 'PRIVATE_KEY_MODAL/SECONDARY_MODAL/ACTIVATED' })
 
     const state = getState()
     const parsedUri = state.ui.scenes.scan.parsedUri
@@ -317,10 +315,14 @@ export const privateKeyModalActivated = () => async (dispatch: Dispatch, getStat
         edgeWallet
           .signTx(unsignedTx)
           .then(signedTx => edgeWallet.broadcastTx(signedTx))
-          .then(() => dispatch(sweepPrivateKeySuccess()))
+          .then(() => dispatch({ type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_SUCCESS' }))
       },
       (error: Error) => {
-        dispatch(sweepPrivateKeyFail(error))
+        console.log(error)
+        dispatch({
+          type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL',
+          data: { error }
+        })
       }
     )
   }, 1000)

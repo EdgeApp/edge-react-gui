@@ -22,7 +22,7 @@ type OwnProps = {
   cleanedPrivateKey?: string
 }
 type StateProps = {
-  supportedFiats: Array<GuiFiatType>
+  supportedFiats: GuiFiatType[]
 }
 type Props = OwnProps & StateProps
 

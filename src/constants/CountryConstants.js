@@ -4,7 +4,7 @@ import { type CountryData } from '../types/types.js'
 
 export const FLAG_LOGO_URL = 'https://developer.airbitz.co/content/country-logos'
 
-export const COUNTRY_CODES: Array<CountryData> = [
+export const COUNTRY_CODES: CountryData[] = [
   { name: 'Afghanistan', 'alpha-2': 'AF' },
   { name: 'Åland Islands', filename: 'aland-islands', 'alpha-2': 'AX' },
   { name: 'Albania', 'alpha-2': 'AL' },

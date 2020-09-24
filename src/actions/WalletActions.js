@@ -120,7 +120,7 @@ export const selectWalletFromModal = (walletId: string, currencyCode: string) =>
   dispatch(refreshReceiveAddressRequest(walletId))
 }
 
-function dispatchUpsertWallets(dispatch, wallets: Array<EdgeCurrencyWallet>) {
+function dispatchUpsertWallets(dispatch, wallets: EdgeCurrencyWallet[]) {
   global.pcount('dispatchUpsertWallets')
   dispatch(upsertWallets(wallets))
 }
@@ -168,7 +168,7 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
   }
 }
 
-export const upsertWallets = (wallets: Array<EdgeCurrencyWallet>) => (dispatch: Dispatch, getState: GetState) => {
+export const upsertWallets = (wallets: EdgeCurrencyWallet[]) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(updateExchangeRates())
   dispatch({
     type: 'UI/WALLETS/UPSERT_WALLETS',
@@ -178,10 +178,7 @@ export const upsertWallets = (wallets: Array<EdgeCurrencyWallet>) => (dispatch: 
   })
 }
 
-export const setWalletEnabledTokens = (walletId: string, enabledTokens: Array<string>, disabledTokens: Array<string>) => (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
+export const setWalletEnabledTokens = (walletId: string, enabledTokens: string[], disabledTokens: string[]) => (dispatch: Dispatch, getState: GetState) => {
   // tell Redux that we are updating the enabledTokens list
   dispatch({ type: 'MANAGE_TOKENS_START' })
   // get a snapshot of the state
@@ -213,7 +210,7 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
   const guiWallet = UI_SELECTORS.getWallet(state, walletId)
 
   // get token information from settings
-  const customTokens: Array<CustomTokenInfo> = getCustomTokens(state)
+  const customTokens: CustomTokenInfo[] = getCustomTokens(state)
   try {
     const enabledTokens = await getEnabledTokensFromFile(wallet)
     const promiseArray = []
@@ -361,7 +358,7 @@ export async function deleteCustomTokenAsync(walletId: string, currencyCode: str
   const coreWalletsToUpdate = []
   const receivedSyncSettings = await getSyncedSettings(account)
   receivedSyncSettings[currencyCode].isVisible = false
-  const syncedCustomTokens: Array<CustomTokenInfo> = [...receivedSyncSettings.customTokens]
+  const syncedCustomTokens: CustomTokenInfo[] = [...receivedSyncSettings.customTokens]
   const indexOfSyncedToken: number = _.findIndex(syncedCustomTokens, item => item.currencyCode === currencyCode)
   syncedCustomTokens[indexOfSyncedToken].isVisible = false
   receivedSyncSettings.customTokens = syncedCustomTokens
@@ -495,7 +492,7 @@ export const removeMostRecentWallet = (walletId: string, currencyCode: string) =
     .catch(showError)
 }
 
-export const checkEnabledTokensArray = (walletId: string, newEnabledTokens: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
+export const checkEnabledTokensArray = (walletId: string, newEnabledTokens: string[]) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = UI_SELECTORS.getWallet(state, walletId)
   const oldEnabledTokens = wallet.enabledTokens

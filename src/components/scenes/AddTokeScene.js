@@ -20,7 +20,7 @@ export type AddTokenOwnProps = {
   walletId: string,
   addTokenPending: Function,
   addNewToken: Function,
-  currentCustomTokens: Array<CustomTokenInfo>,
+  currentCustomTokens: CustomTokenInfo[],
   wallet: GuiWallet,
   onAddToken: Function,
   // adding properties in case coming from Scan scene (scan QR code to add token)

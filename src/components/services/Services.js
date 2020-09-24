@@ -42,7 +42,7 @@ export class Services extends React.PureComponent<Props> {
   constructor(props: Props) {
     super(props)
 
-    const middleware: Array<Object> = [errorAlert, loginStatusChecker, thunk]
+    const middleware: Object[] = [errorAlert, loginStatusChecker, thunk]
     if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
 
     const composeEnhancers =

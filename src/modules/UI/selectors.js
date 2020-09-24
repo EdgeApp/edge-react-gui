@@ -41,7 +41,7 @@ export const getSelectedWallet = (state: State) => {
   return selectedWallet
 }
 
-export const getActiveWalletIds = (state: State): Array<string> => {
+export const getActiveWalletIds = (state: State): string[] => {
   const activeWalletIds = state.ui.wallets.activeWalletIds
   return activeWalletIds
 }
@@ -56,7 +56,7 @@ export const getActiveWalletCurrencyCodes = (state: State) => {
     map[wallet.currencyInfo.currencyCode] = true
     return map
   }, {})
-  const currencyCodes: Array<string> = Object.keys(currencyCodesMap)
+  const currencyCodes: string[] = Object.keys(currencyCodesMap)
   return currencyCodes
 }
 
@@ -100,7 +100,7 @@ export const getSelectedWalletLoadingPercent = (state: State) => {
   return walletsProgress[wallet.id] ? walletsProgress[wallet.id] * 100 : 0
 }
 
-export const getTransactions = (state: State): Array<TransactionListTx> => {
+export const getTransactions = (state: State): TransactionListTx[] => {
   const transactions = state.ui.scenes.transactionList.transactions
   return transactions
 }
@@ -113,7 +113,7 @@ export const getDenominations = (state: State, currencyCode: string) => {
 
 export const getDefaultDenomination = (state: State, currencyCode: string): EdgeDenomination => {
   const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
-  const allCurrencyInfos: Array<EdgeCurrencyInfo> = plugins.allCurrencyInfos
+  const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
   const currencyInfo = getCurrencyInfo(allCurrencyInfos, currencyCode)
   if (currencyInfo) return currencyInfo[0]
   const settings = state.ui.settings

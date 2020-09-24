@@ -28,10 +28,6 @@ export type CryptoExchangeState = {
   insufficientError: boolean,
   genericShapeShiftError: string | null,
 
-  // Wallet list modal:
-  walletListModalVisible: boolean,
-  changeWallet: 'none' | 'from' | 'to',
-
   // Activity flags:
   forceUpdateGuiCounter: number,
   shiftPendingTransaction: boolean,
@@ -72,9 +68,7 @@ const initialState: CryptoExchangeState = {
   toBalanceMessage: '',
 
   insufficientError: false,
-  walletListModalVisible: false,
   genericShapeShiftError: null,
-  changeWallet: 'none',
   forceUpdateGuiCounter: 0,
   shiftPendingTransaction: false,
   calculatingMax: false,
@@ -104,7 +98,6 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         fromCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
         fromCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
         fromBalanceMessage: action.data.balanceMessage,
-        changeWallet: 'none',
         fromNativeAmount: '0',
         toNativeAmount: '0',
         fromDisplayAmount: '0',
@@ -124,20 +117,12 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         toCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
         toCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
         toBalanceMessage: action.data.balanceMessage,
-        changeWallet: 'none',
         fromNativeAmount: '0',
         toNativeAmount: '0',
         fromDisplayAmount: '0',
         toDisplayAmount: '0',
         minerFee: '0',
         genericShapeShiftError: null
-      }
-    }
-    case 'OPEN_WALLET_SELECTOR_MODAL': {
-      return {
-        ...state,
-        walletListModalVisible: true,
-        changeWallet: action.data
       }
     }
 

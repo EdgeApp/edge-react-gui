@@ -10,7 +10,7 @@ import { type GuiContact } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 
 type Props = {
-  contacts: Array<GuiContact>,
+  contacts: GuiContact[],
   currentPayeeText: string,
   onSelectPayee: (string, string) => void,
   bottomGap?: number

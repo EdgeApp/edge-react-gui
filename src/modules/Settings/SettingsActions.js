@@ -65,7 +65,7 @@ export const setAccountBalanceVisibility = (isAccountBalanceVisible: boolean) =>
   data: { isAccountBalanceVisible }
 })
 
-export const updateMostRecentWallets = (mostRecentWallets: Array<MostRecentWallet>) => ({
+export const updateMostRecentWallets = (mostRecentWallets: MostRecentWallet[]) => ({
   type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS',
   data: { mostRecentWallets }
 })

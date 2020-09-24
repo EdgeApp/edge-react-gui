@@ -16,7 +16,7 @@ type Props = {
   bridge: AirshipBridge<null>,
   personStatus: string,
   personName: string,
-  contacts: Array<GuiContact>,
+  contacts: GuiContact[],
   onChangePerson: (string, string) => void
 }
 

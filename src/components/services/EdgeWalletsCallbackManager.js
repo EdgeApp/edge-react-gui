@@ -7,7 +7,7 @@ import type { State } from '../../types/reduxTypes.js'
 import EdgeWalletCallbackManager from './EdgeWalletCallbackManager'
 
 type Props = {
-  ids: Array<string>
+  ids: string[]
 }
 
 class EdgeWalletsManager extends React.Component<Props> {

@@ -97,7 +97,7 @@ export class KeyboardTracker extends React.Component<Props> {
  * All KeyboardTracker instances share the same subscription singleton.
  */
 class KeyboardSubscriber {
-  trackers: Array<KeyboardTracker>
+  trackers: KeyboardTracker[]
 
   // Hiding means we are either down or moving down:
   keyboardHiding: boolean

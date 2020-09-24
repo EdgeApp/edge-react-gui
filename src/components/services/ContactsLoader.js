@@ -11,7 +11,7 @@ import { showError } from '../services/AirshipInstance.js'
 
 type Props = {
   contactsPermission: PermissionStatus,
-  loadContactsSuccess: (contacts: Array<GuiContact>) => void
+  loadContactsSuccess: (contacts: GuiContact[]) => void
 }
 
 const merchantPartners = [
@@ -194,7 +194,7 @@ class ContactsLoaderComponent extends React.Component<Props> {
     }
   }
 
-  fetchContacts(): Promise<Array<GuiContact>> {
+  fetchContacts(): Promise<GuiContact[]> {
     return new Promise((resolve, reject) => {
       return Contacts.getAll((error, result) => {
         // The native code sometimes sends strings instead of errors:
@@ -230,7 +230,7 @@ export const ContactsLoader = connect(
     contactsPermission: state.permissions.contacts
   }),
   (dispatch: Dispatch) => ({
-    loadContactsSuccess: (contacts: Array<GuiContact>) =>
+    loadContactsSuccess: (contacts: GuiContact[]) =>
       dispatch({
         type: 'CONTACTS/LOAD_CONTACTS_SUCCESS',
         data: { contacts }

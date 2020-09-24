@@ -24,7 +24,6 @@ type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
   | 'NEW_RECEIVE_ADDRESS'
-  | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL'
   | 'SET_CONFIRM_PASSWORD_ERROR'
   | 'SET_TRANSACTION_SUBCATEGORIES'
   | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
@@ -51,7 +50,6 @@ type LegacyActionName =
   | 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED'
   | 'UPDATE_EXCHANGE_RATES'
   | 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
-  | 'UPDATE_WALLET_FIAT_BALANCE_VISIBILITY'
   | 'UPDATE_WALLET_LOADING_PROGRESS'
 
 // Actions with no payload:
@@ -121,7 +119,7 @@ export type Action =
         walletId: string,
         tokenObj: CustomTokenInfo,
         settings: Object,
-        enabledTokens: Array<string>
+        enabledTokens: string[]
       }
     }
   | {
@@ -129,8 +127,8 @@ export type Action =
       data: {
         walletId: string,
         code: string,
-        coreWalletsToUpdate: Array<EdgeCurrencyWallet>,
-        enabledTokensOnWallet: Array<string>,
+        coreWalletsToUpdate: EdgeCurrencyWallet[],
+        enabledTokensOnWallet: string[],
         oldCurrencyCode: string,
         setSettings: Object,
         tokenObj: CustomTokenInfo
@@ -143,8 +141,8 @@ export type Action =
   | {
       type: 'CORE/WALLETS/UPDATE_WALLETS',
       data: {
-        activeWalletIds: Array<string>,
-        archivedWalletIds: Array<string>,
+        activeWalletIds: string[],
+        archivedWalletIds: string[],
         currencyWallets: { [id: string]: EdgeCurrencyWallet },
         receiveAddresses: { [id: string]: EdgeReceiveAddress }
       }
@@ -154,7 +152,7 @@ export type Action =
   | { type: 'DEVICE_REFERRAL_LOADED', data: DeviceReferral }
   | {
       type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
-      data: { activeWalletIds: Array<string> }
+      data: { activeWalletIds: string[] }
     }
   | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
   | { type: 'LOGIN', data: EdgeAccount }
@@ -169,10 +167,11 @@ export type Action =
       data: {
         tokenObj: CustomTokenInfo,
         oldCurrencyCode: string,
-        coreWalletsToUpdate: Array<EdgeCurrencyWallet>
+        coreWalletsToUpdate: EdgeCurrencyWallet[]
       }
     }
   | { type: 'PERMISSIONS/UPDATE', data: PermissionsState }
+  | { type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL', data: { error: Error } }
   | { type: 'PROMOTION_ADDED', data: Promotion }
   | { type: 'PROMOTION_REMOVED', data: string /* installerId */ }
   | { type: 'HANDLE_AVAILABLE_STATUS', data: HandleAvailableStatus }
@@ -185,9 +184,8 @@ export type Action =
         wallet: GuiWallet
       }
     }
-  | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS', data: { contacts: Array<GuiContact> } }
+  | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS', data: { contacts: GuiContact[] } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
-  | { type: 'OPEN_WALLET_SELECTOR_MODAL', data: 'from' | 'to' }
   | { type: 'PARSE_URI_SUCCEEDED', data: { parsedUri: EdgeParsedUri } }
   | { type: 'SAVE_EDGE_LOBBY', data: EdgeLobby }
   | { type: 'SET_LOBBY_ERROR', data: string }
@@ -212,7 +210,7 @@ export type Action =
   | { type: 'UPDATE_SWAP_QUOTE', data: GuiSwapInfo }
   | {
       type: 'UPDATE_WALLET_ENABLED_TOKENS',
-      data: { walletId: string, tokens: Array<string> }
+      data: { walletId: string, tokens: string[] }
     }
   | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: string }
   | { type: 'NETWORK/NETWORK_STATUS', data: { isConnected: boolean } }

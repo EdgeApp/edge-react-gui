@@ -26,12 +26,12 @@ import { Airship, showActivity } from '../services/AirshipInstance.js'
 type OwnProps = {
   addTokenPending: boolean,
   currencyCode: string,
-  metaTokens: Array<EdgeMetaToken>,
+  metaTokens: EdgeMetaToken[],
   onDeleteToken(currencyCode: string): void,
   walletId: string
 }
 type StateProps = {
-  customTokens: Array<CustomTokenInfo>,
+  customTokens: CustomTokenInfo[],
   editCustomTokenProcessing: boolean
 }
 type DispatchProps = {

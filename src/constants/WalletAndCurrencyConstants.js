@@ -335,11 +335,11 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
 /**
  * Customizes which coins get which options on the wallet list scene.
  */
-export const WALLET_LIST_MENU: {
+export const WALLET_LIST_MENU: Array<{
   currencyCodes?: string[],
   label: string,
   value: WalletListMenuKey
-}[] = [
+}> = [
   {
     label: s.strings.string_rename,
     value: 'rename'
