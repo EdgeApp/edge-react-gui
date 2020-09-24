@@ -109,14 +109,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -181,14 +181,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -253,14 +253,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -325,14 +325,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -397,14 +397,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -519,14 +519,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -591,14 +591,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -663,14 +663,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -726,14 +726,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={false}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -789,14 +789,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -837,7 +837,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <RCTSwitch
-                accessibilityRole="button"
+                accessibilityRole="switch"
                 disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
@@ -863,14 +863,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -911,7 +911,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <RCTSwitch
-                accessibilityRole="button"
+                accessibilityRole="switch"
                 disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
@@ -937,14 +937,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -1009,14 +1009,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -1081,14 +1081,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -1129,7 +1129,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <RCTSwitch
-                accessibilityRole="button"
+                accessibilityRole="switch"
                 disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
@@ -1155,14 +1155,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -1203,7 +1203,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               }
             >
               <RCTSwitch
-                accessibilityRole="button"
+                accessibilityRole="switch"
                 disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
@@ -1229,14 +1229,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -1273,14 +1273,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={false}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -1345,7 +1345,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
@@ -1502,14 +1503,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -1574,14 +1575,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -1646,14 +1647,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -1718,14 +1719,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -1790,14 +1791,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -1912,14 +1913,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -1984,14 +1985,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -2056,14 +2057,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -2119,14 +2120,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={false}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -2182,14 +2183,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -2230,7 +2231,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <RCTSwitch
-                accessibilityRole="button"
+                accessibilityRole="switch"
                 disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
@@ -2256,14 +2257,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -2304,7 +2305,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <RCTSwitch
-                accessibilityRole="button"
+                accessibilityRole="switch"
                 disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
@@ -2330,14 +2331,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -2402,14 +2403,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -2474,14 +2475,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -2522,7 +2523,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <RCTSwitch
-                accessibilityRole="button"
+                accessibilityRole="switch"
                 disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
@@ -2548,14 +2549,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -2596,7 +2597,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               }
             >
               <RCTSwitch
-                accessibilityRole="button"
+                accessibilityRole="switch"
                 disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
@@ -2622,14 +2623,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -2666,14 +2667,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={false}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
-          style={null}
         >
           <View
             style={
@@ -2738,7 +2739,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          isTVSelectable={true}
+          focusable={true}
+          onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
           onResponderRelease={[Function]}

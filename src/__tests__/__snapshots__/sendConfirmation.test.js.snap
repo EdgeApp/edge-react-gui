@@ -982,7 +982,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                 }
               }
             >
-              <TouchableOpacity
+              <ForwardRef
                 activeOpacity={0.3}
                 style={
                   Object {
@@ -1003,7 +1003,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
                 >
                   Add Destination Tag
                 </FormattedText>
-              </TouchableOpacity>
+              </ForwardRef>
             </Row>
           </Item>
         </Padding>
