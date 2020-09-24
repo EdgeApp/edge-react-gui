@@ -59,8 +59,7 @@ exports[`Request should render with loaded props 1`] = `
           }
         }
       >
-        <TouchableOpacity
-          activeOpacity={0.2}
+        <ForwardRef
           onPress={[Function]}
           style={
             Object {
@@ -79,9 +78,8 @@ exports[`Request should render with loaded props 1`] = `
           >
             
           </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.2}
+        </ForwardRef>
+        <ForwardRef
           onPress={[Function]}
           style={
             Object {
@@ -100,7 +98,7 @@ exports[`Request should render with loaded props 1`] = `
           >
             Done
           </Text>
-        </TouchableOpacity>
+        </ForwardRef>
       </View>
     </InputAccessoryView>
     <View

@@ -15,8 +15,13 @@ import com.android.build.OutputFile
  *   // the name of the generated asset file containing your JS bundle
  *   bundleAssetName: "index.android.bundle",
  *
- *   // the entry file for bundle generation
+ *   // the entry file for bundle generation. If none specified and
+ *   // "index.android.js" exists, it will be used. Otherwise "index.js" is
+ *   // default. Can be overridden with ENTRY_FILE environment variable.
  *   entryFile: "index.android.js",
+ *
+ *   // https://reactnative.dev/docs/performance#enable-the-ram-format
+ *   bundleCommand: "ram-bundle",
  *
  *   // whether to bundle JS and assets in debug mode
  *   bundleInDebug: false,
@@ -65,7 +70,7 @@ import com.android.build.OutputFile
  *   inputExcludes: ["android/**", "ios/**"],
  *
  *   // override which node gets called and with what additional arguments
- *   nodeExecutableAndArgs: ["node"]
+ *   nodeExecutableAndArgs: ["node"],
  *
  *   // supply additional arguments to the packager
  *   extraPackagerArgs: []
@@ -73,7 +78,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "index.js",
+    enableHermes: true,  // clean and rebuild if changing
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -93,6 +98,28 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
+/**
+ * The preferred build flavor of JavaScriptCore.
+ *
+ * For example, to use the international variant, you can use:
+ * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`
+ *
+ * The international variant includes ICU i18n library and necessary data
+ * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that
+ * give correct results when using with locales other than en-US.  Note that
+ * this variant is about 6MiB larger per architecture than default.
+ */
+def jscFlavor = 'org.webkit:android-jsc:+'
+
+/**
+ * Whether to enable the Hermes VM.
+ *
+ * This should be set on project.ext.react and mirrored here.  If it is not set
+ * on project.ext.react, JavaScript will not be compiled to Hermes Bytecode
+ * and the benefits of using Hermes will therefore be sharply reduced.
+ */
+def enableHermes = project.ext.react.get("enableHermes", false);
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -108,8 +135,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 21000000
         versionName "99.99.99"
-        renderscriptTargetApi 23
-        renderscriptSupportModeEnabled true
     }
     splits {
         abi {
@@ -125,68 +150,60 @@ android {
     }
     buildTypes {
         release {
+            // Caution! In production, you need to generate your own keystore file.
+            // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
-            // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2, "arm64-v8a": 3, "x86_64": 4]
+            // https://developer.android.com/studio/build/configure-apk-splits.html
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
             }
+
         }
-    }
-    packagingOptions {
-        // Make sure libjsc.so does not packed in APK
-        exclude "**/libjsc.so"
     }
 }
 
 dependencies {
-    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
-    implementation "com.facebook.react:react-native:+"
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation project(':@bugsnag_react-native')
-    implementation project(':@react-native-community_art')
-    implementation project(':@react-native-community_async-storage')
-    implementation project(':@react-native-community_blur')
-    implementation project(':@react-native-community_datetimepicker')
-    implementation project(':disklet')
-    implementation project(':edge-login-ui-rn')
-    implementation project(':ExtraDimensions')
-    implementation project(':react-native-app-settings')
-    implementation project(':react-native-appearance')
-    implementation project(':react-native-camera')
-    implementation project(':react-native-contacts')
-    implementation project(':react-native-device-info')
-    implementation project(':react-native-fast-crypto')
-    implementation project(':react-native-fs')
-    implementation project(':react-native-linear-gradient')
-    implementation project(':react-native-localize')
-    implementation project(':react-native-mail')
-    implementation project(':react-native-randombytes')
-    implementation project(':react-native-share')
-    implementation project(':react-native-smart-splash-screen')
-    implementation project(':react-native-sound')
-    implementation project(':react-native-tcp')
-    implementation project(':react-native-vector-icons')
-    implementation project(':react-native-webview')
+    //noinspection GradleDynamicVersion
+    implementation "com.facebook.react:react-native:+"  // From node_modules
 
-    // Add v8-android - prebuilt libv8android.so into APK
-    implementation 'org.chromium:v8-android:+'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
-    // Background fetching (pre AndroidX version):
-    // https://stackoverflow.com/questions/52521302
-    implementation("android.arch.work:work-runtime:1.0.0") {
-      exclude group: 'com.google.guava', module: 'listenablefuture'
+    debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
+      exclude group:'com.facebook.fbjni'
     }
+
+    debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
+        exclude group:'com.facebook.flipper'
+        exclude group:'com.squareup.okhttp3', module:'okhttp'
+    }
+
+    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}") {
+        exclude group:'com.facebook.flipper'
+    }
+
+    if (enableHermes) {
+        def hermesPath = "../../node_modules/hermes-engine/android/";
+        debugImplementation files(hermesPath + "hermes-debug.aar")
+        releaseImplementation files(hermesPath + "hermes-release.aar")
+    } else {
+        implementation jscFlavor
+    }
+
+    // Edge additions:
+    implementation 'androidx.work:work-runtime:2.0.1'
     implementation 'org.json:json:20190722'
 }
 
@@ -196,6 +213,8 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
 
 // ---------------------------------------------------------------------
 // Edge additions
