@@ -4,7 +4,7 @@ exports[`TransactionDetails.ui should render 1`] = `
 <SceneWrapper
   background="theme"
 >
-  <ScrollViewMock>
+  <ScrollView>
     <View
       style={
         Object {
@@ -228,7 +228,7 @@ exports[`TransactionDetails.ui should render 1`] = `
         onPress={[Function]}
       />
     </View>
-  </ScrollViewMock>
+  </ScrollView>
 </SceneWrapper>
 `;
 
@@ -236,7 +236,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
 <SceneWrapper
   background="theme"
 >
-  <ScrollViewMock>
+  <ScrollView>
     <View
       style={
         Object {
@@ -460,7 +460,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
         onPress={[Function]}
       />
     </View>
-  </ScrollViewMock>
+  </ScrollView>
 </SceneWrapper>
 `;
 
@@ -468,7 +468,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
 <SceneWrapper
   background="theme"
 >
-  <ScrollViewMock>
+  <ScrollView>
     <View
       style={
         Object {
@@ -692,7 +692,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
         onPress={[Function]}
       />
     </View>
-  </ScrollViewMock>
+  </ScrollView>
 </SceneWrapper>
 `;
 
@@ -700,7 +700,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
 <SceneWrapper
   background="theme"
 >
-  <ScrollViewMock>
+  <ScrollView>
     <View
       style={
         Object {
@@ -924,6 +924,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
         onPress={[Function]}
       />
     </View>
-  </ScrollViewMock>
+  </ScrollView>
 </SceneWrapper>
 `;

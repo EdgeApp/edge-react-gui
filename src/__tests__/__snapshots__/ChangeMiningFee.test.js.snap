@@ -6,7 +6,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
   background="body"
   hasTabs={false}
 >
-  <ScrollViewMock
+  <ScrollView
     style={
       Object {
         "backgroundColor": "#FFFFFF",
@@ -248,7 +248,7 @@ exports[`Change Mining Fees should render with custom props 1`] = `
         Save
       </Text>
     </PrimaryButton>
-  </ScrollViewMock>
+  </ScrollView>
 </SceneWrapper>
 `;
 
@@ -258,7 +258,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
   background="body"
   hasTabs={false}
 >
-  <ScrollViewMock
+  <ScrollView
     style={
       Object {
         "backgroundColor": "#FFFFFF",
@@ -450,7 +450,7 @@ exports[`Change Mining Fees should render with high props 1`] = `
         Save
       </Text>
     </PrimaryButton>
-  </ScrollViewMock>
+  </ScrollView>
 </SceneWrapper>
 `;
 
@@ -460,7 +460,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
   background="body"
   hasTabs={false}
 >
-  <ScrollViewMock
+  <ScrollView
     style={
       Object {
         "backgroundColor": "#FFFFFF",
@@ -682,7 +682,7 @@ exports[`Change Mining Fees should render with low props 1`] = `
         Save
       </Text>
     </PrimaryButton>
-  </ScrollViewMock>
+  </ScrollView>
 </SceneWrapper>
 `;
 
@@ -692,7 +692,7 @@ exports[`Change Mining Fees should render with standard props 1`] = `
   background="body"
   hasTabs={false}
 >
-  <ScrollViewMock
+  <ScrollView
     style={
       Object {
         "backgroundColor": "#FFFFFF",
@@ -884,6 +884,6 @@ exports[`Change Mining Fees should render with standard props 1`] = `
         Save
       </Text>
     </PrimaryButton>
-  </ScrollViewMock>
+  </ScrollView>
 </SceneWrapper>
 `;
