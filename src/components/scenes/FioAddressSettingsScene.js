@@ -110,7 +110,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   getExpiration = (): string => {
     const { fioAddresses, fioAddressName } = this.props
     const fioAddress = fioAddresses.find(({ name }) => fioAddressName === name)
-    if (fioAddress) return formatDate(fioAddress.expiration)
+    if (fioAddress) return formatDate(new Date(fioAddress.expiration))
     return ''
   }
 
@@ -155,7 +155,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
       Actions.pop()
       if (refreshAfterRenew) {
         window.requestAnimationFrame(() => {
-          Actions.refresh({ fioAddressName, expiration: formatDate(expiration) })
+          Actions.refresh({ fioAddressName, expiration: formatDate(new Date(expiration)) })
         })
       }
     } catch (e) {

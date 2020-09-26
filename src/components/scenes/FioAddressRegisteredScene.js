@@ -63,7 +63,7 @@ export class FioAddressRegisteredScene extends React.Component<Props> {
             <T style={styles.title}>{fioName}</T>
             <T style={styles.text}>
               {`${s.strings.fio_address_details_screen_expires} `}
-              {formatDate(expiration)}
+              {formatDate(new Date(expiration))}
             </T>
           </View>
           {this.renderButton()}

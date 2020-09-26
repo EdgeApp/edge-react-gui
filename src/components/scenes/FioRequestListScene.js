@@ -492,7 +492,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     const { item: fioRequest, index } = itemObj
     const isLastOfDate =
       index + 1 === this.state.fioRequestsPending.length ||
-      (index > 0 && formatDate(new Date(this.state.fioRequestsPending[index + 1].time_stamp), true) !== formatDate(new Date(fioRequest.time_stamp), true))
+      (index > 0 && formatDate(new Date(this.state.fioRequestsPending[index + 1].time_stamp)) !== formatDate(new Date(fioRequest.time_stamp)))
     return <FioRequestRow fioRequest={fioRequest} isLastOfDate={isLastOfDate} onSelect={this.selectPendingRequest} />
   }
 
@@ -500,7 +500,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     const { item: fioRequest, index } = itemObj
     const isLastOfDate =
       index + 1 === this.state.fioRequestsSent.length ||
-      (index > 0 && formatDate(new Date(this.state.fioRequestsSent[index + 1].time_stamp), true) !== formatDate(new Date(fioRequest.time_stamp), true))
+      (index > 0 && formatDate(new Date(this.state.fioRequestsSent[index + 1].time_stamp)) !== formatDate(new Date(fioRequest.time_stamp)))
     return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectSentRequest} isSent isLastOfDate={isLastOfDate} />
   }
 

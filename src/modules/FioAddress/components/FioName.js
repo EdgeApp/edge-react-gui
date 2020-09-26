@@ -41,7 +41,7 @@ const FioName = (props: FioNameProps) => {
         <T style={styles.infoTitle}>{name}</T>
         <T style={styles.infoSubtitle}>
           {`${s.strings.fio_address_details_screen_expires} `}&nbsp;
-          {formatDate(expiration)}
+          {formatDate(new Date(expiration))}
         </T>
       </View>
       <View style={styles.arrow}>

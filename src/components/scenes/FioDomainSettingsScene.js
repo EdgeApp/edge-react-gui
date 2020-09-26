@@ -129,7 +129,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         </View>
         <View style={styles.info}>
           <T style={styles.title}>{s.strings.fio_address_details_screen_expires}</T>
-          <T style={styles.content}>{formatDate(expiration)}</T>
+          <T style={styles.content}>{formatDate(new Date(expiration))}</T>
         </View>
         {showVisibility && (
           <FioActionSubmit
