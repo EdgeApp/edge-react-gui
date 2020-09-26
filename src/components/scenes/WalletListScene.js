@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import slowlog from 'react-native-slowlog'
 import SortableListView from 'react-native-sortable-listview'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -59,7 +58,6 @@ type State = {
 class WalletListComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    slowlog(this, /.*/, global.slowlogOptions)
     this.state = {
       sorting: false
     }

@@ -5,7 +5,6 @@ import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import slowlog from 'react-native-slowlog'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -73,7 +72,6 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       fioRequestsPending: [],
       fioRequestsSent: []
     }
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentDidMount = () => {

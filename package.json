@@ -163,7 +163,6 @@
     "react-native-safe-area-view": "^0.14.4",
     "react-native-share": "^3.8.3",
     "react-native-slider": "^0.11.0",
-    "react-native-slowlog": "^1.0.2",
     "react-native-smart-splash-screen": "git://github.com/swansontec/react-native-smart-splash-screen#fix-rn59",
     "react-native-sortable-listview": "git://github.com/EdgeApp/react-native-sortable-listview.git",
     "react-native-sound": "^0.11.0",

@@ -4,7 +4,6 @@ import { bns } from 'biggystring'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
-import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import receivedTypeImage from '../../assets/images/transactions/transaction-type-received.png'
@@ -40,11 +39,6 @@ type Props = TransactionRowOwnProps & TransactionRowStateProps
 type State = {}
 
 export class TransactionRowComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    slowlog(this, /.*/, global.slowlogOptions)
-  }
-
   shouldComponentUpdate(nextProps: Props) {
     const diffElement = UTILS.getObjectDiff(this.props, nextProps, { transaction: true }, { transactions: true })
     if (diffElement) {

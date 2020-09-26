@@ -2,7 +2,6 @@
 
 import React, { PureComponent } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
-import slowlog from 'react-native-slowlog'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
@@ -91,7 +90,6 @@ class WalletListMenuModalComponent extends PureComponent<Props> {
       }
       this.options.push(temp)
     }
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   optionAction = (option: WalletListMenuKey) => {

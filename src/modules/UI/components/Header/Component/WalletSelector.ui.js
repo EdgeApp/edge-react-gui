@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from 'react'
-import slowlog from 'react-native-slowlog'
 
 import * as Constants from '../../../../../constants/indexConstants'
 import s from '../../../../../locales/strings'
@@ -22,11 +21,6 @@ export type DispatchProps = {
 type Props = StateProps & DispatchProps
 
 export default class WalletSelector extends React.Component<Props, State> {
-  constructor(props: any) {
-    super(props)
-    slowlog(this, /.*/, global.slowlogOptions)
-  }
-
   render() {
     let title = s.strings.loading
     if (this.props.selectedWalletName) {

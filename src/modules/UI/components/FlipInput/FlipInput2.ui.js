@@ -3,7 +3,6 @@
 import { bns } from 'biggystring'
 import * as React from 'react'
 import { type Event, Animated, Image, Platform, TextInput, TouchableWithoutFeedback, View } from 'react-native'
-import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { EdgeText } from '../../../../components/themed/EdgeText.js'
@@ -166,7 +165,6 @@ export class FlipInput extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = getInitialState(props)
-    slowlog(this, /.*/, global.slowlogOptions)
 
     // Mounting Animation
     this.animatedValue = new Animated.Value(0)

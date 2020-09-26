@@ -39,7 +39,6 @@ const IGNORED_WARNINGS = ['slowlog', 'Setting a timer for a long period of time'
 console.ignoredYellowBox = IGNORED_WARNINGS
 
 global.OS = Platform.OS
-global.slowlogOptions = { threshold: 16 }
 // Disable the font scaling
 if (!Text.defaultProps) {
   Text.defaultProps = {}

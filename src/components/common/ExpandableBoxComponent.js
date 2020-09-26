@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import slowlog from 'react-native-slowlog'
 
 import * as Constants from '../../constants/indexConstants.js'
 import { TextAndIconButton, TextAndIconButtonStyle } from '../../modules/UI/components/Buttons/TextAndIconButton.ui.js'
@@ -21,7 +20,6 @@ type State = {
 export class ExpandableBoxComponent extends React.Component<Props, State> {
   constructor(props: any) {
     super(props)
-    slowlog(this, /.*/, global.slowlogOptions)
 
     this.state = { collapsed: true }
   }

@@ -5,7 +5,6 @@ import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import credLogo from '../../assets/images/cred_logo.png'
@@ -71,7 +70,6 @@ export class TransactionList extends React.Component<Props, State> {
     this.state = {
       reset: true
     }
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentDidMount = () => {
