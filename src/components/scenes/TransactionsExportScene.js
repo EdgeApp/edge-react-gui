@@ -21,6 +21,7 @@ import { Airship, showActivity, showError } from '../services/AirshipInstance.js
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
+import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 import { PrimaryButton } from '../themed/ThemedButtons.js'
@@ -68,29 +69,6 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       isExportQbo: false,
       isExportCsv: true
     }
-  }
-
-  toggleExportAndroid() {
-    this.setState({
-      isExportCsv: !this.state.isExportCsv,
-      isExportQbo: !this.state.isExportQbo
-    })
-  }
-
-  toggleExportQbo = () => {
-    if (Platform.OS === 'ios') {
-      this.setState({ isExportQbo: !this.state.isExportQbo })
-      return
-    }
-    this.toggleExportAndroid()
-  }
-
-  toggleExportCsv = () => {
-    if (Platform.OS === 'ios') {
-      this.setState({ isExportCsv: !this.state.isExportCsv })
-      return
-    }
-    this.toggleExportAndroid()
   }
 
   setThisMonth = () => {
@@ -142,11 +120,30 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
           <SettingsLabelRow text={s.strings.string_start} right={startDateString} onPress={this.handleStartDate} />
           <SettingsLabelRow text={s.strings.string_end} right={endDateString} onPress={this.handleEndDate} />
           <SettingsHeaderRow icon={<Entypo name="export" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_export_type} />
-          <SettingsSwitchRow key="exportQbo" text={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.toggleExportQbo} />
-          <SettingsSwitchRow key="exportCsv" text={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.toggleExportCsv} />
+          {Platform.OS === 'android' ? this.renderAndroidSwitches() : this.renderIosSwitches()}
           {disabledExport ? null : <PrimaryButton label={s.strings.string_export} marginRem={1.5} onPress={this.handleSubmit} />}
         </ScrollView>
       </SceneWrapper>
+    )
+  }
+
+  renderAndroidSwitches(): React.Node {
+    const { isExportCsv, isExportQbo } = this.state
+    return (
+      <>
+        <SettingsRadioRow key="exportQbo" text={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleAndroidToggle} />
+        <SettingsRadioRow key="exportCsv" text={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.handleAndroidToggle} />
+      </>
+    )
+  }
+
+  renderIosSwitches(): React.Node {
+    const { isExportCsv, isExportQbo } = this.state
+    return (
+      <>
+        <SettingsSwitchRow key="exportQbo" text={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleQboToggle} />
+        <SettingsSwitchRow key="exportCsv" text={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.handleCsvToggle} />
+      </>
     )
   }
 
@@ -164,7 +161,22 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     })
   }
 
-  filenameDateString = () => {
+  handleAndroidToggle = () => {
+    this.setState(state => ({
+      isExportCsv: !state.isExportCsv,
+      isExportQbo: !state.isExportQbo
+    }))
+  }
+
+  handleQboToggle = () => {
+    this.setState(state => ({ isExportQbo: !state.isExportQbo }))
+  }
+
+  handleCsvToggle = () => {
+    this.setState(state => ({ isExportCsv: !state.isExportCsv }))
+  }
+
+  filenameDateString() {
     const date = new Date()
     const fileNameAppend =
       date.getFullYear().toString() +
