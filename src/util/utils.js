@@ -516,17 +516,6 @@ export const autoCorrectDate = (dateInSeconds: number, currentDateInSeconds: num
   return dateInSeconds
 }
 
-// Strips special characters and replaces spaces with hyphens
-export const sanitizeForFilename = (s: string) => {
-  const charRegex = /[^\w\s-]/g
-  const hyphenRegex = /[-\s]+/g
-
-  s = s.replace(charRegex, '').trim()
-  s = s.replace(hyphenRegex, '-')
-
-  return s
-}
-
 export const getYesterdayDateRoundDownHour = () => {
   const date = new Date()
   date.setMinutes(0)
