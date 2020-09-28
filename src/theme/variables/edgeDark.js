@@ -169,14 +169,13 @@ export const edgeDark: Theme = {
   settingsRowHeaderBackground: palette.edgeNavy,
   settingsRowSubHeader: palette.transparent,
 
+  // Native iOS date modal:
+  dateModalTextLight: palette.accentBlue,
+  dateModalTextDark: palette.white,
+  dateModalBackgroundLight: palette.white,
+  dateModalBackgroundDark: palette.edgeBlue,
+
   // Misc
-  // Remove defaults when lightMode is implemented
-  keyboardTopViewBackgroundLight: palette.white,
-  keyboardTopViewBackgroundDark: palette.edgeBlue,
-  keyboardTopViewTextLight: palette.accentBlue,
-  keyboardTopViewTextDark: palette.white,
-  datetimepickerBackgroundLight: palette.white,
-  datetimepickerBackgroundDark: palette.edgeBlue,
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
 
   // Fonts

@@ -113,7 +113,7 @@
     "@react-native-community/art": "^1.2.0",
     "@react-native-community/async-storage": "^1.6.2",
     "@react-native-community/blur": "^3.6.0",
-    "@react-native-community/datetimepicker": "^2.5.0",
+    "@react-native-community/datetimepicker": "^3.0.2",
     "@react-native-firebase/app": "^7.0.1",
     "@react-native-firebase/iid": "^7.0.1",
     "@react-native-firebase/messaging": "^7.0.1",

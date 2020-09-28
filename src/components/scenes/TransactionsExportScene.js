@@ -1,10 +1,8 @@
 // @flow
 
-import DateTimePicker from '@react-native-community/datetimepicker'
 import type { EdgeCurrencyWallet, EdgeGetTransactionsOptions } from 'edge-core-js'
-import React, { PureComponent } from 'react'
-import { Platform, ScrollView, Text, TouchableWithoutFeedback, View } from 'react-native'
-import { Appearance } from 'react-native-appearance'
+import * as React from 'react'
+import { Platform, ScrollView } from 'react-native'
 import RNFS from 'react-native-fs'
 import Mailer from 'react-native-mail'
 import Share from 'react-native-share'
@@ -18,15 +16,14 @@ import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import type { State as StateType } from '../../types/reduxTypes.js'
 import { sanitizeForFilename } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { showActivity, showError } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { DateModal } from '../modals/DateModal.js'
+import { Airship, showActivity, showError } from '../services/AirshipInstance.js'
+import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 import { PrimaryButton } from '../themed/ThemedButtons.js'
-
-const colorScheme = Appearance.getColorScheme()
 
 type Files = {
   qbo?: {
@@ -57,19 +54,17 @@ type Props = StateProps & OwnProps & ThemeProps
 type State = {
   startDate: Date,
   endDate: Date,
-  datePicker: 'startDate' | 'endDate' | null,
   isExportQbo: boolean,
   isExportCsv: boolean
 }
 
-class TransactionsExportSceneComponent extends PureComponent<Props, State> {
+class TransactionsExportSceneComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1))
     this.state = {
       startDate: new Date(new Date().getFullYear(), lastMonth.getMonth(), 1, 0, 0, 0),
       endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0),
-      datePicker: null,
       isExportQbo: false,
       isExportCsv: true
     }
@@ -124,28 +119,11 @@ class TransactionsExportSceneComponent extends PureComponent<Props, State> {
       return
     }
     this.exportFiles()
-    this.closeDatePicker()
   }
-
-  showStartDatePicker = () => this.setState({ datePicker: 'startDate' })
-
-  showEndDatePicker = () => this.setState({ datePicker: 'endDate' })
-
-  onChangeDatePicker = (event: any, date: Date) => {
-    if (this.state.datePicker === 'startDate') {
-      this.setState({ startDate: date })
-    }
-    if (this.state.datePicker === 'endDate') {
-      this.setState({ endDate: date })
-    }
-  }
-
-  closeDatePicker = () => this.setState({ datePicker: null })
 
   render() {
-    const { startDate, endDate, datePicker, isExportCsv, isExportQbo } = this.state
+    const { startDate, endDate, isExportCsv, isExportQbo } = this.state
     const { theme } = this.props
-    const styles = getStyles(theme)
     const iconSize = theme.rem(1.25)
     const rightArrow = <AntDesign name="right" color={theme.icon} size={theme.rem(1)} />
 
@@ -157,35 +135,33 @@ class TransactionsExportSceneComponent extends PureComponent<Props, State> {
     return (
       <SceneWrapper background="theme">
         <ScrollView>
-          <TouchableWithoutFeedback onPress={this.closeDatePicker}>
-            <View>
-              <SettingsRow text={walletName} onPress={this.closeDatePicker} />
-              <SettingsHeaderRow icon={<Entypo name="calendar" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_date_range} />
-              <SettingsRow text={s.strings.export_transaction_this_month} right={rightArrow} onPress={this.setThisMonth} />
-              <SettingsRow text={s.strings.export_transaction_last_month} right={rightArrow} onPress={this.setLastMonth} />
-              <SettingsLabelRow text={s.strings.string_start} right={startDateString} onPress={this.showStartDatePicker} />
-              <SettingsLabelRow text={s.strings.string_end} right={endDateString} onPress={this.showEndDatePicker} />
-              <SettingsHeaderRow icon={<Entypo name="export" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_export_type} />
-              <SettingsSwitchRow key="exportQbo" text={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.toggleExportQbo} />
-              <SettingsSwitchRow key="exportCsv" text={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.toggleExportCsv} />
-              {disabledExport ? null : <PrimaryButton label={s.strings.string_export} marginRem={1.5} onPress={this.handleSubmit} />}
-            </View>
-          </TouchableWithoutFeedback>
+          <SettingsRow text={walletName} onPress={() => undefined} />
+          <SettingsHeaderRow icon={<Entypo name="calendar" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_date_range} />
+          <SettingsRow text={s.strings.export_transaction_this_month} right={rightArrow} onPress={this.setThisMonth} />
+          <SettingsRow text={s.strings.export_transaction_last_month} right={rightArrow} onPress={this.setLastMonth} />
+          <SettingsLabelRow text={s.strings.string_start} right={startDateString} onPress={this.handleStartDate} />
+          <SettingsLabelRow text={s.strings.string_end} right={endDateString} onPress={this.handleEndDate} />
+          <SettingsHeaderRow icon={<Entypo name="export" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_export_type} />
+          <SettingsSwitchRow key="exportQbo" text={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.toggleExportQbo} />
+          <SettingsSwitchRow key="exportCsv" text={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.toggleExportCsv} />
+          {disabledExport ? null : <PrimaryButton label={s.strings.string_export} marginRem={1.5} onPress={this.handleSubmit} />}
         </ScrollView>
-        {datePicker !== null && (
-          <View style={Platform.OS === 'ios' ? styles.pickerContainer : undefined}>
-            {Platform.OS === 'ios' && (
-              <TouchableWithoutFeedback onPress={() => this.setState({ datePicker: null })}>
-                <View style={styles.accessoryView}>
-                  <Text style={styles.accessoryText}>Done</Text>
-                </View>
-              </TouchableWithoutFeedback>
-            )}
-            <DateTimePicker testID="datePicker" value={datePicker === 'startDate' ? startDate : endDate} mode="date" onChange={this.onChangeDatePicker} />
-          </View>
-        )}
       </SceneWrapper>
     )
+  }
+
+  handleStartDate = () => {
+    const { startDate } = this.state
+    Airship.show(bridge => <DateModal bridge={bridge} initialValue={startDate} />).then(date => {
+      this.setState({ startDate: date })
+    })
+  }
+
+  handleEndDate = () => {
+    const { endDate } = this.state
+    Airship.show(bridge => <DateModal bridge={bridge} initialValue={endDate} />).then(date => {
+      this.setState({ endDate: date })
+    })
   }
 
   filenameDateString = () => {
@@ -332,24 +308,6 @@ class TransactionsExportSceneComponent extends PureComponent<Props, State> {
     )
   }
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  accessoryView: {
-    paddingVertical: theme.rem(0.5),
-    paddingHorizontal: theme.rem(1),
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: colorScheme === 'dark' ? theme.keyboardTopViewBackgroundDark : theme.keyboardTopViewBackgroundLight
-  },
-  accessoryText: {
-    color: colorScheme === 'dark' ? theme.keyboardTopViewTextDark : theme.keyboardTopViewTextLight,
-    fontSize: theme.rem(1)
-  },
-  pickerContainer: {
-    backgroundColor: colorScheme === 'dark' ? theme.datetimepickerBackgroundDark : theme.datetimepickerBackgroundLight
-  }
-}))
 
 export const TransactionsExportScene = connect((state: StateType, ownProps: OwnProps): StateProps => {
   const denominationObject = getDisplayDenomination(state, ownProps.currencyCode)
