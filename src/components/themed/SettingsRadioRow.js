@@ -10,7 +10,7 @@ type OwnProps = {
   disabled?: boolean,
   icon?: React.Node,
   text: string,
-  isSelected: boolean,
+  value: boolean,
   onPress: () => void
 }
 
@@ -20,15 +20,14 @@ type Props = OwnProps & ThemeProps
  * A settings row with a radio selector on the right side.
  */
 function SettingsRadioRowComponent(props: Props): React.Node {
-  const { disabled, icon, text, isSelected, onPress, theme } = props
+  const { disabled = false, icon, text, value, onPress, theme } = props
 
-  const radio = isSelected ? (
+  const right = value ? (
     <IonIcon size={theme.rem(1.25)} color={theme.iconTappable} name="ios-radio-button-on" />
   ) : (
     <IonIcon size={theme.rem(1.25)} color={theme.icon} name="ios-radio-button-off" />
   )
-
-  return <SettingsRow disabled={disabled} icon={icon} text={text} right={radio} onPress={onPress} />
+  return <SettingsRow disabled={disabled} icon={icon} text={text} right={right} onPress={onPress} />
 }
 
 export const SettingsRadioRow = withTheme(SettingsRadioRowComponent)

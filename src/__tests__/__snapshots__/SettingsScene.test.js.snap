@@ -408,17 +408,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 17,
-                },
-                null,
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "#0E4B75",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "minHeight": 62,
+                "padding": 17,
+              }
             }
           >
             <Text
@@ -1804,17 +1801,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 17,
-                },
-                null,
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "#0E4B75",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "minHeight": 62,
+                "padding": 17,
+              }
             }
           >
             <Text
