@@ -15,7 +15,6 @@ import { connect } from 'react-redux'
 import { formatExpDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import type { State as StateType } from '../../types/reduxTypes.js'
 import { sanitizeForFilename } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -25,6 +24,7 @@ import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
+import { PrimaryButton } from '../themed/ThemedButtons.js'
 
 const colorScheme = Appearance.getColorScheme()
 
@@ -113,10 +113,11 @@ class TransactionsExportSceneComponent extends PureComponent<Props, State> {
     })
   }
 
-  exportFile = async () => {
+  handleSubmit = (): void => {
     const { startDate, endDate, isExportQbo, isExportCsv } = this.state
     if (startDate.getTime() > endDate.getTime()) {
-      return showError(s.strings.export_transaction_error)
+      showError(s.strings.export_transaction_error)
+      return
     }
     if (Platform.OS === 'android' && isExportQbo && isExportCsv) {
       showError(s.strings.export_transaction_export_error_2)
@@ -152,6 +153,7 @@ class TransactionsExportSceneComponent extends PureComponent<Props, State> {
     const startDateString = formatExpDate(startDate)
     const endDateString = formatExpDate(endDate)
     const disabledExport = !isExportQbo && !isExportCsv
+
     return (
       <SceneWrapper background="theme">
         <ScrollView>
@@ -166,13 +168,7 @@ class TransactionsExportSceneComponent extends PureComponent<Props, State> {
               <SettingsHeaderRow icon={<Entypo name="export" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_export_type} />
               <SettingsSwitchRow key="exportQbo" text={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.toggleExportQbo} />
               <SettingsSwitchRow key="exportCsv" text={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.toggleExportCsv} />
-              {!disabledExport && (
-                <View style={styles.bottomArea}>
-                  <PrimaryButton onPress={this.exportFile} disabled={disabledExport}>
-                    <PrimaryButton.Text>{s.strings.string_export}</PrimaryButton.Text>
-                  </PrimaryButton>
-                </View>
-              )}
+              {disabledExport ? null : <PrimaryButton label={s.strings.string_export} marginRem={1.5} onPress={this.handleSubmit} />}
             </View>
           </TouchableWithoutFeedback>
         </ScrollView>
@@ -338,9 +334,6 @@ class TransactionsExportSceneComponent extends PureComponent<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  bottomArea: {
-    padding: theme.rem(1.5)
-  },
   accessoryView: {
     paddingVertical: theme.rem(0.5),
     paddingHorizontal: theme.rem(1),
