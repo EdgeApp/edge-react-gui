@@ -5,7 +5,6 @@ import * as React from 'react'
 import { Platform, ScrollView } from 'react-native'
 import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 import Entypo from 'react-native-vector-icons/Entypo'
 import { connect } from 'react-redux'
 import { base64 } from 'rfc4648'
@@ -81,7 +80,6 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const { startDate, endDate, isExportCsv, isExportQbo } = this.state
     const { theme } = this.props
     const iconSize = theme.rem(1.25)
-    const rightArrow = <AntDesign name="right" color={theme.icon} size={theme.rem(1)} />
 
     const walletName = `${this.props.sourceWallet.name || s.strings.string_no_wallet_name} (${this.props.currencyCode})`
     const startDateString = formatExpDate(startDate)
@@ -93,8 +91,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
         <ScrollView>
           <SettingsRow text={walletName} onPress={() => undefined} />
           <SettingsHeaderRow icon={<Entypo name="calendar" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_date_range} />
-          <SettingsRow text={s.strings.export_transaction_this_month} right={rightArrow} onPress={this.setThisMonth} />
-          <SettingsRow text={s.strings.export_transaction_last_month} right={rightArrow} onPress={this.setLastMonth} />
+          <SettingsRow text={s.strings.export_transaction_this_month} onPress={this.setThisMonth} />
+          <SettingsRow text={s.strings.export_transaction_last_month} onPress={this.setLastMonth} />
           <SettingsLabelRow text={s.strings.string_start} right={startDateString} onPress={this.handleStartDate} />
           <SettingsLabelRow text={s.strings.string_end} right={endDateString} onPress={this.handleEndDate} />
           <SettingsHeaderRow icon={<Entypo name="export" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_export_type} />
