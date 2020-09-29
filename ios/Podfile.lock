@@ -153,7 +153,7 @@ PODS:
     - React
   - RNStoreReview (0.1.5):
     - React
-  - RNVectorIcons (6.1.0):
+  - RNVectorIcons (7.1.0):
     - React
   - TcpSockets (4.0.0):
     - CocoaAsyncSocket
@@ -329,7 +329,7 @@ SPEC CHECKSUMS:
   RNShare: 883e13860ebb923bf9f7312187c3d744f546e3bb
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
-  RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
+  RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   TcpSockets: a8eb6b5867fe643e6cfed5db2e4de62f4d1e8fd0
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
