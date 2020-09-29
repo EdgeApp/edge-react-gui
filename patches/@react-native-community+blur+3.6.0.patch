@@ -1,0 +1,30 @@
+diff --git a/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java b/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java
+index b583b02..2d2ae94 100644
+--- a/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java
++++ b/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java
+@@ -32,14 +32,17 @@ class BlurViewManager extends ViewGroupManager<BlurView> {
+     @Override
+     public @Nonnull BlurView createViewInstance(@Nonnull ThemedReactContext ctx) {
+         BlurView blurView = new BlurView(ctx);
+-        View decorView = Objects.requireNonNull(ctx.getCurrentActivity()).getWindow().getDecorView();
+-        ViewGroup rootView = decorView.findViewById(android.R.id.content);
+-        Drawable windowBackground = decorView.getBackground();
+-        blurView.setupWith(rootView)
+-            .setFrameClearDrawable(windowBackground)
+-            .setBlurAlgorithm(new RenderScriptBlur(ctx))
+-            .setBlurRadius(defaultRadius)
+-            .setHasFixedTransformationMatrix(false);
++        Activity currentActivity = ctx.getCurrentActivity();
++        if (currentActivity != null) {
++            View decorView = currentActivity.getWindow().getDecorView();
++            ViewGroup rootView = decorView.findViewById(android.R.id.content);
++            Drawable windowBackground = decorView.getBackground();
++            blurView.setupWith(rootView)
++                .setFrameClearDrawable(windowBackground)
++                .setBlurAlgorithm(new RenderScriptBlur(ctx))
++                .setBlurRadius(defaultRadius)
++                .setHasFixedTransformationMatrix(false);
++        }
+         return blurView;
+     }
+ 
