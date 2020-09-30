@@ -650,7 +650,5 @@
   "string_enter_amount": "Inserisci l'importo",
   "export_transaction_error": "La data d'inizio non può essere successiva alla data di fine",
   "export_transaction_export_error": "Nessuna transazione nell'intervallo di date scelto",
-  "export_transaction_export_error_2": "Seleziona un solo tipo di esportazione su Android",
-  "export_transaction_export_error_3": "Errore nell'esportare il file su android",
   "export_transaction_loading": "Esportazione transazioni in corso…"
 }
