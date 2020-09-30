@@ -124,13 +124,13 @@ export type Theme = {
   // securityAlertModalLine: string,
   // securityAlertModalHeaderIconShadow: string,
 
+  // Native iOS date modal:
+  dateModalTextLight: string,
+  dateModalTextDark: string,
+  dateModalBackgroundLight: string,
+  dateModalBackgroundDark: string,
+
   // Misc
-  keyboardTopViewBackgroundLight: string,
-  keyboardTopViewBackgroundDark: string,
-  keyboardTopViewTextLight: string,
-  keyboardTopViewTextDark: string,
-  datetimepickerBackgroundLight: string,
-  datetimepickerBackgroundDark: string,
   // pressedOpacity: number,
 
   // Fonts

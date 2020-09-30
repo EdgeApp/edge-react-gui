@@ -35,9 +35,9 @@ exports[`CurrencySettings should render 1`] = `
           BTG
         </Text>
       }
-      isSelected={false}
       onPress={[Function]}
       text=""
+      value={false}
     />
     <WithTheme(SettingsRadioRowComponent)
       icon={
@@ -65,9 +65,9 @@ exports[`CurrencySettings should render 1`] = `
           mBTG
         </Text>
       }
-      isSelected={false}
       onPress={[Function]}
       text=""
+      value={false}
     />
     <WithTheme(SettingsRadioRowComponent)
       icon={
@@ -95,9 +95,9 @@ exports[`CurrencySettings should render 1`] = `
           bits
         </Text>
       }
-      isSelected={true}
       onPress={[Function]}
       text=""
+      value={true}
     />
   </ScrollViewMock>
 </SceneWrapper>

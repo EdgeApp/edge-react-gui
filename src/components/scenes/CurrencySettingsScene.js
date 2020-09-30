@@ -118,7 +118,7 @@ export class CurrencySettingsComponent extends React.Component<Props, State> {
             )
             const isSelected = key === this.props.selectedDenominationKey
             const onPress = this.selectDenomination(key)
-            return <SettingsRadioRow key={denomination.multiplier} icon={left} text="" isSelected={isSelected} onPress={onPress} />
+            return <SettingsRadioRow key={denomination.multiplier} icon={left} text="" value={isSelected} onPress={onPress} />
           })}
           {this.props.defaultElectrumServer.length !== 0 && (
             <>
