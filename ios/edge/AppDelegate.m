@@ -11,7 +11,7 @@
 #import <sys/errno.h>
 #import <UserNotifications/UserNotifications.h>
 
-@interface AppDelegate () <FIRMessagingDelegate, UNUserNotificationCenterDelegate>
+@interface AppDelegate () <UNUserNotificationCenterDelegate>
 
 @end
 
