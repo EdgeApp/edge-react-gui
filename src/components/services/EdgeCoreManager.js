@@ -17,10 +17,7 @@ import { LoadingScene } from '../scenes/LoadingScene.js'
 import { Services } from './Services.js'
 import { ThemeProvider } from './ThemeContext.js'
 
-type Props = {
-  onLoad: (context: EdgeContext) => mixed,
-  onError: (error: any) => mixed
-}
+type Props = {}
 
 type State = {
   context: EdgeContext | null,

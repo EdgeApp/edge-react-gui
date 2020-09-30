@@ -9,7 +9,8 @@ import co.airbitz.AbcCoreJsUi.AbcCoreJsUiPackage;
 import co.airbitz.fastcrypto.RNFastCryptoPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
-import com.bugsnag.BugsnagReactNative;
+import com.bugsnag.android.Bugsnag;
+import com.bugsnag.android.BugsnagPackage;
 import com.chirag.RNMail.RNMail;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.facebook.react.ReactApplication;
@@ -54,6 +55,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+              new BugsnagPackage(),
               new BlurViewPackage(),
               new RNCAppearancePackage(),
               new RNDateTimePickerPackage(),
@@ -63,7 +65,6 @@ public class MainApplication extends Application implements ReactApplication {
               new DiskletPackage(),
               new RNCWebViewPackage(),
               new OpenAppSettingsPackage(),
-              BugsnagReactNative.getPackage(),
               new RNFirebasePackage(),
               new RNFirebaseAnalyticsPackage(),
               new RNFirebaseDatabasePackage(),
@@ -101,11 +102,13 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     Context context = getApplicationContext();
 
+    // @bugsnag/react-native
+    Bugsnag.start(this);
+
     // Disable RTL
     I18nUtil sharedI18nUtilInstance = I18nUtil.getInstance();
     sharedI18nUtilInstance.allowRTL(context, false);
 
-    BugsnagReactNative.start(this);
     SoLoader.init(this, /* native exopackage */ false);
 
     WebView.setWebContentsDebuggingEnabled(true);

@@ -27,7 +27,7 @@ target 'edge' do
   pod 'Firebase/Messaging'
 
   # React Native linked dependencies
-  pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'
+  pod 'BugsnagReactNative', :path => '../node_modules/@bugsnag/react-native'
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
   pod 'disklet', :path => '../node_modules/disklet'
   pod 'edge-login-ui-rn', :path => '../node_modules/edge-login-ui-rn'

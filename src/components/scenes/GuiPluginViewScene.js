@@ -1,5 +1,6 @@
 // @flow
 
+import Bugsnag from '@bugsnag/react-native'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
@@ -52,7 +53,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: bool
 
     // This was crashing us, so send to bugsnag:
     if (bridge != null && message.events != null && typeof message.events.find !== 'function') {
-      global.bugsnag.notify(new Error('Corrupted yaob events'), report => {
+      Bugsnag.notify(new Error('Corrupted yaob events'), report => {
         report.metadata.rawData = event.nativeEvent.data
         report.metadata.eventType = typeof message.events
       })
