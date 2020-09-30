@@ -328,7 +328,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     showEarnInterestCard: true
   },
   FIO: {
-    noChangeMiningFee: true
+    noChangeMiningFee: true,
+    isImportKeySupported: true
   }
 }
 
