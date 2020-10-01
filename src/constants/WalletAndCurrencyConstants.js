@@ -336,6 +336,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
 /**
  * Customizes which coins get which options on the wallet list scene.
  */
+export const WALLET_LIST_OPTIONS_ICON = '\u22ee'
 export const WALLET_LIST_MENU: Array<{
   currencyCodes?: string[],
   label: string,
@@ -344,10 +345,6 @@ export const WALLET_LIST_MENU: Array<{
   {
     label: s.strings.string_rename,
     value: 'rename'
-  },
-  {
-    label: s.strings.string_delete,
-    value: 'delete'
   },
   {
     label: s.strings.string_resync,
@@ -401,6 +398,10 @@ export const WALLET_LIST_MENU: Array<{
   {
     label: s.strings.string_get_raw_keys,
     value: 'getRawKeys'
+  },
+  {
+    label: s.strings.string_delete_wallet,
+    value: 'delete'
   }
 ]
 

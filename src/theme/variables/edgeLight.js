@@ -51,7 +51,7 @@ export const edgeLight: Theme = {
 
   icon: palette.black,
   iconTappable: palette.edgeBlue,
-  // warningIcon: palette.accentOrange,
+  warningIcon: palette.accentOrange,
 
   // Background
   backgroundGradientLeft: palette.lightestGray,
@@ -73,7 +73,7 @@ export const edgeLight: Theme = {
   // Text
   primaryText: palette.black,
   secondaryText: palette.gray,
-  // warningText: palette.accentOrange,
+  warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
   negativeText: palette.accentRed,
   dangerText: palette.accentRed,

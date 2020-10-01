@@ -2,14 +2,14 @@
 
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { getEnabledTokens, selectWallet } from '../../actions/WalletActions.js'
-import { type WalletListMenuKey } from '../../actions/WalletListMenuActions.js'
 import WalletListTokenRow from '../../connectors/WalletListTokenRowConnector.js'
 import { getSpecialCurrencyInfo, TRANSACTION_LIST, WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
+import { WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
@@ -21,14 +21,14 @@ import { type State as ReduxState } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo, type GuiDenomination, type GuiWallet } from '../../types/types.js'
 import { scale, scaleH } from '../../util/scaling.js'
 import { decimalOrZero, getFiatSymbol, getObjectDiff, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
+import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 import { ProgressPie } from './ProgressPie.js'
-import { WalletListMenu } from './WalletListMenu.js'
 
 const DIVIDE_PRECISION = 18
 
 type OwnProps = {
   guiWallet: GuiWallet,
-  executeWalletRowOption: (walletId: string, option: WalletListMenuKey, currencyCode?: string) => void,
   showBalance: boolean | Function
 }
 type StateProps = {
@@ -68,6 +68,19 @@ class WalletListRowComponent extends React.Component<Props> {
   componentDidMount() {
     const { guiWallet } = this.props
     this.props.getEnabledTokensList(guiWallet.id)
+  }
+
+  openWalletListMenuModal = async () => {
+    const { guiWallet } = this.props
+    await Airship.show(bridge => (
+      <WalletListMenuModal
+        bridge={bridge}
+        walletId={guiWallet.id}
+        currencyName={guiWallet.name}
+        currencyCode={guiWallet.currencyCode}
+        image={guiWallet.symbolImage}
+      />
+    ))
   }
 
   render() {
@@ -180,14 +193,11 @@ class WalletListRowComponent extends React.Component<Props> {
                   <T style={differencePercentageStringStyle}>{differencePercentageString}</T>
                 </View>
               </View>
-              <View style={styles.rowOptionsWrap}>
-                <WalletListMenu
-                  currencyCode={guiWallet.currencyCode}
-                  customStyles={customWalletListOptionsStyles}
-                  executeWalletRowOption={this.props.executeWalletRowOption}
-                  walletId={id}
-                />
-              </View>
+              <TouchableWithoutFeedback onPress={this.openWalletListMenuModal}>
+                <View style={styles.rowOptionsWrap}>
+                  <Text style={styles.rowOptionsIcon}>{WALLET_LIST_OPTIONS_ICON}</Text>
+                </View>
+              </TouchableWithoutFeedback>
             </View>
           </TouchableHighlight>
           {this.renderTokenRow(id, enabledNativeBalances, progress)}
@@ -211,7 +221,6 @@ class WalletListRowComponent extends React.Component<Props> {
               balance={metaTokenBalances[property]}
               showBalance={this.props.showBalance}
               progress={progress}
-              executeWalletRowOption={this.props.executeWalletRowOption}
             />
           )
         }
@@ -237,20 +246,6 @@ class WalletListRowComponent extends React.Component<Props> {
   }
 }
 
-const customWalletListOptionsStyles = StyleSheet.create({
-  icon: {
-    fontSize: scale(21),
-    fontWeight: '200',
-    position: 'relative',
-    top: 6
-  },
-  menuIconWrap: {
-    width: scale(46),
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'flex-start'
-  }
-})
 const rowCurrencyOverlaySize = scale(23.3)
 const rawStyles = {
   rowContainer: {
@@ -284,7 +279,14 @@ const rawStyles = {
     alignSelf: 'center'
   },
   rowOptionsWrap: {
-    width: scaleH(37)
+    width: scaleH(37),
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  rowOptionsIcon: {
+    fontSize: scale(20),
+    color: THEME.COLORS.GRAY_1
   },
   symbol: {
     fontFamily: THEME.FONTS.SYMBOLS
