@@ -1,8 +1,15 @@
 diff --git a/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java b/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java
-index b583b02..2d2ae94 100644
+index b583b02..c2e6106 100644
 --- a/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java
 +++ b/node_modules/@react-native-community/blur/android/src/main/java/com/cmcewen/blurview/BlurViewManager.java
-@@ -32,14 +32,17 @@ class BlurViewManager extends ViewGroupManager<BlurView> {
+@@ -1,5 +1,6 @@
+ package com.cmcewen.blurview;
+ 
++import android.app.Activity;
+ import android.graphics.drawable.Drawable;
+ import android.view.View;
+ import android.view.ViewGroup;
+@@ -32,14 +33,17 @@ class BlurViewManager extends ViewGroupManager<BlurView> {
      @Override
      public @Nonnull BlurView createViewInstance(@Nonnull ThemedReactContext ctx) {
          BlurView blurView = new BlurView(ctx);
