@@ -290,7 +290,9 @@ export class EdgeProvider extends Bridgeable {
         nativeAmount = await coreWallet.denominationToNative(spendTarget.exchangeAmount, currencyCode)
       }
 
-      edgeSpendTargets.push({ ...spendTarget, nativeAmount })
+      const spendTargetObj: EdgeSpendTarget = { ...spendTarget, nativeAmount }
+      if (uniqueIdentifier !== null) spendTargetObj.uniqueIdentifier = uniqueIdentifier
+      edgeSpendTargets.push(spendTargetObj)
       console.log(
         `requestSpend currencycode ${currencyCode} and spendTarget.publicAddress ${spendTarget.publicAddress || ''} and uniqueIdentifier ${
           uniqueIdentifier || ''
