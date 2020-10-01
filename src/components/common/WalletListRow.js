@@ -7,18 +7,16 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { getEnabledTokens, selectWallet } from '../../actions/WalletActions.js'
-import WalletListTokenRow from '../../connectors/WalletListTokenRowConnector.js'
 import { getSpecialCurrencyInfo, TRANSACTION_LIST, WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
 import { WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import { type CustomTokenInfo, type GuiDenomination, type GuiWallet } from '../../types/types.js'
+import { type GuiDenomination, type GuiWallet } from '../../types/types.js'
 import { scale, scaleH } from '../../util/scaling.js'
 import { decimalOrZero, getFiatSymbol, getObjectDiff, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
@@ -29,21 +27,22 @@ const DIVIDE_PRECISION = 18
 
 type OwnProps = {
   guiWallet: GuiWallet,
-  showBalance: boolean | Function
+  showBalance: boolean | Function,
+  walletProgress: number
 }
 type StateProps = {
-  customTokens: CustomTokenInfo[],
   displayDenomination: GuiDenomination,
   exchangeDenomination: GuiDenomination,
   exchangeRates: { [string]: number },
   settings: Object,
-  walletFiatSymbol: string,
-  walletsProgress: Object
+  walletFiatSymbol: string
 }
+
 type DispatchProps = {
   getEnabledTokensList(walletId: string): void,
   selectWallet(walletId: string, currencyCode: string): void
 }
+
 type Props = OwnProps & StateProps & DispatchProps
 
 class WalletListRowComponent extends React.Component<Props> {
@@ -84,8 +83,8 @@ class WalletListRowComponent extends React.Component<Props> {
   }
 
   render() {
-    const { guiWallet, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
-    const progress = this.getProgress()
+    const { guiWallet, walletProgress, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
+    const progress = walletProgress
 
     const currencyCode = guiWallet.currencyCode
     const denomination = this.props.displayDenomination
@@ -97,31 +96,6 @@ class WalletListRowComponent extends React.Component<Props> {
     const preliminaryCryptoAmount = truncateDecimals(bns.div(guiWallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
     const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
     const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
-    // need to crossreference tokensEnabled with nativeBalances
-    const enabledNativeBalances = {}
-    const enabledTokens = guiWallet.enabledTokens
-
-    const customTokens = this.props.customTokens
-    const enabledNotHiddenTokens = enabledTokens.filter(token => {
-      let isVisible = true // assume we will enable token
-
-      const tokenIndex = customTokens.findIndex(item => item.currencyCode === token)
-      // if token is not supposed to be visible, not point in enabling it
-      if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
-      if (SYNCED_ACCOUNT_DEFAULTS[token] && guiWallet.enabledTokens.includes(token)) {
-        // if hardcoded token
-        isVisible = true // and enabled then make visible (overwrite customToken isVisible flag)
-      }
-      return isVisible
-    })
-
-    for (const prop in guiWallet.nativeBalances) {
-      if (guiWallet.nativeBalances.hasOwnProperty(prop)) {
-        if (prop !== currencyCode && enabledNotHiddenTokens.indexOf(prop) >= 0) {
-          enabledNativeBalances[prop] = guiWallet.nativeBalances[prop]
-        }
-      }
-    }
     const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
     const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
     // Fiat Balance Formatting
@@ -200,49 +174,9 @@ class WalletListRowComponent extends React.Component<Props> {
               </TouchableWithoutFeedback>
             </View>
           </TouchableHighlight>
-          {this.renderTokenRow(id, enabledNativeBalances, progress)}
         </View>
       </View>
     )
-  }
-
-  renderTokenRow = (parentId: string, metaTokenBalances, progress: number) => {
-    const { guiWallet } = this.props
-    const tokens = []
-    for (const property in metaTokenBalances) {
-      if (metaTokenBalances.hasOwnProperty(property)) {
-        if (property !== guiWallet.currencyCode) {
-          tokens.push(
-            <WalletListTokenRow
-              parentId={parentId}
-              currencyCode={property}
-              key={property}
-              walletFiatSymbol={this.props.walletFiatSymbol}
-              balance={metaTokenBalances[property]}
-              showBalance={this.props.showBalance}
-              progress={progress}
-            />
-          )
-        }
-      }
-    }
-    return tokens
-  }
-
-  getProgress = () => {
-    const { guiWallet } = this.props
-
-    const walletProgress = this.props.walletsProgress[guiWallet.id]
-    if (walletProgress === 1) {
-      return 1
-    }
-    if (walletProgress < 0.1) {
-      return 0.1
-    }
-    if (walletProgress > 0.95) {
-      return 0.95
-    }
-    return walletProgress
   }
 }
 
@@ -361,14 +295,12 @@ const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const WalletListRow = connect(
   (state: RootState, ownProps: OwnProps): StateProps => ({
-    customTokens: state.ui.settings.customTokens,
     displayDenomination: SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.guiWallet.currencyCode),
     exchangeDenomination: SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.guiWallet.currencyCode),
     exchangeRates: state.exchangeRates,
     settings: state.ui.settings,
     showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
-    walletFiatSymbol: getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode),
-    walletsProgress: state.ui.wallets.walletLoadingProgress
+    walletFiatSymbol: getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode)
   }),
   (dispatch: Dispatch): DispatchProps => ({
     getEnabledTokensList(walletId: string) {
