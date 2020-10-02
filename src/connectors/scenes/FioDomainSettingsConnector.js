@@ -7,9 +7,9 @@ import { FioDomainSettingsScene } from '../../components/scenes/FioDomainSetting
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { getDisplayDenomination } from '../../modules/Settings/selectors'
-import type { Dispatch, State } from '../../types/reduxTypes'
+import { type Dispatch, type RootState } from '../../types/reduxTypes'
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: RootState) => {
   const displayDenomination = getDisplayDenomination(state, FIO_STR)
 
   const out: StateProps = {

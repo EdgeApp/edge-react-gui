@@ -3,9 +3,9 @@
 import { connect } from 'react-redux'
 
 import { SecondaryModal } from '../components/modals/SecondaryModal.js'
-import type { Dispatch, State } from '../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../types/reduxTypes.js'
 
-export const mapStateToProps = (state: State) => ({
+export const mapStateToProps = (state: RootState) => ({
   error: state.ui.scenes.scan.privateKeyModal.error,
   isSweeping: state.ui.scenes.scan.privateKeyModal.isSweeping,
   isActive: state.ui.scenes.scan.privateKeyModal.secondaryModal.isActive

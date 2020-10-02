@@ -18,7 +18,7 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import THEME from '../../theme/variables/airbitz'
-import type { State as StateType } from '../../types/reduxTypes'
+import { type RootState } from '../../types/reduxTypes'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types'
 import { emptyCurrencyInfo } from '../../types/types'
 import { getDenomFromIsoCode } from '../../util/utils'
@@ -293,7 +293,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 }
 
-const FioRequestConfirmationScene = connect((state: StateType): StateProps => {
+const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const { account } = state.core
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)

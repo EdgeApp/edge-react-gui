@@ -4,9 +4,9 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import PasswordRecoveryComponent from '../../components/scenes/PasswordRecoveryScene.js'
-import type { State } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 
-export const mapStateToProps = (state: State) => ({
+export const mapStateToProps = (state: RootState) => ({
   context: state.core.context,
   account: state.core.account,
   showHeader: false

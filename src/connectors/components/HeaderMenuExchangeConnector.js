@@ -9,13 +9,13 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { type DispatchProps, type StateProps, MenuDropDown, MenuDropDownStyle } from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
 import THEME from '../../theme/variables/airbitz'
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 
 export const dropDownStyle = {
   ...MenuDropDownStyle,
   icon: { ...MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
 }
-export const mapStateToProps = (state: State): StateProps => {
+export const mapStateToProps = (state: RootState): StateProps => {
   const data = [
     {
       label: s.strings.dropdown_exchange_max_amount,

@@ -4,7 +4,7 @@ import type { EdgeContext } from 'edge-core-js'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { AlertDropdown } from '../navigation/AlertDropdown.js'
 import { Airship } from './AirshipInstance.js'
 
@@ -53,7 +53,7 @@ class EdgeContextCallbackManager extends React.Component<Props> {
 }
 
 export default connect(
-  (state: State): StateProps => ({
+  (state: RootState): StateProps => ({
     context: state.core.context
   }),
   (dispatch: Dispatch) => ({})

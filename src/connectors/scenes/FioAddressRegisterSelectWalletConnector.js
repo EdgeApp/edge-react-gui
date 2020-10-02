@@ -8,9 +8,9 @@ import { FioAddressRegisterSelectWalletScene } from '../../components/scenes/Fio
 import * as Constants from '../../constants/WalletAndCurrencyConstants'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import { getFioWallets } from '../../modules/UI/selectors'
-import type { Dispatch, State } from '../../types/reduxTypes'
+import { type Dispatch, type RootState } from '../../types/reduxTypes'
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: RootState) => {
   const wallets = state.ui.wallets.byId
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
   const { account } = state.core

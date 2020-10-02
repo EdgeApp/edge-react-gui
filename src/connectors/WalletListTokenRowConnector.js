@@ -8,9 +8,9 @@ import type { DispatchProps, StateProps } from '../components/common/WalletListT
 import { WalletListTokenRow } from '../components/common/WalletListTokenRow.js'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors'
 import { getWallet } from '../modules/UI/selectors.js'
-import type { Dispatch, State } from '../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../types/reduxTypes.js'
 
-const mapStateToProps = (state: State, ownProps): StateProps => {
+const mapStateToProps = (state: RootState, ownProps): StateProps => {
   const currencyCode: string = ownProps.currencyCode
   const settings = state.ui.settings
   const exchangeRates = state.exchangeRates

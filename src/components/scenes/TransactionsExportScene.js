@@ -12,7 +12,7 @@ import { base64 } from 'rfc4648'
 import { formatExpDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
-import type { State as StateType } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import { utf8 } from '../../util/utf8.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { DateModal } from '../modals/DateModal.js'
@@ -263,7 +263,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 }
 
-export const TransactionsExportScene = connect((state: StateType, ownProps: OwnProps): StateProps => {
+export const TransactionsExportScene = connect((state: RootState, ownProps: OwnProps): StateProps => {
   const denominationObject = getDisplayDenomination(state, ownProps.currencyCode)
   return {
     multiplier: denominationObject.multiplier

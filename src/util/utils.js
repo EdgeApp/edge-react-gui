@@ -9,7 +9,7 @@ import SafariView from 'react-native-safari-view'
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import * as intl from '../locales/intl.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
-import type { State } from '../types/reduxTypes.js'
+import { type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types/types.js'
 
 export const DIVIDE_PRECISION = 18
@@ -438,7 +438,7 @@ export function snooze(ms: number): Promise<void> {
   return new Promise((resolve: any) => setTimeout(resolve, ms))
 }
 
-export const getTotalFiatAmountFromExchangeRates = (state: State, isoFiatCurrencyCode: string) => {
+export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string) => {
   const temporaryTotalCrypto = {}
   const wallets = state.ui.wallets.byId
   const settings = state.ui.settings
@@ -486,7 +486,7 @@ export const getTotalFiatAmountFromExchangeRates = (state: State, isoFiatCurrenc
   return balanceInfo
 }
 
-export const calculateTotalFiatBalance = (state: State, values: { [string]: number }, isoFiatCurrencyCode: string) => {
+export const calculateTotalFiatBalance = (state: RootState, values: { [string]: number }, isoFiatCurrencyCode: string) => {
   let total = 0
   // if calculating total balance for password recovery reminder, then use iso:USD that was passed in
   // otherwise grab the default from the account

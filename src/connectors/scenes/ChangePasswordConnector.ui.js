@@ -5,9 +5,9 @@ import { connect } from 'react-redux'
 
 import type { ChangePasswordDispatchProps, ChangePasswordOwnProps, ChangePasswordStateProps } from '../../components/scenes/ChangePasswordScene'
 import ChangePasswordComponent from '../../components/scenes/ChangePasswordScene'
-import type { State } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 
-export const mapStateToProps = (state: State, ownProps: ChangePasswordOwnProps): ChangePasswordStateProps => ({
+export const mapStateToProps = (state: RootState, ownProps: ChangePasswordOwnProps): ChangePasswordStateProps => ({
   context: state.core.context,
   account: state.core.account,
   showHeader: false

@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Animated, Easing, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import type { State } from '../../../../types/reduxTypes.js'
+import { type RootState } from '../../../../types/reduxTypes.js'
 import style from './WiredProgressBarStyle.js'
 
 type WiredProgressBarOwnProps = {
@@ -64,7 +64,7 @@ export class ProgressBar extends React.PureComponent<ProgressBarProps, ProgressB
 }
 
 export const WiredProgressBar = connect(
-  (state: State, ownProps: WiredProgressBarOwnProps): ProgressBarProps => ({
+  (state: RootState, ownProps: WiredProgressBarOwnProps): ProgressBarProps => ({
     progress: typeof ownProps.progress === 'function' ? ownProps.progress(state) : ownProps.progress
   }),
   null

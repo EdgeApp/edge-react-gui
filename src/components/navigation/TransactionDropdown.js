@@ -14,7 +14,7 @@ import s from '../../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { convertNativeToDisplay } from '../../util/utils.js'
 import { AirshipDropdown } from '../common/AirshipDropdown.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
 })
 
 const ConnectedTransactionDropdown = connect(
-  (state: State, ownProps: { tx: EdgeTransaction }) => {
+  (state: RootState, ownProps: { tx: EdgeTransaction }) => {
     const { tx } = ownProps
 
     if (!state.ui.settings.loginStatus) {

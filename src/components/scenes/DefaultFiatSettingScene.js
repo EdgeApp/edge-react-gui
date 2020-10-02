@@ -10,7 +10,7 @@ import s from '../../locales/strings.js'
 import { getDefaultFiat } from '../../modules/Settings/selectors'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { FlatListItem, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { getSupportedFiats } from '../../util/utils'
@@ -174,7 +174,7 @@ const stylesRaw = {
 const styles: typeof stylesRaw = StyleSheet.create(stylesRaw)
 
 export const DefaultFiatSettingScene = connect(
-  (state: ReduxState): StateProps => ({
+  (state: RootState): StateProps => ({
     supportedFiats: getSupportedFiats(getDefaultFiat(state))
   }),
   (dispatch: Dispatch): DispatchProps => ({

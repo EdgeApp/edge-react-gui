@@ -5,7 +5,7 @@ import { AppState } from 'react-native'
 import { connect } from 'react-redux'
 
 import { logoutRequest } from '../../modules/Login/action.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 
 type AppStateType = 'active' | 'background' | 'inactive'
 
@@ -70,7 +70,7 @@ class AutoLogoutComponent extends React.Component<Props, State> {
 }
 
 export const AutoLogout = connect(
-  (state: ReduxState) => ({
+  (state: RootState) => ({
     loginStatus: state.ui.settings.loginStatus,
     autoLogoutTimeInSeconds: state.ui.settings.autoLogoutTimeInSeconds
   }),

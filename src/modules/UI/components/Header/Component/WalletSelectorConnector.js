@@ -2,12 +2,12 @@
 
 import { connect } from 'react-redux'
 
-import type { Dispatch, State } from '../../../../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../../../../types/reduxTypes.js'
 import * as UI_SELECTORS from '../../../selectors'
 import type { DispatchProps, StateProps } from './WalletSelector.ui'
 import WalletSelector from './WalletSelector.ui'
 
-const mapStateToProps = (state: State): StateProps => {
+const mapStateToProps = (state: RootState): StateProps => {
   const selectedWallet = UI_SELECTORS.getSelectedWallet(state)
   const selectedWalletCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   return {

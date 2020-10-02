@@ -14,7 +14,7 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { makeCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
@@ -181,7 +181,7 @@ const rawStyles = {
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const WalletListFooter = connect(
-  (state: ReduxState): StateProps => ({
+  (state: RootState): StateProps => ({
     account: state.core.account,
     wallets: state.ui.wallets.byId
   }),

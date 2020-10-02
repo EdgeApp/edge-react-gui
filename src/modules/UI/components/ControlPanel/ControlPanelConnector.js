@@ -2,12 +2,12 @@
 
 import { connect } from 'react-redux'
 
-import type { Dispatch, State } from '../../../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { getDisplayDenominationFull } from '../../../Settings/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../../UI/selectors.js'
 import ControlPanel from './ControlPanel.ui'
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: RootState) => {
   let secondaryToPrimaryRatio = 0
   const guiWallet = getSelectedWallet(state)
   const currencyCode = getSelectedCurrencyCode(state)

@@ -4,11 +4,11 @@ import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
 import { type Props, CryptoExchangeMessageBoxComponent } from '../../modules/UI/components/CryptoExchangeMessageBox/CryptoExchangeMessageBoxComponent'
-import type { State } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 
 type OwnProps = {}
 
-const mapStateToProps = (state: State, ownProps: OwnProps): Props => {
+const mapStateToProps = (state: RootState, ownProps: OwnProps): Props => {
   const insufficient = state.cryptoExchange.insufficientError
   const genericError = state.cryptoExchange.genericShapeShiftError
   const fromWallet = state.cryptoExchange.fromWallet

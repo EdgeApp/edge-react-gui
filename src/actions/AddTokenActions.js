@@ -8,7 +8,7 @@ import s from '../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../modules/Core/Account/settings'
 import { setEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
 import * as UI_WALLET_SELECTORS from '../modules/UI/selectors.js'
-import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
+import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
 import * as UTILS from '../util/utils.js'
 import * as WALLET_ACTIONS from './WalletActions.js'
@@ -53,7 +53,7 @@ export const addTokenAsync = async (
   currencyCode: string,
   contractAddress: string,
   denomination: string,
-  state: State
+  state: RootState
 ) => {
   const { account } = state.core
   const { currencyConfig, currencyWallets = {} } = account

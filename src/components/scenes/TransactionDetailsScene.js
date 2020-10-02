@@ -17,7 +17,7 @@ import s from '../../locales/strings.js'
 import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/Settings/selectors.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getSelectedWallet, getWallet } from '../../modules/UI/selectors.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -558,7 +558,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const TransactionDetailsScene = connect(
-  (state: ReduxState, ownProps: OwnProps): StateProps => {
+  (state: RootState, ownProps: OwnProps): StateProps => {
     const { edgeTransaction } = ownProps
     const walletId = edgeTransaction.wallet ? edgeTransaction.wallet.id : null
     const wallet = walletId ? getWallet(state, walletId) : getSelectedWallet(state)

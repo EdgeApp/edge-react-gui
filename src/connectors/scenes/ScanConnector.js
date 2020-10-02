@@ -6,9 +6,9 @@ import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { parseScannedUri, qrCodeScanned } from '../../actions/ScanActions'
 import Scan from '../../components/scenes/ScanScene'
 import { getSelectedCurrencyCode, getSelectedWalletId } from '../../modules/UI/selectors.js'
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 
-const mapStateToProps = (state: State) => ({
+const mapStateToProps = (state: RootState) => ({
   cameraPermission: state.permissions.camera,
   torchEnabled: state.ui.scenes.scan.torchEnabled,
   scanEnabled: state.ui.scenes.scan.scanEnabled,

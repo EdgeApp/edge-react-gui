@@ -19,13 +19,13 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
-import type { State } from '../../types/reduxTypes'
+import { type RootState } from '../../types/reduxTypes'
 import type { FioDomain, GuiWallet } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 import { Airship, showError } from '../services/AirshipInstance'
 
 export type StateProps = {
-  state: State,
+  state: RootState,
   wallets: { [string]: GuiWallet },
   fioPlugin: EdgeCurrencyConfig,
   fioWallets: EdgeCurrencyWallet[],

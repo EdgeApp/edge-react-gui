@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { activatePromotion, removePromotion } from '../../actions/AccountReferralActions.js'
 import s from '../../locales/strings.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type AccountReferral, type DeviceReferral } from '../../types/ReferralTypes.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -108,7 +108,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const PromotionSettingsScene = connect(
-  (state: ReduxState): StateProps => ({
+  (state: RootState): StateProps => ({
     accountReferral: state.account.accountReferral,
     deviceReferral: state.deviceReferral
   }),

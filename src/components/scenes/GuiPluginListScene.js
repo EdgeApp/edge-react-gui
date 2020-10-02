@@ -35,7 +35,7 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
 import { type CountryData } from '../../types/types.js'
@@ -394,7 +394,7 @@ const rawStyles = {
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const GuiPluginListScene = connect(
-  (state: ReduxState): StateProps => ({
+  (state: RootState): StateProps => ({
     account: state.core.account,
     accountPlugins: state.account.referralCache.accountPlugins,
     accountReferral: state.account.accountReferral,

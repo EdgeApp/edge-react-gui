@@ -18,7 +18,7 @@ import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButto
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import type { Dispatch, State } from '../../types/reduxTypes'
+import { type Dispatch, type RootState } from '../../types/reduxTypes'
 import type { FioAddress } from '../../types/types'
 import { truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -291,7 +291,7 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: RootState) => {
   const displayDenomination = getDisplayDenomination(state, FIO_STR)
 
   const out: StateProps = {
