@@ -59,10 +59,18 @@ export class CrossFade extends React.Component<Props, State> {
       const opacity = this.opacities[key]
       if (opacity.mode !== 'rise' && key === activeKey) {
         opacity.mode = 'rise'
-        Animated.timing(opacity.value, { toValue: 1, duration }).start()
+        Animated.timing(opacity.value, {
+          duration,
+          toValue: 1,
+          useNativeDriver: false
+        }).start()
       } else if (opacity.mode !== 'fall' && key !== activeKey) {
         opacity.mode = 'fall'
-        Animated.timing(opacity.value, { toValue: 0, duration }).start(({ finished }) => {
+        Animated.timing(opacity.value, {
+          duration,
+          toValue: 0,
+          useNativeDriver: false
+        }).start(({ finished }) => {
           if (finished) this.setState({ [key]: false })
         })
       }

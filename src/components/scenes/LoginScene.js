@@ -7,7 +7,6 @@ import * as React from 'react'
 import { Keyboard, Linking, Platform, StatusBar, StyleSheet, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
 import { getBundleId } from 'react-native-device-info'
-import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 
 import ENV from '../../../env.json'
@@ -54,8 +53,6 @@ class LoginSceneComponent extends React.Component<Props, State> {
       counter: 0,
       needsUpdate: false
     }
-
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   getSkipUpdate() {

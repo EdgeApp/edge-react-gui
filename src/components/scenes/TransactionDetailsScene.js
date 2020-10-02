@@ -6,7 +6,6 @@ import * as React from 'react'
 import { Image, Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
-import slowlog from 'react-native-slowlog'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
@@ -122,7 +121,6 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       bizId: 0,
       miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : ''
     }
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   initalizeAmountBalance = (metadata: ?EdgeMetadata) => {

@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import slowlog from 'react-native-slowlog'
 
 import { THEME } from '../../../../theme/variables/airbitz.js'
 import { scale } from '../../../../util/scaling.js'
@@ -13,11 +12,6 @@ export type Props = {
 }
 
 export class CryptoExchangeMessageBoxComponent extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props)
-    slowlog(this, /.*/, global.slowlogOptions)
-  }
-
   render() {
     const viewStyle = [styles.container, this.props.useErrorStyle ? styles.containerError : null]
     const textStyle = [styles.text, this.props.useErrorStyle ? styles.textError : null]

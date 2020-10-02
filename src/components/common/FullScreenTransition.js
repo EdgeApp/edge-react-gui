@@ -30,16 +30,19 @@ export class FullScreenTransitionComponent extends React.Component<FullScreenTra
     setTimeout(() => {
       Animated.sequence([
         Animated.timing(this.state.opacity, {
+          duration: 1500,
           toValue: 1,
-          duration: 1500
+          useNativeDriver: false
         }),
         Animated.timing(this.state.opacity, {
+          duration: 1400,
           toValue: 1,
-          duration: 1400
+          useNativeDriver: false
         }),
         Animated.timing(this.state.opacity, {
+          duration: 1500,
           toValue: 0,
-          duration: 1500
+          useNativeDriver: false
         })
       ]).start(() => {
         onDone()

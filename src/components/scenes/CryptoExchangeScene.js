@@ -5,7 +5,6 @@ import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Alert, Keyboard, StyleSheet, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
@@ -87,7 +86,6 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
       toExchangeAmount: ''
     }
     this.state = newState
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {

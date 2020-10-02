@@ -282,7 +282,7 @@ class GuiPluginList extends React.Component<Props, State> {
             <Text style={{ textAlign: 'center' }}>{s.strings.buy_sell_crypto_no_plugin_region}</Text>
           </View>
         ) : (
-          <FlatList data={plugins} renderItem={this._renderPlugin} keyExtractor={item => item.id} />
+          <FlatList data={plugins} renderItem={this._renderPlugin} keyExtractor={(item: GuiPluginRow) => item.pluginId} />
         )}
       </SceneWrapper>
     )

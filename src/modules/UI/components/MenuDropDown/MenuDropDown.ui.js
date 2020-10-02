@@ -4,7 +4,6 @@
 import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
-import slowlog from 'react-native-slowlog'
 
 import { THEME } from '../../../../theme/variables/airbitz.js'
 import { scale } from '../../../../util/scaling.js'
@@ -33,7 +32,6 @@ export class MenuDropDown extends React.Component<Props, State> {
       height: 0,
       pageY: 0
     }
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {

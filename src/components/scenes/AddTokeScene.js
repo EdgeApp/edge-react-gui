@@ -3,7 +3,6 @@
 import _ from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
-import slowlog from 'react-native-slowlog'
 
 import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
@@ -61,7 +60,6 @@ export class AddToken extends React.Component<AddTokenProps, State> {
       decimalPlaces: decimalPlaces || '',
       multiplier: ''
     }
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   render() {

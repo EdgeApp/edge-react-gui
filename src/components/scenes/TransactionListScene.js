@@ -3,9 +3,8 @@
 import { bns } from 'biggystring'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Alert, Animated, FlatList, Image, StyleSheet, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import credLogo from '../../assets/images/cred_logo.png'
@@ -60,10 +59,6 @@ export type DispatchProps = {
 type Props = StateProps & DispatchProps
 
 type State = {
-  focused: boolean,
-  op: any,
-  animation: any,
-  width: ?number,
   reset: boolean
 }
 
@@ -73,13 +68,8 @@ export class TransactionList extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      reset: true,
-      focused: false,
-      animation: new Animated.Value(0),
-      op: new Animated.Value(0),
-      width: undefined
+      reset: true
     }
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentDidMount = () => {
