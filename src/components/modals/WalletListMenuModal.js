@@ -12,6 +12,7 @@ import s from '../../locales/strings.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { ModalCloseArrow } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { type AirshipBridge } from './modalParts'
 
@@ -105,8 +106,9 @@ class WalletListMenuModalComponent extends PureComponent<Props> {
   render() {
     const { bridge, currencyCode, currencyName, image, theme } = this.props
     const styles = getStyles(theme)
+
     return (
-      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={0}>
+      <ThemedModal bridge={bridge} onCancel={this.handleCancel} paddingRem={0}>
         <View style={styles.container}>
           <View style={styles.headerContainer}>
             {currencyName && <Text style={styles.text}>{currencyName}</Text>}
@@ -130,14 +132,21 @@ class WalletListMenuModalComponent extends PureComponent<Props> {
             })}
           </View>
         </View>
+        <ModalCloseArrow onPress={this.handleCancel} />
       </ThemedModal>
     )
+  }
+
+  handleCancel = () => {
+    const { bridge } = this.props
+    bridge.resolve(null)
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    padding: theme.rem(1)
+    paddingTop: theme.rem(1),
+    paddingHorizontal: theme.rem(1)
   },
   headerContainer: {
     justifyContent: 'center',
