@@ -1,12 +1,12 @@
 // @flow
 
 import React, { PureComponent } from 'react'
-import { Linking, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Linking, Platform, ScrollView, StyleSheet, Text, View } from 'react-native'
 import SafariView from 'react-native-safari-view'
-import Entypo from 'react-native-vector-icons/Entypo'
 
 import s from '../../locales/strings.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { CloseModalButton } from '../themed/CloseModalButton.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { Tile } from '../themed/Tile.js'
 import { type AirshipBridge } from './modalParts'
@@ -144,11 +144,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
             {signedTx && signedTx !== '' ? <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} /> : null}
           </ScrollView>
         </View>
-        <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
-          <View style={styles.headerContainer}>
-            <Entypo name="chevron-thin-down" size={theme.rem(1.25)} color={theme.modalCloseIcon} />
-          </View>
-        </TouchableWithoutFeedback>
+        <CloseModalButton bridge={bridge} />
       </ThemedModal>
     )
   }

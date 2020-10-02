@@ -12,6 +12,7 @@ import s from '../../locales/strings.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { CloseModalButton } from '../themed/CloseModalButton.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { type AirshipBridge } from './modalParts'
 
@@ -130,6 +131,7 @@ class WalletListMenuModalComponent extends PureComponent<Props> {
             })}
           </View>
         </View>
+        <CloseModalButton bridge={bridge} />
       </ThemedModal>
     )
   }
@@ -137,7 +139,8 @@ class WalletListMenuModalComponent extends PureComponent<Props> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    padding: theme.rem(1)
+    paddingTop: theme.rem(1),
+    paddingHorizontal: theme.rem(1)
   },
   headerContainer: {
     justifyContent: 'center',
