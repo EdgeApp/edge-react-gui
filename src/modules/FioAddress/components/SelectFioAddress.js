@@ -83,7 +83,7 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
 
   componentDidMount() {
     const { fioRequest, isSendUsingFioAddress, refreshAllFioAddresses } = this.props
-    refreshAllFioAddresses()
+    if (fioRequest || isSendUsingFioAddress) refreshAllFioAddresses()
     if (fioRequest) {
       this.setFioAddress(fioRequest.payer_fio_address)
     } else if (isSendUsingFioAddress) {
