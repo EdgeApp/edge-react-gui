@@ -76,7 +76,7 @@ class WalletListRowComponent extends React.Component<Props> {
       <WalletListMenuModal
         bridge={bridge}
         walletId={guiWallet.id}
-        currencyName={guiWallet.name}
+        walletName={guiWallet.name}
         currencyCode={guiWallet.currencyCode}
         image={guiWallet.symbolImage}
       />

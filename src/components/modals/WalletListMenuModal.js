@@ -12,6 +12,7 @@ import s from '../../locales/strings.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { type AirshipBridge } from './modalParts'
 
@@ -27,10 +28,10 @@ type StateProps = {
 type OwnProps = {
   bridge: AirshipBridge<null>,
   currencyCode?: string,
-  currencyName?: string,
   image?: string,
   isToken?: boolean,
-  walletId: string
+  walletId: string,
+  walletName?: string
 }
 
 type DispatchProps = {
@@ -103,76 +104,67 @@ class WalletListMenuModalComponent extends PureComponent<Props> {
   }
 
   render() {
-    const { bridge, currencyCode, currencyName, image, theme } = this.props
+    const { bridge, currencyCode, walletName, image, theme } = this.props
     const styles = getStyles(theme)
+
+    // We need to close the gap if both header rows are present:
+    const headerRowStyle = walletName != null && (image != null || currencyCode != null) ? [styles.headerRow, { marginTop: theme.rem(-1) }] : styles.headerRow
+
     return (
-      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={0}>
-        <View style={styles.container}>
-          <View style={styles.headerContainer}>
-            {currencyName && <Text style={styles.text}>{currencyName}</Text>}
-            {currencyCode && (
-              <View style={styles.headerImageContainer}>
-                {image && <Image style={styles.currencyImage} source={{ uri: image }} resizeMode="cover" />}
-                <Text style={styles.text}>{currencyCode}</Text>
-              </View>
-            )}
-          </View>
-          <View>
-            {this.options.map((option: Option, index: number) => {
-              return (
-                <TouchableOpacity onPress={() => this.optionAction(option.value)} key={option.value}>
-                  <View style={[styles.optionContainer, this.options.length > index + 1 ? styles.optionMargin : null]}>
-                    <AntDesignIcon name={icons[option.value]} size={theme.rem(1)} color={option.value === 'delete' ? theme.warningIcon : theme.icon} />
-                    <Text style={[option.value === 'delete' ? styles.warningText : styles.text, styles.optionText]}>{option.label}</Text>
-                  </View>
-                </TouchableOpacity>
-              )
-            })}
-          </View>
+      <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
+        {walletName == null ? null : <ModalTitle>{walletName}</ModalTitle>}
+        <View style={headerRowStyle}>
+          {image == null ? null : <Image resizeMode="cover" source={{ uri: image }} style={styles.currencyImage} />}
+          {currencyCode == null ? null : <ModalTitle>{currencyCode}</ModalTitle>}
         </View>
+        {this.options.map((option: Option) => (
+          <TouchableOpacity key={option.value} onPress={() => this.optionAction(option.value)} style={styles.optionRow}>
+            <AntDesignIcon
+              name={icons[option.value]}
+              size={theme.rem(1)}
+              style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
+            />
+            <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
+          </TouchableOpacity>
+        ))}
+        <ModalCloseArrow onPress={this.handleCancel} />
       </ThemedModal>
     )
+  }
+
+  handleCancel = () => {
+    const { bridge } = this.props
+    bridge.resolve(null)
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    padding: theme.rem(1)
-  },
-  headerContainer: {
-    justifyContent: 'center',
+  headerRow: {
     alignItems: 'center',
-    margin: theme.rem(1)
-  },
-  text: {
-    fontSize: theme.rem(1),
-    fontFamily: theme.fontFaceDefault,
-    color: theme.primaryText
-  },
-  warningText: {
-    fontSize: theme.rem(1),
-    fontFamily: theme.fontFaceDefault,
-    color: theme.warningText
-  },
-  headerImageContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: 'center'
   },
   currencyImage: {
     width: theme.rem(1),
     height: theme.rem(1),
-    marginRight: theme.rem(0.25)
+    padding: theme.rem(0.5)
   },
-  optionContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end'
+  optionRow: {
+    alignItems: 'center',
+    flexDirection: 'row'
   },
-  optionMargin: {
-    marginBottom: theme.rem(2)
+  optionIcon: {
+    color: theme.primaryText,
+    padding: theme.rem(0.5)
   },
   optionText: {
-    marginLeft: theme.rem(1)
+    color: theme.primaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    padding: theme.rem(0.5)
+  },
+  warningColor: {
+    color: theme.warningText
   }
 }))
 

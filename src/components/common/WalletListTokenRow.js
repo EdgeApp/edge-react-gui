@@ -55,7 +55,7 @@ export class WalletListTokenRow extends React.PureComponent<Props> {
     const symbolImage = meta ? meta.symbolImage : undefined
 
     await Airship.show(bridge => (
-      <WalletListMenuModal bridge={bridge} walletId={wallet.id} currencyName={wallet.name} currencyCode={currencyCode} image={symbolImage} isToken />
+      <WalletListMenuModal bridge={bridge} walletId={wallet.id} walletName={wallet.name} currencyCode={currencyCode} image={symbolImage} isToken />
     ))
   }
 
