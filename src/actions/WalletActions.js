@@ -1,14 +1,13 @@
 // @flow
 
-import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import { launchModal } from '../components/common/ModalProvider.js'
-import { showError } from '../components/services/AirshipInstance.js'
+import { ButtonsModal } from '../components/modals/ButtonsModal.js'
+import { Airship, showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } from '../modules/Core/Account/settings.js'
@@ -17,7 +16,6 @@ import { getEnabledTokensFromFile, setEnabledTokens, updateEnabledTokens } from 
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import { getCustomTokens, getSettings } from '../modules/Settings/selectors.js'
 import { updateMostRecentWallets, updateSettings } from '../modules/Settings/SettingsActions'
-import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
@@ -104,13 +102,14 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
         existingWalletId: walletId
       }
       Actions[Constants.CREATE_WALLET_ACCOUNT_SETUP](createWalletAccountSetupSceneProps)
-      const modal = createSimpleConfirmModal({
-        title: s.strings.create_wallet_account_unfinished_activation_title,
-        message: sprintf(s.strings.create_wallet_account_unfinished_activation_message, guiWallet.currencyCode),
-        icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
-        buttonText: s.strings.string_ok
-      })
-      launchModal(modal)
+      Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.create_wallet_account_unfinished_activation_title}
+          message={sprintf(s.strings.create_wallet_account_unfinished_activation_message, guiWallet.currencyCode)}
+          buttons={{ ok: { label: s.strings.string_ok } }}
+        />
+      ))
     }
   }
 }

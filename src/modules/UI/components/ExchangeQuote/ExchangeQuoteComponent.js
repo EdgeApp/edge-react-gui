@@ -1,17 +1,15 @@
 // @flow
 
-import { createSimpleConfirmModal } from 'edge-components'
 import * as React from 'react'
 import { Image, Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { launchModal } from '../../../../components/common/ModalProvider.js'
-import { EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/indexConstants'
+import { ButtonsModal } from '../../../../components/modals/ButtonsModal.js'
+import { Airship } from '../../../../components/services/AirshipInstance.js'
 import s from '../../../../locales/strings.js'
 import { THEME } from '../../../../theme/variables/airbitz.js'
 import { scale } from '../../../../util/scaling.js'
 import FormattedText from '../../components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../Icon/Icon.ui'
 
 type Props = {
   isTop?: boolean | null,
@@ -48,13 +46,14 @@ export class ExchangeQuoteComponent extends React.Component<Props, State> {
   }
 
   showExplanationForEstimate = () => {
-    const modal = createSimpleConfirmModal({
-      title: s.strings.estimated_exchange_rate,
-      message: s.strings.estimated_exchange_rate_body,
-      icon: <Icon type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />,
-      buttonText: s.strings.string_ok
-    })
-    launchModal(modal).then((response: null) => {})
+    Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.estimated_exchange_rate}
+        message={s.strings.estimated_exchange_rate_body}
+        buttons={{ ok: { label: s.strings.string_ok } }}
+      />
+    ))
   }
 
   renderHeadline = () => {

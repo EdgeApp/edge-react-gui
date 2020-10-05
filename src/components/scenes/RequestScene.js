@@ -1,7 +1,6 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { createSimpleConfirmModal } from 'edge-components'
 import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
@@ -15,17 +14,16 @@ import s from '../../locales/strings.js'
 import ExchangeRate from '../../modules/UI/components/ExchangeRate/ExchangeRate.ui.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { RequestStatus } from '../../modules/UI/components/RequestStatus/RequestStatus.ui.js'
 import { ShareButtons } from '../../modules/UI/components/ShareButtons/ShareButtons.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { getObjectDiff } from '../../util/utils'
-import { launchModal } from '../common/ModalProvider.js'
 import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { showError, showToast } from '../services/AirshipInstance.js'
+import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
@@ -217,14 +215,11 @@ export class Request extends React.Component<Props, State> {
     } else {
       return
     }
-    const modal = createSimpleConfirmModal({
-      title: s.strings.request_minimum_notification_title,
-      message,
-      icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
-      buttonText: s.strings.string_ok
-    })
 
-    await launchModal(modal)
+    await Airship.show(bridge => (
+      <ButtonsModal bridge={bridge} title={s.strings.request_minimum_notification_title} message={message} buttons={{ ok: { label: s.strings.string_ok } }} />
+    ))
+
     // resolve value doesn't really matter here
     this.onCloseXRPMinimumModal()
   }
