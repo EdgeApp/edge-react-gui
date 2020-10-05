@@ -10,7 +10,6 @@
 
 #import "RCTSplashScreen.h"
 #import <Bugsnag/Bugsnag.h>
-#import <Firebase.h>
 #import <Foundation/Foundation.h>
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -46,8 +45,8 @@
 {
   [Bugsnag start];
 
-  [FIRApp configure];
-  [FIRMessaging messaging].delegate = self;
+  // [FIRApp configure];
+  // [FIRMessaging messaging].delegate = self;
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
@@ -78,20 +77,19 @@
   return YES;
 }
 
-- (void)messaging:(FIRMessaging *)messaging didReceiveRegistrationToken:(NSString *)fcmToken {
-    NSLog(@"FCM registration token: %@", fcmToken);
-    // Notify about received token.
-    NSDictionary *dataDict = [NSDictionary dictionaryWithObject:fcmToken forKey:@"token"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:
-     @"FCMToken" object:nil userInfo:dataDict];
-    // TODO: If necessary send token to application server.
-    // Note: This callback is fired at each app startup and whenever a new token is generated.
-}
+// - (void)messaging:(FIRMessaging *)messaging didReceiveRegistrationToken:(NSString *)fcmToken {
+//     NSLog(@"FCM registration token: %@", fcmToken);
+//     // Notify about received token.
+//     NSDictionary *dataDict = [NSDictionary dictionaryWithObject:fcmToken forKey:@"token"];
+//     [[NSNotificationCenter defaultCenter] postNotificationName:
+//      @"FCMToken" object:nil userInfo:dataDict];
+//     // TODO: If necessary send token to application server.
+//     // Note: This callback is fired at each app startup and whenever a new token is generated.
+// }
 
 // With "FirebaseAppDelegateProxyEnabled": NO
 - (void)application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    [FIRMessaging messaging].APNSToken = deviceToken;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge

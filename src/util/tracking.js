@@ -1,10 +1,11 @@
 // @flow
 
-import { getUniqueId } from 'react-native-device-info'
-import firebase from 'react-native-firebase'
+// import { getUniqueId } from 'react-native-device-info'
+// import firebase from 'react-native-firebase'
 
-import ENV from '../../env.json'
+// import ENV from '../../env.json'
 import { asyncWaterfall } from './utils.js'
+
 export type TrackingEvent =
   | 'ActivateWalletCancel'
   | 'ActivateWalletSelect'
@@ -29,10 +30,10 @@ export type TrackingValues = {
 }
 
 // Set up the global Firebase instance at boot:
-if (ENV.USE_FIREBASE && !firebase.isMock) {
-  firebase.analytics().setUserId(getUniqueId())
-  global.firebase = firebase
-}
+// if (ENV.USE_FIREBASE && !firebase.isMock) {
+//   firebase.analytics().setUserId(DeviceInfo.getUniqueID())
+//   global.firebase = firebase
+// }
 
 /**
  * Send a raw event to all backends.

@@ -36,7 +36,6 @@ jest.mock('edge-login-ui-rn', () => ({
     return 'FaceID'
   }
 }))
-jest.mock('react-native-firebase', () => ({ isMock: true }))
 jest.mock('react-native-share', () => 'RNShare')
 jest.mock(
   'react-native-sound',

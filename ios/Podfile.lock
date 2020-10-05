@@ -10,44 +10,11 @@ PODS:
   - DoubleConversion (1.1.6)
   - edge-login-ui-rn (0.6.21):
     - React
-  - Firebase/Core (5.3.0):
-    - Firebase/CoreOnly
-    - FirebaseAnalytics (= 5.0.1)
-  - Firebase/CoreOnly (5.3.0):
-    - FirebaseCore (= 5.0.4)
-  - Firebase/Messaging (5.3.0):
-    - Firebase/CoreOnly
-    - FirebaseMessaging (= 3.0.2)
-  - FirebaseAnalytics (5.0.1):
-    - FirebaseCore (~> 5.0)
-    - FirebaseInstanceID (~> 3.0)
-    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
-    - nanopb (~> 0.3)
-  - FirebaseCore (5.0.4):
-    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
-  - FirebaseInstanceID (3.1.1):
-    - FirebaseCore (~> 5.0)
-  - FirebaseMessaging (3.0.2):
-    - FirebaseCore (~> 5.0)
-    - FirebaseInstanceID (~> 3.0)
-    - GoogleToolboxForMac/Logger (~> 2.1)
-    - Protobuf (~> 3.1)
   - Folly (2018.10.22.00):
     - boost-for-react-native
     - DoubleConversion
     - glog
   - glog (0.3.5)
-  - GoogleToolboxForMac/Defines (2.2.2)
-  - GoogleToolboxForMac/Logger (2.2.2):
-    - GoogleToolboxForMac/Defines (= 2.2.2)
-  - "GoogleToolboxForMac/NSData+zlib (2.2.2)":
-    - GoogleToolboxForMac/Defines (= 2.2.2)
-  - nanopb (0.3.9011):
-    - nanopb/decode (= 0.3.9011)
-    - nanopb/encode (= 0.3.9011)
-  - nanopb/decode (0.3.9011)
-  - nanopb/encode (0.3.9011)
-  - Protobuf (3.12.0)
   - React (0.59.10):
     - React/Core (= 0.59.10)
   - react-native-appearance (0.3.4):
@@ -65,9 +32,6 @@ PODS:
   - react-native-contacts (2.2.5):
     - React
   - react-native-fast-crypto (1.8.2):
-    - React
-  - react-native-firebase (4.3.8):
-    - Firebase/Core
     - React
   - react-native-mail (5.0.1):
     - React
@@ -166,8 +130,6 @@ DEPENDENCIES:
   - disklet (from `../node_modules/disklet`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - edge-login-ui-rn (from `../node_modules/edge-login-ui-rn`)
-  - Firebase/Core (~> 5.3.0)
-  - Firebase/Messaging
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - react-native-appearance (from `../node_modules/react-native-appearance`)
@@ -175,7 +137,6 @@ DEPENDENCIES:
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-fast-crypto (from `../node_modules/react-native-fast-crypto`)
-  - react-native-firebase (from `../node_modules/react-native-firebase`)
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
@@ -211,14 +172,6 @@ SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - boost-for-react-native
     - CocoaAsyncSocket
-    - Firebase
-    - FirebaseAnalytics
-    - FirebaseCore
-    - FirebaseInstanceID
-    - FirebaseMessaging
-    - GoogleToolboxForMac
-    - nanopb
-    - Protobuf
 
 EXTERNAL SOURCES:
   BugsnagReactNative:
@@ -247,8 +200,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-contacts"
   react-native-fast-crypto:
     :path: "../node_modules/react-native-fast-crypto"
-  react-native-firebase:
-    :path: "../node_modules/react-native-firebase"
   react-native-mail:
     :path: "../node_modules/react-native-mail"
   react-native-randombytes:
@@ -295,24 +246,15 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   disklet: 4f586f90b70fdb46f06614a5b7342eda5c90f253
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
-  edge-login-ui-rn: c7397d26a0e62344a17a0506b2485fba288b296d
-  Firebase: 68afeeb05461db02d7c9e3215cda28068670f4aa
-  FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
-  FirebaseCore: 62f1b792a49bb9e8b4073f24606d2c93ffc352f0
-  FirebaseInstanceID: f3f0657372592ecdfdfe2cac604a5a75758376a6
-  FirebaseMessaging: 6894b8fe0a0cf26c3b13dad729f1131654ae0bdb
+  edge-login-ui-rn: c807023a353fc8c5caaca01a8f9dfaa494aa0e65
   Folly: de497beb10f102453a1afa9edbf8cf8a251890de
   glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
-  GoogleToolboxForMac: 800648f8b3127618c1b59c7f97684427630c5ea3
-  nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
-  Protobuf: 2793fcd0622a00b546c60e7cbbcc493e043e9bb9
   React: 36d0768f9e93be2473b37e7fa64f92c1d5341eef
   react-native-appearance: 0f0e5fc2fcef70e03d48c8fe6b00b9158c2ba8aa
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
   react-native-contacts: f6e5c518598762081ff9cf7c70db36f71668538e
-  react-native-fast-crypto: b186cc738ec0b9392c945366ac011500a8b984e0
-  react-native-firebase: c20ee01585998768935fc2cff74ff8e9740f1a73
+  react-native-fast-crypto: aed797071793e23416d6e8c7c1c5dadb63036a0c
   react-native-mail: 685104c633d50ea3e15595acc89ab0eb9ee9cfd2
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
@@ -333,6 +275,6 @@ SPEC CHECKSUMS:
   TcpSockets: a8eb6b5867fe643e6cfed5db2e4de62f4d1e8fd0
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: f3dc10505a872ac06104608825e7dea5cfef3563
+PODFILE CHECKSUM: 437eba51ecc67cb24eb35be357a143b5c3a07fc1
 
 COCOAPODS: 1.10.0

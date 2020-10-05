@@ -8,8 +8,6 @@ buildscript {
         targetSdkVersion = 28
         supportLibVersion = "28.0.0"
         googlePlayServicesVersion = "15.0.1"
-        kotlinVersion = "1.3.50"
-        firebaseVersion = "17.3.0"
     }
     repositories {
         google()
