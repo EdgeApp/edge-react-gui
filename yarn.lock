@@ -3795,17 +3795,17 @@ edge-core-js@^0.17.14:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.25:
-  version "0.7.25"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.25.tgz#3511fcaea62b223093830c0b8303ca7e3a225d31"
-  integrity sha512-qd/I2Gys/mEBHf98MBf22qKVXRqNth+OygysgFOAOmGD90RObP9qmsRzFznrVc9s8OkDAySyMOHrBgG02zEJpA==
+edge-currency-accountbased@^0.7.29:
+  version "0.7.29"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.29.tgz#0aefc59b364a4d5f8c4cda5c80e31a3aa5203a6c"
+  integrity sha512-/hEphOsAP3ZVPeA1C4dqArAkOCPlimZ/GgDo+rc/p5u4KEhm84vakQY1rzgGCwFIqD0c6tcCmUKlyG4upCjXnA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.1.0"
     base-x "^1.0.4"
     biggystring "^3.0.0"
     bip39 "^3.0.2"
-    cleaners "^0.2.0"
+    cleaners "^0.3.1"
     eosjs "^21.0.3"
     eosjs-api "^7.0.4"
     eosjs-ecc "^4.0.7"
@@ -3816,6 +3816,7 @@ edge-currency-accountbased@^0.7.25:
     ethereumjs-wallet "git://github.com/EdgeApp/ethereumjs-wallet.git#6157e11ea10a734fbe55f4c7ea542780975b60ef"
     eztz.js "git://github.com/EdgeApp/eztz.git#edge-fixes"
     jsonschema "^1.1.1"
+    postinstall-postinstall "^2.1.0"
     ripple-keypairs "^0.10.0"
     ripple-lib "^1.0.0"
     stellar-sdk "^0.11.0"
@@ -8988,6 +8989,11 @@ postinstall-build@^5.0.1:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/postinstall-build/-/postinstall-build-5.0.3.tgz#238692f712a481d8f5bc8960e94786036241efc7"
   integrity sha512-vPvPe8TKgp4FLgY3+DfxCE5PIfoXBK2lyLfNCxsRbDsV6vS4oU5RG/IWxrblMn6heagbnMED3MemUQllQ2bQUg==
+
+postinstall-postinstall@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/postinstall-postinstall/-/postinstall-postinstall-2.1.0.tgz#4f7f77441ef539d1512c40bd04c71b06a4704ca3"
+  integrity sha512-7hQX6ZlZXIoRiWNrbMQaLzUUfH+sSx39u8EJ9HYuDc1kLo9IXKWjM5RSquZN1ad5GnH8CGFM78fsAAQi3OKEEQ==
 
 prebuild-install@^5.2.4, prebuild-install@^5.3.0:
   version "5.3.0"
