@@ -10,8 +10,8 @@ import type { GuiWallet } from '../../types/types.js'
 
 export type WalletsState = {
   byId: { [walletId: string]: GuiWallet },
-  activeWalletIds: Array<string>,
-  archivedWalletIds: Array<string>,
+  activeWalletIds: string[],
+  archivedWalletIds: string[],
   selectedWalletId: string,
   selectedCurrencyCode: string,
   addTokenPending: boolean,
@@ -190,7 +190,7 @@ const walletLoadingProgress = (state = {}, action: Action): $PropertyType<Wallet
   }
 }
 
-const activeWalletIds = (state = [], action: Action): Array<string> => {
+const activeWalletIds = (state = [], action: Action): string[] => {
   if (action.type === 'ACCOUNT_INIT_COMPLETE') {
     if (!action.data) return state
     return action.data.activeWalletIds
@@ -203,7 +203,7 @@ const activeWalletIds = (state = [], action: Action): Array<string> => {
   return state
 }
 
-const archivedWalletIds = (state = [], action: Action): Array<string> => {
+const archivedWalletIds = (state = [], action: Action): string[] => {
   if (action.type === 'ACCOUNT_INIT_COMPLETE') {
     if (!action.data) return state
     return action.data.archivedWalletIds
@@ -289,11 +289,11 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
   const symbolImage = wallet.currencyInfo.symbolImage
   const symbolImageDarkMono = wallet.currencyInfo.symbolImageDarkMono
-  const metaTokens: Array<EdgeMetaToken> = wallet.currencyInfo.metaTokens
-  const denominations: Array<EdgeDenomination> = wallet.currencyInfo.denominations
+  const metaTokens: EdgeMetaToken[] = wallet.currencyInfo.metaTokens
+  const denominations: EdgeDenomination[] = wallet.currencyInfo.denominations
   const blockHeight: number = wallet.getBlockHeight()
   // TODO: Fetch the token list asynchonously before dispatching `schema`:
-  const enabledTokens: Array<string> = []
+  const enabledTokens: string[] = []
 
   const allDenominations: {
     [currencyCode: string]: { [denomination: string]: EdgeDenomination }
@@ -322,7 +322,7 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
     const currencyCode: string = metaToken.currencyCode
     const currencyName: string = metaToken.currencyName
     const balance: string = wallet.getBalance({ currencyCode })
-    const denominations: Array<EdgeDenomination> = metaToken.denominations
+    const denominations: EdgeDenomination[] = metaToken.denominations
 
     // Add token balance to allBalances
     nativeBalances[currencyCode] = balance

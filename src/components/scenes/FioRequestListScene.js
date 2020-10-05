@@ -5,7 +5,6 @@ import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import slowlog from 'react-native-slowlog'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -73,7 +72,6 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       fioRequestsPending: [],
       fioRequestsSent: []
     }
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentDidMount = () => {
@@ -261,7 +259,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       return
     }
     const { wallets, onSelectWallet } = this.props
-    const availableWallets: { id: string, currencyCode: string }[] = []
+    const availableWallets: Array<{ id: string, currencyCode: string }> = []
     for (const walletKey: string of Object.keys(wallets)) {
       if (wallets[walletKey].currencyCode.toUpperCase() === fioRequest.content.token_code.toUpperCase()) {
         availableWallets.push({ id: wallets[walletKey].id, currencyCode: wallets[walletKey].currencyCode })
@@ -357,7 +355,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
 
   pendingRequestHeaders = () => {
     const { fioRequestsPending } = this.state
-    const headers: { title: string, data: FioRequest[] }[] = []
+    const headers: Array<{ title: string, data: FioRequest[] }> = []
     let requestsInSection: FioRequest[] = []
     let previousTimestamp = 0
     let previousTitle = ''

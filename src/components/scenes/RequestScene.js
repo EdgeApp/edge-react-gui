@@ -8,7 +8,6 @@ import type { RefObject } from 'react-native'
 import { ActivityIndicator, Clipboard, Dimensions, InputAccessoryView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
-import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../constants/indexConstants'
@@ -108,7 +107,6 @@ export class Request extends React.Component<Props, State> {
       console.log('stop, in constructor')
       this.enqueueMinimumAmountModal()
     }
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   componentDidMount() {

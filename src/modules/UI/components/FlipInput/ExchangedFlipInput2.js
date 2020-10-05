@@ -2,7 +2,6 @@
 
 import { bns } from 'biggystring'
 import * as React from 'react'
-import slowlog from 'react-native-slowlog'
 
 import type { GuiCurrencyInfo } from '../../../../types/types.js'
 import { getObjectDiff, precisionAdjust } from '../../../../util/utils.js'
@@ -128,7 +127,6 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = propsToState(props)
-    slowlog(this, /.*/, global.slowlogOptions)
     this.flipInput = React.createRef()
   }
 

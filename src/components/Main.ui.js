@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { Image, StyleSheet, TouchableWithoutFeedback, View, YellowBox } from 'react-native'
 import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
-import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 
 import ENV from '../../env.json'
@@ -143,7 +142,6 @@ export class MainComponent extends React.Component<Props> {
 
   constructor(props: Props) {
     super(props)
-    slowlog(this, /.*/, global.slowlogOptions)
 
     if (ENV.HIDE_IS_MOUNTED) {
       YellowBox.ignoreWarnings([

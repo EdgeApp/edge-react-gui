@@ -1,20 +1,21 @@
 // @flow
 
-import { createInputModal, createSecureTextModal, createSimpleConfirmModal, Icon } from 'edge-components'
+import { createInputModal, createSecureTextModal, Icon } from 'edge-components'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { launchModal } from '../components/common/ModalProvider.js'
+import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { RawTextModal } from '../components/modals/RawTextModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { getTheme } from '../components/services/ThemeContext.js'
+import { CheckPasswordModal } from '../components/themed/CheckPasswordModal.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
-import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
@@ -95,71 +96,29 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     case 'getSeed': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const theme = getTheme()
-        const icon = <FontAwesome style={{ left: theme.rem(0.125) }} name="user-secret" color={theme.tileBackground} size={theme.rem(2)} />
-
         const { account } = state.core
         const { currencyWallets = {} } = account
         const wallet = currencyWallets[walletId]
+        const message = `${s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}\n${getWalletName(wallet)}`
 
-        try {
-          const input = {
-            label: s.strings.confirm_password_text,
-            autoCorrect: false,
-            returnKeyType: 'go',
-            initialValue: '',
-            autoFocus: true
-          }
-          const yesButton = {
-            title: s.strings.fragment_wallets_get_seed_wallet
-          }
-          const noButton = {
-            title: s.strings.string_cancel_cap
-          }
+        const passwordValid = await Airship.show(bridge => (
+          <CheckPasswordModal
+            bridge={bridge}
+            buttonLabel={s.strings.fragment_wallets_get_seed_wallet}
+            message={message}
+            title={s.strings.fragment_wallets_get_seed_wallet}
+          />
+        ))
 
-          const validateInput = async input => {
-            const isPassword = await account.checkPassword(input)
-            if (isPassword) {
-              dispatch({ type: 'PASSWORD_USED' })
-              return {
-                success: true,
-                message: ''
-              }
-            } else {
-              return {
-                success: false,
-                message: s.strings.password_reminder_invalid
-              }
-            }
-          }
-
-          const getSeedModal = createSecureTextModal({
-            icon,
-            title: s.strings.fragment_wallets_get_seed_wallet,
-            message: (
-              <Text>
-                {s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}
-                <B>{getWalletName(wallet)}</B>
-              </Text>
-            ),
-            input,
-            yesButton,
-            noButton,
-            validateInput
-          })
-          const resolveValue = await launchModal(getSeedModal)
-          if (resolveValue) {
-            const seed = wallet.getDisplayPrivateSeed()
-            const modal = createSimpleConfirmModal({
-              title: s.strings.fragment_wallets_get_seed_wallet,
-              message: seed,
-              buttonText: s.strings.string_ok,
-              icon
-            })
-            await launchModal(modal)
-          }
-        } catch (error) {
-          showError(error)
+        if (passwordValid) {
+          await Airship.show(bridge => (
+            <ButtonsModal
+              title={s.strings.fragment_wallets_get_seed_wallet}
+              bridge={bridge}
+              message={wallet.getDisplayPrivateSeed() || undefined}
+              buttons={{ ok: { label: s.strings.string_ok_cap } }}
+            />
+          ))
         }
       }
     }

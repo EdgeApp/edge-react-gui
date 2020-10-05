@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import slowlog from 'react-native-slowlog'
 import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
@@ -31,11 +30,6 @@ type WiredBalanceBoxOwnProps = {
 }
 
 class BalanceBox extends React.PureComponent<BalanceBoxProps, BalanceBoxState> {
-  constructor(props: BalanceBoxProps) {
-    super(props)
-    slowlog(this, /.*/, global.slowlogOptions)
-  }
-
   render() {
     const { isoFiatCurrencyCode, fiatAmount, showBalance, exchangeRates } = this.props
     const fiatSymbol = isoFiatCurrencyCode ? getFiatSymbol(isoFiatCurrencyCode) : ''

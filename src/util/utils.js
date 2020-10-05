@@ -29,7 +29,7 @@ export const cutOffText = (str: string, lng: number) => {
   }
 }
 
-export const findDenominationSymbol = (denoms: Array<EdgeDenomination>, value: string) => {
+export const findDenominationSymbol = (denoms: EdgeDenomination[], value: string) => {
   for (const v of denoms) {
     if (v.name === value) {
       return v.symbol
@@ -92,7 +92,7 @@ export const getFiatSymbol = (code: string) => {
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
 // $FlowFixMe
-export const mergeTokens = (preferredEdgeMetaTokens: Array<$ReadOnly<EdgeMetaToken | CustomTokenInfo>>, edgeMetaTokens: Array<CustomTokenInfo>) => {
+export const mergeTokens = (preferredEdgeMetaTokens: $ReadOnly<EdgeMetaToken | CustomTokenInfo>[], edgeMetaTokens: CustomTokenInfo[]) => {
   const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   for (const x of edgeMetaTokens) {
     // loops through the account-level array
@@ -108,8 +108,8 @@ export const mergeTokens = (preferredEdgeMetaTokens: Array<$ReadOnly<EdgeMetaTok
   return tokensEnabled
 }
 
-export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: Array<EdgeMetaToken>, edgeMetaTokens: Array<CustomTokenInfo>): Array<EdgeMetaToken> => {
-  const tokensEnabled: Array<EdgeMetaToken> = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
+export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: EdgeMetaToken[], edgeMetaTokens: CustomTokenInfo[]): EdgeMetaToken[] => {
+  const tokensEnabled: EdgeMetaToken[] = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   const tokensToAdd = []
   for (const x of edgeMetaTokens) {
     // loops through the account-level array
@@ -190,11 +190,11 @@ export const convertDisplayToNative = (nativeToDisplayRatio: string) => (display
 
 export const isCryptoParentCurrency = (wallet: GuiWallet, currencyCode: string) => currencyCode === wallet.currencyCode
 
-export function getNewArrayWithoutItem<T>(array: Array<T>, targetItem: T): Array<T> {
+export function getNewArrayWithoutItem<T>(array: T[], targetItem: T): T[] {
   return array.filter(item => item !== targetItem)
 }
 
-export const getNewArrayWithItem = (array: Array<any>, item: any) => (!array.includes(item) ? [...array, item] : array)
+export const getNewArrayWithItem = (array: any[], item: any) => (!array.includes(item) ? [...array, item] : array)
 
 const restrictedCurrencyCodes = ['BTC']
 
@@ -215,7 +215,7 @@ export function getDenomFromIsoCode(currencyCode: string): GuiDenomination {
   return denom
 }
 
-export function getAllDenomsOfIsoCurrencies(): Array<GuiDenomination> {
+export function getAllDenomsOfIsoCurrencies(): GuiDenomination[] {
   // Convert map to an array
   const denomArray = []
 
@@ -276,7 +276,7 @@ export const unspacedLowercase = (input: string) => {
   return newInput
 }
 
-export const getCurrencyInfo = (allCurrencyInfos: Array<EdgeCurrencyInfo>, currencyCode: string): EdgeCurrencyInfo | void => {
+export const getCurrencyInfo = (allCurrencyInfos: EdgeCurrencyInfo[], currencyCode: string): EdgeCurrencyInfo | void => {
   for (const info of allCurrencyInfos) {
     for (const denomination of info.denominations) {
       if (denomination.name === currencyCode) {
@@ -516,17 +516,6 @@ export const autoCorrectDate = (dateInSeconds: number, currentDateInSeconds: num
   return dateInSeconds
 }
 
-// Strips special characters and replaces spaces with hyphens
-export const sanitizeForFilename = (s: string) => {
-  const charRegex = /[^\w\s-]/g
-  const hyphenRegex = /[-\s]+/g
-
-  s = s.replace(charRegex, '').trim()
-  s = s.replace(hyphenRegex, '-')
-
-  return s
-}
-
 export const getYesterdayDateRoundDownHour = () => {
   const date = new Date()
   date.setMinutes(0)
@@ -563,9 +552,9 @@ export function splitTransactionCategory(
 
 type AsyncFunction = void => Promise<any>
 
-export async function asyncWaterfall(asyncFuncs: Array<AsyncFunction>, timeoutMs: number = 5000): Promise<any> {
+export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: number = 5000): Promise<any> {
   let pending = asyncFuncs.length
-  const promises: Array<Promise<any>> = []
+  const promises: Promise<any>[] = []
   for (const func of asyncFuncs) {
     const index = promises.length
     promises.push(
@@ -617,5 +606,27 @@ export async function openLink(url: string): Promise<void> {
     Linking.openURL(url)
   } else {
     throw new Error(`Don't know how to open URI: ${url}`)
+  }
+}
+
+export function debounce(func: Function, wait: number, immediate: boolean): any {
+  let timeout
+
+  return function executedFunction() {
+    const context = this
+    const args = arguments
+
+    const later = function () {
+      timeout = null
+      if (!immediate) func.apply(context, args)
+    }
+
+    const callNow = immediate && !timeout
+
+    if (timeout) clearTimeout(timeout)
+
+    timeout = setTimeout(later, wait)
+
+    if (callNow) func.apply(context, args)
   }
 }

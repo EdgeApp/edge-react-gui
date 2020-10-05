@@ -3,15 +3,23 @@
 import { connect } from 'react-redux'
 
 import { checkHandleAvailability } from '../../actions/CreateWalletActions.js'
-import { CreateWalletAccountSetup } from '../../components/scenes/CreateWalletAccountSetupScene'
+import {
+  type CreateWalletAccountSetupDispatchProps,
+  type CreateWalletAccountSetupOwnProps,
+  type CreateWalletAccountSetupStateProps,
+  CreateWalletAccountSetup
+} from '../../components/scenes/CreateWalletAccountSetupScene'
 import type { Dispatch, State } from '../../types/reduxTypes.js'
 
-const mapStateToProps = (state: State) => ({
-  isCheckingHandleAvailability: state.ui.scenes.createWallet.isCheckingHandleAvailability,
-  handleAvailableStatus: state.ui.scenes.createWallet.handleAvailableStatus
-})
+const mapStateToProps = (state: State): CreateWalletAccountSetupStateProps => {
+  return {
+    isCheckingHandleAvailability: state.ui.scenes.createWallet.isCheckingHandleAvailability,
+    handleAvailableStatus: state.ui.scenes.createWallet.handleAvailableStatus,
+    currencyConfigs: state.core.account.currencyConfig
+  }
+}
 
-const mapDispatchToProps = (dispatch: Dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch: Dispatch, ownProps: CreateWalletAccountSetupOwnProps): CreateWalletAccountSetupDispatchProps => ({
   checkHandleAvailability: (handle: string) => dispatch(checkHandleAvailability(ownProps.selectedWalletType.currencyCode, handle))
 })
 

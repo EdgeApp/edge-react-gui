@@ -8,7 +8,7 @@ export type Theme = {
   // Icons
   icon: string,
   iconTappable: string,
-  // warningIcon: string,
+  warningIcon: string,
 
   // Background
   backgroundGradientLeft: string,
@@ -36,7 +36,7 @@ export type Theme = {
   // Text
   primaryText: string,
   secondaryText: string,
-  // warningText: string,
+  warningText: string,
   positiveText: string,
   negativeText: string,
   dangerText: string,
@@ -124,13 +124,13 @@ export type Theme = {
   // securityAlertModalLine: string,
   // securityAlertModalHeaderIconShadow: string,
 
+  // Native iOS date modal:
+  dateModalTextLight: string,
+  dateModalTextDark: string,
+  dateModalBackgroundLight: string,
+  dateModalBackgroundDark: string,
+
   // Misc
-  keyboardTopViewBackgroundLight: string,
-  keyboardTopViewBackgroundDark: string,
-  keyboardTopViewTextLight: string,
-  keyboardTopViewTextDark: string,
-  datetimepickerBackgroundLight: string,
-  datetimepickerBackgroundDark: string,
   // pressedOpacity: number,
 
   // Fonts

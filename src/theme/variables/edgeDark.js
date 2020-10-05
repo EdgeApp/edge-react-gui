@@ -52,7 +52,7 @@ export const edgeDark: Theme = {
   // Icons
   icon: palette.white,
   iconTappable: palette.edgeMint,
-  // warningIcon: palette.accentOrange,
+  warningIcon: palette.accentOrange,
 
   // Background
   backgroundGradientLeft: palette.darkBlue,
@@ -74,7 +74,7 @@ export const edgeDark: Theme = {
   // Text
   primaryText: palette.white,
   secondaryText: palette.blueGray,
-  // warningText: palette.accentOrange,
+  warningText: palette.accentOrange,
   positiveText: palette.accentGreen,
   negativeText: palette.accentRed,
   dangerText: palette.accentRed,
@@ -169,14 +169,13 @@ export const edgeDark: Theme = {
   settingsRowHeaderBackground: palette.edgeNavy,
   settingsRowSubHeader: palette.transparent,
 
+  // Native iOS date modal:
+  dateModalTextLight: palette.accentBlue,
+  dateModalTextDark: palette.white,
+  dateModalBackgroundLight: palette.white,
+  dateModalBackgroundDark: palette.edgeBlue,
+
   // Misc
-  // Remove defaults when lightMode is implemented
-  keyboardTopViewBackgroundLight: palette.white,
-  keyboardTopViewBackgroundDark: palette.edgeBlue,
-  keyboardTopViewTextLight: palette.accentBlue,
-  keyboardTopViewTextDark: palette.white,
-  datetimepickerBackgroundLight: palette.white,
-  datetimepickerBackgroundDark: palette.edgeBlue,
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
 
   // Fonts

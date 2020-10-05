@@ -27,7 +27,6 @@ Object {
   },
   "cryptoExchange": Object {
     "calculatingMax": false,
-    "changeWallet": "none",
     "creatingWallet": false,
     "forceUpdateGuiCounter": 0,
     "fromBalanceMessage": "",
@@ -71,7 +70,6 @@ Object {
         "name": "",
       },
     },
-    "walletListModalVisible": false,
   },
   "deviceReferral": Object {
     "messages": Array [],
@@ -396,6 +394,9 @@ Object {
       },
       "SUSD": Object {
         "denomination": "1000000000000000000",
+      },
+      "TLOS": Object {
+        "denomination": "10000",
       },
       "TUSD": Object {
         "denomination": "1000000000000000000",

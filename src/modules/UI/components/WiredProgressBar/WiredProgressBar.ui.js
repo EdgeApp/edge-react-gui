@@ -33,9 +33,10 @@ export class ProgressBar extends React.PureComponent<ProgressBarProps, ProgressB
   componentDidUpdate(prevProps: ProgressBarProps) {
     if (prevProps.progress !== this.props.progress) {
       Animated.timing(this.animation, {
-        toValue: this.props.progress,
+        duration: 1500,
         easing: Easing.ease,
-        duration: 1500
+        toValue: this.props.progress,
+        useNativeDriver: false
       }).start()
     }
   }

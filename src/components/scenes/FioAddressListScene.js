@@ -62,7 +62,7 @@ export class FioAddressListScene extends React.Component<Props> {
     const { fioAddresses, loading } = this.props
 
     if (!loading && prevProps.loading) {
-      if (fioAddresses.length === 0) {
+      if (fioAddresses.length === 0 && Actions.currentScene === Constants.FIO_ADDRESS_LIST) {
         Actions[Constants.FIO_ADDRESS_REGISTER]({ noAddresses: true })
       }
     }

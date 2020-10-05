@@ -1,12 +1,12 @@
 // @flow
 
 import React, { PureComponent } from 'react'
-import { Linking, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import { Linking, Platform, ScrollView, StyleSheet, Text, View } from 'react-native'
 import SafariView from 'react-native-safari-view'
-import Entypo from 'react-native-vector-icons/Entypo'
 
 import s from '../../locales/strings.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { ModalCloseArrow } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { Tile } from '../themed/Tile.js'
 import { type AirshipBridge } from './modalParts'
@@ -110,8 +110,9 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
   render() {
     const { bridge, feeRateUsed, networkFeeOption, signedTx, theme, txid, txSecret, recipientAddress, url } = this.props
     const styles = getStyles(theme)
+
     return (
-      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={0}>
+      <ThemedModal bridge={bridge} onCancel={this.handleCancel} paddingRem={0}>
         <View style={styles.headerContainer}>
           <Text style={styles.headerText}>{s.strings.transaction_details_advance_details_header}</Text>
         </View>
@@ -144,13 +145,14 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
             {signedTx && signedTx !== '' ? <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} /> : null}
           </ScrollView>
         </View>
-        <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
-          <View style={styles.headerContainer}>
-            <Entypo name="chevron-thin-down" size={theme.rem(1.25)} color={theme.modalCloseIcon} />
-          </View>
-        </TouchableWithoutFeedback>
+        <ModalCloseArrow onPress={this.handleCancel} />
       </ThemedModal>
     )
+  }
+
+  handleCancel = () => {
+    const { bridge } = this.props
+    bridge.resolve(null)
   }
 }
 

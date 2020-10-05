@@ -112,10 +112,6 @@ android {
         renderscriptTargetApi 23
         renderscriptSupportModeEnabled true
     }
-    signingConfigs {
-        release {
-        }
-    }
     splits {
         abi {
             reset()
@@ -124,11 +120,15 @@ android {
             include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
         }
     }
+    signingConfigs {
+        release {
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -148,21 +148,6 @@ android {
         // Make sure libjsc.so does not packed in APK
         exclude "**/libjsc.so"
     }
-}
-
-// specify signing properties on the command line
-if (hasProperty('storeFile')) {
-    println 'Generating a signed package'
-    android.signingConfigs.release.storeFile     = file(storeFile)
-    android.signingConfigs.release.storePassword = storePassword
-    android.signingConfigs.release.keyAlias      = keyAlias
-    android.signingConfigs.release.keyPassword   = keyPassword
-} else {
-    println 'Generating a debug package'
-    android.signingConfigs.release.storeFile     = file("airbitz.keystore")
-    android.signingConfigs.release.storePassword = "password"
-    android.signingConfigs.release.keyAlias      = "airbitz"
-    android.signingConfigs.release.keyPassword   = "password"
 }
 
 dependencies {
@@ -224,6 +209,25 @@ dependencies {
 task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
+}
+
+// ---------------------------------------------------------------------
+// Edge additions
+// ---------------------------------------------------------------------
+
+// Specify signing properties on the command line:
+if (hasProperty('storeFile')) {
+    println 'Generating a signed package'
+    android.signingConfigs.release.storeFile     = file(storeFile)
+    android.signingConfigs.release.storePassword = storePassword
+    android.signingConfigs.release.keyAlias      = keyAlias
+    android.signingConfigs.release.keyPassword   = keyPassword
+} else {
+    println 'Generating a debug package'
+    android.signingConfigs.release.storeFile     = file("airbitz.keystore")
+    android.signingConfigs.release.storePassword = "password"
+    android.signingConfigs.release.keyAlias      = "airbitz"
+    android.signingConfigs.release.keyPassword   = "password"
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -100,8 +100,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     padding: theme.rem(0.5)
   },
   textRow: {
-    fontFamily: theme.fontFaceDefault,
     color: theme.primaryText,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
     margin: theme.rem(0.5)
   }
 }))

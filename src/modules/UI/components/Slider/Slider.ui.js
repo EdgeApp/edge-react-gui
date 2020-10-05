@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import NativeSlider from 'react-native-slider'
-import slowlog from 'react-native-slowlog'
 
 import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
 import s from '../../../../locales/strings.js'
@@ -38,7 +37,6 @@ export class Slider extends React.Component<Props, State> {
       forceUpdateGuiCounter: 0,
       value: 10
     }
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   onSlidingComplete = (value: number) => {

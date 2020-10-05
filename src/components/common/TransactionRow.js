@@ -4,7 +4,6 @@ import { bns } from 'biggystring'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
-import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import receivedTypeImage from '../../assets/images/transactions/transaction-type-received.png'
@@ -19,7 +18,7 @@ import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 
 type TransactionRowOwnProps = {
-  transactions: Array<TransactionListTx>,
+  transactions: TransactionListTx[],
   transaction: TransactionListTx,
   selectedCurrencyCode: string,
   contacts: ContactsState,
@@ -40,11 +39,6 @@ type Props = TransactionRowOwnProps & TransactionRowStateProps
 type State = {}
 
 export class TransactionRowComponent extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-    slowlog(this, /.*/, global.slowlogOptions)
-  }
-
   shouldComponentUpdate(nextProps: Props) {
     const diffElement = UTILS.getObjectDiff(this.props, nextProps, { transaction: true }, { transactions: true })
     if (diffElement) {
@@ -56,7 +50,7 @@ export class TransactionRowComponent extends React.Component<Props, State> {
 
   render() {
     global.pcount && global.pcount('TransactionRow:render')
-    const completedTxList: Array<TransactionListTx> = this.props.transactions
+    const completedTxList: TransactionListTx[] = this.props.transactions
     // $FlowFixMe
     const tx = this.props.transaction.item
 

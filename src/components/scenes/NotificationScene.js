@@ -19,7 +19,7 @@ import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
 type StateProps = {
-  currencyInfos: Array<EdgeCurrencyInfo>,
+  currencyInfos: EdgeCurrencyInfo[],
   userId: string
 }
 

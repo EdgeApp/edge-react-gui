@@ -204,7 +204,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             text={s.strings.settings_button_password_recovery}
             right={rightArrow}
             onPress={this._onPressRecoverPasswordRouting}
-            marginBottom={false}
+            bottomGap={false}
           />
 
           <SettingsHeaderRow icon={<IonIcon name="ios-options" color={theme.icon} size={iconSize} />} text={s.strings.settings_options_title_cap} />

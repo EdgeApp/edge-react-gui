@@ -18,7 +18,7 @@ import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type StateProps = {
-  supportedFiats: Array<GuiFiatType>
+  supportedFiats: GuiFiatType[]
 }
 type DispatchProps = {
   onSelectFiat: string => void
@@ -26,7 +26,7 @@ type DispatchProps = {
 type Props = StateProps & DispatchProps
 
 type State = {
-  supportedFiats: Array<GuiFiatType>,
+  supportedFiats: GuiFiatType[],
   selectedFiat: string,
   searchTerm: string
 }

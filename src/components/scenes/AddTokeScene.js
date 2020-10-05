@@ -3,7 +3,6 @@
 import _ from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
-import slowlog from 'react-native-slowlog'
 
 import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
@@ -20,7 +19,7 @@ export type AddTokenOwnProps = {
   walletId: string,
   addTokenPending: Function,
   addNewToken: Function,
-  currentCustomTokens: Array<CustomTokenInfo>,
+  currentCustomTokens: CustomTokenInfo[],
   wallet: GuiWallet,
   onAddToken: Function,
   // adding properties in case coming from Scan scene (scan QR code to add token)
@@ -61,7 +60,6 @@ export class AddToken extends React.Component<AddTokenProps, State> {
       decimalPlaces: decimalPlaces || '',
       multiplier: ''
     }
-    slowlog(this, /.*/, global.slowlogOptions)
   }
 
   render() {

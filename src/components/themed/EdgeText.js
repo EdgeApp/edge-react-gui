@@ -12,7 +12,7 @@ type OwnProps = {
   style?: StyleSheet.Styles
 }
 
-class TxtComponent extends React.PureComponent<OwnProps & ThemeProps> {
+class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps> {
   render() {
     const { children, style, theme, ...props } = this.props
     const { text } = getStyles(theme)
@@ -36,4 +36,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const Txt = withTheme(TxtComponent)
+export const EdgeText = withTheme(EdgeTextComponent)

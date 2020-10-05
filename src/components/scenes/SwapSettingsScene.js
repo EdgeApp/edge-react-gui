@@ -44,7 +44,7 @@ type State = {
 
 export class SwapSettings extends React.Component<Props, State> {
   cleanups: Array<() => mixed> = []
-  sortedIds: Array<string>
+  sortedIds: string[]
 
   constructor(props: Props) {
     super(props)

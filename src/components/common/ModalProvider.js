@@ -14,7 +14,7 @@ type QueueEntry = {
 
 type State = {
   isHiding: boolean,
-  queue: Array<QueueEntry>
+  queue: QueueEntry[]
 }
 
 /**

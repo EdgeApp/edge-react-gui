@@ -21,7 +21,7 @@ import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
-import { makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
+import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 import * as UTILS from '../util/utils'
 import { addTokenAsync } from './AddTokenActions.js'
 
@@ -43,7 +43,8 @@ export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dis
 
 export const selectWallet = (walletId: string, currencyCode: string, from?: string) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
-  if (currencyCode === 'EOS') {
+  const SPECIAL_CURRENCY_INFO = Constants.getSpecialCurrencyInfo(currencyCode)
+  if (SPECIAL_CURRENCY_INFO.isAccountActivationRequired) {
     // EOS needs different path in case not activated yet
     dispatch(selectEOSWallet(walletId, currencyCode, from))
     return
@@ -75,11 +76,6 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
   const guiWallet = UI_SELECTORS.getWallet(state, walletId)
   if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode || from === Constants.WALLET_LIST_SCENE) {
     const { publicAddress } = guiWallet.receiveAddress
-    if (!publicAddress) {
-      // Update all wallets' addresses. Hopefully gets the updated address for the next time
-      // We enter the EOS wallet
-      dispatch(updateWalletsRequest())
-    }
 
     if (publicAddress) {
       // already activated
@@ -88,14 +84,18 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
         data: { walletId, currencyCode }
       })
     } else {
+      // Update all wallets' addresses. Hopefully gets the updated address for the next time
+      // We enter the EOSIO wallet
+      dispatch(updateWalletsRequest())
       // not activated yet
-      // find fiat and crypto (EOS) types and populate scene props
+      // find fiat and crypto (EOSIO) types and populate scene props
       const supportedFiats = UTILS.getSupportedFiats()
       const fiatTypeIndex = supportedFiats.findIndex(fiatType => fiatType.value === guiWallet.fiatCurrencyCode)
       const selectedFiat = supportedFiats[fiatTypeIndex]
-
-      const { eos } = state.core.account.currencyConfig
-      const selectedWalletType = makeCreateWalletType(eos.currencyInfo)
+      const currencyInfos = getCurrencyInfos(state.core.account)
+      const currencyInfo = currencyInfos.find(info => info.currencyCode === currencyCode)
+      if (!currencyInfo) throw new Error('CannotFindCurrencyInfo')
+      const selectedWalletType = makeCreateWalletType(currencyInfo)
       const createWalletAccountSetupSceneProps = {
         accountHandle: guiWallet.name,
         selectedWalletType,
@@ -106,7 +106,7 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
       Actions[Constants.CREATE_WALLET_ACCOUNT_SETUP](createWalletAccountSetupSceneProps)
       const modal = createSimpleConfirmModal({
         title: s.strings.create_wallet_account_unfinished_activation_title,
-        message: sprintf(s.strings.create_wallet_account_unfinished_activation_message, 'EOS'),
+        message: sprintf(s.strings.create_wallet_account_unfinished_activation_message, guiWallet.currencyCode),
         icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.EXCLAMATION} size={30} />,
         buttonText: s.strings.string_ok
       })
@@ -120,7 +120,7 @@ export const selectWalletFromModal = (walletId: string, currencyCode: string) =>
   dispatch(refreshReceiveAddressRequest(walletId))
 }
 
-function dispatchUpsertWallets(dispatch, wallets: Array<EdgeCurrencyWallet>) {
+function dispatchUpsertWallets(dispatch, wallets: EdgeCurrencyWallet[]) {
   global.pcount('dispatchUpsertWallets')
   dispatch(upsertWallets(wallets))
 }
@@ -168,7 +168,7 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
   }
 }
 
-export const upsertWallets = (wallets: Array<EdgeCurrencyWallet>) => (dispatch: Dispatch, getState: GetState) => {
+export const upsertWallets = (wallets: EdgeCurrencyWallet[]) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(updateExchangeRates())
   dispatch({
     type: 'UI/WALLETS/UPSERT_WALLETS',
@@ -178,10 +178,7 @@ export const upsertWallets = (wallets: Array<EdgeCurrencyWallet>) => (dispatch: 
   })
 }
 
-export const setWalletEnabledTokens = (walletId: string, enabledTokens: Array<string>, disabledTokens: Array<string>) => (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
+export const setWalletEnabledTokens = (walletId: string, enabledTokens: string[], disabledTokens: string[]) => (dispatch: Dispatch, getState: GetState) => {
   // tell Redux that we are updating the enabledTokens list
   dispatch({ type: 'MANAGE_TOKENS_START' })
   // get a snapshot of the state
@@ -213,7 +210,7 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
   const guiWallet = UI_SELECTORS.getWallet(state, walletId)
 
   // get token information from settings
-  const customTokens: Array<CustomTokenInfo> = getCustomTokens(state)
+  const customTokens: CustomTokenInfo[] = getCustomTokens(state)
   try {
     const enabledTokens = await getEnabledTokensFromFile(wallet)
     const promiseArray = []
@@ -361,7 +358,7 @@ export async function deleteCustomTokenAsync(walletId: string, currencyCode: str
   const coreWalletsToUpdate = []
   const receivedSyncSettings = await getSyncedSettings(account)
   receivedSyncSettings[currencyCode].isVisible = false
-  const syncedCustomTokens: Array<CustomTokenInfo> = [...receivedSyncSettings.customTokens]
+  const syncedCustomTokens: CustomTokenInfo[] = [...receivedSyncSettings.customTokens]
   const indexOfSyncedToken: number = _.findIndex(syncedCustomTokens, item => item.currencyCode === currencyCode)
   syncedCustomTokens[indexOfSyncedToken].isVisible = false
   receivedSyncSettings.customTokens = syncedCustomTokens
@@ -495,7 +492,7 @@ export const removeMostRecentWallet = (walletId: string, currencyCode: string) =
     .catch(showError)
 }
 
-export const checkEnabledTokensArray = (walletId: string, newEnabledTokens: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
+export const checkEnabledTokensArray = (walletId: string, newEnabledTokens: string[]) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = UI_SELECTORS.getWallet(state, walletId)
   const oldEnabledTokens = wallet.enabledTokens

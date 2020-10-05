@@ -6,12 +6,12 @@ import { Text, TouchableHighlight, View } from 'react-native'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 type OwnProps = {
+  bottomGap?: boolean,
   disabled?: boolean, // Show with grey style
   icon?: React.Node,
   text: string | React.Node,
   right?: React.Node,
-  onPress?: () => void,
-  marginBottom?: boolean
+  onPress?: () => void
 }
 
 type Props = OwnProps & ThemeProps
@@ -21,13 +21,12 @@ type Props = OwnProps & ThemeProps
  * on the left and another optional component on the right.
  */
 function SettingsRowComponent(props: Props): React.Node {
-  const { disabled = false, icon, marginBottom = true, text, theme, right, onPress } = props
+  const { bottomGap = true, disabled = false, icon, text, theme, right, onPress } = props
   const styles = getStyles(theme)
-  const rowMarginBottom = marginBottom ? styles.marginBottom : null
 
   return (
     <TouchableHighlight onPress={onPress} underlayColor={theme.settingsRowPressed}>
-      <View style={[styles.row, rowMarginBottom]}>
+      <View style={bottomGap ? [styles.row, styles.bottomGap] : styles.row}>
         {icon != null ? <View style={styles.paddingLeftIcon}>{icon}</View> : undefined}
         <Text style={disabled ? styles.disabledText : styles.text}>{text}</Text>
         {right != null ? <View style={styles.paddingRightIcon}>{right}</View> : undefined}
@@ -50,7 +49,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'flex-start'
   },
-  marginBottom: {
+  bottomGap: {
     marginBottom: theme.rem(1 / 16)
   },
   text: {

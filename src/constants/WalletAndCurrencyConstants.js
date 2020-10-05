@@ -33,6 +33,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   DOGE: s.strings.string_first_doge_wallet_name,
   EBST: s.strings.string_first_eboost_wallet_name,
   EOS: s.strings.string_first_eos_wallet_name,
+  TLOS: s.strings.string_first_telos_wallet_name,
   ETH: s.strings.string_first_ethereum_wallet_name,
   FIO: s.strings.string_first_fio_wallet_name,
   FTC: s.strings.string_first_feather_coin_wallet_name,
@@ -135,6 +136,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   RVN: 'ravencoin',
   SMART: 'smartcash',
   TBTC: 'bitcointestnet',
+  TLOS: 'telos',
   UFO: 'ufo',
   VTC: 'vertcoin',
   XLM: 'stellar',
@@ -241,6 +243,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isImportKeySupported: false
   },
   EOS: {
+    isAccountActivationRequired: true,
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
@@ -249,7 +252,25 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       identifierName: s.strings.unique_identifier_memo,
       identifierKeyboardType: 'default'
     },
-    isImportKeySupported: false
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
+    }
+  },
+  TLOS: {
+    isAccountActivationRequired: true,
+    dummyPublicAddress: 'edgecreator2',
+    needsAccountNameSetup: true,
+    noChangeMiningFee: true,
+    uniqueIdentifier: {
+      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
+      identifierName: s.strings.unique_identifier_memo,
+      identifierKeyboardType: 'default'
+    },
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
+    }
   },
   ETH: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
@@ -313,25 +334,26 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     showEarnInterestCard: true
   },
   FIO: {
-    noChangeMiningFee: true
+    noChangeMiningFee: true,
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    }
   }
 }
 
 /**
  * Customizes which coins get which options on the wallet list scene.
  */
-export const WALLET_LIST_MENU: {
+export const WALLET_LIST_OPTIONS_ICON = '\u22ee'
+export const WALLET_LIST_MENU: Array<{
   currencyCodes?: string[],
   label: string,
   value: WalletListMenuKey
-}[] = [
+}> = [
   {
     label: s.strings.string_rename,
     value: 'rename'
-  },
-  {
-    label: s.strings.string_delete,
-    value: 'delete'
   },
   {
     label: s.strings.string_resync,
@@ -385,6 +407,10 @@ export const WALLET_LIST_MENU: {
   {
     label: s.strings.string_get_raw_keys,
     value: 'getRawKeys'
+  },
+  {
+    label: s.strings.string_delete_wallet,
+    value: 'delete'
   }
 ]
 

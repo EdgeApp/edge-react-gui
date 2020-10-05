@@ -63,8 +63,9 @@ export class KeyboardTracker extends React.Component<Props> {
     if (nextGoal !== this.animationGoal) {
       if (this.nextDuration !== 0) {
         Animated.timing(this.animation, {
+          duration: this.nextDuration,
           toValue: nextGoal,
-          duration: this.nextDuration
+          useNativeDriver: false
         }).start()
       } else {
         this.animation.setValue(nextGoal)
@@ -97,7 +98,7 @@ export class KeyboardTracker extends React.Component<Props> {
  * All KeyboardTracker instances share the same subscription singleton.
  */
 class KeyboardSubscriber {
-  trackers: Array<KeyboardTracker>
+  trackers: KeyboardTracker[]
 
   // Hiding means we are either down or moving down:
   keyboardHiding: boolean

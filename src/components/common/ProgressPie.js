@@ -31,8 +31,9 @@ export class ProgressPie extends React.Component<Props> {
 
       // Progress has changed, so update the animation:
       Animated.spring(this.progressAnimation, {
+        bounciness: 0,
         toValue: this.progressTarget,
-        bounciness: 0
+        useNativeDriver: false
       }).start()
     }
   }

@@ -36,7 +36,7 @@ export const initialState = {
 
 export type CurrencySetting = {
   denomination: string,
-  denominations?: Array<EdgeDenomination>
+  denominations?: EdgeDenomination[]
 }
 
 export type SettingsState = {
@@ -65,7 +65,7 @@ export type SettingsState = {
   autoLogoutTimeInSeconds: number,
   bluetoothMode: boolean,
   changesLocked: any,
-  customTokens: Array<CustomTokenInfo>,
+  customTokens: CustomTokenInfo[],
   defaultFiat: string,
   defaultIsoFiat: string,
   isTouchEnabled: boolean,
@@ -78,12 +78,12 @@ export type SettingsState = {
   pinLoginEnabled: boolean,
   plugins: {
     [pluginId: string]: EdgeCurrencyInfo,
-    allCurrencyInfos: Array<EdgeCurrencyInfo>,
-    supportedWalletTypes: Array<string>
+    allCurrencyInfos: EdgeCurrencyInfo[],
+    supportedWalletTypes: string[]
   },
   confirmPasswordError: string,
   isAccountBalanceVisible: boolean,
-  mostRecentWallets: Array<MostRecentWallet>,
+  mostRecentWallets: MostRecentWallet[],
   spendingLimits: {
     transaction: {
       isEnabled: boolean,

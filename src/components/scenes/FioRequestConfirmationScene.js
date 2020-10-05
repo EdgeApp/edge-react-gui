@@ -50,7 +50,7 @@ type Props = StateProps & NavigationProps
 
 type State = {
   loading: boolean,
-  walletAddresses: { fioAddress: string, fioWallet: EdgeCurrencyWallet }[],
+  walletAddresses: Array<{ fioAddress: string, fioWallet: EdgeCurrencyWallet }>,
   fioAddressFrom: string,
   fioAddressTo: string,
   memo: string,

@@ -2,10 +2,10 @@
 
 import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
-import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import { type WalletListMenuKey } from '../../actions/WalletListMenuActions.js'
+import { WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -14,8 +14,9 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import { type GuiWallet } from '../../types/types.js'
 import { scale, scaleH } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
+import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 import { ProgressPie } from './ProgressPie.js'
-import { WalletListMenu } from './WalletListMenu.js'
 
 type OwnProps = {
   parentId: string,
@@ -24,8 +25,7 @@ type OwnProps = {
   balance: string,
   walletFiatSymbol: string,
   showBalance: boolean,
-  progress: number,
-  executeWalletRowOption: (walletId: string, option: WalletListMenuKey, currencyCode?: string) => void
+  progress: number
 }
 
 export type StateProps = {
@@ -49,11 +49,21 @@ export class WalletListTokenRow extends React.PureComponent<Props> {
     Actions.transactionList({ params: 'walletList' })
   }
 
+  openWalletListMenuModal = async () => {
+    const { wallet, currencyCode } = this.props
+    const meta = wallet.metaTokens.find(token => token.currencyCode === currencyCode)
+    const symbolImage = meta ? meta.symbolImage : undefined
+
+    await Airship.show(bridge => (
+      <WalletListMenuModal bridge={bridge} walletId={wallet.id} walletName={wallet.name} currencyCode={currencyCode} image={symbolImage} isToken />
+    ))
+  }
+
   render() {
     const { wallet, currencyCode, settings, exchangeRates, walletFiatSymbol, showBalance, progress } = this.props
     const { name } = wallet
     const meta = wallet.metaTokens.find(token => token.currencyCode === currencyCode)
-    const symbolImage = meta ? meta.symbolImage : null
+    const symbolImage = meta ? meta.symbolImage : undefined
     const cryptoAmount = intl.formatNumber(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balance) || '0') // check if infinitesimal (would display as zero), cut off trailing zeroes
     const cryptoAmountString = showBalance ? cryptoAmount : ''
     const rateKey = `${currencyCode}_${wallet.isoFiatCurrencyCode}`
@@ -121,15 +131,11 @@ export class WalletListTokenRow extends React.PureComponent<Props> {
               <T style={differencePercentageStringStyle}>{differencePercentageString}</T>
             </View>
           </View>
-          <View style={styles.rowOptionsWrap}>
-            <WalletListMenu
-              currencyCode={currencyCode}
-              customStyles={customWalletListOptionsStyles}
-              executeWalletRowOption={this.props.executeWalletRowOption}
-              walletId={wallet.id}
-              isToken
-            />
-          </View>
+          <TouchableWithoutFeedback onPress={this.openWalletListMenuModal}>
+            <View style={styles.rowOptionsWrap}>
+              <Text style={styles.rowOptionsIcon}>{WALLET_LIST_OPTIONS_ICON}</Text>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
       </TouchableHighlight>
     )
@@ -137,20 +143,6 @@ export class WalletListTokenRow extends React.PureComponent<Props> {
 }
 
 const rowCurrencyOverlaySize = scale(23.3)
-const customWalletListOptionsStyles = StyleSheet.create({
-  icon: {
-    fontSize: scale(21),
-    fontWeight: '200',
-    position: 'relative',
-    top: 6
-  },
-  menuIconWrap: {
-    width: scale(46),
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'flex-start'
-  }
-})
 const rawStyles = {
   rowContent: {
     flex: 1,
@@ -175,7 +167,14 @@ const rawStyles = {
     alignSelf: 'center'
   },
   rowOptionsWrap: {
-    width: scaleH(37)
+    width: scaleH(37),
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  rowOptionsIcon: {
+    fontSize: scale(20),
+    color: THEME.COLORS.GRAY_1
   },
   tokenRowContainer: {
     padding: scale(6),

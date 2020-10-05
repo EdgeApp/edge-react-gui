@@ -67,7 +67,7 @@ type EdgeGetReceiveAddressOptions = {
 type EdgeGetWalletHistoryResult = {
   fiatCurrencyCode: string, // the fiat currency code of all transactions in the wallet. I.e. "iso:USD"
   balance: string, // the current balance of wallet in the native amount units. I.e. "satoshis"
-  transactions: Array<EdgeTransaction>
+  transactions: EdgeTransaction[]
 }
 
 export type EdgeProviderSpendTarget = {
@@ -120,7 +120,7 @@ export class EdgeProvider extends Bridgeable {
   // Set the currency wallet to interact with. This will show a wallet selector modal
   // for the user to pick a wallet within their list of wallets that match `currencyCodes`
   // Returns the currencyCode chosen by the user (store: Store)
-  async chooseCurrencyWallet(allowedCurrencyCodes: Array<string> = []): Promise<string> {
+  async chooseCurrencyWallet(allowedCurrencyCodes: string[] = []): Promise<string> {
     const selectedWallet: WalletListResult = await Airship.show(bridge => (
       <WalletListModal bridge={bridge} showCreateWallet allowedCurrencyCodes={allowedCurrencyCodes} headerTitle={s.strings.choose_your_wallet} />
     ))
@@ -198,7 +198,7 @@ export class EdgeProvider extends Bridgeable {
   // Read data back from the user's account. This can only access data written by this same plugin
   // 'keys' is an array of strings with keys to lookup.
   // Returns an object with a map of key value pairs from the keys passed in
-  async readData(keys: Array<string>): Promise<Object> {
+  async readData(keys: string[]): Promise<Object> {
     const { account } = this._state.core
     const store = account.dataStore
     const returnObj = {}
@@ -239,7 +239,7 @@ export class EdgeProvider extends Bridgeable {
     const balance = coreWallet.getBalance({ currencyCode })
 
     const txs = await coreWallet.getTransactions({ currencyCode })
-    const transactions: Array<EdgeTransaction> = []
+    const transactions: EdgeTransaction[] = []
     for (const tx of txs) {
       const newTx: EdgeTransaction = {
         currencyCode: tx.currencyCode,
@@ -265,7 +265,7 @@ export class EdgeProvider extends Bridgeable {
   }
 
   // Request that the user spend to an address or multiple addresses
-  async requestSpend(spendTargets: Array<EdgeProviderSpendTarget>, options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | void> {
+  async requestSpend(spendTargets: EdgeProviderSpendTarget[], options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | void> {
     const { currencyWallets = {} } = this._state.core.account
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = currencyWallets[guiWallet.id]
@@ -281,7 +281,7 @@ export class EdgeProvider extends Bridgeable {
       uniqueIdentifier
     }
 
-    const edgeSpendTargets: Array<EdgeSpendTarget> = []
+    const edgeSpendTargets: EdgeSpendTarget[] = []
     for (const spendTarget of spendTargets) {
       let nativeAmount = '0'
       if (spendTarget.nativeAmount != null) {
@@ -290,7 +290,9 @@ export class EdgeProvider extends Bridgeable {
         nativeAmount = await coreWallet.denominationToNative(spendTarget.exchangeAmount, currencyCode)
       }
 
-      edgeSpendTargets.push({ ...spendTarget, nativeAmount })
+      const spendTargetObj: EdgeSpendTarget = { ...spendTarget, nativeAmount }
+      if (uniqueIdentifier !== null) spendTargetObj.uniqueIdentifier = uniqueIdentifier
+      edgeSpendTargets.push(spendTargetObj)
       console.log(
         `requestSpend currencycode ${currencyCode} and spendTarget.publicAddress ${spendTarget.publicAddress || ''} and uniqueIdentifier ${
           uniqueIdentifier || ''

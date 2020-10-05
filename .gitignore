@@ -1,33 +1,56 @@
-# Environmental Variables
-#
-env.json
-deploy-config.json
-**/buildnum.json
-keystores/
-android/app/google-services.json
-ios/edge/GoogleService-Info.plist
-android-release.bundle.map
-ios-release.bundle.map
-main.jsbundle
+.tmp/
+.vscode/
+*.swp
+scratch.*
 temp/
 
-# Scratch
-**/scratch.*
+# Build & deployment files
+/android/app/google-services.json
+/android/google-java-format-*.jar
+/ios/edge/GoogleService-Info.plist
+/ios/Pods/
+android-release.bundle.map
+buildnum.json
+deploy-config.json
+env.json
+IDEWorkspaceChecks.plist
+ios-release.bundle.map
+keystores/
 
 # Code Coverage
-coverage
-flow-coverage
+coverage/
+flow_coverage/
+
+# Gui plugins
+/android/app/src/main/assets/plugins/
+/ios/plugins/
+/copy-bitrefill.sh
+/copy-wyre.sh
+/copy-simplex.sh
+
+# Yaob bridge
+/src/util/bridge/rolledUp.js
+/src/util/bridge/injectThisInWebView.js
+
+# Edge core
+/android/app/src/main/assets/edge-core/
+/ios/edge-core/
+
+# Generated headers
+/android/app/src/main/java/co/edgesecure/app/EdgeApiKey.java
+/ios/edge/edgeApiKey.h
+
+# ----------------------------------------------------------------------
+# Everything below comes from React Native.
+# Do not edit this section except during React Native version upgrades.
+# ----------------------------------------------------------------------
 
 # OSX
 #
 .DS_Store
 
-# Flow
-flow_coverage/
-
 # Xcode
 #
-.vscode
 build/
 *.pbxuser
 !default.pbxuser
@@ -45,28 +68,20 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
-ios/Pods/
-IDEWorkspaceChecks.plist
 
 # Android/IntelliJ
 #
-/android/google-java-format-*.jar
 build/
 .idea
 .gradle
 local.properties
 *.iml
-copy-bitrefill.sh
-copy-wyre.sh
-copy-simplex.sh
 
 # node.js
 #
 node_modules/
 npm-debug.log
 yarn-error.log
-buildnum.json
-.tmp/
 
 # BUCK
 buck-out/
@@ -86,21 +101,3 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
-
-## App Plugins
-/android/app/src/main/assets/plugins/
-/ios/plugins/
-
-# Yaob bridge
-src/util/bridge/rolledUp.js
-src/util/bridge/injectThisInWebView.js
-
-## Edge core
-/android/app/src/main/assets/edge-core/
-/ios/edge-core/
-
-## Generated headers
-/android/app/src/main/java/co/edgesecure/app/EdgeApiKey.java
-/ios/edge/edgeApiKey.h
-
-*.swp

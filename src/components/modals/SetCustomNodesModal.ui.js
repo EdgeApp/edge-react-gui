@@ -17,8 +17,8 @@ import { noOp } from '../../util/utils.js'
 export type SetCustomNodesModalOwnProps = {
   isActive: boolean,
   onExit: Function => mixed,
-  electrumServers?: Array<string>,
-  saveCustomNodesList: (Array<string>) => void,
+  electrumServers?: string[],
+  saveCustomNodesList: (string[]) => void,
   defaultElectrumServer: string,
   disableCustomNodes: () => void,
   activatedBy: string | null

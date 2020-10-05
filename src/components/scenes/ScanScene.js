@@ -5,7 +5,6 @@ import { ActivityIndicator, StyleSheet, Text, TouchableHighlight, View } from 'r
 import OpenAppSettings from 'react-native-app-settings'
 import { RNCamera } from 'react-native-camera'
 import { Actions } from 'react-native-router-flux'
-import slowlog from 'react-native-slowlog'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
@@ -35,11 +34,6 @@ type Props = {
 }
 
 export class Scan extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props)
-    slowlog(this, /.*/, global.slowlogOptions)
-  }
-
   render() {
     return (
       <>

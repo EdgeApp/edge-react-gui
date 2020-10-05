@@ -13,7 +13,7 @@ import { checkFioObtData } from './FioActions'
 
 export const updateTransactions = (transactionUpdate: {
   numTransactions: number,
-  transactions: Array<TransactionListTx>,
+  transactions: TransactionListTx[],
   transactionIdMap: { [txid: string]: TransactionListTx },
   currentCurrencyCode: string,
   currentWalletId: string,
@@ -142,7 +142,7 @@ const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletI
   }
 }
 
-export const refreshTransactionsRequest = (walletId: string, transactions: Array<EdgeTransaction>) => (dispatch: Dispatch, getState: GetState) => {
+export const refreshTransactionsRequest = (walletId: string, transactions: EdgeTransaction[]) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
@@ -159,7 +159,7 @@ export const refreshTransactionsRequest = (walletId: string, transactions: Array
   }
 }
 
-export const newTransactionsRequest = (walletId: string, edgeTransactions: Array<EdgeTransaction>) => (dispatch: Dispatch, getState: GetState) => {
+export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeTransaction[]) => (dispatch: Dispatch, getState: GetState) => {
   const edgeTransaction: EdgeTransaction = edgeTransactions[0]
   const state = getState()
   const currentViewableTransactions = state.ui.scenes.transactionList.transactions

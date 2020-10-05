@@ -19,11 +19,11 @@ type CategoriesType = Array<{
 type Props = {
   bridge: AirshipBridge<null>,
   categories: Object,
-  subCategories: Array<string>,
+  subCategories: string[],
   category: string,
   subCategory: string,
   onChange: (string, string) => void,
-  setNewSubcategory: (string, Array<string>) => void
+  setNewSubcategory: (string, string[]) => void
 }
 
 type State = {
@@ -123,7 +123,7 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
     )
   }
 
-  getSortedCategories = (): Array<string> => {
+  getSortedCategories = (): string[] => {
     const { categories, category } = this.state
     const selectedCategories = categories.filter(item => item.key === category)
     const filteredCategories = categories.filter(item => item.key !== category)

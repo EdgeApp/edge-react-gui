@@ -5,7 +5,6 @@ import { Scene } from 'edge-components'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import slowlog from 'react-native-slowlog'
 import { sprintf } from 'sprintf-js'
 
 import { type FioSenderInfo } from '../../actions/SendConfirmationActions'
@@ -107,7 +106,6 @@ export class SendConfirmation extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    slowlog(this, /.*/, global.slowlogOptions)
     this.state = {
       secondaryDisplayDenomination: {
         name: '',
