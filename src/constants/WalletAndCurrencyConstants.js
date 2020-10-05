@@ -335,7 +335,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   },
   FIO: {
     noChangeMiningFee: true,
-    isImportKeySupported: true
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+    }
   }
 }
 
