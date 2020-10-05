@@ -1,5 +1,34 @@
 # edge-react-gui
 
+## 1.17.2 (2020-10-04)
+
+- FIO import private key
+- Add USDC support in Wyre
+- New themed components
+- Fix EOS wallet activation
+- EdgeProvider - Add unique identifiers to spendtargets
+- Fixed the export transaction date picker on iOS 14
+- Re-worked transaction export on Android and fixed crash
+- Misc code cleanups
+- Upgrade edge-core-js to v0.17.14
+  - (fix) Don't crash when using a barcode to log into accounts with pending OTP resets
+  - (fix) Correctly expire any vouchers on the device while doing a barcode login
+  - (fix) Upgrade to node-fetch v2.6.1
+- Upgrade edge-currency-accountbased to v0.7.29
+  - Add FIO import private key support
+  - Replace schema with cleaners for transaction history api calls
+  - Add cloudflare rpcServer
+  - Pass fetchCors function to amberdata api calls
+  - Add postinstall script for node14 dependency compatibility (usb and node-hid)
+  - Update cleaners
+  - Fix TLOS block explorer link
+- Upgrade edge-exchange-plugins to v0.11.9
+  - Fix Fox Exchange parent fee display for token trades
+  - Fix CORS issues with Nomics
+  - Remove unused xagau and herc plugins
+- Upgrade edge-currency-bitcoin to v4.9.2
+  - Add 'bitcoin-sv:' URI support
+
 ## 1.17.1 (2020-09-22)
 
 - Upgrade edge-login-ui-rn to v0.6.18
