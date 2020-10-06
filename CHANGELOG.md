@@ -22,10 +22,11 @@
   - Add postinstall script for node14 dependency compatibility (usb and node-hid)
   - Update cleaners
   - Fix TLOS block explorer link
-- Upgrade edge-exchange-plugins to v0.11.9
+- Upgrade edge-exchange-plugins to v0.11.10
   - Fix Fox Exchange parent fee display for token trades
   - Fix CORS issues with Nomics
   - Remove unused xagau and herc plugins
+  - Remove debugging comment
 - Upgrade edge-currency-bitcoin to v4.9.2
   - Add 'bitcoin-sv:' URI support
 
