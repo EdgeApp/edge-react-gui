@@ -1,0 +1,63 @@
+diff --git a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewFileProvider.java b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewFileProvider.java
+index cadd8ed..8587b3f 100644
+--- a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewFileProvider.java
++++ b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewFileProvider.java
+@@ -1,6 +1,6 @@
+ package com.reactnativecommunity.webview;
+ 
+-import androidx.core.content.FileProvider;
++import android.support.v4.content.FileProvider;
+ 
+ /**
+  * Providing a custom {@code FileProvider} prevents manifest {@code <provider>} name collisions.
+diff --git a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManager.java b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManager.java
+index 8d2cdc2..b0f92f2 100644
+--- a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManager.java
++++ b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManager.java
+@@ -39,10 +39,10 @@ import android.webkit.WebView;
+ import android.webkit.WebViewClient;
+ import android.widget.FrameLayout;
+ 
+-import androidx.annotation.Nullable;
+-import androidx.annotation.RequiresApi;
+-import androidx.core.content.ContextCompat;
+-import androidx.core.util.Pair;
++import android.support.annotation.Nullable;
++import android.support.annotation.RequiresApi;
++import android.support.v4.content.ContextCompat;
++import android.support.v4.util.Pair;
+ 
+ import com.facebook.common.logging.FLog;
+ import com.facebook.react.views.scroll.ScrollEvent;
+diff --git a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModule.java b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModule.java
+index d0e7fb3..8e00a87 100644
+--- a/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModule.java
++++ b/node_modules/react-native-webview/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewModule.java
+@@ -12,11 +12,11 @@ import android.os.Environment;
+ import android.os.Parcelable;
+ import android.provider.MediaStore;
+ 
+-import androidx.annotation.Nullable;
+-import androidx.annotation.RequiresApi;
+-import androidx.core.content.ContextCompat;
+-import androidx.core.content.FileProvider;
+-import androidx.core.util.Pair;
++import android.support.annotation.Nullable;
++import android.support.annotation.RequiresApi;
++import android.support.v4.content.ContextCompat;
++import android.support.v4.content.FileProvider;
++import android.support.v4.util.Pair;
+ 
+ import android.util.Log;
+ import android.webkit.MimeTypeMap;
+diff --git a/node_modules/react-native-webview/react-native-webview.podspec b/node_modules/react-native-webview/react-native-webview.podspec
+index 69a9f82..ea33c64 100644
+--- a/node_modules/react-native-webview/react-native-webview.podspec
++++ b/node_modules/react-native-webview/react-native-webview.podspec
+@@ -15,5 +15,5 @@ Pod::Spec.new do |s|
+   s.source       = { :git => "https://github.com/react-native-community/react-native-webview.git", :tag => "v#{s.version}" }
+   s.source_files  = "apple/**/*.{h,m}"
+ 
+-  s.dependency 'React-Core'
++  s.dependency 'React'
+ end
