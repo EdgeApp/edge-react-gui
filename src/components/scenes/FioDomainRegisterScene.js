@@ -5,6 +5,7 @@ import * as React from 'react'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
@@ -12,7 +13,6 @@ import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { TextAndIconButton, TextAndIconButtonStyle } from '../../modules/UI/components/Buttons/TextAndIconButton.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { getFioWallets } from '../../modules/UI/selectors'
 import { PLATFORM } from '../../theme/variables/platform'
 import { type RootState } from '../../types/reduxTypes'
@@ -211,19 +211,10 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
     let icon = null
     if ((!isValid || isAvailable === false) && touched) {
-      icon = (
-        <Icon
-          style={[styles.statusIcon, styles.statusIconError]}
-          type={Constants.MATERIAL_COMMUNITY}
-          name={Constants.CLOSE_CIRCLE_ICON}
-          size={theme.rem(1.5)}
-        />
-      )
+      icon = <MaterialCommunityIcons style={[styles.statusIcon, styles.statusIconError]} name="close-circle-outline" size={theme.rem(1.5)} />
     }
     if (isValid && isAvailable && touched) {
-      icon = (
-        <Icon style={[styles.statusIcon, styles.statusIconOk]} type={Constants.MATERIAL_COMMUNITY} name={Constants.CHECK_CIRCLE_ICON} size={theme.rem(1.5)} />
-      )
+      icon = <MaterialCommunityIcons style={[styles.statusIcon, styles.statusIconOk]} name="check-circle-outline" size={theme.rem(1.5)} />
     }
 
     return <View style={styles.statusIconContainer}>{loading ? <ActivityIndicator style={styles.statusIcon} size="small" /> : icon}</View>

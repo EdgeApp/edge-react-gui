@@ -2,12 +2,11 @@
 
 import * as React from 'react'
 import { Clipboard, Linking, Platform, Text } from 'react-native'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import { EYE_ICON, ION_ICONS } from '../../constants/IconConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import { scale } from '../../util/scaling.js'
 import { showError, showToast } from '../services/AirshipInstance.js'
@@ -64,7 +63,7 @@ export default class XPubModal extends React.Component<XPubModalComponentProps, 
         onModalHide={this.props.onExit}
       >
         <InteractiveModal.Icon>
-          <Icon style={{}} type={ION_ICONS} name={`${osPrefix}${EYE_ICON}`} size={scale(30)} />
+          <Ionicon name={`${osPrefix}eye`} size={scale(30)} />
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title>

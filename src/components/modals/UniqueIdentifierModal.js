@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from 'react'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
@@ -8,7 +9,6 @@ import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { TextInput } from '../../modules/UI/components/Modals/components/TextInput.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 
@@ -46,12 +46,11 @@ export class UniqueIdentifierModal extends React.Component<Props> {
     const label = type
     const confirm = s.strings.unique_identifier_modal_confirm
     const cancel = s.strings.unique_identifier_modal_cancel
-    const icon = { type: 'ionIcons', name: 'ios-key' }
 
     return (
       <InteractiveModal legacy isActive={isActive} onBackdropPress={onBackdropPress} onBackButtonPress={onBackButtonPress} onModalHide={onModalHide}>
         <InteractiveModal.Icon>
-          <Icon style={{}} type={icon.type} name={icon.name} size={30} />
+          <Ionicon name="ios-key" size={30} />
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title>
