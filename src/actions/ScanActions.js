@@ -1,6 +1,6 @@
 // @flow
 
-import { createThreeButtonModal, createYesNoModal } from 'edge-components'
+import { createYesNoModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, Linking } from 'react-native'
@@ -11,7 +11,8 @@ import URL from 'url-parse'
 
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { launchModal } from '../components/common/ModalProvider.js'
-import { showError } from '../components/services/AirshipInstance'
+import { ButtonsModal } from '../components/modals/ButtonsModal.js'
+import { Airship, showError } from '../components/services/AirshipInstance'
 import {
   ADD_TOKEN,
   CURRENCY_PLUGIN_NAMES,
@@ -20,10 +21,8 @@ import {
   getSpecialCurrencyInfo,
   ION_ICONS,
   KEY_ICON,
-  MATERIAL_ICONS,
   PLUGIN_BUY,
-  SEND_CONFIRMATION,
-  SHOPPING_CART
+  SEND_CONFIRMATION
 } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
@@ -343,44 +342,36 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
     const SPECIAL_CURRENCY_INFO = getSpecialCurrencyInfo(currencyCode)
     if (SPECIAL_CURRENCY_INFO.displayBuyCrypto) {
       const messageSyntax = sprintf(s.strings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
-      threeButtonModal = createThreeButtonModal({
-        title: s.strings.buy_crypto_modal_title,
-        message: messageSyntax,
-        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={THEME.COLORS.SECONDARY} />,
-        primaryButton: {
-          text: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode),
-          returnValue: 'buy'
-        },
-        secondaryButton: {
-          text: s.strings.buy_crypto_modal_exchange,
-          returnValue: 'exchange'
-        },
-        tertiaryButton: {
-          text: s.strings.buy_crypto_decline,
-          returnValue: 'decline'
-        }
-      })
+      threeButtonModal = await Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.buy_crypto_modal_title}
+          message={messageSyntax}
+          buttons={{
+            buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
+            exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'secondary' },
+            decline: { label: s.strings.buy_crypto_decline, type: 'secondary' }
+          }}
+        />
+      ))
     } else {
       // if we're not targetting for buying, but rather exchange
       const messageSyntax = sprintf(s.strings.exchange_crypto_modal_message, currencyCode, currencyCode, currencyCode)
-      threeButtonModal = createThreeButtonModal({
-        title: s.strings.buy_crypto_modal_title,
-        message: messageSyntax,
-        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={THEME.COLORS.SECONDARY} />,
-        primaryButton: {
-          text: sprintf(s.strings.buy_crypto_modal_exchange),
-          returnValue: 'exchange'
-        },
-        secondaryButton: {
-          text: s.strings.buy_crypto_decline,
-          returnValue: 'decline'
-        }
-      })
+      threeButtonModal = await Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.buy_crypto_modal_title}
+          message={messageSyntax}
+          buttons={{
+            exchange: { label: sprintf(s.strings.buy_crypto_modal_exchange) },
+            decline: { label: s.strings.buy_crypto_decline, type: 'secondary' }
+          }}
+        />
+      ))
     }
-    const value = await launchModal(threeButtonModal)
-    if (value === 'buy') {
+    if (threeButtonModal === 'buy') {
       Actions.jump(PLUGIN_BUY)
-    } else if (value === 'exchange') {
+    } else if (threeButtonModal === 'exchange') {
       dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
       Actions.jump(EXCHANGE_SCENE)
     }
