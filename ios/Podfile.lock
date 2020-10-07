@@ -31,8 +31,6 @@ PODS:
     - React
   - react-native-contacts (2.2.5):
     - React
-  - react-native-fast-crypto (1.8.2):
-    - React
   - react-native-mail (5.0.1):
     - React
   - react-native-randombytes (3.5.3):
@@ -136,7 +134,6 @@ DEPENDENCIES:
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-contacts (from `../node_modules/react-native-contacts`)
-  - react-native-fast-crypto (from `../node_modules/react-native-fast-crypto`)
   - react-native-mail (from `../node_modules/react-native-mail`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
@@ -198,8 +195,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera"
   react-native-contacts:
     :path: "../node_modules/react-native-contacts"
-  react-native-fast-crypto:
-    :path: "../node_modules/react-native-fast-crypto"
   react-native-mail:
     :path: "../node_modules/react-native-mail"
   react-native-randombytes:
@@ -254,7 +249,6 @@ SPEC CHECKSUMS:
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
   react-native-contacts: f6e5c518598762081ff9cf7c70db36f71668538e
-  react-native-fast-crypto: aed797071793e23416d6e8c7c1c5dadb63036a0c
   react-native-mail: 685104c633d50ea3e15595acc89ab0eb9ee9cfd2
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
@@ -275,6 +269,6 @@ SPEC CHECKSUMS:
   TcpSockets: a8eb6b5867fe643e6cfed5db2e4de62f4d1e8fd0
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: 437eba51ecc67cb24eb35be357a143b5c3a07fc1
+PODFILE CHECKSUM: cc9ad7bd568e91ee96e1bc352bd8d016402d3bbb
 
 COCOAPODS: 1.10.0
