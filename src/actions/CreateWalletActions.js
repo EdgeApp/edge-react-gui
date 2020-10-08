@@ -1,19 +1,17 @@
 // @flow
 import { bns } from 'biggystring'
-import { createSimpleConfirmModal } from 'edge-components'
 import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import { launchModal } from '../components/common/ModalProvider.js'
+import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { type AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene.js'
-import { showError } from '../components/services/AirshipInstance.js'
+import { Airship, showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../modules/Settings/selectors.js'
-import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { logEvent } from '../util/tracking.js'
@@ -204,12 +202,13 @@ export const createHandleUnavailableModal = (newWalletId: string, accountName: s
       deleted: true
     }
   })
-  const modal = createSimpleConfirmModal({
-    title: s.strings.create_wallet_account_handle_unavailable_modal_title,
-    message: sprintf(s.strings.create_wallet_account_handle_unavailable_modal_message, accountName),
-    icon: <Icon type={Constants.MATERIAL_COMMUNITY} name={Constants.CLOSE_ICON} size={30} />,
-    buttonText: s.strings.string_ok
-  })
-  await launchModal(modal)
+  await Airship.show(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      title={s.strings.create_wallet_account_handle_unavailable_modal_title}
+      message={sprintf(s.strings.create_wallet_account_handle_unavailable_modal_message, accountName)}
+      buttons={{ ok: { label: s.strings.string_ok } }}
+    />
+  ))
   Actions.pop()
 }
