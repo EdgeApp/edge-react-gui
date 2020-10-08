@@ -1,7 +1,6 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { createYesNoModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
@@ -9,30 +8,18 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
-import { launchModal } from '../components/common/ModalProvider.js'
+import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { ThreeButtonSimpleConfirmationModal } from '../components/modals/ThreeButtonSimpleConfirmationModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import {
-  EXCHANGE_SCENE,
-  EXCLAMATION,
-  FEE_ALERT_THRESHOLD,
-  FIO_STR,
-  MATERIAL_COMMUNITY,
-  PLUGIN_BUY,
-  SEND_CONFIRMATION,
-  TRANSACTION_DETAILS
-} from '../constants/indexConstants'
+import { EXCHANGE_SCENE, FEE_ALERT_THRESHOLD, FIO_STR, PLUGIN_BUY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { addToFioAddressCache, recordSend } from '../modules/FioAddress/util'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
-import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { getAuthRequired, getSpendInfo, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
 import type { AuthType } from '../modules/UI/scenes/SendConfirmation/selectors.js'
 import { convertCurrencyFromExchangeRates, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet, getSelectedWalletId } from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
-import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { convertNativeToExchange } from '../util/utils'
 import { playSendSound } from './SoundActions.js'
@@ -419,22 +406,20 @@ export function IncorrectPinError(message: ?string = s.strings.incorrect_pin) {
 }
 
 export const displayFeeAlert = async (feeAmountInFiatSyntax: string) => {
-  const modal = createYesNoModal({
-    title: s.strings.send_confirmation_fee_modal_alert_title,
-    message: (
-      <Text>
-        {s.strings.send_confirmation_fee_modal_alert_message_fragment_1}
-        <B>{feeAmountInFiatSyntax}</B>
-        {s.strings.send_confirmation_fee_modal_alert_message_fragment_2}
-      </Text>
-    ),
-    icon: <Icon type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={38} />,
-    noButtonText: s.strings.string_cancel_cap,
-    yesButtonText: s.strings.title_send
-  })
-  const resolveValue = await launchModal(modal)
+  const resolveValue = await Airship.show(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      title={s.strings.send_confirmation_fee_modal_alert_title}
+      message={`${s.strings.send_confirmation_fee_modal_alert_message_fragment_1} ${feeAmountInFiatSyntax} ${s.strings.send_confirmation_fee_modal_alert_message_fragment_2}`}
+      buttons={{
+        confirm: { label: s.strings.title_send },
+        cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+      }}
+    />
+  ))
+
   console.log('resolveValue is: ', resolveValue)
-  return resolveValue
+  return resolveValue === 'confirm'
 }
 
 export const getAuthRequiredDispatch = (spendInfo: EdgeSpendInfo) => (dispatch: Dispatch, getState: GetState) => {

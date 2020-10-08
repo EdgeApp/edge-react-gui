@@ -1,15 +1,10 @@
 // @flow
 
-import { createYesNoModal } from 'edge-components'
 import * as React from 'react'
 
-import { launchModal } from '../components/common/ModalProvider.js'
-import { showError } from '../components/services/AirshipInstance.js'
-import { SPLIT } from '../constants/indexConstants.js'
+import { ButtonsModal } from '../components/modals/ButtonsModal.js'
+import { Airship, showError } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
-import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
-import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui'
-import { B } from '../styles/common/textStyles.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { refreshWallet } from './WalletActions.js'
@@ -26,23 +21,20 @@ export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispa
   if (edgeWallet.currencyInfo.currencyCode === 'BCH') {
     bodyText = s.strings.fragment_wallets_split_wallet_bch_to_bsv
   }
-  // Use `launchModal` to put the modal component on screen:
-  const modal = createYesNoModal({
-    title: s.strings.fragment_wallets_split_wallet,
-    message: (
-      <Text style={{ textAlign: 'center' }}>
-        {bodyText}
-        <B>{`${getWalletName(edgeWallet)}?`}</B>
-      </Text>
-    ),
-    icon: <OptionIcon iconName={SPLIT} />,
-    noButtonText: s.strings.string_cancel_cap,
-    yesButtonText: s.strings.string_split
-  })
 
-  const resolveValue = await launchModal(modal)
+  const resolveValue = await Airship.show(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      title={s.strings.fragment_wallets_split_wallet}
+      message={`${bodyText} ${getWalletName(edgeWallet)}?`}
+      buttons={{
+        confirm: { label: s.strings.string_split },
+        cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+      }}
+    />
+  ))
 
-  if (resolveValue) {
+  if (resolveValue === 'confirm') {
     try {
       const wallet = currencyWallets[walletId]
       const splitType = getSplitType(wallet.currencyInfo.currencyCode)

@@ -1,14 +1,12 @@
 // @flow
 
-import { createYesNoModal } from 'edge-components'
 import * as React from 'react'
 import { Alert, Linking, TouchableOpacity } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
-import { launchModal } from './ModalProvider.js'
+import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 type AddressTextWithBlockExplorerModalProps = {
   address: string,
@@ -20,14 +18,18 @@ const AddressTextWithBlockExplorerModal = (props: AddressTextWithBlockExplorerMo
   const { address, addressExplorer, children } = props
   const addressModal = async () => {
     if (addressExplorer) {
-      const modal = createYesNoModal({
-        title: s.strings.modal_addressexplorer_message,
-        message: address,
-        icon: <Icon type={Constants.ION_ICONS} name={Constants.WALLET_ICON} size={30} />,
-        noButtonText: s.strings.string_cancel_cap,
-        yesButtonText: s.strings.string_ok_cap
-      })
-      return (await launchModal(modal)) ? Linking.openURL(sprintf(addressExplorer, address)) : null
+      const modal = await Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.modal_addressexplorer_message}
+          message={address}
+          buttons={{
+            confirm: { label: s.strings.string_ok_cap },
+            cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+          }}
+        />
+      ))
+      return modal === 'confirm' ? Linking.openURL(sprintf(addressExplorer, address)) : null
     }
     return Alert.alert(s.strings.modal_addressexplorer_null)
   }
