@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
-import Entypo from 'react-native-vector-icons/Entypo'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -21,8 +20,6 @@ type Props = {
 
 const Icon = ({ style, name, size, type }: Props) => {
   switch (type) {
-    case Constants.ENTYPO:
-      return <Entypo style={style} color={THEME.COLORS.SECONDARY} name={name} size={size} />
     case Constants.MATERIAL_ICONS:
       return <MaterialIcon style={style} color={THEME.COLORS.SECONDARY} name={name} size={size} />
     case Constants.FONT_AWESOME:

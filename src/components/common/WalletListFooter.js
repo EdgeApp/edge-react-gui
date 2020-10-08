@@ -1,6 +1,5 @@
 // @flow
 
-import { createYesNoModal } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
@@ -14,13 +13,13 @@ import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { makeCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
-import { launchModal } from '../common/ModalProvider.js'
+import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 type StateProps = {
   account: EdgeAccount,
@@ -90,17 +89,19 @@ class WalletListFooterComponent extends React.Component<Props> {
       return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
     }
 
-    const answer = await launchModal(
-      createYesNoModal({
-        title: s.strings.wallet_list_add_token_modal_title,
-        message: s.strings.wallet_list_add_token_modal_message,
-        icon: <Icon type={Constants.ION_ICONS} name={Constants.WALLET_ICON} size={30} />,
-        noButtonText: s.strings.string_cancel_cap,
-        yesButtonText: s.strings.title_create_wallet
-      })
-    )
+    const answer = await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.wallet_list_add_token_modal_title}
+        message={s.strings.wallet_list_add_token_modal_message}
+        buttons={{
+          confirm: { label: s.strings.title_create_wallet },
+          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+        }}
+      />
+    ))
 
-    if (answer) {
+    if (answer === 'confirm') {
       Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
         selectedWalletType: makeCreateWalletType(ethereum.currencyInfo)
       })
