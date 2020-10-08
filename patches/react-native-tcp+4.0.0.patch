@@ -1,0 +1,9 @@
+diff --git a/node_modules/react-native-tcp/android/gradle.properties b/node_modules/react-native-tcp/android/gradle.properties
+deleted file mode 100644
+index d015431..0000000
+--- a/node_modules/react-native-tcp/android/gradle.properties
++++ /dev/null
+@@ -1,2 +0,0 @@
+-android.useAndroidX=true
+-android.enableJetifier=true
+\ No newline at end of file
