@@ -3769,10 +3769,10 @@ edge-components@^0.0.28:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.14:
-  version "0.17.14"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.14.tgz#b805bcf47e8dde857a47787bfbd45a2699abade7"
-  integrity sha512-2tR2yZL5OrOPT9kJ7Hymm/Ew0weJqjbxiQjFAfVukL/EEGgL0rfJYm3cJpotUQXMJE+q8X6YJSNtMtUHx77H3Q==
+edge-core-js@^0.17.15:
+  version "0.17.15"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.15.tgz#91f1c848710fd69560a54bdc7cd1e9b9098d612d"
+  integrity sha512-Sl0ON0IIBUIorPAucKxVYIHSqnIX294sZx4jR5VSOmwj+ish3hWtEhr9xuxlqto96Sa77R/sHsQKZxz8GoFgNQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3795,10 +3795,10 @@ edge-core-js@^0.17.14:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.29:
-  version "0.7.29"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.29.tgz#0aefc59b364a4d5f8c4cda5c80e31a3aa5203a6c"
-  integrity sha512-/hEphOsAP3ZVPeA1C4dqArAkOCPlimZ/GgDo+rc/p5u4KEhm84vakQY1rzgGCwFIqD0c6tcCmUKlyG4upCjXnA==
+edge-currency-accountbased@^0.7.30:
+  version "0.7.30"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.30.tgz#c9f42b292c4f595cf29ff9ff73bdc37186d0cc7f"
+  integrity sha512-IEdewQU4kb/t8y5OJXfnBDmXPNMLxkGstBf+Zv9eCjRZ51WVMhg60mpLDWKA2CQKZ6vA4ZV8SqvYZjY0Hl5qNA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.1.0"
