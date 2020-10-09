@@ -67,6 +67,10 @@ class EdgeWalletCallbackManager extends React.Component<Props> {
       this.props.refreshWallet(this.props.id)
     })
 
+    wallet.on('addressChanged', () => {
+      this.props.refreshReceiveAddressRequest(this.props.id)
+    })
+
     wallet.watch('syncRatio', transactionCount => {
       console.log(`${this.props.id} - onAddressesChecked with progress ratio: ${transactionCount}`)
 
