@@ -7,11 +7,11 @@ temp/
 # Build & deployment files
 /android/app/google-services.json
 /android/google-java-format-*.jar
+/release-version.json
+/deploy-config.json
 /ios/edge/GoogleService-Info.plist
 /ios/Pods/
 android-release.bundle.map
-buildnum.json
-deploy-config.json
 env.json
 IDEWorkspaceChecks.plist
 ios-release.bundle.map

@@ -104,6 +104,8 @@ Copy the `env.example.json` to `env.json` and change the `AIRBITZ_API_KEY` to th
 
 ### Build release version of app
 
+First, run `./scripts/updateVersion.js` to copy the `package.json` version into the native project files, and to assign a unique build number.
+
 #### iOS
 
 - Open `edge-react-gui/ios/edge.xcworkspace` in Xcode
@@ -125,16 +127,14 @@ Copy the `env.example.json` to `env.json` and change the `AIRBITZ_API_KEY` to th
 
 ## Deploying (MacOS Only)
 
-The included `deploy.js` is a script to automate building, signing, and deploying release builds of Edge. It provides
-the following:
+The included `deploy.js` is a script to automate building, signing, and deploying release builds of Edge. It provides the following:
 
-- Auto set app version number based on `package.json` version
-- Auto increment and set the buildnum to the value of YYMMDDNN where NN is an auto-incrementing build number within a day
 - Auto sign Android APK with Android keystore files
 - Auto sign iOS IPA with provisioning profiles
 
 ### To Use
 
+- Run `./scripts/updateVersion.js` to set up your build number & version.
 - Set the env var KEYCHAIN_PASSWORD to the keychain password of the current user
 - Copy the `deploy-config.sample.json` to `deploy-config.json` and edit the parameters accordingly. You'll need a HockeyApp account to get ids and keys
 - Put any Android keystore files into `edge-react-gui/keystores/`
