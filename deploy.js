@@ -265,10 +265,20 @@ function buildAndroid(buildObj) {
 
   // Reset gradle file back
   // call('git reset --hard origin/' + buildObj.repoBranch)
-  buildObj.ipaFile = buildObj.guiPlatformDir + '/app/build/outputs/apk/release/app-release.apk'
+  const buildPath = buildObj.guiPlatformDir + '/app/build/outputs/apk/release'
+  buildObj.ipaFile = fs.readdirSync(buildPath).filter(file => file.includes('.apk'))
 }
 
 function buildCommonPost(buildObj) {
+  if (Array.isArray(buildObj.ipaFile)) {
+    for (const fileName of buildObj.ipaFile) {
+      buildCommonPost({
+        ...buildObj,
+        ipaFile: fileName
+      })
+    }
+    return
+  }
   let curl
   const notes = `${buildObj.productName} ${buildObj.version} (${buildObj.buildNum}) branch: ${buildObj.repoBranch} #${buildObj.guiHash}`
 
