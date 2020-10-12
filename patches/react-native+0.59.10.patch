@@ -26,16 +26,3 @@ index e26fcd8..d783722 100644
        [fontCache setObject:font forKey:cacheKey];
      }
    }
-diff --git a/node_modules/react-native/scripts/react-native-xcode.sh b/node_modules/react-native/scripts/react-native-xcode.sh
-index d684e89..5f05cad 100755
---- a/node_modules/react-native/scripts/react-native-xcode.sh
-+++ b/node_modules/react-native/scripts/react-native-xcode.sh
-@@ -123,7 +123,7 @@ BUNDLE_FILE="$DEST/main.jsbundle"
-   --entry-file "$ENTRY_FILE" \
-   --platform ios \
-   --dev $DEV \
--  --reset-cache \
-+  --reset-cache --sourcemap-output ios-release.bundle.map \
-   --bundle-output "$BUNDLE_FILE" \
-   --assets-dest "$DEST" \
-   $EXTRA_PACKAGER_ARGS

@@ -94,12 +94,14 @@ pipeline {
           when { equals expected: true, actual: params.IOS_BUILD }
           steps {
             sh "node ./deploy.js edge ios ${BRANCH_NAME}"
+            sh "./scripts/uploadSourcemaps.js ios"
           }
         }
         stage("android") {
           when { equals expected: true, actual: params.ANDROID_BUILD }
           steps {
             sh "node ./deploy.js edge android ${BRANCH_NAME}"
+            sh "./scripts/uploadSourcemaps.js android"
           }
         }
       }

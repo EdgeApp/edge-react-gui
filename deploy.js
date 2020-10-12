@@ -264,26 +264,14 @@ function buildCommonPost(buildObj) {
     mylog('\nUploaded to HockeyApp')
   }
 
-  if (buildObj.bugsnagApiKey) {
+  if (buildObj.bugsnagApiKey && buildObj.dSymFile) {
     mylog('\n\nUploading to Bugsnag')
     mylog('*********************\n')
 
-    curl =
-      '/usr/bin/curl https://upload.bugsnag.com/ ' +
-      `-F apiKey=${buildObj.bugsnagApiKey} ` +
-      `-F appVersion=${buildObj.buildNum} ` +
-      `-F sourceMap=@${buildObj.bundleMapFile} ` +
-      `-F minifiedUrl=${buildObj.bundleUrl} ` +
-      `-F minifiedFile=@${buildObj.bundlePath} ` +
-      '-F overwrite=true'
+    const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" ${buildObj.tmpDir}/`
+    call(cpa)
+    curl = '/usr/bin/curl https://upload.bugsnag.com/ ' + `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` + `-F projectRoot=${buildObj.guiPlatformDir}`
     call(curl)
-
-    if (buildObj.dSymFile) {
-      const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" ${buildObj.tmpDir}/`
-      call(cpa)
-      curl = '/usr/bin/curl https://upload.bugsnag.com/ ' + `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` + `-F projectRoot=${buildObj.guiPlatformDir}`
-      call(curl)
-    }
   }
 
   if (buildObj.appCenterApiToken && buildObj.appCenterAppName && buildObj.appCenterGroupName) {
