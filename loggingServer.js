@@ -1,9 +1,9 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
+const fs = require('fs')
 const os = require('os')
 const express = require('express')
 const bodyParser = require('body-parser')
-const jsonfile = require('jsonfile')
 
 const ifaces = os.networkInterfaces()
 const PORT = 8080
@@ -12,7 +12,7 @@ let address = ''
 let envJSON = { LOG_SERVER: {} }
 
 try {
-  envJSON = jsonfile.readFileSync(envFile)
+  envJSON = JSON.parse(fs.readFileSync(envFile, 'utf8'))
 } catch (e) {
   console.log(e)
 }
@@ -38,7 +38,7 @@ try {
     host: `http://${address}`,
     port: `${PORT}`
   }
-  jsonfile.writeFileSync(envFile, envJSON)
+  fs.writeFileSync(envFile, JSON.stringify(envJSON, null, 2))
 } catch (e) {
   console.log(e)
 }
