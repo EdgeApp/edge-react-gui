@@ -9,7 +9,7 @@
 #import "edgeApiKey.h"
 
 #import "RCTSplashScreen.h"
-#import <BugsnagReactNative.h>
+#import <Bugsnag/Bugsnag.h>
 #import <Firebase.h>
 #import <Foundation/Foundation.h>
 #import <React/RCTBridge.h>
@@ -44,8 +44,8 @@
 - (BOOL)application:(UIApplication *)application
   didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [BugsnagReactNative start];
-  
+  [Bugsnag start];
+
   [FIRApp configure];
   [FIRMessaging messaging].delegate = self;
 

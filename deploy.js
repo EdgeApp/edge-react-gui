@@ -108,16 +108,6 @@ function makeProject(project, buildObj) {
 }
 
 function makeCommonPost(buildObj) {
-  const packageJson = JSON.parse(fs.readFileSync(buildObj.guiDir + '/package.json', 'utf8'))
-  buildObj.version = packageJson.version
-  if (buildObj.repoBranch === 'develop') {
-    buildObj.version = packageJson.version + '-d'
-  } else if (buildObj.repoBranch === 'test') {
-    buildObj.version = packageJson.version + '-t'
-  } else {
-    buildObj.version = packageJson.version
-  }
-
   if (buildObj.envJson != null) {
     const envJsonPath = buildObj.guiDir + '/env.json'
     let envJson = {}
@@ -129,17 +119,10 @@ function makeCommonPost(buildObj) {
     fs.writeFileSync(envJsonPath, JSON.stringify(envJson, null, 2))
   }
 
-  const buildNumFile = buildObj.guiPlatformDir + '/buildnum.json'
-  if (fs.existsSync(buildNumFile)) {
-    const buildNumJson = JSON.parse(fs.readFileSync(buildNumFile, 'utf8'))
-    buildObj.buildNum = buildnum(buildNumJson.buildNum)
-  } else {
-    buildObj.buildNum = buildnum()
-  }
-
-  const buildNumObj = { buildNum: buildObj.buildNum }
-  const json = JSON.stringify(buildNumObj)
-  fs.writeFileSync(buildNumFile, json)
+  const buildVersionFile = buildObj.guiDir + '/release-version.json'
+  const buildVersionJson = JSON.parse(fs.readFileSync(buildVersionFile, 'utf8'))
+  buildObj.buildNum = buildVersionJson.build
+  buildObj.version = buildVersionJson.version
 
   chdir(buildObj.guiDir)
   buildObj.guiHash = rmNewline(cmd('git rev-parse --short HEAD'))
@@ -183,8 +166,6 @@ function buildIos(buildObj) {
 
   call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
-  call('agvtool new-marketing-version ' + buildObj.version)
-  call('agvtool new-version -all ' + buildObj.buildNum)
   cmdStr = `xcodebuild -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} archive`
   cmdStr = cmdStr + ' | xcpretty && exit ${PIPE' + 'STATUS[0]}'
   call(cmdStr)
@@ -241,18 +222,6 @@ function buildAndroid(buildObj) {
 
   chdir(buildObj.guiDir)
 
-  let gradle = fs.readFileSync(buildObj.guiPlatformDir + '/app/build.gradle', { encoding: 'utf8' })
-  // var mystring = '<img src="[media id=5]" />';
-  let regex = /versionCode [0-9]{8}/gm
-  let newVer = sprintf('versionCode %s', buildObj.buildNum)
-  gradle = gradle.replace(regex, newVer)
-
-  regex = /versionName "99.99.99"/gm
-  newVer = sprintf('versionName "%s"', buildObj.version)
-  gradle = gradle.replace(regex, newVer)
-
-  fs.writeFileSync(buildObj.guiPlatformDir + '/app/build.gradle', gradle)
-
   process.env.ORG_GRADLE_PROJECT_storeFile = sprintf('/%s/keystores/%s', __dirname, buildObj.androidKeyStore)
   process.env.ORG_GRADLE_PROJECT_storePassword = buildObj.androidKeyStorePassword
   process.env.ORG_GRADLE_PROJECT_keyAlias = buildObj.androidKeyStoreAlias
@@ -295,26 +264,14 @@ function buildCommonPost(buildObj) {
     mylog('\nUploaded to HockeyApp')
   }
 
-  if (buildObj.bugsnagApiKey) {
+  if (buildObj.bugsnagApiKey && buildObj.dSymFile) {
     mylog('\n\nUploading to Bugsnag')
     mylog('*********************\n')
 
-    curl =
-      '/usr/bin/curl https://upload.bugsnag.com/ ' +
-      `-F apiKey=${buildObj.bugsnagApiKey} ` +
-      `-F appVersion=${buildObj.buildNum} ` +
-      `-F sourceMap=@${buildObj.bundleMapFile} ` +
-      `-F minifiedUrl=${buildObj.bundleUrl} ` +
-      `-F minifiedFile=@${buildObj.bundlePath} ` +
-      '-F overwrite=true'
+    const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" ${buildObj.tmpDir}/`
+    call(cpa)
+    curl = '/usr/bin/curl https://upload.bugsnag.com/ ' + `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` + `-F projectRoot=${buildObj.guiPlatformDir}`
     call(curl)
-
-    if (buildObj.dSymFile) {
-      const cpa = `cp -a "${buildObj.dSymFile}/Contents/Resources/DWARF/${buildObj.xcodeScheme}" ${buildObj.tmpDir}/`
-      call(cpa)
-      curl = '/usr/bin/curl https://upload.bugsnag.com/ ' + `-F dsym=@${buildObj.tmpDir}/${buildObj.xcodeScheme} ` + `-F projectRoot=${buildObj.guiPlatformDir}`
-      call(curl)
-    }
   }
 
   if (buildObj.appCenterApiToken && buildObj.appCenterAppName && buildObj.appCenterGroupName) {
@@ -350,31 +307,6 @@ function builddate() {
 
   const dateStr = sprintf('%d-%02d-%02d', date.getFullYear(), date.getMonth() + 1, date.getDate())
   return dateStr
-}
-
-function buildnum(oldBuild = '') {
-  const date = new Date()
-  const year = date.getFullYear() - 2000
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  let num = 1
-
-  if (oldBuild !== '') {
-    const oldYear = oldBuild.substr(0, 2)
-    const oldMonth = oldBuild.substr(2, 2)
-    const oldDay = oldBuild.substr(4, 2)
-    const oldNum = oldBuild.substr(6, 2)
-
-    if (year === parseInt(oldYear) && month === parseInt(oldMonth) && day === parseInt(oldDay)) {
-      let numInt = parseInt(oldNum)
-      numInt++
-      num = numInt.toString()
-    }
-  }
-
-  const buildNum = sprintf('%02d%02d%02d%02d', year, month, day, num)
-
-  return buildNum
 }
 
 function rmNewline(text) {

@@ -1,9 +1,6 @@
 PODS:
   - boost-for-react-native (1.63.0)
-  - BugsnagReactNative (2.12.6):
-    - BugsnagReactNative/Core (= 2.12.6)
-    - React
-  - BugsnagReactNative/Core (2.12.6):
+  - BugsnagReactNative (7.3.5):
     - React
   - BVLinearGradient (2.5.6):
     - React
@@ -164,7 +161,7 @@ PODS:
   - yoga (0.59.10.React)
 
 DEPENDENCIES:
-  - BugsnagReactNative (from `../node_modules/bugsnag-react-native`)
+  - "BugsnagReactNative (from `../node_modules/@bugsnag/react-native`)"
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - disklet (from `../node_modules/disklet`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
@@ -225,7 +222,7 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   BugsnagReactNative:
-    :path: "../node_modules/bugsnag-react-native"
+    :path: "../node_modules/@bugsnag/react-native"
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
   disklet:
@@ -293,7 +290,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
-  BugsnagReactNative: 7ba00c17a3dedfeea4dd011919962d415a231c49
+  BugsnagReactNative: fc7d6fb2127e53a8bfc79130b58263da363bb94b
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   disklet: 4f586f90b70fdb46f06614a5b7342eda5c90f253
@@ -336,6 +333,6 @@ SPEC CHECKSUMS:
   TcpSockets: a8eb6b5867fe643e6cfed5db2e4de62f4d1e8fd0
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: acb0ea422c162907eaf6776a0e3f8148ad6814be
+PODFILE CHECKSUM: f3dc10505a872ac06104608825e7dea5cfef3563
 
 COCOAPODS: 1.9.3

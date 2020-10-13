@@ -6,14 +6,14 @@
 
 Edge Wallet is:
 
-* simple
-* secure
-* private
-* decentralized
-* multi-currency
-* cross-platform
-* mobile first
-* open source
+- simple
+- secure
+- private
+- decentralized
+- multi-currency
+- cross-platform
+- mobile first
+- open source
 
 ---
 
@@ -21,15 +21,15 @@ Edge Wallet is:
 
 Edge is known to build with this exact tool set. Updated versions of these toolsets may break the build or app. If you have issues, try mirroring these exact versions.
 
-* MacOS High Sierra 10.13.3
-* Xcode 10.1
-* Android Studio 3.1.3
-* CocoaPods 1.5.3
-* Android NDK r15c *This is a must have. Version r17 is known to break native code builds*
-* NodeJS 10.15.1
-* NPM 6.4.1
-* Yarn 1.10.1
-* Java 1.8.0_152
+- MacOS High Sierra 10.13.3
+- Xcode 10.1
+- Android Studio 3.1.3
+- CocoaPods 1.5.3
+- Android NDK r15c _This is a must have. Version r17 is known to break native code builds_
+- NodeJS 10.15.1
+- NPM 6.4.1
+- Yarn 1.10.1
+- Java 1.8.0_152
 
 ## Getting Started
 
@@ -83,63 +83,63 @@ For best results, please consider using the following versions (up-to-date as of
 
 ### Add API key in env.json
 
-A public API key is built into the edge-core-js which can be used to build and test the Edge app. This key is severely rate limited and should not be used for production. For production use, get an API key by emailing info@edge.app. 
+A public API key is built into the edge-core-js which can be used to build and test the Edge app. This key is severely rate limited and should not be used for production. For production use, get an API key by emailing info@edge.app.
 
-Copy the `env.example.json` to `env.json` and change the `AIRBITZ_API_KEY` to the API key you received from Edge. To use the public API key, leave `AIRBITZ_API_KEY` blank. 
+Copy the `env.example.json` to `env.json` and change the `AIRBITZ_API_KEY` to the API key you received from Edge. To use the public API key, leave `AIRBITZ_API_KEY` blank.
 
 ### Run the app in debug mode
 
 #### iOS
 
-* Open `edge-react-gui/ios/edge.xcworkspace` in Xcode
-* Choose a target device or simulator and tap the Play button on the top nav bar
+- Open `edge-react-gui/ios/edge.xcworkspace` in Xcode
+- Choose a target device or simulator and tap the Play button on the top nav bar
 
 #### Android
 
     cd android
     ./gradlew assembleDebug
 
-* The resulting APK will be in `./app/build/outputs/apk/debug/app-debug.apk`
-* Copy the APK to a simulator like Genymotion or a real device via Email or messaging app
+- The resulting APK will be in `./app/build/outputs/apk/debug/app-debug.apk`
+- Copy the APK to a simulator like Genymotion or a real device via Email or messaging app
 
 ### Build release version of app
 
+First, run `./scripts/updateVersion.js` to copy the `package.json` version into the native project files, and to assign a unique build number.
+
 #### iOS
 
-* Open `edge-react-gui/ios/edge.xcworkspace` in Xcode
-* Hold [ option/alt ] and click on the Edge button on the top bar to the right of the Play and Stop icons.
-* Change 'Build Configuration' to Release
-* Uncheck 'Debug Executable'
-* Close window
-* Choose a device and hit Play
+- Open `edge-react-gui/ios/edge.xcworkspace` in Xcode
+- Hold [ option/alt ] and click on the Edge button on the top bar to the right of the Play and Stop icons.
+- Change 'Build Configuration' to Release
+- Uncheck 'Debug Executable'
+- Close window
+- Choose a device and hit Play
 
 #### Android
 
     cd android
     ./gradlew assembleRelease
 
-* The resulting APK will be in `./app/build/outputs/apk/release/app-release.apk`
-* Copy the APK to a simulator like Genymotion or a real device via Email or messaging app
+- The resulting APK will be in `./app/build/outputs/apk/release/app-release.apk`
+- Copy the APK to a simulator like Genymotion or a real device via Email or messaging app
 
 ---
 
 ## Deploying (MacOS Only)
 
-The included `deploy.js` is a script to automate building, signing, and deploying release builds of Edge. It provides
-the following:
+The included `deploy.js` is a script to automate building, signing, and deploying release builds of Edge. It provides the following:
 
-* Auto set app version number based on `package.json` version
-* Auto increment and set the buildnum to the value of YYMMDDNN where NN is an auto-incrementing build number within a day
-* Auto sign Android APK with Android keystore files
-* Auto sign iOS IPA with provisioning profiles
+- Auto sign Android APK with Android keystore files
+- Auto sign iOS IPA with provisioning profiles
 
 ### To Use
 
-* Set the env var KEYCHAIN_PASSWORD to the keychain password of the current user
-* Copy the `deploy-config.sample.json` to `deploy-config.json` and edit the parameters accordingly. You'll need a HockeyApp account to get ids and keys
-* Put any Android keystore files into `edge-react-gui/keystores/`
-* If using Firebase, put your account's `google-services.json` and `GoogleService-Info.plist` into `edge-react-gui/`
-* Install xcpretty `sudo gem install xcpretty`
+- Run `./scripts/updateVersion.js` to set up your build number & version.
+- Set the env var KEYCHAIN_PASSWORD to the keychain password of the current user
+- Copy the `deploy-config.sample.json` to `deploy-config.json` and edit the parameters accordingly. You'll need a HockeyApp account to get ids and keys
+- Put any Android keystore files into `edge-react-gui/keystores/`
+- If using Firebase, put your account's `google-services.json` and `GoogleService-Info.plist` into `edge-react-gui/`
+- Install xcpretty `sudo gem install xcpretty`
 
 Run deploy
 
