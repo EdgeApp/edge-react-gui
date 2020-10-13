@@ -642,6 +642,8 @@
   "update_fresh": "Una nuova versione di Edge è ora disponibile. Aggiorna per ottenere le nostre nuove funzionalità e correzioni.",
   "update_now": "Aggiorna ora",
   "update_later": "Lo farò più tardi",
+  "error_boundary_title": "Oops!",
+  "error_boundary_message": "Siamo spiacenti ma qualcosa è andato storto. Si prega di chiudere forzatamente l'app e riavviarla per continuare a utilizzare Edge.\n\nSe il problema persiste, contattaci a support@edge.app, e faremo del nostro meglio per risolverlo.",
   "export_transaction_date_range": "Intervallo Date",
   "export_transaction_export_type": "Tipo di esportazione",
   "export_transaction_this_month": "Questo mese",
