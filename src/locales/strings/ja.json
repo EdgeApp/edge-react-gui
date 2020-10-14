@@ -80,7 +80,6 @@
   "fragment_wallets_split_wallet_bch_to_bsv": "BCHのプライベートキーにより、BCHウォレットをスプリットしBSVウォレットを作成します。これには間違ったチェーンに資金が送られてしまうのを防ぐBCHトランザクションが必要です。わずがなBCHのネットワーク手数料をが発生します。このBCHトランザクションが承認されるのを確認してから、その後のBCHトランザクションを行うようにしてください。ウォレットをスプリットしてもよろしいですか？ \n",
   "fragment_wallets_split_wallet_first_confirm_message_mobile": "スプリットしてもよろしいですか？ \n",
   "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "次のウォレットのプライベートシードを表示しますか？\n",
-  "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "削除してもよろしですか？ ",
   "wallet_list_add_wallet": "ウォレットを追加",
   "wallet_list_add_token": "トークンを追加",
   "create_wallet_choice_instructions": "新規ウォレット作成 もしくは 既存のウォレットをプライベートシードで復元しますか？",
