@@ -3,7 +3,7 @@
 import { asArray, asBoolean, asDate, asMap, asObject, asOptional, asString } from 'cleaners'
 import { type EdgeAccount } from 'edge-core-js/types'
 
-import { type Dispatch, type GetState, type State } from '../types/reduxTypes.js'
+import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { type AccountReferral, type Promotion, type ReferralCache } from '../types/ReferralTypes.js'
 import { asCurrencyCode, asMessageTweak, asPluginTweak } from '../types/TweakTypes.js'
 import { type TweakSource, lockStartDates } from '../util/ReferralHelpers.js'
@@ -152,7 +152,7 @@ export const refreshAccountReferral = () => async (dispatch: Dispatch, getState:
 /**
  * Writes the account referral information from redux to the disk.
  */
-async function saveAccountReferral(state: State): Promise<void> {
+async function saveAccountReferral(state: RootState): Promise<void> {
   const { account } = state.core
   const { accountReferral } = state.account
   await account.disklet.setText(ACCOUNT_REFERRAL_FILE, JSON.stringify(accountReferral))
@@ -161,7 +161,7 @@ async function saveAccountReferral(state: State): Promise<void> {
 /**
  * Writes the referral cache from redux to the disk.
  */
-async function saveReferralCache(state: State): Promise<void> {
+async function saveReferralCache(state: RootState): Promise<void> {
   const { account } = state.core
   const { referralCache } = state.account
   await account.localDisklet.setText(REFERRAL_CACHE_FILE, JSON.stringify(referralCache))

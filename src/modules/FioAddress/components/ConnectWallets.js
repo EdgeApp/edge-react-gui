@@ -10,7 +10,7 @@ import { showError } from '../../../components/services/AirshipInstance'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
 import { THEME } from '../../../theme/variables/airbitz.js'
-import type { State } from '../../../types/reduxTypes'
+import { type RootState } from '../../../types/reduxTypes'
 import type { FioConnectionWalletItem } from '../../../types/types'
 import { scale } from '../../../util/scaling.js'
 import T from '../../UI/components/FormattedText/FormattedText.ui.js'
@@ -296,7 +296,7 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-const mapStateToProps = (state: State, ownProps): FioConnectWalletStateProps => {
+const mapStateToProps = (state: RootState, ownProps): FioConnectWalletStateProps => {
   const wallets = getWallets(state)
   const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
 

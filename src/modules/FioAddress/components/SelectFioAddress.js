@@ -13,7 +13,7 @@ import { Airship, showError } from '../../../components/services/AirshipInstance
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
 import { THEME } from '../../../theme/variables/airbitz.js'
-import type { Dispatch, State } from '../../../types/reduxTypes'
+import { type Dispatch, type RootState } from '../../../types/reduxTypes'
 import type { FioAddress, FioRequest, GuiWallet } from '../../../types/types'
 import { scale } from '../../../util/scaling.js'
 import { TextAndIconButton, TextAndIconButtonStyle } from '../../UI/components/Buttons/TextAndIconButton.ui.js'
@@ -316,7 +316,7 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-const mapStateToProps = (state: State): SelectFioAddressProps => {
+const mapStateToProps = (state: RootState): SelectFioAddressProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
   const fioWallets: EdgeCurrencyWallet[] = UI_SELECTORS.getFioWallets(state)

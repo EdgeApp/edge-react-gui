@@ -5,7 +5,7 @@ import { Actions } from 'react-native-router-flux'
 
 import { showError } from '../components/services/AirshipInstance.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
-import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
+import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { refreshTransactionsRequest } from './TransactionListActions.js'
 
 export const setSubcategories = (subcategories: string[]) => ({
@@ -44,7 +44,7 @@ export const setNewSubcategory = (newSubcategory: string) => (dispatch: Dispatch
     .catch(showError)
 }
 
-export const getSelectedWallet = (state: State): EdgeCurrencyWallet => {
+export const getSelectedWallet = (state: RootState): EdgeCurrencyWallet => {
   const { selectedWalletId } = state.ui.wallets
   const { currencyWallets = {} } = state.core.account
   return currencyWallets[selectedWalletId]

@@ -1,11 +1,11 @@
 // @flow
 import { connect } from 'react-redux'
 
-import type { Dispatch, State } from '../../../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { PasswordRecoveryReminderModalComponent } from './PasswordRecoveryReminderModal.ui.js'
 import { hidePasswordRecoveryReminderModal, onGoToPasswordRecoveryScene } from './PasswordRecoveryReminderModalActions.js'
 
-export const mapStateToProps = (state: State) => ({
+export const mapStateToProps = (state: RootState) => ({
   isVisible: state.ui.scenes.passwordRecoveryReminderModal.isVisible
 })
 export const mapDispatchToProps = (dispatch: Dispatch) => ({

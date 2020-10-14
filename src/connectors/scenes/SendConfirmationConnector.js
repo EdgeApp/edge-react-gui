@@ -30,10 +30,10 @@ import {
 import type { AuthType } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils'
 
-const mapStateToProps = (state: State): SendConfirmationStateProps => {
+const mapStateToProps = (state: RootState): SendConfirmationStateProps => {
   const sceneState = state.ui.scenes.sendConfirmation
   let fiatPerCrypto = 0
   let secondaryExchangeCurrencyCode = ''

@@ -15,7 +15,7 @@ import { errorModal } from '../../modules/UI/components/Modals/ErrorModal.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type CreateWalletType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { FormField } from '../common/FormField.js'
@@ -155,7 +155,7 @@ const rawStyles = {
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const CreateWalletImportScene = connect(
-  (state: ReduxState): StateProps => ({
+  (state: RootState): StateProps => ({
     account: state.core.account
   }),
   (dispatch: Dispatch): DispatchProps => ({})

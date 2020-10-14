@@ -9,7 +9,7 @@ import ENV from '../../../env.json'
 import { launchDeepLink, retryPendingDeepLink } from '../../actions/DeepLinkingActions.js'
 import { type WalletsState } from '../../reducers/scenes/WalletsReducer.js'
 import { type DeepLink, parseDeepLink } from '../../types/DeepLink.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { showError } from './AirshipInstance.js'
 
 type StateProps = {
@@ -61,7 +61,7 @@ class DeepLinkingManagerComponent extends React.Component<Props> {
 }
 
 export const DeepLinkingManager = connect(
-  (state: ReduxState): StateProps => ({
+  (state: RootState): StateProps => ({
     pendingDeepLink: state.pendingDeepLink,
     accountReferralLoaded: state.account.accountReferralLoaded,
     wallets: state.ui.wallets

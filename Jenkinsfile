@@ -39,8 +39,8 @@ pipeline {
 
         // Update our description:
         script {
-          def buildVersion = readJSON file: "./release-version.json"
-          currentBuild.description = "version: ${buildVersion.version} (${buildVersion.build})"
+          def versionFile = readJSON file: "./release-version.json"
+          currentBuild.description = "version: ${versionFile.version} (${versionFile.build})"
         }
       }
     }

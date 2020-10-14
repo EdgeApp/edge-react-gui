@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenominationKeyRequest } from '../../actions/SettingsActions.js'
 import s from '../../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiDenomination } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SetCustomNodesModal } from '../modals/SetCustomNodesModal.ui.js'
@@ -142,7 +142,7 @@ export class CurrencySettingsComponent extends React.Component<Props, State> {
 }
 
 export const CurrencySettingsScene = connect(
-  (state: ReduxState, ownProps: NavigationProps): StateProps => {
+  (state: RootState, ownProps: NavigationProps): StateProps => {
     const { currencyInfo } = ownProps
     const { currencyCode, defaultSettings, pluginId } = currencyInfo
 

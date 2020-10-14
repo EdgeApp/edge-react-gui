@@ -21,7 +21,7 @@ import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
 import { THEME } from '../theme/variables/airbitz.js'
-import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
+import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 
 export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -199,7 +199,7 @@ export const showReEnableOtpModal = () => async (dispatch: Dispatch, getState: G
 }
 
 export const enableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const state: State = getState()
+  const state: RootState = getState()
   const { account } = state.core
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
@@ -211,7 +211,7 @@ export const enableCustomNodes = (currencyCode: string) => async (dispatch: Disp
 }
 
 export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const state: State = getState()
+  const state: RootState = getState()
   const { account } = state.core
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
@@ -223,7 +223,7 @@ export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dis
 }
 
 export const saveCustomNodesList = (currencyCode: string, nodesList: string[]) => async (dispatch: Dispatch, getState: GetState) => {
-  const state: State = getState()
+  const state: RootState = getState()
   const { account } = state.core
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]

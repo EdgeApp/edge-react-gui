@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import * as Constants from '../../../../../constants/indexConstants'
 import s from '../../../../../locales/strings'
-import type { State } from '../../../../../types/reduxTypes.js'
+import { type RootState } from '../../../../../types/reduxTypes.js'
 import { TextAndIconButton } from '../../Buttons/TextAndIconButton.ui'
 import { walletSelectorStyles } from '../style'
 import { WalletNameHeader } from './WalletNameHeader.ui.js'
@@ -20,7 +20,7 @@ export type DispatchProps = {
 
 type Props = StateProps & DispatchProps
 
-export default class WalletSelector extends React.Component<Props, State> {
+export default class WalletSelector extends React.Component<Props, RootState> {
   render() {
     let title = s.strings.loading
     if (this.props.selectedWalletName) {

@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type State } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import { scale } from '../../util/scaling.js'
 import { getFiatSymbol } from '../../util/utils.js'
 
@@ -98,7 +98,7 @@ class BalanceBox extends React.PureComponent<BalanceBoxProps, BalanceBoxState> {
   }
 }
 
-export const WiredBalanceBox = connect((state: State, ownProps: WiredBalanceBoxOwnProps): BalanceBoxProps => {
+export const WiredBalanceBox = connect((state: RootState, ownProps: WiredBalanceBoxOwnProps): BalanceBoxProps => {
   const isoFiatCurrencyCode = typeof ownProps.isoFiatCurrencyCode === 'function' ? ownProps.isoFiatCurrencyCode(state) : ownProps.isoFiatCurrencyCode
   return {
     showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,

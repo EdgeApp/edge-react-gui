@@ -5,7 +5,7 @@ import Contacts from 'react-native-contacts'
 import { connect } from 'react-redux'
 
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiContact } from '../../types/types.js'
 import { showError } from '../services/AirshipInstance.js'
 
@@ -226,7 +226,7 @@ class ContactsLoaderComponent extends React.Component<Props> {
 }
 
 export const ContactsLoader = connect(
-  (state: State) => ({
+  (state: RootState) => ({
     contactsPermission: state.permissions.contacts
   }),
   (dispatch: Dispatch) => ({

@@ -11,7 +11,7 @@ import fioAddressIcon from '../../../assets/images/list_fioAddress.png'
 import { type AirshipBridge, AirshipModal, dayText, IconCircle, THEME } from '../../../components/modals/modalParts.js'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
-import type { State as StateType } from '../../../types/reduxTypes'
+import { type RootState } from '../../../types/reduxTypes'
 import type { FioDomain, FlatListItem } from '../../../types/types.js'
 import { scale } from '../../../util/scaling.js'
 import T from '../../UI/components/FormattedText/FormattedText.ui.js'
@@ -216,7 +216,7 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const DomainListModal = connect((state: StateType): StateProps => {
+export const DomainListModal = connect((state: RootState): StateProps => {
   const { account } = state.core
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
   const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null

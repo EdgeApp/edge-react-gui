@@ -3,7 +3,7 @@
 import type { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
 
 import { type CurrencySetting } from '../../reducers/scenes/SettingsReducer.js'
-import type { State } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import isoFiatDenominations from './ISOFiatDenominations'
 
 const emptyEdgeDenomination: EdgeDenomination = {
@@ -12,46 +12,46 @@ const emptyEdgeDenomination: EdgeDenomination = {
   symbol: ''
 }
 
-export const getSettings = (state: State) => {
+export const getSettings = (state: RootState) => {
   const settings = state.ui.settings
   return settings
 }
 
-export const getIsTouchIdSupported = (state: State) => {
+export const getIsTouchIdSupported = (state: RootState) => {
   const settings = getSettings(state)
   return settings.isTouchSupported
 }
-export const getIsTouchIdEnabled = (state: State) => {
+export const getIsTouchIdEnabled = (state: RootState) => {
   const settings = getSettings(state)
   return settings.isTouchEnabled
 }
 
-export const getLoginStatus = (state: State): boolean | null => {
+export const getLoginStatus = (state: RootState): boolean | null => {
   const settings = getSettings(state)
   const loginStatus = settings.loginStatus
   return loginStatus
 }
 
-export const getCurrencySettings = (state: State, currencyCode: string): CurrencySetting => {
+export const getCurrencySettings = (state: RootState, currencyCode: string): CurrencySetting => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
   return currencySettings
 }
 
-export const getCryptocurrencySettings = (state: State, currencyCode: string) => {
+export const getCryptocurrencySettings = (state: RootState, currencyCode: string) => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode]
   return currencySettings
 }
 
-export const getDenominations = (state: State, currencyCode: string): EdgeDenomination[] => {
+export const getDenominations = (state: RootState, currencyCode: string): EdgeDenomination[] => {
   const currencySettings = getCurrencySettings(state, currencyCode)
   if (currencySettings == null || currencySettings.denominations == null) return [emptyEdgeDenomination]
   const denominations = currencySettings.denominations
   return denominations
 }
 
-export const getDisplayDenominationKey = (state: State, currencyCode: string) => {
+export const getDisplayDenominationKey = (state: RootState, currencyCode: string) => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode]
   const selectedDenominationKey = currencySettings.denomination
@@ -71,7 +71,7 @@ export const getDisplayDenominationFromSettings = (settings: any, currencyCode: 
   return selectedDenomination
 }
 
-export const getDisplayDenominationFull = (state: State, currencyCode: string): EdgeDenomination => {
+export const getDisplayDenominationFull = (state: RootState, currencyCode: string): EdgeDenomination => {
   const settings = state.ui.settings
   const currencySettings = settings[currencyCode]
   const selectedDenominationKey = currencySettings.denomination
@@ -85,7 +85,7 @@ export const getDisplayDenominationFull = (state: State, currencyCode: string): 
   return selectedDenomination
 }
 
-export const getDisplayDenomination = (state: State, currencyCode: string): EdgeDenomination => {
+export const getDisplayDenomination = (state: RootState, currencyCode: string): EdgeDenomination => {
   const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
   const denominations = getDenominations(state, currencyCode)
   let selectedDenomination: EdgeDenomination = emptyEdgeDenomination
@@ -97,7 +97,7 @@ export const getDisplayDenomination = (state: State, currencyCode: string): Edge
   return selectedDenomination
 }
 
-export const getExchangeDenomination = (state: State, currencyCode: string) => {
+export const getExchangeDenomination = (state: RootState, currencyCode: string) => {
   const denominations = getDenominations(state, currencyCode)
   let exchangeDenomination: EdgeDenomination = emptyEdgeDenomination
   for (const d of denominations) {
@@ -108,57 +108,57 @@ export const getExchangeDenomination = (state: State, currencyCode: string) => {
   return exchangeDenomination
 }
 
-export const getCustomTokens = (state: State) => {
+export const getCustomTokens = (state: RootState) => {
   const settings = getSettings(state)
   return settings.customTokens
 }
 
-export const getPlugins = (state: State) => {
+export const getPlugins = (state: RootState) => {
   const settings = getSettings(state)
   const plugins = settings.plugins
   return plugins
 }
 
-export const getPluginInfo = (state: State, type: string): EdgeCurrencyInfo => {
+export const getPluginInfo = (state: RootState, type: string): EdgeCurrencyInfo => {
   const plugins = getPlugins(state)
   const currencyInfo: EdgeCurrencyInfo = plugins[type.toLowerCase()]
   return currencyInfo
 }
 
-export const getSettingsLock = (state: State) => {
+export const getSettingsLock = (state: RootState) => {
   const settings = getSettings(state)
   return settings.changesLocked
 }
-export const getAutoLogoutTimeInSeconds = (state: State): number => {
+export const getAutoLogoutTimeInSeconds = (state: RootState): number => {
   const settings = getSettings(state)
   return settings.autoLogoutTimeInSeconds
 }
 
-export const getDefaultFiat = (state: State) => {
+export const getDefaultFiat = (state: RootState) => {
   const settings = getSettings(state)
   const defaultIsoFiat: string = settings.defaultIsoFiat
   const defaultFiat = defaultIsoFiat.replace('iso:', '')
   return defaultFiat
 }
 
-export const getDefaultIsoFiat = (state: State) => {
+export const getDefaultIsoFiat = (state: RootState) => {
   const settings = getSettings(state)
   const defaultIsoFiat: string = settings.defaultIsoFiat
   return defaultIsoFiat
 }
 
-export const getConfirmPasswordErrorMessage = (state: State) => {
+export const getConfirmPasswordErrorMessage = (state: RootState) => {
   const settings = getSettings(state)
   return settings.confirmPasswordError
 }
 
-export const getPinLoginEnabled = (state: State) => {
+export const getPinLoginEnabled = (state: RootState) => {
   const settings = getSettings(state)
   const pinLoginEnabled = settings.pinLoginEnabled
   return pinLoginEnabled
 }
 
-export const getIsAccountBalanceVisible = (state: State) => {
+export const getIsAccountBalanceVisible = (state: RootState) => {
   const settings = getSettings(state)
   return settings.isAccountBalanceVisible
 }

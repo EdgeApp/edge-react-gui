@@ -6,9 +6,9 @@ import * as ADD_TOKEN_ACTIONS from '../../actions/AddTokenActions.js'
 import type { AddTokenDispatchProps, AddTokenOwnProps, AddTokenStateProps } from '../../components/scenes/AddTokeScene.js'
 import { AddToken } from '../../components/scenes/AddTokeScene.js'
 import { getWallet } from '../../modules/UI/selectors.js'
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 
-const mapStateToProps = (state: State, ownProps: AddTokenOwnProps): AddTokenStateProps => ({
+const mapStateToProps = (state: RootState, ownProps: AddTokenOwnProps): AddTokenStateProps => ({
   addTokenPending: state.ui.wallets.addTokenPending,
   wallet: getWallet(state, ownProps.walletId)
 })

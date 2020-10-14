@@ -17,7 +17,7 @@ import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { getFioWallets } from '../../modules/UI/selectors'
-import type { Dispatch, State } from '../../types/reduxTypes'
+import { type Dispatch, type RootState } from '../../types/reduxTypes'
 import type { GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -26,7 +26,7 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 export type StateProps = {
-  state: State,
+  state: RootState,
   wallets: { [string]: GuiWallet },
   fioPlugin: EdgeCurrencyConfig,
   fioWallets: EdgeCurrencyWallet[],
@@ -273,7 +273,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 const FioDomainRegisterSelectWalletScene = connect(
-  (state: State) => {
+  (state: RootState) => {
     const wallets = state.ui.wallets.byId
     const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
     const { account } = state.core

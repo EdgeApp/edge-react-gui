@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
 import { B } from '../../styles/common/textStyles.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship, showActivity, showError, showToast } from '../services/AirshipInstance.js'
@@ -192,7 +192,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const OtpSettingsScene = withTheme(
   connect(
-    (state: ReduxState): StateProps => ({
+    (state: RootState): StateProps => ({
       account: state.core.account
     }),
     (dispatch: Dispatch): DispatchProps => ({})

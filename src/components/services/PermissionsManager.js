@@ -6,7 +6,7 @@ import RNPermissions from 'react-native-permissions'
 import { connect } from 'react-redux'
 
 import { type Permission, type PermissionsState, type PermissionStatus } from '../../reducers/PermissionsReducer.js'
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { showError } from './AirshipInstance.js'
 
 type StateProps = {
@@ -69,7 +69,7 @@ export async function requestPermission(permission: Permission): Promise<Permiss
 }
 
 export const PermissionsManager = connect(
-  (state: State): StateProps => ({
+  (state: RootState): StateProps => ({
     permissions: state.permissions
   }),
   (dispatch: Dispatch): DispatchProps => ({

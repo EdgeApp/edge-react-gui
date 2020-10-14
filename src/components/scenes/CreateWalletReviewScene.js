@@ -16,7 +16,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { fixFiatCurrencyCode } from '../../util/utils'
@@ -182,7 +182,7 @@ const rawStyles = {
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const CreateWalletReviewScene = connect(
-  (state: ReduxState): StateProps => ({
+  (state: RootState): StateProps => ({
     isCreatingWallet: state.ui.scenes.createWallet.isCreatingWallet
   }),
   (dispatch: Dispatch): DispatchProps => ({

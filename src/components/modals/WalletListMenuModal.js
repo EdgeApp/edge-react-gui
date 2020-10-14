@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import { WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
@@ -169,7 +169,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const WalletListMenuModal = connect(
-  (state: ReduxState): StateProps => ({ wallets: state.ui.wallets.byId }),
+  (state: RootState): StateProps => ({ wallets: state.ui.wallets.byId }),
   (dispatch: Dispatch): DispatchProps => ({
     walletListMenuAction(walletId, option, currencyCode) {
       dispatch(walletListMenuAction(walletId, option, currencyCode))

@@ -11,7 +11,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../../modules/UI/selectors'
-import { type State as ReduxState } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -121,7 +121,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const NotificationScene = connect((state: ReduxState): StateProps => {
+export const NotificationScene = connect((state: RootState): StateProps => {
   return {
     currencyInfos: getActiveWalletCurrencyInfos(state),
     userId: state.core.account.rootLoginId

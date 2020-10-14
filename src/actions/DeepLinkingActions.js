@@ -8,7 +8,7 @@ import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
 import { EDGE_LOGIN, EXCHANGE_SCENE, PLUGIN_VIEW_DEEP, SCAN } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { type DeepLink } from '../types/DeepLink.js'
-import { type Dispatch, type GetState, type State as ReduxState } from '../types/reduxTypes.js'
+import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { activatePromotion } from './AccountReferralActions.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
 import { doRequestAddress, parseScannedUri } from './ScanActions.js'
@@ -50,7 +50,7 @@ export const retryPendingDeepLink = () => (dispatch: Dispatch, getState: GetStat
 /**
  * Launches a link if it app is able to do so.
  */
-function handleLink(dispatch: Dispatch, state: ReduxState, link: DeepLink): boolean {
+function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boolean {
   const { activeWalletIds = [], currencyWallets = {}, username } = state.core.account
   const { byId = {}, selectedWalletId } = state.ui.wallets
   const hasCurrentWallet = byId[selectedWalletId] != null

@@ -4,7 +4,7 @@ import { type Disklet } from 'disklet'
 import { type EdgeContext } from 'edge-core-js'
 import { connect } from 'react-redux'
 
-import type { Dispatch, State } from '../../../../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../../../../types/reduxTypes.js'
 import { logoutRequest } from '../../../../Login/action'
 import { deleteLocalAccount } from '../action'
 import UserList from './UserList'
@@ -19,7 +19,7 @@ type DispatchProps = {
   deleteLocalAccount: string => void
 }
 
-const mapStateToProps = (state: State): StateProps => {
+const mapStateToProps = (state: RootState): StateProps => {
   return {
     context: state.core.context,
     disklet: state.core.disklet,

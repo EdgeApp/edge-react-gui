@@ -9,7 +9,7 @@ import fioRequestsIcon from '../../../assets/images/fio/fio_sent_request.png'
 import * as intl from '../../../locales/intl.js'
 import s from '../../../locales/strings'
 import { THEME } from '../../../theme/variables/airbitz.js'
-import type { State } from '../../../types/reduxTypes'
+import { type RootState } from '../../../types/reduxTypes'
 import type { FioRequest } from '../../../types/types'
 import { scale } from '../../../util/scaling.js'
 import { getFiatSymbol } from '../../../util/utils'
@@ -165,7 +165,7 @@ class FioRequestRow extends React.Component<Props> {
 }
 const emptyDisplayDenomination = { name: '', multiplier: '0' }
 
-const mapStateToProps = (state: State, ownProps: OwnProps) => {
+const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const { fioRequest } = ownProps
   const wallet = getSelectedWallet(state)
   if (!wallet) {

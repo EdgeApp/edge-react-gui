@@ -14,7 +14,7 @@ import ENV from '../../../env.json'
 import { loadDeviceReferral } from '../../actions/DeviceReferralActions.js'
 import { rootReducer } from '../../reducers/RootReducer.js'
 import { type Action } from '../../types/reduxActions.js'
-import { type Dispatch, type State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import errorAlert from '../../util/errorAlert.js'
 import loginStatusChecker from '../../util/loginStatusChecker.js'
 import perfLogger from '../../util/perfLogger.js'
@@ -36,7 +36,7 @@ type Props = { context: EdgeContext }
  * including the Redux store, pop-up menus, modals, etc.
  */
 export class Services extends React.PureComponent<Props> {
-  store: Store<State, Action>
+  store: Store<RootState, Action>
   dispatch: Dispatch
 
   constructor(props: Props) {

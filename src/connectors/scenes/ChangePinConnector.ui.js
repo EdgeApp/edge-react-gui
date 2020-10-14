@@ -5,9 +5,9 @@ import { connect } from 'react-redux'
 
 import type { ChangePinDispatchProps, ChangePinOwnProps, ChangePinStateProps } from '../../components/scenes/ChangePinScene'
 import ChangePinComponent from '../../components/scenes/ChangePinScene'
-import type { State } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 
-export const mapStateToProps = (state: State, ownProps: ChangePinOwnProps): ChangePinStateProps => ({
+export const mapStateToProps = (state: RootState, ownProps: ChangePinOwnProps): ChangePinStateProps => ({
   context: state.core.context,
   account: state.core.account,
   showHeader: false

@@ -10,7 +10,7 @@ import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferra
 import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
@@ -196,7 +196,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const SwapSettingsScene = connect(
-  (state: ReduxState): StateProps => ({
+  (state: RootState): StateProps => ({
     accountPlugins: state.account.referralCache.accountPlugins,
     accountReferral: state.account.accountReferral,
     exchanges: state.core.account.swapConfig,

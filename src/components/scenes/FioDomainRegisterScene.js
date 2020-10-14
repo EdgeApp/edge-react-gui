@@ -15,7 +15,7 @@ import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { getFioWallets } from '../../modules/UI/selectors'
 import { PLATFORM } from '../../theme/variables/platform'
-import type { State } from '../../types/reduxTypes'
+import { type RootState } from '../../types/reduxTypes'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import type { WalletListResult } from '../modals/WalletListModal'
@@ -461,7 +461,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioDomainRegisterScene = connect((state: State) => {
+const FioDomainRegisterScene = connect((state: RootState) => {
   const { account } = state.core
   if (!account || !account.currencyConfig) {
     return {

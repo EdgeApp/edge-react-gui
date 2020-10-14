@@ -6,7 +6,7 @@ import { View } from 'react-native'
 import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
-import { type State as ReduxState } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import { type AirshipBridge } from '../modals/modalParts.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
@@ -85,7 +85,7 @@ class CheckPasswordModalComponent extends React.Component<Props, State> {
   }
 }
 
-export const CheckPasswordModal = connect((state: ReduxState): StateProps => ({
+export const CheckPasswordModal = connect((state: RootState): StateProps => ({
   account: state.core.account
 }))(withTheme(CheckPasswordModalComponent))
 

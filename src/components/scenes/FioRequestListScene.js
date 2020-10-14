@@ -18,7 +18,7 @@ import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioReques
 import { getExchangeDenomination } from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import type { State } from '../../types/reduxTypes'
+import { type RootState } from '../../types/reduxTypes'
 import type { FioRequest, GuiWallet } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 import FullScreenLoader from '../common/FullScreenLoader'
@@ -41,7 +41,7 @@ export type LocalState = {
 }
 
 export type StateProps = {
-  state: State,
+  state: RootState,
   account: EdgeAccount,
   wallets: { [walletId: string]: GuiWallet },
   fioWallets: EdgeCurrencyWallet[],

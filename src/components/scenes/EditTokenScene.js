@@ -14,7 +14,7 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import { TertiaryButton } from '../../modules/UI/components/Buttons/TertiaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
@@ -276,7 +276,7 @@ const rawStyles = {
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const EditTokenScene = connect(
-  (state: ReduxState): StateProps => ({
+  (state: RootState): StateProps => ({
     customTokens: state.ui.settings.customTokens,
     editCustomTokenProcessing: state.ui.scenes.editToken.editCustomTokenProcessing
   }),
