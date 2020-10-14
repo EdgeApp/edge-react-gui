@@ -92,7 +92,6 @@ import { EditTokenScene } from './scenes/EditTokenScene.js'
 import { FioDomainRegisterScene } from './scenes/FioDomainRegisterScene'
 import { FioDomainRegisterSelectWalletScene } from './scenes/FioDomainRegisterSelectWalletScene'
 import { FioNameConfirmScene } from './scenes/FioNameConfirmScene'
-import { GuiPluginLegacyScene, renderLegacyPluginBackButton } from './scenes/GuiPluginLegacyScene.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
@@ -389,15 +388,6 @@ export class MainComponent extends React.Component<Props> {
                 renderRightButton={this.renderExitButton()}
                 hideTabBar
               />
-              <Scene
-                key={Constants.PLUGIN_VIEW_LEGACY}
-                navTransparent
-                component={ifLoggedIn(GuiPluginLegacyScene)}
-                renderTitle={props => this.renderTitle(props.plugin.displayName)}
-                renderLeftButton={renderLegacyPluginBackButton()}
-                renderRightButton={this.renderExitButton()}
-                hideTabBar
-              />
             </Stack>
 
             <Stack key={Constants.PLUGIN_SELL} icon={this.icon(Constants.PLUGIN_SELL)} tabBarLabel={s.strings.title_sell}>
@@ -417,15 +407,6 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(GuiPluginViewScene)}
                 renderTitle={props => this.renderTitle(props.plugin.displayName)}
                 renderLeftButton={renderPluginBackButton()}
-                renderRightButton={this.renderExitButton()}
-                hideTabBar
-              />
-              <Scene
-                key={Constants.PLUGIN_VIEW_LEGACY}
-                navTransparent
-                component={ifLoggedIn(GuiPluginLegacyScene)}
-                renderTitle={props => this.renderTitle(props.plugin.displayName)}
-                renderLeftButton={renderLegacyPluginBackButton()}
                 renderRightButton={this.renderExitButton()}
                 hideTabBar
               />
