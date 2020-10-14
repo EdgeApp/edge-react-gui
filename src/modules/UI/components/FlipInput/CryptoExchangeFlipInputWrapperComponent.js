@@ -1,14 +1,13 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
-import * as Constants from '../../../../constants/indexConstants'
+import { B } from '../../../../styles/common/textStyles.js'
 import { THEME } from '../../../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../../../types/types.js'
 import { scale } from '../../../../util/scaling.js'
-import { TextAndIconButton, TextAndIconButtonStyle } from '../Buttons/TextAndIconButton.ui.js'
-import { WalletNameHeader } from '../Header/Component/WalletNameHeader.ui'
 import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from './ExchangedFlipInput2.js'
 
@@ -64,23 +63,30 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
       return (
         <View style={[styles.containerNoFee, styles.containerNoWalletSelected]}>
           <View style={styles.topRow}>
-            <TextAndIconButton style={noWalletSelectedStyle} onPress={this.launchSelector} icon={Constants.KEYBOARD_ARROW_DOWN} title={this.props.buttonText} />
+            <TouchableOpacity onPress={this.launchSelector} style={styles.textIconContainer}>
+              <Text style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
+                {this.props.buttonText}
+              </Text>
+              <MaterialIcons name="keyboard-arrow-down" color={THEME.COLORS.WHITE} size={scale(25)} />
+            </TouchableOpacity>
           </View>
         </View>
       )
     }
     const guiWalletName = this.props.guiWallet.name
     const displayDenomination = this.props.primaryCurrencyInfo.displayCurrencyCode
-    const titleComp = function (styles) {
-      return <WalletNameHeader name={guiWalletName} denomination={displayDenomination} styles={styles} />
-    }
 
     if (!this.props.isFocused) {
       return (
         <View style={styles.containerSelectedWalletNotFocus}>
           {this.renderLogo(this.props.currencyLogo)}
           <View style={styles.topRow}>
-            <TextAndIconButton style={TextAndIconButtonStyle} onPress={this.props.focusMe} icon={Constants.KEYBOARD_ARROW_DOWN} title={titleComp} />
+            <TouchableOpacity onPress={this.props.focusMe} style={{ ...styles.textIconContainer, justifyContent: 'flex-start' }}>
+              <Text style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
+                {guiWalletName}:<B> {displayDenomination}</B>
+              </Text>
+              <MaterialIcons name="keyboard-arrow-down" color={THEME.COLORS.WHITE} size={scale(25)} />
+            </TouchableOpacity>
           </View>
         </View>
       )
@@ -103,16 +109,6 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
         isFocus={false}
       />
     )
-  }
-}
-
-const noWalletSelectedStyle = {
-  ...TextAndIconButtonStyle,
-  textContainer: {},
-  inner: {
-    ...TextAndIconButtonStyle.inner,
-    width: '100%',
-    justifyContent: 'center'
   }
 }
 
@@ -154,6 +150,18 @@ const rawStyles = {
     height: scale(25),
     width: scale(25),
     resizeMode: 'contain'
+  },
+  textIconContainer: {
+    position: 'relative',
+    flexDirection: 'row',
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  iconText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(20)
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

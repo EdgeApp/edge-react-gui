@@ -2,16 +2,16 @@
 
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, ScrollView, View } from 'react-native'
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { TextAndIconButton, TextAndIconButtonStyle } from '../../modules/UI/components/Buttons/TextAndIconButton.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { getFioWallets } from '../../modules/UI/selectors'
 import { PLATFORM } from '../../theme/variables/platform'
@@ -229,29 +229,14 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name
       }`
       return (
-        <TextAndIconButton
-          style={{
-            ...TextAndIconButtonStyle,
-            container: styles.selectWalletBtn,
-            text: {
-              color: theme.secondaryButtonText,
-              fontSize: theme.rem(1)
-            },
-            textPressed: {
-              color: theme.deactivatedText,
-              fontSize: theme.rem(1)
-            },
-            icon: {
-              color: theme.secondaryButtonText
-            },
-            iconPressed: {
-              color: theme.deactivatedText
-            }
-          }}
-          onPress={this.selectFioWallet}
-          icon={Constants.KEYBOARD_ARROW_DOWN}
-          title={title}
-        />
+        <View style={[styles.textIconContainer, styles.selectWalletBtn]}>
+          <TouchableOpacity onPress={this.selectFioWallet} style={styles.textIconRow}>
+            <Text style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
+              {title}
+            </Text>
+            <MaterialIcons name="keyboard-arrow-down" color={theme.secondaryButtonText} size={theme.rem(1.5)} />
+          </TouchableOpacity>
+        </View>
       )
     }
   }
@@ -449,6 +434,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(4),
     width: theme.rem(4),
     textAlign: 'center'
+  },
+  textIconContainer: {
+    position: 'relative',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  textIconRow: {
+    flexDirection: 'row'
+  },
+  iconText: {
+    color: theme.secondaryButtonText,
+    fontSize: theme.rem(1)
   }
 }))
 

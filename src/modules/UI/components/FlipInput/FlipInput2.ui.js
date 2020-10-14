@@ -6,7 +6,6 @@ import { type Event, Animated, Image, Platform, TextInput, TouchableWithoutFeedb
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { EdgeText } from '../../../../components/themed/EdgeText.js'
-import * as Constants from '../../../../constants/indexConstants'
 import * as intl from '../../../../locales/intl.js'
 import s from '../../../../locales/strings.js'
 import { scale } from '../../../../util/scaling.js'
@@ -467,7 +466,7 @@ export class FlipInput extends React.Component<Props, State> {
             <Image style={styles.flipContainerHeaderIcon} source={{ uri: headerLogo || '' }} />
             <View style={styles.flipContainerHeaderTextContainer}>
               <EdgeText style={styles.flipContainerHeaderText}>{headerText}</EdgeText>
-              {headerCallback && <FAIcon style={styles.flipContainerHeaderTextDropDown} name={Constants.KEYBOARD_ARROW_DOWN} size={scale(20)} />}
+              {headerCallback && <FAIcon style={styles.flipContainerHeaderTextDropDown} name="keyboard-arrow-down" size={scale(20)} />}
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -477,7 +476,7 @@ export class FlipInput extends React.Component<Props, State> {
             pointerEvents={isToggled ? 'none' : 'auto'}
           >
             <View style={styles.flipButton}>
-              <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={scale(26)} />
+              <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={scale(26)} />
             </View>
             <View style={styles.rows}>
               {this.topRowFront()}
@@ -489,7 +488,7 @@ export class FlipInput extends React.Component<Props, State> {
             pointerEvents={isToggled ? 'auto' : 'none'}
           >
             <View style={styles.flipButton}>
-              <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={scale(26)} />
+              <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={scale(26)} />
             </View>
             <View style={styles.rows}>
               {this.topRowBack()}

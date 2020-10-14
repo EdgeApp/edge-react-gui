@@ -3,7 +3,7 @@
 import { StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
-import { TextAndIconButtonStyle } from '../Buttons/TextAndIconButton.ui.js'
+import { scale } from '../../../../util/scaling.js'
 
 export default StyleSheet.create({
   headerRoot: {
@@ -45,11 +45,18 @@ export default StyleSheet.create({
   headerNameContainer: {
     display: 'flex',
     flexDirection: 'row'
+  },
+  textIconContainer: {
+    position: 'relative',
+    flexDirection: 'row',
+    width: '80%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  iconText: {
+    textAlign: 'center',
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(20)
   }
 })
-
-export const walletSelectorStyles = {
-  ...TextAndIconButtonStyle,
-  content: { position: 'relative', width: '80%' },
-  centeredContent: { ...TextAndIconButtonStyle.centeredContent, position: 'relative', width: '80%' }
-}

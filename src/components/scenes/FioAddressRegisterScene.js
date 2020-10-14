@@ -5,6 +5,7 @@ import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import fioAddressIcon from '../../assets/images/list_fioAddress.png'
@@ -12,7 +13,6 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { TextAndIconButton, TextAndIconButtonStyle } from '../../modules/UI/components/Buttons/TextAndIconButton.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
@@ -308,12 +308,14 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
         selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name
       }`
       return (
-        <TextAndIconButton
-          style={{ ...TextAndIconButtonStyle, container: styles.selectWalletBtn }}
-          onPress={this.selectFioWallet}
-          icon={Constants.KEYBOARD_ARROW_DOWN}
-          title={title}
-        />
+        <View style={[styles.textIconContainer, styles.selectWalletBtn]}>
+          <TouchableOpacity onPress={this.selectFioWallet} style={styles.textIconRow}>
+            <T style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
+              {title}
+            </T>
+            <MaterialIcons name="keyboard-arrow-down" color={THEME.COLORS.WHITE} size={scale(25)} />
+          </TouchableOpacity>
+        </View>
       )
     }
   }
@@ -527,6 +529,20 @@ const rawStyles = {
     padding: THEME.rem(0.125),
     color: THEME.COLORS.ACCENT_BLUE,
     textAlign: 'center'
+  },
+  textIconContainer: {
+    position: 'relative',
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  textIconRow: {
+    flexDirection: 'row'
+  },
+  iconText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(20)
   }
 }
 export const styles: typeof rawStyles = StyleSheet.create(rawStyles)

@@ -1,13 +1,15 @@
 // @flow
 
 import * as React from 'react'
+import { Text, TouchableOpacity } from 'react-native'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
-import * as Constants from '../../../../../constants/indexConstants'
 import s from '../../../../../locales/strings'
+import { B } from '../../../../../styles/common/textStyles.js'
+import THEME from '../../../../../theme/variables/airbitz'
 import { type RootState } from '../../../../../types/reduxTypes.js'
-import { TextAndIconButton } from '../../Buttons/TextAndIconButton.ui'
-import { walletSelectorStyles } from '../style'
-import { WalletNameHeader } from './WalletNameHeader.ui.js'
+import { scale } from '../../../../../util/scaling.js'
+import styles from '../style'
 
 export type StateProps = {
   selectedWalletName: string | null,
@@ -22,23 +24,19 @@ type Props = StateProps & DispatchProps
 
 export default class WalletSelector extends React.Component<Props, RootState> {
   render() {
-    let title = s.strings.loading
-    if (this.props.selectedWalletName) {
-      const selectedWalletName = this.props.selectedWalletName
-      const selectedWalletCurrencyCode = this.props.selectedWalletCurrencyCode
-      title = function HeaderComp(styles) {
-        return <WalletNameHeader name={selectedWalletName} denomination={selectedWalletCurrencyCode} styles={styles} />
-      }
-    }
-
     return (
-      <TextAndIconButton
-        style={walletSelectorStyles}
-        icon={Constants.KEYBOARD_ARROW_DOWN}
-        iconType={Constants.MATERIAL_ICONS}
-        onPress={this.props.onPress}
-        title={title}
-      />
+      <TouchableOpacity onPress={this.props.onPress} style={styles.textIconContainer}>
+        <Text style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
+          {this.props.selectedWalletName ? (
+            <>
+              {this.props.selectedWalletName}: <B>{this.props.selectedWalletCurrencyCode}</B>
+            </>
+          ) : (
+            s.strings.loading
+          )}
+        </Text>
+        <MaterialIcons name="keyboard-arrow-down" color={THEME.COLORS.WHITE} size={scale(25)} />
+      </TouchableOpacity>
     )
   }
 }

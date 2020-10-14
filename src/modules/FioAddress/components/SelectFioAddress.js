@@ -2,8 +2,9 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 
 import { AddressModal } from '../../../components/modals/AddressModal'
@@ -16,7 +17,6 @@ import { THEME } from '../../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../../types/reduxTypes'
 import type { FioAddress, FioRequest, GuiWallet } from '../../../types/types'
 import { scale } from '../../../util/scaling.js'
-import { TextAndIconButton, TextAndIconButtonStyle } from '../../UI/components/Buttons/TextAndIconButton.ui.js'
 import Text from '../../UI/components/FormattedText/FormattedText.ui.js'
 import * as UI_SELECTORS from '../../UI/selectors.js'
 import { refreshAllFioAddresses } from '../action'
@@ -219,19 +219,12 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
     }
 
     return (
-      <View>
-        <TextAndIconButton
-          style={{
-            ...TextAndIconButtonStyle,
-            text: styles.selectAddressText,
-            textPressed: styles.selectAddressTextPressed,
-            container: styles.selectAddressContainer
-          }}
-          onPress={this.selectAddress}
-          icon={Constants.KEYBOARD_ARROW_DOWN}
-          title={`${s.strings.fragment_send_from_label}: ${selected}`}
-        />
-      </View>
+      <TouchableOpacity onPress={this.selectAddress} style={styles.textIconContainer}>
+        <Text style={styles.selectAddressText} ellipsizeMode="middle" numberOfLines={1}>
+          {`${s.strings.fragment_send_from_label}: ${selected}`}
+        </Text>
+        <MaterialIcons name="keyboard-arrow-down" color={THEME.COLORS.WHITE} size={scale(25)} />
+      </TouchableOpacity>
     )
   }
 
@@ -296,9 +289,6 @@ const rawStyles = {
     marginTop: scale(40),
     alignSelf: 'center'
   },
-  selectAddressContainer: {
-    height: scale(18)
-  },
   selectAddressText: {
     color: THEME.COLORS.WHITE,
     fontSize: scale(14)
@@ -312,6 +302,14 @@ const rawStyles = {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  textIconContainer: {
+    position: 'relative',
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: scale(18)
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
