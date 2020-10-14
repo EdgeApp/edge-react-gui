@@ -49,7 +49,7 @@ export default class XPubModal extends React.Component<XPubModalComponentProps, 
   }
 
   render() {
-    const osPrefix = Platform.OS === 'ios' ? 'ios-' : 'md-'
+    const icon = Platform.OS === 'ios' ? <Ionicon name="ios-eye" size={scale(30)} /> : <Ionicon name="md-eye" size={scale(30)} />
     let hasXpubExplorerValue = false
     if (this.props.xPubExplorer) {
       hasXpubExplorerValue = true
@@ -62,9 +62,7 @@ export default class XPubModal extends React.Component<XPubModalComponentProps, 
         onBackdropPress={this.props.onExit}
         onModalHide={this.props.onExit}
       >
-        <InteractiveModal.Icon>
-          <Ionicon name={`${osPrefix}eye`} size={scale(30)} />
-        </InteractiveModal.Icon>
+        <InteractiveModal.Icon>{icon}</InteractiveModal.Icon>
 
         <InteractiveModal.Title>
           <Text>{s.strings.fragment_wallets_view_xpub}</Text>

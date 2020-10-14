@@ -22,11 +22,15 @@ export default class BackButton extends React.Component<Props> {
 
   render() {
     const { withArrow } = this.props
-    const icon = isIos ? 'ios-arrow-back' : 'md-arrow-back'
+    const icon = isIos ? (
+      <IonIcon size={22} name="ios-arrow-back" style={styles.backIconStyle} />
+    ) : (
+      <IonIcon size={22} name="md-arrow-back" style={[styles.backIconStyle, styles.backIconAndroid]} />
+    )
 
     return (
       <TouchableOpacity style={styles.backButton} onPress={this.props.onPress}>
-        {withArrow && <IonIcon size={22} name={icon} style={[styles.backIconStyle, !isIos && styles.backIconAndroid]} />}
+        {withArrow && icon}
         {withArrow && !isIos ? null : <T style={styles.sideText}>{this.props.label}</T>}
       </TouchableOpacity>
     )
