@@ -53,12 +53,12 @@ export class FioSentRequestDetailsComponent extends React.Component<Props, Local
   }
 
   amountField = () => {
+    const { token_code: tokenCode, amount } = this.props.selectedFioSentRequest.content
     return (
       <View style={styles.row}>
         <T style={styles.title}>
-          {s.strings.fio_request_amount} {this.props.selectedFioSentRequest.content.amount} {this.props.selectedFioSentRequest.content.token_code} (
-          {this.props.fiatSymbol}
-          {this.fiatAmount(this.props.selectedFioSentRequest.content.token_code, this.props.selectedFioSentRequest.content.amount)})
+          {s.strings.fio_request_amount} {amount} {tokenCode.toUpperCase()} ({this.props.fiatSymbol}
+          {this.fiatAmount(tokenCode.toUpperCase(), amount)})
         </T>
       </View>
     )

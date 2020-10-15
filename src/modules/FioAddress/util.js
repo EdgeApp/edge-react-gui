@@ -130,7 +130,7 @@ const isWalletConnected = async (
     const receiveAddress = await wallet.getReceiveAddress()
     if (publicAddress === receiveAddress.publicAddress) return true
 
-    const fullCurrencyCode = `${chainCode}:${tokenCode}`
+    const fullCurrencyCode = `${chainCode}:${tokenCode}`.toUpperCase()
     if (connectedWalletsFromDisklet[fullCurrencyCode]) {
       const { walletId, publicAddress: pubAddressFromDisklet } = connectedWalletsFromDisklet[fullCurrencyCode]
       if (walletId === wallet.id && publicAddress === pubAddressFromDisklet) {
@@ -204,8 +204,8 @@ export const updatePubAddressesForFioAddress = async (
       isConnection: publicAddress && publicAddress !== '0'
     })
     iteration.publicAddressesToConnect.push({
-      token_code: tokenCode,
-      chain_code: chainCode,
+      token_code: tokenCode.toUpperCase(),
+      chain_code: chainCode.toUpperCase(),
       public_address: publicAddress
     })
     if (iteration.publicAddressesToConnect.length === limitPerCall) {
