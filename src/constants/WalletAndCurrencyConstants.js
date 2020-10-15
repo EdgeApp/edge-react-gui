@@ -252,7 +252,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       identifierName: s.strings.unique_identifier_memo,
       identifierKeyboardType: 'default'
     },
-    isImportKeySupported: true
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt_eosio,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions_eosio
+    }
   },
   TLOS: {
     isAccountActivationRequired: true,
@@ -264,7 +267,10 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
       identifierName: s.strings.unique_identifier_memo,
       identifierKeyboardType: 'default'
     },
-    isImportKeySupported: true
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt_eosio,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions_eosio
+    }
   },
   ETH: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',

@@ -113,6 +113,8 @@
   "create_wallet_import_title": "Import Wallet",
   "create_wallet_import_instructions": "Enter your private seed to verify and restore the associated wallet:",
   "create_wallet_import_input_prompt": "Private Seed",
+  "create_wallet_import_instructions_eosio": "Enter your active private key to verify and restore the associated account:",
+  "create_wallet_import_input_prompt_eosio": "Active Private Key",
   "create_wallet_import_successful": "Import Successful!",
   "create_wallet_select_valid_crypto": "Please select a valid wallet type",
   "create_wallet_invalid_input": "Invalid input",
