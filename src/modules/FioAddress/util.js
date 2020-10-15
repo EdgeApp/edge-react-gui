@@ -119,6 +119,8 @@ const isWalletConnected = async (
   connectedWalletsFromDisklet: DiskletConnectedWallets
 ): Promise<boolean> => {
   try {
+    chainCode = chainCode.toUpperCase()
+    tokenCode = tokenCode.toUpperCase()
     const { public_address: publicAddress } = await fioWallet.otherMethods.fioAction('getPublicAddress', {
       fioAddress,
       tokenCode,
@@ -130,7 +132,7 @@ const isWalletConnected = async (
     const receiveAddress = await wallet.getReceiveAddress()
     if (publicAddress === receiveAddress.publicAddress) return true
 
-    const fullCurrencyCode = `${chainCode}:${tokenCode}`.toUpperCase()
+    const fullCurrencyCode = `${chainCode}:${tokenCode}`
     if (connectedWalletsFromDisklet[fullCurrencyCode]) {
       const { walletId, publicAddress: pubAddressFromDisklet } = connectedWalletsFromDisklet[fullCurrencyCode]
       if (walletId === wallet.id && publicAddress === pubAddressFromDisklet) {
@@ -195,7 +197,9 @@ export const updatePubAddressesForFioAddress = async (
     ccWalletMap: []
   }
   const limitPerCall = 5
-  for (const { walletId, chainCode, tokenCode, publicAddress } of publicAddresses) {
+  for (const { walletId, chainCode: cCode, tokenCode: tCode, publicAddress } of publicAddresses) {
+    const chainCode = cCode.toUpperCase()
+    const tokenCode = tCode.toUpperCase()
     const fullCurrencyCode = `${chainCode}:${tokenCode}`
     connectedWalletsFromDisklet[fullCurrencyCode] = { walletId, publicAddress }
     iteration.ccWalletMap.push({
@@ -204,8 +208,8 @@ export const updatePubAddressesForFioAddress = async (
       isConnection: publicAddress && publicAddress !== '0'
     })
     iteration.publicAddressesToConnect.push({
-      token_code: tokenCode.toUpperCase(),
-      chain_code: chainCode.toUpperCase(),
+      token_code: tokenCode,
+      chain_code: chainCode,
       public_address: publicAddress
     })
     if (iteration.publicAddressesToConnect.length === limitPerCall) {

@@ -176,16 +176,17 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     }
   }
   let displayDenomination = emptyDisplayDenomination
+  const tokenCode = fioRequest.content.token_code.toUpperCase()
   try {
-    displayDenomination = getDisplayDenomination(state, fioRequest.content.token_code.toUpperCase())
+    displayDenomination = getDisplayDenomination(state, tokenCode)
   } catch (e) {
-    console.log('No denomination for this Token Code -', fioRequest.content.token_code.toUpperCase())
+    console.log('No denomination for this Token Code -', tokenCode)
   }
   const fiatSymbol = getFiatSymbol(wallet.fiatCurrencyCode)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const exchangeRates = state.exchangeRates
 
-  const rateKey = `${fioRequest.content.token_code.toUpperCase()}_${isoFiatCurrencyCode}`
+  const rateKey = `${tokenCode}_${isoFiatCurrencyCode}`
   const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
   const amountToMultiply = parseFloat(fioRequest.content.amount)
   const fiatAmount = intl.formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
