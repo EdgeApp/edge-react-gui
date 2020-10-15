@@ -324,8 +324,8 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
               payerPublicAddress: pendingRequest.payer_fio_public_key,
               payeePublicAddress: pendingRequest.content.payee_public_address,
               amount: pendingRequest.content.amount,
-              currencyCode: pendingRequest.content.token_code,
-              chainCode: pendingRequest.content.chain_code,
+              currencyCode: pendingRequest.content.token_code.toUpperCase(),
+              chainCode: pendingRequest.content.chain_code.toUpperCase(),
               txid: edgeSignedTransaction.txid,
               memo
             })

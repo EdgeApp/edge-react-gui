@@ -93,7 +93,7 @@ class FioRequestRow extends React.Component<Props> {
 
   requestedField = () => {
     const { displayDenomination, fioRequest } = this.props
-    const name = displayDenomination.name || fioRequest.content.token_code
+    const name = displayDenomination.name || fioRequest.content.token_code.toUpperCase()
     return (
       <T style={styles.transactionPendingTime}>
         {s.strings.title_fio_requested} {name}
@@ -176,16 +176,17 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     }
   }
   let displayDenomination = emptyDisplayDenomination
+  const tokenCode = fioRequest.content.token_code.toUpperCase()
   try {
-    displayDenomination = getDisplayDenomination(state, fioRequest.content.token_code)
+    displayDenomination = getDisplayDenomination(state, tokenCode)
   } catch (e) {
-    console.log('No denomination for this Token Code -', fioRequest.content.token_code)
+    console.log('No denomination for this Token Code -', tokenCode)
   }
   const fiatSymbol = getFiatSymbol(wallet.fiatCurrencyCode)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const exchangeRates = state.exchangeRates
 
-  const rateKey = `${fioRequest.content.token_code}_${isoFiatCurrencyCode}`
+  const rateKey = `${tokenCode}_${isoFiatCurrencyCode}`
   const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
   const amountToMultiply = parseFloat(fioRequest.content.amount)
   const fiatAmount = intl.formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
