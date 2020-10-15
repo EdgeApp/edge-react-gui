@@ -2,11 +2,11 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 
+import { TouchableTextIcon } from '../../../components/common/TouchableTextIcon.js'
 import { AddressModal } from '../../../components/modals/AddressModal'
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { TransactionDetailsNotesInput } from '../../../components/modals/TransactionDetailsNotesInput'
@@ -219,12 +219,12 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
     }
 
     return (
-      <TouchableOpacity onPress={this.selectAddress} style={styles.textIconContainer}>
-        <Text style={styles.selectAddressText} ellipsizeMode="middle" numberOfLines={1}>
-          {`${s.strings.fragment_send_from_label}: ${selected}`}
-        </Text>
-        <MaterialIcons name="keyboard-arrow-down" color={THEME.COLORS.WHITE} size={scale(25)} />
-      </TouchableOpacity>
+      <View style={styles.textIconContainer}>
+        <TouchableTextIcon
+          onPress={this.selectAddress}
+          title={<Text style={styles.selectAddressText} ellipsizeMode="middle" numberOfLines={1}>{`${s.strings.fragment_send_from_label}: ${selected}`}</Text>}
+        />
+      </View>
     )
   }
 
@@ -304,9 +304,6 @@ const rawStyles = {
     justifyContent: 'center'
   },
   textIconContainer: {
-    position: 'relative',
-    flexDirection: 'row',
-    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     height: scale(18)

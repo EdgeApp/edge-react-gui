@@ -2,7 +2,7 @@
 
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -18,6 +18,7 @@ import { PLATFORM } from '../../theme/variables/platform'
 import { type RootState } from '../../types/reduxTypes'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { TouchableTextIcon } from '../common/TouchableTextIcon.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -229,13 +230,16 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name
       }`
       return (
-        <View style={[styles.textIconContainer, styles.selectWalletBtn]}>
-          <TouchableOpacity onPress={this.selectFioWallet} style={styles.textIconRow}>
-            <Text style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
-              {title}
-            </Text>
-            <MaterialIcons name="keyboard-arrow-down" color={theme.secondaryButtonText} size={theme.rem(1.5)} />
-          </TouchableOpacity>
+        <View style={styles.selectWalletBtn}>
+          <TouchableTextIcon
+            icon={<MaterialIcons name="keyboard-arrow-down" color={theme.secondaryButtonText} size={theme.rem(1.5)} />}
+            onPress={this.selectFioWallet}
+            title={
+              <Text style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
+                {title}
+              </Text>
+            }
+          />
         </View>
       )
     }
@@ -395,6 +399,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingBottom: theme.rem(30)
   },
   selectWalletBtn: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginTop: theme.rem(1),
     paddingVertical: theme.rem(0.6),
     paddingHorizontal: theme.rem(0.3),
@@ -434,15 +441,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(4),
     width: theme.rem(4),
     textAlign: 'center'
-  },
-  textIconContainer: {
-    position: 'relative',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  textIconRow: {
-    flexDirection: 'row'
   },
   iconText: {
     color: theme.secondaryButtonText,

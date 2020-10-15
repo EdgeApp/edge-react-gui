@@ -1,9 +1,9 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 
+import { TouchableTextIcon } from '../../../../components/common/TouchableTextIcon.js'
 import { B } from '../../../../styles/common/textStyles.js'
 import { THEME } from '../../../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../../../types/types.js'
@@ -63,12 +63,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
       return (
         <View style={[styles.containerNoFee, styles.containerNoWalletSelected]}>
           <View style={styles.topRow}>
-            <TouchableOpacity onPress={this.launchSelector} style={styles.textIconContainer}>
-              <Text style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
-                {this.props.buttonText}
-              </Text>
-              <MaterialIcons name="keyboard-arrow-down" color={THEME.COLORS.WHITE} size={scale(25)} />
-            </TouchableOpacity>
+            <TouchableTextIcon onPress={this.launchSelector} title={this.props.buttonText} />
           </View>
         </View>
       )
@@ -81,12 +76,14 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
         <View style={styles.containerSelectedWalletNotFocus}>
           {this.renderLogo(this.props.currencyLogo)}
           <View style={styles.topRow}>
-            <TouchableOpacity onPress={this.props.focusMe} style={{ ...styles.textIconContainer, justifyContent: 'flex-start' }}>
-              <Text style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
-                {guiWalletName}:<B> {displayDenomination}</B>
-              </Text>
-              <MaterialIcons name="keyboard-arrow-down" color={THEME.COLORS.WHITE} size={scale(25)} />
-            </TouchableOpacity>
+            <TouchableTextIcon
+              onPress={this.props.focusMe}
+              title={
+                <Text style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
+                  {guiWalletName}:<B> {displayDenomination}</B>
+                </Text>
+              }
+            />
           </View>
         </View>
       )

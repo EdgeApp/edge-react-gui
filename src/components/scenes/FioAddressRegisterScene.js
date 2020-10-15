@@ -5,7 +5,6 @@ import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import fioAddressIcon from '../../assets/images/list_fioAddress.png'
@@ -22,6 +21,7 @@ import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 import { openLink } from '../../util/utils'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
+import { TouchableTextIcon } from '../common/TouchableTextIcon.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -308,13 +308,8 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
         selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name
       }`
       return (
-        <View style={[styles.textIconContainer, styles.selectWalletBtn]}>
-          <TouchableOpacity onPress={this.selectFioWallet} style={styles.textIconRow}>
-            <T style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
-              {title}
-            </T>
-            <MaterialIcons name="keyboard-arrow-down" color={THEME.COLORS.WHITE} size={scale(25)} />
-          </TouchableOpacity>
+        <View style={styles.selectWalletBtn}>
+          <TouchableTextIcon onPress={this.selectFioWallet} title={title} />
         </View>
       )
     }
@@ -496,6 +491,9 @@ const rawStyles = {
     backgroundColor: THEME.COLORS.GRAY_3
   },
   selectWalletBtn: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginTop: scale(15),
     paddingVertical: scale(10),
     paddingHorizontal: scale(5),
@@ -529,20 +527,6 @@ const rawStyles = {
     padding: THEME.rem(0.125),
     color: THEME.COLORS.ACCENT_BLUE,
     textAlign: 'center'
-  },
-  textIconContainer: {
-    position: 'relative',
-    flexDirection: 'row',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  textIconRow: {
-    flexDirection: 'row'
-  },
-  iconText: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(20)
   }
 }
 export const styles: typeof rawStyles = StyleSheet.create(rawStyles)

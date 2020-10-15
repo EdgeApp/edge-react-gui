@@ -47,10 +47,7 @@ export default StyleSheet.create({
     flexDirection: 'row'
   },
   textIconContainer: {
-    position: 'relative',
-    flexDirection: 'row',
     width: '80%',
-    height: '100%',
     alignItems: 'center',
     justifyContent: 'center'
   },
