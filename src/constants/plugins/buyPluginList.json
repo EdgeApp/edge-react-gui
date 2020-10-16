@@ -718,6 +718,35 @@
     }
   },
   {
+    "id": "banxa.sofort",
+    "pluginId": "banxa",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Fee: 1.15% / Settlement: Instant\nDaily Limit: €14000\nMonthly Limit: €150000",
+    "title": "Sofort - Klarna",
+    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "forCountries": [
+      "DE",
+      "AT",
+      "CH",
+      "BE"
+    ],
+    "cryptoCodes": [
+      "BTC",
+      "LTC",
+      "ETH",
+      "BSV",
+      "USDT",
+      "USDC"
+    ],
+    "paymentTypeLogoKey": "sofort",
+    "deepQuery": {
+      "country": "DE",
+      "payment_id": "6045"
+    }
+  },
+  {
     "id": "bits of gold",
     "pluginId": "bitsofgold",
     "paymentTypes": [
@@ -885,6 +914,10 @@
     "sortIndex": 1
   },
   {
+    "id": "banxa.sofort",
+    "sortIndex": 1.5
+  },
+  {
     "id": "banxa.cash",
     "sortIndex": 7
   },
@@ -1033,5 +1066,35 @@
       "AU"
     ],
     "sortIndex": 3
+  },
+  {
+    "id": "banxa.sofort",
+    "forCountries": [
+      "AT"
+    ],
+    "deepQuery": {
+      "country": "AT",
+      "payment_id": "6045"
+    }
+  },
+  {
+    "id": "banxa.sofort",
+    "forCountries": [
+      "CH"
+    ],
+    "deepQuery": {
+      "country": "CH",
+      "payment_id": "6045"
+    }
+  },
+  {
+    "id": "banxa.sofort",
+    "forCountries": [
+      "BE"
+    ],
+    "deepQuery": {
+      "country": "BE",
+      "payment_id": "6045"
+    }
   }
 ]
