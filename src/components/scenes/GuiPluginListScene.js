@@ -25,6 +25,7 @@ import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLo
 import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
 import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
 import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
+import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import { ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
@@ -65,6 +66,7 @@ const paymentTypeLogosById = {
   newsagent: paymentTypeLogoNewsagent,
   payid: paymentTypeLogoPayid,
   poli: paymentTypeLogoPoli,
+  sofort: paymentTypeLogoSofort,
   swish: paymentTypeLogoSwish,
   upi: paymentTypeLogoUpi
 }
