@@ -95,7 +95,6 @@
   "fragment_wallets_split_wallet_bch_to_bsv": "Estás a punto de dividir tu cartera BCH y crear una nueva cartera BSV desde tus claves privadas de BCH. Esto requiere una transacción de BCH para proteger tus fondos de un gasto no intencionado en la cadena incorrecta. Esto generará un pequeño coste de transacción en la cartera BCH. Por favor asegúrate de que esta transacción inicial se confirma antes de hacer más transacciones con BCH. Estás seguro de que quieres dividir\n",
   "fragment_wallets_split_wallet_first_confirm_message_mobile": "¿Estás seguro de que quieres partir la cartera? (Wallet split)",
   "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "¿ Estás seguro de que quieres revelar la semilla privada de la siguiente cartera?\n",
-  "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "¿Estás seguro de que quieres borrar la cartera?\n",
   "fragmet_wallets_delete_fio_extra_message_mobile": "Eliminar esta cartera FIO eliminará el acceso a cualquier dirección FIO que hayas vinculado a esta cartera.",
   "wallet_list_add_wallet": "Crear cartera",
   "wallet_list_add_token": "Añadir token",
