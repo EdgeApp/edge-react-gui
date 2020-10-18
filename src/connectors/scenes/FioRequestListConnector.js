@@ -5,9 +5,9 @@ import { connect } from 'react-redux'
 import type { DispatchProps, StateProps } from '../../components/scenes/FioRequestListScene'
 import { FioRequestList } from '../../components/scenes/FioRequestListScene'
 import { getFioWallets, getSelectedWallet, getWallets } from '../../modules/UI/selectors.js'
-import type { Dispatch, State } from '../../types/reduxTypes'
+import { type Dispatch, type RootState } from '../../types/reduxTypes'
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: RootState) => {
   const fioWallets = getFioWallets(state)
   const wallets = getWallets(state)
   const wallet = getSelectedWallet(state)

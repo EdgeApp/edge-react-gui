@@ -45,7 +45,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'center'
   },
   messageText: {
-    alignSelf: 'center',
     color: theme.primaryText,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),

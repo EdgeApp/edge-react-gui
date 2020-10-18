@@ -8,10 +8,10 @@ import { FioAddressListScene } from '../../components/scenes/FioAddressListScene
 import * as Constants from '../../constants/indexConstants'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { getFioWallets } from '../../modules/UI/selectors'
-import type { Dispatch, State } from '../../types/reduxTypes'
+import { type Dispatch, type RootState } from '../../types/reduxTypes'
 import type { FioAddress, FioDomain } from '../../types/types'
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: RootState) => {
   const { account } = state.core
   const fioAddresses: FioAddress[] = state.ui.scenes.fioAddress.fioAddresses
   const fioDomains: FioDomain[] = state.ui.scenes.fioAddress.fioDomains

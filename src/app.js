@@ -1,7 +1,7 @@
 // @flow
 /* global __DEV__ */
 
-import { Client } from 'bugsnag-react-native'
+import Bugsnag from '@bugsnag/react-native'
 import * as React from 'react'
 import { Platform, StatusBar, Text, TextInput } from 'react-native'
 import RNFS from 'react-native-fs'
@@ -9,6 +9,8 @@ import RNFS from 'react-native-fs'
 import ENV from '../env.json'
 import { THEME } from './theme/variables/airbitz.js'
 import { log, logToServer } from './util/logger'
+
+Bugsnag.start()
 
 // Set up the transparent status bar at boot time on Android:
 StatusBar.setBarStyle('light-content')
@@ -20,8 +22,6 @@ if (StatusBar.setTranslucent != null) {
 const ENABLE_WHY_DID_YOU_UPDATE = false
 const ENABLE_PERF_LOGGING = false
 const PERF_LOGGING_ONLY = false
-
-global.bugsnag = new Client(ENV.BUGSNAG_API_KEY)
 
 const perfTimers = {}
 const perfCounters = {}
@@ -152,7 +152,7 @@ if (ENABLE_PERF_LOGGING) {
 const realFetch = fetch
 fetch = (...args: any) => {
   return realFetch(...args).catch(e => {
-    global.bugsnag.leaveBreadcrumb('realFetchError', {
+    Bugsnag.leaveBreadcrumb('realFetchError', {
       url: args[0],
       errorName: e.name,
       errorMsg: e.message

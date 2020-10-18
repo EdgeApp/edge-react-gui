@@ -8,9 +8,9 @@ import { FioAddressRegisterScene } from '../../components/scenes/FioAddressRegis
 import * as Constants from '../../constants/indexConstants'
 import { createFioWallet } from '../../modules/FioAddress/action'
 import { getFioWallets } from '../../modules/UI/selectors'
-import type { Dispatch, State } from '../../types/reduxTypes'
+import { type Dispatch, type RootState } from '../../types/reduxTypes'
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: RootState) => {
   const { account } = state.core
   if (!account || !account.currencyConfig) {
     return {

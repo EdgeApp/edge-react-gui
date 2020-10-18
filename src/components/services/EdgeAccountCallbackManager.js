@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import { updateWalletsRequest } from '../../modules/Core/Wallets/action.js'
 import { updateExchangeRates } from '../../modules/ExchangeRates/action.js'
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { Airship } from './AirshipInstance.js'
 
 type EdgeAccountCallbackManagerStateProps = {
@@ -67,7 +67,7 @@ class EdgeAccountCallbackManager extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: State): EdgeAccountCallbackManagerStateProps => {
+const mapStateToProps = (state: RootState): EdgeAccountCallbackManagerStateProps => {
   return {
     account: state.core.account
   }

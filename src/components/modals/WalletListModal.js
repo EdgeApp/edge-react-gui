@@ -13,7 +13,7 @@ import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { setEnabledTokens } from '../../modules/Core/Wallets/EnabledTokens.js'
 import { getActiveWalletIds } from '../../modules/UI/selectors.js'
-import type { State as StateType } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import type { CreateWalletType, CustomTokenInfo, FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
 import { getCreateWalletType, getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
@@ -419,7 +419,7 @@ class WalletListModalConnected extends React.Component<Props, State> {
 }
 
 const WalletListModal = connect(
-  (state: StateType): StateProps => {
+  (state: RootState): StateProps => {
     const wallets = state.ui.wallets.byId
     return {
       wallets,

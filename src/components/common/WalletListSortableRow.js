@@ -15,7 +15,7 @@ import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selecto
 import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
 import { THEME } from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform.js'
-import { type State as ReduxState } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils'
@@ -24,7 +24,7 @@ const DIVIDE_PRECISION = 18
 
 type OwnProps = {
   guiWallet: GuiWallet,
-  showBalance: boolean | ((state: ReduxState) => boolean)
+  showBalance: boolean | ((state: RootState) => boolean)
 }
 type StateProps = {
   exchangeRates: ExchangeRatesState,
@@ -171,7 +171,7 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const WalletListSortableRow = connect((state: ReduxState, ownProps: OwnProps): StateProps => ({
+export const WalletListSortableRow = connect((state: RootState, ownProps: OwnProps): StateProps => ({
   showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
   settings: state.ui.settings,
   exchangeRates: state.exchangeRates,

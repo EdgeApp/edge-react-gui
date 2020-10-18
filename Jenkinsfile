@@ -1,19 +1,3 @@
-def build (platform) {
-  sh "mkdir -p buildnum temp"
-  // Copy the previous build num
-  try {
-    sh "cp ./buildnum/${platform}.json ./${platform}/buildnum.json"
-  } catch(err) {
-    println err
-  }
-  sh "node ./deploy.js edge ${platform} ${BRANCH_NAME}"
-  // Save the build num after a successful build
-  sh "cp ./${platform}/buildnum.json ./buildnum/${platform}.json"
-  // Add the build num and the platform to the description
-  def buildnum = readJSON file: "./buildnum/${platform}.json"
-  currentBuild.description += "\n${platform}-${buildnum.buildNum}"
-}
-
 pipeline {
   agent any
   tools {
@@ -42,30 +26,21 @@ pipeline {
       }
     }
 
-    stage ("Get version and build number") {
+    stage ("Get build number and version") {
       steps {
-        // Import the buildnums from previous build
+        // Install dependencies for the versioning script:
+        sh "npm i disklet cleaners sucrase"
+
+        // Copy release-version.json from the previous build:
         copyArtifacts projectName: "${JOB_NAME}", selector: lastCompleted(), optional: true
 
-        // Fix version for branchs that are not "master" or "develop"
+        // Pick the new build number and version:
+        sh "./scripts/updateVersion.js ${BRANCH_NAME}"
+
+        // Update our description:
         script {
-          def packageJson = readJSON file: "./package.json"
-          if (
-            BRANCH_NAME != "develop" &&
-            BRANCH_NAME != "master" &&
-            BRANCH_NAME != "test-feta" &&
-            BRANCH_NAME != "test-gouda" &&
-            BRANCH_NAME != "test-paneer" &&
-            BRANCH_NAME != "test" &&
-            BRANCH_NAME != "yolo"
-          ) {
-            def cleanBranch = BRANCH_NAME.replaceAll('/', '-')
-            packageJson.version = "${packageJson.version}-${cleanBranch}".inspect()
-            writeJSON file: "./package.json", json: packageJson
-          }
-          def description = "[version] ${packageJson.version}"
-          if (BRANCH_NAME == "develop") description += "-d"
-          currentBuild.description = description
+          def versionFile = readJSON file: "./release-version.json"
+          currentBuild.description = "version: ${versionFile.version} (${versionFile.build})"
         }
       }
     }
@@ -83,7 +58,7 @@ pipeline {
           sh "cp ${deploy_config} ./deploy-config.json"
           sh "cp ${GoogleService_Info} ./GoogleService-Info.plist"
           sh "cp ${google_services} ./google-services.json"
-          sh "mkdir -p ./keystores"
+          sh "mkdir -p ./keystores temp"
           sh "cp ${edge_release_keystore} ./keystores/edge-release-keystore.jks"
           sh "cp ${env_json} ./env.json"
         }
@@ -118,13 +93,15 @@ pipeline {
         stage("ios") {
           when { equals expected: true, actual: params.IOS_BUILD }
           steps {
-            build("ios")
+            sh "node ./deploy.js edge ios ${BRANCH_NAME}"
+            sh "./scripts/uploadSourcemaps.js ios"
           }
         }
         stage("android") {
           when { equals expected: true, actual: params.ANDROID_BUILD }
           steps {
-            build("android")
+            sh "node ./deploy.js edge android ${BRANCH_NAME}"
+            sh "./scripts/uploadSourcemaps.js android"
           }
         }
       }
@@ -149,7 +126,7 @@ pipeline {
         sourceEncoding: 'ASCII'
       )
       // Archiving the buildnums for future builds
-      archiveArtifacts artifacts: "buildnum/", allowEmptyArchive: true
+      archiveArtifacts artifacts: "release-version.json", allowEmptyArchive: true
     }
     success {
       echo "The force is strong with this one"

@@ -1,16 +1,14 @@
 PODS:
   - boost-for-react-native (1.63.0)
-  - BugsnagReactNative (2.12.6):
-    - BugsnagReactNative/Core (= 2.12.6)
-    - React
-  - BugsnagReactNative/Core (2.12.6):
+  - BugsnagReactNative (7.3.5):
     - React
   - BVLinearGradient (2.5.6):
     - React
+  - CocoaAsyncSocket (7.6.4)
   - disklet (0.4.5):
     - React
   - DoubleConversion (1.1.6)
-  - edge-login-ui-rn (0.6.18):
+  - edge-login-ui-rn (0.6.20):
     - React
   - Firebase/Core (5.3.0):
     - Firebase/CoreOnly
@@ -78,8 +76,6 @@ PODS:
   - react-native-safari-view (1.0.0):
     - React
   - react-native-smart-splash-screen (2.3.5):
-    - React
-  - react-native-tcp (3.2.2):
     - React
   - react-native-webview (5.12.1):
     - React
@@ -159,10 +155,13 @@ PODS:
     - React
   - RNVectorIcons (6.1.0):
     - React
+  - TcpSockets (4.0.0):
+    - CocoaAsyncSocket
+    - React
   - yoga (0.59.10.React)
 
 DEPENDENCIES:
-  - BugsnagReactNative (from `../node_modules/bugsnag-react-native`)
+  - "BugsnagReactNative (from `../node_modules/@bugsnag/react-native`)"
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - disklet (from `../node_modules/disklet`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
@@ -181,7 +180,6 @@ DEPENDENCIES:
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
-  - react-native-tcp (from `../node_modules/react-native-tcp`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
@@ -206,11 +204,13 @@ DEPENDENCIES:
   - RNSound (from `../node_modules/react-native-sound`)
   - RNStoreReview (from `../node_modules/react-native-store-review/ios`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - TcpSockets (from `../node_modules/react-native-tcp`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - boost-for-react-native
+    - CocoaAsyncSocket
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -222,7 +222,7 @@ SPEC REPOS:
 
 EXTERNAL SOURCES:
   BugsnagReactNative:
-    :path: "../node_modules/bugsnag-react-native"
+    :path: "../node_modules/@bugsnag/react-native"
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
   disklet:
@@ -257,8 +257,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safari-view"
   react-native-smart-splash-screen:
     :path: "../node_modules/react-native-smart-splash-screen"
-  react-native-tcp:
-    :path: "../node_modules/react-native-tcp"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   ReactNativeART:
@@ -285,16 +283,19 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-store-review/ios"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  TcpSockets:
+    :path: "../node_modules/react-native-tcp"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
-  BugsnagReactNative: 7ba00c17a3dedfeea4dd011919962d415a231c49
+  BugsnagReactNative: fc7d6fb2127e53a8bfc79130b58263da363bb94b
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
+  CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   disklet: 4f586f90b70fdb46f06614a5b7342eda5c90f253
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
-  edge-login-ui-rn: 710ef563433b6978aa2a542746e8dfd1e3e07591
+  edge-login-ui-rn: e48e77b4d84e8922ef8624b4736494fb8b0b020a
   Firebase: 68afeeb05461db02d7c9e3215cda28068670f4aa
   FirebaseAnalytics: b3628aea54c50464c32c393fb2ea032566e7ecc2
   FirebaseCore: 62f1b792a49bb9e8b4073f24606d2c93ffc352f0
@@ -316,7 +317,6 @@ SPEC CHECKSUMS:
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
-  react-native-tcp: ec39d0ce136873220a2895a0e89dc33804fe0def
   react-native-webview: 5036ed4a973ad1deeeff118262d2df7b60b3419d
   ReactNativeART: 78edc68dd4a1e675338cd0cd113319cf3a65f2ab
   ReactNativePermissions: bf462424ca7823d1b8e6cb463184d6e7f151971b
@@ -330,8 +330,9 @@ SPEC CHECKSUMS:
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
   RNVectorIcons: ac7bf6bfeafaf3ad34552cdc6eed6fb8c4b7c940
+  TcpSockets: a8eb6b5867fe643e6cfed5db2e4de62f4d1e8fd0
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: 08d7925f21ad0118fdb477099b500ec9a735726d
+PODFILE CHECKSUM: f3dc10505a872ac06104608825e7dea5cfef3563
 
 COCOAPODS: 1.9.3

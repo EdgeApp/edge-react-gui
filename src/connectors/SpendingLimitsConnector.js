@@ -5,10 +5,10 @@ import { connect } from 'react-redux'
 import { setSpendingLimits } from '../actions/SpendingLimitsActions.js'
 import { SpendingLimitsComponent } from '../components/scenes/SpendingLimitsScene.js'
 import type { SpendingLimits as SpendingLimitsType } from '../reducers/SpendingLimitsReducer.js'
-import type { State } from '../types/reduxTypes.js'
+import { type RootState } from '../types/reduxTypes.js'
 import { getFiatSymbol } from '../util/utils.js'
 
-export const mapStateToProps = (state: State) => ({
+export const mapStateToProps = (state: RootState) => ({
   currencySymbol: getFiatSymbol(state.ui.settings.defaultFiat),
   transactionSpendingLimit: state.ui.settings.spendingLimits.transaction
 })

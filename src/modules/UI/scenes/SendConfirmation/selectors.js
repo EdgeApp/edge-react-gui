@@ -3,7 +3,7 @@
 import type { EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
-import type { State } from '../../../../types/reduxTypes.js'
+import { type RootState } from '../../../../types/reduxTypes.js'
 import { convertNativeToExchange } from '../../../../util/utils.js'
 import { getExchangeDenomination } from '../../../Settings/selectors.js'
 import { convertCurrency, getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
@@ -55,21 +55,22 @@ export const initialState = {
   toggleCryptoOnTop: 0
 }
 
-export const getScene = (state: State): any => getSceneState(state, 'sendConfirmation')
-export const getPending = (state: State): boolean => getScene(state).pending
-export const getError = (state: State): Error => getScene(state).error
-export const getKeyboardIsVisible = (state: State): boolean => getScene(state).keyboardIsVisible
+export const getScene = (state: RootState): any => getSceneState(state, 'sendConfirmation')
+export const getPending = (state: RootState): boolean => getScene(state).pending
+export const getError = (state: RootState): Error => getScene(state).error
+export const getKeyboardIsVisible = (state: RootState): boolean => getScene(state).keyboardIsVisible
 
-export const getTransaction = (state: State): EdgeTransaction => getScene(state).transaction || initialState.transaction
-export const getGuiMakeSpendInfo = (state: State): GuiMakeSpendInfo => state.ui.scenes.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
-export const getForceUpdateGuiCounter = (state: State): number => state.ui.scenes.sendConfirmation.forceUpdateGuiCounter
+export const getTransaction = (state: RootState): EdgeTransaction => getScene(state).transaction || initialState.transaction
+export const getGuiMakeSpendInfo = (state: RootState): GuiMakeSpendInfo => state.ui.scenes.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
+export const getForceUpdateGuiCounter = (state: RootState): number => state.ui.scenes.sendConfirmation.forceUpdateGuiCounter
 
-export const getNetworkFeeOption = (state: State): 'high' | 'standard' | 'low' | 'custom' =>
+export const getNetworkFeeOption = (state: RootState): 'high' | 'standard' | 'low' | 'custom' =>
   getGuiMakeSpendInfo(state).networkFeeOption || initialState.guiMakeSpendInfo.networkFeeOption
 
-export const getCustomNetworkFee = (state: State): any => getGuiMakeSpendInfo(state).customNetworkFee || initialState.guiMakeSpendInfo.customNetworkFee || {}
-export const getMetadata = (state: State): EdgeMetadata => getGuiMakeSpendInfo(state).metadata || initialState.guiMakeSpendInfo.metadata || {}
-export const getPublicAddress = (state: State): string => {
+export const getCustomNetworkFee = (state: RootState): any =>
+  getGuiMakeSpendInfo(state).customNetworkFee || initialState.guiMakeSpendInfo.customNetworkFee || {}
+export const getMetadata = (state: RootState): EdgeMetadata => getGuiMakeSpendInfo(state).metadata || initialState.guiMakeSpendInfo.metadata || {}
+export const getPublicAddress = (state: RootState): string => {
   try {
     return (
       getGuiMakeSpendInfo(state).publicAddress ||
@@ -82,18 +83,18 @@ export const getPublicAddress = (state: State): string => {
     return ''
   }
 }
-export const getNativeAmount = (state: State): string | void => state.ui.scenes.sendConfirmation.nativeAmount
+export const getNativeAmount = (state: RootState): string | void => state.ui.scenes.sendConfirmation.nativeAmount
 
-export const getUniqueIdentifier = (state: State): string => {
+export const getUniqueIdentifier = (state: RootState): string => {
   const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo || initialState.guiMakeSpendInfo
   const uniqueIdentifier = guiMakeSpendInfo.uniqueIdentifier || ''
   return uniqueIdentifier || ''
 }
 
-export const getNetworkFee = (state: State): string => getTransaction(state).networkFee
-export const getParentNetworkFee = (state: State): string | void => getTransaction(state).parentNetworkFee
+export const getNetworkFee = (state: RootState): string => getTransaction(state).networkFee
+export const getParentNetworkFee = (state: RootState): string | void => getTransaction(state).parentNetworkFee
 
-export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {}): EdgeSpendInfo => {
+export const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo = {}): EdgeSpendInfo => {
   const uniqueIdentifier = newSpendInfo.uniqueIdentifier || getUniqueIdentifier(state)
   let spendTargets = []
   if (newSpendInfo.spendTargets) {
@@ -149,7 +150,7 @@ export const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, s
 }
 
 export type AuthType = 'pin' | 'none'
-export const getAuthRequired = (state: State, spendInfo: EdgeSpendInfo): AuthType => {
+export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo): AuthType => {
   const isEnabled = state.ui.settings.spendingLimits.transaction.isEnabled
   if (!isEnabled) return 'none'
 

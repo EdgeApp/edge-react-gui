@@ -21,7 +21,7 @@ import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/Flip
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { getExchangeRate } from '../../modules/UI/selectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiCurrencyInfo, type GuiWallet, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { getDenomFromIsoCode } from '../../util/utils.js'
@@ -287,7 +287,7 @@ const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 const DIVIDE_PRECISION = 18
 
 export const CryptoExchangeScene = connect(
-  (state: ReduxState): StateProps => {
+  (state: RootState): StateProps => {
     const fromWallet = state.cryptoExchange.fromWallet
     const toWallet = state.cryptoExchange.toWallet
     let fromCurrencyCode,

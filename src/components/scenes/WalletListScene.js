@@ -21,7 +21,7 @@ import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/W
 import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { dayText, nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
 import { type FlatListItem, type GuiWallet } from '../../types/types.js'
@@ -235,7 +235,7 @@ const rawStyles = {
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const WalletListScene = connect(
-  (state: ReduxState): StateProps => {
+  (state: RootState): StateProps => {
     let activeWalletIds = getActiveWalletIds(state)
 
     // FIO disable changes below

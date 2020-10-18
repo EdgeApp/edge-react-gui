@@ -6,7 +6,7 @@ import _ from 'lodash'
 import { showTransactionDropdown } from '../components/navigation/TransactionDropdown.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
-import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
+import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import type { TransactionListTx } from '../types/types.js'
 import * as UTILS from '../util/utils'
 import { checkFioObtData } from './FioActions'
@@ -34,7 +34,7 @@ export const INITIAL_TRANSACTION_BATCH_QUANTITY = 10
 const emptyArray = []
 
 export const fetchMoreTransactions = (walletId: string, currencyCode: string, reset: boolean) => (dispatch: Dispatch, getState: GetState) => {
-  const state: State = getState()
+  const state: RootState = getState()
   const { currentWalletId, currentCurrencyCode, numTransactions } = state.ui.scenes.transactionList
   let { currentEndIndex } = state.ui.scenes.transactionList
   const { transactions } = state.ui.scenes.transactionList
@@ -81,7 +81,7 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
   }
 }
 
-const getAndMergeTransactions = async (state: State, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
+const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
   const { currencyWallets = {} } = state.core.account
   const wallet = currencyWallets[walletId]
   if (!wallet) return
@@ -192,7 +192,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeT
 }
 
 export const fetchTransactions = (walletId: string, currencyCode: string, options?: Object) => (dispatch: Dispatch, getState: GetState) => {
-  const state: State = getState()
+  const state: RootState = getState()
   let startEntries, startIndex
   if (options) {
     startEntries = options.startEntries || state.ui.scenes.transactionList.currentEndIndex + 1

@@ -13,7 +13,7 @@ import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
-import type { State } from '../../types/reduxTypes'
+import { type RootState } from '../../types/reduxTypes'
 import { getFeeDisplayed, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -264,7 +264,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioNameConfirmScene = connect((state: State) => {
+const FioNameConfirmScene = connect((state: RootState) => {
   const { account } = state.core
   const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
   const displayDenomination = getDisplayDenomination(state, Constants.FIO_STR)

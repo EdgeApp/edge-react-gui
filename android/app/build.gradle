@@ -74,7 +74,6 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "index.js",
-    extraPackagerArgs: ["--sourcemap-output", "android-release.bundle.map"]
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -151,6 +150,7 @@ android {
 }
 
 dependencies {
+    implementation project(':@bugsnag_react-native')
     implementation project(':@react-native-community_blur')
     implementation project(':react-native-appearance')
     implementation project(':@react-native-community_datetimepicker')
@@ -160,7 +160,6 @@ dependencies {
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation project(':bugsnag-react-native')
     implementation project(':disklet')
     implementation project(':edge-login-ui-rn')
     implementation project(':ExtraDimensions')
@@ -236,3 +235,6 @@ com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = 
 
 // Integrate react-native-vector-icons fonts
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+
+// Integrate native bugsnag libraries
+apply from: "../../node_modules/@bugsnag/react-native/bugsnag-react-native.gradle"

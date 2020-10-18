@@ -9,7 +9,7 @@ import fioRequestsIcon from '../../../assets/images/fio/fio_sent_request.png'
 import * as intl from '../../../locales/intl.js'
 import s from '../../../locales/strings'
 import { THEME } from '../../../theme/variables/airbitz.js'
-import type { State } from '../../../types/reduxTypes'
+import { type RootState } from '../../../types/reduxTypes'
 import type { FioRequest } from '../../../types/types'
 import { scale } from '../../../util/scaling.js'
 import { getFiatSymbol } from '../../../util/utils'
@@ -93,7 +93,7 @@ class FioRequestRow extends React.Component<Props> {
 
   requestedField = () => {
     const { displayDenomination, fioRequest } = this.props
-    const name = displayDenomination.name || fioRequest.content.token_code
+    const name = displayDenomination.name || fioRequest.content.token_code.toUpperCase()
     return (
       <T style={styles.transactionPendingTime}>
         {s.strings.title_fio_requested} {name}
@@ -165,7 +165,7 @@ class FioRequestRow extends React.Component<Props> {
 }
 const emptyDisplayDenomination = { name: '', multiplier: '0' }
 
-const mapStateToProps = (state: State, ownProps: OwnProps) => {
+const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const { fioRequest } = ownProps
   const wallet = getSelectedWallet(state)
   if (!wallet) {
@@ -176,16 +176,17 @@ const mapStateToProps = (state: State, ownProps: OwnProps) => {
     }
   }
   let displayDenomination = emptyDisplayDenomination
+  const tokenCode = fioRequest.content.token_code.toUpperCase()
   try {
-    displayDenomination = getDisplayDenomination(state, fioRequest.content.token_code)
+    displayDenomination = getDisplayDenomination(state, tokenCode)
   } catch (e) {
-    console.log('No denomination for this Token Code -', fioRequest.content.token_code)
+    console.log('No denomination for this Token Code -', tokenCode)
   }
   const fiatSymbol = getFiatSymbol(wallet.fiatCurrencyCode)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const exchangeRates = state.exchangeRates
 
-  const rateKey = `${fioRequest.content.token_code}_${isoFiatCurrencyCode}`
+  const rateKey = `${tokenCode}_${isoFiatCurrencyCode}`
   const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
   const amountToMultiply = parseFloat(fioRequest.content.amount)
   const fiatAmount = intl.formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'

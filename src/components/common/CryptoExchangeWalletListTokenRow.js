@@ -10,7 +10,7 @@ import * as intl from '../../locales/intl.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import type { State } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import { scale } from '../../util/scaling.js'
 import { decimalOrZero, truncateDecimals } from '../../util/utils.js'
 
@@ -78,7 +78,7 @@ class CryptoExchangeWalletListTokenRowConnected extends React.Component<Props, L
   }
 }
 
-const mapStateToProps = (state: State, ownProps): StateProps => {
+const mapStateToProps = (state: RootState, ownProps): StateProps => {
   const currencyCode: string = ownProps.currencyCode
   const displayDenomination: EdgeDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
 

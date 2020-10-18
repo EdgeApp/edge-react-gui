@@ -10,11 +10,11 @@ import * as Constants from '../../constants/indexConstants'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
 import { getCurrencyInfo, getDenomFromIsoCode } from '../../util/utils'
 
-const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {
+const mapStateToProps = (state: RootState): RequestStateProps | RequestLoadingProps => {
   const { account } = state.core
   const { currencyWallets = {} } = account
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)

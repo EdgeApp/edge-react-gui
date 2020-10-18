@@ -76,7 +76,7 @@ import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { THEME } from '../theme/variables/airbitz.js'
-import { type Dispatch, type State as ReduxState } from '../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../types/reduxTypes.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle.js'
@@ -938,7 +938,7 @@ const rawStyles = {
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const Main = connect(
-  (state: ReduxState): StateProps => ({}),
+  (state: RootState): StateProps => ({}),
   (dispatch: Dispatch): DispatchProps => ({
     registerDevice() {
       dispatch(registerDevice())

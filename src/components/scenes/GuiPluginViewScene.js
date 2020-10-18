@@ -1,5 +1,6 @@
 // @flow
 
+import Bugsnag from '@bugsnag/react-native'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
@@ -8,7 +9,7 @@ import { Bridge, onMethod } from 'yaob'
 
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
 import { type GuiPlugin, type GuiPluginQuery, makePluginUri } from '../../types/GuiPluginTypes.js'
-import type { Dispatch, State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -52,7 +53,7 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: bool
 
     // This was crashing us, so send to bugsnag:
     if (bridge != null && message.events != null && typeof message.events.find !== 'function') {
-      global.bugsnag.notify(new Error('Corrupted yaob events'), report => {
+      Bugsnag.notify(new Error('Corrupted yaob events'), report => {
         report.metadata.rawData = event.nativeEvent.data
         report.metadata.eventType = typeof message.events
       })
@@ -118,7 +119,7 @@ type OwnProps = {
 }
 
 type DispatchProps = { dispatch: Dispatch }
-type StateProps = { state: ReduxState }
+type StateProps = { state: RootState }
 type Props = OwnProps & DispatchProps & StateProps
 
 type State = {
@@ -184,7 +185,7 @@ class GuiPluginView extends React.Component<Props, State> {
     this._edgeProvider._updateState(state, deepPath, deepQuery, this._promoCode)
   }
 
-  updatePromoCode(plugin: GuiPlugin, state: ReduxState) {
+  updatePromoCode(plugin: GuiPlugin, state: RootState) {
     const accountPlugins = state.account.referralCache.accountPlugins
     const accountReferral = state.account.accountReferral
     const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
@@ -257,6 +258,6 @@ class GuiPluginView extends React.Component<Props, State> {
 // Connector -----------------------------------------------------------
 
 export const GuiPluginViewScene = connect(
-  (state: ReduxState): StateProps => ({ state }),
+  (state: RootState): StateProps => ({ state }),
   (dispatch: Dispatch): DispatchProps => ({ dispatch })
 )(GuiPluginView)

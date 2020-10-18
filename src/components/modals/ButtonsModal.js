@@ -12,18 +12,31 @@ type ButtonInfo = {
   type?: 'primary' | 'secondary'
 }
 
+/**
+ * A modal with a title, message, and buttons.
+ * This is an alternative to the native `Alert` component.
+ *
+ * Child components appear between the message and the buttons,
+ * but this feature is only meant for inserting extra message elements,
+ * like images or custom text formatting.
+ *
+ * Build a custom modal component if you need form fields, check boxes,
+ * or other interactive elements.
+ */
 export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {
   bridge: AirshipBridge<$Keys<Buttons> | void>,
   title?: string,
   message?: string,
+  children?: React.Node,
   buttons: Buttons
 }) {
-  const { bridge, title, message, buttons } = props
+  const { bridge, title, message, children, buttons } = props
 
   return (
     <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(undefined)} paddingRem={1}>
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {message != null ? <ModalMessage>{message}</ModalMessage> : null}
+      {children}
       {Object.keys(buttons).map(key => {
         const { label, type = 'primary' } = buttons[key]
 

@@ -9,9 +9,9 @@ import {
   type CreateWalletAccountSetupStateProps,
   CreateWalletAccountSetup
 } from '../../components/scenes/CreateWalletAccountSetupScene'
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 
-const mapStateToProps = (state: State): CreateWalletAccountSetupStateProps => {
+const mapStateToProps = (state: RootState): CreateWalletAccountSetupStateProps => {
   return {
     isCheckingHandleAvailability: state.ui.scenes.createWallet.isCheckingHandleAvailability,
     handleAvailableStatus: state.ui.scenes.createWallet.handleAvailableStatus,

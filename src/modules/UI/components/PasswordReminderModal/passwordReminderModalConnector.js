@@ -5,12 +5,12 @@ import { connect } from 'react-redux'
 
 import { postponePasswordReminder } from '../../../../actions/PasswordReminderActions.js'
 import { CHANGE_PASSWORD } from '../../../../constants/indexConstants.js'
-import type { Dispatch, State } from '../../../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import type { PasswordReminder } from '../../../../types/types.js'
 import { checkPassword, requestChangePassword, setPasswordReminder } from './indexPasswordReminderModal.js'
 import { PasswordReminderModal } from './PasswordReminderModal.ui.js'
 
-export const mapStateToProps = (state: State) => ({
+export const mapStateToProps = (state: RootState) => ({
   loginStatus: state.ui.settings.loginStatus,
   status: state.ui.scenes.passwordReminderModal.status,
   isVisible: state.ui.passwordReminder.needsPasswordCheck,

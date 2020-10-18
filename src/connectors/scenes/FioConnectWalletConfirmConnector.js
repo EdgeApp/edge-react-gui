@@ -8,9 +8,9 @@ import type {
 } from '../../components/scenes/FioConnectWalletConfirmScene'
 import { FioConnectWalletConfirmScene } from '../../components/scenes/FioConnectWalletConfirmScene'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import type { Dispatch, State } from '../../types/reduxTypes'
+import { type Dispatch, type RootState } from '../../types/reduxTypes'
 
-const mapStateToProps = (state: State, ownProps) => {
+const mapStateToProps = (state: RootState, ownProps) => {
   const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
   const out: StateProps = {
     ccWalletMap,

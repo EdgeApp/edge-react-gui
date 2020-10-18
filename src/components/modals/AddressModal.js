@@ -27,7 +27,7 @@ import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { type FioAddresses, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import THEME from '../../theme/variables/airbitz.js'
-import type { Dispatch, State as StateType } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
 import { KeyboardTracker } from '../common/KeyboardTracker.js'
 import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
@@ -411,7 +411,7 @@ class AddressModalConnected extends React.Component<Props, State> {
 }
 
 const AddressModal = connect(
-  (state: StateType, ownProps: OwnProps): StateProps => {
+  (state: RootState, ownProps: OwnProps): StateProps => {
     const { account } = state.core
     const { currencyWallets = {} } = account
     return {

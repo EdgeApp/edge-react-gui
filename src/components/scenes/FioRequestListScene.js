@@ -18,7 +18,7 @@ import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioReques
 import { getExchangeDenomination } from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import type { State } from '../../types/reduxTypes'
+import { type RootState } from '../../types/reduxTypes'
 import type { FioRequest, GuiWallet } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 import FullScreenLoader from '../common/FullScreenLoader'
@@ -41,7 +41,7 @@ export type LocalState = {
 }
 
 export type StateProps = {
-  state: State,
+  state: RootState,
   account: EdgeAccount,
   wallets: { [walletId: string]: GuiWallet },
   fioWallets: EdgeCurrencyWallet[],
@@ -285,8 +285,8 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       return
     }
     Alert.alert(
-      sprintf(s.strings.err_token_not_in_wallet_title, fioRequest.content.token_code),
-      sprintf(s.strings.err_token_not_in_wallet_msg, fioRequest.content.token_code),
+      sprintf(s.strings.err_token_not_in_wallet_title, fioRequest.content.token_code.toUpperCase()),
+      sprintf(s.strings.err_token_not_in_wallet_msg, fioRequest.content.token_code.toUpperCase()),
       [{ text: s.strings.string_ok_cap }]
     )
   }
@@ -294,7 +294,9 @@ export class FioRequestList extends React.Component<Props, LocalState> {
   renderDropUp = async (selectedFioPendingRequest: FioRequest) => {
     const { onSelectWallet } = this.props
     const { chain_code, token_code } = selectedFioPendingRequest.content
-    const allowedFullCurrencyCode = chain_code !== token_code && token_code && token_code !== '' ? [`${chain_code}:${token_code}`] : [chain_code]
+    const chainCode = chain_code.toUpperCase()
+    const tokenCode = token_code.toUpperCase()
+    const allowedFullCurrencyCode = chainCode !== tokenCode && tokenCode && tokenCode !== '' ? [`${chainCode}:${tokenCode}`] : [chainCode]
 
     const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedFullCurrencyCode} />
@@ -309,13 +311,13 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     const { fioWallets, state } = this.props
     const fioWalletByAddress = fioWallets.find(wallet => wallet.id === pendingRequest.fioWalletId) || null
     if (!fioWalletByAddress) return showError(s.strings.fio_wallet_missing_for_fio_address)
-    const exchangeDenomination = getExchangeDenomination(state, pendingRequest.content.token_code)
+    const exchangeDenomination = getExchangeDenomination(state, pendingRequest.content.token_code.toUpperCase())
     let nativeAmount = bns.mul(pendingRequest.content.amount, exchangeDenomination.multiplier)
     nativeAmount = bns.toFixed(nativeAmount, 0, 0)
     const guiMakeSpendInfo = {
       fioPendingRequest: pendingRequest,
       fioAddress: pendingRequest.payee_fio_address,
-      currencyCode: pendingRequest.content.token_code,
+      currencyCode: pendingRequest.content.token_code.toUpperCase(),
       nativeAmount: nativeAmount,
       publicAddress: pendingRequest.content.payee_public_address,
       lockInputs: true,

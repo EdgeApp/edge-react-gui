@@ -80,7 +80,6 @@
   "fragment_wallets_split_wallet_bch_to_bsv": "Vous allez deviser ce BCH Wallet et créer un nouveau BSV Wallet depuis votre BCH clés privées.  Il est demandé une BCH transaction pour vous êmpecher des dépenses non intentionnelles et protéger vos fonds depuis les mauvais chains.  Souhaitez-vous vraiment diviser? ",
   "fragment_wallets_split_wallet_first_confirm_message_mobile": "Souhaitez-vous vraiment le diviser? ",
   "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "Souhaitez-vous vraiment afficher le Seed privé pour le portefeuille suivant?\n",
-  "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Souhaitez-vous vraiment l'effacer\n",
   "wallet_list_add_wallet": "Ajouter un portefeuille",
   "wallet_list_add_token": "Ajouter les Tokens",
   "create_wallet_choice_instructions": "Créer un nouveau portefeuille, ou restaurer un portefeuille existant en utilisant la graine privée ?",

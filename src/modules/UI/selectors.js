@@ -4,49 +4,49 @@ import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edg
 import _ from 'lodash'
 
 import * as intl from '../../locales/intl.js'
-import type { State } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types/types.js'
 import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
 
-export const getWallets = (state: State) => {
+export const getWallets = (state: RootState) => {
   // returns an object with GUI Wallets as Keys Not sure how to tpye that
   const wallets = state.ui.wallets.byId
   return wallets
 }
 
-export const getFioWallets = (state: State) => {
+export const getFioWallets = (state: RootState) => {
   return state.ui.wallets.fioWallets
 }
 
-export const getWallet = (state: State, walletId: string) => {
+export const getWallet = (state: RootState, walletId: string) => {
   const wallets = getWallets(state)
   const wallet = wallets[walletId]
   return wallet
 }
 
-export const getSelectedWalletId = (state: State): string => {
+export const getSelectedWalletId = (state: RootState): string => {
   const selectedWalletId = state.ui.wallets.selectedWalletId
   return selectedWalletId
 }
 
-export const getSelectedCurrencyCode = (state: State): string => {
+export const getSelectedCurrencyCode = (state: RootState): string => {
   const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
   return selectedCurrencyCode
 }
 
-export const getSelectedWallet = (state: State) => {
+export const getSelectedWallet = (state: RootState) => {
   const walletId = getSelectedWalletId(state)
   const selectedWallet = getWallet(state, walletId)
   return selectedWallet
 }
 
-export const getActiveWalletIds = (state: State): string[] => {
+export const getActiveWalletIds = (state: RootState): string[] => {
   const activeWalletIds = state.ui.wallets.activeWalletIds
   return activeWalletIds
 }
 
-export const getActiveWalletCurrencyCodes = (state: State) => {
+export const getActiveWalletCurrencyCodes = (state: RootState) => {
   const { account } = state.core
   const { activeWalletIds, currencyWallets } = account
   const currencyCodesMap = activeWalletIds.reduce((map, id) => {
@@ -60,7 +60,7 @@ export const getActiveWalletCurrencyCodes = (state: State) => {
   return currencyCodes
 }
 
-export const getActiveWalletCurrencyInfos = (state: State) => {
+export const getActiveWalletCurrencyInfos = (state: RootState) => {
   const currencyInfos = []
   const { account } = state.core
   const { currencyConfig = {} } = account
@@ -74,7 +74,7 @@ export const getActiveWalletCurrencyInfos = (state: State) => {
   return currencyInfos
 }
 
-export const getWalletLoadingPercent = (state: State) => {
+export const getWalletLoadingPercent = (state: RootState) => {
   const walletsForProgress = state.ui.wallets.walletLoadingProgress
   const walletIds = Object.keys(walletsForProgress)
   const numberOfWallets = walletIds.length
@@ -94,24 +94,24 @@ export const getWalletLoadingPercent = (state: State) => {
   return progressPercentage
 }
 
-export const getSelectedWalletLoadingPercent = (state: State) => {
+export const getSelectedWalletLoadingPercent = (state: RootState) => {
   const wallet = getSelectedWallet(state)
   const walletsProgress = state.ui.wallets.walletLoadingProgress
   return walletsProgress[wallet.id] ? walletsProgress[wallet.id] * 100 : 0
 }
 
-export const getTransactions = (state: State): TransactionListTx[] => {
+export const getTransactions = (state: RootState): TransactionListTx[] => {
   const transactions = state.ui.scenes.transactionList.transactions
   return transactions
 }
 
-export const getDenominations = (state: State, currencyCode: string) => {
+export const getDenominations = (state: RootState, currencyCode: string) => {
   const wallet = getSelectedWallet(state)
   const denominations = Object.values(wallet.allDenominations[currencyCode])
   return denominations
 }
 
-export const getDefaultDenomination = (state: State, currencyCode: string): EdgeDenomination => {
+export const getDefaultDenomination = (state: RootState, currencyCode: string): EdgeDenomination => {
   const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
   const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
   const currencyInfo = getCurrencyInfo(allCurrencyInfos, currencyCode)
@@ -124,7 +124,7 @@ export const getDefaultDenomination = (state: State, currencyCode: string): Edge
   return denomination
 }
 
-export const getExchangeDenomination = (state: State, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
+export const getExchangeDenomination = (state: RootState, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
   let wallet = getSelectedWallet(state)
   const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)
   if (specificWallet) {
@@ -145,30 +145,30 @@ export const getExchangeDenomination = (state: State, currencyCode: string, spec
   throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
 }
 
-export const getUIState = (state: State) => {
+export const getUIState = (state: RootState) => {
   const uiState = state.ui
   return uiState
 }
 
-export const getScenesState = (state: State) => {
+export const getScenesState = (state: RootState) => {
   const uiState = getUIState(state)
   const scenesState = uiState.scenes
   return scenesState
 }
 
-export const getSceneState = (state: State, sceneKey: string) => {
+export const getSceneState = (state: RootState, sceneKey: string) => {
   const sceneState = getScenesState(state)[sceneKey]
   return sceneState
 }
 
-export const getExchangeRate = (state: State, fromCurrencyCode: string, toCurrencyCode: string): number => {
+export const getExchangeRate = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string): number => {
   const exchangeRates = state.exchangeRates
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   const rate = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
   return rate
 }
 
-export const convertCurrency = (state: State, fromCurrencyCode: string, toCurrencyCode: string, amount: number = 1) => {
+export const convertCurrency = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string, amount: number = 1) => {
   const exchangeRate = getExchangeRate(state, fromCurrencyCode, toCurrencyCode)
   const convertedAmount = amount * exchangeRate
   return convertedAmount
@@ -210,7 +210,7 @@ export const convertNativeToExchangeRateDenomination = (settings: Object, curren
   return convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
 }
 
-export const findWalletByFioAddress = async (state: State, fioAddress: string): Promise<EdgeCurrencyWallet | null> => {
+export const findWalletByFioAddress = async (state: RootState, fioAddress: string): Promise<EdgeCurrencyWallet | null> => {
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
 
   if (fioWallets && fioWallets.length) {

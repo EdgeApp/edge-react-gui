@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import type { State } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import EdgeWalletCallbackManager from './EdgeWalletCallbackManager'
 
 type Props = {
@@ -16,7 +16,7 @@ class EdgeWalletsManager extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: State): Props => {
+const mapStateToProps = (state: RootState): Props => {
   const { currencyWallets = {} } = state.core.account
   return {
     ids: Object.keys(currencyWallets)

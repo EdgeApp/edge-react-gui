@@ -27,7 +27,7 @@ target 'edge' do
   pod 'Firebase/Messaging'
 
   # React Native linked dependencies
-  pod 'BugsnagReactNative', :path => '../node_modules/bugsnag-react-native'
+  pod 'BugsnagReactNative', :path => '../node_modules/@bugsnag/react-native'
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
   pod 'disklet', :path => '../node_modules/disklet'
   pod 'edge-login-ui-rn', :path => '../node_modules/edge-login-ui-rn'
@@ -39,7 +39,7 @@ target 'edge' do
   pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
   pod 'react-native-safari-view', :path => '../node_modules/react-native-safari-view'
   pod 'react-native-smart-splash-screen', :path => '../node_modules/react-native-smart-splash-screen'
-  pod 'react-native-tcp', :path => '../node_modules/react-native-tcp'
+  pod 'TcpSockets', :path => '../node_modules/react-native-tcp'
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
   pod 'ReactNativeART', :path => '../node_modules/@react-native-community/art'
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'

@@ -1,39 +1,20 @@
 // @flow
 
-import { createThreeButtonModal, createYesNoModal } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, Linking } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
-import { launchModal } from '../components/common/ModalProvider.js'
-import { showError } from '../components/services/AirshipInstance'
-import {
-  ADD_TOKEN,
-  CURRENCY_PLUGIN_NAMES,
-  EXCHANGE_SCENE,
-  FA_MONEY_ICON,
-  getSpecialCurrencyInfo,
-  ION_ICONS,
-  KEY_ICON,
-  MATERIAL_ICONS,
-  PLUGIN_BUY,
-  SEND_CONFIRMATION,
-  SHOPPING_CART
-} from '../constants/indexConstants.js'
+import { ButtonsModal } from '../components/modals/ButtonsModal.js'
+import { Airship, showError } from '../components/services/AirshipInstance'
+import { ADD_TOKEN, CURRENCY_PLUGIN_NAMES, EXCHANGE_SCENE, getSpecialCurrencyInfo, PLUGIN_BUY, SEND_CONFIRMATION } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
-import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
-import OptionIcon from '../modules/UI/components/OptionIcon/OptionIcon.ui.js'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
-import { B } from '../styles/common/textStyles.js'
-import { THEME } from '../theme/variables/airbitz.js'
 import { type ReturnAddressLink, parseDeepLink } from '../types/DeepLink.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { GuiWallet } from '../types/types.js'
@@ -60,26 +41,23 @@ export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWal
   } else {
     // Currencies match. Ask user to confirm sending an address
     const bodyString = sprintf(s.strings.request_crypto_address_modal_body, sourceName, currencyName) + '\n\n'
-
     const { host } = new URL(successUri)
-    const modal = createYesNoModal({
-      title: s.strings.request_crypto_address_modal_title,
-      message: (
-        <Text style={{ textAlign: 'center' }}>
-          {bodyString}
-          <B>{`${host}`}</B>
-        </Text>
-      ),
-      icon: <OptionIcon iconName={FA_MONEY_ICON} />,
-      noButtonText: s.strings.string_cancel_cap,
-      yesButtonText: s.strings.request_crypto_address_modal_send_address_button
-    })
 
     setTimeout(() => {
-      launchModal(modal)
+      Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.request_crypto_address_modal_title}
+          message={`${bodyString} ${host}`}
+          buttons={{
+            confirm: { label: s.strings.request_crypto_address_modal_send_address_button },
+            cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+          }}
+        />
+      ))
         .then(resolveValue => {
           dispatch({ type: 'ENABLE_SCAN' })
-          if (resolveValue) {
+          if (resolveValue === 'confirm') {
             // Build the URL
             const addr = guiWallet.receiveAddress.publicAddress
             const url = decodeURIComponent(successUri)
@@ -263,16 +241,18 @@ export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch
 }
 
 export const showLegacyAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
-  const legacyAddressModal = createYesNoModal({
-    title: s.strings.legacy_address_modal_title,
-    icon: <AntDesignIcon name="warning" size={THEME.rem(2)} color={THEME.COLORS.ACCENT_RED} style={{ marginBottom: THEME.rem(0.25) }} />,
-    message: s.strings.legacy_address_modal_warning,
-    textAlign: 'left',
-    noButtonText: s.strings.legacy_address_modal_cancel,
-    yesButtonText: s.strings.legacy_address_modal_continue
-  })
-  const response = await launchModal(legacyAddressModal)
-  if (response) {
+  const response = await Airship.show(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      title={s.strings.legacy_address_modal_title}
+      message={s.strings.legacy_address_modal_warning}
+      buttons={{
+        confirm: { label: s.strings.legacy_address_modal_continue },
+        cancel: { label: s.strings.legacy_address_modal_cancel, type: 'secondary' }
+      }}
+    />
+  ))
+  if (response === 'confirm') {
     dispatch(legacyAddressModalContinueButtonPressed())
   } else {
     dispatch({ type: 'ENABLE_SCAN' })
@@ -280,16 +260,18 @@ export const showLegacyAddressModal = () => async (dispatch: Dispatch, getState:
 }
 
 export const privateKeyModalActivated = () => async (dispatch: Dispatch, getState: GetState) => {
-  const privateKeyModal = createYesNoModal({
-    title: s.strings.private_key_modal_sweep_from_private_address,
-    message: s.strings.private_key_modal_sweep_from_private_address_message,
-    icon: <Icon style={{ transform: [{ rotate: '270deg' }] }} type={ION_ICONS} name={KEY_ICON} size={30} />,
-    noButtonText: s.strings.private_key_modal_cancel,
-    yesButtonText: s.strings.private_key_modal_import
-  })
-
-  const firstResponse = await launchModal(privateKeyModal)
-  if (!firstResponse) {
+  const firstResponse = await Airship.show(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      title={s.strings.private_key_modal_sweep_from_private_address}
+      message={s.strings.private_key_modal_sweep_from_private_address_message}
+      buttons={{
+        confirm: { label: s.strings.private_key_modal_import },
+        cancel: { label: s.strings.private_key_modal_cancel, type: 'secondary' }
+      }}
+    />
+  ))
+  if (firstResponse !== 'confirm') {
     dispatch({ type: 'ENABLE_SCAN' })
     return
   }
@@ -343,44 +325,36 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
     const SPECIAL_CURRENCY_INFO = getSpecialCurrencyInfo(currencyCode)
     if (SPECIAL_CURRENCY_INFO.displayBuyCrypto) {
       const messageSyntax = sprintf(s.strings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
-      threeButtonModal = createThreeButtonModal({
-        title: s.strings.buy_crypto_modal_title,
-        message: messageSyntax,
-        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={THEME.COLORS.SECONDARY} />,
-        primaryButton: {
-          text: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode),
-          returnValue: 'buy'
-        },
-        secondaryButton: {
-          text: s.strings.buy_crypto_modal_exchange,
-          returnValue: 'exchange'
-        },
-        tertiaryButton: {
-          text: s.strings.buy_crypto_decline,
-          returnValue: 'decline'
-        }
-      })
+      threeButtonModal = await Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.buy_crypto_modal_title}
+          message={messageSyntax}
+          buttons={{
+            buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
+            exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'secondary' },
+            decline: { label: s.strings.buy_crypto_decline, type: 'secondary' }
+          }}
+        />
+      ))
     } else {
       // if we're not targetting for buying, but rather exchange
       const messageSyntax = sprintf(s.strings.exchange_crypto_modal_message, currencyCode, currencyCode, currencyCode)
-      threeButtonModal = createThreeButtonModal({
-        title: s.strings.buy_crypto_modal_title,
-        message: messageSyntax,
-        icon: <Icon name={SHOPPING_CART} type={MATERIAL_ICONS} size={32} color={THEME.COLORS.SECONDARY} />,
-        primaryButton: {
-          text: sprintf(s.strings.buy_crypto_modal_exchange),
-          returnValue: 'exchange'
-        },
-        secondaryButton: {
-          text: s.strings.buy_crypto_decline,
-          returnValue: 'decline'
-        }
-      })
+      threeButtonModal = await Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.buy_crypto_modal_title}
+          message={messageSyntax}
+          buttons={{
+            exchange: { label: sprintf(s.strings.buy_crypto_modal_exchange) },
+            decline: { label: s.strings.buy_crypto_decline, type: 'secondary' }
+          }}
+        />
+      ))
     }
-    const value = await launchModal(threeButtonModal)
-    if (value === 'buy') {
+    if (threeButtonModal === 'buy') {
       Actions.jump(PLUGIN_BUY)
-    } else if (value === 'exchange') {
+    } else if (threeButtonModal === 'exchange') {
       dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
       Actions.jump(EXCHANGE_SCENE)
     }

@@ -3,9 +3,9 @@
 import { connect } from 'react-redux'
 
 import XPubModal from '../components/modals/XPubModal'
-import type { Dispatch, State } from '../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../types/reduxTypes.js'
 
-const mapStateToProps = (state: State) => ({
+const mapStateToProps = (state: RootState) => ({
   visibilityBoolean: state.ui.scenes.walletList.viewXPubWalletModalVisible,
   xPubSyntax: state.ui.scenes.walletList.xPubSyntax,
   xPubExplorer: state.ui.scenes.walletList.xPubExplorer

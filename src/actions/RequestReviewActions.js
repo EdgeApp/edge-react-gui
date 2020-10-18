@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { TwoButtonSimpleConfirmationModal } from '../components/modals/TwoButtonSimpleConfirmationModal.js'
 import { Airship } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
-import type { State } from '../types/reduxTypes.js'
+import { type RootState } from '../types/reduxTypes.js'
 
 const SWAP_COUNT_DATA_FILE = 'swapCountData.json'
 const MANY_SWAPS_TO_TRIGGER_REQUEST = 3
@@ -35,7 +35,7 @@ const requestReview = async () => {
   }
 }
 
-export const updateSwapCount = async (state: State) => {
+export const updateSwapCount = async (state: RootState) => {
   const { account } = state.core
   let swapCountData
   try {

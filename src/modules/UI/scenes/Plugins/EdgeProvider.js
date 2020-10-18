@@ -19,7 +19,7 @@ import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
-import type { Dispatch, State } from '../../../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { type GuiWallet } from '../../../../types/types.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
@@ -81,7 +81,7 @@ export class EdgeProvider extends Bridgeable {
   // Private properties:
   _plugin: GuiPlugin
   _dispatch: Dispatch
-  _state: State
+  _state: RootState
 
   // Public properties:
   deepPath: string | void
@@ -91,7 +91,7 @@ export class EdgeProvider extends Bridgeable {
 
   constructor(
     plugin: GuiPlugin,
-    state: State,
+    state: RootState,
     dispatch: Dispatch,
     restartPlugin: () => void,
     deepPath?: string,
@@ -109,7 +109,7 @@ export class EdgeProvider extends Bridgeable {
     this.restartPlugin = restartPlugin
   }
 
-  _updateState(state: State, deepPath?: string, deepQuery?: GuiPluginQuery, promoCode?: string): void {
+  _updateState(state: RootState, deepPath?: string, deepQuery?: GuiPluginQuery, promoCode?: string): void {
     this._state = state
     this.deepPath = deepPath
     this.deepQuery = deepQuery

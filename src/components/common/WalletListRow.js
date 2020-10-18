@@ -17,7 +17,7 @@ import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type State as ReduxState } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo, type GuiDenomination, type GuiWallet } from '../../types/types.js'
 import { scale, scaleH } from '../../util/scaling.js'
 import { decimalOrZero, getFiatSymbol, getObjectDiff, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
@@ -360,7 +360,7 @@ const rawStyles = {
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const WalletListRow = connect(
-  (state: ReduxState, ownProps: OwnProps): StateProps => ({
+  (state: RootState, ownProps: OwnProps): StateProps => ({
     customTokens: state.ui.settings.customTokens,
     displayDenomination: SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.guiWallet.currencyCode),
     exchangeDenomination: SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.guiWallet.currencyCode),

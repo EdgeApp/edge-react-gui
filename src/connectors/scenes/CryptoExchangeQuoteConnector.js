@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions.js'
 import { type DispatchProps, type OwnProps, type StateProps, CryptoExchangeQuoteScreenComponent } from '../../components/scenes/CryptoExchangeQuoteScene'
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiSwapInfo } from '../../types/types.js'
 
-export const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => {
+export const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const { request } = ownProps.swapInfo
 
   const { account } = state.core

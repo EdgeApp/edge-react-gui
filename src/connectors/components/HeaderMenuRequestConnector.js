@@ -7,7 +7,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { MenuDropDown, MenuDropDownStyle } from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
 import THEME from '../../theme/variables/airbitz'
-import type { Dispatch, State } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 
 export const dropDownStyle = {
   ...MenuDropDownStyle,
@@ -25,7 +25,7 @@ const help = {
 
 const helpArray = [help]
 
-export const mapStateToProps = (state: State) => {
+export const mapStateToProps = (state: RootState) => {
   const useLegacyAddress = state.ui.scenes.requestType.useLegacyAddress
   const uniqueLegacyAddress = state.ui.scenes.requestType.uniqueLegacyAddress
 

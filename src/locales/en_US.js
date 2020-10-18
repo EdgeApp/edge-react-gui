@@ -113,7 +113,7 @@ const strings = {
   fragment_wallets_split_wallet_first_confirm_message_mobile: 'Are you sure you want to split \n',
   fragment_wallets_get_seed_wallet_first_confirm_message_mobile: 'Are you sure you want to reveal the private seed for the following wallet?\n',
   fragment_wallets_get_raw_key_wallet_confirm_message: 'Are you sure you want to reveal the private keys for this wallet?',
-  fragmet_wallets_delete_wallet_first_confirm_message_mobile: 'Are you sure you want to delete \n',
+  fragmet_wallets_delete_wallet_first_confirm_message_mobile: 'Are you sure you want to delete ',
   fragmet_wallets_delete_fio_extra_message_mobile: 'Deleting this FIO wallet will remove access to any FIO addresses you have linked to this wallet.',
   wallet_list_add_wallet: 'Add Wallet',
   wallet_list_add_token: 'Add Token',
@@ -689,6 +689,10 @@ const strings = {
   update_fresh: 'A fresh new version of Edge is now available. Please update to get our hot new features and fixes.',
   update_now: 'Update Now',
   update_later: "I'll do it later",
+
+  error_boundary_title: 'Oops!',
+  error_boundary_message:
+    "We're sorry but something went wrong. Please kill and restart the app to continue using Edge.\n\nIf the problem persists, contact us at support@edge.app, and we'll do our best to fix the problem.",
 
   export_transaction_date_range: 'Date Range',
   export_transaction_export_type: 'Export Type',

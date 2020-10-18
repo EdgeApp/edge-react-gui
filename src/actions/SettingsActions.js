@@ -1,17 +1,16 @@
 // @flow
 
 import { downgradeDisklet } from 'disklet'
-import { createInputModal, createSecureTextModal, createYesNoModal } from 'edge-components'
+import { createInputModal, createSecureTextModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { Image } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import iconImage from '../assets/images/otp/OTP-badge_sm.png'
 import { launchModal } from '../components/common/ModalProvider.js'
-import { showActivity, showError, showToast } from '../components/services/AirshipInstance.js'
+import { ButtonsModal } from '../components/modals/ButtonsModal.js'
+import { Airship, showActivity, showError, showToast } from '../components/services/AirshipInstance.js'
 import { CURRENCY_PLUGIN_NAMES, ION_ICONS, LOCKED_ICON, WALLET_LIST } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
@@ -22,7 +21,7 @@ import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
 import { THEME } from '../theme/variables/airbitz.js'
-import type { Dispatch, GetState, State } from '../types/reduxTypes.js'
+import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 
 export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -177,26 +176,30 @@ export const showReEnableOtpModal = () => async (dispatch: Dispatch, getState: G
   const { account } = state.core
   const otpResetDate = account.otpResetDate
   if (!otpResetDate) return
-  // Use `launchModal` to put the modal component on screen:
-  const modal = createYesNoModal({
-    title: s.strings.title_otp_keep_modal,
-    message: s.strings.otp_modal_reset_description,
-    icon: <Image source={iconImage} />,
-    yesButtonText: s.strings.otp_keep,
-    noButtonText: s.strings.otp_disable
-  })
-  const resolveValue = await launchModal(modal)
-  if (resolveValue === true) {
+
+  const resolveValue = await Airship.show(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      title={s.strings.title_otp_keep_modal}
+      message={s.strings.otp_modal_reset_description}
+      buttons={{
+        confirm: { label: s.strings.otp_keep },
+        cancel: { label: s.strings.otp_disable, type: 'secondary' }
+      }}
+    />
+  ))
+
+  if (resolveValue === 'confirm') {
     // true on positive, false on negative
     // let 2FA expire
     account.cancelOtpReset()
-  } else if (resolveValue === false) {
+  } else {
     account.disableOtp()
   } // if default of null (press backdrop) do not change anything and keep reminding
 }
 
 export const enableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const state: State = getState()
+  const state: RootState = getState()
   const { account } = state.core
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
@@ -208,7 +211,7 @@ export const enableCustomNodes = (currencyCode: string) => async (dispatch: Disp
 }
 
 export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const state: State = getState()
+  const state: RootState = getState()
   const { account } = state.core
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
@@ -220,7 +223,7 @@ export const disableCustomNodes = (currencyCode: string) => async (dispatch: Dis
 }
 
 export const saveCustomNodesList = (currencyCode: string, nodesList: string[]) => async (dispatch: Dispatch, getState: GetState) => {
-  const state: State = getState()
+  const state: RootState = getState()
   const { account } = state.core
   const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
@@ -327,15 +330,18 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
 export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  const restoreWalletsModal = createYesNoModal({
-    title: s.strings.restore_wallets_modal_title,
-    icon: <Icon type="entypo" name="wallet" size={30} />,
-    message: s.strings.restore_wallets_modal_description,
-    noButtonText: s.strings.restore_wallets_modal_cancel,
-    yesButtonText: s.strings.restore_wallets_modal_confirm
-  })
-  const response = await launchModal(restoreWalletsModal)
-  if (response) {
+  const response = await Airship.show(bridge => (
+    <ButtonsModal
+      bridge={bridge}
+      title={s.strings.restore_wallets_modal_title}
+      message={s.strings.restore_wallets_modal_description}
+      buttons={{
+        confirm: { label: s.strings.restore_wallets_modal_confirm },
+        cancel: { label: s.strings.restore_wallets_modal_cancel, type: 'secondary' }
+      }}
+    />
+  ))
+  if (response === 'confirm') {
     const restoreKeys = account.allKeys.filter(key => key.archived || key.deleted)
     await Promise.all(
       restoreKeys

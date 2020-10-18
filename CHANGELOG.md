@@ -1,5 +1,23 @@
 # edge-react-gui
 
+## 1.17.3 (2020-10-19)
+
+- Add Sofort payment method support through Banxa
+- Add onAddressChange callback to update GUI when EOS accounts are activated
+- FIO - Fix code capitalization
+- Misc fixes and upgrades in preparation of RN63
+- Upgrade edge-currency-accountbased to v0.7.30
+  - Add onAddressChanged callback to EOS
+- Upgrade edge-core-js to v0.17.15
+  - (feature) Add onAddressChanged callback
+- Upgrade edgelogin-ui-rn to v0.6.20
+  - Don't show the reset button without a reset token
+  - Use more modern React methods & import styles
+  - Upgrade to react-redux v6.0.1
+  - Theme the delete user modal
+- Upgrade edge-exchange-plugins to v0.11.11
+  - Update Changelly to use getFixRateForAmount
+
 ## 1.17.2 (2020-10-04)
 
 - FIO import private key

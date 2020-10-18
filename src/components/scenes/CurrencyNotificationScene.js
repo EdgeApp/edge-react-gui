@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
 import { enableNotifications, fetchSettings } from '../../modules/Notifications/action'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
@@ -81,7 +81,7 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
 }
 
 export const CurrencyNotificationScene = connect(
-  (state: ReduxState): StateProps => {
+  (state: RootState): StateProps => {
     const { account } = state.core
 
     return {

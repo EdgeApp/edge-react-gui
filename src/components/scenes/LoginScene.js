@@ -17,7 +17,7 @@ import s from '../../locales/strings.js'
 import { initializeAccount, logoutRequest } from '../../modules/Login/action.js'
 import THEME from '../../theme/variables/airbitz.js'
 import { type DeepLink } from '../../types/DeepLink.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 import { UpdateModal } from '../modals/UpdateModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
@@ -161,7 +161,7 @@ const rawStyles = {
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const LoginScene = connect(
-  (state: ReduxState): StateProps => ({
+  (state: RootState): StateProps => ({
     account: state.core.account,
     context: state.core.context,
     disklet: state.core.disklet,

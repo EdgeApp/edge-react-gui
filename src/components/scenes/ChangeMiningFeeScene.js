@@ -15,7 +15,7 @@ import { getGuiMakeSpendInfo } from '../../modules/UI/scenes/SendConfirmation/se
 import { type FeeOption } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { dayText, nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type State as ReduxState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
@@ -189,7 +189,7 @@ const rawStyles = {
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const ChangeMiningFeeScene = connect(
-  (state: ReduxState): StateProps => ({
+  (state: RootState): StateProps => ({
     networkFeeOption: getGuiMakeSpendInfo(state).networkFeeOption,
     customNetworkFee: getGuiMakeSpendInfo(state).customNetworkFee
   }),

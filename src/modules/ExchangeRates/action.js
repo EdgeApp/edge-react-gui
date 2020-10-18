@@ -1,6 +1,6 @@
 // @flow
 
-import { type Dispatch, type GetState, type State } from '../../types/reduxTypes.js'
+import { type Dispatch, type GetState, type RootState } from '../../types/reduxTypes.js'
 import { getYesterdayDateRoundDownHour } from '../../util/utils.js'
 import { getDefaultIsoFiat } from '../Settings/selectors.js'
 
@@ -13,7 +13,7 @@ export const updateExchangeRates = () => async (dispatch: Dispatch, getState: Ge
   })
 }
 
-async function buildExchangeRates(state: State) {
+async function buildExchangeRates(state: RootState) {
   const { account } = state.core
   const { currencyWallets = {}, exchangeCache } = account
   const accountIsoFiat = getDefaultIsoFiat(state)
