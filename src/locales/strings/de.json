@@ -98,7 +98,6 @@
   "fragment_wallets_split_wallet_first_confirm_message_mobile": "Sind Sie sicher, dass Sie aufsplitten wollen \n",
   "fragment_wallets_get_seed_wallet_first_confirm_message_mobile": "Sind Sie sicher, dass Sie die private Mnemonik für die folgende Wallet anzeigen möchten?\n",
   "fragment_wallets_get_raw_key_wallet_confirm_message": "Sind Sie sicher, dass Sie die privaten Schlüssel für diese Wallet anzeigen möchten?",
-  "fragmet_wallets_delete_wallet_first_confirm_message_mobile": "Sind Sie sicher, dass Sie löschen möchten?",
   "fragmet_wallets_delete_fio_extra_message_mobile": "Das Löschen dieser FIO-Wallet entfernt den Zugriff auf alle FIO-Adressen, die Sie mit dieser Wallet verknüpft haben.",
   "wallet_list_add_wallet": "Wallet hinzufügen",
   "wallet_list_add_token": "Token hinzufügen",
