@@ -43,6 +43,14 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
     }, 400)
     return
   }
+
+  dispatch({
+    type: 'FIO/GET_OBT_DATA_LOADING',
+    data: {
+      getObtDataLoading: true
+    }
+  })
+
   const fioWallets = getFioWallets(state)
 
   const wallet = currencyWallets[walletId]
@@ -65,4 +73,11 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
       console.log(e.message)
     }
   }
+
+  dispatch({
+    type: 'FIO/GET_OBT_DATA_LOADING',
+    data: {
+      getObtDataLoading: false
+    }
+  })
 }

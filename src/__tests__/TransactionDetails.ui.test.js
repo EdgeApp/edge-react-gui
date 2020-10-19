@@ -78,7 +78,8 @@ describe('TransactionDetails.ui', () => {
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn(),
-      theme: getTheme()
+      theme: getTheme(),
+      getObtDataLoading: false
     }
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
@@ -111,7 +112,8 @@ describe('TransactionDetails.ui', () => {
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn(),
-      theme: getTheme()
+      theme: getTheme(),
+      getObtDataLoading: false
     }
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
@@ -144,7 +146,8 @@ describe('TransactionDetails.ui', () => {
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn(),
-      theme: getTheme()
+      theme: getTheme(),
+      getObtDataLoading: false
     }
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
@@ -180,7 +183,8 @@ describe('TransactionDetails.ui', () => {
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
       displayDropdownAlert: jest.fn(),
-      theme: getTheme()
+      theme: getTheme(),
+      getObtDataLoading: false
     }
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 

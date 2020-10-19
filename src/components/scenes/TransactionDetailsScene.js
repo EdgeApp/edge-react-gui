@@ -3,7 +3,7 @@
 import { abs, bns, sub } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { Image, Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Image, Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -45,7 +45,8 @@ type StateProps = {
   destinationWallet?: GuiWallet,
   guiWallet: GuiWallet,
   subcategoriesList: string[],
-  walletDefaultDenomProps: EdgeDenomination
+  walletDefaultDenomProps: EdgeDenomination,
+  getObtDataLoading: boolean
 }
 type DispatchProps = {
   getSubcategories(): void,
@@ -63,7 +64,11 @@ type State = {
   bizId: number,
   miscJson: any, // core receives this as a string
   category: string,
-  subCategory: string
+  subCategory: string,
+  prevMetadata: {
+    name: string,
+    notes: string
+  }
 }
 
 const categories = {
@@ -110,17 +115,38 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const direction = parseInt(edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send'
     const category = this.initializeFormattedCategories(edgeTransaction.metadata, direction)
 
+    const payeeName = edgeTransaction.metadata && edgeTransaction.metadata.name ? edgeTransaction.metadata.name : ''
+    const notes = edgeTransaction.metadata && edgeTransaction.metadata.notes ? edgeTransaction.metadata.notes : ''
+
     this.state = {
       amountFiat: this.initalizeAmountBalance(edgeTransaction.metadata),
-      payeeName: edgeTransaction.metadata && edgeTransaction.metadata.name ? edgeTransaction.metadata.name : '', // remove commenting once metaData in Redux
-      notes: edgeTransaction.metadata && edgeTransaction.metadata.notes ? edgeTransaction.metadata.notes : '',
+      payeeName, // remove commenting once metaData in Redux
+      notes,
       category: category.category,
       subCategory: category.subCategory,
       thumbnailPath,
       direction,
       bizId: 0,
-      miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : ''
+      miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : '',
+      prevMetadata: {
+        name: payeeName,
+        notes
+      }
     }
+  }
+
+  static getDerivedStateFromProps(props: Props, state: State) {
+    const {
+      prevMetadata: { name, notes }
+    } = state
+    const { edgeTransaction } = props
+    const stateUpdates = {}
+    if (edgeTransaction && edgeTransaction.metadata) {
+      const { name: newName, notes: newNotes } = edgeTransaction.metadata
+      if (newName && name !== newName) stateUpdates.payeeName = newName
+      if (newNotes && notes !== newNotes) stateUpdates.notes = newNotes
+    }
+    return Object.keys(stateUpdates).length ? stateUpdates : null
   }
 
   initalizeAmountBalance = (metadata: ?EdgeMetadata) => {
@@ -409,7 +435,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
   // Render
   render() {
-    const { guiWallet, edgeTransaction, theme } = this.props
+    const { guiWallet, edgeTransaction, theme, getObtDataLoading } = this.props
     const { direction, amountFiat, payeeName, thumbnailPath, notes, category, subCategory } = this.state
     const { fiatCurrencyCode } = guiWallet
     const styles = getStyles(theme)
@@ -443,7 +469,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
                 ) : (
                   <IonIcon style={styles.tileAvatarIcon} name="ios-contact" size={theme.rem(2)} />
                 )}
-                <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
+                {getObtDataLoading ? <ActivityIndicator /> : <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>}
               </View>
             </Tile>
             <Tile
@@ -476,7 +502,9 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
             </Tile>
             {edgeTransaction.spendTargets && <Tile type="copy" title={s.strings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
             {this.renderExchangeData()}
-            <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
+            <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput}>
+              {getObtDataLoading ? <ActivityIndicator /> : null}
+            </Tile>
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
               <FormattedText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
             </TouchableWithoutFeedback>
@@ -590,7 +618,8 @@ export const TransactionDetailsScene = connect(
       destinationWallet,
       guiWallet: wallet,
       subcategoriesList,
-      walletDefaultDenomProps
+      walletDefaultDenomProps,
+      getObtDataLoading: state.ui.fio.getObtDataLoading
     }
   },
   (dispatch: Dispatch): DispatchProps => ({

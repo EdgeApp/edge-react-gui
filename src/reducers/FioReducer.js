@@ -14,11 +14,13 @@ export type CcWalletMap = {
 export type FioState = {
   connectedWalletsByFioAddress: {
     [fioAddress: string]: CcWalletMap
-  }
+  },
+  getObtDataLoading: boolean
 }
 
 const initialState: FioState = {
-  connectedWalletsByFioAddress: {}
+  connectedWalletsByFioAddress: {},
+  getObtDataLoading: false
 }
 
 export const fio: Reducer<FioState, Action> = (state = initialState, action: Action) => {
@@ -36,6 +38,14 @@ export const fio: Reducer<FioState, Action> = (state = initialState, action: Act
       return {
         ...state,
         connectedWalletsByFioAddress
+      }
+    }
+    case 'FIO/GET_OBT_DATA_LOADING': {
+      if (!action.data) throw new Error(`Invalid action FIO/GET_OBT_DATA_LOADING`)
+      const { getObtDataLoading } = state
+      return {
+        ...state,
+        getObtDataLoading
       }
     }
     default:

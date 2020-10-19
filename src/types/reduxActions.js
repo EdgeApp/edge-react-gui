@@ -219,3 +219,4 @@ export type Action =
   | { type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS', data: { fioAddress: string, ccWalletMap: CcWalletMap } }
   | { type: 'FIO/SET_OBT_DATA', data: FioObtRecord[] }
   | { type: 'FIO/SET_FIO_DOMAINS', data: { fioDomains: FioDomain[] } }
+  | { type: 'FIO/GET_OBT_DATA_LOADING', data: { getObtDataLoading: boolean } }
