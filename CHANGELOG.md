@@ -1,5 +1,10 @@
 # edge-react-gui
 
+## 1.17.4 (2020-10-19)
+
+- Upgrade react-native-fast-crypto to v1.8.2
+  - Upgrade Monero C++ libraries to support v17 hard fork
+
 ## 1.17.3 (2020-10-19)
 
 - Add Sofort payment method support through Banxa
