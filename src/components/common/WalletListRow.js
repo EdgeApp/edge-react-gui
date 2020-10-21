@@ -1,51 +1,41 @@
 // @flow
 
-import { bns } from 'biggystring'
 import * as React from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { getEnabledTokens, selectWallet } from '../../actions/WalletActions.js'
+import { selectWallet } from '../../actions/WalletActions.js'
 import { getSpecialCurrencyInfo, TRANSACTION_LIST, WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
 import { WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
-import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type RootState } from '../../types/reduxTypes.js'
-import { type GuiDenomination, type GuiWallet } from '../../types/types.js'
+import { type GuiWallet } from '../../types/types.js'
 import { scale, scaleH } from '../../util/scaling.js'
-import { decimalOrZero, getFiatSymbol, getObjectDiff, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { ProgressPie } from './ProgressPie.js'
 
-const DIVIDE_PRECISION = 18
-
 type OwnProps = {
+  differencePercentage: string,
+  differencePercentageStyle: any,
+  exchangeRate: string,
+  exchangeRateFiatSymbol: string,
+  fiatBalance: string,
+  fiatBalanceSymbol: string,
+  cryptoAmount: string,
   guiWallet: GuiWallet,
-  showBalance: boolean | Function,
   walletProgress: number
-}
-type StateProps = {
-  displayDenomination: GuiDenomination,
-  exchangeDenomination: GuiDenomination,
-  exchangeRates: { [string]: number },
-  settings: Object,
-  walletFiatSymbol: string
 }
 
 type DispatchProps = {
-  getEnabledTokensList(walletId: string): void,
   selectWallet(walletId: string, currencyCode: string): void
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & DispatchProps
 
-class WalletListRowComponent extends React.Component<Props> {
+class WalletListRowComponent extends React.PureComponent<Props> {
   _onPressSelectWallet = (walletId, currencyCode, publicAddress) => {
     this.props.selectWallet(walletId, currencyCode)
     // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
@@ -54,19 +44,6 @@ class WalletListRowComponent extends React.Component<Props> {
     if (!SPECIAL_CURRENCY_INFO.isAccountActivationRequired || (SPECIAL_CURRENCY_INFO.isAccountActivationRequired && publicAddress)) {
       Actions[TRANSACTION_LIST]({ params: 'walletList' })
     }
-  }
-
-  shouldComponentUpdate(nextProps) {
-    const diffElement = getObjectDiff(this.props, nextProps, {
-      data: true,
-      item: true
-    })
-    return !!diffElement
-  }
-
-  componentDidMount() {
-    const { guiWallet } = this.props
-    this.props.getEnabledTokensList(guiWallet.id)
   }
 
   openWalletListMenuModal = async () => {
@@ -83,88 +60,52 @@ class WalletListRowComponent extends React.Component<Props> {
   }
 
   render() {
-    const { guiWallet, walletProgress, walletFiatSymbol, settings, exchangeRates, showBalance } = this.props
-    const progress = walletProgress
-
-    const currencyCode = guiWallet.currencyCode
-    const denomination = this.props.displayDenomination
-    const multiplier = denomination.multiplier
-    const id = guiWallet.id
-    const name = guiWallet.name || s.strings.string_no_name
-    const symbol = denomination.symbol
-    const symbolImageDarkMono = guiWallet.symbolImageDarkMono
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(guiWallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
-    const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
-    const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
-    const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
-    const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
-    // Fiat Balance Formatting
-    const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)
-    const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
-    const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
-    const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
-    // Exhange Rate Formatting
-    const exchangeRateFormat = exchangeRate ? intl.formatNumber(exchangeRate, { toFixed: 2 }) : null
-    const exchangeRateFiatSymbol = exchangeRateFormat ? `${walletFiatSymbol} ` : ''
-    const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
-    // Yesterdays Percentage Difference Formatting
-    const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`]
-    const fiatExchangeRate = guiWallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${guiWallet.isoFiatCurrencyCode}`] : 1
-    const yesterdayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
-    const differenceYesterday = exchangeRate ? exchangeRate - yesterdayExchangeRate : null
-    let differencePercentage = differenceYesterday ? (differenceYesterday / yesterdayExchangeRate) * 100 : null
-    if (!yesterdayExchangeRate) {
-      differencePercentage = ''
-    }
-    let differencePercentageString, differencePercentageStringStyle
-    if (!exchangeRate || !differencePercentage || isNaN(differencePercentage)) {
-      differencePercentageStringStyle = styles.walletDetailsRowDifferenceNeutral
-      differencePercentageString = ''
-    } else if (exchangeRate && differencePercentage && differencePercentage === 0) {
-      differencePercentageStringStyle = styles.walletDetailsRowDifferenceNeutral
-      differencePercentageString = '0.00%'
-    } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
-      differencePercentageStringStyle = styles.walletDetailsRowDifferenceNegative
-      differencePercentageString = `- ${Math.abs(differencePercentage).toFixed(2)}%`
-    } else if (exchangeRate && differencePercentage && differencePercentage > 0) {
-      differencePercentageStringStyle = styles.walletDetailsRowDifferencePositive
-      differencePercentageString = `+ ${Math.abs(differencePercentage).toFixed(2)}%`
-    }
-
+    const {
+      differencePercentage,
+      differencePercentageStyle,
+      exchangeRate,
+      exchangeRateFiatSymbol,
+      fiatBalance,
+      fiatBalanceSymbol,
+      cryptoAmount,
+      guiWallet,
+      walletProgress
+    } = this.props
+    const { id, currencyCode, name, receiveAddress, symbolImageDarkMono } = guiWallet
     return (
       <View style={{ width: '100%' }}>
         <View>
           <TouchableHighlight
             style={styles.rowContainer}
             underlayColor={THEME.COLORS.ROW_PRESSED}
-            onPress={() => this._onPressSelectWallet(id, currencyCode, guiWallet.receiveAddress.publicAddress)}
+            onPress={() => this._onPressSelectWallet(id, currencyCode, receiveAddress.publicAddress)}
           >
             <View style={styles.rowContent}>
               <View style={styles.rowIconWrap}>
                 {symbolImageDarkMono && <Image style={styles.rowCurrencyLogoAndroid} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
                 <View style={styles.rowCurrencyLogoAndroid}>
-                  <ProgressPie size={rowCurrencyOverlaySize} color={THEME.COLORS.OPAQUE_WHITE_2} progress={progress} />
+                  <ProgressPie size={rowCurrencyOverlaySize} color={THEME.COLORS.OPAQUE_WHITE_2} progress={walletProgress} />
                 </View>
               </View>
               <View style={styles.walletDetailsContainer}>
                 <View style={styles.walletDetailsRow}>
                   <T style={styles.walletDetailsRowCurrency}>{currencyCode}</T>
-                  <T style={styles.walletDetailsRowValue}>{finalCryptoAmountString}</T>
+                  <T style={styles.walletDetailsRowValue}>{cryptoAmount}</T>
                 </View>
                 <View style={styles.walletDetailsRow}>
-                  <T style={styles.walletDetailsRowName}>{name}</T>
+                  <T style={styles.walletDetailsRowName}>{name || s.strings.string_no_name}</T>
                   <View style={styles.walletDetailsFiatBalanceRow}>
                     <T style={styles.walletDetailsRowFiat}>{fiatBalanceSymbol}</T>
-                    <T style={styles.walletDetailsRowFiat}>{fiatBalanceString}</T>
+                    <T style={styles.walletDetailsRowFiat}>{fiatBalance}</T>
                   </View>
                 </View>
                 <View style={styles.walletDetailsRowLine} />
                 <View style={styles.walletDetailsRow}>
                   <View style={styles.walletDetailsExchangeRow}>
                     <T style={styles.walletDetailsRowExchangeRate}>{exchangeRateFiatSymbol}</T>
-                    <T style={styles.walletDetailsRowExchangeRate}>{exchangeRateString}</T>
+                    <T style={styles.walletDetailsRowExchangeRate}>{exchangeRate}</T>
                   </View>
-                  <T style={differencePercentageStringStyle}>{differencePercentageString}</T>
+                  <T style={differencePercentageStyle}>{differencePercentage}</T>
                 </View>
               </View>
               <TouchableWithoutFeedback onPress={this.openWalletListMenuModal}>
@@ -291,23 +232,11 @@ const rawStyles = {
     flex: 1
   }
 }
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const WalletListRow = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => ({
-    displayDenomination: SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.guiWallet.currencyCode),
-    exchangeDenomination: SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.guiWallet.currencyCode),
-    exchangeRates: state.exchangeRates,
-    settings: state.ui.settings,
-    showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
-    walletFiatSymbol: getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode)
-  }),
-  (dispatch: Dispatch): DispatchProps => ({
-    getEnabledTokensList(walletId: string) {
-      dispatch(getEnabledTokens(walletId))
-    },
-    selectWallet(walletId: string, currencyCode) {
-      dispatch(selectWallet(walletId, currencyCode, WALLET_LIST_SCENE))
-    }
-  })
-)(WalletListRowComponent)
+export const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+
+export const WalletListRow = connect(null, (dispatch: Dispatch): DispatchProps => ({
+  selectWallet(walletId: string, currencyCode) {
+    dispatch(selectWallet(walletId, currencyCode, WALLET_LIST_SCENE))
+  }
+}))(WalletListRowComponent)
