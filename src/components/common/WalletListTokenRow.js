@@ -1,134 +1,95 @@
 // @flow
 
-import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
-import * as intl from '../../locales/intl.js'
-import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type GuiWallet } from '../../types/types.js'
 import { scale, scaleH } from '../../util/scaling.js'
-import * as UTILS from '../../util/utils'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { ProgressPie } from './ProgressPie.js'
 
 type OwnProps = {
-  parentId: string,
-  sortHandlers: any,
+  cryptoAmount: string,
   currencyCode: string,
-  balance: string,
-  walletFiatSymbol: string,
-  showBalance: boolean,
-  progress: number
-}
-
-export type StateProps = {
-  displayDenomination: EdgeDenomination,
-  settings: Object,
-  exchangeRates: Object,
-  currencyCode: string,
-  wallet: GuiWallet
+  differencePercentage: string,
+  differencePercentageStyle: any,
+  exchangeRate: string,
+  exchangeRateFiatSymbol: string,
+  fiatBalance: string,
+  fiatBalanceSymbol: string,
+  name: string,
+  symbolImage?: string,
+  walletId: string,
+  walletName: string,
+  walletProgress: number
 }
 
 export type DispatchProps = {
   selectWallet: (id: string, currencyCode: string) => any
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & DispatchProps
 
 export class WalletListTokenRow extends React.PureComponent<Props> {
   selectWallet = () => {
-    const { parentId: walletId, currencyCode } = this.props
+    const { walletId, currencyCode } = this.props
     this.props.selectWallet(walletId, currencyCode)
     Actions.transactionList({ params: 'walletList' })
   }
 
   openWalletListMenuModal = async () => {
-    const { wallet, currencyCode } = this.props
-    const meta = wallet.metaTokens.find(token => token.currencyCode === currencyCode)
-    const symbolImage = meta ? meta.symbolImage : undefined
-
+    const { currencyCode, walletName, symbolImage, walletId } = this.props
     await Airship.show(bridge => (
-      <WalletListMenuModal bridge={bridge} walletId={wallet.id} walletName={wallet.name} currencyCode={currencyCode} image={symbolImage} isToken />
+      <WalletListMenuModal bridge={bridge} walletId={walletId} walletName={walletName} currencyCode={currencyCode} image={symbolImage} isToken />
     ))
   }
 
   render() {
-    const { wallet, currencyCode, settings, exchangeRates, walletFiatSymbol, showBalance, progress } = this.props
-    const { name } = wallet
-    const meta = wallet.metaTokens.find(token => token.currencyCode === currencyCode)
-    const symbolImage = meta ? meta.symbolImage : undefined
-    const cryptoAmount = intl.formatNumber(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balance) || '0') // check if infinitesimal (would display as zero), cut off trailing zeroes
-    const cryptoAmountString = showBalance ? cryptoAmount : ''
-    const rateKey = `${currencyCode}_${wallet.isoFiatCurrencyCode}`
-    const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
-    // Fiat Balance Formatting
-    const fiatBalance = calculateWalletFiatBalanceWithoutState(wallet, currencyCode, settings, exchangeRates)
-    const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
-    const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
-    const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
-    // Exhange Rate Formatting
-    const exchangeRateFormat = exchangeRate ? intl.formatNumber(exchangeRate, { toFixed: 2 }) : null
-    const exchangeRateFiatSymbol = exchangeRateFormat ? `${walletFiatSymbol} ` : ''
-    const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
-    // Yesterdays Percentage Difference Formatting
-    const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${UTILS.getYesterdayDateRoundDownHour()}`]
-    const fiatExchangeRate = wallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${wallet.isoFiatCurrencyCode}`] : 1
-    const yesterdayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
-    const differenceYesterday = exchangeRate ? exchangeRate - yesterdayExchangeRate : null
-    let differencePercentage = differenceYesterday ? (differenceYesterday / yesterdayExchangeRate) * 100 : null
-    if (!yesterdayExchangeRate) {
-      differencePercentage = ''
-    }
-    let differencePercentageString, differencePercentageStringStyle
-    if (!exchangeRate || !differencePercentage || isNaN(differencePercentage)) {
-      differencePercentageStringStyle = styles.walletDetailsRowDifferenceNeutral
-      differencePercentageString = ''
-    } else if (exchangeRate && differencePercentage && differencePercentage === 0) {
-      differencePercentageStringStyle = styles.walletDetailsRowDifferenceNeutral
-      differencePercentageString = '0.00%'
-    } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
-      differencePercentageStringStyle = styles.walletDetailsRowDifferenceNegative
-      differencePercentageString = `- ${Math.abs(differencePercentage).toFixed(2)}%`
-    } else if (exchangeRate && differencePercentage && differencePercentage > 0) {
-      differencePercentageStringStyle = styles.walletDetailsRowDifferencePositive
-      differencePercentageString = `+ ${Math.abs(differencePercentage).toFixed(2)}%`
-    }
-
+    const {
+      currencyCode,
+      cryptoAmount,
+      differencePercentage,
+      differencePercentageStyle,
+      exchangeRate,
+      exchangeRateFiatSymbol,
+      fiatBalance,
+      fiatBalanceSymbol,
+      walletName,
+      symbolImage,
+      walletProgress
+    } = this.props
     return (
       <TouchableHighlight style={styles.tokenRowContainer} underlayColor={THEME.COLORS.ROW_PRESSED} delayLongPress={500} onPress={this.selectWallet}>
         <View style={styles.rowContent}>
           <View style={styles.rowIconWrap}>
             {symbolImage && <Image style={styles.rowCurrencyLogoAndroid} source={{ uri: symbolImage }} resizeMode="cover" />}
             <View style={styles.rowCurrencyLogoAndroid}>
-              <ProgressPie size={rowCurrencyOverlaySize} color={THEME.COLORS.OPAQUE_WHITE_2} progress={progress} />
+              <ProgressPie size={rowCurrencyOverlaySize} color={THEME.COLORS.OPAQUE_WHITE_2} progress={walletProgress} />
             </View>
           </View>
           <View style={styles.walletDetailsContainer}>
             <View style={styles.walletDetailsRow}>
               <T style={styles.walletDetailsRowCurrency}>{currencyCode}</T>
-              <T style={styles.walletDetailsRowValue}>{cryptoAmountString}</T>
+              <T style={styles.walletDetailsRowValue}>{cryptoAmount}</T>
             </View>
             <View style={styles.walletDetailsRow}>
-              <T style={styles.walletDetailsRowName}>{name}</T>
+              <T style={styles.walletDetailsRowName}>{walletName}</T>
               <View style={styles.walletDetailsFiatBalanceRow}>
                 <T style={styles.walletDetailsRowFiat}>{fiatBalanceSymbol}</T>
-                <T style={styles.walletDetailsRowFiat}>{fiatBalanceString}</T>
+                <T style={styles.walletDetailsRowFiat}>{fiatBalance}</T>
               </View>
             </View>
             <View style={styles.walletDetailsRowLine} />
             <View style={styles.walletDetailsRow}>
               <View style={styles.walletDetailsExchangeRow}>
                 <T style={styles.walletDetailsRowExchangeRate}>{exchangeRateFiatSymbol}</T>
-                <T style={styles.walletDetailsRowExchangeRate}>{exchangeRateString}</T>
+                <T style={styles.walletDetailsRowExchangeRate}>{exchangeRate}</T>
               </View>
-              <T style={differencePercentageStringStyle}>{differencePercentageString}</T>
+              <T style={differencePercentageStyle}>{differencePercentage}</T>
             </View>
           </View>
           <TouchableWithoutFeedback onPress={this.openWalletListMenuModal}>

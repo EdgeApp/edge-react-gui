@@ -1,6 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
+import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
@@ -13,7 +14,7 @@ import { emptyEdgeDenomination } from '../../modules/Settings/selectors.js'
 import { calculateWalletFiatBalanceWithoutState, getActiveWalletIds } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, FlatListItem, GuiWallet } from '../../types/types.js'
-import { decimalOrZero, getFiatSymbol, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
+import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
 import { styles as currencyRowStyles, WalletListRow } from './WalletListRow.js'
 
@@ -58,7 +59,7 @@ class WalletListComponent extends React.PureComponent<Props> {
       walletList.push({
         id: walletId,
         fullCurrencyCode: wallet.currencyCode,
-        balance: nativeBalances[wallet.currencyCode]
+        balance: wallet.primaryNativeBalance
       })
 
       // Old logic on getting tokens
@@ -106,11 +107,23 @@ class WalletListComponent extends React.PureComponent<Props> {
     return walletProgress
   }
 
-  getDenomination(guiWallet: GuiWallet, currencyCode: string) {
+  getDenomination(currencyCode: string): EdgeDenomination {
     const { settings } = this.props
     const denominationMultiplier = settings[currencyCode].denomination
     const denomination = settings[currencyCode].denominations.find(denomination => denomination.multiplier === denominationMultiplier)
     return denomination || emptyEdgeDenomination
+  }
+
+  getCryptoAmount(balance: string, denomination: EdgeDenomination, isToken: boolean): string {
+    const { showBalance } = this.props
+    if (isToken) {
+      const cryptoAmount = intl.formatNumber(convertNativeToDisplay(denomination.multiplier)(balance) || '0') // check if infinitesimal (would display as zero), cut off trailing zeroes
+      return showBalance ? cryptoAmount : ''
+    } else {
+      const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), 6)
+      const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+      return showBalance ? `${denomination.symbol || ''} ${finalCryptoAmount}` : ''
+    }
   }
 
   render() {
@@ -125,89 +138,95 @@ class WalletListComponent extends React.PureComponent<Props> {
     const walletId = data.item.id
     const guiWallet = wallets[walletId]
 
-    if (guiWallet == null) {
+    if (guiWallet == null || !data.item.fullCurrencyCode || !data.item.balance) {
       return <WalletListEmptyRow walletId={walletId} />
-    }
-
-    const { currencyCode } = guiWallet
-    const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
-    const walletProgress = this.getWalletProgress(walletId)
-
-    // Crypto Amount And Exchange Rate
-    const denomination = this.getDenomination(guiWallet, currencyCode)
-    const { multiplier, symbol } = denomination
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(guiWallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
-    const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
-    const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
-    const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
-    const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
-
-    // Fiat Balance
-    const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)
-    const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
-    const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
-    const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
-
-    // Currency Exhange Rate
-    const exchangeRateFormat = exchangeRate ? intl.formatNumber(exchangeRate, { toFixed: 2 }) : null
-    const exchangeRateFiatSymbol = exchangeRateFormat ? `${walletFiatSymbol} ` : ''
-    const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
-
-    // Yesterdays Percentage Difference
-    const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`]
-    const fiatExchangeRate = guiWallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${guiWallet.isoFiatCurrencyCode}`] : 1
-    const yesterdayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
-    const differenceYesterday = exchangeRate ? exchangeRate - yesterdayExchangeRate : null
-    let differencePercentage = differenceYesterday ? (differenceYesterday / yesterdayExchangeRate) * 100 : null
-    if (!yesterdayExchangeRate) {
-      differencePercentage = ''
-    }
-
-    let differencePercentageString, differencePercentageStringStyle
-    if (!exchangeRate || !differencePercentage || isNaN(differencePercentage)) {
-      differencePercentageStringStyle = currencyRowStyles.walletDetailsRowDifferenceNeutral
-      differencePercentageString = ''
-    } else if (exchangeRate && differencePercentage && differencePercentage === 0) {
-      differencePercentageStringStyle = currencyRowStyles.walletDetailsRowDifferenceNeutral
-      differencePercentageString = '0.00%'
-    } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
-      differencePercentageStringStyle = currencyRowStyles.walletDetailsRowDifferenceNegative
-      differencePercentageString = `- ${Math.abs(differencePercentage).toFixed(2)}%`
-    } else if (exchangeRate && differencePercentage && differencePercentage > 0) {
-      differencePercentageStringStyle = currencyRowStyles.walletDetailsRowDifferencePositive
-      differencePercentageString = `+ ${Math.abs(differencePercentage).toFixed(2)}%`
-    }
-
-    if (data.item.fullCurrencyCode && guiWallet.currencyCode !== data.item.fullCurrencyCode) {
+    } else {
+      const isToken = guiWallet.currencyCode !== data.item.fullCurrencyCode
       const walletCodesArray = data.item.fullCurrencyCode.split('-')
-      const tokenCode = walletCodesArray[1]
+      const currencyCode = isToken ? walletCodesArray[1] : walletCodesArray[0]
+
+      const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
+      const walletProgress = this.getWalletProgress(walletId)
+
+      // Crypto Amount And Exchange Rate
+      const denomination = this.getDenomination(currencyCode)
+      const cryptoAmount = this.getCryptoAmount(data.item.balance || '0', denomination, isToken)
+      const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
+      const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
+
+      // Fiat Balance
+      const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)
+      const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
+      const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
+      const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
+
+      // Currency Exhange Rate
+      const exchangeRateFormat = exchangeRate ? intl.formatNumber(exchangeRate, { toFixed: 2 }) : null
+      const exchangeRateFiatSymbol = exchangeRateFormat ? `${walletFiatSymbol} ` : ''
+      const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
+
+      // Yesterdays Percentage Difference
+      const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`]
+      const fiatExchangeRate = guiWallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${guiWallet.isoFiatCurrencyCode}`] : 1
+      const yesterdayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
+      const differenceYesterday = exchangeRate ? exchangeRate - yesterdayExchangeRate : null
+
+      let differencePercentage = differenceYesterday ? (differenceYesterday / yesterdayExchangeRate) * 100 : null
+      if (!yesterdayExchangeRate) {
+        differencePercentage = ''
+      }
+
+      let differencePercentageString, differencePercentageStringStyle
+      if (!exchangeRate || !differencePercentage || isNaN(differencePercentage)) {
+        differencePercentageStringStyle = currencyRowStyles.walletDetailsRowDifferenceNeutral
+        differencePercentageString = ''
+      } else if (exchangeRate && differencePercentage && differencePercentage === 0) {
+        differencePercentageStringStyle = currencyRowStyles.walletDetailsRowDifferenceNeutral
+        differencePercentageString = '0.00%'
+      } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
+        differencePercentageStringStyle = currencyRowStyles.walletDetailsRowDifferenceNegative
+        differencePercentageString = `- ${Math.abs(differencePercentage).toFixed(2)}%`
+      } else if (exchangeRate && differencePercentage && differencePercentage > 0) {
+        differencePercentageStringStyle = currencyRowStyles.walletDetailsRowDifferencePositive
+        differencePercentageString = `+ ${Math.abs(differencePercentage).toFixed(2)}%`
+      }
+
+      if (data.item.fullCurrencyCode && isToken) {
+        const meta = guiWallet.metaTokens.find(token => token.currencyCode === currencyCode)
+        const symbolImage = meta ? meta.symbolImage : undefined
+
+        return (
+          <WalletListTokenRow
+            cryptoAmount={cryptoAmount}
+            currencyCode={currencyCode}
+            differencePercentage={differencePercentageString}
+            differencePercentageStyle={differencePercentageStringStyle}
+            exchangeRate={exchangeRateString}
+            exchangeRateFiatSymbol={exchangeRateFiatSymbol}
+            fiatBalance={fiatBalanceString}
+            fiatBalanceSymbol={fiatBalanceSymbol}
+            symbolImage={symbolImage}
+            walletId={walletId}
+            walletName={guiWallet.name}
+            walletProgress={walletProgress}
+          />
+        )
+      }
 
       return (
-        <WalletListTokenRow
-          parentId={walletId}
-          currencyCode={tokenCode}
-          key={tokenCode}
-          walletFiatSymbol={walletFiatSymbol}
-          balance={data.item.balance}
-          showBalance={showBalance}
-          progress={walletProgress}
+        <WalletListRow
+          differencePercentage={differencePercentageString}
+          differencePercentageStyle={differencePercentageStringStyle}
+          exchangeRate={exchangeRateString}
+          exchangeRateFiatSymbol={exchangeRateFiatSymbol}
+          fiatBalance={fiatBalanceString}
+          fiatBalanceSymbol={fiatBalanceSymbol}
+          cryptoAmount={cryptoAmount}
+          guiWallet={guiWallet}
+          walletProgress={walletProgress}
         />
       )
     }
-
-    return (
-      <WalletListRow
-        differencePercentage={differencePercentageString}
-        differencePercentageStyle={differencePercentageStringStyle}
-        exchangeRate={exchangeRateString}
-        exchangeRateFiatSymbol={exchangeRateFiatSymbol}
-        fiatBalance={fiatBalanceString}
-        fiatBalanceSymbol={fiatBalanceSymbol}
-        cryptoAmount={finalCryptoAmountString}
-        guiWallet={guiWallet}
-        walletProgress={walletProgress}
-      />
-    )
   }
 }
 
