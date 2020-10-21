@@ -19,7 +19,7 @@ import { styles as currencyRowStyles, WalletListRow } from './WalletListRow.js'
 
 const DIVIDE_PRECISION = 18
 
-type WalletListItem = { id: string, fullCurrencyCode: string, balance: string }
+type WalletListItem = { id: string, fullCurrencyCode?: string, balance?: string }
 
 type OwnProps = {
   header?: any,
@@ -44,6 +44,14 @@ class WalletListComponent extends React.PureComponent<Props> {
 
     for (const walletId of activeWalletIds) {
       const wallet = wallets[walletId]
+
+      if (wallet == null) {
+        walletList.push({
+          id: walletId
+        })
+        break
+      }
+
       const { enabledTokens, nativeBalances } = wallet
       const { customTokens } = this.props
 
@@ -116,6 +124,11 @@ class WalletListComponent extends React.PureComponent<Props> {
     const { exchangeRates, settings, showBalance, wallets } = this.props
     const walletId = data.item.id
     const guiWallet = wallets[walletId]
+
+    if (guiWallet == null) {
+      return <WalletListEmptyRow walletId={walletId} />
+    }
+
     const { currencyCode } = guiWallet
     const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
     const walletProgress = this.getWalletProgress(walletId)
@@ -165,38 +178,34 @@ class WalletListComponent extends React.PureComponent<Props> {
       differencePercentageString = `+ ${Math.abs(differencePercentage).toFixed(2)}%`
     }
 
-    if (guiWallet == null) {
-      return <WalletListEmptyRow walletId={walletId} />
-    }
+    if (data.item.fullCurrencyCode && guiWallet.currencyCode !== data.item.fullCurrencyCode) {
+      const walletCodesArray = data.item.fullCurrencyCode.split('-')
+      const tokenCode = walletCodesArray[1]
 
-    if (guiWallet.currencyCode === data.item.fullCurrencyCode) {
       return (
-        <WalletListRow
-          differencePercentage={differencePercentageString}
-          differencePercentageStyle={differencePercentageStringStyle}
-          exchangeRate={exchangeRateString}
-          exchangeRateFiatSymbol={exchangeRateFiatSymbol}
-          fiatBalance={fiatBalanceString}
-          fiatBalanceSymbol={fiatBalanceSymbol}
-          cryptoAmount={finalCryptoAmountString}
-          guiWallet={guiWallet}
-          walletProgress={walletProgress}
+        <WalletListTokenRow
+          parentId={walletId}
+          currencyCode={tokenCode}
+          key={tokenCode}
+          walletFiatSymbol={walletFiatSymbol}
+          balance={data.item.balance}
+          showBalance={showBalance}
+          progress={walletProgress}
         />
       )
     }
 
-    const walletCodesArray = data.item.fullCurrencyCode.split('-')
-    const tokenCode = walletCodesArray[1]
-
     return (
-      <WalletListTokenRow
-        parentId={walletId}
-        currencyCode={tokenCode}
-        key={tokenCode}
-        walletFiatSymbol={walletFiatSymbol}
-        balance={data.item.balance}
-        showBalance={showBalance}
-        progress={walletProgress}
+      <WalletListRow
+        differencePercentage={differencePercentageString}
+        differencePercentageStyle={differencePercentageStringStyle}
+        exchangeRate={exchangeRateString}
+        exchangeRateFiatSymbol={exchangeRateFiatSymbol}
+        fiatBalance={fiatBalanceString}
+        fiatBalanceSymbol={fiatBalanceSymbol}
+        cryptoAmount={finalCryptoAmountString}
+        guiWallet={guiWallet}
+        walletProgress={walletProgress}
       />
     )
   }
