@@ -2,52 +2,32 @@
 
 import * as React from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale, scaleH } from '../../util/scaling.js'
-import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
-import { Airship } from '../services/AirshipInstance.js'
 import { ProgressPie } from './ProgressPie.js'
 
-type OwnProps = {
+type Props = {
   cryptoAmount: string,
   currencyCode: string,
   differencePercentage: string,
-  differencePercentageStyle: any,
+  differencePercentageStyle: 'neutral' | 'negative' | 'positive',
   exchangeRate: string,
   exchangeRateFiatSymbol: string,
   fiatBalance: string,
   fiatBalanceSymbol: string,
-  name: string,
+  handleSelectWallet: () => void,
+  handleOpenWalletListMenuModal: () => void,
+  isToken: boolean,
   symbolImage?: string,
   walletId: string,
   walletName: string,
   walletProgress: number
 }
 
-export type DispatchProps = {
-  selectWallet: (id: string, currencyCode: string) => any
-}
-
-type Props = OwnProps & DispatchProps
-
 export class WalletListTokenRow extends React.PureComponent<Props> {
-  selectWallet = () => {
-    const { walletId, currencyCode } = this.props
-    this.props.selectWallet(walletId, currencyCode)
-    Actions.transactionList({ params: 'walletList' })
-  }
-
-  openWalletListMenuModal = async () => {
-    const { currencyCode, walletName, symbolImage, walletId } = this.props
-    await Airship.show(bridge => (
-      <WalletListMenuModal bridge={bridge} walletId={walletId} walletName={walletName} currencyCode={currencyCode} image={symbolImage} isToken />
-    ))
-  }
-
   render() {
     const {
       currencyCode,
@@ -58,12 +38,25 @@ export class WalletListTokenRow extends React.PureComponent<Props> {
       exchangeRateFiatSymbol,
       fiatBalance,
       fiatBalanceSymbol,
+      handleSelectWallet,
+      handleOpenWalletListMenuModal,
+      isToken,
       walletName,
       symbolImage,
       walletProgress
     } = this.props
+    const percentageStyle = {
+      neutral: styles.walletDetailsRowDifferenceNeutral,
+      positive: styles.walletDetailsRowDifferencePositive,
+      negative: styles.walletDetailsRowDifferenceNegative
+    }
     return (
-      <TouchableHighlight style={styles.tokenRowContainer} underlayColor={THEME.COLORS.ROW_PRESSED} delayLongPress={500} onPress={this.selectWallet}>
+      <TouchableHighlight
+        style={[styles.container, isToken ? styles.containerBackgroundToken : styles.containerBackgroundCurrency]}
+        underlayColor={THEME.COLORS.ROW_PRESSED}
+        delayLongPress={500}
+        onPress={handleSelectWallet}
+      >
         <View style={styles.rowContent}>
           <View style={styles.rowIconWrap}>
             {symbolImage && <Image style={styles.rowCurrencyLogoAndroid} source={{ uri: symbolImage }} resizeMode="cover" />}
@@ -89,10 +82,10 @@ export class WalletListTokenRow extends React.PureComponent<Props> {
                 <T style={styles.walletDetailsRowExchangeRate}>{exchangeRateFiatSymbol}</T>
                 <T style={styles.walletDetailsRowExchangeRate}>{exchangeRate}</T>
               </View>
-              <T style={differencePercentageStyle}>{differencePercentage}</T>
+              <T style={percentageStyle[differencePercentageStyle]}>{differencePercentage}</T>
             </View>
           </View>
-          <TouchableWithoutFeedback onPress={this.openWalletListMenuModal}>
+          <TouchableWithoutFeedback onPress={handleOpenWalletListMenuModal}>
             <View style={styles.rowOptionsWrap}>
               <Text style={styles.rowOptionsIcon}>{WALLET_LIST_OPTIONS_ICON}</Text>
             </View>
@@ -105,6 +98,20 @@ export class WalletListTokenRow extends React.PureComponent<Props> {
 
 const rowCurrencyOverlaySize = scale(23.3)
 const rawStyles = {
+  container: {
+    padding: scale(6),
+    paddingLeft: scale(8),
+    height: scale(106),
+    backgroundColor: THEME.COLORS.GRAY_4,
+    borderBottomWidth: 1,
+    borderColor: THEME.COLORS.GRAY_3
+  },
+  containerBackgroundCurrency: {
+    backgroundColor: THEME.COLORS.WHITE
+  },
+  containerBackgroundToken: {
+    backgroundColor: THEME.COLORS.GRAY_4
+  },
   rowContent: {
     flex: 1,
     flexDirection: 'row'
@@ -136,14 +143,6 @@ const rawStyles = {
   rowOptionsIcon: {
     fontSize: scale(20),
     color: THEME.COLORS.GRAY_1
-  },
-  tokenRowContainer: {
-    padding: scale(6),
-    paddingLeft: scale(8),
-    height: scale(106),
-    backgroundColor: THEME.COLORS.GRAY_4,
-    borderBottomWidth: 1,
-    borderColor: THEME.COLORS.GRAY_3
   },
   walletDetailsContainer: {
     flex: 1,
