@@ -27,7 +27,7 @@ type Props = {
   walletProgress: number
 }
 
-export class WalletListTokenRow extends React.PureComponent<Props> {
+export class WalletListRow extends React.PureComponent<Props> {
   render() {
     const {
       currencyCode,

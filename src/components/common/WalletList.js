@@ -20,7 +20,7 @@ import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, getYesterdayDateR
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
-import { WalletListTokenRow } from './WalletListTokenRow.js'
+import { WalletListRow } from './WalletListRow.js'
 
 const DIVIDE_PRECISION = 18
 
@@ -232,7 +232,7 @@ class WalletListComponent extends React.PureComponent<Props> {
         const handleOpenWalletListMenuModal = () => this.handleOpenWalletListMenuModal(currencyCode, guiWallet, symbolImage, isToken)
 
         return (
-          <WalletListTokenRow
+          <WalletListRow
             cryptoAmount={cryptoAmount}
             currencyCode={currencyCode}
             differencePercentage={differencePercentageString}
@@ -255,7 +255,7 @@ class WalletListComponent extends React.PureComponent<Props> {
         const handleOpenWalletListMenuModal = () => this.handleOpenWalletListMenuModal(currencyCode, guiWallet, symbolImage, isToken)
 
         return (
-          <WalletListTokenRow
+          <WalletListRow
             cryptoAmount={cryptoAmount}
             currencyCode={currencyCode}
             differencePercentage={differencePercentageString}
