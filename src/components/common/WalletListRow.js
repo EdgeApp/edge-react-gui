@@ -1,14 +1,13 @@
 // @flow
 
 import * as React from 'react'
-import { Image, StyleSheet, Text, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
+import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
-import { WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { scale, scaleH } from '../../util/scaling.js'
+import { scale } from '../../util/scaling.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { ProgressPie } from './ProgressPie.js'
@@ -80,6 +79,7 @@ export class WalletListRow extends React.PureComponent<Props> {
         underlayColor={THEME.COLORS.ROW_PRESSED}
         delayLongPress={500}
         onPress={this.handleSelectWallet}
+        onLongPress={this.handleOpenWalletListMenuModal}
       >
         <View style={styles.rowContent}>
           <View style={styles.rowIconWrap}>
@@ -109,11 +109,6 @@ export class WalletListRow extends React.PureComponent<Props> {
               <T style={percentageStyle[differencePercentageStyle]}>{differencePercentage}</T>
             </View>
           </View>
-          <TouchableWithoutFeedback onPress={this.handleOpenWalletListMenuModal}>
-            <View style={styles.rowOptionsWrap}>
-              <Text style={styles.rowOptionsIcon}>{WALLET_LIST_OPTIONS_ICON}</Text>
-            </View>
-          </TouchableWithoutFeedback>
         </View>
       </TouchableHighlight>
     )
@@ -123,8 +118,9 @@ export class WalletListRow extends React.PureComponent<Props> {
 const rowCurrencyOverlaySize = scale(23.3)
 const rawStyles = {
   container: {
-    padding: scale(6),
+    paddingHorizontal: scale(6),
     paddingLeft: scale(8),
+    paddingRight: scale(16),
     height: scale(106),
     backgroundColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: 1,
@@ -157,16 +153,6 @@ const rawStyles = {
     marginLeft: scale(3),
     resizeMode: 'contain',
     alignSelf: 'center'
-  },
-  rowOptionsWrap: {
-    width: scaleH(37),
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  rowOptionsIcon: {
-    fontSize: scale(20),
-    color: THEME.COLORS.GRAY_1
   },
   walletDetailsContainer: {
     flex: 1,
