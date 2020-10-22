@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, StyleSheet } from 'react-native'
+import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import { connect } from 'react-redux'
 
 import { selectWallet } from '../../actions/WalletActions.js'
@@ -13,10 +13,12 @@ import s from '../../locales/strings.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import { emptyEdgeDenomination } from '../../modules/Settings/selectors.js'
 import { calculateWalletFiatBalanceWithoutState, getActiveWalletIds } from '../../modules/UI/selectors.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, FlatListItem, GuiWallet } from '../../types/types.js'
 import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
+import { WalletListHiddenItem } from './WalletListHiddenItem.js'
 import { WalletListRow } from './WalletListRow.js'
 
 const DIVIDE_PRECISION = 18
@@ -127,6 +129,36 @@ class WalletListComponent extends React.PureComponent<Props> {
     }
   }
 
+  renderHiddenItem = (data: FlatListItem<WalletListItem>, rowMap: { [string]: SwipeRow }) => {
+    const walletId = data.item.id
+    const guiWallet = this.props.wallets[walletId]
+    if (guiWallet == null) {
+      return <WalletListHiddenItem swipeRow={rowMap[`${walletId}${data.index}`]} walletId={walletId} />
+    } else if (data.item.fullCurrencyCode) {
+      const isToken = guiWallet.currencyCode !== data.item.fullCurrencyCode
+      const walletCodesArray = data.item.fullCurrencyCode.split('-')
+      const currencyCode = isToken ? walletCodesArray[1] : walletCodesArray[0]
+
+      let symbolImage
+      if (isToken) {
+        const meta = guiWallet.metaTokens.find(token => token.currencyCode === currencyCode)
+        symbolImage = meta ? meta.symbolImage : undefined
+      } else {
+        symbolImage = guiWallet.symbolImageDarkMono
+      }
+      return (
+        <WalletListHiddenItem
+          swipeRow={rowMap[`${walletId}${data.index}`]}
+          currencyCode={currencyCode}
+          isToken={isToken}
+          symbolImage={symbolImage}
+          walletId={walletId}
+          walletName={guiWallet.name}
+        />
+      )
+    }
+  }
+
   renderRow = (data: FlatListItem<WalletListItem>) => {
     const { exchangeRates, settings, showBalance, wallets } = this.props
     const walletId = data.item.id.replace(/:.*/, '')
@@ -214,10 +246,24 @@ class WalletListComponent extends React.PureComponent<Props> {
     }
   }
 
+  listKeyExtractor = (item: WalletListItem, index) => `${item.id}${index}`
   render() {
     const { activeWalletIds, footer, header, wallets } = this.props
     const walletList = this.getWalletList(activeWalletIds, wallets)
-    return <FlatList style={StyleSheet.absoltueFill} data={walletList} renderItem={this.renderRow} ListHeaderComponent={header} ListFooterComponent={footer} />
+
+    return (
+      <SwipeListView
+        keyExtractor={this.listKeyExtractor}
+        data={walletList}
+        ListFooterComponent={footer}
+        ListHeaderComponent={header}
+        rightOpenValue={THEME.rem(-3)}
+        renderItem={this.renderRow}
+        renderHiddenItem={this.renderHiddenItem}
+        disableRightSwipe
+        useFlatList
+      />
+    )
   }
 }
 
