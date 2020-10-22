@@ -5,7 +5,6 @@ import * as React from 'react'
 import { Animated, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
-import * as Constants from '../../../../constants/indexConstants'
 import * as intl from '../../../../locales/intl.js'
 import { THEME } from '../../../../theme/variables/airbitz.js'
 import type { FlipInputFieldInfo } from '../../../../types/types.js'
@@ -231,7 +230,7 @@ export default class FlipInput extends React.Component<Props, State> {
           pointerEvents={isToggled ? 'none' : 'auto'}
         >
           <View style={styles.flipButton}>
-            <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
+            <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={36} />
           </View>
           <View style={styles.rows}>
             {this.topRowFront(primaryInfo, this.onPrimaryAmountChange, intl.formatNumberInput(this.state.primaryDisplayAmount))}
@@ -244,7 +243,7 @@ export default class FlipInput extends React.Component<Props, State> {
           pointerEvents={isToggled ? 'auto' : 'none'}
         >
           <View style={styles.flipButton}>
-            <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
+            <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={36} />
           </View>
           <View style={styles.rows}>
             {this.topRowBack(secondaryInfo, this.onSecondaryAmountChange, intl.formatNumberInput(this.state.secondaryDisplayAmount))}

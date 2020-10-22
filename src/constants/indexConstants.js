@@ -1,7 +1,6 @@
 // @flow
 
 export * from './SceneKeys'
-export * from './IconConstants'
 export * from './WalletAndCurrencyConstants.js'
 export * from './CountryConstants.js'
 

@@ -1,13 +1,14 @@
 // @flow
 
 import * as React from 'react'
+import { View } from 'react-native'
 
-import * as Constants from '../../../../../constants/indexConstants'
+import { TouchableTextIcon } from '../../../../../components/common/TouchableTextIcon.js'
 import s from '../../../../../locales/strings'
+import { B } from '../../../../../styles/common/textStyles.js'
 import { type RootState } from '../../../../../types/reduxTypes.js'
-import { TextAndIconButton } from '../../Buttons/TextAndIconButton.ui'
-import { walletSelectorStyles } from '../style'
-import { WalletNameHeader } from './WalletNameHeader.ui.js'
+import T from '../../FormattedText/FormattedText.ui.js'
+import styles from '../style'
 
 export type StateProps = {
   selectedWalletName: string | null,
@@ -22,23 +23,23 @@ type Props = StateProps & DispatchProps
 
 export default class WalletSelector extends React.Component<Props, RootState> {
   render() {
-    let title = s.strings.loading
-    if (this.props.selectedWalletName) {
-      const selectedWalletName = this.props.selectedWalletName
-      const selectedWalletCurrencyCode = this.props.selectedWalletCurrencyCode
-      title = function HeaderComp(styles) {
-        return <WalletNameHeader name={selectedWalletName} denomination={selectedWalletCurrencyCode} styles={styles} />
-      }
-    }
-
     return (
-      <TextAndIconButton
-        style={walletSelectorStyles}
-        icon={Constants.KEYBOARD_ARROW_DOWN}
-        iconType={Constants.MATERIAL_ICONS}
-        onPress={this.props.onPress}
-        title={title}
-      />
+      <View style={styles.textIconContainer}>
+        <TouchableTextIcon
+          onPress={this.props.onPress}
+          title={
+            <T style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
+              {this.props.selectedWalletName ? (
+                <>
+                  {this.props.selectedWalletName}: <B>{this.props.selectedWalletCurrencyCode}</B>
+                </>
+              ) : (
+                s.strings.loading
+              )}
+            </T>
+          }
+        />
+      </View>
     )
   }
 }

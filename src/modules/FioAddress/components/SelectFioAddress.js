@@ -6,6 +6,7 @@ import { ActivityIndicator, StyleSheet, TouchableWithoutFeedback, View } from 'r
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
+import { TouchableTextIcon } from '../../../components/common/TouchableTextIcon.js'
 import { AddressModal } from '../../../components/modals/AddressModal'
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { TransactionDetailsNotesInput } from '../../../components/modals/TransactionDetailsNotesInput'
@@ -16,7 +17,6 @@ import { THEME } from '../../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../../types/reduxTypes'
 import type { FioAddress, FioRequest, GuiWallet } from '../../../types/types'
 import { scale } from '../../../util/scaling.js'
-import { TextAndIconButton, TextAndIconButtonStyle } from '../../UI/components/Buttons/TextAndIconButton.ui.js'
 import Text from '../../UI/components/FormattedText/FormattedText.ui.js'
 import * as UI_SELECTORS from '../../UI/selectors.js'
 import { refreshAllFioAddresses } from '../action'
@@ -219,17 +219,10 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
     }
 
     return (
-      <View>
-        <TextAndIconButton
-          style={{
-            ...TextAndIconButtonStyle,
-            text: styles.selectAddressText,
-            textPressed: styles.selectAddressTextPressed,
-            container: styles.selectAddressContainer
-          }}
+      <View style={styles.textIconContainer}>
+        <TouchableTextIcon
           onPress={this.selectAddress}
-          icon={Constants.KEYBOARD_ARROW_DOWN}
-          title={`${s.strings.fragment_send_from_label}: ${selected}`}
+          title={<Text style={styles.selectAddressText} ellipsizeMode="middle" numberOfLines={1}>{`${s.strings.fragment_send_from_label}: ${selected}`}</Text>}
         />
       </View>
     )
@@ -296,9 +289,6 @@ const rawStyles = {
     marginTop: scale(40),
     alignSelf: 'center'
   },
-  selectAddressContainer: {
-    height: scale(18)
-  },
   selectAddressText: {
     color: THEME.COLORS.WHITE,
     fontSize: scale(14)
@@ -312,6 +302,11 @@ const rawStyles = {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  textIconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: scale(18)
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

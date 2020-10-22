@@ -5,6 +5,7 @@ import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
 import fioAddressIcon from '../../../assets/images/list_fioAddress.png'
@@ -15,7 +16,6 @@ import { type RootState } from '../../../types/reduxTypes'
 import type { FioDomain, FlatListItem } from '../../../types/types.js'
 import { scale } from '../../../util/scaling.js'
 import T from '../../UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../UI/components/Icon/Icon.ui'
 import { getFioWallets } from '../../UI/selectors'
 
 type Item = {
@@ -114,7 +114,7 @@ class DomainListModalConnected extends React.Component<Props, State> {
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsRow}>
                 <T style={styles.domainListRowName}>{label}</T>
-                <Icon type={Constants.FONT_AWESOME} name={Constants.ANGLE_RIGHT} size={THEME.rem(1)} />
+                <FontAwesomeIcon name="angle-right" size={THEME.rem(1)} />
               </View>
             </View>
           </View>

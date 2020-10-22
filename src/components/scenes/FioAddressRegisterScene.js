@@ -4,6 +4,7 @@ import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { sprintf } from 'sprintf-js'
 
 import fioAddressIcon from '../../assets/images/list_fioAddress.png'
@@ -11,10 +12,8 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { TextAndIconButton, TextAndIconButtonStyle } from '../../modules/UI/components/Buttons/TextAndIconButton.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
@@ -22,6 +21,7 @@ import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 import { openLink } from '../../util/utils'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
+import { TouchableTextIcon } from '../common/TouchableTextIcon.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -291,10 +291,10 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
 
     let icon = null
     if ((!isValid || isAvailable === false) && touched) {
-      icon = <Icon style={[styles.statusIcon, styles.statusIconError]} type={Constants.MATERIAL_COMMUNITY} name={Constants.CLOSE_CIRCLE_ICON} size={25} />
+      icon = <MaterialCommunityIcons style={[styles.statusIcon, styles.statusIconError]} name="close-circle-outline" size={25} />
     }
     if (isValid && isAvailable && touched) {
-      icon = <Icon style={[styles.statusIcon, styles.statusIconOk]} type={Constants.MATERIAL_COMMUNITY} name={Constants.CHECK_CIRCLE_ICON} size={25} />
+      icon = <MaterialCommunityIcons style={[styles.statusIcon, styles.statusIconOk]} name="check-circle-outline" size={25} />
     }
 
     return <View style={styles.statusIconContainer}>{loading ? <ActivityIndicator style={styles.statusIcon} size="small" /> : icon}</View>
@@ -308,12 +308,9 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
         selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name
       }`
       return (
-        <TextAndIconButton
-          style={{ ...TextAndIconButtonStyle, container: styles.selectWalletBtn }}
-          onPress={this.selectFioWallet}
-          icon={Constants.KEYBOARD_ARROW_DOWN}
-          title={title}
-        />
+        <View style={styles.selectWalletBtn}>
+          <TouchableTextIcon onPress={this.selectFioWallet} title={title} />
+        </View>
       )
     }
   }
@@ -494,6 +491,9 @@ const rawStyles = {
     backgroundColor: THEME.COLORS.GRAY_3
   },
   selectWalletBtn: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginTop: scale(15),
     paddingVertical: scale(10),
     paddingHorizontal: scale(5),

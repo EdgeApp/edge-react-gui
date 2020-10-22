@@ -4,13 +4,12 @@ import { type Disklet } from 'disklet'
 import { type EdgeContext, type EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../../../../../components/services/AirshipInstance.js'
-import * as Constants from '../../../../../constants/indexConstants.js'
 import s from '../../../../../locales/strings'
 import T from '../../../components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../Icon/Icon.ui.js'
 import styles from '../style'
 
 type Props = {
@@ -81,7 +80,7 @@ export default class UserList extends React.Component<Props, State> {
             </TouchableHighlight>
             <TouchableHighlight style={styles.userList.icon} underlayColor={styles.underlay.color} onPress={this.handlePressDeleteLocalAccount(username)}>
               <View /* Hack, do not remove */>
-                <Icon size={20} name="close" type={Constants.MATERIAL_ICONS} style={{}} />
+                <MaterialIcons size={20} name="close" />
               </View>
             </TouchableHighlight>
           </View>

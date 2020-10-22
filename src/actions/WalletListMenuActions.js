@@ -1,6 +1,6 @@
 // @flow
 
-import { createInputModal, createSecureTextModal, Icon } from 'edge-components'
+import { createInputModal, createSecureTextModal } from 'edge-components'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -205,7 +205,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
             title: s.strings.string_cancel_cap
           }
           const renameWalletModal = createInputModal({
-            icon: <Icon type={Constants.FONT_AWESOME} name={Constants.RENAME} size={30} />,
+            icon: <FontAwesome name="edit" size={30} />,
             title: s.strings.fragment_wallets_rename_wallet,
             input,
             yesButton,

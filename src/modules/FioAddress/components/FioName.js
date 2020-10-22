@@ -2,14 +2,13 @@
 
 import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import fioAddressListIcon from '../../../assets/images/list_fioAddress.png'
-import * as Constants from '../../../constants/indexConstants'
 import * as intl from '../../../locales/intl.js'
 import s from '../../../locales/strings.js'
 import T from '../../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../../modules/UI/components/Icon/Icon.ui'
 import { THEME } from '../../../theme/variables/airbitz.js'
 import type { FioAddress, FioDomain } from '../../../types/types'
 import { scale } from '../../../util/scaling.js'
@@ -46,7 +45,7 @@ const FioName = (props: FioNameProps) => {
         </T>
       </View>
       <View style={styles.arrow}>
-        <Icon type={Constants.FONT_AWESOME} name={Constants.ANGLE_RIGHT} size={THEME.rem(2)} />
+        <FontAwesomeIcon name="angle-right" size={THEME.rem(2)} />
       </View>
     </View>
   )

@@ -11,13 +11,12 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { launchModal } from '../components/common/ModalProvider.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showActivity, showError, showToast } from '../components/services/AirshipInstance.js'
-import { CURRENCY_PLUGIN_NAMES, ION_ICONS, LOCKED_ICON, WALLET_LIST } from '../constants/indexConstants.js'
+import { CURRENCY_PLUGIN_NAMES, WALLET_LIST } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import { sendLogs } from '../modules/Logs/action.js'
 import * as SETTINGS_ACTIONS from '../modules/Settings/SettingsActions.js'
-import { Icon } from '../modules/UI/components/Icon/Icon.ui.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
 import { THEME } from '../theme/variables/airbitz.js'
@@ -267,7 +266,7 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
       }
     }
     const unlockSettingsModal = createSecureTextModal({
-      icon: <Icon style={{ position: 'relative', left: 1 }} type={ION_ICONS} name={LOCKED_ICON} color={THEME.COLORS.PRIMARY} size={30} />,
+      icon: <IonIcon style={{ position: 'relative', left: 1 }} name="ios-lock" color={THEME.COLORS.PRIMARY} size={30} />,
       title: s.strings.confirm_password_text,
       input,
       yesButton,
