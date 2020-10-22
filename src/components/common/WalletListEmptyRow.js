@@ -1,11 +1,10 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, Text, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, TouchableHighlight, View } from 'react-native'
 
-import { WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { scale, scaleH } from '../../util/scaling.js'
+import { scale } from '../../util/scaling.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 
@@ -13,26 +12,22 @@ type Props = {
   walletId?: string
 }
 
-export class WalletListEmptyRow extends React.Component<Props> {
-  openWalletListMenuModal = async () => {
+export class WalletListEmptyRow extends React.PureComponent<Props> {
+  handleOpenWalletListMenuModal = async () => {
     await Airship.show(bridge => <WalletListMenuModal bridge={bridge} walletId={this.props.walletId || ''} />)
   }
 
   render() {
-    const { walletId } = this.props
     return (
-      <TouchableHighlight style={[styles.rowContainer, styles.emptyRow]} underlayColor={THEME.COLORS.ROW_PRESSED}>
+      <TouchableHighlight
+        style={[styles.rowContainer, styles.emptyRow]}
+        underlayColor={THEME.COLORS.ROW_PRESSED}
+        onLongPress={this.handleOpenWalletListMenuModal}
+      >
         <View style={styles.rowContent}>
           <View style={styles.rowNameTextWrap}>
             <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={{ height: 18, width: 18 }} />
           </View>
-          {walletId && (
-            <TouchableWithoutFeedback onPress={this.openWalletListMenuModal}>
-              <View style={styles.rowOptionsWrap}>
-                <Text style={styles.rowOptionsIcon}>{WALLET_LIST_OPTIONS_ICON}</Text>
-              </View>
-            </TouchableWithoutFeedback>
-          )}
         </View>
       </TouchableHighlight>
     )
@@ -67,16 +62,6 @@ const rawStyles = {
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: scale(5)
-  },
-  rowOptionsWrap: {
-    width: scaleH(37),
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  rowOptionsIcon: {
-    fontSize: scale(20),
-    color: THEME.COLORS.GRAY_1
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
