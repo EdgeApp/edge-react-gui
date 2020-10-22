@@ -101,14 +101,7 @@ class WalletListComponent extends React.Component<Props, State> {
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
             <ActivityIndicator key="spinner" style={styles.listSpinner} size="large" />
             <WalletList key="fullList" header={this.renderPromoCard()} footer={WalletListFooter} />
-            <SortableListView
-              key="sortList"
-              style={StyleSheet.absoltueFill}
-              data={wallets}
-              order={activeWalletIds}
-              onRowMoved={this.onActiveRowMoved}
-              renderRow={this.renderSortableRow}
-            />
+            <SortableListView key="sortList" data={wallets} order={activeWalletIds} onRowMoved={this.onActiveRowMoved} renderRow={this.renderSortableRow} />
           </CrossFade>
         </View>
         <XPubModal />
