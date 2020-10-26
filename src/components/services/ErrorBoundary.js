@@ -2,61 +2,37 @@
 
 import Bugsnag from '@bugsnag/react-native'
 import * as React from 'react'
-import { Text } from 'react-native'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
-import s from '../../locales/strings.js'
-import { SceneWrapper } from '../common/SceneWrapper.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeCoreManager } from './EdgeCoreManager.js'
-
-const BugsnagBoundary = Bugsnag.getPlugin('react').createErrorBoundary(React)
-
-export function ErrorBoundary(props: {}): React.Node {
-  return (
-    <BugsnagBoundary FallbackComponent={ErrorView}>
-      <EdgeCoreManager />
-    </BugsnagBoundary>
-  )
+type Props = {
+  children: React.Node,
+  FallbackComponent: React.ComponentType<any>
+}
+type State = {
+  hasError: boolean
 }
 
 /**
- * This component will be displayed when an error boundary catches an error
+ * Shows the crash scene if any component throws an exception
+ * in a React lifecyle method.
  */
-function ErrorViewComponent(props: ThemeProps): React.Node {
-  const { theme } = props
-  const styles = getStyles(theme)
+class ErrorBoundaryComponent extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = { hasError: false }
+  }
 
-  return (
-    <SceneWrapper background="theme" padding={theme.rem(0.5)} scroll>
-      <AntDesignIcon name="frowno" style={styles.icon} />
-      <Text style={styles.titleText}>{s.strings.error_boundary_title}</Text>
-      <Text style={styles.messageText}>{s.strings.error_boundary_message}</Text>
-    </SceneWrapper>
-  )
+  static getDerivedStateFromError(error: mixed) {
+    console.error(error)
+    return { hasError: true }
+  }
+
+  render(): React.Node {
+    const { children, FallbackComponent } = this.props
+    if (this.state.hasError) return <FallbackComponent />
+
+    return children
+  }
 }
 
-const getStyles = cacheStyles((theme: Theme) => ({
-  icon: {
-    alignSelf: 'center',
-    color: theme.primaryText,
-    fontSize: theme.rem(2),
-    margin: theme.rem(0.5)
-  },
-  titleText: {
-    color: theme.primaryText,
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1.25),
-    margin: theme.rem(0.5),
-    textAlign: 'center'
-  },
-  messageText: {
-    color: theme.primaryText,
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1),
-    margin: theme.rem(0.5),
-    textAlign: 'left'
-  }
-}))
-
-const ErrorView = withTheme(ErrorViewComponent)
+const reactPlugin = Bugsnag.getPlugin('react')
+export const ErrorBoundary: typeof ErrorBoundaryComponent = reactPlugin != null ? reactPlugin.createErrorBoundary(React) : ErrorBoundaryComponent

@@ -15,7 +15,6 @@ import { allPlugins } from '../../util/corePlugins.js'
 import { fakeUser } from '../../util/fake-user.js'
 import { LoadingScene } from '../scenes/LoadingScene.js'
 import { Services } from './Services.js'
-import { ThemeProvider } from './ThemeContext.js'
 
 type Props = {}
 
@@ -120,12 +119,10 @@ export class EdgeCoreManager extends React.PureComponent<Props, State> {
     const key = `redux${counter}`
 
     return (
-      <ThemeProvider>
-        <>
-          {context == null ? <LoadingScene /> : <Services key={key} context={context} />}
-          {this.renderCore()}
-        </>
-      </ThemeProvider>
+      <>
+        {context == null ? <LoadingScene /> : <Services key={key} context={context} />}
+        {this.renderCore()}
+      </>
     )
   }
 }
