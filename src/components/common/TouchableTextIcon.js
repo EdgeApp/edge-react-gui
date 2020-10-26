@@ -6,17 +6,17 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { scale } from '../../util/scaling.js'
 
 type Props = {
-  icon?: React.Node,
   onPress: Function,
-  title: string | React.Node
+  title: string | React.Node,
+  iconColor?: string,
+  iconSize?: number
 }
 
 export class TouchableTextIcon extends React.Component<Props> {
   render() {
-    const { icon, onPress, title } = this.props
+    const { iconColor, iconSize, onPress, title } = this.props
     return (
       <TouchableOpacity onPress={onPress} style={styles.textIconContainer}>
         {typeof title === 'string' ? (
@@ -26,7 +26,7 @@ export class TouchableTextIcon extends React.Component<Props> {
         ) : (
           title
         )}
-        {icon || <MaterialIcons name="keyboard-arrow-down" color={THEME.COLORS.WHITE} size={scale(25)} />}
+        <MaterialIcons name="keyboard-arrow-down" color={iconColor || THEME.COLORS.WHITE} size={iconSize || THEME.rem(1.5)} />
       </TouchableOpacity>
     )
   }
@@ -39,6 +39,6 @@ const styles = StyleSheet.create({
   },
   iconText: {
     color: THEME.COLORS.WHITE,
-    fontSize: scale(20)
+    fontSize: THEME.rem(1.25)
   }
 })
