@@ -212,7 +212,7 @@ class FioNameConfirm extends React.PureComponent<Props, LocalState> {
               <Slider
                 resetSlider={false}
                 onSlidingComplete={this.saveFioName}
-                sliderDisabled={(!balance && !!fee) || (balance !== null && fee > balance)}
+                sliderDisabled={(!balance && !!fee) || (balance !== null && fee > balance) || loading}
                 showSpinner={loading}
                 disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label}
               />
