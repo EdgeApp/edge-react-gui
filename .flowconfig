@@ -3,7 +3,6 @@
 .*/node_modules/edge-login-ui-rn/.*
 .*/node_modules/edge-plugin-bity/.*
 .*/node_modules/react-native-camera/.*
-.*/node_modules/react-native-firebase/.*
 .*/node_modules/react-native-keyboard-aware-scroll-view/.*
 .*/node_modules/react-native-permissions/.*
 .*/node_modules/react-native-share/.*

@@ -34,10 +34,10 @@ import com.rnfs.RNFSPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.zmxv.RNSound.RNSoundPackage;
 import io.expo.appearance.RNCAppearancePackage;
-import io.invertase.firebase.RNFirebasePackage;
-import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
-import io.invertase.firebase.database.RNFirebaseDatabasePackage;
-import io.invertase.firebase.instanceid.RNFirebaseInstanceIdPackage;
+import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
+import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
+import io.invertase.firebase.iid.ReactNativeFirebaseIidPackage;
+import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
 import java.util.Arrays;
 import java.util.List;
 import org.reactnative.camera.RNCameraPackage;
@@ -67,16 +67,16 @@ public class MainApplication extends Application implements ReactApplication {
               new RandomBytesPackage(),
               new RCTSplashScreenPackage(),
               new ReactNativeContacts(),
+              new ReactNativeFirebaseAnalyticsPackage(),
+              new ReactNativeFirebaseAppPackage(),
+              new ReactNativeFirebaseIidPackage(),
+              new ReactNativeFirebaseMessagingPackage(),
               new RNCameraPackage(),
               new RNCAppearancePackage(),
               new RNCWebViewPackage(),
               new RNDateTimePickerPackage(),
               new RNDeviceInfo(),
               new RNFastCryptoPackage(),
-              new RNFirebaseAnalyticsPackage(),
-              new RNFirebaseDatabasePackage(),
-              new RNFirebaseInstanceIdPackage(),
-              new RNFirebasePackage(),
               new RNFSPackage(),
               new RNLocalizePackage(),
               new RNMail(),
