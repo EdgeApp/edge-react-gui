@@ -11,6 +11,7 @@ import fioAddressIcon from '../../assets/images/list_fioAddress.png'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
+import { FIO_DOMAIN_IS_NOT_PUBLIC, FioError } from '../../modules/FioAddress/util'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
@@ -182,7 +183,7 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
     }
   }
 
-  checkFioAddress(fioAddress: string, domain: string) {
+  checkFioAddress(fioAddress: string, domain: string, isCustomDomain: boolean = false) {
     this.setState({
       loading: true
     })
@@ -193,8 +194,27 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
         return --this.fioCheckQueue
       }
       this.fioCheckQueue = 0
+      const { fioPlugin } = this.props
+      if (isCustomDomain) {
+        try {
+          const isDomainPublic = fioPlugin.otherMethods ? await fioPlugin.otherMethods.isDomainPublic(domain) : false
+          if (!isDomainPublic) {
+            throw new FioError(s.strings.fio_address_register_domain_is_not_public, FIO_DOMAIN_IS_NOT_PUBLIC)
+          }
+        } catch (e) {
+          if (!e.labelCode || e.name !== 'FioError') {
+            showError(s.strings.fio_connect_wallets_err)
+            return this.setState({
+              loading: false
+            })
+          }
+          return this.setState({
+            isAvailable: false,
+            loading: false
+          })
+        }
+      }
       try {
-        const { fioPlugin } = this.props
         const fullAddress = `${fioAddress}${Constants.FIO_ADDRESS_DELIMITER}${domain}`
         const isAvailable = fioPlugin.otherMethods ? await fioPlugin.otherMethods.validateAccount(fullAddress) : false
         this.setState({
@@ -261,7 +281,7 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
     Airship.show(bridge => <DomainListModal bridge={bridge} publicDomains={this.state.publicDomains} />).then((response: FioDomain | null) => {
       if (response) {
         this.setState({ selectedDomain: response })
-        this.checkFioAddress(this.state.fioAddress, response.name)
+        this.checkFioAddress(this.state.fioAddress, response.name, !response.walletId)
       }
     })
   }
