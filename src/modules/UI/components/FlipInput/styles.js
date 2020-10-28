@@ -77,6 +77,17 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
     marginRight: scale(23),
     backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  clipboardContainer: {
+    width: '70%',
+    height: 0,
+    right: 0,
+    alignItems: 'flex-end'
+  },
+  clipboardText: {
+    color: THEME.COLORS.BLACK,
+    fontSize: scale(16),
+    padding: scale(4)
   }
 })
 
