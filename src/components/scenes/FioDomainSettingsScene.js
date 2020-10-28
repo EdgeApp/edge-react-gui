@@ -1,34 +1,25 @@
 // @flow
 
-import { bns } from 'biggystring'
-import { Scene } from 'edge-components'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { StyleSheet, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings'
-import { getRenewalFee, renewFioName } from '../../modules/FioAddress/util'
+import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
+import { getDomainSetVisibilityFee, getRenewalFee, renewFioName, setDomainVisibility } from '../../modules/FioAddress/util'
 import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { showError, showToast } from '../services/AirshipInstance'
-
-const DIVIDE_PRECISION = 18
+import { showError } from '../services/AirshipInstance'
+import { SecondaryButton } from '../themed/ThemedButtons'
 
 export type State = {
   showRenew: boolean,
-  renewError: string,
-  feeLoading: boolean,
-  renewalFee: number | null,
-  renewLoading: boolean,
-  displayFee: number,
-  balance: number
+  showVisibility: boolean
 }
 
 export type StateProps = {
@@ -43,6 +34,7 @@ export type DispatchProps = {
 export type NavigationProps = {
   fioWallet: EdgeCurrencyWallet,
   fioDomainName: string,
+  isPublic: boolean,
   expiration: string
 }
 
@@ -51,127 +43,48 @@ type Props = NavigationProps & StateProps & DispatchProps
 export class FioDomainSettingsScene extends React.Component<Props, State> {
   state: State = {
     showRenew: false,
-    renewError: '',
-    feeLoading: false,
-    renewalFee: null,
-    renewLoading: false,
-    displayFee: 0,
-    balance: 0
+    showVisibility: false
   }
 
-  setFee = async (): Promise<void> => {
-    const { fioWallet } = this.props
-    let renewalFee = null
-    let displayFee = 0
-    let showRenew = false
-    if (fioWallet) {
-      this.setState({ feeLoading: true })
-      try {
-        renewalFee = await getRenewalFee(fioWallet, true)
-        if (renewalFee) {
-          displayFee = this.formatFio(`${renewalFee}`)
-          showRenew = true
-        }
-      } catch (e) {
-        showError(e.message)
-        this.setState({ renewError: e.message })
-      }
-      this.setState({ renewalFee, displayFee, showRenew, feeLoading: false })
+  afterSuccess = () => {
+    this.props.refreshAllFioAddresses()
+    Actions.pop()
+  }
+
+  onVisibilityPress = () => {
+    this.setState({ showVisibility: true })
+  }
+
+  onRenewPress = () => {
+    this.setState({ showRenew: true })
+  }
+
+  cancelOperation = () => {
+    this.setState({ showRenew: false, showVisibility: false })
+  }
+
+  setDomainVisibility = async (fee: number) => {
+    const { fioWallet, fioDomainName, isPublic, isConnected } = this.props
+    if (!isConnected) {
+      showError(s.strings.fio_network_alert_text)
+      return
     }
+    await setDomainVisibility(fioWallet, fioDomainName, !isPublic, fee)
   }
 
-  setBalance = async (): Promise<void> => {
-    const { fioWallet } = this.props
-    if (fioWallet) {
-      const balance = await fioWallet.getBalance()
-      this.setState({ balance: this.formatFio(balance) })
-    } else {
-      showError(s.strings.fio_wallet_missing_for_fio_domain)
-    }
-  }
-
-  formatFio(val: string): number {
-    return parseFloat(truncateDecimals(bns.div(val, this.props.denominationMultiplier, DIVIDE_PRECISION), 6))
-  }
-
-  onRenewPress = async () => {
-    this.setBalance()
-    this.setFee()
-  }
-
-  onConfirm = async () => {
-    const { fioWallet, fioDomainName, isConnected, refreshAllFioAddresses } = this.props
-    const { renewalFee } = this.state
-
+  renewDomain = async (fee: number) => {
+    const { fioWallet, fioDomainName, isConnected } = this.props
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
     }
 
-    if (!fioWallet) {
-      showError(s.strings.fio_wallet_missing_for_fio_domain)
-      this.setState({ renewError: s.strings.fio_wallet_missing_for_fio_domain })
-      return
-    }
-
-    if (renewalFee === null) {
-      showError(s.strings.fio_get_fee_err_msg)
-      this.setState({ renewError: s.strings.fio_get_fee_err_msg })
-      return
-    }
-
-    try {
-      this.setState({ renewLoading: true })
-      await renewFioName(fioWallet, fioDomainName, renewalFee, true)
-
-      refreshAllFioAddresses()
-
-      this.setState({ showRenew: false })
-      showToast(s.strings.fio_request_renew_ok_text)
-      Actions.pop()
-    } catch (e) {
-      showError(e.message)
-    }
-    this.setState({ renewLoading: false })
-  }
-
-  renderFeeAndBalance() {
-    const { feeLoading, displayFee, balance, renewError, showRenew } = this.state
-
-    if (!feeLoading && renewError) {
-      return (
-        <View>
-          <T style={styles.title}>{renewError}</T>
-        </View>
-      )
-    }
-
-    if (feeLoading || !showRenew) return null
-
-    return (
-      <View style={styles.texts}>
-        <View style={styles.spacer} />
-        <View style={styles.spacer} />
-        <T style={styles.title}>{s.strings.fio_renew_fee_label}</T>
-        <T style={styles.content}>
-          {displayFee ? `${displayFee} ${s.strings.fio_address_confirm_screen_fio_label}` : s.strings.fio_address_confirm_screen_free_label}
-        </T>
-        <View style={styles.spacer} />
-        {displayFee ? (
-          <View>
-            <T style={styles.title}>{s.strings.fio_address_confirm_screen_balance_label}</T>
-            <T style={displayFee > balance ? styles.balanceTitleDisabled : styles.balanceTitle}>
-              {balance ? balance.toFixed(2) : '0'} {balance ? s.strings.fio_address_confirm_screen_fio_label : ''}
-            </T>
-          </View>
-        ) : null}
-      </View>
-    )
+    await renewFioName(fioWallet, fioDomainName, fee, true)
   }
 
   render() {
-    const { fioDomainName, expiration } = this.props
-    const { feeLoading, displayFee, balance, renewalFee, renewLoading, showRenew } = this.state
+    const { fioWallet, fioDomainName, expiration, isPublic } = this.props
+    const { showRenew, showVisibility } = this.state
 
     return (
       <SceneWrapper background="header">
@@ -186,28 +99,43 @@ export class FioDomainSettingsScene extends React.Component<Props, State> {
           <T style={styles.title}>{s.strings.fio_address_details_screen_expires}</T>
           <T style={styles.content}>{intl.formatExpDate(expiration)}</T>
         </View>
-        {!showRenew && (
+        {showVisibility && (
+          <FioActionSubmit
+            onSubmit={this.setDomainVisibility}
+            onSuccess={this.afterSuccess}
+            getOperationFee={getDomainSetVisibilityFee}
+            successMessage={isPublic ? s.strings.fio_domain_is_private_label : s.strings.fio_domain_is_public_label}
+            fioWallet={fioWallet}
+          />
+        )}
+        {showRenew && (
+          <FioActionSubmit
+            onSubmit={this.renewDomain}
+            onSuccess={this.afterSuccess}
+            getOperationFee={getRenewalFee}
+            successMessage={s.strings.fio_request_renew_domain_ok_text}
+            fioWallet={fioWallet}
+          />
+        )}
+        {!showRenew && !showVisibility && (
           <View style={styles.blockPadding}>
-            <PrimaryButton2 onPress={this.onRenewPress} disabled={feeLoading}>
-              {feeLoading ? <ActivityIndicator size="small" /> : <PrimaryButton2.Text>{s.strings.title_fio_renew_domain}</PrimaryButton2.Text>}
+            <PrimaryButton2 onPress={this.onRenewPress}>
+              <PrimaryButton2.Text>{s.strings.title_fio_renew_domain}</PrimaryButton2.Text>
             </PrimaryButton2>
           </View>
         )}
-        {this.renderFeeAndBalance()}
-        {showRenew && renewalFee !== null && !feeLoading ? (
+        {!showRenew && !showVisibility && (
           <View style={styles.blockPadding}>
-            <Scene.Footer>
-              <Slider
-                forceUpdateGuiCounter={0}
-                resetSlider={false}
-                onSlidingComplete={this.onConfirm}
-                sliderDisabled={displayFee > balance || renewLoading}
-                showSpinner={renewLoading}
-                disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label}
-              />
-            </Scene.Footer>
+            <TouchableHighlight onPress={this.onVisibilityPress} underlayColor={THEME.COLORS.TRANSACTION_DETAILS_GREY_1}>
+              <T style={styles.highlightBtn}>{isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}</T>
+            </TouchableHighlight>
           </View>
-        ) : null}
+        )}
+        {(showRenew || showVisibility) && (
+          <View style={styles.blockPadding}>
+            <SecondaryButton onPress={this.cancelOperation} label={s.strings.string_cancel_cap} />
+          </View>
+        )}
       </SceneWrapper>
     )
   }
@@ -232,22 +160,6 @@ const rawStyles = {
     fontSize: THEME.rem(1),
     textAlign: 'left'
   },
-  texts: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  balanceTitle: {
-    fontSize: THEME.rem(1),
-    color: THEME.COLORS.WHITE,
-    textAlign: 'center'
-  },
-  balanceTitleDisabled: {
-    fontSize: THEME.rem(1),
-    color: THEME.COLORS.ACCENT_RED,
-    fontWeight: 'normal',
-    textAlign: 'center'
-  },
   blockPadding: {
     paddingTop: THEME.rem(2),
     paddingLeft: THEME.rem(1.25),
@@ -255,6 +167,11 @@ const rawStyles = {
   },
   spacer: {
     paddingTop: THEME.rem(1.25)
+  },
+  highlightBtn: {
+    color: THEME.COLORS.WHITE,
+    textAlign: 'center',
+    padding: THEME.rem(0.5)
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
