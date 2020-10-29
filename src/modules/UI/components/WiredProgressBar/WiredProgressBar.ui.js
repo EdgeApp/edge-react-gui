@@ -1,11 +1,10 @@
 // @flow
-
 import * as React from 'react'
-import { Animated, Easing, View } from 'react-native'
+import { Animated, Easing, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import { type RootState } from '../../../../types/reduxTypes.js'
-import style from './WiredProgressBarStyle.js'
+import { THEME } from '../../../../theme/variables/airbitz.js'
+import type { RootState } from '../../../../types/reduxTypes.js'
 
 type WiredProgressBarOwnProps = {
   progress: number | Function
@@ -69,3 +68,17 @@ export const WiredProgressBar = connect(
   }),
   null
 )(ProgressBar)
+
+const style = StyleSheet.create({
+  container: {
+    flexDirection: 'row'
+  },
+  bar: {
+    position: 'absolute',
+    left: 0,
+    top: -3,
+    bottom: 0,
+    backgroundColor: THEME.COLORS.ACCENT_MINT,
+    zIndex: 100
+  }
+})
