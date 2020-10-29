@@ -204,7 +204,7 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
               <Slider
                 resetSlider
                 onSlidingComplete={this.confirm}
-                sliderDisabled={!acknowledge}
+                sliderDisabled={!acknowledge || connectWalletsLoading}
                 disabledText={s.strings.send_confirmation_slide_to_confirm}
                 showSpinner={connectWalletsLoading}
               />

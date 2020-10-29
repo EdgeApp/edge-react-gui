@@ -233,7 +233,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
                 forceUpdateGuiCounter={0}
                 resetSlider={false}
                 onSlidingComplete={this.onConfirm}
-                sliderDisabled={displayFee > balance}
+                sliderDisabled={displayFee > balance || renewLoading}
                 showSpinner={renewLoading}
                 disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label}
               />
