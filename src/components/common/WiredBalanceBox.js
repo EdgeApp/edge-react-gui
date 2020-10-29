@@ -1,20 +1,16 @@
 // @flow
-
 import * as React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import { scale } from '../../util/scaling.js'
 import { getFiatSymbol } from '../../util/utils.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 
-type BalanceBoxState = {}
-
-type BalanceBoxProps = {
+type StateProps = {
   showBalance: boolean,
   fiatAmount: number,
   isoFiatCurrencyCode: string,
@@ -22,7 +18,7 @@ type BalanceBoxProps = {
   exchangeRates?: { [string]: number }
 }
 
-type WiredBalanceBoxOwnProps = {
+type OwnProps = {
   showBalance: boolean | Function,
   fiatAmount: number | Function,
   isoFiatCurrencyCode: string | Function,
@@ -30,78 +26,44 @@ type WiredBalanceBoxOwnProps = {
   exchangeRates?: { [string]: number }
 }
 
-class BalanceBox extends React.PureComponent<BalanceBoxProps, BalanceBoxState> {
+type Props = StateProps & OwnProps & ThemeProps
+
+class BalanceBox extends React.PureComponent<Props> {
   render() {
-    const { isoFiatCurrencyCode, fiatAmount, showBalance, exchangeRates } = this.props
+    const { isoFiatCurrencyCode, fiatAmount, showBalance, exchangeRates, theme } = this.props
     const fiatSymbol = isoFiatCurrencyCode ? getFiatSymbol(isoFiatCurrencyCode) : ''
     const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
-    let fiatBalanceString = ''
     const formattedFiat = formatNumber(fiatAmount, { toFixed: 2 })
+    const styles = getStyles(theme)
 
-    if (fiatSymbol.length !== 1) {
-      fiatBalanceString = formattedFiat + ' ' + fiatCurrencyCode
-    } else {
-      fiatBalanceString = fiatSymbol + ' ' + formattedFiat + ' ' + fiatCurrencyCode
-    }
-
-    let displayedBox
+    // if there is no exchangeRates object, empty object, or object with zero values
+    // $FlowFixMe it appears that Object.values may break flow
     const summation = (total: number, rate: number) => {
       if (isNaN(rate)) rate = 0
       return total + rate
     }
-    if (showBalance) {
-      // if there is no exchangeRates object, empty object, or object with zero values
-      // $FlowFixMe it appears that Object.values may break flow
-      if (!exchangeRates || !Object.keys(exchangeRates).length || !Object.values(exchangeRates).reduce(summation)) {
-        displayedBox = this.noBalanceBox('noExchangeRates')
-      } else {
-        displayedBox = this.balanceBox(fiatBalanceString)
-      }
-    } else {
-      displayedBox = this.noBalanceBox('balanceHidden')
-    }
-
-    return <TouchableOpacity onPress={this.props.onPress}>{displayedBox}</TouchableOpacity>
-  }
-
-  balanceBox(fiatBalanceString: string) {
-    return (
-      <View style={styles.totalBalanceBox}>
-        <View style={styles.totalBalanceWrap}>
-          <View style={styles.totalBalanceHeader}>
-            <T style={styles.totalBalanceText}>{s.strings.fragment_wallets_balance_text}</T>
-          </View>
-          <View style={styles.currentBalanceBoxDollarsWrap}>
-            <T style={styles.currentBalanceBoxDollars}>{fiatBalanceString}</T>
-          </View>
-        </View>
-      </View>
-    )
-  }
-
-  noBalanceBox(textType: string) {
-    let displayedText
-    if (textType === 'noExchangeRates') {
-      displayedText = s.strings.exchange_rates_loading
-    } else {
-      displayedText = s.strings.string_show_balance
-    }
+    const noExchangeRates = !exchangeRates || !Object.keys(exchangeRates).length || !Object.values(exchangeRates).reduce(summation)
 
     return (
-      <View style={styles.totalBalanceBox}>
-        <View style={styles.totalBalanceWrap}>
-          <View style={styles.hiddenBalanceBoxDollarsWrap}>
-            <T numberOfLines={2} style={textType === 'noExchangeRates' ? styles.currentBalanceBoxNoExchangeRates : styles.currentBalanceBoxDollars}>
-              {displayedText}
-            </T>
-          </View>
+      <TouchableOpacity onPress={this.props.onPress}>
+        <View style={styles.container}>
+          {showBalance && !noExchangeRates ? (
+            <>
+              <EdgeText style={styles.balanceHeader}>{s.strings.fragment_wallets_balance_text}</EdgeText>
+              <EdgeText style={styles.balanceBody}>
+                {fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`}
+              </EdgeText>
+            </>
+          ) : (
+            <EdgeText style={styles.showBalance}>{noExchangeRates ? s.strings.exchange_rates_loading : s.strings.string_show_balance}</EdgeText>
+          )}
         </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 }
 
-export const WiredBalanceBox = connect((state: RootState, ownProps: WiredBalanceBoxOwnProps): BalanceBoxProps => {
+export const WiredBalanceBox = connect((state: RootState, ownProps: OwnProps): StateProps => {
   const isoFiatCurrencyCode = typeof ownProps.isoFiatCurrencyCode === 'function' ? ownProps.isoFiatCurrencyCode(state) : ownProps.isoFiatCurrencyCode
   return {
     showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
@@ -110,47 +72,22 @@ export const WiredBalanceBox = connect((state: RootState, ownProps: WiredBalance
     isoFiatCurrencyCode,
     exchangeRates: ownProps.exchangeRates
   }
-}, null)(BalanceBox)
+}, null)(withTheme(BalanceBox))
 
-const rawStyles = {
-  totalBalanceBox: {
-    height: scale(111),
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    height: theme.rem(5),
+    alignItems: 'center',
     justifyContent: 'center'
   },
-  totalBalanceWrap: {
-    flex: 3,
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
+  balanceHeader: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
   },
-  totalBalanceHeader: {
-    flex: 2,
-    justifyContent: 'flex-end',
-    backgroundColor: THEME.COLORS.TRANSPARENT
+  balanceBody: {
+    fontSize: theme.rem(1.75)
   },
-  totalBalanceText: {
-    fontSize: scale(18),
-    color: THEME.COLORS.PRIMARY
-  },
-  currentBalanceBoxDollarsWrap: {
-    flex: 3,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  hiddenBalanceBoxDollarsWrap: {
-    flex: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  currentBalanceBoxDollars: {
-    color: THEME.COLORS.PRIMARY,
-    fontSize: scale(44)
-  },
-  currentBalanceBoxNoExchangeRates: {
-    color: THEME.COLORS.PRIMARY,
-    fontSize: scale(26),
-    textAlign: 'center'
+  showBalance: {
+    fontSize: theme.rem(1.75)
   }
-}
-export const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
