@@ -217,7 +217,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     }
 
     if (isExportQbo) {
-      const qboFile = await showActivity(s.strings.export_transaction_loading, sourceWallet.exportTransactionsToCSV(transactionOptions))
+      const qboFile = await showActivity(s.strings.export_transaction_loading, sourceWallet.exportTransactionsToQBO(transactionOptions))
       files.push({
         contents: qboFile,
         mimeType: 'application/vnd.intu.qbo',
