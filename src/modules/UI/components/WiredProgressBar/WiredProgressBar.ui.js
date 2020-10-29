@@ -1,27 +1,29 @@
 // @flow
 import * as React from 'react'
-import { Animated, Easing, StyleSheet, View } from 'react-native'
+import { Animated, Easing, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import { THEME } from '../../../../theme/variables/airbitz.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
 import type { RootState } from '../../../../types/reduxTypes.js'
 
-type WiredProgressBarOwnProps = {
+type OwnProps = {
   progress: number | Function
 }
 
-type ProgressBarProps = {
+type StateProps = {
   progress: number
 }
 
-type ProgressBarState = {
+type State = {
   isWalletProgressVisible: boolean
 }
 
-export class ProgressBar extends React.PureComponent<ProgressBarProps, ProgressBarState> {
+type Props = OwnProps & StateProps & ThemeProps
+
+export class ProgressBar extends React.PureComponent<Props, State> {
   animation: Animated.Value
 
-  constructor(props: ProgressBarProps) {
+  constructor(props: Props) {
     super(props)
     this.animation = new Animated.Value(props.progress)
     this.state = {
@@ -29,7 +31,7 @@ export class ProgressBar extends React.PureComponent<ProgressBarProps, ProgressB
     }
   }
 
-  componentDidUpdate(prevProps: ProgressBarProps) {
+  componentDidUpdate(prevProps: Props) {
     if (prevProps.progress !== this.props.progress) {
       Animated.timing(this.animation, {
         duration: 1500,
@@ -41,6 +43,7 @@ export class ProgressBar extends React.PureComponent<ProgressBarProps, ProgressB
   }
 
   render() {
+    const style = getStyles(this.props.theme)
     const widthInterpolated = this.animation.interpolate({
       inputRange: [0, 100],
       outputRange: ['10%', '100%'],
@@ -56,20 +59,20 @@ export class ProgressBar extends React.PureComponent<ProgressBarProps, ProgressB
     if (!this.state.isWalletProgressVisible) return null
     return (
       <View style={style.container}>
-        <Animated.View style={[style.bar, style.animated, { width: widthInterpolated }]} />
+        <Animated.View style={[style.bar, { width: widthInterpolated }]} />
       </View>
     )
   }
 }
 
 export const WiredProgressBar = connect(
-  (state: RootState, ownProps: WiredProgressBarOwnProps): ProgressBarProps => ({
+  (state: RootState, ownProps: OwnProps): StateProps => ({
     progress: typeof ownProps.progress === 'function' ? ownProps.progress(state) : ownProps.progress
   }),
   null
-)(ProgressBar)
+)(withTheme(ProgressBar))
 
-const style = StyleSheet.create({
+const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexDirection: 'row'
   },
@@ -78,7 +81,7 @@ const style = StyleSheet.create({
     left: 0,
     top: -3,
     bottom: 0,
-    backgroundColor: THEME.COLORS.ACCENT_MINT,
+    backgroundColor: theme.textLink,
     zIndex: 100
   }
-})
+}))
