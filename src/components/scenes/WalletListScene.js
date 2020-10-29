@@ -72,7 +72,7 @@ class WalletListComponent extends React.Component<Props, State> {
     const sort = () => this.setState({ sorting: true })
 
     return (
-      <SceneWrapper background="body">
+      <SceneWrapper>
         <WiredProgressBar progress={getWalletLoadingPercent} />
         <WiredBalanceBox
           showBalance={getIsAccountBalanceVisible}
