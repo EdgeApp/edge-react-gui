@@ -4,11 +4,10 @@ import { bns } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, StyleSheet } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { selectWallet } from '../../actions/WalletActions.js'
-import { getSpecialCurrencyInfo, WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
+import { WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
@@ -17,8 +16,6 @@ import { calculateWalletFiatBalanceWithoutState, getActiveWalletIds } from '../.
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, FlatListItem, GuiWallet } from '../../types/types.js'
 import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
-import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
-import { Airship } from '../services/AirshipInstance.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
 import { WalletListRow } from './WalletListRow.js'
 
@@ -48,33 +45,6 @@ type DispatchProps = {
 type Props = OwnProps & StateProps & DispatchProps
 
 class WalletListComponent extends React.PureComponent<Props> {
-  handleSelectWallet = (currencyCode: string, guiWallet: GuiWallet, isToken: boolean): void => {
-    this.props.selectWallet(guiWallet.id, currencyCode)
-    if (!isToken) {
-      // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
-      // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
-      const SPECIAL_CURRENCY_INFO = getSpecialCurrencyInfo(currencyCode)
-      if (!SPECIAL_CURRENCY_INFO.isAccountActivationRequired || (SPECIAL_CURRENCY_INFO.isAccountActivationRequired && guiWallet.receiveAddress.publicAddress)) {
-        Actions.transactionList({ params: 'walletList' })
-      }
-    } else {
-      Actions.transactionList({ params: 'walletList' })
-    }
-  }
-
-  handleOpenWalletListMenuModal = (currencyCode: string, guiWallet: GuiWallet, symbolImage?: string, isToken: boolean): void => {
-    Airship.show(bridge => (
-      <WalletListMenuModal
-        bridge={bridge}
-        walletId={guiWallet.id}
-        walletName={guiWallet.name}
-        currencyCode={currencyCode}
-        image={symbolImage}
-        isToken={isToken}
-      />
-    ))
-  }
-
   getWalletList(activeWalletIds: string[], wallets: { [walletId: string]: GuiWallet }): WalletListItem[] {
     const walletList = []
 
@@ -161,13 +131,6 @@ class WalletListComponent extends React.PureComponent<Props> {
     }
   }
 
-  render() {
-    const { activeWalletIds, footer, header, wallets } = this.props
-    const walletList = this.getWalletList(activeWalletIds, wallets)
-
-    return <FlatList style={StyleSheet.absoltueFill} data={walletList} renderItem={this.renderRow} ListHeaderComponent={header} ListFooterComponent={footer} />
-  }
-
   renderRow = (data: FlatListItem<WalletListItem>) => {
     const { exchangeRates, settings, showBalance, wallets } = this.props
     const walletId = data.item.id
@@ -179,7 +142,6 @@ class WalletListComponent extends React.PureComponent<Props> {
       const isToken = guiWallet.currencyCode !== data.item.fullCurrencyCode
       const walletCodesArray = data.item.fullCurrencyCode.split('-')
       const currencyCode = isToken ? walletCodesArray[1] : walletCodesArray[0]
-      const handleSelectWallet = () => this.handleSelectWallet(currencyCode, guiWallet, isToken)
 
       const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
       const walletProgress = this.getWalletProgress(walletId)
@@ -226,55 +188,40 @@ class WalletListComponent extends React.PureComponent<Props> {
         differencePercentageString = `+ ${Math.abs(differencePercentage).toFixed(2)}%`
       }
 
-      if (data.item.fullCurrencyCode && isToken) {
+      let symbolImage
+      if (isToken) {
         const meta = guiWallet.metaTokens.find(token => token.currencyCode === currencyCode)
-        const symbolImage = meta ? meta.symbolImage : undefined
-        const handleOpenWalletListMenuModal = () => this.handleOpenWalletListMenuModal(currencyCode, guiWallet, symbolImage, isToken)
-
-        return (
-          <WalletListRow
-            cryptoAmount={cryptoAmount}
-            currencyCode={currencyCode}
-            differencePercentage={differencePercentageString}
-            differencePercentageStyle={differencePercentageStringStyle}
-            exchangeRate={exchangeRateString}
-            exchangeRateFiatSymbol={exchangeRateFiatSymbol}
-            fiatBalance={fiatBalanceString}
-            fiatBalanceSymbol={fiatBalanceSymbol}
-            handleSelectWallet={handleSelectWallet}
-            handleOpenWalletListMenuModal={handleOpenWalletListMenuModal}
-            isToken={isToken}
-            symbolImage={symbolImage}
-            walletId={walletId}
-            walletName={guiWallet.name}
-            walletProgress={walletProgress}
-          />
-        )
+        symbolImage = meta ? meta.symbolImage : undefined
       } else {
-        const symbolImage = guiWallet.symbolImageDarkMono
-        const handleOpenWalletListMenuModal = () => this.handleOpenWalletListMenuModal(currencyCode, guiWallet, symbolImage, isToken)
-
-        return (
-          <WalletListRow
-            cryptoAmount={cryptoAmount}
-            currencyCode={currencyCode}
-            differencePercentage={differencePercentageString}
-            differencePercentageStyle={differencePercentageStringStyle}
-            exchangeRate={exchangeRateString}
-            exchangeRateFiatSymbol={exchangeRateFiatSymbol}
-            fiatBalance={fiatBalanceString}
-            fiatBalanceSymbol={fiatBalanceSymbol}
-            handleSelectWallet={handleSelectWallet}
-            handleOpenWalletListMenuModal={handleOpenWalletListMenuModal}
-            isToken={isToken}
-            symbolImage={guiWallet.symbolImageDarkMono}
-            walletId={walletId}
-            walletName={guiWallet.name}
-            walletProgress={walletProgress}
-          />
-        )
+        symbolImage = guiWallet.symbolImageDarkMono
       }
+
+      return (
+        <WalletListRow
+          cryptoAmount={cryptoAmount}
+          currencyCode={currencyCode}
+          differencePercentage={differencePercentageString}
+          differencePercentageStyle={differencePercentageStringStyle}
+          exchangeRate={exchangeRateString}
+          exchangeRateFiatSymbol={exchangeRateFiatSymbol}
+          fiatBalance={fiatBalanceString}
+          fiatBalanceSymbol={fiatBalanceSymbol}
+          isToken={isToken}
+          publicAddress={guiWallet.receiveAddress.publicAddress}
+          selectWallet={this.props.selectWallet}
+          symbolImage={symbolImage}
+          walletId={walletId}
+          walletName={guiWallet.name}
+          walletProgress={walletProgress}
+        />
+      )
     }
+  }
+
+  render() {
+    const { activeWalletIds, footer, header, wallets } = this.props
+    const walletList = this.getWalletList(activeWalletIds, wallets)
+    return <FlatList style={StyleSheet.absoltueFill} data={walletList} renderItem={this.renderRow} ListHeaderComponent={header} ListFooterComponent={footer} />
   }
 }
 

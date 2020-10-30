@@ -2,11 +2,15 @@
 
 import * as React from 'react'
 import { Image, StyleSheet, Text, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 
+import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import { WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale, scaleH } from '../../util/scaling.js'
+import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 import { ProgressPie } from './ProgressPie.js'
 
 type Props = {
@@ -18,9 +22,9 @@ type Props = {
   exchangeRateFiatSymbol: string,
   fiatBalance: string,
   fiatBalanceSymbol: string,
-  handleSelectWallet: () => void,
-  handleOpenWalletListMenuModal: () => void,
   isToken: boolean,
+  publicAddress: string,
+  selectWallet(walletId: string, currencyCode: string): void,
   symbolImage?: string,
   walletId: string,
   walletName: string,
@@ -28,6 +32,28 @@ type Props = {
 }
 
 export class WalletListRow extends React.PureComponent<Props> {
+  handleSelectWallet = (): void => {
+    const { currencyCode, isToken, publicAddress, walletId } = this.props
+    this.props.selectWallet(walletId, currencyCode)
+    if (!isToken) {
+      // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
+      // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
+      const SPECIAL_CURRENCY_INFO = getSpecialCurrencyInfo(currencyCode)
+      if (!SPECIAL_CURRENCY_INFO.isAccountActivationRequired || (SPECIAL_CURRENCY_INFO.isAccountActivationRequired && publicAddress)) {
+        Actions.transactionList({ params: 'walletList' })
+      }
+    } else {
+      Actions.transactionList({ params: 'walletList' })
+    }
+  }
+
+  handleOpenWalletListMenuModal = (): void => {
+    const { currencyCode, isToken, symbolImage, walletId, walletName } = this.props
+    Airship.show(bridge => (
+      <WalletListMenuModal bridge={bridge} walletId={walletId} walletName={walletName} currencyCode={currencyCode} image={symbolImage} isToken={isToken} />
+    ))
+  }
+
   render() {
     const {
       currencyCode,
@@ -38,8 +64,6 @@ export class WalletListRow extends React.PureComponent<Props> {
       exchangeRateFiatSymbol,
       fiatBalance,
       fiatBalanceSymbol,
-      handleSelectWallet,
-      handleOpenWalletListMenuModal,
       isToken,
       walletName,
       symbolImage,
@@ -55,7 +79,7 @@ export class WalletListRow extends React.PureComponent<Props> {
         style={[styles.container, isToken ? styles.containerBackgroundToken : styles.containerBackgroundCurrency]}
         underlayColor={THEME.COLORS.ROW_PRESSED}
         delayLongPress={500}
-        onPress={handleSelectWallet}
+        onPress={this.handleSelectWallet}
       >
         <View style={styles.rowContent}>
           <View style={styles.rowIconWrap}>
@@ -85,7 +109,7 @@ export class WalletListRow extends React.PureComponent<Props> {
               <T style={percentageStyle[differencePercentageStyle]}>{differencePercentage}</T>
             </View>
           </View>
-          <TouchableWithoutFeedback onPress={handleOpenWalletListMenuModal}>
+          <TouchableWithoutFeedback onPress={this.handleOpenWalletListMenuModal}>
             <View style={styles.rowOptionsWrap}>
               <Text style={styles.rowOptionsIcon}>{WALLET_LIST_OPTIONS_ICON}</Text>
             </View>
