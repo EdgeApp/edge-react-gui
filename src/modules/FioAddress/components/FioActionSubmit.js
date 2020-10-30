@@ -57,7 +57,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     }
   }
 
-  componentDidMount(): * {
+  componentDidMount(): void {
     this.setBalance()
     this.setFee()
   }

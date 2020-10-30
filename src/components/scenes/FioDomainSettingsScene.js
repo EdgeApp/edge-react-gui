@@ -118,18 +118,18 @@ export class FioDomainSettingsScene extends React.Component<Props, State> {
           />
         )}
         {!showRenew && !showVisibility && (
-          <View style={styles.blockPadding}>
-            <PrimaryButton2 onPress={this.onRenewPress}>
-              <PrimaryButton2.Text>{s.strings.title_fio_renew_domain}</PrimaryButton2.Text>
-            </PrimaryButton2>
-          </View>
-        )}
-        {!showRenew && !showVisibility && (
-          <View style={styles.blockPadding}>
-            <TouchableHighlight onPress={this.onVisibilityPress} underlayColor={THEME.COLORS.TRANSACTION_DETAILS_GREY_1}>
-              <T style={styles.highlightBtn}>{isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}</T>
-            </TouchableHighlight>
-          </View>
+          <>
+            <View style={styles.blockPadding}>
+              <PrimaryButton2 onPress={this.onRenewPress}>
+                <PrimaryButton2.Text>{s.strings.title_fio_renew_domain}</PrimaryButton2.Text>
+              </PrimaryButton2>
+            </View>
+            <View style={styles.blockPadding}>
+              <TouchableHighlight onPress={this.onVisibilityPress} underlayColor={THEME.COLORS.TRANSACTION_DETAILS_GREY_1}>
+                <T style={styles.highlightBtn}>{isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}</T>
+              </TouchableHighlight>
+            </View>
+          </>
         )}
         {(showRenew || showVisibility) && (
           <View style={styles.blockPadding}>
