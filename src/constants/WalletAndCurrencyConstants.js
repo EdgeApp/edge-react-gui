@@ -334,6 +334,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     showEarnInterestCard: true
   },
   FIO: {
+    dummyPublicAddress: 'FIO4uX8tSuBZyHJmpPfc5Q6WrZ9eXd33wdgfWvfJ2fjGsg9yH4Dkd',
     noChangeMiningFee: true,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
