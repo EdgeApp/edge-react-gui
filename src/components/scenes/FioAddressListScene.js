@@ -79,9 +79,9 @@ export class FioAddressListScene extends React.Component<Props> {
 
   onDomainPress = (fioDomain: FioDomain) => {
     const { fioWallets } = this.props
-    const { name, expiration, walletId } = fioDomain
+    const { name, expiration, walletId, isPublic } = fioDomain
     const fioWallet = fioWallets.find((fioWallet: EdgeCurrencyWallet) => fioWallet.id === walletId)
-    Actions[Constants.FIO_DOMAIN_SETTINGS]({ fioWallet, fioDomainName: name, expiration })
+    Actions[Constants.FIO_DOMAIN_SETTINGS]({ fioWallet, fioDomainName: name, expiration, isPublic })
   }
 
   render() {

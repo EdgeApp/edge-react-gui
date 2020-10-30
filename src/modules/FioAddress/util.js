@@ -646,3 +646,36 @@ export const renewFioName = async (
   }
   throw new Error(errorStr)
 }
+
+export const getDomainSetVisibilityFee = async (fioWallet: EdgeCurrencyWallet | null): Promise<number> => {
+  if (fioWallet) {
+    try {
+      const { fee } = await fioWallet.otherMethods.fioAction('getFee', {
+        endPoint: 'set_fio_domain_public',
+        fioAddress: ''
+      })
+
+      return fee
+    } catch (e) {
+      throw new Error(s.strings.fio_get_fee_err_msg)
+    }
+  }
+  throw new Error(s.strings.fio_get_fee_err_msg)
+}
+
+export const setDomainVisibility = async (
+  fioWallet: EdgeCurrencyWallet | null,
+  fioDomain: string,
+  isPublic: boolean,
+  fee: number
+): Promise<{ expiration: string }> => {
+  if (fioWallet) {
+    try {
+      const { expiration } = await fioWallet.otherMethods.fioAction('setFioDomainVisibility', { fioDomain, isPublic, maxFee: fee })
+      return { expiration }
+    } catch (e) {
+      throw new Error(s.strings.fio_domain_set_visibility_err)
+    }
+  }
+  throw new Error(s.strings.fio_domain_set_visibility_err)
+}
