@@ -14,7 +14,7 @@ type Props = {
   iconSize?: number
 }
 
-export class TouchableTextIcon extends React.Component<Props> {
+export class ArrowDownTextIconButton extends React.Component<Props> {
   render() {
     const { iconColor, iconSize, onPress, title } = this.props
     return (

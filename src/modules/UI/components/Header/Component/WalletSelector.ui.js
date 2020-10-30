@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { TouchableTextIcon } from '../../../../../components/common/TouchableTextIcon.js'
+import { ArrowDownTextIconButton } from '../../../../../components/common/ArrowDownTextIconButton.js'
 import s from '../../../../../locales/strings'
 import { B } from '../../../../../styles/common/textStyles.js'
 import { type RootState } from '../../../../../types/reduxTypes.js'
@@ -25,7 +25,7 @@ export default class WalletSelector extends React.Component<Props, RootState> {
   render() {
     return (
       <View style={styles.textIconContainer}>
-        <TouchableTextIcon
+        <ArrowDownTextIconButton
           onPress={this.props.onPress}
           title={
             <T style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>

@@ -15,9 +15,9 @@ import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { getFioWallets } from '../../modules/UI/selectors'
 import { PLATFORM } from '../../theme/variables/platform'
 import { type RootState } from '../../types/reduxTypes'
+import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { TouchableTextIcon } from '../common/TouchableTextIcon.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -230,7 +230,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
       }`
       return (
         <View style={styles.selectWalletBtn}>
-          <TouchableTextIcon
+          <ArrowDownTextIconButton
             iconColor={theme.secondaryButtonText}
             iconSize={theme.rem(1.5)}
             onPress={this.selectFioWallet}
