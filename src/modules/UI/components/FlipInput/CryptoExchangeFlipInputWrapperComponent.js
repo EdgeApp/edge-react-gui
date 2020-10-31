@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 
-import { TouchableTextIcon } from '../../../../components/common/TouchableTextIcon.js'
+import { ArrowDownTextIconButton } from '../../../../components/common/ArrowDownTextIconButton.js'
 import { B } from '../../../../styles/common/textStyles.js'
 import { THEME } from '../../../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../../../types/types.js'
@@ -63,7 +63,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
       return (
         <View style={[styles.containerNoFee, styles.containerNoWalletSelected]}>
           <View style={styles.topRow}>
-            <TouchableTextIcon onPress={this.launchSelector} title={this.props.buttonText} />
+            <ArrowDownTextIconButton onPress={this.launchSelector} title={this.props.buttonText} />
           </View>
         </View>
       )
@@ -76,7 +76,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
         <View style={styles.containerSelectedWalletNotFocus}>
           {this.renderLogo(this.props.currencyLogo)}
           <View style={styles.topRow}>
-            <TouchableTextIcon
+            <ArrowDownTextIconButton
               onPress={this.props.focusMe}
               title={
                 <Text style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>

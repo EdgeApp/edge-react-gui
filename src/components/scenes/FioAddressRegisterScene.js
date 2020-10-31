@@ -20,8 +20,8 @@ import { PLATFORM } from '../../theme/variables/platform.js'
 import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 import { openLink } from '../../util/utils'
+import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
-import { TouchableTextIcon } from '../common/TouchableTextIcon.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -309,7 +309,7 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
       }`
       return (
         <View style={styles.selectWalletBtn}>
-          <TouchableTextIcon onPress={this.selectFioWallet} title={title} />
+          <ArrowDownTextIconButton onPress={this.selectFioWallet} title={title} />
         </View>
       )
     }

@@ -6,7 +6,6 @@ import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
@@ -16,9 +15,9 @@ import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { getFioWallets } from '../../modules/UI/selectors'
 import { PLATFORM } from '../../theme/variables/platform'
 import { type RootState } from '../../types/reduxTypes'
+import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { TouchableTextIcon } from '../common/TouchableTextIcon.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -231,8 +230,9 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
       }`
       return (
         <View style={styles.selectWalletBtn}>
-          <TouchableTextIcon
-            icon={<MaterialIcons name="keyboard-arrow-down" color={theme.secondaryButtonText} size={theme.rem(1.5)} />}
+          <ArrowDownTextIconButton
+            iconColor={theme.secondaryButtonText}
+            iconSize={theme.rem(1.5)}
             onPress={this.selectFioWallet}
             title={
               <Text style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>

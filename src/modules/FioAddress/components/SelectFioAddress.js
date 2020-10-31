@@ -6,7 +6,7 @@ import { ActivityIndicator, StyleSheet, TouchableWithoutFeedback, View } from 'r
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { TouchableTextIcon } from '../../../components/common/TouchableTextIcon.js'
+import { ArrowDownTextIconButton } from '../../../components/common/ArrowDownTextIconButton.js'
 import { AddressModal } from '../../../components/modals/AddressModal'
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { TransactionDetailsNotesInput } from '../../../components/modals/TransactionDetailsNotesInput'
@@ -220,7 +220,7 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
 
     return (
       <View style={styles.textIconContainer}>
-        <TouchableTextIcon
+        <ArrowDownTextIconButton
           onPress={this.selectAddress}
           title={<Text style={styles.selectAddressText} ellipsizeMode="middle" numberOfLines={1}>{`${s.strings.fragment_send_from_label}: ${selected}`}</Text>}
         />
