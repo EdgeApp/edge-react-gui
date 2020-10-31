@@ -7,9 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
-import credLogo from '../../assets/images/cred_logo.png'
 import * as Constants from '../../constants/indexConstants.js'
-import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -54,17 +52,6 @@ class WalletListFooterComponent extends React.Component<Props> {
               <Image style={styles.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.BCH }} resizeMode="cover" />
             </View>
             <T style={styles.buyMultipleCryptoBoxText}>{s.strings.title_plugin_buy}</T>
-          </View>
-        </TouchableWithoutFeedback>
-        <TouchableWithoutFeedback
-          onPress={() => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: guiPlugins.cred })}
-          style={styles.buyMultipleCryptoContainer}
-        >
-          <View style={styles.buyMultipleCryptoBox}>
-            <View style={styles.buyMultipleCryptoContentWrap}>
-              <Image style={styles.buyMultipleCryptoBoxImage} source={credLogo} resizeMode="contain" />
-            </View>
-            <T style={styles.buyMultipleCryptoBoxText}>{s.strings.earn_interest}</T>
           </View>
         </TouchableWithoutFeedback>
       </View>
