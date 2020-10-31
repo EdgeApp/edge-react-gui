@@ -178,12 +178,12 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   BTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    showEarnInterestCard: true
+    showEarnInterestCard: false
   },
   BCH: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    showEarnInterestCard: true
+    showEarnInterestCard: false
   },
   BSV: {
     displayBuyCrypto: true
@@ -191,7 +191,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
   LTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    showEarnInterestCard: true
+    showEarnInterestCard: false
   },
   RBTC: {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
@@ -282,7 +282,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     },
     isCustomTokensSupported: true,
     isTokensSupported: true,
-    showEarnInterestCard: true
+    showEarnInterestCard: false
   },
   ETC: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
@@ -325,13 +325,13 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   },
   TUSD: {
-    showEarnInterestCard: true
+    showEarnInterestCard: false
   },
   LBA: {
-    showEarnInterestCard: true
+    showEarnInterestCard: false
   },
   BAT: {
-    showEarnInterestCard: true
+    showEarnInterestCard: false
   },
   FIO: {
     dummyPublicAddress: 'FIO4uX8tSuBZyHJmpPfc5Q6WrZ9eXd33wdgfWvfJ2fjGsg9yH4Dkd',

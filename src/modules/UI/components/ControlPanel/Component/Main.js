@@ -20,7 +20,6 @@ import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import * as Constants from '../../../../../constants/indexConstants.js'
-import { guiPlugins } from '../../../../../constants/plugins/GuiPlugins.js'
 import s from '../../../../../locales/strings.js'
 import { THEME } from '../../../../../theme/variables/airbitz.js'
 import { scale } from '../../../../../util/scaling.js'
@@ -50,8 +49,6 @@ export default class Main extends React.Component<Props> {
               <SellButton />
               <Separator />
               <ExchangeButton />
-              <Separator />
-              <EarnInterestButton />
               <Separator />
               <FioAddressButton />
               <Separator />
@@ -121,27 +118,6 @@ const SellButton = () => {
           <Button.Center>
             <Button.Text>
               <Text>{s.strings.title_plugin_sell}</Text>
-            </Button.Text>
-          </Button.Center>
-        </Button.Row>
-      </Button.Row>
-    </Button>
-  )
-}
-
-const earnInterestAction = () => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: guiPlugins.cred })
-const EarnInterestButton = () => {
-  return (
-    <Button onPress={earnInterestAction}>
-      <Button.Row>
-        <Button.Row>
-          <Button.Left>
-            <Image source={buysellIcon} style={styles.iconImage} />
-          </Button.Left>
-
-          <Button.Center>
-            <Button.Text>
-              <Text>{s.strings.earn_interest}</Text>
             </Button.Text>
           </Button.Center>
         </Button.Row>
