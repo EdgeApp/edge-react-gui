@@ -1,5 +1,10 @@
 # edge-react-gui
 
+## 1.17.5 (2020-10-30)
+
+- Upgrade Bity plugin
+- Fix QBO export
+
 ## 1.17.4 (2020-10-19)
 
 - Upgrade react-native-fast-crypto to v1.8.2
