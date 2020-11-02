@@ -6,7 +6,7 @@ import { type CurrencySetting } from '../../reducers/scenes/SettingsReducer.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import isoFiatDenominations from './ISOFiatDenominations'
 
-const emptyEdgeDenomination: EdgeDenomination = {
+export const emptyEdgeDenomination: EdgeDenomination = {
   name: '',
   multiplier: '1',
   symbol: ''
