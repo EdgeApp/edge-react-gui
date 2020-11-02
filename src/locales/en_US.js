@@ -23,6 +23,8 @@ const strings = {
   fio_domain_choose_label: 'Choose a FIO Domain',
   fio_address_choose_domain_label: 'Choose FIO Domain for Your Address',
 
+  scan_qr_label: 'Scan QR',
+
   // Error messages:
   error_token_exists: 'A currency named %s already exists',
 
@@ -352,6 +354,7 @@ const strings = {
   title_fio_renew_domain: 'Renew FIO Domain',
   title_fio_make_public_domain: 'Make Domain Public',
   title_fio_make_private_domain: 'Make Domain Private',
+  title_fio_transfer_domain: 'Transfer FIO Domain',
   title_fio_address: 'FIO Addresses',
   title_fio_names: 'FIO Names',
   title_fio_domains: 'FIO Domains',
@@ -628,6 +631,7 @@ const strings = {
   fio_domain_is_public_label: 'Your FIO Domain is public now',
   fio_domain_is_private_label: 'Your FIO Domain is private now',
   fio_domain_set_visibility_err: 'There was an issue changing visibility of your domain. Please try again later.',
+  fio_transfer_err_msg: 'There was an issue transferring your %s. Please try again later.',
   fio_no_bundled_err_msg: 'Your FIO Address ran out of bundled transactions.',
   fio_no_bundled_non_fio_err_msg: 'If you continue, metadata for this transaction will not be recorded.',
   fio_no_bundled_renew_err_msg: 'Please renew your FIO Address to receive additional bundled transactions.',
@@ -680,6 +684,8 @@ const strings = {
   fio_select_address_no_wallet_err: 'There is no FIO wallet found for selected fio address',
   fio_sender_memo_label: 'FIO Memo',
   fio_sender_memo_placeholder: 'Your message.',
+  fio_domain_to_transfer: 'Domain to Transfer',
+  fio_domain_transferred: 'Successfully transferred',
   scan_address_modal_title: 'Enter Recipient FIO, ENS, or Public Address',
   address_modal_default_header: 'Enter Address',
   open_url_err: 'Can not open this url - %s',
@@ -715,7 +721,9 @@ const strings = {
   string_enter_amount: 'Enter Amount',
   export_transaction_error: 'Start date should be earlier than the end date',
   export_transaction_export_error: 'No transactions in the date range chosen',
-  export_transaction_loading: 'Exporting Transactions…'
+  export_transaction_loading: 'Exporting Transactions…',
+
+  step: 'Step'
 }
 
 // export default strings

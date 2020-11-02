@@ -30,8 +30,10 @@ import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScen
 import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene.js'
 import { FioAddressRegisteredScene } from '../components/scenes/FioAddressRegisteredScene'
 import { FioAddressSettingsScene } from '../components/scenes/FioAddressSettingsScene'
+import { FioDomainSettingsScene } from '../components/scenes/FioDomainSettingsScene'
 import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConfirmationScene.js'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
+import { SendScene } from '../components/scenes/SendScene'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
@@ -50,7 +52,6 @@ import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConn
 import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegisterConnector'
 import { FioAddressRegisterSelectWalletConnector } from '../connectors/scenes/FioAddressRegisterSelectWalletConnector'
 import { FioConnectWalletConfirmConnector } from '../connectors/scenes/FioConnectWalletConfirmConnector'
-import { FioDomainSettingsConnector } from '../connectors/scenes/FioDomainSettingsConnector'
 import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
 import { FioSentRequestConnector } from '../connectors/scenes/FioSentRequestConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
@@ -480,6 +481,19 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
+          <Stack key={Constants.SEND} hideTabBar>
+            <Scene
+              key={Constants.SEND}
+              navTransparent
+              hideTabBar
+              panHandlers={null}
+              component={ifLoggedIn(SendScene)}
+              renderTitle={this.renderTitle(s.strings.title_send)}
+              renderLeftButton={this.renderBackButton()}
+              renderRightButton={this.renderHelpButton()}
+            />
+          </Stack>
+
           <Stack key={Constants.MANAGE_TOKENS} hideTabBar>
             <Scene
               key={Constants.MANAGE_TOKENS_NOT_USED}
@@ -761,7 +775,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.FIO_DOMAIN_SETTINGS}
               navTransparent
-              component={FioDomainSettingsConnector}
+              component={FioDomainSettingsScene}
               renderTitle={this.renderTitle(s.strings.title_fio_domain_settings)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderMenuButton()}

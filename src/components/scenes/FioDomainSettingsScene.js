@@ -2,24 +2,30 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { StyleSheet, TouchableHighlight, View } from 'react-native'
+import { TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings'
+import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
-import { getDomainSetVisibilityFee, getRenewalFee, renewFioName, setDomainVisibility } from '../../modules/FioAddress/util'
+import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioName, setDomainVisibility } from '../../modules/FioAddress/util'
 import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
+import type { RootState } from '../../reducers/RootReducer'
+import type { Dispatch } from '../../types/reduxTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import { SecondaryButton } from '../themed/ThemedButtons'
+import { SEND_ACTION_TYPE } from './SendScene'
 
 export type State = {
   showRenew: boolean,
-  showVisibility: boolean
+  showVisibility: boolean,
+  showTransfer: boolean
 }
 
 export type StateProps = {
@@ -38,12 +44,13 @@ export type NavigationProps = {
   expiration: string
 }
 
-type Props = NavigationProps & StateProps & DispatchProps
+type Props = NavigationProps & StateProps & ThemeProps & DispatchProps
 
-export class FioDomainSettingsScene extends React.Component<Props, State> {
+export class FioDomainSettingsComponent extends React.Component<Props, State> {
   state: State = {
     showRenew: false,
-    showVisibility: false
+    showVisibility: false,
+    showTransfer: false
   }
 
   afterSuccess = () => {
@@ -59,11 +66,17 @@ export class FioDomainSettingsScene extends React.Component<Props, State> {
     this.setState({ showRenew: true })
   }
 
+  onTransferPress = () => {
+    this.setState({ showTransfer: true })
+  }
+
   cancelOperation = () => {
-    this.setState({ showRenew: false, showVisibility: false })
+    this.setState({ showRenew: false, showVisibility: false, showTransfer: false })
   }
 
   getRenewalFee = async (fioWallet: EdgeCurrencyWallet) => getRenewalFee(fioWallet, true)
+
+  getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet, true)
 
   setDomainVisibility = async (fee: number) => {
     const { fioWallet, fioDomainName, isPublic, isConnected } = this.props
@@ -84,9 +97,26 @@ export class FioDomainSettingsScene extends React.Component<Props, State> {
     await renewFioName(fioWallet, fioDomainName, fee, true)
   }
 
+  goToTransfer = (params: { fee: number }) => {
+    const { fee } = params
+    if (!fee) {
+      showError(s.strings.fio_get_fee_err_msg)
+    } else {
+      this.cancelOperation()
+      Actions[Constants.SEND]({
+        amount: fee,
+        actionType: SEND_ACTION_TYPE.fioTransferDomain,
+        walletId: this.props.fioWallet.id,
+        fioDomain: this.props.fioDomainName,
+        fioWallet: this.props.fioWallet
+      })
+    }
+  }
+
   render() {
-    const { fioWallet, fioDomainName, expiration, isPublic } = this.props
-    const { showRenew, showVisibility } = this.state
+    const { fioWallet, fioDomainName, expiration, isPublic, theme } = this.props
+    const { showRenew, showVisibility, showTransfer } = this.state
+    const styles = getStyles(theme)
 
     return (
       <SceneWrapper background="header">
@@ -119,20 +149,28 @@ export class FioDomainSettingsScene extends React.Component<Props, State> {
             fioWallet={fioWallet}
           />
         )}
-        {!showRenew && !showVisibility && (
+        {showTransfer && <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} />}
+        {!showRenew && !showVisibility && !showTransfer && (
           <>
+            <View style={styles.spacer} />
             <View style={styles.blockPadding}>
               <PrimaryButton2 onPress={this.onRenewPress}>
                 <PrimaryButton2.Text>{s.strings.title_fio_renew_domain}</PrimaryButton2.Text>
               </PrimaryButton2>
             </View>
             <View style={styles.blockPadding}>
-              <TouchableHighlight onPress={this.onVisibilityPress} underlayColor={THEME.COLORS.TRANSACTION_DETAILS_GREY_1}>
+              <PrimaryButton2 onPress={this.onTransferPress}>
+                <PrimaryButton2.Text>{s.strings.title_fio_transfer_domain}</PrimaryButton2.Text>
+              </PrimaryButton2>
+            </View>
+            <View style={styles.blockPadding}>
+              <TouchableHighlight onPress={this.onVisibilityPress} underlayColor="transparent">
                 <T style={styles.highlightBtn}>{isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}</T>
               </TouchableHighlight>
             </View>
           </>
         )}
+        <View style={styles.spacer} />
         {(showRenew || showVisibility) && (
           <View style={styles.blockPadding}>
             <SecondaryButton onPress={this.cancelOperation} label={s.strings.string_cancel_cap} />
@@ -143,37 +181,47 @@ export class FioDomainSettingsScene extends React.Component<Props, State> {
   }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   info: {
-    backgroundColor: THEME.COLORS.SECONDARY,
-    paddingVertical: THEME.rem(1),
-    paddingHorizontal: THEME.rem(1),
-    marginBottom: THEME.rem(0.25)
+    backgroundColor: theme.tileBackground,
+    paddingVertical: theme.rem(1),
+    paddingHorizontal: theme.rem(1),
+    marginBottom: theme.rem(0.25)
   },
   title: {
-    color: THEME.COLORS.TRANSACTION_DETAILS_GREY_1,
-    marginBottom: THEME.rem(0.25),
-    fontSize: THEME.rem(0.75),
+    color: theme.secondaryText,
+    marginBottom: theme.rem(0.25),
+    fontSize: theme.rem(0.75),
     fontWeight: 'normal',
     textAlign: 'left'
   },
   content: {
-    color: THEME.COLORS.WHITE,
-    fontSize: THEME.rem(1),
+    color: theme.primaryText,
+    fontSize: theme.rem(1),
     textAlign: 'left'
   },
   blockPadding: {
-    paddingTop: THEME.rem(2),
-    paddingLeft: THEME.rem(1.25),
-    paddingRight: THEME.rem(1.25)
+    paddingTop: theme.rem(0.5),
+    paddingLeft: theme.rem(1.25),
+    paddingRight: theme.rem(1.25)
   },
   spacer: {
-    paddingTop: THEME.rem(1.25)
+    paddingTop: theme.rem(1.25)
   },
   highlightBtn: {
-    color: THEME.COLORS.WHITE,
+    color: theme.primaryText,
     textAlign: 'center',
-    padding: THEME.rem(0.5)
+    padding: theme.rem(0.5)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+export const FioDomainSettingsScene = connect(
+  (state: RootState) => ({
+    isConnected: state.network.isConnected
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    refreshAllFioAddresses: () => {
+      dispatch(refreshAllFioAddresses())
+    }
+  })
+)(withTheme(FioDomainSettingsComponent))

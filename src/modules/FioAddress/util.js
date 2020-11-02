@@ -679,3 +679,19 @@ export const setDomainVisibility = async (
   }
   throw new Error(s.strings.fio_domain_set_visibility_err)
 }
+
+export const getTransferFee = async (fioWallet: EdgeCurrencyWallet | null, forDomain: boolean = false): Promise<number> => {
+  if (fioWallet) {
+    try {
+      const { fee } = await fioWallet.otherMethods.fioAction('getFee', {
+        endPoint: forDomain ? 'transfer_fio_domain' : 'transfer_fio_address',
+        fioAddress: ''
+      })
+
+      return fee
+    } catch (e) {
+      throw new Error(s.strings.fio_get_fee_err_msg)
+    }
+  }
+  throw new Error(s.strings.fio_get_fee_err_msg)
+}
