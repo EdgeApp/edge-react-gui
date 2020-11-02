@@ -1,6 +1,7 @@
 // @flow
 import * as React from 'react'
 import { Platform, StyleSheet, TextInput, View } from 'react-native'
+import { isIPhoneX } from 'react-native-safe-area-view'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import s from '../../locales/strings.js'
@@ -10,7 +11,6 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
-import { isIphoneX } from '../../util/isIphoneX.js'
 import { noOp } from '../../util/utils.js'
 
 export type SetCustomNodesModalOwnProps = {
@@ -115,11 +115,11 @@ const rawStyles = {
     borderWidth: 1,
     borderColor: '#CCCCCC',
     borderRadius: 3,
-    height: PLATFORM.deviceHeight * 0.13 - (Platform.OS === 'android' ? 23 : 0) + (isIphoneX ? 60 : 0),
+    height: PLATFORM.deviceHeight * 0.13 - (Platform.OS === 'android' ? 23 : 0) + (isIPhoneX ? 60 : 0),
     padding: 3
   },
   customNodesInput: {
-    height: PLATFORM.deviceHeight * 0.13 - (Platform.OS === 'android' ? 23 : 0) + (isIphoneX ? 60 : 0) - 8,
+    height: PLATFORM.deviceHeight * 0.13 - (Platform.OS === 'android' ? 23 : 0) + (isIPhoneX ? 60 : 0) - 8,
     color: THEME.COLORS.GRAY_1,
     fontSize: 15,
     fontFamily: THEME.FONTS.DEFAULT,

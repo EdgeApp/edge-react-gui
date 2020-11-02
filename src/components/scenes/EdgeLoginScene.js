@@ -3,13 +3,13 @@
 import type { EdgeLobby } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
+import { isIPhoneX } from 'react-native-safe-area-view'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import { THEME } from '../../theme/variables/airbitz'
-import { isIphoneX } from '../../util/isIphoneX.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type EdgeLoginSceneProps = {
@@ -163,7 +163,7 @@ const rawStyles = {
     marginLeft: '5%',
     flexDirection: 'row',
     alignSelf: 'flex-end',
-    paddingBottom: isIphoneX ? 30 : 20
+    paddingBottom: isIPhoneX ? 30 : 20
   },
   buttonsProcessing: {
     flex: 1,

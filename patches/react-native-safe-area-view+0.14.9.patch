@@ -1,0 +1,70 @@
+diff --git a/node_modules/react-native-safe-area-view/index.d.ts b/node_modules/react-native-safe-area-view/index.d.ts
+index 4f689fb..9219d08 100644
+--- a/node_modules/react-native-safe-area-view/index.d.ts
++++ b/node_modules/react-native-safe-area-view/index.d.ts
+@@ -1,6 +1,7 @@
+ import { ComponentClass } from 'react';
+ import { ViewProperties } from 'react-native';
+ 
++
+ export type SafeAreaViewForceInsetValue = 'always' | 'never';
+ 
+ export interface SafeAreaViewProps extends ViewProperties {
+@@ -29,4 +30,6 @@ export const withSafeArea: <P extends object>(
+   Component: React.ComponentType<P>
+ ) => React.ComponentType<P & SafeAreaViewProps>;
+ 
++export const isIPhoneX = boolean;
++
+ export default SafeAreaView;
+diff --git a/node_modules/react-native-safe-area-view/index.js b/node_modules/react-native-safe-area-view/index.js
+index a21ff41..96f97e9 100644
+--- a/node_modules/react-native-safe-area-view/index.js
++++ b/node_modules/react-native-safe-area-view/index.js
+@@ -15,6 +15,12 @@ const X_WIDTH = 375;
+ const X_HEIGHT = 812;
+ const XSMAX_WIDTH = 414;
+ const XSMAX_HEIGHT = 896;
++const IPHONE12_WIDTH = 390;
++const IPHONE12_HEIGHT = 844;
++const IPHONE12MAX_WIDTH = 428;
++const IPHONE12MAX_HEIGHT = 926;
++const IPHONE12MINI_WIDTH = 360;
++const IPHONE12MINI_HEIGHT = 780;
+ const PAD_WIDTH = 768;
+ const PAD_HEIGHT = 1024;
+ const IPADPRO11_WIDTH = 834;
+@@ -33,7 +39,7 @@ const { height: D_HEIGHT, width: D_WIDTH } = getResolvedDimensions();
+ const PlatformConstants = Platform.constants || {};
+ const { minor = 0 } = PlatformConstants.reactNativeVersion || {};
+ 
+-const isIPhoneX = (() => {
++export const isIPhoneX = (() => {
+   if (Platform.OS === 'web') return false;
+ 
+   return (
+@@ -41,7 +47,13 @@ const isIPhoneX = (() => {
+       ((D_HEIGHT === X_HEIGHT && D_WIDTH === X_WIDTH) ||
+         (D_HEIGHT === X_WIDTH && D_WIDTH === X_HEIGHT))) ||
+     ((D_HEIGHT === XSMAX_HEIGHT && D_WIDTH === XSMAX_WIDTH) ||
+-      (D_HEIGHT === XSMAX_WIDTH && D_WIDTH === XSMAX_HEIGHT))
++      (D_HEIGHT === XSMAX_WIDTH && D_WIDTH === XSMAX_HEIGHT)) ||
++    ((D_HEIGHT === IPHONE12_HEIGHT && D_WIDTH === IPHONE12_WIDTH) ||
++      (D_HEIGHT === IPHONE12_WIDTH && D_WIDTH === IPHONE12_HEIGHT)) ||
++    ((D_HEIGHT === IPHONE12MAX_HEIGHT && D_WIDTH === IPHONE12MAX_WIDTH) ||
++      (D_HEIGHT === IPHONE12MAX_WIDTH && D_WIDTH === IPHONE12MAX_HEIGHT)) ||
++    ((D_HEIGHT === IPHONE12MINI_HEIGHT && D_WIDTH === IPHONE12MINI_WIDTH) ||
++      (D_HEIGHT === IPHONE12MINI_WIDTH && D_WIDTH === IPHONE12MINI_HEIGHT))
+   );
+ })();
+ 
+diff --git a/node_modules/react-native-safe-area-view/index.js.flow b/node_modules/react-native-safe-area-view/index.js.flow
+index 4c59929..a3274a2 100644
+--- a/node_modules/react-native-safe-area-view/index.js.flow
++++ b/node_modules/react-native-safe-area-view/index.js.flow
+@@ -27,3 +27,5 @@ declare export function getInset(
+   value: 'horizontal' | 'right' | 'left' | 'vertical' | 'top' | 'bottom',
+   isLandscape: boolean
+ ): number
++
++declare export var isIPhoneX: boolean;
