@@ -5,7 +5,7 @@ import * as React from 'react'
 import { Platform, ScrollView } from 'react-native'
 import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
-import Entypo from 'react-native-vector-icons/Entypo'
+import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { connect } from 'react-redux'
 import { base64 } from 'rfc4648'
 
@@ -90,12 +90,12 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       <SceneWrapper background="theme">
         <ScrollView>
           <SettingsRow text={walletName} onPress={() => undefined} />
-          <SettingsHeaderRow icon={<Entypo name="calendar" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_date_range} />
+          <SettingsHeaderRow icon={<EntypoIcon name="calendar" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_date_range} />
           <SettingsRow text={s.strings.export_transaction_this_month} onPress={this.setThisMonth} />
           <SettingsRow text={s.strings.export_transaction_last_month} onPress={this.setLastMonth} />
           <SettingsLabelRow text={s.strings.string_start} right={startDateString} onPress={this.handleStartDate} />
           <SettingsLabelRow text={s.strings.string_end} right={endDateString} onPress={this.handleEndDate} />
-          <SettingsHeaderRow icon={<Entypo name="export" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_export_type} />
+          <SettingsHeaderRow icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_export_type} />
           {Platform.OS === 'android' ? this.renderAndroidSwitches() : this.renderIosSwitches()}
           {disabledExport ? null : <PrimaryButton label={s.strings.string_export} marginRem={1.5} onPress={this.handleSubmit} />}
         </ScrollView>

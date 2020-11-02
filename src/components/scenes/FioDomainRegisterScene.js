@@ -5,7 +5,7 @@ import * as React from 'react'
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
@@ -211,10 +211,10 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
     let icon = null
     if ((!isValid || isAvailable === false) && touched) {
-      icon = <MaterialCommunityIcons style={[styles.statusIcon, styles.statusIconError]} name="close-circle-outline" size={theme.rem(1.5)} />
+      icon = <MaterialCommunityIcon style={[styles.statusIcon, styles.statusIconError]} name="close-circle-outline" size={theme.rem(1.5)} />
     }
     if (isValid && isAvailable && touched) {
-      icon = <MaterialCommunityIcons style={[styles.statusIcon, styles.statusIconOk]} name="check-circle-outline" size={theme.rem(1.5)} />
+      icon = <MaterialCommunityIcon style={[styles.statusIcon, styles.statusIconOk]} name="check-circle-outline" size={theme.rem(1.5)} />
     }
 
     return <View style={styles.statusIconContainer}>{loading ? <ActivityIndicator style={styles.statusIcon} size="small" /> : icon}</View>

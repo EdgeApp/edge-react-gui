@@ -5,7 +5,7 @@ import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } fr
 import { Actions } from 'react-native-router-flux'
 import SortableListView from 'react-native-sortable-listview'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import Ionicon from 'react-native-vector-icons/Ionicons'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
@@ -86,7 +86,7 @@ class WalletListComponent extends React.Component<Props, State> {
           <CrossFade activeKey={sorting ? 'doneButton' : 'defaultButtons'}>
             <View key="defaultButtons" style={[styles.headerButton, styles.defaultButtons]}>
               <TouchableOpacity style={styles.addButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
-                <Ionicon name="md-add" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
+                <IonIcon name="md-add" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
               </TouchableOpacity>
               <TouchableOpacity onPress={sort}>
                 <Fontello name="sort" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />

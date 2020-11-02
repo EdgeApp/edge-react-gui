@@ -4,7 +4,7 @@ import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
 import { deleteCustomToken, editCustomToken } from '../../actions/WalletActions.js'
@@ -141,7 +141,7 @@ class EditTokenComponent extends React.Component<Props, State> {
     const result = await Airship.show(bridge => (
       <TwoButtonSimpleConfirmationModal
         bridge={bridge}
-        icon={<FAIcon name="trash-o" size={THEME.rem(1.5)} color={THEME.COLORS.PRIMARY} />}
+        icon={<FontAwesomeIcon name="trash-o" size={THEME.rem(1.5)} color={THEME.COLORS.PRIMARY} />}
         title={s.strings.string_delete}
         subTitle={s.strings.edittoken_delete_prompt}
         doneText={s.strings.string_delete}

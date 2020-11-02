@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import Ionicon from 'react-native-vector-icons/Ionicons'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
 import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
@@ -50,7 +50,7 @@ export class UniqueIdentifierModal extends React.Component<Props> {
     return (
       <InteractiveModal legacy isActive={isActive} onBackdropPress={onBackdropPress} onBackButtonPress={onBackButtonPress} onModalHide={onModalHide}>
         <InteractiveModal.Icon>
-          <Ionicon name="ios-key" size={30} />
+          <IonIcon name="ios-key" size={30} />
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title>

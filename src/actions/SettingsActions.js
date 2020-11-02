@@ -6,6 +6,7 @@ import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { launchModal } from '../components/common/ModalProvider.js'
@@ -266,7 +267,7 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
       }
     }
     const unlockSettingsModal = createSecureTextModal({
-      icon: <IonIcon style={{ position: 'relative', left: 1 }} name="ios-lock" color={THEME.COLORS.PRIMARY} size={30} />,
+      icon: <AntDesignIcon style={{ position: 'relative', left: 1 }} name="lock" color={THEME.COLORS.PRIMARY} size={30} />,
       title: s.strings.confirm_password_text,
       input,
       yesButton,

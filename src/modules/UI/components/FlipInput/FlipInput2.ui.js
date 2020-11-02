@@ -4,7 +4,7 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 import { type Event, Animated, Clipboard, Image, Platform, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
-import FAIcon from 'react-native-vector-icons/MaterialIcons'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { showError } from '../../../../components/services/AirshipInstance.js'
 import { EdgeText } from '../../../../components/themed/EdgeText.js'
@@ -503,7 +503,7 @@ export class FlipInput extends React.Component<Props, State> {
             <Image style={styles.flipContainerHeaderIcon} source={{ uri: headerLogo || '' }} />
             <View style={styles.flipContainerHeaderTextContainer}>
               <EdgeText style={styles.flipContainerHeaderText}>{headerText}</EdgeText>
-              {headerCallback && <FAIcon style={styles.flipContainerHeaderTextDropDown} name="keyboard-arrow-down" size={scale(20)} />}
+              {headerCallback && <MaterialIcon style={styles.flipContainerHeaderTextDropDown} name="keyboard-arrow-down" size={scale(20)} />}
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -523,7 +523,7 @@ export class FlipInput extends React.Component<Props, State> {
             pointerEvents={isToggled ? 'none' : 'auto'}
           >
             <View style={styles.flipButton}>
-              <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={scale(26)} />
+              <MaterialIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={scale(26)} />
             </View>
             <View style={styles.rows}>
               {this.topRowFront()}
@@ -535,7 +535,7 @@ export class FlipInput extends React.Component<Props, State> {
             pointerEvents={isToggled ? 'auto' : 'none'}
           >
             <View style={styles.flipButton}>
-              <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={scale(26)} />
+              <MaterialIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={scale(26)} />
             </View>
             <View style={styles.rows}>
               {this.topRowBack()}

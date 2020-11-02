@@ -166,7 +166,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                     },
                     undefined,
                     Object {
-                      "fontFamily": "Ionicons",
+                      "fontFamily": "anticon",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -174,7 +174,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -499,7 +499,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text
@@ -1559,7 +1559,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                     },
                     undefined,
                     Object {
-                      "fontFamily": "Ionicons",
+                      "fontFamily": "anticon",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
@@ -1567,7 +1567,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -1892,7 +1892,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 ]
               }
             >
-              
+              
             </Text>
           </View>
           <Text

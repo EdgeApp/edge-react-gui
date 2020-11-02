@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Image, Text, View } from 'react-native'
-import MDIcon from 'react-native-vector-icons/MaterialIcons'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import accountIcon from '../../../../assets/images/sidenav/accounts.png'
 import { SceneWrapper } from '../../../../components/common/SceneWrapper.js'
@@ -97,7 +97,7 @@ export default class ControlPanel extends React.Component<Props> {
             </Button.Center>
 
             <Button.Right>
-              <MDIcon style={styles.toggleIcon} name={arrowIcon} />
+              <MaterialIcon style={styles.toggleIcon} name={arrowIcon} />
             </Button.Right>
           </Button.Row>
         </Button>

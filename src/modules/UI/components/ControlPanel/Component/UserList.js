@@ -4,7 +4,7 @@ import { type Disklet } from 'disklet'
 import { type EdgeContext, type EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../../../../../components/services/AirshipInstance.js'
@@ -80,7 +80,7 @@ export default class UserList extends React.Component<Props, State> {
             </TouchableHighlight>
             <TouchableHighlight style={styles.userList.icon} underlayColor={styles.underlay.color} onPress={this.handlePressDeleteLocalAccount(username)}>
               <View /* Hack, do not remove */>
-                <MaterialIcons size={20} name="close" />
+                <MaterialIcon size={20} name="close" />
               </View>
             </TouchableHighlight>
           </View>

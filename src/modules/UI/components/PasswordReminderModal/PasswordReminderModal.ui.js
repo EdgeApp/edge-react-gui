@@ -3,7 +3,7 @@
 import { isEqual } from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, Text } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import s from '../../../../locales/strings.js'
 import type { PasswordReminder } from '../../../../types/types.js'
@@ -48,7 +48,7 @@ export class PasswordReminderModal extends React.Component<Props, State> {
     return (
       <InteractiveModal legacy isActive={this.props.isVisible} onModalHide={this.reset}>
         <InteractiveModal.Icon>
-          <IonIcon style={styles.icon} name="ios-lock" />
+          <AntDesignIcon style={styles.icon} name="lock" />
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title style={{ textAlign: 'center' }}>

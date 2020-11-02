@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -26,7 +26,7 @@ export class ArrowDownTextIconButton extends React.Component<Props> {
         ) : (
           title
         )}
-        <MaterialIcons name="keyboard-arrow-down" color={iconColor || THEME.COLORS.WHITE} size={iconSize || THEME.rem(1.5)} />
+        <MaterialIcon name="keyboard-arrow-down" color={iconColor || THEME.COLORS.WHITE} size={iconSize || THEME.rem(1.5)} />
       </TouchableOpacity>
     )
   }

@@ -5,8 +5,8 @@ import { ActivityIndicator, StyleSheet, Text, TouchableHighlight, View } from 'r
 import OpenAppSettings from 'react-native-app-settings'
 import { RNCamera } from 'react-native-camera'
 import { Actions } from 'react-native-router-flux'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
-import Ionicon from 'react-native-vector-icons/Ionicons'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
 import s from '../../locales/strings.js'
@@ -42,21 +42,21 @@ export class Scan extends React.Component<Props> {
           <View style={styles.overlayButtonAreaWrap}>
             <TouchableHighlight style={styles.bottomButton} onPress={this._onPressTransfer} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
-                <FAIcon style={styles.transferIcon} name="share" size={scale(18)} />
+                <FontAwesomeIcon style={styles.transferIcon} name="share" size={scale(18)} />
                 <T style={styles.bottomButtonText}>{s.strings.fragment_transaction_transfer}</T>
               </View>
             </TouchableHighlight>
 
             <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
-                <FAIcon style={styles.addressBookIcon} name="address-book-o" size={scale(18)} />
+                <FontAwesomeIcon style={styles.addressBookIcon} name="address-book-o" size={scale(18)} />
                 <T style={styles.bottomButtonText}>{s.strings.fragment_send_address}</T>
               </View>
             </TouchableHighlight>
 
             <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
-                <Ionicon style={styles.flashIcon} name="ios-flash" size={scale(24)} />
+                <IonIcon style={styles.flashIcon} name="ios-flash" size={scale(24)} />
                 <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
               </View>
             </TouchableHighlight>
