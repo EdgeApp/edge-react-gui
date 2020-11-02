@@ -63,6 +63,8 @@ export class FioDomainSettingsScene extends React.Component<Props, State> {
     this.setState({ showRenew: false, showVisibility: false })
   }
 
+  getRenewalFee = async (fioWallet: EdgeCurrencyWallet) => getRenewalFee(fioWallet, true)
+
   setDomainVisibility = async (fee: number) => {
     const { fioWallet, fioDomainName, isPublic, isConnected } = this.props
     if (!isConnected) {
@@ -112,7 +114,7 @@ export class FioDomainSettingsScene extends React.Component<Props, State> {
           <FioActionSubmit
             onSubmit={this.renewDomain}
             onSuccess={this.afterSuccess}
-            getOperationFee={getRenewalFee}
+            getOperationFee={this.getRenewalFee}
             successMessage={s.strings.fio_request_renew_domain_ok_text}
             fioWallet={fioWallet}
           />
