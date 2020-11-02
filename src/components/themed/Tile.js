@@ -16,8 +16,6 @@ type OwnProps = {
   onPress?: () => void,
   title: string,
   type: 'editable' | 'static' | 'touchable' | 'copy',
-  hideTitle?: boolean,
-  hideIcon?: boolean,
   containerClass?: StyleSheet.Styles
 }
 type Props = OwnProps & ThemeProps
@@ -29,25 +27,17 @@ class TileComponent extends React.PureComponent<Props> {
     showToast(s.strings.fragment_copied)
   }
 
-  renderTitle() {
-    const { hideTitle } = this.props
-    if (hideTitle) return null
-    const { error, theme, title } = this.props
-    const styles = getStyles(theme)
-    return <Text style={error ? styles.textHeaderError : styles.textHeader}>{title}</Text>
-  }
-
   render() {
-    const { body, children, theme, type, containerClass, hideIcon } = this.props
+    const { body, title, children, theme, type, error, containerClass } = this.props
     const styles = getStyles(theme)
     const onPress = type === 'copy' ? () => this.copy() : this.props.onPress
     return (
       <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
         <View style={[styles.container, containerClass]}>
           <View style={styles.content}>
-            {type === 'editable' && !hideIcon && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
-            {type === 'copy' && !hideIcon && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
-            {this.renderTitle()}>
+            {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
+            {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
+            <Text style={error ? styles.textHeaderError : styles.textHeader}>{title}</Text>
             {typeof body === 'string' && (
               <Text style={styles.textBody} numberOfLines={3}>
                 {body}
@@ -55,7 +45,7 @@ class TileComponent extends React.PureComponent<Props> {
             )}
             {children}
           </View>
-          {type === 'touchable' && !hideIcon && (
+          {type === 'touchable' && (
             <View style={styles.iconContainer}>
               <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
             </View>

@@ -1,15 +1,14 @@
 // @flow
 
 import * as React from 'react'
-import { View } from 'react-native'
+import { TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import s from '../../locales/strings.js'
-import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui'
 import { ScanModal } from '../modals/ScanModal'
 import { Airship } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { Tile } from './Tile.js'
+import { EdgeText } from './EdgeText'
 
 type OwnProps = {
   onScan: string => Promise<void>
@@ -32,21 +31,24 @@ class ScanTileComponent extends React.PureComponent<Props> {
     const { theme } = this.props
     const styles = getStyles(theme)
     return (
-      <Tile title="" type="editable" hideTitle hideIcon containerClass={styles.noBottomMargin} onPress={this.onScanPress}>
+      <TouchableWithoutFeedback onPress={this.onScanPress}>
         <View style={[styles.tileRow, styles.noVerticalMargin]}>
-          <FormattedText style={styles.tileTextBottom}>{s.strings.scan_qr_label}</FormattedText>
+          <EdgeText style={styles.tileTextBottom}>{s.strings.scan_qr_label}</EdgeText>
           <FontAwesome5 name="expand" style={styles.icon} />
         </View>
-      </Tile>
+      </TouchableWithoutFeedback>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   tileRow: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    margin: theme.rem(0.25)
+    backgroundColor: theme.tileBackground,
+    paddingHorizontal: theme.rem(0.75),
+    paddingVertical: theme.rem(0.5)
   },
   tileTextBottom: {
     color: theme.primaryText,
@@ -55,9 +57,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   noVerticalMargin: {
     marginVertical: 0
-  },
-  noBottomMargin: {
-    marginBottom: 0
   },
   icon: {
     color: theme.iconTappable,

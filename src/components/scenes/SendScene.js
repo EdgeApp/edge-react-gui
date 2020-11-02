@@ -13,7 +13,6 @@ import { FIO_ADDRESS_LIST } from '../../constants/SceneKeys'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { getPlugins, getSettings } from '../../modules/Settings/selectors.js'
-import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui'
 import {
   convertCurrencyFromExchangeRates,
@@ -32,6 +31,7 @@ import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { AddressTile } from '../themed/AddressTile.js'
+import { EdgeText } from '../themed/EdgeText'
 import { Tile } from '../themed/Tile.js'
 
 export const SEND_ACTION_TYPE = {
@@ -53,7 +53,7 @@ type StateProps = {
   currentFiatAmount: number,
   cryptoAmount: string,
   guiWallet: GuiWallet,
-  coreWallet: EdgeCurrencyWallet,
+  coreWallet: EdgeCurrencyWallet | null,
   wallets: { string: GuiWallet },
   walletDefaultDenomProps: EdgeDenomination
 }
@@ -69,7 +69,7 @@ type State = {
   showSlider: boolean
 }
 
-class SendComponent extends React.Component<Props, State> {
+class SendComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
 
@@ -127,12 +127,14 @@ class SendComponent extends React.Component<Props, State> {
 
     if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
       const { fioDomain, fioWallet } = this.props
-      if (!fioWallet) return showError(s.strings.fio_wallet_missing_for_fio_domain)
+      if (!fioWallet || !fioDomain) return showError(s.strings.fio_wallet_missing_for_fio_domain)
       try {
         await fioWallet.otherMethods.fioAction('transferFioDomain', { fioDomain, newOwnerKey: recipientAddress, maxFee: amount })
 
         const { theme } = this.props
         const styles = getStyles(theme)
+        const domainName = `@${fioDomain || ''}`
+        const transferredMessage = ` ${s.strings.fio_domain_transferred.toLowerCase()}`
         await Airship.show(bridge => (
           <ButtonsModal
             bridge={bridge}
@@ -141,9 +143,10 @@ class SendComponent extends React.Component<Props, State> {
               ok: { label: s.strings.string_ok_cap }
             }}
           >
-            <FormattedText style={styles.tileTextBottom}>
-              <FormattedText style={styles.cursive}>@{fioDomain}</FormattedText> {s.strings.fio_domain_transferred.toLowerCase()}
-            </FormattedText>
+            <EdgeText style={styles.tileTextBottom}>
+              <EdgeText style={styles.cursive}>{domainName}</EdgeText>
+              {transferredMessage}
+            </EdgeText>
           </ButtonsModal>
         ))
         return Actions.popTo(FIO_ADDRESS_LIST)
@@ -171,15 +174,14 @@ class SendComponent extends React.Component<Props, State> {
 
     if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
       const fiatSymbol = UTILS.getFiatSymbol(this.props.guiWallet.fiatCurrencyCode)
+      const symbol = `${walletDefaultDenomProps.symbol || ''} `
+      const fiatPrice = `(${fiatSymbol} ${this.props.currentFiatAmount.toFixed(2)})`
       return (
         <Tile type="static" title={s.strings.transaction_details_amount_current_price}>
           <View style={styles.tileRow}>
-            <FormattedText style={styles.tileTextBottom}>{`${walletDefaultDenomProps.symbol || ''} `}</FormattedText>
-            <FormattedText style={styles.tileTextPrice}>{this.props.cryptoAmount}</FormattedText>
-            <FormattedText style={styles.tileTextPriceFiat}>
-              ({`${fiatSymbol} `}
-              {this.props.currentFiatAmount.toFixed(2)})
-            </FormattedText>
+            <EdgeText style={styles.tileTextBottom}>{symbol}</EdgeText>
+            <EdgeText style={styles.tileTextPrice}>{this.props.cryptoAmount}</EdgeText>
+            <EdgeText style={styles.tileTextPriceFiat}>{fiatPrice}</EdgeText>
           </View>
         </Tile>
       )
@@ -187,17 +189,10 @@ class SendComponent extends React.Component<Props, State> {
   }
 
   renderAdditionalTiles() {
-    const { actionType, theme } = this.props
-    const styles = getStyles(theme)
+    const { actionType } = this.props
 
     if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
-      return (
-        <Tile type="static" title={s.strings.fio_domain_to_transfer}>
-          <View style={styles.tileRow}>
-            <FormattedText style={styles.tileTextBottom}>@{this.props.fioDomain}</FormattedText>
-          </View>
-        </Tile>
-      )
+      return this.props.fioDomain && <Tile type="static" title={s.strings.fio_domain_to_transfer} body={`@${this.props.fioDomain}`} />
     }
   }
 
@@ -207,25 +202,22 @@ class SendComponent extends React.Component<Props, State> {
     const { loading, recipientAddress, showSlider } = this.state
     const styles = getStyles(theme)
     const sliderDisabled = !recipientAddress
+    const walletName = `${guiWallet.name} (${guiWallet.currencyCode})`
 
     return (
       <SceneWrapper background="theme">
         <ScrollView>
           <View style={styles.tilesContainer}>
-            <Tile type={this.walletTileType()} title={`${s.strings.step} 1: ${s.strings.select_wallet}`} onPress={this.onWalletPress}>
-              <View style={styles.tileRow}>
-                <FormattedText style={styles.tileTextBottom}>
-                  {guiWallet.name} ({guiWallet.currencyCode})
-                </FormattedText>
-              </View>
-            </Tile>
-            <AddressTile
-              title={`${s.strings.step} 2: ${s.strings.transaction_details_recipient} ${s.strings.fragment_send_address}`}
-              recipientAddress={recipientAddress}
-              coreWallet={coreWallet}
-              currencyCode={currencyCode}
-              onChangeAddress={this.onChangeAddress}
-            />
+            <Tile type={this.walletTileType()} title={`${s.strings.step} 1: ${s.strings.select_wallet}`} onPress={this.onWalletPress} body={walletName} />
+            {coreWallet && (
+              <AddressTile
+                title={`${s.strings.step} 2: ${s.strings.transaction_details_recipient} ${s.strings.fragment_send_address}`}
+                recipientAddress={recipientAddress}
+                coreWallet={coreWallet}
+                currencyCode={currencyCode}
+                onChangeAddress={this.onChangeAddress}
+              />
+            )}
             {this.renderAmount()}
             {this.renderAdditionalTiles()}
           </View>
@@ -292,7 +284,7 @@ export const SendScene = connect(
     const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, parseFloat(cryptoAmount))
 
     const { account } = state.core
-    const { currencyWallets = {} } = account
+    const { currencyWallets } = account
 
     return {
       contacts,
@@ -301,7 +293,7 @@ export const SendScene = connect(
       currentFiatAmount,
       cryptoAmount,
       guiWallet: wallet,
-      coreWallet: currencyWallets[walletId],
+      coreWallet: currencyWallets ? currencyWallets[walletId] : null,
       wallets,
       walletDefaultDenomProps
     }

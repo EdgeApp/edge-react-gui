@@ -1,28 +1,52 @@
 // @flow
 
-import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { Clipboard, TouchableHighlight, View } from 'react-native'
+import { Clipboard, TouchableWithoutFeedback, View } from 'react-native'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
-import { isLegacyAddressUri, isPaymentProtocolUri, isPrivateKeyUri } from '../../actions/ScanActions'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { checkPubAddress } from '../../modules/FioAddress/util'
-import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui'
 import type { RootState } from '../../reducers/RootReducer'
+import type { FeeOption } from '../../reducers/scenes/SendConfirmationReducer'
+import type { FioRequest } from '../../types/types'
 import { AddressModal } from '../modals/AddressModal'
+import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from './EdgeText'
 import { ScanTile } from './ScanTile.js'
+import { ClickableText } from './ThemedButtons'
 import { Tile } from './Tile.js'
+
+type SpendInfo = {
+  currencyCode?: string,
+  metadata?: any,
+  nativeAmount?: string,
+  networkFeeOption?: FeeOption,
+  customNetworkFee?: Object,
+  publicAddress?: string,
+  spendTargets?: EdgeSpendTarget[],
+  lockInputs?: boolean,
+  uniqueIdentifier?: string,
+  otherParams?: Object,
+  dismissAlert?: boolean,
+  fioAddress?: string,
+  fioPendingRequest?: FioRequest,
+  isSendUsingFioAddress?: boolean,
+  onBack?: () => void,
+  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
+  beforeTransaction?: () => Promise<void>
+}
 
 type OwnProps = {
   coreWallet: EdgeCurrencyWallet,
   currencyCode: string,
   title: string,
   recipientAddress: string,
-  onChangeAddress: (address: string, fioAddress?: string) => Promise<void>
+  onChangeAddress: (address: string, spendInfo?: SpendInfo) => Promise<void>
 }
 type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null
@@ -32,6 +56,26 @@ type State = {
   resolvingAddress: boolean
 }
 type Props = OwnProps & StateProps & ThemeProps
+
+export const isLegacyAddressUri = (parsedUri: EdgeParsedUri): boolean => {
+  return !!parsedUri.legacyAddress
+}
+
+export const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
+  // $FlowFixMe should be paymentProtocolUrl (lowercased)?
+  return !!parsedUri.paymentProtocolURL && !parsedUri.publicAddress
+}
+
+const BITPAY = {
+  domain: 'bitpay.com',
+  merchantName: (memo: string) => {
+    // Example BitPay memo
+    // "Payment request for BitPay invoice DKffym7WxX6kzJ73yfYS7s for merchant Electronic Frontier Foundation"
+    // eslint-disable-next-line no-unused-vars
+    const [_, merchantName] = memo.split(' for merchant ')
+    return merchantName
+  }
+}
 
 class AddressTileComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -45,6 +89,61 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 
   componentDidMount(): void {
     this._setClipboard(this.props)
+  }
+
+  shouldContinueLegacy = async () => {
+    const response = await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.legacy_address_modal_title}
+        message={s.strings.legacy_address_modal_warning}
+        buttons={{
+          confirm: { label: s.strings.legacy_address_modal_continue },
+          cancel: { label: s.strings.legacy_address_modal_cancel, type: 'secondary' }
+        }}
+      />
+    ))
+    if (response === 'confirm') {
+      return true
+    }
+
+    return false
+  }
+
+  paymentProtocolUriReceived = async ({ paymentProtocolURL }: { paymentProtocolURL?: string }) => {
+    const { coreWallet, onChangeAddress } = this.props
+    try {
+      if (!paymentProtocolURL) throw new Error('no paymentProtocolURL prop')
+      const paymentProtocolInfo = await coreWallet.getPaymentProtocolInfo(paymentProtocolURL)
+      const { domain, memo, nativeAmount, spendTargets } = paymentProtocolInfo
+
+      const name = domain === BITPAY.domain ? BITPAY.merchantName(memo) : domain
+      const notes = memo
+      const spendInfo = {
+        lockInputs: true,
+        networkFeeOption: 'standard',
+        metadata: {
+          name,
+          notes
+        },
+        nativeAmount,
+        spendTargets,
+        otherParams: { paymentProtocolInfo }
+      }
+      onChangeAddress(spendTargets.length && spendTargets[0].publicAddress ? spendTargets[0].publicAddress : '', spendInfo)
+    } catch (e) {
+      console.log(e)
+      await Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.scan_invalid_address_error_title}
+          message={s.strings.scan_invalid_address_error_description}
+          buttons={{
+            ok: { label: s.strings.string_ok }
+          }}
+        />
+      ))
+    }
   }
 
   onChangeAddress = async (address: string) => {
@@ -66,29 +165,16 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
       }
     }
     try {
-      const parsedUri: EdgeParsedUri = await coreWallet.parseUri(address, currencyCode)
+      const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await coreWallet.parseUri(address, currencyCode)
 
       this.setState({ resolvingAddress: false })
 
-      if (parsedUri.token) {
-        // TOKEN URI
-        // todo:
-        return showError(s.strings.scan_invalid_address_error_title)
+      if (isLegacyAddressUri(parsedUri)) {
+        if (!(await this.shouldContinueLegacy())) return
       }
 
-      if (isLegacyAddressUri(parsedUri)) {
-        // LEGACY ADDRESS URI
-        // todo: showLegacyAddressModal
-        return showError(s.strings.legacy_address_modal_title)
-      }
-      if (isPrivateKeyUri(parsedUri)) {
-        // PRIVATE KEY URI
-        // todo:
-        return showError(s.strings.scan_invalid_address_error_title)
-      }
       if (isPaymentProtocolUri(parsedUri)) {
-        // todo: paymentProtocolUriReceived(parsedUri)
-        return showError(s.strings.scan_invalid_address_error_title)
+        return this.paymentProtocolUriReceived(parsedUri)
       }
 
       if (!parsedUri.publicAddress) {
@@ -96,7 +182,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
       }
 
       // set address
-      onChangeAddress(parsedUri.publicAddress, fioAddress)
+      onChangeAddress(parsedUri.publicAddress, { fioAddress })
     } catch (e) {
       showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
       this.setState({ resolvingAddress: false })
@@ -150,15 +236,21 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     const { resolvingAddress } = this.state
     const styles = getStyles(theme)
     if (resolvingAddress) {
-      return <FormattedText style={styles.tilePlaceHolder}>{s.strings.resolving}</FormattedText>
+      return <EdgeText style={styles.tilePlaceHolder}>{s.strings.resolving}</EdgeText>
     }
 
     return recipientAddress ? (
-      <FormattedText ellipsizeMode="middle" numberOfLines={1} style={[styles.tileTextBottom, styles.rightSpace]}>
-        {recipientAddress}
-      </FormattedText>
+      <>
+        <EdgeText ellipsizeMode="middle" numberOfLines={1} style={[styles.tileTextBottom, styles.rightSpace]}>
+          {recipientAddress}
+        </EdgeText>
+        <FontAwesome name="edit" style={styles.editIcon} />
+      </>
     ) : (
-      <FormattedText style={styles.tilePlaceHolder}>{s.strings.address_modal_default_header}</FormattedText>
+      <>
+        <EdgeText style={[styles.tilePlaceHolder, styles.rightSpace]}>{s.strings.address_modal_default_header}</EdgeText>
+        <FontAwesome name="edit" style={styles.editIcon} />
+      </>
     )
   }
 
@@ -171,22 +263,18 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
         <Tile type="static" containerClass={styles.noBottomMargin} title={title} />
         <View style={styles.recipientBlock}>
           <View style={styles.tileRowParent}>
-            <View style={styles.tileChild}>
-              <Tile type="editable" hideTitle title="" containerClass={styles.noBottomMargin} onPress={this.onAddressPress}>
-                <View style={[styles.tileRow, styles.noVerticalMargin]}>{this.renderAddress()}</View>
-              </Tile>
-            </View>
-            <View style={[styles.tileChild, styles.tileChildNoBorder]}>
-              <ScanTile onScan={this.onScan} />
-            </View>
+            <TouchableWithoutFeedback onPress={this.onAddressPress}>
+              <View style={[styles.tileRow, styles.tileChildSideBorder]}>{this.renderAddress()}</View>
+            </TouchableWithoutFeedback>
+            <ScanTile onScan={this.onScan} />
           </View>
           {copyMessage && (
             <View style={styles.tileContainerButtons}>
-              <TouchableHighlight underlayColor={theme.secondaryButton} onPress={this.onPasteFromClipboard} style={styles.pasteButton}>
-                <FormattedText ellipsizeMode="middle" numberOfLines={1} style={styles.tileTextBottom}>
+              <ClickableText onPress={this.onPasteFromClipboard} style={styles.pasteButton}>
+                <EdgeText ellipsizeMode="middle" numberOfLines={1} style={styles.tileTextBottom}>
                   {copyMessage}
-                </FormattedText>
-              </TouchableHighlight>
+                </EdgeText>
+              </ClickableText>
             </View>
           )}
         </View>
@@ -196,31 +284,30 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  tileChild: {
-    flex: 1,
-    borderColor: theme.deactivatedText,
-    borderTopWidth: theme.rem(0.05),
-    borderRightWidth: theme.rem(0.05),
-    borderBottomWidth: theme.rem(0.05)
-  },
-  tileChildNoBorder: {
-    borderRightWidth: 0
-  },
   tileContainerButtons: {
     backgroundColor: theme.tileBackground,
-    padding: theme.rem(0.5),
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
   },
   tileRow: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    margin: theme.rem(0.25)
+    backgroundColor: theme.tileBackground,
+    paddingHorizontal: theme.rem(0.75),
+    paddingVertical: theme.rem(0.5)
   },
   tileRowParent: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderColor: theme.deactivatedText,
+    borderTopWidth: theme.rem(0.05),
+    borderBottomWidth: theme.rem(0.05)
+  },
+  tileChildSideBorder: {
+    borderColor: theme.deactivatedText,
+    borderRightWidth: theme.rem(0.05)
   },
   tileTextBottom: {
     color: theme.primaryText,
@@ -230,24 +317,28 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.deactivatedText,
     fontSize: theme.rem(1)
   },
-  noVerticalMargin: {
-    marginVertical: 0
-  },
   noBottomMargin: {
     marginBottom: 0
   },
   pasteButton: {
     width: '100%',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    padding: theme.rem(0.75),
+    margin: 0
   },
   rightSpace: {
-    paddingRight: '20%'
+    maxWidth: '90%',
+    paddingRight: theme.rem(0.75)
   },
   recipientBlock: {
     marginBottom: theme.rem(0.125)
   },
   loader: {
     paddingVertical: theme.rem(0.075)
+  },
+  editIcon: {
+    color: theme.iconTappable,
+    fontSize: theme.rem(1)
   }
 }))
 

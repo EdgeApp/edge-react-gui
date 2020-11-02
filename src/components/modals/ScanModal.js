@@ -11,11 +11,12 @@ import { connect } from 'react-redux'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui'
 import { getSelectedCurrencyCode, getSelectedWalletId } from '../../modules/UI/selectors'
-import type { Permission, PermissionStatus } from '../../reducers/PermissionsReducer'
+import type { PermissionStatus } from '../../reducers/PermissionsReducer'
 import type { RootState } from '../../reducers/RootReducer'
 import type { Dispatch } from '../../types/reduxTypes'
 import { requestPermission } from '../services/PermissionsManager'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 
 type OwnProps = {
   bridge: AirshipBridge<string | void>,
@@ -27,15 +28,14 @@ type OwnProps = {
   currencyCode: string,
   toggleEnableTorch: () => void,
   enableScan: () => void,
-  disableScan: () => void,
-  requestPermission: () => void
+  disableScan: () => void
 }
 type Props = OwnProps & ThemeProps
 
 export class ScanModalComponent extends React.Component<Props> {
   componentDidMount(): void {
     this.props.enableScan()
-    this.props.requestPermission()
+    requestPermission('camera')
   }
 
   componentWillUnmount(): void {
@@ -77,14 +77,16 @@ export class ScanModalComponent extends React.Component<Props> {
       const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
       return (
-        <RNCamera style={styles.cameraArea} captureAudio={false} flashMode={flashMode} onBarCodeRead={this.onBarCodeRead} type={RNCamera.Constants.Type.back}>
-          <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={theme.secondaryButton}>
-            <View style={styles.bottomButtonTextWrap}>
-              <Ionicon style={styles.flashIcon} name="ios-flash" size={theme.rem(1.5)} />
-              <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
-            </View>
-          </TouchableHighlight>
-        </RNCamera>
+        <View style={styles.cameraContainer}>
+          <RNCamera style={styles.cameraArea} captureAudio={false} flashMode={flashMode} onBarCodeRead={this.onBarCodeRead} type={RNCamera.Constants.Type.back}>
+            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={theme.secondaryButton}>
+              <View style={styles.bottomButtonTextWrap}>
+                <Ionicon style={styles.flashIcon} name="ios-flash" size={theme.rem(1.5)} />
+                <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
+              </View>
+            </TouchableHighlight>
+          </RNCamera>
+        </View>
       )
     }
 
@@ -101,32 +103,30 @@ export class ScanModalComponent extends React.Component<Props> {
 
   render() {
     const { bridge, theme, title } = this.props
-    const styles = getStyles(theme)
+
     return (
       <AirshipModal bridge={bridge} onCancel={this.close} borderRadius={theme.rem(1)} backgroundColor={theme.tileBackground}>
-        <T style={styles.header}>{title}</T>
+        <ModalTitle>{title}</ModalTitle>
         {this.renderCameraArea()}
-        <TouchableHighlight style={styles.closeButton} onPress={this.close} underlayColor={theme.secondaryButton}>
-          <Ionicon style={styles.flashIcon} name="ios-arrow-down" size={theme.rem(1.5)} />
-        </TouchableHighlight>
+        <ModalCloseArrow onPress={this.close} />
       </AirshipModal>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  header: {
-    width: '100%',
-    textAlign: 'center',
-    fontSize: theme.rem(1.5),
-    paddingVertical: theme.rem(0.75),
-    color: theme.primaryText
+  cameraContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: theme.rem(1.25)
   },
 
   cameraArea: {
     alignItems: 'flex-end',
     flex: 1,
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    width: '100%'
   },
 
   // Permission denied view:
@@ -173,13 +173,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText,
     fontSize: theme.rem(0.875),
     backgroundColor: 'transparent'
-  },
-  closeButton: {
-    width: '100%',
-    padding: theme.rem(0.5),
-    height: theme.rem(2.5),
-    justifyContent: 'center',
-    alignItems: 'center'
   }
 }))
 
@@ -198,9 +191,6 @@ export const ScanModal = connect(
     },
     enableScan: () => {
       dispatch({ type: 'ENABLE_SCAN' })
-    },
-    requestPermission: (permission: Permission) => {
-      requestPermission(permission)
     }
   })
 )(withTheme(ScanModalComponent))
