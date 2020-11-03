@@ -38,6 +38,7 @@ const palette = {
   blackOp50: 'rgba(0, 0, 0, .5)',
 
   whiteOp10: 'rgba(255, 255, 255, .1)',
+  whiteOp75: 'rgba(255, 255, 255, .75)',
 
   grayOp80: 'rgba(135, 147, 158, .8)',
   accentOrangeOp30: 'rgba(241, 170, 25, .3)',
@@ -54,6 +55,7 @@ export const edgeDark: Theme = {
   icon: palette.white,
   iconTappable: palette.edgeMint,
   warningIcon: palette.accentOrange,
+  iconLoadingOverlay: palette.whiteOp75,
 
   // Background
   backgroundGradientLeft: palette.darkBlue,
@@ -69,7 +71,7 @@ export const edgeDark: Theme = {
   // Tile
   // listHeaderBackground: palette.edgeNavy,
   tileBackground: palette.edgeBlue,
-  // tileBackgroundMuted: palette.mutedBlue,
+  tileBackgroundMuted: palette.mutedBlue,
   // listSectionHeaderBackground: palette.edgeNavy,
 
   // Text
@@ -144,7 +146,7 @@ export const edgeDark: Theme = {
   // confirmationThumbDeactivated: palette.gray,
 
   // Lines
-  // lineDivider: palette.blueGray,
+  lineDivider: palette.blueGray,
   // textInputLine: palette.blueGray,
   // orLine: palette.blueGray,
   // tileDivider: palette.blueGray,
@@ -183,6 +185,10 @@ export const edgeDark: Theme = {
   fontFaceDefault: 'SourceSansPro-Black',
   fontFaceBold: 'SourceSansPro-Bold',
   fontFaceSymbols: Platform.OS === 'android' ? 'SF-UI-Text-Regular' : 'SourceSansPro-Black',
+
+  // TouchableHighlights underlay
+  underlayColor: palette.white,
+  underlayOpacity: 0.95,
 
   // Images
   settingsChangellyLogo: changellyLogo,
