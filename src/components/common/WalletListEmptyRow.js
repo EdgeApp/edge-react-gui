@@ -1,67 +1,47 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, TouchableHighlight, View } from 'react-native'
 
-import { THEME } from '../../theme/variables/airbitz.js'
-import { scale } from '../../util/scaling.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 type Props = {
   walletId?: string
 }
 
-export class WalletListEmptyRow extends React.PureComponent<Props> {
+class WalletListEmptyRowComponent extends React.PureComponent<Props & ThemeProps> {
   handleOpenWalletListMenuModal = async () => {
-    await Airship.show(bridge => <WalletListMenuModal bridge={bridge} walletId={this.props.walletId || ''} />)
+    if (this.props.walletId) {
+      await Airship.show(bridge => <WalletListMenuModal bridge={bridge} walletId={this.props.walletId} />)
+    }
   }
 
   render() {
+    const { theme } = this.props
+    const styles = getStyles(theme)
     return (
-      <TouchableHighlight
-        style={[styles.rowContainer, styles.emptyRow]}
-        underlayColor={THEME.COLORS.ROW_PRESSED}
-        onLongPress={this.handleOpenWalletListMenuModal}
-      >
-        <View style={styles.rowContent}>
-          <View style={styles.rowNameTextWrap}>
-            <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={{ height: 18, width: 18 }} />
-          </View>
+      <TouchableHighlight activeOpacity={theme.underlayOpacity} undelayColor={theme.underlayColor} onLongPress={this.handleOpenWalletListMenuModal}>
+        <View style={styles.container}>
+          <ActivityIndicator color={theme.primaryText} size="large" />
         </View>
       </TouchableHighlight>
     )
   }
 }
 
-const rawStyles = {
-  emptyRow: {
-    height: scale(60),
-    backgroundColor: THEME.COLORS.WHITE,
-    padding: scale(16),
-    paddingLeft: scale(20),
-    paddingRight: scale(20),
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderColor: THEME.COLORS.GRAY_4
-  },
-  rowContainer: {
-    padding: scale(6),
-    paddingLeft: scale(8),
-    height: scale(106),
-    backgroundColor: THEME.COLORS.WHITE,
-    borderBottomWidth: scale(1),
-    borderBottomColor: THEME.COLORS.GRAY_3
-  },
-  rowContent: {
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
     flex: 1,
-    flexDirection: 'row'
-  },
-  rowNameTextWrap: {
-    flex: 1,
-    alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'center',
-    marginRight: scale(5)
+    alignItems: 'center',
+    padding: theme.rem(0.75),
+    height: theme.rem(5.75),
+    marginBottom: theme.rem(1 / 16),
+    backgroundColor: theme.tileBackground
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+export const WalletListEmptyRow = withTheme(WalletListEmptyRowComponent)
