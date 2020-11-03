@@ -1,9 +1,10 @@
 // @flow
 
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
   icon?: React.Node,
@@ -22,7 +23,7 @@ export function SettingsHeaderRowComponent(props: Props): React.Node {
   return (
     <View style={styles.row}>
       {icon != null ? <View style={styles.padding}>{icon}</View> : undefined}
-      <Text style={styles.text}>{text}</Text>
+      <EdgeText style={styles.text}>{text}</EdgeText>
     </View>
   )
 }
