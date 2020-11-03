@@ -9,6 +9,7 @@ export type Theme = {
   icon: string,
   iconTappable: string,
   warningIcon: string,
+  iconLoadingOverlay: string,
 
   // Background
   backgroundGradientLeft: string,
@@ -24,7 +25,7 @@ export type Theme = {
   // Tile
   // listHeaderBackground: string,
   tileBackground: string,
-  // tileBackgroundMuted: string, // change from mutedTileBackground
+  tileBackgroundMuted: string,
   // listSectionHeaderBackground: string,
 
   // Settings Row
@@ -104,7 +105,7 @@ export type Theme = {
   // confirmationThumbDeactivated: string,
 
   // Lines
-  // lineDivider: string, // change from listDivider
+  lineDivider: string,
   // textInputLine: string,
   // orLine: string,
   // tileDivider: string,
@@ -137,6 +138,10 @@ export type Theme = {
   fontFaceDefault: string,
   fontFaceBold: string,
   fontFaceSymbols: string,
+
+  // TouchableHighlights underlay
+  underlayColor: string,
+  underlayOpacity: number,
 
   // Images
   settingsChangellyLogo: string,
