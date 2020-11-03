@@ -1,25 +1,22 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import SortableListView from 'react-native-sortable-listview'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import IonIcon from 'react-native-vector-icons/Ionicons'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
 import { linkReferralWithCurrencies, toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
-import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
 import { Fontello } from '../../assets/vector/index.js'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
-import { dayText, nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
@@ -34,6 +31,8 @@ import { WalletListEmptyRow } from '../common/WalletListEmptyRow.js'
 import { WalletListFooter } from '../common/WalletListFooter.js'
 import { WalletListSortableRow } from '../common/WalletListSortableRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 
 type StateProps = {
@@ -49,13 +48,13 @@ type DispatchProps = {
   updateActiveWalletsOrder(walletIds: string[]): void,
   linkReferralWithCurrencies(string): void
 }
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
   sorting: boolean
 }
 
-class WalletListComponent extends React.Component<Props, State> {
+class WalletListComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -63,13 +62,13 @@ class WalletListComponent extends React.Component<Props, State> {
     }
   }
 
-  render() {
-    const { wallets, activeWalletIds } = this.props
-    const { sorting } = this.state
-    const loading = Object.keys(wallets).length <= 0
+  handleSort = () => this.setState({ sorting: true })
 
-    const walletIcon = <Image source={WalletIcon} style={styles.walletIcon} />
-    const sort = () => this.setState({ sorting: true })
+  render() {
+    const { activeWalletIds, theme, wallets } = this.props
+    const { sorting } = this.state
+    const styles = getStyles(theme)
+    const loading = Object.keys(wallets).length <= 0
 
     return (
       <SceneWrapper>
@@ -82,18 +81,18 @@ class WalletListComponent extends React.Component<Props, State> {
           exchangeRates={this.props.exchangeRates}
         />
         <View /* header stack */>
-          <SettingsHeaderRow icon={walletIcon} text={s.strings.fragment_wallets_header} />
+          <SettingsHeaderRow icon={<Fontello name="wallet-1" size={theme.rem(1.25)} color={theme.icon} />} text={s.strings.fragment_wallets_header} />
           <CrossFade activeKey={sorting ? 'doneButton' : 'defaultButtons'}>
-            <View key="defaultButtons" style={[styles.headerButton, styles.defaultButtons]}>
+            <View key="defaultButtons" style={styles.headerButtonsContainer}>
               <TouchableOpacity style={styles.addButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
-                <IonIcon name="md-add" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
+                <Ionicon name="md-add" size={theme.rem(1.25)} color={theme.iconTappable} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={sort}>
-                <Fontello name="sort" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
+              <TouchableOpacity onPress={this.handleSort}>
+                <Fontello name="sort" size={theme.rem(1.25)} color={theme.iconTappable} />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity key="doneButton" style={styles.headerButton} onPress={this.disableSorting}>
-              <T style={nightText()}>{s.strings.string_done_cap}</T>
+            <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={this.disableSorting}>
+              <EdgeText>{s.strings.string_done_cap}</EdgeText>
             </TouchableOpacity>
           </CrossFade>
         </View>
@@ -130,7 +129,8 @@ class WalletListComponent extends React.Component<Props, State> {
   }
 
   renderPromoCard() {
-    const { accountMessages, accountReferral, hideMessageTweak, linkReferralWithCurrencies } = this.props
+    const { accountMessages, accountReferral, hideMessageTweak, linkReferralWithCurrencies, theme } = this.props
+    const styles = getStyles(theme)
     const messageSummary = bestOfMessages(accountMessages, accountReferral)
     if (messageSummary == null) return null
 
@@ -148,7 +148,7 @@ class WalletListComponent extends React.Component<Props, State> {
         <TouchableOpacity onPress={handlePress}>
           <View style={styles.promoCard}>
             {iconUri != null ? <Image resizeMode="contain" source={{ uri: iconUri }} style={styles.promoIcon} /> : null}
-            <Text style={styles.promoText}>{message.message}</Text>
+            <EdgeText style={styles.promoText}>{message.message}</EdgeText>
             <TouchableOpacity onPress={handleClose}>
               <AntDesignIcon name="close" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} style={styles.promoClose} />
             </TouchableOpacity>
@@ -159,26 +159,19 @@ class WalletListComponent extends React.Component<Props, State> {
   }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   // The sort & add buttons are stacked on top of the header component:
-  headerButton: {
-    alignSelf: 'flex-end',
+  headerButtonsContainer: {
     flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: THEME.rem(1)
-  },
-  defaultButtons: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-end',
+    paddingHorizontal: theme.rem(1)
   },
   addButton: {
-    marginRight: THEME.rem(0.75)
+    marginRight: theme.rem(0.75)
   },
-  walletIcon: {
-    width: THEME.rem(1.375),
-    height: THEME.rem(1.375)
-  },
-
   // The two lists are stacked vertically on top of each other:
   listStack: {
     flexGrow: 1
@@ -187,7 +180,6 @@ const rawStyles = {
     flexGrow: 1,
     alignSelf: 'center'
   },
-
   // Promo area:
   promoArea: {
     padding: THEME.rem(0.5)
@@ -205,15 +197,13 @@ const rawStyles = {
     margin: THEME.rem(0.5)
   },
   promoText: {
-    ...dayText('row-left'),
     flex: 1,
     margin: THEME.rem(0.5)
   },
   promoClose: {
     padding: THEME.rem(0.5)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 export const WalletListScene = connect(
   (state: RootState): StateProps => {
@@ -250,4 +240,4 @@ export const WalletListScene = connect(
       dispatch(linkReferralWithCurrencies(uri))
     }
   })
-)(WalletListComponent)
+)(withTheme(WalletListComponent))
