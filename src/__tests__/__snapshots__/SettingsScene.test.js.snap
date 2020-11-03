@@ -93,15 +93,24 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
+            adjustsFontSizeToFit={true}
+            numberOfLines={1}
             style={
-              Object {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "SourceSansPro-Black",
-                "fontSize": 22,
-                "textAlign": "left",
-              }
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "SourceSansPro-Black",
+                  "fontSize": 22,
+                },
+                Object {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "SourceSansPro-Black",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                },
+              ]
             }
           >
             Account: some user
@@ -503,15 +512,24 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
+            adjustsFontSizeToFit={true}
+            numberOfLines={1}
             style={
-              Object {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "SourceSansPro-Black",
-                "fontSize": 22,
-                "textAlign": "left",
-              }
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "SourceSansPro-Black",
+                  "fontSize": 22,
+                },
+                Object {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "SourceSansPro-Black",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                },
+              ]
             }
           >
             Options
@@ -1413,15 +1431,24 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
+            adjustsFontSizeToFit={true}
+            numberOfLines={1}
             style={
-              Object {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "SourceSansPro-Black",
-                "fontSize": 22,
-                "textAlign": "left",
-              }
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "SourceSansPro-Black",
+                  "fontSize": 22,
+                },
+                Object {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "SourceSansPro-Black",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                },
+              ]
             }
           >
             Account: some user
@@ -1823,15 +1850,24 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
+            adjustsFontSizeToFit={true}
+            numberOfLines={1}
             style={
-              Object {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "SourceSansPro-Black",
-                "fontSize": 22,
-                "textAlign": "left",
-              }
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "SourceSansPro-Black",
+                  "fontSize": 22,
+                },
+                Object {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "SourceSansPro-Black",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                },
+              ]
             }
           >
             Options
