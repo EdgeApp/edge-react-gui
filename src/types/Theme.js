@@ -82,7 +82,7 @@ export type Theme = {
 
   // sliderTabSend: string,
   // sliderTabRequest: string,
-  // sliderTabMore: string,
+  sliderTabMore: string,
 
   // pinOutline: string,
   // pinFilled: string,

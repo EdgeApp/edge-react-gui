@@ -122,7 +122,7 @@ export const edgeDark: Theme = {
 
   // sliderTabSend: palette.accentRed,
   // sliderTabRequest: palette.accentGreen,
-  // sliderTabMore: palette.accentBlue,
+  sliderTabMore: palette.accentBlue,
 
   // pinOutline: palette.white,
   // pinFilled: palette.white,

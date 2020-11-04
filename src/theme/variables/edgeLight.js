@@ -120,7 +120,7 @@ export const edgeLight: Theme = {
 
   // sliderTabSend: palette.accentRed,
   // sliderTabRequest: palette.accentGreen,
-  // sliderTabMore: palette.accentBlue,
+  sliderTabMore: palette.accentBlue,
 
   // pinOutline: palette.edgeBlue,
   // pinFilled: palette.edgeBlue,
