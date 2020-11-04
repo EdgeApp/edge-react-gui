@@ -13,10 +13,10 @@ import s from '../../locales/strings.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import { emptyEdgeDenomination } from '../../modules/Settings/selectors.js'
 import { calculateWalletFiatBalanceWithoutState, getActiveWalletIds } from '../../modules/UI/selectors.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, FlatListItem, GuiWallet } from '../../types/types.js'
 import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
+import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
 import { WalletListHiddenItem } from './WalletListHiddenItem.js'
 import { WalletListRow } from './WalletListRow.js'
@@ -44,7 +44,7 @@ type DispatchProps = {
   selectWallet(walletId: string, currencyCode: string): void
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class WalletListComponent extends React.PureComponent<Props> {
   getWalletList(activeWalletIds: string[], wallets: { [walletId: string]: GuiWallet }): WalletListItem[] {
@@ -162,7 +162,7 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   renderRow = (data: FlatListItem<WalletListItem>) => {
-    const { exchangeRates, settings, showBalance, wallets } = this.props
+    const { exchangeRates, settings, showBalance, theme, wallets } = this.props
     const walletId = data.item.id.replace(/:.*/, '')
     const guiWallet = wallets[walletId]
 
@@ -205,16 +205,16 @@ class WalletListComponent extends React.PureComponent<Props> {
       }
 
       let differencePercentageString = ''
-      let differencePercentageStringStyle = 'neutral'
+      let differencePercentageStringStyle = theme.secondaryText
       if (!exchangeRate || !differencePercentage || isNaN(differencePercentage)) {
         differencePercentageString = ''
       } else if (exchangeRate && differencePercentage && differencePercentage === 0) {
         differencePercentageString = '0.00%'
       } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
-        differencePercentageStringStyle = 'negative'
+        differencePercentageStringStyle = theme.negativeText
         differencePercentageString = `- ${Math.abs(differencePercentage).toFixed(2)}%`
       } else if (exchangeRate && differencePercentage && differencePercentage > 0) {
-        differencePercentageStringStyle = 'positive'
+        differencePercentageStringStyle = theme.positiveText
         differencePercentageString = `+ ${Math.abs(differencePercentage).toFixed(2)}%`
       }
 
@@ -250,16 +250,15 @@ class WalletListComponent extends React.PureComponent<Props> {
 
   listKeyExtractor = (item: WalletListItem, index) => `${item.id}${index}`
   render() {
-    const { activeWalletIds, footer, header, wallets } = this.props
+    const { activeWalletIds, footer, header, theme, wallets } = this.props
     const walletList = this.getWalletList(activeWalletIds, wallets)
-
     return (
       <SwipeListView
         keyExtractor={this.listKeyExtractor}
         data={walletList}
         ListFooterComponent={footer}
         ListHeaderComponent={header}
-        rightOpenValue={THEME.rem(-3)}
+        rightOpenValue={theme.rem(-2.5)}
         renderItem={this.renderRow}
         renderHiddenItem={this.renderHiddenItem}
         disableRightSwipe
@@ -297,4 +296,4 @@ export const WalletList = connect(
       dispatch(selectWallet(walletId, currencyCode, WALLET_LIST_SCENE))
     }
   })
-)(WalletListComponent)
+)(withTheme(WalletListComponent))
