@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 1.17.6 (2020-11-03)
+
+- Add 'sell' deepQuery type to Bity
+
 ## 1.17.5 (2020-10-30)
 
 - Upgrade Bity plugin
