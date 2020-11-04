@@ -11,13 +11,11 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from '../themed/EdgeText.js'
 import { ProgressPie } from './ProgressPie.js'
 
-type PercentageStyle = 'neutral' | 'negative' | 'positive'
-
 type Props = {
   cryptoAmount: string,
   currencyCode: string,
   differencePercentage: string,
-  differencePercentageStyle: PercentageStyle,
+  differencePercentageStyle: string,
   exchangeRate: string,
   exchangeRateFiatSymbol: string,
   fiatBalance: string,
@@ -71,11 +69,6 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps> {
       walletProgress
     } = this.props
     const styles = getStyles(theme)
-    const percentageFontColor = {
-      neutral: theme.secondaryText,
-      positive: theme.positiveText,
-      negative: theme.negativeText
-    }
     return (
       <View style={styles.container}>
         <TouchableHighlight
@@ -103,7 +96,7 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps> {
               <View style={styles.divider} />
               <View style={styles.detailsRow}>
                 <EdgeText style={styles.exchangeRate}>{exchangeRateFiatSymbol + exchangeRate}</EdgeText>
-                <EdgeText style={[styles.percentage, { color: percentageFontColor[differencePercentageStyle] }]}>{differencePercentage}</EdgeText>
+                <EdgeText style={[styles.percentage, { color: differencePercentageStyle }]}>{differencePercentage}</EdgeText>
               </View>
             </View>
           </View>

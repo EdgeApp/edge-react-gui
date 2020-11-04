@@ -1,13 +1,14 @@
 // @flow
 
 import * as React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 
 type Props = {
   currencyCode?: string,
@@ -18,7 +19,7 @@ type Props = {
   walletName?: string
 }
 
-export class WalletListHiddenItem extends React.PureComponent<Props> {
+class WalletListHiddenItemComponent extends React.PureComponent<Props & ThemeProps> {
   handleOpenWalletListMenuModal = (): void => {
     const { currencyCode, isToken, swipeRow, symbolImage, walletId, walletName } = this.props
     Airship.show(bridge => (
@@ -30,22 +31,25 @@ export class WalletListHiddenItem extends React.PureComponent<Props> {
   }
 
   render() {
+    const styles = getStyles(this.props.theme)
     return (
       <View style={styles.hiddenRowContainer}>
         <TouchableOpacity style={styles.hiddernRowOptionsButton} onPress={this.handleOpenWalletListMenuModal}>
-          <Text style={styles.hiddenRowOptionsIcon}>{WALLET_LIST_OPTIONS_ICON}</Text>
+          <EdgeText style={styles.hiddenRowOptionsIcon}>{WALLET_LIST_OPTIONS_ICON}</EdgeText>
         </TouchableOpacity>
       </View>
     )
   }
 }
 
-const styles = StyleSheet.create({
+const getStyles = cacheStyles((theme: Theme) => ({
   hiddenRowContainer: {
     flex: 1,
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    height: theme.rem(5.75),
+    marginBottom: theme.rem(1 / 16)
   },
   hiddernRowOptionsButton: {
     alignItems: 'center',
@@ -54,11 +58,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     top: 0,
     right: 0,
-    width: THEME.rem(3),
-    backgroundColor: THEME.COLORS.ACCENT_BLUE
+    width: theme.rem(2.5),
+    backgroundColor: theme.sliderTabMore
   },
   hiddenRowOptionsIcon: {
-    fontSize: THEME.rem(1.25),
-    color: THEME.COLORS.WHITE
+    fontSize: theme.rem(1.25)
   }
-})
+}))
+
+export const WalletListHiddenItem = withTheme(WalletListHiddenItemComponent)
