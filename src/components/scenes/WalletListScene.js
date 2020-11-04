@@ -27,7 +27,6 @@ import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { WalletList } from '../common/WalletList.js'
-import { WalletListEmptyRow } from '../common/WalletListEmptyRow.js'
 import { WalletListFooter } from '../common/WalletListFooter.js'
 import { WalletListSortableRow } from '../common/WalletListSortableRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
@@ -116,7 +115,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   }
 
   renderSortableRow = (guiWallet: GuiWallet | void) => {
-    return guiWallet != null ? <WalletListSortableRow guiWallet={guiWallet} showBalance={getIsAccountBalanceVisible} /> : <WalletListEmptyRow />
+    return guiWallet != null ? <WalletListSortableRow guiWallet={guiWallet} showBalance={getIsAccountBalanceVisible} /> : null
   }
 
   disableSorting = () => this.setState({ sorting: false })
