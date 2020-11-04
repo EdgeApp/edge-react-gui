@@ -3,7 +3,7 @@
 import { createInputModal, createSecureTextModal } from 'edge-components'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
 import { launchModal } from '../components/common/ModalProvider.js'
@@ -127,7 +127,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const theme = getTheme()
-        const icon = <FontAwesome style={{ left: theme.rem(0.125) }} name="user-secret" color={theme.tileBackground} size={theme.rem(2)} />
+        const icon = <FontAwesomeIcon style={{ left: theme.rem(0.125) }} name="user-secret" color={theme.tileBackground} size={theme.rem(2)} />
 
         const { account } = state.core
 
@@ -205,7 +205,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
             title: s.strings.string_cancel_cap
           }
           const renameWalletModal = createInputModal({
-            icon: <FontAwesome name="edit" size={30} />,
+            icon: <FontAwesomeIcon name="edit" size={30} />,
             title: s.strings.fragment_wallets_rename_wallet,
             input,
             yesButton,

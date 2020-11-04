@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import IonIcon from 'react-native-vector-icons/Ionicons'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import s from '../../../../locales/strings.js'
 import { PrimaryButton } from '../Buttons/PrimaryButton.ui.js'
@@ -31,7 +31,7 @@ export class PasswordRecoveryReminderModalComponent extends React.Component<Pass
     return (
       <InteractiveModal legacy isActive={isVisible} onModalHide={hidePasswordRecoveryReminderModal}>
         <InteractiveModal.Icon>
-          <IonIcon style={styles.icon} name="ios-lock" />
+          <AntDesignIcon style={styles.icon} name="lock" />
         </InteractiveModal.Icon>
         <InteractiveModal.Title>
           <Text>{s.strings.password_recovery_reminder_modal_title}</Text>

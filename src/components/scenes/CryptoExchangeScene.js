@@ -5,7 +5,7 @@ import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Alert, Keyboard, StyleSheet, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
@@ -157,7 +157,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             onNext={this.getQuote}
           />
           <View style={styles.arrowShim} />
-          <MaterialCommunityIcons style={styles.downArrow} name="arrow-down-bold" size={scale(30)} />
+          <MaterialCommunityIcon style={styles.downArrow} name="arrow-down-bold" size={scale(30)} />
           <View style={styles.arrowShim} />
           <CryptoExchangeFlipInputWrapperComponent
             guiWallet={this.props.toWallet}

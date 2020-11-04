@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Clipboard, TouchableWithoutFeedback, View } from 'react-native'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -34,8 +34,8 @@ class TileComponent extends React.PureComponent<Props> {
       <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
         <View style={styles.container}>
           <View style={styles.content}>
-            {type === 'editable' && <FontAwesome name="edit" style={styles.editIcon} />}
-            {type === 'copy' && <FontAwesome name="copy" style={styles.editIcon} />}
+            {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
+            {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
             <Text style={error ? styles.textHeaderError : styles.textHeader}>{title}</Text>
             {typeof body === 'string' && (
               <Text style={styles.textBody} numberOfLines={3}>
@@ -46,7 +46,7 @@ class TileComponent extends React.PureComponent<Props> {
           </View>
           {type === 'touchable' && (
             <View style={styles.iconContainer}>
-              <FontAwesome name="chevron-right" style={styles.arrowIcon} />
+              <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
             </View>
           )}
         </View>

@@ -3,7 +3,7 @@
 import type { EdgeMetaToken } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
-import Icon from 'react-native-vector-icons/SimpleLineIcons'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import CheckBox from '../../modules/UI/components/CheckBox/CheckBox.ui.js'
@@ -61,7 +61,7 @@ class ManageTokenRow extends React.Component<Props, State> {
               </Text>
             </View>
           </View>
-          <View>{isEditable && <Icon style={styles.rowRightArrow} name="arrow-right" />}</View>
+          <View>{isEditable && <AntDesignIcon style={styles.rowRightArrow} name="right" size={scale(16)} />}</View>
         </View>
       </TouchableHighlight>
     )

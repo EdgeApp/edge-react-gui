@@ -7,8 +7,8 @@ import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { FlatList, Image, Platform, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import { connect } from 'react-redux'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
@@ -308,7 +308,7 @@ class GuiPluginList extends React.Component<Props, State> {
               {flag}
               <Text style={{ fontSize: scale(16), alignSelf: 'center', paddingLeft: 12 }}>{message}</Text>
             </View>
-            <SimpleLineIcons style={{ alignSelf: 'center' }} name="arrow-right" />
+            <AntDesignIcon style={{ alignSelf: 'center' }} name="right" size={scale(16)} />
           </View>
         </TouchableWithoutFeedback>
       </View>

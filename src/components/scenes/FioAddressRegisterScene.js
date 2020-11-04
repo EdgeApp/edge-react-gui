@@ -4,7 +4,7 @@ import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { sprintf } from 'sprintf-js'
 
 import fioAddressIcon from '../../assets/images/list_fioAddress.png'
@@ -291,10 +291,10 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
 
     let icon = null
     if ((!isValid || isAvailable === false) && touched) {
-      icon = <MaterialCommunityIcons style={[styles.statusIcon, styles.statusIconError]} name="close-circle-outline" size={25} />
+      icon = <MaterialCommunityIcon style={[styles.statusIcon, styles.statusIconError]} name="close-circle-outline" size={25} />
     }
     if (isValid && isAvailable && touched) {
-      icon = <MaterialCommunityIcons style={[styles.statusIcon, styles.statusIconOk]} name="check-circle-outline" size={25} />
+      icon = <MaterialCommunityIcon style={[styles.statusIcon, styles.statusIconOk]} name="check-circle-outline" size={25} />
     }
 
     return <View style={styles.statusIconContainer}>{loading ? <ActivityIndicator style={styles.statusIcon} size="small" /> : icon}</View>

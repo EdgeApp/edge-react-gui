@@ -4,7 +4,7 @@ import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import Ionicon from 'react-native-vector-icons/Ionicons'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants.js'
@@ -33,13 +33,13 @@ class WalletListFooterComponent extends React.Component<Props> {
         <View style={{ flexDirection: 'row', alignItems: 'stretch' }}>
           <TouchableWithoutFeedback onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]} style={styles.addWalletButton}>
             <View style={styles.addWalletContentWrap}>
-              <Ionicon name="md-add-circle" style={styles.addWalletIcon} size={scale(24)} color={THEME.COLORS.GRAY_2} />
+              <IonIcon name="md-add-circle" style={styles.addWalletIcon} size={scale(24)} color={THEME.COLORS.GRAY_2} />
               <T style={styles.addWalletText}>{s.strings.wallet_list_add_wallet}</T>
             </View>
           </TouchableWithoutFeedback>
           <TouchableWithoutFeedback onPress={this.addToken} style={styles.addWalletButton}>
             <View style={styles.addTokenContentWrap}>
-              <Ionicon name="md-add-circle" style={styles.addWalletIcon} size={scale(24)} color={THEME.COLORS.GRAY_2} />
+              <IonIcon name="md-add-circle" style={styles.addWalletIcon} size={scale(24)} color={THEME.COLORS.GRAY_2} />
               <T style={styles.addWalletText}>{s.strings.wallet_list_add_token}</T>
             </View>
           </TouchableWithoutFeedback>

@@ -6,7 +6,7 @@ import * as React from 'react'
 import { Image, Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
@@ -269,7 +269,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
           bridge={bridge}
           body={createExchangeDataString()}
           title={s.strings.transaction_details_exchange_details}
-          icon={<FontAwesome name="exchange" size={theme.rem(1.5)} color={theme.tileBackground} />}
+          icon={<FontAwesomeIcon name="exchange" size={theme.rem(1.5)} color={theme.tileBackground} />}
         />
       ))
     }
@@ -441,7 +441,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
                 {thumbnailPath ? (
                   <Image style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
                 ) : (
-                  <IonIcon style={styles.tileAvatarIcon} name="ios-contact" size={theme.rem(2)} />
+                  <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(2)} />
                 )}
                 <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
               </View>

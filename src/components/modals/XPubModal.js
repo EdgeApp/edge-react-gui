@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Clipboard, Linking, Platform, Text } from 'react-native'
-import Ionicon from 'react-native-vector-icons/Ionicons'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
@@ -49,7 +49,7 @@ export default class XPubModal extends React.Component<XPubModalComponentProps, 
   }
 
   render() {
-    const icon = Platform.OS === 'ios' ? <Ionicon name="ios-eye" size={scale(30)} /> : <Ionicon name="md-eye" size={scale(30)} />
+    const icon = Platform.OS === 'ios' ? <IonIcon name="ios-eye" size={scale(30)} /> : <IonIcon name="md-eye" size={scale(30)} />
     let hasXpubExplorerValue = false
     if (this.props.xPubExplorer) {
       hasXpubExplorerValue = true

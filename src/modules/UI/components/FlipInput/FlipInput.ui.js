@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import * as React from 'react'
 import { Animated, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
-import FAIcon from 'react-native-vector-icons/MaterialIcons'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import * as intl from '../../../../locales/intl.js'
 import { THEME } from '../../../../theme/variables/airbitz.js'
@@ -230,7 +230,7 @@ export default class FlipInput extends React.Component<Props, State> {
           pointerEvents={isToggled ? 'none' : 'auto'}
         >
           <View style={styles.flipButton}>
-            <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={36} />
+            <MaterialIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={36} />
           </View>
           <View style={styles.rows}>
             {this.topRowFront(primaryInfo, this.onPrimaryAmountChange, intl.formatNumberInput(this.state.primaryDisplayAmount))}
@@ -243,7 +243,7 @@ export default class FlipInput extends React.Component<Props, State> {
           pointerEvents={isToggled ? 'auto' : 'none'}
         >
           <View style={styles.flipButton}>
-            <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={36} />
+            <MaterialIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={36} />
           </View>
           <View style={styles.rows}>
             {this.topRowBack(secondaryInfo, this.onSecondaryAmountChange, intl.formatNumberInput(this.state.secondaryDisplayAmount))}

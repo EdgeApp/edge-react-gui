@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { Text } from 'react-native'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import s from '../../../../locales/strings.js'
 import { PrimaryButton } from '../Buttons/PrimaryButton.ui.js'
@@ -18,7 +18,7 @@ export const errorModal = (title: string, error: Error) =>
       return (
         <InteractiveModal>
           <InteractiveModal.Icon>
-            <MaterialCommunityIcons name="exclamation" size={30} />
+            <MaterialCommunityIcon name="exclamation" size={30} />
           </InteractiveModal.Icon>
 
           <InteractiveModal.Title>
