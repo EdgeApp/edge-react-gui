@@ -2,63 +2,69 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Image, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import IonIcon from 'react-native-vector-icons/Ionicons'
+import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { makeCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
-import { scale } from '../../util/scaling.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 
 type StateProps = {
   account: EdgeAccount,
   wallets: { [walletId: string]: GuiWallet }
 }
-type DispatchProps = {}
-type Props = StateProps & DispatchProps
 
-class WalletListFooterComponent extends React.Component<Props> {
-  render() {
+class WalletListFooterComponent extends React.PureComponent<StateProps & ThemeProps> {
+  renderAddButton = (title: string, onPress: () => void) => {
+    const { theme } = this.props
+    const styles = getStyles(theme)
     return (
-      <View style={styles.multipleCallToActionWrap}>
-        <View style={{ flexDirection: 'row', alignItems: 'stretch' }}>
-          <TouchableWithoutFeedback onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]} style={styles.addWalletButton}>
-            <View style={styles.addWalletContentWrap}>
-              <IonIcon name="md-add-circle" style={styles.addWalletIcon} size={scale(24)} color={THEME.COLORS.GRAY_2} />
-              <T style={styles.addWalletText}>{s.strings.wallet_list_add_wallet}</T>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.addToken} style={styles.addWalletButton}>
-            <View style={styles.addTokenContentWrap}>
-              <IonIcon name="md-add-circle" style={styles.addWalletIcon} size={scale(24)} color={THEME.COLORS.GRAY_2} />
-              <T style={styles.addWalletText}>{s.strings.wallet_list_add_token}</T>
-            </View>
-          </TouchableWithoutFeedback>
-        </View>
-        <TouchableWithoutFeedback onPress={Actions[Constants.PLUGIN_BUY]} style={styles.buyMultipleCryptoContainer}>
-          <View style={styles.buyMultipleCryptoBox}>
-            <View style={styles.buyMultipleCryptoContentWrap}>
-              <Image style={styles.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.BTC }} resizeMode="cover" />
-              <Image style={styles.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.ETH }} resizeMode="cover" />
-              <Image style={styles.buyMultipleCryptoBoxImage} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.BCH }} resizeMode="cover" />
-            </View>
-            <T style={styles.buyMultipleCryptoBoxText}>{s.strings.title_plugin_buy}</T>
+      <View style={styles.addButtonsContainer}>
+        <TouchableHighlight activeOpacity={theme.underlayOpacity} underlayColor={theme.underlayColor} onPress={onPress}>
+          <View style={styles.addButtonsInnerContainer}>
+            <Ionicon name="md-add-circle" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
+            <EdgeText style={styles.addItem}>{title}</EdgeText>
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableHighlight>
       </View>
     )
   }
 
-  addToken = async () => {
+  render() {
+    const { theme } = this.props
+    const styles = getStyles(theme)
+    return (
+      <View style={styles.container}>
+        <View style={styles.addButtonsRowContainer}>
+          {this.renderAddButton(s.strings.wallet_list_add_wallet, Actions[Constants.CREATE_WALLET_SELECT_CRYPTO])}
+          {this.renderAddButton(s.strings.wallet_list_add_token, this.addToken)}
+        </View>
+        <View style={styles.buyCryptoContainer}>
+          <TouchableHighlight activeOpacity={theme.underlayOpacity} underlayColor={theme.underlayColor} onPress={Actions[Constants.PLUGIN_BUY]}>
+            <View style={styles.buyCryptoInnerContainer}>
+              <View style={styles.buyCryptoImagesContainer}>
+                <Image style={styles.buyCryptoImages} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.BTC }} resizeMode="cover" />
+                <Image style={styles.buyCryptoImages} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.ETH }} resizeMode="cover" />
+                <Image style={styles.buyCryptoImages} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.BCH }} resizeMode="cover" />
+              </View>
+              <EdgeText>{s.strings.title_plugin_buy_sell}</EdgeText>
+            </View>
+          </TouchableHighlight>
+        </View>
+      </View>
+    )
+  }
+
+  addToken = () => {
     const { account, wallets } = this.props
 
     // check for existence of any token-enabled wallets
@@ -76,7 +82,7 @@ class WalletListFooterComponent extends React.Component<Props> {
       return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
     }
 
-    const answer = await Airship.show(bridge => (
+    Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.wallet_list_add_token_modal_title}
@@ -87,90 +93,62 @@ class WalletListFooterComponent extends React.Component<Props> {
         }}
       />
     ))
-
-    if (answer === 'confirm') {
-      Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
-        selectedWalletType: makeCreateWalletType(ethereum.currencyInfo)
+      .then(answer => {
+        if (answer === 'confirm') {
+          Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
+            selectedWalletType: makeCreateWalletType(ethereum.currencyInfo)
+          })
+        }
       })
-    }
+      .catch(error => {
+        console.log(error)
+      })
   }
 }
 
-const rawStyles = {
-  addWalletButton: {
-    marginBottom: scale(15)
-  },
-  addWalletContentWrap: {
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    backgroundColor: THEME.COLORS.WHITE,
-    padding: scale(15),
-    marginRight: scale(5)
+    alignItems: 'stretch',
+    margin: theme.rem(0.5)
   },
-  addTokenContentWrap: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    backgroundColor: THEME.COLORS.WHITE,
-    padding: scale(15),
-    marginLeft: scale(5)
-  },
-  addWalletIcon: {
-    justifyContent: 'center',
-    marginRight: scale(12),
-    position: 'relative',
-    top: scale(1)
-  },
-  addWalletText: {
-    fontSize: scale(18),
-    position: 'relative',
-    top: scale(2),
-    flexDirection: 'column',
-    justifyContent: 'center',
-    color: THEME.COLORS.GRAY_1
-  },
-
-  multipleCallToActionWrap: {
-    padding: scale(15)
-  },
-  buyMultipleCryptoContainer: {
-    height: scale(180),
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: scale(15)
-  },
-  buyMultipleCryptoBox: {
-    flex: 3,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    backgroundColor: THEME.COLORS.WHITE,
-    padding: scale(15),
-    marginTop: scale(15)
-  },
-  buyMultipleCryptoContentWrap: {
+  addButtonsRowContainer: {
     flexDirection: 'row'
   },
-  buyMultipleCryptoBoxImage: {
-    width: scale(32),
-    height: scale(32),
-    marginHorizontal: scale(4)
+  addButtonsContainer: {
+    flex: 1,
+    padding: theme.rem(0.5)
   },
-  buyMultipleCryptoBoxText: {
-    marginTop: scale(10),
-    fontSize: scale(17),
-    color: THEME.COLORS.GRAY_1
+  addButtonsInnerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.tileBackground,
+    height: theme.rem(3.25)
+  },
+  addItem: {
+    margin: theme.rem(0.25)
+  },
+  buyCryptoContainer: {
+    margin: theme.rem(0.5)
+  },
+  buyCryptoInnerContainer: {
+    backgroundColor: theme.tileBackground,
+    height: theme.rem(5.5),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buyCryptoImagesContainer: {
+    flexDirection: 'row'
+  },
+  buyCryptoImages: {
+    width: theme.rem(1.75),
+    height: theme.rem(1.75),
+    margin: theme.rem(0.25)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
-export const WalletListFooter = connect(
-  (state: RootState): StateProps => ({
-    account: state.core.account,
-    wallets: state.ui.wallets.byId
-  }),
-  (dispatch: Dispatch): DispatchProps => ({})
-)(WalletListFooterComponent)
+export const WalletListFooter = connect((state: RootState): StateProps => ({
+  account: state.core.account,
+  wallets: state.ui.wallets.byId
+}))(withTheme(WalletListFooterComponent))
