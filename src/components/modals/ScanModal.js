@@ -77,16 +77,14 @@ export class ScanModalComponent extends React.Component<Props> {
       const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
       return (
-        <View style={styles.cameraContainer}>
-          <RNCamera style={styles.cameraArea} captureAudio={false} flashMode={flashMode} onBarCodeRead={this.onBarCodeRead} type={RNCamera.Constants.Type.back}>
-            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={theme.secondaryButton}>
-              <View style={styles.bottomButtonTextWrap}>
-                <Ionicon style={styles.flashIcon} name="ios-flash" size={theme.rem(1.5)} />
-                <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
-              </View>
-            </TouchableHighlight>
-          </RNCamera>
-        </View>
+        <RNCamera style={styles.cameraArea} captureAudio={false} flashMode={flashMode} onBarCodeRead={this.onBarCodeRead} type={RNCamera.Constants.Type.back}>
+          <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={theme.secondaryButton}>
+            <View style={styles.bottomButtonTextWrap}>
+              <Ionicon style={styles.flashIcon} name="ios-flash" size={theme.rem(1.5)} />
+              <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
+            </View>
+          </TouchableHighlight>
+        </RNCamera>
       )
     }
 
@@ -115,18 +113,11 @@ export class ScanModalComponent extends React.Component<Props> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  cameraContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: theme.rem(1.25)
-  },
-
   cameraArea: {
     alignItems: 'flex-end',
     flex: 1,
-    justifyContent: 'flex-end',
-    width: '100%'
+    marginHorizontal: theme.rem(1.25),
+    justifyContent: 'flex-end'
   },
 
   // Permission denied view:

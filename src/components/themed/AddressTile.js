@@ -57,11 +57,11 @@ type State = {
 }
 type Props = OwnProps & StateProps & ThemeProps
 
-export const isLegacyAddressUri = (parsedUri: EdgeParsedUri): boolean => {
+const isLegacyAddressUri = (parsedUri: EdgeParsedUri): boolean => {
   return !!parsedUri.legacyAddress
 }
 
-export const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
+const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
   // $FlowFixMe should be paymentProtocolUrl (lowercased)?
   return !!parsedUri.paymentProtocolURL && !parsedUri.publicAddress
 }
