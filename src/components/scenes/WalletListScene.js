@@ -115,7 +115,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   }
 
   renderSortableRow = (guiWallet: GuiWallet | void) => {
-    return guiWallet != null ? <WalletListSortableRow guiWallet={guiWallet} showBalance={getIsAccountBalanceVisible} /> : null
+    return <WalletListSortableRow guiWallet={guiWallet} showBalance={getIsAccountBalanceVisible} />
   }
 
   disableSorting = () => this.setState({ sorting: false })
