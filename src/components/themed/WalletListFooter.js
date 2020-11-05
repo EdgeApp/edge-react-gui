@@ -16,7 +16,7 @@ import { makeCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from '../themed/EdgeText.js'
+import { EdgeText } from './EdgeText.js'
 
 type StateProps = {
   account: EdgeAccount,
