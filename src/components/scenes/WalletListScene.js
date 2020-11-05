@@ -17,7 +17,6 @@ import s from '../../locales/strings.js'
 import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
@@ -132,9 +131,9 @@ class WalletListComponent extends React.PureComponent<Props, State> {
     const styles = getStyles(theme)
     const messageSummary = bestOfMessages(accountMessages, accountReferral)
     if (messageSummary == null) return null
-
     const { message, messageId, messageSource } = messageSummary
     const { uri, iconUri } = message
+
     function handlePress() {
       if (uri != null) linkReferralWithCurrencies(uri)
     }
@@ -143,13 +142,15 @@ class WalletListComponent extends React.PureComponent<Props, State> {
     }
 
     return (
-      <View style={styles.promoArea}>
+      <View style={styles.promoContainer}>
         <TouchableOpacity onPress={handlePress}>
-          <View style={styles.promoCard}>
+          <View style={styles.promoInnerContainer}>
             {iconUri != null ? <Image resizeMode="contain" source={{ uri: iconUri }} style={styles.promoIcon} /> : null}
-            <EdgeText style={styles.promoText}>{message.message}</EdgeText>
+            <EdgeText numberOfLines={0} style={styles.promoText}>
+              {message.message}
+            </EdgeText>
             <TouchableOpacity onPress={handleClose}>
-              <AntDesignIcon name="close" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} style={styles.promoClose} />
+              <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.promoClose} />
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
@@ -180,27 +181,26 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'center'
   },
   // Promo area:
-  promoArea: {
-    padding: THEME.rem(0.5)
+  promoContainer: {
+    margin: theme.rem(1)
   },
-  promoCard: {
+  promoInnerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: THEME.COLORS.WHITE,
-    margin: THEME.rem(0.5),
-    padding: THEME.rem(0.5)
+    backgroundColor: theme.tileBackground,
+    padding: theme.rem(0.5)
   },
   promoIcon: {
-    width: THEME.rem(2),
-    height: THEME.rem(2),
-    margin: THEME.rem(0.5)
+    width: theme.rem(2),
+    height: theme.rem(2),
+    margin: theme.rem(0.5)
   },
   promoText: {
     flex: 1,
-    margin: THEME.rem(0.5)
+    margin: theme.rem(0.5)
   },
   promoClose: {
-    padding: THEME.rem(0.5)
+    padding: theme.rem(0.5)
   }
 }))
 
