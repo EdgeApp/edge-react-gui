@@ -1,15 +1,13 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 // import SortableListView from 'react-native-sortable-listview'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
-import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
-import { linkReferralWithCurrencies, toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
+import { toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import { Fontello } from '../../assets/vector/index.js'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
@@ -18,10 +16,7 @@ import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Set
 import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import { type AccountReferral } from '../../types/ReferralTypes.js'
-import { type MessageTweak } from '../../types/TweakTypes.js'
 import { type GuiWallet } from '../../types/types.js'
-import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -31,21 +26,20 @@ import { WalletListSortableRow } from '../common/WalletListSortableRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
+import { PromoCard } from '../themed/PromoCard.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 
 type StateProps = {
-  accountMessages: MessageTweak[],
-  accountReferral: AccountReferral,
   activeWalletIds: string[],
   exchangeRates: Object,
   wallets: { [walletId: string]: GuiWallet }
 }
+
 type DispatchProps = {
-  hideMessageTweak(messageId: string, source: TweakSource): void,
   toggleAccountBalanceVisibility(): void,
-  updateActiveWalletsOrder(walletIds: string[]): void,
-  linkReferralWithCurrencies(string): void
+  updateActiveWalletsOrder(walletIds: string[]): void
 }
+
 type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
@@ -97,7 +91,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
         <View style={styles.listStack}>
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
             <ActivityIndicator key="spinner" style={styles.listSpinner} size="large" />
-            <WalletList key="fullList" header={this.renderPromoCard()} footer={WalletListFooter} />
+            <WalletList key="fullList" header={PromoCard} footer={WalletListFooter} />
             {/* <SortableListView
               key="sortList"
               style={StyleSheet.absoltueFill}
@@ -125,38 +119,6 @@ class WalletListComponent extends React.PureComponent<Props, State> {
     this.props.updateActiveWalletsOrder(newOrder)
     this.forceUpdate()
   }
-
-  renderPromoCard() {
-    const { accountMessages, accountReferral, hideMessageTweak, linkReferralWithCurrencies, theme } = this.props
-    const styles = getStyles(theme)
-    const messageSummary = bestOfMessages(accountMessages, accountReferral)
-    if (messageSummary == null) return null
-    const { message, messageId, messageSource } = messageSummary
-    const { uri, iconUri } = message
-
-    function handlePress() {
-      if (uri != null) linkReferralWithCurrencies(uri)
-    }
-    function handleClose() {
-      hideMessageTweak(messageId, messageSource)
-    }
-
-    return (
-      <View style={styles.promoContainer}>
-        <TouchableOpacity onPress={handlePress}>
-          <View style={styles.promoInnerContainer}>
-            {iconUri != null ? <Image resizeMode="contain" source={{ uri: iconUri }} style={styles.promoIcon} /> : null}
-            <EdgeText numberOfLines={0} style={styles.promoText}>
-              {message.message}
-            </EdgeText>
-            <TouchableOpacity onPress={handleClose}>
-              <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.promoClose} />
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </View>
-    )
-  }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
@@ -179,28 +141,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   listSpinner: {
     flexGrow: 1,
     alignSelf: 'center'
-  },
-  // Promo area:
-  promoContainer: {
-    margin: theme.rem(1)
-  },
-  promoInnerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: theme.tileBackground,
-    padding: theme.rem(0.5)
-  },
-  promoIcon: {
-    width: theme.rem(2),
-    height: theme.rem(2),
-    margin: theme.rem(0.5)
-  },
-  promoText: {
-    flex: 1,
-    margin: theme.rem(0.5)
-  },
-  promoClose: {
-    padding: theme.rem(0.5)
   }
 }))
 
@@ -218,25 +158,17 @@ export const WalletListScene = connect(
     }
 
     return {
-      accountMessages: state.account.referralCache.accountMessages,
-      accountReferral: state.account.accountReferral,
       activeWalletIds,
       exchangeRates: state.exchangeRates,
       wallets: state.ui.wallets.byId
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    hideMessageTweak(messageId: string, source: TweakSource) {
-      dispatch(hideMessageTweak(messageId, source))
-    },
     toggleAccountBalanceVisibility() {
       dispatch(toggleAccountBalanceVisibility())
     },
     updateActiveWalletsOrder(activeWalletIds) {
       dispatch(updateActiveWalletsOrder(activeWalletIds))
-    },
-    linkReferralWithCurrencies(uri) {
-      dispatch(linkReferralWithCurrencies(uri))
     }
   })
 )(withTheme(WalletListComponent))
