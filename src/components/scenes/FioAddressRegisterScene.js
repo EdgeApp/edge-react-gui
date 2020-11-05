@@ -204,9 +204,6 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
         } catch (e) {
           if (!e.labelCode || e.name !== 'FioError') {
             showError(s.strings.fio_connect_wallets_err)
-            return this.setState({
-              loading: false
-            })
           }
           return this.setState({
             isAvailable: false,
