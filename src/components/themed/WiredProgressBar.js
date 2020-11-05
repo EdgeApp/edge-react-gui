@@ -3,8 +3,8 @@ import * as React from 'react'
 import { Animated, Easing, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
-import type { RootState } from '../../../../types/reduxTypes.js'
+import type { RootState } from '../../types/reduxTypes.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 type OwnProps = {
   progress: number | Function
