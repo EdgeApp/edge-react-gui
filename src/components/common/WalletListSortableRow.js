@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { Image, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, Image, TouchableHighlight, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
@@ -21,7 +21,7 @@ import { EdgeText } from '../themed/EdgeText.js'
 const DIVIDE_PRECISION = 18
 
 type OwnProps = {
-  guiWallet: GuiWallet,
+  guiWallet?: GuiWallet,
   showBalance: boolean | ((state: RootState) => boolean)
 }
 
@@ -29,7 +29,7 @@ type StateProps = {
   exchangeRates: ExchangeRatesState,
   showBalance: boolean,
   settings: SettingsState,
-  walletFiatSymbol: string | void
+  walletFiatSymbol: string | null
 }
 
 type Props = OwnProps & StateProps & ThemeProps
@@ -39,8 +39,20 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
     const { guiWallet, walletFiatSymbol, settings, exchangeRates, showBalance, theme } = this.props
     // $FlowFixMe react-native-sortable-listview sneakily injects this prop:
     const { sortHandlers } = this.props
-
     const styles = getStyles(theme)
+
+    if (!guiWallet) {
+      return (
+        <View style={styles.container}>
+          <TouchableHighlight activeOpacity={0.95} underlayColor={theme.underlayColor} {...sortHandlers}>
+            <View style={[styles.rowContainer, styles.loaderContainer]}>
+              <ActivityIndicator color={theme.primaryText} size="small" />
+            </View>
+          </TouchableHighlight>
+        </View>
+      )
+    }
+
     const displayDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(this.props.settings, guiWallet.currencyCode)
     const multiplier = displayDenomination.multiplier
     const name = guiWallet.name || s.strings.string_no_name
@@ -58,7 +70,7 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
     return (
       <View style={styles.container}>
         <TouchableHighlight activeOpacity={theme.underlayOpacity} underlayColor={theme.underlayColor} {...sortHandlers}>
-          <View style={[styles.rowContainer, styles.walletBackground]}>
+          <View style={styles.rowContainer}>
             <View style={styles.iconContainer}>
               <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
             </View>
@@ -91,13 +103,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1,
     flexDirection: 'row',
     height: theme.rem(4),
-    padding: theme.rem(0.75)
-  },
-  walletBackground: {
+    padding: theme.rem(0.75),
     backgroundColor: theme.tileBackground
   },
-  tokenBackground: {
-    backgroundColor: theme.tileBackgroundMuted
+  loaderContainer: {
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   iconContainer: {
     alignItems: 'center',
@@ -156,5 +167,5 @@ export const WalletListSortableRow = connect((state: RootState, ownProps: OwnPro
   showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
   settings: state.ui.settings,
   exchangeRates: state.exchangeRates,
-  walletFiatSymbol: getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode)
+  walletFiatSymbol: ownProps.guiWallet ? getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode) : null
 }))(withTheme(WalletListSortableRowComponent))
