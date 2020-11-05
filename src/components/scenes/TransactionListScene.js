@@ -17,7 +17,6 @@ import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
 import { getSelectedWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import type { ContactsState } from '../../reducers/ContactsReducer'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -26,6 +25,7 @@ import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import BuyCrypto from '../common/BuyCrypto.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
 const SCROLL_THRESHOLD = 0.5

@@ -5,11 +5,11 @@ import { Image, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
+import { ProgressPie } from '../common/ProgressPie.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from '../themed/EdgeText.js'
-import { ProgressPie } from './ProgressPie.js'
+import { EdgeText } from './EdgeText.js'
 
 type Props = {
   cryptoAmount: string,
