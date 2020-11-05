@@ -8,7 +8,7 @@ import { WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from '../themed/EdgeText.js'
+import { EdgeText } from './EdgeText.js'
 
 type Props = {
   currencyCode?: string,
