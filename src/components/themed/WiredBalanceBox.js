@@ -8,7 +8,7 @@ import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import { getFiatSymbol } from '../../util/utils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from '../themed/EdgeText.js'
+import { EdgeText } from './EdgeText.js'
 
 type StateProps = {
   showBalance: boolean,
