@@ -167,6 +167,7 @@ type SpecialCurrencyInfo = {
       identifierKeyboardType: string
     },
     showEarnInterestCard?: boolean,
+    isRbfSupported?: boolean,
     minimumPopupModals?: {
       minimumNativeBalance: string,
       modalMessage: string
@@ -282,7 +283,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     },
     isCustomTokensSupported: true,
     isTokensSupported: true,
-    showEarnInterestCard: false
+    showEarnInterestCard: false,
+    isRbfSupported: true
   },
   ETC: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',

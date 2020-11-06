@@ -22,6 +22,7 @@ import type { GuiContact, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { RawTextModal } from '../modals/RawTextModal.js'
+import { TransactionAccelerateModal } from '../modals/TransactionAccelerateTransactionModal.js'
 import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
 import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInput.js'
@@ -212,8 +213,20 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     )).then(_ => {})
   }
 
+  openAccelerateModel = () => {
+    const { edgeTransaction, walletDefaultDenomProps, guiWallet } = this.props
+
+    Airship.show(bridge => (
+      <TransactionAccelerateModal bridge={bridge} edgeTransaction={edgeTransaction} walletDefaultDenomProps={walletDefaultDenomProps} guiWallet={guiWallet} />
+    ))
+  }
+
   openAdvancedDetails = async () => {
-    const { currencyInfo } = this.props
+    const { currencyInfo, edgeTransaction, guiWallet, walletDefaultDenomProps } = this.props
+
+    // A transaction is acceleratable when it's unconfirmed and has a recorded nonce
+    const isAcceleratable = !!(edgeTransaction.blockHeight === 0 && edgeTransaction.otherParams?.nonceUsed)
+
     Airship.show(bridge => (
       <TransactionAdvanceDetails
         bridge={bridge}
@@ -432,6 +445,9 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       }
     }
 
+    // A transaction is acceleratable when it's unconfirmed and has a recorded nonce
+    const isAcceleratable = !!(edgeTransaction.blockHeight === 0 && edgeTransaction.otherParams?.nonceUsed)
+
     return (
       <SceneWrapper background="theme">
         <ScrollView>
@@ -476,6 +492,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
             </Tile>
             {edgeTransaction.spendTargets && <Tile type="copy" title={s.strings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
             {this.renderExchangeData()}
+            {isAcceleratable && <Tile type="touchable" title={s.strings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />}
             <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
               <FormattedText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</FormattedText>

@@ -6,6 +6,8 @@ import SafariView from 'react-native-safari-view'
 
 import s from '../../locales/strings.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { TransactionAccelerateModal } from '../modals/TransactionAccelerateTransactionModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 import { ModalCloseArrow } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { Tile } from '../themed/Tile.js'
