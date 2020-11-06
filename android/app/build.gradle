@@ -195,11 +195,9 @@ dependencies {
     implementation "com.google.firebase:firebase-storage:16.0.1"
     implementation "com.google.firebase:firebase-iid"
 
-    // Background fetching (pre AndroidX version):
-    // https://stackoverflow.com/questions/52521302
-    implementation("android.arch.work:work-runtime:1.0.0") {
-      exclude group: 'com.google.guava', module: 'listenablefuture'
-    }
+    // Background fetching:
+    implementation 'androidx.work:work-runtime:2.0.1'
+    implementation 'com.google.guava:guava:27.1-android'
     implementation 'org.json:json:20190722'
 }
 
