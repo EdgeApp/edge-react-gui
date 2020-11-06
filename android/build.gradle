@@ -8,6 +8,7 @@ buildscript {
         targetSdkVersion = 28
         supportLibVersion = "28.0.0"
         googlePlayServicesVersion = "15.0.1"
+        kotlinVersion = "1.3.50"
         firebaseVersion = "17.3.0"
     }
     repositories {
@@ -15,18 +16,18 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
-        classpath 'com.google.gms:google-services:4.0.1'
-
+        classpath("com.android.tools.build:gradle:3.5.3")
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+
+        // Edge additions:
+        classpath 'com.google.gms:google-services:4.0.1'
     }
 }
 
 allprojects {
     repositories {
         mavenLocal()
-        google()
         maven {
             // Replace AAR from original RN with AAR from react-native-v8
             url("$rootDir/../node_modules/react-native-v8/dist")
@@ -35,8 +36,9 @@ allprojects {
             // prebuilt libv8android.so
             url("$rootDir/../node_modules/v8-android-jit/dist")
          }
-        maven { url "https://jitpack.io" }
-        maven { url "https://maven.google.com" }
+
+        google()
         jcenter()
+        maven { url 'https://www.jitpack.io' }
     }
 }
