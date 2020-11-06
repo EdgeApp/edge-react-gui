@@ -150,20 +150,19 @@ android {
 }
 
 dependencies {
-    implementation project(':@bugsnag_react-native')
-    implementation project(':@react-native-community_blur')
-    implementation project(':react-native-appearance')
-    implementation project(':@react-native-community_datetimepicker')
-    implementation project(':react-native-localize')
-    implementation project(':@react-native-community_art')
-    implementation project(':@react-native-community_async-storage')
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(':@bugsnag_react-native')
+    implementation project(':@react-native-community_art')
+    implementation project(':@react-native-community_async-storage')
+    implementation project(':@react-native-community_blur')
+    implementation project(':@react-native-community_datetimepicker')
     implementation project(':disklet')
     implementation project(':edge-login-ui-rn')
     implementation project(':ExtraDimensions')
     implementation project(':react-native-app-settings')
+    implementation project(':react-native-appearance')
     implementation project(':react-native-camera')
     implementation project(':react-native-contacts')
     implementation project(':react-native-device-info')
@@ -171,6 +170,7 @@ dependencies {
     implementation project(':react-native-firebase')
     implementation project(':react-native-fs')
     implementation project(':react-native-linear-gradient')
+    implementation project(':react-native-localize')
     implementation project(':react-native-mail')
     implementation project(':react-native-randombytes')
     implementation project(':react-native-share')
