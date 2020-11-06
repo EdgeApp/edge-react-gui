@@ -1,13 +1,11 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
+import * as Constants from '../constants/indexConstants'
 import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
-import s from '../locales/strings'
-import { addToFioAddressCache, getFioObtData, refreshConnectedWalletsForFioAddress } from '../modules/FioAddress/util.js'
-import { getFioWallets } from '../modules/UI/selectors'
+import { addToFioAddressCache, refreshConnectedWalletsForFioAddress } from '../modules/FioAddress/util.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import type { FioObtRecord } from '../types/types'
 
 export const refreshConnectedWallets = async (dispatch: Dispatch, currencyWallets: { [walletId: string]: EdgeCurrencyWallet }) => {
   const wallets: EdgeCurrencyWallet[] = []
@@ -36,33 +34,20 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, currencyWallet
 
 export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[]) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const { currencyWallets, activeWalletIds } = state.core.account
-  if (Object.keys(currencyWallets).length !== activeWalletIds.length) {
+  const { account } = state.core
+  if (!account || !account.currencyConfig) {
     setTimeout(() => {
       dispatch(checkFioObtData(walletId, transactions))
     }, 400)
-    return
   }
-  const fioWallets = getFioWallets(state)
-
-  const wallet = currencyWallets[walletId]
-  const obtDataRecords = await getFioObtData(fioWallets)
+  const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
 
   for (const transaction: EdgeTransaction of transactions) {
-    const edgeMetadata: EdgeMetadata = transaction.metadata || { notes: '' }
-    const obtForTx: FioObtRecord | void = obtDataRecords.find(obtRecord => obtRecord.content.obt_id === transaction.txid)
-    if (!obtForTx) return
-    if (!edgeMetadata.notes) edgeMetadata.notes = ''
-    let fioNotes = `${s.strings.fragment_transaction_list_sent_prefix}${s.strings.word_to_in_convert_from_to_string} ${obtForTx.payee_fio_address}`
-    if (obtForTx.content.memo) fioNotes += `\n${s.strings.fio_sender_memo_label}: ${obtForTx.content.memo}`
-    edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
-    edgeMetadata.name = obtForTx.payer_fio_address
-    addToFioAddressCache(state.core.account, [obtForTx.payer_fio_address])
-    try {
-      await wallet.saveTxMetadata(transaction.txid, transaction.currencyCode, edgeMetadata)
-    } catch (e) {
-      //
-      console.log(e.message)
+    if (transaction.metadata) {
+      const { name } = transaction.metadata
+      if (name && (await fioPlugin.otherMethods.isFioAddressValid(name))) {
+        addToFioAddressCache(state.core.account, [name])
+      }
     }
   }
 }

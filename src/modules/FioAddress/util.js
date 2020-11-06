@@ -7,7 +7,7 @@ import { sprintf } from 'sprintf-js'
 import { FIO_STR, FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import type { FioConnectionWalletItem, FioDomain, FioObtRecord, GuiWallet } from '../../types/types'
+import type { FioConnectionWalletItem, FioDomain, GuiWallet } from '../../types/types'
 import { truncateDecimals } from '../../util/utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
@@ -441,20 +441,6 @@ export const recordSend = async (
       throw new Error(e.message)
     }
   }
-}
-
-export const getFioObtData = async (fioWallets: EdgeCurrencyWallet[]): Promise<FioObtRecord[]> => {
-  let obtDataRecords = []
-  for (const fioWallet: EdgeCurrencyWallet of fioWallets) {
-    try {
-      const { obt_data_records } = await fioWallet.otherMethods.fioAction('getObtData', {})
-      obtDataRecords = [...obtDataRecords, ...obt_data_records]
-    } catch (e) {
-      //
-    }
-  }
-
-  return obtDataRecords
 }
 
 export const getFioDomains = async (fioPlugin: EdgeCurrencyConfig, fioAddress: string, chainCode: string, tokenCode: string): Promise<string> => {
