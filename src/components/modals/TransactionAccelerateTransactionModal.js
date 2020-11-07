@@ -90,7 +90,7 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
   }
 
   signBroadcastAndSaveRbf = async () => {
-    const { wallet } = this.props
+    const { edgeTransaction, wallet } = this.props
     const { edgeUnsignedTransaction } = this.state
 
     if (edgeUnsignedTransaction) {
@@ -103,8 +103,9 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
         edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
         await wallet.saveTx(edgeSignedTransaction)
 
-        // Should we save tx metadata? Where do we get the metadata?
-        // await wallet.saveTxMetadata(edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetadata)
+        // Save a clone of the replaced transaction's metadata
+        const edgeMetadata = { ...edgeTransaction.metadata }
+        await wallet.saveTxMetadata(edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetadata)
 
         playSendSound().catch(error => console.log(error)) // Fail quietly
 
