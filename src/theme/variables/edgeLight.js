@@ -114,9 +114,9 @@ export const edgeLight: Theme = {
   // cardBackground: palette.white,
   // cardShadow: palette.blackOp25,
 
-  // tabBarBackground: palette.white,
-  // tabBarIcon: palette.gray,
-  // tabBarIconHighlighted: palette.edgeBlue,
+  tabBarBackground: palette.white,
+  tabBarIcon: palette.gray,
+  tabBarIconHighlighted: palette.edgeBlue,
 
   sliderTabSend: palette.accentRed,
   sliderTabRequest: palette.accentGreen,

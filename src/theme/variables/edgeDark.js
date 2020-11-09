@@ -115,9 +115,9 @@ export const edgeDark: Theme = {
   // cardBackground: palette.edgeBlue,
   // cardShadow: palette.blackOp25,
 
-  // tabBarBackground: palette.edgeNavy,
-  // tabBarIcon: palette.white,
-  // tabBarIconHighlighted: palette.edgeMint,
+  tabBarBackground: palette.edgeNavy,
+  tabBarIcon: palette.white,
+  tabBarIconHighlighted: palette.edgeMint,
 
   sliderTabSend: palette.accentRed,
   sliderTabRequest: palette.accentGreen,
