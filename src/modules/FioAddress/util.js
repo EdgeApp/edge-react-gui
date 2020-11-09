@@ -187,13 +187,14 @@ export const refreshConnectedWalletsForFioAddress = async (
 export const updatePubAddressesForFioAddress = async (
   fioWallet: EdgeCurrencyWallet | null,
   fioAddress: string,
-  publicAddresses: Array<{ walletId: string, chainCode: string, tokenCode: string, publicAddress: string }>
-): Promise<{ updatedCcWallets: Array<{ fullCurrencyCode: string, walletId: string, isConnection: boolean }>, error?: Error | FioError | null }> => {
+  publicAddresses: Array<{ walletId: string, chainCode: string, tokenCode: string, publicAddress: string }>,
+  isConnection: boolean = true
+): Promise<{ updatedCcWallets: Array<{ fullCurrencyCode: string, walletId: string }>, error?: Error | FioError | null }> => {
   if (!fioWallet) throw new Error(s.strings.fio_connect_wallets_err)
   const connectedWalletsFromDisklet = await getConnectedWalletsForFioAddress(fioWallet, fioAddress)
   let updatedCcWallets = []
   const iteration = {
-    publicAddressesToConnect: [],
+    publicAddresses: [],
     ccWalletMap: []
   }
   const limitPerCall = 5
@@ -201,23 +202,28 @@ export const updatePubAddressesForFioAddress = async (
     const chainCode = cCode.toUpperCase()
     const tokenCode = tCode.toUpperCase()
     const fullCurrencyCode = `${chainCode}:${tokenCode}`
-    connectedWalletsFromDisklet[fullCurrencyCode] = { walletId, publicAddress }
+    if (isConnection) {
+      connectedWalletsFromDisklet[fullCurrencyCode] = { walletId, publicAddress }
+    } else {
+      delete connectedWalletsFromDisklet[fullCurrencyCode]
+    }
     iteration.ccWalletMap.push({
       fullCurrencyCode,
-      walletId,
-      isConnection: publicAddress && publicAddress !== '0'
+      walletId
     })
-    iteration.publicAddressesToConnect.push({
+    iteration.publicAddresses.push({
       token_code: tokenCode,
       chain_code: chainCode,
       public_address: publicAddress
     })
-    if (iteration.publicAddressesToConnect.length === limitPerCall) {
+    if (iteration.publicAddresses.length === limitPerCall) {
       try {
-        await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddressesToConnect)
+        isConnection
+          ? await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
+          : await removePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
         await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
         updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletMap]
-        iteration.publicAddressesToConnect = []
+        iteration.publicAddresses = []
         iteration.ccWalletMap = []
       } catch (e) {
         return { updatedCcWallets, error: e }
@@ -225,9 +231,11 @@ export const updatePubAddressesForFioAddress = async (
     }
   }
 
-  if (iteration.publicAddressesToConnect.length) {
+  if (iteration.publicAddresses.length) {
     try {
-      await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddressesToConnect)
+      isConnection
+        ? await addPublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
+        : await removePublicAddresses(fioWallet, fioAddress, iteration.publicAddresses)
       await setConnectedWalletsFromFile(fioWallet, fioAddress, connectedWalletsFromDisklet)
       updatedCcWallets = [...updatedCcWallets, ...iteration.ccWalletMap]
     } catch (e) {
@@ -262,6 +270,39 @@ export const addPublicAddresses = async (
   if (getFeeRes.fee) throw new FioError(s.strings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
   try {
     await fioWallet.otherMethods.fioAction('addPublicAddresses', {
+      fioAddress,
+      publicAddresses,
+      maxFee: getFeeRes.fee
+    })
+  } catch (e) {
+    throw new Error(s.strings.fio_connect_wallets_err)
+  }
+}
+
+/**
+ * Add public addresses for FIO Address API call method
+ *
+ * @param fioWallet
+ * @param fioAddress
+ * @param publicAddresses
+ * @returns {Promise<void>}
+ */
+export const removePublicAddresses = async (
+  fioWallet: EdgeCurrencyWallet,
+  fioAddress: string,
+  publicAddresses: Array<{ token_code: string, chain_code: string, public_address: string }>
+) => {
+  let getFeeRes: { fee: number }
+  try {
+    getFeeRes = await fioWallet.otherMethods.fioAction('getFeeForRemovePublicAddresses', {
+      fioAddress
+    })
+  } catch (e) {
+    throw new Error(s.strings.fio_get_fee_err_msg)
+  }
+  if (getFeeRes.fee) throw new FioError(s.strings.fio_no_bundled_err_msg, FIO_NO_BUNDLED_ERR_CODE)
+  try {
+    await fioWallet.otherMethods.fioAction('removePublicAddresses', {
       fioAddress,
       publicAddresses,
       maxFee: getFeeRes.fee
