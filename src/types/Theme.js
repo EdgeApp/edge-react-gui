@@ -75,9 +75,9 @@ export type Theme = {
   // cardBackground: string,
   // cardShadow: string,
 
-  // tabBarBackground: string,
-  // tabBarIcon: string,
-  // tabBarIconHighlighted: string,
+  tabBarBackground: string,
+  tabBarIcon: string,
+  tabBarIconHighlighted: string,
 
   // sliderTabSend: string,
   // sliderTabRequest: string,
