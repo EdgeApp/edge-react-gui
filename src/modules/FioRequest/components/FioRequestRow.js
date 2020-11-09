@@ -21,7 +21,6 @@ import { isRejectedFioRequest, isSentFioRequest } from '../util'
 type OwnProps = {
   fioRequest: FioRequest,
   onSelect: FioRequest => void,
-  isHeaderRow?: boolean,
   isLastOfDate?: boolean,
   isSent?: boolean
 }
@@ -55,7 +54,6 @@ class FioRequestRow extends React.Component<Props> {
       time_stamp: ''
     },
     onSelect: () => {},
-    isHeaderRow: false,
     isLastOfDate: false,
     isSent: false
   }
@@ -116,18 +114,11 @@ class FioRequestRow extends React.Component<Props> {
   }
 
   render() {
-    const { fioRequest, isSent, isHeaderRow, isLastOfDate, displayDenomination } = this.props
+    const { fioRequest, isSent, isLastOfDate, displayDenomination } = this.props
     if (!displayDenomination) return null
 
     return (
       <View key={fioRequest.fio_request_id.toString()} style={styles.singleTransactionWrap}>
-        {isHeaderRow && (
-          <View style={styles.singleDateArea}>
-            <View style={styles.leftDateArea}>
-              <T style={styles.formattedDate}>{intl.formatExpDate(new Date(fioRequest.time_stamp), true)}</T>
-            </View>
-          </View>
-        )}
         <TouchableHighlight
           onPress={this.onSelect}
           underlayColor={this.underlayColor}

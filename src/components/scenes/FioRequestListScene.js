@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -13,8 +13,9 @@ import fioRequestsIcon from '../../assets/images/sidenav/fiorequests.png'
 import * as Constants from '../../constants/indexConstants'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { addToFioAddressCache } from '../../modules/FioAddress/util.js'
+import { addToFioAddressCache, cancelFioRequest, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioRequest/components/FioRequestRow'
+import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { getExchangeDenomination } from '../../modules/Settings/selectors'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -27,14 +28,14 @@ import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
-import { Airship, showError } from '../services/AirshipInstance.js'
+import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 
 const SCROLL_THRESHOLD = 0.5
 
 export type LocalState = {
   loadingPending: boolean,
   loadingSent: boolean,
-  rejectLoading: boolean,
+  fullScreenLoader: boolean,
   addressCachedUpdated: boolean,
   fioRequestsPending: FioRequest[],
   fioRequestsSent: FioRequest[]
@@ -68,7 +69,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       loadingPending: true,
       loadingSent: true,
       addressCachedUpdated: false,
-      rejectLoading: false,
+      fullScreenLoader: false,
       fioRequestsPending: [],
       fioRequestsSent: []
     }
@@ -153,7 +154,13 @@ export class FioRequestList extends React.Component<Props, LocalState> {
             try {
               const { requests } = await wallet.otherMethods.fioAction('getSentFioRequests', { fioPublicKey })
               if (requests) {
-                fioRequestsSent = [...fioRequestsSent, ...requests]
+                fioRequestsSent = [
+                  ...fioRequestsSent,
+                  ...requests.map(request => {
+                    request.fioWalletId = wallet.id
+                    return request
+                  })
+                ]
               } else {
                 showError(s.strings.fio_get_requests_error)
               }
@@ -170,9 +177,35 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     this.setState({ fioRequestsSent: fioRequestsSent.sort((a, b) => (a.time_stamp > b.time_stamp ? -1 : 1)), loadingSent: false })
   }
 
+  showRenewAlert = async (fioWallet: EdgeCurrencyWallet, fioAddressName: string) => {
+    const answer = await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.fio_no_bundled_err_msg}
+        message={s.strings.fio_no_bundled_renew_err_msg}
+        buttons={{
+          ok: { label: s.strings.title_fio_renew_address },
+          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+        }}
+      />
+    ))
+    if (answer === 'ok') {
+      return Actions[Constants.FIO_ADDRESS_SETTINGS]({
+        showRenew: true,
+        fioWallet,
+        fioAddressName
+      })
+    }
+  }
+
   removeFioPendingRequest = (requestId: string): void => {
     const { fioRequestsPending } = this.state
     this.setState({ fioRequestsPending: fioRequestsPending.filter(item => parseInt(item.fio_request_id) !== parseInt(requestId)) })
+  }
+
+  removeFioSentRequest = (requestId: string): void => {
+    const { fioRequestsSent } = this.state
+    this.setState({ fioRequestsSent: fioRequestsSent.filter(item => parseInt(item.fio_request_id) !== parseInt(requestId)) })
   }
 
   closeRow = (rowMap: { [string]: SwipeRow }, rowKey: string) => {
@@ -186,7 +219,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    this.setState({ rejectLoading: true })
+    this.setState({ fullScreenLoader: true })
     const { fioWallets } = this.props
     const fioWallet = fioWallets.find(wallet => wallet.id === request.fioWalletId)
 
@@ -194,29 +227,13 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       try {
         const { fee } = await fioWallet.otherMethods.fioAction('getFeeForRejectFundsRequest', { payerFioAddress })
         if (fee) {
-          this.setState({ rejectLoading: false })
-          const answer = await Airship.show(bridge => (
-            <ButtonsModal
-              bridge={bridge}
-              title={s.strings.fio_no_bundled_err_msg}
-              message={s.strings.fio_no_bundled_renew_err_msg}
-              buttons={{
-                ok: { label: s.strings.title_fio_renew_address },
-                cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
-              }}
-            />
-          ))
-          if (answer === 'ok') {
-            return Actions[Constants.FIO_ADDRESS_SETTINGS]({
-              showRenew: true,
-              fioWallet,
-              fioAddressName: payerFioAddress
-            })
-          }
+          this.setState({ fullScreenLoader: false })
+          this.showRenewAlert(fioWallet, payerFioAddress)
         } else {
           await fioWallet.otherMethods.fioAction('rejectFundsRequest', { fioRequestId: request.fio_request_id, payerFioAddress })
           this.removeFioPendingRequest(request.fio_request_id)
           this.closeRow(rowMap, rowKey)
+          showToast(s.strings.fio_reject_status)
         }
       } catch (e) {
         showError(s.strings.fio_reject_request_error)
@@ -224,23 +241,76 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     } else {
       showError(s.strings.err_no_address_title)
     }
-    this.setState({ rejectLoading: false })
+    this.setState({ fullScreenLoader: false })
   }
 
-  rejectRowConfirm = (rowMap: { [string]: SwipeRow }, rowKey: string, request: FioRequest, payerFioAddress: string) => {
-    Alert.alert(
-      s.strings.fio_reject_request_title,
-      s.strings.fio_reject_request_message,
-      [
-        {
-          text: s.strings.string_cancel_cap,
-          onPress: () => this.closeRow(rowMap, rowKey),
-          style: 'cancel'
-        },
-        { text: s.strings.fio_reject_request_yes, onPress: () => this.rejectFioRequest(rowMap, rowKey, request, payerFioAddress) }
-      ],
-      { cancelable: false }
-    )
+  cancelFioRequest = async (rowMap: { [string]: SwipeRow }, rowKey: string, request: FioRequest, payeeFioAddress: string) => {
+    if (!this.props.isConnected) {
+      showError(s.strings.fio_network_alert_text)
+      return
+    }
+    this.setState({ fullScreenLoader: true })
+    const { fioWallets } = this.props
+    const fioWallet = fioWallets.find(wallet => wallet.id === request.fioWalletId)
+
+    if (fioWallet) {
+      try {
+        await cancelFioRequest(fioWallet, parseInt(request.fio_request_id), payeeFioAddress)
+        this.removeFioSentRequest(request.fio_request_id)
+        this.closeRow(rowMap, rowKey)
+        showToast(s.strings.fio_cancel_status)
+      } catch (e) {
+        this.setState({ fullScreenLoader: false })
+        if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE) {
+          this.showRenewAlert(fioWallet, payeeFioAddress)
+        } else {
+          showError(e.message)
+        }
+      }
+    } else {
+      showError(s.strings.fio_wallet_missing_for_fio_request)
+    }
+    this.setState({ fullScreenLoader: false })
+  }
+
+  rejectRowConfirm = async (rowMap: { [string]: SwipeRow }, rowKey: string, request: FioRequest, payerFioAddress: string) => {
+    const answer = await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.fio_reject_request_title}
+        message={s.strings.fio_reject_request_message}
+        buttons={{
+          yes: { label: s.strings.yes },
+          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+        }}
+      />
+    ))
+    if (answer === 'yes') {
+      return this.rejectFioRequest(rowMap, rowKey, request, payerFioAddress)
+    }
+    if (answer === 'cancel') {
+      return this.closeRow(rowMap, rowKey)
+    }
+  }
+
+  cancelRowConfirm = async (rowMap: { [string]: SwipeRow }, rowKey: string, request: FioRequest, payeeFioAddress: string) => {
+    const answer = await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.fio_reject_request_title}
+        message={s.strings.fio_cancel_request_message}
+        buttons={{
+          yes: { label: s.strings.yes },
+          no: { label: s.strings.no, type: 'secondary' }
+        }}
+      />
+    ))
+    if (answer === 'yes') {
+      return this.cancelFioRequest(rowMap, rowKey, request, payeeFioAddress)
+    }
+    if (answer === 'no') {
+      return this.closeRow(rowMap, rowKey)
+    }
   }
 
   headerRowUsingTitle = (sectionObj: { section: { title: string } }) => {
@@ -284,11 +354,16 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       this.sendCrypto(fioRequest)
       return
     }
-    Alert.alert(
-      sprintf(s.strings.err_token_not_in_wallet_title, fioRequest.content.token_code.toUpperCase()),
-      sprintf(s.strings.err_token_not_in_wallet_msg, fioRequest.content.token_code.toUpperCase()),
-      [{ text: s.strings.string_ok_cap }]
-    )
+    Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={sprintf(s.strings.err_token_not_in_wallet_title, fioRequest.content.token_code.toUpperCase())}
+        message={sprintf(s.strings.err_token_not_in_wallet_msg, fioRequest.content.token_code.toUpperCase())}
+        buttons={{
+          ok: { label: s.strings.string_ok_cap }
+        }}
+      />
+    ))
   }
 
   renderDropUp = async (selectedFioPendingRequest: FioRequest) => {
@@ -381,6 +456,32 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     return headers
   }
 
+  sentRequestHeaders = () => {
+    const { fioRequestsSent } = this.state
+    const headers: Array<{ title: string, data: FioRequest[] }> = []
+    let requestsInSection: FioRequest[] = []
+    let previousTimestamp = 0
+    let previousTitle = ''
+    if (fioRequestsSent) {
+      fioRequestsSent.forEach((fioRequest, i) => {
+        if (i === 0) {
+          requestsInSection = []
+          previousTimestamp = fioRequest.time_stamp
+        }
+        if (i > 0 && intl.formatExpDate(new Date(previousTimestamp)) !== intl.formatExpDate(new Date(fioRequest.time_stamp))) {
+          headers.push({ title: previousTitle, data: requestsInSection })
+          requestsInSection = []
+        }
+        requestsInSection.push(fioRequest)
+        previousTimestamp = fioRequest.time_stamp
+        previousTitle = intl.formatExpDate(new Date(fioRequest.time_stamp), true)
+      })
+      headers.push({ title: previousTitle, data: requestsInSection })
+    }
+
+    return headers
+  }
+
   listKeyExtractor(item: FioRequest) {
     return item.fio_request_id.toString()
   }
@@ -396,15 +497,11 @@ export class FioRequestList extends React.Component<Props, LocalState> {
 
   renderSent = (itemObj: { item: FioRequest, index: number }) => {
     const { item: fioRequest, index } = itemObj
-    const isHeaderRow =
-      index === 0 ||
-      (index > 0 &&
-        intl.formatExpDate(new Date(this.state.fioRequestsSent[index - 1].time_stamp), true) !== intl.formatExpDate(new Date(fioRequest.time_stamp), true))
     const isLastOfDate =
       index + 1 === this.state.fioRequestsSent.length ||
       (index > 0 &&
         intl.formatExpDate(new Date(this.state.fioRequestsSent[index + 1].time_stamp), true) !== intl.formatExpDate(new Date(fioRequest.time_stamp), true))
-    return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectSentRequest} isSent isHeaderRow={isHeaderRow} isLastOfDate={isLastOfDate} />
+    return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectSentRequest} isSent isLastOfDate={isLastOfDate} />
   }
 
   renderHiddenItem = (rowObj: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
@@ -420,12 +517,28 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     )
   }
 
+  renderSentHiddenItem = (rowObj: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
+    if (isSentFioRequest(rowObj.item.status) || isRejectedFioRequest(rowObj.item.status)) {
+      return null
+    }
+    return (
+      <View style={styles.rowBack}>
+        <TouchableOpacity
+          style={[styles.backRightBtn, styles.backRightBtnRight]}
+          onPress={_ => this.cancelRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payee_fio_address)}
+        >
+          <T style={styles.backTextWhite}>{s.strings.string_cancel_cap}</T>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   render() {
-    const { loadingPending, loadingSent, rejectLoading, fioRequestsPending, fioRequestsSent } = this.state
+    const { loadingPending, loadingSent, fullScreenLoader, fioRequestsPending, fioRequestsSent } = this.state
 
     return (
       <SceneWrapper background="header">
-        {rejectLoading && <FullScreenLoader indicatorStyles={styles.rejectLoading} />}
+        {fullScreenLoader && <FullScreenLoader indicatorStyles={styles.fullScreenLoader} />}
         <View style={styles.scene}>
           <View style={styles.row}>
             <SettingsHeaderRow icon={<Image source={fioRequestsIcon} style={styles.iconImage} />} text={s.strings.fio_pending_requests} />
@@ -455,20 +568,22 @@ export class FioRequestList extends React.Component<Props, LocalState> {
                 <T style={styles.text}>{s.strings.fio_no_requests_label}</T>
               </View>
             ) : null}
-            <View style={styles.scrollView}>
-              <View style={styles.container}>
-                <View style={styles.requestsWrap}>
-                  {loadingSent && <ActivityIndicator style={styles.loading} size="small" />}
-                  <FlatList
-                    style={styles.transactionsScrollWrap}
-                    data={fioRequestsSent}
-                    renderItem={this.renderSent}
-                    initialNumToRender={fioRequestsSent ? fioRequestsSent.length : 0}
-                    onEndReachedThreshold={SCROLL_THRESHOLD}
-                    keyExtractor={item => item.fio_request_id.toString()}
-                  />
-                </View>
-              </View>
+            <View style={styles.container}>
+              {loadingSent && <ActivityIndicator style={styles.loading} size="small" />}
+              <SwipeListView
+                style={styles.transactionsScrollWrap}
+                data={fioRequestsSent}
+                initialNumToRender={fioRequestsSent ? fioRequestsSent.length : 0}
+                onEndReachedThreshold={SCROLL_THRESHOLD}
+                useSectionList
+                sections={this.sentRequestHeaders()}
+                renderItem={this.renderSent}
+                keyExtractor={item => item.fio_request_id.toString()}
+                renderHiddenItem={this.renderSentHiddenItem}
+                renderSectionHeader={this.headerRowUsingTitle}
+                rightOpenValue={scale(-75)}
+                disableRightSwipe
+              />
             </View>
           </View>
         </View>
@@ -538,7 +653,7 @@ const rawStyles = {
     width: scale(22),
     height: scale(22)
   },
-  rejectLoading: {
+  fullScreenLoader: {
     paddingBottom: scale(130)
   },
   loading: {
