@@ -11,14 +11,6 @@ import { checkAndShowGetCryptoModal } from '../actions/ScanActions.js'
 import { openDrawer } from '../actions/ScenesActions.js'
 import { showReEnableOtpModal } from '../actions/SettingsActions.js'
 import MenuIcon from '../assets/images/MenuButton/menu.png'
-import buyIconSelected from '../assets/images/tabbar/buy_selected.png'
-import buyIcon from '../assets/images/tabbar/buy.png'
-import exchangeIconSelected from '../assets/images/tabbar/exchange_selected.png'
-import exchangeIcon from '../assets/images/tabbar/exchange.png'
-import sellIconSelected from '../assets/images/tabbar/sell_selected.png'
-import sellIcon from '../assets/images/tabbar/sell.png'
-import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
-import walletIcon from '../assets/images/tabbar/wallets.png'
 import { HeaderWalletSelector } from '../components/navigation/HeaderWalletSelector.js'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
 import { CreateWalletImportScene } from '../components/scenes/CreateWalletImportScene.js'
@@ -100,22 +92,9 @@ import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
 import { Airship } from './services/AirshipInstance.js'
+import { MenuTab } from './themed/MenuTab.js'
 
 const RouterWithRedux = connect()(Router)
-
-const tabBarIconFiles: { [tabName: string]: string } = {}
-tabBarIconFiles[Constants.WALLET_LIST] = walletIcon
-tabBarIconFiles[Constants.PLUGIN_BUY] = buyIcon
-tabBarIconFiles[Constants.PLUGIN_SELL] = sellIcon
-tabBarIconFiles[Constants.TRANSACTION_LIST] = exchangeIcon
-tabBarIconFiles[Constants.EXCHANGE] = exchangeIcon
-
-const tabBarIconFilesSelected: { [tabName: string]: string } = {}
-tabBarIconFilesSelected[Constants.WALLET_LIST] = walletIconSelected
-tabBarIconFilesSelected[Constants.PLUGIN_BUY] = buyIconSelected
-tabBarIconFilesSelected[Constants.PLUGIN_SELL] = sellIconSelected
-tabBarIconFilesSelected[Constants.TRANSACTION_LIST] = exchangeIconSelected
-tabBarIconFilesSelected[Constants.EXCHANGE] = exchangeIconSelected
 
 type DispatchProps = {
   registerDevice(): void,
@@ -200,8 +179,8 @@ export class MainComponent extends React.Component<Props> {
       <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton drawerPosition="right" drawerWidth={scale(280)}>
         {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
         <Scene key="AllMyTabs" hideNavBar>
-          <Tabs key={Constants.EDGE} swipeEnabled={false} navTransparent tabBarPosition="bottom" showLabel tabBarStyle={styles.footerTabStyles}>
-            <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={s.strings.title_wallets}>
+          <Tabs key={Constants.EDGE} swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>
+            <Stack key={Constants.WALLET_LIST}>
               <Scene
                 key={Constants.WALLET_LIST_SCENE}
                 navTransparent
@@ -366,7 +345,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
 
-            <Stack key={Constants.PLUGIN_BUY} icon={this.icon(Constants.PLUGIN_BUY)} tabBarLabel={s.strings.title_buy}>
+            <Stack key={Constants.PLUGIN_BUY}>
               <Scene
                 key={Constants.PLUGIN_BUY}
                 navTransparent
@@ -388,7 +367,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
 
-            <Stack key={Constants.PLUGIN_SELL} icon={this.icon(Constants.PLUGIN_SELL)} tabBarLabel={s.strings.title_sell}>
+            <Stack key={Constants.PLUGIN_SELL}>
               <Scene
                 key={Constants.PLUGIN_SELL}
                 navTransparent
@@ -410,7 +389,7 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
 
-            <Stack key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} tabBarLabel={s.strings.title_exchange}>
+            <Stack key={Constants.EXCHANGE}>
               <Scene
                 key={Constants.EXCHANGE_SCENE}
                 navTransparent
@@ -858,19 +837,6 @@ export class MainComponent extends React.Component<Props> {
     return <SendConfirmationOptions />
   }
 
-  icon = (tabName: string) => (props: { focused: boolean }) => {
-    if (typeof tabBarIconFiles[tabName] === 'undefined' || typeof tabBarIconFilesSelected[tabName] === 'undefined') {
-      throw new Error('Invalid tabbar name')
-    }
-    let imageFile
-    if (props.focused) {
-      imageFile = tabBarIconFilesSelected[tabName]
-    } else {
-      imageFile = tabBarIconFiles[tabName]
-    }
-    return <Image source={imageFile} />
-  }
-
   isCurrentScene = (sceneKey: string) => {
     return Actions.currentScene === sceneKey
   }
@@ -927,9 +893,6 @@ const rawStyles = {
     fontSize: 20,
     color: THEME.COLORS.WHITE,
     fontFamily: THEME.FONTS.DEFAULT
-  },
-  footerTabStyles: {
-    height: THEME.FOOTER_TABS_HEIGHT
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
