@@ -373,7 +373,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
 /**
  * Customizes which coins get which options on the wallet list scene.
  */
-export const WALLET_LIST_OPTIONS_ICON = '\u22ee'
+export const WALLET_LIST_OPTIONS_ICON = '\u2026'
 export const WALLET_LIST_MENU: Array<{
   currencyCodes?: string[],
   label: string,

@@ -18,16 +18,15 @@ import type { CustomTokenInfo, FlatListItem, GuiWallet } from '../../types/types
 import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
-import { WalletListHiddenItem } from './WalletListHiddenItem.js'
 import { WalletListRow } from './WalletListRow.js'
+
+type WalletListItem = { id: string, fullCurrencyCode?: string, balance?: string, key: string }
 
 const DIVIDE_PRECISION = 18
 
-type WalletListItem = { id: string, fullCurrencyCode?: string, balance?: string }
-
 type OwnProps = {
-  header?: any,
-  footer?: any
+  header?: React.Node,
+  footer?: React.Node
 }
 
 type StateProps = {
@@ -55,7 +54,8 @@ class WalletListComponent extends React.PureComponent<Props> {
 
       if (wallet == null) {
         walletList.push({
-          id: walletId
+          id: walletId,
+          key: walletId
         })
       } else {
         const { enabledTokens, nativeBalances } = wallet
@@ -64,7 +64,8 @@ class WalletListComponent extends React.PureComponent<Props> {
         walletList.push({
           id: walletId,
           fullCurrencyCode: wallet.currencyCode,
-          balance: wallet.primaryNativeBalance
+          balance: wallet.primaryNativeBalance,
+          key: `${walletId}-${wallet.currencyCode}`
         })
 
         // Old logic on getting tokens
@@ -83,10 +84,12 @@ class WalletListComponent extends React.PureComponent<Props> {
         for (const currencyCode in nativeBalances) {
           if (nativeBalances.hasOwnProperty(currencyCode)) {
             if (currencyCode !== wallet.currencyCode && enabledNotHiddenTokens.indexOf(currencyCode) >= 0) {
+              const fullCurrencyCode = `${wallet.currencyCode}-${currencyCode}`
               walletList.push({
                 id: walletId,
-                fullCurrencyCode: `${wallet.currencyCode}-${currencyCode}`,
-                balance: nativeBalances[currencyCode]
+                fullCurrencyCode: fullCurrencyCode,
+                balance: nativeBalances[currencyCode],
+                key: `${walletId}-${fullCurrencyCode}`
               })
             }
           }
@@ -131,43 +134,13 @@ class WalletListComponent extends React.PureComponent<Props> {
     }
   }
 
-  renderHiddenItem = (data: FlatListItem<WalletListItem>, rowMap: { [string]: SwipeRow }) => {
-    const walletId = data.item.id
-    const guiWallet = this.props.wallets[walletId]
-    if (guiWallet == null) {
-      return <WalletListHiddenItem swipeRow={rowMap[`${walletId}${data.index}`]} walletId={walletId} />
-    } else if (data.item.fullCurrencyCode) {
-      const isToken = guiWallet.currencyCode !== data.item.fullCurrencyCode
-      const walletCodesArray = data.item.fullCurrencyCode.split('-')
-      const currencyCode = isToken ? walletCodesArray[1] : walletCodesArray[0]
-
-      let symbolImage
-      if (isToken) {
-        const meta = guiWallet.metaTokens.find(token => token.currencyCode === currencyCode)
-        symbolImage = meta ? meta.symbolImage : undefined
-      } else {
-        symbolImage = guiWallet.symbolImageDarkMono
-      }
-      return (
-        <WalletListHiddenItem
-          swipeRow={rowMap[`${walletId}${data.index}`]}
-          currencyCode={currencyCode}
-          isToken={isToken}
-          symbolImage={symbolImage}
-          walletId={walletId}
-          walletName={guiWallet.name}
-        />
-      )
-    }
-  }
-
-  renderRow = (data: FlatListItem<WalletListItem>) => {
+  renderRow = (data: FlatListItem<WalletListItem>, rowMap: { [string]: SwipeRow }) => {
     const { exchangeRates, settings, showBalance, theme, wallets } = this.props
     const walletId = data.item.id
     const guiWallet = wallets[walletId]
 
     if (guiWallet == null || !data.item.fullCurrencyCode || !data.item.balance) {
-      return <WalletListEmptyRow walletId={walletId} />
+      return <WalletListEmptyRow rowKey={data.item.key} rowMap={rowMap} walletId={walletId} />
     } else {
       const isToken = guiWallet.currencyCode !== data.item.fullCurrencyCode
       const walletCodesArray = data.item.fullCurrencyCode.split('-')
@@ -238,6 +211,8 @@ class WalletListComponent extends React.PureComponent<Props> {
           fiatBalanceSymbol={fiatBalanceSymbol}
           isToken={isToken}
           publicAddress={guiWallet.receiveAddress.publicAddress}
+          rowKey={data.item.key}
+          rowMap={rowMap}
           selectWallet={this.props.selectWallet}
           symbolImage={symbolImage}
           walletId={walletId}
@@ -248,23 +223,10 @@ class WalletListComponent extends React.PureComponent<Props> {
     }
   }
 
-  listKeyExtractor = (item: WalletListItem, index) => `${item.id}${index}`
   render() {
-    const { activeWalletIds, footer, header, theme, wallets } = this.props
+    const { activeWalletIds, footer, header, wallets } = this.props
     const walletList = this.getWalletList(activeWalletIds, wallets)
-    return (
-      <SwipeListView
-        keyExtractor={this.listKeyExtractor}
-        data={walletList}
-        ListFooterComponent={footer}
-        ListHeaderComponent={header}
-        rightOpenValue={theme.rem(-2.5)}
-        renderItem={this.renderRow}
-        renderHiddenItem={this.renderHiddenItem}
-        disableRightSwipe
-        useFlatList
-      />
-    )
+    return <SwipeListView data={walletList} ListFooterComponent={footer} ListHeaderComponent={header} renderItem={this.renderRow} useFlatList />
   }
 }
 
