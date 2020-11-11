@@ -360,8 +360,10 @@ export class FlipInput extends React.Component<Props, State> {
     this.onKeyPress(value.slice(value.length - 1), this.state.primaryDecimalAmount, this.props.primaryInfo.maxEntryDecimals, setPrimaryToSecondary)
   }
 
-  onPrimaryKeyPress = (e: Event) =>
+  onPrimaryKeyPress = (e: Event) => {
+    if (Platform.OS === 'android' && e.nativeEvent.key.match(/[0-9]/)) return
     this.onKeyPress(e.nativeEvent.key, this.state.primaryDecimalAmount, this.props.primaryInfo.maxEntryDecimals, setPrimaryToSecondary)
+  }
 
   topRowFront = () => {
     const { primaryDisplayAmount, primaryDecimalAmount } = this.state
@@ -420,8 +422,10 @@ export class FlipInput extends React.Component<Props, State> {
     this.onKeyPress(value.slice(value.length - 1), this.state.secondaryDecimalAmount, this.props.secondaryInfo.maxEntryDecimals, setSecondaryToPrimary)
   }
 
-  onSecondaryKeyPress = (e: Event) =>
+  onSecondaryKeyPress = (e: Event) => {
+    if (Platform.OS === 'android' && e.nativeEvent.key.match(/[0-9]/)) return
     this.onKeyPress(e.nativeEvent.key, this.state.secondaryDecimalAmount, this.props.secondaryInfo.maxEntryDecimals, setSecondaryToPrimary)
+  }
 
   topRowBack = () => {
     const { secondaryDisplayAmount, secondaryDecimalAmount } = this.state
