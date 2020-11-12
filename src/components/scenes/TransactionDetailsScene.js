@@ -12,6 +12,7 @@ import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
+import * as Constants from '../../constants/indexConstants'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/Settings/selectors.js'
@@ -453,8 +454,14 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       }
     }
 
+    const specialCurrencyInfo = edgeTransaction.wallet ? Constants.getSpecialCurrencyInfo(edgeTransaction.wallet.currencyInfo.currencyCode) : undefined
     // A transaction is acceleratable when it's unconfirmed and has a recorded nonce
-    const isAcceleratable = !!(edgeTransaction.blockHeight === 0 && edgeTransaction.otherParams?.nonceUsed)
+    const isAcceleratable = !!(
+      specialCurrencyInfo &&
+      specialCurrencyInfo.isRbfSupported &&
+      edgeTransaction.blockHeight === 0 &&
+      edgeTransaction.otherParams?.nonceUsed
+    )
 
     return (
       <SceneWrapper background="theme">
