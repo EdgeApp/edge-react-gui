@@ -62,15 +62,19 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
   makeRbfTransaction = async () => {
     const { edgeTransaction, wallet } = this.props
 
-    if (edgeTransaction.spendTargets) {
-      const spendTargets = edgeTransaction.spendTargets.map(spendTarget => ({
+    const edgeTransactionSpendTargets = edgeTransaction.spendTargets
+
+    if (edgeTransactionSpendTargets) {
+      const spendTargets = edgeTransactionSpendTargets.map(spendTarget => ({
         nativeAmount: spendTarget.nativeAmount,
         publicAddress: spendTarget.publicAddress,
         uniqueIdentifier: spendTarget.uniqueIdentifier
       }))
       const rbfTxid = edgeTransaction.txid
+      const currencyCode = edgeTransactionSpendTargets[0].currencyCode
 
       const edgeSpendInfo: EdgeSpendInfo = {
+        currencyCode,
         spendTargets,
         rbfTxid
       }
