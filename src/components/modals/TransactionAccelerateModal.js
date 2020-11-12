@@ -35,8 +35,8 @@ type StateProps = {
 type Props = OwnProps & StateProps & ThemeProps
 
 type State = {
-  edgeUnsignedTransaction: ?EdgeTransaction,
-  error: ?Error,
+  edgeUnsignedTransaction?: EdgeTransaction,
+  error?: Error,
   status: Status
 }
 
@@ -45,8 +45,8 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
     super()
 
     this.state = {
-      edgeUnsignedTransaction: null,
-      error: null,
+      edgeUnsignedTransaction: undefined,
+      error: undefined,
       status: 'confirming'
     }
   }
@@ -143,7 +143,7 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
   }
 
   resetRbfState = () => {
-    this.setState({ edgeUnsignedTransaction: null, error: null, status: 'confirming' })
+    this.setState({ edgeUnsignedTransaction: undefined, error: undefined, status: 'confirming' })
   }
 
   closeModal = () => {
