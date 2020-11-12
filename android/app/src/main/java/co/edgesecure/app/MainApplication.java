@@ -3,6 +3,7 @@ package co.edgesecure.app;
 import android.app.Application;
 import android.content.Context;
 import android.webkit.WebView;
+import app.edge.reactnative.mymonerocore.MyMoneroPackage;
 import ca.jaysoo.extradimensions.ExtraDimensionsPackage;
 import cl.json.RNSharePackage;
 import co.airbitz.AbcCoreJsUi.AbcCoreJsUiPackage;
@@ -63,6 +64,7 @@ public class MainApplication extends Application implements ReactApplication {
               new DiskletPackage(),
               new ExtraDimensionsPackage(),
               new LinearGradientPackage(),
+              new MyMoneroPackage(),
               new OpenAppSettingsPackage(),
               new RandomBytesPackage(),
               new RCTSplashScreenPackage(),

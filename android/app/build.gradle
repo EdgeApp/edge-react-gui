@@ -171,6 +171,7 @@ dependencies {
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-localize')
     implementation project(':react-native-mail')
+    implementation project(':react-native-mymonero-core')
     implementation project(':react-native-randombytes')
     implementation project(':react-native-share')
     implementation project(':react-native-smart-splash-screen')

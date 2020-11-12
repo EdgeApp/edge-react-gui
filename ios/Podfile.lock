@@ -118,6 +118,8 @@ PODS:
     - React
   - react-native-mail (5.0.1):
     - React
+  - react-native-mymonero-core (0.1.0):
+    - React
   - react-native-randombytes (3.5.3):
     - React
   - react-native-safari-view (1.0.0):
@@ -238,6 +240,7 @@ DEPENDENCIES:
   - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-fast-crypto (from `../node_modules/react-native-fast-crypto`)
   - react-native-mail (from `../node_modules/react-native-mail`)
+  - react-native-mymonero-core (from `../node_modules/react-native-mymonero-core`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-safari-view (from `../node_modules/react-native-safari-view`)
   - react-native-smart-splash-screen (from `../node_modules/react-native-smart-splash-screen`)
@@ -322,6 +325,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fast-crypto"
   react-native-mail:
     :path: "../node_modules/react-native-mail"
+  react-native-mymonero-core:
+    :path: "../node_modules/react-native-mymonero-core"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
   react-native-safari-view:
@@ -400,6 +405,7 @@ SPEC CHECKSUMS:
   react-native-contacts: f6e5c518598762081ff9cf7c70db36f71668538e
   react-native-fast-crypto: b6dea8324fb1b095dd4f29a80356b43acb3ee2e9
   react-native-mail: 685104c633d50ea3e15595acc89ab0eb9ee9cfd2
+  react-native-mymonero-core: c5e0e039b4977be65ed936a1d5301da3448edff7
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
   react-native-safari-view: 955d7160d159241b8e9395d12d10ea0ef863dcdd
   react-native-smart-splash-screen: a961513689f11d63e8496684c2fa4be2d24fe23b
@@ -423,6 +429,6 @@ SPEC CHECKSUMS:
   TcpSockets: a8eb6b5867fe643e6cfed5db2e4de62f4d1e8fd0
   yoga: 684513b14b03201579ba3cee20218c9d1298b0cc
 
-PODFILE CHECKSUM: 8b8256ab459cb247d7730a32109524582611e0cd
+PODFILE CHECKSUM: 49ab1253901f3c59f91b78d67831067703d94241
 
 COCOAPODS: 1.10.0
