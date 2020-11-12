@@ -3,15 +3,12 @@ import type { EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeTransacti
 import React, { PureComponent } from 'react'
 import { ActivityIndicator, Alert, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { playSendSound } from '../../actions/SoundActions.js'
 import { TRANSACTION_DETAILS } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
-import { getSelectedWallet } from '../../modules/UI/selectors.js'
-import { type RootState } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -26,13 +23,11 @@ type OwnProps = {
   bridge: AirshipBridge<Status>,
   edgeTransaction: EdgeTransaction,
   guiWallet: GuiWallet,
-  walletDefaultDenomProps: EdgeDenomination
-}
-type StateProps = {
+  walletDefaultDenomProps: EdgeDenomination,
   wallet: EdgeCurrencyWallet
 }
 
-type Props = OwnProps & StateProps & ThemeProps
+type Props = OwnProps & ThemeProps
 
 type State = {
   edgeUnsignedTransaction?: EdgeTransaction,
@@ -224,16 +219,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const mapStateToProps = (state: RootState): StateProps => {
-  const { account } = state.core
-  const { currencyWallets = {} } = account
-
-  const guiWallet = getSelectedWallet(state)
-  const wallet = currencyWallets[guiWallet.id]
-
-  return {
-    wallet
-  }
-}
-
-export const TransactionAccelerateModal = connect(mapStateToProps)(withTheme(TransactionAccelerateModalComponent))
+export const TransactionAccelerateModal = withTheme(TransactionAccelerateModalComponent)
