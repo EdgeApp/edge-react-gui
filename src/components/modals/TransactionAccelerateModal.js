@@ -1,9 +1,8 @@
 // @flow
 import type { EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
-import { ActivityIndicator, Alert, Text, View } from 'react-native'
+import { ActivityIndicator, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { sprintf } from 'sprintf-js'
 
 import { playSendSound } from '../../actions/SoundActions.js'
 import { TRANSACTION_DETAILS } from '../../constants/indexConstants'
@@ -11,6 +10,7 @@ import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import type { GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
+import { showError, showToast, showWarning } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -32,7 +32,8 @@ type Props = OwnProps & ThemeProps
 type State = {
   edgeUnsignedTransaction?: EdgeTransaction,
   error?: Error,
-  status: Status
+  status: Status,
+  mounted: boolean
 }
 
 class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
@@ -42,7 +43,8 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
     this.state = {
       edgeUnsignedTransaction: undefined,
       error: undefined,
-      status: 'confirming'
+      status: 'confirming',
+      mounted: true
     }
   }
 
@@ -102,31 +104,24 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
         const edgeMetadata = { ...edgeTransaction.metadata }
         await wallet.saveTxMetadata(edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetadata)
 
-        playSendSound().catch(error => console.log(error)) // Fail quietly
+        if (this.state.mounted) {
+          playSendSound().catch(error => console.log(error)) // Fail quietly
 
-        this.setState({ status: 'sent' })
+          this.setState({ status: 'sent' })
 
-        Alert.alert(s.strings.transaction_success, s.strings.transaction_success_message, [
-          {
-            onPress() {},
-            style: 'default',
-            text: s.strings.string_ok
-          }
-        ])
+          showToast(s.strings.transaction_success_message)
 
-        Actions.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
+          Actions.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
+        } else {
+          showWarning(s.strings.transaction_success_message)
+        }
       } catch (error) {
         console.log(error)
-        this.setState({ status: 'confirming' })
-        const message = sprintf(s.strings.transaction_failure_message, error.message)
 
-        Alert.alert(s.strings.transaction_failure, message, [
-          {
-            onPress() {},
-            style: 'default',
-            text: s.strings.string_ok
-          }
-        ])
+        if (this.state.mounted) {
+          this.setState({ status: 'confirming' })
+          showError(error)
+        }
       }
     } else {
       throw new Error(s.strings.invalid_spend_request)
@@ -134,6 +129,9 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
   }
 
   closeModal = () => {
+    this.setState({
+      mounted: false
+    })
     this.props.bridge.resolve(this.state.status)
   }
 
