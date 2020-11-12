@@ -1,10 +1,9 @@
 // @flow
+import type { EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
-import { connect } from 'react-redux'
 import { ActivityIndicator, Alert, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import type { EdgeCurrencyWallet, EdgeDenomination, EdgeTransaction, EdgeSpendInfo } from 'edge-core-js'
-
+import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { playSendSound } from '../../actions/SoundActions.js'
@@ -16,12 +15,13 @@ import { type RootState } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { ModalTitle, ModalMessage, ModalCloseArrow } from '../themed/ModalParts.js'
+import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { Tile } from '../themed/Tile.js'
 import { type AirshipBridge } from './modalParts'
 
-type Props = OwnProps & StateProps & ThemeProps
+type Status = 'confirming' | 'sending' | 'sent'
+
 type OwnProps = {
   bridge: AirshipBridge<Status>,
   edgeTransaction: EdgeTransaction,
@@ -32,13 +32,13 @@ type StateProps = {
   wallet: EdgeCurrencyWallet
 }
 
+type Props = OwnProps & StateProps & ThemeProps
+
 type State = {
   edgeUnsignedTransaction: ?EdgeTransaction,
   error: ?Error,
   status: Status
 }
-
-type Status = 'confirming' | 'sending' | 'sent'
 
 class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
   constructor() {
@@ -87,7 +87,7 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
         })
       } catch (error) {
         this.setState({
-          error: error
+          error
         })
       }
     }
@@ -127,7 +127,7 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
       } catch (error) {
         console.log(error)
         this.setState({ status: 'confirming' })
-        let message = sprintf(s.strings.transaction_failure_message, error.message)
+        const message = sprintf(s.strings.transaction_failure_message, error.message)
 
         Alert.alert(s.strings.transaction_failure, message, [
           {
@@ -204,7 +204,7 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
           </>
         ) : (
           <View style={styles.loadingContianer}>
-            <ActivityIndicator style={styles.loading} size={'large'} />
+            <ActivityIndicator style={styles.loading} size="large" />
           </View>
         )}
       </ThemedModal>

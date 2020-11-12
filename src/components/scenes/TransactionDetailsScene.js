@@ -222,10 +222,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openAdvancedDetails = async () => {
-    const { currencyInfo, edgeTransaction, guiWallet, walletDefaultDenomProps } = this.props
-
-    // A transaction is acceleratable when it's unconfirmed and has a recorded nonce
-    const isAcceleratable = !!(edgeTransaction.blockHeight === 0 && edgeTransaction.otherParams?.nonceUsed)
+    const { currencyInfo } = this.props
 
     Airship.show(bridge => (
       <TransactionAdvanceDetails
