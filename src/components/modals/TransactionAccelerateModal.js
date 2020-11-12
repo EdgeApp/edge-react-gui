@@ -55,10 +55,6 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
     this.makeRbfTransaction()
   }
 
-  componentWillUnmount() {
-    this.resetRbfState()
-  }
-
   makeRbfTransaction = async () => {
     const { edgeTransaction, wallet } = this.props
 
@@ -142,13 +138,8 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
     }
   }
 
-  resetRbfState = () => {
-    this.setState({ edgeUnsignedTransaction: undefined, error: undefined, status: 'confirming' })
-  }
-
   closeModal = () => {
     this.props.bridge.resolve(this.state.status)
-    this.resetRbfState()
   }
 
   handleConfirmation = async () => {
