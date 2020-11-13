@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
 import { unpackEdges } from '../../util/edges.js'
@@ -46,6 +46,21 @@ export function SecondaryButton(props: Props) {
       {label != null ? <Text style={styles.secondaryText}>{label}</Text> : null}
       {children}
     </TouchableOpacity>
+  )
+}
+
+export function ClickableText(props: Props) {
+  const { children, label, onPress } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  return (
+    <TouchableHighlight style={spacingStyles(props, theme)} onPress={onPress} underlayColor={theme.secondaryButton}>
+      <View>
+        {label != null ? <Text style={styles.primaryText}>{label}</Text> : null}
+        {children}
+      </View>
+    </TouchableHighlight>
   )
 }
 

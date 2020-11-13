@@ -20,9 +20,10 @@ import { Slider } from '../../UI/components/Slider/Slider.ui'
 const DIVIDE_PRECISION = 18
 
 type OwnProps = {
-  successMessage: string,
-  onSubmit: number => Promise<any>,
-  onSuccess: () => void,
+  successMessage?: string,
+  onSubmit?: number => Promise<any>,
+  onSuccess?: () => void,
+  goTo?: (params: any) => void,
   getOperationFee: EdgeCurrencyWallet => Promise<number>,
   fioWallet: EdgeCurrencyWallet
 }
@@ -83,10 +84,10 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
     try {
       this.setState({ loading: true })
-      await onSubmit(fee)
+      if (onSubmit) await onSubmit(fee)
 
-      onSuccess()
-      showToast(successMessage)
+      if (onSuccess) onSuccess()
+      showToast(successMessage || s.strings.string_done_cap)
     } catch (e) {
       showError(e.message)
     }
@@ -94,7 +95,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   }
 
   setFee = async (): Promise<void> => {
-    const { fioWallet, getOperationFee } = this.props
+    const { fioWallet, getOperationFee, goTo } = this.props
     let fee = null
     let displayFee = 0
     let showSlider = false
@@ -103,6 +104,10 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
       try {
         fee = await getOperationFee(fioWallet)
         if (fee) {
+          if (goTo) {
+            this.setState({ feeLoading: false })
+            return goTo({ fee })
+          }
           displayFee = this.formatFio(`${fee}`)
           showSlider = true
         }
