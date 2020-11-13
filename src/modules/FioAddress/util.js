@@ -44,6 +44,7 @@ export type FioAddresses = {
 }
 
 export const FIO_NO_BUNDLED_ERR_CODE = 'FIO_NO_BUNDLED_ERR_CODE'
+export const FIO_DOMAIN_IS_NOT_PUBLIC = 'FIO_DOMAIN_IS_NOT_PUBLIC'
 export class FioError extends Error {
   code: string
   message: string

@@ -593,6 +593,7 @@ const strings = {
   fio_address_list: 'Fio Address List',
   fio_address_register_form_field_label: 'FIO Address',
   fio_address_register_screen_not_available: 'Not Available',
+  fio_address_register_domain_is_not_public: 'Domain is not public',
   fio_address_register_screen_cant_check: "No internet connection, can't check",
   fio_address_register_default_fio_wallet_name: 'FIO Wallet',
   fio_address_register_no_wallet_name: 'No wallet name',
