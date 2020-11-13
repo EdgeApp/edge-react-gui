@@ -457,8 +457,8 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const specialCurrencyInfo = edgeTransaction.wallet ? Constants.getSpecialCurrencyInfo(edgeTransaction.wallet.currencyInfo.currencyCode) : undefined
     // A transaction is acceleratable when it's unconfirmed and has a recorded nonce
     const isAcceleratable = !!(
-      specialCurrencyInfo &&
-      specialCurrencyInfo.isRbfSupported &&
+      edgeTransaction.spendTargets?.length &&
+      specialCurrencyInfo?.isRbfSupported &&
       edgeTransaction.blockHeight === 0 &&
       edgeTransaction.otherParams?.nonceUsed
     )

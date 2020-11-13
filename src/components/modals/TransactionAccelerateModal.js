@@ -57,7 +57,7 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
 
     const edgeTransactionSpendTargets = edgeTransaction.spendTargets
 
-    if (edgeTransactionSpendTargets) {
+    if (edgeTransactionSpendTargets && edgeTransactionSpendTargets.length) {
       const spendTargets = edgeTransactionSpendTargets.map(spendTarget => ({
         nativeAmount: spendTarget.nativeAmount,
         publicAddress: spendTarget.publicAddress,
@@ -83,6 +83,11 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
           error
         })
       }
+    } else {
+      const error = new Error('Missing spend target data.')
+      this.setState({
+        error
+      })
     }
   }
 
