@@ -1087,10 +1087,10 @@
     randombytes "^2.1.0"
     text-encoding "0.7.0"
 
-"@fioprotocol/fiosdk@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@fioprotocol/fiosdk/-/fiosdk-1.1.0.tgz#53078191bc728741c770d9b5ebe47997fd2c37f3"
-  integrity sha512-cHUlGZqOeLBPMHPlnvSObzJm7u0x9dx7afFOCUxhal0e3zHJrEbLw5vAKP/nmJ9nlf6HsvZKr1qJDeyik48CAg==
+"@fioprotocol/fiosdk@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@fioprotocol/fiosdk/-/fiosdk-1.2.0.tgz#81dd0fb58f13c9bd71857f98a692b4c86166038f"
+  integrity sha512-79RG3YTsUoIIrIpLfSeFJsKYRzU0/R9hLoxvYz7IsyO0zWimHgYR1o0Q7I7ttq7NGAU3Dfv4lgz8nr/6Dn4peA==
   dependencies:
     "@fioprotocol/fiojs" "1.0.1"
     "@types/text-encoding" "0.0.35"
@@ -3883,13 +3883,13 @@ edge-core-js@^0.17.15:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.30:
-  version "0.7.30"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.30.tgz#c9f42b292c4f595cf29ff9ff73bdc37186d0cc7f"
-  integrity sha512-IEdewQU4kb/t8y5OJXfnBDmXPNMLxkGstBf+Zv9eCjRZ51WVMhg60mpLDWKA2CQKZ6vA4ZV8SqvYZjY0Hl5qNA==
+edge-currency-accountbased@^0.7.31:
+  version "0.7.31"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.31.tgz#2e46cc5736681ef48ab95b459da01f1cc11c5c9d"
+  integrity sha512-VA4Eni4nTZ2hCvcj/q+J6GQIdRGW5TzEF5bWndaR1IeRakgRxhvz2I8PZathKiW8ZezM6edUIeF6H1MPdQxarw==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
-    "@fioprotocol/fiosdk" "^1.1.0"
+    "@fioprotocol/fiosdk" "^1.2.0"
     base-x "^1.0.4"
     biggystring "^3.0.0"
     bip39 "^3.0.2"
