@@ -21,23 +21,23 @@ Edge Wallet is:
 
 Edge is known to build with this exact tool set. Updated versions of these toolsets may break the build or app. If you have issues, try mirroring these exact versions.
 
-- MacOS High Sierra 10.13.3
-- Xcode 10.1
-- Android Studio 3.1.3
-- CocoaPods 1.5.3
-- Android NDK r15c _This is a must have. Version r17 is known to break native code builds_
-- NodeJS 10.15.1
-- NPM 6.4.1
-- Yarn 1.10.1
-- Java 1.8.0_152
+- macOS Catalina 10.15.6
+- Xcode 12.1
+- Android Studio 4.1
+- CocoaPods 1.10.0
+- Android NDK r21d
+- NodeJS 14.15.0
+- NPM 6.14.8
+- Yarn 1.22.10
+- Java 1.8.0_202
 
 ## Getting Started
 
-### Install nodejs (v 10.15.1 and npm (v 6.4.1)
+### Install NodeJS & NPM
 
     https://nodejs.org/en/download/
 
-### Install yarn
+### Install Yarn
 
     https://yarnpkg.com
 
@@ -45,7 +45,7 @@ Edge is known to build with this exact tool set. Updated versions of these tools
 
     npm install -g react-native-cli
 
-### Install CocoaPods (MacOS)
+### Install CocoaPods (macOS)
 
     sudo gem install cocoapods
 
@@ -62,24 +62,33 @@ Edge is known to build with this exact tool set. Updated versions of these tools
 
 ### Android NDK Setup
 
-    *IMPORTANT* You must use version r15c to build. r17 and above break NDK build that this app requires. Download
-    the r15c NDK version here: https://developer.android.com/ndk/downloads/older_releases
+Use Android Studio's Preferences to install NDK (Side by side):
 
-    (MacOS) If the NDK is already installed from Android Studio, it should be in `/Users/[user]/Library/Android/sdk/ndk-bundle`.
-    If you are using a version other than r15c, replace your version with version r15c downloaded from above
+![Android Studio Preferences Screenshot](docs/images/android-studio-ndk-preferences.png)
+
+1. Open Preferences
+2. Navigate to `Appearance & Behavior -> System Settings -> Android SDK` in the sidebar
+3. Navigate to `SDK Tools` tab
+4. Check `NDK (Side by side)` checkbox
+5. Click OK or Apply and follow the download instructions.
+
+> If the NDK is already installed from Android Studio, it should be in `/Users/[user]/Library/Android/sdk/ndk-bundle` (macOS) or `C:\Users\[username]\AppData\Local\Android\Sdk\ndk-bundle` (Windows).
 
 ### Set the following environment vars
+
+The following environment variables should be exported from your `.bashrc` or equivalent file.
 
     export ANDROID_NDK_HOME=/Users/[username]/Library/Android/sdk/ndk-bundle
     export NDK_HOME=/Users/[username]/Library/Android/sdk/ndk-bundle
     export SDK_HOME=/Users/[username]/Library/Android/sdk
+    export ANDROID_HOME=/Users/[username]/Library/Android/sdk
     export JAVA_HOME="/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home"
 
 ### Android Recommended Versioning & Configuration
 
-For best results, please consider using the following versions (up-to-date as of 2018-05-11)
+For best results, please consider using the following versions (up-to-date as of 2020-11-16)
 
-- **Java & Jave JDK** version 8u171
+- **Java 8 & Java JDK** version 8u202 (([link](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html)))
 
 ### Add API key in env.json
 
@@ -125,7 +134,7 @@ First, run `./scripts/updateVersion.js` to copy the `package.json` version into 
 
 ---
 
-## Deploying (MacOS Only)
+## Deploying (macOS Only)
 
 The included `deploy.js` is a script to automate building, signing, and deploying release builds of Edge. It provides the following:
 
@@ -150,22 +159,20 @@ Run deploy
 
 ## Debugging
 
-For debugging, we recommend using React Native Debugger
+For debugging, we recommend using React Native Debugger. Only React Native
+Debugger 0.10 is supported (until upgrade to React Native 63).
 
-### MacOS
+### Installation
 
-`brew update && brew cask install react-native-debugger`
+You can download React Native Debgger 0.10.11 at
+[https://github.com/jhen0409/react-native-debugger/releases/tag/v0.10.11](https://github.com/jhen0409/react-native-debugger/releases/tag/v0.10.11).
 
-##### iOS Simulator
+#### Debugging in iOS Simulator
 
     ⌘ + d (command + d)
     Select "Debug JS Remotely"
 
-### Windows / Linux
-
-https://github.com/jhen0409/react-native-debugger/releases
-
-###### GenyMotion Android Emulator
+#### Debugging in Android Emulator (GenyMotion / Android Studios)
 
     ⌘ + m (command + m)
     Select "Debug JS Remotely"
