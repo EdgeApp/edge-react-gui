@@ -634,7 +634,6 @@
   "err_no_address_title": "Indirizzo FIO non trovato.",
   "err_address_not_linked_title": "L'indirizzo del destinatario non ha un portafoglio %s collegato",
   "fio_connect_no_wallets": "Portafogli non trovati",
-  "fio_connect_checkbox_text": "Riconosco che, una volta connesso, un indirizzo da ogni portafoglio connesso diventerà pubblico",
   "fio_connect_wallets_err": "Si è verificato un problema durante l'esecuzione dell'operazione. Riprova più tardi.",
   "fio_wallet_missing_for_fio_address": "Errore di sistema. Impossibile trovare il portafoglio FIO per l'indirizzo FIO",
   "fio_wallet_missing_for_fio_domain": "Errore di Sistema. Impossibile trovare il portafoglio FIO per il dominio FIO",
