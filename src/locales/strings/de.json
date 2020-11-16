@@ -634,7 +634,6 @@
   "err_no_address_title": "Keine FIO-Adresse gefunden.",
   "err_address_not_linked_title": "Empfängeradresse hat keine verknüpfte %s Wallet",
   "fio_connect_no_wallets": "Keine Brieftaschen vorhanden",
-  "fio_connect_checkbox_text": "Ich erkenne an, dass nach der Verbindung eine Adresse von jeder verbundenen Brieftasche veröffentlicht wird",
   "fio_connect_wallets_err": "Es gab ein Problem bei der Ausführung des Vorgangs. Bitte versuchen Sie es später erneut.",
   "fio_wallet_missing_for_fio_address": "Sys-Fehler. FIO-Wallet für FIO-Adresse nicht gefunden",
   "fio_wallet_missing_for_fio_domain": "Sys-Fehler. FIO-Wallet für FIO-Domain nicht gefunden",
