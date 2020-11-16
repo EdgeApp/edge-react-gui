@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 1.17.7 (2020-11-16)
+
+- Fix double entry bug on some Android keyboards
+
 ## 1.17.6 (2020-11-03)
 
 - Add 'sell' deepQuery type to Bity
