@@ -261,7 +261,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
         showToast(s.strings.fio_cancel_status)
       } catch (e) {
         this.setState({ fullScreenLoader: false })
-        if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE) {
+        if (e.code === FIO_NO_BUNDLED_ERR_CODE) {
           this.showRenewAlert(fioWallet, payeeFioAddress)
         } else {
           showError(e.message)

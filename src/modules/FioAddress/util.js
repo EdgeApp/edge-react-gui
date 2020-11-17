@@ -689,8 +689,6 @@ export const cancelFioRequest = async (fioWallet: EdgeCurrencyWallet | null, fio
   try {
     getFeeResult = await fioWallet.otherMethods.fioAction('getFeeForCancelFundsRequest', { fioAddress })
   } catch (e) {
-    console.log('=================', e.message)
-    console.log(e.json)
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
   if (getFeeResult.fee !== 0) {
