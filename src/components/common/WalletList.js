@@ -55,44 +55,42 @@ class WalletListComponent extends React.PureComponent<Props> {
         walletList.push({
           id: walletId
         })
-        break
-      }
+      } else {
+        const { enabledTokens, nativeBalances } = wallet
+        const { customTokens } = this.props
 
-      const { enabledTokens, nativeBalances } = wallet
-      const { customTokens } = this.props
+        walletList.push({
+          id: walletId,
+          fullCurrencyCode: wallet.currencyCode,
+          balance: wallet.primaryNativeBalance
+        })
 
-      walletList.push({
-        id: walletId,
-        fullCurrencyCode: wallet.currencyCode,
-        balance: wallet.primaryNativeBalance
-      })
+        // Old logic on getting tokens
+        const enabledNotHiddenTokens = enabledTokens.filter(token => {
+          let isVisible = true // assume we will enable token
+          const tokenIndex = customTokens.findIndex(item => item.currencyCode === token)
+          // if token is not supposed to be visible, not point in enabling it
+          if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
+          if (SYNCED_ACCOUNT_DEFAULTS[token] && enabledTokens.includes(token)) {
+            // if hardcoded token
+            isVisible = true // and enabled then make visible (overwrite customToken isVisible flag)
+          }
+          return isVisible
+        })
 
-      // Old logic on getting tokens
-      const enabledNotHiddenTokens = enabledTokens.filter(token => {
-        let isVisible = true // assume we will enable token
-        const tokenIndex = customTokens.findIndex(item => item.currencyCode === token)
-        // if token is not supposed to be visible, not point in enabling it
-        if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
-        if (SYNCED_ACCOUNT_DEFAULTS[token] && enabledTokens.includes(token)) {
-          // if hardcoded token
-          isVisible = true // and enabled then make visible (overwrite customToken isVisible flag)
-        }
-        return isVisible
-      })
-
-      for (const currencyCode in nativeBalances) {
-        if (nativeBalances.hasOwnProperty(currencyCode)) {
-          if (currencyCode !== wallet.currencyCode && enabledNotHiddenTokens.indexOf(currencyCode) >= 0) {
-            walletList.push({
-              id: walletId,
-              fullCurrencyCode: `${wallet.currencyCode}-${currencyCode}`,
-              balance: nativeBalances[currencyCode]
-            })
+        for (const currencyCode in nativeBalances) {
+          if (nativeBalances.hasOwnProperty(currencyCode)) {
+            if (currencyCode !== wallet.currencyCode && enabledNotHiddenTokens.indexOf(currencyCode) >= 0) {
+              walletList.push({
+                id: walletId,
+                fullCurrencyCode: `${wallet.currencyCode}-${currencyCode}`,
+                balance: nativeBalances[currencyCode]
+              })
+            }
           }
         }
       }
     }
-
     return walletList
   }
 
