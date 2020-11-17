@@ -21,15 +21,15 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, currencyWallet
     const fioAddresses = await fioWallet.otherMethods.getFioAddressNames()
     for (const fioAddress: string of fioAddresses) {
       connectedWalletsByFioAddress[fioAddress] = await refreshConnectedWalletsForFioAddress(fioAddress, fioWallet, wallets)
+      dispatch({
+        type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
+        data: {
+          fioAddress,
+          ccWalletMap: connectedWalletsByFioAddress[fioAddress]
+        }
+      })
     }
   }
-
-  dispatch({
-    type: 'FIO/UPDATE_CONNECTED_WALLETS',
-    data: {
-      connectedWalletsByFioAddress
-    }
-  })
 }
 
 export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[]) => async (dispatch: Dispatch, getState: GetState) => {
