@@ -41,6 +41,8 @@ export type NavigationProps = {
 
 type Props = NavigationProps & StateProps & ThemeProps
 
+const ONE_FREE_ADDRESS_PER_DOMAIN_ERROR = 'ONE_FREE_ADDRESS_PER_DOMAIN_ERROR'
+
 class FioNameConfirm extends React.PureComponent<Props, LocalState> {
   state: LocalState = {
     balance: null,
@@ -113,7 +115,7 @@ class FioNameConfirm extends React.PureComponent<Props, LocalState> {
             true
           )
           if (response.error) {
-            if (response.error === 'You have already registered a free address for that domain' && response.code === 400) {
+            if (response.errorCode && response.errorCode === ONE_FREE_ADDRESS_PER_DOMAIN_ERROR && response.code === 400) {
               const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.fallbackRef)
               const domainExists = publicDomains.find(domain => domain.domain === fioName.split(Constants.FIO_ADDRESS_DELIMITER)[1])
               if (domainExists && !domainExists.free) {
