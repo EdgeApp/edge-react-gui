@@ -723,3 +723,24 @@ export const getTransferFee = async (fioWallet: EdgeCurrencyWallet | null, forDo
   }
   throw new Error(s.strings.fio_get_fee_err_msg)
 }
+
+export const cancelFioRequest = async (fioWallet: EdgeCurrencyWallet | null, fioRequestId: number, fioAddress: string) => {
+  if (!fioWallet) throw new Error(s.strings.fio_wallet_missing_for_fio_address)
+  let getFeeResult
+  try {
+    getFeeResult = await fioWallet.otherMethods.fioAction('getFeeForCancelFundsRequest', { fioAddress })
+  } catch (e) {
+    throw new Error(s.strings.fio_get_fee_err_msg)
+  }
+  if (getFeeResult.fee !== 0) {
+    throw new FioError(`${s.strings.fio_no_bundled_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`, FIO_NO_BUNDLED_ERR_CODE)
+  }
+  try {
+    await fioWallet.otherMethods.fioAction('cancelFundsRequest', {
+      fioRequestId,
+      maxFee: getFeeResult.fee
+    })
+  } catch (e) {
+    throw new Error(s.strings.fio_cancel_request_error)
+  }
+}
