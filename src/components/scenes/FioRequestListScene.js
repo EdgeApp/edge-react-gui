@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -29,6 +29,7 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
+import { HIDDEN_MENU_BUTTONS_WIDTH, HiddenMenuButtons } from '../themed/HiddenMenuButtons'
 
 const SCROLL_THRESHOLD = 0.5
 
@@ -506,14 +507,13 @@ export class FioRequestList extends React.Component<Props, LocalState> {
 
   renderHiddenItem = (rowObj: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
     return (
-      <View style={styles.rowBack}>
-        <TouchableOpacity
-          style={[styles.backRightBtn, styles.backRightBtnRight]}
-          onPress={_ => this.rejectRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payer_fio_address)}
-        >
-          <T style={styles.backTextWhite}>{s.strings.swap_terms_reject_button}</T>
-        </TouchableOpacity>
-      </View>
+      <HiddenMenuButtons
+        rightSwipable={{
+          text: s.strings.swap_terms_reject_button,
+          type: 'danger',
+          onPress: _ => this.rejectRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payer_fio_address)
+        }}
+      />
     )
   }
 
@@ -522,14 +522,13 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       return null
     }
     return (
-      <View style={styles.rowBack}>
-        <TouchableOpacity
-          style={[styles.backRightBtn, styles.backRightBtnRight]}
-          onPress={_ => this.cancelRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payee_fio_address)}
-        >
-          <T style={styles.backTextWhite}>{s.strings.string_cancel_cap}</T>
-        </TouchableOpacity>
-      </View>
+      <HiddenMenuButtons
+        rightSwipable={{
+          text: s.strings.string_cancel_cap,
+          type: 'danger',
+          onPress: _ => this.cancelRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payee_fio_address)
+        }}
+      />
     )
   }
 
@@ -556,7 +555,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
                 keyExtractor={this.listKeyExtractor}
                 renderHiddenItem={this.renderHiddenItem}
                 renderSectionHeader={this.headerRowUsingTitle}
-                rightOpenValue={scale(-75)}
+                rightOpenValue={THEME.rem(-HIDDEN_MENU_BUTTONS_WIDTH)}
                 disableRightSwipe
               />
             </View>
@@ -581,7 +580,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
                 keyExtractor={item => item.fio_request_id.toString()}
                 renderHiddenItem={this.renderSentHiddenItem}
                 renderSectionHeader={this.headerRowUsingTitle}
-                rightOpenValue={scale(-75)}
+                rightOpenValue={THEME.rem(-HIDDEN_MENU_BUTTONS_WIDTH)}
                 disableRightSwipe
               />
             </View>
@@ -609,29 +608,6 @@ const rawStyles = {
   container: {
     flex: 1,
     alignItems: 'stretch'
-  },
-  backRightBtn: {
-    alignItems: 'center',
-    bottom: 0,
-    justifyContent: 'center',
-    position: 'absolute',
-    top: 0,
-    width: scale(75)
-  },
-  backRightBtnRight: {
-    backgroundColor: THEME.COLORS.ACCENT_RED,
-    right: 0
-  },
-  backTextWhite: {
-    color: THEME.COLORS.WHITE
-  },
-  rowBack: {
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.GRAY_3,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: scale(15)
   },
   row: {
     height: '50%'
