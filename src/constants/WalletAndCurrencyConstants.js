@@ -108,7 +108,9 @@ export const WALLET_TYPE_ORDER = [
   'wallet:smartcash',
   'wallet:groestlcoin',
   'wallet:zcoin',
-  'wallet:ufo'
+  'wallet:ufo',
+  'wallet:telos',
+  'wallet:wax'
 ]
 
 // Put these in reverse order of preference
@@ -258,7 +260,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
-    }
+    },
+    isCustomTokensSupported: true,
+    isTokensSupported: true
   },
   TLOS: {
     isAccountActivationRequired: true,
@@ -273,7 +277,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
-    }
+    },
+    isCustomTokensSupported: true,
+    isTokensSupported: true
   },
   WAX: {
     isAccountActivationRequired: false,
@@ -288,7 +294,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
-    }
+    },
+    isCustomTokensSupported: true,
+    isTokensSupported: true
   },
   ETH: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
@@ -393,7 +401,7 @@ export const WALLET_LIST_MENU: Array<{
     value: 'split'
   },
   {
-    currencyCodes: ['ETH', 'RBTC'],
+    currencyCodes: ['ETH', 'RBTC', 'EOS', 'TLOS', 'WAX'],
     label: s.strings.string_add_edit_tokens,
     value: 'manageTokens'
   },
@@ -415,6 +423,8 @@ export const WALLET_LIST_MENU: Array<{
       'BSV',
       'EBST',
       'EOS',
+      'WAX',
+      'TLOS',
       'DOGE',
       'RVN',
       'RBTC',
