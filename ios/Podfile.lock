@@ -567,7 +567,7 @@ SPEC CHECKSUMS:
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
   disklet: 4f586f90b70fdb46f06614a5b7342eda5c90f253
   DoubleConversion: cde416483dac037923206447da6e1454df403714
-  edge-login-ui-rn: c807023a353fc8c5caaca01a8f9dfaa494aa0e65
+  edge-login-ui-rn: c7397d26a0e62344a17a0506b2485fba288b296d
   FBLazyVector: 6f1045c66f816849b33c4ff28930b611e89059a0
   FBReactNativeSpec: e856d5103d749483f86f53afafd8df4ed8a776bd
   Flipper: 33585e2d9810fe5528346be33bcf71b37bb7ae13
