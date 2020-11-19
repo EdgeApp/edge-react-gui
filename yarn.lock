@@ -3848,10 +3848,10 @@ edge-components@^0.0.28:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.15:
-  version "0.17.15"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.15.tgz#91f1c848710fd69560a54bdc7cd1e9b9098d612d"
-  integrity sha512-Sl0ON0IIBUIorPAucKxVYIHSqnIX294sZx4jR5VSOmwj+ish3hWtEhr9xuxlqto96Sa77R/sHsQKZxz8GoFgNQ==
+edge-core-js@^0.17.17:
+  version "0.17.17"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.17.tgz#d325f740789eb8761bef7e47b58f20acce756f8f"
+  integrity sha512-df/2WdQjcXGoMHiUVXHntnYEUwkWugXi/scqq4NLRiCXRDykaFe7aKJtaasDerorjPbk69gYwcl7M+avPXapVw==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -3936,10 +3936,10 @@ edge-currency-monero@^0.2.6:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.11:
-  version "0.11.11"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.11.tgz#341ade1cb5f67668d371026b83ea973537e98bc6"
-  integrity sha512-tmzxbignfp9rSToVgvNmkiDZ166hMxtobTvAmAlgae0BGrkmElJiUMp90bEqWJy/k9fyirV/QarTripfzYjPug==
+edge-exchange-plugins@^0.11.12:
+  version "0.11.12"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.12.tgz#2d739a99f841c9df0d39c4788dea4cf34ee2ef52"
+  integrity sha512-pKzSOnyKOOcknBd+0RoJvOChOLCLXbIfouHFWIoKwEjoI5qsdluaXSV2aPeGNWuF5eg5O5gimU/boLEr0JGlpw==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.2.0"
