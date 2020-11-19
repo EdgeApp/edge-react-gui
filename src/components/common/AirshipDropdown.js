@@ -73,7 +73,7 @@ export class AirshipDropdown extends React.Component<Props> {
     })
   }
 
-  componentDidUnmount() {
+  componentWillUnmount() {
     if (this.unclear != null) this.unclear()
     if (this.unresult != null) this.unresult()
   }
