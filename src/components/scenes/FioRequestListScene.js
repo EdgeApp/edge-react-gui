@@ -30,6 +30,7 @@ import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { HIDDEN_MENU_BUTTONS_WIDTH, HiddenMenuButtons } from '../themed/HiddenMenuButtons'
+import { SquareButton } from '../themed/ThemedButtons'
 
 const SCROLL_THRESHOLD = 0.5
 
@@ -508,11 +509,13 @@ export class FioRequestList extends React.Component<Props, LocalState> {
   renderHiddenItem = (rowObj: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
     return (
       <HiddenMenuButtons
-        rightSwipable={{
-          text: s.strings.swap_terms_reject_button,
-          type: 'danger',
-          onPress: _ => this.rejectRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payer_fio_address)
-        }}
+        rightSwipable={
+          <SquareButton
+            label={s.strings.swap_terms_reject_button}
+            color="danger"
+            onPress={_ => this.rejectRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payer_fio_address)}
+          />
+        }
       />
     )
   }
@@ -523,11 +526,13 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     }
     return (
       <HiddenMenuButtons
-        rightSwipable={{
-          text: s.strings.string_cancel_cap,
-          type: 'danger',
-          onPress: _ => this.cancelRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payee_fio_address)
-        }}
+        rightSwipable={
+          <SquareButton
+            label={s.strings.string_cancel_cap}
+            color="danger"
+            onPress={_ => this.cancelRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payee_fio_address)}
+          />
+        }
       />
     )
   }

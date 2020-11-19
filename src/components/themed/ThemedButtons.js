@@ -9,7 +9,7 @@ import { type Theme, useTheme } from '../services/ThemeContext.js'
 
 type Props = {
   children?: React.Node,
-  onPress?: () => void,
+  onPress?: () => void | Promise<void>,
 
   // If this is set, the component will insert a text node before the other children:
   label?: string,
@@ -22,6 +22,12 @@ type Props = {
   // using the same logic as the web `padding` property. Defaults to 0.5.
   paddingRem?: number[] | number
 }
+
+type ColorProps = {
+  color: 'success' | 'danger' | 'default'
+}
+
+type SquareButtonProps = Props & ColorProps
 
 export function PrimaryButton(props: Props) {
   const { children, label, onPress } = props
@@ -64,7 +70,21 @@ export function ClickableText(props: Props) {
   )
 }
 
-function spacingStyles(props: Props, theme: Theme) {
+export function SquareButton(props: SquareButtonProps) {
+  const { children, label, color, onPress } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const colorStyleName = `${color}Button`
+
+  return (
+    <TouchableOpacity style={[styles.squareButton, spacingStyles(props, theme), styles[colorStyleName]]} onPress={onPress}>
+      {label != null ? <Text style={styles.squareText}>{label}</Text> : null}
+      {children}
+    </TouchableOpacity>
+  )
+}
+
+function spacingStyles(props: Props | SquareButtonProps, theme: Theme) {
   const marginRem = unpackEdges(props.marginRem)
   const paddingRem = unpackEdges(props.paddingRem ?? 0.5)
 
@@ -114,6 +134,25 @@ const getStyles = cacheStyles((theme: Theme) => {
     secondaryText: {
       ...commonText,
       color: theme.secondaryButtonText
+    },
+    squareButton: {
+      height: '100%',
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    squareText: {
+      ...commonText,
+      color: theme.primaryText
+    },
+    dangerButton: {
+      backgroundColor: theme.sliderTabSend
+    },
+    defaultButton: {
+      backgroundColor: theme.sliderTabMore
+    },
+    successButton: {
+      backgroundColor: theme.sliderTabRequest
     }
   }
 })
