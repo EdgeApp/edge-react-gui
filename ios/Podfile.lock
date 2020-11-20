@@ -64,7 +64,7 @@ PODS:
     - React
   - react-native-contacts (2.2.5):
     - React
-  - react-native-fast-crypto (1.8.2):
+  - react-native-fast-crypto (1.8.3):
     - React
   - react-native-firebase (4.3.8):
     - Firebase/Core
@@ -311,7 +311,7 @@ SPEC CHECKSUMS:
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
   react-native-contacts: f6e5c518598762081ff9cf7c70db36f71668538e
-  react-native-fast-crypto: b186cc738ec0b9392c945366ac011500a8b984e0
+  react-native-fast-crypto: 52850db8d9f418c48222c61a56d6c300f7600877
   react-native-firebase: c20ee01585998768935fc2cff74ff8e9740f1a73
   react-native-mail: 685104c633d50ea3e15595acc89ab0eb9ee9cfd2
   react-native-randombytes: 3638d24759d67c68f6ccba60c52a7a8a8faa6a23
