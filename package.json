@@ -146,7 +146,7 @@
     "react-native-contacts": "2.2.5",
     "react-native-device-info": "^5.6.1",
     "react-native-extra-dimensions-android": "^1.2.5",
-    "react-native-fast-crypto": "1.8.3",
+    "react-native-fast-crypto": "^2.0.0",
     "react-native-fs": "git://github.com/EdgeApp/react-native-fs.git#edge/removeEncoding",
     "react-native-keyboard-aware-scroll-view": "^0.9.1",
     "react-native-linear-gradient": "^2.5.6",
