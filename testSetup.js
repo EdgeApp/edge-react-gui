@@ -5,6 +5,20 @@ import dateformat from 'dateformat'
 /* globals jest */
 jest.mock('dateformat', () => (number, format) => dateformat(number, format, true)) // force timezone to UTC
 
+jest.mock('@react-native-firebase/analytics', () => () => ({
+  logEvent() {},
+  setUserId() {}
+}))
+jest.mock('@react-native-firebase/iid', () => () => ({
+  getToken() {
+    return Promise.resolve('testingToken')
+  }
+}))
+jest.mock('@react-native-firebase/messaging', () => () => ({
+  requestPermission() {
+    return Promise.resolve()
+  }
+}))
 jest.mock('react-native-device-info', () => ({
   getBrand() {
     return 'Apple'
@@ -36,7 +50,6 @@ jest.mock('edge-login-ui-rn', () => ({
     return 'FaceID'
   }
 }))
-jest.mock('react-native-firebase', () => ({ isMock: true }))
 jest.mock('react-native-share', () => 'RNShare')
 jest.mock(
   'react-native-sound',

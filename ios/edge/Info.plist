@@ -61,8 +61,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>99999999</string>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<string>NO</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NFCReaderUsageDescription</key>

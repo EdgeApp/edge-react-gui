@@ -1,7 +1,7 @@
 // @flow
 
+import analytics from '@react-native-firebase/analytics'
 import { getUniqueId } from 'react-native-device-info'
-import firebase from 'react-native-firebase'
 
 import ENV from '../../env.json'
 import { asyncWaterfall } from './utils.js'
@@ -29,9 +29,14 @@ export type TrackingValues = {
 }
 
 // Set up the global Firebase instance at boot:
-if (ENV.USE_FIREBASE && !firebase.isMock) {
-  firebase.analytics().setUserId(getUniqueId())
-  global.firebase = firebase
+if (ENV.USE_FIREBASE) {
+  const inner = analytics()
+  inner.setUserId(getUniqueId())
+  global.firebase = {
+    analytics() {
+      return inner
+    }
+  }
 }
 
 /**
