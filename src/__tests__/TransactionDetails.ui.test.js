@@ -12,6 +12,7 @@ import { type GuiWallet } from '../types/types.js'
 const typeHack: any = {
   allDenominations: {
     BTC: {
+      // prettier-ignore
       '100000000': {
         name: 'BTC',
         multiplier: '100000000',

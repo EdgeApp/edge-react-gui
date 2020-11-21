@@ -64,7 +64,7 @@ class WalletListComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { wallets, activeWalletIds } = this.props
+    const { wallets } = this.props
     const { sorting } = this.state
     const loading = Object.keys(wallets).length <= 0
 

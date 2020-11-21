@@ -36,6 +36,7 @@ export class MenuDropDown extends React.Component<Props, State> {
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
     let diffElement2: string = ''
+    // prettier-ignore
     const diffElement = getObjectDiff(this.props, nextProps, {
       data: true,
       value: true,

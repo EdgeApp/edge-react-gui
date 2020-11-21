@@ -113,7 +113,8 @@ export class CurrencySettingsComponent extends React.Component<Props, State> {
             const key = denomination.multiplier
             const left = (
               <Text style={{ fontFamily: theme.fontFaceDefault, fontSize: theme.rem(1), textAlign: 'left', flexShrink: 1, color: theme.primaryText }}>
-                <Text style={{ fontFamily: theme.fontFaceSymbols }}>{denomination.symbol}</Text> - {denomination.name}
+                <Text style={{ fontFamily: theme.fontFaceSymbols }}>{denomination.symbol}</Text>
+                {' - ' + denomination.name}
               </Text>
             )
             const isSelected = key === this.props.selectedDenominationKey

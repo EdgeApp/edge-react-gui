@@ -7,6 +7,7 @@ import { showError } from '../../../components/services/AirshipInstance.js'
 import type { MostRecentWallet, PasswordReminder } from '../../../types/types.js'
 import { categories } from './subcategories.js'
 
+// prettier-ignore
 export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
   '20': false,
   '200': false,
