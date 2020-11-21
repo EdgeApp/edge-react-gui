@@ -9519,10 +9519,10 @@ react-native-extra-dimensions-android@^1.2.5:
   resolved "https://registry.yarnpkg.com/react-native-extra-dimensions-android/-/react-native-extra-dimensions-android-1.2.5.tgz#8ade91029aaac7519bf305116d39019e618a60f0"
   integrity sha512-eorFo9X1vEqAWUkgcZ300yKBG1wtgNeE7tdWAH2CE+P50FGTniJg5Sr6l1iPWG8ZskQOuF+KeiSTFlDa4vLfMw==
 
-react-native-fast-crypto@1.8.3:
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-1.8.3.tgz#8320959625b8e37db2f0b9486fbd3f5f374c76ad"
-  integrity sha512-rcM2p9fh89lBpB9Pd9XZWNYeDl49USt7yvoCrkGwUK+HRHTMlVp8cyb2rCCMhkr7qI2YJo4nsvs5mHz0XU3yJg==
+react-native-fast-crypto@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-2.0.0.tgz#d15958e089f3862ed6bd88ea6ef9ce241571e7a1"
+  integrity sha512-EcQL6XNK7l6hDcvrUwhvbKzV3Sm+iCoebrFBxhX94A+Gm+5Bihg3D9bHL/48M8wpxriuxpQksmk3qDqabnefCg==
   dependencies:
     buffer "^5.0.8"
     rfc4648 "^1.0.0"
@@ -9619,6 +9619,11 @@ react-native-modal@^11.0.1:
   dependencies:
     prop-types "^15.6.2"
     react-native-animatable "^1.3.1"
+
+react-native-mymonero-core@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.1.0.tgz#57d160b076ae50c037cffa94760e4f2f3ca2de88"
+  integrity sha512-2NV+V1GFP/NaKp9enVDWrSrA9gMMDSmBXPnNW/K2eEXyGV9fC0DJqDo6ljlKr7ANak1X5ln/6yV2Z7jrl2Xgwg==
 
 react-native-patina@^0.1.3:
   version "0.1.3"

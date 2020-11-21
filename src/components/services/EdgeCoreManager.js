@@ -8,6 +8,7 @@ import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
 import * as React from 'react'
 import { Alert, AppState } from 'react-native'
 import { getBrand, getDeviceId } from 'react-native-device-info'
+import { callMyMonero } from 'react-native-mymonero-core'
 import SplashScreen from 'react-native-smart-splash-screen'
 
 import ENV from '../../../env.json'
@@ -15,6 +16,8 @@ import { allPlugins } from '../../util/corePlugins.js'
 import { fakeUser } from '../../util/fake-user.js'
 import { LoadingScene } from '../scenes/LoadingScene.js'
 import { Services } from './Services.js'
+
+global.moneroCore = { methodByString: callMyMonero }
 
 type Props = {}
 
