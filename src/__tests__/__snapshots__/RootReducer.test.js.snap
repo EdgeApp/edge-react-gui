@@ -416,6 +416,9 @@ Object {
       "VTC": Object {
         "denomination": "100000000",
       },
+      "WAX": Object {
+        "denomination": "100000000",
+      },
       "WINGS": Object {
         "denomination": "1000000000000000000",
       },

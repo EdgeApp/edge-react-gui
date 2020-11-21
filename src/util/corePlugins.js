@@ -30,6 +30,7 @@ export const currencyPlugins = {
   binance: true,
   eos: true,
   telos: true,
+  wax: true,
   ethereum: ENV.ETHEREUM_INIT,
   ethereumclassic: true,
   fio: ENV.FIO_INIT || true,
