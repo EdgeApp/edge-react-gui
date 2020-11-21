@@ -1,5 +1,11 @@
 # edge-react-gui
 
+## 1.17.8 (2020-11-20)
+
+- Upgrade Android SDK target to 29
+- Upgrade edge-currency-bitcoin to v4.9.3
+  - Add `hardFee` to DOGE to ensure transaction meets minimum network fee of 1 DOGE/tx
+
 ## 1.17.7 (2020-11-16)
 
 - Fix double entry bug on some Android keyboards
