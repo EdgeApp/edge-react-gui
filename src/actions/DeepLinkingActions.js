@@ -3,9 +3,9 @@
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import { showError } from '../components/services/AirshipInstance.js'
+import { showError, showToast } from '../components/services/AirshipInstance.js'
 import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
-import { EDGE_LOGIN, EXCHANGE_SCENE, PLUGIN_VIEW_DEEP, SCAN } from '../constants/SceneKeys.js'
+import { EDGE_LOGIN, EXCHANGE_SCENE, PLUGIN_VIEW_DEEP, SCAN, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { type DeepLink } from '../types/DeepLink.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
@@ -50,7 +50,7 @@ export const retryPendingDeepLink = () => (dispatch: Dispatch, getState: GetStat
 /**
  * Launches a link if it app is able to do so.
  */
-function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boolean {
+async function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): Promise<boolean> {
   const { activeWalletIds = [], currencyWallets = {}, username } = state.core.account
   const { byId = {}, selectedWalletId } = state.ui.wallets
   const hasCurrentWallet = byId[selectedWalletId] != null
@@ -99,6 +99,23 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
     case 'swap': {
       if (!hasCurrentWallet) return false
       Actions.push(EXCHANGE_SCENE)
+      return true
+    }
+
+    case 'azteco': {
+      if (!hasCurrentWallet) return false
+      const edgeWallet = currencyWallets[selectedWalletId]
+      if (edgeWallet.currencyInfo.currencyCode !== 'BTC') return false // prompt to choose btc wallet?
+      const address = await edgeWallet.getReceiveAddress()
+      const response = fetch(`${link.uri}${address.publicAddress}`)
+      if (response.ok) {
+        showToast('Success!')
+      } else if (response.status === 400) {
+        showError('Invalid Azteco code')
+      } else {
+        showError('Azteco service unavailable')
+      }
+      Actions.push(WALLET_LIST_SCENE)
       return true
     }
 
