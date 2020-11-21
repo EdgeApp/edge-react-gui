@@ -31,7 +31,15 @@ export const initialState = {
       amount: 0
     }
   },
-  developerModeOn: false
+  developerModeOn: false,
+  // prettier-ignore
+  passwordRecoveryRemindersShown: {
+    '20': false,
+    '200': false,
+    '2000': false,
+    '20000': false,
+    '200000': false
+  }
 }
 
 export type CurrencySetting = {
@@ -91,6 +99,7 @@ export type SettingsState = {
     }
   },
   developerModeOn: boolean,
+  // prettier-ignore
   passwordRecoveryRemindersShown: {
     '20': boolean,
     '200': boolean,
