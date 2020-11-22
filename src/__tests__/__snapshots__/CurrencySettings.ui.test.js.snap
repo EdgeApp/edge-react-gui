@@ -16,7 +16,7 @@ exports[`CurrencySettings should render 1`] = `
             Object {
               "color": "#FFFFFF",
               "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
+              "fontFamily": "Quicksand-Regular",
               "fontSize": 22,
               "textAlign": "left",
             }
@@ -25,7 +25,7 @@ exports[`CurrencySettings should render 1`] = `
           <Text
             style={
               Object {
-                "fontFamily": "SourceSansPro-Black",
+                "fontFamily": "Quicksand-Regular",
               }
             }
           >
@@ -45,7 +45,7 @@ exports[`CurrencySettings should render 1`] = `
             Object {
               "color": "#FFFFFF",
               "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
+              "fontFamily": "Quicksand-Regular",
               "fontSize": 22,
               "textAlign": "left",
             }
@@ -54,7 +54,7 @@ exports[`CurrencySettings should render 1`] = `
           <Text
             style={
               Object {
-                "fontFamily": "SourceSansPro-Black",
+                "fontFamily": "Quicksand-Regular",
               }
             }
           >
@@ -74,7 +74,7 @@ exports[`CurrencySettings should render 1`] = `
             Object {
               "color": "#FFFFFF",
               "flexShrink": 1,
-              "fontFamily": "SourceSansPro-Black",
+              "fontFamily": "Quicksand-Regular",
               "fontSize": 22,
               "textAlign": "left",
             }
@@ -83,7 +83,7 @@ exports[`CurrencySettings should render 1`] = `
           <Text
             style={
               Object {
-                "fontFamily": "SourceSansPro-Black",
+                "fontFamily": "Quicksand-Regular",
               }
             }
           >
