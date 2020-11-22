@@ -41,7 +41,15 @@ const palette = {
   whiteOp75: 'rgba(255, 255, 255, .75)',
   accentOrangeOp30: 'rgba(241, 170, 25, .3)',
   lightGrayOp75: 'rgba(217, 227, 237, .75)',
-  transparent: 'rgba(255, 255, 255, 0)'
+  transparent: 'rgba(255, 255, 255, 0)',
+
+  // Fonts
+  SFUITextRegular: 'SF-UI-Text-Regular',
+  QuicksandLight: 'Quicksand-Light',
+  QuicksandRegular: 'Quicksand-Regular',
+  QuicksandMedium: 'Quicksand-Medium',
+  QuicksandSemiBold: 'Quicksand-SemiBold',
+  QuicksandBold: 'Quicksand-Bold'
 }
 
 export const edgeLight: Theme = {
@@ -180,9 +188,9 @@ export const edgeLight: Theme = {
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
 
   // Fonts
-  fontFaceDefault: 'SourceSansPro-Black',
-  fontFaceBold: 'SourceSansPro-Bold',
-  fontFaceSymbols: Platform.OS === 'android' ? 'SF-UI-Text-Regular' : 'SourceSansPro-Black',
+  fontFaceDefault: palette.QuicksandRegular,
+  fontFaceBold: palette.QuicksandMedium,
+  fontFaceSymbols: Platform.OS === 'android' ? palette.SFUITextRegular : palette.QuicksandRegular,
 
   // TouchableHighlights underlay
   underlayColor: palette.white,
