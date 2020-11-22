@@ -17,6 +17,11 @@
 		3DC7E8532525AB490061CF16 /* Dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7E8522525AB490061CF16 /* Dummy.swift */; };
 		50FDCD65EBE045E282509085 /* SourceSansPro-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA0A843F10D9480786517FEF /* SourceSansPro-Italic.ttf */; };
 		5872448FDFE840DEBB46A6BA /* SourceSansPro-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38A5524778E84A41B960E513 /* SourceSansPro-ExtraLightItalic.ttf */; };
+		6E22C89C256B72B700080A59 /* Quicksand-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E22C89A256B72B200080A59 /* Quicksand-Bold.ttf */; };
+		6EBB19CE256ABE0A006E5A8F /* Quicksand-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6EBB19CA256ABDD4006E5A8F /* Quicksand-Medium.ttf */; };
+		6EBB19CF256ABE0A006E5A8F /* Quicksand-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6EBB19CC256ABDD4006E5A8F /* Quicksand-Regular.ttf */; };
+		6EBB19D0256ABE0A006E5A8F /* Quicksand-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6EBB19C8256ABDD4006E5A8F /* Quicksand-Light.ttf */; };
+		6EBB19D1256ABE0A006E5A8F /* Quicksand-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6EBB19C9256ABDD4006E5A8F /* Quicksand-SemiBold.ttf */; };
 		6ED8C12021BB685C00CC03C7 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = 6ED8C11F21BB685C00CC03C7 /* splash.png */; };
 		6EFAA86824F72A1A007775E5 /* custom.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6EFAA86724F72A18007775E5 /* custom.ttf */; };
 		77105E1044684D61B6B0B1EA /* SourceSansPro-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6315893BA6CF465CB1E166CF /* SourceSansPro-Black.ttf */; };
@@ -54,6 +59,11 @@
 		550016E295D7C4722CD35EF9 /* Pods-edge.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge.debug.xcconfig"; path = "Pods/Target Support Files/Pods-edge/Pods-edge.debug.xcconfig"; sourceTree = "<group>"; };
 		6315893BA6CF465CB1E166CF /* SourceSansPro-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Black.ttf"; path = "../src/assets/fonts/SourceSansPro-Black.ttf"; sourceTree = "<group>"; };
 		67EDE898A18B445AB08D1ED3 /* SourceSansPro-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-ExtraLight.ttf"; path = "../src/assets/fonts/SourceSansPro-ExtraLight.ttf"; sourceTree = "<group>"; };
+		6E22C89A256B72B200080A59 /* Quicksand-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Quicksand-Bold.ttf"; path = "../android/app/src/main/assets/fonts/Quicksand-Bold.ttf"; sourceTree = "<group>"; };
+		6EBB19C8256ABDD4006E5A8F /* Quicksand-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Quicksand-Light.ttf"; path = "../android/app/src/main/assets/fonts/Quicksand-Light.ttf"; sourceTree = "<group>"; };
+		6EBB19C9256ABDD4006E5A8F /* Quicksand-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Quicksand-SemiBold.ttf"; path = "../android/app/src/main/assets/fonts/Quicksand-SemiBold.ttf"; sourceTree = "<group>"; };
+		6EBB19CA256ABDD4006E5A8F /* Quicksand-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Quicksand-Medium.ttf"; path = "../android/app/src/main/assets/fonts/Quicksand-Medium.ttf"; sourceTree = "<group>"; };
+		6EBB19CC256ABDD4006E5A8F /* Quicksand-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Quicksand-Regular.ttf"; path = "../android/app/src/main/assets/fonts/Quicksand-Regular.ttf"; sourceTree = "<group>"; };
 		6ED8C11F21BB685C00CC03C7 /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
 		6EFAA86724F72A18007775E5 /* custom.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = custom.ttf; path = ../android/app/src/main/assets/fonts/custom.ttf; sourceTree = "<group>"; };
 		7F94D33AFE62415995DED277 /* SourceSansPro-SemiboldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-SemiboldItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-SemiboldItalic.ttf"; sourceTree = "<group>"; };
@@ -111,6 +121,11 @@
 		3BB21E930C5F437EB1EAE492 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6E22C89A256B72B200080A59 /* Quicksand-Bold.ttf */,
+				6EBB19C8256ABDD4006E5A8F /* Quicksand-Light.ttf */,
+				6EBB19CA256ABDD4006E5A8F /* Quicksand-Medium.ttf */,
+				6EBB19CC256ABDD4006E5A8F /* Quicksand-Regular.ttf */,
+				6EBB19C9256ABDD4006E5A8F /* Quicksand-SemiBold.ttf */,
 				6EFAA86724F72A18007775E5 /* custom.ttf */,
 				98AF3B3A1F99F7D10083E087 /* audio_received.mp3 */,
 				98AF3B031F99F7D10083E087 /* audio_sent.mp3 */,
@@ -263,10 +278,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6EBB19D1256ABE0A006E5A8F /* Quicksand-SemiBold.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3D2A4BE322934B0000E1EC61 /* blank.html in Resources */,
 				DA89DDF820F2CFD70012B4BD /* GoogleService-Info.plist in Resources */,
 				6ED8C12021BB685C00CC03C7 /* splash.png in Resources */,
+				6EBB19CF256ABE0A006E5A8F /* Quicksand-Regular.ttf in Resources */,
 				DAF7C41220C505CC005B7898 /* plugins in Resources */,
 				98AF3B3C1F99F7D20083E087 /* audio_received.mp3 in Resources */,
 				FD982BCC1FACDEF00057F035 /* LaunchScreen.xib in Resources */,
@@ -274,15 +291,18 @@
 				98AF3B3B1F99F7D20083E087 /* audio_sent.mp3 in Resources */,
 				77105E1044684D61B6B0B1EA /* SourceSansPro-Black.ttf in Resources */,
 				F0D7D6C909584919867CD8B5 /* SourceSansPro-BlackItalic.ttf in Resources */,
+				6E22C89C256B72B700080A59 /* Quicksand-Bold.ttf in Resources */,
 				224A82278CB1465E9E84DC30 /* SourceSansPro-Bold.ttf in Resources */,
 				31BE19EEE2CA4692A7873F5F /* SourceSansPro-BoldItalic.ttf in Resources */,
 				F4A41DF580AB4DA18363D332 /* SourceSansPro-ExtraLight.ttf in Resources */,
 				5872448FDFE840DEBB46A6BA /* SourceSansPro-ExtraLightItalic.ttf in Resources */,
 				50FDCD65EBE045E282509085 /* SourceSansPro-Italic.ttf in Resources */,
 				D4AFF217F0F5431F869AC7C6 /* SourceSansPro-Light.ttf in Resources */,
+				6EBB19CE256ABE0A006E5A8F /* Quicksand-Medium.ttf in Resources */,
 				AF471FA30819438C9BA580DD /* SourceSansPro-LightItalic.ttf in Resources */,
 				F3343A739BF04CF1B73A6AA6 /* SourceSansPro-Regular.ttf in Resources */,
 				8CBFB9E2496842FC8F06CE3C /* SourceSansPro-Semibold.ttf in Resources */,
+				6EBB19D0256ABE0A006E5A8F /* Quicksand-Light.ttf in Resources */,
 				BBF0CDD08FB044868A4B510C /* SourceSansPro-SemiboldItalic.ttf in Resources */,
 				6EFAA86824F72A1A007775E5 /* custom.ttf in Resources */,
 			);
