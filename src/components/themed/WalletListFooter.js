@@ -126,7 +126,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(3.25)
   },
   addItem: {
-    margin: theme.rem(0.25)
+    margin: theme.rem(0.25),
+    fontFamily: theme.fontFaceBold
   },
   buyCryptoContainer: {
     backgroundColor: theme.tileBackground,
@@ -141,6 +142,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(1.75),
     height: theme.rem(1.75),
     margin: theme.rem(0.25)
+  },
+  buyCryptoText: {
+    fontFamily: theme.fontFaceBold
   }
 }))
 

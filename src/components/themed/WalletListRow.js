@@ -149,7 +149,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   detailsCurrency: {
-    flex: 1
+    flex: 1,
+    fontFamily: theme.fontFaceBold
   },
   detailsValue: {
     textAlign: 'right'
