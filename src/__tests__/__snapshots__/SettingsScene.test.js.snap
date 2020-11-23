@@ -1322,7 +1322,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             style={
               Object {
                 "color": "#0E4B75",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "Quicksand-Medium",
                 "fontSize": 22,
                 "lineHeight": 45,
                 "marginHorizontal": 11,
@@ -2660,7 +2660,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             style={
               Object {
                 "color": "#0E4B75",
-                "fontFamily": "Quicksand-Regular",
+                "fontFamily": "Quicksand-Medium",
                 "fontSize": 22,
                 "lineHeight": 45,
                 "marginHorizontal": 11,

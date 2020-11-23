@@ -6,9 +6,9 @@ import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'
-import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
   body?: string,
@@ -38,11 +38,11 @@ class TileComponent extends React.PureComponent<Props> {
           <View style={styles.content}>
             {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
             {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
-            <Text style={error ? styles.textHeaderError : styles.textHeader}>{title}</Text>
+            <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
             {typeof body === 'string' && (
-              <Text style={styles.textBody} numberOfLines={3}>
+              <EdgeText style={styles.textBody} numberOfLines={3}>
                 {body}
-              </Text>
+              </EdgeText>
             )}
             {children}
           </View>
