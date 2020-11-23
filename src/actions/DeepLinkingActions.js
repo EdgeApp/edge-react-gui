@@ -105,15 +105,19 @@ async function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink):
     case 'azteco': {
       if (!hasCurrentWallet) return false
       const edgeWallet = currencyWallets[selectedWalletId]
-      if (edgeWallet.currencyInfo.currencyCode !== 'BTC') return false // prompt to choose btc wallet?
+      if (edgeWallet.currencyInfo.currencyCode !== 'BTC') {
+        Actions.push(WALLET_LIST_SCENE)
+        showError(s.strings.azteco_btc_only)
+        return false
+      }
       const address = await edgeWallet.getReceiveAddress()
-      const response = fetch(`${link.uri}${address.publicAddress}`)
+      const response = await fetch(`${link.uri}${address.publicAddress}`)
       if (response.ok) {
-        showToast('Success!')
+        showToast(s.strings.azteco_success)
       } else if (response.status === 400) {
-        showError('Invalid Azteco code')
+        showError(s.strings.azteco_invalid_code)
       } else {
-        showError('Azteco service unavailable')
+        showError(s.strings.azteco_service_unavailable)
       }
       Actions.push(WALLET_LIST_SCENE)
       return true
