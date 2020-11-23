@@ -122,7 +122,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     justifyContent: 'center'
   }
   const commonText = {
-    fontFamily: theme.fontFaceDefault,
+    fontFamily: theme.fontFaceBold,
     fontSize: theme.rem(1),
     lineHeight: theme.rem(2),
     marginHorizontal: theme.rem(0.5)
