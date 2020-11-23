@@ -7,7 +7,7 @@ import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
 import { addToFioAddressCache, refreshConnectedWalletsForFioAddress } from '../modules/FioAddress/util.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 
-export const refreshConnectedWallets = async (dispatch: Dispatch, currencyWallets: { [walletId: string]: EdgeCurrencyWallet }) => {
+export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetState, currencyWallets: { [walletId: string]: EdgeCurrencyWallet }) => {
   const wallets: EdgeCurrencyWallet[] = []
   const fioWallets: EdgeCurrencyWallet[] = []
   for (const walletId of Object.keys(currencyWallets)) {
@@ -18,8 +18,10 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, currencyWallet
   }
   const connectedWalletsByFioAddress = {}
   for (const fioWallet: EdgeCurrencyWallet of fioWallets) {
+    if (!getState().core.account.id) break
     const fioAddresses = await fioWallet.otherMethods.getFioAddressNames()
     for (const fioAddress: string of fioAddresses) {
+      if (!getState().core.account.id) break
       connectedWalletsByFioAddress[fioAddress] = await refreshConnectedWalletsForFioAddress(fioAddress, fioWallet, wallets)
       dispatch({
         type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
