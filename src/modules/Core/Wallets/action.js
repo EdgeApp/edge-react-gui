@@ -27,7 +27,7 @@ export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: G
         receiveAddresses
       }
     })
-    refreshConnectedWallets(dispatch, currencyWallets)
+    refreshConnectedWallets(dispatch, getState, currencyWallets)
     return updateWalletsEnabledTokens(getState)
   })
 }
