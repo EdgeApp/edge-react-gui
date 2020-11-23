@@ -64,6 +64,19 @@ export function ClickableText(props: Props) {
   )
 }
 
+export function ButtonBox(props: Props) {
+  const { children, onPress } = props
+  const theme = useTheme()
+
+  return (
+    <View style={spacingStyles(props, theme)}>
+      <TouchableHighlight activeOpacity={theme.underlayOpacity} underlayColor={theme.underlayColor} onPress={onPress}>
+        {children}
+      </TouchableHighlight>
+    </View>
+  )
+}
+
 function spacingStyles(props: Props, theme: Theme) {
   const marginRem = unpackEdges(props.marginRem)
   const paddingRem = unpackEdges(props.paddingRem ?? 0.5)
