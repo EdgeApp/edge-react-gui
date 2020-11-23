@@ -79,9 +79,9 @@ export type Theme = {
   // tabBarIcon: string,
   // tabBarIconHighlighted: string,
 
-  // sliderTabSend: string,
-  // sliderTabRequest: string,
-  // sliderTabMore: string,
+  sliderTabSend: string,
+  sliderTabRequest: string,
+  sliderTabMore: string,
 
   // pinOutline: string,
   // pinFilled: string,

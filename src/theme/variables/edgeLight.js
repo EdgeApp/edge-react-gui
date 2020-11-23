@@ -117,9 +117,9 @@ export const edgeLight: Theme = {
   // tabBarIcon: palette.gray,
   // tabBarIconHighlighted: palette.edgeBlue,
 
-  // sliderTabSend: palette.accentRed,
-  // sliderTabRequest: palette.accentGreen,
-  // sliderTabMore: palette.accentBlue,
+  sliderTabSend: palette.accentRed,
+  sliderTabRequest: palette.accentGreen,
+  sliderTabMore: palette.accentBlue,
 
   // pinOutline: palette.edgeBlue,
   // pinFilled: palette.edgeBlue,
