@@ -11,7 +11,7 @@ import editIcon from '../../assets/images/transaction_details_icon.png'
 import * as Constants from '../../constants/indexConstants'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { addToFioAddressCache } from '../../modules/FioAddress/util.js'
+import { addToFioAddressCache, checkPubAddress } from '../../modules/FioAddress/util'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -105,6 +105,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   onConfirm = async () => {
+    const { fioPlugin } = this.props
     const { walletAddresses, fioAddressFrom } = this.state
     const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
 
@@ -148,10 +149,20 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
           this.resetSlider()
           return showError(s.strings.fio_get_fee_err_msg)
         }
+
+        let payerPublicKey
+        try {
+          const fioCurrencyCode = fioPlugin.currencyInfo.currencyCode
+          payerPublicKey = await checkPubAddress(fioPlugin, this.state.fioAddressTo, fioCurrencyCode, fioCurrencyCode)
+        } catch (e) {
+          console.log(e)
+        }
+
         // send fio request
         await fioWallet.otherMethods.fioAction('requestFunds', {
           payerFioAddress: this.state.fioAddressTo,
           payeeFioAddress: this.state.fioAddressFrom,
+          payerFioPublicKey: payerPublicKey,
           payeeTokenPublicAddress: this.props.publicAddress,
           amount: val,
           tokenCode: this.props.primaryCurrencyInfo.exchangeCurrencyCode,
