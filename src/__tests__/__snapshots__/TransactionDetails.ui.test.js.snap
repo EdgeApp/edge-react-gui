@@ -43,7 +43,7 @@ exports[`TransactionDetails.ui should render 1`] = `
               }
             }
           />
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -52,7 +52,7 @@ exports[`TransactionDetails.ui should render 1`] = `
             }
           >
             Sender
-          </FormattedText>
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -74,7 +74,7 @@ exports[`TransactionDetails.ui should render 1`] = `
             }
           }
         >
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -83,8 +83,8 @@ exports[`TransactionDetails.ui should render 1`] = `
             }
           >
             $ 
-          </FormattedText>
-          <FormattedText
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -93,7 +93,7 @@ exports[`TransactionDetails.ui should render 1`] = `
             }
           >
             0.00
-          </FormattedText>
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -109,7 +109,7 @@ exports[`TransactionDetails.ui should render 1`] = `
             }
           }
         >
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -118,8 +118,8 @@ exports[`TransactionDetails.ui should render 1`] = `
             }
           >
             $ 
-          </FormattedText>
-          <FormattedText
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -129,8 +129,8 @@ exports[`TransactionDetails.ui should render 1`] = `
             }
           >
             120.00
-          </FormattedText>
-          <FormattedText
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#77C513",
@@ -138,9 +138,8 @@ exports[`TransactionDetails.ui should render 1`] = `
               }
             }
           >
-            0
-            %
-          </FormattedText>
+            0%
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -169,7 +168,7 @@ exports[`TransactionDetails.ui should render 1`] = `
               }
             }
           >
-            <FormattedText
+            <WithTheme(EdgeTextComponent)
               style={
                 Object {
                   "color": "#66EDA8",
@@ -178,9 +177,9 @@ exports[`TransactionDetails.ui should render 1`] = `
               }
             >
               Income
-            </FormattedText>
+            </WithTheme(EdgeTextComponent)>
           </View>
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -190,7 +189,7 @@ exports[`TransactionDetails.ui should render 1`] = `
             }
           >
             
-          </FormattedText>
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -202,7 +201,7 @@ exports[`TransactionDetails.ui should render 1`] = `
       <TouchableWithoutFeedback
         onPress={[Function]}
       >
-        <FormattedText
+        <WithTheme(EdgeTextComponent)
           style={
             Object {
               "color": "#66EDA8",
@@ -214,7 +213,7 @@ exports[`TransactionDetails.ui should render 1`] = `
           }
         >
           View Advanced Transaction Data
-        </FormattedText>
+        </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
       <PrimaryButton
         label="Save"
@@ -275,7 +274,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               }
             }
           />
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -284,7 +283,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             }
           >
             Recipient
-          </FormattedText>
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -306,7 +305,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             }
           }
         >
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -315,8 +314,8 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             }
           >
             $ 
-          </FormattedText>
-          <FormattedText
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -325,7 +324,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             }
           >
             6392.93
-          </FormattedText>
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -341,7 +340,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             }
           }
         >
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -350,8 +349,8 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             }
           >
             $ 
-          </FormattedText>
-          <FormattedText
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -361,8 +360,8 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             }
           >
             120.00
-          </FormattedText>
-          <FormattedText
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#E85466",
@@ -370,9 +369,8 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               }
             }
           >
-            - 98.12
-            %
-          </FormattedText>
+            - 98.12%
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -401,7 +399,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               }
             }
           >
-            <FormattedText
+            <WithTheme(EdgeTextComponent)
               style={
                 Object {
                   "color": "#66EDA8",
@@ -410,9 +408,9 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
               }
             >
               Expense
-            </FormattedText>
+            </WithTheme(EdgeTextComponent)>
           </View>
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -422,7 +420,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             }
           >
             
-          </FormattedText>
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -434,7 +432,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
       <TouchableWithoutFeedback
         onPress={[Function]}
       >
-        <FormattedText
+        <WithTheme(EdgeTextComponent)
           style={
             Object {
               "color": "#66EDA8",
@@ -446,7 +444,7 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
           }
         >
           View Advanced Transaction Data
-        </FormattedText>
+        </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
       <PrimaryButton
         label="Save"
@@ -507,7 +505,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               }
             }
           />
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -516,7 +514,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             }
           >
             Sender
-          </FormattedText>
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -538,7 +536,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             }
           }
         >
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -547,8 +545,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             }
           >
             $ 
-          </FormattedText>
-          <FormattedText
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -557,7 +555,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             }
           >
             0.00
-          </FormattedText>
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -573,7 +571,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             }
           }
         >
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -582,8 +580,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             }
           >
             $ 
-          </FormattedText>
-          <FormattedText
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -593,8 +591,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             }
           >
             120.00
-          </FormattedText>
-          <FormattedText
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#77C513",
@@ -602,9 +600,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               }
             }
           >
-            0
-            %
-          </FormattedText>
+            0%
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -633,7 +630,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               }
             }
           >
-            <FormattedText
+            <WithTheme(EdgeTextComponent)
               style={
                 Object {
                   "color": "#66EDA8",
@@ -642,9 +639,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
               }
             >
               Income
-            </FormattedText>
+            </WithTheme(EdgeTextComponent)>
           </View>
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -654,7 +651,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             }
           >
             
-          </FormattedText>
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -666,7 +663,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
       <TouchableWithoutFeedback
         onPress={[Function]}
       >
-        <FormattedText
+        <WithTheme(EdgeTextComponent)
           style={
             Object {
               "color": "#66EDA8",
@@ -678,7 +675,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
           }
         >
           View Advanced Transaction Data
-        </FormattedText>
+        </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
       <PrimaryButton
         label="Save"
@@ -739,7 +736,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               }
             }
           />
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -748,7 +745,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             }
           >
             Sender
-          </FormattedText>
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -770,7 +767,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             }
           }
         >
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -779,8 +776,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             }
           >
             $ 
-          </FormattedText>
-          <FormattedText
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -789,7 +786,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             }
           >
             0.00
-          </FormattedText>
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -805,7 +802,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             }
           }
         >
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -814,8 +811,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             }
           >
             $ 
-          </FormattedText>
-          <FormattedText
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -825,8 +822,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             }
           >
             120.00
-          </FormattedText>
-          <FormattedText
+          </WithTheme(EdgeTextComponent)>
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#77C513",
@@ -834,9 +831,8 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               }
             }
           >
-            0
-            %
-          </FormattedText>
+            0%
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -865,7 +861,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               }
             }
           >
-            <FormattedText
+            <WithTheme(EdgeTextComponent)
               style={
                 Object {
                   "color": "#66EDA8",
@@ -874,9 +870,9 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
               }
             >
               Income
-            </FormattedText>
+            </WithTheme(EdgeTextComponent)>
           </View>
-          <FormattedText
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
                 "color": "#FFFFFF",
@@ -886,7 +882,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             }
           >
             
-          </FormattedText>
+          </WithTheme(EdgeTextComponent)>
         </View>
       </WithTheme(TileComponent)>
       <WithTheme(TileComponent)
@@ -898,7 +894,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
       <TouchableWithoutFeedback
         onPress={[Function]}
       >
-        <FormattedText
+        <WithTheme(EdgeTextComponent)
           style={
             Object {
               "color": "#66EDA8",
@@ -910,7 +906,7 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
           }
         >
           View Advanced Transaction Data
-        </FormattedText>
+        </WithTheme(EdgeTextComponent)>
       </TouchableWithoutFeedback>
       <PrimaryButton
         label="Save"
