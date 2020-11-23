@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { Image, TouchableOpacity, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
 
@@ -12,7 +12,8 @@ import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
 import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from '../themed/EdgeText.js'
+import { EdgeText } from './EdgeText.js'
+import { ButtonBox } from './ThemedButtons.js'
 
 type StateProps = {
   accountMessages: MessageTweak[],
@@ -49,28 +50,22 @@ class PromoCardComponent extends React.PureComponent<Props> {
     if (messageSummary == null) return null
     const { message } = messageSummary
     return (
-      <View style={styles.rootContainer}>
-        <TouchableHighlight activeOpacity={0.95} underlayColor={theme.underlayColor} onPress={this.handlePress}>
-          <View style={styles.container}>
-            {message.iconUri != null ? <Image resizeMode="contain" source={{ uri: message.iconUri }} style={styles.icon} /> : null}
-            <EdgeText numberOfLines={0} style={styles.text}>
-              {message.message}
-            </EdgeText>
-            <TouchableOpacity onPress={this.handleClose}>
-              <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.close} />
-            </TouchableOpacity>
-          </View>
-        </TouchableHighlight>
-      </View>
+      <ButtonBox marginRem={1} onPress={this.handlePress}>
+        <View style={styles.container}>
+          {message.iconUri != null ? <Image resizeMode="contain" source={{ uri: message.iconUri }} style={styles.icon} /> : null}
+          <EdgeText numberOfLines={0} style={styles.text}>
+            {message.message}
+          </EdgeText>
+          <TouchableOpacity onPress={this.handleClose}>
+            <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.close} />
+          </TouchableOpacity>
+        </View>
+      </ButtonBox>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  // Promo area:
-  rootContainer: {
-    margin: theme.rem(1)
-  },
   container: {
     flexDirection: 'row',
     alignItems: 'center',
