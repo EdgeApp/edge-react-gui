@@ -17,6 +17,7 @@ import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
+import { ButtonBox } from './ThemedButtons.js'
 
 type StateProps = {
   account: EdgeAccount,
@@ -48,18 +49,16 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
           {this.renderAddButton(s.strings.wallet_list_add_wallet, Actions[Constants.CREATE_WALLET_SELECT_CRYPTO])}
           {this.renderAddButton(s.strings.wallet_list_add_token, this.addToken)}
         </View>
-        <View style={styles.buyCryptoContainer}>
-          <TouchableHighlight activeOpacity={theme.underlayOpacity} underlayColor={theme.underlayColor} onPress={Actions[Constants.PLUGIN_BUY]}>
-            <View style={styles.buyCryptoInnerContainer}>
-              <View style={styles.buyCryptoImagesContainer}>
-                <Image style={styles.buyCryptoImages} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.BTC }} resizeMode="cover" />
-                <Image style={styles.buyCryptoImages} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.ETH }} resizeMode="cover" />
-                <Image style={styles.buyCryptoImages} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.BCH }} resizeMode="cover" />
-              </View>
-              <EdgeText>{s.strings.title_plugin_buy_sell}</EdgeText>
+        <ButtonBox margin={0.5} onPress={Actions[Constants.PLUGIN_BUY]}>
+          <View style={styles.buyCryptoContainer}>
+            <View style={styles.buyCryptoImagesContainer}>
+              <Image style={styles.buyCryptoImages} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.BTC }} resizeMode="cover" />
+              <Image style={styles.buyCryptoImages} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.ETH }} resizeMode="cover" />
+              <Image style={styles.buyCryptoImages} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.BCH }} resizeMode="cover" />
             </View>
-          </TouchableHighlight>
-        </View>
+            <EdgeText>{s.strings.title_plugin_buy_sell}</EdgeText>
+          </View>
+        </ButtonBox>
       </View>
     )
   }
@@ -130,9 +129,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.25)
   },
   buyCryptoContainer: {
-    margin: theme.rem(0.5)
-  },
-  buyCryptoInnerContainer: {
     backgroundColor: theme.tileBackground,
     height: theme.rem(5.5),
     justifyContent: 'center',
