@@ -16,7 +16,6 @@ import * as Constants from '../../constants/indexConstants'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/Settings/selectors.js'
-import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getSelectedWallet, getWallet } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
@@ -31,6 +30,7 @@ import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesI
 import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPersonInput.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 import { PrimaryButton } from '../themed/ThemedButtons.js'
 import { Tile } from '../themed/Tile.js'
 
@@ -330,9 +330,9 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       <>
         <Tile type="touchable" title={s.strings.transaction_details_exchange_details} onPress={openExchangeDetails}>
           <View style={styles.tileColumn}>
-            <FormattedText style={styles.tileTextBottom}>{`${s.strings.title_exchange} ${sourceAmount} ${sourceCurrencyCode}`}</FormattedText>
-            <FormattedText style={styles.tileTextBottom}>{`${s.strings.string_to_capitalize} ${destinationAmount} ${destinationCurrencyCode}`}</FormattedText>
-            <FormattedText style={styles.tileTextBottom}>{swapData.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote}</FormattedText>
+            <EdgeText style={styles.tileTextBottom}>{s.strings.title_exchange + ' ' + sourceAmount + ' ' + sourceCurrencyCode}</EdgeText>
+            <EdgeText style={styles.tileTextBottom}>{s.strings.string_to_capitalize + ' ' + destinationAmount + ' ' + destinationCurrencyCode}</EdgeText>
+            <EdgeText style={styles.tileTextBottom}>{swapData.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote}</EdgeText>
           </View>
         </Tile>
         {swapData.orderUri && <Tile type="touchable" title={s.strings.transaction_details_exchange_status_page} onPress={openUrl} body={swapData.orderUri} />}
@@ -474,7 +474,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
                 ) : (
                   <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(2)} />
                 )}
-                <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
+                <EdgeText style={styles.tileTextBottom}>{personName}</EdgeText>
               </View>
             </Tile>
             <Tile
@@ -484,25 +484,25 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
             />
             <Tile type="editable" title={sprintf(s.strings.transaction_details_amount_in_fiat, fiatCurrencyCode)} onPress={this.openFiatInput}>
               <View style={styles.tileRow}>
-                <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
-                <FormattedText style={styles.tileTextBottom}>{fiatValue}</FormattedText>
+                <EdgeText style={styles.tileTextBottom}>{fiatSymbol + ' '}</EdgeText>
+                <EdgeText style={styles.tileTextBottom}>{fiatValue}</EdgeText>
               </View>
             </Tile>
             <Tile type="static" title={s.strings.transaction_details_amount_current_price}>
               <View style={styles.tileRow}>
-                <FormattedText style={styles.tileTextBottom}>{`${fiatSymbol} `}</FormattedText>
-                <FormattedText style={styles.tileTextPrice}>{currentFiat.amount}</FormattedText>
-                <FormattedText style={parseFloat(currentFiat.difference) >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>
-                  {parseFloat(currentFiat.difference) >= 0 ? currentFiat.percentage : `- ${currentFiat.percentage}`}%
-                </FormattedText>
+                <EdgeText style={styles.tileTextBottom}>{fiatSymbol + ' '}</EdgeText>
+                <EdgeText style={styles.tileTextPrice}>{currentFiat.amount}</EdgeText>
+                <EdgeText style={parseFloat(currentFiat.difference) >= 0 ? styles.tileTextPriceChangeUp : styles.tileTextPriceChangeDown}>
+                  {(parseFloat(currentFiat.difference) >= 0 ? currentFiat.percentage : `- ${currentFiat.percentage}`) + '%'}
+                </EdgeText>
               </View>
             </Tile>
             <Tile type="editable" title={s.strings.transaction_details_category_title} onPress={this.openCategoryInput}>
               <View style={styles.tileRow}>
                 <View style={styles.tileCategory}>
-                  <FormattedText style={styles.tileCategoryText}>{categories[category].syntax}</FormattedText>
+                  <EdgeText style={styles.tileCategoryText}>{categories[category].syntax}</EdgeText>
                 </View>
-                <FormattedText style={styles.tileSubCategoryText}>{subCategory}</FormattedText>
+                <EdgeText style={styles.tileSubCategoryText}>{subCategory}</EdgeText>
               </View>
             </Tile>
             {edgeTransaction.spendTargets && <Tile type="copy" title={s.strings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
@@ -510,7 +510,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
             {isAcceleratable && <Tile type="touchable" title={s.strings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />}
             <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
-              <FormattedText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
+              <EdgeText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</EdgeText>
             </TouchableWithoutFeedback>
             <PrimaryButton onPress={this.onSaveTxDetails} label={s.strings.string_save} marginRem={[0, 2, 2]} />
           </View>
