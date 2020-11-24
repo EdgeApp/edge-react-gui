@@ -2667,9 +2667,9 @@ bs58check@2.1.2, bs58check@<3.0.0, bs58check@^1.0.8, bs58check@^2.1.1, bs58check
     create-hash "^1.1.0"
     safe-buffer "^5.1.2"
 
-"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
+"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
   version "2.1.2"
-  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#8ff31333a7626161c1484b461c20710bb9f97b93"
+  resolved "https://github.com/Groestlcoin/bs58grscheck#8ff31333a7626161c1484b461c20710bb9f97b93"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -3962,10 +3962,10 @@ edge-exchange-plugins@^0.11.12:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.6.21:
-  version "0.6.21"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.21.tgz#4a4bab5e6fe25d49aafe7b1a9209a9311b12cda9"
-  integrity sha512-mi3I49pG+ThTmFH76d6TRzKVWbKb6DJlhbj7BtWjk+SPxYVPvD6zwlzQPk+bWdLmutlcdNVgFueo5cM5oN4VQQ==
+edge-login-ui-rn@^0.6.22:
+  version "0.6.22"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.22.tgz#e865d65921d501ab96d8d7a9f87399f58caefde5"
+  integrity sha512-SpNgsYAYoGLylCPYcYS5Swj7Zc00n1/LjmFuHrGndqCRKhMVgZlLCyKhbnU4/SOyW7Vu3PN83eji8XZFO+Yudg==
   dependencies:
     cleaners "^0.3.1"
     material-ui "^0.20.0"
