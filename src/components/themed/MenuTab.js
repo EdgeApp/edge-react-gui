@@ -42,7 +42,7 @@ class MenuTabComponent extends React.PureComponent<Props> {
             [Constants.EXCHANGE]: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />
           }
           return (
-            <TouchableOpacity style={styles.content} key={element.key} onPress={() => Actions[element.key]()}>
+            <TouchableOpacity style={styles.content} key={element.key} onPress={() => Actions.jump(element.key)}>
               {icon[element.key]}
               <EdgeText style={{ ...styles.text, color: color }}>{title[element.key]}</EdgeText>
             </TouchableOpacity>
@@ -58,12 +58,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.tabBarBackground,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: theme.rem(0.75),
-    paddingBottom: isIPhoneX ? theme.rem(2.125) : theme.rem(0.75)
+    alignItems: 'center'
   },
   content: {
     flex: 1,
+    paddingTop: theme.rem(0.75),
+    paddingBottom: isIPhoneX ? theme.rem(2.125) : theme.rem(0.75),
     justifyContent: 'center',
     alignItems: 'center'
   },
