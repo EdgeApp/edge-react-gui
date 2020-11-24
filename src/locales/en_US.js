@@ -35,6 +35,10 @@ const strings = {
   alert_dropdown_alert: 'Alert! ',
   alert_dropdown_warning: 'Warning! ',
 
+  azteco_success: `You've redeemed an Azteco bitcoin card. Funds should arrive shortly.`,
+  azteco_invalid_code: 'Invalid Azteco code.',
+  azteco_service_unavailable: 'Error contacting Azteco server. Please try again later.',
+  azteco_btc_only: 'Please choose a BTC wallet and scan again.',
   dropdown_exchange_max_amount: 'Exchange Max Amount',
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
   max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
