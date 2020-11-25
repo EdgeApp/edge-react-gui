@@ -563,7 +563,6 @@
   "err_token_not_in_wallet_msg": "Su cuenta no tiene una cartera %s para pagar esta solicitud",
   "err_no_address_title": "Dirección FIO no encontrada.",
   "fio_connect_no_wallets": "No hay carteras",
-  "fio_connect_checkbox_text": "Reconozco que, una vez conectada, una dirección de cada cartera conectada se convertirá en pública",
   "fio_connect_wallets_err": "Hubo un problema durante la ejecución de la operación. Inténtalo más tarde.",
   "fio_wallet_missing_for_fio_address": "Error de sistema. No se puede encontrar la cartera FIO para la dirección FIO",
   "fio_wallet_missing_for_fio_domain": "Error de sistema. No se puede encontrar la cartera FIO para la dirección FIO",
