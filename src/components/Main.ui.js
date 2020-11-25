@@ -269,7 +269,7 @@ export class MainComponent extends React.Component<Props> {
                 }}
                 navTransparent
                 component={ifLoggedIn(TransactionListConnector)}
-                renderTitle={this.renderHeaderWalletSelector()}
+                renderTitle={<HeaderWalletSelector />}
                 renderLeftButton={this.renderBackButton(s.strings.title_wallets)}
                 renderRightButton={this.renderMenuButton()}
               />
@@ -284,7 +284,7 @@ export class MainComponent extends React.Component<Props> {
                 }}
                 onExit={this.props.dispatchDisableScan}
                 component={ifLoggedIn(Scan)}
-                renderTitle={this.renderHeaderWalletSelector()}
+                renderTitle={<HeaderWalletSelector />}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderMenuButton()}
               />
@@ -293,7 +293,7 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.REQUEST}
                 navTransparent
                 component={ifLoggedIn(Request)}
-                renderTitle={this.renderHeaderWalletSelector()}
+                renderTitle={<HeaderWalletSelector />}
                 renderLeftButton={this.renderBackButton()}
                 renderRightButton={this.renderRequestMenuButton()}
                 hideTabBar
@@ -773,10 +773,6 @@ export class MainComponent extends React.Component<Props> {
     )
   }
 
-  renderHeaderWalletSelector = () => {
-    return <HeaderWalletSelector />
-  }
-
   renderWalletName = () => {
     return (
       <View style={styles.titleWrapper}>
@@ -805,14 +801,6 @@ export class MainComponent extends React.Component<Props> {
     return (
       <View style={styles.titleWrapper}>
         <T style={styles.titleStyle}>{title}</T>
-      </View>
-    )
-  }
-
-  renderSpendTitle = (title: string) => {
-    return (
-      <View style={styles.titleWrapper}>
-        <T style={styles.titleStyle}>title</T>
       </View>
     )
   }
