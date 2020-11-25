@@ -1,17 +1,16 @@
 // @flow
 
 import * as React from 'react'
-import { TouchableOpacity } from 'react-native'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import { View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../components/services/ThemeContext.js'
+import { EdgeText } from '../../components/themed/EdgeText.js'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { B } from '../../styles/common/textStyles.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import type { Dispatch, RootState } from '../../types/reduxTypes.js'
+import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
 import { Airship } from '../services/AirshipInstance.js'
 
 type StateProps = {
@@ -23,9 +22,9 @@ type DispatchProps = {
   onSelectWallet(string, string): void
 }
 
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & ThemeProps
 
-class HeaderWalletSelectorComponent extends React.Component<Props> {
+class HeaderWalletSelectorComponent extends React.PureComponent<Props> {
   handlePress = () => {
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
@@ -34,50 +33,54 @@ class HeaderWalletSelectorComponent extends React.Component<Props> {
     })
   }
 
+  renderTitle = () => {
+    const styles = getStyles(this.props.theme)
+    if (this.props.selectedWalletName) {
+      return (
+        <EdgeText>
+          {this.props.selectedWalletName + ': '}
+          <EdgeText style={styles.boldText}>{this.props.selectedWalletCurrencyCode}</EdgeText>
+        </EdgeText>
+      )
+    } else {
+      return <EdgeText>{s.strings.loading}</EdgeText>
+    }
+  }
+
   render() {
+    const styles = getStyles(this.props.theme)
     return (
-      <TouchableOpacity onPress={this.handlePress} style={styles.textIconContainer}>
-        <T style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
-          {this.props.selectedWalletName ? (
-            <>
-              {this.props.selectedWalletName}: <B>{this.props.selectedWalletCurrencyCode}</B>
-            </>
-          ) : (
-            s.strings.loading
-          )}
-        </T>
-        <MaterialIcon name="keyboard-arrow-down" color={THEME.COLORS.WHITE} size={THEME.rem(1.5)} />
-      </TouchableOpacity>
+      <View style={styles.container}>
+        <ArrowDownTextIconButton onPress={this.handlePress} title={this.renderTitle()} />
+      </View>
     )
   }
 }
 
-const styles = {
-  textIconContainer: {
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingHorizontal: theme.rem(1.5)
   },
-  iconText: {
-    textAlign: 'center',
-    color: THEME.COLORS.WHITE,
-    fontSize: THEME.rem(1.25)
+  boldText: {
+    fontFamily: theme.fontFaceBold
   }
-}
+}))
 
 export const HeaderWalletSelector = connect(
   (state: RootState): StateProps => {
     const walletId = state.ui.wallets.selectedWalletId
     const selectedWallet = state.ui.wallets.byId[walletId]
+
     return {
       selectedWalletName: selectedWallet ? selectedWallet.name : null,
       selectedWalletCurrencyCode: state.ui.wallets.selectedCurrencyCode
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    onSelectWallet(walletId: string, currencyCode: string) {
-      dispatch(selectWalletFromModal(walletId, currencyCode))
-    }
+    onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
   })
-)(HeaderWalletSelectorComponent)
+)(withTheme(HeaderWalletSelectorComponent))
