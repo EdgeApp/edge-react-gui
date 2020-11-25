@@ -59,8 +59,6 @@ import { registerDevice } from '../modules/Device/action'
 import { logoutRequest } from '../modules/Login/action.js'
 import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConnector'
 import BackButton from '../modules/UI/components/Header/Component/BackButton.ui'
-import { ExitButton } from '../modules/UI/components/Header/Component/ExitButton.js'
-import HelpButton from '../modules/UI/components/Header/Component/HelpButton.ui.js'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
@@ -90,6 +88,7 @@ import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
 import { Airship } from './services/AirshipInstance.js'
+import { HeaderTextButton } from './themed/HeaderTextButton.js'
 import { MenuTab } from './themed/MenuTab.js'
 
 const RouterWithRedux = connect()(Router)
@@ -146,7 +145,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(EdgeLoginSceneConnector)}
               renderTitle={<HeaderTitle title={s.strings.title_edge_login} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderHelpButton()}
+              renderRightButton={<HeaderTextButton type="help" />}
             />
             {this.renderTransactionDetailsView()}
             {this.renderTabView()}
@@ -185,7 +184,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 component={ifLoggedIn(WalletListScene)}
                 renderTitle={<HeaderTitle title={s.strings.title_wallets} />}
-                renderLeftButton={this.renderHelpButton()}
+                renderLeftButton={<HeaderTextButton type="help" />}
                 renderRightButton={this.renderMenuButton()}
               />
 
@@ -249,7 +248,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(CreateWalletAccountSetupConnector)}
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_create_account} />}
                 renderLeftButton={this.renderBackButton()}
-                renderRightButton={this.renderHelpButton()}
+                renderRightButton={<HeaderTextButton type="help" />}
               />
 
               <Scene
@@ -258,7 +257,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(CreateWalletAccountSelectConnector)}
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_account_activate} />}
                 renderLeftButton={this.renderBackButton()}
-                renderRightButton={this.renderHelpButton()}
+                renderRightButton={<HeaderTextButton type="help" />}
               />
 
               <Scene
@@ -350,7 +349,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 component={ifLoggedIn(GuiPluginListScene)}
                 renderTitle={<HeaderTitle title={s.strings.title_plugin_buy} />}
-                renderLeftButton={this.renderHelpButton()}
+                renderLeftButton={<HeaderTextButton type="help" />}
                 renderRightButton={this.renderMenuButton()}
                 onLeft={Actions.pop}
                 direction="buy"
@@ -361,7 +360,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(GuiPluginViewScene)}
                 renderTitle={props => <HeaderTitle title={props.plugin.displayName} />}
                 renderLeftButton={renderPluginBackButton()}
-                renderRightButton={this.renderExitButton()}
+                renderRightButton={<HeaderTextButton type="exit" />}
                 hideTabBar
               />
             </Stack>
@@ -372,7 +371,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 component={ifLoggedIn(GuiPluginListScene)}
                 renderTitle={<HeaderTitle title={s.strings.title_plugin_sell} />}
-                renderLeftButton={this.renderHelpButton()}
+                renderLeftButton={<HeaderTextButton type="help" />}
                 renderRightButton={this.renderMenuButton()}
                 onLeft={Actions.pop}
                 direction="sell"
@@ -383,7 +382,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(GuiPluginViewScene)}
                 renderTitle={props => <HeaderTitle title={props.plugin.displayName} />}
                 renderLeftButton={renderPluginBackButton()}
-                renderRightButton={this.renderExitButton()}
+                renderRightButton={<HeaderTextButton type="exit" />}
                 hideTabBar
               />
             </Stack>
@@ -435,7 +434,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(ChangeMiningFeeScene)}
               renderTitle={<HeaderTitle title={s.strings.title_change_mining_fee} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderHelpButton()}
+              renderRightButton={<HeaderTextButton type="help" />}
             />
           </Stack>
 
@@ -448,7 +447,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(SendScene)}
               renderTitle={<HeaderTitle title={s.strings.title_send} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderHelpButton()}
+              renderRightButton={<HeaderTextButton type="help" />}
             />
           </Stack>
 
@@ -479,7 +478,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(GuiPluginViewScene)}
               renderTitle={props => <HeaderTitle title={props.plugin.displayName} />}
               renderLeftButton={renderPluginBackButton()}
-              renderRightButton={this.renderExitButton()}
+              renderRightButton={<HeaderTextButton type="exit" />}
               hideTabBar
             />
           </Stack>
@@ -593,7 +592,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(GuiPluginViewScene)}
               renderTitle={props => <HeaderTitle title={props.plugin.displayName} />}
               renderLeftButton={renderPluginBackButton()}
-              renderRightButton={this.renderExitButton()}
+              renderRightButton={<HeaderTextButton type="exit" />}
             />
           </Stack>
 
@@ -769,16 +768,8 @@ export class MainComponent extends React.Component<Props> {
     )
   }
 
-  renderExitButton = () => {
-    return <ExitButton />
-  }
-
   renderEmptyButton = () => {
     return <BackButton />
-  }
-
-  renderHelpButton = () => {
-    return <HelpButton />
   }
 
   renderBackButton = (label: string = s.strings.title_back) => {
