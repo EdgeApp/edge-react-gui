@@ -5,13 +5,13 @@ import { View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
-import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../components/services/ThemeContext.js'
-import { EdgeText } from '../../components/themed/EdgeText.js'
 import s from '../../locales/strings.js'
 import type { Dispatch, RootState } from '../../types/reduxTypes.js'
 import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
+import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 
 type OwnProps = {
   showWalletNameOnly?: boolean,
@@ -29,7 +29,7 @@ type DispatchProps = {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-class HeaderWalletSelectorComponent extends React.PureComponent<Props> {
+class HeaderTitleComponent extends React.PureComponent<Props> {
   handlePress = () => {
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
@@ -76,7 +76,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const HeaderWalletSelector = connect(
+export const HeaderTitle = connect(
   (state: RootState): StateProps => {
     const walletId = state.ui.wallets.selectedWalletId
     const selectedWallet = state.ui.wallets.byId[walletId]
@@ -89,4 +89,4 @@ export const HeaderWalletSelector = connect(
   (dispatch: Dispatch): DispatchProps => ({
     onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
   })
-)(withTheme(HeaderWalletSelectorComponent))
+)(withTheme(HeaderTitleComponent))
