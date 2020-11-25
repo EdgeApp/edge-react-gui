@@ -56,7 +56,7 @@ const styles = {
   textIconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '80%',
+    flex: 1,
     justifyContent: 'center'
   },
   iconText: {
