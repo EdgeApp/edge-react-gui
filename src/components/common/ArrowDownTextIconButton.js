@@ -1,11 +1,11 @@
 // @flow
 
 import * as React from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../components/services/ThemeContext.js'
+import { EdgeText } from '../../components/themed/EdgeText.js'
 
 type Props = {
   onPress: Function,
@@ -14,31 +14,24 @@ type Props = {
   iconSize?: number
 }
 
-export class ArrowDownTextIconButton extends React.Component<Props> {
+class ArrowDownTextIconButtonComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
-    const { iconColor, iconSize, onPress, title } = this.props
+    const { iconColor, iconSize, onPress, theme, title } = this.props
+    const styles = getStyles(theme)
     return (
-      <TouchableOpacity onPress={onPress} style={styles.textIconContainer}>
-        {typeof title === 'string' ? (
-          <T style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
-            {title}
-          </T>
-        ) : (
-          title
-        )}
-        <MaterialIcon name="keyboard-arrow-down" color={iconColor || THEME.COLORS.WHITE} size={iconSize || THEME.rem(1.5)} />
+      <TouchableOpacity onPress={onPress} style={styles.container}>
+        {typeof title === 'string' ? <EdgeText>{title}</EdgeText> : title}
+        <MaterialIcon name="keyboard-arrow-down" color={iconColor || theme.icon} size={iconSize || theme.rem(1.5)} />
       </TouchableOpacity>
     )
   }
 }
 
-const styles = StyleSheet.create({
-  textIconContainer: {
+export const ArrowDownTextIconButton = withTheme(ArrowDownTextIconButtonComponent)
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
     flexDirection: 'row',
     alignItems: 'center'
-  },
-  iconText: {
-    color: THEME.COLORS.WHITE,
-    fontSize: THEME.rem(1.25)
   }
-})
+}))
