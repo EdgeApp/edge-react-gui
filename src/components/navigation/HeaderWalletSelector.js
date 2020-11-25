@@ -13,6 +13,10 @@ import type { Dispatch, RootState } from '../../types/reduxTypes.js'
 import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
 import { Airship } from '../services/AirshipInstance.js'
 
+type OwnProps = {
+  showWalletNameOnly?: boolean
+}
+
 type StateProps = {
   selectedWalletName: string | null,
   selectedWalletCurrencyCode: string
@@ -22,7 +26,7 @@ type DispatchProps = {
   onSelectWallet(string, string): void
 }
 
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class HeaderWalletSelectorComponent extends React.PureComponent<Props> {
   handlePress = () => {
@@ -48,10 +52,11 @@ class HeaderWalletSelectorComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const styles = getStyles(this.props.theme)
+    const { showWalletNameOnly, theme } = this.props
+    const styles = getStyles(theme)
     return (
       <View style={styles.container}>
-        <ArrowDownTextIconButton onPress={this.handlePress} title={this.renderTitle()} />
+        {showWalletNameOnly ? this.renderTitle() : <ArrowDownTextIconButton onPress={this.handlePress} title={this.renderTitle()} />}
       </View>
     )
   }
