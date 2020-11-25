@@ -194,7 +194,6 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(CreateWalletChoiceComponent)}
                 renderTitle={<HeaderTitle title={s.strings.title_create_wallet} />}
                 renderLeftButton={this.renderBackButton(s.strings.title_wallets)}
-                renderRightButton={this.renderEmptyButton()}
               />
 
               <Scene
@@ -203,7 +202,6 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(CreateWalletImportScene)}
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_import_title} />}
                 renderLeftButton={this.renderBackButton()}
-                renderRightButton={this.renderEmptyButton()}
               />
 
               <Scene
@@ -212,7 +210,6 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(CreateWalletSelectCryptoScene)}
                 renderTitle={<HeaderTitle title={s.strings.title_create_wallet_select_crypto} />}
                 renderLeftButton={this.renderBackButton()}
-                renderRightButton={this.renderEmptyButton()}
               />
 
               <Scene
@@ -221,7 +218,6 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(CreateWalletName)}
                 renderTitle={<HeaderTitle title={s.strings.title_create_wallet} />}
                 renderLeftButton={this.renderBackButton()}
-                renderRightButton={this.renderEmptyButton()}
               />
 
               <Scene
@@ -230,7 +226,6 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(CreateWalletSelectFiatScene)}
                 renderTitle={<HeaderTitle title={s.strings.title_create_wallet_select_fiat} />}
                 renderLeftButton={this.renderBackButton()}
-                renderRightButton={this.renderEmptyButton()}
               />
 
               <Scene
@@ -239,7 +234,6 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(CreateWalletReviewScene)}
                 renderTitle={<HeaderTitle title={s.strings.title_create_wallet} />}
                 renderLeftButton={this.renderBackButton()}
-                renderRightButton={this.renderEmptyButton()}
               />
 
               <Scene
@@ -312,7 +306,6 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 component={ifLoggedIn(ManageTokens)}
                 renderTitle={<HeaderTitle title={s.strings.title_manage_tokens} />}
-                renderRightButton={this.renderEmptyButton()}
                 animation="fade"
                 duration={600}
               />
@@ -322,7 +315,6 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 onLeft={Actions.pop}
                 renderLeftButton={this.renderBackButton()}
-                renderRightButton={this.renderEmptyButton()}
                 renderTitle={<HeaderTitle title={s.strings.title_add_token} />}
               />
               <Scene
@@ -330,7 +322,6 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(EditTokenScene)}
                 navTransparent
                 renderLeftButton={this.renderBackButton()}
-                renderRightButton={this.renderEmptyButton()}
                 renderTitle={<HeaderTitle title={s.strings.title_edit_token} />}
               />
               <Scene
@@ -339,7 +330,6 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(TransactionsExportScene)}
                 renderTitle={<HeaderTitle title={s.strings.title_export_transactions} />}
                 renderLeftButton={this.renderBackButton(s.strings.title_wallets)}
-                renderRightButton={this.renderEmptyButton()}
               />
             </Stack>
 
@@ -403,8 +393,6 @@ export class MainComponent extends React.Component<Props> {
                 hideTabBar
                 component={ifLoggedIn(CryptoExchangeQuoteProcessingScreenComponent)}
                 renderTitle={<HeaderTitle title={s.strings.title_exchange} />}
-                renderLeftButton={this.renderEmptyButton()}
-                renderRightButton={this.renderEmptyButton()}
               />
               <Scene
                 key={Constants.EXCHANGE_QUOTE_SCENE}
@@ -458,7 +446,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(ManageTokens)}
               renderTitle={<HeaderTitle title={s.strings.title_manage_tokens} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
             />
 
             <Scene
@@ -467,7 +454,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(AddToken)}
               renderTitle={<HeaderTitle title={s.strings.title_add_token} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
             />
           </Stack>
 
@@ -491,7 +477,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(SettingsScene)}
               renderTitle={<HeaderTitle title={s.strings.title_settings} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
             />
             <Scene
               key={Constants.CHANGE_PASSWORD}
@@ -499,7 +484,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(ChangePasswordConnector)}
               renderTitle={<HeaderTitle title={s.strings.title_change_password} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
             />
             <Scene
               key={Constants.CHANGE_PIN}
@@ -507,7 +491,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(ChangePinConnector)}
               renderTitle={<HeaderTitle title={s.strings.title_change_pin} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
             />
             <Scene
               key={Constants.OTP_SETUP}
@@ -515,7 +498,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(OtpSettingsScene)}
               renderTitle={<HeaderTitle title={s.strings.title_otp} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
             />
             <Scene
               key={Constants.RECOVER_PASSWORD}
@@ -523,7 +505,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(PasswordRecoveryConnector)}
               renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
             />
             <Scene
               key={Constants.SPENDING_LIMITS}
@@ -531,7 +512,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(SpendingLimitsConnector)}
               renderTitle={<HeaderTitle title={s.strings.spending_limits} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
             />
             <Scene
               key={Constants.EXCHANGE_SETTINGS}
@@ -539,7 +519,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(SwapSettingsScene)}
               renderTitle={<HeaderTitle title={s.strings.settings_exchange_settings} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
             />
             <Scene
               key={Constants.CURRENCY_SETTINGS}
@@ -547,7 +526,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(CurrencySettingsScene)}
               renderTitle={props => <CurrencySettingsTitle currencyInfo={props.currencyInfo} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
             />
             <Scene
               key={Constants.PROMOTION_SETTINGS}
@@ -555,7 +533,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(PromotionSettingsScene)}
               renderTitle={<HeaderTitle title={s.strings.title_promotion_settings} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
             />
             <Scene
               key={Constants.DEFAULT_FIAT_SETTING}
@@ -563,7 +540,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(DefaultFiatSettingScene)}
               renderTitle={<HeaderTitle title={s.strings.title_default_fiat} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
             />
             <Scene
               key={Constants.NOTIFICATION_SETTINGS}
@@ -571,7 +547,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(NotificationScene)}
               renderTitle={<HeaderTitle title={s.strings.settings_notifications} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
             />
             <Scene
@@ -580,7 +555,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(CurrencyNotificationScene)}
               renderTitle={props => <CurrencySettingsTitle currencyInfo={props.currencyInfo} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -603,7 +577,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(TermsOfServiceComponent)}
               renderTitle={<HeaderTitle title={s.strings.title_terms_of_service} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -639,7 +612,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(FioAddressRegisterSelectWalletConnector)}
               renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -651,7 +623,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(FioDomainRegisterScene)}
               renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
             />
             <Scene
@@ -660,7 +631,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(FioDomainRegisterSelectWalletScene)}
               renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
             />
             <Scene
@@ -669,7 +639,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(FioNameConfirmScene)}
               renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -681,7 +650,6 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(FioNameConfirmScene)}
               renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -759,17 +727,12 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(FioSentRequestConnector)}
               renderTitle={<HeaderTitle title={s.strings.title_fio_sent_request_details} />}
               renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
             />
           </Stack>
         </Scene>
       </Drawer>
     )
-  }
-
-  renderEmptyButton = () => {
-    return <BackButton />
   }
 
   renderBackButton = (label: string = s.strings.title_back) => {
