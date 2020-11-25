@@ -14,7 +14,8 @@ import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
 import { Airship } from '../services/AirshipInstance.js'
 
 type OwnProps = {
-  showWalletNameOnly?: boolean
+  showWalletNameOnly?: boolean,
+  title?: string
 }
 
 type StateProps = {
@@ -37,7 +38,7 @@ class HeaderWalletSelectorComponent extends React.PureComponent<Props> {
     })
   }
 
-  renderTitle = () => {
+  renderWalletName = () => {
     const styles = getStyles(this.props.theme)
     if (this.props.selectedWalletName) {
       return (
@@ -51,14 +52,14 @@ class HeaderWalletSelectorComponent extends React.PureComponent<Props> {
     }
   }
 
+  renderWalletNameSection = () => {
+    return this.props.showWalletNameOnly ? this.renderWalletName() : <ArrowDownTextIconButton onPress={this.handlePress} title={this.renderWalletName()} />
+  }
+
   render() {
-    const { showWalletNameOnly, theme } = this.props
+    const { title, theme } = this.props
     const styles = getStyles(theme)
-    return (
-      <View style={styles.container}>
-        {showWalletNameOnly ? this.renderTitle() : <ArrowDownTextIconButton onPress={this.handlePress} title={this.renderTitle()} />}
-      </View>
-    )
+    return <View style={styles.container}>{title ? <EdgeText>{title}</EdgeText> : this.renderWalletNameSection()}</View>
   }
 }
 
