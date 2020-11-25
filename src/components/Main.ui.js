@@ -63,7 +63,6 @@ import T from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import BackButton from '../modules/UI/components/Header/Component/BackButton.ui'
 import { ExitButton } from '../modules/UI/components/Header/Component/ExitButton.js'
 import HelpButton from '../modules/UI/components/Header/Component/HelpButton.ui.js'
-import WalletName from '../modules/UI/components/Header/WalletName/WalletNameConnector.js'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
@@ -426,7 +425,7 @@ export class MainComponent extends React.Component<Props> {
               hideTabBar
               panHandlers={null}
               component={ifLoggedIn(SendConfirmation)}
-              renderTitle={this.renderWalletName()}
+              renderTitle={<HeaderWalletSelector showWalletNameOnly />}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderSendConfirmationButton()}
             />
@@ -770,14 +769,6 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
         </Scene>
       </Drawer>
-    )
-  }
-
-  renderWalletName = () => {
-    return (
-      <View style={styles.titleWrapper}>
-        <WalletName />
-      </View>
     )
   }
 
