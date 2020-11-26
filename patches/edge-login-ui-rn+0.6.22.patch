@@ -1,0 +1,29 @@
+diff --git a/node_modules/edge-login-ui-rn/src/components/screens/PasswordLoginScreen.js b/node_modules/edge-login-ui-rn/src/components/screens/PasswordLoginScreen.js
+index ab0f805..4a5e857 100644
+--- a/node_modules/edge-login-ui-rn/src/components/screens/PasswordLoginScreen.js
++++ b/node_modules/edge-login-ui-rn/src/components/screens/PasswordLoginScreen.js
+@@ -153,18 +153,18 @@ class PasswordLoginScreenComponent extends React.Component<Props, State> {
+
+   render() {
+     return (
+-      <KeyboardAwareScrollView
+-        style={this.style.container}
+-        keyboardShouldPersistTaps="always"
+-        contentContainerStyle={this.style.mainScrollView}
+-      >
++      // <KeyboardAwareScrollView
++      //   style={this.style.container}
++      //   keyboardShouldPersistTaps="always"
++      //   contentContainerStyle={this.style.mainScrollView}
++      // >
+         <BackgroundImage
+           src={this.props.backgroundImage || Assets.LOGIN_BACKGROUND}
+           style={this.style.backgroundImage}
+           content={this.renderOverImage()}
+           callback={this.noFocus}
+         />
+-      </KeyboardAwareScrollView>
++      // </KeyboardAwareScrollView>
+     )
+   }
+
