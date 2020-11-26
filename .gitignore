@@ -24,7 +24,6 @@ flow_coverage/
 # Gui plugins
 /android/app/src/main/assets/plugins/
 /ios/plugins/
-/copy-bitrefill.sh
 /copy-wyre.sh
 /copy-simplex.sh
 
