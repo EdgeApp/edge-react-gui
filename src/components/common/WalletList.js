@@ -82,7 +82,7 @@ class WalletListComponent extends React.PureComponent<Props> {
           if (nativeBalances.hasOwnProperty(currencyCode)) {
             if (currencyCode !== wallet.currencyCode && enabledNotHiddenTokens.indexOf(currencyCode) >= 0) {
               walletList.push({
-                id: walletId,
+                id: `${walletId}:${currencyCode}`,
                 fullCurrencyCode: `${wallet.currencyCode}-${currencyCode}`,
                 balance: nativeBalances[currencyCode]
               })
@@ -131,7 +131,7 @@ class WalletListComponent extends React.PureComponent<Props> {
 
   renderRow = (data: FlatListItem<WalletListItem>) => {
     const { exchangeRates, settings, showBalance, wallets } = this.props
-    const walletId = data.item.id
+    const walletId = data.item.id.replace(/:.*/, '')
     const guiWallet = wallets[walletId]
 
     if (guiWallet == null || !data.item.fullCurrencyCode || !data.item.balance) {
