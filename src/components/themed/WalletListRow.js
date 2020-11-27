@@ -29,6 +29,7 @@ type Props = {
   fiatBalanceSymbol: string,
   isToken: boolean,
   publicAddress: string,
+  showSlidingTutorial: boolean,
   selectWallet(walletId: string, currencyCode: string): void,
   symbolImage?: string,
   walletId: string,
@@ -39,14 +40,24 @@ type Props = {
 }
 
 type State = {
-  swipeDirection: 'left' | 'right' | null
+  swipeDirection: 'left' | 'right' | null,
+  shownSlidingTutorial: boolean
 }
 
 class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, State> {
   constructor(props) {
     super(props)
     this.state = {
-      swipeDirection: null
+      swipeDirection: null,
+      shownSlidingTutorial: false
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.showSlidingTutorial && !this.state.shownSlidingTutorial) {
+      const { swipeRow, theme } = this.props
+      swipeRow.manuallySwipeRow(theme.rem(-6.25))
+      this.setState({ shownSlidingTutorial: true })
     }
   }
 

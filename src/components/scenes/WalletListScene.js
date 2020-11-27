@@ -1,5 +1,6 @@
 // @flow
 
+import type { Disklet } from 'disklet'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -16,9 +17,12 @@ import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Set
 import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
+import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { PromoCard } from '../themed/PromoCard.js'
@@ -32,7 +36,9 @@ import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 type StateProps = {
   activeWalletIds: string[],
   exchangeRates: Object,
-  wallets: { [walletId: string]: GuiWallet }
+  userId: string,
+  wallets: { [walletId: string]: GuiWallet },
+  disklet: Disklet
 }
 
 type DispatchProps = {
@@ -43,22 +49,47 @@ type DispatchProps = {
 type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
-  sorting: boolean
+  sorting: boolean,
+  showSlidingTutorial: boolean
 }
 
 class WalletListComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      sorting: false
+      sorting: false,
+      showSlidingTutorial: false
     }
+  }
+
+  showTutorial = async () => {
+    const { disklet, userId } = this.props
+    try {
+      const userTutorialList = await getWalletListSlideTutorial(userId, disklet)
+      const tutorialCount = parseInt(userTutorialList[userId].walletListSlideTutorialCount || '0')
+
+      if (tutorialCount < 2) {
+        Airship.show(bridge => (
+          <ButtonsModal bridge={bridge} title={s.strings.wallet_list_swipe_tutorial_title} buttons={{ ok: { label: s.strings.string_ok } }} />
+        ))
+        this.setState({ showSlidingTutorial: true })
+        userTutorialList[userId].walletListSlideTutorialCount = (tutorialCount + 1).toString()
+        await setUserTutorialList(userTutorialList, disklet)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  componentDidMount() {
+    this.showTutorial()
   }
 
   handleSort = () => this.setState({ sorting: true })
 
   render() {
     const { activeWalletIds, theme, wallets } = this.props
-    const { sorting } = this.state
+    const { showSlidingTutorial, sorting } = this.state
     const styles = getStyles(theme)
     const loading = Object.keys(wallets).length <= 0
 
@@ -91,7 +122,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
         <View style={styles.listStack}>
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
             <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
-            <WalletList key="fullList" header={PromoCard} footer={WalletListFooter} />
+            <WalletList key="fullList" header={PromoCard} footer={WalletListFooter} showSlidingTutorial={showSlidingTutorial} />
             <SortableListView
               key="sortList"
               style={StyleSheet.absoltueFill}
@@ -160,7 +191,9 @@ export const WalletListScene = connect(
     return {
       activeWalletIds,
       exchangeRates: state.exchangeRates,
-      wallets: state.ui.wallets.byId
+      userId: state.core.account.id,
+      wallets: state.ui.wallets.byId,
+      disklet: state.core.disklet
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
