@@ -4,8 +4,8 @@ import * as React from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../../components/services/ThemeContext.js'
-import { EdgeText } from '../../../../../components/themed/EdgeText.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../components/services/ThemeContext.js'
+import { EdgeText } from '../../components/themed/EdgeText.js'
 
 const isIos = Platform.OS === 'ios'
 
