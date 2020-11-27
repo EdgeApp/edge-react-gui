@@ -29,6 +29,7 @@ type Props = {
   fiatBalanceSymbol: string,
   isToken: boolean,
   publicAddress: string,
+  openRowLeft: boolean,
   selectWallet(walletId: string, currencyCode: string): void,
   symbolImage?: string,
   walletId: string,
@@ -39,14 +40,24 @@ type Props = {
 }
 
 type State = {
-  swipeDirection: 'left' | 'right' | null
+  swipeDirection: 'left' | 'right' | null,
+  leftRowOpened: boolean
 }
 
 class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, State> {
   constructor(props) {
     super(props)
     this.state = {
-      swipeDirection: null
+      swipeDirection: null,
+      leftRowOpened: false
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.openRowLeft && !this.state.leftRowOpened) {
+      const { swipeRow, theme } = this.props
+      swipeRow.manuallySwipeRow(theme.rem(-6.25))
+      this.setState({ leftRowOpened: true })
     }
   }
 
