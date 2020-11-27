@@ -113,6 +113,7 @@
   "wallet_list_referral_link_currency_loading": "Hang tight. Creating wallet necessary for this promotion",
   "wallet_list_referral_link_ask_wallet_creation": "You need %s wallet for this promotion, do you want to create one?",
   "wallet_list_referral_link_cancelled_wallet_creation": "User did not approve creating wallet for the promotion",
+  "wallet_list_swipe_tutorial_title": "Slide wallets to show more options",
   "create_wallet_choice_instructions": "Create a new wallet, or restore an existing wallet using the private seed?",
   "create_wallet_choice_new_button": "Create New Wallet",
   "create_wallet_import_title": "Import Wallet",
