@@ -6,7 +6,7 @@ import _ from 'lodash'
 import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
@@ -74,7 +74,7 @@ export class CryptoExchangeWalletListRow extends React.Component<Props, LocalSta
     const { denomination, customTokens, settings, exchangeRates } = this.props
     const multiplier = denomination.multiplier
     const preliminaryCryptoAmount = truncateDecimals(bns.div(props.wallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
-    const cryptoBalance = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+    const cryptoBalance = formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
     const enabledTokens = props.wallet.enabledTokens
     const wallet = props.wallet
 

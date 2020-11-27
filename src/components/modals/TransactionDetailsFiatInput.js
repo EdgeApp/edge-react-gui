@@ -5,7 +5,7 @@ import * as React from 'react'
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -46,7 +46,7 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
       const fixedAmount = bns.toFixed(absAmount, 2, 2)
       this.changeAmount(fixedAmount)
     } else {
-      this.changeAmount(intl.formatNumber('0.00'))
+      this.changeAmount(formatNumber('0.00'))
     }
   }
 

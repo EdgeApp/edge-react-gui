@@ -6,7 +6,7 @@ import { Actions } from 'react-native-router-flux'
 
 import fioAddressDetailsIcon from '../../assets/images/details_fioAddress.png'
 import * as Constants from '../../constants/SceneKeys'
-import * as intl from '../../locales/intl.js'
+import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -63,7 +63,7 @@ export class FioAddressRegisteredScene extends React.Component<Props> {
             <T style={styles.title}>{fioName}</T>
             <T style={styles.text}>
               {`${s.strings.fio_address_details_screen_expires} `}
-              {intl.formatExpDate(expiration)}
+              {formatDate(expiration)}
             </T>
           </View>
           {this.renderButton()}

@@ -8,7 +8,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import * as Constants from '../../constants/indexConstants'
-import * as intl from '../../locales/intl.js'
+import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
 import { findWalletByFioAddress } from '../../modules/FioAddress/util'
@@ -69,7 +69,7 @@ export class FioAddressDetailsScene extends React.Component<Props, LocalState> {
     const { fioAddressName, expiration } = this.props
     const { fioWallet } = this.state
     if (fioWallet) {
-      Actions[Constants.FIO_ADDRESS_SETTINGS]({ fioWallet, fioAddressName, expiration: intl.formatExpDate(expiration), refreshAfterRenew: true })
+      Actions[Constants.FIO_ADDRESS_SETTINGS]({ fioWallet, fioAddressName, expiration: formatDate(expiration), refreshAfterRenew: true })
     } else {
       showError(s.strings.fio_wallet_missing_for_fio_address)
     }
@@ -115,7 +115,7 @@ export class FioAddressDetailsScene extends React.Component<Props, LocalState> {
       <SceneWrapper background="header">
         <T style={styles.expiration}>
           {`${s.strings.fio_address_details_screen_expires} `}
-          {intl.formatExpDate(expiration)}
+          {formatDate(expiration)}
         </T>
         <View style={styles.viewGrey}>
           {this.renderAccountSettings()}

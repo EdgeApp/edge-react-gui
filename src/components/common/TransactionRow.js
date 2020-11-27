@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import receivedTypeImage from '../../assets/images/transactions/transaction-type-received.png'
 import sentTypeImage from '../../assets/images/transactions/transaction-type-sent.png'
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import type { ContactsState } from '../../reducers/ContactsReducer'
@@ -102,14 +102,14 @@ export class TransactionRowComponent extends React.Component<Props, State> {
 
     const stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
 
-    const amountString = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6))
+    const amountString = formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6))
     const fiatSymbol = this.props.fiatSymbol || ''
     let fiatAmountString
     if (tx.metadata && tx.metadata.amountFiat) {
       fiatAmountString = bns.abs(tx.metadata.amountFiat.toFixed(2))
-      fiatAmountString = intl.formatNumber(bns.toFixed(fiatAmountString, 2, 2), { toFixed: 2 })
+      fiatAmountString = formatNumber(bns.toFixed(fiatAmountString, 2, 2), { toFixed: 2 })
     } else {
-      fiatAmountString = intl.formatNumber('0.00', { toFixed: 2 })
+      fiatAmountString = formatNumber('0.00', { toFixed: 2 })
     }
 
     const walletBlockHeight = this.props.walletBlockHeight || 0

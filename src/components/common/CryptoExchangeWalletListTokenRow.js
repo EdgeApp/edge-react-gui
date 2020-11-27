@@ -6,7 +6,7 @@ import * as React from 'react'
 import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -53,7 +53,7 @@ class CryptoExchangeWalletListTokenRowConnected extends React.Component<Props, L
   render() {
     const multiplier = this.props.displayDenomination ? this.props.displayDenomination.multiplier : '0'
     const preliminaryCryptoAmount = truncateDecimals(bns.div(this.props.nativeAmount, multiplier, DIVIDE_PRECISION), 6)
-    const cryptoBalance = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6))
+    const cryptoBalance = formatNumber(decimalOrZero(preliminaryCryptoAmount, 6))
     return (
       <TouchableHighlight underlayColor={THEME.COLORS.TRANSPARENT} onPress={this.onPress}>
         <View style={[styles.containerToken, styles.rowContainerTop]}>

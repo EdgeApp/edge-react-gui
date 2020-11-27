@@ -185,7 +185,7 @@ export function formatToNativeNumber(value: string, options?: IntlNumberFormatOp
  * @param monthShort
  * @returns {string}
  */
-export function formatExpDate(expiration: Date | string, monthShort?: boolean = false): string {
+export function formatDate(expiration: Date | string, monthShort?: boolean = false): string {
   const expirationDate = new Date(expiration)
 
   return new Intl.DateTimeFormat(locale.localeIdentifier.replace('_', '-'), {

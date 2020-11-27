@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
-import * as intl from '../../locales/intl.js'
+import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
@@ -129,7 +129,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         </View>
         <View style={styles.info}>
           <T style={styles.title}>{s.strings.fio_address_details_screen_expires}</T>
-          <T style={styles.content}>{intl.formatExpDate(expiration)}</T>
+          <T style={styles.content}>{formatDate(expiration)}</T>
         </View>
         {showVisibility && (
           <FioActionSubmit
