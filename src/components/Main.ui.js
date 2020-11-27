@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Image, TouchableWithoutFeedback, YellowBox } from 'react-native'
+import { YellowBox } from 'react-native'
 import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -10,7 +10,6 @@ import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
 import { checkAndShowGetCryptoModal } from '../actions/ScanActions.js'
 import { openDrawer } from '../actions/ScenesActions.js'
 import { showReEnableOtpModal } from '../actions/SettingsActions.js'
-import MenuIcon from '../assets/images/MenuButton/menu.png'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
 import { CreateWalletImportScene } from '../components/scenes/CreateWalletImportScene.js'
 import { CreateWalletReviewScene } from '../components/scenes/CreateWalletReviewScene.js'
@@ -70,6 +69,7 @@ import { AirshipToast } from './common/AirshipToast.js'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle.js'
 import { handlePluginBack, renderPluginBackButton } from './navigation/GuiPluginBackButton.js'
 import { HeaderTitle } from './navigation/HeaderTitle.js'
+import { SideMenuButton } from './navigation/SideMenuButton.js'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
@@ -167,7 +167,7 @@ export class MainComponent extends React.Component<Props> {
         component={ifLoggedIn(TransactionDetailsScene)}
         renderTitle={TransactionDetailsTitle}
         renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-        renderRightButton={this.renderMenuButton()}
+        renderRightButton={<SideMenuButton />}
       />
     )
   }
@@ -185,7 +185,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(WalletListScene)}
                 renderTitle={<HeaderTitle title={s.strings.title_wallets} />}
                 renderLeftButton={<HeaderTextButton type="help" />}
-                renderRightButton={this.renderMenuButton()}
+                renderRightButton={<SideMenuButton />}
               />
 
               <Scene
@@ -263,7 +263,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(TransactionListConnector)}
                 renderTitle={<HeaderTitle />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_wallets} />}
-                renderRightButton={this.renderMenuButton()}
+                renderRightButton={<SideMenuButton />}
               />
 
               <Scene
@@ -278,7 +278,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(Scan)}
                 renderTitle={<HeaderTitle />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-                renderRightButton={this.renderMenuButton()}
+                renderRightButton={<SideMenuButton />}
               />
 
               <Scene
@@ -297,7 +297,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(FioRequestConfirmationScene)}
                 renderTitle={<HeaderTitle title={s.strings.fio_confirm_request_header} />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-                renderRightButton={this.renderMenuButton()}
+                renderRightButton={<SideMenuButton />}
               />
 
               <Scene
@@ -340,7 +340,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(GuiPluginListScene)}
                 renderTitle={<HeaderTitle title={s.strings.title_plugin_buy} />}
                 renderLeftButton={<HeaderTextButton type="help" />}
-                renderRightButton={this.renderMenuButton()}
+                renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
                 direction="buy"
               />
@@ -362,7 +362,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(GuiPluginListScene)}
                 renderTitle={<HeaderTitle title={s.strings.title_plugin_sell} />}
                 renderLeftButton={<HeaderTextButton type="help" />}
-                renderRightButton={this.renderMenuButton()}
+                renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
                 direction="sell"
               />
@@ -384,7 +384,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(CryptoExchangeScene)}
                 renderTitle={<HeaderTitle title={s.strings.title_exchange} />}
                 renderLeftButton={this.renderExchangeButton()}
-                renderRightButton={this.renderMenuButton()}
+                renderRightButton={<SideMenuButton />}
                 onEnter={() => this.props.checkEnabledExchanges()}
               />
               <Scene
@@ -400,7 +400,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(CryptoExchangeQuoteConnector)}
                 renderTitle={<HeaderTitle title={s.strings.title_exchange} />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-                renderRightButton={this.renderMenuButton()}
+                renderRightButton={<SideMenuButton />}
               />
             </Stack>
           </Tabs>
@@ -588,7 +588,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(FioAddressListConnector)}
               renderTitle={<HeaderTitle title={s.strings.title_fio_names} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-              renderRightButton={this.renderMenuButton()}
+              renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -600,7 +600,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(FioAddressRegisterConnector)}
               renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-              renderRightButton={this.renderMenuButton()}
+              renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -661,7 +661,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(FioAddressDetailsConnector)}
               renderTitle={<HeaderTitle title={s.strings.title_fio_address} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-              renderRightButton={this.renderMenuButton()}
+              renderRightButton={<SideMenuButton />}
             />
             <Scene
               key={Constants.FIO_CONNECT_TO_WALLETS_CONFIRM}
@@ -669,7 +669,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(FioConnectWalletConfirmConnector)}
               renderTitle={<HeaderTitle title={s.strings.title_fio_connect_to_wallet} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-              renderRightButton={this.renderMenuButton()}
+              renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -681,7 +681,7 @@ export class MainComponent extends React.Component<Props> {
               component={FioAddressSettingsScene}
               renderTitle={<HeaderTitle title={s.strings.title_fio_address_settings} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-              renderRightButton={this.renderMenuButton()}
+              renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -692,7 +692,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               component={ifLoggedIn(FioAddressRegisteredScene)}
               renderTitle={<HeaderTitle title={s.strings.title_fio_address} />}
-              renderRightButton={this.renderMenuButton()}
+              renderRightButton={<SideMenuButton />}
             />
           </Stack>
 
@@ -703,7 +703,7 @@ export class MainComponent extends React.Component<Props> {
               component={FioDomainSettingsScene}
               renderTitle={<HeaderTitle title={s.strings.title_fio_domain_settings} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-              renderRightButton={this.renderMenuButton()}
+              renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -715,7 +715,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(FioRequestListConnector)}
               renderTitle={<HeaderTitle title={s.strings.drawer_fio_requests} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-              renderRightButton={this.renderMenuButton()}
+              renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
             />
           </Stack>
@@ -732,14 +732,6 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
         </Scene>
       </Drawer>
-    )
-  }
-
-  renderMenuButton = () => {
-    return (
-      <TouchableWithoutFeedback onPress={this.props.openDrawer}>
-        <Image source={MenuIcon} />
-      </TouchableWithoutFeedback>
     )
   }
 
