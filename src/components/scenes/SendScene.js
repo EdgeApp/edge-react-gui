@@ -129,7 +129,24 @@ class SendComponent extends React.PureComponent<Props, State> {
       const { fioDomain, fioWallet } = this.props
       if (!fioWallet || !fioDomain) return showError(s.strings.fio_wallet_missing_for_fio_domain)
       try {
-        await fioWallet.otherMethods.fioAction('transferFioDomain', { fioDomain, newOwnerKey: recipientAddress, maxFee: amount })
+        const transferResult = await fioWallet.otherMethods.fioAction('transferFioDomain', { fioDomain, newOwnerKey: recipientAddress, maxFee: amount })
+
+        try {
+          await fioWallet.saveTx({
+            txid: transferResult.transaction_id,
+            date: new Date().getTime(),
+            currencyCode: fioWallet.currencyInfo.currencyCode,
+            blockHeight: transferResult.block_num,
+            nativeAmount: `-${amount}`,
+            networkFee: `${amount}`,
+            parentNetworkFee: '0',
+            signedTx: '',
+            ourReceiveAddresses: [],
+            otherParams: {}
+          })
+        } catch (e) {
+          console.log(e)
+        }
 
         const { theme } = this.props
         const styles = getStyles(theme)
