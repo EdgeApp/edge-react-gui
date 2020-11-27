@@ -144,19 +144,6 @@ export const truncateDecimals = (input: string, precision: number, allowBlank: b
   return precision > 0 ? `${integers}.${decimals.slice(0, precision)}` : integers
 }
 
-/**
- * @deprecated
- * @param input
- * @returns {string}
- */
-export const formatNumber = (input: string): string => {
-  let out = input.replace(/^0+/, '')
-  if (out.startsWith('.')) {
-    out = '0' + out
-  }
-  return out
-}
-
 export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   if (gte(input, '1')) {
     // do nothing to numbers greater than one
