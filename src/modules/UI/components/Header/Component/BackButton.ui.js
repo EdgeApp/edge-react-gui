@@ -4,8 +4,8 @@ import * as React from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import T from '../../../components/FormattedText/FormattedText.ui.js'
-import styles from '../style'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../../components/services/ThemeContext.js'
+import { EdgeText } from '../../../../../components/themed/EdgeText.js'
 
 const isIos = Platform.OS === 'ios'
 
@@ -14,25 +14,47 @@ export type Props = {
   onPress: () => mixed,
   label?: string
 }
-export default class BackButton extends React.Component<Props> {
+
+class BackButtonComponent extends React.PureComponent<Props & ThemeProps> {
   static defaultProps = {
     withArrow: false,
     onPress: () => {}
   }
 
-  render() {
-    const { withArrow } = this.props
-    const icon = isIos ? (
-      <IonIcon size={22} name="ios-arrow-back" style={styles.backIconStyle} />
+  renderIcon = () => {
+    const { theme } = this.props
+    const styles = getStyles(theme)
+    return isIos ? (
+      <IonIcon size={theme.rem(1.25)} color={this.props.theme.icon} name="ios-arrow-back" style={styles.backIconStyle} />
     ) : (
-      <IonIcon size={22} name="md-arrow-back" style={[styles.backIconStyle, styles.backIconAndroid]} />
+      <IonIcon size={theme.rem(1.25)} color={this.props.theme.icon} name="md-arrow-back" style={styles.backIconAndroid} />
     )
+  }
 
+  render() {
+    const { label, theme, withArrow } = this.props
+    const styles = getStyles(theme)
     return (
-      <TouchableOpacity style={styles.backButton} onPress={this.props.onPress}>
-        {withArrow && icon}
-        {withArrow && !isIos ? null : <T style={styles.sideText}>{this.props.label}</T>}
+      <TouchableOpacity style={styles.container} onPress={this.props.onPress}>
+        {withArrow && this.renderIcon()}
+        {withArrow && !isIos ? null : <EdgeText>{label || ''}</EdgeText>}
       </TouchableOpacity>
     )
   }
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  backIconStyle: {
+    paddingLeft: theme.rem(0.5),
+    paddingRight: theme.rem(0.25)
+  },
+  backIconAndroid: {
+    padding: theme.rem(1)
+  }
+}))
+
+export const BackButton = withTheme(BackButtonComponent)
