@@ -370,9 +370,9 @@ export class FioRequestList extends React.Component<Props, LocalState> {
 
   renderDropUp = async (selectedFioPendingRequest: FioRequest) => {
     const { onSelectWallet } = this.props
-    const { chain_code, token_code } = selectedFioPendingRequest.content
-    const chainCode = chain_code.toUpperCase()
-    const tokenCode = token_code.toUpperCase()
+    const { content } = selectedFioPendingRequest
+    const chainCode = content.chain_code.toUpperCase()
+    const tokenCode = content.token_code.toUpperCase()
     const allowedFullCurrencyCode = chainCode !== tokenCode && tokenCode && tokenCode !== '' ? [`${chainCode}:${tokenCode}`] : [chainCode]
 
     const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (

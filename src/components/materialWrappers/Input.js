@@ -57,12 +57,15 @@ class Input extends React.Component<Props, State> {
   }
 
   textInput: TextField
-  UNSAFE_componentWillMount() {
+
+  constructor(props: Props) {
+    super(props)
     this.textInput = null
-    this.setState({
+    const { autoFocus } = props
+    this.state = {
       inputText: '',
-      autoFocus: this.props.autoFocus
-    })
+      autoFocus
+    }
   }
 
   componentDidMount() {

@@ -56,11 +56,13 @@ class InputWithAutoFocus extends React.Component<Props, State> {
   }
 
   textInput: TextField
-  UNSAFE_componentWillMount() {
+
+  constructor(props: Props) {
+    super(props)
     this.textInput = null
-    this.setState({
+    this.state = {
       inputText: ''
-    })
+    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: any) {

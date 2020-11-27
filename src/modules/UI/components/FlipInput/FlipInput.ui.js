@@ -78,7 +78,7 @@ export default class FlipInput extends React.Component<Props, State> {
     }
   }
 
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
     this.animatedValue = new Animated.Value(0)
     this.frontInterpolate = this.animatedValue.interpolate({
       inputRange: [0, 1],
