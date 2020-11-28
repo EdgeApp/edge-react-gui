@@ -34,6 +34,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   EBST: s.strings.string_first_eboost_wallet_name,
   EOS: s.strings.string_first_eos_wallet_name,
   TLOS: s.strings.string_first_telos_wallet_name,
+  WAX: s.strings.string_first_wax_wallet_name,
   ETH: s.strings.string_first_ethereum_wallet_name,
   FIO: s.strings.string_first_fio_wallet_name,
   FTC: s.strings.string_first_feather_coin_wallet_name,
@@ -107,7 +108,9 @@ export const WALLET_TYPE_ORDER = [
   'wallet:smartcash',
   'wallet:groestlcoin',
   'wallet:zcoin',
-  'wallet:ufo'
+  'wallet:ufo',
+  'wallet:telos',
+  'wallet:wax'
 ]
 
 // Put these in reverse order of preference
@@ -137,6 +140,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   SMART: 'smartcash',
   TBTC: 'bitcointestnet',
   TLOS: 'telos',
+  WAX: 'wax',
   UFO: 'ufo',
   VTC: 'vertcoin',
   XLM: 'stellar',
@@ -167,6 +171,7 @@ type SpecialCurrencyInfo = {
       identifierKeyboardType: string
     },
     showEarnInterestCard?: boolean,
+    isRbfSupported?: boolean,
     minimumPopupModals?: {
       minimumNativeBalance: string,
       modalMessage: string
@@ -255,7 +260,9 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
-    }
+    },
+    isCustomTokensSupported: true,
+    isTokensSupported: true
   },
   TLOS: {
     isAccountActivationRequired: true,
@@ -270,7 +277,26 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
-    }
+    },
+    isCustomTokensSupported: true,
+    isTokensSupported: true
+  },
+  WAX: {
+    isAccountActivationRequired: false,
+    dummyPublicAddress: 'edgecreator2',
+    needsAccountNameSetup: false,
+    noChangeMiningFee: true,
+    uniqueIdentifier: {
+      addButtonText: s.strings.unique_identifier_dropdown_option_memo,
+      identifierName: s.strings.unique_identifier_memo,
+      identifierKeyboardType: 'default'
+    },
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
+    },
+    isCustomTokensSupported: true,
+    isTokensSupported: true
   },
   ETH: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
@@ -282,7 +308,8 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     },
     isCustomTokensSupported: true,
     isTokensSupported: true,
-    showEarnInterestCard: false
+    showEarnInterestCard: false,
+    isRbfSupported: true
   },
   ETC: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
@@ -334,6 +361,7 @@ export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
     showEarnInterestCard: false
   },
   FIO: {
+    dummyPublicAddress: 'FIO4uX8tSuBZyHJmpPfc5Q6WrZ9eXd33wdgfWvfJ2fjGsg9yH4Dkd',
     noChangeMiningFee: true,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
@@ -373,7 +401,7 @@ export const WALLET_LIST_MENU: Array<{
     value: 'split'
   },
   {
-    currencyCodes: ['ETH', 'RBTC'],
+    currencyCodes: ['ETH', 'RBTC', 'EOS', 'TLOS', 'WAX'],
     label: s.strings.string_add_edit_tokens,
     value: 'manageTokens'
   },
@@ -395,6 +423,8 @@ export const WALLET_LIST_MENU: Array<{
       'BSV',
       'EBST',
       'EOS',
+      'WAX',
+      'TLOS',
       'DOGE',
       'RVN',
       'RBTC',

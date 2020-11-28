@@ -2,13 +2,12 @@
 import * as React from 'react'
 import { Platform, StyleSheet, TextInput, View } from 'react-native'
 import { isIPhoneX } from 'react-native-safe-area-view'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import { MATERIAL_COMMUNITY, SERVER } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
@@ -75,7 +74,7 @@ export class SetCustomNodesModal extends React.Component<SetCustomNodeModalProps
     return (
       <InteractiveModal legacy isActive={this.props.isActive}>
         <InteractiveModal.Icon>
-          <Icon type={MATERIAL_COMMUNITY} name={SERVER} size={22} style={{ position: 'relative', top: 1 }} />
+          <MaterialCommunityIcon name="server" size={22} style={{ position: 'relative', top: 1 }} />
         </InteractiveModal.Icon>
         <InteractiveModal.Title>
           <Text>{s.strings.settings_set_custom_nodes_modal_title}</Text>

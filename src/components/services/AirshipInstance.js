@@ -52,6 +52,14 @@ export function showError(error: mixed) {
 }
 
 /**
+ * Shows an error warning to the user.
+ * Used when some user-requested operation succeeds but with a warning.
+ */
+export function showWarning(message: string) {
+  return Airship.show(bridge => <AlertDropdown bridge={bridge} message={message} warning />)
+}
+
+/**
  * Shows a message to the user.
  * Used when some user-requested operation succeeds.
  */

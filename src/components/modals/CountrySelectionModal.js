@@ -4,11 +4,11 @@ import { FormField, MaterialInputStyle } from 'edge-components'
 import * as React from 'react'
 import { FlatList, Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { getCountry } from 'react-native-localize'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
-import { COUNTRY_CODES, FLAG, FLAG_LOGO_URL, FONT_AWESOME } from '../../constants/indexConstants'
+import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
 import { type AirshipBridge, AirshipModal, IconCircle } from './modalParts.js'
@@ -79,7 +79,7 @@ export class CountrySelectionModal extends React.Component<CountrySelectionModal
         {gap => (
           <>
             <IconCircle>
-              <Icon type={FONT_AWESOME} name={FLAG} size={36} />
+              <FontAwesomeIcon name="flag-o" size={36} />
             </IconCircle>
             <View style={{ flex: 1, paddingLeft: scale(12), paddingRight: scale(12) }}>
               <FormField

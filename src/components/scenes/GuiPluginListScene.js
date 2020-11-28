@@ -7,6 +7,7 @@ import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { FlatList, Image, Platform, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
@@ -28,12 +29,11 @@ import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLog
 import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
-import { ARROW_RIGHT, COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY, SIMPLE_ICONS } from '../../constants/indexConstants.js'
+import { COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY } from '../../constants/indexConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
@@ -308,7 +308,7 @@ class GuiPluginList extends React.Component<Props, State> {
               {flag}
               <Text style={{ fontSize: scale(16), alignSelf: 'center', paddingLeft: 12 }}>{message}</Text>
             </View>
-            <Icon type={SIMPLE_ICONS} style={{ alignSelf: 'center' }} name={ARROW_RIGHT} />
+            <AntDesignIcon style={{ alignSelf: 'center' }} name="right" size={scale(16)} />
           </View>
         </TouchableWithoutFeedback>
       </View>

@@ -1,13 +1,12 @@
 // @flow
 
 import * as React from 'react'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
-import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import { PrimaryButton } from '../Buttons/PrimaryButton.ui.js'
 import { TertiaryButton } from '../Buttons/TertiaryButton.ui.js'
 import Text from '../FormattedText/FormattedText.ui.js'
-import { Icon } from '../Icon/Icon.ui'
 import { InteractiveModal } from '../Modals/InteractiveModal/InteractiveModal.ui.js'
 import { styles } from './PasswordRecoveryReminderModalStyles.js'
 
@@ -32,7 +31,7 @@ export class PasswordRecoveryReminderModalComponent extends React.Component<Pass
     return (
       <InteractiveModal legacy isActive={isVisible} onModalHide={hidePasswordRecoveryReminderModal}>
         <InteractiveModal.Icon>
-          <Icon style={styles.icon} name={Constants.LOCKED_ICON} type={Constants.ION_ICONS} />
+          <AntDesignIcon style={styles.icon} name="lock" />
         </InteractiveModal.Icon>
         <InteractiveModal.Title>
           <Text>{s.strings.password_recovery_reminder_modal_title}</Text>

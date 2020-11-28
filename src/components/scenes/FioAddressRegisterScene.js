@@ -4,23 +4,24 @@ import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { sprintf } from 'sprintf-js'
 
 import fioAddressIcon from '../../assets/images/list_fioAddress.png'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
+import { FIO_DOMAIN_IS_NOT_PUBLIC, FioError } from '../../modules/FioAddress/util'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { TextAndIconButton, TextAndIconButtonStyle } from '../../modules/UI/components/Buttons/TextAndIconButton.ui.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 import { openLink } from '../../util/utils'
+import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
@@ -182,7 +183,7 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
     }
   }
 
-  checkFioAddress(fioAddress: string, domain: string) {
+  checkFioAddress(fioAddress: string, domain: string, isCustomDomain: boolean = false) {
     this.setState({
       loading: true
     })
@@ -193,8 +194,24 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
         return --this.fioCheckQueue
       }
       this.fioCheckQueue = 0
+      const { fioPlugin } = this.props
+      if (isCustomDomain) {
+        try {
+          const isDomainPublic = fioPlugin.otherMethods ? await fioPlugin.otherMethods.isDomainPublic(domain) : false
+          if (!isDomainPublic) {
+            throw new FioError(s.strings.fio_address_register_domain_is_not_public, FIO_DOMAIN_IS_NOT_PUBLIC)
+          }
+        } catch (e) {
+          if (!e.labelCode || e.name !== 'FioError') {
+            showError(s.strings.fio_connect_wallets_err)
+          }
+          return this.setState({
+            isAvailable: false,
+            loading: false
+          })
+        }
+      }
       try {
-        const { fioPlugin } = this.props
         const fullAddress = `${fioAddress}${Constants.FIO_ADDRESS_DELIMITER}${domain}`
         const isAvailable = fioPlugin.otherMethods ? await fioPlugin.otherMethods.validateAccount(fullAddress) : false
         this.setState({
@@ -261,7 +278,7 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
     Airship.show(bridge => <DomainListModal bridge={bridge} publicDomains={this.state.publicDomains} />).then((response: FioDomain | null) => {
       if (response) {
         this.setState({ selectedDomain: response })
-        this.checkFioAddress(this.state.fioAddress, response.name)
+        this.checkFioAddress(this.state.fioAddress, response.name, !response.walletId)
       }
     })
   }
@@ -291,10 +308,10 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
 
     let icon = null
     if ((!isValid || isAvailable === false) && touched) {
-      icon = <Icon style={[styles.statusIcon, styles.statusIconError]} type={Constants.MATERIAL_COMMUNITY} name={Constants.CLOSE_CIRCLE_ICON} size={25} />
+      icon = <MaterialCommunityIcon style={[styles.statusIcon, styles.statusIconError]} name="close-circle-outline" size={25} />
     }
     if (isValid && isAvailable && touched) {
-      icon = <Icon style={[styles.statusIcon, styles.statusIconOk]} type={Constants.MATERIAL_COMMUNITY} name={Constants.CHECK_CIRCLE_ICON} size={25} />
+      icon = <MaterialCommunityIcon style={[styles.statusIcon, styles.statusIconOk]} name="check-circle-outline" size={25} />
     }
 
     return <View style={styles.statusIconContainer}>{loading ? <ActivityIndicator style={styles.statusIcon} size="small" /> : icon}</View>
@@ -308,12 +325,9 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
         selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name
       }`
       return (
-        <TextAndIconButton
-          style={{ ...TextAndIconButtonStyle, container: styles.selectWalletBtn }}
-          onPress={this.selectFioWallet}
-          icon={Constants.KEYBOARD_ARROW_DOWN}
-          title={title}
-        />
+        <View style={styles.selectWalletBtn}>
+          <ArrowDownTextIconButton onPress={this.selectFioWallet} title={title} />
+        </View>
       )
     }
   }
@@ -494,6 +508,9 @@ const rawStyles = {
     backgroundColor: THEME.COLORS.GRAY_3
   },
   selectWalletBtn: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginTop: scale(15),
     paddingVertical: scale(10),
     paddingHorizontal: scale(5),

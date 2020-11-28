@@ -55,35 +55,45 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
       this.setState({ connectWalletsLoading: true })
       const newCcWalletMap = { ...ccWalletMap }
       try {
-        const pubAddresses = []
-        walletsToConnect.forEach((wallet: FioConnectionWalletItem) => {
-          pubAddresses.push({
+        const { updatedCcWallets, error } = await updatePubAddressesForFioAddress(
+          fioWallet,
+          fioAddressName,
+          walletsToConnect.map((wallet: FioConnectionWalletItem) => ({
             walletId: wallet.id,
             tokenCode: wallet.currencyCode,
             chainCode: wallet.chainCode,
             publicAddress: wallet.publicAddress
-          })
-        })
-        walletsToDisconnect.forEach((wallet: FioConnectionWalletItem) => {
-          pubAddresses.push({
-            walletId: wallet.id,
-            tokenCode: wallet.currencyCode,
-            chainCode: wallet.chainCode,
-            publicAddress: '0'
-          })
-        })
-        const { updatedCcWallets, error } = await updatePubAddressesForFioAddress(fioWallet, fioAddressName, pubAddresses)
+          }))
+        )
         if (updatedCcWallets.length) {
-          for (const { fullCurrencyCode, walletId, isConnection } of updatedCcWallets) {
-            newCcWalletMap[fullCurrencyCode] = isConnection ? walletId : ''
+          for (const { fullCurrencyCode, walletId } of updatedCcWallets) {
+            newCcWalletMap[fullCurrencyCode] = walletId
           }
           updateConnectedWallets(fioAddressName, newCcWalletMap)
         }
 
-        if (error) {
+        const { updatedCcWallets: removedCcWallets, error: removedError } = await updatePubAddressesForFioAddress(
+          fioWallet,
+          fioAddressName,
+          walletsToDisconnect.map((wallet: FioConnectionWalletItem) => ({
+            walletId: wallet.id,
+            tokenCode: wallet.currencyCode,
+            chainCode: wallet.chainCode,
+            publicAddress: wallet.publicAddress
+          })),
+          false
+        )
+        if (removedCcWallets.length) {
+          for (const { fullCurrencyCode } of removedCcWallets) {
+            newCcWalletMap[fullCurrencyCode] = ''
+          }
+          updateConnectedWallets(fioAddressName, newCcWalletMap)
+        }
+
+        if (error || removedError) {
+          const walletsToConnectLeft = []
+          const walletsToDisconnectLeft = []
           if (updatedCcWallets.length) {
-            const walletsToConnectLeft = []
-            const walletsToDisconnectLeft = []
             for (const walletToConnect of walletsToConnect) {
               if (
                 updatedCcWallets.findIndex(
@@ -93,19 +103,23 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
                 walletsToConnectLeft.push(walletToConnect)
               }
             }
+          }
+          if (removedCcWallets.length) {
             for (const walletToDisconnect of walletsToDisconnect) {
               if (
-                updatedCcWallets.findIndex(
+                removedCcWallets.findIndex(
                   ({ walletId, fullCurrencyCode }) => walletId === walletToDisconnect.id && fullCurrencyCode === walletToDisconnect.fullCurrencyCode
                 ) < 0
               ) {
                 walletsToDisconnectLeft.push(walletToDisconnect)
               }
             }
+          }
+          if (walletsToConnectLeft.length || walletsToDisconnectLeft.length) {
             Actions.refresh({ fioWallet, fioAddressName, walletsToConnect: walletsToConnectLeft, walletsToDisconnect: walletsToDisconnectLeft })
             this.resetSlider()
           }
-          throw error
+          throw error || removedError
         }
         if (walletsToConnect.length) {
           showToast(s.strings.fio_connect_wallets_success)
@@ -136,6 +150,7 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
           }
           return
         }
+        this.resetSlider()
         showError(e.message)
       }
       this.setState({ connectWalletsLoading: false })
@@ -204,7 +219,7 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
               <Slider
                 resetSlider
                 onSlidingComplete={this.confirm}
-                sliderDisabled={!acknowledge}
+                sliderDisabled={!acknowledge || connectWalletsLoading}
                 disabledText={s.strings.send_confirmation_slide_to_confirm}
                 showSpinner={connectWalletsLoading}
               />

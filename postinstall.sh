@@ -16,6 +16,6 @@ if [[ "$unamestr" == 'Darwin' ]]; then
 fi
 
 # Fix Android dependencies:
-npx jetify -r
+npx jetify
 
 node ./scripts/makeNativeHeaders.js

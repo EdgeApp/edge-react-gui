@@ -150,28 +150,28 @@ android {
 }
 
 dependencies {
-    implementation project(':@bugsnag_react-native')
-    implementation project(':@react-native-community_blur')
-    implementation project(':react-native-appearance')
-    implementation project(':@react-native-community_datetimepicker')
-    implementation project(':react-native-localize')
-    implementation project(':@react-native-community_art')
-    implementation project(':@react-native-community_async-storage')
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(':@bugsnag_react-native')
+    implementation project(':@react-native-community_art')
+    implementation project(':@react-native-community_async-storage')
+    implementation project(':@react-native-community_blur')
+    implementation project(':@react-native-community_datetimepicker')
     implementation project(':disklet')
     implementation project(':edge-login-ui-rn')
     implementation project(':ExtraDimensions')
     implementation project(':react-native-app-settings')
+    implementation project(':react-native-appearance')
     implementation project(':react-native-camera')
     implementation project(':react-native-contacts')
     implementation project(':react-native-device-info')
     implementation project(':react-native-fast-crypto')
-    implementation project(':react-native-firebase')
     implementation project(':react-native-fs')
     implementation project(':react-native-linear-gradient')
+    implementation project(':react-native-localize')
     implementation project(':react-native-mail')
+    implementation project(':react-native-mymonero-core')
     implementation project(':react-native-randombytes')
     implementation project(':react-native-share')
     implementation project(':react-native-smart-splash-screen')
@@ -179,27 +179,17 @@ dependencies {
     implementation project(':react-native-tcp')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-webview')
+    implementation project(path: ":@react-native-firebase_analytics")
+    implementation project(path: ":@react-native-firebase_app")
+    implementation project(path: ":@react-native-firebase_iid")
+    implementation project(path: ":@react-native-firebase_messaging")
 
     // Add v8-android - prebuilt libv8android.so into APK
     implementation 'org.chromium:v8-android:+'
 
-    // Firebase dependencies
-    compile "com.google.android.gms:play-services-base:15.0.1"
-    compile "com.google.firebase:firebase-ads:15.0.1"
-    compile "com.google.firebase:firebase-analytics:16.0.1"
-    compile "com.google.firebase:firebase-auth:16.0.3"
-    compile "com.google.firebase:firebase-core:16.0.1"
-    compile "com.google.firebase:firebase-database:16.0.1"
-    compile "com.google.firebase:firebase-firestore:17.1.0"
-    compile "com.google.firebase:firebase-messaging:17.3.0"
-    compile "com.google.firebase:firebase-storage:16.0.1"
-    compile "com.google.firebase:firebase-iid"
-
-    // Background fetching (pre AndroidX version):
-    // https://stackoverflow.com/questions/52521302
-    implementation("android.arch.work:work-runtime:1.0.0") {
-      exclude group: 'com.google.guava', module: 'listenablefuture'
-    }
+    // Background fetching:
+    implementation 'androidx.work:work-runtime:2.0.1'
+    implementation 'com.google.guava:guava:27.1-android'
     implementation 'org.json:json:20190722'
 }
 
@@ -229,12 +219,11 @@ if (hasProperty('storeFile')) {
     android.signingConfigs.release.keyPassword   = "password"
 }
 
-apply plugin: 'com.google.gms.google-services'
-
-com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
-
 // Integrate react-native-vector-icons fonts
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 // Integrate native bugsnag libraries
 apply from: "../../node_modules/@bugsnag/react-native/bugsnag-react-native.gradle"
+
+// Integrate Firebase:
+apply plugin: 'com.google.gms.google-services'

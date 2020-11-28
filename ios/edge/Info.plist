@@ -61,8 +61,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>99999999</string>
-	<key>FirebaseAppDelegateProxyEnabled</key>
-	<string>NO</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NFCReaderUsageDescription</key>
@@ -98,31 +96,26 @@
 	<string>$(PRODUCT_NAME) does not access speech recognition.</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Andale Mono.ttf</string>
-		<string>Arial Black.ttf</string>
-		<string>Arial.ttf</string>
-		<string>Comic Sans MS.ttf</string>
-		<string>Courier New.ttf</string>
-		<string>Georgia.ttf</string>
-		<string>Microsoft Sans Serif.ttf</string>
-		<string>Rubik-Black.ttf</string>
-		<string>Rubik-BlackItalic.ttf</string>
-		<string>Rubik-Bold.ttf</string>
-		<string>Rubik-BoldItalic.ttf</string>
-		<string>Rubik-Italic.ttf</string>
-		<string>Rubik-Light.ttf</string>
-		<string>Rubik-LightItalic.ttf</string>
-		<string>Rubik-Medium.ttf</string>
-		<string>Rubik-MediumItalic.ttf</string>
-		<string>Rubik-Regular.ttf</string>
-		<string>SanFrancisco.ttf</string>
-		<string>SanFranciscoBold.ttf</string>
-		<string>SanFranciscoThin.ttf</string>
-		<string>SF-UI-Text-Regular.otf</string>
-		<string>Skia.ttf</string>
-		<string>Times New Roman.ttf</string>
+		<!-- react-native-vector-icons -->
+		<string>AntDesign.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Feather.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialIcons.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>
-		<string>font.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>Zocial.ttf</string>
+		<string>Fontisto.ttf</string>
+		<!-- Edge fonts -->
+		<string>custom.ttf</string>
+		<string>SF-UI-Text-Regular.otf</string>
 		<string>SourceSansPro-Black.ttf</string>
 		<string>SourceSansPro-BlackItalic.ttf</string>
 		<string>SourceSansPro-Bold.ttf</string>
@@ -135,21 +128,6 @@
 		<string>SourceSansPro-Regular.ttf</string>
 		<string>SourceSansPro-Semibold.ttf</string>
 		<string>SourceSansPro-SemiboldItalic.ttf</string>
-		<string>Entypo.ttf</string>
-		<string>EvilIcons.ttf</string>
-		<string>FontAwesome.ttf</string>
-		<string>Foundation.ttf</string>
-		<string>Ionicons.ttf</string>
-		<string>MaterialIcons.ttf</string>
-		<string>Octicons.ttf</string>
-		<string>SimpleLineIcons.ttf</string>
-		<string>Zocial.ttf</string>
-		<string>Feather.ttf</string>
-		<string>AntDesign.ttf</string>
-		<string>FontAwesome5_Brands.ttf</string>
-		<string>FontAwesome5_Regular.ttf</string>
-		<string>FontAwesome5_Solid.ttf</string>
-		<string>custom.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

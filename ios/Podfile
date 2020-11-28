@@ -22,29 +22,31 @@ target 'edge' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
 
-  # Other dependencies
-  pod 'Firebase/Core', '~> 5.3.0'
-  pod 'Firebase/Messaging'
-
   # React Native linked dependencies
   pod 'BugsnagReactNative', :path => '../node_modules/@bugsnag/react-native'
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
   pod 'disklet', :path => '../node_modules/disklet'
   pod 'edge-login-ui-rn', :path => '../node_modules/edge-login-ui-rn'
+  pod 'react-native-appearance', :path => '../node_modules/react-native-appearance'
+  pod 'react-native-blur', :path => '../node_modules/@react-native-community/blur'
   pod 'react-native-camera', :path => '../node_modules/react-native-camera'
   pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
   pod 'react-native-fast-crypto', :path => '../node_modules/react-native-fast-crypto'
-  pod 'react-native-firebase', :path => '../node_modules/react-native-firebase'
   pod 'react-native-mail', :path => '../node_modules/react-native-mail'
+  pod 'react-native-mymonero-core', :path => '../node_modules/react-native-mymonero-core'
   pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
   pod 'react-native-safari-view', :path => '../node_modules/react-native-safari-view'
   pod 'react-native-smart-splash-screen', :path => '../node_modules/react-native-smart-splash-screen'
-  pod 'TcpSockets', :path => '../node_modules/react-native-tcp'
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
   pod 'ReactNativeART', :path => '../node_modules/@react-native-community/art'
   pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+  pod 'RNFBAnalytics', :path => '../node_modules/@react-native-firebase/analytics'
+  pod 'RNFBApp', :path => '../node_modules/@react-native-firebase/app'
+  pod 'RNFBIid', :path => '../node_modules/@react-native-firebase/iid'
+  pod 'RNFBMessaging', :path => '../node_modules/@react-native-firebase/messaging'
   pod 'RNFS', :path => '../node_modules/react-native-fs'
   pod 'RNLocalize', :path => '../node_modules/react-native-localize'
   pod 'RNOpenAppSettings', :path => '../node_modules/react-native-app-settings'
@@ -52,10 +54,6 @@ target 'edge' do
   pod 'RNSound', :path => '../node_modules/react-native-sound'
   pod 'RNStoreReview', :path => '../node_modules/react-native-store-review/ios'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
-
-  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
-
-  pod 'react-native-appearance', :path => '../node_modules/react-native-appearance'
-  pod 'react-native-blur', :path => '../node_modules/@react-native-community/blur'
+  pod 'TcpSockets', :path => '../node_modules/react-native-tcp'
 
 end

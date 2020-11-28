@@ -3,19 +3,21 @@
 import { FormField, MaterialInputStyle } from 'edge-components'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, Image, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import { FlatList, TouchableHighlight, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 import { Actions } from 'react-native-router-flux'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
-import fioAddressIcon from '../../../assets/images/list_fioAddress.png'
-import { type AirshipBridge, AirshipModal, dayText, IconCircle, THEME } from '../../../components/modals/modalParts.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
+import { PrimaryButton } from '../../../components/themed/ThemedButtons.js'
+import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
 import { type RootState } from '../../../types/reduxTypes'
 import type { FioDomain, FlatListItem } from '../../../types/types.js'
-import { scale } from '../../../util/scaling.js'
 import T from '../../UI/components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../UI/components/Icon/Icon.ui'
 import { getFioWallets } from '../../UI/selectors'
 
 type Item = {
@@ -42,7 +44,7 @@ type State = {
   prevDomainsJson: string
 }
 
-type Props = OwnProps & StateProps
+type Props = OwnProps & ThemeProps & StateProps
 
 const newDomainItem = {
   createNew: true,
@@ -50,7 +52,7 @@ const newDomainItem = {
   label: s.strings.fio_address_list_register_domain
 }
 
-class DomainListModalConnected extends React.Component<Props, State> {
+class DomainListModalComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -104,33 +106,38 @@ class DomainListModalConnected extends React.Component<Props, State> {
     return filteredRecords
   }
 
+  selectCustom = (name: string) => {
+    const fioDomain = { ...Constants.FIO_DOMAIN_DEFAULT, name }
+
+    this.props.bridge.resolve(fioDomain)
+  }
+
+  registerNewDomain = () => {
+    this.props.bridge.resolve(null)
+    Actions[Constants.FIO_DOMAIN_REGISTER]()
+  }
+
   selectItem = (value: any) => this.props.bridge.resolve(value)
   renderItem = ({ item }: FlatListItem<Item>) => {
+    const { theme } = this.props
     const { value, label, createNew } = item
+    const styles = getStyles(theme)
     if (createNew) {
       return (
-        <TouchableHighlight onPress={Actions[Constants.FIO_DOMAIN_REGISTER]} underlayColor={THEME.COLORS.TRANSPARENT}>
+        <TouchableHighlight onPress={this.registerNewDomain} underlayColor="transparent">
           <View style={[styles.rowContainerTop, styles.domainListRowContainerTop]}>
-            <View style={styles.walletDetailsContainer}>
-              <View style={styles.walletDetailsRow}>
-                <T style={styles.domainListRowName}>{label}</T>
-                <Icon type={Constants.FONT_AWESOME} name={Constants.ANGLE_RIGHT} size={THEME.rem(1)} />
-              </View>
-            </View>
+            <T style={styles.domainListRowName}>{label}</T>
+            <FontAwesomeIcon name="angle-right" style={{ color: theme.primaryText }} size={theme.rem(1)} />
           </View>
         </TouchableHighlight>
       )
     }
     if (value) {
       return (
-        <TouchableHighlight onPress={() => this.selectItem(value)} underlayColor={THEME.COLORS.TRANSPARENT}>
+        <TouchableHighlight onPress={() => this.selectItem(value)} underlayColor="transparent">
           <View style={[styles.rowContainerTop, styles.domainListRowContainerTop]}>
-            <View style={styles.walletDetailsContainer}>
-              <View style={styles.walletDetailsRow}>
-                <T style={styles.domainListRowName}>{label}</T>
-                <T style={styles.domainListRowFree}>{value.isFree ? s.strings.fio_domain_free : ''}</T>
-              </View>
-            </View>
+            <T style={styles.domainListRowName}>{label}</T>
+            <T style={styles.domainListRowFree}>{value.isFree ? s.strings.fio_domain_free : ''}</T>
           </View>
         </TouchableHighlight>
       )
@@ -141,80 +148,71 @@ class DomainListModalConnected extends React.Component<Props, State> {
   keyExtractor = (item: Item, index: number) => index.toString()
   onSearchFilterChange = (input: string) => this.setState({ input })
   render() {
-    const { bridge } = this.props
+    const { bridge, theme } = this.props
     const { input } = this.state
+    const items = this.getItems()
+    const formFieldStyles = {
+      ...MaterialInputStyle,
+      container: {
+        ...MaterialInputStyle.container,
+        paddingTop: theme.rem(0.25)
+      },
+      textColor: theme.primaryText,
+      tintColor: theme.primaryButton
+    }
     return (
-      <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
-        {gap => (
-          <>
-            <IconCircle>
-              <Image source={fioAddressIcon} style={{ marginLeft: THEME.rem(0.1) }} resizeMode="cover" />
-            </IconCircle>
-            <View style={{ flex: 1 }}>
-              <Text style={{ ...dayText('title'), marginTop: scale(10), marginBottom: 0, paddingHorizontal: scale(60) }}>
-                {s.strings.fio_address_choose_domain_label}
-              </Text>
-              <View style={{ marginHorizontal: THEME.rem(0.75) }}>
-                <FormField autoFocus keyboardType="default" label="" onChangeText={this.onSearchFilterChange} style={MaterialInputStyle} value={input} />
-              </View>
-              <FlatList
-                style={{ flex: 1, marginBottom: -gap.bottom }}
-                contentContainerStyle={{ paddingBottom: gap.bottom }}
-                data={this.getItems()}
-                initialNumToRender={24}
-                keyboardShouldPersistTaps="handled"
-                keyExtractor={this.keyExtractor}
-                renderItem={this.renderItem}
-              />
-            </View>
-          </>
-        )}
-      </AirshipModal>
+      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={0}>
+        <ModalTitle>{s.strings.fio_address_choose_domain_label}</ModalTitle>
+        <View style={{ marginHorizontal: theme.rem(0.75) }}>
+          <FormField
+            autoFocus
+            keyboardType="default"
+            label=""
+            onChangeText={this.onSearchFilterChange}
+            onSubmitEditing={() => this.selectCustom(input)}
+            style={formFieldStyles}
+            value={input}
+          />
+        </View>
+        {!items.length && <PrimaryButton label={s.strings.submit} onPress={() => this.selectCustom(input)} marginRem={1} />}
+        <FlatList data={items} initialNumToRender={24} keyboardShouldPersistTaps="handled" keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
+        <ModalCloseArrow onPress={() => bridge.resolve(null)} />
+      </ThemedModal>
     )
   }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   rowContainerTop: {
     width: '100%',
-    height: scale(76),
+    height: theme.rem(4.75),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: scale(10),
-    paddingRight: scale(10),
-    borderBottomWidth: scale(1),
-    borderBottomColor: THEME.COLORS.GRAY_3
-  },
-  walletDetailsContainer: {
-    flex: 1,
-    flexDirection: 'column'
-  },
-  walletDetailsRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
+    paddingLeft: theme.rem(0.625),
+    paddingRight: theme.rem(0.625),
+    borderBottomWidth: theme.rem(0.05),
+    borderBottomColor: theme.secondaryButtonOutline
   },
   domainListRowName: {
     flex: 1,
-    fontSize: THEME.rem(1),
-    color: THEME.COLORS.SECONDARY
+    fontSize: theme.rem(1),
+    color: theme.primaryText
   },
   domainListRowFree: {
     flex: 1,
-    fontSize: THEME.rem(0.75),
+    fontSize: theme.rem(0.75),
     textTransform: 'uppercase',
-    color: THEME.COLORS.ACCENT_RED,
+    color: theme.negativeText,
     textAlign: 'right'
   },
   domainListRowContainerTop: {
     height: 'auto',
-    paddingLeft: THEME.rem(0.75),
-    paddingRight: THEME.rem(0.75),
-    paddingVertical: THEME.rem(0.75)
+    paddingLeft: theme.rem(0.75),
+    paddingRight: theme.rem(0.75),
+    paddingVertical: theme.rem(0.75)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 export const DomainListModal = connect((state: RootState): StateProps => {
   const { account } = state.core
@@ -225,4 +223,4 @@ export const DomainListModal = connect((state: RootState): StateProps => {
     fioWallets,
     fioPlugin
   }
-})(DomainListModalConnected)
+})(withTheme(DomainListModalComponent))

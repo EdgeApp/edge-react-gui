@@ -2,6 +2,8 @@
 
 import URL from 'url-parse'
 
+import ENV from '../../env.json'
+
 /*
  * All Edge deep-linking features are available through the `edge://`
  * protocol. This protocol comes in three flavors, which are fully equivalent:
@@ -66,6 +68,11 @@ export type ReturnAddressLink = {
   successUri?: string
 }
 
+export type Azteco = {
+  type: 'azteco',
+  uri: string
+}
+
 export type SwapLink = {
   type: 'swap'
   // We may eventually add query parameters to pre-populate currencies.
@@ -78,6 +85,7 @@ export type DeepLink =
   | PromotionLink
   | ReturnAddressLink
   | SwapLink
+  | Azteco
   | {
       type: 'other',
       protocol: string, // Without the ':'
@@ -112,6 +120,21 @@ export function parseDeepLink(uri: string): DeepLink {
     // Extract the coin name from the protocol:
     const coin = url.protocol.slice(0, url.protocol.indexOf('-ret:'))
     return parseReturnAddress(url, coin)
+  }
+
+  // Handle Azte.co URLs
+  if (url.hostname === 'azte.co') {
+    if (ENV.AZTECO_API_KEY == null) throw new Error('Azteco partner ID not provided')
+    const queryMap = { c1: 'CODE_1', c2: 'CODE_2', c3: 'CODE_3', c4: 'CODE_4' }
+    const partnerId = ENV.AZTECO_API_KEY
+    const query = Object.keys(url.query)
+      .map(key => `${encodeURIComponent(queryMap[key] ? queryMap[key] : key)}=${encodeURIComponent(url.query[key])}`)
+      .join('&')
+    const aztecoLink = `${url.protocol}//${url.hostname}/partners/${partnerId}?${query}&ADDRESS=`
+    return {
+      type: 'azteco',
+      uri: aztecoLink
+    }
   }
 
   // Assume anything else is a coin link of some kind:

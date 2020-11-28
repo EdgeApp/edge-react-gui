@@ -177,8 +177,8 @@ export class Request extends React.Component<Props, State> {
       let encodedURI = s.strings.loading
       try {
         encodedURI = nextProps.edgeWallet ? await nextProps.edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
-      } catch (e) {
-        console.log(e)
+      } catch (err) {
+        console.log(err)
         publicAddress = s.strings.loading
         legacyAddress = s.strings.loading
         setTimeout(() => {
@@ -246,7 +246,6 @@ export class Request extends React.Component<Props, State> {
     const qrSize = Dimensions.get('window').height / 4
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
     const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
-
     return (
       <SceneWrapper background="header" hasTabs={false}>
         <View style={styles.exchangeRateContainer}>

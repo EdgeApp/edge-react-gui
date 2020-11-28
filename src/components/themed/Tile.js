@@ -1,8 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { Clipboard, TouchableWithoutFeedback, View } from 'react-native'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import { Clipboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -15,7 +15,8 @@ type OwnProps = {
   error?: boolean,
   onPress?: () => void,
   title: string,
-  type: 'editable' | 'static' | 'touchable' | 'copy'
+  type: 'editable' | 'static' | 'touchable' | 'copy',
+  containerClass?: StyleSheet.Styles
 }
 type Props = OwnProps & ThemeProps
 
@@ -27,15 +28,15 @@ class TileComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { body, children, error, theme, title, type } = this.props
+    const { body, title, children, theme, type, error, containerClass } = this.props
     const styles = getStyles(theme)
     const onPress = type === 'copy' ? () => this.copy() : this.props.onPress
     return (
       <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
-        <View style={styles.container}>
+        <View style={[styles.container, containerClass]}>
           <View style={styles.content}>
-            {type === 'editable' && <FontAwesome name="edit" style={styles.editIcon} />}
-            {type === 'copy' && <FontAwesome name="copy" style={styles.editIcon} />}
+            {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
+            {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
             <Text style={error ? styles.textHeaderError : styles.textHeader}>{title}</Text>
             {typeof body === 'string' && (
               <Text style={styles.textBody} numberOfLines={3}>
@@ -46,7 +47,7 @@ class TileComponent extends React.PureComponent<Props> {
           </View>
           {type === 'touchable' && (
             <View style={styles.iconContainer}>
-              <FontAwesome name="chevron-right" style={styles.arrowIcon} />
+              <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
             </View>
           )}
         </View>

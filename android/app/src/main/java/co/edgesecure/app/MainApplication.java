@@ -3,6 +3,7 @@ package co.edgesecure.app;
 import android.app.Application;
 import android.content.Context;
 import android.webkit.WebView;
+import app.edge.reactnative.mymonerocore.MyMoneroPackage;
 import ca.jaysoo.extradimensions.ExtraDimensionsPackage;
 import cl.json.RNSharePackage;
 import co.airbitz.AbcCoreJsUi.AbcCoreJsUiPackage;
@@ -34,10 +35,10 @@ import com.rnfs.RNFSPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.zmxv.RNSound.RNSoundPackage;
 import io.expo.appearance.RNCAppearancePackage;
-import io.invertase.firebase.RNFirebasePackage;
-import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
-import io.invertase.firebase.database.RNFirebaseDatabasePackage;
-import io.invertase.firebase.instanceid.RNFirebaseInstanceIdPackage;
+import io.invertase.firebase.analytics.ReactNativeFirebaseAnalyticsPackage;
+import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
+import io.invertase.firebase.iid.ReactNativeFirebaseIidPackage;
+import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
 import java.util.Arrays;
 import java.util.List;
 import org.reactnative.camera.RNCameraPackage;
@@ -55,35 +56,36 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
-              new BugsnagPackage(),
-              new BlurViewPackage(),
-              new RNCAppearancePackage(),
-              new RNDateTimePickerPackage(),
-              new RNLocalizePackage(),
+              new AbcCoreJsUiPackage(),
               new ARTPackage(),
               new AsyncStoragePackage(),
+              new BlurViewPackage(),
+              new BugsnagPackage(),
               new DiskletPackage(),
-              new RNCWebViewPackage(),
-              new OpenAppSettingsPackage(),
-              new RNFirebasePackage(),
-              new RNFirebaseAnalyticsPackage(),
-              new RNFirebaseDatabasePackage(),
-              new RNFirebaseInstanceIdPackage(),
-              new RNMail(),
-              new RCTSplashScreenPackage(),
-              new AbcCoreJsUiPackage(),
-              new RNSoundPackage(),
-              new RNSharePackage(),
-              new RandomBytesPackage(),
-              new RNFastCryptoPackage(),
-              new VectorIconsPackage(),
-              new TcpSocketsModule(),
+              new ExtraDimensionsPackage(),
               new LinearGradientPackage(),
-              new RNFSPackage(),
-              new RNDeviceInfo(),
+              new MyMoneroPackage(),
+              new OpenAppSettingsPackage(),
+              new RandomBytesPackage(),
+              new RCTSplashScreenPackage(),
               new ReactNativeContacts(),
+              new ReactNativeFirebaseAnalyticsPackage(),
+              new ReactNativeFirebaseAppPackage(),
+              new ReactNativeFirebaseIidPackage(),
+              new ReactNativeFirebaseMessagingPackage(),
               new RNCameraPackage(),
-              new ExtraDimensionsPackage());
+              new RNCAppearancePackage(),
+              new RNCWebViewPackage(),
+              new RNDateTimePickerPackage(),
+              new RNDeviceInfo(),
+              new RNFastCryptoPackage(),
+              new RNFSPackage(),
+              new RNLocalizePackage(),
+              new RNMail(),
+              new RNSharePackage(),
+              new RNSoundPackage(),
+              new TcpSocketsModule(),
+              new VectorIconsPackage());
         }
 
         @Override

@@ -1,11 +1,11 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import SortableListView from 'react-native-sortable-listview'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import Ionicon from 'react-native-vector-icons/Ionicons'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
@@ -24,14 +24,14 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
-import { type FlatListItem, type GuiWallet } from '../../types/types.js'
+import { type GuiWallet } from '../../types/types.js'
 import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { WalletList } from '../common/WalletList.js'
 import { WalletListEmptyRow } from '../common/WalletListEmptyRow.js'
 import { WalletListFooter } from '../common/WalletListFooter.js'
-import { WalletListRow } from '../common/WalletListRow.js'
 import { WalletListSortableRow } from '../common/WalletListSortableRow.js'
 import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
@@ -86,7 +86,7 @@ class WalletListComponent extends React.Component<Props, State> {
           <CrossFade activeKey={sorting ? 'doneButton' : 'defaultButtons'}>
             <View key="defaultButtons" style={[styles.headerButton, styles.defaultButtons]}>
               <TouchableOpacity style={styles.addButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
-                <Ionicon name="md-add" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
+                <IonIcon name="md-add" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
               </TouchableOpacity>
               <TouchableOpacity onPress={sort}>
                 <Fontello name="sort" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
@@ -100,20 +100,12 @@ class WalletListComponent extends React.Component<Props, State> {
         <View style={styles.listStack}>
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
             <ActivityIndicator key="spinner" style={styles.listSpinner} size="large" />
-            <FlatList
-              key="fullList"
-              style={StyleSheet.absoltueFill}
-              data={activeWalletIds.map(key => ({ key }))}
-              extraData={wallets}
-              renderItem={this.renderRow}
-              ListFooterComponent={WalletListFooter}
-              ListHeaderComponent={this.renderPromoCard()}
-            />
+            <WalletList key="fullList" header={this.renderPromoCard()} footer={WalletListFooter} />
             <SortableListView
               key="sortList"
               style={StyleSheet.absoltueFill}
               data={wallets}
-              order={this.props.activeWalletIds}
+              order={activeWalletIds}
               onRowMoved={this.onActiveRowMoved}
               renderRow={this.renderSortableRow}
             />
@@ -126,17 +118,6 @@ class WalletListComponent extends React.Component<Props, State> {
 
   renderSortableRow = (guiWallet: GuiWallet | void) => {
     return guiWallet != null ? <WalletListSortableRow guiWallet={guiWallet} showBalance={getIsAccountBalanceVisible} /> : <WalletListEmptyRow />
-  }
-
-  renderRow = (data: FlatListItem<{ key: string }>) => {
-    const { wallets } = this.props
-    const guiWallet = wallets[data.item.key]
-
-    return guiWallet != null ? (
-      <WalletListRow guiWallet={guiWallet} showBalance={getIsAccountBalanceVisible} />
-    ) : (
-      <WalletListEmptyRow walletId={data.item.key} />
-    )
   }
 
   disableSorting = () => this.setState({ sorting: false })

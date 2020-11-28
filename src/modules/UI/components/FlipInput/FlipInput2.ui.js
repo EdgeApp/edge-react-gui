@@ -2,11 +2,12 @@
 
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { type Event, Animated, Image, Platform, TextInput, TouchableWithoutFeedback, View } from 'react-native'
-import FAIcon from 'react-native-vector-icons/MaterialIcons'
+import { type Event, Animated, Clipboard, Image, Platform, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
+import { showError } from '../../../../components/services/AirshipInstance.js'
 import { EdgeText } from '../../../../components/themed/EdgeText.js'
-import * as Constants from '../../../../constants/indexConstants'
 import * as intl from '../../../../locales/intl.js'
 import s from '../../../../locales/strings.js'
 import { scale } from '../../../../util/scaling.js'
@@ -161,6 +162,7 @@ export class FlipInput extends React.Component<Props, State> {
   androidBackOpacityInterpolate: Animated.Value
   textInputFront: TextInput | null
   textInputBack: TextInput | null
+  clipboardMenu: any
 
   constructor(props: Props) {
     super(props)
@@ -257,6 +259,7 @@ export class FlipInput extends React.Component<Props, State> {
   }
 
   onToggleFlipInput = () => {
+    this.clipboardMenu.close()
     this.setState({
       isToggled: !this.state.isToggled
     })
@@ -279,6 +282,17 @@ export class FlipInput extends React.Component<Props, State> {
         friction: 8,
         tension: 10
       }).start()
+    }
+  }
+
+  async openClipboardMenu() {
+    this.clipboardMenu.close()
+    try {
+      if ((this.state.textInputFrontFocus || this.state.textInputBackFocus) && (await Clipboard.getString())) {
+        this.clipboardMenu.open()
+      }
+    } catch (error) {
+      showError(error)
     }
   }
 
@@ -318,7 +332,8 @@ export class FlipInput extends React.Component<Props, State> {
     this.setState({ textInputFrontFocus: false })
   }
 
-  textInputFrontFocus = () => {
+  textInputFrontFocus = async () => {
+    this.openClipboardMenu()
     if (this.textInputFront) {
       this.textInputFront.focus()
     }
@@ -393,7 +408,8 @@ export class FlipInput extends React.Component<Props, State> {
     this.setState({ textInputBackFocus: false })
   }
 
-  textInputBackFocus = () => {
+  textInputBackFocus = async () => {
+    this.openClipboardMenu()
     if (this.textInputBack) {
       this.textInputBack.focus()
     }
@@ -455,6 +471,26 @@ export class FlipInput extends React.Component<Props, State> {
     )
   }
 
+  handlePasteClipboard = async () => {
+    try {
+      const clipboard = await Clipboard.getString()
+      if (this.state.isToggled) {
+        this.setStateAmounts('', setSecondaryToPrimary)
+        for (const string of clipboard.split('')) {
+          this.onKeyPress(string, this.state.secondaryDecimalAmount, this.props.secondaryInfo.maxEntryDecimals, setSecondaryToPrimary)
+        }
+      } else {
+        this.setStateAmounts('', setSecondaryToPrimary)
+        for (const string of clipboard.split('')) {
+          this.onKeyPress(string, this.state.primaryDecimalAmount, this.props.primaryInfo.maxEntryDecimals, setPrimaryToSecondary)
+        }
+      }
+    } catch (error) {
+      showError(error)
+    }
+  }
+
+  clipboardRef = (ref: any) => (this.clipboardMenu = ref)
   render() {
     const { primaryInfo, secondaryInfo, headerText, headerLogo, headerCallback } = this.props
     const { isToggled } = this.state
@@ -471,17 +507,27 @@ export class FlipInput extends React.Component<Props, State> {
             <Image style={styles.flipContainerHeaderIcon} source={{ uri: headerLogo || '' }} />
             <View style={styles.flipContainerHeaderTextContainer}>
               <EdgeText style={styles.flipContainerHeaderText}>{headerText}</EdgeText>
-              {headerCallback && <FAIcon style={styles.flipContainerHeaderTextDropDown} name={Constants.KEYBOARD_ARROW_DOWN} size={scale(20)} />}
+              {headerCallback && <MaterialIcon style={styles.flipContainerHeaderTextDropDown} name="keyboard-arrow-down" size={scale(20)} />}
             </View>
           </View>
         </TouchableWithoutFeedback>
         <View style={styles.flipContainerBody}>
+          <View style={styles.clipboardContainer}>
+            <Menu onSelect={this.handlePasteClipboard} ref={this.clipboardRef} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
+              <MenuTrigger />
+              <MenuOptions>
+                <MenuOption>
+                  <EdgeText style={styles.clipboardText}>{s.strings.string_paste}</EdgeText>
+                </MenuOption>
+              </MenuOptions>
+            </Menu>
+          </View>
           <Animated.View
             style={[styles.flipContainerFront, frontAnimatedStyle, { opacity: this.androidFrontOpacityInterpolate }]}
             pointerEvents={isToggled ? 'none' : 'auto'}
           >
             <View style={styles.flipButton}>
-              <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={scale(26)} />
+              <MaterialIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={scale(26)} />
             </View>
             <View style={styles.rows}>
               {this.topRowFront()}
@@ -493,7 +539,7 @@ export class FlipInput extends React.Component<Props, State> {
             pointerEvents={isToggled ? 'auto' : 'none'}
           >
             <View style={styles.flipButton}>
-              <FAIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={scale(26)} />
+              <MaterialIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={scale(26)} />
             </View>
             <View style={styles.rows}>
               {this.topRowBack()}

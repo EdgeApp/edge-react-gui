@@ -2,11 +2,10 @@
 
 import * as React from 'react'
 import { Text } from 'react-native'
+import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import { EXCLAMATION, MATERIAL_COMMUNITY } from '../../../../constants/IconConstants.js'
 import s from '../../../../locales/strings.js'
 import { PrimaryButton } from '../Buttons/PrimaryButton.ui.js'
-import { Icon } from '../Icon/Icon.ui.js'
 import { InteractiveModal } from './InteractiveModal/InteractiveModal.ui.js'
 
 type Props = {
@@ -19,7 +18,7 @@ export const errorModal = (title: string, error: Error) =>
       return (
         <InteractiveModal>
           <InteractiveModal.Icon>
-            <Icon type={MATERIAL_COMMUNITY} name={EXCLAMATION} size={30} />
+            <MaterialCommunityIcon name="exclamation" size={30} />
           </InteractiveModal.Icon>
 
           <InteractiveModal.Title>

@@ -118,9 +118,9 @@ export const edgeDark: Theme = {
   // tabBarIcon: palette.white,
   // tabBarIconHighlighted: palette.edgeMint,
 
-  // sliderTabSend: palette.accentRed,
-  // sliderTabRequest: palette.accentGreen,
-  // sliderTabMore: palette.accentBlue,
+  sliderTabSend: palette.accentRed,
+  sliderTabRequest: palette.accentGreen,
+  sliderTabMore: palette.accentBlue,
 
   // pinOutline: palette.white,
   // pinFilled: palette.white,

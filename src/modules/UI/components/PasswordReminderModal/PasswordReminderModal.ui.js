@@ -3,13 +3,12 @@
 import { isEqual } from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, Text } from 'react-native'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
-import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import type { PasswordReminder } from '../../../../types/types.js'
 import { SecondaryButton } from '../Buttons/SecondaryButton.ui.js'
 import { TertiaryButton } from '../Buttons/TertiaryButton.ui.js'
-import { Icon } from '../Icon/Icon.ui'
 import { InteractiveModal } from '../Modals/InteractiveModal/InteractiveModal.ui.js'
 import { PasswordInput } from './components/PasswordInput.ui.js'
 import { styles } from './styles.js'
@@ -49,7 +48,7 @@ export class PasswordReminderModal extends React.Component<Props, State> {
     return (
       <InteractiveModal legacy isActive={this.props.isVisible} onModalHide={this.reset}>
         <InteractiveModal.Icon>
-          <Icon style={styles.icon} name={Constants.LOCKED_ICON} type={Constants.ION_ICONS} />
+          <AntDesignIcon style={styles.icon} name="lock" />
         </InteractiveModal.Icon>
 
         <InteractiveModal.Title style={{ textAlign: 'center' }}>

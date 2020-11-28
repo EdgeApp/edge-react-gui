@@ -6,12 +6,13 @@ import * as React from 'react'
 import { Image, Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
+import * as Constants from '../../constants/indexConstants'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/Settings/selectors.js'
@@ -22,6 +23,7 @@ import type { GuiContact, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { RawTextModal } from '../modals/RawTextModal.js'
+import { TransactionAccelerateModal } from '../modals/TransactionAccelerateModal.js'
 import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
 import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInput.js'
@@ -212,8 +214,28 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     )).then(_ => {})
   }
 
+  openAccelerateModel = () => {
+    const { edgeTransaction, walletDefaultDenomProps, guiWallet } = this.props
+    const { wallet } = edgeTransaction
+
+    if (wallet) {
+      Airship.show(bridge => (
+        <TransactionAccelerateModal
+          bridge={bridge}
+          edgeTransaction={edgeTransaction}
+          walletDefaultDenomProps={walletDefaultDenomProps}
+          guiWallet={guiWallet}
+          wallet={wallet}
+        />
+      ))
+    } else {
+      showError(new Error('Transaction is missing wallet data.'))
+    }
+  }
+
   openAdvancedDetails = async () => {
     const { currencyInfo } = this.props
+
     Airship.show(bridge => (
       <TransactionAdvanceDetails
         bridge={bridge}
@@ -269,7 +291,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
           bridge={bridge}
           body={createExchangeDataString()}
           title={s.strings.transaction_details_exchange_details}
-          icon={<FontAwesome name="exchange" size={theme.rem(1.5)} color={theme.tileBackground} />}
+          icon={<FontAwesomeIcon name="exchange" size={theme.rem(1.5)} color={theme.tileBackground} />}
         />
       ))
     }
@@ -432,6 +454,15 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       }
     }
 
+    const specialCurrencyInfo = edgeTransaction.wallet ? Constants.getSpecialCurrencyInfo(edgeTransaction.wallet.currencyInfo.currencyCode) : undefined
+    // A transaction is acceleratable when it's unconfirmed and has a recorded nonce
+    const isAcceleratable = !!(
+      edgeTransaction.spendTargets?.length &&
+      specialCurrencyInfo?.isRbfSupported &&
+      edgeTransaction.blockHeight === 0 &&
+      edgeTransaction.otherParams?.nonceUsed
+    )
+
     return (
       <SceneWrapper background="theme">
         <ScrollView>
@@ -441,7 +472,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
                 {thumbnailPath ? (
                   <Image style={styles.tileThumbnail} source={{ uri: thumbnailPath }} />
                 ) : (
-                  <IonIcon style={styles.tileAvatarIcon} name="ios-contact" size={theme.rem(2)} />
+                  <IonIcon style={styles.tileAvatarIcon} name="person" size={theme.rem(2)} />
                 )}
                 <FormattedText style={styles.tileTextBottom}>{personName}</FormattedText>
               </View>
@@ -476,6 +507,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
             </Tile>
             {edgeTransaction.spendTargets && <Tile type="copy" title={s.strings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
             {this.renderExchangeData()}
+            {isAcceleratable && <Tile type="touchable" title={s.strings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />}
             <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
               <FormattedText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</FormattedText>

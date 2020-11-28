@@ -2,10 +2,9 @@
 
 import * as React from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import * as Constants from '../../../../../constants/indexConstants.js'
 import T from '../../../components/FormattedText/FormattedText.ui.js'
-import { Icon } from '../../Icon/Icon.ui.js'
 import styles from '../style'
 
 const isIos = Platform.OS === 'ios'
@@ -23,11 +22,15 @@ export default class BackButton extends React.Component<Props> {
 
   render() {
     const { withArrow } = this.props
-    const icon = isIos ? 'ios-arrow-back' : 'md-arrow-back'
+    const icon = isIos ? (
+      <IonIcon size={22} name="ios-arrow-back" style={styles.backIconStyle} />
+    ) : (
+      <IonIcon size={22} name="md-arrow-back" style={[styles.backIconStyle, styles.backIconAndroid]} />
+    )
 
     return (
       <TouchableOpacity style={styles.backButton} onPress={this.props.onPress}>
-        {withArrow && <Icon size={22} name={icon} type={Constants.ION_ICONS} style={[styles.backIconStyle, !isIos && styles.backIconAndroid]} />}
+        {withArrow && icon}
         {withArrow && !isIos ? null : <T style={styles.sideText}>{this.props.label}</T>}
       </TouchableOpacity>
     )
