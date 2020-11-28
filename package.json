@@ -148,7 +148,7 @@
     "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-fast-crypto": "^2.0.0",
     "react-native-fs": "git://github.com/EdgeApp/react-native-fs.git#edge/removeEncoding",
-    "react-native-keyboard-aware-scroll-view": "^0.9.1",
+    "react-native-keyboard-aware-scroll-view": "^0.9.3",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-localize": "^1.4.0",
     "react-native-mail": "^5.0.1",
