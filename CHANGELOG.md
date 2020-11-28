@@ -1,5 +1,47 @@
 # edge-react-gui
 
+## 1.18.0 (2020-11-25)
+
+- ETH: Accelerate Transaction feature (replace-by-fee)
+- FIO: Cancel request, transfer domain, expanded exchange support, verify payer address before sending request, text and visual updates
+- Support Azteco URI
+- Limit exchange rate queries to active wallet crypto/fiat pairs
+- Add paste button to flip input
+- Reduced memory utilization
+- Update translations
+- Add new showWarning function to AirshipInstance.js
+- Separate render of wallet Currency and token currencies
+- Make Icon standard and just pass iconColor and iconSize as props
+- Refactor icons and normalize names
+- New common component TouchableTextIcon
+- Removed parent container from RNCamera
+- Android: AndroidX support, Upgrade to gradle v6.2
+- iOS: iPhone 12 safe area fixes
+- Update edge-react-gui README versions and instructions
+- Upgrade react-native-firebase to v4.3.8
+- Upgrade edge-core-js to v0.17.18
+  - (feature) Add ability to filter `getTransactions()` with `searchString` option
+  - (feature) Add requested currency pair to rateHints if it cannot be served by searchRoutes()
+- Upgrade edge-currency-accountbased v0.7.34
+  - RBF support for ETH, RSK, and ETH tokens
+  - Add Blockbook API support for Ethereum
+  - Disable Alethio API support
+  - Remove Supereth API support
+  - Update endpoint for finding EOSIO account by key
+  - Disable Greymass Fuel for Telos
+  - Additional checks and bugfixes for FIO addresses and domains
+  - Removed FIO strings from logs
+- Upgrade react-native-fast-crypto to v2.0.0
+  - Remove all Monero features (these live in react-native-mymonero-core now)
+  - iOS: Use the OpenSSL-Universal package to provide OpenSSL libraries
+  - Android: Use implementation gradle command instead of deprecated compile
+  - Android: Fix some documentation errors
+  - Remove the deprecated default export
+- Upgrade edge-login-ui-rn to v0.6.22
+  - Update back button icon
+- Upgrade edge-components v0.0.30
+  - Remove unused components: Icon, IconButton, ModalManager, PasswordInput, SimpleConfirmModal, StaticModal, TextAndIconButton, TextButton, ThreeButtonModal, YesNoModal
+
 ## 1.17.8 (2020-11-20)
 
 - Upgrade Android SDK target to 29
