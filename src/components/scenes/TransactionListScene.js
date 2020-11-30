@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Alert, FlatList, Image, StyleSheet, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, FlatList, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
@@ -25,6 +25,7 @@ import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import BuyCrypto from '../common/BuyCrypto.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
@@ -56,7 +57,7 @@ export type DispatchProps = {
   toggleBalanceVisibility: () => void
 }
 
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
   reset: boolean
@@ -64,7 +65,7 @@ type State = {
 
 const emptyArray = []
 
-export class TransactionList extends React.Component<Props, State> {
+class TransactionListComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -97,7 +98,8 @@ export class TransactionList extends React.Component<Props, State> {
 
   renderBuyCrypto = () => {
     const wallet = this.props.uiWallet
-    const { selectedCurrencyCode } = this.props
+    const { selectedCurrencyCode, theme } = this.props
+    const styles = getStyles(theme)
     if (this.props.numTransactions) {
       return (
         <View style={styles.emptyListLoader}>
@@ -126,8 +128,9 @@ export class TransactionList extends React.Component<Props, State> {
 
   render() {
     const txs = this.state.reset ? emptyArray : this.props.transactions
+    const styles = getStyles(this.props.theme)
     return (
-      <SceneWrapper background="body" bodySplit={200}>
+      <SceneWrapper bodySplit={200}>
         <FlatList
           ListEmptyComponent={this.renderBuyCrypto()}
           ListHeaderComponent={this.currentRenderBalanceBox()}
@@ -155,13 +158,16 @@ export class TransactionList extends React.Component<Props, State> {
       fiatCurrencyCode,
       isoFiatCurrencyCode,
       isBalanceVisible,
-      transactions
+      transactions,
+      theme
     } = this.props
 
     // should we get rid of "loading" area? Currently unused
     if (loading) {
       return <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={{ flex: 1, alignSelf: 'center' }} size="large" />
     }
+
+    const styles = getStyles(theme)
 
     let logo
 
@@ -298,7 +304,7 @@ export class TransactionList extends React.Component<Props, State> {
   }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   touchableBalanceBox: {
     height: scale(200)
   },
@@ -456,6 +462,6 @@ const rawStyles = {
     fontSize: scale(17),
     color: THEME.COLORS.GRAY_1
   }
-}
+}))
 
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+export const TransactionList = withTheme(TransactionListComponent)
