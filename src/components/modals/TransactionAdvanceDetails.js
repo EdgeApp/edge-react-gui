@@ -143,13 +143,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
                 onPress={this.openProveUrl}
               />
             )}
-            {signedTx && signedTx !== '' ? (
-              <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes}>
-                <EdgeText numberOfLines={3} ellipsizeMode="tail" style={styles.rawBytesText}>
-                  {signedTx}
-                </EdgeText>
-              </Tile>
-            ) : null}
+            {signedTx && signedTx !== '' ? <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} /> : null}
           </ScrollView>
         </View>
         <ModalCloseArrow onPress={this.handleCancel} />
