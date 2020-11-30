@@ -7,6 +7,7 @@ import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
+import { emptyEdgeDenomination } from '../modules/Settings/selectors.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types/types.js'
@@ -600,4 +601,14 @@ export function debounce(func: Function, wait: number, immediate: boolean): any 
 
     if (callNow) func.apply(context, args)
   }
+}
+
+export function getDenomination(currencyCode: string, settings: Object): EdgeDenomination {
+  const denominationMultiplier = settings[currencyCode].denomination
+  const denomination = settings[currencyCode].denominations.find(denomination => denomination.multiplier === denominationMultiplier)
+  return denomination || emptyEdgeDenomination
+}
+
+export function getDefaultDenomination(currencyCode: string, settings: Object): EdgeDenomination {
+  return settings[currencyCode].denominations.find(denomination => denomination.name === currencyCode)
 }
