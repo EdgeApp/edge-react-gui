@@ -11,11 +11,10 @@ import { WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
-import { emptyEdgeDenomination } from '../../modules/Settings/selectors.js'
 import { calculateWalletFiatBalanceWithoutState, getActiveWalletIds } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, FlatListItem, GuiWallet } from '../../types/types.js'
-import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
+import { convertNativeToDisplay, decimalOrZero, getDenomination, getFiatSymbol, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
 import { WalletListRow } from './WalletListRow.js'
@@ -109,13 +108,6 @@ class WalletListComponent extends React.PureComponent<Props> {
     return walletProgress
   }
 
-  getDenomination(currencyCode: string): EdgeDenomination {
-    const { settings } = this.props
-    const denominationMultiplier = settings[currencyCode].denomination
-    const denomination = settings[currencyCode].denominations.find(denomination => denomination.multiplier === denominationMultiplier)
-    return denomination || emptyEdgeDenomination
-  }
-
   getCryptoAmount(balance: string, denomination: EdgeDenomination, isToken: boolean): string {
     const { showBalance } = this.props
     if (isToken) {
@@ -145,7 +137,7 @@ class WalletListComponent extends React.PureComponent<Props> {
       const walletProgress = this.getWalletProgress(walletId)
 
       // Crypto Amount And Exchange Rate
-      const denomination = this.getDenomination(currencyCode)
+      const denomination = getDenomination(currencyCode, settings)
       const cryptoAmount = this.getCryptoAmount(balance || '0', denomination, isToken)
       const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
       const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
