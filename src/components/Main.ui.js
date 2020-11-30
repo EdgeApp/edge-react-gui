@@ -163,7 +163,7 @@ export class MainComponent extends React.Component<Props> {
         onEnter={() => this.props.requestPermission('contacts')}
         clone
         component={ifLoggedIn(TransactionDetailsScene)}
-        renderTitle={TransactionDetailsTitle}
+        renderTitle={props => <TransactionDetailsTitle edgeTransaction={props.edgeTransaction} />}
         renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
         renderRightButton={<SideMenuButton />}
       />
