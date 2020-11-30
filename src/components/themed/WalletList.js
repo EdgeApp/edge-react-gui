@@ -20,7 +20,7 @@ import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
 import { WalletListRow } from './WalletListRow.js'
 
-type WalletListItem = { id: string, fullCurrencyCode?: string, balance?: string, key: string }
+type WalletListItem = { id: string, fullCurrencyCode?: string, key: string }
 
 const DIVIDE_PRECISION = 18
 
@@ -58,13 +58,12 @@ class WalletListComponent extends React.PureComponent<Props> {
           key: walletId
         })
       } else {
-        const { enabledTokens, nativeBalances } = wallet
+        const { enabledTokens } = wallet
         const { customTokens } = this.props
 
         walletList.push({
           id: walletId,
           fullCurrencyCode: wallet.currencyCode,
-          balance: wallet.primaryNativeBalance,
           key: `${walletId}-${wallet.currencyCode}`
         })
 
@@ -81,18 +80,13 @@ class WalletListComponent extends React.PureComponent<Props> {
           return isVisible
         })
 
-        for (const currencyCode in nativeBalances) {
-          if (nativeBalances.hasOwnProperty(currencyCode)) {
-            if (currencyCode !== wallet.currencyCode && enabledNotHiddenTokens.indexOf(currencyCode) >= 0) {
-              const fullCurrencyCode = `${wallet.currencyCode}-${currencyCode}`
-              walletList.push({
-                id: walletId,
-                fullCurrencyCode: fullCurrencyCode,
-                balance: nativeBalances[currencyCode],
-                key: `${walletId}-${fullCurrencyCode}`
-              })
-            }
-          }
+        for (const currencyCode of enabledNotHiddenTokens) {
+          const fullCurrencyCode = `${wallet.currencyCode}-${currencyCode}`
+          walletList.push({
+            id: walletId,
+            fullCurrencyCode: fullCurrencyCode,
+            key: `${walletId}-${fullCurrencyCode}`
+          })
         }
       }
     }
@@ -139,19 +133,20 @@ class WalletListComponent extends React.PureComponent<Props> {
     const walletId = data.item.id
     const guiWallet = wallets[walletId]
 
-    if (guiWallet == null || !data.item.fullCurrencyCode || !data.item.balance) {
+    if (guiWallet == null || !data.item.fullCurrencyCode) {
       return <WalletListEmptyRow rowKey={data.item.key} rowMap={rowMap} walletId={walletId} />
     } else {
       const isToken = guiWallet.currencyCode !== data.item.fullCurrencyCode
       const walletCodesArray = data.item.fullCurrencyCode.split('-')
       const currencyCode = isToken ? walletCodesArray[1] : walletCodesArray[0]
+      const balance = isToken ? guiWallet.nativeBalances[currencyCode] : guiWallet.primaryNativeBalance
 
       const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
       const walletProgress = this.getWalletProgress(walletId)
 
       // Crypto Amount And Exchange Rate
       const denomination = this.getDenomination(currencyCode)
-      const cryptoAmount = this.getCryptoAmount(data.item.balance || '0', denomination, isToken)
+      const cryptoAmount = this.getCryptoAmount(balance || '0', denomination, isToken)
       const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
       const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
 
