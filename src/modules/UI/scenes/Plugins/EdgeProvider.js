@@ -432,9 +432,9 @@ export class EdgeProvider extends Bridgeable {
     const orderData = await response2.json()
     console.log('Bity orderData: ', orderData)
     if (orderData.message_to_sign) {
-      const { signature_submission_url, body } = orderData.message_to_sign
+      const { body } = orderData.message_to_sign
       const signedTransaction = await this.signMessage(body)
-      const thirdURL = url2 + signature_submission_url
+      const thirdURL = url2 + orderData.message_to_sign.signature_submission_url
       const request = {
         method: 'POST',
         headers: {

@@ -6,7 +6,7 @@ import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import fioRequestsIcon from '../../../assets/images/fio/fio_sent_request.png'
-import * as intl from '../../../locales/intl.js'
+import { formatNumber, formatTime } from '../../../locales/intl.js'
 import s from '../../../locales/strings'
 import { THEME } from '../../../theme/variables/airbitz.js'
 import { type RootState } from '../../../types/reduxTypes'
@@ -65,7 +65,7 @@ class FioRequestRow extends React.Component<Props> {
   requestedTimeAndMemo = (time: Date, memo: string) => {
     return (
       <T ellipsizeMode="tail" numberOfLines={1} style={[styles.transactionPendingTime, styles.transactionTime]}>
-        {intl.formatTime(time)}
+        {formatTime(time)}
         {memo ? ` - ${memo}` : ''}
       </T>
     )
@@ -180,7 +180,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const rateKey = `${tokenCode}_${isoFiatCurrencyCode}`
   const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
   const amountToMultiply = parseFloat(fioRequest.content.amount)
-  const fiatAmount = intl.formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
+  const fiatAmount = formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
 
   const out: StateProps = {
     displayDenomination,

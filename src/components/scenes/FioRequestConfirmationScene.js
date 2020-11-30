@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 
 import editIcon from '../../assets/images/transaction_details_icon.png'
 import * as Constants from '../../constants/indexConstants'
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache, checkPubAddress } from '../../modules/FioAddress/util'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
@@ -256,7 +256,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       return null
     }
 
-    const fiatAmount = intl.formatNumber(this.props.exchangeSecondaryToPrimaryRatio * parseFloat(exchangeAmount), { toFixed: 2 }) || '0'
+    const fiatAmount = formatNumber(this.props.exchangeSecondaryToPrimaryRatio * parseFloat(exchangeAmount), { toFixed: 2 }) || '0'
     const cryptoName = primaryCurrencyInfo.displayDenomination.name
     const fiatName = secondaryCurrencyInfo.displayDenomination.name
 

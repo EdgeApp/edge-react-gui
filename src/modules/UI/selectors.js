@@ -3,7 +3,7 @@
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
 
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types/types.js'
 import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils.js'
@@ -199,7 +199,7 @@ export const calculateWalletFiatBalanceWithoutState = (wallet: GuiWallet, curren
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
   fiatValue = convertCurrencyWithoutState(exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
-  return intl.formatNumber(fiatValue, { toFixed: 2 }) || '0'
+  return formatNumber(fiatValue, { toFixed: 2 }) || '0'
 }
 
 export const convertNativeToExchangeRateDenomination = (settings: Object, currencyCode: string, nativeAmount: string): string => {

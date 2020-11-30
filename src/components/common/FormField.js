@@ -32,8 +32,7 @@ type Props = {
 }
 
 type State = {
- secure: boolean,
- autoFocus: boolean
+ secure: boolean
 }
 
 class FormField extends React.Component<Props, State> {
@@ -50,12 +49,12 @@ export class FormField extends React.Component {
     multiline: false
   }
 
-  UNSAFE_componentWillMount() {
-    const secure = this.props.secureTextEntry ? this.props.secureTextEntry : false
-    this.setState({
-      secure: secure,
-      autoFocus: this.props.autoFocus
-    })
+  constructor(props) {
+    super(props)
+    const { secureTextEntry = false } = props
+    this.state = {
+      secure: secureTextEntry
+    }
   }
 
   render() {

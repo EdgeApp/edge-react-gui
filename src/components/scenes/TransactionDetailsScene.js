@@ -13,7 +13,7 @@ import { sprintf } from 'sprintf-js'
 
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
 import * as Constants from '../../constants/indexConstants'
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/Settings/selectors.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -129,9 +129,9 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     if (metadata && metadata.amountFiat) {
       const initialAmount = metadata.amountFiat.toFixed(2)
       const absoluteAmount = bns.abs(initialAmount)
-      return intl.formatNumber(bns.toFixed(absoluteAmount, 2, 2), { noGrouping: true })
+      return formatNumber(bns.toFixed(absoluteAmount, 2, 2), { noGrouping: true })
     }
-    return intl.formatNumber('0.00')
+    return formatNumber('0.00')
   }
 
   initializeFormattedCategories = (metadata: ?EdgeMetadata, direction: string) => {

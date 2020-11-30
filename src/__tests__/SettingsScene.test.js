@@ -27,7 +27,7 @@ describe('MyComponent', () => {
         developerModeOn
         isLocked={false}
         pinLoginEnabled
-        supportsTouchId
+        supportsTouchId={false}
         touchIdEnabled
         // DispatchProps:
         confirmPassword={nop}
@@ -57,7 +57,7 @@ describe('MyComponent', () => {
         developerModeOn
         isLocked
         pinLoginEnabled
-        supportsTouchId
+        supportsTouchId={false}
         touchIdEnabled
         // DispatchProps:
         confirmPassword={nop}

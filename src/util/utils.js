@@ -7,7 +7,7 @@ import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
-import * as intl from '../locales/intl.js'
+import { formatNumber as intlFormatNumber } from '../locales/intl.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types/types.js'
@@ -142,19 +142,6 @@ export const truncateDecimals = (input: string, precision: number, allowBlank: b
   }
   const [integers, decimals] = input.split('.')
   return precision > 0 ? `${integers}.${decimals.slice(0, precision)}` : integers
-}
-
-/**
- * @deprecated
- * @param input
- * @returns {string}
- */
-export const formatNumber = (input: string): string => {
-  let out = input.replace(/^0+/, '')
-  if (out.startsWith('.')) {
-    out = '0' + out
-  }
-  return out
 }
 
 export const decimalOrZero = (input: string, decimalPlaces: number): string => {
@@ -495,7 +482,7 @@ export const calculateTotalFiatBalance = (state: RootState, values: { [string]: 
     const addValue = convertCurrency(state, currency, isoFiat, values[currency])
     total = total + addValue
   }
-  return intl.formatNumber(total, { toFixed: 2 })
+  return intlFormatNumber(total, { toFixed: 2 })
 }
 
 export const isTooFarAhead = (dateInSeconds: number, currentDateInSeconds: number) => {

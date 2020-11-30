@@ -9,7 +9,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { connect } from 'react-redux'
 import { base64 } from 'rfc4648'
 
-import { formatExpDate } from '../../locales/intl.js'
+import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
@@ -82,8 +82,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const iconSize = theme.rem(1.25)
 
     const walletName = `${this.props.sourceWallet.name || s.strings.string_no_wallet_name} (${this.props.currencyCode})`
-    const startDateString = formatExpDate(startDate)
-    const endDateString = formatExpDate(endDate)
+    const startDateString = formatDate(startDate)
+    const endDateString = formatDate(endDate)
     const disabledExport = !isExportQbo && !isExportCsv
 
     return (

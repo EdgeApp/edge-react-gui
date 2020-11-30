@@ -10,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { type FioSenderInfo } from '../../actions/SendConfirmationActions'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIO_STR, getSpecialCurrencyInfo } from '../../constants/indexConstants'
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { SelectFioAddressConnector as SelectFioAddress } from '../../modules/FioAddress/components/SelectFioAddress'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
@@ -210,8 +210,8 @@ export class SendConfirmation extends React.Component<Props, State> {
     }
 
     const cryptoBalanceAmount: string = convertNativeToDisplay(primaryInfo.displayDenomination.multiplier)(this.props.balanceInCrypto) // convert to correct denomination
-    const cryptoBalanceAmountString = cryptoBalanceAmount ? intl.formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
-    const balanceInFiatString = intl.formatNumber(this.props.balanceInFiat || 0, { toFixed: 2 })
+    const cryptoBalanceAmountString = cryptoBalanceAmount ? formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
+    const balanceInFiatString = formatNumber(this.props.balanceInFiat || 0, { toFixed: 2 })
 
     const { address, authRequired, currencyCode, transactionMetadata, uniqueIdentifier, currencyInfo } = this.props
     const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null

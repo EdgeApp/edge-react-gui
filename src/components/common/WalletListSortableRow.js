@@ -6,7 +6,7 @@ import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import sort from '../../assets/images/walletlist/sort.png'
-import * as intl from '../../locales/intl.js'
+import { formatNumberInput } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { type ExchangeRatesState } from '../../modules/ExchangeRates/reducer.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
@@ -47,7 +47,7 @@ class WalletListSortableRowComponent extends React.Component<Props> {
     const symbolImageDarkMono = guiWallet.symbolImageDarkMono
     const currencyCode = guiWallet.currencyCode
     const preliminaryCryptoAmount = truncateDecimals(bns.div(guiWallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
-    const finalCryptoAmount = intl.formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
+    const finalCryptoAmount = formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
     const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
     const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0

@@ -9,7 +9,7 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
-import * as intl from '../../locales/intl.js'
+import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { getRenewalFee, renewFioName } from '../../modules/FioAddress/util'
@@ -110,7 +110,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   getExpiration = (): string => {
     const { fioAddresses, fioAddressName } = this.props
     const fioAddress = fioAddresses.find(({ name }) => fioAddressName === name)
-    if (fioAddress) return intl.formatExpDate(fioAddress.expiration)
+    if (fioAddress) return formatDate(new Date(fioAddress.expiration))
     return ''
   }
 
@@ -155,7 +155,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
       Actions.pop()
       if (refreshAfterRenew) {
         window.requestAnimationFrame(() => {
-          Actions.refresh({ fioAddressName, expiration: intl.formatExpDate(expiration) })
+          Actions.refresh({ fioAddressName, expiration: formatDate(new Date(expiration)) })
         })
       }
     } catch (e) {
