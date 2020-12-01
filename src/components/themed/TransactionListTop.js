@@ -2,15 +2,14 @@
 
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import credLogo from '../../assets/images/cred_logo.png'
-import requestImage from '../../assets/images/transactions/transactions-request.png'
-import sendImage from '../../assets/images/transactions/transactions-send.png'
+import { Fontello } from '../../assets/vector/index.js'
 import * as Constants from '../../constants/indexConstants.js'
 import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import * as intl from '../../locales/intl.js'
@@ -83,19 +82,14 @@ class TransactionListTopComponent extends React.Component<Props> {
     return (
       <View style={styles.container}>
         {this.renderBalanceBox()}
-        <View style={styles.requestSendRow}>
-          <TouchableHighlight style={[styles.requestBox, styles.button]} underlayColor={THEME.COLORS.SECONDARY} onPress={Actions.request}>
-            <View style={styles.requestWrap}>
-              <Image style={{ width: 25, height: 25 }} source={requestImage} />
-              <T style={styles.request}>{s.strings.fragment_request_subtitle}</T>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight style={[styles.sendBox, styles.button]} underlayColor={THEME.COLORS.SECONDARY} onPress={Actions.scan}>
-            <View style={styles.sendWrap}>
-              <Image style={{ width: 25, height: 25 }} source={sendImage} />
-              <T style={styles.send}>{s.strings.fragment_send_subtitle}</T>
-            </View>
-          </TouchableHighlight>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity onPress={Actions.request} style={styles.buttons}>
+            <Fontello name="request" size={theme.rem(2.5)} color={theme.iconTappable} />
+          </TouchableOpacity>
+          <View style={styles.spacer} />
+          <TouchableOpacity onPress={Actions.scan} style={styles.buttons}>
+            <Fontello name="send" size={theme.rem(2.5)} color={theme.iconTappable} />
+          </TouchableOpacity>
         </View>
         <WiredProgressBar progress={getSelectedWalletLoadingPercent} />
         {transactionsLength !== 0 && Constants.getSpecialCurrencyInfo(currencyCode).showEarnInterestCard && (
@@ -116,8 +110,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1
   },
   headerContainer: {
-    height: theme.rem(12),
-    padding: theme.rem(0.75)
+    height: theme.rem(5),
+    padding: theme.rem(0.75),
+    justifyContent: 'center'
   },
   currencyText: {
     fontSize: theme.rem(1.25),
@@ -130,7 +125,27 @@ const getStyles = cacheStyles((theme: Theme) => ({
   showBalanceText: {
     fontSize: theme.rem(1.75)
   },
-
+  buttonsContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: theme.rem(1)
+  },
+  buttons: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonsIcon: {
+    top: theme.rem(-1),
+    width: theme.rem(4),
+    height: theme.rem(1),
+    borderLeftWidth: theme.rem(2 / 16),
+    borderRightWidth: theme.rem(2 / 16),
+    borderBottomWidth: theme.rem(2 / 16),
+    borderColor: theme.iconTappable
+  },
+  spacer: {
+    flex: 1
+  },
   requestSendRow: {
     // two
     height: scale(50),
