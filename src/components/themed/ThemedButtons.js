@@ -91,9 +91,10 @@ export function SquareButton(props: SquareButtonProps) {
 export function ButtonBox(props: Props) {
   const { children, onPress } = props
   const theme = useTheme()
+  const styles = getStyles(theme)
 
   return (
-    <View style={spacingStyles(props, theme)}>
+    <View style={[spacingStyles(props, theme), styles.buttonBox]}>
       <TouchableHighlight activeOpacity={theme.underlayOpacity} underlayColor={theme.underlayColor} onPress={onPress}>
         {children}
       </TouchableHighlight>
@@ -211,6 +212,17 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     disabled: {
       opacity: 0.7
+    },
+    buttonBox: {
+      shadowColor: theme.buttonBoxShadow,
+      shadowOffset: {
+        width: 0,
+        height: theme.rem(0.25)
+      },
+      shadowOpacity: 0.34,
+      shadowRadius: theme.rem(0.25),
+
+      elevation: theme.rem(0.5)
     }
   }
 })
