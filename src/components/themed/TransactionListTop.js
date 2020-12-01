@@ -16,27 +16,26 @@ import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { convertCurrency, getSelectedWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { scale } from '../../util/scaling.js'
 import { convertNativeToDenomination, decimalOrZero, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from './EdgeText.js'
 import { WiredProgressBar } from './WiredProgressBar.js'
-
-const BALANCE_BOX_OPACITY = 0.9
 
 export type StateProps = {
   cryptoAmount: string,
   currencyDenominationSymbol: string,
-  transactionsLength: number,
   currencyCode: string,
   currencyName: string,
   fiatCurrencyCode: string,
   fiatBalance: number,
   fiatSymbol: string,
-  isAccountBalanceVisible: boolean
+  walletName: string,
+  isAccountBalanceVisible: boolean,
+  transactionsLength: number
 }
 
 export type DispatchProps = {
@@ -46,93 +45,59 @@ export type DispatchProps = {
 type Props = StateProps & DispatchProps & ThemeProps
 
 class TransactionListTopComponent extends React.Component<Props> {
-  render() {
+  renderBalanceBox = () => {
     const {
       cryptoAmount,
       currencyCode,
-      currencyName,
       currencyDenominationSymbol,
       fiatSymbol,
       fiatBalance,
       fiatCurrencyCode,
+      walletName,
       isAccountBalanceVisible,
-      transactionsLength,
       theme
     } = this.props
-
-    // // should we get rid of "loading" area? Currently unused
-    // if (loading) {
-    //   return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" />
-    // }
-
     const styles = getStyles(theme)
 
-    // beginning of fiat balance
-    const fiatBalanceStringFormat = `${fiatSymbol} ${fiatBalance} ${fiatCurrencyCode}`
-    const fiatBalanceString = fiatBalanceStringFormat.trim()
+    return (
+      <TouchableOpacity onPress={this.props.toggleBalanceVisibility} style={styles.headerContainer}>
+        {isAccountBalanceVisible ? (
+          <View>
+            <EdgeText>{walletName}</EdgeText>
+            <EdgeText style={styles.currencyText}>{currencyDenominationSymbol + ' ' + cryptoAmount + ' ' + currencyCode}</EdgeText>
+            <EdgeText>{fiatSymbol + ' ' + fiatBalance + ' ' + fiatCurrencyCode}</EdgeText>
+          </View>
+        ) : (
+          <View>
+            <EdgeText style={styles.showBalanceText}>{s.strings.string_show_balance}</EdgeText>
+          </View>
+        )}
+      </TouchableOpacity>
+    )
+  }
+
+  render() {
+    const { currencyCode, currencyName, transactionsLength, theme } = this.props
+    const styles = getStyles(theme)
 
     return (
-      <View>
-        <TouchableOpacity onPress={this.props.toggleBalanceVisibility} style={styles.touchableBalanceBox} activeOpacity={BALANCE_BOX_OPACITY}>
-          <Gradient style={styles.currentBalanceBox}>
-            <View style={styles.balanceBoxContents}>
-              {!isAccountBalanceVisible ? (
-                <View style={styles.totalBalanceWrap}>
-                  <View style={styles.hiddenBalanceBoxDollarsWrap}>
-                    <T style={styles.currentBalanceBoxHiddenText}>{s.strings.string_show_balance}</T>
-                  </View>
-                </View>
-              ) : (
-                <View style={styles.balanceShownContainer}>
-                  <View style={styles.currentBalanceBoxBitsWrap}>
-                    <View style={{ flexDirection: 'row' }}>
-                      {currencyDenominationSymbol ? (
-                        <View style={{ flexDirection: 'row' }}>
-                          <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
-                            {currencyDenominationSymbol + ' '}
-                          </T>
-                          <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
-                            {cryptoAmount}
-                          </T>
-                        </View>
-                      ) : (
-                        <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
-                          {cryptoAmount}
-                        </T>
-                      )}
-
-                      {!currencyDenominationSymbol && (
-                        <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
-                          {' ' + currencyCode}
-                        </T>
-                      )}
-                    </View>
-                  </View>
-                  <View style={styles.currentBalanceBoxDollarsWrap}>
-                    <T numberOfLines={1} style={styles.currentBalanceBoxDollars}>
-                      {fiatBalanceString}
-                    </T>
-                  </View>
-                </View>
-              )}
-              <View style={styles.requestSendRow}>
-                <TouchableHighlight style={[styles.requestBox, styles.button]} underlayColor={THEME.COLORS.SECONDARY} onPress={Actions.request}>
-                  <View style={styles.requestWrap}>
-                    <Image style={{ width: 25, height: 25 }} source={requestImage} />
-                    <T style={styles.request}>{s.strings.fragment_request_subtitle}</T>
-                  </View>
-                </TouchableHighlight>
-                <TouchableHighlight style={[styles.sendBox, styles.button]} underlayColor={THEME.COLORS.SECONDARY} onPress={Actions.scan}>
-                  <View style={styles.sendWrap}>
-                    <Image style={{ width: 25, height: 25 }} source={sendImage} />
-                    <T style={styles.send}>{s.strings.fragment_send_subtitle}</T>
-                  </View>
-                </TouchableHighlight>
-              </View>
+      <View style={styles.container}>
+        {this.renderBalanceBox()}
+        <View style={styles.requestSendRow}>
+          <TouchableHighlight style={[styles.requestBox, styles.button]} underlayColor={THEME.COLORS.SECONDARY} onPress={Actions.request}>
+            <View style={styles.requestWrap}>
+              <Image style={{ width: 25, height: 25 }} source={requestImage} />
+              <T style={styles.request}>{s.strings.fragment_request_subtitle}</T>
             </View>
-          </Gradient>
-          <WiredProgressBar progress={getSelectedWalletLoadingPercent} />
-        </TouchableOpacity>
+          </TouchableHighlight>
+          <TouchableHighlight style={[styles.sendBox, styles.button]} underlayColor={THEME.COLORS.SECONDARY} onPress={Actions.scan}>
+            <View style={styles.sendWrap}>
+              <Image style={{ width: 25, height: 25 }} source={sendImage} />
+              <T style={styles.send}>{s.strings.fragment_send_subtitle}</T>
+            </View>
+          </TouchableHighlight>
+        </View>
+        <WiredProgressBar progress={getSelectedWalletLoadingPercent} />
         {transactionsLength !== 0 && Constants.getSpecialCurrencyInfo(currencyCode).showEarnInterestCard && (
           <TouchableOpacity onPress={() => Actions[Constants.PLUGIN_EARN_INTEREST]({ plugin: guiPlugins.cred })} style={styles.earnInterestContainer}>
             <View style={styles.earnInterestBox}>
@@ -147,59 +112,23 @@ class TransactionListTopComponent extends React.Component<Props> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  touchableBalanceBox: {
-    height: scale(200)
+  container: {
+    flex: 1
   },
-  currentBalanceBox: {
+  headerContainer: {
+    height: theme.rem(12),
+    padding: theme.rem(0.75)
+  },
+  currencyText: {
+    fontSize: theme.rem(1.25),
+    fontFamily: theme.fontFaceBold
+  },
+  showBalanceContainer: {
     flex: 1,
     justifyContent: 'center'
   },
-  totalBalanceWrap: {
-    flex: 3,
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  hiddenBalanceBoxDollarsWrap: {
-    flex: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  currentBalanceBoxHiddenText: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(44)
-  },
-  balanceBoxContents: {
-    flex: 1,
-    paddingTop: scale(10),
-    paddingBottom: scale(20),
-    justifyContent: 'space-between'
-  },
-  balanceShownContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column'
-  },
-  currentBalanceBoxBitsWrap: {
-    // two
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  currentBalanceBoxBits: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(40)
-  },
-  currentBalanceBoxDollarsWrap: {
-    justifyContent: 'flex-start',
-    height: scale(26),
-    paddingTop: scale(4),
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  currentBalanceBoxDollars: {
-    // two
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(20)
+  showBalanceText: {
+    fontSize: theme.rem(1.75)
   },
 
   requestSendRow: {
@@ -307,7 +236,6 @@ export const TransactionListTop = connect(
     const fiatBalanceFormat = intl.formatNumber(fiatBalance && fiatBalance > 0.000001 ? fiatBalance : 0, { toFixed: 2 })
 
     return {
-      transactionsLength: state.ui.scenes.transactionList.transactions.length,
       currencyCode: selectedCurrencyCode,
       currencyName: guiWallet.currencyNames[selectedCurrencyCode],
       currencyDenominationSymbol: currencyDenomination.symbol,
@@ -315,7 +243,9 @@ export const TransactionListTop = connect(
       fiatCurrencyCode: guiWallet.fiatCurrencyCode,
       fiatBalance: fiatBalanceFormat,
       fiatSymbol: getFiatSymbol(guiWallet.isoFiatCurrencyCode),
-      isAccountBalanceVisible: state.ui.settings.isAccountBalanceVisible
+      walletName: guiWallet.name,
+      isAccountBalanceVisible: state.ui.settings.isAccountBalanceVisible,
+      transactionsLength: state.ui.scenes.transactionList.transactions.length
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
