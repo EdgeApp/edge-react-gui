@@ -26,7 +26,6 @@ const mapStateToProps = (state: RootState) => {
   const currencyCode = getSelectedCurrencyCode(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const fiatCurrencyCode = wallet.fiatCurrencyCode
-  const numTransactions = state.ui.scenes.transactionList.numTransactions
   const transactions = getTransactions(state)
   const displayDenomination = getDisplayDenomination(state, currencyCode)
   const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
@@ -46,7 +45,7 @@ const mapStateToProps = (state: RootState) => {
     contacts: state.contacts,
     fiatSymbol,
     requiredConfirmations,
-    numTransactions
+    numTransactions: state.ui.scenes.transactionList.numTransactions
   }
   return out
 }
