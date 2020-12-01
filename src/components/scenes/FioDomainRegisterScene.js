@@ -253,19 +253,6 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_not_available
     }
 
-    const materialInputOnWhiteStyle = {
-      ...MaterialInputOnWhite,
-      container: {
-        ...MaterialInputOnWhite.container,
-        ...styles.inputContainer,
-        width: '100%'
-      },
-      baseColor: theme.primaryText,
-      tintColor: theme.primaryText,
-      errorColor: theme.negativeText,
-      textColor: theme.primaryText
-    }
-
     return (
       <SceneWrapper background="header" bodySplit={theme.rem(1.5)}>
         <ScrollView ref="_scrollView">
@@ -281,7 +268,16 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
             <View style={styles.formFieldView} ref="_fieldView" onLayout={this.fieldViewOnLayout}>
               <View style={styles.formFieldViewContainer}>
                 <FormField
-                  style={materialInputOnWhiteStyle}
+                  {...MaterialInputOnWhite}
+                  containerStyle={{
+                    ...MaterialInputOnWhite.containerStyle,
+                    ...styles.inputContainer,
+                    width: '100%'
+                  }}
+                  baseColor={theme.primaryText}
+                  tintColor={theme.primaryText}
+                  errorColor={theme.negativeText}
+                  textColor={theme.primaryText}
                   autoCorrect={false}
                   autoCapitalize="none"
                   onFocus={this.handleFioDomainFocus}

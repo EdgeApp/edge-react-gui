@@ -51,6 +51,12 @@ export class TransactionDetailsPersonInput extends React.Component<Props, State>
           <View style={styles.airshipContainer}>
             <FormattedText style={styles.airshipHeader}>{personStatusString}</FormattedText>
             <FormField
+              {...MaterialInputOnWhite}
+              containerStyle={{
+                ...MaterialInputOnWhite.containerStyle,
+                height: THEME.rem(3.44),
+                width: '100%'
+              }}
               autoFocus
               autoCorrect={false}
               autoCapitalize="words"
@@ -59,22 +65,12 @@ export class TransactionDetailsPersonInput extends React.Component<Props, State>
               onChangeText={this.onChangePerson}
               onSubmitEditing={() => bridge.resolve(null)}
               value={personName}
-              style={materialInput}
             />
             <ContactSearchResults contacts={contacts} currentPayeeText={personName} onSelectPayee={this.onSelectPerson} />
           </View>
         </TouchableWithoutFeedback>
       </AirshipModal>
     )
-  }
-}
-
-const materialInput = {
-  ...MaterialInputOnWhite,
-  container: {
-    ...MaterialInputOnWhite.container,
-    height: THEME.rem(3.44),
-    width: '100%'
   }
 }
 

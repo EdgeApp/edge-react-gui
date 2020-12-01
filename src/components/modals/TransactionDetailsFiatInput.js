@@ -65,12 +65,16 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
           <View style={styles.airshipContainer}>
             <FormattedText style={styles.airshipHeader}>{sprintf(s.strings.transaction_details_fiat_modal_header, currency)}</FormattedText>
             <FormField
+              {...MaterialInputOnWhite}
+              containerStyle={{
+                ...MaterialInputOnWhite.containerStyle,
+                width: '100%'
+              }}
               autoFocus
               returnKeyType="done"
               autoCapitalize="none"
               keyboardType="numeric"
               label={s.strings.transaction_details_fiat_label}
-              style={materialFiatInput}
               onFocus={this.onFocus}
               onBlur={this.onBlur}
               onChangeText={this.onChange}
@@ -92,14 +96,6 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
       .replace(/,/, 'x')
       .replace(/,/g, '')
       .replace(/x/, ',')
-  }
-}
-
-const materialFiatInput = {
-  ...MaterialInputOnWhite,
-  container: {
-    ...MaterialInputOnWhite.container,
-    width: '100%'
   }
 }
 

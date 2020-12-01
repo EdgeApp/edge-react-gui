@@ -340,15 +340,6 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_not_available
     }
 
-    const materialInputOnWhiteStyle = {
-      ...MaterialInputOnWhite,
-      container: {
-        ...MaterialInputOnWhite.container,
-        ...styles.inputContainer,
-        width: this.state.inputWidth
-      }
-    }
-
     return (
       <SafeAreaView>
         <Gradient style={styles.scrollableGradient} />
@@ -368,7 +359,12 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
             <View style={styles.formFieldView} ref="_fieldView" onLayout={this.fieldViewOnLayout}>
               <View style={styles.formFieldViewContainer}>
                 <FormField
-                  style={materialInputOnWhiteStyle}
+                  {...MaterialInputOnWhite}
+                  containerStyle={{
+                    ...MaterialInputOnWhite.containerStyle,
+                    ...styles.inputContainer,
+                    width: this.state.inputWidth
+                  }}
                   autoCorrect={false}
                   autoCapitalize="none"
                   onFocus={this.handleFioAddressFocus}
