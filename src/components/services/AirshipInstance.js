@@ -42,21 +42,21 @@ export function showFullScreenSpinner<T>(message: string, promise: Promise<T>): 
  * Shows an error alert to the user.
  * Used when some user-requested operation fails.
  */
-export function showError(error: mixed) {
+export function showError(error: mixed): void {
   console.log(error)
 
   // TODO: Run the errors through our translation infrastructure:
   const message = error instanceof Error ? error.message : String(error)
 
-  return Airship.show(bridge => <AlertDropdown bridge={bridge} message={message} />)
+  Airship.show(bridge => <AlertDropdown bridge={bridge} message={message} />)
 }
 
 /**
  * Shows an error warning to the user.
  * Used when some user-requested operation succeeds but with a warning.
  */
-export function showWarning(message: string) {
-  return Airship.show(bridge => <AlertDropdown bridge={bridge} message={message} warning />)
+export function showWarning(message: string): void {
+  Airship.show(bridge => <AlertDropdown bridge={bridge} message={message} warning />)
 }
 
 /**
