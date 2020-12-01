@@ -86,6 +86,8 @@ export type Theme = {
   // dangerButton: string,
   // dangerButtonText: string,
 
+  buttonBoxShadow: string,
+
   // cardBackground: string,
   // cardShadow: string,
 
