@@ -1,0 +1,35 @@
+// @flow
+
+// This file provides definitions for libraries we've ignored using `.flowconfig`.
+
+declare module 'edge-plugin-bity' {
+  declare module.exports: any
+}
+
+declare module 'react-native-camera' {
+  declare module.exports: any
+}
+
+declare module 'react-native-keyboard-aware-scroll-view' {
+  declare module.exports: any
+}
+
+declare module 'react-native-permissions' {
+  declare module.exports: any
+}
+
+declare module 'react-native' {
+  declare module.exports: any
+}
+declare module 'react-native/Libraries/Components/View/ViewPropTypes' {
+  declare module.exports: any
+}
+declare module 'react-native/Libraries/Image/ImageSource' {
+  declare module.exports: any
+}
+declare module 'react-native/Libraries/StyleSheet/processColor' {
+  declare module.exports: any
+}
+declare module 'react-native/Libraries/StyleSheet/StyleSheet' {
+  declare module.exports: any
+}
