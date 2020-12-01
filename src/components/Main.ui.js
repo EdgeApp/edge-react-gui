@@ -80,6 +80,7 @@ import { THEME } from '../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../types/reduxTypes.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
+import { AirshipToast } from './common/AirshipToast.js'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle.js'
 import { handlePluginBack, renderPluginBackButton } from './navigation/GuiPluginBackButton.js'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle.js'
@@ -100,7 +101,7 @@ import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
-import { showToast } from './services/AirshipInstance.js'
+import { Airship } from './services/AirshipInstance.js'
 
 const RouterWithRedux = connect()(Router)
 
@@ -901,7 +902,7 @@ export class MainComponent extends React.Component<Props> {
         this.props.logout()
       } else {
         this.backPressedOnce = true
-        showToast(s.strings.back_button_tap_again_to_exit).then(() => {
+        Airship.show(bridge => <AirshipToast bridge={bridge} message={s.strings.back_button_tap_again_to_exit} />).then(() => {
           this.backPressedOnce = false
         })
       }

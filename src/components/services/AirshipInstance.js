@@ -63,6 +63,6 @@ export function showWarning(message: string): void {
  * Shows a message to the user.
  * Used when some user-requested operation succeeds.
  */
-export function showToast(message: string) {
-  return Airship.show(bridge => <AirshipToast bridge={bridge} message={message} />)
+export function showToast(message: string): void {
+  Airship.show(bridge => <AirshipToast bridge={bridge} message={message} />)
 }
