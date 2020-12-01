@@ -95,7 +95,7 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
       data = publicAddress
     } catch (e) {
       if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
-        return showError(e.message)
+        return showError(e)
       }
     }
   }

@@ -266,7 +266,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
         if (e.code === FIO_NO_BUNDLED_ERR_CODE) {
           this.showRenewAlert(fioWallet, payeeFioAddress)
         } else {
-          showError(e.message)
+          showError(e)
         }
       }
     } else {

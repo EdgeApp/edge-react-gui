@@ -160,7 +160,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
       } catch (e) {
         if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
           this.setState({ resolvingAddress: false })
-          return showError(e.message)
+          return showError(e)
         }
       }
     }

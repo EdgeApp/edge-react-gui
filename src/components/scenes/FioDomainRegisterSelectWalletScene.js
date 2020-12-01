@@ -77,7 +77,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
       )
       this.setState({ activationCost, supportedCurrencies, paymentInfo })
     } catch (e) {
-      showError(e.message)
+      showError(e)
     }
 
     this.setState({ loading: false })

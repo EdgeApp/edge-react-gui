@@ -317,7 +317,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
               memo
             })
           } catch (e) {
-            showError(e.message)
+            showError(e)
           }
         } else if ((guiMakeSpendInfo.publicAddress || publicAddress) && (!skipRecord || edgeSignedTransaction.currencyCode === FIO_STR)) {
           const payerPublicAddress = wallet.publicWalletInfo.keys.publicKey
@@ -338,7 +338,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
               memo
             })
           } catch (e) {
-            showError(e.message)
+            showError(e)
           }
         }
       }

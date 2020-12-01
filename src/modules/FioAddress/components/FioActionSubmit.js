@@ -89,7 +89,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
       if (onSuccess) onSuccess()
       showToast(successMessage || s.strings.string_done_cap)
     } catch (e) {
-      showError(e.message)
+      showError(e)
     }
     this.setState({ loading: false })
   }
@@ -112,7 +112,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
           showSlider = true
         }
       } catch (e) {
-        showError(e.message)
+        showError(e)
         this.setState({ error: e.message })
       }
       this.setState({ fee, displayFee, showSlider, feeLoading: false })

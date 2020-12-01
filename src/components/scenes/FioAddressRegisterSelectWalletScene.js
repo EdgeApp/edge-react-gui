@@ -80,7 +80,7 @@ export class FioAddressRegisterSelectWalletScene extends React.Component<Props, 
       )
       this.setState({ activationCost, supportedCurrencies, paymentInfo })
     } catch (e) {
-      showError(e.message)
+      showError(e)
     }
 
     this.setState({ loading: false })

@@ -90,7 +90,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
           showRenew = true
         }
       } catch (e) {
-        showError(e.message)
+        showError(e)
         this.setState({ renewError: e.message })
       }
       this.setState({ renewalFee, displayFee, showRenew, feeLoading: false })
@@ -159,7 +159,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
         })
       }
     } catch (e) {
-      showError(e.message)
+      showError(e)
       this.setState({ renewError: e.message })
     }
     this.setState({ renewLoading: false })

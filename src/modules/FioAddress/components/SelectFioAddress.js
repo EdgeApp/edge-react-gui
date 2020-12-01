@@ -184,8 +184,8 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
         }
         error = e.message
       } else {
+        showError(e)
         error = e.message
-        showError(e.message)
       }
     }
     this.props.onSelect(fioAddress, fioWallet, error)

@@ -151,7 +151,7 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
           return
         }
         this.resetSlider()
-        showError(e.message)
+        showError(e)
       }
       this.setState({ connectWalletsLoading: false })
     } else {

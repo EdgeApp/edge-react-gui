@@ -399,7 +399,7 @@ export class SendConfirmation extends React.Component<Props, State> {
             return
           }
 
-          showError(e.message)
+          showError(e)
           return
         }
         updateSpendPending(false)
