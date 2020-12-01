@@ -31,7 +31,6 @@ type LocalState = {
   touched: boolean,
   loading: boolean,
   walletLoading: boolean,
-  domainsLoading: boolean,
   isAvailable: boolean | null,
   fieldPos: number
 }
@@ -50,8 +49,6 @@ type Props = StateProps & DispatchProps & ThemeProps
 
 class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   fioCheckQueue: number = 0
-  clearButtonMode = 'while-editing'
-  returnKeyType = 'next'
 
   state = {
     selectedWallet: null,
@@ -61,7 +58,6 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     isAvailable: false,
     loading: false,
     walletLoading: false,
-    domainsLoading: true,
     fieldPos: 200
   }
 
@@ -92,7 +88,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }
   }
 
-  handleNextButton = () => {
+  handleNextButton = (): void => {
     const { isConnected } = this.props
     const { fioDomain, selectedWallet, isValid, isAvailable, loading, walletLoading } = this.state
     if (isValid && isAvailable && !loading && !walletLoading) {
@@ -247,7 +243,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
   render() {
     const { theme } = this.props
-    const { fioDomain, touched, isAvailable, domainsLoading, walletLoading } = this.state
+    const { fioDomain, touched, isAvailable } = this.state
     const styles = getStyles(theme)
     let chooseHandleErrorMessage = ''
     if (touched && !this.props.isConnected) {
@@ -267,10 +263,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
       baseColor: theme.primaryText,
       tintColor: theme.primaryText,
       errorColor: theme.negativeText,
-      textColor: theme.primaryText,
-      affixTextStyle: {
-        color: theme.negativeText
-      }
+      textColor: theme.primaryText
     }
 
     return (
@@ -289,20 +282,15 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
               <View style={styles.formFieldViewContainer}>
                 <FormField
                   style={materialInputOnWhiteStyle}
-                  clearButtonMode={this.clearButtonMode}
                   autoCorrect={false}
                   autoCapitalize="none"
-                  placeholder={s.strings.fio_domain_label}
-                  caretHidden
                   onFocus={this.handleFioDomainFocus}
                   onChangeText={this.handleFioDomainChange}
                   onSubmitEditing={this.handleNextButton}
-                  selectionColor={theme.textLink}
                   label={s.strings.fio_domain_choose_label}
                   value={fioDomain}
-                  returnKeyType={this.returnKeyType}
+                  returnKeyType="next"
                   error={chooseHandleErrorMessage}
-                  disabled={walletLoading || domainsLoading}
                   prefix="@"
                 />
               </View>

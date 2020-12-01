@@ -103,17 +103,13 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     const filteredArray = this.props.supportedFiats.filter(entry => {
       return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
     })
-    const formFieldHeight = scale(50)
 
     return (
       <SceneWrapper avoidKeyboard background="body">
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <FormField
-              style={styles.picker}
               autoFocus
-              containerStyle={{ height: formFieldHeight }}
-              clearButtonMode="while-editing"
               onFocus={this.handleOnFocus}
               onBlur={this.handleOnBlur}
               autoCorrect={false}
@@ -165,11 +161,6 @@ const rawStyles = {
     backgroundColor: THEME.COLORS.WHITE,
     flex: 1,
     paddingHorizontal: scale(20)
-  },
-  picker: {
-    fontFamily: THEME.FONTS.DEFAULT,
-    height: scale(50),
-    padding: scale(5)
   },
   resultList: {
     backgroundColor: THEME.COLORS.WHITE,

@@ -196,10 +196,8 @@ exports[`Change Mining Fees should render with custom props 1`] = `
       <FormField
         autoCapitalize="none"
         autoCorrect={false}
-        autoFocus={false}
         keyboardType="numeric"
         label="Satoshi Per Byte"
-        multiline={false}
         onChangeText={[Function]}
         returnKeyType="go"
         value=""

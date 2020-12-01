@@ -14,7 +14,7 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { FlatListItem, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { getSupportedFiats } from '../../util/utils'
-import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
+import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type StateProps = {
@@ -58,13 +58,11 @@ class DefaultFiatSettingComponent extends React.Component<Props, State> {
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <FormField
               autoFocus
-              clearButtonMode="while-editing"
               autoCorrect={false}
               autoCapitalize="words"
               onChangeText={this.handleSearchTermChange}
               value={this.state.searchTerm}
               label={s.strings.settings_select_currency}
-              style={[MaterialInputOnWhite, { width: '100%' }]}
             />
             <FlatList
               style={styles.resultList}

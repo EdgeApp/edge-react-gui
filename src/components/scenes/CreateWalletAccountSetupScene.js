@@ -146,7 +146,6 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
               <FormField
                 style={this.modifiedStyle}
                 autoFocus
-                clearButtonMode="while-editing"
                 autoCorrect={false}
                 onChangeText={this.handleChangeHandle}
                 label={s.strings.create_wallet_account_handle}

@@ -71,8 +71,6 @@ export class TransactionDetailsPersonInput extends React.Component<Props, State>
 
 const materialInput = {
   ...MaterialInputOnWhite,
-  fontSize: THEME.rem(0.9),
-  labelFontSize: THEME.rem(0.65),
   container: {
     ...MaterialInputOnWhite.container,
     height: THEME.rem(3.44),

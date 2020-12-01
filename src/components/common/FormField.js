@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 
 import * as React from 'react'
 import { TextField } from 'react-native-material-textfield'
@@ -6,43 +6,51 @@ import { TextField } from 'react-native-material-textfield'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 
-/*
-type Props = {
+type Props = {|
+  // From the react-native-material-textfield readme:
+  error?: string,
+  fontSize?: number,
+  label: string,
+  labelFontSize?: number,
+  multiline?: boolean,
+  onBlur?: () => void,
+  onChangeText: (text: string) => void,
+  onFocus?: () => void,
+  prefix?: string,
+  suffix?: string,
+  titleFontSize?: number,
 
- fontSize: number,
- titleFontSize: number,
- labelFontSize: number,
- style: StyleSheet.Styles,
- label?: string,
- value?: string,
- placeholder?: string,
- autoCorrect: boolean,
- autoFocus: boolean,
- autoCapitalize?: string,
- secureTextEntry?: boolean,
- showSecureCheckbox?: boolean,
- returnKeyType?: string,
- error?: string,
- onSubmitEditing(): void,
- onFocus(): void,
- onBlur(): void,
- onChangeText(string):void,
-}
+  // Other React Native TextInput properties:
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters',
+  autoCorrect?: boolean,
+  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad',
+  maxLength?: number,
+  onSubmitEditing?: () => void,
+  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send',
+  secureTextEntry?: boolean,
+  value: string,
 
-class FormField extends React.Component<Props> {
-*/
-export class FormField extends React.Component {
+  // Edge additions:
+  autoFocus?: boolean,
+  style?: {|
+    container: any,
+    baseColor: string,
+    tintColor: string,
+    textColor: string,
+    errorColor: string,
+    titleTextStyle: any
+  |}
+|}
+
+export class FormField extends React.Component<Props> {
   static defaultProps = {
-    autoCapitalize: 'none',
-    autoCorrect: false,
-    autoFocus: false,
+    autoCapitalize: 'none', // Native default is 'sentences'
+    autoCorrect: false, // Native default is 'true'
     returnKeyType: 'go',
-    label: '',
-    keyboardType: 'default',
-    multiline: false
+    keyboardType: 'default'
   }
 
-  inputRef = React.createRef()
+  inputRef: { current: null | React$ElementRef<typeof TextField> } = React.createRef()
 
   componentDidMount() {
     if (this.props.autoFocus && this.inputRef.current != null) {
@@ -97,9 +105,6 @@ export const MaterialInputOnWhite = {
   tintColor: THEME.COLORS.SECONDARY,
   errorColor: THEME.COLORS.ACCENT_RED,
   textColor: THEME.COLORS.BLACK,
-  affixTextStyle: {
-    color: THEME.COLORS.ACCENT_RED
-  },
   titleTextStyle: {
     // color: THEME.COLORS.PRIMARY // this causes the forms to have a default text color EVEN ON ERROR
   }

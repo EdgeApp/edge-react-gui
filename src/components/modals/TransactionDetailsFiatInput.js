@@ -69,7 +69,6 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
               returnKeyType="done"
               autoCapitalize="none"
               keyboardType="numeric"
-              clearButtonMode="while-editing"
               label={s.strings.transaction_details_fiat_label}
               style={materialFiatInput}
               onFocus={this.onFocus}
@@ -98,7 +97,6 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
 
 const materialFiatInput = {
   ...MaterialInputOnWhite,
-  fontSize: THEME.rem(3),
   container: {
     ...MaterialInputOnWhite.container,
     width: '100%'

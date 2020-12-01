@@ -75,12 +75,7 @@ export class CreateWalletName extends React.Component<Props, State> {
         <View style={styles.scene}>
           <Gradient style={styles.gradient} />
           <View style={styles.view}>
-            <WalletNameInput
-              onChangeText={this.handleChangeWalletName}
-              value={this.state.walletName}
-              placeholder={s.strings.fragment_wallets_addwallet_name_hint}
-              onNext={this.onNext}
-            />
+            <WalletNameInput onChangeText={this.handleChangeWalletName} value={this.state.walletName} onNext={this.onNext} />
             <View style={styles.buttons}>
               <SecondaryButton style={styles.back} onPress={this.onBack}>
                 <SecondaryButton.Text>{s.strings.title_back}</SecondaryButton.Text>
@@ -101,7 +96,6 @@ export class CreateWalletName extends React.Component<Props, State> {
 
 export type WalletNameInputProps = {
   value: string,
-  placeholder: string,
   onChangeText: (walletName: string) => void,
   onNext: () => void
 }
@@ -120,9 +114,7 @@ class WalletNameInput extends React.Component<WalletNameInputProps> {
         <FormField
           style={MaterialInputOnWhiteStyle}
           autoFocus
-          clearButtonMode="while-editing"
           autoCorrect={false}
-          placeholder={this.props.placeholder}
           onChangeText={this.props.onChangeText}
           label={s.strings.fragment_wallets_addwallet_name_hint}
           value={this.props.value}

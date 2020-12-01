@@ -98,13 +98,12 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
             <View style={styles.inputSubCategoryContainter}>
               <FormField
                 autoFocus
-                blurOnSubmit
                 returnKeyType="done"
                 autoCapitalize="none"
                 label={s.strings.transaction_details_choose_a_sub_category}
                 style={materialInput}
-                fontSize={materialInput.fontSize}
-                labelFontSize={materialInput.labelFontSize}
+                fontSize={THEME.rem(0.9)}
+                labelFontSize={THEME.rem(0.65)}
                 onChangeText={this.onChangeSubCategory}
                 onSubmitEditing={() => bridge.resolve(null)}
                 value={subCategory}
@@ -149,8 +148,6 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
 
 const materialInput = {
   ...MaterialInputOnWhite,
-  fontSize: THEME.rem(0.9),
-  labelFontSize: THEME.rem(0.65),
   container: {
     ...MaterialInputOnWhite.container,
     height: THEME.rem(3.44),
