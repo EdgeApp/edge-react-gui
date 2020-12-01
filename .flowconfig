@@ -1,12 +1,9 @@
 [ignore]
 ; Edge additions
-.*/node_modules/edge-login-ui-rn/.*
 .*/node_modules/edge-plugin-bity/.*
 .*/node_modules/react-native-camera/.*
 .*/node_modules/react-native-keyboard-aware-scroll-view/.*
 .*/node_modules/react-native-permissions/.*
-.*/node_modules/react-native-share/.*
-.*/node_modules/react-native-tcp/.*
 .*/node_modules/react-native/.*
 
 ; We fork some components by platform

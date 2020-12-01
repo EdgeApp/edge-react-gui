@@ -12,7 +12,7 @@ import { showError } from '../../components/services/AirshipInstance.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
-import { type CustomTokenInfo } from '../../types/types.js'
+import { type CustomTokenInfo, type GuiTouchIdInfo } from '../../types/types.js'
 import { runWithTimeout } from '../../util/utils.js'
 import {
   getLocalSettings,
@@ -47,7 +47,7 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, cur
   return { walletId, currencyCode }
 }
 
-export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
+export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'LOGIN', data: account })
   Actions[Constants.EDGE]()
 
@@ -62,7 +62,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
 
   let accountInitObject = {
     account,
-    touchIdInfo: touchIdInfo,
+    touchIdInfo,
     walletId: '',
     currencyCode: '',
     autoLogoutTimeInSeconds: 3600,
