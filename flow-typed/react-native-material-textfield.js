@@ -3,6 +3,19 @@
 import * as React from 'react'
 
 declare module 'react-native-material-textfield' {
+  declare export type ContentInset = {|
+    top?: number,
+    label?: number,
+    input?: number
+  |}
+
+  declare export type LabelOffset = {|
+    x0: number,
+    y0: number,
+    x1: number,
+    y1: number
+  |}
+
   declare export type TextFieldProps = {|
     // From the react-native-material-textfield readme:
     animationDuration?: number,
@@ -28,7 +41,13 @@ declare module 'react-native-material-textfield' {
     titleFontSize?: number,
 
     // Other layout options:
+    activeLineWidth?: number,
+    contentInset?: ContentInset,
     disabledLineType?: 'solid' | 'dotted' | 'dashed' | 'none',
+    disabledLineWidth?: number,
+    labelOffset?: LabelOffset,
+    lineType?: 'solid' | 'dotted' | 'dashed' | 'none',
+    lineWidth?: number,
 
     // Styles:
     affixTextStyle?: any,
@@ -38,10 +57,12 @@ declare module 'react-native-material-textfield' {
     titleTextStyle?: any,
 
     // Methods:
+    formatText?: (text: string) => string,
     onBlur?: () => void,
     onChangeText?: (text: string) => void,
     onFocus?: () => void,
-    renderAccessory?: () => any,
+    renderLeftAccessory?: () => any,
+    renderRightAccessory?: () => any,
 
     // Other React Native TextInput properties:
     autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters',
@@ -52,7 +73,7 @@ declare module 'react-native-material-textfield' {
     onSubmitEditing?: () => void,
     returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send',
     secureTextEntry?: boolean,
-    value?: string,
+    value?: string
   |}
 
   declare export class TextField extends React$Component<TextFieldProps> {
@@ -62,5 +83,6 @@ declare module 'react-native-material-textfield' {
     value(): string;
     isFocused(): boolean;
     isRestricted(): boolean;
+    setValue(value?: string): void;
   }
 }

@@ -1,0 +1,409 @@
+diff --git a/node_modules/react-native-material-textfield/src/components/affix/index.js b/node_modules/react-native-material-textfield/src/components/affix/index.js
+index 0f85022..b5969fc 100644
+--- a/node_modules/react-native-material-textfield/src/components/affix/index.js
++++ b/node_modules/react-native-material-textfield/src/components/affix/index.js
+@@ -1,4 +1,3 @@
+-import PropTypes from 'prop-types';
+ import React, { PureComponent } from 'react';
+ import { Animated } from 'react-native';
+ 
+@@ -9,27 +8,6 @@ export default class Affix extends PureComponent {
+     numberOfLines: 1,
+   };
+ 
+-  static propTypes = {
+-    numberOfLines: PropTypes.number,
+-    style: Animated.Text.propTypes.style,
+-
+-    color: PropTypes.string.isRequired,
+-    fontSize: PropTypes.number.isRequired,
+-
+-    type: PropTypes
+-      .oneOf(['prefix', 'suffix'])
+-      .isRequired,
+-
+-    labelAnimation: PropTypes
+-      .instanceOf(Animated.Value)
+-      .isRequired,
+-
+-    children: PropTypes.oneOfType([
+-      PropTypes.arrayOf(PropTypes.node),
+-      PropTypes.node,
+-    ]),
+-  };
+-
+   render() {
+     let { labelAnimation, style, children, type, fontSize, color } = this.props;
+ 
+diff --git a/node_modules/react-native-material-textfield/src/components/counter/index.js b/node_modules/react-native-material-textfield/src/components/counter/index.js
+index 35d3264..891a18c 100644
+--- a/node_modules/react-native-material-textfield/src/components/counter/index.js
++++ b/node_modules/react-native-material-textfield/src/components/counter/index.js
+@@ -1,20 +1,9 @@
+-import PropTypes from 'prop-types';
+ import React, { PureComponent } from 'react';
+ import { Text } from 'react-native';
+ 
+ import styles from './styles';
+ 
+ export default class Counter extends PureComponent {
+-  static propTypes = {
+-    count: PropTypes.number.isRequired,
+-    limit: PropTypes.number,
+-
+-    baseColor: PropTypes.string.isRequired,
+-    errorColor: PropTypes.string.isRequired,
+-
+-    style: Text.propTypes.style,
+-  };
+-
+   render() {
+     let { count, limit, baseColor, errorColor, style } = this.props;
+ 
+diff --git a/node_modules/react-native-material-textfield/src/components/field/index.js b/node_modules/react-native-material-textfield/src/components/field/index.js
+index 494bbaa..6c4f281 100644
+--- a/node_modules/react-native-material-textfield/src/components/field/index.js
++++ b/node_modules/react-native-material-textfield/src/components/field/index.js
+@@ -1,4 +1,3 @@
+-import PropTypes from 'prop-types';
+ import React, { PureComponent } from 'react';
+ import {
+   View,
+@@ -55,7 +54,7 @@ export default class TextField extends PureComponent {
+ 
+     errorColor: 'rgb(213, 0, 0)',
+ 
+-    lineWidth: StyleSheet.hairlineWidth,
++    lineWidth: 1,
+     activeLineWidth: 2,
+     disabledLineWidth: 1,
+ 
+@@ -65,61 +64,6 @@ export default class TextField extends PureComponent {
+     disabled: false,
+   };
+ 
+-  static propTypes = {
+-    ...TextInput.propTypes,
+-
+-    animationDuration: PropTypes.number,
+-
+-    fontSize: PropTypes.number,
+-    labelFontSize: PropTypes.number,
+-
+-    contentInset: PropTypes.shape({
+-      top: PropTypes.number,
+-      label: PropTypes.number,
+-      input: PropTypes.number,
+-      left: PropTypes.number,
+-      right: PropTypes.number,
+-    }),
+-
+-    labelOffset: Label.propTypes.offset,
+-
+-    labelTextStyle: Text.propTypes.style,
+-    titleTextStyle: Text.propTypes.style,
+-    affixTextStyle: Text.propTypes.style,
+-
+-    tintColor: PropTypes.string,
+-    textColor: PropTypes.string,
+-    baseColor: PropTypes.string,
+-
+-    label: PropTypes.string,
+-    title: PropTypes.string,
+-
+-    characterRestriction: PropTypes.number,
+-
+-    error: PropTypes.string,
+-    errorColor: PropTypes.string,
+-
+-    lineWidth: PropTypes.number,
+-    activeLineWidth: PropTypes.number,
+-    disabledLineWidth: PropTypes.number,
+-
+-    lineType: Line.propTypes.lineType,
+-    disabledLineType: Line.propTypes.lineType,
+-
+-    disabled: PropTypes.bool,
+-
+-    formatText: PropTypes.func,
+-
+-    renderLeftAccessory: PropTypes.func,
+-    renderRightAccessory: PropTypes.func,
+-
+-    prefix: PropTypes.string,
+-    suffix: PropTypes.string,
+-
+-    containerStyle: (ViewPropTypes || View.propTypes).style,
+-    inputContainerStyle: (ViewPropTypes || View.propTypes).style,
+-  };
+-
+   static inputContainerStyle = styles.inputContainer;
+ 
+   static contentInset = {
+@@ -449,12 +393,97 @@ export default class TextField extends PureComponent {
+ 
+   inputProps() {
+     let store = {};
+-
+-    for (let key in TextInput.propTypes) {
+-      if ('defaultValue' === key) {
+-        continue;
+-      }
+-
++    const keys = [
++      "accessibilityActions",
++      "accessibilityComponentType",
++      "accessibilityElementsHidden",
++      "accessibilityHint",
++      "accessibilityIgnoresInvertColors",
++      "accessibilityLabel",
++      "accessibilityLiveRegion",
++      "accessibilityRole",
++      "accessibilityStates",
++      "accessibilityTraits",
++      "accessibilityViewIsModal",
++      "accessible",
++      "allowFontScaling",
++      "autoCapitalize",
++      "autoCompleteType",
++      "autoCorrect",
++      "autoFocus",
++      "blurOnSubmit",
++      "caretHidden",
++      "clearButtonMode",
++      "clearTextOnFocus",
++      "collapsable",
++      "contextMenuHidden",
++      "dataDetectorTypes",
++      "disableFullscreenUI",
++      "editable",
++      "enablesReturnKeyAutomatically",
++      "hitSlop",
++      "importantForAccessibility",
++      "inlineImageLeft",
++      "inlineImagePadding",
++      "inputAccessoryViewID",
++      "keyboardAppearance",
++      "keyboardType",
++      "maxFontSizeMultiplier",
++      "maxLength",
++      "multiline",
++      "nativeID",
++      "needsOffscreenAlphaCompositing",
++      "numberOfLines",
++      "onAccessibilityAction",
++      "onAccessibilityTap",
++      "onBlur",
++      "onChange",
++      "onChangeText",
++      "onContentSizeChange",
++      "onEndEditing",
++      "onFocus",
++      "onKeyPress",
++      "onLayout",
++      "onMagicTap",
++      "onMoveShouldSetResponder",
++      "onMoveShouldSetResponderCapture",
++      "onResponderGrant",
++      "onResponderMove",
++      "onResponderReject",
++      "onResponderRelease",
++      "onResponderTerminate",
++      "onResponderTerminationRequest",
++      "onScroll",
++      "onSelectionChange",
++      "onStartShouldSetResponder",
++      "onStartShouldSetResponderCapture",
++      "onSubmitEditing",
++      "onTextInput",
++      "placeholder",
++      "placeholderTextColor",
++      "pointerEvents",
++      "rejectResponderTermination",
++      "removeClippedSubviews",
++      "renderToHardwareTextureAndroid",
++      "returnKeyLabel",
++      "returnKeyType",
++      "scrollEnabled",
++      "secureTextEntry",
++      "selection",
++      "selectionColor",
++      "selectionState",
++      "selectTextOnFocus",
++      "shouldRasterizeIOS",
++      "spellCheck",
++      "style",
++      "testID",
++      "textBreakStrategy",
++      "textContentType",
++      "underlineColorAndroid",
++      "value"
++    ]
++
++    for (const key of keys) {
+       if (key in this.props) {
+         store[key] = this.props[key];
+       }
+diff --git a/node_modules/react-native-material-textfield/src/components/helper/index.js b/node_modules/react-native-material-textfield/src/components/helper/index.js
+index 6060f9f..140e1fe 100644
+--- a/node_modules/react-native-material-textfield/src/components/helper/index.js
++++ b/node_modules/react-native-material-textfield/src/components/helper/index.js
+@@ -1,24 +1,9 @@
+-import PropTypes from 'prop-types';
+ import React, { PureComponent } from 'react';
+ import { Animated } from 'react-native';
+ 
+ import styles from './styles';
+ 
+ export default class Helper extends PureComponent {
+-  static propTypes = {
+-    title: PropTypes.string,
+-    error: PropTypes.string,
+-
+-    disabled: PropTypes.bool,
+-
+-    style: Animated.Text.propTypes.style,
+-
+-    baseColor: PropTypes.string,
+-    errorColor: PropTypes.string,
+-
+-    focusAnimation: PropTypes.instanceOf(Animated.Value),
+-  };
+-
+   constructor(props) {
+     super(props);
+ 
+diff --git a/node_modules/react-native-material-textfield/src/components/label/index.js b/node_modules/react-native-material-textfield/src/components/label/index.js
+index 82eaf03..7223558 100644
+--- a/node_modules/react-native-material-textfield/src/components/label/index.js
++++ b/node_modules/react-native-material-textfield/src/components/label/index.js
+@@ -1,4 +1,3 @@
+-import PropTypes from 'prop-types';
+ import React, { PureComponent } from 'react';
+ import { Animated } from 'react-native';
+ 
+@@ -11,42 +10,6 @@ export default class Label extends PureComponent {
+     restricted: false,
+   };
+ 
+-  static propTypes = {
+-    numberOfLines: PropTypes.number,
+-
+-    disabled: PropTypes.bool,
+-    restricted: PropTypes.bool,
+-
+-    fontSize: PropTypes.number.isRequired,
+-    activeFontSize: PropTypes.number.isRequired,
+-
+-    baseColor: PropTypes.string.isRequired,
+-    tintColor: PropTypes.string.isRequired,
+-    errorColor: PropTypes.string.isRequired,
+-
+-    focusAnimation: PropTypes
+-      .instanceOf(Animated.Value)
+-      .isRequired,
+-
+-    labelAnimation: PropTypes
+-      .instanceOf(Animated.Value)
+-      .isRequired,
+-
+-    contentInset: PropTypes.shape({
+-      label: PropTypes.number,
+-    }),
+-
+-    offset: PropTypes.shape({
+-      x0: PropTypes.number,
+-      y0: PropTypes.number,
+-      x1: PropTypes.number,
+-      y1: PropTypes.number,
+-    }),
+-
+-    style: Animated.Text.propTypes.style,
+-    label: PropTypes.string,
+-  };
+-
+   render() {
+     let {
+       label,
+diff --git a/node_modules/react-native-material-textfield/src/components/line/index.js b/node_modules/react-native-material-textfield/src/components/line/index.js
+index 44995e9..879f1f9 100644
+--- a/node_modules/react-native-material-textfield/src/components/line/index.js
++++ b/node_modules/react-native-material-textfield/src/components/line/index.js
+@@ -1,12 +1,8 @@
+-import PropTypes from 'prop-types';
+ import React, { PureComponent } from 'react';
+ import { View, Animated } from 'react-native';
+ 
+ import styles from './styles';
+ 
+-const lineTypes = PropTypes
+-  .oneOf(['solid', 'dotted', 'dashed', 'none']);
+-
+ export default class Line extends PureComponent {
+   static defaultProps = {
+     lineType: 'solid',
+@@ -16,24 +12,6 @@ export default class Line extends PureComponent {
+     restricted: false,
+   };
+ 
+-  static propTypes = {
+-    lineType: lineTypes,
+-    disabledLineType: lineTypes,
+-
+-    disabled: PropTypes.bool,
+-    restricted: PropTypes.bool,
+-
+-    tintColor: PropTypes.string,
+-    baseColor: PropTypes.string,
+-    errorColor: PropTypes.string,
+-
+-    lineWidth: PropTypes.number,
+-    activeLineWidth: PropTypes.number,
+-    disabledLineWidth: PropTypes.number,
+-
+-    focusAnimation: PropTypes.instanceOf(Animated.Value),
+-  };
+-
+   static getDerivedStateFromProps(props, state) {
+     let { lineWidth, activeLineWidth, disabledLineWidth } = props;
+ 
+diff --git a/node_modules/react-native-material-textfield/src/components/outline/index.js b/node_modules/react-native-material-textfield/src/components/outline/index.js
+index 9347a99..a6da339 100644
+--- a/node_modules/react-native-material-textfield/src/components/outline/index.js
++++ b/node_modules/react-native-material-textfield/src/components/outline/index.js
+@@ -1,4 +1,3 @@
+-import PropTypes from 'prop-types';
+ import React, { Fragment, PureComponent } from 'react';
+ import { View, Animated, I18nManager } from 'react-native';
+ 
+@@ -11,30 +10,6 @@ export default class Line extends PureComponent {
+     restricted: false,
+   };
+ 
+-  static propTypes = {
+-    lineType: PropTypes.oneOf(['solid', 'none']),
+-
+-    disabled: PropTypes.bool,
+-    restricted: PropTypes.bool,
+-
+-    tintColor: PropTypes.string,
+-    baseColor: PropTypes.string,
+-    errorColor: PropTypes.string,
+-
+-    lineWidth: PropTypes.number,
+-    activeLineWidth: PropTypes.number,
+-    disabledLineWidth: PropTypes.number,
+-
+-    focusAnimation: PropTypes.instanceOf(Animated.Value),
+-    labelAnimation: PropTypes.instanceOf(Animated.Value),
+-    labelWidth: PropTypes.instanceOf(Animated.Value),
+-
+-    contentInset: PropTypes.shape({
+-      left: PropTypes.number,
+-      right: PropTypes.number,
+-    }),
+-  };
+-
+   borderProps() {
+     let {
+       disabled,

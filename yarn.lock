@@ -9567,9 +9567,10 @@ react-native-mail@^5.0.1:
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-5.0.1.tgz#4fe1dfe319c48fd40e513825e78924c23141197b"
   integrity sha512-MtYA2HlvAFqWwrEH0vTecsSOECi3joW2fxXoMa9TaIa95hs3nyWGX4YBKfBGH8/hE0L0ONh9pY9fKHcCT80Avg==
 
-"react-native-material-textfield@git://github.com/EdgeApp/react-native-material-textfield.git":
-  version "0.10.2"
-  resolved "git://github.com/EdgeApp/react-native-material-textfield.git#c30320fd26e5619c1fe57b3043b8fd9ae2a0c57a"
+react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@git://github.com/EdgeApp/react-native-material-textfield.git":
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz#649e71344bb8a7225d5cea7c7b51cd38bcb2bbfc"
+  integrity sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A==
   dependencies:
     prop-types "^15.5.9"
 
