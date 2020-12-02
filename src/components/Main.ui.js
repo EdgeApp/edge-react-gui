@@ -22,6 +22,7 @@ import { FioAddressRegisteredScene } from '../components/scenes/FioAddressRegist
 import { FioAddressSettingsScene } from '../components/scenes/FioAddressSettingsScene'
 import { FioDomainSettingsScene } from '../components/scenes/FioDomainSettingsScene'
 import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConfirmationScene.js'
+import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
 import { SendScene } from '../components/scenes/SendScene'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
@@ -43,7 +44,6 @@ import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegi
 import { FioAddressRegisterSelectWalletConnector } from '../connectors/scenes/FioAddressRegisterSelectWalletConnector'
 import { FioConnectWalletConfirmConnector } from '../connectors/scenes/FioConnectWalletConfirmConnector'
 import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
-import { FioSentRequestConnector } from '../connectors/scenes/FioSentRequestConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConnector.js'
 import Request from '../connectors/scenes/RequestConnector.js'
@@ -732,7 +732,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.FIO_SENT_REQUEST_DETAILS}
               navTransparent
-              component={ifLoggedIn(FioSentRequestConnector)}
+              component={ifLoggedIn(FioSentRequestDetailsScene)}
               renderTitle={<HeaderTitle title={s.strings.title_fio_sent_request_details} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               onLeft={Actions.pop}
