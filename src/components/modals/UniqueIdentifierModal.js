@@ -58,14 +58,13 @@ export class UniqueIdentifierModal extends React.Component<Props> {
           <InteractiveModal.Row>
             <InteractiveModal.Item>
               <TextField
-                autoFocus
                 baseColor={THEME.COLORS.SECONDARY}
                 tintColor={THEME.COLORS.SECONDARY}
                 onChangeText={uniqueIdentifierChanged}
                 keyboardType={keyboardType}
                 value={uniqueIdentifier}
                 label={title}
-                onSubmit={this.onConfirm}
+                onSubmitEditing={this.onConfirm}
               />
             </InteractiveModal.Item>
           </InteractiveModal.Row>

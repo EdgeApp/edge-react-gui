@@ -329,9 +329,12 @@ export class SendConfirmation extends React.Component<Props, State> {
                           baseColor={THEME.COLORS.WHITE}
                           textColor={THEME.COLORS.WHITE}
                           tintColor={THEME.COLORS.WHITE}
-                          inputContainerPadding={-10}
-                          inputContainerStyle={{ paddingTop: 14, width: 45, alignItems: 'center', justifyContent: 'center' }}
-                          style={{ justifyContent: 'center' }}
+                          inputContainerStyle={{
+                            marginTop: -14,
+                            width: 45,
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
                           secureTextEntry
                           keyboardType="numeric"
                           label=""
