@@ -14,7 +14,7 @@ import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
-const WIDTH_DIMENSION_ACTIVATE = Dimensions.get('window').width * 0.75
+const WIDTH_DIMENSION_ACTIVATE = Dimensions.get('window').width * 0.65
 const WIDTH_DIMENSION_HIDE = Dimensions.get('window').width * 0.4
 const WIDTH_DIMENSION_SHOW = Dimensions.get('window').width * 0.15
 
@@ -137,6 +137,7 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
         rightActivationValue={-WIDTH_DIMENSION_ACTIVATE}
         onLeftActionStatusChange={this.handleOpenSend}
         onRightActionStatusChange={this.handleOpenRequest}
+        directionalDistanceChangeThreshold={0}
         useNativeDriver
       >
         <View style={styles.swipeContainer}>
