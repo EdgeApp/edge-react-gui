@@ -1062,7 +1062,6 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
   </SceneWrapper>
   <Connect(UniqueIdentifierModal)
     currencyCode="XRP"
-    keyboardType="numeric"
   />
 </React.Fragment>
 `;

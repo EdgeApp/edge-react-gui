@@ -18,6 +18,7 @@ import { initializeAccount, logoutRequest } from '../../modules/Login/action.js'
 import THEME from '../../theme/variables/airbitz.js'
 import { type DeepLink } from '../../types/DeepLink.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { type GuiTouchIdInfo } from '../../types/types.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 import { UpdateModal } from '../modals/UpdateModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
@@ -32,7 +33,7 @@ type StateProps = {
 }
 type DispatchProps = {
   deepLinkHandled(): void,
-  initializeAccount(account: EdgeAccount, touchIdInfo: Object): void,
+  initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdInfo): void,
   logout(): void,
   showSendLogsModal(): void
 }
@@ -67,7 +68,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
       setTimeout(() => {
         context
           .loginWithPassword(YOLO_USERNAME, YOLO_PASSWORD)
-          .then(account => initializeAccount(account, {}))
+          .then(account => initializeAccount(account, dummyTouchIdInfo))
           .catch(showError)
       }, 500)
     }
@@ -118,10 +119,10 @@ class LoginSceneComponent extends React.Component<Props, State> {
     showHelpModal()
   }
 
-  onLogin = (error: Error | null, account: EdgeAccount | null, touchIdInfo: Object) => {
+  onLogin = (error: Error | null | void, account: EdgeAccount | null | void, touchIdInfo: GuiTouchIdInfo | null | void) => {
     if (error != null) return
     this.setState({ passwordRecoveryKey: undefined })
-    if (account != null) this.props.initializeAccount(account, touchIdInfo)
+    if (account != null) this.props.initializeAccount(account, touchIdInfo ?? dummyTouchIdInfo)
   }
 
   render() {
@@ -131,7 +132,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
       <View style={styles.container} testID="edge: login-scene">
         <LoginScreen
           username={this.props.username}
-          accountOptions={null}
+          accountOptions={{}}
           context={this.props.context}
           recoveryLogin={passwordRecoveryKey}
           onLogin={this.onLogin}
@@ -148,6 +149,11 @@ class LoginSceneComponent extends React.Component<Props, State> {
       <LoadingScene />
     )
   }
+}
+
+const dummyTouchIdInfo: GuiTouchIdInfo = {
+  isTouchEnabled: false,
+  isTouchSupported: false
 }
 
 const rawStyles = {

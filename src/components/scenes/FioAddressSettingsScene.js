@@ -26,7 +26,7 @@ import { showError, showToast } from '../services/AirshipInstance'
 
 const DIVIDE_PRECISION = 18
 
-export type LocalState = {
+type LocalState = {
   showRenew: boolean,
   renewError: string,
   feeLoading: boolean,
@@ -36,17 +36,17 @@ export type LocalState = {
   balance: number
 }
 
-export type StateProps = {
+type StateProps = {
   fioAddresses: FioAddress[],
   denominationMultiplier: string,
   isConnected: boolean
 }
 
-export type DispatchProps = {
+type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
 
-export type NavigationProps = {
+type NavigationProps = {
   fioWallet: EdgeCurrencyWallet,
   fioAddressName: string,
   expiration?: string,
@@ -90,7 +90,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
           showRenew = true
         }
       } catch (e) {
-        showError(e.message)
+        showError(e)
         this.setState({ renewError: e.message })
       }
       this.setState({ renewalFee, displayFee, showRenew, feeLoading: false })
@@ -159,7 +159,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
         })
       }
     } catch (e) {
-      showError(e.message)
+      showError(e)
       this.setState({ renewError: e.message })
     }
     this.setState({ renewLoading: false })

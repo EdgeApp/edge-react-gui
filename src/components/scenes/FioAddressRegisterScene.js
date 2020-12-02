@@ -27,7 +27,7 @@ import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 
-export type State = {
+type State = {
   selectedWallet: EdgeCurrencyWallet | null,
   selectedDomain: FioDomain,
   publicDomains: FioDomain[],

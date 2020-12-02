@@ -10,18 +10,18 @@ import Text from '../FormattedText/FormattedText.ui.js'
 import { InteractiveModal } from '../Modals/InteractiveModal/InteractiveModal.ui.js'
 import { styles } from './PasswordRecoveryReminderModalStyles.js'
 
-export type PasswordRecoveryReminderModalOwnProps = {}
+type PasswordRecoveryReminderModalOwnProps = {}
 
-export type PasswordRecoveryReminderModalStateProps = {
+type PasswordRecoveryReminderModalStateProps = {
   isVisible: boolean
 }
 
-export type PasswordRecoveryReminderModalDispatchProps = {
+type PasswordRecoveryReminderModalDispatchProps = {
   hidePasswordRecoveryReminderModal: () => void,
   onGoToPasswordRecoveryScene: () => void
 }
 
-export type PasswordRecoveryReminderModalProps = PasswordRecoveryReminderModalOwnProps &
+type PasswordRecoveryReminderModalProps = PasswordRecoveryReminderModalOwnProps &
   PasswordRecoveryReminderModalStateProps &
   PasswordRecoveryReminderModalDispatchProps
 

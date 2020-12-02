@@ -1,12 +1,9 @@
 [ignore]
 ; Edge additions
-.*/node_modules/edge-login-ui-rn/.*
 .*/node_modules/edge-plugin-bity/.*
 .*/node_modules/react-native-camera/.*
 .*/node_modules/react-native-keyboard-aware-scroll-view/.*
 .*/node_modules/react-native-permissions/.*
-.*/node_modules/react-native-share/.*
-.*/node_modules/react-native-tcp/.*
 .*/node_modules/react-native/.*
 
 ; We fork some components by platform
@@ -58,7 +55,7 @@ module.system.haste.paths.whitelist=<PROJECT_ROOT>/node_modules/react-native/Lib
 
 munge_underscores=true
 
-module.name_mapper='^[./a-zA-Z0-9$_-]+\.\(bmp\|gif\|jpg\|jpeg\|png\|psd\|svg\|webp\|m4v\|mov\|mp4\|mpeg\|mpg\|webm\|aac\|aiff\|caf\|m4a\|mp3\|wav\|html\|pdf\)$' -> '<PROJECT_ROOT>/src/ImageStub.js.flow'
+module.name_mapper='^[./a-zA-Z0-9$_-]+\.\(bmp\|gif\|jpg\|jpeg\|png\|psd\|svg\|webp\|m4v\|mov\|mp4\|mpeg\|mpg\|webm\|aac\|aiff\|caf\|m4a\|mp3\|wav\|html\|pdf\)$' -> 'RelativeImageStub'
 
 module.file_ext=.js
 module.file_ext=.jsx

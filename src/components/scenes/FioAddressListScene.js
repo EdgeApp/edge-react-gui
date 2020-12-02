@@ -34,7 +34,7 @@ export type DispatchProps = {
   refreshAllFioAddresses: () => Promise<void>
 }
 
-export type NavigationProps = {
+type NavigationProps = {
   navigation: any
 }
 

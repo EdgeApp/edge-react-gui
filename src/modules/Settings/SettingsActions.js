@@ -1,6 +1,6 @@
 // @flow
 
-import type { GuiTouchIdInfo, MostRecentWallet } from '../../types/types.js'
+import type { MostRecentWallet } from '../../types/types.js'
 
 export const updateSettings = (settings: Object) => ({
   type: 'UI/SETTINGS/UPDATE_SETTINGS',
@@ -50,11 +50,6 @@ export const setDenominationKey = (currencyCode: string, denominationKey: string
 })
 
 // touch id settings
-export const addTouchIdInfo = (touchIdInfo: GuiTouchIdInfo) => ({
-  type: 'UI/SETTINGS/TOUCH_ID_SETTINGS',
-  data: touchIdInfo
-})
-
 export const updateTouchIdEnabled = (bool: boolean) => ({
   type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS',
   data: { isTouchEnabled: bool }

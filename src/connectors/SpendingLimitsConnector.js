@@ -8,11 +8,11 @@ import type { SpendingLimits as SpendingLimitsType } from '../reducers/SpendingL
 import { type RootState } from '../types/reduxTypes.js'
 import { getFiatSymbol } from '../util/utils.js'
 
-export const mapStateToProps = (state: RootState) => ({
+const mapStateToProps = (state: RootState) => ({
   currencySymbol: getFiatSymbol(state.ui.settings.defaultFiat),
   transactionSpendingLimit: state.ui.settings.spendingLimits.transaction
 })
-export const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   onSubmit: (spendingLimits: SpendingLimitsType, password: string) => {
     dispatch(setSpendingLimits(spendingLimits, password))
   }

@@ -47,7 +47,7 @@ type State = {
   enabled?: boolean
 }
 
-export type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
+type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
 
 export class AddToken extends React.Component<AddTokenProps, State> {
   constructor(props: AddTokenProps) {

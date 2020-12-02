@@ -38,8 +38,8 @@ export class WalletListRow extends React.PureComponent<Props> {
     if (!isToken) {
       // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
       // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
-      const SPECIAL_CURRENCY_INFO = getSpecialCurrencyInfo(currencyCode)
-      if (!SPECIAL_CURRENCY_INFO.isAccountActivationRequired || (SPECIAL_CURRENCY_INFO.isAccountActivationRequired && publicAddress)) {
+      const { isAccountActivationRequired } = getSpecialCurrencyInfo(currencyCode)
+      if (!isAccountActivationRequired || (isAccountActivationRequired && publicAddress)) {
         Actions.transactionList({ params: 'walletList' })
       }
     } else {
