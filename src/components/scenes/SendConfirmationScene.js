@@ -231,7 +231,7 @@ export class SendConfirmation extends React.Component<Props, State> {
       !!fioSender.fioError ||
       !!fioSender.memoError
 
-    const isTaggableCurrency = !!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
+    const uniqueIdentifierInfo = getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
     const networkFeeData = this.getNetworkFeeData()
 
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_from_wallet, guiWallet.name) : ''
@@ -303,7 +303,7 @@ export class SendConfirmation extends React.Component<Props, State> {
                     </AddressTextWithBlockExplorerModal>
                   )}
 
-                  {isTaggableCurrency && (
+                  {uniqueIdentifierInfo != null && (
                     <Scene.Row style={{ paddingVertical: 10 }}>
                       <TouchableOpacity
                         activeOpacity={THEME.OPACITY.ACTIVE}
@@ -311,7 +311,7 @@ export class SendConfirmation extends React.Component<Props, State> {
                         onPress={this.props.uniqueIdentifierButtonPressed}
                       >
                         <Text style={styles.addUniqueIDButtonText} ellipsizeMode="tail">
-                          {uniqueIdentifierText(currencyCode, uniqueIdentifier)}
+                          {!uniqueIdentifier ? uniqueIdentifierInfo.addButtonText : sprintf(`${uniqueIdentifierInfo.identifierName}: %s`, uniqueIdentifier)}
                         </Text>
                       </TouchableOpacity>
                     </Scene.Row>
@@ -353,7 +353,7 @@ export class SendConfirmation extends React.Component<Props, State> {
                 onMemoChange={this.onMemoChange}
               />
             </View>
-            <Scene.Footer style={[styles.footer, isTaggableCurrency && styles.footerWithPaymentId]}>
+            <Scene.Footer style={[styles.footer, uniqueIdentifierInfo != null && styles.footerWithPaymentId]}>
               <Slider
                 forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
                 resetSlider={this.props.resetSlider}
@@ -365,13 +365,7 @@ export class SendConfirmation extends React.Component<Props, State> {
             </Scene.Footer>
           </View>
         </SceneWrapper>
-        {isTaggableCurrency && (
-          <UniqueIdentifierModal
-            onConfirm={this.props.sendConfirmationUpdateTx}
-            currencyCode={currencyCode}
-            keyboardType={getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.identifierKeyboardType}
-          />
-        )}
+        {uniqueIdentifierInfo != null && <UniqueIdentifierModal onConfirm={this.props.sendConfirmationUpdateTx} currencyCode={currencyCode} />}
       </>
     )
   }
@@ -620,15 +614,3 @@ const rawStyles = {
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
-
-export const uniqueIdentifierText = (currencyCode: string, uniqueIdentifier?: string): string => {
-  if (!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier) {
-    throw new Error('Invalid currency code')
-  }
-  const uniqueIdentifierInfo = getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
-  if (!uniqueIdentifier) {
-    return uniqueIdentifierInfo.addButtonText
-  } else {
-    return sprintf(`${uniqueIdentifierInfo.identifierName}: %s`, uniqueIdentifier)
-  }
-}

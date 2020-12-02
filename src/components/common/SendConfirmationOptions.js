@@ -45,6 +45,8 @@ export default class SendConfirmationOptions extends React.Component<Props> {
 
   render() {
     const { currencyCode, isEditable } = this.props
+    const uniqueIdentifierInfo = getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
+
     return (
       <View>
         <Menu onSelect={value => this.handleMenuOptions(value)} onOpen={() => Keyboard.dismiss()}>
@@ -69,10 +71,10 @@ export default class SendConfirmationOptions extends React.Component<Props> {
               </MenuOption>
             )}
 
-            {!!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier && (
+            {uniqueIdentifierInfo != null && (
               <MenuOption value={ADD_UNIQUE_IDENTIFIER} style={styles.menuOption}>
                 <View style={styles.menuOptionItem}>
-                  <Text style={styles.optionText}>{getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.addButtonText}</Text>
+                  <Text style={styles.optionText}>{uniqueIdentifierInfo.addButtonText}</Text>
                 </View>
               </MenuOption>
             )}

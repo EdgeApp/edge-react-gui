@@ -322,8 +322,8 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
     if (balance !== '0' || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit
     shownWalletGetCryptoModals.push(wallet.id) // add to list of wallets with modal shown this session
     let threeButtonModal
-    const SPECIAL_CURRENCY_INFO = getSpecialCurrencyInfo(currencyCode)
-    if (SPECIAL_CURRENCY_INFO.displayBuyCrypto) {
+    const { displayBuyCrypto } = getSpecialCurrencyInfo(currencyCode)
+    if (displayBuyCrypto) {
       const messageSyntax = sprintf(s.strings.buy_crypto_modal_message, currencyCode, currencyCode, currencyCode)
       threeButtonModal = await Airship.show(bridge => (
         <ButtonsModal

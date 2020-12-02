@@ -150,36 +150,54 @@ export const CURRENCY_PLUGIN_NAMES = {
   XZC: 'zcoin'
 }
 
-export const getSpecialCurrencyInfo = (currencyCode: string): Object => {
+type SpecialCurrencyInfo = {|
+  // Marketing:
+  displayBuyCrypto?: boolean,
+  showEarnInterestCard?: boolean,
+
+  // Localized GUI text:
+  dummyPublicAddress?: string,
+  minimumPopupModals?: {
+    minimumNativeBalance: string,
+    modalMessage: string
+  },
+  uniqueIdentifier?: {
+    addButtonText: string,
+    identifierName: string,
+    identifierKeyboardType: string
+  },
+  isImportKeySupported?:
+    | false
+    | {
+        privateKeyLabel: string,
+        privateKeyInstructions: string
+      },
+
+  // Flags that could move to EdgeCurrencyInfo:
+  allowZeroTx?: boolean,
+  isAccountActivationRequired?: boolean,
+  isCustomTokensSupported?: boolean,
+  isRbfSupported?: boolean,
+  isTokensSupported?: boolean,
+  isUriEncodedStructure?: boolean,
+  needsAccountNameSetup?: boolean,
+  noChangeMiningFee?: boolean,
+  noMaxSpend?: boolean
+|}
+
+export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInfo => {
   if (SPECIAL_CURRENCY_INFO[currencyCode]) {
     return SPECIAL_CURRENCY_INFO[currencyCode]
   } else {
-    return {}
-  }
-}
-
-type SpecialCurrencyInfo = {
-  [currencyCode: string]: {
-    noMaxSpend?: boolean,
-    needsAccountNameSetup?: boolean,
-    noChangeMiningFee?: boolean,
-    allowZeroTx?: boolean,
-    dummyPublicAddress?: string,
-    uniqueIdentifier?: {
-      addButtonText: string,
-      identifierName: string,
-      identifierKeyboardType: string
-    },
-    showEarnInterestCard?: boolean,
-    isRbfSupported?: boolean,
-    minimumPopupModals?: {
-      minimumNativeBalance: string,
-      modalMessage: string
+    return {
+      displayBuyCrypto: false
     }
   }
 }
 
-export const SPECIAL_CURRENCY_INFO: SpecialCurrencyInfo = {
+export const SPECIAL_CURRENCY_INFO: {
+  [currencyCode: string]: SpecialCurrencyInfo
+} = {
   BTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,

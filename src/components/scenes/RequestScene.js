@@ -209,15 +209,18 @@ export class Request extends React.Component<Props, State> {
   }
 
   enqueueMinimumAmountModal = async () => {
-    let message = ''
-    if (this.props.currencyCode && Constants.getSpecialCurrencyInfo(this.props.currencyCode).minimumPopupModals) {
-      message = Constants.getSpecialCurrencyInfo(this.props.currencyCode).minimumPopupModals.modalMessage
-    } else {
-      return
-    }
+    const { currencyCode } = this.props
+    if (currencyCode == null) return
+    const { minimumPopupModals } = Constants.getSpecialCurrencyInfo(currencyCode)
+    if (minimumPopupModals == null) return
 
     await Airship.show(bridge => (
-      <ButtonsModal bridge={bridge} title={s.strings.request_minimum_notification_title} message={message} buttons={{ ok: { label: s.strings.string_ok } }} />
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.request_minimum_notification_title}
+        message={minimumPopupModals.modalMessage}
+        buttons={{ ok: { label: s.strings.string_ok } }}
+      />
     ))
 
     // resolve value doesn't really matter here
@@ -333,10 +336,8 @@ export class Request extends React.Component<Props, State> {
     if (!props.currencyCode) return false
     if (this.state.minimumPopupModalState[props.currencyCode]) {
       if (this.state.minimumPopupModalState[props.currencyCode] === 'NOT_YET_SHOWN') {
-        let minBalance = '0'
-        if (Constants.getSpecialCurrencyInfo(props.currencyCode).minimumPopupModals) {
-          minBalance = Constants.getSpecialCurrencyInfo(props.currencyCode).minimumPopupModals.minimumNativeBalance
-        }
+        const { minimumPopupModals } = Constants.getSpecialCurrencyInfo(props.currencyCode)
+        const minBalance = minimumPopupModals != null ? minimumPopupModals.minimumNativeBalance : '0'
         if (bns.lt(props.guiWallet.primaryNativeBalance, minBalance)) {
           return true
         }
