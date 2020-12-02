@@ -22,7 +22,7 @@ import * as UI_SELECTORS from '../../UI/selectors.js'
 import { refreshAllFioAddresses } from '../action'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../util'
 
-export type SelectFioAddressOwnProps = {
+type SelectFioAddressOwnProps = {
   selected: string,
   memo: string,
   memoError: string,
@@ -32,7 +32,7 @@ export type SelectFioAddressOwnProps = {
   isSendUsingFioAddress: boolean | null
 }
 
-export type SelectFioAddressProps = {
+type SelectFioAddressProps = {
   loading: boolean,
   fioAddresses: FioAddress[],
   fioWallets: EdgeCurrencyWallet[],
@@ -40,7 +40,7 @@ export type SelectFioAddressProps = {
   currencyCode: string
 }
 
-export type DispatchProps = {
+type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
 

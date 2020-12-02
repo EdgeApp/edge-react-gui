@@ -34,7 +34,7 @@ export type StateProps = {
   isConnected: boolean
 }
 
-export type NavigationProps = {
+type NavigationProps = {
   fioAddress: string,
   selectedWallet: EdgeCurrencyWallet,
   selectedDomain: FioDomain,

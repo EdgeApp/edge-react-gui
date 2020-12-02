@@ -7,13 +7,13 @@ import type { ChangePinDispatchProps, ChangePinOwnProps, ChangePinStateProps } f
 import ChangePinComponent from '../../components/scenes/ChangePinScene'
 import { type RootState } from '../../types/reduxTypes.js'
 
-export const mapStateToProps = (state: RootState, ownProps: ChangePinOwnProps): ChangePinStateProps => ({
+const mapStateToProps = (state: RootState, ownProps: ChangePinOwnProps): ChangePinStateProps => ({
   context: state.core.context,
   account: state.core.account,
   showHeader: false
 })
 
-export const mapDispatchToProps = (dispatch: Dispatch): ChangePinDispatchProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): ChangePinDispatchProps => ({
   onComplete: Actions.pop
 })
 

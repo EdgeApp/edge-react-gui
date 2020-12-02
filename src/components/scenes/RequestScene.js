@@ -67,10 +67,10 @@ export type RequestDispatchProps = {
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 type CurrencyMinimumPopupState = { [currencyCode: string]: ModalState }
 
-export type LoadingProps = RequestLoadingProps & RequestDispatchProps
-export type LoadedProps = RequestStateProps & RequestDispatchProps
-export type Props = LoadingProps | LoadedProps
-export type State = {
+type LoadingProps = RequestLoadingProps & RequestDispatchProps
+type LoadedProps = RequestStateProps & RequestDispatchProps
+type Props = LoadingProps | LoadedProps
+type State = {
   publicAddress: string,
   legacyAddress: string,
   encodedURI: string,

@@ -14,7 +14,7 @@ import type { FioRequest } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-export type NavigationProps = {
+type NavigationProps = {
   selectedFioSentRequest: FioRequest
 }
 
@@ -24,7 +24,7 @@ export type FioSentRequestDetailsProps = {
   exchangeRates: ExchangeRatesState
 }
 
-export type FioSentRequestDetailsDispatchProps = {}
+type FioSentRequestDetailsDispatchProps = {}
 
 type Props = FioSentRequestDetailsProps & FioSentRequestDetailsDispatchProps & NavigationProps
 

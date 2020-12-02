@@ -7,13 +7,13 @@ import type { ChangePasswordDispatchProps, ChangePasswordOwnProps, ChangePasswor
 import ChangePasswordComponent from '../../components/scenes/ChangePasswordScene'
 import { type RootState } from '../../types/reduxTypes.js'
 
-export const mapStateToProps = (state: RootState, ownProps: ChangePasswordOwnProps): ChangePasswordStateProps => ({
+const mapStateToProps = (state: RootState, ownProps: ChangePasswordOwnProps): ChangePasswordStateProps => ({
   context: state.core.context,
   account: state.core.account,
   showHeader: false
 })
 
-export const mapDispatchToProps = (dispatch: Dispatch): ChangePasswordDispatchProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): ChangePasswordDispatchProps => ({
   onComplete: Actions.pop
 })
 

@@ -24,7 +24,7 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import type { Theme, ThemeProps } from '../services/ThemeContext'
 import { cacheStyles, withTheme } from '../services/ThemeContext'
 
-export type LocalState = {
+type LocalState = {
   selectedWallet: EdgeCurrencyWallet | null,
   fioDomain: string,
   isValid: boolean,
@@ -36,13 +36,13 @@ export type LocalState = {
   fieldPos: number
 }
 
-export type StateProps = {
+type StateProps = {
   fioWallets: EdgeCurrencyWallet[],
   fioPlugin: EdgeCurrencyConfig,
   isConnected: boolean
 }
 
-export type DispatchProps = {
+type DispatchProps = {
   createFioWallet: () => Promise<EdgeCurrencyWallet>
 }
 

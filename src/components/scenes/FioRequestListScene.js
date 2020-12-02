@@ -34,7 +34,7 @@ import { SquareButton } from '../themed/ThemedButtons'
 
 const SCROLL_THRESHOLD = 0.5
 
-export type LocalState = {
+type LocalState = {
   loadingPending: boolean,
   loadingSent: boolean,
   fullScreenLoader: boolean,
@@ -55,7 +55,7 @@ export type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 
-export type OwnProps = {
+type OwnProps = {
   navigation: any
 }
 

@@ -22,22 +22,22 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { SecondaryButton } from '../themed/ThemedButtons'
 import { SEND_ACTION_TYPE } from './SendScene'
 
-export type State = {
+type State = {
   showRenew: boolean,
   showVisibility: boolean,
   showTransfer: boolean
 }
 
-export type StateProps = {
+type StateProps = {
   denominationMultiplier: string,
   isConnected: boolean
 }
 
-export type DispatchProps = {
+type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
 
-export type NavigationProps = {
+type NavigationProps = {
   fioWallet: EdgeCurrencyWallet,
   fioDomainName: string,
   isPublic: boolean,

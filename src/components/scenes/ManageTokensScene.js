@@ -32,9 +32,9 @@ export type ManageTokensStateProps = {
   settingsCustomTokens: CustomTokenInfo[]
 }
 
-export type ManageTokensProps = ManageTokensOwnProps & ManageTokensDispatchProps & ManageTokensStateProps
+type ManageTokensProps = ManageTokensOwnProps & ManageTokensDispatchProps & ManageTokensStateProps
 
-export type State = {
+type State = {
   enabledList: string[],
   combinedCurrencyInfos: EdgeMetaToken[]
 }

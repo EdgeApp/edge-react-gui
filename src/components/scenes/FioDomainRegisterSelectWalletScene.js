@@ -25,7 +25,7 @@ import { type WalletListResult, WalletListModal } from '../modals/WalletListModa
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
-export type StateProps = {
+type StateProps = {
   state: RootState,
   wallets: { [string]: GuiWallet },
   fioPlugin: EdgeCurrencyConfig,
@@ -35,12 +35,12 @@ export type StateProps = {
   isConnected: boolean
 }
 
-export type NavigationProps = {
+type NavigationProps = {
   fioDomain: string,
   selectedWallet: EdgeCurrencyWallet
 }
 
-export type DispatchProps = {
+type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 

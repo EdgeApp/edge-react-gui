@@ -6,7 +6,7 @@ import { type DispatchProps, type OwnProps, type StateProps, CryptoExchangeQuote
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiSwapInfo } from '../../types/types.js'
 
-export const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
+const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   const { request } = ownProps.swapInfo
 
   const { account } = state.core
@@ -28,7 +28,7 @@ export const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProp
   }
 }
 
-export const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   shift(swapInfo: GuiSwapInfo) {
     dispatch(shiftCryptoCurrency(swapInfo))
   },
@@ -37,6 +37,4 @@ export const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   }
 })
 
-const CryptoExchangeQuoteConnector = connect(mapStateToProps, mapDispatchToProps)(CryptoExchangeQuoteScreenComponent)
-
-export { CryptoExchangeQuoteConnector }
+export const CryptoExchangeQuoteConnector = connect(mapStateToProps, mapDispatchToProps)(CryptoExchangeQuoteScreenComponent)
