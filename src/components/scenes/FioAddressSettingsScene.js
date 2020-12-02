@@ -4,7 +4,7 @@ import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -14,15 +14,16 @@ import s from '../../locales/strings'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { getRenewalFee, renewFioName } from '../../modules/FioAddress/util'
 import { getDisplayDenomination } from '../../modules/Settings/selectors'
-import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes'
 import type { FioAddress } from '../../types/types'
 import { truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError, showToast } from '../services/AirshipInstance'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText'
+import { PrimaryButton } from '../themed/ThemedButtons'
+import { Tile } from '../themed/Tile'
 
 const DIVIDE_PRECISION = 18
 
@@ -54,7 +55,7 @@ type NavigationProps = {
   refreshAfterRenew?: boolean
 }
 
-type Props = NavigationProps & StateProps & DispatchProps
+type Props = NavigationProps & StateProps & DispatchProps & ThemeProps
 
 class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   state: LocalState = {
@@ -166,43 +167,39 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   renderFeeAndBalance() {
+    const { theme } = this.props
     const { feeLoading, displayFee, balance, renewError, showRenew } = this.state
+    const styles = getStyles(theme)
 
     if (!feeLoading && renewError) {
-      return (
-        <View>
-          <T style={styles.title}>{renewError}</T>
-        </View>
-      )
+      return <EdgeText style={styles.title}>{renewError}</EdgeText>
     }
 
     if (feeLoading || !showRenew) return null
 
+    const balanceText = `${balance ? balance.toFixed(2) : '0'} ${balance ? s.strings.fio_address_confirm_screen_fio_label : ''}`
     return (
       <View style={styles.texts}>
-        <View style={styles.spacer} />
-        <View style={styles.spacer} />
-        <T style={styles.title}>{s.strings.fio_renew_fee_label}</T>
-        <T style={styles.content}>
-          {displayFee ? `${displayFee} ${s.strings.fio_address_confirm_screen_fio_label}` : s.strings.fio_address_confirm_screen_free_label}
-        </T>
-        <View style={styles.spacer} />
+        <EdgeText style={styles.title}>{s.strings.title_fio_renew_address}</EdgeText>
+        <Tile
+          type="static"
+          title={s.strings.fio_renew_fee_label}
+          body={displayFee ? `${displayFee} ${s.strings.fio_address_confirm_screen_fio_label}` : s.strings.fio_address_confirm_screen_free_label}
+        />
         {displayFee ? (
-          <View>
-            <T style={styles.title}>{s.strings.fio_address_confirm_screen_balance_label}</T>
-            <T style={displayFee > balance ? styles.balanceTitleDisabled : styles.balanceTitle}>
-              {balance ? balance.toFixed(2) : '0'} {balance ? s.strings.fio_address_confirm_screen_fio_label : ''}
-            </T>
-          </View>
+          <Tile type="static" title={s.strings.fio_address_confirm_screen_balance_label}>
+            <EdgeText style={displayFee > balance ? styles.balanceTitleDisabled : styles.balanceTitle}>{balanceText}</EdgeText>
+          </Tile>
         ) : null}
       </View>
     )
   }
 
   render() {
-    const { fioAddressName } = this.props
+    const { fioAddressName, theme } = this.props
     let { expiration } = this.props
     const { feeLoading, displayFee, balance, renewalFee, renewLoading, showRenew } = this.state
+    const styles = getStyles(theme)
 
     if (!expiration) {
       expiration = this.getExpiration()
@@ -210,23 +207,13 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
 
     return (
       <SceneWrapper background="header">
-        <View style={styles.info}>
-          <T style={styles.title}>{s.strings.fio_address_register_form_field_label}</T>
-          <T style={styles.content}>{fioAddressName}</T>
-        </View>
-        <View style={styles.info}>
-          <T style={styles.title}>{s.strings.fio_address_details_screen_expires}</T>
-          <T style={styles.content}>{expiration}</T>
-        </View>
+        <Tile type="static" title={s.strings.fio_address_register_form_field_label} body={fioAddressName} />
+        <Tile type="static" title={s.strings.fio_address_details_screen_expires} body={expiration} />
         {!showRenew && (
           <View style={styles.blockPadding}>
-            <PrimaryButton2 onPress={this.onRenewPress} disabled={feeLoading}>
-              {feeLoading ? (
-                <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="small" />
-              ) : (
-                <PrimaryButton2.Text>{s.strings.title_fio_renew_address}</PrimaryButton2.Text>
-              )}
-            </PrimaryButton2>
+            <PrimaryButton onPress={this.onRenewPress} disabled={feeLoading} label={feeLoading ? '' : s.strings.title_fio_renew_address}>
+              {feeLoading ? <ActivityIndicator color={theme.icon} size="large" /> : null}
+            </PrimaryButton>
           </View>
         )}
         {this.renderFeeAndBalance()}
@@ -249,51 +236,34 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 }
 
-const rawStyles = {
-  info: {
-    backgroundColor: THEME.COLORS.SECONDARY,
-    paddingVertical: THEME.rem(1),
-    paddingHorizontal: THEME.rem(1),
-    marginBottom: THEME.rem(0.25)
-  },
+const getStyles = cacheStyles((theme: Theme) => ({
   title: {
-    color: THEME.COLORS.TRANSACTION_DETAILS_GREY_1,
-    marginBottom: THEME.rem(0.25),
-    fontSize: THEME.rem(0.75),
+    color: theme.secondaryText,
+    marginBottom: theme.rem(0.5),
+    fontSize: theme.rem(1),
     fontWeight: 'normal',
-    textAlign: 'left'
-  },
-  content: {
-    color: THEME.COLORS.WHITE,
-    fontSize: THEME.rem(1),
-    textAlign: 'left'
+    textAlign: 'center'
   },
   texts: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    paddingTop: theme.rem(1.5)
   },
   balanceTitle: {
-    fontSize: THEME.rem(1),
-    color: THEME.COLORS.WHITE,
-    textAlign: 'center'
+    margin: theme.rem(0.25),
+    fontSize: theme.rem(1),
+    color: theme.primaryText
   },
   balanceTitleDisabled: {
-    fontSize: THEME.rem(1),
-    color: THEME.COLORS.ACCENT_RED,
-    fontWeight: 'normal',
-    textAlign: 'center'
+    margin: theme.rem(0.25),
+    fontSize: theme.rem(1),
+    color: theme.dangerText,
+    fontWeight: 'normal'
   },
   blockPadding: {
-    paddingTop: THEME.rem(2),
-    paddingLeft: THEME.rem(1.25),
-    paddingRight: THEME.rem(1.25)
-  },
-  spacer: {
-    paddingTop: THEME.rem(1.25)
+    paddingTop: theme.rem(2),
+    paddingLeft: theme.rem(1.25),
+    paddingRight: theme.rem(1.25)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 const mapStateToProps = (state: RootState) => {
   const displayDenomination = getDisplayDenomination(state, FIO_STR)
@@ -313,4 +283,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   }
 })
 
-export const FioAddressSettingsScene = connect(mapStateToProps, mapDispatchToProps)(FioAddressSettingsComponent)
+export const FioAddressSettingsScene = connect(mapStateToProps, mapDispatchToProps)(withTheme(FioAddressSettingsComponent))
