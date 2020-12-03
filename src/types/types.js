@@ -108,8 +108,7 @@ export type GuiFiatType = {
   value: string
 }
 
-export type TransactionListTx = {
-  ...EdgeTransaction,
+export type TransactionListTx = EdgeTransaction & {
   dateString?: string,
   key: number,
   time: string,
