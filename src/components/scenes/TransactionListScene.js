@@ -1,16 +1,12 @@
 // @flow
 
-import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Alert, FlatList, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
+import { ActivityIndicator, FlatList, View } from 'react-native'
 
-import TransactionRow from '../../connectors/TransactionRowConnector.js'
-import s from '../../locales/strings.js'
-import type { ContactsState } from '../../reducers/ContactsReducer'
-import type { GuiWallet, TransactionListTx } from '../../types/types.js'
+import type { TransactionListTx } from '../../types/types.js'
 import { BuyCrypto } from '../common/BuyCrypto.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { TransactionRow } from '../common/TransactionRow.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { TransactionListTop } from '../themed/TransactionListTop.js'
 
@@ -19,22 +15,14 @@ const SCROLL_THRESHOLD = 0.5
 
 export type StateProps = {
   loading: boolean,
-  displayDenomination: EdgeDenomination,
   transactions: TransactionListTx[],
   selectedWalletId: string,
-  selectedCurrencyCode: string,
-  isoFiatCurrencyCode: string,
-  fiatCurrencyCode: string,
-  uiWallet: GuiWallet,
-  contacts: ContactsState,
-  fiatSymbol: string,
-  requiredConfirmations?: number,
-  numTransactions: number
+  numTransactions: number,
+  selectedCurrencyCode: string
 }
 
 export type DispatchProps = {
-  fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => any,
-  toggleBalanceVisibility: () => void
+  fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => any
 }
 
 type Props = StateProps & DispatchProps & ThemeProps
@@ -112,30 +100,11 @@ class TransactionListComponent extends React.Component<Props, State> {
     return this.props.loading ? <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" /> : <TransactionListTop />
   }
 
-  goToTxDetail = (edgeTransaction: EdgeTransaction, thumbnailPath: string) => {
-    if (edgeTransaction) {
-      Actions.transactionDetails({ edgeTransaction, thumbnailPath })
-    } else {
-      Alert.alert(s.strings.transaction_details_error_invalid)
-    }
-  }
-
-  renderTx = (transaction: TransactionListTx) => {
-    return (
-      <TransactionRow
-        transaction={transaction}
-        transactions={this.props.transactions}
-        selectedCurrencyCode={this.props.selectedCurrencyCode}
-        contacts={this.props.contacts}
-        uiWallet={this.props.uiWallet}
-        displayDenomination={this.props.displayDenomination}
-        isoFiatCurrencyCode={this.props.isoFiatCurrencyCode}
-        fiatCurrencyCode={this.props.fiatCurrencyCode}
-        onClick={this.goToTxDetail}
-        fiatSymbol={this.props.fiatSymbol}
-        requiredConfirmations={this.props.requiredConfirmations}
-      />
-    )
+  renderTx = (transactionListItem: FlatList<TransactionListTx>) => {
+    const { selectedWalletId, selectedCurrencyCode, transactions } = this.props
+    const transaction = transactionListItem.item
+    const isHeader = transaction.key === 0 || transaction.dateString !== transactions[transaction.key - 1].dateString
+    return <TransactionRow currencyId={selectedWalletId} currencyCode={selectedCurrencyCode} transaction={transaction} isHeader={isHeader} />
   }
 }
 

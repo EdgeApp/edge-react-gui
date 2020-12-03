@@ -10,7 +10,7 @@ import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexCon
 import { emptyEdgeDenomination } from '../modules/Settings/selectors.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { type RootState } from '../types/reduxTypes.js'
-import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types/types.js'
+import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet, TransactionListTx } from '../types/types.js'
 
 export const DIVIDE_PRECISION = 18
 
@@ -298,7 +298,8 @@ export const decimalPlacesToDenomination = (decimalPlaces: string): string => {
 export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => {
   return !isSentTransaction(edgeTransaction)
 }
-export const isSentTransaction = (edgeTransaction: EdgeTransaction): boolean => {
+
+export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTransaction): boolean => {
   return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-'
 }
 
