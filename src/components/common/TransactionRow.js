@@ -1,164 +1,115 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { Alert, Image, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import receivedTypeImage from '../../assets/images/transactions/transaction-type-received.png'
 import sentTypeImage from '../../assets/images/transactions/transaction-type-sent.png'
-import { formatNumber } from '../../locales/intl.js'
+import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import type { ContactsState } from '../../reducers/ContactsReducer'
 import { THEME } from '../../theme/variables/airbitz.js'
-import type { GuiWallet, TransactionListTx } from '../../types/types.js'
+import { type RootState } from '../../types/reduxTypes.js'
+import type { TransactionListTx } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
+import { getDenomination, getFiatSymbol } from '../../util/utils.js'
 
-type TransactionRowOwnProps = {
-  transactions: TransactionListTx[],
-  transaction: TransactionListTx,
-  selectedCurrencyCode: string,
-  contacts: ContactsState,
-  uiWallet: GuiWallet,
-  displayDenomination: EdgeDenomination,
-  isoFiatCurrencyCode: string,
-  fiatCurrencyCode: string,
-  onClick: (edgeTransaction: EdgeTransaction, thumbnailPath: string) => void,
+type StateProps = {
+  cryptoAmount: string,
+  denominationSymbol?: string,
+  fiatAmount: string,
   fiatSymbol: string,
-  requiredConfirmations: number
+  isSentTransaction: boolean,
+  requiredConfirmations: number,
+  selectedCurrencyName: string,
+  thumbnailPath?: string,
+  walletBlockHeight: number
 }
 
-export type TransactionRowStateProps = {
-  walletBlockHeight: number | null
+type OwnProps = {
+  isHeader: boolean,
+  currencyId: string,
+  currencyCode: string,
+  transaction: TransactionListTx
 }
-type Props = TransactionRowOwnProps & TransactionRowStateProps
 
-type State = {}
+type Props = OwnProps & StateProps
 
-export class TransactionRowComponent extends React.Component<Props, State> {
-  shouldComponentUpdate(nextProps: Props) {
-    const diffElement = UTILS.getObjectDiff(this.props, nextProps, { transaction: true }, { transactions: true })
-    if (diffElement) {
-      return true
+export class TransactionRowComponent extends React.PureComponent<Props> {
+  goToTxDetail = () => {
+    const { transaction, thumbnailPath } = this.props
+    if (transaction) {
+      Actions.transactionDetails({ transaction, thumbnailPath })
     } else {
-      return false
+      Alert.alert(s.strings.transaction_details_error_invalid)
     }
   }
 
   render() {
+    // What is this for?
     global.pcount && global.pcount('TransactionRow:render')
-    const completedTxList: TransactionListTx[] = this.props.transactions
-    // $FlowFixMe
-    const tx = this.props.transaction.item
 
-    // Work around corrupted metadata from another GUI bug:
-    if (tx.metadata != null && tx.metadata.name != null && typeof tx.metadata.name !== 'string') {
-      tx.metadata.name = ''
-    }
+    const {
+      cryptoAmount,
+      denominationSymbol,
+      fiatAmount,
+      fiatSymbol,
+      isSentTransaction,
+      isHeader,
+      requiredConfirmations,
+      selectedCurrencyName,
+      thumbnailPath,
+      transaction,
+      walletBlockHeight
+    } = this.props
 
-    let lastOfDate, txImage, pendingTimeSyntax, transactionPartner, pendingTimeStyle
-    let txName = ''
-    let thumbnailPath = ''
+    const cryptoAmountString = `${isSentTransaction ? '-' : '+'} ${denominationSymbol ? denominationSymbol + ' ' : ''}${cryptoAmount}`
+    const fiatAmountString = `${fiatSymbol} ${fiatAmount}`
 
-    let currencyName = this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
-    if (!currencyName) {
-      currencyName = this.props.selectedCurrencyCode
-    }
-    if (UTILS.isSentTransaction(tx)) {
-      // XXX -paulvp Why is this hard coded here?
-      txName = s.strings.fragment_transaction_list_sent_prefix + currencyName
-      txImage = sentTypeImage
+    // Transaction Text and Icon
+    let transactionText, transactionIcon
+    if (isSentTransaction) {
+      transactionText =
+        transaction.metadata && transaction.metadata.name ? transaction.metadata.name : s.strings.fragment_transaction_list_sent_prefix + selectedCurrencyName
+      transactionIcon = sentTypeImage
     } else {
-      txName = s.strings.fragment_transaction_list_receive_prefix + currencyName
-      txImage = receivedTypeImage
+      transactionText =
+        transaction.metadata && transaction.metadata.name
+          ? transaction.metadata.name
+          : s.strings.fragment_transaction_list_receive_prefix + selectedCurrencyName
+      transactionIcon = receivedTypeImage
     }
 
-    if (tx.metadata && tx.metadata.name) {
-      if (this.props.contacts) {
-        let contact
-        for (const element of this.props.contacts) {
-          const fullName = element.givenName && element.familyName ? element.givenName + ' ' + element.familyName : element.givenName
-          const found = element.thumbnailPath && UTILS.unspacedLowercase(fullName) === UTILS.unspacedLowercase(tx.metadata.name)
-          if (found) {
-            contact = element
-            break
-          }
-        }
-        if (contact) {
-          thumbnailPath = contact.thumbnailPath
-        }
-      }
-    }
-
-    if (completedTxList[tx.key + 1]) {
-      // is there a subsequent transaction?
-      lastOfDate = tx.dateString !== completedTxList[tx.key + 1].dateString
-    } else {
-      lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
-    }
-
-    const stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
-
-    const amountString = formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6))
-    const fiatSymbol = this.props.fiatSymbol || ''
-    let fiatAmountString
-    if (tx.metadata && tx.metadata.amountFiat) {
-      fiatAmountString = bns.abs(tx.metadata.amountFiat.toFixed(2))
-      fiatAmountString = formatNumber(bns.toFixed(fiatAmountString, 2, 2), { toFixed: 2 })
-    } else {
-      fiatAmountString = formatNumber('0.00', { toFixed: 2 })
-    }
-
-    const walletBlockHeight = this.props.walletBlockHeight || 0
-    const requiredConfirmations = this.props.requiredConfirmations
-    let currentConfirmations = 0
-    if (walletBlockHeight && tx.blockHeight > 0) {
-      currentConfirmations = walletBlockHeight - tx.blockHeight + 1
-    }
-
+    // Pending Text and Style
+    const currentConfirmations = walletBlockHeight && transaction.blockHeight > 0 ? walletBlockHeight - transaction.blockHeight + 1 : 0
+    let pendingText, pendingStyle
     if (walletBlockHeight === 0) {
-      pendingTimeSyntax = s.strings.fragment_transaction_list_tx_synchronizing
-      pendingTimeStyle = styles.transactionPartialConfirmation
-    } else if (tx.blockHeight < 0) {
-      pendingTimeSyntax = s.strings.fragment_transaction_list_tx_dropped
-      pendingTimeStyle = styles.transactionPartialConfirmation
+      pendingText = s.strings.fragment_transaction_list_tx_synchronizing
+      pendingStyle = styles.transactionPartialConfirmation
+    } else if (transaction.blockHeight < 0) {
+      pendingText = s.strings.fragment_transaction_list_tx_dropped
+      pendingStyle = styles.transactionPartialConfirmation
     } else if (currentConfirmations <= 0) {
-      // if completely unconfirmed or wallet uninitialized, or wallet lagging behind (tx block height larger than wallet block height)
-      pendingTimeStyle = styles.transactionPending
-      pendingTimeSyntax = s.strings.fragment_wallet_unconfirmed
+      // if completely unconfirmed or wallet uninitialized, or wallet lagging behind (transaction block height larger than wallet block height)
+      pendingText = s.strings.fragment_wallet_unconfirmed
+      pendingStyle = styles.transactionPending
     } else if (currentConfirmations < requiredConfirmations) {
-      pendingTimeStyle = styles.transactionPartialConfirmation
-      pendingTimeSyntax = sprintf(s.strings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
+      pendingStyle = styles.transactionPartialConfirmation
+      pendingText = sprintf(s.strings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
     } else {
-      pendingTimeStyle = styles.transactionTime
-      pendingTimeSyntax = tx.time
+      pendingText = transaction.time
+      pendingStyle = styles.transactionTime
     }
 
-    if (tx.metadata && tx.metadata.name) {
-      transactionPartner = tx.metadata.name
-    } else {
-      transactionPartner = txName
-    }
-    const transactionAmountString = () => {
-      if (UTILS.isSentTransaction(tx)) {
-        return (
-          <T style={styles.transactionDetailsSentTx}>
-            - {this.props.displayDenomination.symbol} {amountString}
-          </T>
-        )
-      }
-      return (
-        <T style={styles.transactionDetailsReceivedTx}>
-          + {this.props.displayDenomination.symbol} {amountString}
-        </T>
-      )
-    }
-    const transactionMeta = tx ? tx.metadata : null
-    const transactionCategory = transactionMeta ? transactionMeta.category : null
-    let formattedTransactionCategory = null
+    // Transaction Category
+    let formattedTransactionCategory
+    const transactionCategory = transaction.metadata ? transaction.metadata.category : null
     if (transactionCategory) {
       const splittedFullCategory = UTILS.splitTransactionCategory(transactionCategory)
       const { category, subCategory } = splittedFullCategory
@@ -182,27 +133,24 @@ export class TransactionRowComponent extends React.Component<Props, State> {
         }
       }
     }
-    const out = (
+
+    return (
       <View style={styles.singleTransactionWrap}>
-        {(tx.key === 0 || tx.dateString !== completedTxList[tx.key - 1].dateString) && (
+        {isHeader && (
           <View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
-              <T style={styles.formattedDate}>{tx.dateString}</T>
+              <T style={styles.formattedDate}>{transaction.dateString}</T>
             </View>
           </View>
         )}
-        <TouchableHighlight
-          onPress={() => this.props.onClick(tx, thumbnailPath)}
-          underlayColor={THEME.COLORS.ROW_PRESSED}
-          style={[styles.singleTransaction, { borderBottomWidth: lastOfDate ? 0 : 1 }]}
-        >
+        <TouchableHighlight onPress={this.goToTxDetail} underlayColor={THEME.COLORS.ROW_PRESSED} style={styles.singleTransaction}>
           <View style={styles.transactionInfoWrap}>
             <View style={styles.transactionLeft}>
               <View style={styles.transactionLeftLogoWrap}>
                 {thumbnailPath ? (
                   <Image style={styles.transactionLogo} source={{ uri: thumbnailPath }} />
                 ) : (
-                  <Image style={styles.transactionLogo} source={txImage} />
+                  <Image style={styles.transactionLogo} source={transactionIcon} />
                 )}
               </View>
             </View>
@@ -210,25 +158,25 @@ export class TransactionRowComponent extends React.Component<Props, State> {
             <View style={styles.transactionRight}>
               <View style={[styles.transactionDetailsRow, transactionCategory ? styles.transactionDetailsRowMargin : null]}>
                 <T style={styles.transactionPartner} adjustsFontSizeToFit minimumFontScale={0.6}>
-                  {transactionPartner}
+                  {transactionText}
                 </T>
-                {transactionAmountString()}
+                <T style={isSentTransaction ? styles.transactionDetailsSentTx : styles.transactionDetailsReceivedTx}>{cryptoAmountString}</T>
               </View>
               {formattedTransactionCategory ? (
                 <View style={styles.transactionDetailsRow}>
                   <T style={styles.transactionCategory}>{formattedTransactionCategory}</T>
-                  <T style={styles.transactionFiat}>{`${fiatSymbol} ${fiatAmountString}`}</T>
+                  <T style={styles.transactionFiat}>{fiatAmountString}</T>
                 </View>
               ) : null}
               {formattedTransactionCategory ? (
                 <View style={[styles.transactionDetailsRow, styles.transactionDetailsRowMargin]}>
-                  <T style={[styles.transactionPendingTime, pendingTimeStyle]}>{pendingTimeSyntax}</T>
+                  <T style={[styles.transactionPendingTime, pendingStyle]}>{pendingText}</T>
                 </View>
               ) : null}
               {!formattedTransactionCategory ? (
                 <View style={styles.transactionDetailsRow}>
-                  <T style={[styles.transactionPendingTime, pendingTimeStyle]}>{pendingTimeSyntax}</T>
-                  <T style={styles.transactionFiat}>{`${fiatSymbol} ${fiatAmountString}`}</T>
+                  <T style={[styles.transactionPendingTime, pendingStyle]}>{pendingText}</T>
+                  <T style={styles.transactionFiat}>{fiatAmountString}</T>
                 </View>
               ) : null}
             </View>
@@ -236,7 +184,6 @@ export class TransactionRowComponent extends React.Component<Props, State> {
         </TouchableHighlight>
       </View>
     )
-    return out
   }
 }
 
@@ -336,3 +283,50 @@ const rawStyles = {
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+
+export const TransactionRow = connect((state: RootState, ownProps: OwnProps): StateProps => {
+  const { currencyCode, currencyId, transaction } = ownProps
+  const { metadata } = transaction
+  const guiWallet = state.ui.wallets.byId[currencyId]
+  const { fiatCurrencyCode } = guiWallet
+  const displayDenomination = getDenomination(currencyCode, state.ui.settings)
+
+  // Required Confirmations
+  const { currencyWallets = {} } = state.core.account
+  const coreWallet: EdgeCurrencyWallet = currencyWallets[currencyId]
+  const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
+  const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
+
+  // Thumbnail
+  let thumbnailPath
+  const contacts = state.contacts || []
+  const transactionContactName = metadata && metadata.name ? UTILS.unspacedLowercase(metadata.name) : null
+  for (const contact of contacts) {
+    const { givenName, familyName } = contact
+    const fullName = UTILS.unspacedLowercase(givenName + (familyName || ''))
+    if (contact.thumbnailPath && fullName === transactionContactName) {
+      thumbnailPath = contact.thumbnailPath
+      break
+    }
+  }
+
+  // CryptoAmount
+  const cryptoAmount = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(bns.abs(transaction.nativeAmount || ''))
+  const cryptoAmountFormat = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(cryptoAmount, 6), 6))
+
+  // FiatAmount
+  const fiatAmount = metadata && metadata.amountFiat ? bns.abs(metadata.amountFiat.toFixed(2)) : '0.00'
+  const fiatAmountFormat = intl.formatNumber(bns.toFixed(fiatAmount, 2, 2), { toFixed: 2 })
+
+  return {
+    isSentTransaction: UTILS.isSentTransaction(transaction),
+    cryptoAmount: cryptoAmountFormat,
+    fiatAmount: fiatAmountFormat,
+    fiatSymbol: getFiatSymbol(fiatCurrencyCode),
+    walletBlockHeight: guiWallet.blockHeight || 0,
+    denominationSymbol: displayDenomination.symbol,
+    requiredConfirmations,
+    selectedCurrencyName: guiWallet.currencyNames[currencyCode] || currencyCode,
+    thumbnailPath
+  }
+})(TransactionRowComponent)
