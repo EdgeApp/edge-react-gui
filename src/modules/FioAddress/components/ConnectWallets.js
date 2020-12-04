@@ -2,18 +2,18 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, Switch, TouchableHighlight, View } from 'react-native'
+import { FlatList, Image, ScrollView, Switch, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { showError } from '../../../components/services/AirshipInstance'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import { EdgeText } from '../../../components/themed/EdgeText'
+import { PrimaryButton } from '../../../components/themed/ThemedButtons.js'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
-import { THEME } from '../../../theme/variables/airbitz.js'
 import { type RootState } from '../../../types/reduxTypes'
 import type { FioConnectionWalletItem } from '../../../types/types'
-import { scale } from '../../../util/scaling.js'
-import T from '../../UI/components/FormattedText/FormattedText.ui.js'
 import { getWallets } from '../../UI/selectors'
 import { makeConnectWallets } from '../util'
 
@@ -34,7 +34,7 @@ export type OwnProps = {
   disabled: boolean
 }
 
-class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnProps, LocalState> {
+class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnProps & ThemeProps, LocalState> {
   state = {
     connectWalletsMap: {},
     disconnectWalletsMap: {},
@@ -117,8 +117,10 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
   keyExtractor = (item: {}, index: number): string => index.toString()
 
   renderFioConnectionWalletItem = ({ item: wallet }: { item: FioConnectionWalletItem }) => {
-    const { walletItems } = this.props
+    const { walletItems, theme } = this.props
     const { connectWalletsMap, disconnectWalletsMap } = this.state
+    const styles = getStyles(theme)
+
     if (wallet) {
       const value = wallet.isConnected ? !disconnectWalletsMap[wallet.key] : !!connectWalletsMap[wallet.key]
       const disabled =
@@ -131,17 +133,22 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
               walletItems[walletKey].id !== wallet.id &&
               !disconnectWalletsMap[walletKey]
           ))
+      const noWalletSymbol = '-'
 
       return (
-        <View style={disabled ? styles.walletDisabled : styles.wallet} underlayColor={THEME.COLORS.GRAY_2}>
+        <View style={[styles.wallet, disabled ? styles.walletDisabled : null]} underlayColor={theme.secondaryButton}>
           <View style={styles.rowContainerTop}>
             <View style={styles.containerLeft}>
-              {wallet.symbolImage ? <Image style={styles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode="contain" /> : <T>-</T>}
+              {wallet.symbolImage ? (
+                <Image style={styles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode="contain" />
+              ) : (
+                <EdgeText>{noWalletSymbol}</EdgeText>
+              )}
             </View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsCol}>
-                <T style={styles.walletDetailsRowCurrency}>{wallet.currencyCode}</T>
-                <T style={styles.walletDetailsRowName}>{wallet.name}</T>
+                <EdgeText style={styles.walletDetailsRowCurrency}>{wallet.currencyCode}</EdgeText>
+                <EdgeText style={styles.walletDetailsRowName}>{wallet.name}</EdgeText>
               </View>
               <View style={styles.walletDetailsCol}>
                 <View style={styles.switchContainer}>
@@ -157,13 +164,15 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
   }
 
   renderNoWallets() {
-    const { loading } = this.props
-    return <T style={styles.no_wallets_text}>{loading ? s.strings.loading : s.strings.fio_connect_no_wallets}</T>
+    const { loading, theme } = this.props
+    const styles = getStyles(theme)
+    return <EdgeText style={styles.no_wallets_text}>{loading ? s.strings.loading : s.strings.fio_connect_no_wallets}</EdgeText>
   }
 
   render() {
-    const { walletItems, disabled } = this.props
+    const { walletItems, disabled, theme } = this.props
     const { connectWalletsMap, disconnectWalletsMap } = this.state
+    const styles = getStyles(theme)
     const continueDisabled = !Object.keys(connectWalletsMap).length && !Object.keys(disconnectWalletsMap).length
 
     return (
@@ -184,42 +193,29 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
           </ScrollView>
         </View>
         <View style={styles.bottomSection}>
-          <TouchableHighlight
-            style={[styles.button, continueDisabled ? styles.btnDisabled : null]}
-            onPress={this._onContinuePress}
-            underlayColor={THEME.COLORS.SECONDARY}
-            disabled={continueDisabled || disabled}
-          >
-            <View style={styles.buttonTextWrap}>
-              {disabled ? (
-                <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="small" />
-              ) : (
-                <T style={styles.buttonText}>{s.strings.string_next_capitalized}</T>
-              )}
-            </View>
-          </TouchableHighlight>
+          <PrimaryButton onPress={this._onContinuePress} label={s.strings.string_next_capitalized} disabled={continueDisabled || disabled} />
         </View>
       </View>
     )
   }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   view: {
     flex: 1
   },
   list: {
-    flex: 5,
-    backgroundColor: THEME.COLORS.WHITE
+    flex: 5
   },
   no_wallets_text: {
-    padding: scale(30),
-    fontSize: scale(22),
-    color: THEME.COLORS.GRAY_2,
+    padding: theme.rem(1.75),
+    fontSize: theme.rem(1.5),
+    color: theme.deactivatedText,
     textAlign: 'center'
   },
   wallet: {
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    backgroundColor: theme.tileBackground,
+    marginBottom: theme.rem(0.05)
   },
   walletDisabled: {
     opacity: 0.7
@@ -235,70 +231,45 @@ const rawStyles = {
   },
   switchContainer: {
     alignItems: 'flex-end',
-    paddingRight: THEME.rem(0.25)
+    paddingRight: theme.rem(0.25)
   },
   walletDetailsRowCurrency: {
-    fontSize: scale(18)
+    fontSize: theme.rem(1.25),
+    color: theme.primaryText
   },
   walletDetailsRowName: {
-    fontSize: scale(14),
-    color: THEME.COLORS.SECONDARY
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
   },
   bottomSection: {
     flex: 2,
-    backgroundColor: THEME.COLORS.GRAY_3,
-    paddingBottom: scale(20)
-  },
-  button: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.BLUE_3,
-    borderRadius: scale(3),
-    height: scale(50),
-    marginLeft: scale(15),
-    marginRight: scale(15),
-    marginTop: scale(15),
-    marginBottom: scale(15)
-  },
-  buttonTextWrap: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  buttonText: {
-    opacity: 1,
-    color: THEME.COLORS.WHITE,
-    fontSize: THEME.rem(1),
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    backgroundColor: theme.backgroundGradientRight,
+    padding: theme.rem(1)
   },
   btnDisabled: {
-    backgroundColor: THEME.COLORS.GRAY_2
+    opacity: 0.5
   },
 
   rowContainerTop: {
     width: '100%',
-    height: scale(76),
+    height: theme.rem(4.75),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: scale(10),
-    paddingRight: scale(10),
-    borderBottomWidth: scale(1),
-    borderBottomColor: THEME.COLORS.GRAY_3
+    paddingLeft: theme.rem(0.5),
+    paddingRight: theme.rem(0.5)
   },
   containerLeft: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: scale(10),
-    width: scale(36)
+    marginRight: theme.rem(0.25),
+    width: theme.rem(2.25)
   },
   imageContainer: {
-    height: scale(24),
-    width: scale(24)
+    height: theme.rem(1.5),
+    width: theme.rem(1.5)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 const mapStateToProps = (state: RootState, ownProps): FioConnectWalletStateProps => {
   const wallets = getWallets(state)
@@ -315,4 +286,4 @@ const mapStateToProps = (state: RootState, ownProps): FioConnectWalletStateProps
   return out
 }
 
-export const ConnectWalletsConnector = connect(mapStateToProps, {})(ConnectWallets)
+export const ConnectWalletsConnector = connect(mapStateToProps, {})(withTheme(ConnectWallets))

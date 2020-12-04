@@ -18,6 +18,7 @@ import { CreateWalletSelectFiatScene } from '../components/scenes/CreateWalletSe
 import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene.js'
 import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene.js'
 import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene.js'
+import { FioAddressDetailsScene } from '../components/scenes/FioAddressDetailsScene'
 import { FioAddressRegisteredScene } from '../components/scenes/FioAddressRegisteredScene'
 import { FioAddressRegisterSelectWalletScene } from '../components/scenes/FioAddressRegisterSelectWalletScene'
 import { FioAddressSettingsScene } from '../components/scenes/FioAddressSettingsScene'
@@ -40,7 +41,6 @@ import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateW
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
-import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetailsConnector'
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegisterConnector'
 import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
@@ -658,7 +658,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.FIO_ADDRESS_DETAILS}
               navTransparent
-              component={ifLoggedIn(FioAddressDetailsConnector)}
+              component={ifLoggedIn(FioAddressDetailsScene)}
               renderTitle={<HeaderTitle title={s.strings.title_fio_address} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={<SideMenuButton />}
