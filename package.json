@@ -132,7 +132,7 @@
     "edge-currency-accountbased": "^0.7.34",
     "edge-currency-bitcoin": "^4.9.3",
     "edge-currency-monero": "^0.2.6",
-    "edge-exchange-plugins": "^0.11.12",
+    "edge-exchange-plugins": "^0.11.13",
     "edge-login-ui-rn": "^0.6.22",
     "lodash": "^4.17.19",
     "qrcode-generator": "^1.4.4",
