@@ -2,23 +2,25 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, StyleSheet, View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
 import { findWalletByFioAddress } from '../../modules/FioAddress/util'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { scale } from '../../util/scaling'
+import { getFioWallets } from '../../modules/UI/selectors'
+import type { RootState } from '../../reducers/RootReducer'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow'
-import { SettingsRow } from '../common/SettingsRow.js'
 import { showError } from '../services/AirshipInstance'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText.js'
+import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
+import { SettingsRow } from '../themed/SettingsRow.js'
 
 export type StateProps = {
   fioWallets: EdgeCurrencyWallet[]
@@ -35,11 +37,9 @@ export type LocalState = {
   fioWallet: EdgeCurrencyWallet | null
 }
 
-type Props = StateProps & NavProps
+type Props = StateProps & NavProps & ThemeProps
 
-const headerIconSize = THEME.rem(1.5)
-
-export class FioAddressDetailsScene extends React.Component<Props, LocalState> {
+class FioAddressDetails extends React.Component<Props, LocalState> {
   state: LocalState = {
     fioWalletLoading: false,
     fioWallet: null
@@ -82,21 +82,24 @@ export class FioAddressDetailsScene extends React.Component<Props, LocalState> {
   }
 
   renderTitle = (title: string) => {
+    const styles = getStyles(this.props.theme)
     return (
       <View style={styles.titleWrapper}>
-        <T style={styles.titleStyle}>{title}</T>
+        <EdgeText style={styles.titleStyle}>{title}</EdgeText>
       </View>
     )
   }
 
   renderAccountSettings = () => {
+    const { theme } = this.props
+    const styles = getStyles(theme)
     let icon, displayName
     if (this.checkExpiredSoon()) {
-      icon = <IonIcon name="ios-warning" color={THEME.COLORS.ACCENT_ORANGE} size={headerIconSize} />
-      displayName = <T style={styles.warning}>{s.strings.fio_address_details_expired_soon}</T>
+      icon = <IonIcon name="ios-warning" color={theme.warningIcon} size={theme.rem(1.5)} />
+      displayName = <EdgeText style={styles.warning}>{s.strings.fio_address_details_expired_soon}</EdgeText>
     } else {
-      icon = <IonIcon name="ios-settings" color={THEME.COLORS.GRAY_1} size={headerIconSize} />
-      displayName = <T style={styles.settingsText}>{s.strings.fio_address_details_screen_manage_account_settings}</T>
+      icon = <IonIcon name="ios-settings" color={theme.icon} size={theme.rem(1.5)} />
+      displayName = <EdgeText style={styles.settingsText}>{s.strings.fio_address_details_screen_manage_account_settings}</EdgeText>
     }
 
     return (
@@ -104,57 +107,47 @@ export class FioAddressDetailsScene extends React.Component<Props, LocalState> {
         icon={icon}
         text={displayName}
         onPress={this._onPressAccountSettings}
-        right={<AntDesignIcon name="right" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} />}
+        right={<AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />}
       />
     )
   }
 
   render() {
-    const { fioAddressName, expiration } = this.props
+    const { fioAddressName, expiration, theme } = this.props
+    const styles = getStyles(theme)
+    const expirationLabel = `${s.strings.fio_address_details_screen_expires} ${formatDate(new Date(expiration))}`
+
     return (
       <SceneWrapper background="header">
-        <T style={styles.expiration}>
-          {`${s.strings.fio_address_details_screen_expires} `}
-          {formatDate(new Date(expiration))}
-        </T>
-        <View style={styles.viewGrey}>
-          {this.renderAccountSettings()}
-          <SettingsHeaderRow
-            icon={<IonIcon name="ios-link" color={THEME.COLORS.WHITE} size={headerIconSize} />}
-            text={s.strings.fio_address_details_connect_to_wallets}
-          />
-          <ConnectWallets fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} disabled={this.state.fioWalletLoading} />
-        </View>
+        <EdgeText style={styles.expiration}>{expirationLabel}</EdgeText>
+        {this.renderAccountSettings()}
+        <SettingsHeaderRow
+          icon={<IonIcon name="ios-link" color={theme.primaryText} size={theme.rem(1.5)} />}
+          numberOfLines={2}
+          text={s.strings.fio_address_details_connect_to_wallets}
+        />
+        <ConnectWallets fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} disabled={this.state.fioWalletLoading} />
       </SceneWrapper>
     )
   }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   text: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(16)
-  },
-  image: {
-    marginBottom: scale(50)
+    color: theme.primaryText,
+    fontSize: theme.rem(1)
   },
   titleStyle: {
     alignSelf: 'center',
     fontSize: 20,
-    color: THEME.COLORS.WHITE,
-    fontFamily: THEME.FONTS.DEFAULT
-  },
-  viewGrey: {
-    flex: 1,
-    backgroundColor: THEME.COLORS.GRAY_3,
-    paddingHorizontal: 0
+    color: theme.primaryText
   },
   expiration: {
-    fontSize: THEME.rem(0.75),
-    color: THEME.COLORS.WHITE,
+    fontSize: theme.rem(0.75),
+    color: theme.primaryText,
     textAlign: 'center',
-    marginTop: THEME.rem(-0.5),
-    paddingBottom: THEME.rem(0.75)
+    marginTop: theme.rem(-0.5),
+    paddingBottom: theme.rem(0.75)
   },
   titleWrapper: {
     justifyContent: 'center',
@@ -162,11 +155,27 @@ const rawStyles = {
     width: '100%'
   },
   settingsText: {
-    color: THEME.COLORS.GRAY_1,
-    fontSize: THEME.rem(1)
+    color: theme.primaryText,
+    fontSize: theme.rem(1)
+  },
+  settingsTile: {
+    paddingHorizontal: theme.rem(1)
+  },
+  settingsTitle: {
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   warning: {
-    color: THEME.COLORS.ACCENT_RED
+    fontSize: theme.rem(1),
+    color: theme.warningText
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+export const FioAddressDetailsScene = connect((state: RootState) => {
+  const fioWallets = getFioWallets(state)
+
+  const out: StateProps = {
+    fioWallets
+  }
+  return out
+}, {})(withTheme(FioAddressDetails))
