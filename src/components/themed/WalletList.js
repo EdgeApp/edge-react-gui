@@ -206,13 +206,12 @@ class WalletListComponent extends React.PureComponent<Props> {
           fiatBalanceSymbol={fiatBalanceSymbol}
           isToken={isToken}
           publicAddress={guiWallet.receiveAddress.publicAddress}
-          rowKey={data.item.key}
-          rowMap={rowMap}
           selectWallet={this.props.selectWallet}
           symbolImage={symbolImage}
           walletId={walletId}
           walletName={guiWallet.name}
           walletProgress={walletProgress}
+          swipeRow={rowMap[data.item.key]}
         />
       )
     }
