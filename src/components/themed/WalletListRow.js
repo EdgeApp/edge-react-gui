@@ -14,9 +14,9 @@ import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
-const WIDTH_DIMENSION_ACTIVATE = Dimensions.get('window').width * 0.65
-const WIDTH_DIMENSION_HIDE = Dimensions.get('window').width * 0.4
-const WIDTH_DIMENSION_SHOW = Dimensions.get('window').width * 0.15
+const FULL_WIDTH = Dimensions.get('window').width
+const WIDTH_DIMENSION_HIDE = FULL_WIDTH * 0.35
+const WIDTH_DIMENSION_SHOW = FULL_WIDTH * 0.15
 
 type Props = {
   cryptoAmount: string,
@@ -28,7 +28,6 @@ type Props = {
   fiatBalance: string,
   fiatBalanceSymbol: string,
   isToken: boolean,
-  rowKey: string,
   publicAddress: string,
   selectWallet(walletId: string, currencyCode: string): void,
   symbolImage?: string,
@@ -36,7 +35,7 @@ type Props = {
   walletName: string,
   walletProgress: number,
   swipeRef: ?React.ElementRef<typeof SwipeRow>,
-  rowMap: { [string]: SwipeRow }
+  swipeRow: SwipeRow
 }
 
 type State = {
@@ -52,7 +51,8 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
   }
 
   handleSelectWallet = (): void => {
-    const { currencyCode, isToken, publicAddress, walletId } = this.props
+    const { currencyCode, isToken, publicAddress, swipeRow, walletId } = this.props
+    swipeRow.closeRow()
     this.props.selectWallet(walletId, currencyCode)
     if (!isToken) {
       // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
@@ -67,16 +67,16 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
   }
 
   handleOpenWalletListMenuModal = (): void => {
-    const { currencyCode, isToken, rowKey, rowMap, symbolImage, walletId, walletName } = this.props
-    rowMap[rowKey].closeRow()
+    const { currencyCode, isToken, swipeRow, symbolImage, walletId, walletName } = this.props
+    swipeRow.closeRow()
     Airship.show(bridge => (
       <WalletListMenuModal bridge={bridge} walletId={walletId} walletName={walletName} currencyCode={currencyCode} image={symbolImage} isToken={isToken} />
     ))
   }
 
   openScene(key: string) {
-    const { currencyCode, rowKey, walletId, rowMap } = this.props
-    rowMap[rowKey].closeRow()
+    const { currencyCode, swipeRow, walletId } = this.props
+    swipeRow.closeRow()
     this.props.selectWallet(walletId, currencyCode)
     Actions.jump(key)
   }
@@ -99,15 +99,6 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
     }
   }
 
-  handleRowOpen = () => {
-    const { rowKey, rowMap } = this.props
-    for (const key in rowMap) {
-      if (rowMap.hasOwnProperty(key) && key !== rowKey && rowMap[key]) {
-        rowMap[key].closeRow()
-      }
-    }
-  }
-
   render() {
     const { swipeDirection } = this.state
     const {
@@ -126,38 +117,44 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
       walletProgress
     } = this.props
     const styles = getStyles(theme)
+    const isSwipingLeft = swipeDirection === 'left'
+    const isSwipingRight = swipeDirection === 'right'
+    const leftOpenValue = isSwipingRight ? FULL_WIDTH : theme.rem(6.25)
+    const rightOpenValue = isSwipingLeft ? -FULL_WIDTH : theme.rem(-6.25)
+    const swipeToOpenPercent = isSwipingLeft || isSwipingRight ? 0 : 50
     return (
       <SwipeRow
-        onRowOpen={this.handleRowOpen}
+        {...this.props}
         onSwipeValueChange={this.handleSwipeValueChange}
-        leftOpenValue={theme.rem(6.25)}
-        rightOpenValue={theme.rem(-6.25)}
+        leftOpenValue={leftOpenValue}
+        rightOpenValue={rightOpenValue}
+        swipeToOpenPercent={swipeToOpenPercent}
         ref={this.props.swipeRef}
-        leftActivationValue={WIDTH_DIMENSION_ACTIVATE}
-        rightActivationValue={-WIDTH_DIMENSION_ACTIVATE}
-        onLeftActionStatusChange={this.handleOpenSend}
-        onRightActionStatusChange={this.handleOpenRequest}
+        leftActivationValue={FULL_WIDTH}
+        rightActivationValue={-FULL_WIDTH}
+        onLeftActionStatusChange={this.handleOpenRequest}
+        onRightActionStatusChange={this.handleOpenSend}
         directionalDistanceChangeThreshold={0}
         useNativeDriver
       >
         <View style={styles.swipeContainer}>
-          {(swipeDirection === 'right' || swipeDirection === null) && (
+          {(isSwipingRight || swipeDirection === null) && (
             <View style={styles.swipeRowContainer}>
               <TouchableOpacity style={styles.swipeOptionsContainer} onPress={this.handleOpenWalletListMenuModal}>
                 <EdgeText style={styles.swipeOptionsIcon}>{WALLET_LIST_OPTIONS_ICON}</EdgeText>
               </TouchableOpacity>
               <TouchableOpacity style={styles.swipeRequestContainer} onPress={this.handleOpenRequest}>
                 <View style={styles.swipeButton}>
-                  <Fontello name="request" color={theme.icon} size={theme.rem(1)} />
+                  <Fontello name="request" color={theme.icon} size={theme.rem(isSwipingRight ? 1.5 : 1)} />
                 </View>
               </TouchableOpacity>
             </View>
           )}
-          {(swipeDirection === 'left' || swipeDirection === null) && (
+          {(isSwipingLeft || swipeDirection === null) && (
             <View style={styles.swipeRowContainer}>
               <TouchableOpacity style={styles.swipeSendContainer} onPress={this.handleOpenSend}>
                 <View style={styles.swipeButton}>
-                  <Fontello name="send" color={theme.icon} size={theme.rem(1)} />
+                  <Fontello name="send" color={theme.icon} size={theme.rem(isSwipingLeft ? 1.5 : 1)} />
                 </View>
               </TouchableOpacity>
               <TouchableOpacity style={styles.swipeOptionsContainer} onPress={this.handleOpenWalletListMenuModal}>
