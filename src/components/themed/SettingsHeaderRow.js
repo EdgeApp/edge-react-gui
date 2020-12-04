@@ -8,6 +8,7 @@ import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
   icon?: React.Node,
+  numberOfLines?: number,
   text: string
 }
 
@@ -17,13 +18,15 @@ type Props = OwnProps & ThemeProps
  * A blue header row in a settings scene.
  */
 export function SettingsHeaderRowComponent(props: Props): React.Node {
-  const { icon, text, theme } = props
+  const { icon, text, numberOfLines, theme } = props
   const styles = getStyles(theme)
 
   return (
     <View style={styles.row}>
       {icon != null ? <View style={styles.padding}>{icon}</View> : undefined}
-      <EdgeText style={styles.text}>{text}</EdgeText>
+      <EdgeText style={styles.text} numberOfLines={numberOfLines || 1}>
+        {text}
+      </EdgeText>
     </View>
   )
 }
