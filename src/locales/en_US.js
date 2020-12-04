@@ -310,7 +310,7 @@ const strings = {
   string_first_ufo_wallet_name: 'My UFO',
   string_first_vertcoin_wallet_name: 'My Vertcoin',
   string_first_ravencoin_wallet_name: 'My Ravencoin',
-  string_first_zcoin_wallet_name: 'My Zcoin',
+  string_first_zcoin_wallet_name: 'My Firo',
   string_first_stellar_wallet_name: 'My Stellar',
   string_first_tezos_wallet_name: 'My Tezos',
   string_first_rsk_wallet_name: 'My RSK',

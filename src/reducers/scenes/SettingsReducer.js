@@ -57,7 +57,7 @@ export type SettingsState = {
   ETC: CurrencySetting,
   LTC: CurrencySetting,
   VTC: CurrencySetting,
-  XZC: CurrencySetting,
+  FIRO: CurrencySetting,
   QTUM: CurrencySetting,
   UFO: CurrencySetting,
   XMR: CurrencySetting,

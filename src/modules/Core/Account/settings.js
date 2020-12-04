@@ -70,7 +70,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   RVN: {
     denomination: '100000000'
   },
-  XZC: {
+  FIRO: {
     denomination: '100000000'
   },
   QTUM: {
@@ -275,7 +275,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   VTC: 'object',
   XTZ: 'object',
   RVN: 'object',
-  XZC: 'object',
+  FIRO: 'object',
   QTUM: 'object',
   XMR: 'object',
   ETH: 'object',

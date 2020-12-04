@@ -51,7 +51,7 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   XMR: s.strings.string_first_monero_wallet_name,
   XRP: s.strings.string_first_ripple_wallet_name,
   XTZ: s.strings.string_first_tezos_wallet_name,
-  XZC: s.strings.string_first_zcoin_wallet_name
+  FIRO: s.strings.string_first_zcoin_wallet_name
 }
 
 /**
@@ -147,7 +147,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   XMR: 'monero',
   XRP: 'ripple',
   XTZ: 'tezos',
-  XZC: 'zcoin'
+  FIRO: 'zcoin'
 }
 
 type SpecialCurrencyInfo = {|
@@ -429,7 +429,7 @@ export const WALLET_LIST_MENU: Array<{
       'BCH',
       'DASH',
       'FTC',
-      'XZC',
+      'FIRO',
       'LTC',
       'UFO',
       'QTUM',
