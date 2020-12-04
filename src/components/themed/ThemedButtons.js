@@ -21,7 +21,9 @@ type Props = {
 
   // The gap inside the button. Takes 0-4 numbers (top, right, bottom, left),
   // using the same logic as the web `padding` property. Defaults to 0.5.
-  paddingRem?: number[] | number
+  paddingRem?: number[] | number,
+
+  disabled?: boolean
 }
 
 type ColorProps = {
@@ -32,12 +34,12 @@ type SquareButtonProps = Props & ColorProps
 type RadioButtonProps = Props & { value: boolean, right?: boolean }
 
 export function PrimaryButton(props: Props) {
-  const { children, label, onPress } = props
+  const { children, label, onPress, disabled } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
-    <TouchableOpacity style={[styles.primaryButton, spacingStyles(props, theme)]} onPress={onPress}>
+    <TouchableOpacity style={[styles.primaryButton, spacingStyles(props, theme), disabled ? styles.disabled : null]} onPress={onPress} disabled={disabled}>
       {label != null ? <Text style={styles.primaryText}>{label}</Text> : null}
       {children}
     </TouchableOpacity>
@@ -45,12 +47,12 @@ export function PrimaryButton(props: Props) {
 }
 
 export function SecondaryButton(props: Props) {
-  const { children, label, onPress } = props
+  const { children, label, onPress, disabled } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
-    <TouchableOpacity style={[styles.secondaryButton, spacingStyles(props, theme)]} onPress={onPress}>
+    <TouchableOpacity style={[styles.secondaryButton, spacingStyles(props, theme), disabled ? styles.disabled : null]} onPress={onPress} disabled={disabled}>
       {label != null ? <Text style={styles.secondaryText}>{label}</Text> : null}
       {children}
     </TouchableOpacity>
@@ -206,6 +208,9 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     radioRight: {
       flexDirection: 'row-reverse'
+    },
+    disabled: {
+      opacity: 0.7
     }
   }
 })
