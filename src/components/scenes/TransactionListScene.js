@@ -104,7 +104,7 @@ class TransactionListComponent extends React.Component<Props, State> {
     const { selectedWalletId, selectedCurrencyCode, transactions } = this.props
     const transaction = transactionListItem.item
     const isHeader = transaction.key === 0 || transaction.dateString !== transactions[transaction.key - 1].dateString
-    return <TransactionRow currencyId={selectedWalletId} currencyCode={selectedCurrencyCode} transaction={transaction} isHeader={isHeader} />
+    return <TransactionRow walletId={selectedWalletId} currencyCode={selectedCurrencyCode} transaction={transaction} isHeader={isHeader} />
   }
 }
 
