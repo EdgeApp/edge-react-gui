@@ -3,22 +3,21 @@
 import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, Image, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
-import receivedTypeImage from '../../assets/images/transactions/transaction-type-received.png'
-import sentTypeImage from '../../assets/images/transactions/transaction-type-sent.png'
+import { Fontello } from '../../assets/vector/index.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
-import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import { getDenomination, getFiatSymbol } from '../../util/utils.js'
+import { showError } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 
 type StateProps = {
   cryptoAmount: string,
@@ -34,20 +33,21 @@ type StateProps = {
 
 type OwnProps = {
   isHeader: boolean,
-  currencyId: string,
+  walletId: string,
   currencyCode: string,
   transaction: TransactionListTx
 }
 
-type Props = OwnProps & StateProps
+type Props = OwnProps & StateProps & ThemeProps
 
 export class TransactionRowComponent extends React.PureComponent<Props> {
-  goToTxDetail = () => {
+  handlePress = () => {
     const { transaction, thumbnailPath } = this.props
     if (transaction) {
-      Actions.transactionDetails({ transaction, thumbnailPath })
+      console.log(transaction)
+      Actions.transactionDetails({ edgeTransaction: transaction, thumbnailPath })
     } else {
-      Alert.alert(s.strings.transaction_details_error_invalid)
+      showError(s.strings.transaction_details_error_invalid)
     }
   }
 
@@ -64,10 +64,12 @@ export class TransactionRowComponent extends React.PureComponent<Props> {
       isHeader,
       requiredConfirmations,
       selectedCurrencyName,
+      theme,
       thumbnailPath,
       transaction,
       walletBlockHeight
     } = this.props
+    const styles = getStyles(theme)
 
     const cryptoAmountString = `${isSentTransaction ? '-' : '+'} ${denominationSymbol ? denominationSymbol + ' ' : ''}${cryptoAmount}`
     const fiatAmountString = `${fiatSymbol} ${fiatAmount}`
@@ -77,13 +79,13 @@ export class TransactionRowComponent extends React.PureComponent<Props> {
     if (isSentTransaction) {
       transactionText =
         transaction.metadata && transaction.metadata.name ? transaction.metadata.name : s.strings.fragment_transaction_list_sent_prefix + selectedCurrencyName
-      transactionIcon = sentTypeImage
+      transactionIcon = <Fontello name="send" size={theme.rem(1.875)} color={theme.negativeText} />
     } else {
       transactionText =
         transaction.metadata && transaction.metadata.name
           ? transaction.metadata.name
           : s.strings.fragment_transaction_list_receive_prefix + selectedCurrencyName
-      transactionIcon = receivedTypeImage
+      transactionIcon = <Fontello name="request" size={theme.rem(1.875)} color={theme.positiveText} />
     }
 
     // Pending Text and Style
@@ -91,24 +93,24 @@ export class TransactionRowComponent extends React.PureComponent<Props> {
     let pendingText, pendingStyle
     if (walletBlockHeight === 0) {
       pendingText = s.strings.fragment_transaction_list_tx_synchronizing
-      pendingStyle = styles.transactionPartialConfirmation
+      pendingStyle = styles.partialTime
     } else if (transaction.blockHeight < 0) {
       pendingText = s.strings.fragment_transaction_list_tx_dropped
-      pendingStyle = styles.transactionPartialConfirmation
+      pendingStyle = styles.partialTime
     } else if (currentConfirmations <= 0) {
       // if completely unconfirmed or wallet uninitialized, or wallet lagging behind (transaction block height larger than wallet block height)
       pendingText = s.strings.fragment_wallet_unconfirmed
-      pendingStyle = styles.transactionPending
+      pendingStyle = styles.pendingTime
     } else if (currentConfirmations < requiredConfirmations) {
-      pendingStyle = styles.transactionPartialConfirmation
       pendingText = sprintf(s.strings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
+      pendingStyle = styles.partialTime
     } else {
       pendingText = transaction.time
-      pendingStyle = styles.transactionTime
+      pendingStyle = styles.completedTime
     }
 
     // Transaction Category
-    let formattedTransactionCategory
+    let categoryText
     const transactionCategory = transaction.metadata ? transaction.metadata.category : null
     if (transactionCategory) {
       const splittedFullCategory = UTILS.splitTransactionCategory(transactionCategory)
@@ -117,16 +119,16 @@ export class TransactionRowComponent extends React.PureComponent<Props> {
         const mainCategory = category.toLowerCase()
         switch (mainCategory) {
           case 'exchange':
-            formattedTransactionCategory = `${s.strings.fragment_transaction_exchange}:${subCategory}`
+            categoryText = `${s.strings.fragment_transaction_exchange}:${subCategory}`
             break
           case 'expense':
-            formattedTransactionCategory = `${s.strings.fragment_transaction_expense}:${subCategory}`
+            categoryText = `${s.strings.fragment_transaction_expense}:${subCategory}`
             break
           case 'transfer':
-            formattedTransactionCategory = `${s.strings.fragment_transaction_transfer}:${subCategory}`
+            categoryText = `${s.strings.fragment_transaction_transfer}:${subCategory}`
             break
           case 'income':
-            formattedTransactionCategory = `${s.strings.fragment_transaction_income}:${subCategory}`
+            categoryText = `${s.strings.fragment_transaction_income}:${subCategory}`
             break
           default:
             break
@@ -135,165 +137,135 @@ export class TransactionRowComponent extends React.PureComponent<Props> {
     }
 
     return (
-      <View style={styles.singleTransactionWrap}>
+      <View style={styles.container}>
         {isHeader && (
-          <View style={styles.singleDateArea}>
-            <View style={styles.leftDateArea}>
-              <T style={styles.formattedDate}>{transaction.dateString}</T>
-            </View>
+          <View style={styles.headerContainer}>
+            <EdgeText style={styles.formattedDate}>{transaction.dateString || ''}</EdgeText>
           </View>
         )}
-        <TouchableHighlight onPress={this.goToTxDetail} underlayColor={THEME.COLORS.ROW_PRESSED} style={styles.singleTransaction}>
-          <View style={styles.transactionInfoWrap}>
-            <View style={styles.transactionLeft}>
-              <View style={styles.transactionLeftLogoWrap}>
-                {thumbnailPath ? (
-                  <Image style={styles.transactionLogo} source={{ uri: thumbnailPath }} />
-                ) : (
-                  <Image style={styles.transactionLogo} source={transactionIcon} />
-                )}
+        <TouchableOpacity onPress={this.handlePress}>
+          <View style={styles.rowContainer}>
+            <View style={styles.iconContainer}>{thumbnailPath ? <Image style={styles.icon} source={{ uri: thumbnailPath }} /> : transactionIcon}</View>
+            <View style={styles.transactionContainer}>
+              <View style={styles.transactionRow}>
+                <EdgeText style={styles.transactionText}>{transactionText}</EdgeText>
+                <EdgeText style={isSentTransaction ? styles.negativeCryptoAmount : styles.positiveCryptoAmount}>{cryptoAmountString}</EdgeText>
               </View>
-            </View>
-
-            <View style={styles.transactionRight}>
-              <View style={[styles.transactionDetailsRow, transactionCategory ? styles.transactionDetailsRowMargin : null]}>
-                <T style={styles.transactionPartner} adjustsFontSizeToFit minimumFontScale={0.6}>
-                  {transactionText}
-                </T>
-                <T style={isSentTransaction ? styles.transactionDetailsSentTx : styles.transactionDetailsReceivedTx}>{cryptoAmountString}</T>
+              <View style={styles.transactionRow}>
+                <View style={styles.categoryAndTimeContainer}>
+                  {categoryText && <EdgeText style={styles.category}>{categoryText}</EdgeText>}
+                  <EdgeText style={pendingStyle}>{pendingText}</EdgeText>
+                </View>
+                <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
               </View>
-              {formattedTransactionCategory ? (
-                <View style={styles.transactionDetailsRow}>
-                  <T style={styles.transactionCategory}>{formattedTransactionCategory}</T>
-                  <T style={styles.transactionFiat}>{fiatAmountString}</T>
-                </View>
-              ) : null}
-              {formattedTransactionCategory ? (
-                <View style={[styles.transactionDetailsRow, styles.transactionDetailsRowMargin]}>
-                  <T style={[styles.transactionPendingTime, pendingStyle]}>{pendingText}</T>
-                </View>
-              ) : null}
-              {!formattedTransactionCategory ? (
-                <View style={styles.transactionDetailsRow}>
-                  <T style={[styles.transactionPendingTime, pendingStyle]}>{pendingText}</T>
-                  <T style={styles.transactionFiat}>{fiatAmountString}</T>
-                </View>
-              ) : null}
             </View>
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </View>
     )
   }
 }
 
-const rawStyles = {
-  singleTransaction: {
-    height: scale(80),
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    padding: scale(15),
-    paddingRight: scale(15),
-    paddingLeft: scale(15)
-  },
-  singleTransactionWrap: {
-    backgroundColor: THEME.COLORS.WHITE,
-    flexDirection: 'column',
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
     flex: 1
   },
-  singleDateArea: {
-    backgroundColor: THEME.COLORS.GRAY_4,
-    flex: 3,
-    padding: scale(3),
-    paddingLeft: scale(15),
+  rowContainer: {
     flexDirection: 'row',
-    paddingRight: scale(24)
+    justifyContent: 'center',
+    paddingVertical: theme.rem(0.25),
+    paddingHorizontal: theme.rem(6 / 16),
+    backgroundColor: theme.tileBackground,
+    marginBottom: theme.rem(2 / 16)
   },
-  leftDateArea: {
+  iconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: theme.rem(6 / 16)
+  },
+  icon: {
+    width: theme.rem(1.875),
+    height: theme.rem(1.875)
+  },
+  transactionContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: theme.rem(6 / 16)
+  },
+  transactionRow: {
+    flexDirection: 'row',
+    marginVertical: theme.rem(0.125)
+  },
+  transactionText: {
+    flex: 1,
+    fontFamily: theme.fontFaceBold,
+    fontSize: theme.rem(0.75)
+  },
+  cryptoAmount: {
+    fontFamily: theme.fontFaceBold,
+    fontSize: theme.rem(0.75)
+  },
+  positiveCryptoAmount: {
+    fontSize: theme.rem(0.75),
+    fontFamily: theme.fontFaceBold,
+    color: theme.positiveText,
+    textAlign: 'right'
+  },
+  negativeCryptoAmount: {
+    fontSize: theme.rem(0.75),
+    fontFamily: theme.fontFaceBold,
+    color: theme.negativeText,
+    textAlign: 'right'
+  },
+  fiatAmount: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText,
+    textAlign: 'right'
+  },
+  categoryAndTimeContainer: {
     flex: 1
+  },
+  category: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
+  },
+  partialTime: {
+    fontSize: theme.rem(0.75),
+    color: theme.warningText
+  },
+  pendingTime: {
+    fontSize: theme.rem(0.75),
+    color: theme.dangerText
+  },
+  completedTime: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
+  },
+
+  // Header area, will be removed on the following commits
+  headerContainer: {
+    marginTop: theme.rem(0.5),
+    marginBottom: theme.rem(0.125),
+    backgroundColor: theme.tileBackground,
+    padding: theme.rem(0.25)
   },
   formattedDate: {
-    color: THEME.COLORS.GRAY_2,
-    fontSize: scale(14)
-  },
-  transactionInfoWrap: {
-    flex: 1,
-    flexDirection: 'row',
-    height: scale(40)
-  },
-  transactionLeft: {
-    flexDirection: 'row'
-  },
-  transactionLogo: {
-    width: scale(40),
-    height: scale(40),
-    borderRadius: scale(20),
-    marginRight: scale(10)
-  },
-  transactionLeftLogoWrap: {
-    justifyContent: 'center'
-  },
-  transactionPartner: {
-    flex: 1
-  },
-  transactionRight: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    flexDirection: 'column',
-    justifyContent: 'center'
-  },
-  transactionTime: {
-    color: THEME.COLORS.SECONDARY
-  },
-  transactionPending: {
-    color: THEME.COLORS.ACCENT_RED
-  },
-  transactionPartialConfirmation: {
-    color: THEME.COLORS.ACCENT_ORANGE
-  },
-  symbol: {
-    fontFamily: THEME.FONTS.SYMBOLS
-  },
-  transactionDetailsRow: {
-    flexDirection: 'row',
-    width: '100%'
-  },
-  transactionDetailsRowMargin: {
-    marginBottom: scale(2)
-  },
-  transactionDetailsReceivedTx: {
-    color: THEME.COLORS.TRANSACTION_LIST_RECEIVED_TX
-  },
-  transactionDetailsSentTx: {
-    color: THEME.COLORS.TRANSACTION_LIST_SENT_TX
-  },
-  transactionCategory: {
-    flex: 1,
-    fontSize: 12,
-    color: THEME.COLORS.SECONDARY
-  },
-  transactionFiat: {
-    fontSize: 12,
-    color: THEME.COLORS.SECONDARY
-  },
-  transactionPendingTime: {
-    flex: 1,
-    fontSize: 12
+    marginVertical: theme.rem(0.25),
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 export const TransactionRow = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const { currencyCode, currencyId, transaction } = ownProps
+  const { currencyCode, walletId, transaction } = ownProps
   const { metadata } = transaction
-  const guiWallet = state.ui.wallets.byId[currencyId]
+  const guiWallet = state.ui.wallets.byId[walletId]
   const { fiatCurrencyCode } = guiWallet
   const displayDenomination = getDenomination(currencyCode, state.ui.settings)
 
   // Required Confirmations
   const { currencyWallets = {} } = state.core.account
-  const coreWallet: EdgeCurrencyWallet = currencyWallets[currencyId]
+  const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
   const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
   const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
 
@@ -329,4 +301,4 @@ export const TransactionRow = connect((state: RootState, ownProps: OwnProps): St
     selectedCurrencyName: guiWallet.currencyNames[currencyCode] || currencyCode,
     thumbnailPath
   }
-})(TransactionRowComponent)
+})(withTheme(TransactionRowComponent))
