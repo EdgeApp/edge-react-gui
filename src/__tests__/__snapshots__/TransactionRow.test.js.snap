@@ -41,9 +41,7 @@ exports[`MenuDropDown component should render without props 1`] = `
       </FormattedText>
     </View>
   </View>
-  <TouchableHighlight
-    activeOpacity={0.85}
-    delayPressOut={100}
+  <ForwardRef
     onPress={[Function]}
     style={
       Array [
@@ -184,6 +182,6 @@ exports[`MenuDropDown component should render without props 1`] = `
         </View>
       </View>
     </View>
-  </TouchableHighlight>
+  </ForwardRef>
 </View>
 `;

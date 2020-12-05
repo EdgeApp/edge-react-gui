@@ -1,11 +1,12 @@
 <resources>
 
-  <!-- Base application theme. -->
-  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    <!-- Customize your theme here. -->
-    <!-- Doing <item name="android:windowIsTranslucent">true</item>
-      as requested by react-native-smart-splash-screen crashes on Oreo
-      because we also request portrait mode. -->
-  </style>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:textColor">#000000</item>
+        <!-- Doing <item name="android:windowIsTranslucent">true</item>
+          as requested by react-native-smart-splash-screen crashes on Oreo
+          because we also request portrait mode. -->
+    </style>
 
 </resources>
