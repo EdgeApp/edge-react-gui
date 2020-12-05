@@ -1,17 +1,24 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, FlatList, View } from 'react-native'
+import { ActivityIndicator, SectionList, View } from 'react-native'
 
+import s from '../../locales/strings'
 import type { TransactionListTx } from '../../types/types.js'
 import { BuyCrypto } from '../common/BuyCrypto.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { TransactionRow } from '../common/TransactionRow.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 import { TransactionListTop } from '../themed/TransactionListTop.js'
 
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
 const SCROLL_THRESHOLD = 0.5
+
+type Section = {
+  title: string,
+  data: TransactionListTx[]
+}
 
 export type StateProps = {
   loading: boolean,
@@ -31,9 +38,7 @@ type State = {
   reset: boolean
 }
 
-const emptyArray = []
-
-class TransactionListComponent extends React.Component<Props, State> {
+class TransactionListComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -64,6 +69,28 @@ class TransactionListComponent extends React.Component<Props, State> {
     }
   }
 
+  section = (transactions: TransactionListTx[]) => {
+    const sections: Section[] = []
+    for (const transaction of transactions) {
+      const dateString = transaction.dateString || s.strings.fragment_transaction_list_no_date
+      const checkTitle = sections.find(section => section.title === dateString)
+      if (!checkTitle) {
+        sections.push({
+          title: dateString,
+          data: [transaction]
+        })
+      } else {
+        for (const section of sections) {
+          if (section.title === dateString) {
+            section.data.push(transaction)
+            break
+          }
+        }
+      }
+    }
+    return sections
+  }
+
   renderEmptyComponent = () => {
     const styles = getStyles(this.props.theme)
     if (this.props.numTransactions) {
@@ -76,21 +103,22 @@ class TransactionListComponent extends React.Component<Props, State> {
     return <BuyCrypto walletId={this.props.selectedWalletId} currencyCode={this.props.selectedCurrencyCode} />
   }
 
+  keyExtractor = (item: TransactionListTx) => String(item.key)
   render() {
-    const txs = this.state.reset ? emptyArray : this.props.transactions
-    const styles = getStyles(this.props.theme)
+    const transactions = this.state.reset ? [] : this.props.transactions
     return (
       <SceneWrapper>
-        <FlatList
-          ListEmptyComponent={this.renderEmptyComponent}
-          ListHeaderComponent={this.renderHeader()}
-          style={styles.transactionsScrollWrap}
-          data={txs}
-          renderItem={this.renderTx}
+        <SectionList
+          sections={this.section(transactions)}
+          renderItem={this.renderTransaction}
+          renderSectionHeader={this.renderSectionHeader}
+          renderSectionFooter={() => <View style={{ height: this.props.theme.rem(0.5) }} />}
           initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
           onEndReached={this.handleScrollEnd}
           onEndReachedThreshold={SCROLL_THRESHOLD}
-          keyExtractor={item => item.key.toString()}
+          keyExtractor={this.keyExtractor}
+          ListEmptyComponent={this.renderEmptyComponent}
+          ListHeaderComponent={this.renderHeader()}
         />
       </SceneWrapper>
     )
@@ -100,23 +128,38 @@ class TransactionListComponent extends React.Component<Props, State> {
     return this.props.loading ? <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" /> : <TransactionListTop />
   }
 
-  renderTx = (transactionListItem: FlatList<TransactionListTx>) => {
-    const { selectedWalletId, selectedCurrencyCode, transactions } = this.props
-    const transaction = transactionListItem.item
-    const isHeader = transaction.key === 0 || transaction.dateString !== transactions[transaction.key - 1].dateString
-    return <TransactionRow walletId={selectedWalletId} currencyCode={selectedCurrencyCode} transaction={transaction} isHeader={isHeader} />
+  renderSectionHeader = (section: { section: Section }) => {
+    const styles = getStyles(this.props.theme)
+    return (
+      <View style={styles.headerContainer}>
+        <EdgeText style={styles.formattedDate}>{section.section.title}</EdgeText>
+      </View>
+    )
+  }
+
+  renderTransaction = (transaction: SectionList<TransactionListTx>) => {
+    const { selectedWalletId, selectedCurrencyCode } = this.props
+    return <TransactionRow walletId={selectedWalletId} currencyCode={selectedCurrencyCode} transaction={transaction} />
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  transactionsScrollWrap: {
-    flex: 1
-  },
   loader: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     height: theme.rem(10)
+  },
+  headerContainer: {
+    // marginTop: theme.rem(0.5),
+    marginBottom: theme.rem(0.125),
+    backgroundColor: theme.tileBackground,
+    padding: theme.rem(0.25)
+  },
+  formattedDate: {
+    marginVertical: theme.rem(0.25),
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
   }
 }))
 
