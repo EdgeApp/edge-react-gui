@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from 'react'
+import { TextField } from 'react-native-material-textfield'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -9,8 +10,8 @@ import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { TextInput } from '../../modules/UI/components/Modals/components/TextInput.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 
 export type Props = {
   isActive: boolean,
@@ -56,13 +57,14 @@ export class UniqueIdentifierModal extends React.Component<Props> {
 
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <TextInput
-                autoFocus
+              <TextField
+                baseColor={THEME.COLORS.SECONDARY}
+                tintColor={THEME.COLORS.SECONDARY}
                 onChangeText={uniqueIdentifierChanged}
                 keyboardType={keyboardType}
                 value={uniqueIdentifier}
                 label={title}
-                onSubmit={this.onConfirm}
+                onSubmitEditing={this.onConfirm}
               />
             </InteractiveModal.Item>
           </InteractiveModal.Row>

@@ -4,11 +4,10 @@ import { Gradient, Scene } from 'edge-components'
 import * as React from 'react'
 import { StyleSheet, Switch } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { TextField } from 'react-native-material-textfield'
 
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { PasswordInput } from '../../modules/UI/components/Modals/components/PasswordInput.ui.js'
-import { TextInput } from '../../modules/UI/components/Modals/components/TextInput.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import type { SpendingLimits as SpendingLimitsType } from '../../reducers/SpendingLimitsReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -48,7 +47,13 @@ export class SpendingLimitsComponent extends React.Component<SpendingLimitsOwnPr
         <Scene key="SpendingLimitsSceneKey" style={styles.scene}>
           <KeyboardAwareScrollView>
             <Scene.Header>
-              <PasswordInput label={s.strings.enter_your_password} onChangeText={onPasswordChanged} />
+              <TextField
+                baseColor={THEME.COLORS.GRAY_2}
+                tintColor={THEME.COLORS.GRAY_2}
+                secureTextEntry
+                label={s.strings.enter_your_password}
+                onChangeText={onPasswordChanged}
+              />
             </Scene.Header>
 
             <Scene.Padding style={styles.spacer} />
@@ -65,7 +70,9 @@ export class SpendingLimitsComponent extends React.Component<SpendingLimitsOwnPr
               </Scene.Row>
 
               <Scene.Row>
-                <TextInput
+                <TextField
+                  tintColor={THEME.COLORS.SECONDARY}
+                  baseColor={THEME.COLORS.SECONDARY}
                   disabled={!transactionIsEnabled}
                   value={transactionAmount.toString()}
                   onChangeText={onTransactionAmountChanged}

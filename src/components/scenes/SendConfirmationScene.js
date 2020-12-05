@@ -5,6 +5,7 @@ import { Scene } from 'edge-components'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { TextField } from 'react-native-material-textfield'
 import { sprintf } from 'sprintf-js'
 
 import { type FioSenderInfo } from '../../actions/SendConfirmationActions'
@@ -18,7 +19,6 @@ import ExchangeRate from '../../modules/UI/components/ExchangeRate/ExchangeRate.
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { PinInput } from '../../modules/UI/components/PinInput/PinInput.ui.js'
 import Recipient from '../../modules/UI/components/Recipient/Recipient.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes/SendConfirmation/selectors'
@@ -324,7 +324,24 @@ export class SendConfirmation extends React.Component<Props, State> {
                       <View style={styles.pinInputSpacer} />
 
                       <View style={styles.pinInputContainer}>
-                        <PinInput ref={ref => (this.pinInput = ref)} onChangePin={this.handleChangePin} returnKeyType="done" />
+                        <TextField
+                          ref={ref => (this.pinInput = ref)}
+                          baseColor={THEME.COLORS.WHITE}
+                          textColor={THEME.COLORS.WHITE}
+                          tintColor={THEME.COLORS.WHITE}
+                          inputContainerStyle={{
+                            marginTop: -14,
+                            width: 45,
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                          secureTextEntry
+                          keyboardType="numeric"
+                          label=""
+                          maxLength={4}
+                          onChangeText={this.handleChangePin}
+                          returnKeyType="done"
+                        />
                       </View>
                     </Scene.Row>
                   )}

@@ -164,7 +164,7 @@ type SpecialCurrencyInfo = {|
   uniqueIdentifier?: {
     addButtonText: string,
     identifierName: string,
-    identifierKeyboardType: string
+    identifierKeyboardType: 'default' | 'email-address' | 'numeric' | 'phone-pad' | 'number-pad' | 'decimal-pad'
   },
   isImportKeySupported?:
     | false

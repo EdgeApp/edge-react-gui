@@ -1,14 +1,16 @@
 // @flow
 
 import * as React from 'react'
-import { TextField } from 'react-native-material-textfield'
+import { type TextFieldProps, TextField } from 'react-native-material-textfield'
 
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 
-class EdgeTextFieldComponent extends React.PureComponent<ThemeProps> {
+type Props = ThemeProps & TextFieldProps
+
+class EdgeTextFieldComponent extends React.PureComponent<Props> {
   render() {
-    const { theme, ...props } = this.props
-    return <TextField textColor={theme.primaryText} tintColor={theme.primaryText} baseColor={theme.primaryText} errorColor={theme.dangerText} {...props} />
+    const { theme, ...rest } = this.props
+    return <TextField baseColor={theme.primaryText} errorColor={theme.dangerText} textColor={theme.primaryText} tintColor={theme.primaryText} {...rest} />
   }
 }
 

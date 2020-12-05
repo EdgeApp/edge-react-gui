@@ -57,8 +57,6 @@ type Props = StateProps & DispatchProps
 
 export class FioAddressRegisterScene extends React.Component<Props, State> {
   fioCheckQueue: number = 0
-  clearButtonMode = 'while-editing'
-  returnKeyType = 'next'
 
   state = {
     selectedWallet: null,
@@ -156,7 +154,7 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
     }
   }
 
-  handleNextButton = () => {
+  handleNextButton = (): void => {
     const { isConnected } = this.props
     const { fioAddress, selectedWallet, selectedDomain, isValid, isAvailable, loading, walletLoading } = this.state
     if (isValid && isAvailable && !loading && !walletLoading) {
@@ -333,22 +331,13 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
   }
 
   render() {
-    const { fioAddress, selectedDomain, touched, isAvailable, domainsLoading, walletLoading, showFreeAddressLink } = this.state
+    const { fioAddress, selectedDomain, touched, isAvailable, domainsLoading, showFreeAddressLink } = this.state
     let chooseHandleErrorMessage = ''
     if (touched && !this.props.isConnected) {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_cant_check
     }
     if (touched && isAvailable === false) {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_not_available
-    }
-
-    const materialInputOnWhiteStyle = {
-      ...MaterialInputOnWhite,
-      container: {
-        ...MaterialInputOnWhite.container,
-        ...styles.inputContainer,
-        width: this.state.inputWidth
-      }
     }
 
     return (
@@ -370,21 +359,21 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
             <View style={styles.formFieldView} ref="_fieldView" onLayout={this.fieldViewOnLayout}>
               <View style={styles.formFieldViewContainer}>
                 <FormField
-                  style={materialInputOnWhiteStyle}
-                  clearButtonMode={this.clearButtonMode}
+                  {...MaterialInputOnWhite}
+                  containerStyle={{
+                    ...MaterialInputOnWhite.containerStyle,
+                    ...styles.inputContainer,
+                    width: this.state.inputWidth
+                  }}
                   autoCorrect={false}
                   autoCapitalize="none"
-                  placeholder={s.strings.fio_address_confirm_screen_label}
-                  caretHidden
                   onFocus={this.handleFioAddressFocus}
                   onChangeText={this.handleFioAddressChange}
                   onSubmitEditing={this.handleNextButton}
-                  selectionColor={THEME.COLORS.ACCENT_MINT}
                   label={s.strings.fio_address_choose_label}
                   value={fioAddress}
-                  returnKeyType={this.returnKeyType}
+                  returnKeyType="next"
                   error={chooseHandleErrorMessage}
-                  disabled={walletLoading || domainsLoading}
                 />
                 <TouchableOpacity style={styles.domain} onPress={this.selectFioDomain} disabled={domainsLoading}>
                   <View onLayout={this.domainOnLayout}>
