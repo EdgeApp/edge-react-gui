@@ -32,7 +32,6 @@ type StateProps = {
 }
 
 type OwnProps = {
-  isHeader: boolean,
   walletId: string,
   currencyCode: string,
   transaction: TransactionListTx
@@ -44,7 +43,6 @@ export class TransactionRowComponent extends React.PureComponent<Props> {
   handlePress = () => {
     const { transaction, thumbnailPath } = this.props
     if (transaction) {
-      console.log(transaction)
       Actions.transactionDetails({ edgeTransaction: transaction, thumbnailPath })
     } else {
       showError(s.strings.transaction_details_error_invalid)
@@ -61,7 +59,6 @@ export class TransactionRowComponent extends React.PureComponent<Props> {
       fiatAmount,
       fiatSymbol,
       isSentTransaction,
-      isHeader,
       requiredConfirmations,
       selectedCurrencyName,
       theme,
@@ -138,11 +135,6 @@ export class TransactionRowComponent extends React.PureComponent<Props> {
 
     return (
       <View style={styles.container}>
-        {isHeader && (
-          <View style={styles.headerContainer}>
-            <EdgeText style={styles.formattedDate}>{transaction.dateString || ''}</EdgeText>
-          </View>
-        )}
         <TouchableOpacity onPress={this.handlePress}>
           <View style={styles.rowContainer}>
             <View style={styles.iconContainer}>{thumbnailPath ? <Image style={styles.icon} source={{ uri: thumbnailPath }} /> : transactionIcon}</View>
@@ -238,19 +230,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.dangerText
   },
   completedTime: {
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
-  },
-
-  // Header area, will be removed on the following commits
-  headerContainer: {
-    marginTop: theme.rem(0.5),
-    marginBottom: theme.rem(0.125),
-    backgroundColor: theme.tileBackground,
-    padding: theme.rem(0.25)
-  },
-  formattedDate: {
-    marginVertical: theme.rem(0.25),
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   }
