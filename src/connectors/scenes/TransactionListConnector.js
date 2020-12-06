@@ -5,24 +5,16 @@ import { connect } from 'react-redux'
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import type { DispatchProps, StateProps } from '../../components/scenes/TransactionListScene'
 import { TransactionList } from '../../components/scenes/TransactionListScene'
-import { getSelectedCurrencyCode, getSelectedWallet, getSelectedWalletId, getTransactions } from '../../modules/UI/selectors.js'
+import { getSelectedCurrencyCode, getSelectedWalletId, getTransactions } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: RootState) => {
   const selectedWalletId = getSelectedWalletId(state)
-  const wallet = getSelectedWallet(state)
-  if (!wallet) {
-    return {
-      loading: true
-    }
-  }
   const currencyCode = getSelectedCurrencyCode(state)
   const transactions = getTransactions(state)
 
   const out: StateProps = {
-    loading: false,
     transactions,
-    // searchVisible: state.ui.scenes.transactionList.searchVisible,
     selectedWalletId,
     numTransactions: state.ui.scenes.transactionList.numTransactions,
     selectedCurrencyCode: currencyCode
