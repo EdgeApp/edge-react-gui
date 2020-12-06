@@ -49,7 +49,6 @@ import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConn
 import Request from '../connectors/scenes/RequestConnector.js'
 import Scan from '../connectors/scenes/ScanConnector'
 import SendConfirmation from '../connectors/scenes/SendConfirmationConnector.js'
-import TransactionListConnector from '../connectors/scenes/TransactionListConnector'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
@@ -87,6 +86,7 @@ import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
+import { TransactionList } from './scenes/TransactionListScene.js'
 import { Airship } from './services/AirshipInstance.js'
 import { HeaderTextButton } from './themed/HeaderTextButton.js'
 import { MenuTab } from './themed/MenuTab.js'
@@ -266,7 +266,7 @@ export class MainComponent extends React.Component<Props> {
                   this.props.requestPermission('contacts')
                 }}
                 navTransparent
-                component={ifLoggedIn(TransactionListConnector)}
+                component={ifLoggedIn(TransactionList)}
                 renderTitle={<HeaderTitle />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_wallets} />}
                 renderRightButton={<SideMenuButton />}

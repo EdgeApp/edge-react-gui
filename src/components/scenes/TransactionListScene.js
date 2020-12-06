@@ -2,8 +2,11 @@
 
 import * as React from 'react'
 import { SectionList } from 'react-native'
+import { connect } from 'react-redux'
 
+import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import s from '../../locales/strings'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
 import { BuyCrypto } from '../common/BuyCrypto.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -19,10 +22,10 @@ type Section = {
 }
 
 export type StateProps = {
-  transactions: TransactionListTx[],
-  selectedWalletId: string,
   numTransactions: number,
-  selectedCurrencyCode: string
+  selectedWalletId: string,
+  selectedCurrencyCode: string,
+  transactions: TransactionListTx[]
 }
 
 export type DispatchProps = {
@@ -35,7 +38,7 @@ type State = {
   reset: boolean
 }
 
-export class TransactionList extends React.PureComponent<Props, State> {
+class TransactionListComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -123,3 +126,15 @@ export class TransactionList extends React.PureComponent<Props, State> {
     )
   }
 }
+
+export const TransactionList = connect(
+  (state: RootState) => ({
+    numTransactions: state.ui.scenes.transactionList.numTransactions,
+    selectedCurrencyCode: state.ui.wallets.selectedCurrencyCode,
+    selectedWalletId: state.ui.wallets.selectedWalletId,
+    transactions: state.ui.scenes.transactionList.transactions
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
+  })
+)(TransactionListComponent)
