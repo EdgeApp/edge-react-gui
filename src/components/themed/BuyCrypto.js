@@ -9,8 +9,8 @@ import { sprintf } from 'sprintf-js'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from '../themed/EdgeText.js'
-import { ButtonBox } from '../themed/ThemedButtons.js'
+import { EdgeText } from './EdgeText.js'
+import { ButtonBox } from './ThemedButtons.js'
 
 const allowedCurrencies = { BTC: true, BCH: true, ETH: true, LTC: true, XRP: true, BSV: true }
 
