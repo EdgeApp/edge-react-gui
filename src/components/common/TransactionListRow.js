@@ -39,7 +39,7 @@ type OwnProps = {
 
 type Props = OwnProps & StateProps & ThemeProps
 
-export class TransactionRowComponent extends React.PureComponent<Props> {
+export class TransactionListRowComponent extends React.PureComponent<Props> {
   handlePress = () => {
     const { transaction, thumbnailPath } = this.props
     if (transaction) {
@@ -257,7 +257,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionRow = connect((state: RootState, ownProps: OwnProps): StateProps => {
+export const TransactionListRow = connect((state: RootState, ownProps: OwnProps): StateProps => {
   const { currencyCode, walletId, transaction } = ownProps
   const { metadata } = transaction
   const guiWallet = state.ui.wallets.byId[walletId]
@@ -302,4 +302,4 @@ export const TransactionRow = connect((state: RootState, ownProps: OwnProps): St
     selectedCurrencyName: guiWallet.currencyNames[currencyCode] || currencyCode,
     thumbnailPath
   }
-})(withTheme(TransactionRowComponent))
+})(withTheme(TransactionListRowComponent))
