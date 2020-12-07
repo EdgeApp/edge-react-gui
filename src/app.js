@@ -50,6 +50,7 @@ if (!TextInput.defaultProps) {
 }
 TextInput.defaultProps.allowFontScaling = false
 
+// $FlowFixMe
 if (!__DEV__) {
   // TODO: Fix logger to append data vs read/modify/write
   // $FlowFixMe

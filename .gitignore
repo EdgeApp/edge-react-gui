@@ -66,7 +66,6 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-project.xcworkspace
 
 # Android/IntelliJ
 #
@@ -100,3 +99,6 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
+
+# CocoaPods
+/ios/Pods/

@@ -5,7 +5,7 @@ exports[`CurrencySettings should render 1`] = `
   background="theme"
   hasTabs={false}
 >
-  <ScrollViewMock>
+  <ScrollView>
     <WithTheme(SettingsHeaderRowComponent)
       text="Denominations"
     />
@@ -96,6 +96,6 @@ exports[`CurrencySettings should render 1`] = `
       text=""
       value={true}
     />
-  </ScrollViewMock>
+  </ScrollView>
 </SceneWrapper>
 `;

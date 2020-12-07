@@ -65,17 +65,6 @@
 	<true/>
 	<key>NFCReaderUsageDescription</key>
 	<string>$(PRODUCT_NAME) does not use NFC.</string>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-		</dict>
-	</dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>This application does not use Bluetooth. However, it does utilize a third-party SDK that includes Bluetooth capability, even though $(PRODUCT_NAME) does not use or need the Bluetooth features.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
@@ -88,8 +77,21 @@
 	<string>$(PRODUCT_NAME) uses your contacts to add useful information to your transactions. No contact information leaves your device and no-one, including $(PRODUCT_NAME), has access to the contact information used.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>This allows you to securely and conveniently access your $(PRODUCT_NAME) wallet</string>
+  <key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses photos to retrieve QR Code images.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
