@@ -8,10 +8,10 @@ import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import s from '../../locales/strings'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
-import { BuyCrypto } from '../common/BuyCrypto.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { TransactionListRow } from '../common/TransactionListRow.js'
+import { BuyCrypto } from '../themed/BuyCrypto.js'
 import { EmptyLoader, SectionFooter, SectionHeader, Top } from '../themed/TransactionListComponents.js'
+import { TransactionListRow } from '../themed/TransactionListRow.js'
 
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
 const SCROLL_THRESHOLD = 0.5
