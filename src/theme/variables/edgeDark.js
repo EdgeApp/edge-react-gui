@@ -64,6 +64,7 @@ export const edgeDark: Theme = {
   iconTappable: palette.edgeMint,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
+  transactionListIconBackground: palette.darkBlue,
 
   // Background
   backgroundGradientLeft: palette.darkBlue,
@@ -165,6 +166,7 @@ export const edgeDark: Theme = {
   // orLine: palette.blueGray,
   // tileDivider: palette.blueGray,
   thinLineWidth: 1,
+  mediumLineWidth: 2,
 
   // Notifications
   // notificationBackground: palette.lightGrayOp75,

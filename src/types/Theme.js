@@ -10,6 +10,7 @@ export type Theme = {
   iconTappable: string,
   warningIcon: string,
   iconLoadingOverlay: string,
+  transactionListIconBackground: string,
 
   // Background
   backgroundGradientLeft: string,
@@ -125,6 +126,7 @@ export type Theme = {
   // orLine: string,
   // tileDivider: string,
   thinLineWidth: number,
+  mediumLineWidth: number,
 
   // Notifications
   // notificationBackground: string,
