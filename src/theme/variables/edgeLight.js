@@ -187,6 +187,11 @@ export const edgeLight: Theme = {
   settingsRowHeaderBackground: palette.lightGray,
   settingsRowSubHeader: palette.transparent,
 
+  // Wallet Icon Progress
+  walletProgressIconFill: palette.edgeMint,
+  walletProgressIconFillDone: palette.transparent,
+  walletProgressIconBackground: palette.transparent,
+
   // Native iOS date modal:
   dateModalTextLight: palette.accentBlue,
   dateModalTextDark: palette.white,
