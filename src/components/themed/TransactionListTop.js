@@ -14,13 +14,15 @@ import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { convertCurrency } from '../../modules/UI/selectors.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import { scale } from '../../util/scaling.js'
 import { convertNativeToDenomination, decimalOrZero, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox } from './ThemedButtons.js'
+
+type OwnProps = {
+  isEmpty: boolean
+}
 
 export type StateProps = {
   cryptoAmount: string,
@@ -39,7 +41,7 @@ export type DispatchProps = {
   toggleBalanceVisibility: () => void
 }
 
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class TransactionListTopComponent extends React.PureComponent<Props> {
   renderEarnInterestCard = () => {
@@ -90,7 +92,7 @@ class TransactionListTopComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { theme } = this.props
+    const { isEmpty, theme } = this.props
     const styles = getStyles(theme)
 
     return (
@@ -99,13 +101,19 @@ class TransactionListTopComponent extends React.PureComponent<Props> {
         <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={Actions.request} style={styles.buttons}>
             <Fontello name="request" size={theme.rem(2.5)} color={theme.iconTappable} />
+            <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
           </TouchableOpacity>
-          <View style={styles.spacer} />
           <TouchableOpacity onPress={Actions.scan} style={styles.buttons}>
             <Fontello name="send" size={theme.rem(2.5)} color={theme.iconTappable} />
+            <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
           </TouchableOpacity>
         </View>
         {this.renderEarnInterestCard()}
+        {!isEmpty && (
+          <View style={styles.transactionsDividerContainer}>
+            <EdgeText style={styles.transactionsDividerText}>{s.strings.fragment_transaction_list_transaction}</EdgeText>
+          </View>
+        )}
       </View>
     )
   }
@@ -114,7 +122,9 @@ class TransactionListTopComponent extends React.PureComponent<Props> {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
-    padding: theme.rem(1)
+    paddingHorizontal: theme.rem(1.5),
+    paddingVertical: theme.rem(1),
+    marginBottom: theme.rem(0.75)
   },
 
   // Balance Box
@@ -125,10 +135,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   currencyText: {
     fontSize: theme.rem(1.25),
     fontFamily: theme.fontFaceBold
-  },
-  showBalanceContainer: {
-    flex: 1,
-    justifyContent: 'center'
   },
   showBalanceText: {
     fontSize: theme.rem(1.75)
@@ -141,30 +147,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingVertical: theme.rem(1)
   },
   buttons: {
-    justifyContent: 'center',
-    alignItems: 'center'
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-end'
   },
-  buttonsIcon: {
-    top: theme.rem(-1),
-    width: theme.rem(4),
-    height: theme.rem(1),
-    borderLeftWidth: theme.rem(2 / 16),
-    borderRightWidth: theme.rem(2 / 16),
-    borderBottomWidth: theme.rem(2 / 16),
-    borderColor: theme.iconTappable
-  },
-  spacer: {
-    flex: 1
-  },
-  request: {
-    fontSize: scale(18),
-    color: THEME.COLORS.WHITE,
-    marginHorizontal: scale(12)
-  },
-  send: {
-    fontSize: scale(18),
-    color: THEME.COLORS.WHITE,
-    marginHorizontal: scale(12)
+  buttonsText: {
+    fontSize: theme.rem(1.75),
+    marginLeft: theme.rem(0.5)
   },
 
   // Earn Interest Card
@@ -181,6 +170,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
     padding: theme.rem(1)
   },
   earnInterestText: {
+    fontFamily: theme.fontFaceBold
+  },
+
+  // Transactions Divider
+  transactionsDividerContainer: {
+    flex: 1,
+    marginTop: theme.rem(1),
+    paddingBottom: theme.rem(0.5),
+    borderBottomWidth: theme.thinLineWidth,
+    borderBottomColor: theme.lineDivider
+  },
+  transactionsDividerText: {
+    fontSize: theme.rem(1),
     fontFamily: theme.fontFaceBold
   }
 }))

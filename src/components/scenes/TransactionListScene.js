@@ -101,7 +101,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     return <TransactionRow walletId={selectedWalletId} currencyCode={selectedCurrencyCode} transaction={transaction.item} />
   }
 
-  renderTop = () => <Top walletId={this.props.selectedWalletId} />
+  renderTop = () => <Top walletId={this.props.selectedWalletId} isEmpty={this.props.transactions.length < 1} />
 
   renderSectionFooter = () => <SectionFooter />
 

@@ -100,6 +100,7 @@ const strings = {
   fragment_transaction_list_tx_synchronizing: 'Synchronizing',
   fragment_transaction_list_confirmation_progress: '%s of %s Confirmations',
   fragment_transaction_list_no_date: 'No Date',
+  fragment_transaction_list_transaction: 'Transactions',
   transaction_list_buy_crypto_message: 'Buy %s',
   transaction_list_no_tx_yet: 'No transactions yet!',
   fragment_wallets_addwallet_name_hint: 'New Wallet Name',
