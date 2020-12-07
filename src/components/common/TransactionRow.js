@@ -72,17 +72,19 @@ export class TransactionRowComponent extends React.PureComponent<Props> {
     const fiatAmountString = `${fiatSymbol} ${fiatAmount}`
 
     // Transaction Text and Icon
-    let transactionText, transactionIcon
+    let transactionText, transactionIcon, transactionStyle
     if (isSentTransaction) {
       transactionText =
         transaction.metadata && transaction.metadata.name ? transaction.metadata.name : s.strings.fragment_transaction_list_sent_prefix + selectedCurrencyName
-      transactionIcon = <Fontello name="send" size={theme.rem(1.875)} color={theme.negativeText} />
+      transactionIcon = <Fontello name="send" size={theme.rem(1.75)} color={theme.negativeText} />
+      transactionStyle = styles.iconSent
     } else {
       transactionText =
         transaction.metadata && transaction.metadata.name
           ? transaction.metadata.name
           : s.strings.fragment_transaction_list_receive_prefix + selectedCurrencyName
-      transactionIcon = <Fontello name="request" size={theme.rem(1.875)} color={theme.positiveText} />
+      transactionIcon = <Fontello name="request" size={theme.rem(1.75)} color={theme.positiveText} />
+      transactionStyle = styles.iconRequest
     }
 
     // Pending Text and Style
@@ -134,55 +136,79 @@ export class TransactionRowComponent extends React.PureComponent<Props> {
     }
 
     return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress={this.handlePress}>
-          <View style={styles.rowContainer}>
-            <View style={styles.iconContainer}>{thumbnailPath ? <Image style={styles.icon} source={{ uri: thumbnailPath }} /> : transactionIcon}</View>
-            <View style={styles.transactionContainer}>
-              <View style={styles.transactionRow}>
-                <EdgeText style={styles.transactionText}>{transactionText}</EdgeText>
-                <EdgeText style={isSentTransaction ? styles.negativeCryptoAmount : styles.positiveCryptoAmount}>{cryptoAmountString}</EdgeText>
+      <TouchableOpacity onPress={this.handlePress}>
+        <View style={styles.rowContainer}>
+          <View style={[styles.iconContainer, transactionStyle]}>
+            {thumbnailPath ? <Image style={styles.icon} source={{ uri: thumbnailPath }} /> : transactionIcon}
+          </View>
+          <View style={styles.transactionContainer}>
+            <View style={styles.transactionRow}>
+              <EdgeText style={styles.transactionText}>{transactionText}</EdgeText>
+              <EdgeText style={isSentTransaction ? styles.negativeCryptoAmount : styles.positiveCryptoAmount}>{cryptoAmountString}</EdgeText>
+            </View>
+            <View style={styles.transactionRow}>
+              <View style={styles.categoryAndTimeContainer}>
+                {categoryText && <EdgeText style={styles.category}>{categoryText}</EdgeText>}
+                <EdgeText style={pendingStyle}>{pendingText}</EdgeText>
               </View>
-              <View style={styles.transactionRow}>
-                <View style={styles.categoryAndTimeContainer}>
-                  {categoryText && <EdgeText style={styles.category}>{categoryText}</EdgeText>}
-                  <EdgeText style={pendingStyle}>{pendingText}</EdgeText>
-                </View>
-                <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
-              </View>
+              <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
             </View>
           </View>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1
-  },
   rowContainer: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingVertical: theme.rem(0.25),
-    paddingHorizontal: theme.rem(6 / 16),
-    backgroundColor: theme.tileBackground,
-    marginBottom: theme.rem(2 / 16)
+    paddingVertical: theme.rem(1.5),
+    paddingHorizontal: theme.rem(1.5)
   },
   iconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: theme.rem(6 / 16)
+    backgroundColor: theme.transactionListIconBackground,
+    paddingHorizontal: theme.rem(0.5),
+    width: theme.rem(3.25),
+    height: theme.rem(3.25),
+    borderWidth: theme.mediumLineWidth,
+    borderRadius: theme.rem(1)
+  },
+  iconSent: {
+    borderColor: theme.negativeText,
+    shadowColor: theme.negativeText,
+    shadowOffset: {
+      width: 0,
+      height: theme.rem(3)
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: theme.rem(10),
+    elevation: theme.rem(3)
+  },
+  iconRequest: {
+    borderColor: theme.positiveText,
+    shadowColor: theme.positiveText,
+    shadowOffset: {
+      width: 0,
+      height: theme.rem(3)
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: theme.rem(10),
+    elevation: theme.rem(3)
   },
   icon: {
-    width: theme.rem(1.875),
-    height: theme.rem(1.875)
+    width: theme.rem(3),
+    height: theme.rem(3),
+    borderRadius: theme.rem(0.875)
   },
   transactionContainer: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: theme.rem(6 / 16)
+    paddingHorizontal: theme.rem(0.5)
   },
   transactionRow: {
     flexDirection: 'row',
@@ -190,10 +216,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   transactionText: {
     flex: 1,
-    fontFamily: theme.fontFaceBold,
-    fontSize: theme.rem(0.75)
-  },
-  cryptoAmount: {
     fontFamily: theme.fontFaceBold,
     fontSize: theme.rem(0.75)
   },
