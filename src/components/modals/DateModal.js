@@ -2,9 +2,8 @@
 
 import DateTimePicker from '@react-native-community/datetimepicker'
 import * as React from 'react'
-import { Platform, Text, TouchableOpacity } from 'react-native'
+import { Appearance, Platform, Text, TouchableOpacity } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
-import { Appearance } from 'react-native-appearance'
 
 import s from '../../locales/strings.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
