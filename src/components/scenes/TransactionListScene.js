@@ -10,7 +10,7 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
 import { BuyCrypto } from '../common/BuyCrypto.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { TransactionRow } from '../common/TransactionRow.js'
+import { TransactionListRow } from '../common/TransactionListRow.js'
 import { EmptyLoader, SectionFooter, SectionHeader, Top } from '../themed/TransactionListComponents.js'
 
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
@@ -98,7 +98,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   renderTransaction = (transaction: SectionList<TransactionListTx>) => {
     const { selectedWalletId, selectedCurrencyCode } = this.props
-    return <TransactionRow walletId={selectedWalletId} currencyCode={selectedCurrencyCode} transaction={transaction.item} />
+    return <TransactionListRow walletId={selectedWalletId} currencyCode={selectedCurrencyCode} transaction={transaction.item} />
   }
 
   renderTop = () => <Top walletId={this.props.selectedWalletId} isEmpty={this.props.transactions.length < 1} />
