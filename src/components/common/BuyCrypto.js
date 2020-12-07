@@ -37,7 +37,7 @@ class BuyCryptoComponent extends React.PureComponent<Props> {
           <ButtonBox onPress={Actions.pluginBuy} paddingRem={1}>
             <View style={styles.container}>
               <View style={styles.buyCrypto}>
-                <Image style={styles.buyCryptImage} source={{ uri: currencyImage }} resizeMode="cover" />
+                <Image style={styles.buyCryptoImage} source={{ uri: currencyImage }} resizeMode="cover" />
                 <EdgeText style={styles.buyCryptoText}>{sprintf(s.strings.transaction_list_buy_crypto_message, currencyName)}</EdgeText>
               </View>
             </View>
@@ -63,7 +63,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  buyCryptImage: {
+  buyCryptoImage: {
     width: theme.rem(2.25),
     height: theme.rem(2.25),
     marginVertical: theme.rem(0.25)
@@ -77,12 +77,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: theme.rem(0.5)
-  },
-  noTransactionBigContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: theme.rem(15)
   },
   noTransactionText: {
     fontSize: theme.rem(1.25)
