@@ -21,6 +21,12 @@ declare module 'react-native-permissions' {
 declare module 'react-native' {
   declare module.exports: any
 }
+declare module 'react-native/Libraries/Components/ScrollResponder' {
+  declare module.exports: any
+}
+declare module 'react-native/Libraries/Components/ScrollView' {
+  declare module.exports: any
+}
 declare module 'react-native/Libraries/Components/View/ViewPropTypes' {
   declare module.exports: any
 }
