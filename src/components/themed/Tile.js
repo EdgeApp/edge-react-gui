@@ -59,12 +59,15 @@ class TileComponent extends React.PureComponent<Props> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    width: '100%',
+    flex: 1,
     backgroundColor: theme.tileBackground,
-    marginBottom: theme.rem(0.125),
-    padding: theme.rem(0.5),
+    marginHorizontal: theme.rem(1),
+    marginTop: theme.rem(1),
+    paddingBottom: theme.rem(1),
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderBottomWidth: theme.thinLineWidth,
+    borderBottomColor: theme.lineDivider
   },
   content: {
     flex: 1
@@ -99,7 +102,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.iconTappable,
     width: theme.rem(0.75),
     height: theme.rem(0.75),
-    top: theme.rem(0.25),
+    top: theme.rem(0.5),
     right: theme.rem(0.25)
   }
 }))
