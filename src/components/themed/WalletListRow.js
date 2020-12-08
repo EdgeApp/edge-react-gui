@@ -212,10 +212,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     padding: theme.rem(0.75)
   },
   walletBackground: {
-    backgroundColor: theme.tileBackground
+    backgroundColor: theme.walletListBackground
   },
   tokenBackground: {
-    backgroundColor: theme.tileBackgroundMuted
+    backgroundColor: theme.walletListMutedBackground
   },
   iconContainer: {
     alignItems: 'center',
