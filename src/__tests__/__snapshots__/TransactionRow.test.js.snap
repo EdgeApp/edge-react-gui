@@ -1,71 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`MenuDropDown component should render without props 1`] = `
-<View
-  style={
-    Object {
-      "backgroundColor": "#FFFFFF",
-      "flex": 1,
-      "flexDirection": "column",
-    }
-  }
+exports[`Transaction List Row should render props 1`] = `
+<ForwardRef
+  onPress={[Function]}
 >
   <View
     style={
       Object {
-        "backgroundColor": "#F4F5F6",
-        "flex": 3,
+        "flex": 1,
         "flexDirection": "row",
-        "padding": 4.213732394366197,
-        "paddingLeft": 21.068661971830984,
-        "paddingRight": 33.709859154929575,
+        "justifyContent": "center",
+        "marginBottom": 3,
+        "paddingHorizontal": 34,
+        "paddingVertical": 34,
       }
     }
   >
     <View
       style={
-        Object {
-          "flex": 1,
-        }
+        Array [
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "#0C446A",
+            "borderRadius": 22,
+            "borderWidth": 3,
+            "height": 73,
+            "justifyContent": "center",
+            "paddingHorizontal": 11,
+            "width": 73,
+          },
+          Object {
+            "borderColor": "#E85466",
+            "elevation": 3,
+            "shadowColor": "#E85466",
+            "shadowOffset": Object {
+              "height": 3,
+              "width": 0,
+            },
+            "shadowOpacity": 0.5,
+            "shadowRadius": 10,
+          },
+        ]
       }
     >
-      <FormattedText
-        style={
-          Object {
-            "color": "#87939E",
-            "fontSize": 19.664084507042254,
-          }
-        }
-      >
-        Oct 14, 2018
-      </FormattedText>
+      <Icon
+        allowFontScaling={false}
+        color="#E85466"
+        name="send"
+        size={39}
+      />
     </View>
-  </View>
-  <ForwardRef
-    onPress={[Function]}
-    style={
-      Array [
-        Object {
-          "borderBottomColor": "#D9E3ED",
-          "borderBottomWidth": 1,
-          "height": 112.36619718309859,
-          "padding": 21.068661971830984,
-          "paddingLeft": 21.068661971830984,
-          "paddingRight": 21.068661971830984,
-        },
-        Object {
-          "borderBottomWidth": 1,
-        },
-      ]
-    }
-    underlayColor="#D9E3ED"
-  >
     <View
       style={
         Object {
           "flex": 1,
-          "flexDirection": "row",
-          "height": 56.183098591549296,
+          "justifyContent": "center",
+          "paddingHorizontal": 11,
         }
       }
     >
@@ -73,115 +63,73 @@ exports[`MenuDropDown component should render without props 1`] = `
         style={
           Object {
             "flexDirection": "row",
+            "marginVertical": 3,
           }
         }
       >
-        <View
+        <WithTheme(EdgeTextComponent)
           style={
             Object {
-              "justifyContent": "center",
+              "flex": 1,
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 17,
             }
           }
         >
-          <Image
-            source={
-              Object {
-                "testUri": "../../../src/assets/images/transactions/transaction-type-sent.png",
-              }
+          Sent Monero
+        </WithTheme(EdgeTextComponent)>
+        <WithTheme(EdgeTextComponent)
+          style={
+            Object {
+              "color": "#E85466",
+              "fontFamily": "Quicksand-Medium",
+              "fontSize": 17,
+              "textAlign": "right",
             }
-            style={
-              Object {
-                "borderRadius": 28.091549295774648,
-                "height": 56.183098591549296,
-                "marginRight": 14.045774647887324,
-                "width": 56.183098591549296,
-              }
-            }
-          />
-        </View>
+          }
+        >
+          - ‎ɱ 32.295514
+        </WithTheme(EdgeTextComponent)>
       </View>
       <View
         style={
           Object {
-            "flex": 1,
-            "flexDirection": "column",
-            "height": "100%",
-            "justifyContent": "center",
-            "width": "100%",
+            "flexDirection": "row",
+            "marginVertical": 3,
           }
         }
       >
         <View
           style={
-            Array [
-              Object {
-                "flexDirection": "row",
-                "width": "100%",
-              },
-              null,
-            ]
+            Object {
+              "flex": 1,
+            }
           }
         >
-          <FormattedText
-            adjustsFontSizeToFit={true}
-            minimumFontScale={0.6}
+          <WithTheme(EdgeTextComponent)
             style={
               Object {
-                "flex": 1,
+                "color": "#A4C7DF",
+                "fontSize": 17,
               }
             }
           >
-            Sent Monero
-          </FormattedText>
-          <FormattedText
-            style={
-              Object {
-                "color": "#E85466",
-              }
-            }
-          >
-            - 
-            ‎ɱ
-             
-            32.295514
-          </FormattedText>
+            3:16 PM
+          </WithTheme(EdgeTextComponent)>
         </View>
-        <View
+        <WithTheme(EdgeTextComponent)
           style={
             Object {
-              "flexDirection": "row",
-              "width": "100%",
+              "color": "#A4C7DF",
+              "fontSize": 17,
+              "textAlign": "right",
             }
           }
         >
-          <FormattedText
-            style={
-              Array [
-                Object {
-                  "flex": 1,
-                  "fontSize": 12,
-                },
-                Object {
-                  "color": "#F1AA19",
-                },
-              ]
-            }
-          >
-            Synchronizing
-          </FormattedText>
-          <FormattedText
-            style={
-              Object {
-                "color": "#0E4B75",
-                "fontSize": 12,
-              }
-            }
-          >
-            $ 0.00
-          </FormattedText>
-        </View>
+          $ 4,424,808,418,353,299.50
+        </WithTheme(EdgeTextComponent)>
       </View>
     </View>
-  </ForwardRef>
-</View>
+  </View>
+</ForwardRef>
 `;
