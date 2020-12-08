@@ -76,9 +76,13 @@ export const edgeLight: Theme = {
 
   // Tile
   // listHeaderBackground: palette.white,
-  tileBackground: palette.white,
-  tileBackgroundMuted: palette.mutedGray,
+  tileBackground: palette.transparent,
+  tileBackgroundMuted: palette.transparent,
   // listSectionHeaderBackground: palette.white,
+
+  // WalletList
+  walletListBackground: palette.edgeBlue,
+  walletListMutedBackground: palette.mutedBlue,
 
   // Text
   primaryText: palette.black,
@@ -156,6 +160,7 @@ export const edgeLight: Theme = {
   // textInputLine: palette.gray,
   // orLine: palette.gray,
   // tileDivider: palette.gray,
+  thinLineWidth: 1,
 
   // Notifications
   // notificationBackground: palette.grayOp80,
