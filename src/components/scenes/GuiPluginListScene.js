@@ -175,6 +175,11 @@ class GuiPluginList extends React.Component<Props, State> {
     const { pluginId, deepQuery } = listRow
     const plugin = guiPlugins[pluginId]
 
+    // Add countryCode
+    if (plugin.needsCountryCode) {
+      deepQuery.countryCode = this.props.countryCode
+    }
+
     // Grab a custom URI if necessary:
     let { deepPath } = listRow
     if (pluginId === 'custom') {
