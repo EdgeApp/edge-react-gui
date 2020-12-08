@@ -79,9 +79,13 @@ export const edgeDark: Theme = {
 
   // Tile
   // listHeaderBackground: palette.edgeNavy,
-  tileBackground: palette.edgeBlue,
-  tileBackgroundMuted: palette.mutedBlue,
+  tileBackground: palette.transparent,
+  tileBackgroundMuted: palette.transparent,
   // listSectionHeaderBackground: palette.edgeNavy,
+
+  // WalletList
+  walletListBackground: palette.edgeBlue,
+  walletListMutedBackground: palette.mutedBlue,
 
   // Text
   primaryText: palette.white,
@@ -159,6 +163,7 @@ export const edgeDark: Theme = {
   // textInputLine: palette.blueGray,
   // orLine: palette.blueGray,
   // tileDivider: palette.blueGray,
+  thinLineWidth: 1,
 
   // Notifications
   // notificationBackground: palette.lightGrayOp75,
