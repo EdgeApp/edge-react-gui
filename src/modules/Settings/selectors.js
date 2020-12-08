@@ -54,7 +54,7 @@ export const getDenominations = (state: RootState, currencyCode: string): EdgeDe
 export const getDisplayDenominationKey = (state: RootState, currencyCode: string) => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode]
-  const selectedDenominationKey = currencySettings.denomination
+  const selectedDenominationKey = currencySettings ? currencySettings.denomination : '1'
   return selectedDenominationKey
 }
 
