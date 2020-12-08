@@ -28,6 +28,19 @@ export type Theme = {
   tileBackgroundMuted: string,
   // listSectionHeaderBackground: string,
 
+  // NOTE: List of components/screens that uses the tileBackground
+  // - promoCard
+  // - scanTile
+  // - addressTile
+  // - scanModal
+  // - fioDomainSettings
+  // - otpSettingsKey
+  // - tileComponent
+
+  // WalletList
+  walletListBackground: string,
+  walletListMutedBackground: string,
+
   // Settings Row
   settingsRowBackground: string,
   settingsRowPressed: string,
@@ -109,6 +122,7 @@ export type Theme = {
   // textInputLine: string,
   // orLine: string,
   // tileDivider: string,
+  thinLineWidth: number,
 
   // Notifications
   // notificationBackground: string,
