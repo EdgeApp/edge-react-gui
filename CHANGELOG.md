@@ -1,5 +1,10 @@
 # edge-react-gui
 
+## 1.18.1 (2020-12-09)
+
+- EOS: Patches issue with bogus accounts getting returned by nodes
+- WAX: Disabled in core plugins
+
 ## 1.18.0 (2020-11-25)
 
 - ETH: Accelerate Transaction feature (replace-by-fee)
