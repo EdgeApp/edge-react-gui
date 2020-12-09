@@ -1,10 +1,11 @@
 // @flow
 
+import Clipboard from '@react-native-community/clipboard'
 import { bns } from 'biggystring'
 import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
-import { ActivityIndicator, Clipboard, Dimensions, InputAccessoryView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Dimensions, InputAccessoryView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import { sprintf } from 'sprintf-js'
