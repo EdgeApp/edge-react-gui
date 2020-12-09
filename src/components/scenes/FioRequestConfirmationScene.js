@@ -3,21 +3,18 @@
 import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js/src/types/types'
 import * as React from 'react'
-import { Image, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import editIcon from '../../assets/images/transaction_details_icon.png'
 import * as Constants from '../../constants/indexConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache, checkPubAddress } from '../../modules/FioAddress/util'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
-import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
-import THEME from '../../theme/variables/airbitz'
 import { type RootState } from '../../types/reduxTypes'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types'
 import { emptyCurrencyInfo } from '../../types/types'
@@ -27,6 +24,8 @@ import { AddressModal } from '../modals/AddressModal.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { Tile } from '../themed/Tile'
 
 type StateProps = {
   exchangeSecondaryToPrimaryRatio: number,
@@ -46,7 +45,7 @@ type NavigationProps = {
   amounts: ExchangedFlipInputAmounts
 }
 
-type Props = StateProps & NavigationProps
+type Props = StateProps & NavigationProps & ThemeProps
 
 type State = {
   loading: boolean,
@@ -186,6 +185,18 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     }
   }
 
+  onAddressFromPressed = () => {
+    this.openFioAddressFromModal()
+  }
+
+  onAddressToPressed = () => {
+    this.openFioAddressToModal()
+  }
+
+  onMemoPressed = () => {
+    this.openMemoModal()
+  }
+
   openFioAddressFromModal = async () => {
     const { fioPlugin } = this.props
     const { walletAddresses } = this.state
@@ -245,8 +256,9 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   render() {
-    const { primaryCurrencyInfo, secondaryCurrencyInfo } = this.props
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
     const { fioAddressFrom, fioAddressTo, loading, memo, settingFioAddressTo, showSlider } = this.state
+
     if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
     let cryptoAmount, exchangeAmount
     try {
@@ -256,38 +268,24 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       return null
     }
 
+    const styles = getStyles(theme)
+
     const fiatAmount = formatNumber(this.props.exchangeSecondaryToPrimaryRatio * parseFloat(exchangeAmount), { toFixed: 2 }) || '0'
     const cryptoName = primaryCurrencyInfo.displayDenomination.name
     const fiatName = secondaryCurrencyInfo.displayDenomination.name
 
     return (
-      <SceneWrapper background="header">
+      <SceneWrapper background="theme">
         <View style={styles.container}>
-          <TouchableWithoutFeedback onPress={this.openFioAddressFromModal}>
-            <View style={styles.tileContainer}>
-              <Image style={styles.tileIcon} source={editIcon} />
-              <Text style={fioAddressFrom.length > 0 ? styles.tileTextHeader : styles.tileTextHeaderError}>{s.strings.fio_confirm_request_from}</Text>
-              <Text style={styles.tileTextBody}>{fioAddressFrom}</Text>
-            </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback onPress={this.openFioAddressToModal}>
-            <View style={styles.tileContainer}>
-              <Image style={styles.tileIcon} source={editIcon} />
-              <Text style={fioAddressTo.length > 0 ? styles.tileTextHeader : styles.tileTextHeaderError}>{s.strings.fio_confirm_request_to}</Text>
-              <Text style={styles.tileTextBody}>{settingFioAddressTo ? s.strings.resolving : fioAddressTo}</Text>
-            </View>
-          </TouchableWithoutFeedback>
-          <View style={styles.tileContainer}>
-            <Text style={styles.tileTextHeader}>{s.strings.fio_confirm_request_amount}</Text>
-            <Text style={styles.tileTextBody}>{`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`}</Text>
-          </View>
-          <TouchableWithoutFeedback onPress={this.openMemoModal}>
-            <View style={styles.tileContainer}>
-              <Image style={styles.tileIcon} source={editIcon} />
-              <Text style={styles.tileTextHeader}>{s.strings.fio_confirm_request_memo}</Text>
-              <Text style={styles.tileTextBody}>{memo}</Text>
-            </View>
-          </TouchableWithoutFeedback>
+          <Tile type="editable" title={s.strings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
+          <Tile
+            type="editable"
+            title={s.strings.fio_confirm_request_to}
+            body={settingFioAddressTo ? s.strings.resolving : fioAddressTo}
+            onPress={this.onAddressToPressed}
+          />
+          <Tile type="static" title={s.strings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
+          <Tile type="editable" title={s.strings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
           {fioAddressFrom.length > 0 && fioAddressTo.length > 0 && showSlider ? (
             <Slider
               resetSlider={false}
@@ -303,6 +301,21 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     )
   }
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    alignItems: 'center'
+  },
+  sliderStyle: {
+    marginTop: theme.rem(2),
+    width: theme.rem(15),
+    backgroundColor: theme.secondaryButton,
+    borderRadius: theme.rem(2)
+  }
+}))
 
 const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
@@ -363,69 +376,5 @@ const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
     currencyCode: state.ui.wallets.selectedCurrencyCode,
     fioPlugin
   }
-})(FioRequestConfirmationConnected)
+})(withTheme(FioRequestConfirmationConnected))
 export { FioRequestConfirmationScene }
-
-const { rem } = THEME
-const tileStyles = {
-  width: '100%',
-  backgroundColor: THEME.COLORS.WHITE,
-  borderBottomWidth: 1,
-  borderBottomColor: THEME.COLORS.GRAY_3,
-  padding: rem(0.5)
-}
-
-const rawStyles = {
-  container: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    backgroundColor: THEME.COLORS.GRAY_4,
-    alignItems: 'center'
-  },
-  tileContainer: {
-    ...tileStyles
-  },
-  tileTextHeader: {
-    color: THEME.COLORS.SECONDARY,
-    fontSize: rem(0.75),
-    margin: rem(0.25)
-  },
-  tileTextHeaderError: {
-    color: THEME.COLORS.ACCENT_RED,
-    fontSize: rem(0.75),
-    margin: rem(0.25)
-  },
-  tileTextBody: {
-    color: THEME.COLORS.GRAY_5,
-    fontSize: rem(1),
-    margin: rem(0.25)
-  },
-  tileIcon: {
-    position: 'absolute',
-    width: rem(0.75),
-    height: rem(0.75),
-    top: rem(0.75),
-    right: rem(0.75)
-  },
-  nextButton: {
-    backgroundColor: THEME.COLORS.SECONDARY,
-    marginTop: rem(1),
-    borderRadius: rem(1.5),
-    width: '80%',
-    height: rem(3),
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  buttonText: {
-    color: THEME.COLORS.WHITE,
-    fontSize: rem(1.25)
-  },
-  sliderStyle: {
-    marginTop: rem(2),
-    width: rem(15),
-    backgroundColor: THEME.COLORS.PRIMARY,
-    borderRadius: rem(2)
-  }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
