@@ -3,8 +3,9 @@
 import Clipboard from '@react-native-community/clipboard'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableWithoutFeedback, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { connect } from 'react-redux'
 
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
@@ -15,11 +16,10 @@ import type { FeeOption } from '../../reducers/scenes/SendConfirmationReducer'
 import type { FioRequest } from '../../types/types'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
+import { ScanModal } from '../modals/ScanModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText'
-import { ScanTile } from './ScanTile.js'
-import { ClickableText } from './ThemedButtons'
 import { Tile } from './Tile.js'
 
 type SpendInfo = {
@@ -54,7 +54,8 @@ type StateProps = {
 }
 type State = {
   clipboard: string,
-  resolvingAddress: boolean
+  loading: boolean,
+  isSetAddress: boolean
 }
 type Props = OwnProps & StateProps & ThemeProps
 
@@ -84,7 +85,8 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 
     this.state = {
       clipboard: '',
-      resolvingAddress: false
+      loading: false,
+      isSetAddress: false
     }
   }
 
@@ -151,7 +153,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     if (!address) return
     const { onChangeAddress, coreWallet, currencyCode, fioPlugin } = this.props
 
-    this.setState({ resolvingAddress: true })
+    this.setState({ loading: true })
     let fioAddress
     if (fioPlugin) {
       try {
@@ -160,7 +162,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
         address = publicAddress
       } catch (e) {
         if (!e.code || e.code !== fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS) {
-          this.setState({ resolvingAddress: false })
+          this.setState({ loading: false })
           return showError(e)
         }
       }
@@ -168,7 +170,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     try {
       const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await coreWallet.parseUri(address, currencyCode)
 
-      this.setState({ resolvingAddress: false })
+      this.setState({ loading: false })
 
       if (isLegacyAddressUri(parsedUri)) {
         if (!(await this.shouldContinueLegacy())) return
@@ -184,9 +186,10 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 
       // set address
       onChangeAddress(parsedUri.publicAddress, { fioAddress })
+      this.setState({ isSetAddress: true })
     } catch (e) {
       showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
-      this.setState({ resolvingAddress: false })
+      this.setState({ loading: false })
     }
   }
 
@@ -194,152 +197,108 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     const coreWallet = props.coreWallet
 
     try {
+      this.setState({ loading: true })
       const uri = await Clipboard.getString()
 
       // Will throw in case uri is invalid
       await coreWallet.parseUri(uri)
 
       this.setState({
-        clipboard: uri
+        clipboard: uri,
+        loading: false
       })
     } catch (e) {
+      this.setState({ loading: false })
       // Failure is acceptable
     }
   }
 
-  onPasteFromClipboard = () => {
+  handlePasteFromClipboard = () => {
     const { clipboard } = this.state
     this.onChangeAddress(clipboard)
   }
 
-  changeRecipient = async () => {
+  handleScan = () => {
+    Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
+      .then((result: string) => {
+        if (result) {
+          this.onChangeAddress(result)
+        }
+      })
+      .catch(error => {
+        showError(error)
+      })
+  }
+
+  handleChangeAddress = async () => {
     const { coreWallet, currencyCode } = this.props
-    const address = await Airship.show(bridge => (
-      <AddressModal bridge={bridge} walletId={coreWallet.id} currencyCode={currencyCode} title={s.strings.scan_address_modal_title} />
-    ))
-    if (address) {
-      this.onChangeAddress(address)
-    }
+    Airship.show(bridge => <AddressModal bridge={bridge} walletId={coreWallet.id} currencyCode={currencyCode} title={s.strings.scan_address_modal_title} />)
+      .then((result: string | null) => {
+        if (result) {
+          this.onChangeAddress(result)
+        }
+      })
+      .catch(error => {
+        showError(error)
+      })
   }
 
-  onScan = async result => {
-    if (result) {
-      this.onChangeAddress(result)
+  handleTilePress = () => {
+    if (this.state.isSetAddress) {
+      this.setState({ isSetAddress: false })
     }
-  }
-
-  onAddressPress = (): void => {
-    this.changeRecipient()
-  }
-
-  renderAddress() {
-    const { theme, recipientAddress } = this.props
-    const { resolvingAddress } = this.state
-    const styles = getStyles(theme)
-    if (resolvingAddress) {
-      return <EdgeText style={styles.tilePlaceHolder}>{s.strings.resolving}</EdgeText>
-    }
-
-    return recipientAddress ? (
-      <>
-        <EdgeText ellipsizeMode="middle" numberOfLines={1} style={[styles.tileTextBottom, styles.rightSpace]}>
-          {recipientAddress}
-        </EdgeText>
-        <FontAwesome name="edit" style={styles.editIcon} />
-      </>
-    ) : (
-      <>
-        <EdgeText style={[styles.tilePlaceHolder, styles.rightSpace]}>{s.strings.address_modal_default_header}</EdgeText>
-        <FontAwesome name="edit" style={styles.editIcon} />
-      </>
-    )
   }
 
   render() {
-    const { theme, title } = this.props
+    const { recipientAddress, theme, title } = this.props
+    const { loading, isSetAddress } = this.state
     const styles = getStyles(theme)
     const copyMessage = this.state.clipboard ? `${s.strings.string_paste}: ${this.state.clipboard}` : null
+    const tileType = loading ? 'loading' : isSetAddress ? 'touchable' : 'static'
+    const tileBody = isSetAddress ? recipientAddress : undefined
     return (
       <View>
-        <Tile type="static" containerClass={styles.noBottomMargin} title={title} />
-        <View style={styles.recipientBlock}>
-          <View style={styles.tileRowParent}>
-            <TouchableWithoutFeedback onPress={this.onAddressPress}>
-              <View style={[styles.tileRow, styles.tileChildSideBorder]}>{this.renderAddress()}</View>
-            </TouchableWithoutFeedback>
-            <ScanTile onScan={this.onScan} />
-          </View>
-          {copyMessage && (
-            <View style={styles.tileContainerButtons}>
-              <ClickableText onPress={this.onPasteFromClipboard} style={styles.pasteButton}>
-                <EdgeText ellipsizeMode="middle" numberOfLines={1} style={styles.tileTextBottom}>
-                  {copyMessage}
-                </EdgeText>
-              </ClickableText>
+        <Tile type={tileType} title={title} body={tileBody} onPress={this.handleTilePress}>
+          {!isSetAddress && (
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity style={styles.buttonContainer} onPress={this.handleChangeAddress}>
+                <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
+                <EdgeText style={styles.buttonText}>{s.strings.enter_as_in_enter_address_with_keyboard}</EdgeText>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonContainer} onPress={this.handleScan}>
+                <FontAwesome5 name="expand" size={theme.rem(2)} color={theme.iconTappable} />
+                <EdgeText style={styles.buttonText}>{s.strings.scan_as_in_scan_barcode}</EdgeText>
+              </TouchableOpacity>
+              {copyMessage && (
+                <TouchableOpacity style={styles.buttonContainer} onPress={this.handlePasteFromClipboard}>
+                  <FontAwesome5 name="clipboard" size={theme.rem(2)} color={theme.iconTappable} />
+                  <EdgeText style={styles.buttonText}>{s.strings.string_paste}</EdgeText>
+                </TouchableOpacity>
+              )}
             </View>
           )}
-        </View>
+        </Tile>
       </View>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  tileContainerButtons: {
-    backgroundColor: theme.tileBackground,
+  buttonsContainer: {
+    paddingTop: theme.rem(1),
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
   },
-  tileRow: {
+  buttonContainer: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: theme.tileBackground,
-    paddingHorizontal: theme.rem(0.75),
-    paddingVertical: theme.rem(0.5)
+    flexDirection: 'column',
+    alignItems: 'center'
   },
-  tileRowParent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: theme.deactivatedText,
-    borderTopWidth: theme.rem(0.05),
-    borderBottomWidth: theme.rem(0.05)
-  },
-  tileChildSideBorder: {
-    borderColor: theme.deactivatedText,
-    borderRightWidth: theme.rem(0.05)
-  },
-  tileTextBottom: {
-    color: theme.primaryText,
-    fontSize: theme.rem(1)
-  },
-  tilePlaceHolder: {
-    color: theme.deactivatedText,
-    fontSize: theme.rem(1)
-  },
-  noBottomMargin: {
-    marginBottom: 0
-  },
-  pasteButton: {
-    width: '100%',
-    backgroundColor: 'transparent',
-    padding: theme.rem(0.75),
-    margin: 0
-  },
-  rightSpace: {
-    maxWidth: '90%',
-    paddingRight: theme.rem(0.75)
-  },
-  recipientBlock: {
-    marginBottom: theme.rem(0.125)
-  },
-  loader: {
-    paddingVertical: theme.rem(0.075)
-  },
-  editIcon: {
-    color: theme.iconTappable,
-    fontSize: theme.rem(1)
+  buttonText: {
+    marginTop: theme.rem(0.25),
+    fontSize: theme.rem(0.75),
+    color: theme.textLink
   }
 }))
 

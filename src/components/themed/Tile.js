@@ -2,7 +2,7 @@
 
 import Clipboard from '@react-native-community/clipboard'
 import * as React from 'react'
-import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'
@@ -16,8 +16,7 @@ type OwnProps = {
   error?: boolean,
   onPress?: () => void,
   title: string,
-  type: 'editable' | 'static' | 'touchable' | 'copy',
-  containerClass?: StyleSheet.Styles
+  type: 'editable' | 'static' | 'touchable' | 'copy' | 'loading'
 }
 type Props = OwnProps & ThemeProps
 
@@ -29,12 +28,22 @@ class TileComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { body, title, children, theme, type, error, containerClass } = this.props
+    const { body, title, children, theme, type, error } = this.props
     const styles = getStyles(theme)
     const onPress = type === 'copy' ? () => this.copy() : this.props.onPress
+    if (type === 'loading') {
+      return (
+        <View style={styles.container}>
+          <View style={styles.content}>
+            <EdgeText style={styles.textHeader}>{title}</EdgeText>
+            <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
+          </View>
+        </View>
+      )
+    }
     return (
       <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
-        <View style={[styles.container, containerClass]}>
+        <View style={styles.container}>
           <View style={styles.content}>
             {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
             {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
@@ -104,6 +113,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(0.75),
     top: theme.rem(0.5),
     right: theme.rem(0.25)
+  },
+  loader: {
+    marginTop: theme.rem(0.25)
   }
 }))
 
