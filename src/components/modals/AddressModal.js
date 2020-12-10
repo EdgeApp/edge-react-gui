@@ -389,7 +389,7 @@ class AddressModalConnected extends React.Component<Props, State> {
                 />
               ) : (
                 <View style={styles.loaderContainer}>
-                  <ActivityIndicator />
+                  <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
                 </View>
               )}
             </View>

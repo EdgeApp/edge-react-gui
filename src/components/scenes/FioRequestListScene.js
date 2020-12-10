@@ -550,7 +550,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
               </View>
             ) : null}
             <View style={styles.container}>
-              {loadingPending && <ActivityIndicator style={styles.loading} size="small" />}
+              {loadingPending && <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="small" />}
               <SwipeListView
                 useSectionList
                 sections={this.pendingRequestHeaders()}
@@ -571,7 +571,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
               </View>
             ) : null}
             <View style={styles.container}>
-              {loadingSent && <ActivityIndicator style={styles.loading} size="small" />}
+              {loadingSent && <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="small" />}
               <SwipeListView
                 style={styles.transactionsScrollWrap}
                 data={fioRequestsSent}

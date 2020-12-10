@@ -74,7 +74,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
   renderSlider = () => {
     const { pending } = this.props
     if (pending) {
-      return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="small" />
+      return <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={{ flex: 1, alignSelf: 'center' }} size="small" />
     }
     return <Slider onSlidingComplete={this.doShift} sliderDisabled={pending} parentStyle={styles.slideContainer} />
   }

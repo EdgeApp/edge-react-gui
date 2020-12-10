@@ -91,7 +91,7 @@ export class FioAddressListScene extends React.Component<Props> {
       return (
         <SceneWrapper background="header">
           <Gradient style={styles.gradient} />
-          <ActivityIndicator style={styles.loading} size="large" />
+          <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="large" />
         </SceneWrapper>
       )
     }
@@ -117,7 +117,7 @@ export class FioAddressListScene extends React.Component<Props> {
               <FioDomainRow key={`${domain.name}`} item={domain} onPress={this.onDomainPress} />
             ))}
           </View>
-          {loading && <ActivityIndicator style={styles.loading} size="large" />}
+          {loading && <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="large" />}
         </ScrollView>
 
         <View>

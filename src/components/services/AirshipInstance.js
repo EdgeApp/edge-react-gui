@@ -4,6 +4,7 @@ import * as React from 'react'
 import { ActivityIndicator } from 'react-native'
 import { makeAirship } from 'react-native-airship'
 
+import { THEME } from '../../theme/variables/airbitz.js'
 import { AirshipFullScreenSpinner } from '../common/AirshipFullScreenSpinner.js'
 import { AirshipToast, toastUnit } from '../common/AirshipToast.js'
 import { AlertDropdown } from '../navigation/AlertDropdown.js'
@@ -22,7 +23,7 @@ export function showActivity<T>(message: string, promise: Promise<T>): Promise<T
     )
     return (
       <AirshipToast bridge={bridge} message={message}>
-        <ActivityIndicator style={{ marginLeft: toastUnit }} />
+        <ActivityIndicator color={THEME.COLORS.BLACK} style={{ marginLeft: toastUnit }} />
       </AirshipToast>
     )
   })

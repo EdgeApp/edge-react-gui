@@ -221,7 +221,11 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
         {!showRenew && (
           <View style={styles.blockPadding}>
             <PrimaryButton2 onPress={this.onRenewPress} disabled={feeLoading}>
-              {feeLoading ? <ActivityIndicator size="small" /> : <PrimaryButton2.Text>{s.strings.title_fio_renew_address}</PrimaryButton2.Text>}
+              {feeLoading ? (
+                <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="small" />
+              ) : (
+                <PrimaryButton2.Text>{s.strings.title_fio_renew_address}</PrimaryButton2.Text>
+              )}
             </PrimaryButton2>
           </View>
         )}

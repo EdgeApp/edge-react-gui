@@ -176,7 +176,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
     return (
       <View>
-        {feeLoading && <ActivityIndicator style={styles.loader} size="small" />}
+        {feeLoading && <ActivityIndicator color={theme.primaryText} style={styles.loader} size="small" />}
         {this.renderFeeAndBalance()}
         <View style={styles.spacer} />
         {showSlider && (

@@ -99,7 +99,11 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
                 </SecondaryButton>
 
                 <PrimaryButton style={styles.create} onPress={this.onSubmit} disabled={isCreatingWallet}>
-                  {isCreatingWallet ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.fragment_create_wallet_create_wallet}</PrimaryButton.Text>}
+                  {isCreatingWallet ? (
+                    <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
+                  ) : (
+                    <PrimaryButton.Text>{s.strings.fragment_create_wallet_create_wallet}</PrimaryButton.Text>
+                  )}
                 </PrimaryButton>
               </View>
             </View>

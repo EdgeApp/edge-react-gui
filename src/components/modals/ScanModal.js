@@ -89,7 +89,7 @@ export class ScanModalComponent extends React.Component<Props> {
 
     return (
       <View style={styles.cameraArea}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator color={theme.primaryText} size="large" />
       </View>
     )
   }

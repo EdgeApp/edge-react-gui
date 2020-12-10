@@ -241,7 +241,7 @@ export class Request extends React.Component<Props, State> {
 
   render() {
     if (this.props.loading) {
-      return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" />
+      return <ActivityIndicator color={THEME.COLORS.GRAY_2} style={{ flex: 1, alignSelf: 'center' }} size="large" />
     }
 
     const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, currencyInfo, guiWallet } = this.props

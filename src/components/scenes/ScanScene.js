@@ -131,7 +131,7 @@ export class Scan extends React.Component<Props> {
 
     return (
       <View style={styles.cameraArea}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="large" />
       </View>
     )
   }
