@@ -30,7 +30,7 @@ export function QrModal(props: Props) {
       maxWidth={maxSize}
       maxHeight={maxSize}
       onCancel={handleCancel}
-      underlay={<BlurView blurType={theme.modalBlurType} style={StyleSheet.absoluteFill} />}
+      underlay={<BlurView blurType={theme.isDark ? 'light' : 'dark'} style={StyleSheet.absoluteFill} />}
     >
       <QrCode data={data} onPress={handleCancel} />
     </AirshipModal>
