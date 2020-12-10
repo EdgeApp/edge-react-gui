@@ -99,7 +99,7 @@ class WalletListComponent extends React.Component<Props, State> {
         </View>
         <View style={styles.listStack}>
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
-            <ActivityIndicator key="spinner" style={styles.listSpinner} size="large" />
+            <ActivityIndicator key="spinner" color={THEME.COLORS.GRAY_2} style={styles.listSpinner} size="large" />
             <WalletList key="fullList" header={this.renderPromoCard()} footer={WalletListFooter} />
             <SortableListView
               key="sortList"

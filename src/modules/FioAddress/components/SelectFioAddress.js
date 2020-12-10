@@ -206,7 +206,7 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
     const { selected, fioRequest } = this.props
     const { loading } = this.state
 
-    if (loading) return <ActivityIndicator style={styles.loading} size="small" />
+    if (loading) return <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="small" />
 
     if (fioRequest) {
       return (
@@ -236,7 +236,7 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
     if (walletLoading) {
       return (
         <View style={[styles.selectContainer, styles.selectFullWidth]}>
-          <ActivityIndicator style={styles.loading} size="small" />
+          <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="small" />
         </View>
       )
     }

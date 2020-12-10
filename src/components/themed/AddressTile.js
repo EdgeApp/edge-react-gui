@@ -1,8 +1,9 @@
 // @flow
 
+import Clipboard from '@react-native-community/clipboard'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { Clipboard, TouchableWithoutFeedback, View } from 'react-native'
+import { TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 

@@ -1,8 +1,9 @@
 // @flow
 
+import Clipboard from '@react-native-community/clipboard'
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { type Event, Animated, Clipboard, Image, Platform, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { type Event, Animated, Image, Platform, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 

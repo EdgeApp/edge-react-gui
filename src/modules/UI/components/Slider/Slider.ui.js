@@ -83,7 +83,11 @@ export class Slider extends React.Component<Props, State> {
           thumbTouchSize={{ width: scale(160), height: scale(160) }}
         />
 
-        {this.props.showSpinner ? <ActivityIndicator style={styles.activityIndicator} /> : <Text style={styles.textOverlay}>{sliderText}</Text>}
+        {this.props.showSpinner ? (
+          <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.activityIndicator} />
+        ) : (
+          <Text style={styles.textOverlay}>{sliderText}</Text>
+        )}
       </View>
     )
   }

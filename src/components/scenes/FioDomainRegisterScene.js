@@ -188,7 +188,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         <View style={styles.buttons}>
           <PrimaryButton style={styles.next} onPress={this.handleNextButton} disabled={!isAvailable || walletLoading}>
             {walletLoading ? (
-              <ActivityIndicator size="small" />
+              <ActivityIndicator color={theme.primaryText} size="small" />
             ) : (
               <PrimaryButton.Text style={styles.nextText}>{s.strings.string_next_capitalized}</PrimaryButton.Text>
             )}
@@ -213,7 +213,9 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
       icon = <MaterialCommunityIcon style={[styles.statusIcon, styles.statusIconOk]} name="check-circle-outline" size={theme.rem(1.5)} />
     }
 
-    return <View style={styles.statusIconContainer}>{loading ? <ActivityIndicator style={styles.statusIcon} size="small" /> : icon}</View>
+    return (
+      <View style={styles.statusIconContainer}>{loading ? <ActivityIndicator color={theme.primaryText} style={styles.statusIcon} size="small" /> : icon}</View>
+    )
   }
 
   renderFioWallets() {

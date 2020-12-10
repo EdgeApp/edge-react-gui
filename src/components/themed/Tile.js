@@ -1,7 +1,8 @@
 // @flow
 
+import Clipboard from '@react-native-community/clipboard'
 import * as React from 'react'
-import { Clipboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'

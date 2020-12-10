@@ -130,7 +130,11 @@ export default class ManageTokens extends React.Component<ManageTokensProps, Sta
             {specialCurrencyInfo.isCustomTokensSupported ? (
               <View style={styles.buttonsArea}>
                 <PrimaryButton style={styles.saveButton} onPress={this.saveEnabledTokenList}>
-                  {manageTokensPending ? <ActivityIndicator /> : <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_save}</PrimaryButton.Text>}
+                  {manageTokensPending ? (
+                    <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
+                  ) : (
+                    <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_save}</PrimaryButton.Text>
+                  )}
                 </PrimaryButton>
                 <SecondaryButton style={styles.addButton} onPress={this.goToAddTokenScene}>
                   <SecondaryButton.Text style={styles.buttonText}>{s.strings.addtoken_add}</SecondaryButton.Text>
@@ -139,7 +143,11 @@ export default class ManageTokens extends React.Component<ManageTokensProps, Sta
             ) : (
               <View style={styles.buttonsArea}>
                 <PrimaryButton style={styles.oneButton} onPress={this.saveEnabledTokenList}>
-                  {manageTokensPending ? <ActivityIndicator /> : <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_save}</PrimaryButton.Text>}
+                  {manageTokensPending ? (
+                    <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
+                  ) : (
+                    <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_save}</PrimaryButton.Text>
+                  )}
                 </PrimaryButton>
               </View>
             )}

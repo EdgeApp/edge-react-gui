@@ -78,7 +78,11 @@ export class PasswordReminderModal extends React.Component<Props, State> {
           <InteractiveModal.Row>
             <InteractiveModal.Item>
               <TertiaryButton onPress={this.onSubmit} disabled={isChecking} style={{ flex: -1 }}>
-                {isChecking ? <ActivityIndicator /> : <TertiaryButton.Text>{s.strings.password_reminder_check_password}</TertiaryButton.Text>}
+                {isChecking ? (
+                  <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
+                ) : (
+                  <TertiaryButton.Text>{s.strings.password_reminder_check_password}</TertiaryButton.Text>
+                )}
               </TertiaryButton>
             </InteractiveModal.Item>
           </InteractiveModal.Row>

@@ -24,7 +24,7 @@ export class WalletListEmptyRow extends React.Component<Props> {
       <TouchableHighlight style={[styles.rowContainer, styles.emptyRow]} underlayColor={THEME.COLORS.ROW_PRESSED}>
         <View style={styles.rowContent}>
           <View style={styles.rowNameTextWrap}>
-            <ActivityIndicator style={{ height: 18, width: 18 }} />
+            <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={{ height: 18, width: 18 }} />
           </View>
           {walletId && (
             <TouchableWithoutFeedback onPress={this.openWalletListMenuModal}>

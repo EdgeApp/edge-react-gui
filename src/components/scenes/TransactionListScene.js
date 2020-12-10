@@ -101,7 +101,7 @@ export class TransactionList extends React.Component<Props, State> {
     if (this.props.numTransactions) {
       return (
         <View style={styles.emptyListLoader}>
-          <ActivityIndicator size="large" />
+          <ActivityIndicator color={THEME.COLORS.GRAY_2} size="large" />
         </View>
       )
     }
@@ -160,7 +160,7 @@ export class TransactionList extends React.Component<Props, State> {
 
     // should we get rid of "loading" area? Currently unused
     if (loading) {
-      return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" />
+      return <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={{ flex: 1, alignSelf: 'center' }} size="large" />
     }
 
     let logo

@@ -1,10 +1,11 @@
 // @flow
 
+import Clipboard from '@react-native-community/clipboard'
 import { bns } from 'biggystring'
 import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
-import { ActivityIndicator, Clipboard, Dimensions, InputAccessoryView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Dimensions, InputAccessoryView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import { sprintf } from 'sprintf-js'
@@ -240,7 +241,7 @@ export class Request extends React.Component<Props, State> {
 
   render() {
     if (this.props.loading) {
-      return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" />
+      return <ActivityIndicator color={THEME.COLORS.GRAY_2} style={{ flex: 1, alignSelf: 'center' }} size="large" />
     }
 
     const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, currencyInfo, guiWallet } = this.props

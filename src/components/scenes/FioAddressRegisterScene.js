@@ -292,7 +292,11 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
       return (
         <View style={styles.buttons}>
           <PrimaryButton style={styles.next} onPress={this.handleNextButton} disabled={!isAvailable || walletLoading}>
-            {walletLoading ? <ActivityIndicator size="small" /> : <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>}
+            {walletLoading ? (
+              <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="small" />
+            ) : (
+              <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+            )}
           </PrimaryButton>
         </View>
       )
@@ -312,7 +316,11 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
       icon = <MaterialCommunityIcon style={[styles.statusIcon, styles.statusIconOk]} name="check-circle-outline" size={25} />
     }
 
-    return <View style={styles.statusIconContainer}>{loading ? <ActivityIndicator style={styles.statusIcon} size="small" /> : icon}</View>
+    return (
+      <View style={styles.statusIconContainer}>
+        {loading ? <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.statusIcon} size="small" /> : icon}
+      </View>
+    )
   }
 
   renderFioWallets() {
