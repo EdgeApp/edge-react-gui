@@ -42,6 +42,9 @@ export type GuiPlugin = {
   // Pass any promo codes using this query parameter:
   queryPromoCode?: string,
 
+  // Add country code as a query parameter when launching plugin
+  needsCountryCode?: boolean,
+
   // Scene title to display when inside the plugin:
   displayName: string,
 
