@@ -20,8 +20,7 @@ type Props = {
   fiatCurrencyAmount: string,
   walletName: string,
   total?: string,
-  miningFee?: string | null,
-  isEstimate?: boolean
+  miningFee?: string | null
 }
 type State = {}
 

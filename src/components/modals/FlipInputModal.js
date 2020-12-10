@@ -81,6 +81,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
 
   componentDidUpdate(prevProps: Props) {
     if (this.props.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         overridePrimaryExchangeAmount: this.props.overridePrimaryExchangeAmount,
         forceUpdateGuiCounter: this.props.forceUpdateGuiCounter

@@ -235,6 +235,7 @@ class FioAddressRegister extends React.Component<Props, State> {
   }
 
   handleFioAddressFocus = () => {
+    // eslint-disable-next-line react/no-string-refs
     this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
   }
 
@@ -362,6 +363,7 @@ class FioAddressRegister extends React.Component<Props, State> {
 
     return (
       <SceneWrapper background="theme">
+        {/* eslint-disable-next-line react/no-string-refs */}
         <ScrollView ref="_scrollView">
           <View style={styles.view}>
             <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />

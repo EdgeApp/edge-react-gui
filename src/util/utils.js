@@ -347,6 +347,7 @@ export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Obje
       continue
     }
     comparedElements[e] = true
+    // eslint-disable-next-line no-prototype-builtins
     if (obj2.hasOwnProperty(e)) {
       if (obj1[e] !== obj2[e]) {
         if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
@@ -369,6 +370,7 @@ export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Obje
     if ((comparedElements && comparedElements[e]) || (ignoreObjects && ignoreObjects[e])) {
       continue
     }
+    // eslint-disable-next-line no-prototype-builtins
     if (obj1.hasOwnProperty(e)) {
       if (obj1[e] !== obj2[e]) {
         if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
@@ -598,6 +600,7 @@ export function getDenomination(currencyCode: string, settings: Object, type: 'd
       } else if (type === 'exchange') {
         return denomination.name === currencyInfo.currencyCode
       }
+      return false
     })
     return denomination ?? emptyEdgeDenomination
   }

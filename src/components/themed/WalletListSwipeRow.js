@@ -50,6 +50,7 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
       if (swipeRow) {
         swipeRow.manuallySwipeRow(theme.rem(-6.25))
       }
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ leftRowOpened: true })
     }
   }

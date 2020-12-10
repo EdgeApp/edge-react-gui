@@ -15,7 +15,6 @@ import { PrimaryButton } from '../themed/ThemedButtons'
 export type NavProps = {
   fioName: string,
   expiration: string,
-  feeCollected: number,
   navigation: any
 }
 

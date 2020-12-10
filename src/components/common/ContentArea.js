@@ -28,8 +28,8 @@ type Props = {
 
 export function ContentArea(props: Props) {
   const { children, grow = false, horizontal = false } = props
-  const padding = parsePadding(props)
-  const backgroundColor = parseBackground(props)
+  const padding = parsePadding(props.padding)
+  const backgroundColor = parseBackground(props.background)
 
   const style: Object = {
     // Layout:
@@ -48,13 +48,13 @@ export function ContentArea(props: Props) {
   return <View style={style}>{LadderLayout({ children, horizontal, padding })}</View>
 }
 
-function parsePadding({ padding }: Props): number {
+function parsePadding(padding?: number | 'wide'): number {
   if (typeof padding === 'number') return padding
   if (padding === 'wide') return THEME.rem(1.4)
   return THEME.rem(1)
 }
 
-function parseBackground({ background }: Props): string | void {
+function parseBackground(background?: BackgroundOptions): string | void {
   if (background === 'body') return THEME.COLORS.WHITE
   if (background === 'tray') return THEME.COLORS.GRAY_4
 }

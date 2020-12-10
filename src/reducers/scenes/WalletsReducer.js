@@ -169,7 +169,7 @@ const walletLoadingProgress = (state = {}, action: Action): $PropertyType<Wallet
       if (!action.data) throw new Error('Invalid action')
       const activeWalletIdList = action.data.activeWalletIds
       const activeWalletIdProgress = {}
-      activeWalletIdList.map(item => {
+      activeWalletIdList.forEach(item => {
         activeWalletIdProgress[item] = 0
       })
       return activeWalletIdProgress

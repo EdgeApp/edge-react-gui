@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -27,7 +27,6 @@ export type StateProps = {
   fioAddresses: FioAddress[],
   fioDomains: FioDomain[],
   fioWallets: EdgeCurrencyWallet[],
-  fioPlugin: EdgeCurrencyConfig | null,
   loading: boolean,
   isConnected: boolean
 }

@@ -47,9 +47,7 @@ export class Header extends React.Component<HeaderProps> {
     * move the Icon component inside Modal.Container
   https://github.com/facebook/react-native/issues/6802
 */
-type AndroidHackSpacerProps = {
-  style?: StyleSheet.Styles
-}
+type AndroidHackSpacerProps = {}
 export class AndroidHackSpacer extends React.Component<AndroidHackSpacerProps> {
   render() {
     return <View style={styles.androidHackSpacer} />

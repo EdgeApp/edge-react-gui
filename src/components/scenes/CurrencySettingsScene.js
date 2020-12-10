@@ -19,6 +19,7 @@ import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
 type NavigationProps = {
+  // eslint-disable-next-line react/no-unused-prop-types
   currencyInfo: EdgeCurrencyInfo
 }
 type StateProps = {

@@ -14,19 +14,24 @@ type Props = {
   onPress?: () => void | Promise<void>,
 
   // If this is set, the component will insert a text node before the other children:
+  // eslint-disable-next-line react/no-unused-prop-types
   label?: string,
 
   // If this is set, show a spinner:
+  // eslint-disable-next-line react/no-unused-prop-types
   spinner?: boolean,
 
   // The gap around the button. Takes 0-4 numbers (top, right, bottom, left),
   // using the same logic as the web `margin` property. Defaults to 0.
+  // eslint-disable-next-line react/no-unused-prop-types
   marginRem?: number[] | number,
 
   // The gap inside the button. Takes 0-4 numbers (top, right, bottom, left),
   // using the same logic as the web `padding` property. Defaults to 0.5.
+  // eslint-disable-next-line react/no-unused-prop-types
   paddingRem?: number[] | number,
 
+  // eslint-disable-next-line react/no-unused-prop-types
   disabled?: boolean
 }
 

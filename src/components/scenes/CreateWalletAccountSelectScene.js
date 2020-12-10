@@ -30,9 +30,7 @@ export type AccountPaymentParams = {
 export type CreateWalletAccountSelectStateProps = {
   wallets: { [string]: GuiWallet },
   paymentCurrencyCode: string,
-  paymentAddress: string,
   amount: string,
-  expireTime: string,
   supportedCurrencies: { [currencyCode: string]: boolean },
   activationCost: string,
   isCreatingWallet: boolean,
@@ -46,7 +44,6 @@ export type CreateWalletAccountSelectOwnProps = {
   selectedFiat: GuiFiatType,
   selectedWalletType: CreateWalletType,
   accountName: string,
-  isReactivation?: boolean,
   existingWalletId?: string
 }
 

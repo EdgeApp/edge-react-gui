@@ -11,8 +11,6 @@ import { type AirshipBridge, AirshipModal, dayText, IconCircle, textSize, THEME 
 
 type Props = {
   bridge: AirshipBridge<void>,
-  newVersion: string,
-  released: string,
   onUpdate(): void,
   onSkip(): void
 }

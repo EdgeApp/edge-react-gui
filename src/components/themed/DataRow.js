@@ -7,9 +7,9 @@ import { unpackEdges } from '../../util/edges'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 type Props = {
-  image?: React.Node,
   label: React.Node,
   value: React.Node,
+  // eslint-disable-next-line react/no-unused-prop-types
   marginRem?: number[] | number
 }
 

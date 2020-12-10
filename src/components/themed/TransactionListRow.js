@@ -35,7 +35,9 @@ type StateProps = {
 }
 
 type OwnProps = {
+  // eslint-disable-next-line react/no-unused-prop-types
   walletId: string,
+  // eslint-disable-next-line react/no-unused-prop-types
   currencyCode: string,
   transaction: TransactionListTx
 }

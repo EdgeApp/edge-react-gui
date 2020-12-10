@@ -47,6 +47,7 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {
           case 'secondary':
             return <SecondaryButton key={key} label={label} onPress={() => bridge.resolve(key)} marginRem={0.5} />
         }
+        return null
       })}
       {closeButton ? <ModalCloseArrow onPress={() => bridge.resolve(undefined)} /> : undefined}
     </ThemedModal>

@@ -524,9 +524,8 @@ export const USD_FIAT = 'iso:USD'
 export const getSymbolFromCurrency = (currencyCode: string) => {
   if (typeof currencyCode !== 'string') return ''
   const codeWithoutIso = currencyCode.replace('iso:', '')
-  const code = codeWithoutIso.toUpperCase()
-  if (!FIAT_CODES_SYMBOLS.hasOwnProperty(code)) return ''
-  return FIAT_CODES_SYMBOLS[codeWithoutIso]
+  const out = FIAT_CODES_SYMBOLS[codeWithoutIso.toUpperCase()]
+  return out != null ? out : ''
 }
 export const FIAT_CODES_SYMBOLS = {
   AED: 'د.إ',

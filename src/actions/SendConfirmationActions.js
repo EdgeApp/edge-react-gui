@@ -73,7 +73,7 @@ export const toggleCryptoOnTop = () => ({
   data: null
 })
 
-export const updateAmount =
+const updateAmount =
   (
     nativeAmount: string,
     exchangeAmount: string,

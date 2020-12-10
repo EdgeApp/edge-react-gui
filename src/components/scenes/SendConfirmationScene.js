@@ -64,15 +64,13 @@ export type SendConfirmationStateProps = {
   coreWallet: EdgeCurrencyWallet,
   sceneState: SendConfirmationState,
   toggleCryptoOnTop: number,
-  guiWallet: GuiWallet,
-  isConnected: boolean
+  guiWallet: GuiWallet
 }
 
 export type SendConfirmationDispatchProps = {
   updateSpendPending: boolean => any,
   signBroadcastAndSave: (fioSender?: FioSenderInfo) => any,
   reset: () => any,
-  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => any,
   onChangePin: (pin: string) => mixed,
   uniqueIdentifierButtonPressed: () => void,
@@ -149,6 +147,7 @@ export class SendConfirmation extends React.Component<Props, State> {
     }
 
     if (this.props.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         overridePrimaryExchangeAmount: bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION),
         forceUpdateGuiCounter: this.props.forceUpdateGuiCounter

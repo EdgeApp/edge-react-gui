@@ -179,7 +179,12 @@ const ScanButton = () => {
   )
 }
 
-const SweepPrivateKeyButton = ({ onSelectWallet }) => {
+type SweepPrivateKeyButtonProps = {
+  onSelectWallet: (walletId: string, currencyCode: string) => void
+}
+
+const SweepPrivateKeyButton = (props: SweepPrivateKeyButtonProps) => {
+  const { onSelectWallet } = props
   const handlePress = () => {
     Airship.show(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={getPrivateKeySweepableCurrencies()} showCreateWallet />
@@ -311,7 +316,12 @@ const SettingsButton = () => {
   )
 }
 
-const LogoutButton = ({ onPress }) => {
+type LogoutButtonProps = {
+  onPress: () => void
+}
+
+const LogoutButton = (props: LogoutButtonProps) => {
+  const { onPress } = props
   return (
     <Button onPress={onPress}>
       <Button.Row>
