@@ -743,7 +743,9 @@ const strings = {
   export_transaction_export_error: 'No transactions in the date range chosen',
   export_transaction_loading: 'Exporting Transactions…',
 
-  step: 'Step'
+  step: 'Step',
+  scan_as_in_scan_barcode: 'Scan',
+  enter_as_in_enter_address_with_keyboard: 'Enter'
 }
 
 // export default strings
