@@ -153,5 +153,6 @@ export type Theme = {
   settingsGodexLogo: string,
   settingsSwitchainLogo: string,
   settingsSideshiftLogo: string,
-  settingsTotleLogo: string
+  settingsTotleLogo: string,
+  fioAddressLogo: string
 }

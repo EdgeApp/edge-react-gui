@@ -2,6 +2,7 @@
 
 import { Platform } from 'react-native'
 
+import fioAddressLogo from '../../assets/images/details_fioAddress.png'
 import changellyLogo from '../../assets/images/exchange/settingsExchangeChangelly.png'
 import changenowLogo from '../../assets/images/exchange/settingsExchangeChangenow.png'
 import coinswitchLogo from '../../assets/images/exchange/settingsExchangeCoinswitch.png'
@@ -208,5 +209,6 @@ export const edgeDark: Theme = {
   settingsGodexLogo: godexLogo,
   settingsSideshiftLogo: sideshiftLogo,
   settingsSwitchainLogo: switchainLogo,
-  settingsTotleLogo: totleLogo
+  settingsTotleLogo: totleLogo,
+  fioAddressLogo: fioAddressLogo
 }
