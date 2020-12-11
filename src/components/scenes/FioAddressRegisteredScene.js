@@ -1,17 +1,16 @@
 // @flow
 
 import * as React from 'react'
-import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { Image, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import fioAddressDetailsIcon from '../../assets/images/details_fioAddress.png'
 import * as Constants from '../../constants/SceneKeys'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { scale } from '../../util/scaling'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { PrimaryButton } from '../themed/ThemedButtons'
 
 export type NavProps = {
   fioName: string,
@@ -20,9 +19,9 @@ export type NavProps = {
   navigation: any
 }
 
-type Props = NavProps
+type Props = NavProps & ThemeProps
 
-export class FioAddressRegisteredScene extends React.Component<Props> {
+class FioAddressRegistered extends React.Component<Props> {
   componentDidMount() {
     const { fioName } = this.props
     this.props.navigation.setParams({
@@ -31,6 +30,7 @@ export class FioAddressRegisteredScene extends React.Component<Props> {
   }
 
   renderTitle = (title: string) => {
+    const styles = getStyles(this.props.theme)
     return (
       <View style={styles.titleWrapper}>
         <T style={styles.titleStyle}>{title}</T>
@@ -38,26 +38,16 @@ export class FioAddressRegisteredScene extends React.Component<Props> {
     )
   }
 
-  renderButton() {
-    return (
-      <View style={styles.buttons}>
-        <TouchableHighlight style={styles.bottomButton} onPress={Actions[Constants.FIO_ADDRESS_LIST]} underlayColor={THEME.COLORS.SECONDARY}>
-          <View style={styles.bottomButtonTextWrap}>
-            <T style={styles.bottomButtonText}>{s.strings.title_fio_names}</T>
-          </View>
-        </TouchableHighlight>
-      </View>
-    )
-  }
-
   render() {
-    const { fioName, expiration } = this.props
+    const { fioName, expiration, theme } = this.props
+    const styles = getStyles(theme)
+
     return (
       <SceneWrapper background="header">
         <View style={styles.view}>
           <View style={styles.texts}>
             <View style={styles.image}>
-              <Image source={fioAddressDetailsIcon} />
+              <Image source={theme.fioAddressLogo} />
             </View>
             <T style={styles.text}>{s.strings.fio_address_details_screen_registered}</T>
             <T style={styles.title}>{fioName}</T>
@@ -66,84 +56,59 @@ export class FioAddressRegisteredScene extends React.Component<Props> {
               {formatDate(new Date(expiration))}
             </T>
           </View>
-          {this.renderButton()}
+          <PrimaryButton marginRem={2} onPress={Actions[Constants.FIO_ADDRESS_LIST]} label={s.strings.title_fio_names} />
         </View>
       </SceneWrapper>
     )
   }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   view: {
     flex: 2,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    paddingHorizontal: THEME.rem(1)
+    paddingHorizontal: theme.rem(1)
   },
   texts: {
     flex: 1,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: scale(40)
+    marginBottom: theme.rem(2.5)
   },
   text: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(16)
+    color: theme.primaryText,
+    fontSize: theme.rem(1)
   },
   image: {
-    marginBottom: scale(50)
+    marginLeft: theme.rem(0.25),
+    marginBottom: theme.rem(3)
   },
   title: {
-    fontSize: scale(28),
-    color: THEME.COLORS.WHITE,
-    marginTop: scale(20),
-    marginBottom: scale(10)
+    fontSize: theme.rem(1.75),
+    color: theme.primaryText,
+    marginTop: theme.rem(1.25),
+    marginBottom: theme.rem(0.75)
   },
   titleStyle: {
     alignSelf: 'center',
-    fontSize: 20,
-    color: THEME.COLORS.WHITE,
-    fontFamily: THEME.FONTS.DEFAULT
-  },
-  buttons: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginBottom: scale(35)
-  },
-  bottomButton: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
-    borderRadius: scale(3),
-    height: scale(50),
-    marginLeft: scale(1),
-    marginRight: scale(1),
-    marginTop: scale(15)
-  },
-  bottomButtonTextWrap: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  bottomButtonText: {
-    opacity: 1,
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(14),
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    fontSize: theme.rem(1.25),
+    color: theme.primaryText
   },
   expiration: {
-    fontSize: THEME.rem(0.75),
-    color: THEME.COLORS.WHITE,
+    fontSize: theme.rem(0.75),
+    color: theme.primaryText,
     textAlign: 'center',
-    marginTop: THEME.rem(-0.5),
-    paddingBottom: THEME.rem(0.75)
+    marginTop: theme.rem(-0.5),
+    paddingBottom: theme.rem(0.75)
   },
   titleWrapper: {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%'
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+const FioAddressRegisteredScene = withTheme(FioAddressRegistered)
+export { FioAddressRegisteredScene }
