@@ -186,7 +186,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   instructionText: {
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
-    textAlign: 'center',
     color: theme.primaryText
   },
   swapIcon: {

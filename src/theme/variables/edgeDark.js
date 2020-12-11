@@ -176,7 +176,7 @@ export const edgeDark: Theme = {
   // securityAlertModalHeaderIconShadow: palette.accentOrangeOp30,
 
   // Settings Row
-  settingsRowBackground: palette.edgeBlue,
+  settingsRowBackground: palette.transparent,
   settingsRowPressed: palette.transparent,
   settingsRowHeaderBackground: palette.edgeNavy,
   settingsRowSubHeader: palette.transparent,
