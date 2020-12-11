@@ -241,7 +241,7 @@ exports[`SendConfirmation should render with destination 1`] = `
             }
           />
         </Padding>
-        <Connect(SelectFioAddress)
+        <Connect(WithTheme(SelectFioAddress))
           fioRequest={null}
           isSendUsingFioAddress={null}
           memo=""
@@ -505,7 +505,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
             }
           />
         </Padding>
-        <Connect(SelectFioAddress)
+        <Connect(WithTheme(SelectFioAddress))
           fioRequest={null}
           isSendUsingFioAddress={null}
           memo=""
@@ -749,7 +749,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             }
           />
         </Padding>
-        <Connect(SelectFioAddress)
+        <Connect(WithTheme(SelectFioAddress))
           fioRequest={null}
           isSendUsingFioAddress={null}
           memo=""
@@ -1023,7 +1023,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             }
           />
         </Padding>
-        <Connect(SelectFioAddress)
+        <Connect(WithTheme(SelectFioAddress))
           fioRequest={null}
           isSendUsingFioAddress={null}
           memo=""
