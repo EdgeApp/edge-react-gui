@@ -60,7 +60,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               "flexDirection": "row",
               "justifyContent": "flex-start",
               "minHeight": 62,
-              "padding": 17,
+              "padding": 22,
             }
           }
         >
@@ -132,11 +132,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -204,11 +204,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -276,11 +276,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -348,11 +348,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -419,11 +419,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             style={
               Object {
                 "alignItems": "center",
-                "backgroundColor": "#0E4B75",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
                 "flexDirection": "row",
                 "justifyContent": "flex-start",
                 "minHeight": 62,
-                "padding": 17,
+                "padding": 22,
               }
             }
           >
@@ -479,7 +479,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               "flexDirection": "row",
               "justifyContent": "flex-start",
               "minHeight": 62,
-              "padding": 17,
+              "padding": 22,
             }
           }
         >
@@ -551,11 +551,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -623,11 +623,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -695,11 +695,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -758,11 +758,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -821,11 +821,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -895,11 +895,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -967,11 +967,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1039,11 +1039,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1113,11 +1113,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1187,11 +1187,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1231,11 +1231,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1398,7 +1398,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               "flexDirection": "row",
               "justifyContent": "flex-start",
               "minHeight": 62,
-              "padding": 17,
+              "padding": 22,
             }
           }
         >
@@ -1470,11 +1470,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1542,11 +1542,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1614,11 +1614,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1686,11 +1686,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1757,11 +1757,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             style={
               Object {
                 "alignItems": "center",
-                "backgroundColor": "#0E4B75",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
                 "flexDirection": "row",
                 "justifyContent": "flex-start",
                 "minHeight": 62,
-                "padding": 17,
+                "padding": 22,
               }
             }
           >
@@ -1817,7 +1817,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               "flexDirection": "row",
               "justifyContent": "flex-start",
               "minHeight": 62,
-              "padding": 17,
+              "padding": 22,
             }
           }
         >
@@ -1889,11 +1889,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1961,11 +1961,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2033,11 +2033,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2096,11 +2096,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2159,11 +2159,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2233,11 +2233,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2305,11 +2305,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2377,11 +2377,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2451,11 +2451,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2525,11 +2525,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2569,11 +2569,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
