@@ -86,11 +86,13 @@ export default class ManageTokens extends React.Component<ManageTokensProps, Sta
     })
     const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
 
-    const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
-      if (a.currencyCode < b.currencyCode) return -1
-      if (a === b) return 0
-      return 1
-    })
+    const sortedTokenInfo = combinedTokenInfo
+      .filter(token => token.currencyCode !== currencyCode)
+      .sort((a, b) => {
+        if (a.currencyCode < b.currencyCode) return -1
+        if (a === b) return 0
+        return 1
+      })
 
     // put preferred tokens at the top
     for (const cc of PREFERRED_TOKENS) {
