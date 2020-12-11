@@ -11,6 +11,7 @@ import foxExchangeLogo from '../../assets/images/exchange/settingsExchangeFoxExc
 import godexLogo from '../../assets/images/exchange/settingsExchangeGodex.png'
 import switchainLogo from '../../assets/images/exchange/settingsExchangeSwitchain.png'
 import totleLogo from '../../assets/images/exchange/settingsExchangeTotle.png'
+import fioAddressLogo from '../../assets/images/list_fioAddress.png'
 import { type Theme } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
 
@@ -204,5 +205,6 @@ export const edgeLight: Theme = {
   settingsFoxExchangeLogo: foxExchangeLogo,
   settingsGodexLogo: godexLogo,
   settingsSwitchainLogo: switchainLogo,
-  settingsTotleLogo: totleLogo
+  settingsTotleLogo: totleLogo,
+  fioAddressLogo: fioAddressLogo
 }
