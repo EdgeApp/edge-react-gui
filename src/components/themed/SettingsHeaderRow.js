@@ -32,7 +32,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   row: {
     // Layout:
     minHeight: theme.rem(2.75),
-    padding: theme.rem(0.75),
+    padding: theme.rem(1),
     backgroundColor: theme.settingsRowHeaderBackground,
 
     // Children:
