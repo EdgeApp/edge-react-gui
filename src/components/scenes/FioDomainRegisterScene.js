@@ -2,33 +2,30 @@
 
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, ScrollView, Text, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { getFioWallets } from '../../modules/UI/selectors'
-import { PLATFORM } from '../../theme/variables/platform'
 import { type RootState } from '../../types/reduxTypes'
-import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
-import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import type { Theme, ThemeProps } from '../services/ThemeContext'
 import { cacheStyles, withTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
+import { PrimaryButton } from '../themed/ThemedButtons'
+import { Tile } from '../themed/Tile'
 
 type LocalState = {
   selectedWallet: EdgeCurrencyWallet | null,
   fioDomain: string,
   isValid: boolean,
-  touched: boolean,
   loading: boolean,
   walletLoading: boolean,
   isAvailable: boolean | null,
@@ -54,7 +51,6 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     selectedWallet: null,
     fioDomain: '',
     isValid: true,
-    touched: false,
     isAvailable: false,
     loading: false,
     walletLoading: false,
@@ -104,6 +100,14 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }
   }
 
+  onDomainPress = () => {
+    this.setDomain()
+  }
+
+  onWalletPress = () => {
+    this.selectFioWallet()
+  }
+
   checkFioDomain(fioDomain: string) {
     this.setState({
       loading: true
@@ -134,7 +138,6 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     if (!this.props.isConnected) {
       return this.setState({
         fioDomain: fioDomainChanged,
-        touched: true,
         isAvailable: null,
         loading: false
       })
@@ -143,7 +146,6 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
     this.setState({
       fioDomain: fioDomainChanged.toLowerCase(),
-      touched: true,
       isAvailable: null
     })
   }
@@ -152,10 +154,13 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
   }
 
-  fieldViewOnLayout = () => {
-    this.refs._fieldView.measure((x, y) => {
+  fieldViewOnLayout = ({ nativeEvent }) => {
+    if (nativeEvent) {
+      const {
+        layout: { y }
+      } = nativeEvent
       this.setState({ fieldPos: y })
-    })
+    }
   }
 
   handleFioWalletChange = (walletId: string) => {
@@ -164,141 +169,97 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     })
   }
 
-  selectFioWallet = () => {
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={[Constants.FIO_STR]} />).then(
-      ({ walletId, currencyCode }: WalletListResult) => {
-        if (walletId && currencyCode) {
-          if (currencyCode === Constants.FIO_STR) {
-            this.handleFioWalletChange(walletId)
-          } else {
-            showError(`${s.strings.create_wallet_select_valid_crypto}: ${Constants.FIO_STR}`)
-          }
-        }
+  selectFioWallet = async () => {
+    const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={[Constants.FIO_STR]} />
+    ))
+    if (walletId && currencyCode) {
+      if (currencyCode === Constants.FIO_STR) {
+        this.handleFioWalletChange(walletId)
+      } else {
+        showError(`${s.strings.create_wallet_select_valid_crypto}: ${Constants.FIO_STR}`)
       }
-    )
+    }
+  }
+
+  setDomain = async () => {
+    this.handleFioDomainFocus()
+
+    // todo: change to editName fio component after PR merge https://github.com/EdgeApp/edge-react-gui/pull/2282
+    const fioDomain = await Airship.show(bridge => (
+      <TransactionDetailsNotesInput bridge={bridge} title={s.strings.fio_confirm_request_input_title_memo} notes={this.state.fioDomain} />
+    ))
+    if (fioDomain) this.handleFioDomainChange(fioDomain)
   }
 
   renderButton() {
-    const { theme } = this.props
     const { isValid, isAvailable, loading, walletLoading } = this.state
-    const styles = getStyles(theme)
 
     if (isValid && isAvailable && !loading) {
       return (
-        <View style={styles.buttons}>
-          <PrimaryButton style={styles.next} onPress={this.handleNextButton} disabled={!isAvailable || walletLoading}>
-            {walletLoading ? (
-              <ActivityIndicator color={theme.primaryText} size="small" />
-            ) : (
-              <PrimaryButton.Text style={styles.nextText}>{s.strings.string_next_capitalized}</PrimaryButton.Text>
-            )}
-          </PrimaryButton>
-        </View>
+        <PrimaryButton
+          marginRem={1}
+          onPress={this.handleNextButton}
+          label={walletLoading ? s.strings.loading : s.strings.string_next_capitalized}
+          disabled={!isAvailable || walletLoading}
+        />
       )
     }
 
     return null
   }
 
-  renderLoader() {
-    const { theme } = this.props
-    const { isValid, touched, isAvailable, loading } = this.state
-    const styles = getStyles(theme)
-
-    let icon = null
-    if ((!isValid || isAvailable === false) && touched) {
-      icon = <MaterialCommunityIcon style={[styles.statusIcon, styles.statusIconError]} name="close-circle-outline" size={theme.rem(1.5)} />
-    }
-    if (isValid && isAvailable && touched) {
-      icon = <MaterialCommunityIcon style={[styles.statusIcon, styles.statusIconOk]} name="check-circle-outline" size={theme.rem(1.5)} />
-    }
-
-    return (
-      <View style={styles.statusIconContainer}>{loading ? <ActivityIndicator color={theme.primaryText} style={styles.statusIcon} size="small" /> : icon}</View>
-    )
-  }
-
   renderFioWallets() {
-    const { fioWallets, theme } = this.props
+    const { fioWallets } = this.props
     const { selectedWallet } = this.state
-    const styles = getStyles(theme)
     if (fioWallets && fioWallets.length > 1) {
-      const title = `${s.strings.title_fio_connect_to_wallet}: ${
-        selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name
-      }`
       return (
-        <View style={styles.selectWalletBtn}>
-          <ArrowDownTextIconButton
-            iconColor={theme.secondaryButtonText}
-            iconSize={theme.rem(1.5)}
-            onPress={this.selectFioWallet}
-            title={
-              <Text style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
-                {title}
-              </Text>
-            }
-          />
-        </View>
+        <Tile
+          type="touchable"
+          title={s.strings.title_fio_connect_to_wallet}
+          onPress={this.onWalletPress}
+          body={selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name}
+        />
       )
     }
   }
 
   render() {
     const { theme } = this.props
-    const { fioDomain, touched, isAvailable } = this.state
+    const { fioDomain, isAvailable, loading } = this.state
     const styles = getStyles(theme)
     let chooseHandleErrorMessage = ''
-    if (touched && !this.props.isConnected) {
+    if (fioDomain && !this.props.isConnected) {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_cant_check
     }
-    if (touched && isAvailable === false) {
+    if (fioDomain && isAvailable === false) {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_not_available
     }
 
     return (
-      <SceneWrapper background="header" bodySplit={theme.rem(1.5)}>
+      <SceneWrapper background="theme" bodySplit={theme.rem(1.5)}>
         <ScrollView ref="_scrollView">
-          <View style={styles.scrollableView}>
-            <IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(4)} />
-            <View style={[styles.createWalletPromptArea, styles.paddings, styles.title]}>
-              <T style={styles.instructionalText}>{s.strings.fio_domain_reg_text}</T>
-            </View>
-            <View style={[styles.createWalletPromptArea, styles.paddings, styles.title]}>
-              <T style={styles.instructionalText}>{s.strings.fio_domain_reg_descr}</T>
-            </View>
+          <IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(4)} />
+          <EdgeText style={[styles.paddings, styles.instructionalText, styles.title]} numberOfLines={3}>
+            {s.strings.fio_domain_reg_text}
+          </EdgeText>
+          <EdgeText style={[styles.paddings, styles.instructionalText]} numberOfLines={8}>
+            {s.strings.fio_domain_reg_descr}
+          </EdgeText>
 
-            <View style={styles.formFieldView} ref="_fieldView" onLayout={this.fieldViewOnLayout}>
-              <View style={styles.formFieldViewContainer}>
-                <FormField
-                  {...MaterialInputOnWhite}
-                  containerStyle={{
-                    ...MaterialInputOnWhite.containerStyle,
-                    ...styles.inputContainer,
-                    width: '100%'
-                  }}
-                  baseColor={theme.primaryText}
-                  tintColor={theme.primaryText}
-                  errorColor={theme.negativeText}
-                  textColor={theme.primaryText}
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  onFocus={this.handleFioDomainFocus}
-                  onChangeText={this.handleFioDomainChange}
-                  onSubmitEditing={this.handleNextButton}
-                  label={s.strings.fio_domain_choose_label}
-                  value={fioDomain}
-                  returnKeyType="next"
-                  error={chooseHandleErrorMessage}
-                  prefix="@"
-                />
+          <View ref="_fieldView" onLayout={this.fieldViewOnLayout}>
+            <Tile type="editable" title={s.strings.fio_domain_choose_label} onPress={this.onDomainPress}>
+              <View style={styles.domainView}>
+                <EdgeText style={styles.domainText}>{fioDomain}</EdgeText>
+                <EdgeText style={styles.errorMessage}>{chooseHandleErrorMessage ? `(${chooseHandleErrorMessage})` : ''}</EdgeText>
+                <EdgeText style={styles.loadingText}>{loading ? `(${s.strings.loading})` : ''}</EdgeText>
               </View>
-              {this.renderLoader()}
-            </View>
-
-            {this.renderFioWallets()}
-            {this.renderButton()}
-            <View style={styles.bottomSpace} />
+            </Tile>
           </View>
+
+          {this.renderFioWallets()}
+          {this.renderButton()}
+          <View style={styles.bottomSpace} />
         </ScrollView>
       </SceneWrapper>
     )
@@ -306,120 +267,35 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  scrollableView: {
-    position: 'relative',
-    paddingHorizontal: theme.rem(1)
-  },
-  createWalletPromptArea: {
-    paddingTop: theme.rem(1),
-    paddingBottom: theme.rem(0.5)
+  paddings: {
+    paddingBottom: theme.rem(1),
+    paddingHorizontal: theme.rem(1.25)
   },
   instructionalText: {
     fontSize: theme.rem(1),
     textAlign: 'center',
-    color: theme.primaryText
-  },
-  handleRequirementsText: {
-    fontSize: theme.rem(1),
-    textAlign: 'left',
-    color: theme.primaryText
-  },
-  buttons: {
-    marginTop: theme.rem(1.5),
-    flexDirection: 'row'
-  },
-  next: {
-    flex: 1,
-    backgroundColor: theme.primaryButton
-  },
-  nextText: {
-    color: theme.primaryButtonText
+    color: theme.secondaryText
   },
 
-  image: {
-    alignSelf: 'center',
-    marginTop: theme.rem(1.5),
-    height: theme.rem(3.1),
-    width: theme.rem(3.5)
-  },
   title: {
     paddingTop: theme.rem(1.5)
-  },
-  paddings: {
-    paddingVertical: theme.rem(0.5)
-  },
-  inputContainer: {
-    width: 'auto',
-    marginTop: 0,
-    marginBottom: 0,
-    color: theme.primaryText
-  },
-  statusIconError: {
-    color: theme.negativeText
-  },
-  statusIconOk: {
-    color: theme.textLink
-  },
-  formFieldView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: theme.rem(0.8),
-    marginBottom: theme.rem(0.75)
-  },
-  formFieldViewContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: PLATFORM.deviceWidth - theme.rem(4.5)
-  },
-  statusIconContainer: {
-    width: theme.rem(1.5),
-    height: theme.rem(1.5)
-  },
-  statusIcon: {
-    alignSelf: 'flex-end',
-    marginTop: theme.rem(1.75),
-    width: theme.rem(1.5),
-    height: theme.rem(1.5)
   },
   bottomSpace: {
     paddingBottom: theme.rem(30)
   },
-  selectWalletBtn: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: theme.rem(1),
-    paddingVertical: theme.rem(0.6),
-    paddingHorizontal: theme.rem(0.3),
-    backgroundColor: theme.secondaryButton,
-    borderColor: theme.secondaryButtonOutline,
-    color: theme.secondaryButtonText,
-    borderStyle: 'solid',
-    borderWidth: theme.rem(0.125)
-  },
-  domain: {
-    marginTop: theme.rem(1),
-    marginLeft: theme.rem(0.3),
-    paddingHorizontal: theme.rem(0.6),
-    paddingVertical: theme.rem(0.25),
-    borderRadius: theme.rem(0.4),
-    borderColor: theme.secondaryButton,
-    borderWidth: theme.rem(0.1)
+  domainView: {
+    flexDirection: 'row',
+    margin: theme.rem(0.25)
   },
   domainText: {
     color: theme.primaryText,
-    fontSize: theme.rem(1)
+    marginRight: theme.rem(0.5)
   },
-  domainListRowName: {
-    flex: 1,
-    fontSize: theme.rem(1),
-    color: theme.primaryText
+  errorMessage: {
+    color: theme.dangerText
   },
-  domainListRowContainerTop: {
-    height: 'auto',
-    paddingLeft: theme.rem(0.75),
-    paddingRight: theme.rem(0.75),
-    paddingVertical: theme.rem(0.75)
+  loadingText: {
+    color: theme.deactivatedText
   },
   iconIon: {
     alignSelf: 'center',
@@ -427,10 +303,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(4),
     width: theme.rem(4),
     textAlign: 'center'
-  },
-  iconText: {
-    color: theme.secondaryButtonText,
-    fontSize: theme.rem(1)
   }
 }))
 

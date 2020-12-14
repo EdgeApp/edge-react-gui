@@ -9,17 +9,19 @@ import { connect } from 'react-redux'
 import { showError, showToast } from '../../../components/services/AirshipInstance'
 import type { Theme, ThemeProps } from '../../../components/services/ThemeContext'
 import { cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import { EdgeText } from '../../../components/themed/EdgeText'
+import { Tile } from '../../../components/themed/Tile'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings'
 import type { RootState } from '../../../reducers/RootReducer'
 import { truncateDecimals } from '../../../util/utils'
 import { getDisplayDenomination } from '../../Settings/selectors'
-import T from '../../UI/components/FormattedText/FormattedText.ui'
 import { Slider } from '../../UI/components/Slider/Slider.ui'
 
 const DIVIDE_PRECISION = 18
 
 type OwnProps = {
+  title?: string,
   successMessage?: string,
   onSubmit?: number => Promise<any>,
   onSuccess?: () => void,
@@ -139,44 +141,37 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     if (!feeLoading && error) {
-      return (
-        <View>
-          <T style={styles.title}>{error}</T>
-        </View>
-      )
+      return <EdgeText style={styles.errorMessage}>{error}</EdgeText>
     }
 
     if (feeLoading || !showSlider) return null
 
+    const balanceText = `${balance ? balance.toFixed(2) : '0'} ${balance ? s.strings.fio_address_confirm_screen_fio_label : ''}`
     return (
-      <View style={styles.texts}>
-        <View style={styles.spacer} />
-        <View style={styles.spacer} />
-        <T style={styles.title}>{s.strings.fio_action_fee_label}</T>
-        <T style={styles.content}>
-          {displayFee ? `${displayFee} ${s.strings.fio_address_confirm_screen_fio_label}` : s.strings.fio_address_confirm_screen_free_label}
-        </T>
-        <View style={styles.spacer} />
+      <>
+        <Tile
+          type="static"
+          title={s.strings.fio_action_fee_label}
+          body={displayFee ? `${displayFee} ${s.strings.fio_address_confirm_screen_fio_label}` : s.strings.fio_address_confirm_screen_free_label}
+        />
         {displayFee ? (
-          <View>
-            <T style={styles.title}>{s.strings.fio_address_confirm_screen_balance_label}</T>
-            <T style={displayFee > balance ? styles.balanceTitleDisabled : styles.balanceTitle}>
-              {balance ? balance.toFixed(2) : '0'} {balance ? s.strings.fio_address_confirm_screen_fio_label : ''}
-            </T>
-          </View>
+          <Tile type="static" title={s.strings.fio_address_confirm_screen_balance_label}>
+            <EdgeText style={displayFee > balance ? styles.balanceTitleDisabled : styles.balanceTitle}>{balanceText}</EdgeText>
+          </Tile>
         ) : null}
-      </View>
+      </>
     )
   }
 
   render(): React$Node {
-    const { theme } = this.props
+    const { title, theme } = this.props
     const { loading, feeLoading, showSlider, displayFee, balance } = this.state
     const styles = getStyles(theme)
 
     return (
       <View>
-        {feeLoading && <ActivityIndicator color={theme.primaryText} style={styles.loader} size="small" />}
+        {feeLoading && <ActivityIndicator color={theme.iconTappable} style={styles.loader} size="small" />}
+        <EdgeText style={styles.actionTitle}>{title || ''}</EdgeText>
         {this.renderFeeAndBalance()}
         <View style={styles.spacer} />
         {showSlider && (
@@ -199,33 +194,21 @@ const getStyles = cacheStyles((theme: Theme) => ({
   loader: {
     marginTop: theme.rem(3)
   },
-  title: {
-    color: theme.secondaryText,
-    marginBottom: theme.rem(0.25),
-    fontSize: theme.rem(0.75),
-    fontWeight: 'normal',
-    textAlign: 'left'
-  },
-  content: {
-    color: theme.primaryText,
-    fontSize: theme.rem(1),
-    textAlign: 'left'
-  },
-  texts: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+  actionTitle: {
+    marginTop: theme.rem(1.5),
+    marginBottom: theme.rem(1),
+    textAlign: 'center'
   },
   balanceTitle: {
-    fontSize: theme.rem(1),
-    color: theme.primaryText,
-    textAlign: 'center'
+    margin: theme.rem(0.25),
+    color: theme.primaryText
   },
   balanceTitleDisabled: {
-    fontSize: theme.rem(1),
-    color: theme.dangerText,
-    fontWeight: 'normal',
-    textAlign: 'center'
+    margin: theme.rem(0.25),
+    color: theme.dangerText
+  },
+  errorMessage: {
+    color: theme.dangerText
   },
   blockPadding: {
     paddingTop: theme.rem(0.5),
