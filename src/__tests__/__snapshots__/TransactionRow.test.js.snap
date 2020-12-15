@@ -1,135 +1,45 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Transaction List Row should render props 1`] = `
-<ForwardRef
+<WithTheme(TransactionRowComponent)
+  cryptoAmount="32.295514"
+  denominationSymbol="‎ɱ"
+  fiatAmount="4,424,808,418,353,299.50"
+  fiatSymbol="$"
+  isSentTransaction={true}
   onPress={[Function]}
->
-  <View
-    style={
-      Object {
-        "flex": 1,
-        "flexDirection": "row",
-        "justifyContent": "center",
-        "marginBottom": 3,
-        "paddingHorizontal": 34,
-        "paddingVertical": 34,
-      }
+  requiredConfirmations={15}
+  selectedCurrencyName="Monero"
+  thumbnailPath=""
+  transaction={
+    Object {
+      "SVGMetadataElement": Object {
+        "category": "",
+        "name": "ShapeShift",
+        "notes": "Exchanged …",
+      },
+      "amountSatoshi": -32295514330000,
+      "blockHeight": 1683022,
+      "currencyCode": "XMR",
+      "date": 1539555412.068,
+      "dateString": "Oct 14, 2018",
+      "key": 0,
+      "metadata": Object {
+        "amountFiat": 4424808418353299.5,
+      },
+      "nativeAmount": "-32295514330000",
+      "networkFee": "0",
+      "otherParams": Object {},
+      "ourReceiveAddresses": Array [],
+      "signedTx": "no_signature",
+      "time": "3:16 PM",
+      "txid": "4e92d23cff1714d52d48c0c5246adf4f6871d6d8d52d774b1b60cc4b28f8f296",
+      "wallet": Object {
+        "id": "SXq1f3x21H…",
+        "type": "wallet:monero",
+      },
     }
-  >
-    <View
-      style={
-        Array [
-          Object {
-            "alignItems": "center",
-            "backgroundColor": "#0C446A",
-            "borderRadius": 22,
-            "borderWidth": 3,
-            "height": 73,
-            "justifyContent": "center",
-            "paddingHorizontal": 11,
-            "width": 73,
-          },
-          Object {
-            "borderColor": "#E85466",
-            "elevation": 3,
-            "shadowColor": "#E85466",
-            "shadowOffset": Object {
-              "height": 3,
-              "width": 0,
-            },
-            "shadowOpacity": 0.5,
-            "shadowRadius": 10,
-          },
-        ]
-      }
-    >
-      <Icon
-        allowFontScaling={false}
-        color="#E85466"
-        name="send"
-        size={39}
-      />
-    </View>
-    <View
-      style={
-        Object {
-          "flex": 1,
-          "justifyContent": "center",
-          "paddingHorizontal": 11,
-        }
-      }
-    >
-      <View
-        style={
-          Object {
-            "flexDirection": "row",
-            "marginVertical": 3,
-          }
-        }
-      >
-        <WithTheme(EdgeTextComponent)
-          style={
-            Object {
-              "flex": 1,
-              "fontFamily": "Quicksand-Medium",
-              "fontSize": 17,
-            }
-          }
-        >
-          Sent Monero
-        </WithTheme(EdgeTextComponent)>
-        <WithTheme(EdgeTextComponent)
-          style={
-            Object {
-              "color": "#E85466",
-              "fontFamily": "Quicksand-Medium",
-              "fontSize": 17,
-              "textAlign": "right",
-            }
-          }
-        >
-          - ‎ɱ 32.295514
-        </WithTheme(EdgeTextComponent)>
-      </View>
-      <View
-        style={
-          Object {
-            "flexDirection": "row",
-            "marginVertical": 3,
-          }
-        }
-      >
-        <View
-          style={
-            Object {
-              "flex": 1,
-            }
-          }
-        >
-          <WithTheme(EdgeTextComponent)
-            style={
-              Object {
-                "color": "#A4C7DF",
-                "fontSize": 17,
-              }
-            }
-          >
-            3:16 PM
-          </WithTheme(EdgeTextComponent)>
-        </View>
-        <WithTheme(EdgeTextComponent)
-          style={
-            Object {
-              "color": "#A4C7DF",
-              "fontSize": 17,
-              "textAlign": "right",
-            }
-          }
-        >
-          $ 4,424,808,418,353,299.50
-        </WithTheme(EdgeTextComponent)>
-      </View>
-    </View>
-  </View>
-</ForwardRef>
+  }
+  walletBlockHeight={1688551}
+/>
 `;
