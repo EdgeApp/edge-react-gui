@@ -10,6 +10,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import { EdgeText } from '../../../components/themed/EdgeText'
 import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
 import { PrimaryButton } from '../../../components/themed/ThemedButtons.js'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
@@ -17,7 +18,6 @@ import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
 import { type RootState } from '../../../types/reduxTypes'
 import type { FioDomain, FlatListItem } from '../../../types/types.js'
-import T from '../../UI/components/FormattedText/FormattedText.ui.js'
 import { getFioWallets } from '../../UI/selectors'
 
 type Item = {
@@ -126,7 +126,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
       return (
         <TouchableHighlight onPress={this.registerNewDomain} underlayColor="transparent">
           <View style={[styles.rowContainerTop, styles.domainListRowContainerTop]}>
-            <T style={styles.domainListRowName}>{label}</T>
+            <EdgeText style={styles.domainListRowName}>{label}</EdgeText>
             <FontAwesomeIcon name="angle-right" style={{ color: theme.primaryText }} size={theme.rem(1)} />
           </View>
         </TouchableHighlight>
@@ -136,8 +136,8 @@ class DomainListModalComponent extends React.Component<Props, State> {
       return (
         <TouchableHighlight onPress={() => this.selectItem(value)} underlayColor="transparent">
           <View style={[styles.rowContainerTop, styles.domainListRowContainerTop]}>
-            <T style={styles.domainListRowName}>{label}</T>
-            <T style={styles.domainListRowFree}>{value.isFree ? s.strings.fio_domain_free : ''}</T>
+            <EdgeText style={styles.domainListRowName}>{label}</EdgeText>
+            <EdgeText style={styles.domainListRowFree}>{value.isFree ? s.strings.fio_domain_free : ''}</EdgeText>
           </View>
         </TouchableHighlight>
       )
