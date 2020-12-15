@@ -5,7 +5,11 @@ import { type TextFieldProps, TextField } from 'react-native-material-textfield'
 
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 
-type Props = ThemeProps & TextFieldProps
+type EdgeTextFieldProps = {
+  autoFocus?: boolean
+}
+
+type Props = EdgeTextFieldProps & ThemeProps & TextFieldProps
 
 class EdgeTextFieldComponent extends React.PureComponent<Props> {
   render() {
