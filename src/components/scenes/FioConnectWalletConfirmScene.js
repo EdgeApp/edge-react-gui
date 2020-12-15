@@ -2,21 +2,25 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import { THEME } from '../../theme/variables/airbitz.js'
+import type { RootState } from '../../reducers/RootReducer'
+import type { Dispatch } from '../../types/reduxTypes'
 import type { FioConnectionWalletItem } from '../../types/types'
-import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText'
+import { Radio } from '../themed/ThemedButtons'
+import { Tile } from '../themed/Tile'
 
 type State = {
   acknowledge: boolean,
@@ -24,25 +28,25 @@ type State = {
   showSlider: boolean
 }
 
-export type FioConnectWalletConfirmStateProps = {
+type StateProps = {
   ccWalletMap: CcWalletMap,
   isConnected: boolean
 }
 
-type FioConnectWalletConfirmRouteProps = {
+type RouteProps = {
   fioWallet: EdgeCurrencyWallet,
   fioAddressName: string,
   walletsToConnect: FioConnectionWalletItem[],
   walletsToDisconnect: FioConnectionWalletItem[]
 }
 
-export type FioConnectWalletConfirmDispatchProps = {
+type DispatchProps = {
   updateConnectedWallets: (fioAddress: string, ccWalletMap: CcWalletMap) => void
 }
 
-type Props = FioConnectWalletConfirmStateProps & FioConnectWalletConfirmDispatchProps & FioConnectWalletConfirmRouteProps
+type Props = StateProps & DispatchProps & RouteProps & ThemeProps
 
-export class FioConnectWalletConfirmScene extends React.Component<Props, State> {
+export class FioConnectWalletConfirm extends React.Component<Props, State> {
   state = {
     acknowledge: false,
     connectWalletsLoading: false,
@@ -169,53 +173,44 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
     this.setState({ acknowledge: !acknowledge })
   }
 
+  renderWalletLine = (wallet: FioConnectionWalletItem) => {
+    const styles = getStyles(this.props.theme)
+    const label = `${wallet.name} (${wallet.currencyCode})`
+    return (
+      <EdgeText key={`${wallet.id}-${wallet.currencyCode}`} style={styles.content}>
+        {label}
+      </EdgeText>
+    )
+  }
+
   render() {
-    const { fioAddressName, walletsToConnect, walletsToDisconnect } = this.props
+    const { fioAddressName, walletsToConnect, walletsToDisconnect, theme } = this.props
     const { acknowledge, connectWalletsLoading, showSlider } = this.state
+    const styles = getStyles(theme)
 
     return (
       <SceneWrapper background="header">
         <ScrollView>
-          <View style={styles.info}>
-            <T style={styles.title}>{s.strings.fio_address_register_form_field_label}</T>
-            <T style={styles.content}>{fioAddressName}</T>
-          </View>
-
+          <Tile type="static" title={s.strings.fio_address_register_form_field_label} body={fioAddressName} />
           {walletsToConnect.length ? (
-            <View style={styles.info}>
-              <T style={styles.title}>{s.strings.title_fio_connect_to_wallet}</T>
-              {walletsToConnect.map(wallet => (
-                <T key={`${wallet.id}-${wallet.currencyCode}`} style={styles.content}>
-                  {wallet.name} ({wallet.currencyCode})
-                </T>
-              ))}
-            </View>
+            <Tile type="static" title={s.strings.title_fio_connect_to_wallet}>
+              {walletsToConnect.map(this.renderWalletLine)}
+            </Tile>
           ) : null}
 
           {walletsToDisconnect.length ? (
-            <View style={styles.info}>
-              <T style={styles.title}>{s.strings.title_fio_disconnect_wallets}</T>
-              {walletsToDisconnect.map(wallet => (
-                <T key={`${wallet.id}-${wallet.currencyCode}`} style={styles.content}>
-                  {wallet.name} ({wallet.currencyCode})
-                </T>
-              ))}
-            </View>
+            <Tile type="static" title={s.strings.title_fio_disconnect_wallets}>
+              {walletsToDisconnect.map(this.renderWalletLine)}
+            </Tile>
           ) : null}
 
-          <View style={styles.spacer} />
-          <View style={styles.spacer} />
-
-          <View style={styles.confirmContainer}>
-            <TouchableWithoutFeedback onPress={this.check}>
-              <View style={styles.checkBoxContainer}>
-                <View style={styles.checkBox}>{acknowledge && <View style={styles.checkBoxIconOk} />}</View>
-                <T style={styles.checkTitle}>{s.strings.fio_connect_checkbox_text}</T>
-              </View>
-            </TouchableWithoutFeedback>
-            <View style={styles.spacer} />
-            <View style={styles.spacer} />
-            {showSlider && (
+          <Radio value={acknowledge} onPress={this.check} marginRem={[2, 2, 0]}>
+            <EdgeText style={styles.checkTitle} numberOfLines={4}>
+              {s.strings.fio_connect_checkbox_text}
+            </EdgeText>
+          </Radio>
+          {showSlider && (
+            <View style={styles.slider}>
               <Slider
                 resetSlider
                 onSlidingComplete={this.confirm}
@@ -223,71 +218,51 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
                 disabledText={s.strings.send_confirmation_slide_to_confirm}
                 showSpinner={connectWalletsLoading}
               />
-            )}
-            <View style={styles.spacer} />
-            <View style={styles.spacer} />
-          </View>
+            </View>
+          )}
         </ScrollView>
       </SceneWrapper>
     )
   }
 }
 
-const rawStyles = {
-  info: {
-    backgroundColor: THEME.COLORS.SECONDARY,
-    paddingVertical: THEME.rem(1),
-    paddingHorizontal: THEME.rem(1),
-    marginBottom: THEME.rem(0.25)
-  },
-  title: {
-    color: THEME.COLORS.TRANSACTION_DETAILS_GREY_1,
-    marginBottom: THEME.rem(0.25),
-    fontSize: THEME.rem(0.75),
-    fontWeight: 'normal',
-    textAlign: 'left'
-  },
+const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(15),
+    color: theme.primaryText,
+    fontSize: theme.rem(1),
+    marginHorizontal: theme.rem(0.25),
     textAlign: 'left'
-  },
-  spacer: {
-    paddingTop: scale(20)
   },
   checkTitle: {
-    fontSize: THEME.rem(0.75),
-    color: THEME.COLORS.WHITE,
-    marginLeft: scale(15)
+    fontSize: theme.rem(0.75),
+    color: theme.primaryText,
+    marginLeft: theme.rem(1)
   },
-  checkBox: {
-    borderStyle: 'solid',
-    borderWidth: scale(2),
-    borderColor: THEME.COLORS.WHITE,
-    borderRadius: 15,
-    width: THEME.rem(1.5),
-    height: THEME.rem(1.5),
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  checkBoxIconOk: {
-    width: THEME.rem(1),
-    height: THEME.rem(1),
-    borderRadius: 12,
-    backgroundColor: THEME.COLORS.ACCENT_MINT
-  },
-  checkBoxContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: scale(8),
-    justifyContent: 'center',
-    alignItems: 'center',
-    color: THEME.COLORS.WHITE
-  },
-  confirmContainer: {
-    paddingHorizontal: THEME.rem(2)
-  },
-  wallet: {
-    backgroundColor: THEME.COLORS.TRANSPARENT
+  slider: {
+    padding: theme.rem(2)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+const FioConnectWalletConfirmScene = connect(
+  (state: RootState, ownProps: RouteProps) => {
+    const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
+    const out: StateProps = {
+      ccWalletMap,
+      isConnected: state.network.isConnected
+    }
+    return out
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    updateConnectedWallets: (fioAddress: string, ccWalletMap: CcWalletMap) => {
+      dispatch({
+        type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
+        data: {
+          fioAddress,
+          ccWalletMap
+        }
+      })
+    }
+  })
+)(withTheme(FioConnectWalletConfirm))
+
+export { FioConnectWalletConfirmScene }
