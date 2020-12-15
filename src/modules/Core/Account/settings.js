@@ -112,6 +112,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   HERC: {
     denomination: '1000000000000000000'
   },
+  ANTV1: {
+    denomination: '1000000000000000000'
+  },
   ANT: {
     denomination: '1000000000000000000'
   },
@@ -289,6 +292,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   HUR: 'object',
   HERC: 'object',
   SMART: 'object',
+  ANTV1: 'object',
   ANT: 'object',
   BAT: 'object',
   BNT: 'object',
