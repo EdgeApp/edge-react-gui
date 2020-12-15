@@ -20,6 +20,7 @@ import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScen
 import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene.js'
 import { FioAddressRegisteredScene } from '../components/scenes/FioAddressRegisteredScene'
 import { FioAddressSettingsScene } from '../components/scenes/FioAddressSettingsScene'
+import { FioConnectWalletConfirmScene } from '../components/scenes/FioConnectWalletConfirmScene'
 import { FioDomainSettingsScene } from '../components/scenes/FioDomainSettingsScene'
 import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConfirmationScene.js'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
@@ -42,7 +43,6 @@ import { FioAddressDetailsConnector } from '../connectors/scenes/FioAddressDetai
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import { FioAddressRegisterConnector } from '../connectors/scenes/FioAddressRegisterConnector'
 import { FioAddressRegisterSelectWalletConnector } from '../connectors/scenes/FioAddressRegisterSelectWalletConnector'
-import { FioConnectWalletConfirmConnector } from '../connectors/scenes/FioConnectWalletConfirmConnector'
 import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConnector.js'
@@ -674,7 +674,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.FIO_CONNECT_TO_WALLETS_CONFIRM}
               navTransparent
-              component={ifLoggedIn(FioConnectWalletConfirmConnector)}
+              component={ifLoggedIn(FioConnectWalletConfirmScene)}
               renderTitle={<HeaderTitle title={s.strings.title_fio_connect_to_wallet} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={<SideMenuButton />}
