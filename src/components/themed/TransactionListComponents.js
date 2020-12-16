@@ -10,8 +10,12 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { TransactionListTop } from '../themed/TransactionListTop.js'
 
-function TopComponent(props: { loading: boolean, isEmpty: boolean }) {
-  return props.loading ? <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" /> : <TransactionListTop isEmpty={props.isEmpty} />
+function TopComponent(props: { walletId: string, loading: boolean, isEmpty: boolean }) {
+  return props.loading ? (
+    <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" />
+  ) : (
+    <TransactionListTop walletId={props.walletId} isEmpty={props.isEmpty} />
+  )
 }
 
 export function EmptyLoader() {
@@ -32,12 +36,6 @@ export function SectionHeader(props: { title?: string }) {
   )
 }
 
-// Spacer only
-export function SectionFooter() {
-  const theme = useTheme()
-  return <View style={{ height: theme.rem(0.5) }} />
-}
-
 const getStyles = cacheStyles((theme: Theme) => ({
   emptyLoader: {
     flex: 1,
@@ -46,13 +44,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(10)
   },
   headerContainer: {
-    paddingHorizontal: theme.rem(1.5),
-    marginBottom: theme.rem(0.125)
+    paddingLeft: theme.rem(2),
+    paddingVertical: theme.rem(0.5)
   },
   headerDate: {
-    marginVertical: theme.rem(0.5),
     fontSize: theme.rem(0.75),
-    color: theme.secondaryText
+    fontFamily: theme.fontFaceBold
   }
 }))
 
