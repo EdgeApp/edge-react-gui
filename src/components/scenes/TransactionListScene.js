@@ -10,7 +10,7 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { BuyCrypto } from '../themed/BuyCrypto.js'
-import { EmptyLoader, SectionFooter, SectionHeader, Top } from '../themed/TransactionListComponents.js'
+import { EmptyLoader, SectionHeader, Top } from '../themed/TransactionListComponents.js'
 import { TransactionListRow } from '../themed/TransactionListRow.js'
 
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
@@ -103,8 +103,6 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   renderTop = () => <Top walletId={this.props.selectedWalletId} isEmpty={this.props.transactions.length < 1} />
 
-  renderSectionFooter = () => <SectionFooter />
-
   keyExtractor = (item: TransactionListTx) => String(item.key)
   render() {
     const transactions = this.state.reset ? [] : this.props.transactions
@@ -114,7 +112,6 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
           sections={this.section(transactions)}
           renderItem={this.renderTransaction}
           renderSectionHeader={this.renderSectionHeader}
-          renderSectionFooter={this.renderSectionFooter}
           initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
           onEndReached={this.handleScrollEnd}
           onEndReachedThreshold={SCROLL_THRESHOLD}
