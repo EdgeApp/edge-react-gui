@@ -13,9 +13,11 @@ pipeline {
   parameters {
     booleanParam(name: 'ANDROID_BUILD', defaultValue: true, description: 'Build an Android version')
     booleanParam(name: 'IOS_BUILD', defaultValue: true, description: 'Build an iOS version')
+    booleanParam(name: 'VERBOSE', defaultValue: false, description: 'Complete build log output')
   }
   environment {
     LC_CTYPE = 'en_US.UTF-8'
+    DISABLE_XCPRETTY = "${params.VERBOSE}"
   }
 
   stages {
