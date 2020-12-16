@@ -172,7 +172,8 @@ function buildIos(buildObj) {
   call(`security set-keychain-settings -l ${process.env.HOME || ''}/Library/Keychains/login.keychain`)
 
   cmdStr = `xcodebuild -workspace ${buildObj.xcodeWorkspace} -scheme ${buildObj.xcodeScheme} archive`
-  cmdStr = cmdStr + ' | xcpretty && exit ${PIPE' + 'STATUS[0]}'
+  if (process.env.DISABLE_XCPRETTY === 'false') cmdStr = cmdStr + ' | xcpretty'
+  cmdStr = cmdStr + ' && exit ${PIPE' + 'STATUS[0]}'
   call(cmdStr)
 
   const buildDate = builddate()
