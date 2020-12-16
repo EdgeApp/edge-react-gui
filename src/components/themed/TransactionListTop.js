@@ -4,11 +4,11 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import credLogo from '../../assets/images/cred_logo.png'
-import { Fontello } from '../../assets/vector/index.js'
 import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import * as intl from '../../locales/intl.js'
@@ -19,8 +19,10 @@ import { convertNativeToDenomination, decimalOrZero, getDefaultDenomination, get
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox } from './ThemedButtons.js'
+import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 type OwnProps = {
+  walletId: string,
   isEmpty: boolean
 }
 
@@ -61,33 +63,28 @@ class TransactionListTopComponent extends React.PureComponent<Props> {
   }
 
   renderBalanceBox = () => {
-    const {
-      cryptoAmount,
-      currencyCode,
-      currencyDenominationSymbol,
-      fiatSymbol,
-      fiatBalance,
-      fiatCurrencyCode,
-      walletName,
-      isAccountBalanceVisible,
-      theme
-    } = this.props
+    const { cryptoAmount, currencyCode, fiatSymbol, fiatBalance, fiatCurrencyCode, walletId, walletName, isAccountBalanceVisible, theme } = this.props
     const styles = getStyles(theme)
 
     return (
-      <TouchableOpacity onPress={this.props.toggleBalanceVisibility} style={styles.headerContainer}>
-        {isAccountBalanceVisible ? (
-          <View>
-            <EdgeText>{walletName}</EdgeText>
-            <EdgeText style={styles.currencyText}>{currencyDenominationSymbol + ' ' + cryptoAmount + ' ' + currencyCode}</EdgeText>
-            <EdgeText>{fiatSymbol + ' ' + fiatBalance + ' ' + fiatCurrencyCode}</EdgeText>
+      <View style={styles.balanceBoxContainer}>
+        <View style={styles.balanceBoxRow}>
+          <TouchableOpacity onPress={this.props.toggleBalanceVisibility} style={styles.balanceBoxBalanceContainer}>
+            {isAccountBalanceVisible ? (
+              <>
+                <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
+                <EdgeText style={styles.balanceBoxCurrency}>{cryptoAmount + ' ' + currencyCode}</EdgeText>
+                <EdgeText style={styles.balanceFiatBalance}>{fiatSymbol + fiatBalance + ' ' + fiatCurrencyCode}</EdgeText>
+              </>
+            ) : (
+              <EdgeText style={styles.balanceFiatShow}>{s.strings.string_show_balance}</EdgeText>
+            )}
+          </TouchableOpacity>
+          <View style={styles.balanceBoxWalletProgressIconContainer}>
+            <WalletProgressIcon walletId={walletId} size={theme.rem(2.5)} />
           </View>
-        ) : (
-          <View>
-            <EdgeText style={styles.showBalanceText}>{s.strings.string_show_balance}</EdgeText>
-          </View>
-        )}
-      </TouchableOpacity>
+        </View>
+      </View>
     )
   }
 
@@ -100,15 +97,17 @@ class TransactionListTopComponent extends React.PureComponent<Props> {
         {this.renderBalanceBox()}
         <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={Actions.request} style={styles.buttons}>
-            <Fontello name="request" size={theme.rem(2.5)} color={theme.iconTappable} />
+            <Ionicons name="arrow-down" size={theme.rem(1.5)} color={theme.iconTappable} />
             <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
           </TouchableOpacity>
+          <View style={styles.buttonsDivider} />
           <TouchableOpacity onPress={Actions.scan} style={styles.buttons}>
-            <Fontello name="send" size={theme.rem(2.5)} color={theme.iconTappable} />
+            <Ionicons name="arrow-up" size={theme.rem(1.5)} color={theme.iconTappable} />
             <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
           </TouchableOpacity>
         </View>
         {this.renderEarnInterestCard()}
+
         {!isEmpty && (
           <View style={styles.transactionsDividerContainer}>
             <EdgeText style={styles.transactionsDividerText}>{s.strings.fragment_transaction_list_transaction}</EdgeText>
@@ -122,38 +121,59 @@ class TransactionListTopComponent extends React.PureComponent<Props> {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
-    paddingHorizontal: theme.rem(1.5),
-    paddingVertical: theme.rem(1),
-    marginBottom: theme.rem(0.75)
+    paddingLeft: theme.rem(2),
+    marginBottom: theme.rem(0.5)
   },
 
   // Balance Box
-  headerContainer: {
-    height: theme.rem(5),
-    justifyContent: 'center'
+  balanceBoxContainer: {
+    height: theme.rem(5.25),
+    marginVertical: theme.rem(1),
+    marginRight: theme.rem(2)
   },
-  currencyText: {
-    fontSize: theme.rem(1.25),
+  balanceBoxRow: {
+    flexDirection: 'row'
+  },
+  balanceBoxBalanceContainer: {
+    flex: 1
+  },
+  balanceBoxWalletName: {
+    fontSize: theme.rem(1.25)
+  },
+  balanceBoxCurrency: {
+    fontSize: theme.rem(2),
     fontFamily: theme.fontFaceBold
   },
-  showBalanceText: {
-    fontSize: theme.rem(1.75)
+  balanceFiatBalance: {
+    fontSize: theme.rem(1.25)
+  },
+  balanceFiatShow: {
+    fontSize: theme.rem(2)
+  },
+  balanceBoxWalletProgressIconContainer: {
+    height: theme.rem(7.75)
   },
 
   // Send/Receive Buttons
   buttonsContainer: {
-    flex: 1,
     flexDirection: 'row',
-    paddingVertical: theme.rem(1)
+    marginBottom: theme.rem(1)
   },
   buttons: {
-    flex: 1,
     flexDirection: 'row',
-    alignItems: 'flex-end'
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: theme.rem(6),
+    height: theme.rem(3)
+  },
+  buttonsDivider: {
+    width: theme.rem(2)
   },
   buttonsText: {
-    fontSize: theme.rem(1.75),
-    marginLeft: theme.rem(0.5)
+    fontSize: theme.rem(1),
+    color: theme.textLink,
+    fontFamily: theme.fontFaceBold,
+    marginLeft: theme.rem(0.25)
   },
 
   // Earn Interest Card
@@ -175,14 +195,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   // Transactions Divider
   transactionsDividerContainer: {
-    flex: 1,
-    marginTop: theme.rem(1),
-    paddingBottom: theme.rem(0.5),
+    paddingBottom: theme.rem(0.75),
     borderBottomWidth: theme.thinLineWidth,
     borderBottomColor: theme.lineDivider
   },
   transactionsDividerText: {
-    fontSize: theme.rem(1),
     fontFamily: theme.fontFaceBold
   }
 }))

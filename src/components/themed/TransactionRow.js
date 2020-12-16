@@ -2,9 +2,9 @@
 
 import * as React from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { Fontello } from '../../assets/vector/index.js'
 import s from '../../locales/strings'
 import type { TransactionListTx } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
@@ -56,14 +56,14 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     if (isSentTransaction) {
       transactionText =
         transaction.metadata && transaction.metadata.name ? transaction.metadata.name : s.strings.fragment_transaction_list_sent_prefix + selectedCurrencyName
-      transactionIcon = <Fontello name="send" size={theme.rem(1.75)} color={theme.negativeText} />
+      transactionIcon = <Ionicons name="arrow-up" size={theme.rem(1.25)} color={theme.negativeText} />
       transactionStyle = styles.iconSent
     } else {
       transactionText =
         transaction.metadata && transaction.metadata.name
           ? transaction.metadata.name
           : s.strings.fragment_transaction_list_receive_prefix + selectedCurrencyName
-      transactionIcon = <Fontello name="request" size={theme.rem(1.75)} color={theme.positiveText} />
+      transactionIcon = <Ionicons name="arrow-down" size={theme.rem(1.25)} color={theme.positiveText} />
       transactionStyle = styles.iconRequest
     }
 
@@ -142,21 +142,22 @@ class TransactionRowComponent extends React.PureComponent<Props> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   rowContainer: {
-    flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: theme.rem(1.5),
-    paddingHorizontal: theme.rem(1.5)
+    height: theme.rem(4.25),
+    marginHorizontal: theme.rem(1),
+    paddingHorizontal: theme.rem(1)
   },
   iconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: theme.transactionListIconBackground,
-    paddingHorizontal: theme.rem(0.5),
-    width: theme.rem(3.25),
-    height: theme.rem(3.25),
+    width: theme.rem(2),
+    height: theme.rem(2),
+    marginRight: theme.rem(1),
     borderWidth: theme.mediumLineWidth,
-    borderRadius: theme.rem(1)
+    borderRadius: theme.rem(0.75)
   },
   iconSent: {
     borderColor: theme.negativeText,
@@ -181,32 +182,27 @@ const getStyles = cacheStyles((theme: Theme) => ({
     elevation: theme.rem(3)
   },
   icon: {
-    width: theme.rem(3),
-    height: theme.rem(3),
-    borderRadius: theme.rem(0.875)
+    width: theme.rem(1.75),
+    height: theme.rem(1.75),
+    borderRadius: theme.rem(0.5)
   },
   transactionContainer: {
     flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: theme.rem(0.5)
+    justifyContent: 'center'
   },
   transactionRow: {
-    flexDirection: 'row',
-    marginVertical: theme.rem(0.125)
+    flexDirection: 'row'
   },
   transactionText: {
     flex: 1,
-    fontFamily: theme.fontFaceBold,
-    fontSize: theme.rem(0.75)
+    fontFamily: theme.fontFaceBold
   },
   positiveCryptoAmount: {
-    fontSize: theme.rem(0.75),
     fontFamily: theme.fontFaceBold,
     color: theme.positiveText,
     textAlign: 'right'
   },
   negativeCryptoAmount: {
-    fontSize: theme.rem(0.75),
     fontFamily: theme.fontFaceBold,
     color: theme.negativeText,
     textAlign: 'right'
