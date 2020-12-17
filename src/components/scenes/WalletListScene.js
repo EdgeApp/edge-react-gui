@@ -21,7 +21,7 @@ import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tuto
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { WalletListSlidingTutorialModal } from '../modals/WalletListSlidingTutorialModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -38,7 +38,8 @@ type StateProps = {
   exchangeRates: Object,
   userId: string,
   wallets: { [walletId: string]: GuiWallet },
-  disklet: Disklet
+  disklet: Disklet,
+  passwordReminderModal: boolean
 }
 
 type DispatchProps = {
@@ -63,15 +64,13 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   }
 
   showTutorial = async () => {
-    const { disklet, userId } = this.props
+    const { disklet, passwordReminderModal, userId } = this.props
     try {
       const userTutorialList = await getWalletListSlideTutorial(userId, disklet)
       const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
 
-      if (tutorialCount < 2) {
-        Airship.show(bridge => (
-          <ButtonsModal bridge={bridge} title={s.strings.wallet_list_swipe_tutorial_title} buttons={{ ok: { label: s.strings.string_ok } }} />
-        ))
+      if (tutorialCount < 2 && !passwordReminderModal) {
+        Airship.show(bridge => <WalletListSlidingTutorialModal bridge={bridge} />)
         this.setState({ showSlidingTutorial: true })
         userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
         await setUserTutorialList(userTutorialList, disklet)
@@ -193,7 +192,8 @@ export const WalletListScene = connect(
       exchangeRates: state.exchangeRates,
       userId: state.core.account.id,
       wallets: state.ui.wallets.byId,
-      disklet: state.core.disklet
+      disklet: state.core.disklet,
+      passwordReminderModal: state.ui.passwordReminder.needsPasswordCheck
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
