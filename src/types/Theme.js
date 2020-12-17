@@ -157,6 +157,9 @@ export type Theme = {
   underlayColor: string,
   underlayOpacity: number,
 
+  // Tutorials
+  tutorialModalUnderlay: string,
+
   // Images
   settingsChangellyLogo: string,
   settingsChangenowLogo: string,
@@ -168,5 +171,6 @@ export type Theme = {
   settingsSwitchainLogo: string,
   settingsSideshiftLogo: string,
   settingsTotleLogo: string,
-  fioAddressLogo: string
+  fioAddressLogo: string,
+  walletListSlideTutorialImage: string
 }
