@@ -12,6 +12,7 @@ import godexLogo from '../../assets/images/exchange/settingsExchangeGodex.png'
 import switchainLogo from '../../assets/images/exchange/settingsExchangeSwitchain.png'
 import totleLogo from '../../assets/images/exchange/settingsExchangeTotle.png'
 import fioAddressLogo from '../../assets/images/list_fioAddress.png'
+import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_light.gif'
 import { type Theme } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
 
@@ -201,6 +202,9 @@ export const edgeLight: Theme = {
   underlayColor: palette.white,
   underlayOpacity: 0.95,
 
+  // Tutorials
+  walletListSlidingTutorialModalUnderlay: palette.transparent,
+
   // Images
   settingsChangellyLogo: changellyLogo,
   settingsChangenowLogo: changenowLogo,
@@ -211,5 +215,6 @@ export const edgeLight: Theme = {
   settingsGodexLogo: godexLogo,
   settingsSwitchainLogo: switchainLogo,
   settingsTotleLogo: totleLogo,
-  fioAddressLogo: fioAddressLogo
+  fioAddressLogo: fioAddressLogo,
+  walletListSlideTutorialImage: walletListSlidingTutorial
 }
