@@ -11,7 +11,6 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import {
-  checkCurrentPassword,
   lockSettings,
   setAutoLogoutTimeInSecondsRequest,
   setDeveloperModeOn,
@@ -50,7 +49,6 @@ type StateProps = {
   touchIdEnabled: boolean
 }
 type DispatchProps = {
-  confirmPassword(password: string): void,
   dispatchUpdateEnableTouchIdEnable(arg: boolean, account: EdgeAccount): void,
   lockSettings(): void,
   onTogglePinLoginEnabled(enableLogin: boolean): void,
@@ -279,9 +277,6 @@ export const SettingsScene = connect(
     touchIdEnabled: state.ui.settings.isTouchEnabled
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    confirmPassword(arg: string) {
-      dispatch(checkCurrentPassword(arg))
-    },
     dispatchUpdateEnableTouchIdEnable(arg: boolean, account: EdgeAccount) {
       dispatch(updateTouchIdEnabled(arg, account))
     },

@@ -147,11 +147,6 @@ export const getDefaultIsoFiat = (state: RootState) => {
   return defaultIsoFiat
 }
 
-export const getConfirmPasswordErrorMessage = (state: RootState) => {
-  const settings = getSettings(state)
-  return settings.confirmPasswordError
-}
-
 export const getPinLoginEnabled = (state: RootState) => {
   const settings = getSettings(state)
   const pinLoginEnabled = settings.pinLoginEnabled
