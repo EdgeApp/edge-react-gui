@@ -175,7 +175,7 @@ Array [
     "deepPath": "",
     "deepQuery": Object {},
     "description": "Fee: 1% / Settlement: 1 - 5days
-Limit: $2500/week",
+Limit: $5000/week",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": Array [
