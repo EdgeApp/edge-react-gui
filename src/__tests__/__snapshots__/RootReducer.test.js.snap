@@ -447,7 +447,6 @@ Object {
       "autoLogoutTimeInSeconds": 3600,
       "bluetoothMode": false,
       "changesLocked": true,
-      "confirmPasswordError": "",
       "countryCode": "",
       "customTokens": Array [],
       "defaultFiat": "USD",

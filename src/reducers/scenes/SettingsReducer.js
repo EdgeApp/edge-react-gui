@@ -22,7 +22,6 @@ export const initialState = {
   loginStatus: null,
   isTouchSupported: false,
   isTouchEnabled: false,
-  confirmPasswordError: '',
   isAccountBalanceVisible: true,
   mostRecentWallets: [],
   spendingLimits: {
@@ -89,7 +88,6 @@ export type SettingsState = {
     allCurrencyInfos: EdgeCurrencyInfo[],
     supportedWalletTypes: string[]
   },
-  confirmPasswordError: string,
   isAccountBalanceVisible: boolean,
   mostRecentWallets: MostRecentWallet[],
   spendingLimits: {
@@ -262,14 +260,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
     case 'DEVELOPER_MODE_OFF': {
       return { ...state, developerModeOn: false }
-    }
-    case 'SET_CONFIRM_PASSWORD_ERROR': {
-      if (!action.data) throw new Error('Invalid action')
-      const { confirmPasswordError } = action.data
-      return {
-        ...state,
-        confirmPasswordError: confirmPasswordError
-      }
     }
 
     case 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED': {
