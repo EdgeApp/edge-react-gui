@@ -5212,10 +5212,10 @@ edge-exchange-plugins@^0.11.14:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.6.23:
-  version "0.6.23"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.23.tgz#543653ad0b6b6cc3764cf599717f4eb2caea0c46"
-  integrity sha512-zjPZgkxqxlIPt9ZvDM6PgOs0u7DuIcUcawj03OQRRtmhU8BhiPaf0RIuYkDByvCFsH1IZvnnxmjeztDnGbo/SA==
+edge-login-ui-rn@^0.6.24:
+  version "0.6.24"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.24.tgz#41f2cbcfbed569f2a253d6e170c901e5a7c05f61"
+  integrity sha512-HjZrNUtmoFrf9CM5j786e+V1l48n1sMpIW/cDbuvAbXBPizgo0J9Lo8rb62huT7e7JnQ+XF0gKUROCJmgH8w0g==
   dependencies:
     cleaners "^0.3.1"
     material-ui "^0.20.0"
