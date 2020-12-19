@@ -141,6 +141,7 @@ const asConfig = asObject({
 
   ...configComment('app options'),
   USE_FAKE_CORE: asOptional(asBoolean, false),
+  USE_TEST_AUTH_SERVER: asOptional(asBoolean, false),
   USE_FIREBASE: asOptional(asBoolean, true),
   YOLO_DEEP_LINK: asOptional(asEither(asString, asNull), null),
   YOLO_PASSWORD: asOptional(asEither(asString, asNull), null),
