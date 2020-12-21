@@ -25,6 +25,7 @@ import { WalletListSlidingTutorialModal } from '../modals/WalletListSlidingTutor
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
+import { PasswordReminderModal } from '../themed/PasswordReminderModal.js'
 import { PromoCard } from '../themed/PromoCard.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { WalletList } from '../themed/WalletList.js'
@@ -39,7 +40,7 @@ type StateProps = {
   userId: string,
   wallets: { [walletId: string]: GuiWallet },
   disklet: Disklet,
-  passwordReminderModal: boolean
+  needsPasswordCheck: boolean
 }
 
 type DispatchProps = {
@@ -64,12 +65,12 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   }
 
   showTutorial = async () => {
-    const { disklet, passwordReminderModal, userId } = this.props
+    const { disklet, userId } = this.props
     try {
       const userTutorialList = await getWalletListSlideTutorial(userId, disklet)
       const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
 
-      if (tutorialCount < 2 && !passwordReminderModal) {
+      if (tutorialCount < 2) {
         Airship.show(bridge => <WalletListSlidingTutorialModal bridge={bridge} />)
         this.setState({ showSlidingTutorial: true })
         userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
@@ -81,7 +82,11 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    this.showTutorial()
+    if (this.props.needsPasswordCheck) {
+      Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)
+    } else {
+      this.showTutorial()
+    }
   }
 
   handleSort = () => this.setState({ sorting: true })
@@ -193,7 +198,7 @@ export const WalletListScene = connect(
       userId: state.core.account.id,
       wallets: state.ui.wallets.byId,
       disklet: state.core.disklet,
-      passwordReminderModal: state.ui.passwordReminder.needsPasswordCheck
+      needsPasswordCheck: state.ui.passwordReminder.needsPasswordCheck
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
