@@ -1,8 +1,8 @@
 // @flow
 
-import { showError } from '../../../../components/services/AirshipInstance.js'
-import type { Dispatch, GetState } from '../../../../types/reduxTypes.js'
-import { setPasswordReminderRequest } from '../../../Core/Account/settings.js'
+import { showError } from '../components/services/AirshipInstance.js'
+import { setPasswordReminderRequest } from '../modules/Core/Account/settings.js'
+import type { Dispatch, GetState } from '../types/reduxTypes.js'
 
 export const requestChangePassword = () => ({
   type: 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD'
