@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -14,6 +14,9 @@ type Props = {
 
   // If this is set, the component will insert a text node before the other children:
   label?: string,
+
+  // If this is set, show a spinner:
+  spinner?: boolean,
 
   // The gap around the button. Takes 0-4 numbers (top, right, bottom, left),
   // using the same logic as the web `margin` property. Defaults to 0.
@@ -34,26 +37,28 @@ type SquareButtonProps = Props & ColorProps
 type RadioButtonProps = Props & { value: boolean, right?: boolean }
 
 export function PrimaryButton(props: Props) {
-  const { children, label, onPress, disabled } = props
+  const { children, label, onPress, disabled, spinner } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
     <TouchableOpacity style={[styles.primaryButton, spacingStyles(props, theme), disabled ? styles.disabled : null]} onPress={onPress} disabled={disabled}>
       {label != null ? <Text style={styles.primaryText}>{label}</Text> : null}
+      {spinner != null ? <ActivityIndicator color={theme.primaryButtonText} style={styles.spinner} /> : null}
       {children}
     </TouchableOpacity>
   )
 }
 
 export function SecondaryButton(props: Props) {
-  const { children, label, onPress, disabled } = props
+  const { children, label, onPress, disabled, spinner } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
     <TouchableOpacity style={[styles.secondaryButton, spacingStyles(props, theme), disabled ? styles.disabled : null]} onPress={onPress} disabled={disabled}>
       {label != null ? <Text style={styles.secondaryText}>{label}</Text> : null}
+      {spinner != null ? <ActivityIndicator color={theme.primaryButtonText} style={styles.spinner} /> : null}
       {children}
     </TouchableOpacity>
   )
@@ -220,6 +225,7 @@ const getStyles = cacheStyles((theme: Theme) => {
       shadowRadius: theme.rem(0.25),
 
       elevation: theme.rem(0.5)
-    }
+    },
+    spinner: { height: theme.rem(2) }
   }
 })
