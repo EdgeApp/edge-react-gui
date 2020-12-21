@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 
 import { CHANGE_PASSWORD } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { checkPasswordSuccess, postponePasswordReminder, requestChangePassword } from '../../modules/UI/components/PasswordReminderModal/actions.js'
+import { postponePasswordReminder, requestChangePassword } from '../../modules/UI/components/PasswordReminderModal/actions.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { EdgeTextField } from './EdgeTextField.js'
@@ -27,7 +27,6 @@ type StateProps = {
 
 type DispatchProps = {
   onPostpone: () => void,
-  onSubmitSuccess: () => void,
   onRequestChangePassword: () => void
 }
 
@@ -61,14 +60,13 @@ class PasswordReminderModalComponent extends React.PureComponent<Props, State> {
   }
 
   handleSubmit = () => {
-    const { bridge, account, onSubmitSuccess } = this.props
+    const { bridge, account } = this.props
     const { password } = this.state
 
     this.setState({ spinning: true })
     account.checkPassword(password).then(isValidPassword => {
       if (isValidPassword) {
         this.setState({ spinning: false })
-        onSubmitSuccess()
         showToast(s.strings.password_reminder_great_job)
         setTimeout(() => bridge.resolve(), 10)
       } else {
@@ -118,7 +116,6 @@ export const PasswordReminderModal = connect(
     account: state.core.account
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    onSubmitSuccess: () => dispatch(checkPasswordSuccess()),
     onRequestChangePassword: () => dispatch(requestChangePassword()),
     onPostpone: () => dispatch(postponePasswordReminder())
   })
