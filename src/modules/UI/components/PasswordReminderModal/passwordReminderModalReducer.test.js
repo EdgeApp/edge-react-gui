@@ -2,7 +2,8 @@
 
 /* globals test describe expect */
 
-import { checkPasswordFail, checkPasswordStart, checkPasswordSuccess, initialState, passwordReminderModal as uut } from './indexPasswordReminderModal.js'
+import { checkPasswordFail, checkPasswordStart, checkPasswordSuccess } from './actions.js'
+import { initialState, passwordReminderModalReducer as uut } from './passwordReminderModalReducer.js'
 
 describe('PasswordReminderModal', () => {
   test('initialState', () => {
