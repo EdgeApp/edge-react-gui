@@ -5,7 +5,10 @@ import { type Reducer, combineReducers } from 'redux'
 import { type FioAddressSceneState, fioAddress } from '../../modules/FioAddress/reducer.js'
 import { type ControlPanelState, controlPanel } from '../../modules/UI/components/ControlPanel/reducer.js'
 import { type ExchangeRateState, exchangeRate } from '../../modules/UI/components/ExchangeRate/reducer.js'
-import { type PasswordReminderModalState, passwordReminderModal } from '../../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
+import {
+  type PasswordReminderModalState,
+  passwordReminderModalReducer as passwordReminderModal
+} from '../../modules/UI/components/PasswordReminderModal/passwordReminderModalReducer.js'
 import type { Action } from '../../types/reduxTypes.js'
 import { type EditTokenState, editToken } from '../EditTokenReducer.js'
 import { type RequestTypeState, requestType } from '../RequestTypeReducer.js'
