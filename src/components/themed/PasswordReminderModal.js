@@ -9,11 +9,7 @@ import { connect } from 'react-redux'
 
 import { CHANGE_PASSWORD } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import {
-  checkPasswordSuccess,
-  postponePasswordReminder,
-  requestChangePassword
-} from '../../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
+import { checkPasswordSuccess, postponePasswordReminder, requestChangePassword } from '../../modules/UI/components/PasswordReminderModal/actions.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { EdgeTextField } from './EdgeTextField.js'
