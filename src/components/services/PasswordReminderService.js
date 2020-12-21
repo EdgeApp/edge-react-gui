@@ -4,7 +4,7 @@ import { isEqual } from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import { setPasswordReminder } from '../../modules/UI/components/PasswordReminderModal/actions.js'
+import { setPasswordReminder } from '../../actions/PasswordReminderActions.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { PasswordReminder } from '../../types/types.js'
 
