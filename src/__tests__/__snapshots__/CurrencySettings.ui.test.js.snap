@@ -5,7 +5,7 @@ exports[`CurrencySettings should render 1`] = `
   background="theme"
   hasTabs={false}
 >
-  <ScrollViewMock>
+  <ScrollView>
     <WithTheme(SettingsHeaderRowComponent)
       text="Denominations"
     />
@@ -31,8 +31,7 @@ exports[`CurrencySettings should render 1`] = `
           >
             ₿
           </Text>
-           - 
-          BTG
+           - BTG
         </Text>
       }
       onPress={[Function]}
@@ -61,8 +60,7 @@ exports[`CurrencySettings should render 1`] = `
           >
             m₿
           </Text>
-           - 
-          mBTG
+           - mBTG
         </Text>
       }
       onPress={[Function]}
@@ -91,14 +89,13 @@ exports[`CurrencySettings should render 1`] = `
           >
             ƀ
           </Text>
-           - 
-          bits
+           - bits
         </Text>
       }
       onPress={[Function]}
       text=""
       value={true}
     />
-  </ScrollViewMock>
+  </ScrollView>
 </SceneWrapper>
 `;

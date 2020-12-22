@@ -18,7 +18,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 
-export type State = {
+type State = {
   acknowledge: boolean,
   connectWalletsLoading: boolean,
   showSlider: boolean
@@ -29,7 +29,7 @@ export type FioConnectWalletConfirmStateProps = {
   isConnected: boolean
 }
 
-export type FioConnectWalletConfirmRouteProps = {
+type FioConnectWalletConfirmRouteProps = {
   fioWallet: EdgeCurrencyWallet,
   fioAddressName: string,
   walletsToConnect: FioConnectionWalletItem[],
@@ -151,7 +151,7 @@ export class FioConnectWalletConfirmScene extends React.Component<Props, State> 
           return
         }
         this.resetSlider()
-        showError(e.message)
+        showError(e)
       }
       this.setState({ connectWalletsLoading: false })
     } else {

@@ -29,7 +29,7 @@ import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLog
 import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
-import { COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW, PLUGIN_VIEW_LEGACY } from '../../constants/indexConstants.js'
+import { COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW } from '../../constants/indexConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
@@ -209,9 +209,6 @@ class GuiPluginList extends React.Component<Props, State> {
     }
 
     // Launch!
-    if (plugin.isLegacy) {
-      return Actions[PLUGIN_VIEW_LEGACY]({ plugin })
-    }
     return Actions[PLUGIN_VIEW]({ plugin, deepPath, deepQuery })
   }
 

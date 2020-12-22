@@ -1,8 +1,9 @@
 // @flow
 
+import Clipboard from '@react-native-community/clipboard'
 import { PrimaryButton } from 'edge-components'
 import * as React from 'react'
-import { Clipboard, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 import s from '../../locales/strings.js'

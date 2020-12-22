@@ -159,8 +159,7 @@ Run deploy
 
 ## Debugging
 
-For debugging, we recommend using React Native Debugger. Only React Native
-Debugger 0.10 is supported (until upgrade to React Native 63).
+For debugging, we recommend using [React Native Debugger](https://github.com/jhen0409/react-native-debugger). The current latest version (0.11) works well.
 
 ### Installation
 

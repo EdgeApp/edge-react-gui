@@ -70,7 +70,7 @@ export class AirshipFullScreenSpinner extends React.Component<Props> {
     return (
       <>
         <Text style={[styles.text, { marginRight: unit }]}>{message}</Text>
-        <ActivityIndicator />
+        <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
       </>
     )
   }

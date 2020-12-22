@@ -15,7 +15,7 @@ export const dropDownStyle = {
   ...MenuDropDownStyle,
   icon: { ...MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
 }
-export const mapStateToProps = (state: RootState): StateProps => {
+const mapStateToProps = (state: RootState): StateProps => {
   const data = [
     {
       label: s.strings.dropdown_exchange_max_amount,
@@ -38,7 +38,7 @@ export const mapStateToProps = (state: RootState): StateProps => {
   }
 }
 
-export const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   onSelect: (value: Object) => {
     switch (value.title) {
       case Constants.HELP_VALUE:

@@ -97,14 +97,18 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
             </View>
             <View style={styles.inputSubCategoryContainter}>
               <FormField
+                {...MaterialInputOnWhite}
+                containerStyle={{
+                  ...MaterialInputOnWhite.containerStyle,
+                  height: THEME.rem(3.44),
+                  width: '100%'
+                }}
                 autoFocus
-                blurOnSubmit
                 returnKeyType="done"
                 autoCapitalize="none"
                 label={s.strings.transaction_details_choose_a_sub_category}
-                style={materialInput}
-                fontSize={materialInput.fontSize}
-                labelFontSize={materialInput.labelFontSize}
+                fontSize={THEME.rem(0.9)}
+                labelFontSize={THEME.rem(0.65)}
                 onChangeText={this.onChangeSubCategory}
                 onSubmitEditing={() => bridge.resolve(null)}
                 value={subCategory}
@@ -144,17 +148,6 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
       return splittedSubCategory[0].toLowerCase() !== categories[category].syntax.toLowerCase()
     })
     return [...selectedSubcategories, ...filteredSubcategories]
-  }
-}
-
-const materialInput = {
-  ...MaterialInputOnWhite,
-  fontSize: THEME.rem(0.9),
-  labelFontSize: THEME.rem(0.65),
-  container: {
-    ...MaterialInputOnWhite.container,
-    height: THEME.rem(3.44),
-    width: '100%'
   }
 }
 

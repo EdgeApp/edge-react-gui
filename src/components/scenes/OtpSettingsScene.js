@@ -1,8 +1,9 @@
 // @flow
 
+import Clipboard from '@react-native-community/clipboard'
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Clipboard, Text, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'

@@ -13,7 +13,7 @@ import sendImage from '../../assets/images/transactions/transactions-send.png'
 import TransactionRow from '../../connectors/TransactionRowConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
 import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
@@ -101,7 +101,7 @@ export class TransactionList extends React.Component<Props, State> {
     if (this.props.numTransactions) {
       return (
         <View style={styles.emptyListLoader}>
-          <ActivityIndicator size="large" />
+          <ActivityIndicator color={THEME.COLORS.GRAY_2} size="large" />
         </View>
       )
     }
@@ -160,7 +160,7 @@ export class TransactionList extends React.Component<Props, State> {
 
     // should we get rid of "loading" area? Currently unused
     if (loading) {
-      return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" />
+      return <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={{ flex: 1, alignSelf: 'center' }} size="large" />
     }
 
     let logo
@@ -176,12 +176,12 @@ export class TransactionList extends React.Component<Props, State> {
     }
 
     const cryptoAmount: string = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto) // convert to correct denomination
-    const cryptoAmountString = cryptoAmount ? intl.formatNumber(UTILS.decimalOrZero(bns.toFixed(cryptoAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
+    const cryptoAmountString = cryptoAmount ? formatNumber(UTILS.decimalOrZero(bns.toFixed(cryptoAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
 
     // beginning of fiat balance
     let fiatBalanceString
     const receivedFiatSymbol = fiatSymbol ? UTILS.getFiatSymbol(isoFiatCurrencyCode) : ''
-    const fiatBalanceFormat = `${intl.formatNumber(balanceInFiat && balanceInFiat > 0.000001 ? balanceInFiat : 0, { toFixed: 2 })} ${fiatCurrencyCode}`
+    const fiatBalanceFormat = `${formatNumber(balanceInFiat && balanceInFiat > 0.000001 ? balanceInFiat : 0, { toFixed: 2 })} ${fiatCurrencyCode}`
     const currencyCode = this.props.selectedCurrencyCode
     const currencyName = uiWallet.currencyNames[currencyCode]
 

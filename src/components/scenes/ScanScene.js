@@ -1,8 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
-import OpenAppSettings from 'react-native-app-settings'
+import { ActivityIndicator, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { RNCamera } from 'react-native-camera'
 import { Actions } from 'react-native-router-flux'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
@@ -95,7 +94,7 @@ export class Scan extends React.Component<Props> {
   }
 
   openSettingsTapped = () => {
-    OpenAppSettings.open()
+    Linking.openSettings()
   }
 
   onBarCodeRead = (result: { data: string }) => {
@@ -132,7 +131,7 @@ export class Scan extends React.Component<Props> {
 
     return (
       <View style={styles.cameraArea}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="large" />
       </View>
     )
   }

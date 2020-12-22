@@ -34,7 +34,7 @@ export type StateProps = {
   isConnected: boolean
 }
 
-export type NavigationProps = {
+type NavigationProps = {
   fioAddress: string,
   selectedWallet: EdgeCurrencyWallet,
   selectedDomain: FioDomain,
@@ -80,7 +80,7 @@ export class FioAddressRegisterSelectWalletScene extends React.Component<Props, 
       )
       this.setState({ activationCost, supportedCurrencies, paymentInfo })
     } catch (e) {
-      showError(e.message)
+      showError(e)
     }
 
     this.setState({ loading: false })

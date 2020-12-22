@@ -4,7 +4,6 @@
 import { makeReactNativeDisklet } from 'disklet'
 import { type EdgeContext } from 'edge-core-js/types'
 import * as React from 'react'
-import { AppearanceProvider } from 'react-native-appearance'
 import { MenuProvider } from 'react-native-popup-menu'
 import { Provider } from 'react-redux'
 import { type Store, applyMiddleware, compose, createStore } from 'redux'
@@ -70,11 +69,9 @@ export class Services extends React.PureComponent<Props> {
 
   renderGui() {
     return (
-      <AppearanceProvider>
-        <MenuProvider>
-          <Main />
-        </MenuProvider>
-      </AppearanceProvider>
+      <MenuProvider>
+        <Main />
+      </MenuProvider>
     )
   }
 

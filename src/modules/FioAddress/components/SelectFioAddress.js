@@ -22,7 +22,7 @@ import * as UI_SELECTORS from '../../UI/selectors.js'
 import { refreshAllFioAddresses } from '../action'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../util'
 
-export type SelectFioAddressOwnProps = {
+type SelectFioAddressOwnProps = {
   selected: string,
   memo: string,
   memoError: string,
@@ -32,7 +32,7 @@ export type SelectFioAddressOwnProps = {
   isSendUsingFioAddress: boolean | null
 }
 
-export type SelectFioAddressProps = {
+type SelectFioAddressProps = {
   loading: boolean,
   fioAddresses: FioAddress[],
   fioWallets: EdgeCurrencyWallet[],
@@ -40,7 +40,7 @@ export type SelectFioAddressProps = {
   currencyCode: string
 }
 
-export type DispatchProps = {
+type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
 
@@ -184,8 +184,8 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
         }
         error = e.message
       } else {
+        showError(e)
         error = e.message
-        showError(e.message)
       }
     }
     this.props.onSelect(fioAddress, fioWallet, error)
@@ -206,7 +206,7 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
     const { selected, fioRequest } = this.props
     const { loading } = this.state
 
-    if (loading) return <ActivityIndicator style={styles.loading} size="small" />
+    if (loading) return <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="small" />
 
     if (fioRequest) {
       return (
@@ -236,7 +236,7 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
     if (walletLoading) {
       return (
         <View style={[styles.selectContainer, styles.selectFullWidth]}>
-          <ActivityIndicator style={styles.loading} size="small" />
+          <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="small" />
         </View>
       )
     }

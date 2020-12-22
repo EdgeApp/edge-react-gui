@@ -25,7 +25,7 @@ import { type WalletListResult, WalletListModal } from '../modals/WalletListModa
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
-export type StateProps = {
+type StateProps = {
   state: RootState,
   wallets: { [string]: GuiWallet },
   fioPlugin: EdgeCurrencyConfig,
@@ -35,12 +35,12 @@ export type StateProps = {
   isConnected: boolean
 }
 
-export type NavigationProps = {
+type NavigationProps = {
   fioDomain: string,
   selectedWallet: EdgeCurrencyWallet
 }
 
-export type DispatchProps = {
+type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 
@@ -77,7 +77,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
       )
       this.setState({ activationCost, supportedCurrencies, paymentInfo })
     } catch (e) {
-      showError(e.message)
+      showError(e)
     }
 
     this.setState({ loading: false })
@@ -171,7 +171,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         <View style={styles.buttons}>
           <PrimaryButton disabled={isSelectWalletDisabled} style={styles.next} onPress={this.onPressNext}>
             {isSelectWalletDisabled || loading ? (
-              <ActivityIndicator />
+              <ActivityIndicator color={theme.primaryText} />
             ) : (
               <PrimaryButton.Text style={styles.nextText}>{s.strings.create_wallet_account_select_wallet}</PrimaryButton.Text>
             )}
@@ -180,7 +180,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         <View style={styles.paymentArea}>
           <T style={styles.paymentLeft}>{s.strings.create_wallet_account_amount_due}</T>
           {loading ? (
-            <ActivityIndicator />
+            <ActivityIndicator color={theme.primaryText} />
           ) : (
             <T style={styles.paymentRight}>
               {activationCost} {Constants.FIO_STR}

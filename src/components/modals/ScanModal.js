@@ -1,9 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, Linking, TouchableHighlight, View } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
-import OpenAppSettings from 'react-native-app-settings'
 import { RNCamera } from 'react-native-camera'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
@@ -47,7 +46,7 @@ export class ScanModalComponent extends React.Component<Props> {
   }
 
   openSettingsTapped = () => {
-    OpenAppSettings.open()
+    Linking.openSettings()
   }
 
   _onToggleTorch = () => {
@@ -90,7 +89,7 @@ export class ScanModalComponent extends React.Component<Props> {
 
     return (
       <View style={styles.cameraArea}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator color={theme.primaryText} size="large" />
       </View>
     )
   }

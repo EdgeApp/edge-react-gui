@@ -41,8 +41,8 @@ export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dis
 
 export const selectWallet = (walletId: string, currencyCode: string, from?: string) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
-  const SPECIAL_CURRENCY_INFO = Constants.getSpecialCurrencyInfo(currencyCode)
-  if (SPECIAL_CURRENCY_INFO.isAccountActivationRequired) {
+  const { isAccountActivationRequired } = Constants.getSpecialCurrencyInfo(currencyCode)
+  if (isAccountActivationRequired) {
     // EOS needs different path in case not activated yet
     dispatch(selectEOSWallet(walletId, currencyCode, from))
     return

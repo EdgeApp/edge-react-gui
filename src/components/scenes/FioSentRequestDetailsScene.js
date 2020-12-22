@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import * as intl from '../../locales/intl.js'
+import { formatDate, formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
@@ -14,7 +14,7 @@ import type { FioRequest } from '../../types/types'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 
-export type NavigationProps = {
+type NavigationProps = {
   selectedFioSentRequest: FioRequest
 }
 
@@ -24,7 +24,7 @@ export type FioSentRequestDetailsProps = {
   exchangeRates: ExchangeRatesState
 }
 
-export type FioSentRequestDetailsDispatchProps = {}
+type FioSentRequestDetailsDispatchProps = {}
 
 type Props = FioSentRequestDetailsProps & FioSentRequestDetailsDispatchProps & NavigationProps
 
@@ -49,7 +49,7 @@ export class FioSentRequestDetailsComponent extends React.Component<Props, Local
     const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
     const amountToMultiply = parseFloat(amount)
 
-    return intl.formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
+    return formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
   }
 
   amountField = () => {
@@ -98,7 +98,7 @@ export class FioSentRequestDetailsComponent extends React.Component<Props, Local
     return (
       <View style={styles.row}>
         <T style={styles.title}>{s.strings.fio_date_label}</T>
-        <T style={styles.text}>{intl.formatExpDate(date, true)}</T>
+        <T style={styles.text}>{formatDate(date, true)}</T>
       </View>
     )
   }

@@ -38,7 +38,7 @@ export class SecondaryModal extends React.Component<Props> {
               <NonInteractiveModal.Message>
                 <Text>{s.strings.private_key_modal_importing_private_key}</Text>
               </NonInteractiveModal.Message>
-              <ActivityIndicator size="large" style={{ padding: 10 }} />
+              <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="large" style={{ padding: 10 }} />
             </View>
           ) : null}
 

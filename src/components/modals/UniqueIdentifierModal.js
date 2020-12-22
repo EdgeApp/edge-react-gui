@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from 'react'
+import { TextField } from 'react-native-material-textfield'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -9,8 +10,8 @@ import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { TextInput } from '../../modules/UI/components/Modals/components/TextInput.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
+import { THEME } from '../../theme/variables/airbitz.js'
 
 export type Props = {
   isActive: boolean,
@@ -21,31 +22,19 @@ export type Props = {
   onCancel: () => any,
   currencyCode: string,
   uniqueIdentifier: string,
-  uniqueIdentifierChanged: (uniqueIdentifier: string) => void,
-  keyboardType: ?string
+  uniqueIdentifierChanged: (uniqueIdentifier: string) => void
 }
 export class UniqueIdentifierModal extends React.Component<Props> {
   render() {
-    const {
-      currencyCode,
-      isActive,
-      onBackButtonPress,
-      onBackdropPress,
-      onCancel,
-      onModalHide,
-      uniqueIdentifier,
-      uniqueIdentifierChanged,
-      keyboardType
-    } = this.props
-    let type = ''
-    if (getSpecialCurrencyInfo(currencyCode).uniqueIdentifier) {
-      type = getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.identifierName
+    const { currencyCode, isActive, onBackButtonPress, onBackdropPress, onCancel, onModalHide, uniqueIdentifier, uniqueIdentifierChanged } = this.props
+
+    let title = ''
+    let keyboardType = 'default'
+    const uniqueIdentifierInfo = getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
+    if (uniqueIdentifierInfo != null) {
+      title = uniqueIdentifierInfo.identifierName
+      keyboardType = uniqueIdentifierInfo.identifierKeyboardType
     }
-    const description = sprintf(s.strings.unique_identifier_modal_description, type)
-    const title = type
-    const label = type
-    const confirm = s.strings.unique_identifier_modal_confirm
-    const cancel = s.strings.unique_identifier_modal_cancel
 
     return (
       <InteractiveModal legacy isActive={isActive} onBackdropPress={onBackdropPress} onBackButtonPress={onBackButtonPress} onModalHide={onModalHide}>
@@ -61,20 +50,21 @@ export class UniqueIdentifierModal extends React.Component<Props> {
           <InteractiveModal.Row>
             <InteractiveModal.Item>
               <InteractiveModal.Description>
-                <Text>{description}</Text>
+                <Text>{sprintf(s.strings.unique_identifier_modal_description, title)}</Text>
               </InteractiveModal.Description>
             </InteractiveModal.Item>
           </InteractiveModal.Row>
 
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <TextInput
-                autoFocus
+              <TextField
+                baseColor={THEME.COLORS.SECONDARY}
+                tintColor={THEME.COLORS.SECONDARY}
                 onChangeText={uniqueIdentifierChanged}
                 keyboardType={keyboardType}
                 value={uniqueIdentifier}
-                label={label}
-                onSubmit={this.onConfirm}
+                label={title}
+                onSubmitEditing={this.onConfirm}
               />
             </InteractiveModal.Item>
           </InteractiveModal.Row>
@@ -85,14 +75,14 @@ export class UniqueIdentifierModal extends React.Component<Props> {
             <InteractiveModal.Item>
               <SecondaryButton onPress={() => onCancel()} style={{ flex: -1 }}>
                 <SecondaryButton.Text>
-                  <Text>{cancel}</Text>
+                  <Text>{s.strings.unique_identifier_modal_cancel}</Text>
                 </SecondaryButton.Text>
               </SecondaryButton>
             </InteractiveModal.Item>
             <InteractiveModal.Item>
               <PrimaryButton onPress={() => this.onConfirm()} style={{ flex: -1 }}>
                 <PrimaryButton.Text>
-                  <Text>{confirm}</Text>
+                  <Text>{s.strings.unique_identifier_modal_confirm}</Text>
                 </PrimaryButton.Text>
               </PrimaryButton>
             </InteractiveModal.Item>

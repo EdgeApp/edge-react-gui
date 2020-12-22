@@ -158,7 +158,7 @@ class FioNameConfirm extends React.PureComponent<Props, LocalState> {
           ))
           Actions[Constants.WALLET_LIST]()
         } catch (e) {
-          showError(e.message)
+          showError(e)
         }
       } else {
         showError(s.strings.fio_get_fee_err_msg)

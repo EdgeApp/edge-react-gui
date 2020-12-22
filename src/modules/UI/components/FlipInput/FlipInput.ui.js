@@ -5,7 +5,7 @@ import * as React from 'react'
 import { Animated, Platform, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
-import * as intl from '../../../../locales/intl.js'
+import { formatNumberInput, formatToNativeNumber, isValidInput, prettifyNumber, truncateDecimals } from '../../../../locales/intl.js'
 import { THEME } from '../../../../theme/variables/airbitz.js'
 import type { FlipInputFieldInfo } from '../../../../types/types.js'
 import * as UTILS from '../../../../util/utils.js'
@@ -78,7 +78,7 @@ export default class FlipInput extends React.Component<Props, State> {
     }
   }
 
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
     this.animatedValue = new Animated.Value(0)
     this.frontInterpolate = this.animatedValue.interpolate({
       inputRange: [0, 1],
@@ -116,10 +116,10 @@ export default class FlipInput extends React.Component<Props, State> {
   }
 
   onPrimaryAmountChange = (primaryDisplayAmount: string) => {
-    if (!intl.isValidInput(primaryDisplayAmount)) {
+    if (!isValidInput(primaryDisplayAmount)) {
       return
     }
-    const formattedPrimaryDisplayAmount = intl.formatToNativeNumber(intl.truncateDecimals(intl.prettifyNumber(primaryDisplayAmount), 8))
+    const formattedPrimaryDisplayAmount = formatToNativeNumber(truncateDecimals(prettifyNumber(primaryDisplayAmount), 8))
     this.setState(
       {
         primaryDisplayAmount: formattedPrimaryDisplayAmount
@@ -129,10 +129,10 @@ export default class FlipInput extends React.Component<Props, State> {
   }
 
   onSecondaryAmountChange = (secondaryDisplayAmount: string) => {
-    if (!intl.isValidInput(secondaryDisplayAmount)) {
+    if (!isValidInput(secondaryDisplayAmount)) {
       return
     }
-    const formattedSecondaryDisplayAmount = intl.formatToNativeNumber(intl.truncateDecimals(intl.prettifyNumber(secondaryDisplayAmount), 2))
+    const formattedSecondaryDisplayAmount = formatToNativeNumber(truncateDecimals(prettifyNumber(secondaryDisplayAmount), 2))
     this.setState(
       {
         secondaryDisplayAmount: formattedSecondaryDisplayAmount
@@ -141,8 +141,7 @@ export default class FlipInput extends React.Component<Props, State> {
     )
   }
 
-  topDisplayAmount = () =>
-    this.state.isToggled ? intl.formatNumberInput(this.state.secondaryDisplayAmount) : intl.formatNumberInput(this.state.primaryDisplayAmount)
+  topDisplayAmount = () => (this.state.isToggled ? formatNumberInput(this.state.secondaryDisplayAmount) : formatNumberInput(this.state.primaryDisplayAmount))
 
   bottomDisplayAmount = () => (this.state.isToggled ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount)
 
@@ -233,8 +232,8 @@ export default class FlipInput extends React.Component<Props, State> {
             <MaterialIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={36} />
           </View>
           <View style={styles.rows}>
-            {this.topRowFront(primaryInfo, this.onPrimaryAmountChange, intl.formatNumberInput(this.state.primaryDisplayAmount))}
-            {this.bottomRow(secondaryInfo, intl.formatNumberInput(this.state.secondaryDisplayAmount))}
+            {this.topRowFront(primaryInfo, this.onPrimaryAmountChange, formatNumberInput(this.state.primaryDisplayAmount))}
+            {this.bottomRow(secondaryInfo, formatNumberInput(this.state.secondaryDisplayAmount))}
           </View>
           <View style={styles.spacer} />
         </Animated.View>
@@ -246,8 +245,8 @@ export default class FlipInput extends React.Component<Props, State> {
             <MaterialIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={36} />
           </View>
           <View style={styles.rows}>
-            {this.topRowBack(secondaryInfo, this.onSecondaryAmountChange, intl.formatNumberInput(this.state.secondaryDisplayAmount))}
-            {this.bottomRow(primaryInfo, intl.formatNumberInput(this.state.primaryDisplayAmount))}
+            {this.topRowBack(secondaryInfo, this.onSecondaryAmountChange, formatNumberInput(this.state.secondaryDisplayAmount))}
+            {this.bottomRow(primaryInfo, formatNumberInput(this.state.primaryDisplayAmount))}
           </View>
           <View style={styles.spacer} />
         </Animated.View>

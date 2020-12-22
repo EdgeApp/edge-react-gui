@@ -91,7 +91,7 @@ export class NotificationComponent extends React.Component<Props, State> {
     return (
       <SceneWrapper background="theme" hasTabs={false}>
         {this.state.loading ? (
-          <ActivityIndicator style={styles.loader} size="large" />
+          <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
         ) : (
           <ScrollView>
             <SettingsSwitchRow key="notifications" text={s.strings.settings_notifications_switch} value={enabled} onPress={this.toggleNotifications} />

@@ -1,14 +1,15 @@
 // @flow
 
+import Clipboard from '@react-native-community/clipboard'
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { type Event, Animated, Clipboard, Image, Platform, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { type Event, Animated, Image, Platform, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { showError } from '../../../../components/services/AirshipInstance.js'
 import { EdgeText } from '../../../../components/themed/EdgeText.js'
-import * as intl from '../../../../locales/intl.js'
+import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../../../locales/intl.js'
 import s from '../../../../locales/strings.js'
 import { scale } from '../../../../util/scaling.js'
 import * as UTILS from '../../../../util/utils.js'
@@ -88,7 +89,7 @@ export const sanitizeDecimalAmount = (amount: string, maxEntryDecimals: number):
   amount = amount.replace(/[^0-9.]/g, '')
 
   // Trunctuate decimals to limited decimal entries, also remove additional periods
-  return intl.truncateDecimalsPeriod(amount, maxEntryDecimals)
+  return truncateDecimalsPeriod(amount, maxEntryDecimals)
 }
 
 const checkKeyPress = (keyPressed: string, decimalAmount: string) => {
@@ -106,7 +107,7 @@ const checkKeyPress = (keyPressed: string, decimalAmount: string) => {
 // Assumes a US locale decimal input
 const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string): Amounts => {
   // Formats into locale specific format. Add currency symbol
-  const primaryDisplayAmount = addCurrencySymbol(props.primaryInfo.currencySymbol, intl.formatNumberInput(intl.prettifyNumber(primaryDecimalAmount)))
+  const primaryDisplayAmount = addCurrencySymbol(props.primaryInfo.currencySymbol, formatNumberInput(prettifyNumber(primaryDecimalAmount)))
 
   // Converts to secondary value using exchange rate
   let secondaryDecimalAmount = bns.mul(primaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio)
@@ -115,7 +116,7 @@ const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string): Amou
   secondaryDecimalAmount = UTILS.truncateDecimals(secondaryDecimalAmount, props.secondaryInfo.maxConversionDecimals)
 
   // Format into locale specific format. Add currency symbol
-  const secondaryDisplayAmount = addCurrencySymbol(props.secondaryInfo.currencySymbol, intl.formatNumberInput(intl.prettifyNumber(secondaryDecimalAmount)))
+  const secondaryDisplayAmount = addCurrencySymbol(props.secondaryInfo.currencySymbol, formatNumberInput(prettifyNumber(secondaryDecimalAmount)))
 
   // Set the state for display in render()
   return { primaryDecimalAmount, primaryDisplayAmount, secondaryDecimalAmount, secondaryDisplayAmount }
@@ -123,10 +124,10 @@ const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string): Amou
 
 // Pretty much the same as setPrimaryToSecondary
 const setSecondaryToPrimary = (props: Props, secondaryDecimalAmount: string): Amounts => {
-  const secondaryDisplayAmount = addCurrencySymbol(props.secondaryInfo.currencySymbol, intl.formatNumberInput(intl.prettifyNumber(secondaryDecimalAmount)))
+  const secondaryDisplayAmount = addCurrencySymbol(props.secondaryInfo.currencySymbol, formatNumberInput(prettifyNumber(secondaryDecimalAmount)))
   let primaryDecimalAmount = props.exchangeSecondaryToPrimaryRatio === '0' ? '0' : bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, 18)
   primaryDecimalAmount = UTILS.truncateDecimals(primaryDecimalAmount, props.primaryInfo.maxConversionDecimals)
-  const primaryDisplayAmount = addCurrencySymbol(props.primaryInfo.currencySymbol, intl.formatNumberInput(intl.prettifyNumber(primaryDecimalAmount)))
+  const primaryDisplayAmount = addCurrencySymbol(props.primaryInfo.currencySymbol, formatNumberInput(prettifyNumber(primaryDecimalAmount)))
   return { primaryDisplayAmount, primaryDecimalAmount, secondaryDisplayAmount, secondaryDecimalAmount }
 }
 
@@ -342,9 +343,9 @@ export class FlipInput extends React.Component<Props, State> {
   onKeyPress(keyPressed: string, decimalAmount: string, maxEntryDecimals: number, setAmounts: (Props, string) => Amounts) {
     keyPressed = keyPressed.replace(',', '.')
     if (keyPressed === 'Backspace') {
-      this.setStateAmounts(intl.truncateDecimals(decimalAmount.slice(0, -1), maxEntryDecimals), setAmounts)
+      this.setStateAmounts(truncateDecimals(decimalAmount.slice(0, -1), maxEntryDecimals), setAmounts)
     } else if (checkKeyPress(keyPressed, decimalAmount)) {
-      this.setStateAmounts(intl.truncateDecimals(decimalAmount + keyPressed, maxEntryDecimals), setAmounts)
+      this.setStateAmounts(truncateDecimals(decimalAmount + keyPressed, maxEntryDecimals), setAmounts)
     }
   }
 

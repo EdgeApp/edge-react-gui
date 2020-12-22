@@ -5,10 +5,10 @@ import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { PasswordRecoveryReminderModalComponent } from './PasswordRecoveryReminderModal.ui.js'
 import { hidePasswordRecoveryReminderModal, onGoToPasswordRecoveryScene } from './PasswordRecoveryReminderModalActions.js'
 
-export const mapStateToProps = (state: RootState) => ({
+const mapStateToProps = (state: RootState) => ({
   isVisible: state.ui.scenes.passwordRecoveryReminderModal.isVisible
 })
-export const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   hidePasswordRecoveryReminderModal: () => dispatch(hidePasswordRecoveryReminderModal()),
   onGoToPasswordRecoveryScene: () => dispatch(onGoToPasswordRecoveryScene())
 })

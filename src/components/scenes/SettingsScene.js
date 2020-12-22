@@ -31,7 +31,7 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
-import { Airship, showToast } from '../services/AirshipInstance.js'
+import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
@@ -77,27 +77,26 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     }
   }
 
-  async componentDidMount() {
-    if (!this.props.supportsTouchId) {
-      return null
-    }
-    try {
-      const biometryType = await getSupportedBiometryType()
-      switch (biometryType) {
-        case 'FaceID':
-          this.setState({ touchIdText: s.strings.settings_button_use_faceID })
-          return null
-        case 'TouchID':
-          this.setState({ touchIdText: s.strings.settings_button_use_touchID })
-          return null
-        case 'Fingerprint':
-          this.setState({ touchIdText: s.strings.settings_button_use_biometric })
-          return null
-        default:
-          return null
-      }
-    } catch (error) {
-      console.log(error)
+  componentDidMount() {
+    this.loadBiometryType().catch(showError)
+  }
+
+  async loadBiometryType() {
+    if (!this.props.supportsTouchId) return
+
+    const biometryType = await getSupportedBiometryType()
+    switch (biometryType) {
+      case 'FaceID':
+        this.setState({ touchIdText: s.strings.settings_button_use_faceID })
+        return null
+      case 'TouchID':
+        this.setState({ touchIdText: s.strings.settings_button_use_touchID })
+        return null
+      case 'Fingerprint':
+        this.setState({ touchIdText: s.strings.settings_button_use_biometric })
+        return null
+      default:
+        return null
     }
   }
 
@@ -276,8 +275,8 @@ export const SettingsScene = connect(
     developerModeOn: state.ui.settings.developerModeOn,
     isLocked: SETTINGS_SELECTORS.getSettingsLock(state),
     pinLoginEnabled: SETTINGS_SELECTORS.getPinLoginEnabled(state),
-    supportsTouchId: SETTINGS_SELECTORS.getIsTouchIdSupported(state),
-    touchIdEnabled: SETTINGS_SELECTORS.getIsTouchIdEnabled(state)
+    supportsTouchId: state.ui.settings.isTouchSupported,
+    touchIdEnabled: state.ui.settings.isTouchEnabled
   }),
   (dispatch: Dispatch): DispatchProps => ({
     confirmPassword(arg: string) {

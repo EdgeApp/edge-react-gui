@@ -224,6 +224,9 @@ Object {
       "ANT": Object {
         "denomination": "1000000000000000000",
       },
+      "ANTV1": Object {
+        "denomination": "1000000000000000000",
+      },
       "BAT": Object {
         "denomination": "1000000000000000000",
       },
@@ -292,6 +295,9 @@ Object {
       },
       "ETHBNT": Object {
         "denomination": "1000000000000000000",
+      },
+      "FIRO": Object {
+        "denomination": "100000000",
       },
       "FTC": Object {
         "denomination": "100000000",
@@ -433,9 +439,6 @@ Object {
       },
       "XTZ": Object {
         "denomination": "1000000",
-      },
-      "XZC": Object {
-        "denomination": "100000000",
       },
       "ZRX": Object {
         "denomination": "1000000000000000000",

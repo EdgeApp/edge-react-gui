@@ -47,7 +47,7 @@ type State = {
   enabled?: boolean
 }
 
-export type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
+type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
 
 export class AddToken extends React.Component<AddTokenProps, State> {
   constructor(props: AddTokenProps) {
@@ -113,7 +113,7 @@ export class AddToken extends React.Component<AddTokenProps, State> {
           </View>
           <View style={styles.buttonsArea}>
             <PrimaryButton style={styles.saveButton} onPress={this._onSave}>
-              {addTokenPending ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
+              {addTokenPending ? <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
             </PrimaryButton>
           </View>
           <View style={styles.bottomPaddingForKeyboard} />

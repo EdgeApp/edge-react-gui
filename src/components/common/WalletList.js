@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import { WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import { emptyEdgeDenomination } from '../../modules/Settings/selectors.js'
@@ -82,7 +82,7 @@ class WalletListComponent extends React.PureComponent<Props> {
           if (nativeBalances.hasOwnProperty(currencyCode)) {
             if (currencyCode !== wallet.currencyCode && enabledNotHiddenTokens.indexOf(currencyCode) >= 0) {
               walletList.push({
-                id: walletId,
+                id: `${walletId}:${currencyCode}`,
                 fullCurrencyCode: `${wallet.currencyCode}-${currencyCode}`,
                 balance: nativeBalances[currencyCode]
               })
@@ -120,18 +120,18 @@ class WalletListComponent extends React.PureComponent<Props> {
   getCryptoAmount(balance: string, denomination: EdgeDenomination, isToken: boolean): string {
     const { showBalance } = this.props
     if (isToken) {
-      const cryptoAmount = intl.formatNumber(convertNativeToDisplay(denomination.multiplier)(balance) || '0') // check if infinitesimal (would display as zero), cut off trailing zeroes
+      const cryptoAmount = formatNumber(convertNativeToDisplay(denomination.multiplier)(balance) || '0') // check if infinitesimal (would display as zero), cut off trailing zeroes
       return showBalance ? cryptoAmount : ''
     } else {
       const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), 6)
-      const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+      const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
       return showBalance ? `${denomination.symbol || ''} ${finalCryptoAmount}` : ''
     }
   }
 
   renderRow = (data: FlatListItem<WalletListItem>) => {
     const { exchangeRates, settings, showBalance, wallets } = this.props
-    const walletId = data.item.id
+    const walletId = data.item.id.replace(/:.*/, '')
     const guiWallet = wallets[walletId]
 
     if (guiWallet == null || !data.item.fullCurrencyCode || !data.item.balance) {
@@ -157,7 +157,7 @@ class WalletListComponent extends React.PureComponent<Props> {
       const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
 
       // Currency Exhange Rate
-      const exchangeRateFormat = exchangeRate ? intl.formatNumber(exchangeRate, { toFixed: 2 }) : null
+      const exchangeRateFormat = exchangeRate ? formatNumber(exchangeRate, { toFixed: 2 }) : null
       const exchangeRateFiatSymbol = exchangeRateFormat ? `${walletFiatSymbol} ` : ''
       const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
 

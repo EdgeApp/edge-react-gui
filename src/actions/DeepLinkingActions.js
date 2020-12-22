@@ -1,5 +1,6 @@
 // @flow
 
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
@@ -50,7 +51,7 @@ export const retryPendingDeepLink = () => (dispatch: Dispatch, getState: GetStat
 /**
  * Launches a link if it app is able to do so.
  */
-async function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): Promise<boolean> {
+function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boolean {
   const { activeWalletIds = [], currencyWallets = {}, username } = state.core.account
   const { byId = {}, selectedWalletId } = state.ui.wallets
   const hasCurrentWallet = byId[selectedWalletId] != null
@@ -110,16 +111,7 @@ async function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink):
         showError(s.strings.azteco_btc_only)
         return false
       }
-      const address = await edgeWallet.getReceiveAddress()
-      const response = await fetch(`${link.uri}${address.publicAddress}`)
-      if (response.ok) {
-        showToast(s.strings.azteco_success)
-      } else if (response.status === 400) {
-        showError(s.strings.azteco_invalid_code)
-      } else {
-        showError(s.strings.azteco_service_unavailable)
-      }
-      Actions.push(WALLET_LIST_SCENE)
+      launchAzteco(edgeWallet, link.uri).catch(showError)
       return true
     }
 
@@ -158,6 +150,19 @@ async function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink):
   }
 
   return false
+}
+
+async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string): Promise<void> {
+  const address = await edgeWallet.getReceiveAddress()
+  const response = await fetch(`${uri}${address.publicAddress}`)
+  if (response.ok) {
+    showToast(s.strings.azteco_success)
+  } else if (response.status === 400) {
+    showError(s.strings.azteco_invalid_code)
+  } else {
+    showError(s.strings.azteco_service_unavailable)
+  }
+  Actions.push(WALLET_LIST_SCENE)
 }
 
 const CURRENCY_NAMES = {

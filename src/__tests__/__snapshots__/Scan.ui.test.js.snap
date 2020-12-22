@@ -26,9 +26,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
         }
       }
     >
-      <TouchableHighlight
-        activeOpacity={0.85}
-        delayPressOut={100}
+      <ForwardRef
         onPress={[Function]}
         style={
           Object {
@@ -78,10 +76,8 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
             Transfer
           </FormattedText>
         </View>
-      </TouchableHighlight>
-      <TouchableHighlight
-        activeOpacity={0.85}
-        delayPressOut={100}
+      </ForwardRef>
+      <ForwardRef
         onPress={[Function]}
         style={
           Object {
@@ -136,10 +132,8 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
             Address
           </FormattedText>
         </View>
-      </TouchableHighlight>
-      <TouchableHighlight
-        activeOpacity={0.85}
-        delayPressOut={100}
+      </ForwardRef>
+      <ForwardRef
         onPress={[Function]}
         style={
           Object {
@@ -189,10 +183,10 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
             Flash
           </FormattedText>
         </View>
-      </TouchableHighlight>
+      </ForwardRef>
     </View>
   </SceneWrapper>
-  <Connect(SecondaryModal) />
+  <Memo(Connect(SecondaryModal)) />
 </React.Fragment>
 `;
 
@@ -222,9 +216,7 @@ exports[`Scan component should render with DENIED props 1`] = `
         }
       }
     >
-      <TouchableHighlight
-        activeOpacity={0.85}
-        delayPressOut={100}
+      <ForwardRef
         onPress={[Function]}
         style={
           Object {
@@ -274,10 +266,8 @@ exports[`Scan component should render with DENIED props 1`] = `
             Transfer
           </FormattedText>
         </View>
-      </TouchableHighlight>
-      <TouchableHighlight
-        activeOpacity={0.85}
-        delayPressOut={100}
+      </ForwardRef>
+      <ForwardRef
         onPress={[Function]}
         style={
           Object {
@@ -332,10 +322,8 @@ exports[`Scan component should render with DENIED props 1`] = `
             Address
           </FormattedText>
         </View>
-      </TouchableHighlight>
-      <TouchableHighlight
-        activeOpacity={0.85}
-        delayPressOut={100}
+      </ForwardRef>
+      <ForwardRef
         onPress={[Function]}
         style={
           Object {
@@ -385,9 +373,9 @@ exports[`Scan component should render with DENIED props 1`] = `
             Flash
           </FormattedText>
         </View>
-      </TouchableHighlight>
+      </ForwardRef>
     </View>
   </SceneWrapper>
-  <Connect(SecondaryModal) />
+  <Memo(Connect(SecondaryModal)) />
 </React.Fragment>
 `;

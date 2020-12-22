@@ -5,12 +5,13 @@ import { Scene } from 'edge-components'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { TextField } from 'react-native-material-textfield'
 import { sprintf } from 'sprintf-js'
 
 import { type FioSenderInfo } from '../../actions/SendConfirmationActions'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIO_STR, getSpecialCurrencyInfo } from '../../constants/indexConstants'
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { SelectFioAddressConnector as SelectFioAddress } from '../../modules/FioAddress/components/SelectFioAddress'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
@@ -18,7 +19,6 @@ import ExchangeRate from '../../modules/UI/components/ExchangeRate/ExchangeRate.
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { PinInput } from '../../modules/UI/components/PinInput/PinInput.ui.js'
 import Recipient from '../../modules/UI/components/Recipient/Recipient.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes/SendConfirmation/selectors'
@@ -210,8 +210,8 @@ export class SendConfirmation extends React.Component<Props, State> {
     }
 
     const cryptoBalanceAmount: string = convertNativeToDisplay(primaryInfo.displayDenomination.multiplier)(this.props.balanceInCrypto) // convert to correct denomination
-    const cryptoBalanceAmountString = cryptoBalanceAmount ? intl.formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
-    const balanceInFiatString = intl.formatNumber(this.props.balanceInFiat || 0, { toFixed: 2 })
+    const cryptoBalanceAmountString = cryptoBalanceAmount ? formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
+    const balanceInFiatString = formatNumber(this.props.balanceInFiat || 0, { toFixed: 2 })
 
     const { address, authRequired, currencyCode, transactionMetadata, uniqueIdentifier, currencyInfo } = this.props
     const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null
@@ -231,7 +231,7 @@ export class SendConfirmation extends React.Component<Props, State> {
       !!fioSender.fioError ||
       !!fioSender.memoError
 
-    const isTaggableCurrency = !!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
+    const uniqueIdentifierInfo = getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
     const networkFeeData = this.getNetworkFeeData()
 
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_from_wallet, guiWallet.name) : ''
@@ -303,7 +303,7 @@ export class SendConfirmation extends React.Component<Props, State> {
                     </AddressTextWithBlockExplorerModal>
                   )}
 
-                  {isTaggableCurrency && (
+                  {uniqueIdentifierInfo != null && (
                     <Scene.Row style={{ paddingVertical: 10 }}>
                       <TouchableOpacity
                         activeOpacity={THEME.OPACITY.ACTIVE}
@@ -311,7 +311,7 @@ export class SendConfirmation extends React.Component<Props, State> {
                         onPress={this.props.uniqueIdentifierButtonPressed}
                       >
                         <Text style={styles.addUniqueIDButtonText} ellipsizeMode="tail">
-                          {uniqueIdentifierText(currencyCode, uniqueIdentifier)}
+                          {!uniqueIdentifier ? uniqueIdentifierInfo.addButtonText : sprintf(`${uniqueIdentifierInfo.identifierName}: %s`, uniqueIdentifier)}
                         </Text>
                       </TouchableOpacity>
                     </Scene.Row>
@@ -324,7 +324,24 @@ export class SendConfirmation extends React.Component<Props, State> {
                       <View style={styles.pinInputSpacer} />
 
                       <View style={styles.pinInputContainer}>
-                        <PinInput ref={ref => (this.pinInput = ref)} onChangePin={this.handleChangePin} returnKeyType="done" />
+                        <TextField
+                          ref={ref => (this.pinInput = ref)}
+                          baseColor={THEME.COLORS.WHITE}
+                          textColor={THEME.COLORS.WHITE}
+                          tintColor={THEME.COLORS.WHITE}
+                          inputContainerStyle={{
+                            marginTop: -14,
+                            width: 45,
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                          secureTextEntry
+                          keyboardType="numeric"
+                          label=""
+                          maxLength={4}
+                          onChangeText={this.handleChangePin}
+                          returnKeyType="done"
+                        />
                       </View>
                     </Scene.Row>
                   )}
@@ -353,7 +370,7 @@ export class SendConfirmation extends React.Component<Props, State> {
                 onMemoChange={this.onMemoChange}
               />
             </View>
-            <Scene.Footer style={[styles.footer, isTaggableCurrency && styles.footerWithPaymentId]}>
+            <Scene.Footer style={[styles.footer, uniqueIdentifierInfo != null && styles.footerWithPaymentId]}>
               <Slider
                 forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
                 resetSlider={this.props.resetSlider}
@@ -365,13 +382,7 @@ export class SendConfirmation extends React.Component<Props, State> {
             </Scene.Footer>
           </View>
         </SceneWrapper>
-        {isTaggableCurrency && (
-          <UniqueIdentifierModal
-            onConfirm={this.props.sendConfirmationUpdateTx}
-            currencyCode={currencyCode}
-            keyboardType={getSpecialCurrencyInfo(currencyCode).uniqueIdentifier.identifierKeyboardType}
-          />
-        )}
+        {uniqueIdentifierInfo != null && <UniqueIdentifierModal onConfirm={this.props.sendConfirmationUpdateTx} currencyCode={currencyCode} />}
       </>
     )
   }
@@ -405,7 +416,7 @@ export class SendConfirmation extends React.Component<Props, State> {
             return
           }
 
-          showError(e.message)
+          showError(e)
           return
         }
         updateSpendPending(false)
@@ -620,15 +631,3 @@ const rawStyles = {
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
-
-export const uniqueIdentifierText = (currencyCode: string, uniqueIdentifier?: string): string => {
-  if (!getSpecialCurrencyInfo(currencyCode).uniqueIdentifier) {
-    throw new Error('Invalid currency code')
-  }
-  const uniqueIdentifierInfo = getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
-  if (!uniqueIdentifier) {
-    return uniqueIdentifierInfo.addButtonText
-  } else {
-    return sprintf(`${uniqueIdentifierInfo.identifierName}: %s`, uniqueIdentifier)
-  }
-}

@@ -53,7 +53,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
       return (
         <View style={[styles.containerNoFee, styles.containerNoWalletSelected]}>
           <View style={styles.topRow}>
-            <ActivityIndicator />
+            <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
           </View>
         </View>
       )
@@ -80,7 +80,8 @@ export class CryptoExchangeFlipInputWrapperComponent extends React.Component<Pro
               onPress={this.props.focusMe}
               title={
                 <Text style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
-                  {guiWalletName}:<B> {displayDenomination}</B>
+                  {guiWalletName + ':'}
+                  <B> {displayDenomination}</B>
                 </Text>
               }
             />

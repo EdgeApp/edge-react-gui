@@ -48,28 +48,21 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
     }
   }
 
-  onNext = async () => {
+  handleNext = (): void => {
     const { account, selectedWalletType } = this.props
     const { input } = this.state
+    const { currencyCode } = selectedWalletType
+    const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
+    const currencyPlugin = account.currencyConfig[currencyPluginName]
 
-    this.setState({
-      isProcessing: true
-    })
-    try {
-      const { currencyCode } = selectedWalletType
-      const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
-      const currencyPlugin = account.currencyConfig[currencyPluginName]
-      await currencyPlugin.importKey(input)
-      Actions[CREATE_WALLET_SELECT_FIAT]({ selectedWalletType, cleanedPrivateKey: input })
-      this.setState({
-        isProcessing: false
+    this.setState({ isProcessing: true })
+    currencyPlugin
+      .importKey(input)
+      .then(() => {
+        Actions[CREATE_WALLET_SELECT_FIAT]({ selectedWalletType, cleanedPrivateKey: input })
       })
-    } catch (error) {
-      await launchModal(errorModal(s.strings.create_wallet_failed_import_header, error))
-      this.setState({
-        isProcessing: false
-      })
-    }
+      .catch(error => launchModal(errorModal(s.strings.create_wallet_failed_import_header, error)))
+      .then(() => this.setState({ isProcessing: false }))
   }
 
   onChangeText = (input: string) => {
@@ -93,22 +86,23 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
               <Text style={styles.instructionalText}>{instructionSyntax}</Text>
             </View>
             <FormField
-              style={{ flex: 1, height: 150 }}
               autoFocus
-              clearButtonMode="while-editing"
               autoCorrect={false}
               onChangeText={this.onChangeText}
               label={labelKeySyntax}
               value={input}
               returnKeyType="next"
-              onSubmitEditing={this.onNext}
-              numberOfLines={5}
+              onSubmitEditing={this.handleNext}
               multiline
               error={error}
             />
             <View style={styles.buttons}>
-              <PrimaryButton style={styles.next} onPress={this.onNext} disabled={isProcessing}>
-                {isProcessing ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>}
+              <PrimaryButton style={styles.next} onPress={this.handleNext} disabled={isProcessing}>
+                {isProcessing ? (
+                  <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
+                ) : (
+                  <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+                )}
               </PrimaryButton>
             </View>
           </View>

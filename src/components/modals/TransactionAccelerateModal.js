@@ -193,7 +193,7 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
           </>
         ) : (
           <View style={styles.loadingContianer}>
-            <ActivityIndicator style={styles.loading} size="large" />
+            <ActivityIndicator color={theme.primaryText} style={styles.loading} size="large" />
           </View>
         )}
       </ThemedModal>

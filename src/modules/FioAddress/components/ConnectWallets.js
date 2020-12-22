@@ -191,7 +191,11 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
             disabled={continueDisabled || disabled}
           >
             <View style={styles.buttonTextWrap}>
-              {disabled ? <ActivityIndicator size="small" /> : <T style={styles.buttonText}>{s.strings.string_next_capitalized}</T>}
+              {disabled ? (
+                <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="small" />
+              ) : (
+                <T style={styles.buttonText}>{s.strings.string_next_capitalized}</T>
+              )}
             </View>
           </TouchableHighlight>
         </View>

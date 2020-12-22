@@ -6,7 +6,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import fioAddressListIcon from '../../../assets/images/list_fioAddress.png'
-import * as intl from '../../../locales/intl.js'
+import { formatDate } from '../../../locales/intl.js'
 import s from '../../../locales/strings.js'
 import T from '../../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../../theme/variables/airbitz.js'
@@ -41,7 +41,7 @@ const FioName = (props: FioNameProps) => {
         <T style={styles.infoTitle}>{name}</T>
         <T style={styles.infoSubtitle}>
           {`${s.strings.fio_address_details_screen_expires} `}&nbsp;
-          {intl.formatExpDate(expiration)}
+          {formatDate(new Date(expiration))}
         </T>
       </View>
       <View style={styles.arrow}>

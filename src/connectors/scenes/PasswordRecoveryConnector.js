@@ -6,13 +6,13 @@ import { connect } from 'react-redux'
 import PasswordRecoveryComponent from '../../components/scenes/PasswordRecoveryScene.js'
 import { type RootState } from '../../types/reduxTypes.js'
 
-export const mapStateToProps = (state: RootState) => ({
+const mapStateToProps = (state: RootState) => ({
   context: state.core.context,
   account: state.core.account,
   showHeader: false
 })
 
-export const mapDispatchToProps = () => ({
+const mapDispatchToProps = () => ({
   onComplete: Actions.pop
 })
 

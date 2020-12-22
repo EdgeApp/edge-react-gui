@@ -97,17 +97,12 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
       entry => entry.currencyName.toLowerCase().indexOf(lowerSearch) >= 0 || entry.currencyCode.toLowerCase().indexOf(lowerSearch) >= 0
     )
 
-    const formFieldHeight = scale(50)
-
     return (
       <SceneWrapper avoidKeyboard background="body">
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <FormField
               autoFocus
-              containerStyle={{ height: formFieldHeight }}
-              style={styles.picker}
-              clearButtonMode="while-editing"
               onFocus={this.handleOnFocus}
               onBlur={this.handleOnBlur}
               autoCorrect={false}
@@ -116,7 +111,6 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
               value={this.state.searchTerm}
               label={s.strings.create_wallet_choose_crypto}
               returnKeyType="search"
-              autpCorrect={false}
             />
             <FlatList
               style={styles.resultList}
@@ -175,11 +169,6 @@ const rawStyles = {
     backgroundColor: THEME.COLORS.WHITE,
     flex: 1,
     paddingHorizontal: scale(20)
-  },
-  picker: {
-    fontFamily: THEME.FONTS.DEFAULT,
-    height: scale(50),
-    padding: scale(5)
   },
   resultList: {
     backgroundColor: THEME.COLORS.WHITE,

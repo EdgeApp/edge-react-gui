@@ -9,7 +9,7 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
-import * as intl from '../../locales/intl.js'
+import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { getRenewalFee, renewFioName } from '../../modules/FioAddress/util'
@@ -26,7 +26,7 @@ import { showError, showToast } from '../services/AirshipInstance'
 
 const DIVIDE_PRECISION = 18
 
-export type LocalState = {
+type LocalState = {
   showRenew: boolean,
   renewError: string,
   feeLoading: boolean,
@@ -36,17 +36,17 @@ export type LocalState = {
   balance: number
 }
 
-export type StateProps = {
+type StateProps = {
   fioAddresses: FioAddress[],
   denominationMultiplier: string,
   isConnected: boolean
 }
 
-export type DispatchProps = {
+type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
 
-export type NavigationProps = {
+type NavigationProps = {
   fioWallet: EdgeCurrencyWallet,
   fioAddressName: string,
   expiration?: string,
@@ -90,7 +90,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
           showRenew = true
         }
       } catch (e) {
-        showError(e.message)
+        showError(e)
         this.setState({ renewError: e.message })
       }
       this.setState({ renewalFee, displayFee, showRenew, feeLoading: false })
@@ -110,7 +110,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   getExpiration = (): string => {
     const { fioAddresses, fioAddressName } = this.props
     const fioAddress = fioAddresses.find(({ name }) => fioAddressName === name)
-    if (fioAddress) return intl.formatExpDate(fioAddress.expiration)
+    if (fioAddress) return formatDate(new Date(fioAddress.expiration))
     return ''
   }
 
@@ -155,11 +155,11 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
       Actions.pop()
       if (refreshAfterRenew) {
         window.requestAnimationFrame(() => {
-          Actions.refresh({ fioAddressName, expiration: intl.formatExpDate(expiration) })
+          Actions.refresh({ fioAddressName, expiration: formatDate(new Date(expiration)) })
         })
       }
     } catch (e) {
-      showError(e.message)
+      showError(e)
       this.setState({ renewError: e.message })
     }
     this.setState({ renewLoading: false })
@@ -221,7 +221,11 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
         {!showRenew && (
           <View style={styles.blockPadding}>
             <PrimaryButton2 onPress={this.onRenewPress} disabled={feeLoading}>
-              {feeLoading ? <ActivityIndicator size="small" /> : <PrimaryButton2.Text>{s.strings.title_fio_renew_address}</PrimaryButton2.Text>}
+              {feeLoading ? (
+                <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="small" />
+              ) : (
+                <PrimaryButton2.Text>{s.strings.title_fio_renew_address}</PrimaryButton2.Text>
+              )}
             </PrimaryButton2>
           </View>
         )}

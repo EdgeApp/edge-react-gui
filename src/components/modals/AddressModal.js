@@ -1,20 +1,10 @@
 // @flow
 
+import Clipboard from '@react-native-community/clipboard'
 import { FormField, MaterialInputStyle, TertiaryButton } from 'edge-components'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import {
-  ActivityIndicator,
-  Clipboard,
-  FlatList,
-  Image,
-  InputAccessoryView,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View
-} from 'react-native'
+import { ActivityIndicator, FlatList, Image, InputAccessoryView, Platform, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
@@ -399,7 +389,7 @@ class AddressModalConnected extends React.Component<Props, State> {
                 />
               ) : (
                 <View style={styles.loaderContainer}>
-                  <ActivityIndicator />
+                  <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
                 </View>
               )}
             </View>

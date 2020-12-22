@@ -3,14 +3,15 @@
 import { isEqual } from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, Text } from 'react-native'
+import { TextField } from 'react-native-material-textfield'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import s from '../../../../locales/strings.js'
+import { THEME } from '../../../../theme/variables/airbitz.js'
 import type { PasswordReminder } from '../../../../types/types.js'
 import { SecondaryButton } from '../Buttons/SecondaryButton.ui.js'
 import { TertiaryButton } from '../Buttons/TertiaryButton.ui.js'
 import { InteractiveModal } from '../Modals/InteractiveModal/InteractiveModal.ui.js'
-import { PasswordInput } from './components/PasswordInput.ui.js'
 import { styles } from './styles.js'
 
 type Props = {
@@ -61,7 +62,14 @@ export class PasswordReminderModal extends React.Component<Props, State> {
 
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <PasswordInput onChangeText={this.onChangeText} error={error} />
+              <TextField
+                baseColor={THEME.COLORS.GRAY_2}
+                error={error}
+                label={s.strings.password}
+                onChangeText={this.onChangeText}
+                secureTextEntry
+                tintColor={THEME.COLORS.GRAY_2}
+              />
             </InteractiveModal.Item>
           </InteractiveModal.Row>
         </InteractiveModal.Body>
@@ -70,7 +78,11 @@ export class PasswordReminderModal extends React.Component<Props, State> {
           <InteractiveModal.Row>
             <InteractiveModal.Item>
               <TertiaryButton onPress={this.onSubmit} disabled={isChecking} style={{ flex: -1 }}>
-                {isChecking ? <ActivityIndicator /> : <TertiaryButton.Text>{s.strings.password_reminder_check_password}</TertiaryButton.Text>}
+                {isChecking ? (
+                  <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
+                ) : (
+                  <TertiaryButton.Text>{s.strings.password_reminder_check_password}</TertiaryButton.Text>
+                )}
               </TertiaryButton>
             </InteractiveModal.Item>
           </InteractiveModal.Row>

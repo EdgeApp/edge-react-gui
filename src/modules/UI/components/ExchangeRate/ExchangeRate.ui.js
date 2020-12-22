@@ -4,7 +4,7 @@ import { log10 } from 'biggystring'
 import * as React from 'react'
 import { View } from 'react-native'
 
-import * as intl from '../../../../locales/intl.js'
+import { formatNumber } from '../../../../locales/intl.js'
 import s from '../../../../locales/strings.js'
 import * as UTILS from '../../../../util/utils'
 import T from '../../components/FormattedText/FormattedText.ui.js'
@@ -54,8 +54,8 @@ export default class ExchangeRate extends React.Component<Props> {
       secondaryDisplaySymbol,
       secondaryCurrencyCode
     }
-    const formattedPrimaryAmount = intl.formatNumber(primaryDisplayAmount || '1')
-    const formattedSecondaryAmount = intl.formatNumber(formattedSecondaryDisplayAmount, { toFixed: precision })
+    const formattedPrimaryAmount = formatNumber(primaryDisplayAmount || '1')
+    const formattedSecondaryAmount = formatNumber(formattedSecondaryDisplayAmount, { toFixed: precision })
 
     return (
       <View style={styles.view}>

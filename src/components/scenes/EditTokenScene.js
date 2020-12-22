@@ -127,7 +127,11 @@ class EditTokenComponent extends React.Component<Props, State> {
                 <TertiaryButton.Text>{s.strings.edittoken_delete_token}</TertiaryButton.Text>
               </TertiaryButton>
               <PrimaryButton style={styles.saveButton} onPress={this._onSave}>
-                {editCustomTokenProcessing ? <ActivityIndicator /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
+                {editCustomTokenProcessing ? (
+                  <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
+                ) : (
+                  <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>
+                )}
               </PrimaryButton>
             </View>
           </ScrollView>

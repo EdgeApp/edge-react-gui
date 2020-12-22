@@ -67,16 +67,6 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     logEvent('ActivateWalletStart')
   }
 
-  modifiedStyle = {
-    ...MaterialInputOnWhite,
-    container: {
-      ...MaterialInputOnWhite.container,
-      marginTop: scale(16),
-      marginBottom: scale(24),
-      width: deviceWidth - scale(25) - scale(40) // substract padding and validation icon
-    }
-  }
-
   onBack = () => {
     Actions.pop()
   }
@@ -144,9 +134,14 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <FormField
-                style={this.modifiedStyle}
+                {...MaterialInputOnWhite}
+                containerStyle={{
+                  ...MaterialInputOnWhite.containerStyle,
+                  marginTop: scale(16),
+                  marginBottom: scale(24),
+                  width: deviceWidth - scale(25) - scale(40) // substract padding and validation icon
+                }}
                 autoFocus
-                clearButtonMode="while-editing"
                 autoCorrect={false}
                 onChangeText={this.handleChangeHandle}
                 label={s.strings.create_wallet_account_handle}
@@ -156,7 +151,11 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
                 error={chooseHandleErrorMessage}
               />
               <View style={{ width: scale(25), height: scale(25) }}>
-                {isCheckingHandleAvailability ? <ActivityIndicator style={styles.feedbackIcon} /> : <Image source={validityIcon} style={styles.feedbackIcon} />}
+                {isCheckingHandleAvailability ? (
+                  <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.feedbackIcon} />
+                ) : (
+                  <Image source={validityIcon} style={styles.feedbackIcon} />
+                )}
               </View>
             </View>
             {showButton && this.renderButton()}

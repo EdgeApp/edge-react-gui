@@ -1,5 +1,40 @@
 # edge-react-gui
 
+## 1.19.0 (2020-12-21)
+
+- Upgrade to React Native v0.63.4
+- Update ANT token
+- Change Zcoin to Firo
+- Upgrade edge-currency-accountbased to v0.7.39
+  - Double gas estimate when sending ETH to a contract to reduce chance of failure
+  - FIO logging cleanup
+  - Update ANT contract address and rename original token ANTV1
+- Upgrade edge-currency-bitcoin to v4.9.7
+  - Change Zcoin to Firo
+  - Use XZC code when querying info1 for FIRO electrum servers
+  - Update DOGE fee calculation
+  - Suppress electrum spam server messages
+  - Update Blockchair explorer URLs to include partner ID
+  - Update InfoServer constant
+- Upgrade edge-currency-monero to v0.2.7
+  - Update Blockchair explorer URL to include partner ID
+- Upgrade edge-exchange-plugins to v0.11.15
+  - Update ChangeNow to save amount returned from order creation endpoints to metadata
+  - Add new swap partner SideShift
+  - Add ANT token to Coingecko
+  - Reduce Nomics queries by ignoring fiat/fiat pairs
+  - Add support for FIRO
+  - Fix CORS issue with Coincap
+- Upgrade edge-login-ui-rn to v0.6.24
+  - Fix & theme the password recovery input modal
+  - Show the correct header for IP validation errors
+  - Fix typos on the 2fa reset modal
+  - Add colors to all spinner components
+  - Fix Flow types around react-native-material-textfield
+- Upgrade edge-components to v0.0.31
+  - Fix the react-native-material-textfield Flow types
+- Upgrade edge-plugin-simplex to remove all Sell functionality
+
 ## 1.18.1 (2020-12-09)
 
 - EOS: Patches issue with bogus accounts getting returned by nodes

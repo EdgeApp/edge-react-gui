@@ -7,13 +7,13 @@ import { lobbyLogin } from '../../actions/EdgeLoginActions.js'
 import LinkedComponent from '../../components/scenes/EdgeLoginScene'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 
-export const mapStateToProps = (state: RootState) => ({
+const mapStateToProps = (state: RootState) => ({
   lobby: state.core.edgeLogin.lobby,
   error: state.core.edgeLogin.error,
   isProcessing: state.core.edgeLogin.isProcessing
 })
 
-export const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   accept: () => dispatch(lobbyLogin()),
   decline: () => Actions.pop()
 })

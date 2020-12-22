@@ -3,13 +3,14 @@
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
+import { THEME } from '../../theme/variables/airbitz.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 export const LoadingScene = () => {
   return (
     <SceneWrapper background="header" hasHeader={false} hasTabs={false}>
       <View style={styles.container}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="large" />
       </View>
     </SceneWrapper>
   )

@@ -19,7 +19,7 @@ import { trackConversion } from '../actions/TrackingActions.js'
 import { ThreeButtonSimpleConfirmationModal } from '../components/modals/ThreeButtonSimpleConfirmationModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
-import * as intl from '../locales/intl.js'
+import { formatNumber } from '../locales/intl.js'
 import s from '../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../modules/UI/selectors'
@@ -182,7 +182,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   const fromExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, fromCurrencyCode)
   const fromBalanceInCryptoDisplay = UTILS.convertNativeToExchange(fromExchangeDenomination.multiplier)(quote.fromNativeAmount)
   const fromBalanceInFiatRaw = await currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.fiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
-  const fromFiat = intl.formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
+  const fromFiat = formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
   // Format crypto fee:
   const settings = SETTINGS_SELECTORS.getSettings(state)
@@ -198,7 +198,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
     fromWallet.fiatCurrencyCode,
     Number(feeDenominatedAmount)
   )
-  const feeFiatAmount = intl.formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
+  const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
   const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${fromWallet.fiatCurrencyCode.replace('iso:', '')})`
 
   // Format to amount:
@@ -210,7 +210,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   const toExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, toCurrencyCode)
   const toBalanceInCryptoDisplay = UTILS.convertNativeToExchange(toExchangeDenomination.multiplier)(quote.toNativeAmount)
   const toBalanceInFiatRaw = await currencyConverter.convertCurrency(toCurrencyCode, toWallet.fiatCurrencyCode, Number(toBalanceInCryptoDisplay))
-  const toFiat = intl.formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
+  const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
 
   const swapInfo: GuiSwapInfo = {
     quote,
@@ -419,8 +419,8 @@ async function getBalanceMessage(state: RootState, wallet: GuiWallet, currencyCo
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
 
   const cryptoBalanceAmount: string = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto) // convert to correct denomination
-  const cryptoBalanceAmountString = cryptoBalanceAmount ? intl.formatNumber(UTILS.decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
-  const balanceInFiatString = intl.formatNumber(balanceInFiat || 0, { toFixed: 2 })
+  const cryptoBalanceAmountString = cryptoBalanceAmount ? formatNumber(UTILS.decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
+  const balanceInFiatString = formatNumber(balanceInFiat || 0, { toFixed: 2 })
 
   const fiatCurrencyCode = UTILS.getDenomFromIsoCode(wallet.fiatCurrencyCode)
   const fiatDisplayCode = fiatCurrencyCode.symbol

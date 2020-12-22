@@ -11,7 +11,7 @@ import { sprintf } from 'sprintf-js'
 
 import fioRequestsIcon from '../../assets/images/sidenav/fiorequests.png'
 import * as Constants from '../../constants/indexConstants'
-import * as intl from '../../locales/intl.js'
+import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache, cancelFioRequest, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioRequest/components/FioRequestRow'
@@ -34,7 +34,7 @@ import { SquareButton } from '../themed/ThemedButtons'
 
 const SCROLL_THRESHOLD = 0.5
 
-export type LocalState = {
+type LocalState = {
   loadingPending: boolean,
   loadingSent: boolean,
   fullScreenLoader: boolean,
@@ -55,7 +55,7 @@ export type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 
-export type OwnProps = {
+type OwnProps = {
   navigation: any
 }
 
@@ -266,7 +266,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
         if (e.code === FIO_NO_BUNDLED_ERR_CODE) {
           this.showRenewAlert(fioWallet, payeeFioAddress)
         } else {
-          showError(e.message)
+          showError(e)
         }
       }
     } else {
@@ -370,9 +370,9 @@ export class FioRequestList extends React.Component<Props, LocalState> {
 
   renderDropUp = async (selectedFioPendingRequest: FioRequest) => {
     const { onSelectWallet } = this.props
-    const { chain_code, token_code } = selectedFioPendingRequest.content
-    const chainCode = chain_code.toUpperCase()
-    const tokenCode = token_code.toUpperCase()
+    const { content } = selectedFioPendingRequest
+    const chainCode = content.chain_code.toUpperCase()
+    const tokenCode = content.token_code.toUpperCase()
     const allowedFullCurrencyCode = chainCode !== tokenCode && tokenCode && tokenCode !== '' ? [`${chainCode}:${tokenCode}`] : [chainCode]
 
     const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
@@ -444,13 +444,13 @@ export class FioRequestList extends React.Component<Props, LocalState> {
           requestsInSection = []
           previousTimestamp = fioRequest.time_stamp
         }
-        if (i > 0 && intl.formatExpDate(new Date(previousTimestamp)) !== intl.formatExpDate(new Date(fioRequest.time_stamp))) {
+        if (i > 0 && formatDate(new Date(previousTimestamp)) !== formatDate(new Date(fioRequest.time_stamp))) {
           headers.push({ title: previousTitle, data: requestsInSection })
           requestsInSection = []
         }
         requestsInSection.push(fioRequest)
         previousTimestamp = fioRequest.time_stamp
-        previousTitle = intl.formatExpDate(new Date(fioRequest.time_stamp), true)
+        previousTitle = formatDate(new Date(fioRequest.time_stamp), true)
       })
       headers.push({ title: previousTitle, data: requestsInSection })
     }
@@ -470,13 +470,13 @@ export class FioRequestList extends React.Component<Props, LocalState> {
           requestsInSection = []
           previousTimestamp = fioRequest.time_stamp
         }
-        if (i > 0 && intl.formatExpDate(new Date(previousTimestamp)) !== intl.formatExpDate(new Date(fioRequest.time_stamp))) {
+        if (i > 0 && formatDate(new Date(previousTimestamp)) !== formatDate(new Date(fioRequest.time_stamp))) {
           headers.push({ title: previousTitle, data: requestsInSection })
           requestsInSection = []
         }
         requestsInSection.push(fioRequest)
         previousTimestamp = fioRequest.time_stamp
-        previousTitle = intl.formatExpDate(new Date(fioRequest.time_stamp), true)
+        previousTitle = formatDate(new Date(fioRequest.time_stamp), true)
       })
       headers.push({ title: previousTitle, data: requestsInSection })
     }
@@ -492,8 +492,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     const { item: fioRequest, index } = itemObj
     const isLastOfDate =
       index + 1 === this.state.fioRequestsPending.length ||
-      (index > 0 &&
-        intl.formatExpDate(new Date(this.state.fioRequestsPending[index + 1].time_stamp), true) !== intl.formatExpDate(new Date(fioRequest.time_stamp), true))
+      (index > 0 && formatDate(new Date(this.state.fioRequestsPending[index + 1].time_stamp)) !== formatDate(new Date(fioRequest.time_stamp)))
     return <FioRequestRow fioRequest={fioRequest} isLastOfDate={isLastOfDate} onSelect={this.selectPendingRequest} />
   }
 
@@ -501,8 +500,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     const { item: fioRequest, index } = itemObj
     const isLastOfDate =
       index + 1 === this.state.fioRequestsSent.length ||
-      (index > 0 &&
-        intl.formatExpDate(new Date(this.state.fioRequestsSent[index + 1].time_stamp), true) !== intl.formatExpDate(new Date(fioRequest.time_stamp), true))
+      (index > 0 && formatDate(new Date(this.state.fioRequestsSent[index + 1].time_stamp)) !== formatDate(new Date(fioRequest.time_stamp)))
     return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectSentRequest} isSent isLastOfDate={isLastOfDate} />
   }
 
@@ -552,7 +550,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
               </View>
             ) : null}
             <View style={styles.container}>
-              {loadingPending && <ActivityIndicator style={styles.loading} size="small" />}
+              {loadingPending && <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="small" />}
               <SwipeListView
                 useSectionList
                 sections={this.pendingRequestHeaders()}
@@ -573,7 +571,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
               </View>
             ) : null}
             <View style={styles.container}>
-              {loadingSent && <ActivityIndicator style={styles.loading} size="small" />}
+              {loadingSent && <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="small" />}
               <SwipeListView
                 style={styles.transactionsScrollWrap}
                 data={fioRequestsSent}

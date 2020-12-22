@@ -25,7 +25,7 @@ const help = {
 
 const helpArray = [help]
 
-export const mapStateToProps = (state: RootState) => {
+const mapStateToProps = (state: RootState) => {
   const useLegacyAddress = state.ui.scenes.requestType.useLegacyAddress
   const uniqueLegacyAddress = state.ui.scenes.requestType.uniqueLegacyAddress
 
@@ -45,7 +45,7 @@ export const mapStateToProps = (state: RootState) => {
   }
 }
 
-export const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   onSelect: (value: Object) => {
     switch (value.value) {
       case 'useRegularRequestAddress': {

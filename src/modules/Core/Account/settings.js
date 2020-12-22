@@ -7,6 +7,7 @@ import { showError } from '../../../components/services/AirshipInstance.js'
 import type { MostRecentWallet, PasswordReminder } from '../../../types/types.js'
 import { categories } from './subcategories.js'
 
+// prettier-ignore
 export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
   '20': false,
   '200': false,
@@ -69,7 +70,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   RVN: {
     denomination: '100000000'
   },
-  XZC: {
+  FIRO: {
     denomination: '100000000'
   },
   QTUM: {
@@ -109,6 +110,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
     denomination: '100000000'
   },
   HERC: {
+    denomination: '1000000000000000000'
+  },
+  ANTV1: {
     denomination: '1000000000000000000'
   },
   ANT: {
@@ -274,7 +278,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   VTC: 'object',
   XTZ: 'object',
   RVN: 'object',
-  XZC: 'object',
+  FIRO: 'object',
   QTUM: 'object',
   XMR: 'object',
   ETH: 'object',
@@ -288,6 +292,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   HUR: 'object',
   HERC: 'object',
   SMART: 'object',
+  ANTV1: 'object',
   ANT: 'object',
   BAT: 'object',
   BNT: 'object',

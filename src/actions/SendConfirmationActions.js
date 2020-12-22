@@ -12,7 +12,7 @@ import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { ThreeButtonSimpleConfirmationModal } from '../components/modals/ThreeButtonSimpleConfirmationModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { EXCHANGE_SCENE, FEE_ALERT_THRESHOLD, FIO_STR, PLUGIN_BUY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
-import { getSpecialCurrencyInfo, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
+import { getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { addToFioAddressCache, recordSend } from '../modules/FioAddress/util'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
@@ -288,19 +288,6 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
       fioNotes += fioSender.memo ? `\n${s.strings.fio_sender_memo_label}: ${fioSender.memo}` : ''
       edgeMetadata.notes = `${fioNotes}\n${edgeMetadata.notes || ''}`
     }
-    if (getSpecialCurrencyInfo(currencyCode).uniqueIdentifierToNotes && edgeSignedTransaction.otherParams != null) {
-      const newNotesSyntax = sprintf(
-        s.strings.tx_notes_metadata,
-        s.strings.unique_identifier_payment_id,
-        edgeSignedTransaction.otherParams.sendParams.paymentId,
-        edgeSignedTransaction.otherParams.sendParams.targetAddress
-      )
-      if (edgeMetadata.notes) {
-        edgeMetadata.notes += `\n${newNotesSyntax}`
-      } else {
-        edgeMetadata.notes = newNotesSyntax
-      }
-    }
     await wallet.saveTxMetadata(edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetadata)
 
     edgeSignedTransaction.metadata = edgeMetadata
@@ -330,7 +317,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
               memo
             })
           } catch (e) {
-            showError(e.message)
+            showError(e)
           }
         } else if ((guiMakeSpendInfo.publicAddress || publicAddress) && (!skipRecord || edgeSignedTransaction.currencyCode === FIO_STR)) {
           const payerPublicAddress = wallet.publicWalletInfo.keys.publicKey
@@ -351,7 +338,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispat
               memo
             })
           } catch (e) {
-            showError(e.message)
+            showError(e)
           }
         }
       }

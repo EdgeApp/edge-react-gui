@@ -1,7 +1,8 @@
 // @flow
 
+import Clipboard from '@react-native-community/clipboard'
 import * as React from 'react'
-import { Clipboard, Linking, Platform, Text } from 'react-native'
+import { Linking, Platform, Text } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import s from '../../locales/strings.js'

@@ -5,7 +5,7 @@ import * as React from 'react'
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import * as intl from '../../locales/intl.js'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -46,7 +46,7 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
       const fixedAmount = bns.toFixed(absAmount, 2, 2)
       this.changeAmount(fixedAmount)
     } else {
-      this.changeAmount(intl.formatNumber('0.00'))
+      this.changeAmount(formatNumber('0.00'))
     }
   }
 
@@ -65,13 +65,16 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
           <View style={styles.airshipContainer}>
             <FormattedText style={styles.airshipHeader}>{sprintf(s.strings.transaction_details_fiat_modal_header, currency)}</FormattedText>
             <FormField
+              {...MaterialInputOnWhite}
+              containerStyle={{
+                ...MaterialInputOnWhite.containerStyle,
+                width: '100%'
+              }}
               autoFocus
               returnKeyType="done"
               autoCapitalize="none"
               keyboardType="numeric"
-              clearButtonMode="while-editing"
               label={s.strings.transaction_details_fiat_label}
-              style={materialFiatInput}
               onFocus={this.onFocus}
               onBlur={this.onBlur}
               onChangeText={this.onChange}
@@ -93,15 +96,6 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
       .replace(/,/, 'x')
       .replace(/,/g, '')
       .replace(/x/, ',')
-  }
-}
-
-const materialFiatInput = {
-  ...MaterialInputOnWhite,
-  fontSize: THEME.rem(3),
-  container: {
-    ...MaterialInputOnWhite.container,
-    width: '100%'
   }
 }
 

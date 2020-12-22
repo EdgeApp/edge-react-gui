@@ -181,28 +181,23 @@ export function formatToNativeNumber(value: string, options?: IntlNumberFormatOp
 
 /**
  * Returns date string depending on locale
- * @param expiration
- * @param monthShort
- * @returns {string}
  */
-export function formatExpDate(expiration: Date | string, monthShort?: boolean = false): string {
-  const expirationDate = new Date(expiration)
-
-  return new Intl.DateTimeFormat(locale.localeIdentifier.replace('_', '-'), {
-    dateStyle: monthShort ? 'medium' : 'long'
-  }).format(expirationDate)
+export function formatDate(date: Date, monthShort: boolean = false): string {
+  return date.toLocaleDateString(locale.localeIdentifier.replace('_', '-'), {
+    year: 'numeric',
+    month: monthShort ? 'short' : 'long',
+    day: 'numeric'
+  })
 }
 
 /**
  * Returns time string depending on locale
- * @param date
- * @returns {string}
  */
 export function formatTime(date: Date): string {
-  return new Intl.DateTimeFormat(locale.localeIdentifier.replace('_', '-'), {
-    hour: 'numeric',
-    minute: 'numeric'
-  }).format(date)
+  return date.toLocaleTimeString(locale.localeIdentifier.replace('_', '-'), {
+    hour: '2-digit',
+    minute: '2-digit'
+  })
 }
 
 export function setIntlLocale(l: IntlLocaleType): void {

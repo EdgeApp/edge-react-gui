@@ -201,7 +201,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     if (this.props.calculatingMax) {
       return (
         <PrimaryButton>
-          <ActivityIndicator />
+          <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
         </PrimaryButton>
       )
     } else if (this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '') {

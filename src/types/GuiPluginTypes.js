@@ -48,9 +48,6 @@ export type GuiPlugin = {
   // Scene title to display when inside the plugin:
   displayName: string,
 
-  // Use the Airbitz-based API when set, instead of EdgeProvider:
-  isLegacy?: true,
-
   // The WebView won't navigate to hostnames outside of this list:
   originWhitelist?: string[],
 

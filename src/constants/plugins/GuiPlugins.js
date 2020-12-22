@@ -82,10 +82,9 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   bitrefill: {
     pluginId: 'bitrefill',
     storeId: 'co.edgesecure.bitrefill',
-    baseUri: hostedUri + 'co.edgesecure.bitrefill/index.html',
+    baseUri: 'https://embed.bitrefill.com/?ref=nUqaI7Qe&theme=dark&paymentMethods=bitcoin,ethereum,dogecoin,litecoin,dash',
     lockUriPath: true,
-    displayName: 'Bitrefill',
-    isLegacy: true
+    displayName: 'Bitrefill'
   },
   cred: {
     pluginId: 'cred',
