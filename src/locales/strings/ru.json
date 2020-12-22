@@ -237,7 +237,6 @@
   "unique_identifier": "Уникальный идентификатор",
   "unique_identifier_memo_id": "Memo ID",
   "unique_identifier_destination_tag": "Назначение платежа",
-  "unique_identifier_payment_id": "Идентификатор платежа",
   "unique_identifier_dropdown_option_memo_id": "Добавьте идентификатор МЕМО",
   "unique_identifier_dropdown_option_destination_tag": "Добавить назначение платежа",
   "unique_identifier_modal_confirm": "Подтвердить",
