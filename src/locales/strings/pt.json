@@ -224,7 +224,6 @@
   "unique_identifier": "Identificador exclusivo",
   "unique_identifier_memo_id": "ID de memo",
   "unique_identifier_destination_tag": "Tag de Destino",
-  "unique_identifier_payment_id": "ID de pagamento",
   "unique_identifier_dropdown_option_memo_id": "Adicione ID de Memo",
   "unique_identifier_dropdown_option_destination_tag": "Adicionar Tag de Destino",
   "unique_identifier_modal_confirm": "Confirmar",
