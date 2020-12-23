@@ -73,7 +73,6 @@ import { ExitButton } from '../modules/UI/components/Header/Component/ExitButton
 import HelpButton from '../modules/UI/components/Header/Component/HelpButton.ui.js'
 import WalletName from '../modules/UI/components/Header/WalletName/WalletNameConnector.js'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
-import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
 import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { THEME } from '../theme/variables/airbitz.js'
@@ -177,7 +176,6 @@ export class MainComponent extends React.Component<Props> {
           </Stack>
         </RouterWithRedux>
         <PasswordReminderModal />
-        <PasswordRecoveryReminderModalConnector />
       </>
     )
   }

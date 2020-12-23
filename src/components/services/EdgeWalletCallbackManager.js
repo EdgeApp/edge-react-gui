@@ -4,9 +4,9 @@ import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
+import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions.js'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../actions/TransactionListActions.js'
 import { refreshReceiveAddressRequest, refreshWallet, updateWalletLoadingProgress } from '../../actions/WalletActions.js'
-import { checkPasswordRecovery } from '../../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalActions.js'
 import { isReceivedTransaction } from '../../util/utils.js'
 
 type EdgeWalletCallbackManagerStateProps = {

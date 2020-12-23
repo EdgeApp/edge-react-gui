@@ -479,15 +479,10 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL': {
-      if (!action.data) throw new Error('Invalid action')
-      const { level, wasShown } = action.data
-      return {
-        ...state,
-        passwordRecoveryRemindersShown: {
-          ...state.passwordRecoveryRemindersShown,
-          [level]: wasShown
-        }
-      }
+      const level = action.data
+      const passwordRecoveryRemindersShown = { ...state.passwordRecoveryRemindersShown }
+      passwordRecoveryRemindersShown[level] = true
+      return { ...state, passwordRecoveryRemindersShown }
     }
     default:
       return state
