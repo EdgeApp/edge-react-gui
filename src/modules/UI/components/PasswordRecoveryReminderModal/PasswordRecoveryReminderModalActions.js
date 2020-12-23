@@ -1,6 +1,5 @@
 // @flow
 
-import { bns } from 'biggystring'
 import { Actions } from 'react-native-router-flux'
 
 import { RECOVER_PASSWORD as PASSWORD_RECOVERY_SCENE } from '../../../../constants/indexConstants.js'
@@ -38,7 +37,7 @@ export const checkPasswordRecovery = () => async (dispatch: Dispatch, getState: 
   if (isPasswordRecoverySetup) return
   const totalDollars = getTotalFiatAmountFromExchangeRates(state, 'iso:USD')
   for (const level of Object.keys(passwordRecoveryRemindersShown)) {
-    if (bns.lt(totalDollars, level)) return // if balance is not big enough to trigger then exit routine
+    if (totalDollars < Number(level)) return // if balance is not big enough to trigger then exit routine
     if (passwordRecoveryRemindersShown[level] === true) continue // if it's already been shown then go to higher level
     // now show the modal
     dispatch(showPasswordRecoveryReminderModal())
