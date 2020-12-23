@@ -91,14 +91,11 @@ export function SquareButton(props: SquareButtonProps) {
 export function ButtonBox(props: Props) {
   const { children, onPress } = props
   const theme = useTheme()
-  const styles = getStyles(theme)
 
   return (
-    <View style={[spacingStyles(props, theme), styles.buttonBox]}>
-      <TouchableHighlight activeOpacity={theme.underlayOpacity} underlayColor={theme.underlayColor} onPress={onPress}>
-        {children}
-      </TouchableHighlight>
-    </View>
+    <TouchableOpacity onPress={onPress} style={spacingStyles(props, theme)}>
+      {children}
+    </TouchableOpacity>
   )
 }
 

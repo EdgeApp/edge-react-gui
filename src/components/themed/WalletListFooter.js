@@ -2,7 +2,7 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, Image, TouchableHighlight, View } from 'react-native'
+import { Alert, Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
@@ -30,12 +30,12 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
     const styles = getStyles(theme)
     return (
       <View style={styles.addButtonsContainer}>
-        <TouchableHighlight activeOpacity={theme.underlayOpacity} underlayColor={theme.underlayColor} onPress={onPress}>
+        <TouchableOpacity onPress={onPress}>
           <View style={styles.addButtonsInnerContainer}>
-            <Ionicon name="md-add-circle" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
+            <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
             <EdgeText style={styles.addItem}>{title}</EdgeText>
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -56,7 +56,7 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
               <Image style={styles.buyCryptoImages} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.ETH }} resizeMode="cover" />
               <Image style={styles.buyCryptoImages} source={{ uri: Constants.CURRENCY_SYMBOL_IMAGES.BCH }} resizeMode="cover" />
             </View>
-            <EdgeText>{s.strings.title_plugin_buy_sell}</EdgeText>
+            <EdgeText style={styles.buyCryptoText}>{s.strings.title_plugin_buy_sell}</EdgeText>
           </View>
         </ButtonBox>
       </View>
@@ -109,7 +109,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
     alignItems: 'stretch',
-    margin: theme.rem(0.5)
+    marginTop: theme.rem(1.5),
+    paddingTop: theme.rem(0.75),
+    marginLeft: theme.rem(1.75),
+    paddingRight: theme.rem(1.75),
+    borderTopWidth: theme.thinLineWidth,
+    borderTopColor: theme.lineDivider
   },
   addButtonsRowContainer: {
     flexDirection: 'row'
@@ -127,6 +132,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   addItem: {
     margin: theme.rem(0.25),
+    color: theme.textLink,
     fontFamily: theme.fontFaceBold
   },
   buyCryptoContainer: {
@@ -144,7 +150,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.25)
   },
   buyCryptoText: {
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceBold,
+    color: theme.textLink
   }
 }))
 
