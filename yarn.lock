@@ -4117,10 +4117,10 @@ cleaners@^0.2.0:
   resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.2.0.tgz#b1a583878f4c217c8f0bd2e7756dca3eaca91003"
   integrity sha512-UsCPC3eYtqBgk9kYSh8WbFoXbDD4lr9r7wz57MSsluMLFb78ws3ER6Bs2q+7iUmaeBiwZ/+S02FOQ5gEA2y4Sg==
 
-cleaners@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.1.tgz#f8fe89d76b1731e07258148a1648ea251d72096d"
-  integrity sha512-PIV0B/TVBnTJlcQtjkLtUOnzBlKUT9QTL/LVw4M22vlgrm+/858oNK3w2umc3Ll9Q9hT2oTCURUOsiSDOpT9bA==
+cleaners@^0.3.1, cleaners@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.2.tgz#e240a3837f5b2d59975f18d753dea7d1bab0fd4b"
+  integrity sha512-SOjd7UOrU/8CF6V7QKZsfJB8MIBylrZOso+eJWYFaOm2jamKj7Wxbihg8vasnHzqtagv1vpwhN8xkD3liX/dIg==
 
 cli-boxes@^2.2.0:
   version "2.2.1"
@@ -5167,10 +5167,10 @@ edge-currency-accountbased@^0.7.38:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.9.5:
-  version "4.9.5"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.5.tgz#8dddaf354dcdaec8a92196f495bc70ec9b62c2a0"
-  integrity sha512-2DWVkjLQOqLSSqcm9unkqI/9YgT1f3ncfwwuY381mpWA2Gx/Urfpug7VrNAxAlIqb+FtLroDh+fUDfiYp3xcvQ==
+edge-currency-bitcoin@^4.9.6:
+  version "4.9.6"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.6.tgz#ba80bf46bd1e85821c7d74de79985edf8d937f87"
+  integrity sha512-siHnuAWHyKlR6ScQaS8ogp8kBjREbeYTU+d2QN1wtM/ekF9ZjNwT/kOy7s1qjYx1szgIS4AFvkC/p7aXdccUNg==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -5212,10 +5212,10 @@ edge-exchange-plugins@^0.11.14:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.6.23:
-  version "0.6.23"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.23.tgz#543653ad0b6b6cc3764cf599717f4eb2caea0c46"
-  integrity sha512-zjPZgkxqxlIPt9ZvDM6PgOs0u7DuIcUcawj03OQRRtmhU8BhiPaf0RIuYkDByvCFsH1IZvnnxmjeztDnGbo/SA==
+edge-login-ui-rn@^0.6.24:
+  version "0.6.24"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.24.tgz#41f2cbcfbed569f2a253d6e170c901e5a7c05f61"
+  integrity sha512-HjZrNUtmoFrf9CM5j786e+V1l48n1sMpIW/cDbuvAbXBPizgo0J9Lo8rb62huT7e7JnQ+XF0gKUROCJmgH8w0g==
   dependencies:
     cleaners "^0.3.1"
     material-ui "^0.20.0"
@@ -5242,9 +5242,9 @@ edge-login-ui-rn@^0.6.23:
   dependencies:
     cleaners "^0.3.1"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#868cc7b":
+"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#efedbabac85ecf985aa13658b25a7f2fd4466751":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#868cc7bb486f8e0d3e72f93406a33dedc90a55b3"
+  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#efedbabac85ecf985aa13658b25a7f2fd4466751"
   dependencies:
     moment "^2.22.2"
 
