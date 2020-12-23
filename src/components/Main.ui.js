@@ -65,6 +65,7 @@ import { logEvent } from '../util/tracking.js'
 import { AirshipToast } from './common/AirshipToast.js'
 import { BackButton } from './navigation/BackButton.js'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle.js'
+import { EdgeLogoHeader } from './navigation/EdgeLogoHeader.js'
 import { handlePluginBack, renderPluginBackButton } from './navigation/GuiPluginBackButton.js'
 import { HeaderTitle } from './navigation/HeaderTitle.js'
 import { SideMenuButton } from './navigation/SideMenuButton.js'
@@ -181,7 +182,7 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.WALLET_LIST_SCENE}
                 navTransparent
                 component={ifLoggedIn(WalletListScene)}
-                renderTitle={<HeaderTitle title={s.strings.title_wallets} />}
+                renderTitle={<EdgeLogoHeader />}
                 renderLeftButton={<HeaderTextButton type="help" />}
                 renderRightButton={<SideMenuButton />}
               />
