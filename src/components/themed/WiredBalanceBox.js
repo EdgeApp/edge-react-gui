@@ -45,8 +45,8 @@ class BalanceBox extends React.PureComponent<Props> {
     const noExchangeRates = !exchangeRates || !Object.keys(exchangeRates).length || !Object.values(exchangeRates).reduce(summation)
 
     return (
-      <TouchableOpacity onPress={this.props.onPress}>
-        <View style={styles.container}>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={this.props.onPress} style={styles.balanceBoxContainer}>
           {showBalance && !noExchangeRates ? (
             <>
               <EdgeText style={styles.balanceHeader}>{s.strings.fragment_wallets_balance_text}</EdgeText>
@@ -57,8 +57,8 @@ class BalanceBox extends React.PureComponent<Props> {
           ) : (
             <EdgeText style={styles.showBalance}>{noExchangeRates ? s.strings.exchange_rates_loading : s.strings.string_show_balance}</EdgeText>
           )}
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     )
   }
 }
@@ -76,18 +76,27 @@ export const WiredBalanceBox = connect((state: RootState, ownProps: OwnProps): S
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    height: theme.rem(5),
-    alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginLeft: theme.rem(2),
+    marginTop: theme.rem(1),
+    paddingBottom: theme.rem(1),
+    marginBottom: theme.rem(1),
+    borderBottomWidth: theme.thinLineWidth,
+    borderBottomColor: theme.lineDivider
+  },
+  balanceBoxContainer: {
+    height: theme.rem(3.25)
   },
   balanceHeader: {
-    fontSize: theme.rem(0.75),
+    fontSize: theme.rem(1),
     color: theme.secondaryText
   },
   balanceBody: {
-    fontSize: theme.rem(1.75)
+    fontSize: theme.rem(1.5),
+    fontFamily: theme.fontFaceBold
   },
   showBalance: {
-    fontSize: theme.rem(1.75)
+    fontSize: theme.rem(1.5),
+    fontFamily: theme.fontFaceBold
   }
 }))

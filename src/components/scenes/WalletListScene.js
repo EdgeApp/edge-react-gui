@@ -26,7 +26,6 @@ import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { PromoCard } from '../themed/PromoCard.js'
-import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { WalletList } from '../themed/WalletList.js'
 import { WalletListFooter } from '../themed/WalletListFooter.js'
 import { WalletListSortableRow } from '../themed/WalletListSortableRow.js'
@@ -103,7 +102,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
           exchangeRates={this.props.exchangeRates}
         />
         <View /* header stack */>
-          <SettingsHeaderRow icon={<Fontello name="wallet-1" size={theme.rem(1.25)} color={theme.icon} />} text={s.strings.fragment_wallets_header} />
+          {/* <SettingsHeaderRow icon={<Fontello name="wallet-1" size={theme.rem(1.25)} color={theme.icon} />} text={s.strings.fragment_wallets_header} /> */}
           <CrossFade activeKey={sorting ? 'doneButton' : 'defaultButtons'}>
             <View key="defaultButtons" style={styles.headerButtonsContainer}>
               <TouchableOpacity style={styles.addButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
