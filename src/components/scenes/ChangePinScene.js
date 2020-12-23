@@ -8,8 +8,7 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 
 export type ChangePinOwnProps = {
   account: EdgeAccount,
-  context: EdgeContext,
-  showHeader: boolean
+  context: EdgeContext
 }
 
 export type ChangePinDispatchProps = {
@@ -18,8 +17,7 @@ export type ChangePinDispatchProps = {
 
 export type ChangePinStateProps = {
   context: EdgeContext,
-  account: EdgeAccount,
-  showHeader: boolean
+  account: EdgeAccount
 }
 
 type ChangePinComponentProps = ChangePinOwnProps & ChangePinDispatchProps & ChangePinStateProps
