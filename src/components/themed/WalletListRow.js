@@ -1,18 +1,19 @@
 // @flow
 
 import * as React from 'react'
-import { Dimensions, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { Dimensions, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { Fontello } from '../../assets/vector/index.js'
 import * as Constants from '../../constants/indexConstants'
 import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
-import { ProgressPie } from '../common/ProgressPie.js'
+import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
+import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 const FULL_WIDTH = Dimensions.get('window').width
 const WIDTH_DIMENSION_HIDE = FULL_WIDTH * 0.35
@@ -34,7 +35,6 @@ type Props = {
   symbolImage?: string,
   walletId: string,
   walletName: string,
-  walletProgress: number,
   swipeRef: ?React.ElementRef<typeof SwipeRow>,
   swipeRow: SwipeRow
 }
@@ -121,11 +121,9 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
       exchangeRateFiatSymbol,
       fiatBalance,
       fiatBalanceSymbol,
-      isToken,
-      symbolImage,
       theme,
-      walletName,
-      walletProgress
+      walletId,
+      walletName
     } = this.props
     const styles = getStyles(theme)
     const isSwipingLeft = swipeDirection === 'left'
@@ -174,38 +172,28 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
             </View>
           )}
         </View>
-        <View style={styles.container}>
-          <TouchableHighlight
-            activeOpacity={theme.underlayOpacity}
-            underlayColor={theme.underlayColor}
-            onPress={this.handleSelectWallet}
-            onLongPress={this.handleOpenWalletListMenuModal}
-          >
-            <View style={[styles.rowContainer, isToken ? styles.tokenBackground : styles.walletBackground]}>
+        <Gradient style={styles.container}>
+          <TouchableOpacity onPress={this.handleSelectWallet} onLongPress={this.handleOpenWalletListMenuModal}>
+            <View style={styles.rowContainer}>
               <View style={styles.iconContainer}>
-                {symbolImage && <Image style={styles.icon} source={{ uri: symbolImage }} resizeMode="cover" />}
-                <View style={styles.icon}>
-                  <ProgressPie size={theme.rem(1.25)} color={theme.iconLoadingOverlay} progress={walletProgress} />
-                </View>
+                <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} />
               </View>
               <View style={styles.detailsContainer}>
                 <View style={styles.detailsRow}>
                   <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
+                  <EdgeText style={[styles.exchangeRate, { color: differencePercentageStyle }]}>
+                    {exchangeRateFiatSymbol + exchangeRate + '     ' + differencePercentage}
+                  </EdgeText>
                   <EdgeText style={styles.detailsValue}>{cryptoAmount}</EdgeText>
                 </View>
                 <View style={styles.detailsRow}>
                   <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
                   <EdgeText style={styles.detailsFiat}>{fiatBalanceSymbol + fiatBalance}</EdgeText>
                 </View>
-                <View style={styles.divider} />
-                <View style={styles.detailsRow}>
-                  <EdgeText style={styles.exchangeRate}>{exchangeRateFiatSymbol + exchangeRate}</EdgeText>
-                  <EdgeText style={[styles.percentage, { color: differencePercentageStyle }]}>{differencePercentage}</EdgeText>
-                </View>
               </View>
             </View>
-          </TouchableHighlight>
-        </View>
+          </TouchableOpacity>
+        </Gradient>
       </SwipeRow>
     )
   }
@@ -214,35 +202,17 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
-    marginBottom: theme.rem(1 / 16)
+    paddingHorizontal: theme.rem(2)
   },
   rowContainer: {
     flex: 1,
     flexDirection: 'row',
-    height: theme.rem(5.75),
-    padding: theme.rem(0.75)
-  },
-  walletBackground: {
-    backgroundColor: theme.walletListBackground
-  },
-  tokenBackground: {
-    backgroundColor: theme.walletListMutedBackground
+    marginVertical: theme.rem(1)
   },
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: theme.rem(1.25),
-    marginRight: theme.rem(0.75)
-  },
-  icon: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: theme.rem(1.25),
-    height: theme.rem(1.25),
-    resizeMode: 'contain'
+    marginRight: theme.rem(1)
   },
   detailsContainer: {
     flex: 1,
@@ -250,12 +220,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   detailsRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center'
   },
   detailsCurrency: {
-    flex: 1,
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceBold,
+    marginRight: theme.rem(0.75)
   },
   detailsValue: {
     textAlign: 'right'
@@ -272,18 +241,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   exchangeRate: {
     flex: 1,
-    fontSize: theme.rem(0.75),
+    fontSize: theme.rem(1),
     textAlign: 'left'
-  },
-  percentage: {
-    fontSize: theme.rem(0.75),
-    fontFamily: theme.fontFaceBold
-  },
-  divider: {
-    height: theme.rem(1 / 16),
-    borderColor: theme.lineDivider,
-    borderBottomWidth: theme.rem(1 / 16),
-    marginVertical: theme.rem(0.5)
   },
   swipeContainer: {
     flex: 1,
