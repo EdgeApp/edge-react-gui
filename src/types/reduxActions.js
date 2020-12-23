@@ -47,7 +47,6 @@ type LegacyActionName =
   | 'UI/WALLETS/UPSERT_WALLETS'
   | 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED'
   | 'UPDATE_EXCHANGE_RATES'
-  | 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL'
   | 'UPDATE_WALLET_LOADING_PROGRESS'
 
 // Actions with no payload:
@@ -66,7 +65,6 @@ type NoDataActionName =
   | 'EDIT_CUSTOM_TOKEN_FAILURE'
   | 'EDIT_CUSTOM_TOKEN_START'
   | 'ENABLE_SCAN'
-  | 'HIDE_PASSWORD_RECOVERY_MODAL'
   | 'INVALIDATE_EDGE_LOBBY'
   | 'MANAGE_TOKENS_START'
   | 'MANAGE_TOKENS_SUCCESS'
@@ -85,7 +83,6 @@ type NoDataActionName =
   | 'PROCESS_EDGE_LOGIN'
   | 'RECEIVED_INSUFFICENT_FUNDS_ERROR'
   | 'SHIFT_COMPLETE'
-  | 'SHOW_PASSWORD_RECOVERY_MODAL'
   | 'START_CALC_MAX'
   | 'START_SHIFT_TRANSACTION'
   | 'TOGGLE_ENABLE_TORCH'
@@ -208,6 +205,7 @@ export type Action =
       type: 'UPDATE_WALLET_ENABLED_TOKENS',
       data: { walletId: string, tokens: string[] }
     }
+  | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL', data: number }
   | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: string }
   | { type: 'NETWORK/NETWORK_STATUS', data: { isConnected: boolean } }
   | { type: 'FIO/SET_FIO_ADDRESSES', data: { fioAddresses: FioAddress[] } }

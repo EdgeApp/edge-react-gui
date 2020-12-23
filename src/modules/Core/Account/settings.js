@@ -456,12 +456,10 @@ export const setSpendingLimits = (account: EdgeAccount, spendingLimits: Spending
     return setLocalSettings(account, updatedSettings)
   })
 }
-export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: string, wasShown: boolean) {
+export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: number) {
   const settings = await getSyncedSettings(account)
-  const passwordRecoveryRemindersShown = {
-    ...settings.passwordRecoveryRemindersShown,
-    [level]: wasShown
-  }
+  const passwordRecoveryRemindersShown = { ...settings.passwordRecoveryRemindersShown }
+  passwordRecoveryRemindersShown[level] = true
   const updatedSettings = updateSettings(settings, { passwordRecoveryRemindersShown })
   return setSyncedSettings(account, updatedSettings)
 }
