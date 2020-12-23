@@ -95,7 +95,7 @@ export class FioAddressRegisterSelectWalletScene extends React.Component<Props, 
     }
 
     const allowedCurrencyCodes = []
-    for (const currency in supportedCurrencies) {
+    for (const currency of Object.keys(supportedCurrencies)) {
       if (supportedCurrencies[currency]) {
         allowedCurrencyCodes.push(currency)
       }

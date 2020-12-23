@@ -1,5 +1,6 @@
 // @flow
 
+import { type EdgeDataDump } from 'edge-core-js'
 import { Platform } from 'react-native'
 import { getBrand, getBuildNumber, getDeviceId, getVersion } from 'react-native-device-info'
 
@@ -17,7 +18,7 @@ export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: G
     const { currencyWallets = {} } = account
 
     let accountSummary = '***Account Wallet Summary***\n'
-    for (const walletId in currencyWallets) {
+    for (const walletId of Object.keys(currencyWallets)) {
       const codes = await currencyWallets[walletId].getEnabledTokens()
       if (codes.length === 0) {
         codes.push(currencyWallets[walletId].currencyInfo.currencyCode)
@@ -27,20 +28,20 @@ export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: G
         accountSummary += `${codes[i]}: ${txs} txs\n`
       }
     }
-    for (const walletId in currencyWallets) {
+    for (const walletId of Object.keys(currencyWallets)) {
       const wallet = currencyWallets[walletId]
       if (wallet) {
-        const dataDump = await wallet.dumpData()
+        const dataDump: EdgeDataDump = await wallet.dumpData()
         let ds = ''
         ds = ds + '--------------------- Wallet Data Dump ----------------------\n'
         ds = ds + `Wallet ID: ${dataDump.walletId}\n`
         ds = ds + `Wallet Type: ${dataDump.walletType}\n`
+        // $FlowFixMe
         ds = ds + `Plugin Type: ${dataDump.pluginType}\n`
         ds = ds + '------------------------- Data -------------------------\n'
-        for (const cache in dataDump.data) {
+        for (const cache of Object.keys(dataDump.data)) {
           try {
             let t = `-------------------- ${cache} ---------------------\n`
-            // $FlowFixMe
             t = t + `${JSON.stringify(dataDump.data[cache], null, 2)}\n`
             ds = ds + t
           } catch (e) {

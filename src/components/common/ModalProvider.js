@@ -94,10 +94,10 @@ const globalInstances: { [id: string]: ModalProvider } = {}
  * If there are multiple ModalProviders mounted, just pick one:
  */
 function getInstance() {
-  for (const id in globalInstances) {
-    return globalInstances[id]
-  }
-  throw new Error('No ModalProvider is mounted')
+  const [id] = Object.keys(globalInstances)
+  if (id == null) throw new Error('No ModalProvider is mounted')
+
+  return globalInstances[id]
 }
 
 /**

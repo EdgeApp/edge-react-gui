@@ -62,7 +62,7 @@ class WalletListFooterComponent extends React.Component<Props> {
     const { account, wallets } = this.props
 
     // check for existence of any token-enabled wallets
-    for (const key in wallets) {
+    for (const key of Object.keys(wallets)) {
       const wallet = wallets[key]
       const specialCurrencyInfo = getSpecialCurrencyInfo(wallet.currencyCode)
       if (specialCurrencyInfo.isCustomTokensSupported) {

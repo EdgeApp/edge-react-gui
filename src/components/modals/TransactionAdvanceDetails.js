@@ -88,9 +88,9 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
     return <Text style={styles.text}>{networkFeeOption ? feeString[networkFeeOption] : s.strings.mining_fee_standard_label_choice}</Text>
   }
 
-  renderFees(styles: StyleSheet, title: string, fees?: Object) {
+  renderFees(styles: StyleSheet, title: string, fees: Object = {}) {
     const feeRows = []
-    for (const feeKey in fees) {
+    for (const feeKey of Object.keys(fees)) {
       const feeString = localizedFeeText[feeKey] || feeKey
       feeRows.push(
         <View key={feeKey} style={styles.feesRow}>

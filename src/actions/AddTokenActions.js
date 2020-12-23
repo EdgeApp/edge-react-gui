@@ -63,7 +63,7 @@ export const addTokenAsync = async (
   const newTokenObj: CustomTokenInfo = WALLET_ACTIONS.assembleCustomToken(currencyName, currencyCode, contractAddress, denomination, uiWallet.type)
 
   // Check for conflicting currency codes:
-  for (const pluginId in currencyConfig) {
+  for (const pluginId of Object.keys(currencyConfig)) {
     const { currencyInfo } = currencyConfig[pluginId]
     if (currencyCode === currencyInfo.currencyCode) {
       throw new Error(sprintf(s.strings.error_token_exists, currencyCode))
