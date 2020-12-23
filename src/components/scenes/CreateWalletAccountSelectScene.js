@@ -104,7 +104,7 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   onPressSelect = () => {
     const { supportedCurrencies } = this.props
     const allowedCurrencyCodes = []
-    for (const currency in supportedCurrencies) {
+    for (const currency of Object.keys(supportedCurrencies)) {
       if (supportedCurrencies[currency]) {
         allowedCurrencyCodes.push(currency)
       }
@@ -257,14 +257,14 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     const confirmMessageSyntax = sprintf(s.strings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
     // only included supported types of payment in WalletListModal
     const supportedCurrenciesList = []
-    for (const currency in supportedCurrencies) {
+    for (const currency of Object.keys(supportedCurrencies)) {
       if (supportedCurrencies[currency]) {
         supportedCurrenciesList.push(currency)
       }
     }
 
     const walletsCopy = { ...wallets }
-    for (const id in walletsCopy) {
+    for (const id of Object.keys(walletsCopy)) {
       if (!supportedCurrenciesList.includes(walletsCopy[id].currencyCode)) {
         delete walletsCopy[id]
       }

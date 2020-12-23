@@ -139,7 +139,7 @@ class AddressModalConnected extends React.Component<Props, State> {
     }
 
     if (!useUserFioAddressesOnly) {
-      for (const address in fioAddresses.addresses) {
+      for (const address of Object.keys(fioAddresses.addresses)) {
         if (!fioAddresses.addresses[address]) continue // Ignore when address is not active (boolean false)
         const addressLowerCase = address.toLowerCase()
         if (uri !== '' && !addressLowerCase.includes(uri.toLowerCase())) continue // Autocomplete/Filter check

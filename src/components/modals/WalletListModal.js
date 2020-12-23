@@ -151,23 +151,21 @@ class WalletListModalConnected extends React.Component<Props, State> {
 
     // Initialize Create Tokens
     if (showCreateWallet) {
-      for (const fullCurrencyCode in createTokens) {
-        if (createTokens.hasOwnProperty(fullCurrencyCode)) {
-          const createToken = createTokens[fullCurrencyCode]
-          const tokenCurrencyCode = createToken.currencyCode
-          const checkAllowedCurrencyCodes = allowedCurrencyCodes
-            ? allowedCurrencyCodes.find(currencyCode => currencyCode === fullCurrencyCode || currencyCode === tokenCurrencyCode)
-            : true
-          const checkExcludeCurrencyCodes = excludeCurrencyCodes
-            ? excludeCurrencyCodes.find(currencyCode => currencyCode === fullCurrencyCode || currencyCode === tokenCurrencyCode)
-            : false
-          if (checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes) {
-            records.push({
-              walletItem: null,
-              createWalletCurrency: null,
-              createToken
-            })
-          }
+      for (const fullCurrencyCode of Object.keys(createTokens)) {
+        const createToken = createTokens[fullCurrencyCode]
+        const tokenCurrencyCode = createToken.currencyCode
+        const checkAllowedCurrencyCodes = allowedCurrencyCodes
+          ? allowedCurrencyCodes.find(currencyCode => currencyCode === fullCurrencyCode || currencyCode === tokenCurrencyCode)
+          : true
+        const checkExcludeCurrencyCodes = excludeCurrencyCodes
+          ? excludeCurrencyCodes.find(currencyCode => currencyCode === fullCurrencyCode || currencyCode === tokenCurrencyCode)
+          : false
+        if (checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes) {
+          records.push({
+            walletItem: null,
+            createWalletCurrency: null,
+            createToken
+          })
         }
       }
     }
@@ -306,7 +304,7 @@ class WalletListModalConnected extends React.Component<Props, State> {
 
     // Find existing EdgeCurrencyWallet
     let wallet
-    for (const walletId in currencyWallets) {
+    for (const walletId of Object.keys(currencyWallets)) {
       const currencyWallet = currencyWallets[walletId]
       if (currencyWallet.currencyInfo.currencyCode === parentCurrencyCode) {
         wallet = currencyWallet

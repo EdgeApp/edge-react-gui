@@ -78,15 +78,13 @@ class WalletListComponent extends React.PureComponent<Props> {
           return isVisible
         })
 
-        for (const currencyCode in nativeBalances) {
-          if (nativeBalances.hasOwnProperty(currencyCode)) {
-            if (currencyCode !== wallet.currencyCode && enabledNotHiddenTokens.indexOf(currencyCode) >= 0) {
-              walletList.push({
-                id: `${walletId}:${currencyCode}`,
-                fullCurrencyCode: `${wallet.currencyCode}-${currencyCode}`,
-                balance: nativeBalances[currencyCode]
-              })
-            }
+        for (const currencyCode of Object.keys(nativeBalances)) {
+          if (currencyCode !== wallet.currencyCode && enabledNotHiddenTokens.indexOf(currencyCode) >= 0) {
+            walletList.push({
+              id: `${walletId}:${currencyCode}`,
+              fullCurrencyCode: `${wallet.currencyCode}-${currencyCode}`,
+              balance: nativeBalances[currencyCode]
+            })
           }
         }
       }

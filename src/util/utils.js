@@ -206,12 +206,10 @@ export function getAllDenomsOfIsoCurrencies(): GuiDenomination[] {
   // Convert map to an array
   const denomArray = []
 
-  for (const currencyCode in FIAT_CODES_SYMBOLS) {
-    if (FIAT_CODES_SYMBOLS.hasOwnProperty(currencyCode)) {
-      const item = getDenomFromIsoCode(currencyCode)
-      if (item.name.length) {
-        denomArray.push(item)
-      }
+  for (const currencyCode of Object.keys(FIAT_CODES_SYMBOLS)) {
+    const item = getDenomFromIsoCode(currencyCode)
+    if (item.name.length) {
+      denomArray.push(item)
     }
   }
   return denomArray
@@ -225,16 +223,14 @@ export const getSupportedFiats = (defaultCurrencyCode?: string): Array<{ label: 
       value: defaultCurrencyCode
     })
   }
-  for (const currencyCode in FIAT_CODES_SYMBOLS) {
+  for (const currencyCode of Object.keys(FIAT_CODES_SYMBOLS)) {
     if (defaultCurrencyCode === currencyCode) {
       continue
     }
-    if (FIAT_CODES_SYMBOLS.hasOwnProperty(currencyCode)) {
-      out.push({
-        label: `${currencyCode} - ${FIAT_CODES_SYMBOLS[currencyCode]}`,
-        value: currencyCode
-      })
-    }
+    out.push({
+      label: `${currencyCode} - ${FIAT_CODES_SYMBOLS[currencyCode]}`,
+      value: currencyCode
+    })
   }
   return out
 }
@@ -363,50 +359,46 @@ export const daysBetween = (DateInMsA: number, dateInMsB: number) => {
 // Returns the element name of the unequal element or '' if objects are equal
 export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Object, ignoreObjects?: Object): string {
   const comparedElements = {}
-  for (const e in obj1) {
+  for (const e of Object.keys(obj1)) {
     if (ignoreObjects && ignoreObjects[e]) {
       continue
     }
     comparedElements[e] = true
-    if (obj1.hasOwnProperty(e)) {
-      if (obj2.hasOwnProperty(e)) {
-        if (obj1[e] !== obj2[e]) {
-          if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
-            const deepDiff = getObjectDiff(obj1[e], obj2[e], traverseObjects, ignoreObjects)
-            if (deepDiff) {
-              // console.log(`getObjectDiff:${e}`)
-              return e
-            }
-          } else {
+    if (obj2.hasOwnProperty(e)) {
+      if (obj1[e] !== obj2[e]) {
+        if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
+          const deepDiff = getObjectDiff(obj1[e], obj2[e], traverseObjects, ignoreObjects)
+          if (deepDiff) {
             // console.log(`getObjectDiff:${e}`)
             return e
           }
+        } else {
+          // console.log(`getObjectDiff:${e}`)
+          return e
         }
-      } else {
-        // console.log(`getObjectDiff:${e}`)
-        return e
       }
+    } else {
+      // console.log(`getObjectDiff:${e}`)
+      return e
     }
   }
-  for (const e in obj2) {
+  for (const e of Object.keys(obj2)) {
     if ((comparedElements && comparedElements[e]) || (ignoreObjects && ignoreObjects[e])) {
       continue
     }
-    if (obj2.hasOwnProperty(e)) {
-      if (obj1.hasOwnProperty(e)) {
-        if (obj1[e] !== obj2[e]) {
-          if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
-            const deepDiff = getObjectDiff(obj2[e], obj1[e], traverseObjects)
-            if (deepDiff) {
-              return e
-            }
-          } else {
+    if (obj1.hasOwnProperty(e)) {
+      if (obj1[e] !== obj2[e]) {
+        if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
+          const deepDiff = getObjectDiff(obj2[e], obj1[e], traverseObjects)
+          if (deepDiff) {
             return e
           }
+        } else {
+          return e
         }
-      } else {
-        return e
       }
+    } else {
+      return e
     }
   }
   return ''
@@ -430,10 +422,10 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
   const wallets = state.ui.wallets.byId
   const settings = state.ui.settings
   // loop through each of the walletId's
-  for (const parentProp in wallets) {
+  for (const parentProp of Object.keys(wallets)) {
     const wallet = wallets[parentProp]
     // loop through all of the nativeBalances, which includes both parent currency and tokens
-    for (const currencyCode in wallet.nativeBalances) {
+    for (const currencyCode of Object.keys(wallet.nativeBalances)) {
       // if there is no native balance for the currency / token then assume it's zero
       if (!temporaryTotalCrypto[currencyCode]) {
         temporaryTotalCrypto[currencyCode] = 0
@@ -478,7 +470,7 @@ export const calculateTotalFiatBalance = (state: RootState, values: { [string]: 
   // if calculating total balance for password recovery reminder, then use iso:USD that was passed in
   // otherwise grab the default from the account
   const isoFiat = isoFiatCurrencyCode
-  for (const currency in values) {
+  for (const currency of Object.keys(values)) {
     const addValue = convertCurrency(state, currency, isoFiat, values[currency])
     total = total + addValue
   }

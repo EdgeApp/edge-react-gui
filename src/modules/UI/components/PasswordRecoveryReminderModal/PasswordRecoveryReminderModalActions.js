@@ -37,7 +37,7 @@ export const checkPasswordRecovery = () => async (dispatch: Dispatch, getState: 
   const isPasswordRecoverySetup = !!account.recoveryKey
   if (isPasswordRecoverySetup) return
   const totalDollars = getTotalFiatAmountFromExchangeRates(state, 'iso:USD')
-  for (const level in passwordRecoveryRemindersShown) {
+  for (const level of Object.keys(passwordRecoveryRemindersShown)) {
     if (bns.lt(totalDollars, level)) return // if balance is not big enough to trigger then exit routine
     if (passwordRecoveryRemindersShown[level] === true) continue // if it's already been shown then go to higher level
     // now show the modal

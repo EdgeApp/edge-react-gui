@@ -25,15 +25,17 @@ describe.skip('Account', () => {
     const world: EdgeFakeWorld = await makeFakeEdgeWorld([fakeUser])
     const context: EdgeContext = await world.makeEdgeContext(contextOptions)
     const account: EdgeAccount = await context.loginWithPIN(fakeUser.username, fakeUser.pin)
-    for (const key in SYNCED_ACCOUNT_DEFAULTS) {
-      const defaultDenom = SYNCED_ACCOUNT_DEFAULTS[key].denomination
+    for (const key of Object.keys(SYNCED_ACCOUNT_DEFAULTS)) {
+      // $FlowFixMe
+      const defaultDenom: string | void = SYNCED_ACCOUNT_DEFAULTS[key].denomination
       if (defaultDenom) {
         // if it's in synced settings defaults
-        const pluginId = CURRENCY_PLUGIN_NAMES[key]
+        // $FlowFixMe
+        const pluginId: string | void = CURRENCY_PLUGIN_NAMES[key]
         if (pluginId) {
           // and is a plugin
           // check that default denom is in plugin options for denoms
-          const plugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES[key]]
+          const plugin = account.currencyConfig[pluginId]
           const currencyInfo = plugin.currencyInfo
           const denoms = currencyInfo.denominations
           const defaultDenomIndex = denoms.findIndex(item => item.multiplier === defaultDenom)
