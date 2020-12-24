@@ -125,7 +125,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
         accountInitObject.denominationKeys.push({ currencyCode: token.currencyCode, denominationKey: token.multiplier })
       })
     }
-    for (const key in accountInitObject) {
+    for (const key of Object.keys(accountInitObject)) {
       if (accountInitObject[key]) {
         // avoid trying to look at property 'denomination' of undefined
         const typeofDenomination = typeof accountInitObject[key].denomination
@@ -190,7 +190,7 @@ export const mergeSettings = (
   // begin process for repairing damaged settings data
   let isOverwriteNeeded = false
   let isDefaultTypeIncorrect = false
-  for (const key in defaults) {
+  for (const key of Object.keys(defaults)) {
     // if the type of the setting default does not meet the enforced type
     const defaultSettingType = typeof defaults[key]
     if (defaultSettingType !== types[key]) {
@@ -243,7 +243,7 @@ export const mergeSettings = (
   if (finalSettings.customTokens && account != null) {
     const { currencyConfig } = account
     finalSettings.customTokens = finalSettings.customTokens.filter((customToken: CustomTokenInfo) => {
-      for (const pluginId in currencyConfig) {
+      for (const pluginId of Object.keys(currencyConfig)) {
         const { currencyInfo } = currencyConfig[pluginId]
         if (customToken.currencyCode === currencyInfo.currencyCode) return false
       }
@@ -270,7 +270,7 @@ export const logoutRequest = (username?: string) => (dispatch: Dispatch, getStat
  * Finds the currency info for a currency code.
  */
 function findCurrencyInfo(account: EdgeAccount, currencyCode: string): EdgeCurrencyInfo | void {
-  for (const pluginId in account.currencyConfig) {
+  for (const pluginId of Object.keys(account.currencyConfig)) {
     const { currencyInfo } = account.currencyConfig[pluginId]
     if (currencyInfo.currencyCode.toUpperCase() === currencyCode) {
       return currencyInfo

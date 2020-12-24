@@ -50,7 +50,7 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
 
   render() {
     const rows = []
-    for (const hours in this.state.hours) {
+    for (const hours of Object.keys(this.state.hours)) {
       const enabled: boolean = this.state.hours[hours]
       const num = Number(hours)
       const percent = num === 1 ? 3 : 10

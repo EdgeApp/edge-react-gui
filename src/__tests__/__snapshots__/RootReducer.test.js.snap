@@ -131,9 +131,6 @@ Object {
         "fioAddressesLoading": false,
         "fioDomains": Array [],
       },
-      "passwordRecoveryReminderModal": Object {
-        "isVisible": false,
-      },
       "passwordReminderModal": Object {
         "status": null,
       },
@@ -447,7 +444,6 @@ Object {
       "autoLogoutTimeInSeconds": 3600,
       "bluetoothMode": false,
       "changesLocked": true,
-      "confirmPasswordError": "",
       "countryCode": "",
       "customTokens": Array [],
       "defaultFiat": "USD",

@@ -51,7 +51,7 @@ export class SwapSettings extends React.Component<Props, State> {
     const { exchanges } = props
 
     this.state = { enabled: {}, needsActivation: {} }
-    for (const pluginId in exchanges) {
+    for (const pluginId of Object.keys(exchanges)) {
       const exchange = exchanges[pluginId]
       this.state.enabled[pluginId] = exchange.enabled
       this.state.needsActivation[pluginId] = exchange.needsActivation

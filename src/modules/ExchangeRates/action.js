@@ -38,7 +38,7 @@ async function buildExchangeRates(state: RootState) {
     if (walletIsoFiat !== 'iso:USD') {
       exchangeRates[`iso:USD_${walletIsoFiat}`] = exchangeCache.convertCurrency('iso:USD', walletIsoFiat)
     }
-    for (const tokenCode in wallet.balances) {
+    for (const tokenCode of Object.keys(wallet.balances)) {
       if (tokenCode !== currencyCode) {
         exchangeRates[`${tokenCode}_${walletIsoFiat}`] = exchangeCache.convertCurrency(tokenCode, walletIsoFiat)
         exchangeRates[`${tokenCode}_${accountIsoFiat}`] = exchangeCache.convertCurrency(tokenCode, accountIsoFiat)

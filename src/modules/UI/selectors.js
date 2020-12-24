@@ -65,7 +65,7 @@ export const getActiveWalletCurrencyInfos = (state: RootState) => {
   const { account } = state.core
   const { currencyConfig = {} } = account
   const activeCurrencyCodes = getActiveWalletCurrencyCodes(state)
-  for (const pluginId in currencyConfig) {
+  for (const pluginId of Object.keys(currencyConfig)) {
     const info = currencyConfig[pluginId].currencyInfo
     if (activeCurrencyCodes.includes(info.currencyCode)) {
       currencyInfos.push(info)
@@ -79,7 +79,7 @@ export const getWalletLoadingPercent = (state: RootState) => {
   const walletIds = Object.keys(walletsForProgress)
   const numberOfWallets = walletIds.length
   let progressBeforeDivision = 0
-  for (const walletId in walletsForProgress) {
+  for (const walletId of Object.keys(walletsForProgress)) {
     progressBeforeDivision += walletsForProgress[walletId]
   }
   const progressAfterDivision = progressBeforeDivision / numberOfWallets
