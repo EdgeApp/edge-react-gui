@@ -17,6 +17,7 @@ const mapStateToProps = (state: RootState) => {
       state,
       account,
       wallets: {},
+      currencyWallets: {},
       fioWallets: [],
       isConnected: state.network.isConnected
     }
@@ -27,6 +28,7 @@ const mapStateToProps = (state: RootState) => {
     state,
     account,
     wallets,
+    currencyWallets: state.core.account.currencyWallets,
     fioWallets,
     isConnected: state.network.isConnected
   }
