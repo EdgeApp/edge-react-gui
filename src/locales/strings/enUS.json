@@ -687,6 +687,8 @@
   "string_no_wallet_name": "No Wallet Name",
   "string_enter_amount": "Enter Amount",
   "string_status": "Status",
+  "string_enter": "Enter",
+  "string_fee": "Fee",
   "export_transaction_error": "Start date should be earlier than the end date",
   "export_transaction_export_error": "No transactions in the date range chosen",
   "export_transaction_loading": "Exporting Transactions…",
