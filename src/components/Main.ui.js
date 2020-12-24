@@ -476,6 +476,17 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
+          <Stack key={Constants.RECOVER_PASSWORD} hideTabBar>
+            <Scene
+              key={Constants.RECOVER_PASSWORD}
+              navTransparent
+              component={ifLoggedIn(PasswordRecoveryConnector)}
+              renderTitle={this.renderTitle(s.strings.title_password_recovery)}
+              renderLeftButton={this.renderBackButton()}
+              renderRightButton={this.renderEmptyButton()}
+            />
+          </Stack>
+
           <Stack key={Constants.MANAGE_TOKENS} hideTabBar>
             <Scene
               key={Constants.MANAGE_TOKENS_NOT_USED}
@@ -539,14 +550,6 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               component={ifLoggedIn(OtpSettingsScene)}
               renderTitle={this.renderTitle(s.strings.title_otp)}
-              renderLeftButton={this.renderBackButton()}
-              renderRightButton={this.renderEmptyButton()}
-            />
-            <Scene
-              key={Constants.RECOVER_PASSWORD}
-              navTransparent
-              component={ifLoggedIn(PasswordRecoveryConnector)}
-              renderTitle={this.renderTitle(s.strings.title_password_recovery)}
               renderLeftButton={this.renderBackButton()}
               renderRightButton={this.renderEmptyButton()}
             />
