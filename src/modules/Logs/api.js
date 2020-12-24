@@ -1,6 +1,6 @@
 // @flow
-
-const API_PREFIX = 'https://info1.edgesecure.co:8444/v1/'
+import { getEdgeServers } from '../../util/servers.js'
+import { shuffleArray } from '../../util/utils.js'
 
 const headers = {
   Accept: 'application/json',
@@ -9,12 +9,16 @@ const headers = {
 
 const request = (name, path, method, data) => {
   console.log(`====== ${name} REQUEST ======`, (data && data.length) || data)
+  const servers = getEdgeServers().infoServers
+  const server = shuffleArray(servers)[0] + '/v1/'
+  const isoDate = new Date().toISOString()
+  const uniqueId = (Math.random() * 100000000).toString().slice(0, 8)
 
   return global
-    .fetch(`${API_PREFIX}${path}`, {
+    .fetch(`${server}${path}`, {
       method,
       headers,
-      body: JSON.stringify({ data })
+      body: JSON.stringify({ isoDate, uniqueId, data })
     })
     .then(response => {
       console.log(`====== ${name} SUCCESS ======`, response)

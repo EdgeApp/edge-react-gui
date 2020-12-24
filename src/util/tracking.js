@@ -4,7 +4,8 @@ import analytics from '@react-native-firebase/analytics'
 import { getUniqueId } from 'react-native-device-info'
 
 import ENV from '../../env.json'
-import { asyncWaterfall } from './utils.js'
+import { getEdgeServers } from './servers.js'
+import { asyncWaterfall, shuffleArray } from './utils.js'
 export type TrackingEvent =
   | 'ActivateWalletCancel'
   | 'ActivateWalletSelect'
@@ -96,18 +97,22 @@ async function logToFirebase(event: TrackingEvent, values: TrackingValues) {
  * Send a tracking event to the util server.
  */
 async function logToUtilServer(event: TrackingEvent, values: TrackingValues) {
-  fetch('https://util2.edge.app/api/v1/event', {
+  const servers = getEdgeServers().referralServers
+  const server = shuffleArray(servers)[0]
+  const isoDate = new Date().toISOString()
+  const uniqueId = (Math.random() * 100000000).toString().slice(0, 8)
+  fetch(`${server}/api/v1/event`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json'
     },
-    body: JSON.stringify({ ...values, event })
+    body: JSON.stringify({ ...values, event, isoDate, uniqueId })
   })
 }
 
 export async function utilWaterfall(path: string, options?: any): Promise<any> {
-  const utilServers = ['https://util2.edge.app/', 'https://util1.edge.app/']
+  const utilServers = getEdgeServers().referralServers
   const funcs = utilServers.map(server => async () => {
     const result = await fetch(server + path, options)
     if (typeof result !== 'object') {
