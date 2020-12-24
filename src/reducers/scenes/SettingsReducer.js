@@ -454,22 +454,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/SETTINGS/TOUCH_ID_SETTINGS': {
-      if (action.data) {
-        return {
-          ...state,
-          isTouchSupported: action.data.isTouchSupported,
-          isTouchEnabled: action.data.isTouchEnabled
-        }
-      } else {
-        return {
-          ...state,
-          isTouchSupported: false,
-          isTouchEnabled: false
-        }
-      }
-    }
-
     case 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS': {
       if (!action.data) throw new Error('Invalid action')
       return {
