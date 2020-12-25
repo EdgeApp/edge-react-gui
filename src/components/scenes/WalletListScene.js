@@ -71,7 +71,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
     const setState = this.setState.bind(this)
     setTimeout(() => {
       setState({
-        testValue: curState.testValue + 234254.34
+        testValue: curState.testValue + 23254.34
       })
     }, 1000)
   }
