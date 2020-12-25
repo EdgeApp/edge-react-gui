@@ -56,23 +56,23 @@ class WalletListComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  componentDidMount() {
-    const curState = this.state
-    const setState = this.setState.bind(this)
-    setState({
-      testValue: curState.testValue + 234254.34
-    })
-  }
+  // componentDidMount() {
+  //   const curState = this.state
+  //   const setState = this.setState.bind(this)
+  //   setState({
+  //     testValue: curState.testValue + 106.34
+  //   })
+  // }
 
-  componentDidUpdate() {
-    const curState = this.state
-    const setState = this.setState.bind(this)
-    setTimeout(() => {
-      setState({
-        testValue: curState.testValue + 23254.34
-      })
-    }, 2000)
-  }
+  // componentDidUpdate() {
+  //   const curState = this.state
+  //   const setState = this.setState.bind(this)
+  //   setTimeout(() => {
+  //     setState({
+  //       testValue: curState.testValue + 455.34
+  //     })
+  //   }, 2000)
+  // }
 
   handleSort = () => this.setState({ sorting: true })
 
@@ -87,7 +87,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
         <WiredProgressBar progress={getWalletLoadingPercent} />
         <WiredBalanceBox
           showBalance={getIsAccountBalanceVisible}
-          fiatAmount={intlFormatNumber(this.state.testValue, { toFixed: 2 })}
+          fiatAmount={getTotalFiatAmountFromExchangeRates}
           isoFiatCurrencyCode={getDefaultIsoFiat}
           onPress={this.props.toggleAccountBalanceVisibility}
           exchangeRates={this.props.exchangeRates}

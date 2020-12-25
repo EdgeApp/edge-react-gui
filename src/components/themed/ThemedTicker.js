@@ -10,10 +10,11 @@ type Props = {
   style: any,
   numberOfLines?: number,
   ellipsizeMode?: string,
+  durations?: number,
   [x: string]: any
 }
 
-export const ThemedTicker = ({ children, style, ...props }: Props) => {
+export const ThemedTicker = ({ children, style, duration, ...props }: Props) => {
   const theme = useTheme()
 
   // TODO: The nature of the Ticker compoenent does not apply textProps to the string as a whole so these propds dont work.
@@ -29,7 +30,7 @@ export const ThemedTicker = ({ children, style, ...props }: Props) => {
   }
 
   return (
-    <Ticker {...props} textProps={textProps} textStyle={[defaultTickerStyle, style]}>
+    <Ticker {...props} textProps={textProps} textStyle={[defaultTickerStyle, style]} duration={duration || 500}>
       {children}
     </Ticker>
   )

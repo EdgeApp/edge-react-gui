@@ -25,6 +25,7 @@ import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import BuyCrypto from '../common/BuyCrypto.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { ThemedTicker } from '../themed/ThemedTicker.js'
 import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
@@ -217,14 +218,10 @@ export class TransactionList extends React.Component<Props, State> {
                           <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
                             {displayDenomination.symbol + ' '}
                           </T>
-                          <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
-                            {cryptoAmountString}
-                          </T>
+                          <ThemedTicker style={[styles.currentBalanceBoxBits, styles.symbol]}>{cryptoAmountString}</ThemedTicker>
                         </View>
                       ) : (
-                        <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
-                          {cryptoAmountString}
-                        </T>
+                        <ThemedTicker style={styles.currentBalanceBoxBits}>{cryptoAmountString}</ThemedTicker>
                       )}
 
                       {!displayDenomination.symbol && (

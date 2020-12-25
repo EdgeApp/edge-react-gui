@@ -13,6 +13,7 @@ import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
+import { ThemedTicker } from './ThemedTicker'
 
 const FULL_WIDTH = Dimensions.get('window').width
 const WIDTH_DIMENSION_HIDE = FULL_WIDTH * 0.35
@@ -180,16 +181,20 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
               <View style={styles.detailsContainer}>
                 <View style={styles.detailsRow}>
                   <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
-                  <EdgeText style={styles.detailsValue}>{cryptoAmount}</EdgeText>
+                  <ThemedTicker style={styles.detailsValue}>{cryptoAmount}</ThemedTicker>
                 </View>
                 <View style={styles.detailsRow}>
                   <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
-                  <EdgeText style={styles.detailsFiat}>{fiatBalanceSymbol + fiatBalance}</EdgeText>
+                  <ThemedTicker style={styles.detailsFiat}>{fiatBalanceSymbol + fiatBalance}</ThemedTicker>
                 </View>
                 <View style={styles.divider} />
                 <View style={styles.detailsRow}>
-                  <EdgeText style={styles.exchangeRate}>{exchangeRateFiatSymbol + exchangeRate}</EdgeText>
-                  <EdgeText style={[styles.percentage, { color: differencePercentageStyle }]}>{differencePercentage}</EdgeText>
+                  <View style={styles.exchangeRateContainer}>
+                    <ThemedTicker style={styles.exchangeRate}>{exchangeRateFiatSymbol + exchangeRate}</ThemedTicker>
+                  </View>
+                  <View style={styles.percentageContainer}>
+                    <ThemedTicker style={[styles.percentage, { color: differencePercentageStyle }]}>{differencePercentage}</ThemedTicker>
+                  </View>
                 </View>
               </View>
             </View>
@@ -238,9 +243,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column'
   },
   detailsRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
+    flexDirection: 'row'
   },
   detailsCurrency: {
     flex: 1,
@@ -259,10 +262,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'right',
     color: theme.secondaryText
   },
-  exchangeRate: {
+  exchangeRateContainer: {
     flex: 1,
-    fontSize: theme.rem(0.75),
-    textAlign: 'left'
+    alignItems: 'flex-start'
+  },
+  exchangeRate: {
+    fontSize: theme.rem(0.75)
+  },
+  percentageContainer: {
+    flex: 1,
+    alignItems: 'flex-end'
   },
   percentage: {
     fontSize: theme.rem(0.75),
