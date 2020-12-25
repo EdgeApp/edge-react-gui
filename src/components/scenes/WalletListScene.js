@@ -11,7 +11,6 @@ import { toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../
 import { Fontello } from '../../assets/vector/index.js'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
-import { formatNumber as intlFormatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
 import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
@@ -51,8 +50,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      sorting: false,
-      testValue: 3453
+      sorting: false
     }
   }
 
