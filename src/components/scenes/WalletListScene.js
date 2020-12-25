@@ -56,24 +56,6 @@ class WalletListComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  // componentDidMount() {
-  //   const curState = this.state
-  //   const setState = this.setState.bind(this)
-  //   setState({
-  //     testValue: curState.testValue + 106.34
-  //   })
-  // }
-
-  // componentDidUpdate() {
-  //   const curState = this.state
-  //   const setState = this.setState.bind(this)
-  //   setTimeout(() => {
-  //     setState({
-  //       testValue: curState.testValue + 455.34
-  //     })
-  //   }, 2000)
-  // }
-
   handleSort = () => this.setState({ sorting: true })
 
   render() {
