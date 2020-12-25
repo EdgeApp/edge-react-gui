@@ -16,6 +16,8 @@ type Props = {
 export const ThemedTicker = ({ children, style, ...props }: Props) => {
   const theme = useTheme()
 
+  // TODO: The nature of the Ticker compoenent does not apply textProps to the string as a whole so these propds dont work.
+  // May not be able to have the text automatically adjust to fit with this ticker. If this is needed, may need more creative solution.
   const iosTextProps = { numberOfLines: props.numberOfLines || 1, adjustsFontSizeToFit: true }
   const androidTextProps = { numberOfLines: props.numberOfLines || 1, ellipsizeMode: props.ellipsizeMode || 'middle' }
   const textProps = Platform.OS === 'ios' ? iosTextProps : androidTextProps

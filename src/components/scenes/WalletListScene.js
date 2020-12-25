@@ -11,6 +11,7 @@ import { toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../
 import { Fontello } from '../../assets/vector/index.js'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import * as Constants from '../../constants/indexConstants.js'
+import { formatNumber as intlFormatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
 import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
@@ -50,8 +51,29 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      sorting: false
+      sorting: false,
+      testValue: 3453
     }
+  }
+
+  componentDidMount() {
+    const curState = this.state
+    const setState = this.setState.bind(this)
+    setTimeout(() => {
+      setState({
+        testValue: curState.testValue + 234254.34
+      })
+    }, 1000)
+  }
+
+  componentDidUpdate() {
+    const curState = this.state
+    const setState = this.setState.bind(this)
+    setTimeout(() => {
+      setState({
+        testValue: curState.testValue + 234254.34
+      })
+    }, 1000)
   }
 
   handleSort = () => this.setState({ sorting: true })
@@ -67,7 +89,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
         <WiredProgressBar progress={getWalletLoadingPercent} />
         <WiredBalanceBox
           showBalance={getIsAccountBalanceVisible}
-          fiatAmount={getTotalFiatAmountFromExchangeRates}
+          fiatAmount={intlFormatNumber(this.state.testValue, { toFixed: 2 })}
           isoFiatCurrencyCode={getDefaultIsoFiat}
           onPress={this.props.toggleAccountBalanceVisibility}
           exchangeRates={this.props.exchangeRates}

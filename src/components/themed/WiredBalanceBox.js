@@ -86,8 +86,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText
   },
   balanceBody: {
-    color: theme.primaryText,
-    fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1.75)
   },
   showBalance: {
