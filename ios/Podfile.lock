@@ -445,6 +445,8 @@ PODS:
     - React
   - RNLocalize (1.4.0):
     - React
+  - RNReanimated (1.13.2):
+    - React-Core
   - RNShare (3.8.3):
     - React
   - RNSound (0.11.0):
@@ -536,6 +538,7 @@ DEPENDENCIES:
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNLocalize (from `../node_modules/react-native-localize`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNShare (from `../node_modules/react-native-share`)
   - RNSound (from `../node_modules/react-native-sound`)
   - RNStoreReview (from `../node_modules/react-native-store-review/ios`)
@@ -677,6 +680,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fs"
   RNLocalize:
     :path: "../node_modules/react-native-localize"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNShare:
     :path: "../node_modules/react-native-share"
   RNSound:
@@ -768,6 +773,7 @@ SPEC CHECKSUMS:
   RNFBMessaging: c55142d3b2d34d706bf12bd5eef9ef35254c2df1
   RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
   RNLocalize: b6df30cc25ae736d37874f9bce13351db2f56796
+  RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
   RNShare: 883e13860ebb923bf9f7312187c3d744f546e3bb
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
@@ -776,6 +782,6 @@ SPEC CHECKSUMS:
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 68877d18b199959276325d4c6448ef9bbabe31b9
+PODFILE CHECKSUM: 0a98dfaa976506f38155e2b8c5d19441b6807042
 
 COCOAPODS: 1.10.0
