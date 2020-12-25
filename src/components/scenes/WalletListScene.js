@@ -59,11 +59,9 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   componentDidMount() {
     const curState = this.state
     const setState = this.setState.bind(this)
-    setTimeout(() => {
-      setState({
-        testValue: curState.testValue + 234254.34
-      })
-    }, 1000)
+    setState({
+      testValue: curState.testValue + 234254.34
+    })
   }
 
   componentDidUpdate() {
@@ -73,7 +71,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
       setState({
         testValue: curState.testValue + 23254.34
       })
-    }, 1000)
+    }, 2000)
   }
 
   handleSort = () => this.setState({ sorting: true })
