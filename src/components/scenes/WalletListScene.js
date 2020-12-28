@@ -101,21 +101,23 @@ class WalletListComponent extends React.PureComponent<Props, State> {
           onPress={this.props.toggleAccountBalanceVisibility}
           exchangeRates={this.props.exchangeRates}
         />
-        <View /* header stack */>
-          {/* <SettingsHeaderRow icon={<Fontello name="wallet-1" size={theme.rem(1.25)} color={theme.icon} />} text={s.strings.fragment_wallets_header} /> */}
-          <CrossFade activeKey={sorting ? 'doneButton' : 'defaultButtons'}>
+        <View style={styles.headerContainer}>
+          <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
+          {!sorting && (
             <View key="defaultButtons" style={styles.headerButtonsContainer}>
               <TouchableOpacity style={styles.addButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
-                <Ionicon name="md-add" size={theme.rem(1.25)} color={theme.iconTappable} />
+                <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
               <TouchableOpacity onPress={this.handleSort}>
-                <Fontello name="sort" size={theme.rem(1.25)} color={theme.iconTappable} />
+                <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
             </View>
+          )}
+          {sorting && (
             <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={this.disableSorting}>
               <EdgeText>{s.strings.string_done_cap}</EdgeText>
             </TouchableOpacity>
-          </CrossFade>
+          )}
         </View>
         <View style={styles.listStack}>
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
@@ -152,16 +154,21 @@ class WalletListComponent extends React.PureComponent<Props, State> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   // The sort & add buttons are stacked on top of the header component:
+  // Header Stack style
+  headerContainer: {
+    flexDirection: 'row',
+    marginHorizontal: theme.rem(2)
+  },
+  headerText: {
+    flex: 1
+  },
   headerButtonsContainer: {
-    flexGrow: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'flex-end',
-    paddingHorizontal: theme.rem(1)
+    justifyContent: 'center'
   },
   addButton: {
-    marginRight: theme.rem(0.75)
+    marginRight: theme.rem(0.5)
   },
   // The two lists are stacked vertically on top of each other:
   listStack: {
