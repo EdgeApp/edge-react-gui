@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { ActivityIndicator, Image, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
@@ -44,11 +44,11 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
     if (!guiWallet) {
       return (
         <View style={styles.container}>
-          <TouchableHighlight activeOpacity={0.95} underlayColor={theme.underlayColor} {...sortHandlers}>
+          <TouchableOpacity activeOpacity={0.95} underlayColor={theme.underlayColor} {...sortHandlers}>
             <View style={[styles.rowContainer, styles.loaderContainer]}>
               <ActivityIndicator color={theme.primaryText} size="small" />
             </View>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
       )
     }
@@ -69,7 +69,7 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
 
     return (
       <View style={styles.container}>
-        <TouchableHighlight activeOpacity={theme.underlayOpacity} underlayColor={theme.underlayColor} {...sortHandlers}>
+        <TouchableOpacity {...sortHandlers}>
           <View style={styles.rowContainer}>
             <View style={styles.iconContainer}>
               <Ionicon name="ios-menu" size={theme.rem(1.25)} color={theme.icon} />
@@ -88,7 +88,7 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
               </View>
             </View>
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -96,14 +96,13 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    flex: 1,
-    marginBottom: theme.rem(1 / 16)
+    paddingHorizontal: theme.rem(2)
   },
   rowContainer: {
-    flex: 1,
     flexDirection: 'row',
-    height: theme.rem(4),
-    padding: theme.rem(0.75),
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: theme.rem(4.25),
     backgroundColor: theme.tileBackground
   },
   loaderContainer: {
@@ -114,11 +113,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     width: theme.rem(1.25),
-    marginRight: theme.rem(0.75)
+    marginRight: theme.rem(1)
   },
   icon: {
-    width: theme.rem(1.25),
-    height: theme.rem(1.25),
+    width: theme.rem(2),
+    height: theme.rem(2),
     resizeMode: 'contain'
   },
   detailsContainer: {

@@ -1,10 +1,11 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
+import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -45,11 +46,11 @@ class WalletListEmptyRowComponent extends React.PureComponent<Props & ThemeProps
             <EdgeText style={styles.swipeIcon}>{WALLET_LIST_OPTIONS_ICON}</EdgeText>
           </TouchableOpacity>
         </View>
-        <TouchableHighlight activeOpacity={theme.underlayOpacity} undelayColor={theme.underlayColor} onLongPress={this.handleOpenWalletListMenuModal}>
-          <View style={styles.container}>
+        <Gradient style={styles.container}>
+          <TouchableOpacity onLongPress={this.handleOpenWalletListMenuModal}>
             <ActivityIndicator color={theme.primaryText} size="large" />
-          </View>
-        </TouchableHighlight>
+          </TouchableOpacity>
+        </Gradient>
       </SwipeRow>
     )
   }
@@ -61,17 +62,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: theme.rem(0.75),
-    height: theme.rem(5.75),
-    marginBottom: theme.rem(1 / 16),
-    backgroundColor: theme.tileBackground
+    height: theme.rem(4.25),
+    paddingHorizontal: theme.rem(1.75)
   },
   swipeContainer: {
     flex: 1,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: theme.rem(5.75),
+    height: theme.rem(4.5),
     marginBottom: theme.rem(1 / 16)
   },
   swipeButton: {

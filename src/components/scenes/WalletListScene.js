@@ -115,7 +115,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
           )}
           {sorting && (
             <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={this.disableSorting}>
-              <EdgeText>{s.strings.string_done_cap}</EdgeText>
+              <EdgeText style={styles.doneButton}>{s.strings.string_done_cap}</EdgeText>
             </TouchableOpacity>
           )}
         </View>
@@ -169,6 +169,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   addButton: {
     marginRight: theme.rem(0.5)
+  },
+  doneButton: {
+    fontSize: theme.rem(1.25),
+    color: theme.textLink
   },
   // The two lists are stacked vertically on top of each other:
   listStack: {
