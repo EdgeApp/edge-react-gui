@@ -81,7 +81,7 @@ class TransactionListTopComponent extends React.PureComponent<Props> {
             )}
           </TouchableOpacity>
           <View style={styles.balanceBoxWalletProgressIconContainer}>
-            <WalletProgressIcon walletId={walletId} size={theme.rem(2.5)} />
+            <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} size={theme.rem(2.5)} />
           </View>
         </View>
       </View>

@@ -69,7 +69,6 @@ import { handlePluginBack, renderPluginBackButton } from './navigation/GuiPlugin
 import { HeaderTitle } from './navigation/HeaderTitle.js'
 import { SideMenuButton } from './navigation/SideMenuButton.js'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle.js'
-import { WalletProgressIconHeader } from './navigation/WalletProgressIconHeader.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
@@ -266,7 +265,7 @@ export class MainComponent extends React.Component<Props> {
                 }}
                 navTransparent
                 component={ifLoggedIn(TransactionList)}
-                renderTitle={<WalletProgressIconHeader />}
+                renderTitle={<HeaderTitle title=" " />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_wallets} />}
                 renderRightButton={<SideMenuButton />}
               />
