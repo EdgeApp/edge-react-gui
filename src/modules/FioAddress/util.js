@@ -203,9 +203,15 @@ export const updatePubAddressesForFioAddress = async (
     const chainCode = cCode.toUpperCase()
     const tokenCode = tCode.toUpperCase()
     const fullCurrencyCode = `${chainCode}:${tokenCode}`
+    let pubAddress = publicAddress
+
     if (isConnection) {
       connectedWalletsFromDisklet[fullCurrencyCode] = { walletId, publicAddress }
     } else {
+      const { publicAddress: pubAddressFromStore } = connectedWalletsFromDisklet[fullCurrencyCode]
+      if (pubAddressFromStore !== publicAddress) {
+        pubAddress = pubAddressFromStore
+      }
       delete connectedWalletsFromDisklet[fullCurrencyCode]
     }
     iteration.ccWalletMap.push({
@@ -215,7 +221,7 @@ export const updatePubAddressesForFioAddress = async (
     iteration.publicAddresses.push({
       token_code: tokenCode,
       chain_code: chainCode,
-      public_address: publicAddress
+      public_address: pubAddress
     })
     if (iteration.publicAddresses.length === limitPerCall) {
       try {
