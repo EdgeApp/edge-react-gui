@@ -73,6 +73,7 @@ export const ratePlugins = {
   coingecko: true,
   constantRate: true,
   coincapLegacy: false,
+  edgeRates: true,
   nomics: ENV.NOMICS_INIT,
   currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
   wazirx: true
