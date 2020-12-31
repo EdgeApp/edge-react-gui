@@ -65,7 +65,7 @@ device: ${getBrand()} ${getDeviceId()}
     .then(() => LOGGER.log(walletDump))
     .then(() => LOGGER.readLogs())
     .then(logs => LOGS_API.sendLogs(logs))
-    .catch(() => {
-      throw new Error(s.strings.settings_modal_send_logs_failure)
+    .catch(e => {
+      throw new Error(`${s.strings.settings_modal_send_logs_failure} code ${e.message}`)
     })
 }
