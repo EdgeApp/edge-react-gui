@@ -250,6 +250,57 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   COMP: {
     denomination: '1000000000000000000'
   },
+  AAVE: {
+    denomination: '1000000000000000000'
+  },
+  aYFI: {
+    denomination: '1000000000000000000'
+  },
+  aLINK: {
+    denomination: '1000000000000000000'
+  },
+  aDai: {
+    denomination: '1000000000000000000'
+  },
+  aBAT: {
+    denomination: '1000000000000000000'
+  },
+  aETH: {
+    denomination: '1000000000000000000'
+  },
+  aWBTC: {
+    denomination: '100000000'
+  },
+  aSNX: {
+    denomination: '1000000000000000000'
+  },
+  aREN: {
+    denomination: '1000000000000000000'
+  },
+  aUSDT: {
+    denomination: '1000000'
+  },
+  aMKR: {
+    denomination: '1000000000000000000'
+  },
+  aMANA: {
+    denomination: '1000000000000000000'
+  },
+  aZRX: {
+    denomination: '1000000000000000000'
+  },
+  aKNC: {
+    denomination: '1000000000000000000'
+  },
+  aUSDC: {
+    denomination: '1000000'
+  },
+  aSUSD: {
+    denomination: '1000000000000000000'
+  },
+  aUNI: {
+    denomination: '1000000000000000000'
+  },
   customTokens: [],
   mostRecentWallets: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
@@ -337,6 +388,23 @@ export const SYNCED_ACCOUNT_TYPES = {
   SNX: 'object',
   SUSD: 'object',
   SBTC: 'object',
+  AAVE: 'object',
+  aYFI: 'object',
+  aLINK: 'object',
+  aDai: 'object',
+  aBAT: 'object',
+  aETH: 'object',
+  aWBTC: 'object',
+  aSNX: 'object',
+  aREN: 'object',
+  aUSDT: 'object',
+  aMKR: 'object',
+  aMANA: 'object',
+  aZRX: 'object',
+  aKNC: 'object',
+  aUSDC: 'object',
+  aSUSD: 'object',
+  aUNI: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   mostRecentWallets: 'object',
   passwordRecoveryRemindersShown: 'object'

@@ -215,6 +215,9 @@ Object {
       },
     },
     "settings": Object {
+      "AAVE": Object {
+        "denomination": "1000000000000000000",
+      },
       "AGLD": Object {
         "denomination": "1000000000",
       },
@@ -438,6 +441,54 @@ Object {
         "denomination": "1000000",
       },
       "ZRX": Object {
+        "denomination": "1000000000000000000",
+      },
+      "aBAT": Object {
+        "denomination": "1000000000000000000",
+      },
+      "aDai": Object {
+        "denomination": "1000000000000000000",
+      },
+      "aETH": Object {
+        "denomination": "1000000000000000000",
+      },
+      "aKNC": Object {
+        "denomination": "1000000000000000000",
+      },
+      "aLINK": Object {
+        "denomination": "1000000000000000000",
+      },
+      "aMANA": Object {
+        "denomination": "1000000000000000000",
+      },
+      "aMKR": Object {
+        "denomination": "1000000000000000000",
+      },
+      "aREN": Object {
+        "denomination": "1000000000000000000",
+      },
+      "aSNX": Object {
+        "denomination": "1000000000000000000",
+      },
+      "aSUSD": Object {
+        "denomination": "1000000000000000000",
+      },
+      "aUNI": Object {
+        "denomination": "1000000000000000000",
+      },
+      "aUSDC": Object {
+        "denomination": "1000000",
+      },
+      "aUSDT": Object {
+        "denomination": "1000000",
+      },
+      "aWBTC": Object {
+        "denomination": "100000000",
+      },
+      "aYFI": Object {
+        "denomination": "1000000000000000000",
+      },
+      "aZRX": Object {
         "denomination": "1000000000000000000",
       },
       "account": null,
