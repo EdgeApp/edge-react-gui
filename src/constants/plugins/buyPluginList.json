@@ -577,7 +577,7 @@
     ],
     "description": "Fee: 2.5% / Settlement: 5min - 24hours\nLimit: $50000/day",
     "title": "POLi Bank Transfer",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
     "forCountries": [
       "GB",
       "AU",
@@ -601,9 +601,9 @@
     "paymentTypes": [
       "cash"
     ],
-    "description": "Fee: 5.5% / Settlement: 5min - 24hours\nLimit: $9000/day",
+    "description": "Fee: 5.5% / Settlement: 5min - 24hours\nLimit: $1000/day",
     "title": "Cash with Newsagent",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
     "forCountries": [
       "AU"
     ],
@@ -627,7 +627,7 @@
     ],
     "description": "Fee: 3% / Settlement: Instant\nLimit: $50000/day",
     "title": "PayID",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
     "forCountries": [
       "AU"
     ],
@@ -651,7 +651,7 @@
     ],
     "description": "Fee: 2% / Settlement: 1 - 48hours\nLimit: $10000+/day",
     "title": "BPay",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
     "forCountries": [
       "AU"
     ],
@@ -673,9 +673,9 @@
     "paymentTypes": [
       "cash"
     ],
-    "description": "Fee: 4.5% / Settlement: Instant\nLimit: $50000/day",
+    "description": "Fee: 4.5% / Settlement: Instant\nLimit: $1000/day",
     "title": "Australia Post",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
     "forCountries": [
       "AU"
     ],
@@ -699,7 +699,7 @@
     ],
     "description": "Fee: 2.9% / Settlement: Instant\nLimit: $5000/day",
     "title": "Credit and Debit Card",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
     "forCountries": [
       "AU",
       "HK"
@@ -724,7 +724,7 @@
     ],
     "description": "Fee: 1.15% / Settlement: Instant - 3days\nDaily Limit: €14000\nMonthly Limit: €150000",
     "title": "Sofort - Klarna",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/banxa.png",
+    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
     "forCountries": [
       "DE",
       "AT",
@@ -1015,7 +1015,7 @@
     },
     "title": "Faster Payments",
     "paymentTypeLogoKey": "fasterPayments",
-    "description": "Fee: 2.5% / Settlement: Instant - 1hour\nLimit: £5000",
+    "description": "Fee: 2.5% / Settlement: Instant - 1hour\nLimit: £6000",
     "sortIndex": 1
   },
   {
