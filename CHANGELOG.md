@@ -1,5 +1,29 @@
 # edge-react-gui
 
+## 1.19.1 (2020-12-31)
+
+- Add new swap partner SideShift
+- Add WAX
+- Add Aave interest bearing tokens support
+- FIO: Fix removing public address and added parseUri for approving request
+- Update partner descriptions and assets
+- Theme the password-recovery reminder modal
+- Clean up unused code
+- Replace all for-in loops with for-of loops
+- Use new logs1 endpoint
+- Upgrade edge-core-js to v0.17.19
+  - Upgrade Airbitz accounts with secret-key login
+  - Filter duplicates from rateHints
+  - Add low priority edgeRates bias
+  - Update linting
+- Upgrade edge-exchange-plugins to v0.11.18
+  - Add rates1 as a fiat/fiat exchange rate provider
+  - Fix Coingecko returning duplicate rates
+  - Fix Sideshift cleaner throws and formatting
+- Upgrade edge-currency-accountbased to v0.7.41
+  - Add Aave ERC20 tokens
+  - FIO: Add additional domain transfer transaction
+
 ## 1.19.0 (2020-12-21)
 
 - Upgrade to React Native v0.63.4
