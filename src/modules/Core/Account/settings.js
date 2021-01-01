@@ -253,52 +253,52 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   AAVE: {
     denomination: '1000000000000000000'
   },
-  aYFI: {
+  AYFI: {
     denomination: '1000000000000000000'
   },
-  aLINK: {
+  ALINK: {
     denomination: '1000000000000000000'
   },
-  aDai: {
+  ADAI: {
     denomination: '1000000000000000000'
   },
-  aBAT: {
+  ABAT: {
     denomination: '1000000000000000000'
   },
-  aETH: {
+  AETH: {
     denomination: '1000000000000000000'
   },
-  aWBTC: {
+  AWBTC: {
     denomination: '100000000'
   },
-  aSNX: {
+  ASNX: {
     denomination: '1000000000000000000'
   },
-  aREN: {
+  AREN: {
     denomination: '1000000000000000000'
   },
-  aUSDT: {
+  AUSDT: {
     denomination: '1000000'
   },
-  aMKR: {
+  AMKR: {
     denomination: '1000000000000000000'
   },
-  aMANA: {
+  AMANA: {
     denomination: '1000000000000000000'
   },
-  aZRX: {
+  AZRX: {
     denomination: '1000000000000000000'
   },
-  aKNC: {
+  AKNC: {
     denomination: '1000000000000000000'
   },
-  aUSDC: {
+  AUSDC: {
     denomination: '1000000'
   },
-  aSUSD: {
+  ASUSD: {
     denomination: '1000000000000000000'
   },
-  aUNI: {
+  AUNI: {
     denomination: '1000000000000000000'
   },
   customTokens: [],
@@ -389,22 +389,22 @@ export const SYNCED_ACCOUNT_TYPES = {
   SUSD: 'object',
   SBTC: 'object',
   AAVE: 'object',
-  aYFI: 'object',
-  aLINK: 'object',
-  aDai: 'object',
-  aBAT: 'object',
-  aETH: 'object',
-  aWBTC: 'object',
-  aSNX: 'object',
-  aREN: 'object',
-  aUSDT: 'object',
-  aMKR: 'object',
-  aMANA: 'object',
-  aZRX: 'object',
-  aKNC: 'object',
-  aUSDC: 'object',
-  aSUSD: 'object',
-  aUNI: 'object',
+  AYFI: 'object',
+  ALINK: 'object',
+  ADAI: 'object',
+  ABAT: 'object',
+  AETH: 'object',
+  AWBTC: 'object',
+  ASNX: 'object',
+  AREN: 'object',
+  AUSDT: 'object',
+  AMKR: 'object',
+  AMANA: 'object',
+  AZRX: 'object',
+  AKNC: 'object',
+  AUSDC: 'object',
+  ASUSD: 'object',
+  AUNI: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   mostRecentWallets: 'object',
   passwordRecoveryRemindersShown: 'object'
