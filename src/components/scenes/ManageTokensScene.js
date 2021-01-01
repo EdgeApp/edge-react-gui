@@ -87,7 +87,7 @@ export default class ManageTokens extends React.Component<ManageTokensProps, Sta
     const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
 
     const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
-      if (a.currencyCode < b.currencyCode) return -1
+      if (a.currencyCode.toUpperCase() < b.currencyCode.toUpperCase()) return -1
       if (a === b) return 0
       return 1
     })
