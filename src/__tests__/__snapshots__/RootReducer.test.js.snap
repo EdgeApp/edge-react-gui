@@ -218,13 +218,61 @@ Object {
       "AAVE": Object {
         "denomination": "1000000000000000000",
       },
+      "ABAT": Object {
+        "denomination": "1000000000000000000",
+      },
+      "ADAI": Object {
+        "denomination": "1000000000000000000",
+      },
+      "AETH": Object {
+        "denomination": "1000000000000000000",
+      },
       "AGLD": Object {
         "denomination": "1000000000",
+      },
+      "AKNC": Object {
+        "denomination": "1000000000000000000",
+      },
+      "ALINK": Object {
+        "denomination": "1000000000000000000",
+      },
+      "AMANA": Object {
+        "denomination": "1000000000000000000",
+      },
+      "AMKR": Object {
+        "denomination": "1000000000000000000",
       },
       "ANT": Object {
         "denomination": "1000000000000000000",
       },
       "ANTV1": Object {
+        "denomination": "1000000000000000000",
+      },
+      "AREN": Object {
+        "denomination": "1000000000000000000",
+      },
+      "ASNX": Object {
+        "denomination": "1000000000000000000",
+      },
+      "ASUSD": Object {
+        "denomination": "1000000000000000000",
+      },
+      "AUNI": Object {
+        "denomination": "1000000000000000000",
+      },
+      "AUSDC": Object {
+        "denomination": "1000000",
+      },
+      "AUSDT": Object {
+        "denomination": "1000000",
+      },
+      "AWBTC": Object {
+        "denomination": "100000000",
+      },
+      "AYFI": Object {
+        "denomination": "1000000000000000000",
+      },
+      "AZRX": Object {
         "denomination": "1000000000000000000",
       },
       "BAT": Object {
@@ -441,54 +489,6 @@ Object {
         "denomination": "1000000",
       },
       "ZRX": Object {
-        "denomination": "1000000000000000000",
-      },
-      "aBAT": Object {
-        "denomination": "1000000000000000000",
-      },
-      "aDai": Object {
-        "denomination": "1000000000000000000",
-      },
-      "aETH": Object {
-        "denomination": "1000000000000000000",
-      },
-      "aKNC": Object {
-        "denomination": "1000000000000000000",
-      },
-      "aLINK": Object {
-        "denomination": "1000000000000000000",
-      },
-      "aMANA": Object {
-        "denomination": "1000000000000000000",
-      },
-      "aMKR": Object {
-        "denomination": "1000000000000000000",
-      },
-      "aREN": Object {
-        "denomination": "1000000000000000000",
-      },
-      "aSNX": Object {
-        "denomination": "1000000000000000000",
-      },
-      "aSUSD": Object {
-        "denomination": "1000000000000000000",
-      },
-      "aUNI": Object {
-        "denomination": "1000000000000000000",
-      },
-      "aUSDC": Object {
-        "denomination": "1000000",
-      },
-      "aUSDT": Object {
-        "denomination": "1000000",
-      },
-      "aWBTC": Object {
-        "denomination": "100000000",
-      },
-      "aYFI": Object {
-        "denomination": "1000000000000000000",
-      },
-      "aZRX": Object {
         "denomination": "1000000000000000000",
       },
       "account": null,
