@@ -117,18 +117,6 @@ export const setBluetoothModeRequest = (bluetoothMode: boolean) => (dispatch: Di
     .catch(showError)
 }
 
-export const checkCurrentPassword = (arg: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const clearPasswordError = { confirmPasswordError: '' }
-  dispatch({ type: 'SET_CONFIRM_PASSWORD_ERROR', data: clearPasswordError })
-  const state = getState()
-  const { account } = state.core
-  const isPassword = await account.checkPassword(arg)
-  dispatch(SETTINGS_ACTIONS.setSettingsLock(!isPassword))
-  if (!isPassword) {
-    dispatch({ type: 'SET_CONFIRM_PASSWORD_ERROR', data: { confirmPasswordError: s.strings.fragmet_invalid_password } })
-  }
-}
-
 export const lockSettings = () => async (dispatch: Dispatch) => {
   dispatch(SETTINGS_ACTIONS.setSettingsLock(true))
 }

@@ -1,10 +1,17 @@
 // @flow
 
-const API_PREFIX = 'https://info1.edgesecure.co:8444/v1/'
+const API_PREFIX = 'https://logs1.edge.app/v1/'
 
 const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json'
+}
+
+function handleErrors(response) {
+  if (!response.ok) {
+    throw Error(response.status)
+  }
+  return response
 }
 
 const request = (name, path, method, data) => {
@@ -16,6 +23,7 @@ const request = (name, path, method, data) => {
       headers,
       body: JSON.stringify({ data })
     })
+    .then(handleErrors)
     .then(response => {
       console.log(`====== ${name} SUCCESS ======`, response)
       return response
@@ -27,4 +35,4 @@ const request = (name, path, method, data) => {
 }
 
 // $FlowFixMe
-export const sendLogs = logs => request('SENDING LOGS', 'addLogs/', 'POST', logs)
+export const sendLogs = logs => request('SENDING LOGS', 'log/', 'PUT', logs)

@@ -4,6 +4,7 @@ import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -35,10 +36,12 @@ class BalanceBox extends React.PureComponent<BalanceBoxProps, BalanceBoxState> {
     const fiatSymbol = isoFiatCurrencyCode ? getFiatSymbol(isoFiatCurrencyCode) : ''
     const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
     let fiatBalanceString = ''
+    const formattedFiat = formatNumber(fiatAmount, { toFixed: 2 })
+
     if (fiatSymbol.length !== 1) {
-      fiatBalanceString = fiatAmount + ' ' + fiatCurrencyCode
+      fiatBalanceString = formattedFiat + ' ' + fiatCurrencyCode
     } else {
-      fiatBalanceString = fiatSymbol + ' ' + fiatAmount + ' ' + fiatCurrencyCode
+      fiatBalanceString = fiatSymbol + ' ' + formattedFiat + ' ' + fiatCurrencyCode
     }
 
     let displayedBox

@@ -30,7 +30,7 @@ export const currencyPlugins = {
   binance: true,
   eos: true,
   telos: true,
-  wax: false,
+  wax: true,
   ethereum: ENV.ETHEREUM_INIT,
   ethereumclassic: true,
   fio: ENV.FIO_INIT || true,
@@ -73,6 +73,7 @@ export const ratePlugins = {
   coingecko: true,
   constantRate: true,
   coincapLegacy: false,
+  edgeRates: true,
   nomics: ENV.NOMICS_INIT,
   currencyconverterapi: ENV.CURRENCYCONVERTERAPI_INIT,
   wazirx: true
@@ -86,6 +87,7 @@ export const swapPlugins = {
   foxExchange: ENV.FOX_INIT,
   godex: ENV.GODEX_INIT,
   // shapeshift: ENV.SHAPESHIFT_INIT,
+  sideshift: ENV.SIDESHIFT_INIT,
   switchain: ENV.SWITCHAIN_INIT,
   totle: ENV.TOTLE_INIT,
   transfer: true

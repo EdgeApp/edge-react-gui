@@ -148,7 +148,7 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
         refreshDetails.walletIds[walletId] = wallet
         setTimeout(() => {
           const wallets = []
-          for (const wid in refreshDetails.walletIds) {
+          for (const wid of Object.keys(refreshDetails.walletIds)) {
             wallets.push(refreshDetails.walletIds[wid])
           }
           dispatchUpsertWallets(dispatch, wallets)
