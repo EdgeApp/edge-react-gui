@@ -224,9 +224,6 @@ Object {
       "ADAI": Object {
         "denomination": "1000000000000000000",
       },
-      "AETH": Object {
-        "denomination": "1000000000000000000",
-      },
       "AGLD": Object {
         "denomination": "1000000000",
       },
@@ -268,6 +265,9 @@ Object {
       },
       "AWBTC": Object {
         "denomination": "100000000",
+      },
+      "AWETH": Object {
+        "denomination": "1000000000000000000",
       },
       "AYFI": Object {
         "denomination": "1000000000000000000",
@@ -471,6 +471,9 @@ Object {
         "denomination": "100000000",
       },
       "WAX": Object {
+        "denomination": "100000000",
+      },
+      "WBTC": Object {
         "denomination": "100000000",
       },
       "WINGS": Object {
