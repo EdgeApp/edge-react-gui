@@ -265,7 +265,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   ABAT: {
     denomination: '1000000000000000000'
   },
-  AETH: {
+  AWETH: {
     denomination: '1000000000000000000'
   },
   AWBTC: {
@@ -300,6 +300,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   },
   AUNI: {
     denomination: '1000000000000000000'
+  },
+  WBTC: {
+    denomination: '100000000'
   },
   customTokens: [],
   mostRecentWallets: [],
@@ -393,7 +396,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   ALINK: 'object',
   ADAI: 'object',
   ABAT: 'object',
-  AETH: 'object',
+  AWETH: 'object',
   AWBTC: 'object',
   ASNX: 'object',
   AREN: 'object',
@@ -405,6 +408,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   AUSDC: 'object',
   ASUSD: 'object',
   AUNI: 'object',
+  WBTC: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   mostRecentWallets: 'object',
   passwordRecoveryRemindersShown: 'object'

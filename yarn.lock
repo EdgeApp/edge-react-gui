@@ -5138,10 +5138,10 @@ edge-core-js@^0.17.19:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.41:
-  version "0.7.41"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.41.tgz#5980985699e5afaa1dd9afd933be8ab192155450"
-  integrity sha512-8wZJ3Ym83toY1wzQzd2u9U7J+VZ6hcnxYFJ518i+UaxuM5hih41bAObrIh32aYpkrssZJDsls92Isfj+t+2KkA==
+edge-currency-accountbased@^0.7.42:
+  version "0.7.42"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.42.tgz#5be4f592053765971e72f3b70a438866f596c619"
+  integrity sha512-2se5+idHNBQVSkww23uhqKV8W5CaulmocPiHMMTl++Kkvs1T4d3Gq4LuiEV9SwNxru3yepvsA/YrRkCxqNgBPw==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.2.1"

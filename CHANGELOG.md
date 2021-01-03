@@ -5,6 +5,7 @@
 - Add new swap partner SideShift
 - Add WAX
 - Add Aave interest bearing tokens support
+- Add WBTC
 - FIO: Fix removing public address and added parseUri for approving request
 - Update partner descriptions and assets
 - Theme the password-recovery reminder modal
@@ -20,8 +21,9 @@
   - Add rates1 as a fiat/fiat exchange rate provider
   - Fix Coingecko returning duplicate rates
   - Fix Sideshift cleaner throws and formatting
-- Upgrade edge-currency-accountbased to v0.7.41
+- Upgrade edge-currency-accountbased to v0.7.42
   - Add Aave ERC20 tokens
+  - Add WBTC
   - FIO: Add additional domain transfer transaction
 
 ## 1.19.0 (2020-12-21)
