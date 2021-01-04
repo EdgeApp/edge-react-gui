@@ -37,9 +37,9 @@ export class PasswordReminderModal extends React.Component<Props, State> {
     this.state = this.initialState()
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.loginStatus && !isEqual(this.props.passwordReminder, nextProps.passwordReminder)) {
-      nextProps.setPasswordReminder(nextProps.passwordReminder)
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.loginStatus && !isEqual(this.props.passwordReminder, prevProps.passwordReminder)) {
+      this.props.setPasswordReminder(this.props.passwordReminder)
     }
   }
 
