@@ -62,9 +62,12 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.selectedWalletId !== this.props.selectedWalletId || nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode) {
-      this.props.fetchMoreTransactions(nextProps.selectedWalletId, nextProps.selectedCurrencyCode, this.state.reset)
+  componentDidUpdate(prevProps: Props) {
+    const walletIdChanged = prevProps.selectedWalletId !== this.props.selectedWalletId
+    const currencyCodeChanged = prevProps.selectedCurrencyCode !== this.props.selectedCurrencyCode
+
+    if (walletIdChanged || currencyCodeChanged) {
+      this.props.fetchMoreTransactions(this.props.selectedWalletId, this.props.selectedCurrencyCode, this.state.reset)
       if (this.state.reset) {
         this.setState({ reset: false })
       }
