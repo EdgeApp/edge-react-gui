@@ -285,29 +285,10 @@ function buildCommonPost(buildObj) {
     mylog('***********************\n')
 
     call(
-      `npx appcenter distribute release --app ${buildObj.appCenterGroupName}/${buildObj.appCenterAppName} --file ${buildObj.ipaFile} --token ${buildObj.appCenterApiToken} -g ${buildObj.appCenterDistroGroup}`
+      `npx appcenter distribute release --app ${buildObj.appCenterGroupName}/${buildObj.appCenterAppName} --file ${buildObj.ipaFile} --token ${
+        buildObj.appCenterApiToken
+      } -g ${buildObj.appCenterDistroGroup} -r ${JSON.stringify(notes)}`
     )
-
-    // mylog('*** Getting upload URL/ID')
-    // curl = `curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads'`
-    // let response = rmNewline(cmd(curl))
-    // let responseObj = JSON.parse(response)
-    // console.log('Got reply', response)
-
-    // mylog('\n*** Uploading IPA/APK')
-    // curl = `curl -F "ipa=@${buildObj.ipaFile}" ${responseObj.upload_url}`
-    // call(curl)
-
-    // mylog('\n*** Change resource status to committed')
-    // curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' -d '{ "status": "committed" }' 'https://api.appcenter.ms/v0.1/apps/${buildObj.appCenterGroupName}/${buildObj.appCenterAppName}/release_uploads/${responseObj.upload_id}'`
-    // response = rmNewline(cmd(curl))
-    // responseObj = JSON.parse(response)
-    // console.log('Got reply', response)
-
-    // mylog('\n*** Releasing to distribution group')
-    // curl = `curl -X PATCH --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'X-API-Token: ${buildObj.appCenterApiToken}' -d '{ "destination_name": "${buildObj.appCenterDistroGroup}", "release_notes": "${notes}" }' 'https://api.appcenter.ms/${responseObj.release_url}'`
-    // call(curl)
-
     mylog('\n*** Upload to App Center Complete ***')
   }
 }
