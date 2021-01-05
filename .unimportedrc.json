@@ -1,0 +1,31 @@
+{
+  "ignoreUnresolved": [],
+  "ignoreUnimported": [
+    "src/util/bridge/bridge.js",
+    "src/util/bridge/rolledUp.js",
+    "src/util/bridge/stringifyBridge.js",
+    "src/util/corePluginBundle.js"
+  ],
+  "ignoreUnused": [
+    "@react-native-firebase/messaging",
+    "core-js",
+    "edge-exchange-plugins",
+    "react-native-fast-crypto",
+    "react-native-randombytes",
+    "react-native-swipe-gestures",
+    "react-native-tcp",
+    "react-native-v8",
+    "url",
+    "v8-android-jit"
+  ],
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/*.stories.{js,jsx,ts,tsx}",
+    "**/*.tests.{js,jsx,ts,tsx}",
+    "**/*.test.{js,jsx,ts,tsx}",
+    "**/*.spec.{js,jsx,ts,tsx}",
+    "**/tests/**",
+    "**/__tests__/**",
+    "**/*.d.ts"
+  ]
+}
