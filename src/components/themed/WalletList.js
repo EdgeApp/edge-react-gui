@@ -24,6 +24,7 @@ import {
   getYesterdayDateRoundDownHour,
   truncateDecimals
 } from '../../util/utils'
+import { type SortOption } from '../modals/WalletListSortModal.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
 import { WalletListRow } from './WalletListRow.js'
@@ -38,6 +39,7 @@ type OwnProps = {
   searching: boolean,
   searchText: string,
   activateSearch: () => void,
+  sortOptions: SortOption,
   showSlidingTutorial?: boolean
 }
 

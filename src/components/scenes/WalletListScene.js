@@ -17,6 +17,7 @@ import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tuto
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { WalletListSlidingTutorialModal } from '../modals/WalletListSlidingTutorialModal.js'
+import { type SortOption, WalletListSortModal } from '../modals/WalletListSortModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -43,9 +44,10 @@ type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
   sorting: boolean,
-  showSlidingTutorial: boolean,
   searching: boolean,
-  searchText: string
+  searchText: string,
+  sortOption: SortOption,
+  showSlidingTutorial: boolean
 }
 
 class WalletListComponent extends React.PureComponent<Props, State> {
@@ -53,9 +55,10 @@ class WalletListComponent extends React.PureComponent<Props, State> {
     super(props)
     this.state = {
       sorting: false,
-      showSlidingTutorial: false,
       searching: false,
-      searchText: ''
+      searchText: '',
+      sortOption: null,
+      showSlidingTutorial: false
     }
   }
 
@@ -96,6 +99,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
     <WalletListHeader
       sorting={this.state.sorting}
       searching={this.state.searching}
+      openSortModal={this.handleSort}
       toggleSorting={this.handleToggleSorting}
       onChangeSearchText={this.handleChangeSearchText}
       toggleWalletSearching={this.handleToggleWalletSearching}
@@ -104,9 +108,21 @@ class WalletListComponent extends React.PureComponent<Props, State> {
 
   renderFooter = () => (this.state.searching ? null : <WalletListFooter />)
 
+  handleSort = () => {
+    Airship.show(bridge => <WalletListSortModal bridge={bridge} sortOption={this.state.sortOption} />)
+      .then(sort => {
+        if (sort === 'manual') {
+          this.setState({ sorting: true, sortOption: null })
+        } else if (sort || sort === null) {
+          this.setState({ sortOption: sort })
+        }
+      })
+      .catch(error => console.log(error))
+  }
+
   render() {
     const { activeWalletIds, theme, wallets } = this.props
-    const { showSlidingTutorial, searching, searchText, sorting } = this.state
+    const { showSlidingTutorial, searching, searchText, sorting, sortOption } = this.state
     const styles = getStyles(theme)
     const loading = Object.keys(wallets).length <= 0
 
@@ -131,6 +147,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
               searching={searching}
               searchText={searchText}
               activateSearch={this.handleActivateSearch}
+              sortOption={sortOption}
               showSlidingTutorial={showSlidingTutorial}
             />
             <SortableListView
