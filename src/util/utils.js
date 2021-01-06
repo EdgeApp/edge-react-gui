@@ -629,3 +629,13 @@ export function checkFilterToken(wallet: GuiWallet, currencyCode: string, filter
   const filterString = filterText.toLowerCase()
   return walletName.includes(filterString) || tokenCode.includes(filterString) || tokenName.includes(filterString)
 }
+
+export function alphabeticalSort(itemA: string, itemB: string): number {
+  if (itemA < itemB) {
+    return -1
+  } else if (itemA > itemB) {
+    return 1
+  } else {
+    return 0
+  }
+}
