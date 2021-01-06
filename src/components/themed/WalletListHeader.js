@@ -23,7 +23,7 @@ import { EdgeTextFieldOutlined } from './EdgeTextField.js'
 type OwnProps = {
   sorting: boolean,
   searching: boolean,
-  toggleSorting: (sorting: boolean) => void,
+  openSortModal: () => void,
   onChangeSearchText: (search: string) => void,
   toggleWalletSearching: (searching: boolean) => void
 }
@@ -57,8 +57,6 @@ class WalletListHeaderComponent extends React.PureComponent<Props, State> {
       this.textInput.current.focus()
     }
   }
-
-  activateSorting = () => this.props.toggleSorting(true)
 
   handleOnChangeText = (input: string) => this.props.onChangeSearchText(input)
 
@@ -124,7 +122,7 @@ class WalletListHeaderComponent extends React.PureComponent<Props, State> {
               <TouchableOpacity style={styles.addButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
                 <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={this.activateSorting}>
+              <TouchableOpacity onPress={this.props.openSortModal}>
                 <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
             </View>
