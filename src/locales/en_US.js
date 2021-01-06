@@ -756,7 +756,16 @@ const strings = {
 
   step: 'Step',
   scan_as_in_scan_barcode: 'Scan',
-  enter_as_in_enter_address_with_keyboard: 'Enter'
+  enter_as_in_enter_address_with_keyboard: 'Enter',
+
+  // Wallet List Sort
+  wallet_list_sort_title: 'Sort Wallets',
+  wallet_list_sort_manual: 'Manual sort',
+  wallet_list_sort_name: 'Sort by name',
+  wallet_list_sort_currencyCode: 'Sort by currency code',
+  wallet_list_sort_currencyName: 'Sort by currency name',
+  wallet_list_sort_highest: 'Sort by highest value',
+  wallet_list_sort_lowest: 'Sort by lowest value'
 }
 
 // export default strings
