@@ -11,10 +11,11 @@ import { selectWallet } from '../../actions/WalletActions.js'
 import { WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
-import { calculateWalletFiatBalanceWithoutState, getActiveWalletIds } from '../../modules/UI/selectors.js'
+import { calculateWalletFiatBalanceUsingDefaultIsoFiat, calculateWalletFiatBalanceWithoutState, getActiveWalletIds } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, FlatListItem, GuiWallet } from '../../types/types.js'
 import {
+  alphabeticalSort,
   checkFilterToken,
   checkFilterWallet,
   convertNativeToDisplay,
@@ -33,13 +34,18 @@ type WalletListItem = { id: string, fullCurrencyCode?: string, key: string }
 
 const DIVIDE_PRECISION = 18
 
+const getSortOptionsCurrencyCode = (fullCurrencyCode: string): string => {
+  const splittedCurrencyCode = fullCurrencyCode.split('-')
+  return splittedCurrencyCode[1] || splittedCurrencyCode[0]
+}
+
 type OwnProps = {
   header?: React.Node,
   footer?: React.Node,
   searching: boolean,
   searchText: string,
   activateSearch: () => void,
-  sortOptions: SortOption,
+  sortOption: SortOption,
   showSlidingTutorial?: boolean
 }
 
@@ -59,6 +65,51 @@ type DispatchProps = {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class WalletListComponent extends React.PureComponent<Props> {
+  sortWalletList(walletList: WalletListItem[]) {
+    const getFiatBalance = (wallet: GuiWallet, fullCurrencyCode: string) => {
+      const { settings, exchangeRates } = this.props
+      const currencyCode = getSortOptionsCurrencyCode(fullCurrencyCode)
+      return calculateWalletFiatBalanceUsingDefaultIsoFiat(wallet, currencyCode, settings, exchangeRates)
+    }
+
+    if (this.props.sortOption === 'name') {
+      const { wallets } = this.props
+      walletList.sort((itemA, itemB) => {
+        return alphabeticalSort(wallets[itemA.id].name, wallets[itemB.id].name)
+      })
+    }
+
+    if (this.props.sortOption === 'currencyCode') {
+      walletList.sort((itemA, itemB) => {
+        return alphabeticalSort(getSortOptionsCurrencyCode(itemA.fullCurrencyCode || ''), getSortOptionsCurrencyCode(itemB.fullCurrencyCode || ''))
+      })
+    }
+
+    if (this.props.sortOption === 'currencyName') {
+      const { wallets } = this.props
+      walletList.sort((itemA, itemB) => {
+        const currencyNameA = wallets[itemA.id].currencyNames[getSortOptionsCurrencyCode(itemA.fullCurrencyCode || '')]
+        const currencyNameB = wallets[itemB.id].currencyNames[getSortOptionsCurrencyCode(itemB.fullCurrencyCode || '')]
+        return alphabeticalSort(currencyNameA, currencyNameB)
+      })
+    }
+
+    if (this.props.sortOption === 'highest') {
+      const { wallets } = this.props
+      walletList.sort((itemA, itemB) => {
+        return getFiatBalance(wallets[itemB.id], itemB.fullCurrencyCode || '') - getFiatBalance(wallets[itemA.id], itemA.fullCurrencyCode || '')
+      })
+    }
+
+    if (this.props.sortOption === 'lowest') {
+      const { wallets } = this.props
+      walletList.sort((itemA, itemB) => {
+        return getFiatBalance(wallets[itemA.id], itemA.fullCurrencyCode || '') - getFiatBalance(wallets[itemB.id], itemB.fullCurrencyCode || '')
+      })
+    }
+    return walletList
+  }
+
   getWalletList(activeWalletIds: string[], wallets: { [walletId: string]: GuiWallet }): WalletListItem[] {
     const { searching, searchText } = this.props
     const walletList = []
@@ -107,7 +158,8 @@ class WalletListComponent extends React.PureComponent<Props> {
         }
       }
     }
-    return walletList
+
+    return this.sortWalletList(walletList)
   }
 
   getCryptoAmount(balance: string, denomination: EdgeDenomination, isToken: boolean): string {
