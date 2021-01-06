@@ -5167,10 +5167,10 @@ edge-currency-accountbased@^0.7.42:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.9.7:
-  version "4.9.7"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.7.tgz#42819f09baa773dababba39b4e3c758027eb1a34"
-  integrity sha512-D1Mmx/JNLObsXiGsLyoaZyv0Pqc6t8zA2DL+vqbLepwrymz3h4AVFp/jmS5XqrbadSGtySt8zIK+QibkdrMXkQ==
+edge-currency-bitcoin@^4.9.8:
+  version "4.9.8"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.8.tgz#a2157a21bbb5aa5fb9efe13859fc429e3e19d307"
+  integrity sha512-DRyAxsBOZWPflgp3bqb5TwW/FVf1RfPAomkpFXtwd5jfTj30cHj89rdK8F4c4N02zetgct6LGIet9Gi0D8bMqA==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -5189,10 +5189,10 @@ edge-currency-bitcoin@^4.9.7:
     uri-js "^4.2.2"
     url-parse "^1.4.3"
 
-edge-currency-monero@^0.2.7:
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.2.7.tgz#a065dfc13788339f9c5ebdde4efa657684a0ca99"
-  integrity sha512-6P1Qvh6jkLTcRYMO/Nuo0Bpmzw+jGGZKardC7N+LO7ZuTB2PyH6y26w2LO2ge7eeluNS9yQhjXSRr8ZdRav0DA==
+edge-currency-monero@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.2.8.tgz#5d4b6197d0dced90cda1870696357dfb8b22b714"
+  integrity sha512-w1JxIJQzl5lXVe6LZgh488KCWWvJy1edgwWC8xpfudw1yje1MRIZpwVe4NAHVeEqmG15SxrJsV+f5IRq1TZtrA==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
