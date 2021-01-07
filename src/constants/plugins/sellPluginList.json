@@ -417,7 +417,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 1.55% / Settlement: 1 - 2days\nLimit: €5000/day with no KYC",
+    "description": "Fee: 1.55% / Settlement: 1 - 2days\nLimit: €1000/day with no KYC",
     "title": "SEPA Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
     "paymentTypeLogoKey": "bank",
