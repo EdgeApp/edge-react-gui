@@ -160,12 +160,14 @@ exports[`TransactionDetails.ui should render 1`] = `
           <View
             style={
               Object {
+                "alignItems": "center",
                 "borderColor": "#66EDA8",
                 "borderRadius": 3,
                 "borderWidth": 1,
+                "height": 45,
+                "justifyContent": "center",
                 "marginVertical": 6,
                 "paddingHorizontal": 11,
-                "paddingVertical": 6,
               }
             }
           >
@@ -392,12 +394,14 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
           <View
             style={
               Object {
+                "alignItems": "center",
                 "borderColor": "#66EDA8",
                 "borderRadius": 3,
                 "borderWidth": 1,
+                "height": 45,
+                "justifyContent": "center",
                 "marginVertical": 6,
                 "paddingHorizontal": 11,
-                "paddingVertical": 6,
               }
             }
           >
@@ -624,12 +628,14 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
           <View
             style={
               Object {
+                "alignItems": "center",
                 "borderColor": "#66EDA8",
                 "borderRadius": 3,
                 "borderWidth": 1,
+                "height": 45,
+                "justifyContent": "center",
                 "marginVertical": 6,
                 "paddingHorizontal": 11,
-                "paddingVertical": 6,
               }
             }
           >
@@ -856,12 +862,14 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
           <View
             style={
               Object {
+                "alignItems": "center",
                 "borderColor": "#66EDA8",
                 "borderRadius": 3,
                 "borderWidth": 1,
+                "height": 45,
+                "justifyContent": "center",
                 "marginVertical": 6,
                 "paddingHorizontal": 11,
-                "paddingVertical": 6,
               }
             }
           >

@@ -564,8 +564,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1)
   },
   tileCategory: {
+    height: theme.rem(2),
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingHorizontal: theme.rem(0.5),
-    paddingVertical: theme.rem(0.25),
     marginVertical: theme.rem(0.25),
     borderWidth: 1,
     borderColor: theme.secondaryButtonOutline,
