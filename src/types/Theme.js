@@ -11,6 +11,7 @@ export type Theme = {
   warningIcon: string,
   iconLoadingOverlay: string,
   transactionListIconBackground: string,
+  pluginCustomModal: string,
 
   // Background
   backgroundGradientLeft: string,

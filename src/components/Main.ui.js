@@ -345,7 +345,6 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.PLUGIN_BUY}
                 navTransparent
                 component={ifLoggedIn(GuiPluginListScene)}
-                renderTitle={<HeaderTitle title={s.strings.title_plugin_buy} />}
                 renderLeftButton={<HeaderTextButton type="help" />}
                 renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
@@ -367,7 +366,6 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.PLUGIN_SELL}
                 navTransparent
                 component={ifLoggedIn(GuiPluginListScene)}
-                renderTitle={<HeaderTitle title={s.strings.title_plugin_sell} />}
                 renderLeftButton={<HeaderTextButton type="help" />}
                 renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}

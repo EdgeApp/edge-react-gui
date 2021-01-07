@@ -65,6 +65,7 @@ export const edgeLight: Theme = {
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
   transactionListIconBackground: palette.white,
+  pluginCustomModal: palette.white,
 
   // Background
   backgroundGradientLeft: palette.lightestGray,

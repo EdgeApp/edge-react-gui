@@ -541,6 +541,7 @@
   "buy_sell_crypto_no_plugin_region": "We're sorry but there are no available plugins for your region.",
   "user_closed_modal_no_wallet": "User closed modal. No wallet was selected",
   "plugin_provider_disclaimer": "The following services are not provided by Edge. \n\nFor issues and feedback please contact the respective service providers.",
+  "plugin_powered_by": "Powered by",
   "no_exchange_rate": "No Exchange Rate",
   "send_from_wallet": "Send from %s",
   "send_to_wallet": "Receive to %s",
