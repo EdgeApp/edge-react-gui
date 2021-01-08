@@ -1,12 +1,12 @@
 // @flow
 
-import { isEqual } from 'lodash'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
 import { setPasswordReminder } from '../../actions/PasswordReminderActions.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { PasswordReminder } from '../../types/types.js'
+import { matchJson } from '../../util/matchJson.js'
 
 type Props = {
   setPasswordReminder: (passwordReminder: PasswordReminder) => void,
@@ -15,9 +15,9 @@ type Props = {
 }
 
 class PasswordReminderComponent extends React.PureComponent<Props> {
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.loginStatus && !isEqual(this.props.passwordReminder, nextProps.passwordReminder)) {
-      nextProps.setPasswordReminder(nextProps.passwordReminder)
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.loginStatus && !matchJson(prevProps.passwordReminder, this.props.passwordReminder)) {
+      this.props.setPasswordReminder(this.props.passwordReminder)
     }
   }
 
