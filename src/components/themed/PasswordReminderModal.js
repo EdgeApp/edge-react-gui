@@ -7,7 +7,7 @@ import { type AirshipBridge } from 'react-native-airship'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { postponePasswordReminder, requestChangePassword } from '../../actions/PasswordReminderActions.js'
+import { passwordReminderSuccess, postponePasswordReminder, requestChangePassword } from '../../actions/PasswordReminderActions.js'
 import { CHANGE_PASSWORD } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
@@ -26,6 +26,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
+  onSuccess: () => void,
   onPostpone: () => void,
   onRequestChangePassword: () => void
 }
@@ -66,6 +67,7 @@ class PasswordReminderModalComponent extends React.PureComponent<Props, State> {
     this.setState({ spinning: true })
     account.checkPassword(password).then(isValidPassword => {
       if (isValidPassword) {
+        this.props.onSuccess()
         this.setState({ spinning: false })
         showToast(s.strings.password_reminder_great_job)
         setTimeout(() => bridge.resolve(), 10)
@@ -116,6 +118,7 @@ export const PasswordReminderModal = connect(
     account: state.core.account
   }),
   (dispatch: Dispatch): DispatchProps => ({
+    onSuccess: () => dispatch(passwordReminderSuccess()),
     onRequestChangePassword: () => dispatch(requestChangePassword()),
     onPostpone: () => dispatch(postponePasswordReminder())
   })
