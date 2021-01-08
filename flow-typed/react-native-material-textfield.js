@@ -67,6 +67,7 @@ declare module 'react-native-material-textfield' {
     // Other React Native TextInput properties:
     autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters',
     autoCorrect?: boolean,
+    autoFocus?: boolean,
     inputAccessoryViewID?: string,
     keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad',
     maxLength?: number,
