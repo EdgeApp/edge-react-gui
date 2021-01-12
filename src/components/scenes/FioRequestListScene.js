@@ -398,7 +398,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     const guiMakeSpendInfo = {
       fioPendingRequest: pendingRequest,
       fioAddress: pendingRequest.payee_fio_address,
-      publicAddress: parsedUri.publicAddress,
+      publicAddress: parsedUri.legacyAddress || parsedUri.publicAddress,
       nativeAmount,
       currencyCode,
       metadata: parsedUri.metadata,

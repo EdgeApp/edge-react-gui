@@ -137,9 +137,11 @@ export class Request extends React.Component<Props, State> {
   async generateEncodedUri() {
     const { edgeWallet, useLegacyAddress, currencyCode } = this.props
     if (!currencyCode) return
-    let publicAddress = this.props.publicAddress
-    let legacyAddress = this.props.legacyAddress
-    const abcEncodeUri = useLegacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
+    let { publicAddress, legacyAddress } = this.props
+    const abcEncodeUri = {
+      publicAddress: useLegacyAddress ? legacyAddress : publicAddress,
+      currencyCode
+    }
     let encodedURI = s.strings.loading
     try {
       encodedURI = edgeWallet ? await edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
