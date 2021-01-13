@@ -13,6 +13,23 @@ import sideshiftLogo from '../../assets/images/exchange/settingsExchangeSideShif
 import switchainLogo from '../../assets/images/exchange/settingsExchangeSwitchain.png'
 import totleLogo from '../../assets/images/exchange/settingsExchangeTotle.png'
 import fioAddressLogo from '../../assets/images/list_fioAddress.png'
+import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
+import paymentTypeLogoBankgirot from '../../assets/images/paymentTypes/paymentTypeLogoBankgirot.png'
+import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymentTypeLogoBankTransfer.png'
+import paymentTypeLogoBpay from '../../assets/images/paymentTypes/paymentTypeLogoBpay.png'
+import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLogoCash.png'
+import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
+import paymentTypeLogoDebitCard from '../../assets/images/paymentTypes/paymentTypeLogoDebitCard.png'
+import paymentTypeLogoFasterPayments from '../../assets/images/paymentTypes/paymentTypeLogoFasterPayments.png'
+import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
+import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
+import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
+import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
+import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
+import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
+import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
+import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_light.gif'
 import { type Theme } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
@@ -65,7 +82,7 @@ export const edgeLight: Theme = {
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
   transactionListIconBackground: palette.white,
-  pluginCustomModal: palette.white,
+  buySellCustomPluginModalIcon: palette.white,
 
   // Background
   backgroundGradientLeft: palette.lightestGray,
@@ -227,6 +244,25 @@ export const edgeLight: Theme = {
   settingsSideshiftLogo: sideshiftLogo,
   settingsSwitchainLogo: switchainLogo,
   settingsTotleLogo: totleLogo,
+
+  paymentTypeLogoApplePay: paymentTypeLogoApplePay,
+  paymentTypeLogoAuspost: paymentTypeLogoAuspost,
+  paymentTypeLogoBankgirot: paymentTypeLogoBankgirot,
+  paymentTypeLogoBankTransfer: paymentTypeLogoBankTransfer,
+  paymentTypeLogoBpay: paymentTypeLogoBpay,
+  paymentTypeLogoCash: paymentTypeLogoCash,
+  paymentTypeLogoCreditCard: paymentTypeLogoCreditCard,
+  paymentTypeLogoDebitCard: paymentTypeLogoDebitCard,
+  paymentTypeLogoFasterPayments: paymentTypeLogoFasterPayments,
+  paymentTypeLogoGiftCard: paymentTypeLogoGiftCard,
+  paymentTypeLogoIdeal: paymentTypeLogoIdeal,
+  paymentTypeLogoNewsagent: paymentTypeLogoNewsagent,
+  paymentTypeLogoPayid: paymentTypeLogoPayid,
+  paymentTypeLogoPoli: paymentTypeLogoPoli,
+  paymentTypeLogoSofort: paymentTypeLogoSofort,
+  paymentTypeLogoSwish: paymentTypeLogoSwish,
+  paymentTypeLogoUpi: paymentTypeLogoUpi,
+
   fioAddressLogo: fioAddressLogo,
   walletListSlideTutorialImage: walletListSlidingTutorial
 }
