@@ -535,6 +535,7 @@ Object {
           "isEnabled": false,
         },
       },
+      "walletsSort": "default",
     },
     "wallets": Object {
       "activeWalletIds": Array [],
