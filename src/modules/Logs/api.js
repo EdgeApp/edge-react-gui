@@ -21,7 +21,7 @@ const request = (name, path, method, data) => {
     .fetch(`${API_PREFIX}${path}`, {
       method,
       headers,
-      body: JSON.stringify({ data })
+      body: JSON.stringify(data)
     })
     .then(handleErrors)
     .then(response => {
