@@ -45,7 +45,6 @@ type OwnProps = {
   searching: boolean,
   searchText: string,
   activateSearch: () => void,
-  sortOption: SortOption,
   showSlidingTutorial?: boolean
 }
 
@@ -55,6 +54,7 @@ type StateProps = {
   exchangeRates: { [string]: number },
   showBalance: boolean,
   settings: Object,
+  walletsSort: SortOption,
   wallets: { [walletId: string]: GuiWallet }
 }
 
@@ -72,20 +72,20 @@ class WalletListComponent extends React.PureComponent<Props> {
       return calculateWalletFiatBalanceUsingDefaultIsoFiat(wallet, currencyCode, settings, exchangeRates)
     }
 
-    if (this.props.sortOption === 'name') {
+    if (this.props.walletsSort === 'name') {
       const { wallets } = this.props
       walletList.sort((itemA, itemB) => {
         return alphabeticalSort(wallets[itemA.id].name, wallets[itemB.id].name)
       })
     }
 
-    if (this.props.sortOption === 'currencyCode') {
+    if (this.props.walletsSort === 'currencyCode') {
       walletList.sort((itemA, itemB) => {
         return alphabeticalSort(getSortOptionsCurrencyCode(itemA.fullCurrencyCode || ''), getSortOptionsCurrencyCode(itemB.fullCurrencyCode || ''))
       })
     }
 
-    if (this.props.sortOption === 'currencyName') {
+    if (this.props.walletsSort === 'currencyName') {
       const { wallets } = this.props
       walletList.sort((itemA, itemB) => {
         const currencyNameA = wallets[itemA.id].currencyNames[getSortOptionsCurrencyCode(itemA.fullCurrencyCode || '')]
@@ -94,14 +94,14 @@ class WalletListComponent extends React.PureComponent<Props> {
       })
     }
 
-    if (this.props.sortOption === 'highest') {
+    if (this.props.walletsSort === 'highest') {
       const { wallets } = this.props
       walletList.sort((itemA, itemB) => {
         return getFiatBalance(wallets[itemB.id], itemB.fullCurrencyCode || '') - getFiatBalance(wallets[itemA.id], itemA.fullCurrencyCode || '')
       })
     }
 
-    if (this.props.sortOption === 'lowest') {
+    if (this.props.walletsSort === 'lowest') {
       const { wallets } = this.props
       walletList.sort((itemA, itemB) => {
         return getFiatBalance(wallets[itemA.id], itemA.fullCurrencyCode || '') - getFiatBalance(wallets[itemB.id], itemB.fullCurrencyCode || '')
@@ -296,6 +296,7 @@ export const WalletList = connect(
       activeWalletIds,
       customTokens: state.ui.settings.customTokens,
       exchangeRates: state.exchangeRates,
+      walletsSort: state.ui.settings.walletsSort,
       showBalance: state.ui.settings.isAccountBalanceVisible,
       settings: state.ui.settings,
       wallets: state.ui.wallets.byId

@@ -1,5 +1,6 @@
 // @flow
 
+import type { SortOption } from '../../components/modals/WalletListSortModal.js'
 import type { MostRecentWallet } from '../../types/types.js'
 
 export const updateSettings = (settings: Object) => ({
@@ -59,6 +60,14 @@ export const setAccountBalanceVisibility = (isAccountBalanceVisible: boolean) =>
   type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
   data: { isAccountBalanceVisible }
 })
+
+export const setWalletsSort = (walletsSort: SortOption) => {
+  console.log(walletsSort)
+  return {
+    type: 'UI/SETTINGS/SET_WALLETS_SORT',
+    data: { walletsSort }
+  }
+}
 
 export const updateMostRecentWallets = (mostRecentWallets: MostRecentWallet[]) => ({
   type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS',

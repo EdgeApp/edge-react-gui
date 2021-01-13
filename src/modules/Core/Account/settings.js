@@ -3,6 +3,7 @@
 
 import type { EdgeAccount } from 'edge-core-js'
 
+import type { SortOption } from '../../../components/modals/WalletListSortModal.js'
 import { showError } from '../../../components/services/AirshipInstance.js'
 import type { MostRecentWallet, PasswordReminder } from '../../../types/types.js'
 import { categories } from './subcategories.js'
@@ -306,7 +307,8 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   },
   customTokens: [],
   mostRecentWallets: [],
-  passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
+  passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
+  walletsSort: 'default'
 }
 
 export const SYNCED_ACCOUNT_TYPES = {
@@ -411,7 +413,8 @@ export const SYNCED_ACCOUNT_TYPES = {
   WBTC: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   mostRecentWallets: 'object',
-  passwordRecoveryRemindersShown: 'object'
+  passwordRecoveryRemindersShown: 'object',
+  walletsSort: 'string'
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
@@ -485,6 +488,12 @@ export const setPreferredSwapPluginId = (account: EdgeAccount, pluginId: string 
 export const setMostRecentWalletsSelected = (account: EdgeAccount, mostRecentWallets: MostRecentWallet[]) =>
   getSyncedSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { mostRecentWallets })
+    return setSyncedSettings(account, updatedSettings)
+  })
+
+export const setWalletsSort = (account: EdgeAccount, walletsSort: SortOption) =>
+  getSyncedSettings(account).then(settings => {
+    const updatedSettings = updateSettings(settings, { walletsSort })
     return setSyncedSettings(account, updatedSettings)
   })
 
