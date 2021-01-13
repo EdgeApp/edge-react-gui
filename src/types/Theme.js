@@ -11,7 +11,7 @@ export type Theme = {
   warningIcon: string,
   iconLoadingOverlay: string,
   transactionListIconBackground: string,
-  pluginCustomModal: string,
+  buySellCustomPluginModalIcon: string,
 
   // Background
   backgroundGradientLeft: string,
@@ -181,6 +181,25 @@ export type Theme = {
   settingsSwitchainLogo: string,
   settingsSideshiftLogo: string,
   settingsTotleLogo: string,
+
+  paymentTypeLogoApplePay: string,
+  paymentTypeLogoAuspost: string,
+  paymentTypeLogoBankgirot: string,
+  paymentTypeLogoBankTransfer: string,
+  paymentTypeLogoBpay: string,
+  paymentTypeLogoCash: string,
+  paymentTypeLogoCreditCard: string,
+  paymentTypeLogoDebitCard: string,
+  paymentTypeLogoFasterPayments: string,
+  paymentTypeLogoGiftCard: string,
+  paymentTypeLogoIdeal: string,
+  paymentTypeLogoNewsagent: string,
+  paymentTypeLogoPayid: string,
+  paymentTypeLogoPoli: string,
+  paymentTypeLogoSofort: string,
+  paymentTypeLogoSwish: string,
+  paymentTypeLogoUpi: string,
+
   fioAddressLogo: string,
   walletListSlideTutorialImage: string
 }

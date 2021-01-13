@@ -12,23 +12,6 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
-import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
-import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
-import paymentTypeLogoBankgirot from '../../assets/images/paymentTypes/paymentTypeLogoBankgirot.png'
-import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymentTypeLogoBankTransfer.png'
-import paymentTypeLogoBpay from '../../assets/images/paymentTypes/paymentTypeLogoBpay.png'
-import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLogoCash.png'
-import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
-import paymentTypeLogoDebitCard from '../../assets/images/paymentTypes/paymentTypeLogoDebitCard.png'
-import paymentTypeLogoFasterPayments from '../../assets/images/paymentTypes/paymentTypeLogoFasterPayments.png'
-import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
-import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
-import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
-import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
-import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
-import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
-import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
-import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import { COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW } from '../../constants/indexConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
@@ -50,23 +33,23 @@ const buyPluginJson = asGuiPluginJson(require('../../constants/plugins/buyPlugin
 const sellPluginJson = asGuiPluginJson(require('../../constants/plugins/sellPluginList.json'))
 
 const paymentTypeLogosById = {
-  credit: paymentTypeLogoCreditCard,
-  auspost: paymentTypeLogoAuspost,
-  applepay: paymentTypeLogoApplePay,
-  bank: paymentTypeLogoBankTransfer,
-  bankgirot: paymentTypeLogoBankgirot,
-  bpay: paymentTypeLogoBpay,
-  cash: paymentTypeLogoCash,
-  debit: paymentTypeLogoDebitCard,
-  fasterPayments: paymentTypeLogoFasterPayments,
-  giftcard: paymentTypeLogoGiftCard,
-  ideal: paymentTypeLogoIdeal,
-  newsagent: paymentTypeLogoNewsagent,
-  payid: paymentTypeLogoPayid,
-  poli: paymentTypeLogoPoli,
-  sofort: paymentTypeLogoSofort,
-  swish: paymentTypeLogoSwish,
-  upi: paymentTypeLogoUpi
+  credit: 'paymentTypeLogoCreditCard',
+  auspost: 'paymentTypeLogoAuspost',
+  applepay: 'paymentTypeLogoApplePay',
+  bank: 'paymentTypeLogoBankTransfer',
+  bankgirot: 'paymentTypeLogoBankgirot',
+  bpay: 'paymentTypeLogoBpay',
+  cash: 'paymentTypeLogoCash',
+  debit: 'paymentTypeLogoDebitCard',
+  fasterPayments: 'paymentTypeLogoFasterPayments',
+  giftcard: 'paymentTypeLogoGiftCard',
+  ideal: 'paymentTypeLogoIdeal',
+  newsagent: 'paymentTypeLogoNewsagent',
+  payid: 'paymentTypeLogoPayid',
+  poli: 'paymentTypeLogoPoli',
+  sofort: 'paymentTypeLogoSofort',
+  swish: 'paymentTypeLogoSwish',
+  upi: 'paymentTypeLogoUpi'
 }
 
 type OwnProps = {
@@ -184,7 +167,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     if (pluginId === 'custom') {
       const { developerUri } = this.state
       const modal = createInputModal({
-        icon: <IonIcon name="md-globe" size={theme.rem(2.75)} color={theme.transactionListIconBackground} />,
+        icon: <IonIcon name="md-globe" size={theme.rem(2.75)} color={theme.buySellCustomPluginModalIcon} />,
         title: s.strings.load_plugin,
         input: {
           label: s.strings.plugin_url,
@@ -235,6 +218,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   renderPlugin = ({ item }) => {
+    const { theme } = this.props
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
     const styles = getStyles(this.props.theme)
@@ -243,7 +227,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
       <View style={styles.pluginRowContainer}>
         <TouchableOpacity onPress={() => this.openPlugin(item).catch(showError)}>
           <View style={styles.pluginRowLogoAndInfo}>
-            <Image style={styles.logo} source={paymentTypeLogosById[item.paymentTypeLogoKey]} />
+            <Image style={styles.logo} source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]} />
             <View style={styles.pluginTextContainer}>
               <EdgeText style={styles.titleText}>{item.title}</EdgeText>
               <EdgeText style={styles.subtitleText} numberOfLines={0}>
@@ -310,7 +294,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   header: {
     marginVertical: theme.rem(1),
     marginHorizontal: theme.rem(1.5),
-    fontSize: theme.rem(1.2),
+    fontSize: theme.rem(1.25),
     fontFamily: theme.fontFaceBold
   },
   selectedCountryRow: {
