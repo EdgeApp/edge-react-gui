@@ -3,8 +3,11 @@
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import { connect } from 'react-redux'
 
+import { updateWalletsSort } from '../../actions/WalletListActions.js'
 import s from '../../locales/strings.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
@@ -20,18 +23,25 @@ const options = [
   { key: 'lowest', title: s.strings.wallet_list_sort_lowest }
 ]
 
-export type SortOption = null | 'name' | 'currencyCode' | 'currencyName' | 'highest' | 'lowest'
+export type SortOption = 'default' | 'name' | 'currencyCode' | 'currencyName' | 'highest' | 'lowest'
 
 type OwnProps = {
-  bridge: AirshipBridge<'manual' | SortOption>,
+  bridge: AirshipBridge<'manual' | void>
+}
+
+type StateProps = {
   sortOption: SortOption
+}
+
+type DispatchProps = {
+  updateWalletsSort: (sortOption: SortOption) => void
 }
 
 type State = {
   option: SortOption
 }
 
-type Props = OwnProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class WalletListSortModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -41,11 +51,17 @@ class WalletListSortModalComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  handleCloseModal = () => this.props.bridge.resolve(this.state.option)
+  handleCloseModal = () => {
+    this.props.updateWalletsSort(this.state.option)
+    this.props.bridge.resolve()
+  }
 
-  handleManualOption = () => this.props.bridge.resolve('manual')
+  handleManualOption = () => {
+    this.props.updateWalletsSort('default')
+    this.props.bridge.resolve('manual')
+  }
 
-  handleOptionKey = (option: SortOption) => (this.state.option === option ? this.setState({ option: null }) : this.setState({ option }))
+  handleOptionKey = (option: SortOption) => (this.state.option === option ? this.setState({ option: 'default' }) : this.setState({ option }))
 
   render() {
     const { bridge, theme } = this.props
@@ -73,4 +89,13 @@ class WalletListSortModalComponent extends React.PureComponent<Props, State> {
   }
 }
 
-export const WalletListSortModal = withTheme(WalletListSortModalComponent)
+export const WalletListSortModal = connect(
+  (state: RootState): StateProps => ({
+    sortOption: state.ui.settings.walletsSort
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    updateWalletsSort(sortOption: SortOption) {
+      dispatch(updateWalletsSort(sortOption))
+    }
+  })
+)(withTheme(WalletListSortModalComponent))

@@ -5,11 +5,12 @@ import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { TwoButtonSimpleConfirmationModal } from '../components/modals/TwoButtonSimpleConfirmationModal.js'
+import type { SortOption } from '../components/modals/WalletListSortModal.js'
 import { Airship, showError, showFullScreenSpinner } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { getSettings } from '../modules/Settings/selectors.js'
-import { setAccountBalanceVisibility } from '../modules/Settings/SettingsActions.js'
+import { setAccountBalanceVisibility, setWalletsSort } from '../modules/Settings/SettingsActions.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 
@@ -34,6 +35,14 @@ export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getStat
       dispatch(setAccountBalanceVisibility(!currentAccountBalanceVisibility))
     })
     .catch(showError)
+}
+
+export const updateWalletsSort = (walletsSort: SortOption) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const { account } = state.core
+  // For speed efficiency, dispatch is independent of persistence
+  dispatch(setWalletsSort(walletsSort))
+  ACCOUNT_SETTINGS.setWalletsSort(account, walletsSort).catch(showError)
 }
 
 export const linkReferralWithCurrencies = (uri: string) => async (dispatch: Dispatch, getState: GetState) => {
