@@ -3,7 +3,9 @@ package co.edgesecure.app;
 import android.app.Application;
 import android.content.Context;
 import android.webkit.WebView;
+import com.bugsnag.android.BreadcrumbType;
 import com.bugsnag.android.Bugsnag;
+import com.bugsnag.android.Configuration;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -12,6 +14,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.modules.i18nmanager.I18nUtil;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -49,7 +52,17 @@ public class MainApplication extends Application implements ReactApplication {
     Context context = getApplicationContext();
 
     // @bugsnag/react-native
-    Bugsnag.start(this);
+    Configuration config = Configuration.load(this);
+    config.setEnabledBreadcrumbTypes(
+        new HashSet<BreadcrumbType>() {
+          {
+            add(BreadcrumbType.ERROR);
+            add(BreadcrumbType.NAVIGATION);
+            add(BreadcrumbType.STATE);
+            add(BreadcrumbType.USER);
+          }
+        });
+    Bugsnag.start(this, config);
 
     // Disable RTL
     I18nUtil sharedI18nUtilInstance = I18nUtil.getInstance();
