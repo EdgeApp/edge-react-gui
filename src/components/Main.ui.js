@@ -26,6 +26,7 @@ import { FioAddressSettingsScene } from '../components/scenes/FioAddressSettings
 import { FioConnectWalletConfirmScene } from '../components/scenes/FioConnectWalletConfirmScene'
 import { FioDomainSettingsScene } from '../components/scenes/FioDomainSettingsScene'
 import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConfirmationScene.js'
+import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
 import { SendScene } from '../components/scenes/SendScene'
@@ -43,7 +44,6 @@ import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWa
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
-import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConnector.js'
 import Request from '../connectors/scenes/RequestConnector.js'
@@ -748,8 +748,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.FIO_REQUEST_LIST}
               navTransparent
-              component={ifLoggedIn(FioRequestListConnector)}
-              renderTitle={<HeaderTitle title={s.strings.drawer_fio_requests} />}
+              component={ifLoggedIn(FioRequestListScene)}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
