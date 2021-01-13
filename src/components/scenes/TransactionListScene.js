@@ -1,7 +1,8 @@
 // @flow
 
+import type { EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { SectionList } from 'react-native'
+import { RefreshControl, SectionList } from 'react-native'
 import { connect } from 'react-redux'
 
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
@@ -9,6 +10,7 @@ import s from '../../locales/strings'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { BuyCrypto } from '../themed/BuyCrypto.js'
 import { EmptyLoader, SectionHeader, Top } from '../themed/TransactionListComponents.js'
 import { TransactionListRow } from '../themed/TransactionListRow.js'
@@ -22,6 +24,7 @@ type Section = {
 }
 
 export type StateProps = {
+  getTransactions(opts?: EdgeGetTransactionsOptions): Promise<EdgeTransaction[]>,
   numTransactions: number,
   selectedWalletId: string,
   selectedCurrencyCode: string,
@@ -32,17 +35,21 @@ export type DispatchProps = {
   fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => any
 }
 
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
-  reset: boolean
+  reset: boolean,
+  searching: boolean,
+  filteredTransactions: TransactionListTx[]
 }
 
 class TransactionListComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      reset: true
+      reset: true,
+      searching: false,
+      filteredTransactions: []
     }
   }
 
@@ -69,6 +76,27 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     }
   }
 
+  handleOnRefresh = () => {
+    if (!this.state.searching) {
+      this.setState({ filteredTransactions: this.props.transactions }, () => this.setState({ searching: true }))
+    }
+  }
+
+  handleSearchTransaction = (searchString: string) => {
+    const { getTransactions, selectedCurrencyCode, transactions } = this.props
+    getTransactions({
+      currencyCode: selectedCurrencyCode,
+      searchString
+    })
+      .then(filteredEdgeTransactions => {
+        const filteredTransactions = transactions.filter(transaction => filteredEdgeTransactions.find(item => item.txid === transaction.txid))
+        this.setState({ filteredTransactions })
+      })
+      .catch(error => console.log(error))
+  }
+
+  toggleTransactionSearching = (isSearching: boolean) => (isSearching ? this.handleOnRefresh() : this.setState({ searching: false }))
+
   section = (transactions: TransactionListTx[]) => {
     const sections: Section[] = []
     for (const transaction of transactions) {
@@ -91,6 +119,8 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     return sections
   }
 
+  emptySection = () => [{ title: s.strings.transaction_list_search_no_result, data: [] }]
+
   renderEmptyComponent = () =>
     this.props.numTransactions ? <EmptyLoader /> : <BuyCrypto walletId={this.props.selectedWalletId} currencyCode={this.props.selectedCurrencyCode} />
 
@@ -101,15 +131,25 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     return <TransactionListRow walletId={selectedWalletId} currencyCode={selectedCurrencyCode} transaction={transaction.item} />
   }
 
-  renderTop = () => <Top walletId={this.props.selectedWalletId} isEmpty={this.props.transactions.length < 1} />
+  renderTop = () => (
+    <Top
+      walletId={this.props.selectedWalletId}
+      isEmpty={this.props.transactions.length < 1}
+      searching={this.state.searching}
+      toggleTransactionSearching={this.toggleTransactionSearching}
+      onSearchTransaction={this.handleSearchTransaction}
+    />
+  )
 
   keyExtractor = (item: TransactionListTx) => String(item.key)
   render() {
-    const transactions = this.state.reset ? [] : this.props.transactions
+    const { filteredTransactions, reset, searching } = this.state
+    const transactions = reset ? [] : searching ? filteredTransactions : this.props.transactions
+    const checkFilteredTransactions = searching && filteredTransactions.length === 0
     return (
       <SceneWrapper>
         <SectionList
-          sections={this.section(transactions)}
+          sections={checkFilteredTransactions ? this.emptySection() : this.section(transactions)}
           renderItem={this.renderTransaction}
           renderSectionHeader={this.renderSectionHeader}
           initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
@@ -118,6 +158,8 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
           keyExtractor={this.keyExtractor}
           ListEmptyComponent={this.renderEmptyComponent}
           ListHeaderComponent={this.renderTop}
+          contentOffset={{ y: !searching && transactions.length > 0 ? this.props.theme.rem(4.5) : 0 }}
+          refreshControl={<RefreshControl refreshing={false} onRefresh={this.handleOnRefresh} />}
         />
       </SceneWrapper>
     )
@@ -125,13 +167,24 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 }
 
 export const TransactionList = connect(
-  (state: RootState) => ({
-    numTransactions: state.ui.scenes.transactionList.numTransactions,
-    selectedCurrencyCode: state.ui.wallets.selectedCurrencyCode,
-    selectedWalletId: state.ui.wallets.selectedWalletId,
-    transactions: state.ui.scenes.transactionList.transactions
-  }),
+  (state: RootState) => {
+    const selectedWalletId = state.ui.wallets.selectedWalletId
+    const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
+
+    // getTransactions
+    const { currencyWallets = {} } = state.core.account
+    const currencyWallet = currencyWallets[selectedWalletId]
+    const { getTransactions } = currencyWallet
+
+    return {
+      getTransactions,
+      numTransactions: state.ui.scenes.transactionList.numTransactions,
+      selectedCurrencyCode,
+      selectedWalletId,
+      transactions: state.ui.scenes.transactionList.transactions
+    }
+  },
   (dispatch: Dispatch): DispatchProps => ({
     fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
   })
-)(TransactionListComponent)
+)(withTheme(TransactionListComponent))
