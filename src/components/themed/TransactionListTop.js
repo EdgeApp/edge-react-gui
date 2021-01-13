@@ -4,6 +4,7 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
@@ -18,12 +19,16 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { convertNativeToDenomination, decimalOrZero, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
+import { EdgeTextFieldOutlined } from './EdgeTextField.js'
 import { ButtonBox } from './ThemedButtons.js'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 type OwnProps = {
   walletId: string,
-  isEmpty: boolean
+  isEmpty: boolean,
+  searching: boolean,
+  toggleTransactionSearching: (isSearching: boolean) => void,
+  onSearchTransaction: (searchString: string) => void
 }
 
 export type StateProps = {
@@ -43,9 +48,28 @@ export type DispatchProps = {
   toggleBalanceVisibility: () => void
 }
 
+type State = {
+  input: string
+}
+
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-class TransactionListTopComponent extends React.PureComponent<Props> {
+class TransactionListTopComponent extends React.PureComponent<Props, State> {
+  textInput = React.createRef()
+
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      input: ''
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.searching === false && this.props.searching === true && this.textInput.current) {
+      this.textInput.current.focus()
+    }
+  }
+
   renderEarnInterestCard = () => {
     const { currencyCode, transactionsLength, theme } = this.props
     const styles = getStyles(theme)
@@ -88,27 +112,83 @@ class TransactionListTopComponent extends React.PureComponent<Props> {
     )
   }
 
+  handleOnChangeText = (input: string) => {
+    this.setState({ input })
+  }
+
+  handleTextFieldFocus = () => {
+    this.props.toggleTransactionSearching(true)
+  }
+
+  handleTextFieldBlur = () => {
+    this.props.onSearchTransaction(this.state.input)
+  }
+
+  disabledTextFieldFocus = () => {
+    this.clearText()
+    this.props.toggleTransactionSearching(false)
+  }
+
+  clearText = () => {
+    this.setState({ input: '' })
+    // $FlowFixMe - react-native-material-textfield have many flow errors. Somehow needed cause material-textfield value is not functioning well
+    this.textInput.current.clear()
+    this.props.onSearchTransaction('')
+  }
+
   render() {
-    const { isEmpty, theme } = this.props
+    const { isEmpty, searching, theme } = this.props
     const styles = getStyles(theme)
 
     return (
       <View style={styles.container}>
-        {this.renderBalanceBox()}
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={Actions.request} style={styles.buttons}>
-            <Ionicons name="arrow-down" size={theme.rem(1.5)} color={theme.iconTappable} />
-            <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
-          </TouchableOpacity>
-          <View style={styles.buttonsDivider} />
-          <TouchableOpacity onPress={Actions.scan} style={styles.buttons}>
-            <Ionicons name="arrow-up" size={theme.rem(1.5)} color={theme.iconTappable} />
-            <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
-          </TouchableOpacity>
-        </View>
-        {this.renderEarnInterestCard()}
-
         {!isEmpty && (
+          <View style={styles.searchContainer}>
+            <View style={{ flex: 1, flexDirection: 'column' }}>
+              <EdgeTextFieldOutlined
+                returnKeyLabel={s.strings.fragment_seach}
+                returnKeyType="done"
+                label={s.strings.transaction_list_search}
+                onChangeText={this.handleOnChangeText}
+                value={this.state.input}
+                onFocus={this.handleTextFieldFocus}
+                onBlur={this.handleTextFieldBlur}
+                ref={this.textInput}
+                marginRem={0}
+              />
+            </View>
+            {searching && (
+              <>
+                <TouchableOpacity onPress={this.clearText} style={styles.searchClearIcon}>
+                  <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.disabledTextFieldFocus} style={styles.searchDoneButton}>
+                  <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        )}
+
+        {!searching && (
+          <>
+            {this.renderBalanceBox()}
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity onPress={Actions.request} style={styles.buttons}>
+                <Ionicons name="arrow-down" size={theme.rem(1.5)} color={theme.iconTappable} />
+                <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
+              </TouchableOpacity>
+              <View style={styles.buttonsDivider} />
+              <TouchableOpacity onPress={Actions.scan} style={styles.buttons}>
+                <Ionicons name="arrow-up" size={theme.rem(1.5)} color={theme.iconTappable} />
+                <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
+              </TouchableOpacity>
+            </View>
+            {this.renderEarnInterestCard()}
+          </>
+        )}
+
+        {!isEmpty && !searching && (
           <View style={styles.transactionsDividerContainer}>
             <EdgeText style={styles.transactionsDividerText}>{s.strings.fragment_transaction_list_transaction}</EdgeText>
           </View>
@@ -201,6 +281,23 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   transactionsDividerText: {
     fontFamily: theme.fontFaceBold
+  },
+
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: theme.rem(2),
+    height: theme.rem(4.5)
+  },
+  searchClearIcon: {
+    position: 'absolute',
+    right: '22%',
+    top: theme.rem(1.5)
+  },
+  searchDoneButton: {
+    paddingLeft: theme.rem(0.75),
+    paddingRight: 0,
+    paddingBottom: theme.rem(0.5)
   }
 }))
 

@@ -10,11 +10,26 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { TransactionListTop } from '../themed/TransactionListTop.js'
 
-function TopComponent(props: { walletId: string, loading: boolean, isEmpty: boolean }) {
+type TopProps = {
+  walletId: string,
+  loading: boolean,
+  isEmpty: boolean,
+  searching: boolean,
+  toggleTransactionSearching: (isSearching: boolean) => void,
+  onSearchTransaction: (searchString: string) => void
+}
+
+function TopComponent(props: TopProps) {
   return props.loading ? (
     <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" />
   ) : (
-    <TransactionListTop walletId={props.walletId} isEmpty={props.isEmpty} />
+    <TransactionListTop
+      walletId={props.walletId}
+      isEmpty={props.isEmpty}
+      searching={props.searching}
+      toggleTransactionSearching={props.toggleTransactionSearching}
+      onSearchTransaction={props.onSearchTransaction}
+    />
   )
 }
 

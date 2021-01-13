@@ -104,6 +104,8 @@ const strings = {
   fragment_transaction_list_transaction: 'Transactions',
   transaction_list_buy_crypto_message: 'Buy %s',
   transaction_list_no_tx_yet: 'No transactions yet!',
+  transaction_list_search: 'Search Transactions',
+  transaction_list_search_no_result: 'Search returned no results',
   fragment_wallets_addwallet_name_hint: 'New Wallet Name',
   fragment_wallets_balance_text: 'Total Balance',
   fragment_wallets_delete_wallet: 'Delete Wallet',
