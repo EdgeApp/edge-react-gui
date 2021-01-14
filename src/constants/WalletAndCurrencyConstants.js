@@ -182,7 +182,8 @@ type SpecialCurrencyInfo = {|
   isUriEncodedStructure?: boolean,
   needsAccountNameSetup?: boolean,
   noChangeMiningFee?: boolean,
-  noMaxSpend?: boolean
+  noMaxSpend?: boolean,
+  keysOnlyMode?: boolean
 |}
 
 export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInfo => {
@@ -314,7 +315,8 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
     },
     isCustomTokensSupported: true,
-    isTokensSupported: true
+    isTokensSupported: true,
+    keysOnlyMode: true
   },
   ETH: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
