@@ -14,7 +14,16 @@ import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import { calculateWalletFiatBalanceWithoutState, getActiveWalletIds } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, FlatListItem, GuiWallet } from '../../types/types.js'
-import { convertNativeToDisplay, decimalOrZero, getDenomination, getFiatSymbol, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils'
+import {
+  checkFilterToken,
+  checkFilterWallet,
+  convertNativeToDisplay,
+  decimalOrZero,
+  getDenomination,
+  getFiatSymbol,
+  getYesterdayDateRoundDownHour,
+  truncateDecimals
+} from '../../util/utils'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
 import { WalletListRow } from './WalletListRow.js'
@@ -27,6 +36,7 @@ type OwnProps = {
   header?: React.Node,
   footer?: React.Node,
   searching: boolean,
+  searchText: string,
   activateSearch: () => void,
   showSlidingTutorial?: boolean
 }
@@ -48,25 +58,27 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class WalletListComponent extends React.PureComponent<Props> {
   getWalletList(activeWalletIds: string[], wallets: { [walletId: string]: GuiWallet }): WalletListItem[] {
+    const { searching, searchText } = this.props
     const walletList = []
 
     for (const walletId of activeWalletIds) {
       const wallet = wallets[walletId]
-
-      if (wallet == null) {
+      if (wallet == null && !searching) {
         walletList.push({
           id: walletId,
           key: walletId
         })
-      } else {
+      } else if (wallet != null) {
         const { enabledTokens } = wallet
         const { customTokens } = this.props
 
-        walletList.push({
-          id: walletId,
-          fullCurrencyCode: wallet.currencyCode,
-          key: `${walletId}-${wallet.currencyCode}`
-        })
+        if (searchText === '' || checkFilterWallet(wallet, searchText)) {
+          walletList.push({
+            id: walletId,
+            fullCurrencyCode: wallet.currencyCode,
+            key: `${walletId}-${wallet.currencyCode}`
+          })
+        }
 
         // Old logic on getting tokens
         const enabledNotHiddenTokens = enabledTokens.filter(token => {
@@ -83,11 +95,13 @@ class WalletListComponent extends React.PureComponent<Props> {
 
         for (const currencyCode of enabledNotHiddenTokens) {
           const fullCurrencyCode = `${wallet.currencyCode}-${currencyCode}`
-          walletList.push({
-            id: walletId,
-            fullCurrencyCode: fullCurrencyCode,
-            key: `${walletId}-${fullCurrencyCode}`
-          })
+          if (searchText === '' || checkFilterToken(wallet, currencyCode, searchText)) {
+            walletList.push({
+              id: walletId,
+              fullCurrencyCode: fullCurrencyCode,
+              key: `${walletId}-${fullCurrencyCode}`
+            })
+          }
         }
       }
     }
