@@ -257,7 +257,7 @@ export class Request extends React.Component<Props, State> {
           <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={exchangeSecondaryToPrimaryRatio} />
         </View>
 
-        {keysOnlyMode !== true && (
+        {keysOnlyMode !== true ? (
           <View style={styles.main}>
             <ExchangedFlipInput
               ref={this.flipInputRef}
@@ -296,6 +296,8 @@ export class Request extends React.Component<Props, State> {
             </View>
             <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} />
           </View>
+        ) : (
+          <Text style={styles.text}>{sprintf(s.strings.request_deprecated_currency_code, primaryCurrencyInfo.displayCurrencyCode)}</Text>
         )}
 
         {keysOnlyMode !== true && (
@@ -475,6 +477,10 @@ const rawStyles = {
   accessoryText: {
     color: THEME.COLORS.ACCENT_BLUE,
     fontSize: scale(16)
+  },
+  text: {
+    color: THEME.COLORS.WHITE,
+    margin: scale(12)
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
