@@ -3,6 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
+import { RefreshControl } from 'react-native'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import { connect } from 'react-redux'
 
@@ -25,6 +26,8 @@ const DIVIDE_PRECISION = 18
 type OwnProps = {
   header?: React.Node,
   footer?: React.Node,
+  searching: boolean,
+  activateSearch: () => void,
   showSlidingTutorial?: boolean
 }
 
@@ -192,9 +195,19 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { activeWalletIds, footer, header, wallets } = this.props
+    const { activeWalletIds, footer, header, searching, wallets } = this.props
     const walletList = this.getWalletList(activeWalletIds, wallets)
-    return <SwipeListView data={walletList} ListFooterComponent={footer} ListHeaderComponent={header} renderItem={this.renderRow} useFlatList />
+    return (
+      <SwipeListView
+        data={walletList}
+        ListFooterComponent={footer}
+        ListHeaderComponent={header}
+        renderItem={this.renderRow}
+        refreshControl={<RefreshControl refreshing={false} onRefresh={this.props.activateSearch} />}
+        contentOffset={{ y: !searching ? this.props.theme.rem(4.5) : 0 }}
+        useFlatList
+      />
+    )
   }
 }
 
