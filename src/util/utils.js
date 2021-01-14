@@ -613,3 +613,19 @@ export function getDenomination(currencyCode: string, settings: Object): EdgeDen
 export function getDefaultDenomination(currencyCode: string, settings: Object): EdgeDenomination {
   return settings[currencyCode].denominations.find(denomination => denomination.name === currencyCode)
 }
+
+export function checkFilterWallet(wallet: GuiWallet, filterText: string): boolean {
+  const walletName = wallet.name.replace(' ', '').toLowerCase()
+  const currencyCode = wallet.currencyCode.toLowerCase()
+  const currencyName = wallet.currencyNames[wallet.currencyCode].toLowerCase()
+  const filterString = filterText.toLowerCase()
+  return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
+}
+
+export function checkFilterToken(wallet: GuiWallet, currencyCode: string, filterText: string): boolean {
+  const walletName = wallet.name.replace(' ', '').toLowerCase()
+  const tokenCode = currencyCode.toLowerCase()
+  const tokenName = wallet.currencyNames[currencyCode].toLowerCase()
+  const filterString = filterText.toLowerCase()
+  return walletName.includes(filterString) || tokenCode.includes(filterString) || tokenName.includes(filterString)
+}
