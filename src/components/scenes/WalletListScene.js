@@ -43,7 +43,9 @@ type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
   sorting: boolean,
-  showSlidingTutorial: boolean
+  showSlidingTutorial: boolean,
+  searching: boolean,
+  searchText: string
 }
 
 class WalletListComponent extends React.PureComponent<Props, State> {
@@ -51,7 +53,9 @@ class WalletListComponent extends React.PureComponent<Props, State> {
     super(props)
     this.state = {
       sorting: false,
-      showSlidingTutorial: false
+      showSlidingTutorial: false,
+      searching: false,
+      searchText: ''
     }
   }
 
@@ -82,11 +86,27 @@ class WalletListComponent extends React.PureComponent<Props, State> {
 
   handleToggleSorting = (sorting: boolean) => this.setState({ sorting })
 
-  renderHeader = () => <WalletListHeader sorting={this.state.sorting} toggleSorting={this.handleToggleSorting} />
+  handleToggleWalletSearching = (searching: boolean) => this.setState({ searching })
+
+  handleChangeSearchText = (searchText: string) => this.setState({ searchText })
+
+  handleActivateSearch = () => this.setState({ searching: true })
+
+  renderHeader = () => (
+    <WalletListHeader
+      sorting={this.state.sorting}
+      searching={this.state.searching}
+      toggleSorting={this.handleToggleSorting}
+      onChangeSearchText={this.handleChangeSearchText}
+      toggleWalletSearching={this.handleToggleWalletSearching}
+    />
+  )
+
+  renderFooter = () => (this.state.searching ? null : <WalletListFooter />)
 
   render() {
     const { activeWalletIds, theme, wallets } = this.props
-    const { showSlidingTutorial, sorting } = this.state
+    const { showSlidingTutorial, searching, searchText, sorting } = this.state
     const styles = getStyles(theme)
     const loading = Object.keys(wallets).length <= 0
 
@@ -104,7 +124,15 @@ class WalletListComponent extends React.PureComponent<Props, State> {
         <View style={styles.listStack}>
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
             <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
-            <WalletList key="fullList" header={this.renderHeader} footer={WalletListFooter} showSlidingTutorial={showSlidingTutorial} />
+            <WalletList
+              key="fullList"
+              header={this.renderHeader}
+              footer={this.renderFooter}
+              searching={searching}
+              searchText={searchText}
+              activateSearch={this.handleActivateSearch}
+              showSlidingTutorial={showSlidingTutorial}
+            />
             <SortableListView
               key="sortList"
               style={StyleSheet.absoltueFill}
