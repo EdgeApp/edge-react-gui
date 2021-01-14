@@ -3,22 +3,17 @@
 import type { Disklet } from 'disklet'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import SortableListView from 'react-native-sortable-listview'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
-import { toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
-import { Fontello } from '../../assets/vector/index.js'
+import { updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import XPubModal from '../../connectors/XPubModalConnector.js'
-import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
+import { getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
 import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
-import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { WalletListSlidingTutorialModal } from '../modals/WalletListSlidingTutorialModal.js'
@@ -26,16 +21,14 @@ import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { PasswordReminderModal } from '../themed/PasswordReminderModal.js'
-import { PromoCard } from '../themed/PromoCard.js'
 import { WalletList } from '../themed/WalletList.js'
 import { WalletListFooter } from '../themed/WalletListFooter.js'
+import { WalletListHeader } from '../themed/WalletListHeader.js'
 import { WalletListSortableRow } from '../themed/WalletListSortableRow.js'
-import { WiredBalanceBox } from '../themed/WiredBalanceBox.js'
 import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 
 type StateProps = {
   activeWalletIds: string[],
-  exchangeRates: Object,
   userId: string,
   wallets: { [walletId: string]: GuiWallet },
   disklet: Disklet,
@@ -43,7 +36,6 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  toggleAccountBalanceVisibility(): void,
   updateActiveWalletsOrder(walletIds: string[]): void
 }
 
@@ -88,7 +80,9 @@ class WalletListComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  handleSort = () => this.setState({ sorting: true })
+  handleToggleSorting = (sorting: boolean) => this.setState({ sorting })
+
+  renderHeader = () => <WalletListHeader sorting={this.state.sorting} toggleSorting={this.handleToggleSorting} />
 
   render() {
     const { activeWalletIds, theme, wallets } = this.props
@@ -99,35 +93,18 @@ class WalletListComponent extends React.PureComponent<Props, State> {
     return (
       <SceneWrapper>
         <WiredProgressBar progress={getWalletLoadingPercent} />
-        <WiredBalanceBox
-          showBalance={getIsAccountBalanceVisible}
-          fiatAmount={getTotalFiatAmountFromExchangeRates}
-          isoFiatCurrencyCode={getDefaultIsoFiat}
-          onPress={this.props.toggleAccountBalanceVisibility}
-          exchangeRates={this.props.exchangeRates}
-        />
-        <View style={styles.headerContainer}>
-          <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
-          {!sorting && (
-            <View key="defaultButtons" style={styles.headerButtonsContainer}>
-              <TouchableOpacity style={styles.addButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
-                <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this.handleSort}>
-                <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
-              </TouchableOpacity>
-            </View>
-          )}
-          {sorting && (
+        {sorting && (
+          <View style={styles.headerContainer}>
+            <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
             <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={this.disableSorting}>
               <EdgeText style={styles.doneButton}>{s.strings.string_done_cap}</EdgeText>
             </TouchableOpacity>
-          )}
-        </View>
+          </View>
+        )}
         <View style={styles.listStack}>
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
             <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
-            <WalletList key="fullList" header={PromoCard} footer={WalletListFooter} showSlidingTutorial={showSlidingTutorial} />
+            <WalletList key="fullList" header={this.renderHeader} footer={WalletListFooter} showSlidingTutorial={showSlidingTutorial} />
             <SortableListView
               key="sortList"
               style={StyleSheet.absoltueFill}
@@ -172,11 +149,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  addButton: {
-    marginRight: theme.rem(0.5)
-  },
   doneButton: {
-    fontSize: theme.rem(1.25),
     color: theme.textLink
   },
   // The two lists are stacked vertically on top of each other:
@@ -204,7 +177,6 @@ export const WalletListScene = connect(
 
     return {
       activeWalletIds,
-      exchangeRates: state.exchangeRates,
       userId: state.core.account.id,
       wallets: state.ui.wallets.byId,
       disklet: state.core.disklet,
@@ -212,9 +184,6 @@ export const WalletListScene = connect(
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    toggleAccountBalanceVisibility() {
-      dispatch(toggleAccountBalanceVisibility())
-    },
     updateActiveWalletsOrder(activeWalletIds) {
       dispatch(updateActiveWalletsOrder(activeWalletIds))
     }
