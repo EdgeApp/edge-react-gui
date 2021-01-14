@@ -51,7 +51,13 @@ static void InitializeFlipper(UIApplication *application) {
 - (BOOL)application:(UIApplication *)application
   didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [Bugsnag start];
+  BugsnagConfiguration *config = [BugsnagConfiguration loadConfig];
+  config.enabledBreadcrumbTypes =
+    BSGEnabledBreadcrumbTypeError &
+    BSGEnabledBreadcrumbTypeNavigation &
+    BSGEnabledBreadcrumbTypeState &
+    BSGEnabledBreadcrumbTypeUser;
+  [Bugsnag startWithConfiguration:config];
 
   if ([FIRApp defaultApp] == nil) {
     [FIRApp configure];
