@@ -53,8 +53,10 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   constructor(props: Props) {
     super(props)
     const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1))
+    let lastYear = 0
+    if (lastMonth.getMonth() === 11) lastYear = 1 // Decrease year by 1 if previous month was December
     this.state = {
-      startDate: new Date(new Date().getFullYear(), lastMonth.getMonth(), 1, 0, 0, 0),
+      startDate: new Date(new Date().getFullYear() - lastYear, lastMonth.getMonth(), 1, 0, 0, 0),
       endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0),
       isExportQbo: false,
       isExportCsv: true
@@ -70,8 +72,10 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
   setLastMonth = () => {
     const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1))
+    let lastYear = 0
+    if (lastMonth.getMonth() === 11) lastYear = 1 // Decrease year by 1 if previous month was December
     this.setState({
-      startDate: new Date(new Date().getFullYear(), lastMonth.getMonth(), 1, 0, 0, 0),
+      startDate: new Date(new Date().getFullYear() - lastYear, lastMonth.getMonth(), 1, 0, 0, 0),
       endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0)
     })
   }
@@ -210,7 +214,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     if (isExportCsv) {
       files.push({
         contents: csvFile,
-        mimeType: 'text/csv',
+        mimeType: 'text/comma-separated-values',
         fileName: fileName + '.csv'
       })
       formats.push('CSV')
@@ -256,7 +260,6 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
     await Share.open({
       title,
-      message: '',
       urls,
       subject: title
     }).catch(error => console.log(error))
