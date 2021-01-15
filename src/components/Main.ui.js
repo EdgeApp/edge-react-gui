@@ -36,8 +36,6 @@ import { requestPermission } from '../components/services/PermissionsManager.js'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import AddToken from '../connectors/scenes/AddTokenConnector.js'
-import ChangePasswordConnector from '../connectors/scenes/ChangePasswordConnector.ui'
-import ChangePinConnector from '../connectors/scenes/ChangePinConnector.ui'
 import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
@@ -45,7 +43,6 @@ import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnecto
 import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import { FioRequestListConnector } from '../connectors/scenes/FioRequestListConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
-import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConnector.js'
 import Request from '../connectors/scenes/RequestConnector.js'
 import Scan from '../connectors/scenes/ScanConnector'
 import SendConfirmation from '../connectors/scenes/SendConfirmationConnector.js'
@@ -70,6 +67,8 @@ import { HeaderTitle } from './navigation/HeaderTitle.js'
 import { SideMenuButton } from './navigation/SideMenuButton.js'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
+import { ChangePasswordScene } from './scenes/ChangePasswordScene.js'
+import { ChangePinScene } from './scenes/ChangePinScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { CurrencyNotificationScene } from './scenes/CurrencyNotificationScene'
@@ -82,6 +81,7 @@ import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
 import { NotificationScene } from './scenes/NotificationScene'
 import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
+import { ChangeRecoveryScene } from './scenes/PasswordRecoveryScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
@@ -448,7 +448,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.RECOVER_PASSWORD}
               navTransparent
-              component={ifLoggedIn(PasswordRecoveryConnector)}
+              component={ifLoggedIn(ChangeRecoveryScene)}
               renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
             />
@@ -499,7 +499,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.CHANGE_PASSWORD}
               navTransparent
-              component={ifLoggedIn(ChangePasswordConnector)}
+              component={ifLoggedIn(ChangePasswordScene)}
               renderTitle={<HeaderTitle title={s.strings.title_change_password} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={this.renderEmptyButton()}
@@ -507,7 +507,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.CHANGE_PIN}
               navTransparent
-              component={ifLoggedIn(ChangePinConnector)}
+              component={ifLoggedIn(ChangePinScene)}
               renderTitle={<HeaderTitle title={s.strings.title_change_pin} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={this.renderEmptyButton()}
@@ -523,7 +523,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.RECOVER_PASSWORD}
               navTransparent
-              component={ifLoggedIn(PasswordRecoveryConnector)}
+              component={ifLoggedIn(ChangeRecoveryScene)}
               renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={this.renderEmptyButton()}
