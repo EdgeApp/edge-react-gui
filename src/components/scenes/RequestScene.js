@@ -250,54 +250,61 @@ export class Request extends React.Component<Props, State> {
     const qrSize = Dimensions.get('window').height / 4
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
     const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
+    const { keysOnlyMode = false } = Constants.getSpecialCurrencyInfo(primaryCurrencyInfo.displayCurrencyCode)
     return (
       <SceneWrapper background="header" hasTabs={false}>
         <View style={styles.exchangeRateContainer}>
           <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={exchangeSecondaryToPrimaryRatio} />
         </View>
 
-        <View style={styles.main}>
-          <ExchangedFlipInput
-            ref={this.flipInputRef}
-            headerText={flipInputHeaderText}
-            headerLogo={flipInputHeaderLogo}
-            primaryCurrencyInfo={primaryCurrencyInfo}
-            secondaryCurrencyInfo={secondaryCurrencyInfo}
-            exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
-            overridePrimaryExchangeAmount=""
-            forceUpdateGuiCounter={0}
-            onExchangeAmountChanged={this.onExchangeAmountChanged}
-            keyboardVisible={false}
-            color={THEME.COLORS.WHITE}
-            isFiatOnTop
-            isFocus={false}
-            onNext={this.onNext}
-            topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
-            inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
-          />
+        {keysOnlyMode !== true ? (
+          <View style={styles.main}>
+            <ExchangedFlipInput
+              ref={this.flipInputRef}
+              headerText={flipInputHeaderText}
+              headerLogo={flipInputHeaderLogo}
+              primaryCurrencyInfo={primaryCurrencyInfo}
+              secondaryCurrencyInfo={secondaryCurrencyInfo}
+              exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
+              overridePrimaryExchangeAmount=""
+              forceUpdateGuiCounter={0}
+              onExchangeAmountChanged={this.onExchangeAmountChanged}
+              keyboardVisible={false}
+              color={THEME.COLORS.WHITE}
+              isFiatOnTop
+              isFocus={false}
+              onNext={this.onNext}
+              topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
+              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
+            />
 
-          {Platform.OS === 'ios' ? (
-            <InputAccessoryView backgroundColor={THEME.COLORS.OPAQUE_WHITE} nativeID={inputAccessoryViewID}>
-              <View style={styles.accessoryView}>
-                <TouchableOpacity style={styles.accessoryBtn} onPress={this.cancelFioMode}>
-                  <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_cancel_cap : ''}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.accessoryBtn} onPress={this.nextFioMode}>
-                  <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_next_capitalized : 'Done'}</Text>
-                </TouchableOpacity>
-              </View>
-            </InputAccessoryView>
-          ) : null}
+            {Platform.OS === 'ios' ? (
+              <InputAccessoryView backgroundColor={THEME.COLORS.OPAQUE_WHITE} nativeID={inputAccessoryViewID}>
+                <View style={styles.accessoryView}>
+                  <TouchableOpacity style={styles.accessoryBtn} onPress={this.cancelFioMode}>
+                    <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_cancel_cap : ''}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.accessoryBtn} onPress={this.nextFioMode}>
+                    <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_next_capitalized : 'Done'}</Text>
+                  </TouchableOpacity>
+                </View>
+              </InputAccessoryView>
+            ) : null}
 
-          <View style={styles.qrContainer}>
-            <QrCode data={this.state.encodedURI} size={qrSize} />
+            <View style={styles.qrContainer}>
+              <QrCode data={this.state.encodedURI} size={qrSize} />
+            </View>
+            <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} />
           </View>
-          <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} />
-        </View>
+        ) : (
+          <Text style={styles.text}>{sprintf(s.strings.request_deprecated_currency_code, primaryCurrencyInfo.displayCurrencyCode)}</Text>
+        )}
 
-        <View style={styles.shareButtonsContainer}>
-          <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />
-        </View>
+        {keysOnlyMode !== true && (
+          <View style={styles.shareButtonsContainer}>
+            <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />
+          </View>
+        )}
       </SceneWrapper>
     )
   }
@@ -470,6 +477,10 @@ const rawStyles = {
   accessoryText: {
     color: THEME.COLORS.ACCENT_BLUE,
     fontSize: scale(16)
+  },
+  text: {
+    color: THEME.COLORS.WHITE,
+    margin: scale(12)
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

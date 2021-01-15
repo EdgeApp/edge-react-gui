@@ -6,7 +6,7 @@ import { Alert, FlatList, Image, Keyboard, StyleSheet, TouchableHighlight, View 
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { CREATE_WALLET_CHOICE, CREATE_WALLET_SELECT_FIAT, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
+import { CREATE_WALLET_CHOICE, CREATE_WALLET_SELECT_FIAT, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -94,7 +94,9 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     // Sort and filter the available types:
     const sortedArray = getCreateWalletTypes(account)
     const filteredArray = sortedArray.filter(
-      entry => entry.currencyName.toLowerCase().indexOf(lowerSearch) >= 0 || entry.currencyCode.toLowerCase().indexOf(lowerSearch) >= 0
+      entry =>
+        !SPECIAL_CURRENCY_INFO[entry.currencyCode]?.keysOnlyMode &&
+        (entry.currencyName.toLowerCase().indexOf(lowerSearch) >= 0 || entry.currencyCode.toLowerCase().indexOf(lowerSearch) >= 0)
     )
 
     return (
