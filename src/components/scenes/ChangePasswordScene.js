@@ -3,11 +3,9 @@
 import { type EdgeAccount, type EdgeContext } from 'edge-core-js'
 import { ChangePasswordScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { THEME } from '../../theme/variables/airbitz'
 import { type RootState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
@@ -26,10 +24,7 @@ class ChangePasswordComponent extends React.Component<Props> {
 
     return (
       <SceneWrapper hasTabs={false} background="body">
-        <ScrollView keyboardShouldPersistTaps="always">
-          <ChangePasswordScreen account={account} context={context} onComplete={onComplete} onCancel={onComplete} showHeader={false} />
-          <View style={{ backgroundColor: THEME.COLORS.WHITE, height: 360 }} />
-        </ScrollView>
+        <ChangePasswordScreen account={account} context={context} onComplete={onComplete} onCancel={onComplete} showHeader={false} />
       </SceneWrapper>
     )
   }
