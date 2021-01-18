@@ -118,8 +118,11 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     return (
       <TouchableOpacity onPress={onPress}>
         <View style={styles.rowContainer}>
-          <View style={[styles.iconContainer, transactionStyle]}>
-            {thumbnailPath ? <Image style={styles.icon} source={{ uri: thumbnailPath }} /> : transactionIcon}
+          <View style={styles.iconContainer}>
+            <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
+              {thumbnailPath ? null : transactionIcon}
+            </View>
+            <Image style={styles.icon} source={{ uri: thumbnailPath }} />
           </View>
           <View style={styles.transactionContainer}>
             <View style={styles.transactionRow}>
@@ -149,14 +152,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginHorizontal: theme.rem(1)
   },
   iconContainer: {
+    marginRight: theme.rem(1)
+  },
+  iconArrowsContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme.transactionListIconBackground,
     width: theme.rem(2),
     height: theme.rem(2),
-    marginRight: theme.rem(1),
     borderWidth: theme.mediumLineWidth,
-    borderRadius: theme.rem(0.75)
+    borderRadius: theme.rem(0.75),
+    zIndex: 1
+  },
+  iconArrowsContainerBackground: {
+    backgroundColor: theme.transactionListIconBackground
   },
   iconSent: {
     borderColor: theme.negativeText,
@@ -181,9 +189,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     elevation: 3
   },
   icon: {
-    width: theme.rem(1.75),
-    height: theme.rem(1.75),
-    borderRadius: theme.rem(0.5)
+    position: 'absolute',
+    width: theme.rem(2),
+    height: theme.rem(2),
+    borderRadius: theme.rem(0.75)
   },
   // Some of the react-native-vector-icon icons does have surrounding white space and leans towards the left.
   // Tested some other icons also like the AntDesign and MaterialIcons and have similar problems.
