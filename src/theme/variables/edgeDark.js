@@ -181,7 +181,7 @@ export const edgeDark: Theme = {
   // confirmationThumbDeactivated: palette.gray,
 
   // Lines
-  lineDivider: palette.blueGray,
+  lineDivider: palette.whiteOp10,
   // textInputLine: palette.blueGray,
   // orLine: palette.blueGray,
   // tileDivider: palette.blueGray,
