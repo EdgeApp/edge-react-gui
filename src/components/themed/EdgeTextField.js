@@ -50,7 +50,7 @@ class EdgeTextFieldOutlinedComponent extends React.PureComponent<Props> {
         }}
         baseColor={theme.secondaryText}
         errorColor={theme.dangerText}
-        textColor={theme.secondaryText}
+        textColor={theme.primaryText}
         tintColor={theme.textLink}
         ref={this.props.fieldRef}
         {...rest}
