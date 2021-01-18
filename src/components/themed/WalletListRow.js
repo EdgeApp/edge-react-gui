@@ -181,19 +181,8 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
               </View>
               <View style={styles.detailsContainer}>
                 <View style={styles.detailsRow}>
-                  <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
-                  <EdgeText style={[styles.exchangeRate, { color: differencePercentageStyle }]}>
-                    {exchangeRateFiatSymbol + exchangeRate + '     ' + differencePercentage}
-                  </EdgeText>
-                  <ThemedTicker style={styles.detailsValue}>{cryptoAmount}</ThemedTicker>
-                </View>
-                <View style={styles.detailsRow}>
-                  <View style={styles.exchangeRateContainer}>
-                    <ThemedTicker style={styles.exchangeRate}>{exchangeRateFiatSymbol + exchangeRate}</ThemedTicker>
-                  </View>
-                  <View style={styles.percentageContainer}>
-                    <ThemedTicker style={[styles.percentage, { color: differencePercentageStyle }]}>{differencePercentage}</ThemedTicker>
-                  </View>
+                  <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
+                  <ThemedTicker style={styles.detailsFiat}>{fiatBalanceSymbol + fiatBalance}</ThemedTicker>
                 </View>
               </View>
             </View>
