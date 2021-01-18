@@ -251,7 +251,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     ))
   }
 
-  renderExchangeData = () => {
+  renderExchangeData = (symbolString: string) => {
     const { destinationDenomination, destinationWallet, edgeTransaction, guiWallet, walletDefaultDenomProps, theme } = this.props
     const { swapData, spendTargets } = edgeTransaction
     const styles = getStyles(theme)
@@ -276,7 +276,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
         orderId || ''
       }${newline}${s.strings.transaction_details_exchange_source_wallet}: ${guiWallet.name}${newline}${
         s.strings.fragment_send_from_label
-      }: ${sourceAmount} ${sourceCurrencyCode}${newline}${s.strings.string_to_capitalize}: ${destinationAmount} ${destinationCurrencyCode}${newline}${
+      }: ${sourceAmount} ${symbolString}${newline}${s.strings.string_to_capitalize}: ${destinationAmount} ${destinationCurrencyCode}${newline}${
         s.strings.transaction_details_exchange_destination_wallet
       }: ${destinationWalletName}${newline}${isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote}${newline}${newline}${
         s.strings.transaction_details_exchange_exchange_address
@@ -330,7 +330,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       <>
         <Tile type="touchable" title={s.strings.transaction_details_exchange_details} onPress={openExchangeDetails}>
           <View style={styles.tileColumn}>
-            <FormattedText style={styles.tileTextBottom}>{`${s.strings.title_exchange} ${sourceAmount} ${sourceCurrencyCode}`}</FormattedText>
+            <FormattedText style={styles.tileTextBottom}>{`${s.strings.title_exchange} ${sourceAmount} ${symbolString}`}</FormattedText>
             <FormattedText style={styles.tileTextBottom}>{`${s.strings.string_to_capitalize} ${destinationAmount} ${destinationCurrencyCode}`}</FormattedText>
             <FormattedText style={styles.tileTextBottom}>{swapData.isEstimate ? s.strings.estimated_quote : s.strings.fixed_quote}</FormattedText>
           </View>
@@ -506,7 +506,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
               </View>
             </Tile>
             {edgeTransaction.spendTargets && <Tile type="copy" title={s.strings.transaction_details_recipient_addresses} body={recipientsAddresses} />}
-            {this.renderExchangeData()}
+            {this.renderExchangeData(crypto.symbolString)}
             {isAcceleratable && <Tile type="touchable" title={s.strings.transaction_details_advance_details_accelerate} onPress={this.openAccelerateModel} />}
             <Tile type="editable" title={s.strings.transaction_details_notes_title} body={notes} onPress={this.openNotesInput} />
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
