@@ -23,7 +23,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center'
   },
   icon: {
-    width: theme.rem(1.5),
-    height: theme.rem(1.5)
+    width: theme.rem(1.25),
+    height: theme.rem(1.25)
   }
 }))
