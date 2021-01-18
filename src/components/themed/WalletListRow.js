@@ -182,7 +182,7 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
                 <View style={styles.detailsRow}>
                   <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
                   <EdgeText style={[styles.exchangeRate, { color: differencePercentageStyle }]}>
-                    {exchangeRateFiatSymbol + exchangeRate + '     ' + differencePercentage}
+                    {exchangeRateFiatSymbol + exchangeRate + '  ' + differencePercentage}
                   </EdgeText>
                   <EdgeText style={styles.detailsValue}>{cryptoAmount}</EdgeText>
                 </View>
@@ -241,9 +241,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.secondaryText
   },
   exchangeRate: {
-    flex: 1,
-    fontSize: theme.rem(1),
-    textAlign: 'left'
+    flex: 1
   },
   swipeContainer: {
     flex: 1,
