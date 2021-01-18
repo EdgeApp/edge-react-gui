@@ -7,16 +7,19 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from './EdgeText.js'
 
 type Props = {
-  title: string,
+  title?: string,
+  children?: React.Node,
   withTopMargin?: boolean
 }
 
-class ListHeaderComponent extends React.PureComponent<Props & ThemeProps> {
+class UnderlinedHeaderComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
-    const styles = getStyles(this.props.theme)
+    const { title, children, theme } = this.props
+    const styles = getStyles(theme)
     return (
       <View style={[styles.container, this.props.withTopMargin ? styles.topMargin : null]}>
-        <EdgeText style={styles.title}>{this.props.title}</EdgeText>
+        {title ? <EdgeText style={styles.title}>{title}</EdgeText> : null}
+        {children}
       </View>
     )
   }
@@ -40,4 +43,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const ListHeader = withTheme(ListHeaderComponent)
+export const UnderlinedHeader = withTheme(UnderlinedHeaderComponent)
