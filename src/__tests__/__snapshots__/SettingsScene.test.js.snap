@@ -4,8 +4,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4278994026,
       4279050565,
+      4278994026,
     ]
   }
   endPoint={
@@ -1342,8 +1342,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4278994026,
       4279050565,
+      4278994026,
     ]
   }
   endPoint={

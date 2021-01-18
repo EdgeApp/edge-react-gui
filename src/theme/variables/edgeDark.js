@@ -87,8 +87,8 @@ export const edgeDark: Theme = {
   buySellCustomPluginModalIcon: palette.darkBlue,
 
   // Background
-  backgroundGradientLeft: palette.darkBlue,
-  backgroundGradientRight: palette.edgeNavy,
+  backgroundGradientLeft: palette.edgeNavy,
+  backgroundGradientRight: palette.darkBlue,
 
   // Modal
   modal: palette.royalBlue,
