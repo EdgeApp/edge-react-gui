@@ -2,11 +2,12 @@
 
 import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableHighlight, View } from 'react-native'
+import { View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import { ClickableRow } from '../../../components/themed/ClickableRow'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { formatNumber, formatTime } from '../../../locales/intl.js'
 import s from '../../../locales/strings'
@@ -14,7 +15,6 @@ import { type RootState } from '../../../types/reduxTypes'
 import type { FioRequest } from '../../../types/types'
 import { getFiatSymbol } from '../../../util/utils'
 import { getDisplayDenomination } from '../../Settings/selectors'
-import { Gradient } from '../../UI/components/Gradient/Gradient.ui'
 import { getSelectedWallet } from '../../UI/selectors'
 import { isRejectedFioRequest, isSentFioRequest } from '../util'
 
@@ -57,23 +57,6 @@ class FioRequestRow extends React.PureComponent<Props> {
     this.props.onSelect(this.props.fioRequest)
   }
 
-  requestedTimeAndMemo = (time: Date, memo: string) => {
-    const styles = getStyles(this.props.theme)
-    const value = `${formatTime(time)} ${memo ? `- ${memo}` : ''}`
-    return (
-      <EdgeText ellipsizeMode="tail" numberOfLines={1} style={[styles.requestPendingTime, styles.requestTime]}>
-        {value}
-      </EdgeText>
-    )
-  }
-
-  currencyField = (amount: string) => {
-    const styles = getStyles(this.props.theme)
-    const value = `${this.props.displayDenomination.symbol || ''} ${amount}`
-
-    return <EdgeText style={styles.requestAmount}>{value}</EdgeText>
-  }
-
   requestedField = () => {
     const { displayDenomination, fioRequest, theme } = this.props
     const styles = getStyles(theme)
@@ -105,49 +88,33 @@ class FioRequestRow extends React.PureComponent<Props> {
     if (!displayDenomination) return null
 
     const fiatValue = `${this.props.fiatSymbol} ${this.props.fiatAmount}`
+    const currencyValue = `${this.props.displayDenomination.symbol || ''} ${fioRequest.content.amount}`
+    const dateValue = `${formatTime(new Date(fioRequest.time_stamp))} ${fioRequest.content.memo ? `- ${fioRequest.content.memo}` : ''}`
     return (
-      <TouchableHighlight onPress={this.onSelect} underlayColor={theme.backgroundGradientLeft}>
-        <Gradient style={styles.row}>
-          <View style={styles.requestInfoWrap}>
-            <View style={styles.requestLeft}>
-              <FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />
-            </View>
+      <ClickableRow onPress={this.onSelect} highlight gradient>
+        <FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />
 
-            <View style={styles.requestRight}>
-              <View style={styles.requestDetailsRow}>
-                <EdgeText style={styles.name}>{isSent ? fioRequest.payer_fio_address : fioRequest.payee_fio_address}</EdgeText>
-                {this.currencyField(fioRequest.content.amount)}
-              </View>
-              <View style={styles.requestDetailsRow}>
-                {this.requestedTimeAndMemo(new Date(fioRequest.time_stamp), fioRequest.content.memo)}
-                <EdgeText style={styles.requestFiat}>{fiatValue}</EdgeText>
-              </View>
-              <View style={styles.requestDetailsRow}>{isSent ? this.showStatus(fioRequest.status) : this.requestedField()}</View>
-            </View>
+        <View style={styles.requestRight}>
+          <View style={styles.requestDetailsRow}>
+            <EdgeText style={styles.name}>{isSent ? fioRequest.payer_fio_address : fioRequest.payee_fio_address}</EdgeText>
+            <EdgeText style={styles.requestAmount}>{currencyValue}</EdgeText>
           </View>
-        </Gradient>
-      </TouchableHighlight>
+          <View style={styles.requestDetailsRow}>
+            <EdgeText ellipsizeMode="tail" numberOfLines={1} style={[styles.requestPendingTime, styles.requestTime]}>
+              {dateValue}
+            </EdgeText>
+            <EdgeText style={styles.requestFiat}>{fiatValue}</EdgeText>
+          </View>
+          <View style={styles.requestDetailsRow}>{isSent ? this.showStatus(fioRequest.status) : this.requestedField()}</View>
+        </View>
+      </ClickableRow>
     )
   }
 }
 const emptyDisplayDenomination = { name: '', multiplier: '0' }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  row: {
-    paddingRight: theme.rem(1),
-    paddingLeft: theme.rem(1)
-  },
-  requestInfoWrap: {
-    flex: 1,
-    flexDirection: 'row',
-    paddingBottom: theme.rem(0.5),
-    paddingTop: theme.rem(0.375)
-  },
-  requestLeft: {
-    flexDirection: 'row'
-  },
   icon: {
-    marginTop: theme.rem(1.5),
     marginRight: theme.rem(1),
     color: theme.primaryText,
     fontSize: theme.rem(1)
