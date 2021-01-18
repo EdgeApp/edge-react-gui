@@ -207,67 +207,29 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
-<<<<<<< HEAD
-    marginBottom: theme.rem(1 / 16)
-=======
     paddingHorizontal: theme.rem(2)
->>>>>>> d3e0de0508e9e75a1afdaf09ff4be0f649088e79
   },
   rowContainer: {
     flex: 1,
     flexDirection: 'row',
-<<<<<<< HEAD
-    height: theme.rem(5.75),
-    padding: theme.rem(0.75)
-  },
-  walletBackground: {
-    backgroundColor: theme.walletListBackground
-  },
-  tokenBackground: {
-    backgroundColor: theme.walletListMutedBackground
-=======
     marginVertical: theme.rem(1)
->>>>>>> d3e0de0508e9e75a1afdaf09ff4be0f649088e79
   },
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-<<<<<<< HEAD
-    width: theme.rem(1.25),
-    marginRight: theme.rem(0.75)
-  },
-  icon: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    width: theme.rem(1.25),
-    height: theme.rem(1.25),
-    resizeMode: 'contain'
-=======
     marginRight: theme.rem(1)
->>>>>>> d3e0de0508e9e75a1afdaf09ff4be0f649088e79
   },
   detailsContainer: {
     flex: 1,
     flexDirection: 'column'
   },
   detailsRow: {
-<<<<<<< HEAD
-    flexDirection: 'row'
-  },
-  detailsCurrency: {
-    flex: 1,
-    fontFamily: theme.fontFaceBold
-=======
     flexDirection: 'row',
     alignItems: 'center'
   },
   detailsCurrency: {
     fontFamily: theme.fontFaceBold,
     marginRight: theme.rem(0.75)
->>>>>>> d3e0de0508e9e75a1afdaf09ff4be0f649088e79
   },
   detailsValue: {
     textAlign: 'right'
@@ -282,33 +244,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'right',
     color: theme.secondaryText
   },
-<<<<<<< HEAD
-  exchangeRateContainer: {
-    flex: 1,
-    alignItems: 'flex-start'
-  },
-  exchangeRate: {
-    fontSize: theme.rem(0.75)
-  },
-  percentageContainer: {
-    flex: 1,
-    alignItems: 'flex-end'
-  },
-  percentage: {
-    fontSize: theme.rem(0.75),
-    fontFamily: theme.fontFaceBold
-  },
-  divider: {
-    height: theme.rem(1 / 16),
-    borderColor: theme.lineDivider,
-    borderBottomWidth: theme.rem(1 / 16),
-    marginVertical: theme.rem(0.5)
-=======
   exchangeRate: {
     flex: 1,
     fontSize: theme.rem(1),
     textAlign: 'left'
->>>>>>> d3e0de0508e9e75a1afdaf09ff4be0f649088e79
   },
   swipeContainer: {
     flex: 1,
