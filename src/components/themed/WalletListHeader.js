@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
@@ -66,13 +65,13 @@ class WalletListHeaderComponent extends React.PureComponent<Props, State> {
 
   handleSearchDone = () => {
     this.clearText()
+    // $FlowFixMe - react-native-material-textfield have many flow errors. Somehow needed cause material-textfield value is not functioning well
+    this.textInput.current.clear()
     this.props.onChangeSearchingState(false)
   }
 
   clearText = () => {
     this.setState({ input: '' })
-    // $FlowFixMe - react-native-material-textfield have many flow errors. Somehow needed cause material-textfield value is not functioning well
-    this.textInput.current.clear()
     // $FlowFixMe
     this.textInput.current.blur()
     this.props.onChangeSearchText('')
@@ -93,18 +92,15 @@ class WalletListHeaderComponent extends React.PureComponent<Props, State> {
               value={this.state.input}
               onFocus={this.handleTextFieldFocus}
               ref={this.textInput}
+              isClearable={searching}
+              onClear={this.clearText}
               marginRem={0}
             />
           </View>
           {searching && (
-            <>
-              <TouchableOpacity onPress={this.clearText} style={styles.searchClearIcon}>
-                <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
-                <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
-              </TouchableOpacity>
-            </>
+            <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
+              <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
+            </TouchableOpacity>
           )}
         </View>
         {!searching && (
@@ -159,11 +155,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(0.5),
     marginHorizontal: theme.rem(1),
     height: theme.rem(4.5)
-  },
-  searchClearIcon: {
-    position: 'absolute',
-    right: '22%',
-    top: theme.rem(1.5)
   },
   searchDoneButton: {
     paddingLeft: theme.rem(0.75),
