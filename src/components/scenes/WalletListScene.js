@@ -82,9 +82,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
     this.props.needsPasswordCheck ? Airship.show(bridge => <PasswordReminderModal bridge={bridge} />) : this.showTutorial()
   }
 
-  handleToggleSorting = (sorting: boolean) => this.setState({ sorting })
-
-  handleToggleWalletSearching = (searching: boolean) => this.setState({ searching })
+  handleChangeSearchingState = (searching: boolean) => this.setState({ searching })
 
   handleChangeSearchText = (searchText: string) => this.setState({ searchText })
 
@@ -95,9 +93,8 @@ class WalletListComponent extends React.PureComponent<Props, State> {
       sorting={this.state.sorting}
       searching={this.state.searching}
       openSortModal={this.handleSort}
-      toggleSorting={this.handleToggleSorting}
       onChangeSearchText={this.handleChangeSearchText}
-      toggleWalletSearching={this.handleToggleWalletSearching}
+      onChangeSearchingState={this.handleChangeSearchingState}
     />
   )
 

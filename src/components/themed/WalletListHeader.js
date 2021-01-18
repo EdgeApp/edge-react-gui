@@ -25,7 +25,7 @@ type OwnProps = {
   searching: boolean,
   openSortModal: () => void,
   onChangeSearchText: (search: string) => void,
-  toggleWalletSearching: (searching: boolean) => void
+  onChangeSearchingState: (searching: boolean) => void
 }
 
 type StateProps = {
@@ -61,12 +61,12 @@ class WalletListHeaderComponent extends React.PureComponent<Props, State> {
   handleOnChangeText = (input: string) => this.props.onChangeSearchText(input)
 
   handleTextFieldFocus = () => {
-    this.props.toggleWalletSearching(true)
+    this.props.onChangeSearchingState(true)
   }
 
-  disabledTextFieldFocus = () => {
+  disableWalletSearching = () => {
     this.clearText()
-    this.props.toggleWalletSearching(false)
+    this.props.onChangeSearchingState(false)
   }
 
   clearText = () => {
@@ -101,7 +101,7 @@ class WalletListHeaderComponent extends React.PureComponent<Props, State> {
               <TouchableOpacity onPress={this.clearText} style={styles.searchClearIcon}>
                 <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={this.disabledTextFieldFocus} style={styles.searchDoneButton}>
+              <TouchableOpacity onPress={this.disableWalletSearching} style={styles.searchDoneButton}>
                 <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
               </TouchableOpacity>
             </>
