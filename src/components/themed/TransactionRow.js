@@ -163,22 +163,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
     shadowColor: theme.negativeText,
     shadowOffset: {
       width: 0,
-      height: theme.rem(3)
+      height: 0
     },
-    shadowOpacity: 0.5,
-    shadowRadius: theme.rem(10),
-    elevation: theme.rem(3)
+    shadowOpacity: 0.3,
+    shadowRadius: theme.rem(0.5),
+    elevation: 3
   },
   iconRequest: {
     borderColor: theme.positiveText,
     shadowColor: theme.positiveText,
     shadowOffset: {
       width: 0,
-      height: theme.rem(3)
+      height: 0
     },
-    shadowOpacity: 0.5,
-    shadowRadius: theme.rem(10),
-    elevation: theme.rem(3)
+    shadowOpacity: 0.3,
+    shadowRadius: theme.rem(0.5),
+    elevation: 3
   },
   icon: {
     width: theme.rem(1.75),
