@@ -202,7 +202,7 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
-    paddingHorizontal: theme.rem(2)
+    paddingHorizontal: theme.rem(1)
   },
   rowContainer: {
     flex: 1,

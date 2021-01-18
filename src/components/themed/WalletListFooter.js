@@ -99,8 +99,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'stretch',
     marginVertical: theme.rem(1),
     paddingTop: theme.rem(0.75),
-    marginLeft: theme.rem(2),
-    paddingRight: theme.rem(2),
+    marginLeft: theme.rem(1),
+    paddingRight: theme.rem(1),
     borderTopWidth: theme.thinLineWidth,
     borderTopColor: theme.lineDivider
   },

@@ -77,7 +77,7 @@ export const WiredBalanceBox = connect((state: RootState, ownProps: OwnProps): S
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     justifyContent: 'center',
-    marginLeft: theme.rem(2),
+    marginLeft: theme.rem(1),
     paddingBottom: theme.rem(1),
     marginBottom: theme.rem(1),
     borderBottomWidth: theme.thinLineWidth,
