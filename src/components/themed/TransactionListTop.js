@@ -36,6 +36,7 @@ export type StateProps = {
   currencyDenominationSymbol: string,
   currencyCode: string,
   currencyName: string,
+  denominationName: string,
   fiatCurrencyCode: string,
   fiatBalance: number,
   fiatSymbol: string,
@@ -87,23 +88,36 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   renderBalanceBox = () => {
-    const { cryptoAmount, currencyCode, fiatSymbol, fiatBalance, fiatCurrencyCode, walletId, walletName, isAccountBalanceVisible, theme } = this.props
+    const {
+      cryptoAmount,
+      currencyCode,
+      denominationName,
+      fiatSymbol,
+      fiatBalance,
+      fiatCurrencyCode,
+      walletId,
+      walletName,
+      isAccountBalanceVisible,
+      theme
+    } = this.props
     const styles = getStyles(theme)
 
     return (
       <View style={styles.balanceBoxContainer}>
         <View style={styles.balanceBoxRow}>
-          <TouchableOpacity onPress={this.props.toggleBalanceVisibility} style={styles.balanceBoxBalanceContainer}>
-            {isAccountBalanceVisible ? (
-              <>
-                <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
-                <EdgeText style={styles.balanceBoxCurrency}>{cryptoAmount + ' ' + currencyCode}</EdgeText>
-                <EdgeText style={styles.balanceFiatBalance}>{fiatSymbol + fiatBalance + ' ' + fiatCurrencyCode}</EdgeText>
-              </>
-            ) : (
-              <EdgeText style={styles.balanceFiatShow}>{s.strings.string_show_balance}</EdgeText>
-            )}
-          </TouchableOpacity>
+          <View style={styles.balanceBoxBalanceContainer}>
+            <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
+            <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>
+              {isAccountBalanceVisible ? (
+                <>
+                  <EdgeText style={styles.balanceBoxCurrency}>{cryptoAmount + ' ' + denominationName}</EdgeText>
+                  <EdgeText style={styles.balanceFiatBalance}>{fiatSymbol + fiatBalance + ' ' + fiatCurrencyCode}</EdgeText>
+                </>
+              ) : (
+                <EdgeText style={styles.balanceFiatShow}>{s.strings.string_show_balance}</EdgeText>
+              )}
+            </TouchableOpacity>
+          </View>
           <View style={styles.balanceBoxWalletProgressIconContainer}>
             <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} size={theme.rem(2.5)} />
           </View>
@@ -324,6 +338,7 @@ export const TransactionListTop = connect(
       currencyName: guiWallet.currencyNames[selectedCurrencyCode],
       currencyDenominationSymbol: currencyDenomination.symbol,
       cryptoAmount: cryptoAmountFormat,
+      denominationName: currencyDenomination.name,
       fiatCurrencyCode: guiWallet.fiatCurrencyCode,
       fiatBalance: fiatBalanceFormat,
       fiatSymbol: getFiatSymbol(guiWallet.isoFiatCurrencyCode),
