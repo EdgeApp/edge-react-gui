@@ -209,10 +209,23 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
     if (loading) return <ActivityIndicator color={theme.icon} style={styles.loading} size="small" />
 
     if (fioRequest) {
-      return <Tile type="static" title={s.strings.fragment_send_from_label} body={selected} />
+      return (
+        <View>
+          <Text style={styles.selectAddressText}>
+            {s.strings.fragment_send_from_label}: {selected}
+          </Text>
+        </View>
+      )
     }
 
-    return <Tile type="touchable" title={s.strings.fragment_send_from_label} body={selected} onPress={this.selectAddress} />
+    return (
+      <View style={styles.textIconContainer}>
+        <ArrowDownTextIconButton
+          onPress={this.selectAddress}
+          title={<Text style={styles.selectAddressText} ellipsizeMode="middle" numberOfLines={1}>{`${s.strings.fragment_send_from_label}: ${selected}`}</Text>}
+        />
+      </View>
+    )
   }
 
   render() {
