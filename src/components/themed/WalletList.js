@@ -263,7 +263,7 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { activeWalletIds, footer, header, searching, wallets } = this.props
+    const { activeWalletIds, footer, header, searching, theme, wallets } = this.props
     const walletList = this.getWalletList(activeWalletIds, wallets)
     return (
       <SwipeListView
@@ -271,7 +271,7 @@ class WalletListComponent extends React.PureComponent<Props> {
         ListFooterComponent={footer}
         ListHeaderComponent={header}
         renderItem={this.renderRow}
-        refreshControl={<RefreshControl refreshing={false} onRefresh={this.props.activateSearch} />}
+        refreshControl={<RefreshControl refreshing={false} onRefresh={this.props.activateSearch} tintColor={theme.searchListRefreshControlIndicator} />}
         contentOffset={{ y: !searching ? this.props.theme.rem(4.5) : 0 }}
         keyboardShouldPersistTaps="handled"
         useFlatList

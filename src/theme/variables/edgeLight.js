@@ -220,6 +220,7 @@ export const edgeLight: Theme = {
 
   // Misc
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
+  searchListRefreshControlIndicator: palette.transparent,
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
