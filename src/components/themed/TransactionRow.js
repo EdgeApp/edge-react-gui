@@ -56,14 +56,14 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     if (isSentTransaction) {
       transactionText =
         transaction.metadata && transaction.metadata.name ? transaction.metadata.name : s.strings.fragment_transaction_list_sent_prefix + selectedCurrencyName
-      transactionIcon = <Ionicons name="arrow-up" size={theme.rem(1.25)} color={theme.negativeText} />
+      transactionIcon = <Ionicons name="arrow-up" size={theme.rem(1.25)} color={theme.negativeText} style={styles.iconArrows} />
       transactionStyle = styles.iconSent
     } else {
       transactionText =
         transaction.metadata && transaction.metadata.name
           ? transaction.metadata.name
           : s.strings.fragment_transaction_list_receive_prefix + selectedCurrencyName
-      transactionIcon = <Ionicons name="arrow-down" size={theme.rem(1.25)} color={theme.positiveText} />
+      transactionIcon = <Ionicons name="arrow-down" size={theme.rem(1.25)} color={theme.positiveText} style={styles.iconArrows} />
       transactionStyle = styles.iconRequest
     }
 
@@ -184,6 +184,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(1.75),
     height: theme.rem(1.75),
     borderRadius: theme.rem(0.5)
+  },
+  // Some of the react-native-vector-icon icons does have surrounding white space and leans towards the left.
+  // Tested some other icons also like the AntDesign and MaterialIcons and have similar problems.
+  // Needed to be replaced by a custom icon to remove hack.
+  iconArrows: {
+    marginLeft: 1
   },
   transactionContainer: {
     flex: 1,
