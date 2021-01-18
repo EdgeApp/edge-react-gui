@@ -201,7 +201,7 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
-    paddingLeft: theme.rem(2),
+    paddingLeft: theme.rem(1),
     marginBottom: theme.rem(0.5)
   },
 
@@ -209,7 +209,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   balanceBoxContainer: {
     height: theme.rem(5.25),
     marginVertical: theme.rem(1),
-    marginRight: theme.rem(2)
+    marginRight: theme.rem(1)
   },
   balanceBoxRow: {
     flexDirection: 'row'
@@ -286,7 +286,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: theme.rem(2),
+    marginRight: theme.rem(1),
     height: theme.rem(4.5)
   },
   searchClearIcon: {
