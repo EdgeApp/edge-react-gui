@@ -203,9 +203,15 @@ export const updatePubAddressesForFioAddress = async (
     const chainCode = cCode.toUpperCase()
     const tokenCode = tCode.toUpperCase()
     const fullCurrencyCode = `${chainCode}:${tokenCode}`
+    let pubAddress = publicAddress
+
     if (isConnection) {
       connectedWalletsFromDisklet[fullCurrencyCode] = { walletId, publicAddress }
     } else {
+      const { publicAddress: pubAddressFromStore } = connectedWalletsFromDisklet[fullCurrencyCode]
+      if (pubAddressFromStore !== publicAddress) {
+        pubAddress = pubAddressFromStore
+      }
       delete connectedWalletsFromDisklet[fullCurrencyCode]
     }
     iteration.ccWalletMap.push({
@@ -215,7 +221,7 @@ export const updatePubAddressesForFioAddress = async (
     iteration.publicAddresses.push({
       token_code: tokenCode,
       chain_code: chainCode,
-      public_address: publicAddress
+      public_address: pubAddress
     })
     if (iteration.publicAddresses.length === limitPerCall) {
       try {
@@ -337,7 +343,7 @@ export const findWalletByFioAddress = async (fioWallets: EdgeCurrencyWallet[], f
 
 export const makeConnectWallets = (wallets: { [walletId: string]: GuiWallet }, ccWalletMap: CcWalletMap): { [key: string]: FioConnectionWalletItem } => {
   const walletItems = {}
-  for (const walletKey: string in wallets) {
+  for (const walletKey of Object.keys(wallets)) {
     if (wallets[walletKey].type === FIO_WALLET_TYPE) continue
     const publicAddress = wallets[walletKey].receiveAddress.publicAddress
     const fullCurrencyCode = `${wallets[walletKey].currencyCode}:${wallets[walletKey].currencyCode}`
@@ -613,7 +619,7 @@ const buyAddressRequest = async (
         }
       }
 
-      for (const currencyKey in buyAddressResponse.success.charge.pricing) {
+      for (const currencyKey of Object.keys(buyAddressResponse.success.charge.pricing)) {
         const currencyCode = buyAddressResponse.success.charge.pricing[currencyKey].currency
         supportedCurrencies[currencyCode] = true
 

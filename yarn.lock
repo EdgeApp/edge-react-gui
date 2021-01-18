@@ -3332,7 +3332,7 @@ base@^0.11.1:
 
 "bcoin@git+https://github.com/Airbitz/bcoin.git#primitiveBuild":
   version "1.0.0-beta.15"
-  resolved "git+https://github.com/Airbitz/bcoin.git#cf7b7d63a0ed2b0c468672b01cdbdc511272aec7"
+  resolved "git+https://github.com/Airbitz/bcoin.git#67ced95be8eb4ee3938079de5532823f540dc637"
   dependencies:
     bn.js "4.11.8"
     elliptic "6.4.0"
@@ -3484,6 +3484,11 @@ body-parser@1.19.0, body-parser@^1.18.2:
     qs "6.7.0"
     raw-body "2.4.0"
     type-is "~1.6.17"
+
+boolbase@^1.0.0, boolbase@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
+  integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
 bowser@^1.7.3:
   version "1.9.4"
@@ -4667,6 +4672,29 @@ css-in-js-utils@^2.0.0:
     hyphenate-style-name "^1.0.2"
     isobject "^3.0.1"
 
+css-select@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/css-select/-/css-select-2.1.0.tgz#6a34653356635934a81baca68d0255432105dbef"
+  integrity sha512-Dqk7LQKpwLoH3VovzZnkzegqNSuAziQyNZUcrdDM401iY+R5NkGBXGmtO05/yaXQziALuPogeG0b7UAgjnTJTQ==
+  dependencies:
+    boolbase "^1.0.0"
+    css-what "^3.2.1"
+    domutils "^1.7.0"
+    nth-check "^1.0.2"
+
+css-tree@^1.0.0-alpha.39:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/css-tree/-/css-tree-1.1.2.tgz#9ae393b5dafd7dae8a622475caec78d3d8fbd7b5"
+  integrity sha512-wCoWush5Aeo48GLhfHPbmvZs59Z+M7k5+B1xDnXbdWNcEF423DoFdqSWE0PM5aNk5nI5cp1q7ms36zGApY/sKQ==
+  dependencies:
+    mdn-data "2.0.14"
+    source-map "^0.6.1"
+
+css-what@^3.2.1:
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/css-what/-/css-what-3.4.2.tgz#ea7026fcb01777edbde52124e21f327e7ae950e4"
+  integrity sha512-ACUm3L0/jiZTqfzRM3Hi9Q8eZqd6IK37mMWPLz9PJxkLWllYeRf+EHUSHYEtFop2Eqytaq1FizFVh7XfBnXCDQ==
+
 cssom@^0.4.1:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/cssom/-/cssom-0.4.4.tgz#5a66cf93d2d0b661d80bf6a44fb65f5c2e4e0a10"
@@ -5002,10 +5030,28 @@ dom-helpers@^3.2.0:
   dependencies:
     "@babel/runtime" "^7.1.2"
 
+dom-serializer@0:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/dom-serializer/-/dom-serializer-0.2.2.tgz#1afb81f533717175d478655debc5e332d9f9bb51"
+  integrity sha512-2/xPb3ORsQ42nHYiSunXkDjPLBaEj/xTwUO4B7XCZQTRk7EBtTOPaygh10YAAh2OI1Qrp6NWfpAhzswj0ydt9g==
+  dependencies:
+    domelementtype "^2.0.1"
+    entities "^2.0.0"
+
 domain-browser@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.2.0.tgz#3d31f50191a6749dd1375a7f522e823d42e54eda"
   integrity sha512-jnjyiM6eRyZl2H+W8Q/zLMA481hzi0eszAaBUzIVnmYVDBbnLxVNnfu1HgEBvCbL+71FrxMl3E6lpKH7Ge3OXA==
+
+domelementtype@1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/domelementtype/-/domelementtype-1.3.1.tgz#d048c44b37b0d10a7f2a3d5fee3f4333d790481f"
+  integrity sha512-BSKB+TSpMpFI/HOxCNr1O8aMOTZ8hT3pM3GQ0w/mWRmkhEDSFJkkyzz4XQsBV44BChwGkrDfMyjVD0eA2aFV3w==
+
+domelementtype@^2.0.1:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/domelementtype/-/domelementtype-2.1.0.tgz#a851c080a6d1c3d94344aed151d99f669edf585e"
+  integrity sha512-LsTgx/L5VpD+Q8lmsXSHW2WpA+eBlZ9HPf3erD1IoPF00/3JKHZ3BknUVA2QGDNu69ZNmyFmCWBSO45XjYKC5w==
 
 domexception@^1.0.1:
   version "1.0.1"
@@ -5013,6 +5059,14 @@ domexception@^1.0.1:
   integrity sha512-raigMkn7CJNNo6Ihro1fzG7wr3fHuYVytzquZKX5n0yizGsTcYgzdIUwj1X9pK0VvjeihV+XiclP+DjwbsSKug==
   dependencies:
     webidl-conversions "^4.0.2"
+
+domutils@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/domutils/-/domutils-1.7.0.tgz#56ea341e834e06e6748af7a1cb25da67ea9f8c2a"
+  integrity sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg==
+  dependencies:
+    dom-serializer "0"
+    domelementtype "1"
 
 dot-prop@^5.2.0:
   version "5.3.0"
@@ -5112,15 +5166,15 @@ edge-components@^0.0.31:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.18:
-  version "0.17.18"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.18.tgz#5495f14a767de1d021a928bd419e41b88865079b"
-  integrity sha512-YNEhKZt4MpDE5+Kbe915EwmT0JOGv0Z8D9dVaEnzcB0iCw7K8FBbiRZueBPUgkn0Z7MlTE6nNgJB5njy2p2Gpw==
+edge-core-js@^0.17.19:
+  version "0.17.19"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.19.tgz#c0f52f66e95bcd6022c5f0d76550ee3888c18531"
+  integrity sha512-YGLeYCHVbtwHtsNlTpQ22hiGbCkSVA8NDMLh9lkZMYtXfJRSKspalNxnu8hSf/zD6gcR+6NNLOf2fSkGw0rX1A==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
     biggystring "^3.0.2"
-    cleaners "^0.3.1"
+    cleaners "^0.3.2"
     currency-codes "^1.1.2"
     disklet "^0.4.5"
     elliptic "^6.4.0"
@@ -5138,10 +5192,10 @@ edge-core-js@^0.17.18:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.38:
-  version "0.7.38"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.38.tgz#66f5708331adc42b633c54bbc4a2c63a66b8658d"
-  integrity sha512-ZW99z2ll4Eby+kPnhI7CoLOgaad8ucoYV6/I0Zhpkhprqyj4QbLYNEsfnDwfh5NIFLdM3w+JGsQmdVr2mwg4oQ==
+edge-currency-accountbased@^0.7.42:
+  version "0.7.42"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.42.tgz#5be4f592053765971e72f3b70a438866f596c619"
+  integrity sha512-2se5+idHNBQVSkww23uhqKV8W5CaulmocPiHMMTl++Kkvs1T4d3Gq4LuiEV9SwNxru3yepvsA/YrRkCxqNgBPw==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.2.1"
@@ -5167,10 +5221,10 @@ edge-currency-accountbased@^0.7.38:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.9.6:
-  version "4.9.6"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.6.tgz#ba80bf46bd1e85821c7d74de79985edf8d937f87"
-  integrity sha512-siHnuAWHyKlR6ScQaS8ogp8kBjREbeYTU+d2QN1wtM/ekF9ZjNwT/kOy7s1qjYx1szgIS4AFvkC/p7aXdccUNg==
+edge-currency-bitcoin@^4.9.8:
+  version "4.9.8"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.8.tgz#a2157a21bbb5aa5fb9efe13859fc429e3e19d307"
+  integrity sha512-DRyAxsBOZWPflgp3bqb5TwW/FVf1RfPAomkpFXtwd5jfTj30cHj89rdK8F4c4N02zetgct6LGIet9Gi0D8bMqA==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -5189,10 +5243,10 @@ edge-currency-bitcoin@^4.9.6:
     uri-js "^4.2.2"
     url-parse "^1.4.3"
 
-edge-currency-monero@^0.2.7:
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.2.7.tgz#a065dfc13788339f9c5ebdde4efa657684a0ca99"
-  integrity sha512-6P1Qvh6jkLTcRYMO/Nuo0Bpmzw+jGGZKardC7N+LO7ZuTB2PyH6y26w2LO2ge7eeluNS9yQhjXSRr8ZdRav0DA==
+edge-currency-monero@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.2.8.tgz#5d4b6197d0dced90cda1870696357dfb8b22b714"
+  integrity sha512-w1JxIJQzl5lXVe6LZgh488KCWWvJy1edgwWC8xpfudw1yje1MRIZpwVe4NAHVeEqmG15SxrJsV+f5IRq1TZtrA==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
@@ -5200,10 +5254,10 @@ edge-currency-monero@^0.2.7:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.14:
-  version "0.11.14"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.14.tgz#f08e03c2296dcc1bd114f8880a948b472e888e2c"
-  integrity sha512-S6aBuw/igyeqFvFLcF4Y2kl57ltcFuzpMYjqFvFtfnsbthsQnZLcZWDUrmRAOSkQrsIdJTsje/f4FPCvFfjAnA==
+edge-exchange-plugins@^0.11.18:
+  version "0.11.18"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.18.tgz#e2c484f1bb53ab6a9d9778238db7d5996bc9d82f"
+  integrity sha512-XaV85wg/Y/sAUA/VKDsdUYetLT48sZ1ZuvWdBBwRysDX2FeQy+FDapjPQ3TkuZH1QGNfsasDv6iH0qmoKryzKw==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.2.0"
@@ -5212,10 +5266,10 @@ edge-exchange-plugins@^0.11.14:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.6.24:
-  version "0.6.24"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.24.tgz#41f2cbcfbed569f2a253d6e170c901e5a7c05f61"
-  integrity sha512-HjZrNUtmoFrf9CM5j786e+V1l48n1sMpIW/cDbuvAbXBPizgo0J9Lo8rb62huT7e7JnQ+XF0gKUROCJmgH8w0g==
+edge-login-ui-rn@^0.6.25:
+  version "0.6.25"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.6.25.tgz#fe58a2eb2bb4d4c3c42cf36a391a6bfa558a2e17"
+  integrity sha512-swa9FwH1aFNszabE+MoEm7SH9oODcxhT9SqyOY5xJAfPp8l/cFUXBsyerrg+CeE8WEsI2Q+F3smVe0anli2P+w==
   dependencies:
     cleaners "^0.3.1"
     material-ui "^0.20.0"
@@ -5340,6 +5394,11 @@ enquirer@^2.3.5, enquirer@^2.3.6:
   integrity sha512-yjNnPr315/FjS4zIsUxYguYUPP2e1NK4d7E7ZOLiyYCcbFBiTMyID+2wvm2w6+pZ/odMA7cRkjhsPbltwBOrLg==
   dependencies:
     ansi-colors "^4.1.1"
+
+entities@^2.0.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/entities/-/entities-2.1.0.tgz#992d3129cf7df6870b96c57858c249a120f8b8b5"
+  integrity sha512-hCx1oky9PFrJ611mf0ifBLBRW8lUUVRlFolb5gWRfIELabBlbp9xZvrqZLZAs+NxFnbfQoeGd8wDkygjg7U85w==
 
 envinfo@^7.7.2:
   version "7.7.3"
@@ -8954,6 +9013,11 @@ md5.js@^1.3.4:
     inherits "^2.0.1"
     safe-buffer "^5.1.2"
 
+mdn-data@2.0.14:
+  version "2.0.14"
+  resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.14.tgz#7113fc4281917d63ce29b43446f701e68c25ba50"
+  integrity sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==
+
 media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
@@ -9852,6 +9916,13 @@ npmlog@^4.0.1:
     console-control-strings "~1.1.0"
     gauge "~2.7.3"
     set-blocking "~2.0.0"
+
+nth-check@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/nth-check/-/nth-check-1.0.2.tgz#b2bd295c37e3dd58a3bf0700376663ba4d9cf05c"
+  integrity sha512-WeBOdju8SnzPN5vTUJYxYUxLeXpCaVP5i5e0LF8fg7WORF2Wd7wFX/pk0tYZk7s8T+J7VLy0Da6J1+wCT0AtHg==
+  dependencies:
+    boolbase "~1.0.0"
 
 nub@~0.0.0:
   version "0.0.0"
@@ -10972,6 +11043,13 @@ react-native-check-version@^1.0.5:
   resolved "https://registry.yarnpkg.com/react-native-check-version/-/react-native-check-version-1.0.5.tgz#45c622214efbfbb106fd8cfb7cf73d520d21a691"
   integrity sha512-AvS1LfImO8NHpy6DYEU7o5Y7ob0pe1k/Q+IQyYAuOETpuTpcLd2TL3bdcV9oGWnp8DL1IOGPXEIIqz+GT/ATfg==
 
+react-native-circular-progress@^1.3.6:
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/react-native-circular-progress/-/react-native-circular-progress-1.3.6.tgz#023f74785274ea1a4473ca9291e600e5d33ee892"
+  integrity sha512-0P+RIZ1SdufLNI9oXhZCx1QBwvdkgJeyLHv+243jSvqrRVcfp6E31ktrdZr8QOpI2sG3g3n4NRrtjMxHKL7ryw==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-native-contacts@2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-2.2.5.tgz#5f7ff7b0310a095753ef0491d6e9453dcfc17ff8"
@@ -11161,6 +11239,14 @@ react-native-store-review@^0.1.5:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/react-native-store-review/-/react-native-store-review-0.1.5.tgz#9df69786a137580748e368641698d2104519e4cf"
   integrity sha512-vVx7NYaQva3bGU5MdqXn4yEB+o+GPdmjqAuj7PnkepfeCS6Bi3sqniiKoXmKOKDgRTfIobBZjUkHzWeHli1+3A==
+
+react-native-svg@^12.1.0:
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-12.1.0.tgz#acfe48c35cd5fca3d5fd767abae0560c36cfc03d"
+  integrity sha512-1g9qBRci7man8QsHoXn6tP3DhCDiypGgc6+AOWq+Sy+PmP6yiyf8VmvKuoqrPam/tf5x+ZaBT2KI0gl7bptZ7w==
+  dependencies:
+    css-select "^2.1.0"
+    css-tree "^1.0.0-alpha.39"
 
 react-native-swipe-gestures@^1.0.2:
   version "1.0.3"

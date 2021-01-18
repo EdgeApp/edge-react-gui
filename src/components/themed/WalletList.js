@@ -3,19 +3,27 @@
 import { bns } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
+import { RefreshControl } from 'react-native'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import { connect } from 'react-redux'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import { WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
 import { formatNumber } from '../../locales/intl.js'
-import s from '../../locales/strings.js'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
-import { emptyEdgeDenomination } from '../../modules/Settings/selectors.js'
 import { calculateWalletFiatBalanceWithoutState, getActiveWalletIds } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, FlatListItem, GuiWallet } from '../../types/types.js'
-import { convertNativeToDisplay, decimalOrZero, getFiatSymbol, getYesterdayDateRoundDownHour, truncateDecimals } from '../../util/utils.js'
+import {
+  checkFilterToken,
+  checkFilterWallet,
+  convertNativeToDisplay,
+  decimalOrZero,
+  getDenomination,
+  getFiatSymbol,
+  getYesterdayDateRoundDownHour,
+  truncateDecimals
+} from '../../util/utils'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
 import { WalletListRow } from './WalletListRow.js'
@@ -26,7 +34,11 @@ const DIVIDE_PRECISION = 18
 
 type OwnProps = {
   header?: React.Node,
-  footer?: React.Node
+  footer?: React.Node,
+  searching: boolean,
+  searchText: string,
+  activateSearch: () => void,
+  showSlidingTutorial?: boolean
 }
 
 type StateProps = {
@@ -35,8 +47,7 @@ type StateProps = {
   exchangeRates: { [string]: number },
   showBalance: boolean,
   settings: Object,
-  wallets: { [walletId: string]: GuiWallet },
-  walletsProgress: Object
+  wallets: { [walletId: string]: GuiWallet }
 }
 
 type DispatchProps = {
@@ -47,25 +58,27 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class WalletListComponent extends React.PureComponent<Props> {
   getWalletList(activeWalletIds: string[], wallets: { [walletId: string]: GuiWallet }): WalletListItem[] {
+    const { searching, searchText } = this.props
     const walletList = []
 
     for (const walletId of activeWalletIds) {
       const wallet = wallets[walletId]
-
-      if (wallet == null) {
+      if (wallet == null && !searching) {
         walletList.push({
           id: walletId,
           key: walletId
         })
-      } else {
+      } else if (wallet != null) {
         const { enabledTokens } = wallet
         const { customTokens } = this.props
 
-        walletList.push({
-          id: walletId,
-          fullCurrencyCode: wallet.currencyCode,
-          key: `${walletId}-${wallet.currencyCode}`
-        })
+        if (searchText === '' || checkFilterWallet(wallet, searchText)) {
+          walletList.push({
+            id: walletId,
+            fullCurrencyCode: wallet.currencyCode,
+            key: `${walletId}-${wallet.currencyCode}`
+          })
+        }
 
         // Old logic on getting tokens
         const enabledNotHiddenTokens = enabledTokens.filter(token => {
@@ -82,38 +95,17 @@ class WalletListComponent extends React.PureComponent<Props> {
 
         for (const currencyCode of enabledNotHiddenTokens) {
           const fullCurrencyCode = `${wallet.currencyCode}-${currencyCode}`
-          walletList.push({
-            id: walletId,
-            fullCurrencyCode: fullCurrencyCode,
-            key: `${walletId}-${fullCurrencyCode}`
-          })
+          if (searchText === '' || checkFilterToken(wallet, currencyCode, searchText)) {
+            walletList.push({
+              id: walletId,
+              fullCurrencyCode: fullCurrencyCode,
+              key: `${walletId}-${fullCurrencyCode}`
+            })
+          }
         }
       }
     }
     return walletList
-  }
-
-  getWalletProgress(walletId: string): number {
-    const walletProgress = this.props.walletsProgress[walletId]
-
-    if (walletProgress === 1) {
-      return 1
-    }
-    if (walletProgress < 0.1) {
-      return 0.1
-    }
-    if (walletProgress > 0.95) {
-      return 0.95
-    }
-
-    return walletProgress
-  }
-
-  getDenomination(currencyCode: string): EdgeDenomination {
-    const { settings } = this.props
-    const denominationMultiplier = settings[currencyCode].denomination
-    const denomination = settings[currencyCode].denominations.find(denomination => denomination.multiplier === denominationMultiplier)
-    return denomination || emptyEdgeDenomination
   }
 
   getCryptoAmount(balance: string, denomination: EdgeDenomination, isToken: boolean): string {
@@ -129,7 +121,7 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   renderRow = (data: FlatListItem<WalletListItem>, rowMap: { [string]: SwipeRow }) => {
-    const { exchangeRates, settings, showBalance, theme, wallets } = this.props
+    const { exchangeRates, settings, showBalance, showSlidingTutorial, theme, wallets } = this.props
     const walletId = data.item.id.replace(/:.*/, '')
     const guiWallet = wallets[walletId]
 
@@ -142,10 +134,9 @@ class WalletListComponent extends React.PureComponent<Props> {
       const balance = isToken ? guiWallet.nativeBalances[currencyCode] : guiWallet.primaryNativeBalance
 
       const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
-      const walletProgress = this.getWalletProgress(walletId)
 
       // Crypto Amount And Exchange Rate
-      const denomination = this.getDenomination(currencyCode)
+      const denomination = getDenomination(currencyCode, settings)
       const cryptoAmount = this.getCryptoAmount(balance || '0', denomination, isToken)
       const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
       const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
@@ -159,7 +150,7 @@ class WalletListComponent extends React.PureComponent<Props> {
       // Currency Exhange Rate
       const exchangeRateFormat = exchangeRate ? formatNumber(exchangeRate, { toFixed: 2 }) : null
       const exchangeRateFiatSymbol = exchangeRateFormat ? `${walletFiatSymbol} ` : ''
-      const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}/${currencyCode}` : s.strings.no_exchange_rate
+      const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}` : ''
 
       // Yesterdays Percentage Difference
       const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`]
@@ -180,10 +171,10 @@ class WalletListComponent extends React.PureComponent<Props> {
         differencePercentageString = '0.00%'
       } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
         differencePercentageStringStyle = theme.negativeText
-        differencePercentageString = `- ${Math.abs(differencePercentage).toFixed(2)}%`
+        differencePercentageString = `-${Math.abs(differencePercentage).toFixed(2)}%`
       } else if (exchangeRate && differencePercentage && differencePercentage > 0) {
         differencePercentageStringStyle = theme.positiveText
-        differencePercentageString = `+ ${Math.abs(differencePercentage).toFixed(2)}%`
+        differencePercentageString = `+${Math.abs(differencePercentage).toFixed(2)}%`
       }
 
       let symbolImage
@@ -208,9 +199,9 @@ class WalletListComponent extends React.PureComponent<Props> {
           publicAddress={guiWallet.receiveAddress.publicAddress}
           selectWallet={this.props.selectWallet}
           symbolImage={symbolImage}
+          openRowLeft={data.index === 0 && showSlidingTutorial}
           walletId={walletId}
           walletName={guiWallet.name}
-          walletProgress={walletProgress}
           swipeRow={rowMap[data.item.key]}
         />
       )
@@ -218,9 +209,19 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { activeWalletIds, footer, header, wallets } = this.props
+    const { activeWalletIds, footer, header, searching, wallets } = this.props
     const walletList = this.getWalletList(activeWalletIds, wallets)
-    return <SwipeListView data={walletList} ListFooterComponent={footer} ListHeaderComponent={header} renderItem={this.renderRow} useFlatList />
+    return (
+      <SwipeListView
+        data={walletList}
+        ListFooterComponent={footer}
+        ListHeaderComponent={header}
+        renderItem={this.renderRow}
+        refreshControl={<RefreshControl refreshing={false} onRefresh={this.props.activateSearch} />}
+        contentOffset={{ y: !searching ? this.props.theme.rem(4.5) : 0 }}
+        useFlatList
+      />
+    )
   }
 }
 
@@ -243,8 +244,7 @@ export const WalletList = connect(
       exchangeRates: state.exchangeRates,
       showBalance: state.ui.settings.isAccountBalanceVisible,
       settings: state.ui.settings,
-      wallets: state.ui.wallets.byId,
-      walletsProgress: state.ui.wallets.walletLoadingProgress
+      wallets: state.ui.wallets.byId
     }
   },
   (dispatch: Dispatch): DispatchProps => ({

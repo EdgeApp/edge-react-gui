@@ -1,15 +1,19 @@
 /* globals describe it expect */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
+import { bns } from 'biggystring'
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import { TransactionRowComponent } from '../components/common/TransactionRow.js'
+import { getTheme } from '../components/services/ThemeContext.js'
+import { TransactionListRowComponent } from '../components/themed/TransactionListRow.js'
+import * as intl from '../locales/intl.js'
+import * as UTILS from '../util/utils'
 
-describe('MenuDropDown component', () => {
-  it('should render without props', () => {
+describe('Transaction List Row', () => {
+  it('should render props', () => {
     const renderer = new ShallowRenderer()
-    const uiWallet = {
+    const guiWallet = {
       id: 'SXq1f3x21H2e/h5A4ANvrMoK5xs+sQcDoFWHtCG25BA=',
       type: 'wallet:monero',
       name: 'Monero',
@@ -44,29 +48,36 @@ describe('MenuDropDown component', () => {
       SVGMetadataElement: { name: 'ShapeShift', category: '', notes: 'Exchanged …' },
       dateString: 'Oct 14, 2018',
       time: '3:16 PM',
-      key: 0
-    }
-    const props = {
-      uiWallet,
-      transactions: [{ ...transaction }],
-      selectedCurrencyCode: 'XMR',
-      contacts: [],
-      isoFiatCurrencyCode: 'iso:USD',
-      fiatCurrencyCode: 'USD',
-      fiatSymbol: '$',
-      requiredConfirmations: 1,
-      transaction: {
-        item: {
-          ...transaction
-        }
-      },
-      displayDenomination: {
-        multiplier: '1000000000000',
-        name: 'XMR',
-        symbol: '‎ɱ'
+      key: 0,
+      metadata: {
+        amountFiat: 4424808418353299.5
       }
     }
-    const actual = renderer.render(<TransactionRowComponent {...props} />)
+    const displayDenomination = {
+      multiplier: '1000000000000',
+      name: 'XMR',
+      symbol: '‎ɱ'
+    }
+    // CryptoAmount
+    const cryptoAmount = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(bns.abs(transaction.nativeAmount || ''))
+    const cryptoAmountFormat = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(cryptoAmount, 6), 6))
+    // FiatAmount
+    const fiatAmount = bns.abs(transaction.metadata.amountFiat.toFixed(2))
+    const fiatAmountFormat = intl.formatNumber(bns.toFixed(fiatAmount, 2, 2), { toFixed: 2 })
+    const props = {
+      cryptoAmount: cryptoAmountFormat,
+      denominationSymbol: displayDenomination.symbol,
+      fiatAmount: fiatAmountFormat,
+      fiatSymbol: UTILS.getFiatSymbol(guiWallet.fiatCurrencyCode),
+      isSentTransaction: UTILS.isSentTransaction(transaction),
+      requiredConfirmations: 15,
+      selectedCurrencyName: guiWallet.currencyNames[guiWallet.currencyCode],
+      thumbnailPath: '',
+      walletBlockHeight: guiWallet.blockHeight,
+      transaction: transaction,
+      theme: getTheme()
+    }
+    const actual = renderer.render(<TransactionListRowComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
   })

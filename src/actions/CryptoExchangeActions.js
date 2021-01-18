@@ -396,7 +396,7 @@ export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetSta
   // make sure exchanges are enabled
   let isAnyExchangeEnabled = false
   const exchanges = account.swapConfig
-  for (const exchange in exchanges) {
+  for (const exchange of Object.keys(exchanges)) {
     if (exchanges[exchange].enabled === true) {
       isAnyExchangeEnabled = true
     }

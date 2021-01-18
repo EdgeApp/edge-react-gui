@@ -10,8 +10,7 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 
 export type ChangePasswordOwnProps = {
   account: EdgeAccount,
-  context: EdgeContext,
-  showHeader: boolean
+  context: EdgeContext
 }
 
 export type ChangePasswordDispatchProps = {
@@ -20,8 +19,7 @@ export type ChangePasswordDispatchProps = {
 
 export type ChangePasswordStateProps = {
   context: EdgeContext,
-  account: EdgeAccount,
-  showHeader: boolean
+  account: EdgeAccount
 }
 
 type ChangePasswordComponent = ChangePasswordOwnProps & ChangePasswordDispatchProps & ChangePasswordStateProps
@@ -40,7 +38,7 @@ export class ChangePassword extends React.Component<ChangePasswordComponent> {
             context={this.props.context}
             onComplete={this.onComplete}
             onCancel={this.onComplete}
-            showHeader={this.props.showHeader}
+            showHeader={false}
           />
           <View style={{ backgroundColor: THEME.COLORS.WHITE, height: 360 }} />
         </ScrollView>

@@ -1,19 +1,20 @@
 // @flow
 
 import * as React from 'react'
-import { Dimensions, Image, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { Dimensions, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { Fontello } from '../../assets/vector/index.js'
 import * as Constants from '../../constants/indexConstants'
 import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
-import { ProgressPie } from '../common/ProgressPie.js'
+import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { ThemedTicker } from './ThemedTicker'
+import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 const FULL_WIDTH = Dimensions.get('window').width
 const WIDTH_DIMENSION_HIDE = FULL_WIDTH * 0.35
@@ -30,24 +31,34 @@ type Props = {
   fiatBalanceSymbol: string,
   isToken: boolean,
   publicAddress: string,
+  openRowLeft: boolean,
   selectWallet(walletId: string, currencyCode: string): void,
   symbolImage?: string,
   walletId: string,
   walletName: string,
-  walletProgress: number,
   swipeRef: ?React.ElementRef<typeof SwipeRow>,
   swipeRow: SwipeRow
 }
 
 type State = {
-  swipeDirection: 'left' | 'right' | null
+  swipeDirection: 'left' | 'right' | null,
+  leftRowOpened: boolean
 }
 
 class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, State> {
   constructor(props) {
     super(props)
     this.state = {
-      swipeDirection: null
+      swipeDirection: null,
+      leftRowOpened: false
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.props.openRowLeft && !this.state.leftRowOpened) {
+      const { swipeRow, theme } = this.props
+      swipeRow.manuallySwipeRow(theme.rem(-6.25))
+      this.setState({ leftRowOpened: true })
     }
   }
 
@@ -111,11 +122,9 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
       exchangeRateFiatSymbol,
       fiatBalance,
       fiatBalanceSymbol,
-      isToken,
-      symbolImage,
       theme,
-      walletName,
-      walletProgress
+      walletId,
+      walletName
     } = this.props
     const styles = getStyles(theme)
     const isSwipingLeft = swipeDirection === 'left'
@@ -164,30 +173,20 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
             </View>
           )}
         </View>
-        <View style={styles.container}>
-          <TouchableHighlight
-            activeOpacity={theme.underlayOpacity}
-            underlayColor={theme.underlayColor}
-            onPress={this.handleSelectWallet}
-            onLongPress={this.handleOpenWalletListMenuModal}
-          >
-            <View style={[styles.rowContainer, isToken ? styles.tokenBackground : styles.walletBackground]}>
+        <Gradient style={styles.container}>
+          <TouchableOpacity onPress={this.handleSelectWallet} onLongPress={this.handleOpenWalletListMenuModal}>
+            <View style={styles.rowContainer}>
               <View style={styles.iconContainer}>
-                {symbolImage && <Image style={styles.icon} source={{ uri: symbolImage }} resizeMode="cover" />}
-                <View style={styles.icon}>
-                  <ProgressPie size={theme.rem(1.25)} color={theme.iconLoadingOverlay} progress={walletProgress} />
-                </View>
+                <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} />
               </View>
               <View style={styles.detailsContainer}>
                 <View style={styles.detailsRow}>
                   <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
+                  <EdgeText style={[styles.exchangeRate, { color: differencePercentageStyle }]}>
+                    {exchangeRateFiatSymbol + exchangeRate + '     ' + differencePercentage}
+                  </EdgeText>
                   <ThemedTicker style={styles.detailsValue}>{cryptoAmount}</ThemedTicker>
                 </View>
-                <View style={styles.detailsRow}>
-                  <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
-                  <ThemedTicker style={styles.detailsFiat}>{fiatBalanceSymbol + fiatBalance}</ThemedTicker>
-                </View>
-                <View style={styles.divider} />
                 <View style={styles.detailsRow}>
                   <View style={styles.exchangeRateContainer}>
                     <ThemedTicker style={styles.exchangeRate}>{exchangeRateFiatSymbol + exchangeRate}</ThemedTicker>
@@ -198,8 +197,8 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
                 </View>
               </View>
             </View>
-          </TouchableHighlight>
-        </View>
+          </TouchableOpacity>
+        </Gradient>
       </SwipeRow>
     )
   }
@@ -208,11 +207,16 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
+<<<<<<< HEAD
     marginBottom: theme.rem(1 / 16)
+=======
+    paddingHorizontal: theme.rem(2)
+>>>>>>> d3e0de0508e9e75a1afdaf09ff4be0f649088e79
   },
   rowContainer: {
     flex: 1,
     flexDirection: 'row',
+<<<<<<< HEAD
     height: theme.rem(5.75),
     padding: theme.rem(0.75)
   },
@@ -221,10 +225,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   tokenBackground: {
     backgroundColor: theme.walletListMutedBackground
+=======
+    marginVertical: theme.rem(1)
+>>>>>>> d3e0de0508e9e75a1afdaf09ff4be0f649088e79
   },
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+<<<<<<< HEAD
     width: theme.rem(1.25),
     marginRight: theme.rem(0.75)
   },
@@ -237,17 +245,29 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(1.25),
     height: theme.rem(1.25),
     resizeMode: 'contain'
+=======
+    marginRight: theme.rem(1)
+>>>>>>> d3e0de0508e9e75a1afdaf09ff4be0f649088e79
   },
   detailsContainer: {
     flex: 1,
     flexDirection: 'column'
   },
   detailsRow: {
+<<<<<<< HEAD
     flexDirection: 'row'
   },
   detailsCurrency: {
     flex: 1,
     fontFamily: theme.fontFaceBold
+=======
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  detailsCurrency: {
+    fontFamily: theme.fontFaceBold,
+    marginRight: theme.rem(0.75)
+>>>>>>> d3e0de0508e9e75a1afdaf09ff4be0f649088e79
   },
   detailsValue: {
     textAlign: 'right'
@@ -262,6 +282,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'right',
     color: theme.secondaryText
   },
+<<<<<<< HEAD
   exchangeRateContainer: {
     flex: 1,
     alignItems: 'flex-start'
@@ -282,6 +303,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     borderColor: theme.lineDivider,
     borderBottomWidth: theme.rem(1 / 16),
     marginVertical: theme.rem(0.5)
+=======
+  exchangeRate: {
+    flex: 1,
+    fontSize: theme.rem(1),
+    textAlign: 'left'
+>>>>>>> d3e0de0508e9e75a1afdaf09ff4be0f649088e79
   },
   swipeContainer: {
     flex: 1,

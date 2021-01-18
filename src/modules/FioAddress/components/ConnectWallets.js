@@ -44,7 +44,7 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
   static getDerivedStateFromProps(props, state) {
     const { walletItems } = props
     const { prevItemsConnected } = state
-    for (const walletKey in prevItemsConnected) {
+    for (const walletKey of Object.keys(prevItemsConnected)) {
       if (prevItemsConnected[walletKey] !== walletItems[walletKey].isConnected) {
         return {
           connectWalletsMap: {},
@@ -67,7 +67,7 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
     const { fioAddressName, fioWallet, walletItems } = this.props
     const { connectWalletsMap, disconnectWalletsMap } = this.state
     const walletsToDisconnect = []
-    for (const walletKey in disconnectWalletsMap) {
+    for (const walletKey of Object.keys(disconnectWalletsMap)) {
       if (
         !Object.keys(connectWalletsMap).find(
           (cWalletKey: string) => connectWalletsMap[cWalletKey].fullCurrencyCode === disconnectWalletsMap[walletKey].fullCurrencyCode

@@ -9,9 +9,28 @@ import defaultLogo from '../../assets/images/exchange/settingsExchangeDefault.pn
 import faastLogo from '../../assets/images/exchange/settingsExchangeFaast.png'
 import foxExchangeLogo from '../../assets/images/exchange/settingsExchangeFoxExchange.png'
 import godexLogo from '../../assets/images/exchange/settingsExchangeGodex.png'
+import sideshiftLogo from '../../assets/images/exchange/settingsExchangeSideShiftAI.png'
 import switchainLogo from '../../assets/images/exchange/settingsExchangeSwitchain.png'
 import totleLogo from '../../assets/images/exchange/settingsExchangeTotle.png'
 import fioAddressLogo from '../../assets/images/list_fioAddress.png'
+import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
+import paymentTypeLogoBankgirot from '../../assets/images/paymentTypes/paymentTypeLogoBankgirot.png'
+import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymentTypeLogoBankTransfer.png'
+import paymentTypeLogoBpay from '../../assets/images/paymentTypes/paymentTypeLogoBpay.png'
+import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLogoCash.png'
+import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
+import paymentTypeLogoDebitCard from '../../assets/images/paymentTypes/paymentTypeLogoDebitCard.png'
+import paymentTypeLogoFasterPayments from '../../assets/images/paymentTypes/paymentTypeLogoFasterPayments.png'
+import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
+import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
+import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
+import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
+import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
+import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
+import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
+import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
+import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_light.gif'
 import { type Theme } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
 
@@ -62,6 +81,8 @@ export const edgeLight: Theme = {
   iconTappable: palette.edgeBlue,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
+  transactionListIconBackground: palette.white,
+  buySellCustomPluginModalIcon: palette.white,
 
   // Background
   backgroundGradientLeft: palette.lightestGray,
@@ -124,6 +145,8 @@ export const edgeLight: Theme = {
   // dangerButton: palette.accentRed,
   // dangerButtonText: palette.white,
 
+  buttonBoxShadow: palette.black,
+
   // cardBackground: palette.white,
   // cardShadow: palette.blackOp25,
 
@@ -161,6 +184,7 @@ export const edgeLight: Theme = {
   // orLine: palette.gray,
   // tileDivider: palette.gray,
   thinLineWidth: 1,
+  mediumLineWidth: 2,
 
   // Notifications
   // notificationBackground: palette.grayOp80,
@@ -189,6 +213,11 @@ export const edgeLight: Theme = {
   dateModalBackgroundLight: palette.white,
   dateModalBackgroundDark: palette.edgeBlue,
 
+  // Wallet Icon Progress
+  walletProgressIconFill: palette.edgeMint,
+  walletProgressIconFillDone: palette.transparent,
+  walletProgressIconBackground: palette.transparent,
+
   // Misc
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
 
@@ -201,6 +230,9 @@ export const edgeLight: Theme = {
   underlayColor: palette.white,
   underlayOpacity: 0.95,
 
+  // Tutorials
+  tutorialModalUnderlay: palette.transparent,
+
   // Images
   settingsChangellyLogo: changellyLogo,
   settingsChangenowLogo: changenowLogo,
@@ -209,7 +241,28 @@ export const edgeLight: Theme = {
   settingsFaastLogo: faastLogo,
   settingsFoxExchangeLogo: foxExchangeLogo,
   settingsGodexLogo: godexLogo,
+  settingsSideshiftLogo: sideshiftLogo,
   settingsSwitchainLogo: switchainLogo,
   settingsTotleLogo: totleLogo,
-  fioAddressLogo: fioAddressLogo
+
+  paymentTypeLogoApplePay: paymentTypeLogoApplePay,
+  paymentTypeLogoAuspost: paymentTypeLogoAuspost,
+  paymentTypeLogoBankgirot: paymentTypeLogoBankgirot,
+  paymentTypeLogoBankTransfer: paymentTypeLogoBankTransfer,
+  paymentTypeLogoBpay: paymentTypeLogoBpay,
+  paymentTypeLogoCash: paymentTypeLogoCash,
+  paymentTypeLogoCreditCard: paymentTypeLogoCreditCard,
+  paymentTypeLogoDebitCard: paymentTypeLogoDebitCard,
+  paymentTypeLogoFasterPayments: paymentTypeLogoFasterPayments,
+  paymentTypeLogoGiftCard: paymentTypeLogoGiftCard,
+  paymentTypeLogoIdeal: paymentTypeLogoIdeal,
+  paymentTypeLogoNewsagent: paymentTypeLogoNewsagent,
+  paymentTypeLogoPayid: paymentTypeLogoPayid,
+  paymentTypeLogoPoli: paymentTypeLogoPoli,
+  paymentTypeLogoSofort: paymentTypeLogoSofort,
+  paymentTypeLogoSwish: paymentTypeLogoSwish,
+  paymentTypeLogoUpi: paymentTypeLogoUpi,
+
+  fioAddressLogo: fioAddressLogo,
+  walletListSlideTutorialImage: walletListSlidingTutorial
 }

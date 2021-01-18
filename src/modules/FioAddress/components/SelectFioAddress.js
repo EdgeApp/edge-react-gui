@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -12,11 +12,11 @@ import { TransactionDetailsNotesInput } from '../../../components/modals/Transac
 import { Airship, showError } from '../../../components/services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext.js'
 import { EdgeText } from '../../../components/themed/EdgeText'
-import { Tile } from '../../../components/themed/Tile'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
 import { type Dispatch, type RootState } from '../../../types/reduxTypes'
 import type { FioAddress, FioRequest, GuiWallet } from '../../../types/types'
+import Text from '../../UI/components/FormattedText/FormattedText.ui.js'
 import * as UI_SELECTORS from '../../UI/selectors.js'
 import { refreshAllFioAddresses } from '../action'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../util'
@@ -231,9 +231,16 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
     }
 
     return (
-      <View>
+      <View style={styles.selectContainer}>
         {this.renderFioAddress()}
-        {!loading && <Tile type="editable" title={s.strings.fio_sender_memo_label} body={memo} onPress={this.openMessageInput} />}
+        {!loading && (
+          <TouchableWithoutFeedback onPress={this.openMessageInput}>
+            <View style={styles.memoContainer}>
+              <Text style={styles.selectAddressText}>{s.strings.fio_sender_memo_label}:</Text>
+              <Text style={styles.selectAddressTextPressed}>{memo || s.strings.fio_sender_memo_placeholder}</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        )}
         {memoError ? <EdgeText style={styles.error}>{memoError}</EdgeText> : null}
       </View>
     )
@@ -255,6 +262,25 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1,
     marginTop: theme.rem(2.5),
     alignSelf: 'center'
+  },
+  selectAddressText: {
+    marginTop: theme.rem(0.75),
+    color: theme.primaryText,
+    fontSize: theme.rem(0.875)
+  },
+  selectAddressTextPressed: {
+    color: theme.secondaryText,
+    fontSize: theme.rem(0.875)
+  },
+  memoContainer: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  textIconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: theme.rem(1.25)
   }
 }))
 

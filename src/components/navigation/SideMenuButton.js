@@ -16,7 +16,7 @@ type Props = {
 function SideMenuButtonComponent(props: Props) {
   const theme = useTheme()
   return (
-    <TouchableOpacity onPress={props.openDrawer} style={{ paddingHorizontal: theme.rem(0.75) }}>
+    <TouchableOpacity onPress={props.openDrawer} style={{ paddingVertical: theme.rem(0.75), paddingRight: theme.rem(1), paddingLeft: theme.rem(1.75) }}>
       <Fontello name="hamburgerButton" size={theme.rem(1)} color={theme.icon} />
     </TouchableOpacity>
   )

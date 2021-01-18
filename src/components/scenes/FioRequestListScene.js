@@ -47,6 +47,7 @@ export type StateProps = {
   state: RootState,
   account: EdgeAccount,
   wallets: { [walletId: string]: GuiWallet },
+  currencyWallets: { [walletId: string]: EdgeCurrencyWallet },
   fioWallets: EdgeCurrencyWallet[],
   isConnected: boolean
 }
@@ -353,7 +354,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     }
     if (availableWallets.length) {
       onSelectWallet(availableWallets[0].id, availableWallets[0].currencyCode)
-      this.sendCrypto(fioRequest)
+      this.sendCrypto(fioRequest, availableWallets[0].id)
       return
     }
     Airship.show(bridge => (
@@ -380,23 +381,28 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     ))
     if (walletId && currencyCode) {
       onSelectWallet(walletId, currencyCode)
-      this.sendCrypto(selectedFioPendingRequest)
+      this.sendCrypto(selectedFioPendingRequest, walletId)
     }
   }
 
-  sendCrypto = async (pendingRequest: FioRequest) => {
-    const { fioWallets, state } = this.props
+  sendCrypto = async (pendingRequest: FioRequest, walletId: string) => {
+    const { fioWallets, currencyWallets, state } = this.props
     const fioWalletByAddress = fioWallets.find(wallet => wallet.id === pendingRequest.fioWalletId) || null
     if (!fioWalletByAddress) return showError(s.strings.fio_wallet_missing_for_fio_address)
     const exchangeDenomination = getExchangeDenomination(state, pendingRequest.content.token_code.toUpperCase())
     let nativeAmount = bns.mul(pendingRequest.content.amount, exchangeDenomination.multiplier)
     nativeAmount = bns.toFixed(nativeAmount, 0, 0)
+    const currencyCode = pendingRequest.content.token_code.toUpperCase()
+
+    const parsedUri = await currencyWallets[walletId].parseUri(pendingRequest.content.payee_public_address, currencyCode)
     const guiMakeSpendInfo = {
       fioPendingRequest: pendingRequest,
       fioAddress: pendingRequest.payee_fio_address,
-      currencyCode: pendingRequest.content.token_code.toUpperCase(),
-      nativeAmount: nativeAmount,
-      publicAddress: pendingRequest.content.payee_public_address,
+      publicAddress: parsedUri.publicAddress,
+      nativeAmount,
+      currencyCode,
+      metadata: parsedUri.metadata,
+      uniqueIdentifier: parsedUri.uniqueIdentifier,
       lockInputs: true,
       beforeTransaction: async () => {
         try {

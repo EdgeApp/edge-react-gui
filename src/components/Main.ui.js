@@ -49,7 +49,6 @@ import PasswordRecoveryConnector from '../connectors/scenes/PasswordRecoveryConn
 import Request from '../connectors/scenes/RequestConnector.js'
 import Scan from '../connectors/scenes/ScanConnector'
 import SendConfirmation from '../connectors/scenes/SendConfirmationConnector.js'
-import TransactionListConnector from '../connectors/scenes/TransactionListConnector'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
@@ -58,8 +57,6 @@ import { registerDevice } from '../modules/Device/action'
 import { logoutRequest } from '../modules/Login/action.js'
 import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConnector'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
-import { PasswordRecoveryReminderModalConnector } from '../modules/UI/components/PasswordRecoveryReminderModal/PasswordRecoveryReminderModalConnector.js'
-import { passwordReminderModalConnector as PasswordReminderModal } from '../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { type Dispatch, type RootState } from '../types/reduxTypes.js'
 import { scale } from '../util/scaling.js'
@@ -67,6 +64,7 @@ import { logEvent } from '../util/tracking.js'
 import { AirshipToast } from './common/AirshipToast.js'
 import { BackButton } from './navigation/BackButton.js'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle.js'
+import { EdgeLogoHeader } from './navigation/EdgeLogoHeader.js'
 import { handlePluginBack, renderPluginBackButton } from './navigation/GuiPluginBackButton.js'
 import { HeaderTitle } from './navigation/HeaderTitle.js'
 import { SideMenuButton } from './navigation/SideMenuButton.js'
@@ -87,6 +85,7 @@ import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
+import { TransactionList } from './scenes/TransactionListScene.js'
 import { Airship } from './services/AirshipInstance.js'
 import { HeaderTextButton } from './themed/HeaderTextButton.js'
 import { MenuTab } from './themed/MenuTab.js'
@@ -151,8 +150,6 @@ export class MainComponent extends React.Component<Props> {
             {this.renderTabView()}
           </Stack>
         </RouterWithRedux>
-        <PasswordReminderModal />
-        <PasswordRecoveryReminderModalConnector />
       </>
     )
   }
@@ -183,7 +180,7 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.WALLET_LIST_SCENE}
                 navTransparent
                 component={ifLoggedIn(WalletListScene)}
-                renderTitle={<HeaderTitle title={s.strings.title_wallets} />}
+                renderTitle={<EdgeLogoHeader />}
                 renderLeftButton={<HeaderTextButton type="help" />}
                 renderRightButton={<SideMenuButton />}
               />
@@ -266,8 +263,8 @@ export class MainComponent extends React.Component<Props> {
                   this.props.requestPermission('contacts')
                 }}
                 navTransparent
-                component={ifLoggedIn(TransactionListConnector)}
-                renderTitle={<HeaderTitle />}
+                component={ifLoggedIn(TransactionList)}
+                renderTitle={<HeaderTitle title=" " />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_wallets} />}
                 renderRightButton={<SideMenuButton />}
               />
@@ -348,7 +345,6 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.PLUGIN_BUY}
                 navTransparent
                 component={ifLoggedIn(GuiPluginListScene)}
-                renderTitle={<HeaderTitle title={s.strings.title_plugin_buy} />}
                 renderLeftButton={<HeaderTextButton type="help" />}
                 renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
@@ -370,7 +366,6 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.PLUGIN_SELL}
                 navTransparent
                 component={ifLoggedIn(GuiPluginListScene)}
-                renderTitle={<HeaderTitle title={s.strings.title_plugin_sell} />}
                 renderLeftButton={<HeaderTextButton type="help" />}
                 renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
@@ -446,6 +441,16 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_send} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={<HeaderTextButton type="help" />}
+            />
+          </Stack>
+
+          <Stack key={Constants.RECOVER_PASSWORD} hideTabBar>
+            <Scene
+              key={Constants.RECOVER_PASSWORD}
+              navTransparent
+              component={ifLoggedIn(PasswordRecoveryConnector)}
+              renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
+              renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
             />
           </Stack>
 

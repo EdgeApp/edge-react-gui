@@ -3,6 +3,7 @@ import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import { getFiatSymbol } from '../../util/utils.js'
@@ -32,6 +33,7 @@ class BalanceBox extends React.PureComponent<Props> {
     const { isoFiatCurrencyCode, fiatAmount, showBalance, exchangeRates, theme } = this.props
     const fiatSymbol = isoFiatCurrencyCode ? getFiatSymbol(isoFiatCurrencyCode) : ''
     const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+    const formattedFiat = formatNumber(fiatAmount, { toFixed: 2 })
     const styles = getStyles(theme)
 
     // if there is no exchangeRates object, empty object, or object with zero values
@@ -42,24 +44,21 @@ class BalanceBox extends React.PureComponent<Props> {
     }
     const noExchangeRates = !exchangeRates || !Object.keys(exchangeRates).length || !Object.values(exchangeRates).reduce(summation)
 
-    const currencyFormat = value => {
-      const shouldHideFiatSymbol = fiatSymbol.length !== 1
-      return shouldHideFiatSymbol ? `${value} ${fiatCurrencyCode}` : `${fiatSymbol} ${value} ${fiatCurrencyCode}`
-    }
-
     return (
-      <TouchableOpacity onPress={this.props.onPress}>
-        <View style={styles.container}>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={this.props.onPress} style={styles.balanceBoxContainer}>
           {showBalance && !noExchangeRates ? (
             <>
               <EdgeText style={styles.balanceHeader}>{s.strings.fragment_wallets_balance_text}</EdgeText>
-              <ThemedTicker style={styles.balanceBody}>{currencyFormat(fiatAmount)}</ThemedTicker>
+              <ThemedTicker style={styles.balanceBody}>
+                {fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`}
+              </ThemedTicker>
             </>
           ) : (
             <EdgeText style={styles.showBalance}>{noExchangeRates ? s.strings.exchange_rates_loading : s.strings.string_show_balance}</EdgeText>
           )}
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     )
   }
 }
@@ -77,18 +76,26 @@ export const WiredBalanceBox = connect((state: RootState, ownProps: OwnProps): S
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    height: theme.rem(5),
-    alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginLeft: theme.rem(2),
+    paddingBottom: theme.rem(1),
+    marginBottom: theme.rem(1),
+    borderBottomWidth: theme.thinLineWidth,
+    borderBottomColor: theme.lineDivider
+  },
+  balanceBoxContainer: {
+    height: theme.rem(3.25)
   },
   balanceHeader: {
-    fontSize: theme.rem(0.75),
+    fontSize: theme.rem(1),
     color: theme.secondaryText
   },
   balanceBody: {
-    fontSize: theme.rem(1.75)
+    fontSize: theme.rem(1.5),
+    fontFamily: theme.fontFaceBold
   },
   showBalance: {
-    fontSize: theme.rem(1.75)
+    fontSize: theme.rem(1.5),
+    fontFamily: theme.fontFaceBold
   }
 }))

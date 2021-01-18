@@ -250,6 +250,60 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   COMP: {
     denomination: '1000000000000000000'
   },
+  AAVE: {
+    denomination: '1000000000000000000'
+  },
+  AYFI: {
+    denomination: '1000000000000000000'
+  },
+  ALINK: {
+    denomination: '1000000000000000000'
+  },
+  ADAI: {
+    denomination: '1000000000000000000'
+  },
+  ABAT: {
+    denomination: '1000000000000000000'
+  },
+  AWETH: {
+    denomination: '1000000000000000000'
+  },
+  AWBTC: {
+    denomination: '100000000'
+  },
+  ASNX: {
+    denomination: '1000000000000000000'
+  },
+  AREN: {
+    denomination: '1000000000000000000'
+  },
+  AUSDT: {
+    denomination: '1000000'
+  },
+  AMKR: {
+    denomination: '1000000000000000000'
+  },
+  AMANA: {
+    denomination: '1000000000000000000'
+  },
+  AZRX: {
+    denomination: '1000000000000000000'
+  },
+  AKNC: {
+    denomination: '1000000000000000000'
+  },
+  AUSDC: {
+    denomination: '1000000'
+  },
+  ASUSD: {
+    denomination: '1000000000000000000'
+  },
+  AUNI: {
+    denomination: '1000000000000000000'
+  },
+  WBTC: {
+    denomination: '100000000'
+  },
   customTokens: [],
   mostRecentWallets: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
@@ -337,6 +391,24 @@ export const SYNCED_ACCOUNT_TYPES = {
   SNX: 'object',
   SUSD: 'object',
   SBTC: 'object',
+  AAVE: 'object',
+  AYFI: 'object',
+  ALINK: 'object',
+  ADAI: 'object',
+  ABAT: 'object',
+  AWETH: 'object',
+  AWBTC: 'object',
+  ASNX: 'object',
+  AREN: 'object',
+  AUSDT: 'object',
+  AMKR: 'object',
+  AMANA: 'object',
+  AZRX: 'object',
+  AKNC: 'object',
+  AUSDC: 'object',
+  ASUSD: 'object',
+  AUNI: 'object',
+  WBTC: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   mostRecentWallets: 'object',
   passwordRecoveryRemindersShown: 'object'
@@ -456,12 +528,10 @@ export const setSpendingLimits = (account: EdgeAccount, spendingLimits: Spending
     return setLocalSettings(account, updatedSettings)
   })
 }
-export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: string, wasShown: boolean) {
+export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: number) {
   const settings = await getSyncedSettings(account)
-  const passwordRecoveryRemindersShown = {
-    ...settings.passwordRecoveryRemindersShown,
-    [level]: wasShown
-  }
+  const passwordRecoveryRemindersShown = { ...settings.passwordRecoveryRemindersShown }
+  passwordRecoveryRemindersShown[level] = true
   const updatedSettings = updateSettings(settings, { passwordRecoveryRemindersShown })
   return setSyncedSettings(account, updatedSettings)
 }

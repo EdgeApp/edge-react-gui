@@ -8,7 +8,6 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 type Props = {
   account: Object,
   context: Object,
-  showHeader: boolean,
   onComplete(): void
 }
 export default class PasswordRecovery extends React.Component<Props> {
@@ -20,7 +19,7 @@ export default class PasswordRecovery extends React.Component<Props> {
           context={this.props.context}
           onComplete={this.props.onComplete}
           onCancel={this.props.onComplete}
-          showHeader={this.props.showHeader}
+          showHeader={false}
         />
       </SceneWrapper>
     )

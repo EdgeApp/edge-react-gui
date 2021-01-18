@@ -89,11 +89,9 @@ export class CryptoExchangeWalletListRow extends React.Component<Props, LocalSta
       return isVisible
     })
 
-    for (const prop in props.wallet.nativeBalances) {
-      if (props.wallet.nativeBalances.hasOwnProperty(prop)) {
-        if (prop !== props.wallet.currencyCode && enabledNotHiddenTokens.indexOf(prop) >= 0) {
-          enabledNativeBalances[prop] = props.wallet.nativeBalances[prop]
-        }
+    for (const prop of Object.keys(props.wallet.nativeBalances)) {
+      if (prop !== props.wallet.currencyCode && enabledNotHiddenTokens.indexOf(prop) >= 0) {
+        enabledNativeBalances[prop] = props.wallet.nativeBalances[prop]
       }
     }
     this.setState({
@@ -117,63 +115,61 @@ export class CryptoExchangeWalletListRow extends React.Component<Props, LocalSta
     if (this.props.wallet.enabledTokens.length > 0) {
       const tokens = []
       const metaTokenBalances = this.state.enabledNativeBalances
-      for (const property in metaTokenBalances) {
-        if (metaTokenBalances.hasOwnProperty(property)) {
-          if (property !== this.props.wallet.currencyCode) {
-            // Token Filters
-            const checkAllowedCurrencyCodes = allowedCurrencyCodes
-              ? allowedCurrencyCodes.find(currencyCode => {
-                  const [currency, token] = currencyCode.split(':')
-                  return currency === property || token === property
-                })
-              : true
-            const checkExcludeCurrencyCodes = excludeCurrencyCodes
-              ? excludeCurrencyCodes.find(currencyCode => {
-                  const [currency, token] = currencyCode.split(':')
-                  return currency === property || token === property
-                })
-              : false
-            const { name } = this.props.wallet
-            const standardToken = this.props.wallet.metaTokens.find(item => item.currencyCode === property)
-            const customToken = this.props.customTokens.find(item => item.currencyCode === property)
-            const token = standardToken || customToken
-            const searchFilterLowerCase = searchFilter.toLowerCase()
-            const walletNameString = name.toLowerCase()
-            const currencyNameString = token ? token.currencyName.toLowerCase() : ''
-            const currencyCodeString = token ? token.currencyCode.toLowerCase() : ''
-            const basicFilter =
-              searchFilterLowerCase === '' ||
-              walletNameString.includes(searchFilterLowerCase) ||
-              currencyNameString.includes(searchFilterLowerCase) ||
-              currencyCodeString.includes(searchFilterLowerCase)
-            const excludedCurrencyFilter = property !== this.props.excludedCurrencyCode && !this.props.excludedTokens.includes(property)
-            const searchInputFilter = excludedCurrencyFilter && basicFilter
-            const mostRecentUsedCheck = isMostRecentWallet ? currencyCodeString === currencyCodeFilter.toLowerCase() : true
+      for (const property of Object.keys(metaTokenBalances)) {
+        if (property !== this.props.wallet.currencyCode) {
+          // Token Filters
+          const checkAllowedCurrencyCodes = allowedCurrencyCodes
+            ? allowedCurrencyCodes.find(currencyCode => {
+                const [currency, token] = currencyCode.split(':')
+                return currency === property || token === property
+              })
+            : true
+          const checkExcludeCurrencyCodes = excludeCurrencyCodes
+            ? excludeCurrencyCodes.find(currencyCode => {
+                const [currency, token] = currencyCode.split(':')
+                return currency === property || token === property
+              })
+            : false
+          const { name } = this.props.wallet
+          const standardToken = this.props.wallet.metaTokens.find(item => item.currencyCode === property)
+          const customToken = this.props.customTokens.find(item => item.currencyCode === property)
+          const token = standardToken || customToken
+          const searchFilterLowerCase = searchFilter.toLowerCase()
+          const walletNameString = name.toLowerCase()
+          const currencyNameString = token ? token.currencyName.toLowerCase() : ''
+          const currencyCodeString = token ? token.currencyCode.toLowerCase() : ''
+          const basicFilter =
+            searchFilterLowerCase === '' ||
+            walletNameString.includes(searchFilterLowerCase) ||
+            currencyNameString.includes(searchFilterLowerCase) ||
+            currencyCodeString.includes(searchFilterLowerCase)
+          const excludedCurrencyFilter = property !== this.props.excludedCurrencyCode && !this.props.excludedTokens.includes(property)
+          const searchInputFilter = excludedCurrencyFilter && basicFilter
+          const mostRecentUsedCheck = isMostRecentWallet ? currencyCodeString === currencyCodeFilter.toLowerCase() : true
 
-            if (searchFilter !== '' ? searchInputFilter : mostRecentUsedCheck && checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes) {
-              const formattedFiatBalance = calculateWalletFiatBalanceWithoutState(wallet, property, settings, exchangeRates)
-              if (!this.props.denomination || !this.props.denomination.multiplier) {
-                return []
-              }
-              const tokenImage = token && token.symbolImage ? token.symbolImage : ''
-              const nativeAmount = metaTokenBalances[property]
-              const disabled = this.props.excludedCurrencyCode.includes(property) || this.props.disableZeroBalance
-              tokens.push(
-                <CryptoExchangeWalletListTokenRow
-                  key={property}
-                  parentId={this.props.wallet.id}
-                  onPress={this.props.onTokenPress}
-                  currencyCode={property}
-                  fiatSymbol={this.state.fiatSymbol}
-                  fiatBalance={formattedFiatBalance}
-                  name={name}
-                  image={tokenImage}
-                  nativeAmount={nativeAmount}
-                  parentCryptoBalance={this.state.cryptoBalance}
-                  disabled={disabled}
-                />
-              )
+          if (searchFilter !== '' ? searchInputFilter : mostRecentUsedCheck && checkAllowedCurrencyCodes && !checkExcludeCurrencyCodes) {
+            const formattedFiatBalance = calculateWalletFiatBalanceWithoutState(wallet, property, settings, exchangeRates)
+            if (!this.props.denomination || !this.props.denomination.multiplier) {
+              return []
             }
+            const tokenImage = token && token.symbolImage ? token.symbolImage : ''
+            const nativeAmount = metaTokenBalances[property]
+            const disabled = this.props.excludedCurrencyCode.includes(property) || this.props.disableZeroBalance
+            tokens.push(
+              <CryptoExchangeWalletListTokenRow
+                key={property}
+                parentId={this.props.wallet.id}
+                onPress={this.props.onTokenPress}
+                currencyCode={property}
+                fiatSymbol={this.state.fiatSymbol}
+                fiatBalance={formattedFiatBalance}
+                name={name}
+                image={tokenImage}
+                nativeAmount={nativeAmount}
+                parentCryptoBalance={this.state.cryptoBalance}
+                disabled={disabled}
+              />
+            )
           }
         }
       }

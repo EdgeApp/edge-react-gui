@@ -10,6 +10,8 @@ export type Theme = {
   iconTappable: string,
   warningIcon: string,
   iconLoadingOverlay: string,
+  transactionListIconBackground: string,
+  buySellCustomPluginModalIcon: string,
 
   // Background
   backgroundGradientLeft: string,
@@ -86,6 +88,8 @@ export type Theme = {
   // dangerButton: string,
   // dangerButtonText: string,
 
+  buttonBoxShadow: string,
+
   // cardBackground: string,
   // cardShadow: string,
 
@@ -123,6 +127,7 @@ export type Theme = {
   // orLine: string,
   // tileDivider: string,
   thinLineWidth: number,
+  mediumLineWidth: number,
 
   // Notifications
   // notificationBackground: string,
@@ -145,6 +150,11 @@ export type Theme = {
   dateModalBackgroundLight: string,
   dateModalBackgroundDark: string,
 
+  // Wallet Icon Progress
+  walletProgressIconFill: string,
+  walletProgressIconFillDone: string,
+  walletProgressIconBackground: string,
+
   // Misc
   // pressedOpacity: number,
 
@@ -157,6 +167,9 @@ export type Theme = {
   underlayColor: string,
   underlayOpacity: number,
 
+  // Tutorials
+  tutorialModalUnderlay: string,
+
   // Images
   settingsChangellyLogo: string,
   settingsChangenowLogo: string,
@@ -166,6 +179,27 @@ export type Theme = {
   settingsFoxExchangeLogo: string,
   settingsGodexLogo: string,
   settingsSwitchainLogo: string,
+  settingsSideshiftLogo: string,
   settingsTotleLogo: string,
-  fioAddressLogo: string
+
+  paymentTypeLogoApplePay: string,
+  paymentTypeLogoAuspost: string,
+  paymentTypeLogoBankgirot: string,
+  paymentTypeLogoBankTransfer: string,
+  paymentTypeLogoBpay: string,
+  paymentTypeLogoCash: string,
+  paymentTypeLogoCreditCard: string,
+  paymentTypeLogoDebitCard: string,
+  paymentTypeLogoFasterPayments: string,
+  paymentTypeLogoGiftCard: string,
+  paymentTypeLogoIdeal: string,
+  paymentTypeLogoNewsagent: string,
+  paymentTypeLogoPayid: string,
+  paymentTypeLogoPoli: string,
+  paymentTypeLogoSofort: string,
+  paymentTypeLogoSwish: string,
+  paymentTypeLogoUpi: string,
+
+  fioAddressLogo: string,
+  walletListSlideTutorialImage: string
 }

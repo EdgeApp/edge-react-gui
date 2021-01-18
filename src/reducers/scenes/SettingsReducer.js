@@ -22,7 +22,6 @@ export const initialState = {
   loginStatus: null,
   isTouchSupported: false,
   isTouchEnabled: false,
-  confirmPasswordError: '',
   isAccountBalanceVisible: true,
   mostRecentWallets: [],
   spendingLimits: {
@@ -89,7 +88,6 @@ export type SettingsState = {
     allCurrencyInfos: EdgeCurrencyInfo[],
     supportedWalletTypes: string[]
   },
-  confirmPasswordError: string,
   isAccountBalanceVisible: boolean,
   mostRecentWallets: MostRecentWallet[],
   spendingLimits: {
@@ -262,14 +260,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
     case 'DEVELOPER_MODE_OFF': {
       return { ...state, developerModeOn: false }
-    }
-    case 'SET_CONFIRM_PASSWORD_ERROR': {
-      if (!action.data) throw new Error('Invalid action')
-      const { confirmPasswordError } = action.data
-      return {
-        ...state,
-        confirmPasswordError: confirmPasswordError
-      }
     }
 
     case 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED': {
@@ -464,22 +454,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/SETTINGS/TOUCH_ID_SETTINGS': {
-      if (action.data) {
-        return {
-          ...state,
-          isTouchSupported: action.data.isTouchSupported,
-          isTouchEnabled: action.data.isTouchEnabled
-        }
-      } else {
-        return {
-          ...state,
-          isTouchSupported: false,
-          isTouchEnabled: false
-        }
-      }
-    }
-
     case 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS': {
       if (!action.data) throw new Error('Invalid action')
       return {
@@ -505,15 +479,10 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL': {
-      if (!action.data) throw new Error('Invalid action')
-      const { level, wasShown } = action.data
-      return {
-        ...state,
-        passwordRecoveryRemindersShown: {
-          ...state.passwordRecoveryRemindersShown,
-          [level]: wasShown
-        }
-      }
+      const level = action.data
+      const passwordRecoveryRemindersShown = { ...state.passwordRecoveryRemindersShown }
+      passwordRecoveryRemindersShown[level] = true
+      return { ...state, passwordRecoveryRemindersShown }
     }
     default:
       return state

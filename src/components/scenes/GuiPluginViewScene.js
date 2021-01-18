@@ -54,8 +54,10 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: bool
     // This was crashing us, so send to bugsnag:
     if (bridge != null && message.events != null && typeof message.events.find !== 'function') {
       Bugsnag.notify(new Error('Corrupted yaob events'), report => {
-        report.metadata.rawData = event.nativeEvent.data
-        report.metadata.eventType = typeof message.events
+        report.addMetadata('yaob', {
+          rawData: event.nativeEvent.data,
+          eventType: typeof message.events
+        })
       })
     }
 
