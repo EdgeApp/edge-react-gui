@@ -176,7 +176,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Header Stack style
   headerContainer: {
     flexDirection: 'row',
-    marginHorizontal: theme.rem(2)
+    marginHorizontal: theme.rem(1)
   },
   headerText: {
     flex: 1

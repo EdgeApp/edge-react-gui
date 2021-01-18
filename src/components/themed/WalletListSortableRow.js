@@ -96,7 +96,7 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    paddingHorizontal: theme.rem(2)
+    paddingHorizontal: theme.rem(1)
   },
   rowContainer: {
     flexDirection: 'row',
