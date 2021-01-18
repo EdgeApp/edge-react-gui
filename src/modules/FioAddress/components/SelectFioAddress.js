@@ -6,6 +6,7 @@ import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
+import { ArrowDownTextIconButton } from '../../../components/common/ArrowDownTextIconButton.js'
 import { AddressModal } from '../../../components/modals/AddressModal'
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { TransactionDetailsNotesInput } from '../../../components/modals/TransactionDetailsNotesInput'
