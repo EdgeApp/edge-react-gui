@@ -202,7 +202,7 @@ class WalletListComponent extends React.PureComponent<Props> {
       const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
 
       // Currency Exhange Rate
-      const exchangeRateFormat = exchangeRate ? formatNumber(exchangeRate, { toFixed: 2 }) : null
+      const exchangeRateFormat = exchangeRate ? formatNumber(exchangeRate, { toFixed: exchangeRate && Math.log10(exchangeRate) >= 3 ? 0 : 2 }) : null
       const exchangeRateFiatSymbol = exchangeRateFormat ? `${walletFiatSymbol} ` : ''
       const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}` : ''
 
