@@ -203,11 +203,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceBold
   },
   positiveCryptoAmount: {
+    marginLeft: theme.rem(0.5),
     fontFamily: theme.fontFaceBold,
     color: theme.positiveText,
     textAlign: 'right'
   },
   negativeCryptoAmount: {
+    marginLeft: theme.rem(0.5),
     fontFamily: theme.fontFaceBold,
     color: theme.negativeText,
     textAlign: 'right'
