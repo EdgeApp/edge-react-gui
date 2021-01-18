@@ -227,6 +227,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginRight: theme.rem(0.75)
   },
   detailsValue: {
+    marginLeft: theme.rem(0.5),
     textAlign: 'right'
   },
   detailsName: {
