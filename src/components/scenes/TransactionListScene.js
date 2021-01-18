@@ -95,7 +95,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
       .catch(error => console.log(error))
   }
 
-  toggleTransactionSearching = (isSearching: boolean) => (isSearching ? this.handleOnRefresh() : this.setState({ searching: false }))
+  handleChangeSortingState = (isSearching: boolean) => (isSearching ? this.handleOnRefresh() : this.setState({ searching: false }))
 
   section = (transactions: TransactionListTx[]) => {
     const sections: Section[] = []
@@ -136,7 +136,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
       walletId={this.props.selectedWalletId}
       isEmpty={this.props.transactions.length < 1}
       searching={this.state.searching}
-      toggleTransactionSearching={this.toggleTransactionSearching}
+      onChangeSortingState={this.handleChangeSortingState}
       onSearchTransaction={this.handleSearchTransaction}
     />
   )

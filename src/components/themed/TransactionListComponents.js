@@ -15,7 +15,7 @@ type TopProps = {
   loading: boolean,
   isEmpty: boolean,
   searching: boolean,
-  toggleTransactionSearching: (isSearching: boolean) => void,
+  onChangeSortingState: (isSearching: boolean) => void,
   onSearchTransaction: (searchString: string) => void
 }
 
@@ -27,7 +27,7 @@ function TopComponent(props: TopProps) {
       walletId={props.walletId}
       isEmpty={props.isEmpty}
       searching={props.searching}
-      toggleTransactionSearching={props.toggleTransactionSearching}
+      onChangeSortingState={props.onChangeSortingState}
       onSearchTransaction={props.onSearchTransaction}
     />
   )

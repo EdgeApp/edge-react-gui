@@ -28,7 +28,7 @@ type OwnProps = {
   walletId: string,
   isEmpty: boolean,
   searching: boolean,
-  toggleTransactionSearching: (isSearching: boolean) => void,
+  onChangeSortingState: (isSearching: boolean) => void,
   onSearchTransaction: (searchString: string) => void
 }
 
@@ -132,16 +132,16 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   handleTextFieldFocus = () => {
-    this.props.toggleTransactionSearching(true)
+    this.props.onChangeSortingState(true)
   }
 
   handleTextFieldBlur = () => {
     this.props.onSearchTransaction(this.state.input)
   }
 
-  disabledTextFieldFocus = () => {
+  handleSearchDone = () => {
     this.clearText()
-    this.props.toggleTransactionSearching(false)
+    this.props.onChangeSortingState(false)
   }
 
   clearText = () => {
@@ -179,7 +179,7 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
                   <TouchableOpacity onPress={this.clearText} style={styles.searchClearIcon}>
                     <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={this.disabledTextFieldFocus} style={styles.searchDoneButton}>
+                  <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
                     <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
                   </TouchableOpacity>
                 </>
