@@ -273,6 +273,7 @@ class WalletListComponent extends React.PureComponent<Props> {
         renderItem={this.renderRow}
         refreshControl={<RefreshControl refreshing={false} onRefresh={this.props.activateSearch} />}
         contentOffset={{ y: !searching ? this.props.theme.rem(4.5) : 0 }}
+        keyboardShouldPersistTaps="handled"
         useFlatList
       />
     )

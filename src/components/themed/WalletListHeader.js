@@ -73,6 +73,8 @@ class WalletListHeaderComponent extends React.PureComponent<Props, State> {
     this.setState({ input: '' })
     // $FlowFixMe - react-native-material-textfield have many flow errors. Somehow needed cause material-textfield value is not functioning well
     this.textInput.current.clear()
+    // $FlowFixMe
+    this.textInput.current.blur()
     this.props.onChangeSearchText('')
   }
 
