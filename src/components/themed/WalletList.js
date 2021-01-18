@@ -16,7 +16,6 @@ import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, FlatListItem, GuiWallet } from '../../types/types.js'
 import {
   alphabeticalSort,
-  checkFilterToken,
   checkFilterWallet,
   convertNativeToDisplay,
   decimalOrZero,
@@ -125,7 +124,7 @@ class WalletListComponent extends React.PureComponent<Props> {
         const { enabledTokens } = wallet
         const { customTokens } = this.props
 
-        if (searchText === '' || checkFilterWallet(wallet, searchText)) {
+        if (searchText === '' || checkFilterWallet(wallet, wallet.currencyCode, searchText)) {
           walletList.push({
             id: walletId,
             fullCurrencyCode: wallet.currencyCode,
@@ -148,7 +147,7 @@ class WalletListComponent extends React.PureComponent<Props> {
 
         for (const currencyCode of enabledNotHiddenTokens) {
           const fullCurrencyCode = `${wallet.currencyCode}-${currencyCode}`
-          if (searchText === '' || checkFilterToken(wallet, currencyCode, searchText)) {
+          if (searchText === '' || checkFilterWallet(wallet, currencyCode, searchText)) {
             walletList.push({
               id: walletId,
               fullCurrencyCode: fullCurrencyCode,
