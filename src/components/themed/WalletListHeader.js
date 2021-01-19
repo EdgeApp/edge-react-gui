@@ -148,6 +148,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(4.5)
   },
   searchDoneButton: {
+    height: theme.rem(3.5),
+    justifyContent: 'center',
     paddingLeft: theme.rem(0.75),
     paddingRight: 0,
     paddingBottom: theme.rem(0.5)
