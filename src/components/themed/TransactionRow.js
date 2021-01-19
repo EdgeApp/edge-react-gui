@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
+import { Image, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -9,7 +9,8 @@ import s from '../../locales/strings'
 import type { TransactionListTx } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from '../themed/EdgeText.js'
+import { ClickableRow } from './ClickableRow'
+import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
   cryptoAmount: string,
@@ -116,41 +117,32 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     }
 
     return (
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.rowContainer}>
-          <View style={styles.iconContainer}>
-            <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
-              {thumbnailPath ? null : transactionIcon}
-            </View>
-            <Image style={styles.icon} source={{ uri: thumbnailPath }} />
+      <ClickableRow onPress={onPress}>
+        <View style={styles.iconContainer}>
+          <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
+            {thumbnailPath ? null : transactionIcon}
           </View>
-          <View style={styles.transactionContainer}>
-            <View style={styles.transactionRow}>
-              <EdgeText style={styles.transactionText}>{transactionText}</EdgeText>
-              <EdgeText style={isSentTransaction ? styles.negativeCryptoAmount : styles.positiveCryptoAmount}>{cryptoAmountString}</EdgeText>
+          <Image style={styles.icon} source={{ uri: thumbnailPath }} />
+        </View>
+        <View style={styles.transactionContainer}>
+          <View style={styles.transactionRow}>
+            <EdgeText style={styles.transactionText}>{transactionText}</EdgeText>
+            <EdgeText style={isSentTransaction ? styles.negativeCryptoAmount : styles.positiveCryptoAmount}>{cryptoAmountString}</EdgeText>
+          </View>
+          <View style={styles.transactionRow}>
+            <View style={styles.categoryAndTimeContainer}>
+              {categoryText && <EdgeText style={styles.category}>{categoryText}</EdgeText>}
+              <EdgeText style={pendingStyle}>{pendingText}</EdgeText>
             </View>
-            <View style={styles.transactionRow}>
-              <View style={styles.categoryAndTimeContainer}>
-                {categoryText && <EdgeText style={styles.category}>{categoryText}</EdgeText>}
-                <EdgeText style={pendingStyle}>{pendingText}</EdgeText>
-              </View>
-              <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
-            </View>
+            <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>
           </View>
         </View>
-      </TouchableOpacity>
+      </ClickableRow>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  rowContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: theme.rem(4.25),
-    marginHorizontal: theme.rem(1)
-  },
   iconContainer: {
     marginRight: theme.rem(1)
   },

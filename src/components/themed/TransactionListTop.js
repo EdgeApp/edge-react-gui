@@ -21,6 +21,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from './EdgeText.js'
 import { EdgeTextFieldOutlined } from './EdgeTextField.js'
 import { ButtonBox } from './ThemedButtons.js'
+import { UnderlinedHeader } from './UnderlinedHeader'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 type OwnProps = {
@@ -157,58 +158,60 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <View style={styles.container}>
-        {!isEmpty && (
-          <View style={styles.searchContainer}>
-            <View style={{ flex: 1, flexDirection: 'column' }}>
-              <EdgeTextFieldOutlined
-                returnKeyType="search"
-                label={s.strings.transaction_list_search}
-                onChangeText={this.handleOnChangeText}
-                value={this.state.input}
-                onFocus={this.handleTextFieldFocus}
-                onBlur={this.handleTextFieldBlur}
-                ref={this.textInput}
-                marginRem={0}
-              />
+      <>
+        <View style={styles.container}>
+          {!isEmpty && (
+            <View style={styles.searchContainer}>
+              <View style={{ flex: 1, flexDirection: 'column' }}>
+                <EdgeTextFieldOutlined
+                  returnKeyType="search"
+                  label={s.strings.transaction_list_search}
+                  onChangeText={this.handleOnChangeText}
+                  value={this.state.input}
+                  onFocus={this.handleTextFieldFocus}
+                  onBlur={this.handleTextFieldBlur}
+                  ref={this.textInput}
+                  marginRem={0}
+                />
+              </View>
+              {searching && (
+                <>
+                  <TouchableOpacity onPress={this.clearText} style={styles.searchClearIcon}>
+                    <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={this.disabledTextFieldFocus} style={styles.searchDoneButton}>
+                    <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
-            {searching && (
-              <>
-                <TouchableOpacity onPress={this.clearText} style={styles.searchClearIcon}>
-                  <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={this.disabledTextFieldFocus} style={styles.searchDoneButton}>
-                  <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
-                </TouchableOpacity>
-              </>
-            )}
-          </View>
-        )}
+          )}
 
-        {!searching && (
-          <>
-            {this.renderBalanceBox()}
-            <View style={styles.buttonsContainer}>
-              <TouchableOpacity onPress={Actions.request} style={styles.buttons}>
-                <Ionicons name="arrow-down" size={theme.rem(1.5)} color={theme.iconTappable} />
-                <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
-              </TouchableOpacity>
-              <View style={styles.buttonsDivider} />
-              <TouchableOpacity onPress={Actions.scan} style={styles.buttons}>
-                <Ionicons name="arrow-up" size={theme.rem(1.5)} color={theme.iconTappable} />
-                <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
-              </TouchableOpacity>
-            </View>
-            {this.renderEarnInterestCard()}
-          </>
-        )}
+          {!searching && (
+            <>
+              {this.renderBalanceBox()}
+              <View style={styles.buttonsContainer}>
+                <TouchableOpacity onPress={Actions.request} style={styles.buttons}>
+                  <Ionicons name="arrow-down" size={theme.rem(1.5)} color={theme.iconTappable} />
+                  <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
+                </TouchableOpacity>
+                <View style={styles.buttonsDivider} />
+                <TouchableOpacity onPress={Actions.scan} style={styles.buttons}>
+                  <Ionicons name="arrow-up" size={theme.rem(1.5)} color={theme.iconTappable} />
+                  <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
+                </TouchableOpacity>
+              </View>
+              {this.renderEarnInterestCard()}
+            </>
+          )}
+        </View>
 
         {!isEmpty && !searching && (
-          <View style={styles.transactionsDividerContainer}>
+          <UnderlinedHeader>
             <EdgeText style={styles.transactionsDividerText}>{s.strings.fragment_transaction_list_transaction}</EdgeText>
-          </View>
+          </UnderlinedHeader>
         )}
-      </View>
+      </>
     )
   }
 }
@@ -290,11 +293,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
 
   // Transactions Divider
-  transactionsDividerContainer: {
-    paddingBottom: theme.rem(0.75),
-    borderBottomWidth: theme.thinLineWidth,
-    borderBottomColor: theme.lineDivider
-  },
   transactionsDividerText: {
     fontFamily: theme.fontFaceBold
   },
