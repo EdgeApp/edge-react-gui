@@ -57,7 +57,6 @@
   "edittoken_duplicate_currency_code": "A token with that token code already exists.",
   "edittoken_invalid_decimal_places": "Please enter a valid number of decimal places.",
   "edittoken_improper_token_load": "Unable to load initial data.",
-  "fragment_seach": "Search",
   "fragment_create_wallet_create_wallet": "Create Wallet",
   "fragment_create_wallet_select_valid": "Please select valid data",
   "fragment_insufficient_funds": "insufficient funds",
