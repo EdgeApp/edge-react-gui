@@ -36,7 +36,7 @@ type Props = {
   walletId: string,
   walletName: string,
   swipeRef: ?React.ElementRef<typeof SwipeRow>,
-  swipeRow: SwipeRow
+  swipeRow?: SwipeRow
 }
 
 type State = {
@@ -56,14 +56,23 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
   componentDidUpdate() {
     if (this.props.openRowLeft && !this.state.leftRowOpened) {
       const { swipeRow, theme } = this.props
-      swipeRow.manuallySwipeRow(theme.rem(-6.25))
+      if (swipeRow) {
+        swipeRow.manuallySwipeRow(theme.rem(-6.25))
+      }
       this.setState({ leftRowOpened: true })
     }
   }
 
+  closeRow = () => {
+    const { swipeRow } = this.props
+    if (swipeRow) {
+      swipeRow.closeRow()
+    }
+  }
+
   handleSelectWallet = (): void => {
-    const { currencyCode, isToken, publicAddress, swipeRow, walletId } = this.props
-    swipeRow.closeRow()
+    const { currencyCode, isToken, publicAddress, walletId } = this.props
+    this.closeRow()
     this.props.selectWallet(walletId, currencyCode)
     if (!isToken) {
       // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
@@ -78,16 +87,16 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
   }
 
   handleOpenWalletListMenuModal = (): void => {
-    const { currencyCode, isToken, swipeRow, symbolImage, walletId, walletName } = this.props
-    swipeRow.closeRow()
+    const { currencyCode, isToken, symbolImage, walletId, walletName } = this.props
+    this.closeRow()
     Airship.show(bridge => (
       <WalletListMenuModal bridge={bridge} walletId={walletId} walletName={walletName} currencyCode={currencyCode} image={symbolImage} isToken={isToken} />
     ))
   }
 
   openScene(key: string) {
-    const { currencyCode, swipeRow, walletId } = this.props
-    swipeRow.closeRow()
+    const { currencyCode, walletId } = this.props
+    this.closeRow()
     this.props.selectWallet(walletId, currencyCode)
     Actions.jump(key)
   }
