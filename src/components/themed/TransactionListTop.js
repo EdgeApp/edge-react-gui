@@ -140,16 +140,18 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
 
   handleSearchDone = () => {
     this.clearText()
-    // $FlowFixMe - react-native-material-textfield have many flow errors. Somehow needed cause material-textfield value is not functioning well
-    this.textInput.current.clear()
     this.props.onChangeSortingState(false)
+    if (this.textInput.current) {
+      this.textInput.current.clear()
+    }
   }
 
   clearText = () => {
     this.setState({ input: '' })
-    // $FlowFixMe
-    this.textInput.current.blur()
     this.props.onSearchTransaction('')
+    if (this.textInput.current) {
+      this.textInput.current.blur()
+    }
   }
 
   render() {
