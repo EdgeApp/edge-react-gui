@@ -760,7 +760,6 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.FIO_SENT_REQUEST_DETAILS}
               navTransparent
               component={ifLoggedIn(FioSentRequestDetailsScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_fio_sent_request_details} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
