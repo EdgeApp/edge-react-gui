@@ -61,7 +61,7 @@ export function formatNumber(number: number | string, options?: IntlNumberFormat
   let i
   let intPart
   let stringify = String(number)
-  if (options && options.toFixed) {
+  if (options && options.toFixed != null) {
     stringify = toFixed(stringify, options.toFixed, options.toFixed)
   }
   const [integers, decimals] = stringify.split(NATIVE_DECIMAL_SEPARATOR)

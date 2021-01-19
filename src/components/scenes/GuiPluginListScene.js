@@ -5,70 +5,51 @@ import { asObject, asString } from 'cleaners'
 import { createInputModal } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
-import { FlatList, Image, Platform, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { FlatList, Image, Platform, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
-import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
-import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
-import paymentTypeLogoBankgirot from '../../assets/images/paymentTypes/paymentTypeLogoBankgirot.png'
-import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymentTypeLogoBankTransfer.png'
-import paymentTypeLogoBpay from '../../assets/images/paymentTypes/paymentTypeLogoBpay.png'
-import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLogoCash.png'
-import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
-import paymentTypeLogoDebitCard from '../../assets/images/paymentTypes/paymentTypeLogoDebitCard.png'
-import paymentTypeLogoFasterPayments from '../../assets/images/paymentTypes/paymentTypeLogoFasterPayments.png'
-import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
-import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
-import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
-import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
-import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
-import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
-import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
-import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
 import { COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW } from '../../constants/indexConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
-import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
-import { type CountryData } from '../../types/types.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
-import { scale } from '../../util/scaling.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 
 const buyPluginJson = asGuiPluginJson(require('../../constants/plugins/buyPluginList.json'))
 const sellPluginJson = asGuiPluginJson(require('../../constants/plugins/sellPluginList.json'))
 
 const paymentTypeLogosById = {
-  credit: paymentTypeLogoCreditCard,
-  auspost: paymentTypeLogoAuspost,
-  applepay: paymentTypeLogoApplePay,
-  bank: paymentTypeLogoBankTransfer,
-  bankgirot: paymentTypeLogoBankgirot,
-  bpay: paymentTypeLogoBpay,
-  cash: paymentTypeLogoCash,
-  debit: paymentTypeLogoDebitCard,
-  fasterPayments: paymentTypeLogoFasterPayments,
-  giftcard: paymentTypeLogoGiftCard,
-  ideal: paymentTypeLogoIdeal,
-  newsagent: paymentTypeLogoNewsagent,
-  payid: paymentTypeLogoPayid,
-  poli: paymentTypeLogoPoli,
-  sofort: paymentTypeLogoSofort,
-  swish: paymentTypeLogoSwish,
-  upi: paymentTypeLogoUpi
+  credit: 'paymentTypeLogoCreditCard',
+  auspost: 'paymentTypeLogoAuspost',
+  applepay: 'paymentTypeLogoApplePay',
+  bank: 'paymentTypeLogoBankTransfer',
+  bankgirot: 'paymentTypeLogoBankgirot',
+  bpay: 'paymentTypeLogoBpay',
+  cash: 'paymentTypeLogoCash',
+  debit: 'paymentTypeLogoDebitCard',
+  fasterPayments: 'paymentTypeLogoFasterPayments',
+  giftcard: 'paymentTypeLogoGiftCard',
+  ideal: 'paymentTypeLogoIdeal',
+  newsagent: 'paymentTypeLogoNewsagent',
+  payid: 'paymentTypeLogoPayid',
+  poli: 'paymentTypeLogoPoli',
+  sofort: 'paymentTypeLogoSofort',
+  swish: 'paymentTypeLogoSwish',
+  upi: 'paymentTypeLogoUpi'
 }
 
 type OwnProps = {
@@ -87,7 +68,7 @@ type DispatchProps = {
   updateCountryCode(string): void
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 type State = {
   developerUri: string
 }
@@ -96,7 +77,7 @@ const MODAL_DATA_FILE = 'pluginModalTracker.json'
 const DEVELOPER_PLUGIN_KEY = 'developerPlugin'
 const asDeveloperUri = asObject({ uri: asString })
 
-class GuiPluginList extends React.Component<Props, State> {
+class GuiPluginList extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -172,6 +153,7 @@ class GuiPluginList extends React.Component<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
+    const { theme } = this.props
     const { pluginId, deepQuery } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -185,7 +167,7 @@ class GuiPluginList extends React.Component<Props, State> {
     if (pluginId === 'custom') {
       const { developerUri } = this.state
       const modal = createInputModal({
-        icon: <IonIcon name="md-globe" size={42} color={THEME.COLORS.SECONDARY} />,
+        icon: <IonIcon name="md-globe" size={theme.rem(2.75)} color={theme.buySellCustomPluginModalIcon} />,
         title: s.strings.load_plugin,
         input: {
           label: s.strings.plugin_url,
@@ -235,35 +217,38 @@ class GuiPluginList extends React.Component<Props, State> {
     this.showCountrySelectionModal().catch(showError)
   }
 
-  _renderPlugin = ({ item }) => {
+  renderPlugin = ({ item }) => {
+    const { theme } = this.props
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
+    const styles = getStyles(this.props.theme)
 
     return (
-      <TouchableWithoutFeedback onPress={() => this.openPlugin(item).catch(showError)}>
-        <View style={styles.pluginRow}>
+      <View style={styles.pluginRowContainer}>
+        <TouchableOpacity onPress={() => this.openPlugin(item).catch(showError)}>
           <View style={styles.pluginRowLogoAndInfo}>
-            <View style={styles.logo}>
-              <Image style={styles.logoImage} source={paymentTypeLogosById[item.paymentTypeLogoKey]} />
-            </View>
-            <View style={styles.textBoxWrap}>
-              <Text style={styles.titleText}>{item.title}</Text>
-              <Text style={styles.subtitleText}>{item.cryptoCodes.length > 0 && `Currencies: ${item.cryptoCodes.join(', ')}`}</Text>
-              <Text style={styles.subtitleText}>{item.description}</Text>
+            <Image style={styles.logo} source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]} />
+            <View style={styles.pluginTextContainer}>
+              <EdgeText style={styles.titleText}>{item.title}</EdgeText>
+              <EdgeText style={styles.subtitleText} numberOfLines={0}>
+                {item.cryptoCodes.length > 0 && `Currencies: ${item.cryptoCodes.join(', ')}`}
+              </EdgeText>
+              <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>
             </View>
           </View>
           <View style={styles.pluginRowPoweredByRow}>
-            <Text style={styles.footerText}>Powered by </Text>
+            <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
             <Image style={styles.partnerIconImage} source={{ uri: item.partnerIconPath }} />
-            <Text style={styles.footerText}> {plugin.displayName}</Text>
+            <EdgeText style={styles.footerText}>{' ' + plugin.displayName}</EdgeText>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableOpacity>
+      </View>
     )
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, developerModeOn, direction } = this.props
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, direction, theme } = this.props
+    const styles = getStyles(theme)
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 
     // Pick a filter based on our direction:
@@ -279,123 +264,109 @@ class GuiPluginList extends React.Component<Props, State> {
     }
 
     return (
-      <SceneWrapper background="body">
-        {this.renderCountryPicker(countryData)}
+      <SceneWrapper background="header">
+        <EdgeText style={styles.header}>{direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell}</EdgeText>
+        <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
+          {countryData && (
+            <Image
+              source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
+              style={styles.selectedCountryFlag}
+            />
+          )}
+          <EdgeText style={styles.selectedCountryText}>{countryData ? countryData.name : s.strings.buy_sell_crypto_select_country_button}</EdgeText>
+          <AntDesignIcon name="right" size={theme.rem(1)} color={theme.icon} />
+        </TouchableOpacity>
         {plugins.length === 0 ? (
-          <View style={{ flex: 1, width: '100%', padding: scale(50), justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ textAlign: 'center' }}>{s.strings.buy_sell_crypto_no_plugin_region}</Text>
+          <View style={styles.emptyPluginContainer}>
+            <EdgeText style={styles.emptyPluginText} numberOfLines={2}>
+              {s.strings.buy_sell_crypto_no_plugin_region}
+            </EdgeText>
           </View>
         ) : (
-          <FlatList data={plugins} renderItem={this._renderPlugin} keyExtractor={(item: GuiPluginRow) => item.pluginId} />
+          <FlatList data={plugins} renderItem={this.renderPlugin} keyExtractor={(item: GuiPluginRow) => item.pluginId} />
         )}
       </SceneWrapper>
     )
   }
-
-  renderCountryPicker(countryData: CountryData | void) {
-    let flag = null
-    let message = s.strings.buy_sell_crypto_select_country_button
-    if (countryData != null) {
-      const { filename = countryData.name.toLowerCase().replace(' ', '-') } = countryData
-
-      flag = <Image source={{ uri: `${FLAG_LOGO_URL}/${filename}.png` }} style={{ height: scale(30), width: scale(30), borderRadius: scale(15) }} />
-      message = countryData.name
-    }
-
-    return (
-      <View style={styles.selectedCountryWrapper}>
-        <TouchableWithoutFeedback style={styles.selectedCountry} onPress={this._handleCountryPress}>
-          <View style={styles.selectedCountryTextWrapper}>
-            <View style={{ flexDirection: 'row' }}>
-              {flag}
-              <Text style={{ fontSize: scale(16), alignSelf: 'center', paddingLeft: 12 }}>{message}</Text>
-            </View>
-            <AntDesignIcon style={{ alignSelf: 'center' }} name="right" size={scale(16)} />
-          </View>
-        </TouchableWithoutFeedback>
-      </View>
-    )
-  }
 }
 
-const rawStyles = {
-  selectedCountryWrapper: {
-    padding: scale(16),
-    backgroundColor: THEME.COLORS.GRAY_4,
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_3
+const getStyles = cacheStyles((theme: Theme) => ({
+  header: {
+    marginVertical: theme.rem(1),
+    marginHorizontal: theme.rem(1.5),
+    fontSize: theme.rem(1.25),
+    fontFamily: theme.fontFaceBold
   },
-  selectedCountry: {
-    color: THEME.COLORS.GRAY_1,
-    backgroundColor: THEME.COLORS.GRAY_3,
-    borderRadius: scale(5),
-    padding: scale(8)
-  },
-  selectedCountryTextWrapper: {
+  selectedCountryRow: {
+    marginTop: theme.rem(1),
+    marginBottom: theme.rem(1.5),
+    marginHorizontal: theme.rem(1.5),
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    alignItems: 'center'
   },
-  pluginRow: {
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    paddingVertical: scale(8),
-    paddingHorizontal: scale(16),
-    backgroundColor: THEME.COLORS.WHITE,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'stretch',
-    flexWrap: 'nowrap',
-    width: '100%'
+  selectedCountryFlag: {
+    height: theme.rem(2),
+    width: theme.rem(2),
+    borderRadius: theme.rem(1),
+    marginRight: theme.rem(1.5)
+  },
+  selectedCountryText: {
+    flex: 1,
+    fontFamily: theme.fontFaceBold
+  },
+  emptyPluginContainer: {
+    flex: 1,
+    padding: theme.rem(2),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  emptyPluginText: {
+    textAlign: 'center'
+  },
+  pluginRowContainer: {
+    borderTopWidth: theme.thinLineWidth,
+    borderTopColor: theme.lineDivider,
+    marginBottom: theme.rem(1),
+    marginLeft: theme.rem(1.5),
+    paddingTop: theme.rem(1),
+    paddingRight: theme.rem(1.5)
   },
   pluginRowLogoAndInfo: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    flexWrap: 'nowrap'
+    alignItems: 'center'
   },
   pluginRowPoweredByRow: {
+    marginTop: theme.rem(0.5),
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    alignItems: 'center',
-    flexWrap: 'nowrap',
-    width: '100%'
+    alignItems: 'center'
   },
   logo: {
-    justifyContent: 'center',
-    marginRight: scale(16),
-    width: scale(50)
-  },
-  logoImage: {
-    aspectRatio: 1,
-    width: 50,
-    height: 50,
+    marginRight: theme.rem(1.5),
+    width: theme.rem(2),
+    maxHeight: theme.rem(2),
     resizeMode: 'contain'
   },
-  partnerIconImage: {
-    aspectRatio: 1,
-    height: scale(10)
-  },
-  textBoxWrap: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+  pluginTextContainer: {
     width: '80%'
   },
   titleText: {
-    color: THEME.COLORS.GRAY_1,
-    fontSize: scale(16),
-    marginBottom: scale(4)
+    marginBottom: theme.rem(0.25),
+    fontFamily: theme.fontFaceBold
   },
   subtitleText: {
-    fontSize: scale(12),
-    lineHeight: scale(18)
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
   },
   footerText: {
-    fontSize: scale(10),
-    lineHeight: scale(16)
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
+  },
+  partnerIconImage: {
+    aspectRatio: 1,
+    height: theme.rem(0.75)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 export const GuiPluginListScene = connect(
   (state: RootState): StateProps => ({
@@ -410,4 +381,4 @@ export const GuiPluginListScene = connect(
       dispatch(updateOneSetting({ countryCode }))
     }
   })
-)(GuiPluginList)
+)(withTheme(GuiPluginList))

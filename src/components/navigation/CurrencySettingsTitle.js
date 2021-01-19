@@ -2,10 +2,10 @@
 
 import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { Image, StyleSheet, View } from 'react-native'
+import { Image, View } from 'react-native'
 
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 
 type Props = {
   currencyInfo: EdgeCurrencyInfo
@@ -13,35 +13,30 @@ type Props = {
 
 export function CurrencySettingsTitle(props: Props) {
   const { displayName, symbolImage = '' } = props.currencyInfo
+  const styles = getStyles(useTheme())
   return (
-    <View style={styles.titleWrapper}>
-      <Image style={styles.titleImage} source={{ uri: symbolImage }} />
-      <T numberOfLines={1} style={styles.titleStyle}>
-        {displayName}
-      </T>
+    <View style={styles.container}>
+      <Image style={styles.image} source={{ uri: symbolImage }} />
+      <EdgeText style={styles.text}>{displayName}</EdgeText>
     </View>
   )
 }
 
-const rawStyles = {
-  titleWrapper: {
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
-    paddingHorizontal: THEME.rem(0.75)
+    paddingHorizontal: theme.rem(0.75)
   },
-  titleImage: {
-    height: THEME.rem(1.5),
-    width: THEME.rem(1.5),
-    marginRight: THEME.rem(0.5),
+  image: {
+    height: theme.rem(1.25),
+    width: theme.rem(1.25),
+    marginRight: theme.rem(0.5),
     resizeMode: 'contain'
   },
-  titleStyle: {
-    alignSelf: 'center',
-    fontSize: THEME.rem(1.25),
-    color: THEME.COLORS.WHITE,
-    fontFamily: THEME.FONTS.DEFAULT
+  text: {
+    fontFamily: theme.fontFaceBold
   }
-}
-const styles = StyleSheet.create(rawStyles)
+}))

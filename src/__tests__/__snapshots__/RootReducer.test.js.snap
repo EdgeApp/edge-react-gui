@@ -131,9 +131,6 @@ Object {
         "fioAddressesLoading": false,
         "fioDomains": Array [],
       },
-      "passwordReminderModal": Object {
-        "status": null,
-      },
       "requestType": Object {
         "uniqueLegacyAddress": false,
         "useLegacyAddress": false,
@@ -538,6 +535,7 @@ Object {
           "isEnabled": false,
         },
       },
+      "walletsSort": "default",
     },
     "wallets": Object {
       "activeWalletIds": Array [],

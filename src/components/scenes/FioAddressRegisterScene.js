@@ -2,30 +2,30 @@
 
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
-import fioAddressIcon from '../../assets/images/list_fioAddress.png'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
+import { createFioWallet } from '../../modules/FioAddress/action'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
+import { EditNameModal } from '../../modules/FioAddress/components/EditNameModal'
 import { FIO_DOMAIN_IS_NOT_PUBLIC, FioError } from '../../modules/FioAddress/util'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { PLATFORM } from '../../theme/variables/platform.js'
+import { getFioWallets } from '../../modules/UI/selectors'
+import type { RootState } from '../../reducers/RootReducer'
+import type { Dispatch } from '../../types/reduxTypes'
 import type { FioDomain, FioPublicDomain } from '../../types/types'
-import { scale } from '../../util/scaling.js'
 import { openLink } from '../../util/utils'
-import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
-import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
+import { SceneWrapper } from '../common/SceneWrapper'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText'
+import { ClickableText, PrimaryButton } from '../themed/ThemedButtons'
+import { Tile } from '../themed/Tile'
 
 type State = {
   selectedWallet: EdgeCurrencyWallet | null,
@@ -33,29 +33,28 @@ type State = {
   publicDomains: FioDomain[],
   fioAddress: string,
   isValid: boolean,
-  touched: boolean,
   loading: boolean,
   walletLoading: boolean,
   domainsLoading: boolean,
-  isAvailable: boolean | null,
+  isAvailable: boolean,
   fieldPos: number,
   inputWidth: number,
   showFreeAddressLink: boolean
 }
 
-export type StateProps = {
+type StateProps = {
   fioWallets: EdgeCurrencyWallet[],
   fioPlugin: EdgeCurrencyConfig,
   isConnected: boolean
 }
 
-export type DispatchProps = {
+type DispatchProps = {
   createFioWallet: () => Promise<EdgeCurrencyWallet>
 }
 
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & ThemeProps
 
-export class FioAddressRegisterScene extends React.Component<Props, State> {
+class FioAddressRegister extends React.Component<Props, State> {
   fioCheckQueue: number = 0
 
   state = {
@@ -64,13 +63,12 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
     publicDomains: [],
     fioAddress: '',
     isValid: true,
-    touched: false,
     isAvailable: false,
     loading: false,
     walletLoading: false,
     domainsLoading: true,
     fieldPos: 200,
-    inputWidth: scale(200),
+    inputWidth: 0,
     showFreeAddressLink: false
   }
 
@@ -85,6 +83,7 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
     } else {
       this.createFioWallet()
     }
+    this.setState({ inputWidth: this.props.theme.rem(12.5) })
   }
 
   checkFreeAddress = async () => {
@@ -213,11 +212,14 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
         const fullAddress = `${fioAddress}${Constants.FIO_ADDRESS_DELIMITER}${domain}`
         const isAvailable = fioPlugin.otherMethods ? await fioPlugin.otherMethods.validateAccount(fullAddress) : false
         this.setState({
+          isValid: true,
           isAvailable,
           loading: false
         })
       } catch (e) {
         this.setState({
+          isValid: false,
+          isAvailable: false,
           loading: false
         })
       }
@@ -227,18 +229,14 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
   handleFioAddressChange = (fioAddressChanged: string) => {
     if (!this.props.isConnected) {
       return this.setState({
-        fioAddress: fioAddressChanged,
-        touched: true,
-        isAvailable: null,
+        fioAddress: fioAddressChanged.toLowerCase(),
         loading: false
       })
     }
     this.checkFioAddress(fioAddressChanged, this.state.selectedDomain.name)
 
     this.setState({
-      fioAddress: fioAddressChanged.toLowerCase(),
-      touched: true,
-      isAvailable: null
+      fioAddress: fioAddressChanged.toLowerCase()
     })
   }
 
@@ -246,9 +244,21 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
     this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
   }
 
-  fieldViewOnLayout = () => {
-    this.refs._fieldView.measure((x, y) => {
+  fieldViewOnLayout = ({ nativeEvent }) => {
+    if (nativeEvent) {
+      const {
+        layout: { y }
+      } = nativeEvent
       this.setState({ fieldPos: y })
+    }
+  }
+
+  editAddressPressed = () => {
+    this.handleFioAddressFocus()
+    Airship.show(bridge => <EditNameModal bridge={bridge} value={this.state.fioAddress} />).then((response: string | null) => {
+      if (response) {
+        this.handleFioAddressChange(response)
+      }
     })
   }
 
@@ -273,6 +283,8 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
   }
 
   selectFioDomain = () => {
+    const { domainsLoading } = this.state
+    if (domainsLoading) return
     Airship.show(bridge => <DomainListModal bridge={bridge} publicDomains={this.state.publicDomains} />).then((response: FioDomain | null) => {
       if (response) {
         this.setState({ selectedDomain: response })
@@ -281,22 +293,20 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
     })
   }
 
-  domainOnLayout = (event: { nativeEvent: { layout: { x: number, y: number, width: number, height: number } } }) => {
-    this.setState({ inputWidth: calcInputWidth(event.nativeEvent.layout.width) })
-  }
-
   renderButton() {
     const { isValid, isAvailable, loading, walletLoading } = this.state
+    const styles = getStyles(this.props.theme)
 
     if (isValid && isAvailable && !loading) {
       return (
         <View style={styles.buttons}>
-          <PrimaryButton style={styles.next} onPress={this.handleNextButton} disabled={!isAvailable || walletLoading}>
-            {walletLoading ? (
-              <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="small" />
-            ) : (
-              <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
-            )}
+          <PrimaryButton
+            style={styles.next}
+            label={walletLoading ? '' : s.strings.string_next_capitalized}
+            onPress={this.handleNextButton}
+            disabled={!isAvailable || walletLoading}
+          >
+            {walletLoading ? <ActivityIndicator color={this.props.theme.icon} size="small" /> : null}
           </PrimaryButton>
         </View>
       )
@@ -306,241 +316,223 @@ export class FioAddressRegisterScene extends React.Component<Props, State> {
   }
 
   renderLoader() {
-    const { isValid, touched, isAvailable, loading } = this.state
+    const { theme } = this.props
+    const { loading } = this.state
+    const styles = getStyles(theme)
 
-    let icon = null
-    if ((!isValid || isAvailable === false) && touched) {
-      icon = <MaterialCommunityIcon style={[styles.statusIcon, styles.statusIconError]} name="close-circle-outline" size={25} />
-    }
-    if (isValid && isAvailable && touched) {
-      icon = <MaterialCommunityIcon style={[styles.statusIcon, styles.statusIconOk]} name="check-circle-outline" size={25} />
-    }
-
-    return (
-      <View style={styles.statusIconContainer}>
-        {loading ? <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.statusIcon} size="small" /> : icon}
-      </View>
-    )
+    const label = `(${s.strings.validating})`
+    return loading ? <EdgeText style={styles.muted}>{label}</EdgeText> : null
   }
 
   renderFioWallets() {
     const { fioWallets } = this.props
     const { selectedWallet } = this.state
+
     if (fioWallets && fioWallets.length > 1) {
-      const title = `${s.strings.title_fio_connect_to_wallet}: ${
-        selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name
-      }`
-      return (
-        <View style={styles.selectWalletBtn}>
-          <ArrowDownTextIconButton onPress={this.selectFioWallet} title={title} />
-        </View>
-      )
+      const title = `${selectedWallet && selectedWallet.name ? selectedWallet.name : s.strings.fio_address_register_no_wallet_name}`
+      return <Tile type="touchable" title={`${s.strings.title_fio_connect_to_wallet}`} onPress={this.selectFioWallet} body={title} />
     }
   }
 
-  render() {
-    const { fioAddress, selectedDomain, touched, isAvailable, domainsLoading, showFreeAddressLink } = this.state
+  renderErrorMessage() {
+    const { fioAddress, isAvailable, isValid, loading } = this.state
+    const styles = getStyles(this.props.theme)
     let chooseHandleErrorMessage = ''
-    if (touched && !this.props.isConnected) {
+
+    if (loading) return null
+
+    if (fioAddress && !this.props.isConnected) {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_cant_check
     }
-    if (touched && isAvailable === false) {
+    if (fioAddress && !isAvailable) {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_not_available
     }
+    if (fioAddress && !isValid) {
+      chooseHandleErrorMessage = s.strings.fio_error_invalid_address
+    }
+
+    return <EdgeText style={styles.errorMessage}>{chooseHandleErrorMessage}</EdgeText>
+  }
+
+  render() {
+    const { theme } = this.props
+    const { fioAddress, selectedDomain, domainsLoading, showFreeAddressLink } = this.state
+    const styles = getStyles(theme)
 
     return (
-      <SafeAreaView>
-        <Gradient style={styles.scrollableGradient} />
+      <SceneWrapper background="theme">
         <ScrollView ref="_scrollView">
-          <View style={styles.scrollableView}>
-            <Image source={fioAddressIcon} style={styles.image} resizeMode="cover" />
-            <View style={[styles.createWalletPromptArea, styles.paddings, styles.title]}>
-              <T style={styles.instructionalText}>{s.strings.fio_address_first_screen_title}</T>
+          <View style={styles.view}>
+            <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
+            <View style={[styles.createWalletPromptArea, styles.title]}>
+              <EdgeText style={styles.instructionalText} numberOfLines={2}>
+                {s.strings.fio_address_first_screen_title}
+              </EdgeText>
             </View>
-            <View style={[styles.createWalletPromptArea, styles.paddings]}>
-              <T style={styles.handleRequirementsText}>{s.strings.fio_address_features}</T>
+            <View style={styles.createWalletPromptArea}>
+              <EdgeText style={styles.handleRequirementsText} numberOfLines={3}>
+                {s.strings.fio_address_features}
+              </EdgeText>
             </View>
-            <View style={[styles.createWalletPromptArea, styles.paddings]}>
-              <T style={styles.handleRequirementsText}>{s.strings.fio_address_first_screen_end}</T>
-            </View>
-
-            <View style={styles.formFieldView} ref="_fieldView" onLayout={this.fieldViewOnLayout}>
-              <View style={styles.formFieldViewContainer}>
-                <FormField
-                  {...MaterialInputOnWhite}
-                  containerStyle={{
-                    ...MaterialInputOnWhite.containerStyle,
-                    ...styles.inputContainer,
-                    width: this.state.inputWidth
-                  }}
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  onFocus={this.handleFioAddressFocus}
-                  onChangeText={this.handleFioAddressChange}
-                  onSubmitEditing={this.handleNextButton}
-                  label={s.strings.fio_address_choose_label}
-                  value={fioAddress}
-                  returnKeyType="next"
-                  error={chooseHandleErrorMessage}
-                />
-                <TouchableOpacity style={styles.domain} onPress={this.selectFioDomain} disabled={domainsLoading}>
-                  <View onLayout={this.domainOnLayout}>
-                    {domainsLoading ? (
-                      <ActivityIndicator size="small" />
-                    ) : (
-                      <T style={styles.domainText}>
-                        {Constants.FIO_ADDRESS_DELIMITER}
-                        {selectedDomain.name}
-                      </T>
-                    )}
-                  </View>
-                </TouchableOpacity>
-              </View>
-              {this.renderLoader()}
+            <View style={styles.createWalletPromptArea}>
+              <EdgeText style={styles.handleRequirementsText} numberOfLines={5}>
+                {s.strings.fio_address_first_screen_end}
+              </EdgeText>
             </View>
 
-            {this.renderFioWallets()}
+            <View onLayout={this.fieldViewOnLayout}>
+              <Tile type="editable" title={s.strings.fio_address_choose_label} onPress={this.editAddressPressed}>
+                <View style={styles.addressTileBody}>
+                  {fioAddress ? (
+                    <EdgeText style={styles.fioAddressName}>{fioAddress}</EdgeText>
+                  ) : (
+                    <EdgeText style={styles.muted}>{s.strings.fio_address_register_placeholder}</EdgeText>
+                  )}
+                  {this.renderLoader()}
+                  {this.renderErrorMessage()}
+                </View>
+              </Tile>
+              <Tile
+                type="touchable"
+                title={s.strings.fio_address_choose_domain_label}
+                onPress={this.selectFioDomain}
+                body={domainsLoading ? s.strings.loading : `${Constants.FIO_ADDRESS_DELIMITER}${selectedDomain.name}`}
+              />
+              {this.renderFioWallets()}
+            </View>
             {this.renderButton()}
             {this.props.fioWallets.length && showFreeAddressLink ? (
-              <View style={[styles.createWalletPromptArea, styles.paddings]}>
-                <TouchableOpacity onPress={this.registerFreeAddress} underlayColor={`${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`}>
-                  <View>
-                    <T style={styles.link}>{s.strings.fio_address_reg_free}</T>
-                  </View>
-                </TouchableOpacity>
-              </View>
+              <ClickableText onPress={this.registerFreeAddress}>
+                <EdgeText style={styles.link}>{s.strings.fio_address_reg_free}</EdgeText>
+              </ClickableText>
             ) : null}
             <View style={styles.bottomSpace} />
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </SceneWrapper>
     )
   }
 }
 
-const calcInputWidth = (domainWidth: number) => styles.formFieldViewContainer.width - scale(33) - domainWidth
-
-const rawStyles = {
-  scrollableGradient: {
-    height: THEME.HEADER
-  },
-  scrollableView: {
-    position: 'relative',
-    paddingHorizontal: 20
+const getStyles = cacheStyles((theme: Theme) => ({
+  view: {
+    position: 'relative'
   },
   createWalletPromptArea: {
-    paddingTop: scale(16),
-    paddingBottom: scale(8)
+    paddingHorizontal: theme.rem(1),
+    paddingBottom: theme.rem(1)
   },
   instructionalText: {
-    fontSize: scale(16),
+    fontSize: theme.rem(1),
     textAlign: 'center',
-    color: THEME.COLORS.GRAY_1
+    color: theme.primaryText
   },
   handleRequirementsText: {
-    fontSize: scale(16),
+    fontSize: theme.rem(1),
     textAlign: 'left',
-    color: THEME.COLORS.GRAY_1
+    color: theme.secondaryText
   },
   buttons: {
-    marginTop: scale(24),
-    flexDirection: 'row'
+    marginTop: theme.rem(1.5),
+    paddingHorizontal: theme.rem(1)
   },
   next: {
-    marginLeft: scale(1),
     flex: 1
   },
 
+  addressTileBody: {
+    flexDirection: 'row',
+    margin: theme.rem(0.25)
+  },
+  fioAddressName: {
+    marginRight: theme.rem(1)
+  },
   image: {
     alignSelf: 'center',
-    marginTop: scale(24),
-    height: scale(50),
-    width: scale(55)
+    marginTop: theme.rem(1.5),
+    height: theme.rem(3.25),
+    width: theme.rem(3.5)
   },
   title: {
-    paddingTop: scale(24)
-  },
-  paddings: {
-    paddingVertical: scale(8)
-  },
-  inputContainer: {
-    width: 'auto',
-    marginTop: 0,
-    marginBottom: 0
-  },
-  statusIconError: {
-    color: THEME.COLORS.ACCENT_RED
-  },
-  statusIconOk: {
-    color: THEME.COLORS.ACCENT_MINT
-  },
-  formFieldView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: scale(14),
-    marginBottom: scale(12)
-  },
-  formFieldViewContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: PLATFORM.deviceWidth - scale(30) - scale(40)
-  },
-  statusIconContainer: {
-    width: scale(25),
-    height: scale(25)
-  },
-  statusIcon: {
-    alignSelf: 'flex-end',
-    marginTop: scale(29),
-    width: scale(25),
-    height: scale(25)
+    paddingTop: theme.rem(1.5)
   },
   bottomSpace: {
-    paddingBottom: scale(500)
+    paddingBottom: theme.rem(30)
   },
   selectWalletBlock: {
-    marginTop: scale(48),
-    paddingHorizontal: scale(18),
-    paddingBottom: scale(10),
-    backgroundColor: THEME.COLORS.GRAY_3
+    marginTop: theme.rem(3),
+    paddingHorizontal: theme.rem(1.25),
+    paddingBottom: theme.rem(0.75),
+    backgroundColor: theme.tileBackground
   },
   selectWalletBtn: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: scale(15),
-    paddingVertical: scale(10),
-    paddingHorizontal: scale(5),
-    backgroundColor: THEME.COLORS.BLUE_3
+    marginTop: theme.rem(1),
+    paddingVertical: theme.rem(0.5),
+    paddingHorizontal: theme.rem(0.25),
+    backgroundColor: theme.primaryButton
   },
   domain: {
-    marginTop: scale(24),
-    marginLeft: scale(5),
-    paddingHorizontal: scale(10),
-    paddingVertical: scale(4),
-    borderRadius: scale(5),
-    borderColor: THEME.COLORS.BLUE_3,
-    borderWidth: scale(2)
+    marginTop: theme.rem(1.5),
+    marginLeft: theme.rem(0.25),
+    paddingHorizontal: theme.rem(0.75),
+    paddingVertical: theme.rem(0.25),
+    borderRadius: theme.rem(0.25),
+    borderColor: theme.primaryButton,
+    borderWidth: theme.rem(0.125)
   },
   domainText: {
-    color: THEME.COLORS.BLUE_3,
-    fontSize: scale(16)
+    color: theme.primaryText,
+    fontSize: theme.rem(1)
   },
   domainListRowName: {
     flex: 1,
-    fontSize: THEME.rem(1),
-    color: THEME.COLORS.SECONDARY
+    fontSize: theme.rem(1),
+    color: theme.secondaryText
   },
   domainListRowContainerTop: {
     height: 'auto',
-    paddingLeft: THEME.rem(0.75),
-    paddingRight: THEME.rem(0.75),
-    paddingVertical: THEME.rem(0.75)
+    paddingLeft: theme.rem(0.75),
+    paddingRight: theme.rem(0.75),
+    paddingVertical: theme.rem(0.75)
   },
   link: {
-    padding: THEME.rem(0.125),
-    color: THEME.COLORS.ACCENT_BLUE,
+    fontSize: theme.rem(1),
+    color: theme.textLink,
     textAlign: 'center'
+  },
+  errorMessage: {
+    color: theme.dangerText
+  },
+  muted: {
+    color: theme.deactivatedText
   }
-}
-export const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+const FioAddressRegisterScene = connect(
+  (state: RootState) => {
+    const { account } = state.core
+    if (!account || !account.currencyConfig) {
+      return {
+        fioWallets: [],
+        fioPlugin: {},
+        isConnected: state.network.isConnected
+      }
+    }
+    const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
+    const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+
+    const out: StateProps = {
+      fioWallets,
+      fioPlugin,
+      isConnected: state.network.isConnected
+    }
+    return out
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    createFioWallet: () => dispatch(createFioWallet())
+  })
+)(withTheme(FioAddressRegister))
+export { FioAddressRegisterScene }

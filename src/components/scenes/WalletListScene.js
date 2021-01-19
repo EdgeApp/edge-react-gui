@@ -1,106 +1,147 @@
 // @flow
 
+import type { Disklet } from 'disklet'
 import * as React from 'react'
-import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
+import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native'
 import SortableListView from 'react-native-sortable-listview'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
-import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
-import { linkReferralWithCurrencies, toggleAccountBalanceVisibility, updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
-import WalletIcon from '../../assets/images/walletlist/my-wallets.png'
-import { Fontello } from '../../assets/vector/index.js'
+import { updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import XPubModal from '../../connectors/XPubModalConnector.js'
-import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { WiredProgressBar } from '../../modules/UI/components/WiredProgressBar/WiredProgressBar.ui.js'
+import { getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
 import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
-import { dayText, nightText } from '../../styles/common/textStyles.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import { type AccountReferral } from '../../types/ReferralTypes.js'
-import { type MessageTweak } from '../../types/TweakTypes.js'
 import { type GuiWallet } from '../../types/types.js'
-import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
-import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
+import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { WalletList } from '../common/WalletList.js'
-import { WalletListEmptyRow } from '../common/WalletListEmptyRow.js'
-import { WalletListFooter } from '../common/WalletListFooter.js'
-import { WalletListSortableRow } from '../common/WalletListSortableRow.js'
-import { WiredBalanceBox } from '../common/WiredBalanceBox.js'
-import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
+import { WalletListSlidingTutorialModal } from '../modals/WalletListSlidingTutorialModal.js'
+import { WalletListSortModal } from '../modals/WalletListSortModal.js'
+import { Airship } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
+import { PasswordReminderModal } from '../themed/PasswordReminderModal.js'
+import { WalletList } from '../themed/WalletList.js'
+import { WalletListFooter } from '../themed/WalletListFooter.js'
+import { WalletListHeader } from '../themed/WalletListHeader.js'
+import { WalletListSortableRow } from '../themed/WalletListSortableRow.js'
+import { WiredProgressBar } from '../themed/WiredProgressBar.js'
 
 type StateProps = {
-  accountMessages: MessageTweak[],
-  accountReferral: AccountReferral,
   activeWalletIds: string[],
-  exchangeRates: Object,
-  wallets: { [walletId: string]: GuiWallet }
+  userId: string,
+  wallets: { [walletId: string]: GuiWallet },
+  accountDisklet: Disklet,
+  disklet: Disklet,
+  needsPasswordCheck: boolean
 }
+
 type DispatchProps = {
-  hideMessageTweak(messageId: string, source: TweakSource): void,
-  toggleAccountBalanceVisibility(): void,
-  updateActiveWalletsOrder(walletIds: string[]): void,
-  linkReferralWithCurrencies(string): void
+  updateActiveWalletsOrder(walletIds: string[]): void
 }
-type Props = StateProps & DispatchProps
+
+type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
-  sorting: boolean
+  sorting: boolean,
+  searching: boolean,
+  searchText: string,
+  showSlidingTutorial: boolean
 }
 
-class WalletListComponent extends React.Component<Props, State> {
+class WalletListComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      sorting: false
+      sorting: false,
+      searching: false,
+      searchText: '',
+      showSlidingTutorial: false
     }
   }
 
+  showTutorial = async () => {
+    const { disklet, userId } = this.props
+    try {
+      const userTutorialList = await getWalletListSlideTutorial(userId, disklet)
+      const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
+
+      if (tutorialCount < 2) {
+        Airship.show(bridge => <WalletListSlidingTutorialModal bridge={bridge} />)
+        this.setState({ showSlidingTutorial: true })
+        userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
+        await setUserTutorialList(userTutorialList, disklet)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  componentDidMount() {
+    this.props.needsPasswordCheck ? Airship.show(bridge => <PasswordReminderModal bridge={bridge} />) : this.showTutorial()
+  }
+
+  handleToggleSorting = (sorting: boolean) => this.setState({ sorting })
+
+  handleToggleWalletSearching = (searching: boolean) => this.setState({ searching })
+
+  handleChangeSearchText = (searchText: string) => this.setState({ searchText })
+
+  handleActivateSearch = () => this.setState({ searching: true })
+
+  renderHeader = () => (
+    <WalletListHeader
+      sorting={this.state.sorting}
+      searching={this.state.searching}
+      openSortModal={this.handleSort}
+      toggleSorting={this.handleToggleSorting}
+      onChangeSearchText={this.handleChangeSearchText}
+      toggleWalletSearching={this.handleToggleWalletSearching}
+    />
+  )
+
+  renderFooter = () => (this.state.searching ? null : <WalletListFooter />)
+
+  handleSort = () => {
+    Airship.show(bridge => <WalletListSortModal bridge={bridge} />)
+      .then(sort => {
+        if (sort === 'manual') {
+          this.setState({ sorting: true })
+        }
+      })
+      .catch(error => console.log(error))
+  }
+
   render() {
-    const { wallets, activeWalletIds } = this.props
-    const { sorting } = this.state
+    const { activeWalletIds, theme, wallets } = this.props
+    const { showSlidingTutorial, searching, searchText, sorting } = this.state
+    const styles = getStyles(theme)
     const loading = Object.keys(wallets).length <= 0
 
-    const walletIcon = <Image source={WalletIcon} style={styles.walletIcon} />
-    const sort = () => this.setState({ sorting: true })
-
     return (
-      <SceneWrapper background="body">
+      <SceneWrapper>
         <WiredProgressBar progress={getWalletLoadingPercent} />
-        <WiredBalanceBox
-          showBalance={getIsAccountBalanceVisible}
-          fiatAmount={getTotalFiatAmountFromExchangeRates}
-          isoFiatCurrencyCode={getDefaultIsoFiat}
-          onPress={this.props.toggleAccountBalanceVisibility}
-          exchangeRates={this.props.exchangeRates}
-        />
-        <View /* header stack */>
-          <SettingsHeaderRow icon={walletIcon} text={s.strings.fragment_wallets_header} />
-          <CrossFade activeKey={sorting ? 'doneButton' : 'defaultButtons'}>
-            <View key="defaultButtons" style={[styles.headerButton, styles.defaultButtons]}>
-              <TouchableOpacity style={styles.addButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
-                <IonIcon name="md-add" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={sort}>
-                <Fontello name="sort" size={THEME.rem(1.75)} color={THEME.COLORS.WHITE} />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity key="doneButton" style={styles.headerButton} onPress={this.disableSorting}>
-              <T style={nightText()}>{s.strings.string_done_cap}</T>
+        {sorting && (
+          <View style={styles.headerContainer}>
+            <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
+            <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={this.disableSorting}>
+              <EdgeText style={styles.doneButton}>{s.strings.string_done_cap}</EdgeText>
             </TouchableOpacity>
-          </CrossFade>
-        </View>
+          </View>
+        )}
         <View style={styles.listStack}>
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
-            <ActivityIndicator key="spinner" color={THEME.COLORS.GRAY_2} style={styles.listSpinner} size="large" />
-            <WalletList key="fullList" header={this.renderPromoCard()} footer={WalletListFooter} />
+            <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
+            <WalletList
+              key="fullList"
+              header={this.renderHeader}
+              footer={this.renderFooter}
+              searching={searching}
+              searchText={searchText}
+              activateSearch={this.handleActivateSearch}
+              showSlidingTutorial={showSlidingTutorial}
+            />
             <SortableListView
               key="sortList"
               style={StyleSheet.absoltueFill}
@@ -117,7 +158,7 @@ class WalletListComponent extends React.Component<Props, State> {
   }
 
   renderSortableRow = (guiWallet: GuiWallet | void) => {
-    return guiWallet != null ? <WalletListSortableRow guiWallet={guiWallet} showBalance={getIsAccountBalanceVisible} /> : <WalletListEmptyRow />
+    return <WalletListSortableRow guiWallet={guiWallet} showBalance={getIsAccountBalanceVisible} />
   }
 
   disableSorting = () => this.setState({ sorting: false })
@@ -128,57 +169,26 @@ class WalletListComponent extends React.Component<Props, State> {
     this.props.updateActiveWalletsOrder(newOrder)
     this.forceUpdate()
   }
-
-  renderPromoCard() {
-    const { accountMessages, accountReferral, hideMessageTweak, linkReferralWithCurrencies } = this.props
-    const messageSummary = bestOfMessages(accountMessages, accountReferral)
-    if (messageSummary == null) return null
-
-    const { message, messageId, messageSource } = messageSummary
-    const { uri, iconUri } = message
-    function handlePress() {
-      if (uri != null) linkReferralWithCurrencies(uri)
-    }
-    function handleClose() {
-      hideMessageTweak(messageId, messageSource)
-    }
-
-    return (
-      <View style={styles.promoArea}>
-        <TouchableOpacity onPress={handlePress}>
-          <View style={styles.promoCard}>
-            {iconUri != null ? <Image resizeMode="contain" source={{ uri: iconUri }} style={styles.promoIcon} /> : null}
-            <Text style={styles.promoText}>{message.message}</Text>
-            <TouchableOpacity onPress={handleClose}>
-              <AntDesignIcon name="close" color={THEME.COLORS.GRAY_2} size={THEME.rem(1)} style={styles.promoClose} />
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </View>
-    )
-  }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   // The sort & add buttons are stacked on top of the header component:
-  headerButton: {
-    alignSelf: 'flex-end',
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: THEME.rem(1)
-  },
-  defaultButtons: {
+  // Header Stack style
+  headerContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    marginHorizontal: theme.rem(1)
   },
-  addButton: {
-    marginRight: THEME.rem(0.75)
+  headerText: {
+    flex: 1
   },
-  walletIcon: {
-    width: THEME.rem(1.375),
-    height: THEME.rem(1.375)
+  headerButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-
+  doneButton: {
+    color: theme.textLink
+  },
   // The two lists are stacked vertically on top of each other:
   listStack: {
     flexGrow: 1
@@ -186,34 +196,8 @@ const rawStyles = {
   listSpinner: {
     flexGrow: 1,
     alignSelf: 'center'
-  },
-
-  // Promo area:
-  promoArea: {
-    padding: THEME.rem(0.5)
-  },
-  promoCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.WHITE,
-    margin: THEME.rem(0.5),
-    padding: THEME.rem(0.5)
-  },
-  promoIcon: {
-    width: THEME.rem(2),
-    height: THEME.rem(2),
-    margin: THEME.rem(0.5)
-  },
-  promoText: {
-    ...dayText('row-left'),
-    flex: 1,
-    margin: THEME.rem(0.5)
-  },
-  promoClose: {
-    padding: THEME.rem(0.5)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 export const WalletListScene = connect(
   (state: RootState): StateProps => {
@@ -229,25 +213,17 @@ export const WalletListScene = connect(
     }
 
     return {
-      accountMessages: state.account.referralCache.accountMessages,
-      accountReferral: state.account.accountReferral,
       activeWalletIds,
-      exchangeRates: state.exchangeRates,
-      wallets: state.ui.wallets.byId
+      userId: state.core.account.id,
+      wallets: state.ui.wallets.byId,
+      accountDisklet: state.core.account.disklet,
+      disklet: state.core.disklet,
+      needsPasswordCheck: state.ui.passwordReminder.needsPasswordCheck
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    hideMessageTweak(messageId: string, source: TweakSource) {
-      dispatch(hideMessageTweak(messageId, source))
-    },
-    toggleAccountBalanceVisibility() {
-      dispatch(toggleAccountBalanceVisibility())
-    },
     updateActiveWalletsOrder(activeWalletIds) {
       dispatch(updateActiveWalletsOrder(activeWalletIds))
-    },
-    linkReferralWithCurrencies(uri) {
-      dispatch(linkReferralWithCurrencies(uri))
     }
   })
-)(WalletListComponent)
+)(withTheme(WalletListComponent))

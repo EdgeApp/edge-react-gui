@@ -3,6 +3,7 @@
 import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
 
+import type { SortOption } from '../../components/modals/WalletListSortModal.js'
 import { LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import type { Action } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, MostRecentWallet } from '../../types/types.js'
@@ -23,6 +24,7 @@ export const initialState = {
   isTouchSupported: false,
   isTouchEnabled: false,
   isAccountBalanceVisible: true,
+  walletsSort: 'default',
   mostRecentWallets: [],
   spendingLimits: {
     transaction: {
@@ -89,6 +91,7 @@ export type SettingsState = {
     supportedWalletTypes: string[]
   },
   isAccountBalanceVisible: boolean,
+  walletsSort: SortOption,
   mostRecentWallets: MostRecentWallet[],
   spendingLimits: {
     transaction: {
@@ -206,6 +209,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         denominationKeys,
         customTokensSettings,
         isAccountBalanceVisible,
+        walletsSort,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
         developerModeOn
@@ -226,6 +230,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         pinMode,
         pinLoginEnabled,
         isAccountBalanceVisible,
+        walletsSort,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
         developerModeOn
@@ -475,6 +480,14 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return {
         ...state,
         isAccountBalanceVisible: action.data.isAccountBalanceVisible
+      }
+    }
+
+    case 'UI/SETTINGS/SET_WALLETS_SORT': {
+      if (!action.data) throw new Error('Invalid action')
+      return {
+        ...state,
+        walletsSort: action.data.walletsSort
       }
     }
 

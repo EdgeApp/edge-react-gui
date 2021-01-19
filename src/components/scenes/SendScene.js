@@ -50,6 +50,8 @@ type StateProps = {
   contacts: GuiContact[],
   currencyCode: string,
   currencyInfo?: EdgeCurrencyInfo,
+  balanceFiatAmount: number,
+  balanceCrypto: string,
   currentFiatAmount: number,
   cryptoAmount: string,
   guiWallet: GuiWallet,
@@ -169,6 +171,14 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAmount() {
+    const { actionType } = this.props
+
+    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
+      return null
+    }
+  }
+
+  renderFee() {
     const { actionType, theme, walletDefaultDenomProps } = this.props
     const styles = getStyles(theme)
 
@@ -177,7 +187,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       const symbol = `${walletDefaultDenomProps.symbol || ''} `
       const fiatPrice = `(${fiatSymbol} ${this.props.currentFiatAmount.toFixed(2)})`
       return (
-        <Tile type="static" title={s.strings.transaction_details_amount_current_price}>
+        <Tile type="static" title={`${s.strings.string_fee}:`}>
           <View style={styles.tileRow}>
             <EdgeText style={styles.tileTextBottom}>{symbol}</EdgeText>
             <EdgeText style={styles.tileTextPrice}>{this.props.cryptoAmount}</EdgeText>
@@ -219,6 +229,7 @@ class SendComponent extends React.PureComponent<Props, State> {
               />
             )}
             {this.renderAmount()}
+            {this.renderFee()}
             {this.renderAdditionalTiles()}
           </View>
           <Scene.Footer style={styles.footer}>
@@ -246,7 +257,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1)
   },
   tileTextPrice: {
-    flex: 1,
+    marginRight: theme.rem(0.25),
     color: theme.primaryText,
     fontSize: theme.rem(1)
   },
@@ -279,6 +290,12 @@ export const SendScene = connect(
       ? UTILS.getWalletDefaultDenomProps(wallet, settings)
       : UTILS.getWalletDefaultDenomProps(wallet, settings, wallet.currencyCode)
 
+    // balance
+    const balanceInCrypto = wallet.nativeBalances[currencyCode]
+    const balanceCrypto = convertNativeToExchangeRateDenomination(settings, currencyCode, balanceInCrypto)
+    const balanceFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, parseFloat(balanceCrypto))
+
+    // amount
     const nativeAmount = ownProps.amount ? bns.abs(`${ownProps.amount}`) : ''
     const cryptoAmount = convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
     const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, parseFloat(cryptoAmount))
@@ -290,6 +307,8 @@ export const SendScene = connect(
       contacts,
       currencyCode,
       currencyInfo,
+      balanceFiatAmount,
+      balanceCrypto,
       currentFiatAmount,
       cryptoAmount,
       guiWallet: wallet,

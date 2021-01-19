@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -11,12 +11,12 @@ import { AddressModal } from '../../../components/modals/AddressModal'
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { TransactionDetailsNotesInput } from '../../../components/modals/TransactionDetailsNotesInput'
 import { Airship, showError } from '../../../components/services/AirshipInstance'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext.js'
+import { EdgeText } from '../../../components/themed/EdgeText'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
-import { THEME } from '../../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../../types/reduxTypes'
 import type { FioAddress, FioRequest, GuiWallet } from '../../../types/types'
-import { scale } from '../../../util/scaling.js'
 import Text from '../../UI/components/FormattedText/FormattedText.ui.js'
 import * as UI_SELECTORS from '../../UI/selectors.js'
 import { refreshAllFioAddresses } from '../action'
@@ -44,7 +44,7 @@ type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
 
-type Props = SelectFioAddressOwnProps & SelectFioAddressProps & DispatchProps
+type Props = SelectFioAddressOwnProps & SelectFioAddressProps & DispatchProps & ThemeProps
 
 type LocalState = {
   loading: boolean,
@@ -203,10 +203,11 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
   }
 
   renderFioAddress() {
-    const { selected, fioRequest } = this.props
+    const { selected, fioRequest, theme } = this.props
     const { loading } = this.state
+    const styles = getStyles(theme)
 
-    if (loading) return <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="small" />
+    if (loading) return <ActivityIndicator color={theme.icon} style={styles.loading} size="small" />
 
     if (fioRequest) {
       return (
@@ -229,20 +230,22 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
   }
 
   render() {
-    const { fioRequest, selected, memo, memoError, loading: walletLoading, isSendUsingFioAddress } = this.props
+    const { fioRequest, selected, memo, memoError, loading: walletLoading, isSendUsingFioAddress, theme } = this.props
     const { loading } = this.state
+    const styles = getStyles(theme)
+
     if (!fioRequest && !isSendUsingFioAddress) return null
     if (!fioRequest && !selected) return null
     if (walletLoading) {
       return (
-        <View style={[styles.selectContainer, styles.selectFullWidth]}>
-          <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="small" />
+        <View style={styles.selectContainer}>
+          <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />
         </View>
       )
     }
 
     return (
-      <View style={[styles.selectContainer, styles.selectFullWidth]}>
+      <View style={styles.selectContainer}>
         {this.renderFioAddress()}
         {!loading && (
           <TouchableWithoutFeedback onPress={this.openMessageInput}>
@@ -252,53 +255,38 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
             </View>
           </TouchableWithoutFeedback>
         )}
-        {memoError ? <Text style={styles.error}>{memoError}</Text> : null}
+        {memoError ? <EdgeText style={styles.error}>{memoError}</EdgeText> : null}
       </View>
     )
   }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   selectContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  selectFullWidth: {
-    width: '100%',
-    paddingHorizontal: scale(30),
-    paddingVertical: scale(10)
-  },
-  title: {
-    fontSize: scale(28),
-    color: THEME.COLORS.WHITE,
-    marginTop: scale(20),
-    marginBottom: scale(10)
-  },
-  text: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(16)
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   error: {
-    color: THEME.COLORS.ACCENT_RED,
-    fontSize: scale(12),
-    width: '100%'
+    color: theme.dangerText,
+    fontSize: theme.rem(0.75),
+    width: '100%',
+    alignSelf: 'center'
   },
   loading: {
     flex: 1,
-    marginTop: scale(40),
+    marginTop: theme.rem(2.5),
     alignSelf: 'center'
   },
   selectAddressText: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(14)
+    marginTop: theme.rem(0.75),
+    color: theme.primaryText,
+    fontSize: theme.rem(0.875)
   },
   selectAddressTextPressed: {
-    color: THEME.COLORS.GRAY_2,
-    fontSize: scale(14)
+    color: theme.secondaryText,
+    fontSize: theme.rem(0.875)
   },
   memoContainer: {
-    marginTop: scale(10),
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center'
@@ -306,10 +294,9 @@ const rawStyles = {
   textIconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: scale(18)
+    height: theme.rem(1.25)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 const mapStateToProps = (state: RootState): SelectFioAddressProps => {
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
@@ -342,4 +329,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   }
 })
 
-export const SelectFioAddressConnector = connect(mapStateToProps, mapDispatchToProps)(SelectFioAddress)
+export const SelectFioAddressConnector = connect(mapStateToProps, mapDispatchToProps)(withTheme(SelectFioAddress))

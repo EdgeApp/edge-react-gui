@@ -1,8 +1,9 @@
 // @flow
 
 import * as React from 'react'
-import { Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { unpackEdges } from '../../util/edges.js'
 import { type Theme, useTheme } from '../services/ThemeContext.js'
@@ -14,13 +15,18 @@ type Props = {
   // If this is set, the component will insert a text node before the other children:
   label?: string,
 
+  // If this is set, show a spinner:
+  spinner?: boolean,
+
   // The gap around the button. Takes 0-4 numbers (top, right, bottom, left),
   // using the same logic as the web `margin` property. Defaults to 0.
   marginRem?: number[] | number,
 
   // The gap inside the button. Takes 0-4 numbers (top, right, bottom, left),
   // using the same logic as the web `padding` property. Defaults to 0.5.
-  paddingRem?: number[] | number
+  paddingRem?: number[] | number,
+
+  disabled?: boolean
 }
 
 type ColorProps = {
@@ -28,28 +34,31 @@ type ColorProps = {
 }
 
 type SquareButtonProps = Props & ColorProps
+type RadioButtonProps = Props & { value: boolean, right?: boolean }
 
 export function PrimaryButton(props: Props) {
-  const { children, label, onPress } = props
+  const { children, label, onPress, disabled, spinner } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
-    <TouchableOpacity style={[styles.primaryButton, spacingStyles(props, theme)]} onPress={onPress}>
+    <TouchableOpacity style={[styles.primaryButton, spacingStyles(props, theme), disabled ? styles.disabled : null]} onPress={onPress} disabled={disabled}>
       {label != null ? <Text style={styles.primaryText}>{label}</Text> : null}
+      {spinner != null ? <ActivityIndicator color={theme.primaryButtonText} style={styles.spinner} /> : null}
       {children}
     </TouchableOpacity>
   )
 }
 
 export function SecondaryButton(props: Props) {
-  const { children, label, onPress } = props
+  const { children, label, onPress, disabled, spinner } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
-    <TouchableOpacity style={[styles.secondaryButton, spacingStyles(props, theme)]} onPress={onPress}>
+    <TouchableOpacity style={[styles.secondaryButton, spacingStyles(props, theme), disabled ? styles.disabled : null]} onPress={onPress} disabled={disabled}>
       {label != null ? <Text style={styles.secondaryText}>{label}</Text> : null}
+      {spinner != null ? <ActivityIndicator color={theme.primaryButtonText} style={styles.spinner} /> : null}
       {children}
     </TouchableOpacity>
   )
@@ -84,7 +93,48 @@ export function SquareButton(props: SquareButtonProps) {
   )
 }
 
-function spacingStyles(props: Props | SquareButtonProps, theme: Theme) {
+export function ButtonBox(props: Props) {
+  const { children, onPress } = props
+  const theme = useTheme()
+
+  return (
+    <TouchableOpacity onPress={onPress} style={spacingStyles(props, theme)}>
+      {children}
+    </TouchableOpacity>
+  )
+}
+
+export function Radio(props: RadioButtonProps) {
+  const { children, value, right, onPress } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  return (
+    <View style={spacingStyles(props, theme)}>
+      <TouchableHighlight activeOpacity={theme.underlayOpacity} underlayColor={theme.secondaryButton} onPress={onPress}>
+        <View style={[styles.radio, right && styles.radioRight]}>
+          <RadioIcon value={value} />
+          {children}
+        </View>
+      </TouchableHighlight>
+    </View>
+  )
+}
+
+export function RadioIcon(props: { value: boolean }) {
+  const { value } = props
+  const theme = useTheme()
+
+  const icon = value ? (
+    <IonIcon size={theme.rem(1.25)} color={theme.iconTappable} name="ios-radio-button-on" />
+  ) : (
+    <IonIcon size={theme.rem(1.25)} color={theme.icon} name="ios-radio-button-off" />
+  )
+
+  return icon
+}
+
+function spacingStyles(props: Props, theme: Theme) {
   const marginRem = unpackEdges(props.marginRem)
   const paddingRem = unpackEdges(props.paddingRem ?? 0.5)
 
@@ -109,7 +159,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     justifyContent: 'center'
   }
   const commonText = {
-    fontFamily: theme.fontFaceDefault,
+    fontFamily: theme.fontFaceBold,
     fontSize: theme.rem(1),
     lineHeight: theme.rem(2),
     marginHorizontal: theme.rem(0.5)
@@ -153,6 +203,29 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     successButton: {
       backgroundColor: theme.sliderTabRequest
-    }
+    },
+    radio: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    radioRight: {
+      flexDirection: 'row-reverse'
+    },
+    disabled: {
+      opacity: 0.7
+    },
+    buttonBox: {
+      shadowColor: theme.buttonBoxShadow,
+      shadowOffset: {
+        width: 0,
+        height: theme.rem(0.25)
+      },
+      shadowOpacity: 0.34,
+      shadowRadius: theme.rem(0.25),
+
+      elevation: theme.rem(0.5)
+    },
+    spinner: { height: theme.rem(2) }
   }
 })

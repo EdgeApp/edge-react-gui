@@ -1,0 +1,183 @@
+// @flow
+
+import * as React from 'react'
+import { TouchableOpacity, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import Ionicon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
+
+import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
+import { Fontello } from '../../assets/vector/index.js'
+import * as Constants from '../../constants/indexConstants.js'
+import s from '../../locales/strings.js'
+import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
+import { PromoCard } from '../themed/PromoCard.js'
+import { WiredBalanceBox } from '../themed/WiredBalanceBox.js'
+import { EdgeTextFieldOutlined } from './EdgeTextField.js'
+
+type OwnProps = {
+  sorting: boolean,
+  searching: boolean,
+  openSortModal: () => void,
+  onChangeSearchText: (search: string) => void,
+  toggleWalletSearching: (searching: boolean) => void
+}
+
+type StateProps = {
+  exchangeRates: Object
+}
+
+type DispatchProps = {
+  toggleAccountBalanceVisibility(): void
+}
+
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+
+type State = {
+  input: string
+}
+
+class WalletListHeaderComponent extends React.PureComponent<Props, State> {
+  textInput = React.createRef()
+
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      input: ''
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.searching === false && this.props.searching === true && this.textInput.current) {
+      this.textInput.current.focus()
+    }
+  }
+
+  handleOnChangeText = (input: string) => this.props.onChangeSearchText(input)
+
+  handleTextFieldFocus = () => {
+    this.props.toggleWalletSearching(true)
+  }
+
+  disabledTextFieldFocus = () => {
+    this.clearText()
+    this.props.toggleWalletSearching(false)
+  }
+
+  clearText = () => {
+    this.setState({ input: '' })
+    // $FlowFixMe - react-native-material-textfield have many flow errors. Somehow needed cause material-textfield value is not functioning well
+    this.textInput.current.clear()
+    // $FlowFixMe
+    this.textInput.current.blur()
+    this.props.onChangeSearchText('')
+  }
+
+  render() {
+    const { sorting, searching, theme } = this.props
+    const styles = getStyles(theme)
+
+    return (
+      <>
+        <View style={styles.searchContainer}>
+          <View style={{ flex: 1, flexDirection: 'column' }}>
+            <EdgeTextFieldOutlined
+              returnKeyType="search"
+              label={s.strings.wallet_list_wallet_search}
+              onChangeText={this.handleOnChangeText}
+              value={this.state.input}
+              onFocus={this.handleTextFieldFocus}
+              ref={this.textInput}
+              marginRem={0}
+            />
+          </View>
+          {searching && (
+            <>
+              <TouchableOpacity onPress={this.clearText} style={styles.searchClearIcon}>
+                <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.disabledTextFieldFocus} style={styles.searchDoneButton}>
+                <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+        {!searching && (
+          <WiredBalanceBox
+            showBalance={getIsAccountBalanceVisible}
+            fiatAmount={getTotalFiatAmountFromExchangeRates}
+            isoFiatCurrencyCode={getDefaultIsoFiat}
+            onPress={this.props.toggleAccountBalanceVisibility}
+            exchangeRates={this.props.exchangeRates}
+          />
+        )}
+        {!sorting && !searching && (
+          <View style={styles.headerContainer}>
+            <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
+            <View key="defaultButtons" style={styles.headerButtonsContainer}>
+              <TouchableOpacity style={styles.addButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
+                <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.props.openSortModal}>
+                <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+        {!searching && <PromoCard />}
+      </>
+    )
+  }
+}
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  headerContainer: {
+    flexDirection: 'row',
+    marginHorizontal: theme.rem(1)
+  },
+  headerText: {
+    flex: 1
+  },
+  headerButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  addButton: {
+    marginRight: theme.rem(0.5)
+  },
+
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: theme.rem(0.5),
+    marginHorizontal: theme.rem(1),
+    height: theme.rem(4.5)
+  },
+  searchClearIcon: {
+    position: 'absolute',
+    right: '22%',
+    top: theme.rem(1.5)
+  },
+  searchDoneButton: {
+    paddingLeft: theme.rem(0.75),
+    paddingRight: 0,
+    paddingBottom: theme.rem(0.5)
+  }
+}))
+
+export const WalletListHeader = connect(
+  (state: RootState): StateProps => ({
+    exchangeRates: state.exchangeRates
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    toggleAccountBalanceVisibility() {
+      dispatch(toggleAccountBalanceVisibility())
+    }
+  })
+)(withTheme(WalletListHeaderComponent))
