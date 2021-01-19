@@ -22,6 +22,7 @@ import { EdgeTextFieldOutlined } from './EdgeTextField.js'
 type OwnProps = {
   sorting: boolean,
   searching: boolean,
+  searchText: string,
   openSortModal: () => void,
   onChangeSearchText: (search: string) => void,
   onChangeSearchingState: (searching: boolean) => void
@@ -37,19 +38,8 @@ type DispatchProps = {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-type State = {
-  input: string
-}
-
-class WalletListHeaderComponent extends React.PureComponent<Props, State> {
+class WalletListHeaderComponent extends React.PureComponent<Props> {
   textInput = React.createRef()
-
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      input: ''
-    }
-  }
 
   componentDidUpdate(prevProps: Props) {
     if (prevProps.searching === false && this.props.searching === true && this.textInput.current) {
@@ -72,7 +62,6 @@ class WalletListHeaderComponent extends React.PureComponent<Props, State> {
   }
 
   clearText = () => {
-    this.setState({ input: '' })
     this.props.onChangeSearchText('')
     if (this.textInput.current) {
       this.textInput.current.blur()
@@ -80,7 +69,7 @@ class WalletListHeaderComponent extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { sorting, searching, theme } = this.props
+    const { sorting, searching, searchText, theme } = this.props
     const styles = getStyles(theme)
 
     return (
@@ -91,7 +80,7 @@ class WalletListHeaderComponent extends React.PureComponent<Props, State> {
               returnKeyType="search"
               label={s.strings.wallet_list_wallet_search}
               onChangeText={this.handleOnChangeText}
-              value={this.state.input}
+              value={searchText}
               onFocus={this.handleTextFieldFocus}
               ref={this.textInput}
               isClearable={searching}
