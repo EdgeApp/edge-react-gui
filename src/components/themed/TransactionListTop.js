@@ -1,6 +1,5 @@
 // @flow
 
-import { bns } from 'biggystring'
 import * as React from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -16,7 +15,7 @@ import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { convertCurrency } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import { convertNativeToDenomination, decimalOrZero, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
+import { convertNativeToDenomination, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { EdgeTextFieldOutlined } from './EdgeTextField.js'
@@ -106,7 +105,10 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
       <View style={styles.balanceBoxContainer}>
         <View style={styles.balanceBoxRow}>
           <View style={styles.balanceBoxBalanceContainer}>
-            <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
+            <View style={styles.balanceBoxWalletNameContainer}>
+              <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
+              <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} size={theme.rem(1.5)} />
+            </View>
             <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>
               {isAccountBalanceVisible ? (
                 <>
@@ -117,9 +119,6 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
                 <EdgeText style={styles.balanceFiatShow}>{s.strings.string_show_balance}</EdgeText>
               )}
             </TouchableOpacity>
-          </View>
-          <View style={styles.balanceBoxWalletProgressIconContainer}>
-            <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} size={theme.rem(2.5)} />
           </View>
         </View>
       </View>
@@ -232,7 +231,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   balanceBoxBalanceContainer: {
     flex: 1
   },
+  balanceBoxWalletNameContainer: {
+    flexDirection: 'row'
+  },
   balanceBoxWalletName: {
+    flex: 1,
     fontSize: theme.rem(1.25)
   },
   balanceBoxCurrency: {
@@ -244,9 +247,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   balanceFiatShow: {
     fontSize: theme.rem(2)
-  },
-  balanceBoxWalletProgressIconContainer: {
-    height: theme.rem(7.75)
   },
 
   // Send/Receive Buttons
@@ -326,7 +326,7 @@ export const TransactionListTop = connect(
     // Crypto Amount Formatting
     const currencyDenomination = getDenomination(selectedCurrencyCode, state.ui.settings)
     const cryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(balance) // convert to correct denomination
-    const cryptoAmountFormat = cryptoAmount ? intl.formatNumber(decimalOrZero(bns.toFixed(cryptoAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
+    const cryptoAmountFormat = cryptoAmount ? intl.formatNumber(cryptoAmount.replace(/0+$/, '')) : '0' // only cut off trailing zeroes (to the right of significant figures)
 
     // Fiat Balance Formatting
     const defaultDenomination = getDefaultDenomination(selectedCurrencyCode, state.ui.settings)
