@@ -105,7 +105,10 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
       <View style={styles.balanceBoxContainer}>
         <View style={styles.balanceBoxRow}>
           <View style={styles.balanceBoxBalanceContainer}>
-            <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
+            <View style={styles.balanceBoxWalletNameContainer}>
+              <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
+              <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} size={theme.rem(1.5)} />
+            </View>
             <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>
               {isAccountBalanceVisible ? (
                 <>
@@ -116,9 +119,6 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
                 <EdgeText style={styles.balanceFiatShow}>{s.strings.string_show_balance}</EdgeText>
               )}
             </TouchableOpacity>
-          </View>
-          <View style={styles.balanceBoxWalletProgressIconContainer}>
-            <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} size={theme.rem(2.5)} />
           </View>
         </View>
       </View>
@@ -231,7 +231,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   balanceBoxBalanceContainer: {
     flex: 1
   },
+  balanceBoxWalletNameContainer: {
+    flexDirection: 'row'
+  },
   balanceBoxWalletName: {
+    flex: 1,
     fontSize: theme.rem(1.25)
   },
   balanceBoxCurrency: {
@@ -243,9 +247,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   balanceFiatShow: {
     fontSize: theme.rem(2)
-  },
-  balanceBoxWalletProgressIconContainer: {
-    height: theme.rem(7.75)
   },
 
   // Send/Receive Buttons
