@@ -225,10 +225,10 @@ class WalletListComponent extends React.PureComponent<Props> {
         differencePercentageString = '0.00%'
       } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
         differencePercentageStringStyle = theme.negativeText
-        differencePercentageString = `-${Math.abs(differencePercentage).toFixed(2)}%`
+        differencePercentageString = `-${Math.abs(differencePercentage).toFixed(1)}%`
       } else if (exchangeRate && differencePercentage && differencePercentage > 0) {
         differencePercentageStringStyle = theme.positiveText
-        differencePercentageString = `+${Math.abs(differencePercentage).toFixed(2)}%`
+        differencePercentageString = `+${Math.abs(differencePercentage).toFixed(1)}%`
       }
 
       let symbolImage
