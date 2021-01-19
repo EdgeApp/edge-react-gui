@@ -43,24 +43,27 @@ class TileComponent extends React.PureComponent<Props> {
     }
     return (
       <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
-        <View style={styles.container}>
-          <View style={styles.content}>
-            {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
-            {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
-            <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
-            {typeof body === 'string' && (
-              <EdgeText style={styles.textBody} numberOfLines={3} adjustsFontSizeToFit={false}>
-                {body}
-              </EdgeText>
-            )}
-            {children}
-          </View>
-          {type === 'touchable' && (
-            <View style={styles.iconContainer}>
-              <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
+        <>
+          <View style={styles.container}>
+            <View style={styles.content}>
+              {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
+              {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
+              <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
+              {typeof body === 'string' && (
+                <EdgeText style={styles.textBody} numberOfLines={3} adjustsFontSizeToFit={false}>
+                  {body}
+                </EdgeText>
+              )}
+              {children}
             </View>
-          )}
-        </View>
+            {type === 'touchable' && (
+              <View style={styles.iconContainer}>
+                <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
+              </View>
+            )}
+          </View>
+          <View style={styles.divider} />
+        </>
       </TouchableWithoutFeedback>
     )
   }
@@ -69,13 +72,11 @@ class TileComponent extends React.PureComponent<Props> {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     backgroundColor: theme.tileBackground,
-    marginHorizontal: theme.rem(1),
+    paddingHorizontal: theme.rem(1),
     marginTop: theme.rem(1),
     paddingBottom: theme.rem(1),
     flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomWidth: theme.thinLineWidth,
-    borderBottomColor: theme.lineDivider
+    alignItems: 'center'
   },
   content: {
     flex: 1
@@ -115,6 +116,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   loader: {
     marginTop: theme.rem(0.25)
+  },
+  divider: {
+    height: theme.thinLineWidth,
+    marginLeft: theme.rem(1),
+    borderBottomWidth: theme.thinLineWidth,
+    borderBottomColor: theme.lineDivider
   }
 }))
 
