@@ -162,8 +162,7 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
           <View style={styles.searchContainer}>
             <View style={{ flex: 1, flexDirection: 'column' }}>
               <EdgeTextFieldOutlined
-                returnKeyLabel={s.strings.fragment_seach}
-                returnKeyType="done"
+                returnKeyType="search"
                 label={s.strings.transaction_list_search}
                 onChangeText={this.handleOnChangeText}
                 value={this.state.input}
