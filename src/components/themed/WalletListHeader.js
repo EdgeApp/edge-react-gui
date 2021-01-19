@@ -17,7 +17,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from '../themed/EdgeText.js'
 import { PromoCard } from '../themed/PromoCard.js'
 import { WiredBalanceBox } from '../themed/WiredBalanceBox.js'
-import { EdgeTextFieldOutlined } from './EdgeTextField.js'
+import { SearchList } from './SearchList.js'
 
 type OwnProps = {
   sorting: boolean,
@@ -37,74 +37,27 @@ type DispatchProps = {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-type State = {
-  input: string
-}
+class WalletListHeaderComponent extends React.PureComponent<Props> {
+  handleTextFieldFocus = () => this.props.onChangeSearchingState(true)
 
-class WalletListHeaderComponent extends React.PureComponent<Props, State> {
-  textInput = React.createRef()
+  handleClearTextField = () => this.props.onChangeSearchText('')
 
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      input: ''
-    }
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.searching === false && this.props.searching === true && this.textInput.current) {
-      this.textInput.current.focus()
-    }
-  }
-
-  handleOnChangeText = (input: string) => {
-    this.setState({ input })
-    this.props.onChangeSearchText(input)
-  }
-
-  handleTextFieldFocus = () => {
-    this.props.onChangeSearchingState(true)
-  }
-
-  disableWalletSearching = () => {
-    this.clearText()
-    // $FlowFixMe - react-native-material-textfield have many flow errors. Somehow needed cause material-textfield value is not functioning well
-    this.textInput.current.clear()
-    this.props.onChangeSearchingState(false)
-  }
-
-  clearText = () => {
-    this.setState({ input: '' })
-    // $FlowFixMe
-    this.textInput.current.blur()
-    this.props.onChangeSearchText('')
-  }
+  disableWalletSearching = () => this.props.onChangeSearchingState(false)
 
   render() {
-    const { sorting, searching, theme } = this.props
+    const { onChangeSearchText, sorting, searching, theme } = this.props
     const styles = getStyles(theme)
 
     return (
       <>
         <View style={styles.searchContainer}>
-          <View style={{ flex: 1, flexDirection: 'column' }}>
-            <EdgeTextFieldOutlined
-              returnKeyType="search"
-              label={s.strings.wallet_list_wallet_search}
-              onChangeText={this.handleOnChangeText}
-              value={this.state.input}
-              onFocus={this.handleTextFieldFocus}
-              ref={this.textInput}
-              isClearable={searching}
-              onClear={this.clearText}
-              marginRem={0}
-            />
-          </View>
-          {searching && (
-            <TouchableOpacity onPress={this.disableWalletSearching} style={styles.searchDoneButton}>
-              <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
-            </TouchableOpacity>
-          )}
+          <SearchList
+            searching={searching}
+            onChangeText={onChangeSearchText}
+            onTextFieldFocus={this.handleTextFieldFocus}
+            onDoneSearching={this.disableWalletSearching}
+            onClearText={this.handleClearTextField}
+          />
         </View>
         {!searching && (
           <WiredBalanceBox
@@ -152,18 +105,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
 
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: theme.rem(0.5),
-    marginHorizontal: theme.rem(1),
-    height: theme.rem(4.5)
-  },
-  searchDoneButton: {
-    height: theme.rem(3.5),
-    justifyContent: 'center',
-    paddingLeft: theme.rem(0.75),
-    paddingRight: 0,
-    paddingBottom: theme.rem(0.5)
+    marginHorizontal: theme.rem(1)
   }
 }))
 

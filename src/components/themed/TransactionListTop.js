@@ -18,7 +18,7 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { convertNativeToDenomination, decimalOrZero, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
-import { EdgeTextFieldOutlined } from './EdgeTextField.js'
+import { SearchList } from './SearchList.js'
 import { ButtonBox } from './ThemedButtons.js'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
@@ -48,28 +48,9 @@ export type DispatchProps = {
   toggleBalanceVisibility: () => void
 }
 
-type State = {
-  input: string
-}
-
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-class TransactionListTopComponent extends React.PureComponent<Props, State> {
-  textInput = React.createRef()
-
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      input: ''
-    }
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.searching === false && this.props.searching === true && this.textInput.current) {
-      this.textInput.current.focus()
-    }
-  }
-
+class TransactionListTopComponent extends React.PureComponent<Props> {
   renderEarnInterestCard = () => {
     const { currencyCode, transactionsLength, theme } = this.props
     const styles = getStyles(theme)
@@ -125,31 +106,13 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
     )
   }
 
-  handleOnChangeText = (input: string) => {
-    this.setState({ input })
-  }
+  handleTextFieldFocus = () => this.props.onChangeSortingState(true)
 
-  handleTextFieldFocus = () => {
-    this.props.onChangeSortingState(true)
-  }
+  handleTextFieldBlur = (input: string) => this.props.onSearchTransaction(input)
 
-  handleTextFieldBlur = () => {
-    this.props.onSearchTransaction(this.state.input)
-  }
+  handleClearTextField = () => this.props.onSearchTransaction('')
 
-  disableTransactionSearching = () => {
-    this.clearText()
-    // $FlowFixMe - react-native-material-textfield have many flow errors. Somehow needed cause material-textfield value is not functioning well
-    this.textInput.current.clear()
-    this.props.onChangeSortingState(false)
-  }
-
-  clearText = () => {
-    this.setState({ input: '' })
-    // $FlowFixMe
-    this.textInput.current.blur()
-    this.props.onSearchTransaction('')
-  }
+  disableTransactionSearching = () => this.props.onChangeSortingState(false)
 
   render() {
     const { isEmpty, searching, theme } = this.props
@@ -159,28 +122,15 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
       <View style={styles.container}>
         {!isEmpty && (
           <View style={styles.searchContainer}>
-            <View style={{ flex: 1, flexDirection: 'column' }}>
-              <EdgeTextFieldOutlined
-                returnKeyType="search"
-                label={s.strings.transaction_list_search}
-                onChangeText={this.handleOnChangeText}
-                value={this.state.input}
-                onFocus={this.handleTextFieldFocus}
-                onBlur={this.handleTextFieldBlur}
-                ref={this.textInput}
-                isClearable={searching}
-                onClear={this.clearText}
-                marginRem={0}
-              />
-            </View>
-            {searching && (
-              <TouchableOpacity onPress={this.disableTransactionSearching} style={styles.searchDoneButton}>
-                <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
-              </TouchableOpacity>
-            )}
+            <SearchList
+              searching={searching}
+              onTextFieldFocus={this.handleTextFieldFocus}
+              onTextFieldBlur={this.handleTextFieldBlur}
+              onDoneSearching={this.disableTransactionSearching}
+              onClearText={this.handleClearTextField}
+            />
           </View>
         )}
-
         {!searching && (
           <>
             {this.renderBalanceBox()}
@@ -295,17 +245,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
 
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: theme.rem(1),
-    height: theme.rem(4.5)
-  },
-  searchDoneButton: {
-    height: theme.rem(3.5),
-    justifyContent: 'center',
-    paddingLeft: theme.rem(0.75),
-    paddingRight: 0,
-    paddingBottom: theme.rem(0.5)
+    marginRight: theme.rem(1)
   }
 }))
 
