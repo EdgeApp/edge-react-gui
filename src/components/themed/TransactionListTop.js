@@ -1,6 +1,5 @@
 // @flow
 
-import { bns } from 'biggystring'
 import * as React from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -16,7 +15,7 @@ import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { convertCurrency } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import { convertNativeToDenomination, decimalOrZero, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
+import { convertNativeToDenomination, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { EdgeTextFieldOutlined } from './EdgeTextField.js'
@@ -326,7 +325,7 @@ export const TransactionListTop = connect(
     // Crypto Amount Formatting
     const currencyDenomination = getDenomination(selectedCurrencyCode, state.ui.settings)
     const cryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(balance) // convert to correct denomination
-    const cryptoAmountFormat = cryptoAmount ? intl.formatNumber(decimalOrZero(bns.toFixed(cryptoAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
+    const cryptoAmountFormat = cryptoAmount ? intl.formatNumber(cryptoAmount.replace(/0+$/, '')) : '0' // only cut off trailing zeroes (to the right of significant figures)
 
     // Fiat Balance Formatting
     const defaultDenomination = getDefaultDenomination(selectedCurrencyCode, state.ui.settings)
