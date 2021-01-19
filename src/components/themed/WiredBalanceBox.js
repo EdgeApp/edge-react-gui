@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 
 import { formatNumber } from '../../locales/intl.js'
@@ -9,6 +9,7 @@ import { type RootState } from '../../types/reduxTypes.js'
 import { getFiatSymbol } from '../../util/utils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
+import { UnderlinedHeader } from './UnderlinedHeader'
 
 type StateProps = {
   showBalance: boolean,
@@ -45,7 +46,7 @@ class BalanceBox extends React.PureComponent<Props> {
     const noExchangeRates = !exchangeRates || !Object.keys(exchangeRates).length || !Object.values(exchangeRates).reduce(summation)
 
     return (
-      <View style={styles.container}>
+      <UnderlinedHeader>
         <TouchableOpacity onPress={this.props.onPress} style={styles.balanceBoxContainer}>
           {showBalance && !noExchangeRates ? (
             <>
@@ -58,7 +59,7 @@ class BalanceBox extends React.PureComponent<Props> {
             <EdgeText style={styles.showBalance}>{noExchangeRates ? s.strings.exchange_rates_loading : s.strings.string_show_balance}</EdgeText>
           )}
         </TouchableOpacity>
-      </View>
+      </UnderlinedHeader>
     )
   }
 }
@@ -75,14 +76,6 @@ export const WiredBalanceBox = connect((state: RootState, ownProps: OwnProps): S
 }, null)(withTheme(BalanceBox))
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    justifyContent: 'center',
-    marginLeft: theme.rem(1),
-    paddingBottom: theme.rem(1),
-    marginBottom: theme.rem(1),
-    borderBottomWidth: theme.thinLineWidth,
-    borderBottomColor: theme.lineDivider
-  },
   balanceBoxContainer: {
     height: theme.rem(3.25)
   },

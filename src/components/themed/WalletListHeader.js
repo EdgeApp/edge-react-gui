@@ -138,6 +138,7 @@ class WalletListHeaderComponent extends React.PureComponent<Props, State> {
 const getStyles = cacheStyles((theme: Theme) => ({
   headerContainer: {
     flexDirection: 'row',
+    marginTop: theme.rem(0.5),
     marginHorizontal: theme.rem(1)
   },
   headerText: {
