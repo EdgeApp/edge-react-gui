@@ -54,11 +54,21 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
     if (!icon) {
       return null
     }
+
+    let formattedProgress
+    if (progress < 5) {
+      formattedProgress = 5
+    } else if (progress > 95 && progress < 100) {
+      formattedProgress = 95
+    } else {
+      formattedProgress = progress
+    }
+
     return (
       <AnimatedCircularProgress
         size={size ? size + theme.rem(0.25) : theme.rem(2.25)}
         width={theme.rem(3 / 16)}
-        fill={progress}
+        fill={formattedProgress}
         tintColor={isDone ? theme.walletProgressIconFillDone : theme.walletProgressIconFill}
         backgroundColor={theme.walletProgressIconBackground}
         rotation={0}
