@@ -3,13 +3,12 @@
 import { bns } from 'biggystring'
 import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
-import IonIcon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
-import fioRequestsIcon from '../../assets/images/sidenav/fiorequests.png'
 import * as Constants from '../../constants/indexConstants'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
@@ -17,20 +16,20 @@ import { addToFioAddressCache, cancelFioRequest, FIO_NO_BUNDLED_ERR_CODE } from 
 import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioRequest/components/FioRequestRow'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { getExchangeDenomination } from '../../modules/Settings/selectors'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
+import { getFioWallets, getWallets } from '../../modules/UI/selectors'
+import type { Dispatch } from '../../types/reduxTypes'
 import { type RootState } from '../../types/reduxTypes'
 import type { FioRequest, GuiWallet } from '../../types/types'
-import { scale } from '../../util/scaling.js'
 import FullScreenLoader from '../common/FullScreenLoader'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
+import { EdgeText } from '../themed/EdgeText'
 import { HIDDEN_MENU_BUTTONS_WIDTH, HiddenMenuButtons } from '../themed/HiddenMenuButtons'
-import { SquareButton } from '../themed/ThemedButtons'
+import { UnderlinedHeader } from '../themed/UnderlinedHeader.js'
 
 const SCROLL_THRESHOLD = 0.5
 
@@ -60,10 +59,9 @@ type OwnProps = {
   navigation: any
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
-export class FioRequestList extends React.Component<Props, LocalState> {
-  headerIconSize = THEME.rem(1.375)
+class FioRequestList extends React.Component<Props, LocalState> {
   willFocusSubscription: { remove: () => void } | null = null
 
   constructor(props: Props) {
@@ -108,7 +106,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   getFioRequestsPending = async () => {
-    const { fioWallets } = this.props
+    const { fioWallets = [] } = this.props
     let fioRequestsPending = []
     if (fioWallets.length) {
       try {
@@ -146,7 +144,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   getFioRequestsSent = async () => {
-    const { fioWallets } = this.props
+    const { fioWallets = [] } = this.props
     let fioRequestsSent = []
     if (fioWallets.length) {
       try {
@@ -223,7 +221,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       return
     }
     this.setState({ fullScreenLoader: true })
-    const { fioWallets } = this.props
+    const { fioWallets = [] } = this.props
     const fioWallet = fioWallets.find(wallet => wallet.id === request.fioWalletId)
 
     if (fioWallet) {
@@ -253,7 +251,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       return
     }
     this.setState({ fullScreenLoader: true })
-    const { fioWallets } = this.props
+    const { fioWallets = [] } = this.props
     const fioWallet = fioWallets.find(wallet => wallet.id === request.fioWalletId)
 
     if (fioWallet) {
@@ -317,11 +315,11 @@ export class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   headerRowUsingTitle = (sectionObj: { section: { title: string } }) => {
+    const styles = getStyles(this.props.theme)
+    if (!sectionObj.section.title) return null
     return (
       <View style={styles.singleDateArea}>
-        <View style={styles.leftDateArea}>
-          <T style={styles.formattedDate}>{sectionObj.section.title}</T>
-        </View>
+        <EdgeText style={styles.formattedDate}>{sectionObj.section.title}</EdgeText>
       </View>
     )
   }
@@ -331,7 +329,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    const { wallets, onSelectWallet } = this.props
+    const { wallets = {}, onSelectWallet } = this.props
     const availableWallets: Array<{ id: string, currencyCode: string }> = []
     for (const walletKey: string of Object.keys(wallets)) {
       if (wallets[walletKey].currencyCode.toUpperCase() === fioRequest.content.token_code.toUpperCase()) {
@@ -386,7 +384,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   sendCrypto = async (pendingRequest: FioRequest, walletId: string) => {
-    const { fioWallets, currencyWallets, state } = this.props
+    const { fioWallets = [], currencyWallets = {}, state } = this.props
     const fioWalletByAddress = fioWallets.find(wallet => wallet.id === pendingRequest.fioWalletId) || null
     if (!fioWalletByAddress) return showError(s.strings.fio_wallet_missing_for_fio_address)
     const exchangeDenomination = getExchangeDenomination(state, pendingRequest.content.token_code.toUpperCase())
@@ -486,7 +484,6 @@ export class FioRequestList extends React.Component<Props, LocalState> {
       })
       headers.push({ title: previousTitle, data: requestsInSection })
     }
-
     return headers
   }
 
@@ -494,32 +491,24 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     return item.fio_request_id.toString()
   }
 
-  renderPending = (itemObj: { item: FioRequest, index: number }) => {
-    const { item: fioRequest, index } = itemObj
-    const isLastOfDate =
-      index + 1 === this.state.fioRequestsPending.length ||
-      (index > 0 && formatDate(new Date(this.state.fioRequestsPending[index + 1].time_stamp)) !== formatDate(new Date(fioRequest.time_stamp)))
-    return <FioRequestRow fioRequest={fioRequest} isLastOfDate={isLastOfDate} onSelect={this.selectPendingRequest} />
+  renderPending = (itemObj: { item: FioRequest }) => {
+    const { item: fioRequest } = itemObj
+    return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectPendingRequest} />
   }
 
-  renderSent = (itemObj: { item: FioRequest, index: number }) => {
-    const { item: fioRequest, index } = itemObj
-    const isLastOfDate =
-      index + 1 === this.state.fioRequestsSent.length ||
-      (index > 0 && formatDate(new Date(this.state.fioRequestsSent[index + 1].time_stamp)) !== formatDate(new Date(fioRequest.time_stamp)))
-    return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectSentRequest} isSent isLastOfDate={isLastOfDate} />
+  renderSent = (itemObj: { item: FioRequest }) => {
+    const { item: fioRequest } = itemObj
+    return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectSentRequest} isSent />
   }
 
   renderHiddenItem = (rowObj: { item: FioRequest }, rowMap: { [string]: SwipeRow }) => {
     return (
       <HiddenMenuButtons
-        rightSwipable={
-          <SquareButton
-            label={s.strings.swap_terms_reject_button}
-            color="danger"
-            onPress={_ => this.rejectRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payer_fio_address)}
-          />
-        }
+        rightSwipable={{
+          label: s.strings.swap_terms_reject_button,
+          color: 'danger',
+          onPress: _ => this.rejectRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payer_fio_address)
+        }}
       />
     )
   }
@@ -530,33 +519,29 @@ export class FioRequestList extends React.Component<Props, LocalState> {
     }
     return (
       <HiddenMenuButtons
-        rightSwipable={
-          <SquareButton
-            label={s.strings.string_cancel_cap}
-            color="danger"
-            onPress={_ => this.cancelRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payee_fio_address)}
-          />
-        }
+        rightSwipable={{
+          label: s.strings.string_cancel_cap,
+          color: 'danger',
+          onPress: _ => this.cancelRowConfirm(rowMap, rowObj.item.fio_request_id.toString(), rowObj.item, rowObj.item.payee_fio_address)
+        }}
       />
     )
   }
 
   render() {
+    const { theme } = this.props
     const { loadingPending, loadingSent, fullScreenLoader, fioRequestsPending, fioRequestsSent } = this.state
+    const styles = getStyles(theme)
 
     return (
       <SceneWrapper background="header">
         {fullScreenLoader && <FullScreenLoader indicatorStyles={styles.fullScreenLoader} />}
         <View style={styles.scene}>
           <View style={styles.row}>
-            <SettingsHeaderRow icon={<Image source={fioRequestsIcon} style={styles.iconImage} />} text={s.strings.fio_pending_requests} />
-            {!loadingPending && !fioRequestsPending.length ? (
-              <View style={styles.emptyListContainer}>
-                <T style={styles.text}>{s.strings.fio_no_requests_label}</T>
-              </View>
-            ) : null}
+            <UnderlinedHeader title={s.strings.fio_pending_requests} />
+            {!loadingPending && !fioRequestsPending.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
             <View style={styles.container}>
-              {loadingPending && <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="small" />}
+              {loadingPending && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
               <SwipeListView
                 useSectionList
                 sections={this.pendingRequestHeaders()}
@@ -564,23 +549,17 @@ export class FioRequestList extends React.Component<Props, LocalState> {
                 keyExtractor={this.listKeyExtractor}
                 renderHiddenItem={this.renderHiddenItem}
                 renderSectionHeader={this.headerRowUsingTitle}
-                rightOpenValue={THEME.rem(-HIDDEN_MENU_BUTTONS_WIDTH)}
+                rightOpenValue={theme.rem(-HIDDEN_MENU_BUTTONS_WIDTH)}
                 disableRightSwipe
               />
             </View>
           </View>
           <View style={styles.row}>
-            <SettingsHeaderRow icon={<IonIcon name="ios-send" color={THEME.COLORS.WHITE} size={this.headerIconSize} />} text={s.strings.fio_sent_requests} />
-            {!loadingSent && !fioRequestsSent.length ? (
-              <View style={styles.emptyListContainer}>
-                <T style={styles.text}>{s.strings.fio_no_requests_label}</T>
-              </View>
-            ) : null}
+            <UnderlinedHeader title={s.strings.fio_sent_requests} withTopMargin />
+            {!loadingSent && !fioRequestsSent.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
             <View style={styles.container}>
-              {loadingSent && <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="small" />}
+              {loadingSent && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
               <SwipeListView
-                style={styles.transactionsScrollWrap}
-                data={fioRequestsSent}
                 initialNumToRender={fioRequestsSent ? fioRequestsSent.length : 0}
                 onEndReachedThreshold={SCROLL_THRESHOLD}
                 useSectionList
@@ -589,7 +568,7 @@ export class FioRequestList extends React.Component<Props, LocalState> {
                 keyExtractor={item => item.fio_request_id.toString()}
                 renderHiddenItem={this.renderSentHiddenItem}
                 renderSectionHeader={this.headerRowUsingTitle}
-                rightOpenValue={THEME.rem(-HIDDEN_MENU_BUTTONS_WIDTH)}
+                rightOpenValue={theme.rem(-HIDDEN_MENU_BUTTONS_WIDTH)}
                 disableRightSwipe
               />
             </View>
@@ -600,19 +579,12 @@ export class FioRequestList extends React.Component<Props, LocalState> {
   }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   scene: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'stretch',
-    backgroundColor: THEME.COLORS.GRAY_4
-  },
-  requestsWrap: {
-    flex: 1
-  },
-  scrollView: {
-    flex: 1
+    alignItems: 'stretch'
   },
   container: {
     flex: 1,
@@ -621,49 +593,51 @@ const rawStyles = {
   row: {
     height: '50%'
   },
-  text: {
-    fontSize: scale(14),
-    fontWeight: 'normal'
-  },
-  transactionLogo: {
-    width: scale(44),
-    height: scale(44)
-  },
-  emptyListContainer: {
-    paddingVertical: scale(30),
-    paddingHorizontal: scale(20),
+  emptyListText: {
+    fontSize: theme.rem(0.75),
+    fontWeight: 'normal',
+    paddingVertical: theme.rem(1.75),
+    paddingHorizontal: theme.rem(1.25),
     opacity: 0.5
   },
-  iconImage: {
-    width: scale(22),
-    height: scale(22)
-  },
   fullScreenLoader: {
-    paddingBottom: scale(130)
+    paddingBottom: theme.rem(3.5)
   },
   loading: {
     flex: 1,
-    marginTop: scale(40),
+    marginTop: theme.rem(2.5),
     alignSelf: 'center'
   },
-
-  transactionsScrollWrap: {
-    flex: 1
-  },
   singleDateArea: {
-    backgroundColor: THEME.COLORS.GRAY_4,
-    flex: 3,
-    padding: scale(3),
-    paddingLeft: scale(15),
-    flexDirection: 'row',
-    paddingRight: scale(24)
-  },
-  leftDateArea: {
-    flex: 1
+    paddingVertical: theme.rem(0.5),
+    paddingLeft: theme.rem(1),
+    paddingRight: theme.rem(1.5)
   },
   formattedDate: {
-    color: THEME.COLORS.GRAY_2,
-    fontSize: scale(14)
+    color: theme.primaryText,
+    fontSize: theme.rem(0.75)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+const FioRequestListScene = connect(
+  (state: RootState) => {
+    const fioWallets = getFioWallets(state)
+    const wallets = getWallets(state)
+    const account = state.core.account
+
+    return {
+      state,
+      account,
+      wallets,
+      fioWallets,
+      currencyWallets: state.core.account.currencyWallets,
+      isConnected: state.network.isConnected
+    }
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    onSelectWallet: (walletId: string, currencyCode: string) => {
+      dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
+    }
+  })
+)(withTheme(FioRequestList))
+export { FioRequestListScene }

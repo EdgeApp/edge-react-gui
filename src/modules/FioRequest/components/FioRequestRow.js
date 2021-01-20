@@ -2,26 +2,25 @@
 
 import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
-import { Image, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { View } from 'react-native'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
-import fioRequestsIcon from '../../../assets/images/fio/fio_sent_request.png'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import { ClickableRow } from '../../../components/themed/ClickableRow'
+import { EdgeText } from '../../../components/themed/EdgeText'
 import { formatNumber, formatTime } from '../../../locales/intl.js'
 import s from '../../../locales/strings'
-import { THEME } from '../../../theme/variables/airbitz.js'
 import { type RootState } from '../../../types/reduxTypes'
 import type { FioRequest } from '../../../types/types'
-import { scale } from '../../../util/scaling.js'
 import { getFiatSymbol } from '../../../util/utils'
 import { getDisplayDenomination } from '../../Settings/selectors'
-import T from '../../UI/components/FormattedText/FormattedText.ui.js'
 import { getSelectedWallet } from '../../UI/selectors'
 import { isRejectedFioRequest, isSentFioRequest } from '../util'
 
 type OwnProps = {
   fioRequest: FioRequest,
   onSelect: FioRequest => void,
-  isLastOfDate?: boolean,
   isSent?: boolean
 }
 
@@ -31,12 +30,9 @@ type StateProps = {
   displayDenomination: EdgeDenomination
 }
 
-type Props = OwnProps & StateProps
+type Props = OwnProps & StateProps & ThemeProps
 
-class FioRequestRow extends React.Component<Props> {
-  underlayColor = THEME.COLORS.ROW_PRESSED
-  minimumFontScale = 0.6
-
+class FioRequestRow extends React.PureComponent<Props> {
   static defaultProps: OwnProps = {
     fioRequest: {
       fio_request_id: '',
@@ -54,7 +50,6 @@ class FioRequestRow extends React.Component<Props> {
       time_stamp: ''
     },
     onSelect: () => {},
-    isLastOfDate: false,
     isSent: false
   }
 
@@ -62,99 +57,110 @@ class FioRequestRow extends React.Component<Props> {
     this.props.onSelect(this.props.fioRequest)
   }
 
-  requestedTimeAndMemo = (time: Date, memo: string) => {
-    return (
-      <T ellipsizeMode="tail" numberOfLines={1} style={[styles.transactionPendingTime, styles.transactionTime]}>
-        {formatTime(time)}
-        {memo ? ` - ${memo}` : ''}
-      </T>
-    )
-  }
-
-  currencyField = (amount: string, status: string) => {
-    let fieldStyle = styles.transactionPartialConfirmation
-    if (status && isSentFioRequest(status)) {
-      fieldStyle = styles.transactionDetailsReceivedTx
-    }
-    if (status && isRejectedFioRequest(status)) {
-      fieldStyle = styles.transactionDetailsSentTx
-    }
-
-    const symbol = this.props.displayDenomination.symbol || ''
-
-    return (
-      <T style={fieldStyle}>
-        {symbol} {amount}
-      </T>
-    )
-  }
-
   requestedField = () => {
-    const { displayDenomination, fioRequest } = this.props
+    const { displayDenomination, fioRequest, theme } = this.props
+    const styles = getStyles(theme)
     const name = displayDenomination.name || fioRequest.content.token_code.toUpperCase()
-    return (
-      <T style={styles.transactionPendingTime}>
-        {s.strings.title_fio_requested} {name}
-      </T>
-    )
+    const value = `${s.strings.title_fio_requested} ${name}`
+
+    return <EdgeText style={styles.requestPendingTime}>{value}</EdgeText>
   }
 
   showStatus = (status: string) => {
-    let statusStyle = styles.transactionPartialConfirmation
+    const styles = getStyles(this.props.theme)
+
+    let statusStyle = styles.requestPartialConfirmation
     let label = s.strings.fragment_wallet_unconfirmed
     if (isSentFioRequest(status)) {
-      statusStyle = styles.transactionDetailsReceivedTx
+      statusStyle = styles.requestDetailsReceivedTx
       label = s.strings.fragment_transaction_list_receive_prefix
     }
     if (isRejectedFioRequest(status)) {
-      statusStyle = styles.transactionPending
+      statusStyle = styles.requestPending
       label = s.strings.fio_reject_status
     }
-    return <T style={[styles.transactionPendingTime, statusStyle]}>{label}</T>
+    return <EdgeText style={[styles.requestPendingTime, statusStyle]}>{label}</EdgeText>
   }
 
   render() {
-    const { fioRequest, isSent, isLastOfDate, displayDenomination } = this.props
+    const { fioRequest, isSent, displayDenomination, theme } = this.props
+    const styles = getStyles(theme)
     if (!displayDenomination) return null
 
+    const fiatValue = `${this.props.fiatSymbol} ${this.props.fiatAmount}`
+    const currencyValue = `${this.props.displayDenomination.symbol || ''} ${fioRequest.content.amount}`
+    const dateValue = `${formatTime(new Date(fioRequest.time_stamp))} ${fioRequest.content.memo ? `- ${fioRequest.content.memo}` : ''}`
     return (
-      <View key={fioRequest.fio_request_id.toString()} style={styles.singleTransactionWrap}>
-        <TouchableHighlight
-          onPress={this.onSelect}
-          underlayColor={this.underlayColor}
-          style={[styles.singleTransaction, { borderBottomWidth: isLastOfDate ? 0 : 1 }]}
-        >
-          <View style={styles.transactionInfoWrap}>
-            <View style={styles.transactionLeft}>
-              <View style={styles.transactionLeftLogoWrap}>
-                <Image style={styles.transactionLogo} source={fioRequestsIcon} />
-              </View>
-            </View>
+      <ClickableRow onPress={this.onSelect} highlight gradient>
+        <FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />
 
-            <View style={styles.transactionRight}>
-              <View style={[styles.transactionDetailsRow, fioRequest.content.memo ? styles.transactionDetailsRowMargin : null]}>
-                <T style={styles.transactionPartner} adjustsFontSizeToFit minimumFontScale={this.minimumFontScale}>
-                  {isSent ? fioRequest.payer_fio_address : fioRequest.payee_fio_address}
-                </T>
-                {this.currencyField(fioRequest.content.amount, isSent ? fioRequest.status : '')}
-              </View>
-              <View style={styles.transactionDetailsRow}>
-                {this.requestedTimeAndMemo(new Date(fioRequest.time_stamp), fioRequest.content.memo)}
-                <T style={styles.transactionFiat}>
-                  {this.props.fiatSymbol} {this.props.fiatAmount}
-                </T>
-              </View>
-              <View style={[styles.transactionDetailsRow, styles.transactionDetailsRowMargin]}>
-                {isSent ? this.showStatus(fioRequest.status) : this.requestedField()}
-              </View>
-            </View>
+        <View style={styles.requestRight}>
+          <View style={styles.requestDetailsRow}>
+            <EdgeText style={styles.name}>{isSent ? fioRequest.payer_fio_address : fioRequest.payee_fio_address}</EdgeText>
+            <EdgeText style={styles.requestAmount}>{currencyValue}</EdgeText>
           </View>
-        </TouchableHighlight>
-      </View>
+          <View style={styles.requestDetailsRow}>
+            <EdgeText ellipsizeMode="tail" numberOfLines={1} style={[styles.requestPendingTime, styles.requestTime]}>
+              {dateValue}
+            </EdgeText>
+            <EdgeText style={styles.requestFiat}>{fiatValue}</EdgeText>
+          </View>
+          <View style={styles.requestDetailsRow}>{isSent ? this.showStatus(fioRequest.status) : this.requestedField()}</View>
+        </View>
+      </ClickableRow>
     )
   }
 }
 const emptyDisplayDenomination = { name: '', multiplier: '0' }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  icon: {
+    marginRight: theme.rem(1),
+    color: theme.primaryText,
+    fontSize: theme.rem(1)
+  },
+  name: {
+    flex: 1,
+    fontSize: theme.rem(1),
+    color: theme.primaryText
+  },
+  requestRight: {
+    flex: 1
+  },
+  requestTime: {
+    color: theme.secondaryText
+  },
+  requestPending: {
+    color: theme.negativeText
+  },
+  requestAmount: {
+    color: theme.primaryText,
+    fontSize: theme.rem(1)
+  },
+  requestPartialConfirmation: {
+    color: theme.warningText
+  },
+  requestDetailsRow: {
+    flexDirection: 'row',
+    width: '100%',
+    paddingBottom: theme.rem(0.125)
+  },
+  requestDetailsReceivedTx: {
+    color: theme.textLink
+  },
+  requestDetailsSentTx: {
+    color: theme.negativeText
+  },
+  requestFiat: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
+  },
+  requestPendingTime: {
+    flex: 1,
+    fontSize: theme.rem(0.75),
+    color: theme.deactivatedText
+  }
+}))
 
 const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const { fioRequest } = ownProps
@@ -190,98 +196,4 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   return out
 }
 
-export const FioRequestRowConnector = connect(mapStateToProps, {})(FioRequestRow)
-
-const rawStyles = {
-  singleTransaction: {
-    height: scale(80),
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    padding: scale(15),
-    paddingRight: scale(15),
-    paddingLeft: scale(15)
-  },
-  singleTransactionWrap: {
-    backgroundColor: THEME.COLORS.WHITE,
-    flexDirection: 'column',
-    flex: 1
-  },
-  singleDateArea: {
-    backgroundColor: THEME.COLORS.GRAY_4,
-    flex: 3,
-    padding: scale(3),
-    paddingLeft: scale(15),
-    flexDirection: 'row',
-    paddingRight: scale(24)
-  },
-  leftDateArea: {
-    flex: 1
-  },
-  formattedDate: {
-    color: THEME.COLORS.GRAY_2,
-    fontSize: scale(14)
-  },
-
-  transactionInfoWrap: {
-    flex: 1,
-    flexDirection: 'row',
-    height: scale(40)
-  },
-  transactionLeft: {
-    flexDirection: 'row'
-  },
-  transactionLogo: {
-    width: scale(44),
-    height: scale(44),
-    borderRadius: scale(20),
-    marginRight: scale(10)
-  },
-  transactionLeftLogoWrap: {
-    justifyContent: 'center'
-  },
-  transactionPartner: {
-    flex: 1
-  },
-  transactionRight: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    flexDirection: 'column',
-    justifyContent: 'center'
-  },
-  transactionTime: {
-    color: THEME.COLORS.SECONDARY
-  },
-  transactionPending: {
-    color: THEME.COLORS.ACCENT_RED
-  },
-  transactionPartialConfirmation: {
-    color: THEME.COLORS.ACCENT_ORANGE
-  },
-  symbol: {
-    fontFamily: THEME.FONTS.SYMBOLS
-  },
-
-  transactionDetailsRow: {
-    flexDirection: 'row',
-    width: '100%'
-  },
-  transactionDetailsRowMargin: {
-    marginBottom: scale(2)
-  },
-  transactionDetailsReceivedTx: {
-    color: THEME.COLORS.TRANSACTION_LIST_RECEIVED_TX
-  },
-  transactionDetailsSentTx: {
-    color: THEME.COLORS.TRANSACTION_LIST_SENT_TX
-  },
-  transactionFiat: {
-    fontSize: 12,
-    color: THEME.COLORS.SECONDARY
-  },
-  transactionPendingTime: {
-    flex: 1,
-    fontSize: 12
-  }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+export const FioRequestRowConnector = connect(mapStateToProps, {})(withTheme(FioRequestRow))
