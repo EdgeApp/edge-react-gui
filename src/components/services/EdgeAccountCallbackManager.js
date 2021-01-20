@@ -1,9 +1,12 @@
 // @flow
 
 import type { EdgeAccount } from 'edge-core-js'
+import { watchSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
+import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
+import { SECURITY_ALERTS_SCENE } from '../../constants/SceneKeys.js'
 import { updateWalletsRequest } from '../../modules/Core/Wallets/action.js'
 import { updateExchangeRates } from '../../modules/ExchangeRates/action.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
@@ -63,6 +66,12 @@ class EdgeAccountCallbackManager extends React.Component<Props> {
         if (account.loggedIn === false) {
           Airship.clear()
           console.log('onLoggedOut')
+        }
+      }),
+
+      watchSecurityAlerts(account, hasAlerts => {
+        if (hasAlerts && Actions.currentScene !== SECURITY_ALERTS_SCENE) {
+          Actions.push(SECURITY_ALERTS_SCENE)
         }
       }),
 
