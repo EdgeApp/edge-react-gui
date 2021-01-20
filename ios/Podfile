@@ -19,4 +19,5 @@ target 'edge' do
 
   # Edge additions
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 end

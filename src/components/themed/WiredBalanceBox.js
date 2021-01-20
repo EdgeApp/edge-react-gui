@@ -9,6 +9,7 @@ import { type RootState } from '../../types/reduxTypes.js'
 import { getFiatSymbol } from '../../util/utils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
+import { ThemedTicker } from './ThemedTicker'
 import { UnderlinedHeader } from './UnderlinedHeader'
 
 type StateProps = {
@@ -28,7 +29,6 @@ type OwnProps = {
 }
 
 type Props = StateProps & OwnProps & ThemeProps
-
 class BalanceBox extends React.PureComponent<Props> {
   render() {
     const { isoFiatCurrencyCode, fiatAmount, showBalance, exchangeRates, theme } = this.props
@@ -51,9 +51,9 @@ class BalanceBox extends React.PureComponent<Props> {
           {showBalance && !noExchangeRates ? (
             <>
               <EdgeText style={styles.balanceHeader}>{s.strings.fragment_wallets_balance_text}</EdgeText>
-              <EdgeText style={styles.balanceBody}>
+              <ThemedTicker style={styles.balanceBody}>
                 {fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`}
-              </EdgeText>
+              </ThemedTicker>
             </>
           ) : (
             <EdgeText style={styles.showBalance}>{noExchangeRates ? s.strings.exchange_rates_loading : s.strings.string_show_balance}</EdgeText>

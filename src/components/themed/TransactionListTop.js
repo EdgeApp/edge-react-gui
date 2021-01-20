@@ -23,6 +23,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from './EdgeText.js'
 import { EdgeTextFieldOutlined } from './EdgeTextField.js'
 import { ButtonBox } from './ThemedButtons.js'
+import { ThemedTicker } from './ThemedTicker'
 import { UnderlinedHeader } from './UnderlinedHeader'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
@@ -128,8 +129,8 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
             <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>
               {isAccountBalanceVisible ? (
                 <>
-                  <EdgeText style={styles.balanceBoxCurrency}>{cryptoAmount + ' ' + denominationName}</EdgeText>
-                  <EdgeText style={styles.balanceFiatBalance}>{fiatSymbol + fiatBalance + ' ' + fiatCurrencyCode}</EdgeText>
+                  <ThemedTicker style={styles.balanceBoxCurrency}>{cryptoAmount + ' ' + denominationName}</ThemedTicker>
+                  <ThemedTicker style={styles.balanceFiatBalance}>{fiatSymbol + fiatBalance + ' ' + fiatCurrencyCode}</ThemedTicker>
                 </>
               ) : (
                 <EdgeText style={styles.balanceFiatShow}>{s.strings.string_show_balance}</EdgeText>
