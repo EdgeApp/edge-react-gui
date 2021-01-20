@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import * as React from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -326,7 +327,7 @@ export const TransactionListTop = connect(
     // Crypto Amount Formatting
     const currencyDenomination = getDenomination(selectedCurrencyCode, state.ui.settings)
     const cryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(balance) // convert to correct denomination
-    const cryptoAmountFormat = cryptoAmount ? intl.formatNumber(cryptoAmount.replace(/0+$/, '')) : '0' // only cut off trailing zeroes (to the right of significant figures)
+    const cryptoAmountFormat = cryptoAmount && !bns.eq(cryptoAmount, '0') ? intl.formatNumber(cryptoAmount.replace(/0+$/, '')) : '0' // only cut off trailing zeroes (to the right of significant figures)
 
     // Fiat Balance Formatting
     const defaultDenomination = getDefaultDenomination(selectedCurrencyCode, state.ui.settings)
