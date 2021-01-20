@@ -43,7 +43,7 @@ class TileComponent extends React.PureComponent<Props> {
     }
     return (
       <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
-        <>
+        <View>
           <View style={styles.container}>
             <View style={styles.content}>
               {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
@@ -63,7 +63,7 @@ class TileComponent extends React.PureComponent<Props> {
             )}
           </View>
           <View style={styles.divider} />
-        </>
+        </View>
       </TouchableWithoutFeedback>
     )
   }
