@@ -26,6 +26,13 @@ const title = {
 }
 
 class MenuTabComponent extends React.PureComponent<Props> {
+  handleOnPress = (route: string) => {
+    if (route === Constants.WALLET_LIST) {
+      return Actions.jump(Constants.WALLET_LIST_SCENE)
+    }
+    Actions.jump(route)
+  }
+
   render() {
     const { theme } = this.props
     const styles = getStyles(theme)
@@ -42,7 +49,7 @@ class MenuTabComponent extends React.PureComponent<Props> {
             [Constants.EXCHANGE]: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />
           }
           return (
-            <TouchableOpacity style={styles.content} key={element.key} onPress={() => Actions.jump(element.key)}>
+            <TouchableOpacity style={styles.content} key={element.key} onPress={() => this.handleOnPress(element.key)}>
               {icon[element.key]}
               <EdgeText style={{ ...styles.text, color: color }}>{title[element.key]}</EdgeText>
             </TouchableOpacity>
