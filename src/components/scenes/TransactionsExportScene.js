@@ -7,13 +7,11 @@ import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { connect } from 'react-redux'
-import { base64 } from 'rfc4648'
 
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import { utf8 } from '../../util/utf8.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { DateModal } from '../modals/DateModal.js'
 import { Airship, showActivity, showError } from '../services/AirshipInstance.js'
@@ -239,14 +237,25 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 
   async shareAndroid(title: string, file: File): Promise<void> {
-    const url = `data:${file.mimeType};base64,${base64.stringify(utf8.parse(file.contents))}`
-    await Share.open({
-      title,
-      message: '',
-      url,
-      filename: file.fileName,
-      subject: title
-    }).catch(error => console.log(error))
+    try {
+      const directory = RNFS.ExternalCachesDirectoryPath
+      const url = `file://${directory}/${file.fileName}`
+      await RNFS.writeFile(`${directory}/${file.fileName}`, file.contents, 'utf8')
+
+      await Share.open({
+        title,
+        message: '',
+        url,
+        filename: file.fileName,
+        subject: title
+      }).catch(error => {
+        console.log('Share error', error)
+        showError(error)
+      })
+    } catch (error) {
+      console.log('Error writing file to disk', error)
+      showError(error)
+    }
   }
 
   async shareIos(title: string, files: File[]): Promise<void> {
