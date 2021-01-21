@@ -234,11 +234,17 @@ exports[`Change Mining Fees should render with custom props 1`] = `
       </Text>
     </View>
     <PrimaryButton
+      disabled={true}
       onPress={[Function]}
       style={
-        Object {
-          "marginTop": 28,
-        }
+        Array [
+          Object {
+            "marginTop": 28,
+          },
+          Object {
+            "backgroundColor": "#87939E",
+          },
+        ]
       }
     >
       <Text>
@@ -436,11 +442,15 @@ exports[`Change Mining Fees should render with high props 1`] = `
       </View>
     </TouchableWithoutFeedback>
     <PrimaryButton
+      disabled={false}
       onPress={[Function]}
       style={
-        Object {
-          "marginTop": 28,
-        }
+        Array [
+          Object {
+            "marginTop": 28,
+          },
+          null,
+        ]
       }
     >
       <Text>
@@ -668,11 +678,15 @@ exports[`Change Mining Fees should render with low props 1`] = `
       </Text>
     </View>
     <PrimaryButton
+      disabled={false}
       onPress={[Function]}
       style={
-        Object {
-          "marginTop": 28,
-        }
+        Array [
+          Object {
+            "marginTop": 28,
+          },
+          null,
+        ]
       }
     >
       <Text>
@@ -870,11 +884,15 @@ exports[`Change Mining Fees should render with standard props 1`] = `
       </View>
     </TouchableWithoutFeedback>
     <PrimaryButton
+      disabled={false}
       onPress={[Function]}
       style={
-        Object {
-          "marginTop": 28,
-        }
+        Array [
+          Object {
+            "marginTop": 28,
+          },
+          null,
+        ]
       }
     >
       <Text>

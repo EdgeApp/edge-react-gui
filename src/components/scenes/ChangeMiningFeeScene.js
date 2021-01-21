@@ -70,8 +70,20 @@ export class ChangeMiningFee extends React.Component<Props, State> {
     Actions.pop()
   }
 
+  isValidFee(): boolean {
+    const { networkFeeOption, customNetworkFee } = this.state
+    if (networkFeeOption === 'custom') {
+      for (const key in customNetworkFee) {
+        const customFeeValue = Number(customNetworkFee[key])
+        if (customFeeValue < 1 || isNaN(customFeeValue)) return false
+      }
+    }
+    return true
+  }
+
   render() {
     const customFormat = this.getCustomFormat()
+    const isValidFee = this.isValidFee()
 
     return (
       <SceneWrapper background="body" hasTabs={false} avoidKeyboard>
@@ -82,7 +94,11 @@ export class ChangeMiningFee extends React.Component<Props, State> {
           {customFormat != null ? this.renderRadioRow('custom', s.strings.mining_fee_custom_label_choice) : null}
           {customFormat != null ? this.renderCustomFee(customFormat) : null}
           {this.renderFeeWarning()}
-          <PrimaryButton onPress={this.onSubmit} style={styles.saveButton}>
+          <PrimaryButton
+            disabled={!isValidFee}
+            onPress={this.onSubmit}
+            style={[styles.saveButton, isValidFee ? null : { backgroundColor: THEME.COLORS.GRAY_2 }]}
+          >
             <PrimaryButton.Text>{s.strings.save}</PrimaryButton.Text>
           </PrimaryButton>
         </ScrollView>
