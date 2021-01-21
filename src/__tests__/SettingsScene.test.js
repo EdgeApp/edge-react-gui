@@ -1,7 +1,7 @@
 // @flow
 /* globals describe it expect */
 
-import { type EdgeAccount } from 'edge-core-js'
+import { type EdgeAccount, type EdgeContext } from 'edge-core-js'
 import * as React from 'react'
 import renderer from 'react-test-renderer'
 
@@ -10,9 +10,12 @@ import { edgeDark } from '../theme/variables/edgeDark.js'
 
 const typeHack: any = {
   currencyConfig: {},
-  username: 'some user'
+  username: 'some user',
+  logSettings: { defaultLogLevel: 'info' },
+  watch() {}
 }
 const account: EdgeAccount = typeHack
+const context: EdgeContext = typeHack
 const nop: any = () => undefined
 
 describe('MyComponent', () => {
@@ -22,6 +25,7 @@ describe('MyComponent', () => {
         theme={edgeDark}
         // StateProps:
         account={account}
+        context={context}
         autoLogoutTimeInSeconds={600}
         defaultFiat="iso:USD"
         developerModeOn
@@ -52,6 +56,7 @@ describe('MyComponent', () => {
         theme={edgeDark}
         // StateProps:
         account={account}
+        context={context}
         autoLogoutTimeInSeconds={600}
         defaultFiat="iso:USD"
         developerModeOn

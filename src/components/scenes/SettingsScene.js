@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeAccount } from 'edge-core-js'
+import { type EdgeAccount, type EdgeContext, type EdgeLogType } from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Image, ScrollView } from 'react-native'
@@ -40,6 +40,7 @@ import { PrimaryButton } from '../themed/ThemedButtons.js'
 
 type StateProps = {
   account: EdgeAccount,
+  context: EdgeContext,
   autoLogoutTimeInSeconds: number,
   defaultFiat: string,
   developerModeOn: boolean,
@@ -62,21 +63,35 @@ type Props = StateProps & DispatchProps & ThemeProps
 
 type State = {
   touchIdText: string,
-  darkTheme: boolean
+  darkTheme: boolean,
+  defaultLogLevel: EdgeLogType | 'silent'
 }
 
 export class SettingsSceneComponent extends React.Component<Props, State> {
+  cleanups: Array<() => mixed> = []
+
   constructor(props: Props) {
     super(props)
     const theme = getTheme()
+    const { logSettings } = this.props.context
     this.state = {
       touchIdText: s.strings.settings_button_use_touchID,
-      darkTheme: theme === edgeDark
+      darkTheme: theme === edgeDark,
+      defaultLogLevel: logSettings.defaultLogLevel
     }
   }
 
   componentDidMount() {
     this.loadBiometryType().catch(showError)
+    this.cleanups = [
+      this.props.context.watch('logSettings', logSettings => {
+        this.setState({ defaultLogLevel: logSettings.defaultLogLevel })
+      })
+    ]
+  }
+
+  componentWillUnmount() {
+    for (const cleanup of this.cleanups) cleanup()
   }
 
   async loadBiometryType() {
@@ -144,6 +159,17 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
   onDeveloperPress = () => {
     this.props.toggleDeveloperMode(!this.props.developerModeOn)
+  }
+
+  handleVerboseLoggingPress = () => {
+    const defaultLogLevel = this.state.defaultLogLevel === 'info' ? 'warn' : 'info'
+    this.setState({ defaultLogLevel })
+    this.props.context
+      .changeLogSettings({
+        defaultLogLevel,
+        sources: {}
+      })
+      .catch(showError)
   }
 
   onDarkThemePress = () => {
@@ -239,6 +265,12 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           )}
           <SettingsRow onPress={this.props.showRestoreWalletsModal} text={s.strings.restore_wallets_modal_title} />
           <SettingsRow text={s.strings.title_terms_of_service} onPress={Actions[Constants.TERMS_OF_SERVICE]} right={rightArrow} />
+          <SettingsSwitchRow
+            key="verboseLogging"
+            text={s.strings.settings_verbose_logging}
+            value={this.state.defaultLogLevel === 'info'}
+            onPress={this.handleVerboseLoggingPress}
+          />
           <PrimaryButton onPress={this.props.showSendLogsModal} label={s.strings.settings_button_send_logs} marginRem={2} />
         </ScrollView>
       </SceneWrapper>
@@ -268,6 +300,7 @@ const getStyles = cacheStyles((theme: Theme) => {
 export const SettingsScene = connect(
   (state: RootState): StateProps => ({
     account: state.core.account,
+    context: state.core.context,
     autoLogoutTimeInSeconds: SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state),
     defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
     developerModeOn: state.ui.settings.developerModeOn,
