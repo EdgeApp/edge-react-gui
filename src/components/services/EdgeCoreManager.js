@@ -1,7 +1,7 @@
 // @flow
 
 import detectBundler from 'detect-bundler'
-import { type EdgeContext, type EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
+import { type EdgeContext, type EdgeContextOptions, type EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
 import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io.js'
 import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
@@ -26,10 +26,19 @@ type State = {
   counter: number
 }
 
-const contextOptions = {
+const contextOptions: EdgeContextOptions = {
   apiKey: ENV.AIRBITZ_API_KEY,
   appId: '',
   deviceDescription: `${getBrand()} ${getDeviceId()}`,
+
+  // Use this to adjust logging verbosity on a plugin-by-plugin basis:
+  logSettings: {
+    defaultLogLevel: 'warn',
+    sources: {
+      'edge-core': 'warn'
+    }
+  },
+
   plugins: allPlugins
 }
 
@@ -106,7 +115,7 @@ export class EdgeCoreManager extends React.PureComponent<Props, State> {
   }
 
   onFakeEdgeWorld = (world: EdgeFakeWorld) => {
-    world.makeEdgeContext(contextOptions).then(this.onContext, this.onError)
+    world.makeEdgeContext({ ...contextOptions }).then(this.onContext, this.onError)
   }
 
   renderCore() {
