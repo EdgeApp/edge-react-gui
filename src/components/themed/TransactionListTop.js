@@ -7,6 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
+import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import credLogo from '../../assets/images/cred_logo.png'
 import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
@@ -16,6 +17,8 @@ import s from '../../locales/strings.js'
 import { convertCurrency } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { convertNativeToDenomination, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
+import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { EdgeTextFieldOutlined } from './EdgeTextField.js'
@@ -28,7 +31,8 @@ type OwnProps = {
   isEmpty: boolean,
   searching: boolean,
   onChangeSortingState: (isSearching: boolean) => void,
-  onSearchTransaction: (searchString: string) => void
+  onSearchTransaction: (searchString: string) => void,
+  onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 
 export type StateProps = {
@@ -87,6 +91,14 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
     }
   }
 
+  handleOpenWalletListModal = () => {
+    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
+      if (walletId && currencyCode) {
+        this.props.onSelectWallet(walletId, currencyCode)
+      }
+    })
+  }
+
   renderBalanceBox = () => {
     const {
       cryptoAmount,
@@ -106,8 +118,11 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
       <View style={styles.balanceBoxContainer}>
         <View style={styles.balanceBoxRow}>
           <View style={styles.balanceBoxBalanceContainer}>
-            <View style={styles.balanceBoxWalletNameContainer}>
-              <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
+            <View style={styles.balanceBoxWalletNameCurrencyContainer}>
+              <TouchableOpacity style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
+                <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
+                <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+              </TouchableOpacity>
               <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} size={theme.rem(1.5)} />
             </View>
             <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>
@@ -233,11 +248,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
   balanceBoxBalanceContainer: {
     flex: 1
   },
-  balanceBoxWalletNameContainer: {
+  balanceBoxWalletNameCurrencyContainer: {
     flexDirection: 'row'
   },
-  balanceBoxWalletName: {
+  balanceBoxWalletNameContainer: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  balanceBoxWalletName: {
+    marginRight: theme.rem(0.25),
     fontSize: theme.rem(1.25)
   },
   balanceBoxCurrency: {
@@ -345,6 +365,7 @@ export const TransactionListTop = connect(
   (dispatch: Dispatch): DispatchProps => ({
     toggleBalanceVisibility() {
       dispatch(toggleAccountBalanceVisibility())
-    }
+    },
+    onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
   })
 )(withTheme(TransactionListTopComponent))
