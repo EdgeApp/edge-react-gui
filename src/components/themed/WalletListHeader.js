@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
@@ -23,9 +22,10 @@ import { EdgeTextFieldOutlined } from './EdgeTextField.js'
 type OwnProps = {
   sorting: boolean,
   searching: boolean,
+  searchText: string,
   openSortModal: () => void,
   onChangeSearchText: (search: string) => void,
-  toggleWalletSearching: (searching: boolean) => void
+  onChangeSearchingState: (searching: boolean) => void
 }
 
 type StateProps = {
@@ -38,19 +38,8 @@ type DispatchProps = {
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
-type State = {
-  input: string
-}
-
-class WalletListHeaderComponent extends React.PureComponent<Props, State> {
+class WalletListHeaderComponent extends React.PureComponent<Props> {
   textInput = React.createRef()
-
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      input: ''
-    }
-  }
 
   componentDidUpdate(prevProps: Props) {
     if (prevProps.searching === false && this.props.searching === true && this.textInput.current) {
@@ -61,25 +50,26 @@ class WalletListHeaderComponent extends React.PureComponent<Props, State> {
   handleOnChangeText = (input: string) => this.props.onChangeSearchText(input)
 
   handleTextFieldFocus = () => {
-    this.props.toggleWalletSearching(true)
+    this.props.onChangeSearchingState(true)
   }
 
-  disabledTextFieldFocus = () => {
+  handleSearchDone = () => {
     this.clearText()
-    this.props.toggleWalletSearching(false)
+    this.props.onChangeSearchingState(false)
+    if (this.textInput.current) {
+      this.textInput.current.clear()
+    }
   }
 
   clearText = () => {
-    this.setState({ input: '' })
-    // $FlowFixMe - react-native-material-textfield have many flow errors. Somehow needed cause material-textfield value is not functioning well
-    this.textInput.current.clear()
-    // $FlowFixMe
-    this.textInput.current.blur()
     this.props.onChangeSearchText('')
+    if (this.textInput.current) {
+      this.textInput.current.blur()
+    }
   }
 
   render() {
-    const { sorting, searching, theme } = this.props
+    const { sorting, searching, searchText, theme } = this.props
     const styles = getStyles(theme)
 
     return (
@@ -90,21 +80,18 @@ class WalletListHeaderComponent extends React.PureComponent<Props, State> {
               returnKeyType="search"
               label={s.strings.wallet_list_wallet_search}
               onChangeText={this.handleOnChangeText}
-              value={this.state.input}
+              value={searchText}
               onFocus={this.handleTextFieldFocus}
               ref={this.textInput}
+              isClearable={searching}
+              onClear={this.clearText}
               marginRem={0}
             />
           </View>
           {searching && (
-            <>
-              <TouchableOpacity onPress={this.clearText} style={styles.searchClearIcon}>
-                <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this.disabledTextFieldFocus} style={styles.searchDoneButton}>
-                <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
-              </TouchableOpacity>
-            </>
+            <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
+              <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
+            </TouchableOpacity>
           )}
         </View>
         {!searching && (
@@ -160,12 +147,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginHorizontal: theme.rem(1),
     height: theme.rem(4.5)
   },
-  searchClearIcon: {
-    position: 'absolute',
-    right: '22%',
-    top: theme.rem(1.5)
-  },
   searchDoneButton: {
+    height: theme.rem(3.5),
+    justifyContent: 'center',
     paddingLeft: theme.rem(0.75),
     paddingRight: 0,
     paddingBottom: theme.rem(0.5)

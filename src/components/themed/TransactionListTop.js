@@ -4,7 +4,6 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
@@ -28,7 +27,7 @@ type OwnProps = {
   walletId: string,
   isEmpty: boolean,
   searching: boolean,
-  toggleTransactionSearching: (isSearching: boolean) => void,
+  onChangeSortingState: (isSearching: boolean) => void,
   onSearchTransaction: (searchString: string) => void
 }
 
@@ -132,25 +131,27 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   handleTextFieldFocus = () => {
-    this.props.toggleTransactionSearching(true)
+    this.props.onChangeSortingState(true)
   }
 
   handleTextFieldBlur = () => {
     this.props.onSearchTransaction(this.state.input)
   }
 
-  disabledTextFieldFocus = () => {
+  handleSearchDone = () => {
     this.clearText()
-    this.props.toggleTransactionSearching(false)
+    this.props.onChangeSortingState(false)
+    if (this.textInput.current) {
+      this.textInput.current.clear()
+    }
   }
 
   clearText = () => {
     this.setState({ input: '' })
-    // $FlowFixMe - react-native-material-textfield have many flow errors. Somehow needed cause material-textfield value is not functioning well
-    this.textInput.current.clear()
-    // $FlowFixMe
-    this.textInput.current.blur()
     this.props.onSearchTransaction('')
+    if (this.textInput.current) {
+      this.textInput.current.blur()
+    }
   }
 
   render() {
@@ -171,18 +172,15 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
                   onFocus={this.handleTextFieldFocus}
                   onBlur={this.handleTextFieldBlur}
                   ref={this.textInput}
+                  isClearable={searching}
+                  onClear={this.clearText}
                   marginRem={0}
                 />
               </View>
               {searching && (
-                <>
-                  <TouchableOpacity onPress={this.clearText} style={styles.searchClearIcon}>
-                    <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={this.disabledTextFieldFocus} style={styles.searchDoneButton}>
-                    <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
-                  </TouchableOpacity>
-                </>
+                <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
+                  <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
+                </TouchableOpacity>
               )}
             </View>
           )}
@@ -303,12 +301,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginRight: theme.rem(1),
     height: theme.rem(4.5)
   },
-  searchClearIcon: {
-    position: 'absolute',
-    right: '22%',
-    top: theme.rem(1.5)
-  },
   searchDoneButton: {
+    height: theme.rem(3.5),
+    justifyContent: 'center',
     paddingLeft: theme.rem(0.75),
     paddingRight: 0,
     paddingBottom: theme.rem(0.5)
