@@ -21,49 +21,73 @@ type EdgeAccountCallbackManagerDispatchProps = {
 type Props = EdgeAccountCallbackManagerStateProps & EdgeAccountCallbackManagerDispatchProps
 
 class EdgeAccountCallbackManager extends React.Component<Props> {
+  cleanups: Array<() => mixed> = []
+  lastAccount: EdgeAccount | void
+
   render() {
     return null
   }
 
+  componentDidMount() {
+    this.subscribeToAccount()
+  }
+
   componentDidUpdate() {
-    if (this.props.account.id) this.subscribeToAccount()
+    this.subscribeToAccount()
+  }
+
+  componentWillUnmount() {
+    this.cleanup()
+  }
+
+  cleanup() {
+    for (const cleanup of this.cleanups) cleanup()
+    this.cleanups = []
   }
 
   subscribeToAccount = () => {
     const { account } = this.props
+    if (account === this.lastAccount) return
+    this.lastAccount = account
+    this.cleanup()
 
-    account.watch('currencyWallets', () => {
-      this.props.updateWalletsRequest()
-    })
+    // This could be a bogus account object:
+    if (account.watch == null) return
 
-    account.watch('loggedIn', () => {
-      if (account.loggedIn === false) {
-        Airship.clear()
-        console.log('onLoggedOut')
-      }
-    })
+    this.cleanups = [
+      account.watch('currencyWallets', () => {
+        this.props.updateWalletsRequest()
+      }),
 
-    account.exchangeCache.on('update', () => {
-      this.props.updateExchangeRates()
-    })
+      account.watch('loggedIn', () => {
+        if (account.loggedIn === false) {
+          Airship.clear()
+          console.log('onLoggedOut')
+        }
+      }),
 
-    // Not implemented yet
+      account.exchangeCache.on('update', () => {
+        this.props.updateExchangeRates()
+      })
 
-    // account.watch('otpDrift', () => {
-    //   console.log('otpDrift')
-    // })
+      // Not implemented yet
 
-    // account.watch('remoteOtpChanged', () => {
-    //   console.log('remoteOtpChanged')
-    // })
+      // account.watch('otpDrift', () => {
+      //   console.log('otpDrift')
+      // })
 
-    // account.watch('remotePasswordChanged', () => {
-    //   console.log('remotePasswordChanged')
-    // })
+      // account.watch('remoteOtpChanged', () => {
+      //   console.log('remoteOtpChanged')
+      // })
 
-    // account.watch('onDataChanged', () => {
-    //   console.log('onDataChanged')
-    // })
+      // account.watch('remotePasswordChanged', () => {
+      //   console.log('remotePasswordChanged')
+      // })
+
+      // account.watch('onDataChanged', () => {
+      //   console.log('onDataChanged')
+      // })
+    ]
   }
 }
 
