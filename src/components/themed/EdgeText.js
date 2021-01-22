@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Platform, StyleSheet, Text } from 'react-native'
+import { StyleSheet, Text } from 'react-native'
 
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
@@ -20,12 +20,8 @@ class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps> {
     if (typeof children === 'string' && children.includes('\n')) {
       numberOfLines = numberOfLines + (children.match(/\n/g) || []).length
     }
-    return Platform.OS === 'ios' ? (
+    return (
       <Text style={[text, style]} numberOfLines={numberOfLines} adjustsFontSizeToFit {...props}>
-        {children}
-      </Text>
-    ) : (
-      <Text style={[text, style]} numberOfLines={numberOfLines} ellipsizeMode={this.props.ellipsizeMode || 'middle'} {...props}>
         {children}
       </Text>
     )
