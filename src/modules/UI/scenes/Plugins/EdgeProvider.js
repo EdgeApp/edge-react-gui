@@ -319,7 +319,7 @@ export class EdgeProvider extends Bridgeable {
     const info: GuiMakeSpendInfo = {
       currencyCode,
       nativeAmount: result.nativeAmount,
-      publicAddress: result.publicAddress,
+      publicAddress: result.legacyAddress || result.publicAddress,
       customNetworkFee,
       metadata,
       lockInputs,
