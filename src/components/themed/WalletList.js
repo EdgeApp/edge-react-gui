@@ -73,6 +73,7 @@ class WalletListComponent extends React.PureComponent<Props> {
     if (this.props.walletsSort === 'name') {
       const { wallets } = this.props
       walletList.sort((itemA, itemB) => {
+        if (wallets[itemA.id] === undefined || wallets[itemB.id] === undefined) return 0
         return alphabeticalSort(wallets[itemA.id].name, wallets[itemB.id].name)
       })
     }
@@ -86,6 +87,7 @@ class WalletListComponent extends React.PureComponent<Props> {
     if (this.props.walletsSort === 'currencyName') {
       const { wallets } = this.props
       walletList.sort((itemA, itemB) => {
+        if (wallets[itemA.id] === undefined || wallets[itemB.id] === undefined) return 0
         const currencyNameA = wallets[itemA.id].currencyNames[getSortOptionsCurrencyCode(itemA.fullCurrencyCode || '')]
         const currencyNameB = wallets[itemB.id].currencyNames[getSortOptionsCurrencyCode(itemB.fullCurrencyCode || '')]
         return alphabeticalSort(currencyNameA, currencyNameB)
@@ -95,6 +97,7 @@ class WalletListComponent extends React.PureComponent<Props> {
     if (this.props.walletsSort === 'highest') {
       const { wallets } = this.props
       walletList.sort((itemA, itemB) => {
+        if (wallets[itemA.id] === undefined || wallets[itemB.id] === undefined) return 0
         return getFiatBalance(wallets[itemB.id], itemB.fullCurrencyCode || '') - getFiatBalance(wallets[itemA.id], itemA.fullCurrencyCode || '')
       })
     }
@@ -102,6 +105,7 @@ class WalletListComponent extends React.PureComponent<Props> {
     if (this.props.walletsSort === 'lowest') {
       const { wallets } = this.props
       walletList.sort((itemA, itemB) => {
+        if (wallets[itemA.id] === undefined || wallets[itemB.id] === undefined) return 0
         return getFiatBalance(wallets[itemA.id], itemA.fullCurrencyCode || '') - getFiatBalance(wallets[itemB.id], itemB.fullCurrencyCode || '')
       })
     }
