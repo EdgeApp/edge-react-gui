@@ -17,7 +17,6 @@ import type { CustomTokenInfo, FlatListItem, GuiWallet } from '../../types/types
 import {
   alphabeticalSort,
   checkFilterWallet,
-  convertNativeToDisplay,
   decimalOrZero,
   getDenomination,
   getFiatSymbol,
@@ -161,16 +160,11 @@ class WalletListComponent extends React.PureComponent<Props> {
     return this.sortWalletList(walletList)
   }
 
-  getCryptoAmount(balance: string, denomination: EdgeDenomination, isToken: boolean): string {
+  getCryptoAmount(balance: string, denomination: EdgeDenomination): string {
     const { showBalance } = this.props
-    if (isToken) {
-      const cryptoAmount = formatNumber(convertNativeToDisplay(denomination.multiplier)(balance) || '0') // check if infinitesimal (would display as zero), cut off trailing zeroes
-      return showBalance ? cryptoAmount : ''
-    } else {
-      const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), 6)
-      const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
-      return showBalance ? `${denomination.symbol || ''} ${finalCryptoAmount}` : ''
-    }
+    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), 6)
+    const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+    return showBalance ? `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}` : ''
   }
 
   renderRow = (data: FlatListItem<WalletListItem>, rowMap: { [string]: SwipeRow }) => {
@@ -190,7 +184,7 @@ class WalletListComponent extends React.PureComponent<Props> {
 
       // Crypto Amount And Exchange Rate
       const denomination = getDenomination(currencyCode, settings)
-      const cryptoAmount = this.getCryptoAmount(balance || '0', denomination, isToken)
+      const cryptoAmount = this.getCryptoAmount(balance || '0', denomination)
       const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
       const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
 
