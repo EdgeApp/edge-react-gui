@@ -143,6 +143,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
           primaryLogo={edgeLogo}
           primaryLogoCallback={this.props.showSendLogsModal}
           parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
+          skipSecurityAlerts
         />
       </View>
     ) : (
