@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { Image } from 'react-native'
+import { Image, View } from 'react-native'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import { connect } from 'react-redux'
 
@@ -51,12 +51,11 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
       width: size || theme.rem(2),
       height: size || theme.rem(2)
     }
-    if (!icon) {
-      return null
-    }
 
     let formattedProgress
-    if (progress < 5) {
+    if (!icon) {
+      formattedProgress = 0
+    } else if (progress < 5) {
       formattedProgress = 5
     } else if (progress > 95 && progress < 100) {
       formattedProgress = 95
@@ -73,7 +72,7 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
         backgroundColor={theme.walletProgressIconBackground}
         rotation={0}
       >
-        {() => <Image style={iconSize} source={{ uri: icon }} />}
+        {() => (icon ? <Image style={iconSize} source={{ uri: icon }} /> : <View style={iconSize} />)}
       </AnimatedCircularProgress>
     )
   }
