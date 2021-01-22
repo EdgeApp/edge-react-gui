@@ -202,5 +202,8 @@ export type Theme = {
   paymentTypeLogoUpi: string,
 
   fioAddressLogo: string,
-  walletListSlideTutorialImage: string
+  walletListSlideTutorialImage: string,
+
+  guiPluginLogoBitaccess: string,
+  guiPluginLogoMoonpay: string
 }

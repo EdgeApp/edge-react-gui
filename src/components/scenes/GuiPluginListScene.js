@@ -52,6 +52,11 @@ const paymentTypeLogosById = {
   upi: 'paymentTypeLogoUpi'
 }
 
+const pluginPartnerLogos = {
+  moonpay: 'guiPluginLogoMoonpay',
+  bitaccess: 'guiPluginLogoBitaccess'
+}
+
 type OwnProps = {
   direction?: 'buy' | 'sell'
 }
@@ -222,6 +227,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
     const styles = getStyles(this.props.theme)
+    const pluginPartnerLogo = pluginPartnerLogos[pluginId] ? theme[pluginPartnerLogos[pluginId]] : { uri: item.partnerIconPath }
 
     return (
       <View style={styles.pluginRowContainer}>
@@ -238,7 +244,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
           </View>
           <View style={styles.pluginRowPoweredByRow}>
             <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
-            <Image style={styles.partnerIconImage} source={{ uri: item.partnerIconPath }} />
+            <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
             <EdgeText style={styles.footerText}>{' ' + plugin.displayName}</EdgeText>
           </View>
         </TouchableOpacity>
@@ -364,6 +370,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   partnerIconImage: {
     aspectRatio: 1,
+    width: theme.rem(0.75),
     height: theme.rem(0.75)
   }
 }))

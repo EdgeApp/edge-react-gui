@@ -13,6 +13,8 @@ import godexLogo from '../../assets/images/exchange/settingsExchangeGodex.png'
 import sideshiftLogo from '../../assets/images/exchange/settingsExchangeSideShiftAI.png'
 import switchainLogo from '../../assets/images/exchange/settingsExchangeSwitchain.png'
 import totleLogo from '../../assets/images/exchange/settingsExchangeTotle.png'
+import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
+import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
 import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
 import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
 import paymentTypeLogoBankgirot from '../../assets/images/paymentTypes/paymentTypeLogoBankgirot.png'
@@ -267,5 +269,8 @@ export const edgeDark: Theme = {
   paymentTypeLogoUpi: paymentTypeLogoUpi,
 
   fioAddressLogo: fioAddressLogo,
-  walletListSlideTutorialImage: walletListSlidingTutorial
+  walletListSlideTutorialImage: walletListSlidingTutorial,
+
+  guiPluginLogoBitaccess: guiPluginLogoBitaccess,
+  guiPluginLogoMoonpay: guiPluginLogoMoonpay
 }
