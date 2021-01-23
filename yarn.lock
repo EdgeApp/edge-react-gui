@@ -11017,12 +11017,11 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-airship@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.2.tgz#fed7301f31894f969e099d8be136d513c933e369"
-  integrity sha512-XUkNTF5lkJqQW9is4lXpblg9oBCoOY5go7ENsDmwZNONdA1Kn4+g6cXVHCv1orr6RpD7MNoag2zvxyPf4sfJLw==
+react-native-airship@^0.2.2, react-native-airship@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.3.tgz#d027f4eeef7293d1cb171c751ee20997f36acbe6"
+  integrity sha512-ysJHiZtSYialYli5Jf1X5n5myT7W5hpdaU/zit0XFW7XBgTXcXp/rKEt6oDQD5UCG5lXxYn5kxt8HxoPwsgQoA==
   dependencies:
-    react-native-safe-area-view "^0.14.9"
     yavent "^0.1.1"
 
 react-native-animatable@^1.3.1:
@@ -11196,7 +11195,7 @@ react-native-safari-view@^2.1.0:
   resolved "https://registry.yarnpkg.com/react-native-safari-view/-/react-native-safari-view-2.1.0.tgz#1e0cd12c62bce79bc1759c7e281646b08b61c959"
   integrity sha1-HgzRLGK855vBdZx+KBZGsIthyVk=
 
-react-native-safe-area-view@0.11.0, react-native-safe-area-view@0.14.9, react-native-safe-area-view@^0.14.9:
+react-native-safe-area-view@0.11.0, react-native-safe-area-view@0.14.9:
   version "0.14.9"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.14.9.tgz#90ee8383037010d9a5055a97cf97e4c1da1f0c3d"
   integrity sha512-WII/ulhpVyL/qbYb7vydq7dJAfZRBcEhg4/UWt6F6nAKpLa3gAceMOxBxI914ppwSP/TdUsandFy6lkJQE0z4A==
