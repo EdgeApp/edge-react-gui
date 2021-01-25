@@ -42,7 +42,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: theme.rem(0.75)
+    paddingHorizontal: theme.rem(1)
   }
 }))
 
