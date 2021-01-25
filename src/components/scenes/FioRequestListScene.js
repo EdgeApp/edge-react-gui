@@ -16,6 +16,7 @@ import { addToFioAddressCache, cancelFioRequest, FIO_NO_BUNDLED_ERR_CODE } from 
 import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioRequest/components/FioRequestRow'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { getExchangeDenomination } from '../../modules/Settings/selectors'
+import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { getFioWallets, getWallets } from '../../modules/UI/selectors'
 import type { Dispatch } from '../../types/reduxTypes'
 import { type RootState } from '../../types/reduxTypes'
@@ -318,9 +319,9 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const styles = getStyles(this.props.theme)
     if (!sectionObj.section.title) return null
     return (
-      <View style={styles.singleDateArea}>
+      <Gradient style={styles.singleDateArea}>
         <EdgeText style={styles.formattedDate}>{sectionObj.section.title}</EdgeText>
-      </View>
+      </Gradient>
     )
   }
 
