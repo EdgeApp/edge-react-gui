@@ -89,7 +89,9 @@ function spacingStyles(margin: number | number[], theme: Theme) {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   outlinedTextFieldContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: theme.rem(4.5)
   },
   outlinedTextField: {
     flex: 1
@@ -98,11 +100,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'absolute',
     right: 0,
     paddingHorizontal: theme.rem(0.75),
-    height: theme.rem(3.5),
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingBottom: theme.rem(0.25) // This is needed because the OutlinedTextField also has innate padding/margin/height on the bottom
   }
 }))
-
 export const EdgeTextField = withTheme(EdgeTextFieldComponent)
 const EdgeTextFieldOutlinedInner = withTheme(EdgeTextFieldOutlinedComponent)
 // $FlowFixMe = forwardRef is not recognize by flow?
