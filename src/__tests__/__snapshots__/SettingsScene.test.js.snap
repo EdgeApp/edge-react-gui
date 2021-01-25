@@ -1297,6 +1297,80 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "justifyContent": "flex-start",
+                  "minHeight": 62,
+                  "padding": 22,
+                },
+                Object {
+                  "marginBottom": 1,
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                Object {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                }
+              }
+            >
+              Verbose Logging
+            </Text>
+            <View
+              style={
+                Object {
+                  "paddingLeft": 17,
+                }
+              }
+            >
+              <RCTSwitch
+                accessibilityRole="switch"
+                disabled={false}
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#66EDA8"
+                style={
+                  Array [
+                    Object {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    Object {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
+                }
+                tintColor="#87939E"
+                value={true}
+              />
+            </View>
+          </View>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             Object {
               "alignItems": "center",
@@ -2622,6 +2696,80 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               >
                 
               </Text>
+            </View>
+          </View>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "justifyContent": "flex-start",
+                  "minHeight": 62,
+                  "padding": 22,
+                },
+                Object {
+                  "marginBottom": 1,
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                Object {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                }
+              }
+            >
+              Verbose Logging
+            </Text>
+            <View
+              style={
+                Object {
+                  "paddingLeft": 17,
+                }
+              }
+            >
+              <RCTSwitch
+                accessibilityRole="switch"
+                disabled={false}
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#66EDA8"
+                style={
+                  Array [
+                    Object {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    Object {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
+                }
+                tintColor="#87939E"
+                value={true}
+              />
             </View>
           </View>
         </View>
