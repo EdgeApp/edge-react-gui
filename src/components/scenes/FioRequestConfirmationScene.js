@@ -36,7 +36,7 @@ type StateProps = {
   fioWallets: EdgeCurrencyWallet[],
   account: EdgeAccount,
   isConnected: boolean,
-  fioPlugin: EdgeCurrencyConfig,
+  fioPlugin: EdgeCurrencyConfig | null,
   walletId: string,
   currencyCode: string
 }
@@ -108,7 +108,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     const { walletAddresses, fioAddressFrom } = this.state
     const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
 
-    if (walletAddress) {
+    if (walletAddress && fioPlugin) {
       const { fioWallet } = walletAddress
       const val = bns.div(this.props.amounts.nativeAmount, this.props.primaryCurrencyInfo.exchangeDenomination.multiplier, 18)
       try {
@@ -211,7 +211,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       />
     ))
     if (fioAddressFrom === null) return
-    if (!(await fioPlugin.otherMethods.doesAccountExist(fioAddressFrom)))
+    if (fioPlugin && !(await fioPlugin.otherMethods.doesAccountExist(fioAddressFrom)))
       return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressFrom ? '\n' + fioAddressFrom : ''}`)
     if (!walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)) return showError(s.strings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
     if (fioAddressFrom === this.state.fioAddressTo) return showError(s.strings.fio_confirm_request_error_from_same)
@@ -234,7 +234,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       this.setState({ settingFioAddressTo: false })
       return
     }
-    if (!(await this.props.fioPlugin.otherMethods.doesAccountExist(fioAddressTo))) {
+    if (this.props.fioPlugin && !(await this.props.fioPlugin.otherMethods.doesAccountExist(fioAddressTo))) {
       this.setState({ settingFioAddressTo: false })
       return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
     }
@@ -320,7 +320,7 @@ const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
   const fioWallets: EdgeCurrencyWallet[] = UI_SELECTORS.getFioWallets(state)
   const { isConnected } = state.network
-  const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+  const fioPlugin = account && account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
 
   if (!guiWallet || !currencyCode) {
     return {

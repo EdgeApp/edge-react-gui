@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import { refreshReceiveAddressRequest } from '../../actions/WalletActions'
 import type { RequestDispatchProps, RequestLoadingProps, RequestStateProps } from '../../components/scenes/RequestScene'
 import { Request } from '../../components/scenes/RequestScene'
-import * as Constants from '../../constants/indexConstants'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
@@ -23,7 +22,6 @@ const mapStateToProps = (state: RootState): RequestStateProps | RequestLoadingPr
   const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
   const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
   const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
-  const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
 
   if (!guiWallet || !currencyCode) {
     return {
@@ -38,7 +36,6 @@ const mapStateToProps = (state: RootState): RequestStateProps | RequestLoadingPr
       publicAddress: '',
       legacyAddress: '',
       useLegacyAddress: null,
-      fioPlugin,
       fioAddressesExist: false,
       isConnected: state.network.isConnected
     }
@@ -79,7 +76,6 @@ const mapStateToProps = (state: RootState): RequestStateProps | RequestLoadingPr
     primaryCurrencyInfo,
     secondaryCurrencyInfo,
     useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
-    fioPlugin,
     fioAddressesExist,
     isConnected: state.network.isConnected
   }
