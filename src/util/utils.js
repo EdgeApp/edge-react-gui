@@ -614,10 +614,11 @@ export function getDefaultDenomination(currencyCode: string, settings: Object): 
   return settings[currencyCode].denominations.find(denomination => denomination.name === currencyCode)
 }
 
-export function checkFilterWallet(wallet: GuiWallet, currencyCodeString: string, filterText: string): boolean {
+export function checkFilterWallet(wallet: GuiWallet, currencyCodeString: string, filterText: string, customToken?: CustomTokenInfo): boolean {
   const walletName = wallet.name.replace(' ', '').toLowerCase()
   const currencyCode = currencyCodeString.toLowerCase()
-  const currencyName = wallet.currencyNames[currencyCodeString].toLowerCase()
+  const currencyNameString = customToken ? customToken.currencyName : wallet.currencyNames[currencyCodeString]
+  const currencyName = currencyNameString ? currencyNameString.toLowerCase() : '' // Added fallback if cannot find currency name on both guiWallet and customTokenInfo
   const filterString = filterText.toLowerCase()
   return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
 }
