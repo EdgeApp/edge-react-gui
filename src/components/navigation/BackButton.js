@@ -46,14 +46,14 @@ class BackButtonComponent extends React.PureComponent<Props & ThemeProps> {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingLeft: theme.rem(1)
   },
   backIconStyle: {
-    paddingLeft: theme.rem(0.5),
     paddingRight: theme.rem(0.25)
   },
   backIconAndroid: {
-    padding: theme.rem(1)
+    paddingRight: theme.rem(1)
   }
 }))
 
