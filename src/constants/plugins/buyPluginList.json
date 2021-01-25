@@ -525,8 +525,7 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH",
-      "XRP"
+      "ETH"
     ],
     "paymentTypeLogoKey": "credit"
   },
@@ -544,8 +543,7 @@
     ],
     "cryptoCodes": [
       "BTC",
-      "ETH",
-      "XRP"
+      "ETH"
     ],
     "paymentTypeLogoKey": "bank",
     "deepPath": "/buy/bank"

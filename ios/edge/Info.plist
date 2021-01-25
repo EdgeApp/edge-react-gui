@@ -63,6 +63,13 @@
 	<string>99999999</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>http</string>
+		<string>bankid</string>
+		<string>swish</string>
+	</array>
 	<key>NFCReaderUsageDescription</key>
 	<string>$(PRODUCT_NAME) does not use NFC.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
