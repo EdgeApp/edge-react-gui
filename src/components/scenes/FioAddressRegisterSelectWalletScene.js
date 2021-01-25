@@ -27,7 +27,7 @@ import { Tile } from '../themed/Tile'
 type StateProps = {
   state: RootState,
   wallets: { [string]: GuiWallet },
-  fioPlugin: EdgeCurrencyConfig,
+  fioPlugin: EdgeCurrencyConfig | null,
   fioWallets: EdgeCurrencyWallet[],
   fioDisplayDenomination: EdgeDenomination,
   defaultFiatCode: string,
@@ -74,19 +74,21 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
   getRegInfo = async () => {
     this.setState({ loading: true })
 
-    try {
-      const { activationCost, supportedCurrencies, paymentInfo } = await getRegInfo(
-        this.props.fioPlugin,
-        this.props.fioAddress,
-        this.props.selectedWallet,
-        this.props.selectedDomain,
-        this.props.fioDisplayDenomination,
-        this.props.isFallback
-      )
-      this.setState({ activationCost, supportedCurrencies, paymentInfo })
-    } catch (e) {
-      showError(e)
-      this.setState({ errorMessage: e.message })
+    if (this.props.fioPlugin) {
+      try {
+        const { activationCost, supportedCurrencies, paymentInfo } = await getRegInfo(
+          this.props.fioPlugin,
+          this.props.fioAddress,
+          this.props.selectedWallet,
+          this.props.selectedDomain,
+          this.props.fioDisplayDenomination,
+          this.props.isFallback
+        )
+        this.setState({ activationCost, supportedCurrencies, paymentInfo })
+      } catch (e) {
+        showError(e)
+        this.setState({ errorMessage: e.message })
+      }
     }
 
     this.setState({ loading: false })
@@ -269,7 +271,7 @@ const FioAddressRegisterSelectWalletScene = connect(
     const wallets = state.ui.wallets.byId
     const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
     const { account } = state.core
-    const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+    const fioPlugin = account && account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
     const fioDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, Constants.FIO_STR)
 
     const defaultFiatCode = SETTINGS_SELECTORS.getDefaultIsoFiat(state)

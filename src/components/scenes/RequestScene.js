@@ -2,7 +2,7 @@
 
 import Clipboard from '@react-native-community/clipboard'
 import { bns } from 'biggystring'
-import type { EdgeCurrencyConfig, EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
 import { ActivityIndicator, Dimensions, InputAccessoryView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
@@ -40,7 +40,6 @@ export type RequestStateProps = {
   legacyAddress: string,
   secondaryCurrencyInfo: GuiCurrencyInfo,
   useLegacyAddress: boolean,
-  fioPlugin: EdgeCurrencyConfig,
   fioAddressesExist: boolean,
   isConnected: boolean
 }
@@ -56,7 +55,6 @@ export type RequestLoadingProps = {
   legacyAddress: string,
   secondaryCurrencyInfo: null,
   useLegacyAddress: null,
-  fioPlugin: EdgeCurrencyConfig,
   fioAddressesExist: boolean,
   isConnected: boolean
 }
