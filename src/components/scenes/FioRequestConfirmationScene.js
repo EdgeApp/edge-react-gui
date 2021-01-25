@@ -276,16 +276,16 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
     return (
       <SceneWrapper background="theme">
-        <View style={styles.container}>
-          <Tile type="editable" title={s.strings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
-          <Tile
-            type="editable"
-            title={s.strings.fio_confirm_request_to}
-            body={settingFioAddressTo ? s.strings.resolving : fioAddressTo}
-            onPress={this.onAddressToPressed}
-          />
-          <Tile type="static" title={s.strings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
-          <Tile type="editable" title={s.strings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
+        <Tile type="editable" title={s.strings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
+        <Tile
+          type="editable"
+          title={s.strings.fio_confirm_request_to}
+          body={settingFioAddressTo ? s.strings.resolving : fioAddressTo}
+          onPress={this.onAddressToPressed}
+        />
+        <Tile type="static" title={s.strings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
+        <Tile type="editable" title={s.strings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
+        <View style={styles.sliderContainer}>
           {fioAddressFrom.length > 0 && fioAddressTo.length > 0 && showSlider ? (
             <Slider
               resetSlider={false}
@@ -303,10 +303,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
+  sliderContainer: {
     alignItems: 'center'
   },
   sliderStyle: {
