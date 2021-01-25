@@ -317,16 +317,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   searchContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: theme.rem(1),
-    height: theme.rem(4.5)
+    marginRight: theme.rem(1)
   },
   searchDoneButton: {
-    height: theme.rem(3.5),
     justifyContent: 'center',
+    height: theme.rem(4.5),
     paddingLeft: theme.rem(0.75),
-    paddingRight: 0,
-    paddingBottom: theme.rem(0.5)
+    paddingBottom: theme.rem(0.25)
   }
 }))
 
