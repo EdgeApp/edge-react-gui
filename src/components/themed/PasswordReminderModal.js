@@ -2,7 +2,7 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Platform, View } from 'react-native'
+import { Platform, ScrollView, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -12,6 +12,7 @@ import { CHANGE_PASSWORD } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { showToast } from '../services/AirshipInstance.js'
+import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeTextField } from './EdgeTextField.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from './ModalParts.js'
 import { PrimaryButton, SecondaryButton } from './ThemedButtons.js'
@@ -37,7 +38,7 @@ type State = {
   spinning: boolean
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class PasswordReminderModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -80,16 +81,17 @@ class PasswordReminderModalComponent extends React.PureComponent<Props, State> {
   handleChangeText = (password: string) => this.setState({ password })
 
   render() {
-    const { bridge } = this.props
+    const { bridge, theme } = this.props
     const { errorMessage, password, spinning } = this.state
 
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
         <ModalTitle>{s.strings.password_reminder_remember_your_password}</ModalTitle>
-        <ModalMessage>{s.strings.password_reminder_you_will_need_your_password}</ModalMessage>
-        <ModalMessage>{s.strings.password_reminder_enter_password_below}</ModalMessage>
+        <ScrollView style={{ maxHeight: theme.rem(6.75) }}>
+          <ModalMessage>{s.strings.password_reminder_you_will_need_your_password}</ModalMessage>
+          <ModalMessage>{s.strings.password_reminder_enter_password_below}</ModalMessage>
+        </ScrollView>
         <EdgeTextField
-          autoFocus
           secureTextEntry
           error={errorMessage}
           label={s.strings.password}
@@ -122,4 +124,4 @@ export const PasswordReminderModal = connect(
     onRequestChangePassword: () => dispatch(requestChangePassword()),
     onPostpone: () => dispatch(postponePasswordReminder())
   })
-)(PasswordReminderModalComponent)
+)(withTheme(PasswordReminderModalComponent))
