@@ -16,7 +16,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { trackConversion } from '../actions/TrackingActions.js'
-import { ThreeButtonSimpleConfirmationModal } from '../components/modals/ThreeButtonSimpleConfirmationModal.js'
+import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import { formatNumber } from '../locales/intl.js'
@@ -68,33 +68,30 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
   } catch (error) {
     Actions.popTo(Constants.EXCHANGE_SCENE)
     if (error.name === 'InsufficientFundsError' && error.currencyCode != null && fromCurrencyCode !== error.currencyCode) {
-      const createBuyExchangeModal = (currencyCode: string) => {
-        return Airship.show(bridge => (
-          <ThreeButtonSimpleConfirmationModal
-            bridge={bridge}
-            title={s.strings.buy_crypto_modal_title}
-            subTitle={sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}
-            cancelText={s.strings.buy_crypto_decline}
-            oneText={sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode)}
-            twoText={s.strings.buy_crypto_modal_exchange}
-          />
-        ))
+      const { currencyCode } = error
+      const result = await Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.buy_crypto_modal_title}
+          message={sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}
+          buttons={{
+            buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
+            exchange: { label: s.strings.buy_crypto_modal_exchange },
+            cancel: { label: s.strings.buy_crypto_decline, type: 'secondary' }
+          }}
+        />
+      ))
+      switch (result) {
+        case 'buy':
+          Actions.jump(Constants.PLUGIN_BUY)
+          return
+        case 'exchange':
+          dispatch({ type: 'SHIFT_COMPLETE' })
+          if (fromWallet != null) {
+            dispatch(selectWalletForExchange(fromWallet.id, error.currencyCode, 'to'))
+          }
+          break
       }
-      createBuyExchangeModal(error.currencyCode).then(result => {
-        switch (result) {
-          case 'one':
-            Actions.jump(Constants.PLUGIN_BUY)
-            return
-          case 'two':
-            dispatch({ type: 'SHIFT_COMPLETE' })
-            if (fromWallet != null) {
-              dispatch(selectWalletForExchange(fromWallet.id, error.currencyCode, 'to'))
-            }
-            break
-          default:
-            break
-        }
-      })
     }
     dispatch(processSwapQuoteError(error))
   }
