@@ -313,8 +313,8 @@ export function precisionAdjust(params: PrecisionAdjustParams): number {
   const order = Math.floor(Math.log(params.exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
   const exchangeRateOrderOfMagnitude = Math.pow(10, order)
 
-  // Get the exchange rate in pennies
-  const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), params.secondaryExchangeMultiplier)
+  // Get the exchange rate in tenth of pennies
+  const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), bns.mul(params.secondaryExchangeMultiplier, '10'))
 
   const precisionAdjust = bns.div(exchangeRateString, params.primaryExchangeMultiplier, DIVIDE_PRECISION)
 

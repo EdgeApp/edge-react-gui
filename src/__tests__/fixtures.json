@@ -8,8 +8,8 @@
         "exchangeSecondaryToPrimaryRatio": 32533.217120011082
       },
       "output": {
-        "precisionAdjustmentValue": 1,
-        "maxPrimaryCurrencyConversionDecimals": 7
+        "precisionAdjustmentValue": 0,
+        "maxPrimaryCurrencyConversionDecimals": 8
       }
     },
     "ETH for precision adjustment and max conversion decimal": {
@@ -20,8 +20,8 @@
         "exchangeSecondaryToPrimaryRatio": 1359.8708229894155
       },
       "output" : {
-        "precisionAdjustmentValue": 12,
-        "maxPrimaryCurrencyConversionDecimals": 6
+        "precisionAdjustmentValue": 11,
+        "maxPrimaryCurrencyConversionDecimals": 7
       }
     }
   }
