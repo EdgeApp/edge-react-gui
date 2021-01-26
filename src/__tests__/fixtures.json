@@ -1,0 +1,28 @@
+{
+  "precisionAdjust": {
+    "BTC for precision adjustment and max conversion decimal": {
+      "input": {
+        "displayDenominationMultiplier": "100000000",
+        "primaryExchangeMultiplier": "100000000",
+        "secondaryExchangeMultiplier": "100",
+        "exchangeSecondaryToPrimaryRatio": 32533.217120011082
+      },
+      "output": {
+        "precisionAdjustmentValue": 1,
+        "maxPrimaryCurrencyConversionDecimals": 7
+      }
+    },
+    "ETH for precision adjustment and max conversion decimal": {
+      "input": {
+        "displayDenominationMultiplier": "1000000000000000000",
+        "primaryExchangeMultiplier": "1000000000000000000",
+        "secondaryExchangeMultiplier": "100",
+        "exchangeSecondaryToPrimaryRatio": 1359.8708229894155
+      },
+      "output" : {
+        "precisionAdjustmentValue": 12,
+        "maxPrimaryCurrencyConversionDecimals": 6
+      }
+    }
+  }
+}

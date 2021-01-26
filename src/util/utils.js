@@ -632,3 +632,8 @@ export function alphabeticalSort(itemA: string, itemB: string): number {
     return 0
   }
 }
+
+export function maxPrimaryCurrencyConversionDecimals(primaryPrecision: number, precisionAdjustValue: number): number {
+  const newPrimaryPrecision = primaryPrecision - precisionAdjustValue
+  return newPrimaryPrecision >= 0 ? newPrimaryPrecision : 0
+}
