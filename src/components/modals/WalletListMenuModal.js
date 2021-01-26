@@ -107,13 +107,10 @@ class WalletListMenuModalComponent extends PureComponent<Props> {
     const { bridge, currencyCode, walletName, image, theme } = this.props
     const styles = getStyles(theme)
 
-    // We need to close the gap if both header rows are present:
-    const headerRowStyle = walletName != null && (image != null || currencyCode != null) ? [styles.headerRow, { marginTop: theme.rem(-1) }] : styles.headerRow
-
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
         {walletName == null ? null : <ModalTitle>{walletName}</ModalTitle>}
-        <View style={headerRowStyle}>
+        <View style={styles.headerRow}>
           {image == null ? null : <Image resizeMode="cover" source={{ uri: image }} style={styles.currencyImage} />}
           {currencyCode == null ? null : <ModalTitle>{currencyCode}</ModalTitle>}
         </View>
@@ -140,14 +137,14 @@ class WalletListMenuModalComponent extends PureComponent<Props> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   headerRow: {
-    alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'center'
+    alignItems: 'center'
   },
   currencyImage: {
     width: theme.rem(1),
     height: theme.rem(1),
-    padding: theme.rem(0.5)
+    padding: theme.rem(0.5),
+    marginLeft: theme.rem(0.5)
   },
   optionRow: {
     alignItems: 'center',
