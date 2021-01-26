@@ -12,7 +12,7 @@ import { Bridgeable, update } from 'yaob'
 
 import { trackAccountEvent, trackConversion } from '../../../../actions/TrackingActions.js'
 import { selectWallet } from '../../../../actions/WalletActions'
-import { TwoButtonSimpleConfirmationModal } from '../../../../components/modals/TwoButtonSimpleConfirmationModal.js'
+import { ButtonsModal } from '../../../../components/modals/ButtonsModal.js'
 import { type WalletListResult, WalletListModal } from '../../../../components/modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
 import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
@@ -222,15 +222,17 @@ export class EdgeProvider extends Bridgeable {
 
     // Prompt user with yes/no modal for permission
     const confirmTxShare = await Airship.show(bridge => (
-      <TwoButtonSimpleConfirmationModal
+      <ButtonsModal
         bridge={bridge}
         title={s.strings.fragment_wallets_export_transactions}
-        subTitle={sprintf(s.strings.transaction_history_permission, coreWallet.name)}
-        cancelText={s.strings.no}
-        doneText={s.strings.yes}
+        message={sprintf(s.strings.transaction_history_permission, coreWallet.name)}
+        buttons={{
+          ok: { label: s.strings.yes },
+          cancel: { label: s.strings.no, type: 'secondary' }
+        }}
       />
     ))
-    if (!confirmTxShare) {
+    if (confirmTxShare !== 'ok') {
       throw new Error('User denied permission')
     }
 
