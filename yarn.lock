@@ -5221,10 +5221,10 @@ edge-currency-accountbased@^0.7.42:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.9.9:
-  version "4.9.9"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.9.tgz#ad823f87698596728590c7bd80795b3466835647"
-  integrity sha512-DdQuS/GY/AbAVpOuPz7FhSBNRxaNYHwj6VUhsIZHtxlsVUEOKZ8r/TWe92W7qrfF7X+yVsgIhvvKvHinQw9Oag==
+edge-currency-bitcoin@^4.9.10:
+  version "4.9.10"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.10.tgz#a6ab08b8c60756718f87730f3bf8f39446c5aba3"
+  integrity sha512-7V13WQbqWGyuqp6BJh9OnRZoivg44XRSdvEMlH/ru4YzbRkHYnfmloWeisJyBrsqhX8veXHhbUT76wRPoaBhLA==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
