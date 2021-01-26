@@ -11,7 +11,7 @@ import s from '../../locales/strings'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
-import { getDenomination, getFiatSymbol } from '../../util/utils.js'
+import { getDisplayDenomination, getFiatSymbol } from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { TransactionRow } from './TransactionRow.js'
 
@@ -69,7 +69,7 @@ export const TransactionListRow = connect((state: RootState, ownProps: OwnProps)
   const { metadata } = transaction
   const guiWallet = state.ui.wallets.byId[walletId]
   const { fiatCurrencyCode } = guiWallet
-  const displayDenomination = getDenomination(currencyCode, state.ui.settings)
+  const displayDenomination = getDisplayDenomination(currencyCode, state.ui.settings)
 
   // Required Confirmations
   const { currencyWallets = {} } = state.core.account

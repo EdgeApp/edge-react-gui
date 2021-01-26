@@ -1,4 +1,21 @@
 {
+  "getDisplayDenomination": {
+    "title": "Display Denomination of",
+    "input": ["BTC", "ETH", "TKN"],
+    "output": [{
+      "multiplier": "100000000",
+      "name": "BTC",
+      "symbol": "₿"
+    }, {
+      "multiplier": "1000000000000000000",
+      "name": "ETH",
+      "symbol": "Ξ"
+    }, {
+      "multiplier": "10000000000000000000000000000000000000000000000000",
+      "name": "TKN",
+      "symbol": ""
+    }]
+  },
   "precisionAdjust": {
     "BTC for precision adjustment and max conversion decimal": {
       "input": {
@@ -24,5 +41,61 @@
         "maxPrimaryCurrencyConversionDecimals": 7
       }
     }
+  },
+  "settings": {
+    "BTC": {
+      "currencyCode": "BTC",
+      "denomination": "100000000",
+      "displayName": "Bitcoin",
+      "denominations": [{
+        "multiplier": "100000000",
+        "name": "BTC",
+        "symbol": "₿"
+      }, {
+        "multiplier": "100000",
+        "name": "mBTC",
+        "symbol": "m₿"
+      }, {
+        "multiplier": "100",
+        "name": "bits",
+        "symbol": "ƀ"
+      }, {
+        "multiplier": "1",
+        "name": "sats",
+        "symbol": "s"
+      }],
+      "symbolImage": "https://developer.airbitz.co/content/bitcoin-logo-solo-64.png",
+      "symbolImageDarkMono": "https://developer.airbitz.co/content/bitcoin-logo-solo-64.png"
+    },
+    "ETH": {
+      "currencyCode": "ETH",
+        "denomination": "1000000000000000000",
+        "denominations": [{
+          "multiplier": "1000000000000000000",
+          "name": "ETH",
+          "symbol": "Ξ"
+        }, {
+          "multiplier": "1000000000000000",
+          "name": "mETH",
+          "symbol": "mΞ"
+        }],
+        "displayName": "Ethereum",
+        "symbolImage": "https://developer.airbitz.co/content/ethereum-logo-solo-64.png",
+        "symbolImageDarkMono": "https://developer.airbitz.co/content/ethereum-logo-solo-64.png"
+    },
+    "customTokens": [{
+      "contractAddress": "0x0C658Fa2eAA292E8dcA085Dab0E5CBD2da21C494",
+      "currencyCode": "TKN",
+      "currencyName": "CustomToken",
+      "denomination": "10000000000000000000000000000000000000000000000000",
+      "denominations": [{
+        "multiplier": "10000000000000000000000000000000000000000000000000",
+        "name": "TKN",
+        "symbol": ""
+      }],
+      "isVisible": true,
+      "multiplier": "10000000000000000000000000000000000000000000000000",
+      "walletType": "wallet:ethereum"
+    }]
   }
 }

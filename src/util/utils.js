@@ -604,10 +604,31 @@ export function debounce(func: Function, wait: number, immediate: boolean): any 
   }
 }
 
-export function getDenomination(currencyCode: string, settings: Object): EdgeDenomination {
-  const denominationMultiplier = settings[currencyCode].denomination
-  const denomination = settings[currencyCode].denominations.find(denomination => denomination.multiplier === denominationMultiplier)
-  return denomination || emptyEdgeDenomination
+export function getCustomTokenDenomination(currencyCode: string, settings: Object) {
+  const customTokenCurrencyInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
+  return customTokenCurrencyInfo ? customTokenCurrencyInfo.denominations[0] : emptyEdgeDenomination
+}
+
+export function getDisplayDenomination(currencyCode: string, settings: Object): EdgeDenomination {
+  const currencyInfo = settings[currencyCode]
+  if (currencyInfo) {
+    const denominationMultiplier = currencyInfo.denomination
+    const denomination = currencyInfo.denominations.find(denomination => denomination.multiplier === denominationMultiplier)
+    return denomination || emptyEdgeDenomination
+  }
+  return getCustomTokenDenomination(currencyCode, settings)
+}
+
+export function getExchangeDenomination(guiWallet: GuiWallet, currencyCode: string, settings: Object): EdgeDenomination {
+  const currencyExchangeInfo = guiWallet.allDenominations[currencyCode]
+  if (currencyExchangeInfo) {
+    for (const key in currencyExchangeInfo) {
+      if (currencyExchangeInfo[key] && currencyExchangeInfo[key].name === currencyCode) {
+        return currencyExchangeInfo[key]
+      }
+    }
+  }
+  return getCustomTokenDenomination(currencyCode, settings)
 }
 
 export function getDefaultDenomination(currencyCode: string, settings: Object): EdgeDenomination {

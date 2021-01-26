@@ -10,6 +10,7 @@ import {
   convertNativeToDisplay,
   convertNativeToExchange,
   daysBetween,
+  getDisplayDenomination,
   getNewArrayWithItem,
   getNewArrayWithoutItem,
   getObjectDiff,
@@ -680,4 +681,15 @@ describe('precisionAdjust', function () {
       )
     })
   }
+})
+
+describe('getDisplayDenomination', function () {
+  const tests = fixtures.getDisplayDenomination
+  const { title, input, output } = tests
+
+  input.forEach((currency, index) => {
+    test(`${title} ${currency}`, function () {
+      expect(getDisplayDenomination(currency, fixtures.settings)).toMatchObject(output[index])
+    })
+  })
 })

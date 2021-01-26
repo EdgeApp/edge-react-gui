@@ -18,7 +18,7 @@ import {
   alphabeticalSort,
   checkFilterWallet,
   decimalOrZero,
-  getDenomination,
+  getDisplayDenomination,
   getFiatSymbol,
   getYesterdayDateRoundDownHour,
   truncateDecimals
@@ -188,7 +188,7 @@ class WalletListComponent extends React.PureComponent<Props> {
       const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
 
       // Crypto Amount And Exchange Rate
-      const denomination = getDenomination(currencyCode, settings)
+      const denomination = getDisplayDenomination(currencyCode, settings)
       const cryptoAmount = this.getCryptoAmount(balance || '0', denomination)
       const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
       const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
