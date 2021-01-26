@@ -5166,10 +5166,10 @@ edge-components@^0.0.31:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.21:
-  version "0.17.21"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.21.tgz#55e7d45b31d0159ac47e58276a0c466f53d650d0"
-  integrity sha512-fyrZulGZbShTvKhmQj3jCcatTYtIOfwtmCwF0wx7TNSRG3fnv2h+rYsAGrSaT32ENOe93rXeF8WNOppUY2AlYw==
+edge-core-js@^0.17.22:
+  version "0.17.22"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.22.tgz#eb742439aab5b579bc1a1f0e3d2815915f672416"
+  integrity sha512-F8p10+Ywxf968AwXLkjJswGbJ8EKPFT8v9jKw3ugafoHCqaJTR/CoPP7FPVomLb7UlzzBg1WOivIICzOe8yzAQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -9764,12 +9764,12 @@ node-fetch@1.6.3:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-fetch@2.6.0, node-fetch@^2.2.0, node-fetch@^2.6.0:
+node-fetch@2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
   integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
 
-node-fetch@2.6.1, node-fetch@^2.6.1:
+node-fetch@2.6.1, node-fetch@^2.2.0, node-fetch@^2.6.0, node-fetch@^2.6.1:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
   integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
