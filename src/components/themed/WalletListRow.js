@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Dimensions, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Platform, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { SwipeRow } from 'react-native-swipe-list-view'
 
@@ -159,7 +159,9 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
           {(isSwipingRight || swipeDirection === null) && (
             <View style={styles.swipeRowContainer}>
               <TouchableOpacity style={styles.swipeOptionsContainer} onPress={this.handleOpenWalletListMenuModal}>
-                <EdgeText style={styles.swipeOptionsIcon}>{WALLET_LIST_OPTIONS_ICON}</EdgeText>
+                <EdgeText style={styles.swipeOptionsIcon} adjustsFontSizeToFit={false}>
+                  {WALLET_LIST_OPTIONS_ICON}
+                </EdgeText>
               </TouchableOpacity>
               <TouchableOpacity style={styles.swipeRequestContainer} onPress={this.handleOpenRequest}>
                 <View style={styles.swipeButton}>
@@ -176,7 +178,9 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
                 </View>
               </TouchableOpacity>
               <TouchableOpacity style={styles.swipeOptionsContainer} onPress={this.handleOpenWalletListMenuModal}>
-                <EdgeText style={styles.swipeOptionsIcon}>{WALLET_LIST_OPTIONS_ICON}</EdgeText>
+                <EdgeText style={styles.swipeOptionsIcon} adjustsFontSizeToFit={false}>
+                  {WALLET_LIST_OPTIONS_ICON}
+                </EdgeText>
               </TouchableOpacity>
             </View>
           )}
@@ -289,6 +293,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     width: theme.rem(3.125),
+    paddingBottom: Platform.OS === 'ios' ? theme.rem(0.75) : theme.rem(1), // As the swipe options icon behaves like a text. This padding ensures the icon is centered vertically
     backgroundColor: theme.sliderTabMore
   },
   swipeOptionsIcon: {
