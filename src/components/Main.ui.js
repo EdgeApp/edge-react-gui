@@ -31,6 +31,7 @@ import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
 import { SendScene } from '../components/scenes/SendScene'
+import { SendScene as SendScene2 } from '../components/scenes/SendScene2.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
@@ -44,7 +45,7 @@ import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchang
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import Request from '../connectors/scenes/RequestConnector.js'
-import Scan from '../connectors/scenes/ScanConnector'
+// import Scan from '../connectors/scenes/ScanConnector'
 import SendConfirmation from '../connectors/scenes/SendConfirmationConnector.js'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
@@ -274,16 +275,11 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key={Constants.SCAN}
                 navTransparent
-                onEnter={props => {
-                  this.props.requestPermission('camera')
-                  this.props.dispatchEnableScan()
-                  this.props.checkAndShowGetCryptoModal(props.data)
-                }}
                 onExit={this.props.dispatchDisableScan}
-                component={ifLoggedIn(Scan)}
-                renderTitle={<HeaderTitle />}
+                component={ifLoggedIn(SendScene2)}
+                renderTitle={<HeaderTitle showWalletNameOnly />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-                renderRightButton={<SideMenuButton />}
+                renderRightButton={this.renderSendConfirmationButton()}
               />
 
               <Scene
