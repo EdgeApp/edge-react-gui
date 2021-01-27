@@ -8,6 +8,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import fioAddressLogo from '../../assets/images/fio/fio_logo.png'
+import { Fontello } from '../../assets/vector'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
@@ -98,8 +99,6 @@ class FioAddressList extends React.Component<Props> {
     }
 
     const noFioDomainsText = `${s.strings.no} ${s.strings.title_fio_domains}`
-    const regAddressText = `+ ${s.strings.fio_address_list_screen_button_register}`
-    const regDomainText = `+ ${s.strings.fio_address_list_domain_register}`
     return (
       <SceneWrapper background="theme">
         <ScrollView style={styles.row}>
@@ -135,10 +134,16 @@ class FioAddressList extends React.Component<Props> {
 
         <View>
           <ClickableText marginRem={[1, 1, 0]} onPress={Actions[Constants.FIO_ADDRESS_REGISTER]}>
-            <EdgeText style={styles.buttonText}>{regAddressText}</EdgeText>
+            <View style={styles.actionButton}>
+              <Fontello name="register-new-fio-icon" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
+              <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_screen_button_register}</EdgeText>
+            </View>
           </ClickableText>
           <ClickableText marginRem={[0, 1, 2, 1]} onPress={Actions[Constants.FIO_DOMAIN_REGISTER]}>
-            <EdgeText style={styles.buttonText}>{regDomainText}</EdgeText>
+            <View style={styles.actionButton}>
+              <Fontello name="register-custom-fio" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
+              <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_domain_register}</EdgeText>
+            </View>
           </ClickableText>
         </View>
       </SceneWrapper>
@@ -166,6 +171,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     padding: theme.rem(1)
   },
   buttonText: {
+    marginLeft: theme.rem(0.5),
     color: theme.textLink,
     textAlign: 'center'
   },
@@ -177,6 +183,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(1.5),
     marginRight: theme.rem(1),
     textAlign: 'center'
+  },
+  actionButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  actionIcon: {
+    marginTop: theme.rem(0.25)
   }
 }))
 
