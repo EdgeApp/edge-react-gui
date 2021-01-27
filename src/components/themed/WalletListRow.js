@@ -152,7 +152,7 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
         rightActivationValue={-FULL_WIDTH}
         onLeftActionStatusChange={this.handleOpenRequest}
         onRightActionStatusChange={this.handleOpenSend}
-        directionalDistanceChangeThreshold={0}
+        directionalDistanceChangeThreshold={5}
         useNativeDriver
       >
         <View style={styles.swipeContainer}>
