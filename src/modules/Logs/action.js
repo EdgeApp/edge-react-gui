@@ -18,7 +18,7 @@ export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: G
     userMessage: text,
     deviceInfo: `${getBrand()} ${getDeviceId()}`,
     appVersion: packageJson.version,
-    OS: `${Platform.OS} ${Platform.Version}`,
+    OS: Platform.OS,
     accounts: [],
     data: ''
   }
