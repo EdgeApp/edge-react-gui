@@ -278,7 +278,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'center'
   },
   selectAddressText: {
-    marginTop: theme.rem(0.75),
     color: theme.primaryText,
     fontSize: theme.rem(0.875)
   },
@@ -294,7 +293,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   textIconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: theme.rem(1.25)
+    height: theme.rem(2.5)
   }
 }))
 
