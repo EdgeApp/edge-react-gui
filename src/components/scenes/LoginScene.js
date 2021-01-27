@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 
 import ENV from '../../../env.json'
 import { showSendLogsModal } from '../../actions/SettingsActions'
-import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.jpg'
+import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.gif'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import s from '../../locales/strings.js'
 import { initializeAccount, logoutRequest } from '../../modules/Login/action.js'
