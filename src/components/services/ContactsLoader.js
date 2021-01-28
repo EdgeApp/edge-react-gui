@@ -182,6 +182,18 @@ const merchantPartners = [
     jobTitle: '',
     familyName: '',
     recordID: ''
+  },
+  {
+    givenName: 'SideShift.ai',
+    hasThumbnail: true,
+    thumbnailPath: 'https://developer.edge.app/content/sideshift-logo.png',
+    emailAddresses: [],
+    postalAddresses: [],
+    middleName: '',
+    company: '',
+    jobTitle: '',
+    familyName: '',
+    recordID: ''
   }
 ]
 

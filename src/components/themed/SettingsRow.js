@@ -42,7 +42,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
     // Layout:
     minHeight: theme.rem(2.75),
-    padding: theme.rem(0.75),
+    padding: theme.rem(1),
 
     // Children:
     alignItems: 'center',

@@ -1,5 +1,58 @@
 # edge-react-gui
 
+## 2.0.0 (2020-01-26)
+
+- New dark-themed components
+- Swipable wallets to quickly send, receive, and reveal settings
+- Added tutorial on new swipe actions
+- Android: Fix export transactions
+- Safello: Add BankId support
+- EOS: Fix account activation errors related to hyperion nodes
+- Deprecate WAX
+- Verbose logging setting to minimize noisy logs
+- logs before sending to logs server
+- Update partner descriptions
+- Update translations
+- Upgrade edge-core-js to v0.17.22
+  - Update EdgeCurrencyEngine to allow getFreshAddres, addGapLimitAddresses, and isAddressUsed to return promises
+  - Periodically perform a re-login to sync logged-in account credentials with the server
+  - Add an EdgeContextOptions.logSettings property to control logging verbosity, along with an EdgeContext.changeLogSettings method
+  - Deprecate the EdgeEncodeUri.legacyAddress and EdgeEncodeUri.segwitAddress parameters and just pass the address in EdgeEncodeUri.publicAddress, regardless of format
+  - Update the swap logging to give more information about failed quotes
+- Upgrade edge-currency-accountbased to v0.7.43
+  - EOS: Fix get_key_accounts endpoint and enforce 12 character rule on new account names
+  - Adjust log levels
+  - Update to eslint-config-standard-kit to v0.15.1
+  - Add WBTC
+  - Fix Aave token parameters
+- Upgrade edge-currency-bitcoin to v4.9.10
+  - Throw error when custom fee is below 1 sat/byte
+  - Add StratumError to carry the throwing server's URI
+  - Update to eslint-config-standard-kit to v0.15.1
+  - Adjust log levels
+  - Add parseUri tests
+- Upgrade edge-currency-monero to v0.2.9
+  - Add additional logging and context for logs
+  - Upgrade to eslint-config-standard-kit v0.15.1
+  - Add parseUri tests
+- Upgrade edge-exchange-plugins to v0.11.18
+  - Coingecko: Add AAVE tokens
+  - Coingecko: Fix rates[] initialization
+- Upgrade edge-login-ui-rn to v0.6.28
+  - Only fetch recovery questions if they exist
+  - Fix the OTP backup code modal crash
+  - Add a scroll view to the change password screen
+  - Expose the security alerts screen as a standalone component
+    - Add hasSecurityAlerts and watchSecurityAlerts helpers to determine when to show this screen
+    - Add a skipSecurityAlerts prop to the LoginScreen component, so the GUI can manage the alerts instead of the login UI
+  - Eliminate all legacy Disklet usage
+  - Expose the QR modal from the password login screen
+  - Update translations
+  - Fix a bug that could show the user redundant login approval requests
+  - Add helper text to pin login network errors
+  - Improve the password recovery error text
+  - Replace several old-style modals with themed modals
+
 ## 1.19.1 (2020-12-31)
 
 - Add new swap partner SideShift

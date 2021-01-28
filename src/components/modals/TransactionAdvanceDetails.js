@@ -1,11 +1,12 @@
 // @flow
 
 import React, { PureComponent } from 'react'
-import { Linking, Platform, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
 import s from '../../locales/strings.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 import { ModalCloseArrow } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { Tile } from '../themed/Tile.js'
@@ -85,7 +86,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
     if (networkFeeOption === 'custom') {
       return this.renderFees(styles, s.strings.mining_fee_custom_label_choice, requestedCustomFee)
     }
-    return <Text style={styles.text}>{networkFeeOption ? feeString[networkFeeOption] : s.strings.mining_fee_standard_label_choice}</Text>
+    return <EdgeText style={styles.text}>{networkFeeOption ? feeString[networkFeeOption] : s.strings.mining_fee_standard_label_choice}</EdgeText>
   }
 
   renderFees(styles: StyleSheet, title: string, fees: Object = {}) {
@@ -94,14 +95,14 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
       const feeString = localizedFeeText[feeKey] || feeKey
       feeRows.push(
         <View key={feeKey} style={styles.feesRow}>
-          <Text style={styles.feesRowText}>{feeString} </Text>
-          <Text style={styles.feesRowText}>{fees[feeKey]}</Text>
+          <EdgeText style={styles.feesRowText}>{feeString}</EdgeText>
+          <EdgeText style={styles.feesRowText}>{fees[feeKey]}</EdgeText>
         </View>
       )
     }
     return (
       <View style={styles.feesContainer}>
-        <Text style={styles.feesRowText}>{title}:</Text>
+        <EdgeText style={styles.feesRowText}>{title + ':'}</EdgeText>
         <View style={styles.feesBodyContainer}>{feeRows}</View>
       </View>
     )
@@ -114,7 +115,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCancel} paddingRem={0}>
         <View style={styles.headerContainer}>
-          <Text style={styles.headerText}>{s.strings.transaction_details_advance_details_header}</Text>
+          <EdgeText style={styles.headerText}>{s.strings.transaction_details_advance_details_header}</EdgeText>
         </View>
         <View style={styles.body}>
           <ScrollView>
@@ -189,6 +190,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   feesRowText: {
     color: theme.primaryText,
     fontSize: theme.rem(1)
+  },
+  rawBytesText: {
+    margin: theme.rem(0.25)
   }
 }))
 

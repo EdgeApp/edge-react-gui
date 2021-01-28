@@ -4,8 +4,8 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4278994026,
       4279050565,
+      4278994026,
     ]
   }
   endPoint={
@@ -60,7 +60,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               "flexDirection": "row",
               "justifyContent": "flex-start",
               "minHeight": 62,
-              "padding": 17,
+              "padding": 22,
             }
           }
         >
@@ -93,15 +93,24 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
+            adjustsFontSizeToFit={true}
+            numberOfLines={1}
             style={
-              Object {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "SourceSansPro-Black",
-                "fontSize": 22,
-                "textAlign": "left",
-              }
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                Object {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                },
+              ]
             }
           >
             Account: some user
@@ -123,11 +132,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -141,7 +150,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -195,11 +204,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -213,7 +222,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#87939E",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -267,11 +276,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -285,7 +294,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#87939E",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -339,11 +348,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -357,7 +366,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#87939E",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -410,11 +419,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             style={
               Object {
                 "alignItems": "center",
-                "backgroundColor": "#0E4B75",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
                 "flexDirection": "row",
                 "justifyContent": "flex-start",
                 "minHeight": 62,
-                "padding": 17,
+                "padding": 22,
               }
             }
           >
@@ -424,7 +433,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#87939E",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -470,7 +479,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               "flexDirection": "row",
               "justifyContent": "flex-start",
               "minHeight": 62,
-              "padding": 17,
+              "padding": 22,
             }
           }
         >
@@ -503,15 +512,24 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
+            adjustsFontSizeToFit={true}
+            numberOfLines={1}
             style={
-              Object {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "SourceSansPro-Black",
-                "fontSize": 22,
-                "textAlign": "left",
-              }
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                Object {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                },
+              ]
             }
           >
             Options
@@ -533,11 +551,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -551,7 +569,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -605,11 +623,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -623,7 +641,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -677,11 +695,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -695,7 +713,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -714,7 +732,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 style={
                   Object {
                     "color": "#66EDA8",
-                    "fontFamily": "SourceSansPro-Black",
+                    "fontFamily": "Quicksand-Regular",
                     "fontSize": 22,
                   }
                 }
@@ -740,11 +758,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -758,7 +776,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -777,7 +795,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 style={
                   Object {
                     "color": "#66EDA8",
-                    "fontFamily": "SourceSansPro-Black",
+                    "fontFamily": "Quicksand-Regular",
                     "fontSize": 22,
                   }
                 }
@@ -803,11 +821,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -821,7 +839,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -877,11 +895,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -895,7 +913,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -949,11 +967,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -967,7 +985,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -1021,11 +1039,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1039,7 +1057,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -1095,11 +1113,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1113,7 +1131,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -1169,11 +1187,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1187,7 +1205,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -1213,11 +1231,11 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1231,7 +1249,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -1279,6 +1297,80 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "justifyContent": "flex-start",
+                  "minHeight": 62,
+                  "padding": 22,
+                },
+                Object {
+                  "marginBottom": 1,
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                Object {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                }
+              }
+            >
+              Verbose Logging
+            </Text>
+            <View
+              style={
+                Object {
+                  "paddingLeft": 17,
+                }
+              }
+            >
+              <RCTSwitch
+                accessibilityRole="switch"
+                disabled={false}
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#66EDA8"
+                style={
+                  Array [
+                    Object {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    Object {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
+                }
+                tintColor="#87939E"
+                value={true}
+              />
+            </View>
+          </View>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             Object {
               "alignItems": "center",
@@ -1304,7 +1396,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             style={
               Object {
                 "color": "#0E4B75",
-                "fontFamily": "SourceSansPro-Black",
+                "fontFamily": "Quicksand-Medium",
                 "fontSize": 22,
                 "lineHeight": 45,
                 "marginHorizontal": 11,
@@ -1324,8 +1416,8 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
 <BVLinearGradient
   colors={
     Array [
-      4278994026,
       4279050565,
+      4278994026,
     ]
   }
   endPoint={
@@ -1380,7 +1472,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               "flexDirection": "row",
               "justifyContent": "flex-start",
               "minHeight": 62,
-              "padding": 17,
+              "padding": 22,
             }
           }
         >
@@ -1413,15 +1505,24 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
+            adjustsFontSizeToFit={true}
+            numberOfLines={1}
             style={
-              Object {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "SourceSansPro-Black",
-                "fontSize": 22,
-                "textAlign": "left",
-              }
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                Object {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                },
+              ]
             }
           >
             Account: some user
@@ -1443,11 +1544,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1461,7 +1562,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -1515,11 +1616,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1533,7 +1634,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -1587,11 +1688,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1605,7 +1706,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -1659,11 +1760,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1677,7 +1778,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -1730,11 +1831,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             style={
               Object {
                 "alignItems": "center",
-                "backgroundColor": "#0E4B75",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
                 "flexDirection": "row",
                 "justifyContent": "flex-start",
                 "minHeight": 62,
-                "padding": 17,
+                "padding": 22,
               }
             }
           >
@@ -1744,7 +1845,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -1790,7 +1891,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               "flexDirection": "row",
               "justifyContent": "flex-start",
               "minHeight": 62,
-              "padding": 17,
+              "padding": 22,
             }
           }
         >
@@ -1823,15 +1924,24 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
+            adjustsFontSizeToFit={true}
+            numberOfLines={1}
             style={
-              Object {
-                "color": "#FFFFFF",
-                "flexGrow": 1,
-                "flexShrink": 1,
-                "fontFamily": "SourceSansPro-Black",
-                "fontSize": 22,
-                "textAlign": "left",
-              }
+              Array [
+                Object {
+                  "color": "#FFFFFF",
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                },
+                Object {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Medium",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                },
+              ]
             }
           >
             Options
@@ -1853,11 +1963,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1871,7 +1981,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -1925,11 +2035,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -1943,7 +2053,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -1997,11 +2107,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2015,7 +2125,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -2034,7 +2144,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 style={
                   Object {
                     "color": "#66EDA8",
-                    "fontFamily": "SourceSansPro-Black",
+                    "fontFamily": "Quicksand-Regular",
                     "fontSize": 22,
                   }
                 }
@@ -2060,11 +2170,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2078,7 +2188,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -2097,7 +2207,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 style={
                   Object {
                     "color": "#66EDA8",
-                    "fontFamily": "SourceSansPro-Black",
+                    "fontFamily": "Quicksand-Regular",
                     "fontSize": 22,
                   }
                 }
@@ -2123,11 +2233,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2141,7 +2251,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -2197,11 +2307,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2215,7 +2325,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -2269,11 +2379,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2287,7 +2397,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -2341,11 +2451,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2359,7 +2469,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -2415,11 +2525,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2433,7 +2543,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -2489,11 +2599,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2507,7 +2617,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -2533,11 +2643,11 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               Array [
                 Object {
                   "alignItems": "center",
-                  "backgroundColor": "#0E4B75",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
                   "flexDirection": "row",
                   "justifyContent": "flex-start",
                   "minHeight": 62,
-                  "padding": 17,
+                  "padding": 22,
                 },
                 Object {
                   "marginBottom": 1,
@@ -2551,7 +2661,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                   "color": "#FFFFFF",
                   "flexGrow": 1,
                   "flexShrink": 1,
-                  "fontFamily": "SourceSansPro-Black",
+                  "fontFamily": "Quicksand-Regular",
                   "fontSize": 22,
                   "textAlign": "left",
                 }
@@ -2599,6 +2709,80 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           onResponderTerminate={[Function]}
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
+        >
+          <View
+            style={
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "backgroundColor": "rgba(255, 255, 255, 0)",
+                  "flexDirection": "row",
+                  "justifyContent": "flex-start",
+                  "minHeight": 62,
+                  "padding": 22,
+                },
+                Object {
+                  "marginBottom": 1,
+                },
+              ]
+            }
+          >
+            <Text
+              style={
+                Object {
+                  "color": "#FFFFFF",
+                  "flexGrow": 1,
+                  "flexShrink": 1,
+                  "fontFamily": "Quicksand-Regular",
+                  "fontSize": 22,
+                  "textAlign": "left",
+                }
+              }
+            >
+              Verbose Logging
+            </Text>
+            <View
+              style={
+                Object {
+                  "paddingLeft": 17,
+                }
+              }
+            >
+              <RCTSwitch
+                accessibilityRole="switch"
+                disabled={false}
+                onChange={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                onTintColor="#66EDA8"
+                style={
+                  Array [
+                    Object {
+                      "height": 31,
+                      "width": 51,
+                    },
+                    Object {
+                      "backgroundColor": "#87939E",
+                      "borderRadius": 16,
+                    },
+                  ]
+                }
+                tintColor="#87939E"
+                value={true}
+              />
+            </View>
+          </View>
+        </View>
+        <View
+          accessible={true}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             Object {
               "alignItems": "center",
@@ -2624,7 +2808,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             style={
               Object {
                 "color": "#0E4B75",
-                "fontFamily": "SourceSansPro-Black",
+                "fontFamily": "Quicksand-Medium",
                 "fontSize": 22,
                 "lineHeight": 45,
                 "marginHorizontal": 11,

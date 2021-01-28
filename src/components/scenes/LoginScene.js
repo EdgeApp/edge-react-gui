@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 
 import ENV from '../../../env.json'
 import { showSendLogsModal } from '../../actions/SettingsActions'
-import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.jpg'
+import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.gif'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import s from '../../locales/strings.js'
 import { initializeAccount, logoutRequest } from '../../modules/Login/action.js'
@@ -119,7 +119,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
     showHelpModal()
   }
 
-  onLogin = (error: Error | null | void, account: EdgeAccount | null | void, touchIdInfo: GuiTouchIdInfo | null | void) => {
+  onLogin = (error: Error | string | null | void, account: EdgeAccount | null | void, touchIdInfo: GuiTouchIdInfo | null | void) => {
     if (error != null) return
     this.setState({ passwordRecoveryKey: undefined })
     if (account != null) this.props.initializeAccount(account, touchIdInfo ?? dummyTouchIdInfo)
@@ -143,6 +143,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
           primaryLogo={edgeLogo}
           primaryLogoCallback={this.props.showSendLogsModal}
           parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
+          skipSecurityAlerts
         />
       </View>
     ) : (

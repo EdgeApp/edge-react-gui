@@ -13,6 +13,7 @@ import { type SetNativeAmountInfo, getQuoteForTransaction, selectWalletForExchan
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import CryptoExchangeMessageConnector from '../../connectors/components/CryptoExchangeMessageConnector'
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getSettings } from '../../modules/Settings/selectors.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
@@ -70,6 +71,8 @@ type State = {
   forceUpdateGuiCounter: number,
   toExchangeAmount: string
 }
+
+const disabledCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => !!SPECIAL_CURRENCY_INFO[code].keysOnlyMode)
 
 class CryptoExchangeComponent extends React.Component<Props, State> {
   fromAmountNative: string
@@ -250,6 +253,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
         bridge={bridge}
         headerTitle={whichWallet === 'to' ? s.strings.select_recv_wallet : s.strings.select_src_wallet}
         showCreateWallet={whichWallet === 'to'}
+        excludeCurrencyCodes={whichWallet === 'to' ? disabledCurrencyCodes : []}
       />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {

@@ -54,6 +54,10 @@ Edge is known to build with this exact tool set. Updated versions of these tools
     cd edge-react-gui
     yarn
 
+### Run the bundler
+    
+    yarn start
+
 ### XCode Setup - Use Legacy Build System
 
     Open edge-react-gui/ios/edge.xcworkspace in Xcode

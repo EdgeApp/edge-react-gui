@@ -1,9 +1,12 @@
 // @flow
 
 import type { EdgeAccount } from 'edge-core-js'
+import { watchSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
+import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
+import { SECURITY_ALERTS_SCENE } from '../../constants/SceneKeys.js'
 import { updateWalletsRequest } from '../../modules/Core/Wallets/action.js'
 import { updateExchangeRates } from '../../modules/ExchangeRates/action.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
@@ -21,49 +24,79 @@ type EdgeAccountCallbackManagerDispatchProps = {
 type Props = EdgeAccountCallbackManagerStateProps & EdgeAccountCallbackManagerDispatchProps
 
 class EdgeAccountCallbackManager extends React.Component<Props> {
+  cleanups: Array<() => mixed> = []
+  lastAccount: EdgeAccount | void
+
   render() {
     return null
   }
 
+  componentDidMount() {
+    this.subscribeToAccount()
+  }
+
   componentDidUpdate() {
-    if (this.props.account.id) this.subscribeToAccount()
+    this.subscribeToAccount()
+  }
+
+  componentWillUnmount() {
+    this.cleanup()
+  }
+
+  cleanup() {
+    for (const cleanup of this.cleanups) cleanup()
+    this.cleanups = []
   }
 
   subscribeToAccount = () => {
     const { account } = this.props
+    if (account === this.lastAccount) return
+    this.lastAccount = account
+    this.cleanup()
 
-    account.watch('currencyWallets', () => {
-      this.props.updateWalletsRequest()
-    })
+    // This could be a bogus account object:
+    if (account.watch == null) return
 
-    account.watch('loggedIn', () => {
-      if (account.loggedIn === false) {
-        Airship.clear()
-        console.log('onLoggedOut')
-      }
-    })
+    this.cleanups = [
+      account.watch('currencyWallets', () => {
+        this.props.updateWalletsRequest()
+      }),
 
-    account.exchangeCache.on('update', () => {
-      this.props.updateExchangeRates()
-    })
+      account.watch('loggedIn', () => {
+        if (account.loggedIn === false) {
+          Airship.clear()
+          console.log('onLoggedOut')
+        }
+      }),
 
-    // Not implemented yet
+      watchSecurityAlerts(account, hasAlerts => {
+        if (hasAlerts && Actions.currentScene !== SECURITY_ALERTS_SCENE) {
+          Actions.push(SECURITY_ALERTS_SCENE)
+        }
+      }),
 
-    // account.watch('otpDrift', () => {
-    //   console.log('otpDrift')
-    // })
+      account.exchangeCache.on('update', () => {
+        this.props.updateExchangeRates()
+      })
 
-    // account.watch('remoteOtpChanged', () => {
-    //   console.log('remoteOtpChanged')
-    // })
+      // Not implemented yet
 
-    // account.watch('remotePasswordChanged', () => {
-    //   console.log('remotePasswordChanged')
-    // })
+      // account.watch('otpDrift', () => {
+      //   console.log('otpDrift')
+      // })
 
-    // account.watch('onDataChanged', () => {
-    //   console.log('onDataChanged')
-    // })
+      // account.watch('remoteOtpChanged', () => {
+      //   console.log('remoteOtpChanged')
+      // })
+
+      // account.watch('remotePasswordChanged', () => {
+      //   console.log('remotePasswordChanged')
+      // })
+
+      // account.watch('onDataChanged', () => {
+      //   console.log('onDataChanged')
+      // })
+    ]
   }
 }
 

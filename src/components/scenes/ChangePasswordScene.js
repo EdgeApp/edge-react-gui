@@ -1,50 +1,41 @@
 // @flow
 
-import type { EdgeAccount, EdgeContext } from 'edge-core-js'
+import { type EdgeAccount, type EdgeContext } from 'edge-core-js'
 import { ChangePasswordScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
-import { THEME } from '../../theme/variables/airbitz'
+import { type RootState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
-export type ChangePasswordOwnProps = {
+type StateProps = {
   account: EdgeAccount,
   context: EdgeContext
 }
-
-export type ChangePasswordDispatchProps = {
+type DispatchProps = {
   onComplete: () => void
 }
+type Props = StateProps & DispatchProps
 
-export type ChangePasswordStateProps = {
-  context: EdgeContext,
-  account: EdgeAccount
-}
-
-type ChangePasswordComponent = ChangePasswordOwnProps & ChangePasswordDispatchProps & ChangePasswordStateProps
-
-export class ChangePassword extends React.Component<ChangePasswordComponent> {
-  onComplete = () => {
-    this.props.onComplete()
-  }
-
+class ChangePasswordComponent extends React.Component<Props> {
   render() {
+    const { context, account, onComplete } = this.props
+
     return (
       <SceneWrapper hasTabs={false} background="body">
-        <ScrollView keyboardShouldPersistTaps="always">
-          <ChangePasswordScreen
-            account={this.props.account}
-            context={this.props.context}
-            onComplete={this.onComplete}
-            onCancel={this.onComplete}
-            showHeader={false}
-          />
-          <View style={{ backgroundColor: THEME.COLORS.WHITE, height: 360 }} />
-        </ScrollView>
+        <ChangePasswordScreen account={account} context={context} onComplete={onComplete} onCancel={onComplete} showHeader={false} />
       </SceneWrapper>
     )
   }
 }
 
-export default ChangePassword
+export const ChangePasswordScene = connect(
+  (state: RootState): StateProps => ({
+    context: state.core.context,
+    account: state.core.account
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    onComplete: Actions.pop
+  })
+)(ChangePasswordComponent)

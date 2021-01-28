@@ -2,13 +2,13 @@
 
 import Clipboard from '@react-native-community/clipboard'
 import * as React from 'react'
-import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'
-import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
   body?: string,
@@ -16,8 +16,7 @@ type OwnProps = {
   error?: boolean,
   onPress?: () => void,
   title: string,
-  type: 'editable' | 'static' | 'touchable' | 'copy',
-  containerClass?: StyleSheet.Styles
+  type: 'editable' | 'static' | 'touchable' | 'copy' | 'loading'
 }
 type Props = OwnProps & ThemeProps
 
@@ -29,28 +28,41 @@ class TileComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { body, title, children, theme, type, error, containerClass } = this.props
+    const { body, title, children, theme, type, error } = this.props
     const styles = getStyles(theme)
     const onPress = type === 'copy' ? () => this.copy() : this.props.onPress
+    if (type === 'loading') {
+      return (
+        <View style={styles.container}>
+          <View style={styles.content}>
+            <EdgeText style={styles.textHeader}>{title}</EdgeText>
+            <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
+          </View>
+        </View>
+      )
+    }
     return (
       <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
-        <View style={[styles.container, containerClass]}>
-          <View style={styles.content}>
-            {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
-            {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
-            <Text style={error ? styles.textHeaderError : styles.textHeader}>{title}</Text>
-            {typeof body === 'string' && (
-              <Text style={styles.textBody} numberOfLines={3}>
-                {body}
-              </Text>
-            )}
-            {children}
-          </View>
-          {type === 'touchable' && (
-            <View style={styles.iconContainer}>
-              <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
+        <View>
+          <View style={styles.container}>
+            <View style={styles.content}>
+              {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
+              {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
+              <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
+              {typeof body === 'string' && (
+                <EdgeText style={styles.textBody} numberOfLines={3} adjustsFontSizeToFit={false}>
+                  {body}
+                </EdgeText>
+              )}
+              {children}
             </View>
-          )}
+            {type === 'touchable' && (
+              <View style={styles.iconContainer}>
+                <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
+              </View>
+            )}
+          </View>
+          <View style={styles.divider} />
         </View>
       </TouchableWithoutFeedback>
     )
@@ -59,10 +71,10 @@ class TileComponent extends React.PureComponent<Props> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    width: '100%',
     backgroundColor: theme.tileBackground,
-    marginBottom: theme.rem(0.125),
-    padding: theme.rem(0.5),
+    paddingHorizontal: theme.rem(1),
+    marginTop: theme.rem(1),
+    paddingBottom: theme.rem(1),
     flexDirection: 'row',
     alignItems: 'center'
   },
@@ -99,8 +111,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.iconTappable,
     width: theme.rem(0.75),
     height: theme.rem(0.75),
-    top: theme.rem(0.25),
+    top: theme.rem(0.5),
     right: theme.rem(0.25)
+  },
+  loader: {
+    marginTop: theme.rem(0.25)
+  },
+  divider: {
+    height: theme.thinLineWidth,
+    marginLeft: theme.rem(1),
+    borderBottomWidth: theme.thinLineWidth,
+    borderBottomColor: theme.lineDivider
   }
 }))
 

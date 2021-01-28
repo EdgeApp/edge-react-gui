@@ -28,7 +28,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 type StateProps = {
   state: RootState,
   wallets: { [string]: GuiWallet },
-  fioPlugin: EdgeCurrencyConfig,
+  fioPlugin: EdgeCurrencyConfig | null,
   fioWallets: EdgeCurrencyWallet[],
   fioDisplayDenomination: EdgeDenomination,
   defaultFiatCode: string,
@@ -68,16 +68,18 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   getRegInfo = async () => {
     this.setState({ loading: true })
 
-    try {
-      const { activationCost, supportedCurrencies, paymentInfo } = await getDomainRegInfo(
-        this.props.fioPlugin,
-        this.props.fioDomain,
-        this.props.selectedWallet,
-        this.props.fioDisplayDenomination
-      )
-      this.setState({ activationCost, supportedCurrencies, paymentInfo })
-    } catch (e) {
-      showError(e)
+    if (this.props.fioPlugin) {
+      try {
+        const { activationCost, supportedCurrencies, paymentInfo } = await getDomainRegInfo(
+          this.props.fioPlugin,
+          this.props.fioDomain,
+          this.props.selectedWallet,
+          this.props.fioDisplayDenomination
+        )
+        this.setState({ activationCost, supportedCurrencies, paymentInfo })
+      } catch (e) {
+        showError(e)
+      }
     }
 
     this.setState({ loading: false })
@@ -277,7 +279,7 @@ const FioDomainRegisterSelectWalletScene = connect(
     const wallets = state.ui.wallets.byId
     const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
     const { account } = state.core
-    const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+    const fioPlugin = account && account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
     const fioDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, Constants.FIO_STR)
 
     const defaultFiatCode = SETTINGS_SELECTORS.getDefaultIsoFiat(state)

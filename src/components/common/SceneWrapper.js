@@ -13,7 +13,6 @@ type BackgroundOptions =
   | 'header' // Dark header area covers the screen
   | 'body' // Seprate dark header and white content areas
   | 'none' // Do not render any background elements
-  | 'drawer' // Reverse gradient for the drawer
 
 type Props = {
   // The children can either be normal React elements,
@@ -103,7 +102,7 @@ export class SceneWrapper extends React.Component<Props> {
       return <Gradient style={styles.gradient}>{scene}</Gradient>
     }
     return (
-      <Gradient reverse={background === 'drawer'} style={styles.gradient}>
+      <Gradient style={styles.gradient}>
         {background === 'body' && <View style={[styles.body, { top: gap.top + bodySplit }]} />}
         {scene}
       </Gradient>

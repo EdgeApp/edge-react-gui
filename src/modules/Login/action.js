@@ -1,6 +1,7 @@
 // @flow
 
 import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js/types'
+import { hasSecurityAlerts } from 'edge-login-ui-rn'
 import { getCurrencies } from 'react-native-localize'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
@@ -10,6 +11,7 @@ import { trackAccountEvent } from '../../actions/TrackingActions.js'
 import { checkEnabledTokensArray, getEnabledTokens, setWalletEnabledTokens } from '../../actions/WalletActions.js'
 import { showError } from '../../components/services/AirshipInstance.js'
 import * as Constants from '../../constants/indexConstants'
+import { SECURITY_ALERTS_SCENE } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo, type GuiTouchIdInfo } from '../../types/types.js'
@@ -49,7 +51,11 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, cur
 
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'LOGIN', data: account })
+
   Actions[Constants.EDGE]()
+  if (hasSecurityAlerts(account)) {
+    Actions.push(SECURITY_ALERTS_SCENE)
+  }
 
   const state = getState()
   const { context } = state.core

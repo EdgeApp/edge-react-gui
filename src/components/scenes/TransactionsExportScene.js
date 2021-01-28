@@ -7,13 +7,11 @@ import RNFS from 'react-native-fs'
 import Share from 'react-native-share'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { connect } from 'react-redux'
-import { base64 } from 'rfc4648'
 
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import { utf8 } from '../../util/utf8.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { DateModal } from '../modals/DateModal.js'
 import { Airship, showActivity, showError } from '../services/AirshipInstance.js'
@@ -53,8 +51,10 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   constructor(props: Props) {
     super(props)
     const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1))
+    let lastYear = 0
+    if (lastMonth.getMonth() === 11) lastYear = 1 // Decrease year by 1 if previous month was December
     this.state = {
-      startDate: new Date(new Date().getFullYear(), lastMonth.getMonth(), 1, 0, 0, 0),
+      startDate: new Date(new Date().getFullYear() - lastYear, lastMonth.getMonth(), 1, 0, 0, 0),
       endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0),
       isExportQbo: false,
       isExportCsv: true
@@ -70,8 +70,10 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
   setLastMonth = () => {
     const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1))
+    let lastYear = 0
+    if (lastMonth.getMonth() === 11) lastYear = 1 // Decrease year by 1 if previous month was December
     this.setState({
-      startDate: new Date(new Date().getFullYear(), lastMonth.getMonth(), 1, 0, 0, 0),
+      startDate: new Date(new Date().getFullYear() - lastYear, lastMonth.getMonth(), 1, 0, 0, 0),
       endDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1, 0, 0, 0)
     })
   }
@@ -210,7 +212,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     if (isExportCsv) {
       files.push({
         contents: csvFile,
-        mimeType: 'text/csv',
+        mimeType: 'text/comma-separated-values',
         fileName: fileName + '.csv'
       })
       formats.push('CSV')
@@ -235,14 +237,25 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 
   async shareAndroid(title: string, file: File): Promise<void> {
-    const url = `data:${file.mimeType};base64,${base64.stringify(utf8.parse(file.contents))}`
-    await Share.open({
-      title,
-      message: '',
-      url,
-      filename: file.fileName,
-      subject: title
-    }).catch(error => console.log(error))
+    try {
+      const directory = RNFS.ExternalCachesDirectoryPath
+      const url = `file://${directory}/${file.fileName}`
+      await RNFS.writeFile(`${directory}/${file.fileName}`, file.contents, 'utf8')
+
+      await Share.open({
+        title,
+        message: '',
+        url,
+        filename: file.fileName,
+        subject: title
+      }).catch(error => {
+        console.log('Share error', error)
+        showError(error)
+      })
+    } catch (error) {
+      console.log('Error writing file to disk', error)
+      showError(error)
+    }
   }
 
   async shareIos(title: string, files: File[]): Promise<void> {
@@ -256,7 +269,6 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
     await Share.open({
       title,
-      message: '',
       urls,
       subject: title
     }).catch(error => console.log(error))

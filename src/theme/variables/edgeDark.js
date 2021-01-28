@@ -2,6 +2,7 @@
 
 import { Platform } from 'react-native'
 
+import fioAddressLogo from '../../assets/images/details_fioAddress.png'
 import changellyLogo from '../../assets/images/exchange/settingsExchangeChangelly.png'
 import changenowLogo from '../../assets/images/exchange/settingsExchangeChangenow.png'
 import coinswitchLogo from '../../assets/images/exchange/settingsExchangeCoinswitch.png'
@@ -12,6 +13,26 @@ import godexLogo from '../../assets/images/exchange/settingsExchangeGodex.png'
 import sideshiftLogo from '../../assets/images/exchange/settingsExchangeSideShiftAI.png'
 import switchainLogo from '../../assets/images/exchange/settingsExchangeSwitchain.png'
 import totleLogo from '../../assets/images/exchange/settingsExchangeTotle.png'
+import guiPluginLogoBitaccess from '../../assets/images/guiPlugins/guiPluginLogoBitaccessDark.png'
+import guiPluginLogoMoonpay from '../../assets/images/guiPlugins/guiPluginLogoMoonpayDark.png'
+import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTypeLogoApplePay.png'
+import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
+import paymentTypeLogoBankgirot from '../../assets/images/paymentTypes/paymentTypeLogoBankgirot.png'
+import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymentTypeLogoBankTransfer.png'
+import paymentTypeLogoBpay from '../../assets/images/paymentTypes/paymentTypeLogoBpay.png'
+import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLogoCash.png'
+import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
+import paymentTypeLogoDebitCard from '../../assets/images/paymentTypes/paymentTypeLogoDebitCard.png'
+import paymentTypeLogoFasterPayments from '../../assets/images/paymentTypes/paymentTypeLogoFasterPayments.png'
+import paymentTypeLogoGiftCard from '../../assets/images/paymentTypes/paymentTypeLogoGiftCard.png'
+import paymentTypeLogoIdeal from '../../assets/images/paymentTypes/paymentTypeLogoIdeal.png'
+import paymentTypeLogoNewsagent from '../../assets/images/paymentTypes/paymentTypeLogoNewsagent.png'
+import paymentTypeLogoPayid from '../../assets/images/paymentTypes/paymentTypeLogoPayid.png'
+import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLogoPoli.png'
+import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
+import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
+import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
+import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_dark.gif'
 import { type Theme } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
 
@@ -38,11 +59,20 @@ const palette = {
   blackOp50: 'rgba(0, 0, 0, .5)',
 
   whiteOp10: 'rgba(255, 255, 255, .1)',
+  whiteOp75: 'rgba(255, 255, 255, .75)',
 
   grayOp80: 'rgba(135, 147, 158, .8)',
   accentOrangeOp30: 'rgba(241, 170, 25, .3)',
   lightGrayOp75: 'rgba(217, 227, 237, .75)',
-  transparent: 'rgba(255, 255, 255, 0)'
+  transparent: 'rgba(255, 255, 255, 0)',
+
+  // Fonts
+  SFUITextRegular: 'SF-UI-Text-Regular',
+  QuicksandLight: 'Quicksand-Light',
+  QuicksandRegular: 'Quicksand-Regular',
+  QuicksandMedium: 'Quicksand-Medium',
+  QuicksandSemiBold: 'Quicksand-SemiBold',
+  QuicksandBold: 'Quicksand-Bold'
 }
 
 export const edgeDark: Theme = {
@@ -54,10 +84,13 @@ export const edgeDark: Theme = {
   icon: palette.white,
   iconTappable: palette.edgeMint,
   warningIcon: palette.accentOrange,
+  iconLoadingOverlay: palette.whiteOp75,
+  transactionListIconBackground: palette.darkBlue,
+  buySellCustomPluginModalIcon: palette.darkBlue,
 
   // Background
-  backgroundGradientLeft: palette.darkBlue,
-  backgroundGradientRight: palette.edgeNavy,
+  backgroundGradientLeft: palette.edgeNavy,
+  backgroundGradientRight: palette.darkBlue,
 
   // Modal
   modal: palette.royalBlue,
@@ -68,9 +101,13 @@ export const edgeDark: Theme = {
 
   // Tile
   // listHeaderBackground: palette.edgeNavy,
-  tileBackground: palette.edgeBlue,
-  // tileBackgroundMuted: palette.mutedBlue,
+  tileBackground: palette.transparent,
+  tileBackgroundMuted: palette.transparent,
   // listSectionHeaderBackground: palette.edgeNavy,
+
+  // WalletList
+  walletListBackground: palette.edgeBlue,
+  walletListMutedBackground: palette.mutedBlue,
 
   // Text
   primaryText: palette.white,
@@ -112,12 +149,14 @@ export const edgeDark: Theme = {
   // dangerButton: palette.white,
   // dangerButtonText: palette.accentRed,
 
+  buttonBoxShadow: palette.black,
+
   // cardBackground: palette.edgeBlue,
   // cardShadow: palette.blackOp25,
 
-  // tabBarBackground: palette.edgeNavy,
-  // tabBarIcon: palette.white,
-  // tabBarIconHighlighted: palette.edgeMint,
+  tabBarBackground: palette.edgeNavy,
+  tabBarIcon: palette.white,
+  tabBarIconHighlighted: palette.edgeMint,
 
   sliderTabSend: palette.accentRed,
   sliderTabRequest: palette.accentGreen,
@@ -144,10 +183,12 @@ export const edgeDark: Theme = {
   // confirmationThumbDeactivated: palette.gray,
 
   // Lines
-  // lineDivider: palette.blueGray,
+  lineDivider: palette.whiteOp10,
   // textInputLine: palette.blueGray,
   // orLine: palette.blueGray,
   // tileDivider: palette.blueGray,
+  thinLineWidth: 1,
+  mediumLineWidth: 2,
 
   // Notifications
   // notificationBackground: palette.lightGrayOp75,
@@ -165,7 +206,7 @@ export const edgeDark: Theme = {
   // securityAlertModalHeaderIconShadow: palette.accentOrangeOp30,
 
   // Settings Row
-  settingsRowBackground: palette.edgeBlue,
+  settingsRowBackground: palette.transparent,
   settingsRowPressed: palette.transparent,
   settingsRowHeaderBackground: palette.edgeNavy,
   settingsRowSubHeader: palette.transparent,
@@ -176,13 +217,26 @@ export const edgeDark: Theme = {
   dateModalBackgroundLight: palette.white,
   dateModalBackgroundDark: palette.edgeBlue,
 
+  // Wallet Icon Progress
+  walletProgressIconFill: palette.edgeMint,
+  walletProgressIconFillDone: palette.transparent,
+  walletProgressIconBackground: palette.transparent,
+
   // Misc
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
+  searchListRefreshControlIndicator: palette.transparent,
 
   // Fonts
-  fontFaceDefault: 'SourceSansPro-Black',
-  fontFaceBold: 'SourceSansPro-Bold',
-  fontFaceSymbols: Platform.OS === 'android' ? 'SF-UI-Text-Regular' : 'SourceSansPro-Black',
+  fontFaceDefault: palette.QuicksandRegular,
+  fontFaceBold: palette.QuicksandMedium,
+  fontFaceSymbols: Platform.OS === 'android' ? palette.SFUITextRegular : palette.QuicksandRegular,
+
+  // TouchableHighlights underlay
+  underlayColor: palette.white,
+  underlayOpacity: 0.95,
+
+  // Tutorials
+  tutorialModalUnderlay: palette.transparent,
 
   // Images
   settingsChangellyLogo: changellyLogo,
@@ -194,5 +248,29 @@ export const edgeDark: Theme = {
   settingsGodexLogo: godexLogo,
   settingsSideshiftLogo: sideshiftLogo,
   settingsSwitchainLogo: switchainLogo,
-  settingsTotleLogo: totleLogo
+  settingsTotleLogo: totleLogo,
+
+  paymentTypeLogoApplePay: paymentTypeLogoApplePay,
+  paymentTypeLogoAuspost: paymentTypeLogoAuspost,
+  paymentTypeLogoBankgirot: paymentTypeLogoBankgirot,
+  paymentTypeLogoBankTransfer: paymentTypeLogoBankTransfer,
+  paymentTypeLogoBpay: paymentTypeLogoBpay,
+  paymentTypeLogoCash: paymentTypeLogoCash,
+  paymentTypeLogoCreditCard: paymentTypeLogoCreditCard,
+  paymentTypeLogoDebitCard: paymentTypeLogoDebitCard,
+  paymentTypeLogoFasterPayments: paymentTypeLogoFasterPayments,
+  paymentTypeLogoGiftCard: paymentTypeLogoGiftCard,
+  paymentTypeLogoIdeal: paymentTypeLogoIdeal,
+  paymentTypeLogoNewsagent: paymentTypeLogoNewsagent,
+  paymentTypeLogoPayid: paymentTypeLogoPayid,
+  paymentTypeLogoPoli: paymentTypeLogoPoli,
+  paymentTypeLogoSofort: paymentTypeLogoSofort,
+  paymentTypeLogoSwish: paymentTypeLogoSwish,
+  paymentTypeLogoUpi: paymentTypeLogoUpi,
+
+  fioAddressLogo: fioAddressLogo,
+  walletListSlideTutorialImage: walletListSlidingTutorial,
+
+  guiPluginLogoBitaccess: guiPluginLogoBitaccess,
+  guiPluginLogoMoonpay: guiPluginLogoMoonpay
 }

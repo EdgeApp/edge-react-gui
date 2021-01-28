@@ -7,9 +7,10 @@ import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
+import { emptyEdgeDenomination } from '../modules/Settings/selectors.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { type RootState } from '../types/reduxTypes.js'
-import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet } from '../types/types.js'
+import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet, TransactionListTx } from '../types/types.js'
 
 export const DIVIDE_PRECISION = 18
 
@@ -297,7 +298,8 @@ export const decimalPlacesToDenomination = (decimalPlaces: string): string => {
 export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => {
   return !isSentTransaction(edgeTransaction)
 }
-export const isSentTransaction = (edgeTransaction: EdgeTransaction): boolean => {
+
+export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTransaction): boolean => {
   return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-'
 }
 
@@ -599,5 +601,34 @@ export function debounce(func: Function, wait: number, immediate: boolean): any 
     timeout = setTimeout(later, wait)
 
     if (callNow) func.apply(context, args)
+  }
+}
+
+export function getDenomination(currencyCode: string, settings: Object): EdgeDenomination {
+  const denominationMultiplier = settings[currencyCode].denomination
+  const denomination = settings[currencyCode].denominations.find(denomination => denomination.multiplier === denominationMultiplier)
+  return denomination || emptyEdgeDenomination
+}
+
+export function getDefaultDenomination(currencyCode: string, settings: Object): EdgeDenomination {
+  return settings[currencyCode].denominations.find(denomination => denomination.name === currencyCode)
+}
+
+export function checkFilterWallet(wallet: GuiWallet, currencyCodeString: string, filterText: string, customToken?: CustomTokenInfo): boolean {
+  const walletName = wallet.name.replace(' ', '').toLowerCase()
+  const currencyCode = currencyCodeString.toLowerCase()
+  const currencyNameString = customToken ? customToken.currencyName : wallet.currencyNames[currencyCodeString]
+  const currencyName = currencyNameString ? currencyNameString.toLowerCase() : '' // Added fallback if cannot find currency name on both guiWallet and customTokenInfo
+  const filterString = filterText.toLowerCase()
+  return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
+}
+
+export function alphabeticalSort(itemA: string, itemB: string): number {
+  if (itemA < itemB) {
+    return -1
+  } else if (itemA > itemB) {
+    return 1
+  } else {
+    return 0
   }
 }

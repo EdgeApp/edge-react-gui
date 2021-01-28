@@ -39,10 +39,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   titleText: {
     color: theme.primaryText,
-    fontFamily: theme.fontFaceDefault,
+    fontFamily: theme.fontFaceBold,
     fontSize: theme.rem(1.25),
-    margin: theme.rem(0.5),
-    textAlign: 'center'
+    margin: theme.rem(0.5)
   },
   messageText: {
     color: theme.primaryText,

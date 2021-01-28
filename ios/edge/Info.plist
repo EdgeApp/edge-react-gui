@@ -63,6 +63,13 @@
 	<string>99999999</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>http</string>
+		<string>bankid</string>
+		<string>swish</string>
+	</array>
 	<key>NFCReaderUsageDescription</key>
 	<string>$(PRODUCT_NAME) does not use NFC.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
@@ -77,7 +84,7 @@
 	<string>$(PRODUCT_NAME) uses your contacts to add useful information to your transactions. No contact information leaves your device and no-one, including $(PRODUCT_NAME), has access to the contact information used.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>This allows you to securely and conveniently access your $(PRODUCT_NAME) wallet</string>
-  <key>NSAppTransportSecurity</key>
+	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
@@ -91,14 +98,13 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses photos to retrieve QR Code images.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>$(PRODUCT_NAME) does not access speech recognition.</string>
 	<key>UIAppFonts</key>
 	<array>
-		<!-- react-native-vector-icons -->
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
@@ -115,7 +121,6 @@
 		<string>Octicons.ttf</string>
 		<string>Zocial.ttf</string>
 		<string>Fontisto.ttf</string>
-		<!-- Edge fonts -->
 		<string>custom.ttf</string>
 		<string>SF-UI-Text-Regular.otf</string>
 		<string>SourceSansPro-Black.ttf</string>
@@ -130,6 +135,11 @@
 		<string>SourceSansPro-Regular.ttf</string>
 		<string>SourceSansPro-Semibold.ttf</string>
 		<string>SourceSansPro-SemiboldItalic.ttf</string>
+		<string>Quicksand-Light.ttf</string>
+		<string>Quicksand-Medium.ttf</string>
+		<string>Quicksand-Regular.ttf</string>
+		<string>Quicksand-SemiBold.ttf</string>
+		<string>Quicksand-Bold.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

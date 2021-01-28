@@ -72,7 +72,7 @@ export default class ControlPanel extends React.Component<Props> {
     const currencyLogoIcon = { uri: currencyLogo }
 
     return (
-      <SceneWrapper background="drawer" hasHeader={false} hasTabs={false}>
+      <SceneWrapper hasHeader={false} hasTabs={false}>
         <View style={styles.header}>
           {!!currencyLogo && <Image style={styles.iconImage} source={currencyLogoIcon} />}
           <View style={styles.exchangeContainer}>

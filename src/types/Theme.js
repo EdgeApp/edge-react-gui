@@ -9,6 +9,9 @@ export type Theme = {
   icon: string,
   iconTappable: string,
   warningIcon: string,
+  iconLoadingOverlay: string,
+  transactionListIconBackground: string,
+  buySellCustomPluginModalIcon: string,
 
   // Background
   backgroundGradientLeft: string,
@@ -24,8 +27,21 @@ export type Theme = {
   // Tile
   // listHeaderBackground: string,
   tileBackground: string,
-  // tileBackgroundMuted: string, // change from mutedTileBackground
+  tileBackgroundMuted: string,
   // listSectionHeaderBackground: string,
+
+  // NOTE: List of components/screens that uses the tileBackground
+  // - promoCard
+  // - scanTile
+  // - addressTile
+  // - scanModal
+  // - fioDomainSettings
+  // - otpSettingsKey
+  // - tileComponent
+
+  // WalletList
+  walletListBackground: string,
+  walletListMutedBackground: string,
 
   // Settings Row
   settingsRowBackground: string,
@@ -72,12 +88,14 @@ export type Theme = {
   // dangerButton: string,
   // dangerButtonText: string,
 
+  buttonBoxShadow: string,
+
   // cardBackground: string,
   // cardShadow: string,
 
-  // tabBarBackground: string,
-  // tabBarIcon: string,
-  // tabBarIconHighlighted: string,
+  tabBarBackground: string,
+  tabBarIcon: string,
+  tabBarIconHighlighted: string,
 
   sliderTabSend: string,
   sliderTabRequest: string,
@@ -104,10 +122,12 @@ export type Theme = {
   // confirmationThumbDeactivated: string,
 
   // Lines
-  // lineDivider: string, // change from listDivider
+  lineDivider: string,
   // textInputLine: string,
   // orLine: string,
   // tileDivider: string,
+  thinLineWidth: number,
+  mediumLineWidth: number,
 
   // Notifications
   // notificationBackground: string,
@@ -130,13 +150,26 @@ export type Theme = {
   dateModalBackgroundLight: string,
   dateModalBackgroundDark: string,
 
+  // Wallet Icon Progress
+  walletProgressIconFill: string,
+  walletProgressIconFillDone: string,
+  walletProgressIconBackground: string,
+
   // Misc
   // pressedOpacity: number,
+  searchListRefreshControlIndicator: string,
 
   // Fonts
   fontFaceDefault: string,
   fontFaceBold: string,
   fontFaceSymbols: string,
+
+  // TouchableHighlights underlay
+  underlayColor: string,
+  underlayOpacity: number,
+
+  // Tutorials
+  tutorialModalUnderlay: string,
 
   // Images
   settingsChangellyLogo: string,
@@ -148,5 +181,29 @@ export type Theme = {
   settingsGodexLogo: string,
   settingsSwitchainLogo: string,
   settingsSideshiftLogo: string,
-  settingsTotleLogo: string
+  settingsTotleLogo: string,
+
+  paymentTypeLogoApplePay: string,
+  paymentTypeLogoAuspost: string,
+  paymentTypeLogoBankgirot: string,
+  paymentTypeLogoBankTransfer: string,
+  paymentTypeLogoBpay: string,
+  paymentTypeLogoCash: string,
+  paymentTypeLogoCreditCard: string,
+  paymentTypeLogoDebitCard: string,
+  paymentTypeLogoFasterPayments: string,
+  paymentTypeLogoGiftCard: string,
+  paymentTypeLogoIdeal: string,
+  paymentTypeLogoNewsagent: string,
+  paymentTypeLogoPayid: string,
+  paymentTypeLogoPoli: string,
+  paymentTypeLogoSofort: string,
+  paymentTypeLogoSwish: string,
+  paymentTypeLogoUpi: string,
+
+  fioAddressLogo: string,
+  walletListSlideTutorialImage: string,
+
+  guiPluginLogoBitaccess: string,
+  guiPluginLogoMoonpay: string
 }

@@ -182,7 +182,8 @@ type SpecialCurrencyInfo = {|
   isUriEncodedStructure?: boolean,
   needsAccountNameSetup?: boolean,
   noChangeMiningFee?: boolean,
-  noMaxSpend?: boolean
+  noMaxSpend?: boolean,
+  keysOnlyMode?: boolean
 |}
 
 export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInfo => {
@@ -314,7 +315,8 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
     },
     isCustomTokensSupported: true,
-    isTokensSupported: true
+    isTokensSupported: true,
+    keysOnlyMode: true
   },
   ETH: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
@@ -391,7 +393,7 @@ export const SPECIAL_CURRENCY_INFO: {
 /**
  * Customizes which coins get which options on the wallet list scene.
  */
-export const WALLET_LIST_OPTIONS_ICON = '\u22ee'
+export const WALLET_LIST_OPTIONS_ICON = '\u2026'
 export const WALLET_LIST_MENU: Array<{
   currencyCodes?: string[],
   label: string,

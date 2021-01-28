@@ -42,14 +42,18 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
       dispatch(checkFioObtData(walletId, transactions))
     }, 400)
   }
-  const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+  try {
+    const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
 
-  for (const transaction: EdgeTransaction of transactions) {
-    if (transaction.metadata) {
-      const { name } = transaction.metadata
-      if (name && (await fioPlugin.otherMethods.isFioAddressValid(name))) {
-        addToFioAddressCache(state.core.account, [name])
+    for (const transaction: EdgeTransaction of transactions) {
+      if (transaction.metadata) {
+        const { name } = transaction.metadata
+        if (name && (await fioPlugin.otherMethods.isFioAddressValid(name))) {
+          addToFioAddressCache(state.core.account, [name])
+        }
       }
     }
+  } catch (e) {
+    console.log(e)
   }
 }
