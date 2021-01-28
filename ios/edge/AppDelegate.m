@@ -181,6 +181,7 @@ typedef void (^MessagesHandler)(NSArray<NSString *> *resetUsers, NSError *error)
     if (!json || ![json isKindOfClass:[NSDictionary class]])
       continue;
 
+    if (!json[@"loginAuthBox"]) continue;
     id loginId = json[@"loginId"];
     id username = json[@"username"];
     if (!loginId || ![loginId isKindOfClass:[NSString class]])

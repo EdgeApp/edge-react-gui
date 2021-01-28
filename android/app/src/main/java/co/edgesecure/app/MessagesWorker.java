@@ -89,6 +89,7 @@ public class MessagesWorker extends Worker {
     for (File file : files) {
       try {
         JSONObject json = new JSONObject(readFile(file));
+        if (!json.has("loginAuthBox")) continue;
         String loginId = json.getString("loginId");
         String username = json.getString("username");
         loginIds.put(loginId, username);
