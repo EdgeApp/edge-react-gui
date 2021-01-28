@@ -52,20 +52,20 @@ public class MessagesWorker extends Worker {
 
     // Snag the users:
     try {
-      Iterable<String> resetUsers = fetchMessages();
+      Iterable<String> problemUsers = fetchMessages();
 
       // Send a notification:
       StringBuilder builder = new StringBuilder();
-      builder.append("Another device requested a 2-factor reset for: ");
+      builder.append("Another device is trying to log into: ");
       int count = 0;
-      for (String user : resetUsers) {
+      for (String user : problemUsers) {
         if (count++ > 0) builder.append(", ");
         builder.append(user);
       }
       builder.append(
-          "\nPlease log in to approve or deny the request. Failure to approve or deny an unauthorized request could result in loss of funds.");
+          ".\nPlease log in to approve or deny the request. Failure to approve or deny an unauthorized request could result in loss of funds.");
       if (count > 0) {
-        sendNotification("Urgent", builder.toString());
+        sendNotification("Urgent Security Issue", builder.toString());
       } else {
         cancelNotification();
       }
@@ -111,20 +111,25 @@ public class MessagesWorker extends Worker {
     if (statusCode != 0) throw new JSONException("Incorrect status code");
     JSONArray messages = replyJson.getJSONArray("results");
 
-    // Find messages with 2fa resets:
-    ArrayList<String> resetUsers = new ArrayList();
+    // Find messages with problems:
+    ArrayList<String> problemUsers = new ArrayList();
     int messagesLength = messages.length();
     for (int i = 0; i < messagesLength; ++i) {
       JSONObject message = messages.getJSONObject(i);
       String loginId = message.getString("loginId");
       String username = loginIds.get(loginId);
       if (username == null) continue;
-      if (message.optBoolean("otpResetPending", false)) {
-        resetUsers.add(username);
+
+      JSONArray pendingVouchers = message.optJSONArray("pendingVouchers");
+      boolean hasVoucher = pendingVouchers != null && pendingVouchers.length() > 0;
+      boolean hasReset = message.optBoolean("otpResetPending", false);
+
+      if (hasVoucher || hasReset) {
+        problemUsers.add(username);
       }
     }
 
-    return resetUsers;
+    return problemUsers;
   }
 
   /** Reads a file from disk. */

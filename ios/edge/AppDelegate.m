@@ -107,34 +107,34 @@ static void InitializeFlipper(UIApplication *application) {
 - (void)application:(UIApplication *)application
   performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-  [self fetchMessagesWithCompletion:^(NSArray *resetUsers, NSError *error) {
+  [self fetchMessagesWithCompletion:^(NSArray *problemUsers, NSError *error) {
     if (error) {
       return completionHandler(UIBackgroundFetchResultNoData);
     }
 
-    NSString *message = @"Someone is trying to reset the 2-factor for these accounts: ";
-    for (NSUInteger i = 0; i < resetUsers.count; ++i) {
+    NSString *message = @"Another device is trying to log into: ";
+    for (NSUInteger i = 0; i < problemUsers.count; ++i) {
       if (i == 0) {
-        message = [message stringByAppendingString:resetUsers[i]];
+        message = [message stringByAppendingString:problemUsers[i]];
       } else {
-        message = [message stringByAppendingFormat:@", %@", resetUsers[i]];
+        message = [message stringByAppendingFormat:@", %@", problemUsers[i]];
       }
     }
 
     dispatch_async(dispatch_get_main_queue(), ^(void) {
-      application.applicationIconBadgeNumber = resetUsers.count;
-      if (resetUsers.count == 0) {
+      application.applicationIconBadgeNumber = problemUsers.count;
+      if (problemUsers.count == 0) {
         return completionHandler(UIBackgroundFetchResultNoData);
       }
 
       UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-      content.title = @"Urgent";
+      content.title = @"Urgent Security Issue";
       content.body = message;
       UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
           triggerWithTimeInterval:1
                           repeats:NO];
       UNNotificationRequest* request = [UNNotificationRequest
-          requestWithIdentifier:@"2faReset"
+          requestWithIdentifier:@"loginRequest"
                         content:content
                         trigger:trigger];
       [[UNUserNotificationCenter currentNotificationCenter]
@@ -146,7 +146,7 @@ static void InitializeFlipper(UIApplication *application) {
   }];
 }
 
-typedef void (^MessagesHandler)(NSArray<NSString *> *resetUsers, NSError *error);
+typedef void (^MessagesHandler)(NSArray<NSString *> *problemUsers, NSError *error);
 
 /**
  * Goes to the auth server and figures out which users have 2fa resets.
@@ -247,22 +247,30 @@ typedef void (^MessagesHandler)(NSArray<NSString *> *resetUsers, NSError *error)
     }
     NSArray *messages = (NSArray *)results;
 
-    // Find messages with 2fa resets:
-    NSMutableArray *resetUsers = [[NSMutableArray alloc] init];
+    // Find messages with problems:
+    NSMutableArray *problemUsers = [[NSMutableArray alloc] init];
     for (NSUInteger i = 0; i < messages.count; ++i) {
       id message = messages[i];
       if (![message isKindOfClass:[NSDictionary class]]) continue;
       NSString *username = loginIds[message[@"loginId"]];
       if (!username) continue;
+
+      id pendingVouchers = message[@"pendingVouchers"];
+      BOOL hasVoucher = pendingVouchers &&
+        [pendingVouchers isKindOfClass:[NSArray class]] &&
+        ((NSArray *)pendingVouchers).count > 0;
+
       id otpResetPending = message[@"otpResetPending"];
-      if (otpResetPending &&
+      BOOL hasReset = otpResetPending &&
         [otpResetPending isKindOfClass:[NSNumber class]] &&
-        [((NSNumber *)otpResetPending) boolValue]) {
-        [resetUsers addObject:username];
+        [((NSNumber *)otpResetPending) boolValue];
+
+      if (hasVoucher || hasReset) {
+        [problemUsers addObject:username];
       }
     }
 
-    completionHandler(resetUsers, nil);
+    completionHandler(problemUsers, nil);
   };
 
   // Do the fetch:
