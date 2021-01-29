@@ -147,9 +147,10 @@ const WalletsButton = () => {
   )
 }
 
+const popToScanScene = () => Actions.jump(Constants.SCAN)
 const ScanButton = () => {
   return (
-    <Button onPress={Actions.scan}>
+    <Button onPress={popToScanScene}>
       <Button.Row>
         <Button.Left>
           <Image source={scanIcon} style={styles.iconImage} />
@@ -165,12 +166,10 @@ const ScanButton = () => {
   )
 }
 
+const popToSweepPrivateKeyScene = () => Actions.jump(Constants.SCAN, { data: 'sweepPrivateKey' })
 const SweepPrivateKeyButton = () => {
-  /* eslint-disable no-unused-vars */
-  const routeWithData = () => Actions.scan('sweepPrivateKey')
-  /* eslint-disable no-unused-vars */
   return (
-    <Button onPress={routeWithData}>
+    <Button onPress={popToSweepPrivateKeyScene}>
       <Button.Row>
         <Button.Left>
           <Image source={sweepIcon} style={styles.iconImage} />
@@ -186,9 +185,10 @@ const SweepPrivateKeyButton = () => {
   )
 }
 
+const popToRequestScene = () => Actions.jump(Constants.REQUEST)
 const RequestButton = () => {
   return (
-    <Button onPress={Actions.request}>
+    <Button onPress={popToRequestScene}>
       <Button.Row>
         <Button.Left>
           <Image source={receiveIcon} style={styles.iconImage} />
