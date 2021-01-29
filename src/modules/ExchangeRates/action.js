@@ -48,7 +48,16 @@ async function buildExchangeRates(state: RootState) {
   }
   const exchangeRateKeys = Object.keys(exchangeRates)
   const exchangeRatePromises = Object.values(exchangeRates)
-  const rates = await Promise.all(exchangeRatePromises)
+  // Promise.allSettled() is the correct function for this but somehow not included in Promise
+  const rates = await Promise.all(
+    exchangeRatePromises.map(promise =>
+      // $FlowExpectedError - Object.values() always produce mixed type so .catch will produce error
+      promise.catch(e => {
+        console.log(e)
+        return 0
+      })
+    )
+  )
   for (let i = 0; i < exchangeRateKeys.length; i++) {
     const key = exchangeRateKeys[i]
     const codes = key.split('_')
