@@ -12,15 +12,8 @@ import { sprintf } from 'sprintf-js'
 import { FIO_ADDRESS_LIST } from '../../constants/SceneKeys'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
-import { getPlugins, getSettings } from '../../modules/Settings/selectors.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui'
-import {
-  convertCurrencyFromExchangeRates,
-  convertNativeToExchangeRateDenomination,
-  getSelectedWallet,
-  getSelectedWalletId,
-  getWallets
-} from '../../modules/UI/selectors.js'
+import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
@@ -40,8 +33,8 @@ export const SEND_ACTION_TYPE = {
 }
 
 type OwnProps = {
-  amount: string,
-  walletId: string,
+  amount?: string,
+  walletId?: string,
   actionType: 'send' | 'fioTransferDomain',
   fioDomain?: string,
   fioWallet?: EdgeCurrencyWallet
@@ -85,7 +78,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   componentWillMount(): void {
     if (this.props.actionType === SEND_ACTION_TYPE.fioTransferDomain) {
-      this.props.onSelectWallet(this.props.walletId, FIO_STR)
+      this.props.onSelectWallet(this.props.guiWallet.id, FIO_STR)
     }
   }
 
@@ -275,30 +268,30 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SendScene = connect(
+export const SendScene2 = connect(
   (state: RootState, ownProps: OwnProps): StateProps => {
-    const walletId = getSelectedWalletId(state) || ownProps.walletId
-    const wallets = getWallets(state)
-    const wallet = walletId ? wallets[walletId] : getSelectedWallet(state)
-    const contacts = state.contacts
-    const settings = getSettings(state)
-    const currencyCode = wallet.currencyCode
-    const plugins = getPlugins(state)
-    const allCurrencyInfos = plugins.allCurrencyInfos
+    const walletId = ownProps.walletId || state.ui.wallets.selectedWalletId
+    const wallets = state.ui.wallets.byId
+    const guiWallet = wallets[walletId]
+    const { currencyCode, isoFiatCurrencyCode } = guiWallet
+    const { contacts, ui } = state
+    const { settings } = ui
+    const { plugins } = settings
+    const { allCurrencyInfos } = plugins
     const currencyInfo = UTILS.getCurrencyInfo(allCurrencyInfos, currencyCode)
-    const walletDefaultDenomProps: EdgeDenomination = UTILS.isCryptoParentCurrency(wallet, wallet.currencyCode)
-      ? UTILS.getWalletDefaultDenomProps(wallet, settings)
-      : UTILS.getWalletDefaultDenomProps(wallet, settings, wallet.currencyCode)
+    const walletDefaultDenomProps: EdgeDenomination = UTILS.isCryptoParentCurrency(guiWallet, currencyCode)
+      ? UTILS.getWalletDefaultDenomProps(guiWallet, settings)
+      : UTILS.getWalletDefaultDenomProps(guiWallet, settings, currencyCode)
 
     // balance
-    const balanceInCrypto = wallet.nativeBalances[currencyCode]
+    const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
     const balanceCrypto = convertNativeToExchangeRateDenomination(settings, currencyCode, balanceInCrypto)
-    const balanceFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, parseFloat(balanceCrypto))
+    const balanceFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(balanceCrypto))
 
     // amount
     const nativeAmount = ownProps.amount ? bns.abs(`${ownProps.amount}`) : ''
     const cryptoAmount = convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
-    const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, parseFloat(cryptoAmount))
+    const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(cryptoAmount))
 
     const { account } = state.core
     const { currencyWallets } = account
@@ -311,7 +304,7 @@ export const SendScene = connect(
       balanceCrypto,
       currentFiatAmount,
       cryptoAmount,
-      guiWallet: wallet,
+      guiWallet,
       coreWallet: currencyWallets ? currencyWallets[walletId] : null,
       wallets,
       walletDefaultDenomProps
