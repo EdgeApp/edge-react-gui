@@ -2,18 +2,20 @@
 
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
-import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
+import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions.js'
 import { FIO_ADDRESS_LIST } from '../../constants/SceneKeys'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../modules/UI/selectors.js'
+import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
@@ -55,7 +57,8 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  onSelectWallet(walletId: string, currencyCode: string): void
+  onSelectWallet(walletId: string, currencyCode: string): void,
+  sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => any
 }
 
 type RouteProps = {
@@ -103,13 +106,37 @@ class SendComponent extends React.PureComponent<Props, State> {
       .catch(error => console.log(error))
   }
 
-  onChangeAddress = async (recipientAddress: string) => {
-    const { actionType } = this.props
+  onChangeAddress = async (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => {
+    const { actionType, sendConfirmationUpdateTx } = this.props
+    const { spendTargets } = guiMakeSpendInfo
+    const recipientAddress = parsedUri ? parsedUri.publicAddress : spendTargets && spendTargets[0].publicAddress ? spendTargets[0].publicAddress : ''
+
     if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
-      if (recipientAddress.indexOf('FIO') < 0) {
+      if (recipientAddress && recipientAddress.indexOf('FIO') < 0) {
         showError(s.strings.scan_invalid_address_error_title)
         return
       }
+    }
+
+    if (actionType === SEND_ACTION_TYPE.send) {
+      if (parsedUri) {
+        const nativeAmount = parsedUri.nativeAmount || '0'
+        const spendTargets: EdgeSpendTarget[] = [
+          {
+            publicAddress: parsedUri.publicAddress,
+            nativeAmount
+          }
+        ]
+        guiMakeSpendInfo = {
+          spendTargets,
+          lockInputs: false,
+          metadata: parsedUri.metadata,
+          uniqueIdentifier: parsedUri.uniqueIdentifier,
+          nativeAmount,
+          ...guiMakeSpendInfo
+        }
+      }
+      sendConfirmationUpdateTx(guiMakeSpendInfo)
     }
     this.setState({ recipientAddress })
   }
@@ -308,6 +335,7 @@ export const SendScene2 = connect(
   (dispatch: Dispatch): DispatchProps => ({
     onSelectWallet: (walletId: string, currencyCode: string) => {
       dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
-    }
+    },
+    sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo))
   })
 )(withTheme(SendComponent))

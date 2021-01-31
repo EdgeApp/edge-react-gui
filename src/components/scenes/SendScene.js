@@ -111,10 +111,13 @@ class SendComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  onChangeAddress = async (recipientAddress: string) => {
+  onChangeAddress = async (guiMakeSpendInfo, parsedUri?) => {
     const { actionType } = this.props
+    const { spendTargets } = guiMakeSpendInfo
+    const recipientAddress = parsedUri ? parsedUri.publicAddress : spendTargets && spendTargets[0].publicAddress ? spendTargets[0].publicAddress : ''
+
     if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
-      if (recipientAddress.indexOf('FIO') < 0) {
+      if (recipientAddress && recipientAddress.indexOf('FIO') < 0) {
         showError(s.strings.scan_invalid_address_error_title)
         return
       }

@@ -1,7 +1,7 @@
 // @flow
 
 import Clipboard from '@react-native-community/clipboard'
-import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -12,8 +12,7 @@ import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstant
 import s from '../../locales/strings.js'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import type { RootState } from '../../reducers/RootReducer'
-import type { FeeOption } from '../../reducers/scenes/SendConfirmationReducer'
-import type { FioRequest } from '../../types/types'
+import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal.js'
@@ -22,32 +21,12 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from './EdgeText'
 import { Tile } from './Tile.js'
 
-type SpendInfo = {
-  currencyCode?: string,
-  metadata?: any,
-  nativeAmount?: string,
-  networkFeeOption?: FeeOption,
-  customNetworkFee?: Object,
-  publicAddress?: string,
-  spendTargets?: EdgeSpendTarget[],
-  lockInputs?: boolean,
-  uniqueIdentifier?: string,
-  otherParams?: Object,
-  dismissAlert?: boolean,
-  fioAddress?: string,
-  fioPendingRequest?: FioRequest,
-  isSendUsingFioAddress?: boolean,
-  onBack?: () => void,
-  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
-  beforeTransaction?: () => Promise<void>
-}
-
 type OwnProps = {
   coreWallet: EdgeCurrencyWallet,
   currencyCode: string,
   title: string,
   recipientAddress: string,
-  onChangeAddress: (address: string, spendInfo?: SpendInfo) => Promise<void>
+  onChangeAddress: (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => Promise<void>
 }
 type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null
@@ -133,7 +112,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
         spendTargets,
         otherParams: { paymentProtocolInfo }
       }
-      onChangeAddress(spendTargets.length && spendTargets[0].publicAddress ? spendTargets[0].publicAddress : '', spendInfo)
+      onChangeAddress(spendInfo)
     } catch (e) {
       console.log(e)
       await Airship.show(bridge => (
@@ -176,6 +155,8 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
         if (!(await this.shouldContinueLegacy())) return
       }
 
+      // Missing isPrivateKeyUri Modal
+
       if (isPaymentProtocolUri(parsedUri)) {
         return this.paymentProtocolUriReceived(parsedUri)
       }
@@ -185,7 +166,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
       }
 
       // set address
-      onChangeAddress(parsedUri.publicAddress, { fioAddress })
+      onChangeAddress({ fioAddress }, parsedUri)
       this.setState({ isSetAddress: true })
     } catch (e) {
       showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
