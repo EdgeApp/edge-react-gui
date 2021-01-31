@@ -39,6 +39,7 @@ type OwnProps = {
   fioDomain?: string,
   fioWallet?: EdgeCurrencyWallet
 }
+
 type StateProps = {
   contacts: GuiContact[],
   currencyCode: string,
@@ -52,10 +53,16 @@ type StateProps = {
   wallets: { string: GuiWallet },
   walletDefaultDenomProps: EdgeDenomination
 }
+
 type DispatchProps = {
   onSelectWallet(walletId: string, currencyCode: string): void
 }
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+
+type RouteProps = {
+  allowedCurrencyCodes?: string[]
+}
+
+type Props = OwnProps & StateProps & DispatchProps & RouteProps & ThemeProps
 
 type State = {
   recipientAddress: string,
@@ -86,22 +93,14 @@ class SendComponent extends React.PureComponent<Props, State> {
     this.setState({ showSlider: false }, () => this.setState({ showSlider: true }))
   }
 
-  onWalletPress = (): void => {
-    this.openWalletSelector()
-  }
-
-  openWalletSelector = async () => {
-    const { actionType } = this.props
-    const allowedCurrencyCodes = []
-    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
-      allowedCurrencyCodes.push(`${FIO_STR}`)
-      const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
-        <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
-      ))
-      if (walletId && currencyCode) {
-        this.props.onSelectWallet(walletId, currencyCode)
-      }
-    }
+  handleWalletPress = () => {
+    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={this.props.allowedCurrencyCodes} />)
+      .then(({ walletId, currencyCode }: WalletListResult) => {
+        if (walletId && currencyCode) {
+          this.props.onSelectWallet(walletId, currencyCode)
+        }
+      })
+      .catch(error => console.log(error))
   }
 
   onChangeAddress = async (recipientAddress: string) => {
@@ -154,15 +153,6 @@ class SendComponent extends React.PureComponent<Props, State> {
     this.setState({ loading: false })
   }
 
-  walletTileType = () => {
-    const { actionType } = this.props
-    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
-      return 'static'
-    }
-
-    return 'editable'
-  }
-
   renderAmount() {
     const { actionType } = this.props
 
@@ -201,7 +191,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   // Render
   render() {
-    const { theme, guiWallet, coreWallet, currencyCode } = this.props
+    const { actionType, theme, guiWallet, coreWallet, currencyCode } = this.props
     const { loading, recipientAddress, showSlider } = this.state
     const styles = getStyles(theme)
     const sliderDisabled = !recipientAddress
@@ -211,7 +201,12 @@ class SendComponent extends React.PureComponent<Props, State> {
       <SceneWrapper background="theme">
         <ScrollView>
           <View style={styles.tilesContainer}>
-            <Tile type={this.walletTileType()} title={`${s.strings.step} 1: ${s.strings.select_wallet}`} onPress={this.onWalletPress} body={walletName} />
+            <Tile
+              type={actionType === SEND_ACTION_TYPE.fioTransferDomain ? 'static' : 'editable'}
+              title={`${s.strings.step} 1: ${s.strings.select_wallet}`}
+              onPress={this.handleWalletPress}
+              body={walletName}
+            />
             {coreWallet && (
               <AddressTile
                 title={`${s.strings.step} 2: ${s.strings.transaction_details_recipient} ${s.strings.fragment_send_address}`}
