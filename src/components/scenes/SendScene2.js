@@ -9,7 +9,7 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
-import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions.js'
+import { reset, sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions.js'
 import { FIO_ADDRESS_LIST } from '../../constants/SceneKeys'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
@@ -58,11 +58,13 @@ type StateProps = {
 
 type DispatchProps = {
   onSelectWallet(walletId: string, currencyCode: string): void,
-  sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => any
+  reset: () => void,
+  sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => Promise<void> // Somehow has a return??
 }
 
 type RouteProps = {
-  allowedCurrencyCodes?: string[]
+  allowedCurrencyCodes?: string[],
+  guiMakeSpendInfo?: GuiMakeSpendInfo
 }
 
 type Props = OwnProps & StateProps & DispatchProps & RouteProps & ThemeProps
@@ -86,9 +88,20 @@ class SendComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  componentWillMount(): void {
+  componentDidMount(): void {
     if (this.props.actionType === SEND_ACTION_TYPE.fioTransferDomain) {
       this.props.onSelectWallet(this.props.guiWallet.id, FIO_STR)
+    }
+
+    if (this.props.guiMakeSpendInfo) {
+      this.props.sendConfirmationUpdateTx(this.props.guiMakeSpendInfo)
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.reset()
+    if (this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.onBack) {
+      this.props.guiMakeSpendInfo.onBack()
     }
   }
 
@@ -336,6 +349,7 @@ export const SendScene2 = connect(
     onSelectWallet: (walletId: string, currencyCode: string) => {
       dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
     },
+    reset: () => dispatch(reset()),
     sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo))
   })
 )(withTheme(SendComponent))
