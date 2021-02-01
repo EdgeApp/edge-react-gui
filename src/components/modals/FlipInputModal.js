@@ -14,7 +14,7 @@ import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/Exchan
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getExchangeRate } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
-import { getDenomFromIsoCode } from '../../util/utils.js'
+import { calculateTransactionFee, getDenomFromIsoCode } from '../../util/utils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
@@ -35,7 +35,11 @@ type StateProps = {
   flipInputHeaderLogo: string,
   primaryInfo: GuiCurrencyInfo,
   secondaryInfo: GuiCurrencyInfo,
-  fiatPerCrypto: number
+  fiatPerCrypto: number,
+
+  // Fees
+  feeSyntax: string,
+  feeSyntaxStyle?: string
 }
 
 type Props = OwnProps & StateProps & ThemeProps
@@ -82,6 +86,18 @@ class FlipInputModalComponent extends React.PureComponent<Props> {
 
   handleExchangeAmountChange = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {}
 
+  renderFees = () => {
+    const { feeSyntax, feeSyntaxStyle, theme } = this.props
+    const styles = getStyles(theme)
+    const feeText = `+ ${s.strings.string_fee}`
+    return (
+      <View style={styles.feesContainer}>
+        <EdgeText style={styles.feesContainerText}>{feeText}</EdgeText>
+        <EdgeText style={{ color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText }}>{feeSyntax}</EdgeText>
+      </View>
+    )
+  }
+
   render() {
     return (
       <MenuProvider style={{ flexDirection: 'row' }}>
@@ -89,6 +105,7 @@ class FlipInputModalComponent extends React.PureComponent<Props> {
           <ModalTitle>{s.strings.string_enter_amount}</ModalTitle>
           {this.renderBalance()}
           {this.renderFlipInput()}
+          {this.renderFees()}
           <ModalCloseArrow onPress={this.handleCloseModal} />
         </ThemedModal>
       </MenuProvider>
@@ -112,6 +129,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   flipInputContainer: {
     marginVertical: theme.rem(1)
+  },
+  feesContainer: {
+    flexDirection: 'row',
+    marginHorizontal: theme.rem(1)
+  },
+  feesContainerText: {
+    flex: 1
   }
 }))
 
@@ -147,6 +171,11 @@ export const FlipInputModal = connect((state: RootState, ownProps: OwnProps): St
     exchangeDenomination: fiatDenomination
   }
 
+  // Fees
+  const transactionFee = calculateTransactionFee(state, guiWallet, currencyCode)
+  const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
+  const feeSyntaxStyle = transactionFee.fiatStyle
+
   return {
     // Balances
     balanceCrypto: `${balanceCrypto} ${currencyCode}`,
@@ -157,6 +186,10 @@ export const FlipInputModal = connect((state: RootState, ownProps: OwnProps): St
     flipInputHeaderLogo: guiWallet.symbolImageDarkMono || '',
     primaryInfo,
     secondaryInfo,
-    fiatPerCrypto: fiatPerCrypto || 0
+    fiatPerCrypto: fiatPerCrypto || 0,
+
+    // Fees
+    feeSyntax,
+    feeSyntaxStyle
   }
 })(withTheme(FlipInputModalComponent))
