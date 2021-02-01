@@ -27,5 +27,11 @@ export const showResyncWalletModal = (walletId: string) => async (dispatch: Disp
 
   if (resolveValue === 'confirm') {
     await wallet.resyncBlockchain()
+    dispatch({
+      type: 'RESET_WALLET_LOADING_PROGRESS',
+      data: {
+        walletId
+      }
+    })
   }
 }
