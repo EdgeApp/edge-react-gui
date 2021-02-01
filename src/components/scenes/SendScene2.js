@@ -22,6 +22,7 @@ import type { GuiContact, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
+import { FlipInputModal } from '../modals/FlipInputModal.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance.js'
@@ -198,12 +199,19 @@ class SendComponent extends React.PureComponent<Props, State> {
     this.setState({ loading: false })
   }
 
+  handleFlipinputModal = () => {
+    Airship.show(bridge => <FlipInputModal bridge={bridge} walletId={this.props.guiWallet.id} currencyCode={this.props.currencyCode} />).catch(error =>
+      console.log(error)
+    )
+  }
+
   renderAmount() {
     const { actionType } = this.props
 
     if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
       return null
     }
+    return <Tile type="touchable" title={s.strings.fio_request_amount} onPress={this.handleFlipinputModal} />
   }
 
   renderAdditionalTiles() {
