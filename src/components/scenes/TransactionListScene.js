@@ -172,7 +172,11 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
           ListEmptyComponent={this.renderEmptyComponent}
           ListHeaderComponent={this.renderTop}
           contentOffset={{ y: !searching && transactions.length > 0 ? this.props.theme.rem(4.5) : 0 }}
-          refreshControl={<RefreshControl refreshing={false} onRefresh={this.handleOnRefresh} tintColor={this.props.theme.searchListRefreshControlIndicator} />}
+          refreshControl={
+            transactions.length !== 0 ? (
+              <RefreshControl refreshing={false} onRefresh={this.handleOnRefresh} tintColor={this.props.theme.searchListRefreshControlIndicator} />
+            ) : undefined
+          }
           keyboardShouldPersistTaps="handled"
         />
       </SceneWrapper>
