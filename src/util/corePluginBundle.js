@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 // WebPack bundles this thing up to give us our core plugins.
 
 import 'core-js'

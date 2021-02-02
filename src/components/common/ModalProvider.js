@@ -23,7 +23,7 @@ type State = {
  * React component tree.
  */
 export class ModalProvider extends React.Component<{}, State> {
-  +id: string
+  id: string
 
   constructor(props: {}) {
     super(props)
