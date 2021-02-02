@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeCurrencyWallet } from 'edge-core-js/types'
+import { type EdgeCurrencyWallet, type EdgeSpendTarget } from 'edge-core-js/types'
 import * as React from 'react'
 import { ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -18,6 +18,7 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { showError } from '../services/AirshipInstance.js'
 
 type OwnProps = {
   wallet: EdgeCurrencyWallet
@@ -25,7 +26,8 @@ type OwnProps = {
 
 type StateProps = {
   networkFeeOption?: FeeOption,
-  customNetworkFee?: Object
+  customNetworkFee?: Object,
+  spendTargets?: EdgeSpendTarget[]
 }
 
 type DispatchProps = {
@@ -66,8 +68,19 @@ export class ChangeMiningFee extends React.Component<Props, State> {
 
   onSubmit = () => {
     const { networkFeeOption, customNetworkFee } = this.state
-    this.props.onSubmit(networkFeeOption, customNetworkFee)
-    Actions.pop()
+    const { wallet, spendTargets = [] } = this.props
+    const testSpendInfo = { spendTargets, networkFeeOption, customNetworkFee }
+    wallet
+      .makeSpend(testSpendInfo)
+      .then(() => {
+        this.props.onSubmit(networkFeeOption, customNetworkFee)
+        Actions.pop()
+      })
+      .catch(e => {
+        let message = e.message
+        if (e.name === 'ErrorBelowMinimumFee') message = `${s.strings.invalid_custom_fee} ${e.message}`
+        showError(message)
+      })
   }
 
   render() {
@@ -191,7 +204,8 @@ const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 export const ChangeMiningFeeScene = connect(
   (state: RootState): StateProps => ({
     networkFeeOption: getGuiMakeSpendInfo(state).networkFeeOption,
-    customNetworkFee: getGuiMakeSpendInfo(state).customNetworkFee
+    customNetworkFee: getGuiMakeSpendInfo(state).customNetworkFee,
+    spendTargets: getGuiMakeSpendInfo(state).spendTargets
   }),
   (dispatch: Dispatch): DispatchProps => ({
     onSubmit(networkFeeOption: string, customNetworkFee: Object) {
