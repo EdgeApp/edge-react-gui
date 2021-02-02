@@ -32,9 +32,6 @@ test('initialState', () => {
     editToken: {
       editCustomTokenProcessing: false
     },
-    exchangeRate: {
-      exchangeRates: {}
-    },
     fioAddress: {
       fioAddresses: [],
       fioAddressesLoading: false,

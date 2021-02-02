@@ -4,7 +4,6 @@ import { type Reducer, combineReducers } from 'redux'
 
 import { type FioAddressSceneState, fioAddress } from '../../modules/FioAddress/reducer.js'
 import { type ControlPanelState, controlPanel } from '../../modules/UI/components/ControlPanel/reducer.js'
-import { type ExchangeRateState, exchangeRate } from '../../modules/UI/components/ExchangeRate/reducer.js'
 import type { Action } from '../../types/reduxTypes.js'
 import { type EditTokenState, editToken } from '../EditTokenReducer.js'
 import { type RequestTypeState, requestType } from '../RequestTypeReducer.js'
@@ -20,7 +19,6 @@ export type ScenesState = {
   +controlPanel: ControlPanelState,
   +createWallet: CreateWalletState,
   +editToken: EditTokenState,
-  +exchangeRate: ExchangeRateState,
   +fioAddress: FioAddressSceneState,
   +requestType: RequestTypeState,
   +scan: ScanState,
@@ -35,7 +33,6 @@ export const scenes: Reducer<ScenesState, Action> = combineReducers({
   controlPanel,
   createWallet,
   editToken,
-  exchangeRate,
   fioAddress,
   requestType,
   scan,
