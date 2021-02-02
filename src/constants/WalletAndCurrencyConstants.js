@@ -69,6 +69,7 @@ export const CURRENCY_SETTINGS_KEYS = [
   'bitcoinsv',
   'zcoin',
   'digibyte',
+  'dogecoin',
   'qtum',
   'vertcoin',
   'feathercoin',
