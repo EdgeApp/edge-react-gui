@@ -332,7 +332,7 @@ export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getSt
           message={messageSyntax}
           buttons={{
             buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
-            exchange: { label: s.strings.buy_crypto_modal_exchange, type: 'secondary' },
+            exchange: { label: s.strings.buy_crypto_modal_exchange },
             decline: { label: s.strings.buy_crypto_decline, type: 'secondary' }
           }}
         />
