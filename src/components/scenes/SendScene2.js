@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
-import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -18,7 +18,7 @@ import { Slider } from '../../modules/UI/components/Slider/Slider.ui'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import type { GuiContact, GuiWallet } from '../../types/types.js'
+import type { GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -45,16 +45,11 @@ type OwnProps = {
 }
 
 type StateProps = {
-  contacts: GuiContact[],
   currencyCode: string,
-  currencyInfo?: EdgeCurrencyInfo,
-  balanceFiatAmount: number,
-  balanceCrypto: string,
   feeSyntax: string,
   feeSyntaxStyle?: string,
   guiWallet: GuiWallet,
-  coreWallet: EdgeCurrencyWallet | null,
-  wallets: { string: GuiWallet }
+  coreWallet?: EdgeCurrencyWallet
 }
 
 type DispatchProps = {
@@ -72,7 +67,6 @@ type Props = OwnProps & StateProps & DispatchProps & RouteProps & ThemeProps
 
 type State = {
   recipientAddress: string,
-  clipboard: string,
   loading: boolean,
   showSlider: boolean
 }
@@ -83,7 +77,6 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     this.state = {
       recipientAddress: '',
-      clipboard: '',
       loading: false,
       showSlider: true
     }
@@ -300,19 +293,13 @@ export const SendScene2 = connect(
     const guiWallet = wallets[walletId]
     const currencyCode = ownProps.walletId ? guiWallet.currencyCode : state.ui.wallets.selectedCurrencyCode
     const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
-    const { contacts, exchangeRates, ui } = state
+    const { exchangeRates, ui } = state
     const { settings } = ui
-    const { plugins } = settings
-    const { allCurrencyInfos } = plugins
-    const currencyInfo = UTILS.getCurrencyInfo(allCurrencyInfos, currencyCode)
 
-    // balance
-    const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
-    const balanceCrypto = convertNativeToExchangeRateDenomination(settings, currencyCode, balanceInCrypto)
-    const balanceFiatAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(balanceCrypto))
-
+    // Core Wallet
     const { account } = state.core
     const { currencyWallets } = account
+    const coreWallet = currencyWallets ? currencyWallets[walletId] : undefined
 
     // Fees
     let feeSyntax = ''
@@ -331,16 +318,14 @@ export const SendScene2 = connect(
     }
 
     return {
-      contacts,
+      // Wallet
       currencyCode,
-      currencyInfo,
-      balanceFiatAmount,
-      balanceCrypto,
-      coreWallet: currencyWallets ? currencyWallets[walletId] : null,
-      feeSyntax,
-      feeSyntaxStyle,
       guiWallet,
-      wallets
+      coreWallet,
+
+      // Fees
+      feeSyntax,
+      feeSyntaxStyle
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
