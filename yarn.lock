@@ -11252,11 +11252,6 @@ react-native-svg@^12.1.0:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
 
-react-native-swipe-gestures@^1.0.2:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.3.tgz#4160f8d459627323f3a3d2770af4bcd82fd054f5"
-  integrity sha512-KOouRzPB2fHFjVombsSdRfYo8SFeNVa4Ho4B5il87DuuF26sPNOtb3je+qaT/xVptedOsCzRPJGbWFMsaBApgg==
-
 react-native-swipe-list-view@^3.2.5:
   version "3.2.5"
   resolved "https://registry.yarnpkg.com/react-native-swipe-list-view/-/react-native-swipe-list-view-3.2.5.tgz#e10297ae53c9df79a5ef93bd01f47c47ad5dc23b"
@@ -11286,13 +11281,6 @@ react-native-tab-view@^1.0.0:
     ip-regex "^4.1.0"
     process "^0.11.9"
     util "^0.12.1"
-
-"react-native-v8@>=0.59.10-patch.0 <0.59.11":
-  version "0.59.10-patch.6"
-  resolved "https://registry.yarnpkg.com/react-native-v8/-/react-native-v8-0.59.10-patch.6.tgz#5cc6ad6a664ceb25feeb8faa15603d051805783b"
-  integrity sha512-EDiAWH0yEFWRBuNhyBBj5+jMo/oio6JFJaFOtJL78XfoZ6hRDQL9RySKyCVEQhl9QATkwjV3RuDBA2OC81HVJg==
-  dependencies:
-    v8-android "~8.80.0"
 
 react-native-vector-icons@^6.1.0:
   version "6.1.0"
@@ -13787,16 +13775,6 @@ uuid@3.3.2, uuid@7.0.3, uuid@^2.0.1, uuid@^3.0.0, uuid@^3.2.1, uuid@^3.3.2, uuid
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
-
-v8-android-jit@8.80.1:
-  version "8.80.1"
-  resolved "https://registry.yarnpkg.com/v8-android-jit/-/v8-android-jit-8.80.1.tgz#6340d55853bc196330e1b01f46d7e52a50c76a8a"
-  integrity sha512-o1dduJTRORxU8N/i0KjjKsQAnOBYgBSSh2edvMysXmmWvPMjjjIHXn8iLM00fgb1sXq+bQUUArj+88K1EPPJ9w==
-
-v8-android@~8.80.0:
-  version "8.80.1"
-  resolved "https://registry.yarnpkg.com/v8-android/-/v8-android-8.80.1.tgz#ec4c9be7656445377e6c080ebc39b1ab7e95fbce"
-  integrity sha512-YtJEYC4cEr/EJjCAllQN1T+PX+XtcrCCBXJv+dLdzxxRtVKkHlf8kAxyriXUOtGmiMtgzlz+d8hQugVPdq8ZfA==
 
 v8-compile-cache@^2.0.3, v8-compile-cache@^2.1.1:
   version "2.1.1"
