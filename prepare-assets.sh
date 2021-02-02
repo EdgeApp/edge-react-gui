@@ -9,7 +9,7 @@ cd "$(dirname "$0")"
 
 # Build the EdgeProvider shim code:
 node ./node_modules/.bin/rollup -c
-node ./src/util/bridge/stringifyBridge.js
+node ./scripts/stringifyBridge.js
 
 # Copy pre-built buy/sell plugins:
 node ./copy-plugin.js
