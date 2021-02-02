@@ -1,5 +1,6 @@
 // @flow
 
+import { errorNames } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -40,7 +41,10 @@ type StateProps = {
 
   // Fees
   feeSyntax: string,
-  feeSyntaxStyle?: string
+  feeSyntaxStyle?: string,
+
+  // Error
+  errorMessage?: string
 }
 
 type Props = OwnProps & StateProps & ThemeProps
@@ -49,11 +53,15 @@ class FlipInputModalComponent extends React.PureComponent<Props> {
   handleCloseModal = () => this.props.bridge.resolve()
 
   renderExchangeRates = () => {
-    const { primaryInfo, secondaryInfo, fiatPerCrypto, theme } = this.props
+    const { primaryInfo, secondaryInfo, fiatPerCrypto, errorMessage, theme } = this.props
     const styles = getStyles(theme)
     return (
       <View style={styles.exchangeRateContainer}>
-        <ExchangeRate primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} secondaryDisplayAmount={fiatPerCrypto} />
+        {errorMessage ? (
+          <EdgeText style={styles.exchangeRateErrorText}>{errorMessage}</EdgeText>
+        ) : (
+          <ExchangeRate primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} secondaryDisplayAmount={fiatPerCrypto} />
+        )}
       </View>
     )
   }
@@ -133,6 +141,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   exchangeRateContainer: {
     margin: theme.rem(0.5)
   },
+  exchangeRateErrorText: {
+    color: theme.dangerText
+  },
   balanceValueContainer: {
     flexDirection: 'column'
   },
@@ -191,6 +202,13 @@ export const FlipInputModal = connect((state: RootState, ownProps: OwnProps): St
   const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
   const feeSyntaxStyle = transactionFee.fiatStyle
 
+  // Error
+  const error = state.ui.scenes.sendConfirmation.error
+  let errorMessage
+  if (error && error.message !== 'broadcastError' && error.message !== 'transactionCancelled' && error.name !== errorNames.NoAmountSpecifiedError) {
+    errorMessage = error.message
+  }
+
   return {
     // Balances
     balanceCrypto: `${balanceCrypto} ${currencyCode}`,
@@ -205,6 +223,9 @@ export const FlipInputModal = connect((state: RootState, ownProps: OwnProps): St
 
     // Fees
     feeSyntax,
-    feeSyntaxStyle
+    feeSyntaxStyle,
+
+    // Error
+    errorMessage
   }
 })(withTheme(FlipInputModalComponent))
