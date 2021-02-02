@@ -15,8 +15,7 @@ import { getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.j
 import s from '../locales/strings.js'
 import { addToFioAddressCache, recordSend } from '../modules/FioAddress/util'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
-import { getAuthRequired, getSpendInfo, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
-import type { AuthType } from '../modules/UI/scenes/SendConfirmation/selectors.js'
+import { type AuthType, getAuthRequired, getSpendInfo, getSpendInfoWithoutState, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
 import { convertCurrencyFromExchangeRates, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet, getSelectedWalletId } from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
@@ -407,4 +406,37 @@ export const displayFeeAlert = async (feeAmountInFiatSyntax: string) => {
 
 export const getAuthRequiredDispatch = (spendInfo: EdgeSpendInfo) => (dispatch: Dispatch, getState: GetState) => {
   return getAuthRequired(getState(), spendInfo)
+}
+
+export const updateTransactionAmount = (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
+  const state = getState()
+  const guiWallet = state.ui.wallets.byId[walletId]
+  const sceneState = state.ui.scenes.sendConfirmation
+  const { isoFiatCurrencyCode } = guiWallet
+  const { currencyWallets = {} } = state.core.account
+  const coreWallet = currencyWallets[guiWallet.id]
+
+  // Spend Info
+  const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+  const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto.toString())
+  const metadata: EdgeMetadata = { amountFiat: parseFloat(amountFiatString) }
+  const guiMakeSpendInfo = { nativeAmount, metadata }
+  const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
+  const spendInfo = getSpendInfoWithoutState(guiMakeSpendInfoClone, sceneState, currencyCode)
+  const authType: any = getAuthRequiredDispatch(spendInfo) // Type casting any cause dispatch returns a function
+
+  // Transaction Update
+  dispatch(newSpendInfo(spendInfo, authType))
+  coreWallet
+    .makeSpend(spendInfo)
+    .then(edgeTransaction => {
+      dispatch(updateTransaction(edgeTransaction, guiMakeSpendInfoClone, false, null))
+    })
+    .catch(error => {
+      dispatch(updateTransaction(null, guiMakeSpendInfoClone, false, error))
+      console.log(error)
+    })
 }

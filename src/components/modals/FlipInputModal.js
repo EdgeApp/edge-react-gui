@@ -8,6 +8,7 @@ import { MenuProvider } from 'react-native-popup-menu'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
+import { updateTransactionAmount } from '../../actions/SendConfirmationActions.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../modules/Settings/selectors.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
@@ -47,10 +48,19 @@ type StateProps = {
   errorMessage?: string
 }
 
-type Props = OwnProps & StateProps & ThemeProps
+type DispatchProps = {
+  updateTransactionAmount: (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => void
+}
+
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class FlipInputModalComponent extends React.PureComponent<Props> {
   handleCloseModal = () => this.props.bridge.resolve()
+
+  handleExchangeAmountChange = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
+    const { walletId, currencyCode, updateTransactionAmount } = this.props
+    updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode)
+  }
 
   renderExchangeRates = () => {
     const { primaryInfo, secondaryInfo, fiatPerCrypto, errorMessage, theme } = this.props
@@ -102,8 +112,6 @@ class FlipInputModalComponent extends React.PureComponent<Props> {
       </View>
     )
   }
-
-  handleExchangeAmountChange = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {}
 
   renderFees = () => {
     const { feeSyntax, feeSyntaxStyle, theme } = this.props
@@ -165,67 +173,73 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FlipInputModal = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const { walletId, currencyCode } = ownProps
-  const guiWallet = state.ui.wallets.byId[walletId]
-  const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
+export const FlipInputModal = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => {
+    const { walletId, currencyCode } = ownProps
+    const guiWallet = state.ui.wallets.byId[walletId]
+    const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
 
-  // Denominations
-  const cryptoDenomination = getDisplayDenomination(state, currencyCode)
-  const cryptoExchangeDenomination = getExchangeDenomination(state, currencyCode)
-  const fiatDenomination = getDenomFromIsoCode(fiatCurrencyCode)
+    // Denominations
+    const cryptoDenomination = getDisplayDenomination(state, currencyCode)
+    const cryptoExchangeDenomination = getExchangeDenomination(state, currencyCode)
+    const fiatDenomination = getDenomFromIsoCode(fiatCurrencyCode)
 
-  // Balances
-  const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
-  const balanceCrypto = convertNativeToExchangeRateDenomination(state.ui.settings, currencyCode, balanceInCrypto)
-  const balanceFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(balanceCrypto))
-
-  // FlipInput
-  const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-
-  const primaryInfo = {
-    displayCurrencyCode: currencyCode,
-    displayDenomination: cryptoDenomination,
-    exchangeCurrencyCode: cryptoExchangeDenomination.name,
-    exchangeDenomination: cryptoExchangeDenomination
-  }
-
-  const secondaryInfo = {
-    displayCurrencyCode: fiatCurrencyCode,
-    displayDenomination: fiatDenomination,
-    exchangeCurrencyCode: isoFiatCurrencyCode,
-    exchangeDenomination: fiatDenomination
-  }
-
-  // Fees
-  const transactionFee = calculateTransactionFee(state, guiWallet, currencyCode)
-  const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
-  const feeSyntaxStyle = transactionFee.fiatStyle
-
-  // Error
-  const error = state.ui.scenes.sendConfirmation.error
-  let errorMessage
-  if (error && error.message !== 'broadcastError' && error.message !== 'transactionCancelled' && error.name !== errorNames.NoAmountSpecifiedError) {
-    errorMessage = error.message
-  }
-
-  return {
     // Balances
-    balanceCrypto: `${balanceCrypto} ${currencyCode}`,
-    balanceFiat: `${fiatDenomination.symbol ? fiatDenomination.symbol + ' ' : ''} ${balanceFiat.toFixed(2)}`,
+    const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
+    const balanceCrypto = convertNativeToExchangeRateDenomination(state.ui.settings, currencyCode, balanceInCrypto)
+    const balanceFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(balanceCrypto))
 
     // FlipInput
-    flipInputHeaderText: sprintf(s.strings.send_from_wallet, guiWallet.name),
-    flipInputHeaderLogo: guiWallet.symbolImageDarkMono || '',
-    primaryInfo,
-    secondaryInfo,
-    fiatPerCrypto: fiatPerCrypto || 0,
+    const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+
+    const primaryInfo = {
+      displayCurrencyCode: currencyCode,
+      displayDenomination: cryptoDenomination,
+      exchangeCurrencyCode: cryptoExchangeDenomination.name,
+      exchangeDenomination: cryptoExchangeDenomination
+    }
+
+    const secondaryInfo = {
+      displayCurrencyCode: fiatCurrencyCode,
+      displayDenomination: fiatDenomination,
+      exchangeCurrencyCode: isoFiatCurrencyCode,
+      exchangeDenomination: fiatDenomination
+    }
 
     // Fees
-    feeSyntax,
-    feeSyntaxStyle,
+    const transactionFee = calculateTransactionFee(state, guiWallet, currencyCode)
+    const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
+    const feeSyntaxStyle = transactionFee.fiatStyle
 
     // Error
-    errorMessage
-  }
-})(withTheme(FlipInputModalComponent))
+    const error = state.ui.scenes.sendConfirmation.error
+    let errorMessage
+    if (error && error.message !== 'broadcastError' && error.message !== 'transactionCancelled' && error.name !== errorNames.NoAmountSpecifiedError) {
+      errorMessage = error.message
+    }
+
+    return {
+      // Balances
+      balanceCrypto: `${balanceCrypto} ${currencyCode}`,
+      balanceFiat: `${fiatDenomination.symbol ? fiatDenomination.symbol + ' ' : ''} ${balanceFiat.toFixed(2)}`,
+
+      // FlipInput
+      flipInputHeaderText: sprintf(s.strings.send_from_wallet, guiWallet.name),
+      flipInputHeaderLogo: guiWallet.symbolImageDarkMono || '',
+      primaryInfo,
+      secondaryInfo,
+      fiatPerCrypto: fiatPerCrypto || 0,
+
+      // Fees
+      feeSyntax,
+      feeSyntaxStyle,
+
+      // Error
+      errorMessage
+    }
+  },
+  (dispatch: Dispatch) => ({
+    updateTransactionAmount: (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) =>
+      dispatch(updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode))
+  })
+)(withTheme(FlipInputModalComponent))
