@@ -15,6 +15,7 @@ import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenominati
 import { type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { calculateTransactionFee, getDenomFromIsoCode } from '../../util/utils.js'
+import { ExchangeRate } from '../common/ExchangeRate.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
@@ -46,6 +47,16 @@ type Props = OwnProps & StateProps & ThemeProps
 
 class FlipInputModalComponent extends React.PureComponent<Props> {
   handleCloseModal = () => this.props.bridge.resolve()
+
+  renderExchangeRates = () => {
+    const { primaryInfo, secondaryInfo, fiatPerCrypto, theme } = this.props
+    const styles = getStyles(theme)
+    return (
+      <View style={styles.exchangeRateContainer}>
+        <ExchangeRate primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} secondaryDisplayAmount={fiatPerCrypto} />
+      </View>
+    )
+  }
 
   renderBalance = () => {
     const { balanceCrypto, balanceFiat, theme } = this.props
@@ -103,6 +114,7 @@ class FlipInputModalComponent extends React.PureComponent<Props> {
       <MenuProvider style={{ flexDirection: 'row' }}>
         <ThemedModal bridge={this.props.bridge} onCancel={this.handleCloseModal}>
           <ModalTitle>{s.strings.string_enter_amount}</ModalTitle>
+          {this.renderExchangeRates()}
           {this.renderBalance()}
           {this.renderFlipInput()}
           {this.renderFees()}
@@ -117,6 +129,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   balanceContainer: {
     flexDirection: 'row',
     marginHorizontal: theme.rem(0.5)
+  },
+  exchangeRateContainer: {
+    margin: theme.rem(0.5)
   },
   balanceValueContainer: {
     flexDirection: 'column'
