@@ -45,11 +45,17 @@ type OwnProps = {
 }
 
 type StateProps = {
+  // Wallet
   currencyCode: string,
+  guiWallet: GuiWallet,
+  coreWallet?: EdgeCurrencyWallet,
+
+  // Fees
   feeSyntax: string,
   feeSyntaxStyle?: string,
-  guiWallet: GuiWallet,
-  coreWallet?: EdgeCurrencyWallet
+
+  // Amount
+  amountSyntax: string
 }
 
 type DispatchProps = {
@@ -194,12 +200,20 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAmount() {
-    const { actionType } = this.props
+    const { actionType, amountSyntax } = this.props
 
     if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
       return null
     }
-    return <Tile type="touchable" title={s.strings.fio_request_amount} onPress={this.handleFlipinputModal} />
+
+    return (
+      <Tile
+        type="touchable"
+        title={s.strings.fio_request_amount}
+        onPress={this.handleFlipinputModal}
+        body={amountSyntax}
+      />
+    )
   }
 
   renderAdditionalTiles() {
@@ -296,6 +310,10 @@ export const SendScene2 = connect(
     const { exchangeRates, ui } = state
     const { settings } = ui
 
+    // Denominations
+    const cryptoDenomination = getDisplayDenomination(state, currencyCode)
+    const fiatDenomination = UTILS.getDenomFromIsoCode(fiatCurrencyCode)
+
     // Core Wallet
     const { account } = state.core
     const { currencyWallets } = account
@@ -305,16 +323,26 @@ export const SendScene2 = connect(
     let feeSyntax = ''
     let feeSyntaxStyle
     if (ownProps.actionType === SEND_ACTION_TYPE.fioTransferDomain) {
-      const primaryExchangeDenomination = getDisplayDenomination(state, currencyCode)
-      const secondaryDisplayDenomination = UTILS.getDenomFromIsoCode(fiatCurrencyCode)
       const nativeAmount = ownProps.amount ? bns.abs(`${ownProps.amount}`) : ''
       const cryptoAmount = convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
       const currentFiatAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(cryptoAmount))
-      feeSyntax = `${primaryExchangeDenomination.symbol || ''} ${cryptoAmount} (${secondaryDisplayDenomination.symbol || ''} ${currentFiatAmount.toFixed(2)})`
+      feeSyntax = `${cryptoDenomination.symbol || ''} ${cryptoAmount} (${fiatDenomination.symbol || ''} ${currentFiatAmount.toFixed(2)})`
     } else if (ownProps.actionType === SEND_ACTION_TYPE.send) {
       const transactionFee = UTILS.calculateTransactionFee(state, guiWallet, currencyCode)
       feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
       feeSyntaxStyle = transactionFee.fiatStyle
+    }
+
+    // Amount
+    let amountSyntax
+    const { nativeAmount } = state.ui.scenes.sendConfirmation
+    const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
+    if (nativeAmount && !bns.eq(nativeAmount, '0')) {
+      const exchangeAmount = bns.div(nativeAmount, cryptoDenomination.multiplier, UTILS.DIVIDE_PRECISION)
+      const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(exchangeAmount))
+      amountSyntax = `${exchangeAmount || '0'} ${cryptoDenomination.name} = (${fiatSymbol} ${fiatAmount.toFixed(2) || '0'})`
+    } else {
+      amountSyntax = `${'0'} ${cryptoDenomination.name} = (${fiatSymbol} ${'0'})`
     }
 
     return {
@@ -325,7 +353,10 @@ export const SendScene2 = connect(
 
       // Fees
       feeSyntax,
-      feeSyntaxStyle
+      feeSyntaxStyle,
+
+      // Amount
+      amountSyntax
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
