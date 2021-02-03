@@ -118,6 +118,7 @@
     "@react-native-community/blur": "^3.6.0",
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/datetimepicker": "^3.0.2",
+    "@react-native-community/netinfo": "^5.9.10",
     "@react-native-firebase/analytics": "^6.0.0",
     "@react-native-firebase/app": "^6.0.0",
     "@react-native-firebase/iid": "^6.0.0",

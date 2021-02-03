@@ -26,6 +26,7 @@ import { DeepLinkingManager } from './DeepLinkingManager.js'
 import EdgeAccountCallbackManager from './EdgeAccountCallbackManager.js'
 import EdgeContextCallbackManager from './EdgeContextCallbackManager.js'
 import EdgeWalletsCallbackManager from './EdgeWalletsCallbackManager.js'
+import { NetworkActivity } from './NetworkActivity.js'
 import { PasswordReminderService } from './PasswordReminderService.js'
 import { PermissionsManager } from './PermissionsManager.js'
 
@@ -90,6 +91,7 @@ export class Services extends React.PureComponent<Props> {
           <EdgeWalletsCallbackManager />
           <ModalProvider />
           <PermissionsManager />
+          <NetworkActivity />
           <PasswordReminderService />
         </>
       </Provider>
