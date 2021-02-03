@@ -30,7 +30,6 @@ import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConf
 import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
-import { SendScene } from '../components/scenes/SendScene'
 import { SEND_ACTION_TYPE, SendScene2 } from '../components/scenes/SendScene2'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
@@ -45,7 +44,7 @@ import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchang
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import Request from '../connectors/scenes/RequestConnector.js'
-// import Scan from '../connectors/scenes/ScanConnector'
+import Scan from '../connectors/scenes/ScanConnector'
 import SendConfirmation from '../connectors/scenes/SendConfirmationConnector.js'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
@@ -275,13 +274,16 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key={Constants.SCAN}
                 navTransparent
+                onEnter={props => {
+                  this.props.requestPermission('camera')
+                  this.props.dispatchEnableScan()
+                  this.props.checkAndShowGetCryptoModal(props.data)
+                }}
                 onExit={this.props.dispatchDisableScan}
-                component={ifLoggedIn(() => (
-                  <SendScene2 actionType={SEND_ACTION_TYPE.send} />
-                ))}
-                renderTitle={<HeaderTitle showWalletNameOnly />}
+                component={ifLoggedIn(Scan)}
+                renderTitle={<HeaderTitle />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-                renderRightButton={this.renderSendConfirmationButton()}
+                renderRightButton={<SideMenuButton />}
               />
 
               <Scene
@@ -437,10 +439,19 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.SEND}
               navTransparent
-              hideTabBar
-              panHandlers={null}
-              component={ifLoggedIn(SendScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_send} />}
+              onExit={this.props.dispatchDisableScan}
+              component={ifLoggedIn(() => (
+                <SendScene2 actionType={SEND_ACTION_TYPE.send} />
+              ))}
+              renderTitle={<HeaderTitle showWalletNameOnly />}
+              renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
+              renderRightButton={this.renderSendConfirmationButton()}
+            />
+            <Scene
+              key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
+              navTransparent
+              component={ifLoggedIn(ChangeMiningFeeScene)}
+              renderTitle={<HeaderTitle title={s.strings.title_change_mining_fee} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={<HeaderTextButton type="help" />}
             />
