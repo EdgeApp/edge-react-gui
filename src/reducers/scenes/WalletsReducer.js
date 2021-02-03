@@ -185,6 +185,14 @@ const walletLoadingProgress = (state = {}, action: Action): $PropertyType<Wallet
       }
     }
 
+    case 'RESET_WALLET_LOADING_PROGRESS': {
+      if (!action.data) throw new Error('Invalid action')
+      return {
+        ...state,
+        [action.data.walletId]: 5
+      }
+    }
+
     default:
       return state
   }
