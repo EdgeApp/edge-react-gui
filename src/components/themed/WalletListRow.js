@@ -13,6 +13,7 @@ import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
+import { HiddenMenuButtons } from './HiddenMenuButtons'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 const FULL_WIDTH = Dimensions.get('window').width
@@ -155,36 +156,43 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
         directionalDistanceChangeThreshold={5}
         useNativeDriver
       >
-        <View style={styles.swipeContainer}>
-          {(isSwipingRight || swipeDirection === null) && (
-            <View style={styles.swipeRowContainer}>
-              <TouchableOpacity style={styles.swipeOptionsContainer} onPress={this.handleOpenWalletListMenuModal}>
+        <HiddenMenuButtons
+          left={{
+            children: (
+              <View style={styles.swipeOptionsContainer}>
                 <EdgeText style={styles.swipeOptionsIcon} adjustsFontSizeToFit={false}>
                   {WALLET_LIST_OPTIONS_ICON}
                 </EdgeText>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.swipeRequestContainer} onPress={this.handleOpenRequest}>
-                <View style={styles.swipeButton}>
-                  <Fontello name="request" color={theme.icon} size={theme.rem(isSwipingRight ? 1.5 : 1)} />
-                </View>
-              </TouchableOpacity>
-            </View>
-          )}
-          {(isSwipingLeft || swipeDirection === null) && (
-            <View style={styles.swipeRowContainer}>
-              <TouchableOpacity style={styles.swipeSendContainer} onPress={this.handleOpenSend}>
-                <View style={styles.swipeButton}>
-                  <Fontello name="send" color={theme.icon} size={theme.rem(isSwipingLeft ? 1.5 : 1)} />
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.swipeOptionsContainer} onPress={this.handleOpenWalletListMenuModal}>
+              </View>
+            ),
+            color: 'default',
+            onPress: this.handleOpenWalletListMenuModal
+          }}
+          leftSwipable={{
+            children: <Fontello name="request" color={theme.icon} size={theme.rem(isSwipingRight ? 1.5 : 1)} />,
+            color: 'success',
+            onPress: this.handleOpenRequest
+          }}
+          rightSwipable={{
+            children: <Fontello name="send" color={theme.icon} size={theme.rem(isSwipingLeft ? 1.5 : 1)} />,
+            color: 'danger',
+            onPress: this.handleOpenSend
+          }}
+          right={{
+            children: (
+              <View style={styles.swipeOptionsContainer}>
                 <EdgeText style={styles.swipeOptionsIcon} adjustsFontSizeToFit={false}>
                   {WALLET_LIST_OPTIONS_ICON}
                 </EdgeText>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
+              </View>
+            ),
+            color: 'default',
+            onPress: this.handleOpenWalletListMenuModal
+          }}
+          isSwipingRight={isSwipingRight}
+          isSwipingLeft={isSwipingLeft}
+          swipeDirection={swipeDirection}
+        />
         <Gradient style={styles.container}>
           <TouchableOpacity onPress={this.handleSelectWallet} onLongPress={this.handleOpenWalletListMenuModal}>
             <View style={styles.rowContainer}>
@@ -255,38 +263,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   exchangeRate: {
     flex: 1
-  },
-  swipeContainer: {
-    flex: 1,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    height: theme.rem(5.75),
-    marginBottom: theme.rem(1 / 16)
-  },
-  swipeRowContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    height: '100%'
-  },
-  swipeRequestContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    backgroundColor: theme.sliderTabRequest,
-    height: '100%'
-  },
-  swipeSendContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    backgroundColor: theme.sliderTabSend,
-    height: '100%'
-  },
-  swipeButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: theme.rem(3.125)
   },
   swipeOptionsContainer: {
     height: '100%',
