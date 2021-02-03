@@ -2,24 +2,27 @@
 
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
 
-import fioAddressDetailsIcon from '../../assets/images/details_fioAddress.png'
+import fioAddressLogo from '../../assets/images/fio/fio_logo.png'
+import { Fontello } from '../../assets/vector'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { FioAddressRow, FioDomainRow } from '../../modules/FioAddress/components/FioName'
-import { Button } from '../../modules/UI/components/ControlPanel/Component/Button/Button.ui'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
+import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
+import { FioNameRow } from '../../modules/FioAddress/components/FioName'
+import { getFioWallets } from '../../modules/UI/selectors'
+import type { RootState } from '../../reducers/RootReducer'
+import type { Dispatch } from '../../types/reduxTypes'
 import type { FioAddress, FioDomain } from '../../types/types'
-import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { SettingsHeaderRow } from '../common/SettingsHeaderRow.js'
 import { showError } from '../services/AirshipInstance'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText'
+import { ClickableText } from '../themed/ThemedButtons'
+import { UnderlinedHeader } from '../themed/UnderlinedHeader'
 
 export type StateProps = {
   fioAddresses: FioAddress[],
@@ -38,10 +41,9 @@ type NavigationProps = {
   navigation: any
 }
 
-type Props = StateProps & DispatchProps & NavigationProps
+type Props = StateProps & DispatchProps & NavigationProps & ThemeProps
 
-export class FioAddressListScene extends React.Component<Props> {
-  headerIconSize = THEME.rem(1.375)
+class FioAddressList extends React.Component<Props> {
   willFocusSubscription: { remove: () => void } | null = null
 
   fetchData() {
@@ -85,127 +87,133 @@ export class FioAddressListScene extends React.Component<Props> {
   }
 
   render() {
-    const { fioAddresses, fioDomains, loading } = this.props
+    const { fioAddresses, fioDomains, loading, theme } = this.props
+    const styles = getStyles(theme)
 
     if (!fioAddresses.length) {
       return (
-        <SceneWrapper background="header">
-          <Gradient style={styles.gradient} />
-          <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="large" />
+        <SceneWrapper background="theme">
+          <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />
         </SceneWrapper>
       )
     }
 
+    const noFioDomainsText = `${s.strings.no} ${s.strings.title_fio_domains}`
     return (
-      <SafeAreaView>
-        <Gradient style={styles.gradient} />
+      <SceneWrapper background="theme">
         <ScrollView style={styles.row}>
-          <SettingsHeaderRow icon={<Image source={fioAddressDetailsIcon} style={styles.headerIcon} />} text={s.strings.title_fio_address} />
+          <UnderlinedHeader title={s.strings.title_fio_address} />
           <View style={styles.list}>
-            {fioAddresses.map((address: FioAddress) => (
-              <FioAddressRow key={`${address.name}`} item={address} onPress={this.onAddressPress} />
+            {fioAddresses.map((address: FioAddress, index: number) => (
+              <FioNameRow
+                key={`${address.name}`}
+                name={address.name}
+                expiration={address.expiration}
+                icon={<Image source={fioAddressLogo} style={styles.iconImg} />}
+                theme={theme}
+                onPress={() => this.onAddressPress(address)}
+              />
             ))}
           </View>
-          <SettingsHeaderRow icon={<IonIcon name="ios-at" color={THEME.COLORS.WHITE} size={this.headerIconSize} />} text={s.strings.title_fio_domains} />
+          <UnderlinedHeader title={s.strings.title_fio_domains} withTopMargin />
           <View style={styles.list}>
-            {!fioDomains.length && (
-              <T style={styles.noNames}>
-                {s.strings.no} {s.strings.title_fio_domains}
-              </T>
-            )}
-            {fioDomains.map((domain: FioDomain) => (
-              <FioDomainRow key={`${domain.name}`} item={domain} onPress={this.onDomainPress} />
+            {!fioDomains.length && <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>}
+            {fioDomains.map((domain: FioDomain, index: number) => (
+              <FioNameRow
+                key={`${domain.name}`}
+                name={domain.name}
+                expiration={domain.expiration}
+                icon={<IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />}
+                theme={theme}
+                onPress={() => this.onDomainPress(domain)}
+              />
             ))}
           </View>
-          {loading && <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.loading} size="large" />}
+          {loading && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />}
         </ScrollView>
 
         <View>
-          <View style={styles.button}>
-            <Button onPress={Actions[Constants.FIO_ADDRESS_REGISTER]} style={styles.toggleButton} underlayColor={`${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`}>
-              <Button.Center>
-                <Button.Text>
-                  <T>{s.strings.fio_address_list_screen_button_register}</T>
-                </Button.Text>
-              </Button.Center>
-            </Button>
-          </View>
-          <View style={styles.button}>
-            <Button onPress={Actions[Constants.FIO_DOMAIN_REGISTER]} style={styles.toggleButton} underlayColor={`${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`}>
-              <Button.Center>
-                <Button.Text>
-                  <T>{s.strings.fio_address_list_domain_register}</T>
-                </Button.Text>
-              </Button.Center>
-            </Button>
-          </View>
+          <ClickableText marginRem={[1, 1, 0]} onPress={Actions[Constants.FIO_ADDRESS_REGISTER]}>
+            <View style={styles.actionButton}>
+              <Fontello name="register-new-fio-icon" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
+              <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_screen_button_register}</EdgeText>
+            </View>
+          </ClickableText>
+          <ClickableText marginRem={[0, 1, 2, 1]} onPress={Actions[Constants.FIO_DOMAIN_REGISTER]}>
+            <View style={styles.actionButton}>
+              <Fontello name="register-custom-fio" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
+              <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_domain_register}</EdgeText>
+            </View>
+          </ClickableText>
         </View>
-      </SafeAreaView>
+      </SceneWrapper>
     )
   }
 }
 
-const rawStyles = {
-  gradient: {
-    height: THEME.HEADER
-  },
+const getStyles = cacheStyles((theme: Theme) => ({
   list: {
     display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: THEME.COLORS.WHITE
-  },
-  item: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: scale(15),
-    borderBottomColor: THEME.COLORS.FIO_ADDRESS_LIST_BORDER_BOTTOM,
-    borderBottomWidth: 1
-  },
-  icon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: scale(10),
-    marginLeft: scale(5)
-  },
-  button: {
-    paddingVertical: THEME.rem(0.33),
-    paddingHorizontal: THEME.rem(0.66)
-  },
-  toggleButton: {
-    backgroundColor: THEME.COLORS.PRIMARY,
-    height: scale(58),
-    justifyContent: 'flex-start',
-    alignItems: 'center'
-  },
-  domainVew: {
-    paddingHorizontal: scale(15),
-    paddingTop: scale(10),
-    paddingBottom: scale(0)
-  },
-  link: {
-    padding: scale(10),
-    color: THEME.COLORS.ACCENT_BLUE,
-    textAlign: 'center'
+    flexDirection: 'column'
   },
   loading: {
     flex: 1,
-    marginTop: scale(40),
+    marginTop: theme.rem(2.5),
     alignSelf: 'center'
   },
   row: {
     flex: 1
   },
   noNames: {
-    color: THEME.COLORS.GRAY_2,
-    fontSize: scale(16),
+    color: theme.deactivatedText,
+    fontSize: theme.rem(1),
     textAlign: 'center',
-    padding: scale(15)
+    padding: theme.rem(1)
   },
-  headerIcon: {
-    width: scale(24),
-    height: scale(22)
+  buttonText: {
+    marginLeft: theme.rem(0.5),
+    color: theme.textLink,
+    textAlign: 'center'
+  },
+  iconImg: {
+    height: theme.rem(2.25),
+    marginRight: theme.rem(1.5)
+  },
+  iconIon: {
+    width: theme.rem(1.5),
+    marginRight: theme.rem(1),
+    textAlign: 'center'
+  },
+  actionButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  actionIcon: {
+    marginTop: theme.rem(0.25)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+const FioAddressListScene = connect(
+  (state: RootState) => {
+    const { account } = state.core
+    const fioAddresses: FioAddress[] = state.ui.scenes.fioAddress.fioAddresses
+    const fioDomains: FioDomain[] = state.ui.scenes.fioAddress.fioDomains
+    const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
+    const loading: boolean = state.ui.scenes.fioAddress.fioAddressesLoading
+    const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
+
+    return {
+      fioAddresses,
+      fioDomains,
+      fioWallets,
+      fioPlugin,
+      loading,
+      isConnected: state.network.isConnected
+    }
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses())
+  })
+)(withTheme(FioAddressList))
+export { FioAddressListScene }
