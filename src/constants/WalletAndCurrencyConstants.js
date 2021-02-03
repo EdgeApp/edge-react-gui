@@ -256,7 +256,7 @@ export const SPECIAL_CURRENCY_INFO: {
       minimumNativeBalance: '20000000',
       modalMessage: s.strings.request_xrp_minimum_notification_body
     },
-    displayBuyCrypto: true,
+    displayBuyCrypto: false,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_instructions

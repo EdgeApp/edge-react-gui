@@ -5301,9 +5301,9 @@ edge-login-ui-rn@^0.6.28:
   dependencies:
     cleaners "^0.3.1"
 
-"edge-plugin-simplex@https://github.com/Airbitz/edge-plugin-simplex.git#efedbabac85ecf985aa13658b25a7f2fd4466751":
+"edge-plugin-simplex@https://github.com/EdgeApp/edge-plugin-simplex.git#efb0f2280192894e4c24e28e297d0e466f2d333b":
   version "0.0.3"
-  resolved "https://github.com/Airbitz/edge-plugin-simplex.git#efedbabac85ecf985aa13658b25a7f2fd4466751"
+  resolved "https://github.com/EdgeApp/edge-plugin-simplex.git#efb0f2280192894e4c24e28e297d0e466f2d333b"
   dependencies:
     moment "^2.22.2"
 

@@ -196,7 +196,7 @@
     "babel-loader": "^8.0.5",
     "body-parser": "^1.18.2",
     "edge-plugin-bity": "https://github.com/EdgeApp/edge-plugin-bity.git#36c597e5ac9d53db87ee1f705360f9cc937b7b52",
-    "edge-plugin-simplex": "https://github.com/Airbitz/edge-plugin-simplex.git#efedbabac85ecf985aa13658b25a7f2fd4466751",
+    "edge-plugin-simplex": "https://github.com/EdgeApp/edge-plugin-simplex.git#efb0f2280192894e4c24e28e297d0e466f2d333b",
     "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#3ff34e5f6ebdfea1199f6acccedc703cc9abcd7a",
     "eslint": "^7.1.0",
     "eslint-config-standard-kit": "^0.14.4",
