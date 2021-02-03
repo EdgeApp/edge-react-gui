@@ -209,19 +209,24 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   renderAmount() {
     const { actionType, amountSyntax } = this.props
+    const { recipientAddress } = this.state
 
     if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
       return null
     }
 
-    return (
-      <Tile
-        type="touchable"
-        title={s.strings.fio_request_amount}
-        onPress={this.handleFlipinputModal}
-        body={amountSyntax}
-      />
-    )
+    if (recipientAddress) {
+      return (
+        <Tile
+          type="touchable"
+          title={s.strings.fio_request_amount}
+          onPress={this.handleFlipinputModal}
+          body={amountSyntax}
+        />
+      )
+    }
+
+    return null
   }
 
   renderAdditionalTiles() {
@@ -262,13 +267,15 @@ class SendComponent extends React.PureComponent<Props, State> {
               />
             )}
             {this.renderAmount()}
-            <Tile type="static" title={`${s.strings.string_fee}:`}>
-              <EdgeText style={{ color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText }}>{feeSyntax}</EdgeText>
-            </Tile>
+            {!!recipientAddress && (
+              <Tile type="static" title={`${s.strings.string_fee}:`}>
+                <EdgeText style={{ color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText }}>{feeSyntax}</EdgeText>
+              </Tile>
+            )}
             {this.renderAdditionalTiles()}
           </View>
           <Scene.Footer style={styles.footer}>
-            {showSlider && <Slider onSlidingComplete={this.submit} sliderDisabled={sliderDisabled} showSpinner={loading} />}
+            {showSlider && !!recipientAddress && <Slider onSlidingComplete={this.submit} sliderDisabled={sliderDisabled} showSpinner={loading} />}
           </Scene.Footer>
         </ScrollView>
       </SceneWrapper>
