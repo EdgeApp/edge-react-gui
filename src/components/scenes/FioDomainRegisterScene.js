@@ -9,10 +9,10 @@ import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
+import { EditNameModal } from '../../modules/FioAddress/components/EditNameModal'
 import { getFioWallets } from '../../modules/UI/selectors'
 import { type RootState } from '../../types/reduxTypes'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -185,10 +185,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   setDomain = async () => {
     this.handleFioDomainFocus()
 
-    // todo: change to editName fio component after PR merge https://github.com/EdgeApp/edge-react-gui/pull/2282
-    const fioDomain = await Airship.show(bridge => (
-      <TransactionDetailsNotesInput bridge={bridge} title={s.strings.fio_confirm_request_input_title_memo} notes={this.state.fioDomain} />
-    ))
+    const fioDomain = await Airship.show(bridge => <EditNameModal bridge={bridge} title={s.strings.fio_domain_choose_label} value={this.state.fioDomain} />)
     if (fioDomain) this.handleFioDomainChange(fioDomain)
   }
 
