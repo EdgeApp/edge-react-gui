@@ -229,6 +229,8 @@ class SendComponent extends React.PureComponent<Props, State> {
                 coreWallet={coreWallet}
                 currencyCode={currencyCode}
                 onChangeAddress={this.onChangeAddress}
+                resetAddressTile={false}
+                resetSendTransaction={() => {}}
               />
             )}
             {this.renderAmount()}

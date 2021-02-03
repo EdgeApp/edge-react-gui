@@ -74,7 +74,8 @@ type Props = OwnProps & StateProps & DispatchProps & RouteProps & ThemeProps
 type State = {
   recipientAddress: string,
   loading: boolean,
-  showSlider: boolean
+  showSlider: boolean,
+  resetAddressTile: boolean
 }
 
 class SendComponent extends React.PureComponent<Props, State> {
@@ -84,7 +85,8 @@ class SendComponent extends React.PureComponent<Props, State> {
     this.state = {
       recipientAddress: '',
       loading: false,
-      showSlider: true
+      showSlider: true,
+      resetAddressTile: false
     }
   }
 
@@ -109,11 +111,17 @@ class SendComponent extends React.PureComponent<Props, State> {
     this.setState({ showSlider: false }, () => this.setState({ showSlider: true }))
   }
 
+  resetSendTransaction = () => {
+    this.props.reset()
+    this.setState({ recipientAddress: '', resetAddressTile: true }, () => this.setState({ resetAddressTile: false }))
+  }
+
   handleWalletPress = () => {
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={this.props.allowedCurrencyCodes} />)
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
           this.props.onSelectWallet(walletId, currencyCode)
+          this.resetSendTransaction()
         }
       })
       .catch(error => console.log(error))
@@ -227,7 +235,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   // Render
   render() {
     const { actionType, coreWallet, currencyCode, feeSyntax, feeSyntaxStyle, guiWallet, theme } = this.props
-    const { loading, recipientAddress, showSlider } = this.state
+    const { loading, recipientAddress, showSlider, resetAddressTile } = this.state
     const styles = getStyles(theme)
     const sliderDisabled = !recipientAddress
     const walletName = `${guiWallet.name} (${guiWallet.currencyCode})`
@@ -249,6 +257,8 @@ class SendComponent extends React.PureComponent<Props, State> {
                 coreWallet={coreWallet}
                 currencyCode={currencyCode}
                 onChangeAddress={this.onChangeAddress}
+                resetSendTransaction={this.resetSendTransaction}
+                resetAddressTile={resetAddressTile}
               />
             )}
             {this.renderAmount()}

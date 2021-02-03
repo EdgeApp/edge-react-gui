@@ -26,7 +26,9 @@ type OwnProps = {
   currencyCode: string,
   title: string,
   recipientAddress: string,
-  onChangeAddress: (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => Promise<void>
+  onChangeAddress: (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => Promise<void>,
+  resetAddressTile: boolean,
+  resetSendTransaction: () => void
 }
 type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null
@@ -71,6 +73,12 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 
   componentDidMount(): void {
     this._setClipboard(this.props)
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.resetAddressTile !== this.props.resetAddressTile && this.props.resetAddressTile === false) {
+      this.resetAddressTile()
+    }
   }
 
   shouldContinueLegacy = async () => {
@@ -189,7 +197,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
         loading: false
       })
     } catch (e) {
-      this.setState({ loading: false })
+      this.setState({ loading: false, clipboard: '' })
       // Failure is acceptable
     }
   }
@@ -224,9 +232,15 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
       })
   }
 
+  resetAddressTile = () => {
+    this._setClipboard(this.props)
+    this.setState({ isSetAddress: false })
+  }
+
   handleTilePress = () => {
     if (this.state.isSetAddress) {
-      this.setState({ isSetAddress: false })
+      this.resetAddressTile()
+      this.props.resetSendTransaction()
     }
   }
 
