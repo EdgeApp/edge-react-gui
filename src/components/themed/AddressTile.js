@@ -27,16 +27,15 @@ type OwnProps = {
   title: string,
   recipientAddress: string,
   onChangeAddress: (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => Promise<void>,
-  resetAddressTile: boolean,
-  resetSendTransaction: () => void
+  resetSendTransaction: () => void,
+  lockInputs?: boolean
 }
 type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null
 }
 type State = {
   clipboard: string,
-  loading: boolean,
-  isSetAddress: boolean
+  loading: boolean
 }
 type Props = OwnProps & StateProps & ThemeProps
 
@@ -66,8 +65,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 
     this.state = {
       clipboard: '',
-      loading: false,
-      isSetAddress: false
+      loading: false
     }
   }
 
@@ -76,11 +74,8 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.resetAddressTile !== this.props.resetAddressTile && this.props.resetAddressTile === false) {
-      this.resetAddressTile()
-    }
-    if (prevProps.recipientAddress !== this.props.recipientAddress && this.props.recipientAddress !== '') {
-      this.setState({ isSetAddress: true })
+    if (prevProps.recipientAddress !== this.props.recipientAddress && this.props.recipientAddress === '') {
+      this._setClipboard(this.props)
     }
   }
 
@@ -178,7 +173,6 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 
       // set address
       onChangeAddress({ fioAddress }, parsedUri)
-      this.setState({ isSetAddress: true })
     } catch (e) {
       showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
       this.setState({ loading: false })
@@ -235,29 +229,25 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
       })
   }
 
-  resetAddressTile = () => {
-    this._setClipboard(this.props)
-    this.setState({ isSetAddress: false })
-  }
-
   handleTilePress = () => {
-    if (this.state.isSetAddress) {
-      this.resetAddressTile()
+    const { lockInputs, recipientAddress } = this.props
+    if (!lockInputs && !!recipientAddress) {
+      this._setClipboard(this.props)
       this.props.resetSendTransaction()
     }
   }
 
   render() {
-    const { recipientAddress, theme, title } = this.props
-    const { loading, isSetAddress } = this.state
+    const { recipientAddress, lockInputs, theme, title } = this.props
+    const { loading } = this.state
     const styles = getStyles(theme)
     const copyMessage = this.state.clipboard ? `${s.strings.string_paste}: ${this.state.clipboard}` : null
-    const tileType = loading ? 'loading' : isSetAddress ? 'touchable' : 'static'
-    const tileBody = isSetAddress ? recipientAddress : undefined
+    const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'touchable' : 'static'
+    const tileBody = recipientAddress || undefined
     return (
       <View>
         <Tile type={tileType} title={title} body={tileBody} onPress={this.handleTilePress}>
-          {!isSetAddress && (
+          {!recipientAddress && (
             <View style={styles.buttonsContainer}>
               <TouchableOpacity style={styles.buttonContainer} onPress={this.handleChangeAddress}>
                 <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />

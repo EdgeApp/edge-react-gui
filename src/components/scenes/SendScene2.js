@@ -61,7 +61,8 @@ type StateProps = {
   // Slider
   sliderDisabled: boolean,
   resetSlider: boolean,
-  pending: boolean
+  pending: boolean,
+  lockInputs?: boolean
 }
 
 type DispatchProps = {
@@ -85,7 +86,6 @@ type State = {
   recipientAddress: string,
   loading: boolean,
   showSlider: boolean,
-  resetAddressTile: boolean,
   fioSender: FioSenderInfo
 }
 
@@ -97,7 +97,6 @@ class SendComponent extends React.PureComponent<Props, State> {
       recipientAddress: '',
       loading: false,
       showSlider: true,
-      resetAddressTile: false,
       fioSender: {
         fioAddress: props.guiMakeSpendInfo && props.guiMakeSpendInfo.fioPendingRequest ? props.guiMakeSpendInfo.fioPendingRequest.payer_fio_address : '',
         fioWallet: null,
@@ -137,7 +136,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   resetSendTransaction = () => {
     this.props.reset()
-    this.setState({ recipientAddress: '', resetAddressTile: true }, () => this.setState({ resetAddressTile: false }))
+    this.setState({ recipientAddress: '' })
   }
 
   handleWalletPress = () => {
@@ -296,8 +295,8 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   // Render
   render() {
-    const { actionType, coreWallet, currencyCode, feeSyntax, feeSyntaxStyle, guiWallet, pending, resetSlider, sliderDisabled, theme } = this.props
-    const { loading, recipientAddress, showSlider, resetAddressTile } = this.state
+    const { actionType, coreWallet, currencyCode, feeSyntax, feeSyntaxStyle, guiWallet, lockInputs, pending, resetSlider, sliderDisabled, theme } = this.props
+    const { loading, recipientAddress, showSlider } = this.state
     const styles = getStyles(theme)
     const walletName = `${guiWallet.name} (${guiWallet.currencyCode})`
 
@@ -319,7 +318,7 @@ class SendComponent extends React.PureComponent<Props, State> {
                 currencyCode={currencyCode}
                 onChangeAddress={this.onChangeAddress}
                 resetSendTransaction={this.resetSendTransaction}
-                resetAddressTile={resetAddressTile}
+                lockInputs={lockInputs}
               />
             )}
             {this.renderAmount()}
@@ -425,7 +424,7 @@ export const SendScene2 = connect(
     }
 
     // Slider
-    const { transaction, error, pending } = state.ui.scenes.sendConfirmation
+    const { transaction, error, pending, guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
 
     return {
       // Wallet
@@ -443,7 +442,8 @@ export const SendScene2 = connect(
       // slider
       resetSlider: !!error && (error.message === 'broadcastError' || error.message === 'transactionCancelled'),
       sliderDisabled: !transaction || !!error || pending,
-      pending
+      pending,
+      lockInputs: guiMakeSpendInfo.lockInputs
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
