@@ -440,8 +440,8 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.SEND}
               navTransparent
               onExit={this.props.dispatchDisableScan}
-              component={ifLoggedIn(() => (
-                <SendScene2 actionType={SEND_ACTION_TYPE.send} />
+              component={ifLoggedIn(props => (
+                <SendScene2 actionType={SEND_ACTION_TYPE.send} {...props} />
               ))}
               renderTitle={<HeaderTitle showWalletNameOnly />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}

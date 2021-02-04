@@ -79,6 +79,9 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     if (prevProps.resetAddressTile !== this.props.resetAddressTile && this.props.resetAddressTile === false) {
       this.resetAddressTile()
     }
+    if (prevProps.recipientAddress !== this.props.recipientAddress && this.props.recipientAddress !== '') {
+      this.setState({ isSetAddress: true })
+    }
   }
 
   shouldContinueLegacy = async () => {

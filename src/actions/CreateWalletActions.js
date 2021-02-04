@@ -184,11 +184,7 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
         }
       }
     }
-    dispatch({
-      type: 'UI/WALLETS/SELECT_WALLET',
-      data: { currencyCode, walletId: paymentWalletId }
-    })
-    Actions[Constants.SEND_CONFIRMATION]({ guiMakeSpendInfo })
+    Actions[Constants.SEND]({ guiMakeSpendInfo, selectedWalletId: paymentWalletId, selectedCurrencyCode: currencyCode })
   } else {
     // if handle is now unavailable
     dispatch(createHandleUnavailableModal(createdWalletId, accountName))

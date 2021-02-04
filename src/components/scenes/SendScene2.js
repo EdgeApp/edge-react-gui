@@ -74,7 +74,9 @@ type DispatchProps = {
 
 type RouteProps = {
   allowedCurrencyCodes?: string[],
-  guiMakeSpendInfo?: GuiMakeSpendInfo
+  guiMakeSpendInfo?: GuiMakeSpendInfo,
+  selectedWalletId?: string,
+  selectedCurrencyCode?: string
 }
 
 type Props = OwnProps & StateProps & DispatchProps & RouteProps & ThemeProps
@@ -107,12 +109,18 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount(): void {
-    if (this.props.actionType === SEND_ACTION_TYPE.fioTransferDomain) {
+    const { actionType, guiMakeSpendInfo, selectedWalletId, selectedCurrencyCode } = this.props
+    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
       this.props.onSelectWallet(this.props.guiWallet.id, FIO_STR)
     }
 
-    if (this.props.guiMakeSpendInfo) {
-      this.props.sendConfirmationUpdateTx(this.props.guiMakeSpendInfo)
+    if (guiMakeSpendInfo) {
+      this.props.sendConfirmationUpdateTx(guiMakeSpendInfo)
+      this.setState({ recipientAddress: guiMakeSpendInfo.publicAddress || '' })
+    }
+
+    if (selectedWalletId && selectedCurrencyCode) {
+      this.props.onSelectWallet(selectedWalletId, selectedCurrencyCode)
     }
   }
 
