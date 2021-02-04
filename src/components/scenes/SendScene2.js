@@ -271,7 +271,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAmount() {
-    const { actionType, amountSyntax } = this.props
+    const { actionType, amountSyntax, lockInputs } = this.props
     const { recipientAddress } = this.state
 
     if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
@@ -279,7 +279,14 @@ class SendComponent extends React.PureComponent<Props, State> {
     }
 
     if (recipientAddress) {
-      return <Tile type="touchable" title={s.strings.fio_request_amount} onPress={this.handleFlipinputModal} body={amountSyntax} />
+      return (
+        <Tile
+          type={lockInputs ? 'static' : 'touchable'}
+          title={s.strings.fio_request_amount}
+          onPress={lockInputs ? undefined : this.handleFlipinputModal}
+          body={amountSyntax}
+        />
+      )
     }
 
     return null
@@ -293,23 +300,29 @@ class SendComponent extends React.PureComponent<Props, State> {
     }
   }
 
+  renderSelectedWallet() {
+    const { actionType, guiWallet, lockInputs } = this.props
+    return (
+      <Tile
+        type={actionType === SEND_ACTION_TYPE.fioTransferDomain || lockInputs ? 'static' : 'editable'}
+        title={`${s.strings.step} 1: ${s.strings.select_wallet}`}
+        onPress={lockInputs ? undefined : this.handleWalletPress}
+        body={`${guiWallet.name} (${guiWallet.currencyCode})`}
+      />
+    )
+  }
+
   // Render
   render() {
-    const { actionType, coreWallet, currencyCode, feeSyntax, feeSyntaxStyle, guiWallet, lockInputs, pending, resetSlider, sliderDisabled, theme } = this.props
+    const { coreWallet, currencyCode, feeSyntax, feeSyntaxStyle, lockInputs, pending, resetSlider, sliderDisabled, theme } = this.props
     const { loading, recipientAddress, showSlider } = this.state
     const styles = getStyles(theme)
-    const walletName = `${guiWallet.name} (${guiWallet.currencyCode})`
 
     return (
       <SceneWrapper background="theme">
         <ScrollView>
           <View style={styles.tilesContainer}>
-            <Tile
-              type={actionType === SEND_ACTION_TYPE.fioTransferDomain ? 'static' : 'editable'}
-              title={`${s.strings.step} 1: ${s.strings.select_wallet}`}
-              onPress={this.handleWalletPress}
-              body={walletName}
-            />
+            {this.renderSelectedWallet()}
             {coreWallet && (
               <AddressTile
                 title={`${s.strings.step} 2: ${s.strings.transaction_details_recipient} ${s.strings.fragment_send_address}`}
