@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 2.0.2 (2020-02-05)
+
+- Fix crash when adding a Fio name
+
 ## 2.0.1 (2020-02-04)
 
 - Fix detection of transactions with large input values
