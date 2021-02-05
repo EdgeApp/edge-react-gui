@@ -123,9 +123,6 @@ Object {
       "editToken": Object {
         "editCustomTokenProcessing": false,
       },
-      "exchangeRate": Object {
-        "exchangeRates": Object {},
-      },
       "fioAddress": Object {
         "fioAddresses": Array [],
         "fioAddressesLoading": false,
