@@ -44,6 +44,12 @@ export const getSettingsCurrencyMultiplier = (currencyCode: string, settings: Ob
   return multiplier
 }
 
+// Gets the currency multiplier set in settings for specified currencyCode
+// i.e. getSettingsCurrencyMultiplier("ETH", settings)
+export const getMultiplierFromSettings = (currencyCode: string, settings: Object) => {
+  return settings[currencyCode].denomination
+}
+
 // tokens can only have one denomination / multiplier from what I understand
 export const getSettingsTokenMultiplier = (currencyCode: string, settings: Object, denomination: Object): string => {
   let multiplier
