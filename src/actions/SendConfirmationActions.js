@@ -9,7 +9,6 @@ import { sprintf } from 'sprintf-js'
 
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
-import { ThreeButtonSimpleConfirmationModal } from '../components/modals/ThreeButtonSimpleConfirmationModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { EXCHANGE_SCENE, FEE_ALERT_THRESHOLD, FIO_STR, PLUGIN_BUY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import { getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
@@ -142,34 +141,31 @@ export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | Ed
     .then(edgeTransaction => {
       return dispatch(updateTransaction(edgeTransaction, guiMakeSpendInfoClone, forceUpdateGui, null))
     })
-    .catch(e => {
+    .catch(async e => {
       console.log(e)
       if (e.name === 'InsufficientFundsError' && e.currencyCode != null && spendInfo.currencyCode !== e.currencyCode) {
-        const createBuyExchangeModal = (currencyCode: string) => {
-          return Airship.show(bridge => (
-            <ThreeButtonSimpleConfirmationModal
-              bridge={bridge}
-              title={s.strings.buy_crypto_modal_title}
-              subTitle={sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}
-              cancelText={s.strings.buy_crypto_decline}
-              oneText={sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode)}
-              twoText={s.strings.buy_crypto_modal_exchange}
-            />
-          ))
+        const { currencyCode } = e
+        const result = await Airship.show(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={s.strings.buy_crypto_modal_title}
+            message={sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}
+            buttons={{
+              buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
+              exchange: { label: s.strings.buy_crypto_modal_exchange },
+              cancel: { label: s.strings.buy_crypto_decline, type: 'secondary' }
+            }}
+          />
+        ))
+        switch (result) {
+          case 'buy':
+            Actions.jump(PLUGIN_BUY)
+            return
+          case 'exchange':
+            dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))
+            Actions.jump(EXCHANGE_SCENE)
+            break
         }
-        createBuyExchangeModal(e.currencyCode).then(result => {
-          switch (result) {
-            case 'one':
-              Actions.jump(PLUGIN_BUY)
-              return
-            case 'two':
-              dispatch(selectWalletForExchange(walletId, e.currencyCode, 'to'))
-              Actions.jump(EXCHANGE_SCENE)
-              break
-            default:
-              break
-          }
-        })
       }
       return dispatch(updateTransaction(null, guiMakeSpendInfoClone, forceUpdateGui, e))
     })

@@ -4,7 +4,6 @@ import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
 import { deleteCustomToken, editCustomToken } from '../../actions/WalletActions.js'
@@ -20,7 +19,7 @@ import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { TwoButtonSimpleConfirmationModal } from '../modals/TwoButtonSimpleConfirmationModal.js'
+import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship, showActivity } from '../services/AirshipInstance.js'
 
 type OwnProps = {
@@ -143,16 +142,17 @@ class EditTokenComponent extends React.Component<Props, State> {
   deleteToken = async () => {
     const { walletId, currencyCode } = this.props
     const result = await Airship.show(bridge => (
-      <TwoButtonSimpleConfirmationModal
+      <ButtonsModal
         bridge={bridge}
-        icon={<FontAwesomeIcon name="trash-o" size={THEME.rem(1.5)} color={THEME.COLORS.PRIMARY} />}
         title={s.strings.string_delete}
-        subTitle={s.strings.edittoken_delete_prompt}
-        doneText={s.strings.string_delete}
-        cancelText={s.strings.string_cancel_cap}
+        message={s.strings.edittoken_delete_prompt}
+        buttons={{
+          ok: { label: s.strings.string_delete },
+          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+        }}
       />
     ))
-    if (result) {
+    if (result === 'ok') {
       showActivity(s.strings.string_delete, this.props.deleteCustomToken(walletId, currencyCode))
       this.props.onDeleteToken(currencyCode)
     }

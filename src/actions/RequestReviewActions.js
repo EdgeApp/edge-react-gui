@@ -5,7 +5,7 @@ import { Linking, Platform } from 'react-native'
 import * as StoreReview from 'react-native-store-review'
 import { sprintf } from 'sprintf-js'
 
-import { TwoButtonSimpleConfirmationModal } from '../components/modals/TwoButtonSimpleConfirmationModal.js'
+import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import { type RootState } from '../types/reduxTypes.js'
@@ -18,16 +18,18 @@ const requestReview = async () => {
     StoreReview.requestReview()
   } else if (Platform.OS === 'android') {
     const title = sprintf(s.strings.request_review_question_title, s.strings.app_name_short)
-    const doRequest = await Airship.show(bridge => (
-      <TwoButtonSimpleConfirmationModal
+    const result = await Airship.show(bridge => (
+      <ButtonsModal
         bridge={bridge}
         title={title}
-        subTitle={s.strings.request_review_question_subtitle}
-        cancelText={s.strings.request_review_answer_no}
-        doneText={s.strings.request_review_answer_yes}
+        message={s.strings.request_review_question_subtitle}
+        buttons={{
+          ok: { label: s.strings.request_review_answer_yes },
+          cancel: { label: s.strings.request_review_answer_no, type: 'secondary' }
+        }}
       />
     ))
-    if (doRequest) {
+    if (result === 'ok') {
       Linking.openURL(s.strings.request_review_android_page_link)
     }
   } else {

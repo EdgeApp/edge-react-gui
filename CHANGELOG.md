@@ -1,5 +1,21 @@
 # edge-react-gui
 
+## 2.0.1 (2020-02-04)
+
+- Fix detection of transactions with large input values
+- Themed FIO screens
+- Fix wallet balance display issue
+- Add Doge settings
+- Fix minor navigation issues
+- Update partner descriptions
+- Upgrade edge-currency-bitcoin to v4.9.11
+  - Refactor parseTransaction test and add big number transaction support
+- Upgrade edge-currency-accountbased to v0.7.44
+  - ETH: Bump max gas limit to 300000
+  - ETH: Add additional estimateGas params that Cloudflare requires
+  - ETH: Put RPC error handling in multicastServers
+  - ETH: Throw error when custom fee isn't valid or doesn't reach network minimums
+
 ## 2.0.0 (2020-01-26)
 
 - New dark-themed components

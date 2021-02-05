@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { TwoButtonSimpleConfirmationModal } from '../components/modals/TwoButtonSimpleConfirmationModal.js'
+import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import type { SortOption } from '../components/modals/WalletListSortModal.js'
 import { Airship, showError, showFullScreenSpinner } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
@@ -99,14 +99,17 @@ const getCurrencyAddress = async (currencyCode, getState) => {
   return receiveAddress.publicAddress
 }
 
-const createWalletCheckModal = async (currencyCode: string) => {
-  return Airship.show(bridge => (
-    <TwoButtonSimpleConfirmationModal
+const createWalletCheckModal = async (currencyCode: string): Promise<boolean> => {
+  const result = await Airship.show(bridge => (
+    <ButtonsModal
       bridge={bridge}
       title={s.strings.fragment_create_wallet_create_wallet}
-      subTitle={sprintf(s.strings.wallet_list_referral_link_ask_wallet_creation, currencyCode)}
-      cancelText={s.strings.no}
-      doneText={s.strings.yes}
+      message={sprintf(s.strings.wallet_list_referral_link_ask_wallet_creation, currencyCode)}
+      buttons={{
+        ok: { label: s.strings.yes },
+        cancel: { label: s.strings.no, type: 'secondary' }
+      }}
     />
   ))
+  return result === 'ok'
 }

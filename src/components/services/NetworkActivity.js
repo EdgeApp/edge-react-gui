@@ -1,9 +1,6 @@
 // @flow
 
-// todo: enable @react-native-community/netinfo for react-native >= 0.60 or figure out how to use with Jetifier for current version
-// "@react-native-community/netinfo": "3.2.1"
-// import NetInfo from '@react-native-community/netinfo'
-
+import NetInfo, { type NetInfoState } from '@react-native-community/netinfo'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
@@ -15,23 +12,24 @@ type Props = {
   changeConnectivity: (isConnected: boolean) => void
 }
 
-const NetInfo = {}
-
 class NetworkActivityComponent extends React.Component<Props> {
-  netInfoUnsubscribe: Function | null = null
+  netInfoUnsubscribe: void | (() => void)
+
+  handleNetworkState = (info: NetInfoState) => {
+    console.log('NetworkActivity - isConnected changed: ', info.isConnected)
+    this.props.changeConnectivity(info.isConnected)
+    if (!info.isConnected) {
+      showError(`${s.strings.network_alert_title}`)
+    }
+  }
 
   componentDidMount() {
-    this.netInfoUnsubscribe = NetInfo.addEventListener(state => {
-      console.log('NetworkActivity - isConnected changed: ', state.isConnected)
-      this.props.changeConnectivity(state.isConnected)
-      if (!state.isConnected) {
-        showError(`${s.strings.network_alert_title}`)
-      }
-    })
+    this.netInfoUnsubscribe = NetInfo.addEventListener(this.handleNetworkState)
+    NetInfo.fetch().then(this.handleNetworkState)
   }
 
   componentWillUnmount() {
-    this.netInfoUnsubscribe && this.netInfoUnsubscribe()
+    if (this.netInfoUnsubscribe != null) this.netInfoUnsubscribe()
   }
 
   render() {

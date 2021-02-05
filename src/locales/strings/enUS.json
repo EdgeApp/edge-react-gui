@@ -213,6 +213,7 @@
   "transaction_success_message": "Your transaction has been successfully sent.",
   "incorrect_pin": "Incorrect PIN",
   "invalid_spend_request": "Invalid Spend Request",
+  "invalid_custom_fee": "Minimum custom fee is",
   "settings_account_title_cap": "Account",
   "settings_button_change_password": "Change Password",
   "settings_developer_mode": "Developer Mode",

@@ -2163,6 +2163,11 @@
   dependencies:
     invariant "^2.2.4"
 
+"@react-native-community/netinfo@^5.9.10":
+  version "5.9.10"
+  resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-5.9.10.tgz#97d3a9fa62a3a4838ec7a6ec91cfec5a26e365b6"
+  integrity sha512-1NPlBA2Hu/KWc3EnQcDRPRX0x8Dg9tuQlQQVWVQjlg+u+PjCq7ANEtbikOFKp5yQqfF8tqzU5+84/IfDO8zpiA==
+
 "@react-native-firebase/analytics@^6.0.0":
   version "6.7.2"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-6.7.2.tgz#5f5d6cdefbee09e2a45e33e8dbf55cbc3452c64b"
@@ -3332,7 +3337,7 @@ base@^0.11.1:
 
 "bcoin@git+https://github.com/Airbitz/bcoin.git#primitiveBuild":
   version "1.0.0-beta.15"
-  resolved "git+https://github.com/Airbitz/bcoin.git#67ced95be8eb4ee3938079de5532823f540dc637"
+  resolved "git+https://github.com/Airbitz/bcoin.git#6e192d4214e2b66fa3852ce63ad24796704570e1"
   dependencies:
     bn.js "4.11.8"
     elliptic "6.4.0"
@@ -5192,10 +5197,10 @@ edge-core-js@^0.17.22:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.43:
-  version "0.7.43"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.43.tgz#89f8b4be7a5f357b8c57df3a60f19c6af3fc030b"
-  integrity sha512-CVzdDDyLsiY3UMSHsH/EHxZbDbEacaW/AEOGVcy373ifRJp/gOtYyQxwhbDvaiszpwpwkfdcC2QWET+tI8mslw==
+edge-currency-accountbased@^0.7.44:
+  version "0.7.44"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.44.tgz#aa3c019b3e5cd1e28bb010642758230590054b56"
+  integrity sha512-XNELSU7w1lvDMDoZxlv92E6SEsAKYdxDzixdaBvYz3y9s/8ETovVsFAMUC2822XAW2Jo7P20EirNAKGJPnsi6A==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.2.1"
@@ -5221,10 +5226,10 @@ edge-currency-accountbased@^0.7.43:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.9.10:
-  version "4.9.10"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.10.tgz#a6ab08b8c60756718f87730f3bf8f39446c5aba3"
-  integrity sha512-7V13WQbqWGyuqp6BJh9OnRZoivg44XRSdvEMlH/ru4YzbRkHYnfmloWeisJyBrsqhX8veXHhbUT76wRPoaBhLA==
+edge-currency-bitcoin@^4.9.11:
+  version "4.9.11"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.11.tgz#a9c4ff48d20909cde469fd27dc2cffe3ba44bd87"
+  integrity sha512-WeazcIWxJbA1TT8swZicuNzRhiKkS22KFF88N7Tpk8qaI2m1pp5P/wAhaK+OE77tKydq+yPOywpWn4xMXaNfsg==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -5302,9 +5307,9 @@ edge-login-ui-rn@^0.6.28:
   dependencies:
     moment "^2.22.2"
 
-"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#45bff6b":
+"edge-plugin-wyre@https://github.com/EdgeApp/edge-plugin-wyre.git#3ff34e5f6ebdfea1199f6acccedc703cc9abcd7a":
   version "0.1.2"
-  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#45bff6b4f8857a66b0399e0adc32944d78fedbf4"
+  resolved "https://github.com/EdgeApp/edge-plugin-wyre.git#3ff34e5f6ebdfea1199f6acccedc703cc9abcd7a"
   dependencies:
     cleaners "^0.2.0"
     js-sha256 "^0.9.0"

@@ -19,6 +19,7 @@ import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene.js
 import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene.js'
 import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene.js'
 import { FioAddressDetailsScene } from '../components/scenes/FioAddressDetailsScene'
+import { FioAddressListScene } from '../components/scenes/FioAddressListScene'
 import { FioAddressRegisteredScene } from '../components/scenes/FioAddressRegisteredScene'
 import { FioAddressRegisterScene } from '../components/scenes/FioAddressRegisterScene'
 import { FioAddressRegisterSelectWalletScene } from '../components/scenes/FioAddressRegisterSelectWalletScene'
@@ -41,7 +42,6 @@ import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateW
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
-import { FioAddressListConnector } from '../connectors/scenes/FioAddressListConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import Request from '../connectors/scenes/RequestConnector.js'
 import Scan from '../connectors/scenes/ScanConnector'
@@ -620,8 +620,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.FIO_ADDRESS_LIST}
               navTransparent
-              component={ifLoggedIn(FioAddressListConnector)}
-              renderTitle={<HeaderTitle title={s.strings.title_fio_names} />}
+              component={ifLoggedIn(FioAddressListScene)}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
