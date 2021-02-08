@@ -15,7 +15,6 @@ import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { SelectFioAddressConnector as SelectFioAddress } from '../../modules/FioAddress/components/SelectFioAddress'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
-import ExchangeRate from '../../modules/UI/components/ExchangeRate/ExchangeRate.ui.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -29,6 +28,7 @@ import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/ty
 import { scale } from '../../util/scaling.js'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
 import { AddressTextWithBlockExplorerModal } from '../common/AddressTextWithBlockExplorerModal'
+import { ExchangeRate } from '../common/ExchangeRate.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -89,7 +89,6 @@ type SendConfirmationRouterParams = {
 type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & SendConfirmationRouterParams
 
 type State = {|
-  secondaryDisplayDenomination: GuiDenomination,
   nativeAmount: string,
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
@@ -107,11 +106,6 @@ export class SendConfirmation extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      secondaryDisplayDenomination: {
-        name: '',
-        multiplier: '1',
-        symbol: ''
-      },
       overridePrimaryExchangeAmount: '',
       keyboardVisible: false,
       forceUpdateGuiCounter: 0,
@@ -131,7 +125,6 @@ export class SendConfirmation extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
     const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
     const guiMakeSpendInfo = this.props.guiMakeSpendInfo
     let keyboardVisible = true
@@ -145,7 +138,7 @@ export class SendConfirmation extends React.Component<Props, State> {
     }
 
     this.props.sendConfirmationUpdateTx(this.props.guiMakeSpendInfo)
-    this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount, keyboardVisible })
+    this.setState({ overridePrimaryExchangeAmount, keyboardVisible })
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -155,25 +148,13 @@ export class SendConfirmation extends React.Component<Props, State> {
     if (prevProps.toggleCryptoOnTop !== this.props.toggleCryptoOnTop) {
       this.flipInput.current.toggleCryptoOnTop()
     }
-  }
 
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    const newState = {}
-    if (nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
-      const overridePrimaryExchangeAmount = bns.div(nextProps.nativeAmount, nextProps.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
-      newState.overridePrimaryExchangeAmount = overridePrimaryExchangeAmount
-      newState.forceUpdateGuiCounter = nextProps.forceUpdateGuiCounter
+    if (this.props.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
+      this.setState({
+        overridePrimaryExchangeAmount: bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION),
+        forceUpdateGuiCounter: this.props.forceUpdateGuiCounter
+      })
     }
-    if (nextProps.fiatCurrencyCode !== this.props.fiatCurrencyCode) {
-      newState.secondaryDisplayDenomination = getDenomFromIsoCode(nextProps.fiatCurrencyCode)
-    }
-
-    const feeCalculated = !!nextProps.networkFee || !!nextProps.parentNetworkFee
-    if (feeCalculated || nextProps.errorMsg || nextProps.nativeAmount === '0') {
-      newState.showSpinner = false
-    }
-
-    this.setState(newState)
   }
 
   componentWillUnmount() {
@@ -184,7 +165,9 @@ export class SendConfirmation extends React.Component<Props, State> {
   }
 
   render() {
-    const { networkFee, parentNetworkFee, guiWallet } = this.props
+    const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
+
+    const { networkFee, parentNetworkFee, guiWallet, nativeAmount, errorMsg } = this.props
     const primaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.currencyCode,
       displayDenomination: this.props.primaryDisplayDenomination,
@@ -197,16 +180,16 @@ export class SendConfirmation extends React.Component<Props, State> {
     if (this.props.secondaryExchangeCurrencyCode === '') {
       // There is no `EdgeDenomination.currencyCode`,
       // so this should never even run: $FlowFixMe
-      if (this.state.secondaryDisplayDenomination.currencyCode) {
-        exchangeCurrencyCode = this.state.secondaryDisplayDenomination.name
+      if (secondaryDisplayDenomination.currencyCode) {
+        exchangeCurrencyCode = secondaryDisplayDenomination.name
       }
     }
 
     const secondaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.fiatCurrencyCode,
-      displayDenomination: this.state.secondaryDisplayDenomination,
+      displayDenomination: secondaryDisplayDenomination,
       exchangeCurrencyCode: exchangeCurrencyCode,
-      exchangeDenomination: this.state.secondaryDisplayDenomination
+      exchangeDenomination: secondaryDisplayDenomination
     }
 
     const cryptoBalanceAmount: string = convertNativeToDisplay(primaryInfo.displayDenomination.multiplier)(this.props.balanceInCrypto) // convert to correct denomination
@@ -223,7 +206,7 @@ export class SendConfirmation extends React.Component<Props, State> {
     const displayAddress = fioAddress ? '' : address
 
     const feeCalculated = !!networkFee || !!parentNetworkFee
-
+    const showSpinner = (!feeCalculated && !errorMsg && nativeAmount !== '0') || this.state.showSpinner || this.props.pending
     const sliderDisabled =
       this.props.sliderDisabled ||
       !feeCalculated ||
@@ -372,12 +355,12 @@ export class SendConfirmation extends React.Component<Props, State> {
             </View>
             <Scene.Footer style={[styles.footer, uniqueIdentifierInfo != null && styles.footerWithPaymentId]}>
               <Slider
-                forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
+                forceUpdateGuiCounter={this.props.forceUpdateGuiCounter}
                 resetSlider={this.props.resetSlider}
                 parentStyle={styles.sliderStyle}
                 onSlidingComplete={this.signBroadcastAndSave}
                 sliderDisabled={sliderDisabled}
-                showSpinner={this.state.showSpinner || this.props.pending}
+                showSpinner={showSpinner}
               />
             </Scene.Footer>
           </View>
@@ -457,6 +440,7 @@ export class SendConfirmation extends React.Component<Props, State> {
   }
 
   getNetworkFeeData = (): { feeSyntax: string, feeColor: string } => {
+    const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
     const { networkFee, parentNetworkFee, parentDisplayDenomination, exchangeRates } = this.props
     let feeColor = THEME.COLORS.WHITE
 
@@ -472,16 +456,16 @@ export class SendConfirmation extends React.Component<Props, State> {
     if (this.props.secondaryExchangeCurrencyCode === '') {
       // There is no `EdgeDenomination.currencyCode`,
       // so this should never even run: $FlowFixMe
-      if (this.state.secondaryDisplayDenomination.currencyCode) {
-        exchangeCurrencyCode = this.state.secondaryDisplayDenomination.name
+      if (secondaryDisplayDenomination.currencyCode) {
+        exchangeCurrencyCode = secondaryDisplayDenomination.name
       }
     }
 
     const secondaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.fiatCurrencyCode,
-      displayDenomination: this.state.secondaryDisplayDenomination,
+      displayDenomination: secondaryDisplayDenomination,
       exchangeCurrencyCode: exchangeCurrencyCode,
-      exchangeDenomination: this.state.secondaryDisplayDenomination
+      exchangeDenomination: secondaryDisplayDenomination
     }
 
     let denomination, exchangeDenomination, usedNetworkFee, currencyCode

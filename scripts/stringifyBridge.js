@@ -1,4 +1,5 @@
 // @flow
+
 const fs = require('fs')
 
 const text = fs.readFileSync('./src/util/bridge/rolledUp.js', 'utf8')

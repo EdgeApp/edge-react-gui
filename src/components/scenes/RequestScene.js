@@ -12,7 +12,6 @@ import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import ExchangeRate from '../../modules/UI/components/ExchangeRate/ExchangeRate.ui.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { RequestStatus } from '../../modules/UI/components/RequestStatus/RequestStatus.ui.js'
@@ -21,6 +20,7 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { getObjectDiff } from '../../util/utils'
+import { ExchangeRate } from '../common/ExchangeRate.js'
 import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
@@ -162,29 +162,31 @@ export class Request extends React.Component<Props, State> {
     }
   }
 
-  async UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    const { currencyCode } = nextProps
-    if (nextProps.loading || currencyCode === null) return
+  async componentDidUpdate(prevProps: Props) {
+    const { props } = this
+    if (props.loading || props.currencyCode === null) return
 
-    const didAddressChange = this.state.publicAddress !== nextProps.guiWallet.receiveAddress.publicAddress
-    const changeLegacyPublic = nextProps.useLegacyAddress !== this.props.useLegacyAddress
-    const didWalletChange = this.props.edgeWallet && nextProps.edgeWallet.id !== this.props.edgeWallet.id
+    const didAddressChange = this.state.publicAddress !== props.guiWallet.receiveAddress.publicAddress
+    const changeLegacyPublic = props.useLegacyAddress !== prevProps.useLegacyAddress
+    const didWalletChange = prevProps.edgeWallet && props.edgeWallet.id !== prevProps.edgeWallet.id
 
     if (didAddressChange || changeLegacyPublic || didWalletChange) {
-      let publicAddress = nextProps.guiWallet.receiveAddress.publicAddress
-      let legacyAddress = nextProps.guiWallet.receiveAddress.legacyAddress
+      let publicAddress = props.guiWallet.receiveAddress.publicAddress
+      let legacyAddress = props.guiWallet.receiveAddress.legacyAddress
 
-      const abcEncodeUri = nextProps.useLegacyAddress ? { publicAddress, legacyAddress, currencyCode } : { publicAddress, currencyCode }
+      const abcEncodeUri = props.useLegacyAddress
+        ? { publicAddress, legacyAddress, currencyCode: props.currencyCode }
+        : { publicAddress, currencyCode: props.currencyCode }
       let encodedURI = s.strings.loading
       try {
-        encodedURI = nextProps.edgeWallet ? await nextProps.edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
+        encodedURI = props.edgeWallet ? await props.edgeWallet.encodeUri(abcEncodeUri) : s.strings.loading
       } catch (err) {
         console.log(err)
         publicAddress = s.strings.loading
         legacyAddress = s.strings.loading
         setTimeout(() => {
-          if (nextProps.edgeWallet && nextProps.edgeWallet.id) {
-            nextProps.refreshReceiveAddressRequest(nextProps.edgeWallet.id)
+          if (props.edgeWallet && props.edgeWallet.id) {
+            props.refreshReceiveAddressRequest(props.edgeWallet.id)
           }
         }, PUBLIC_ADDRESS_REFRESH_MS)
       }
@@ -198,12 +200,12 @@ export class Request extends React.Component<Props, State> {
     // old blank address to new
     // include 'didAddressChange' because didWalletChange returns false upon initial request scene load
     if (didWalletChange || didAddressChange) {
-      if (this.shouldShowMinimumModal(nextProps)) {
+      if (this.shouldShowMinimumModal(props)) {
         const minimumPopupModalState: CurrencyMinimumPopupState = Object.assign({}, this.state.minimumPopupModalState)
-        if (minimumPopupModalState[nextProps.currencyCode] === 'NOT_YET_SHOWN') {
+        if (minimumPopupModalState[props.currencyCode] === 'NOT_YET_SHOWN') {
           this.enqueueMinimumAmountModal()
         }
-        minimumPopupModalState[nextProps.currencyCode] = 'VISIBLE'
+        minimumPopupModalState[props.currencyCode] = 'VISIBLE'
         this.setState({ minimumPopupModalState })
       }
     }

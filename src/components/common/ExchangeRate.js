@@ -2,13 +2,14 @@
 
 import { log10 } from 'biggystring'
 import * as React from 'react'
-import { View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
-import { formatNumber } from '../../../../locales/intl.js'
-import s from '../../../../locales/strings.js'
-import * as UTILS from '../../../../util/utils'
-import T from '../../components/FormattedText/FormattedText.ui.js'
-import styles from './styles'
+import { formatNumber } from '../../locales/intl.js'
+import s from '../../locales/strings.js'
+import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { THEME } from '../../theme/variables/airbitz'
+import { scale } from '../../util/scaling.js'
+import * as UTILS from '../../util/utils.js'
 
 type Props = {
   primaryInfo: Object,
@@ -17,7 +18,7 @@ type Props = {
   secondaryDisplayAmount: string | number
 }
 
-export default class ExchangeRate extends React.Component<Props> {
+export class ExchangeRate extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
     const diffElement = UTILS.getObjectDiff(this.props, nextProps, {
       primaryInfo: true,
@@ -70,3 +71,13 @@ export default class ExchangeRate extends React.Component<Props> {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  view: {
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  text: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(16)
+  }
+})

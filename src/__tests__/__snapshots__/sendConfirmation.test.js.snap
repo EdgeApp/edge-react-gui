@@ -42,7 +42,7 @@ exports[`SendConfirmation should render with destination 1`] = `
            
           BTC
            (
-          
+          $
            
           0.00
           )
@@ -84,15 +84,15 @@ exports[`SendConfirmation should render with destination 1`] = `
             Object {
               "displayCurrencyCode": "USD",
               "displayDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
               "exchangeCurrencyCode": "iso:USD",
               "exchangeDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
             }
           }
@@ -136,15 +136,15 @@ exports[`SendConfirmation should render with destination 1`] = `
             Object {
               "displayCurrencyCode": "USD",
               "displayDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
               "exchangeCurrencyCode": "iso:USD",
               "exchangeDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
             }
           }
@@ -321,7 +321,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
            
           BTC
            (
-          
+          $
            
           0.00
           )
@@ -363,15 +363,15 @@ exports[`SendConfirmation should render with standard props 1`] = `
             Object {
               "displayCurrencyCode": "USD",
               "displayDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
               "exchangeCurrencyCode": "iso:USD",
               "exchangeDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
             }
           }
@@ -415,15 +415,15 @@ exports[`SendConfirmation should render with standard props 1`] = `
             Object {
               "displayCurrencyCode": "USD",
               "displayDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
               "exchangeCurrencyCode": "iso:USD",
               "exchangeDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
             }
           }
@@ -585,7 +585,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
            
           XMR
            (
-          
+          $
            
           0.00
           )
@@ -627,15 +627,15 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             Object {
               "displayCurrencyCode": "USD",
               "displayDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
               "exchangeCurrencyCode": "iso:USD",
               "exchangeDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
             }
           }
@@ -679,15 +679,15 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             Object {
               "displayCurrencyCode": "USD",
               "displayDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
               "exchangeCurrencyCode": "iso:USD",
               "exchangeDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
             }
           }
@@ -829,7 +829,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
            
           XRP
            (
-          
+          $
            
           0.00
           )
@@ -871,15 +871,15 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             Object {
               "displayCurrencyCode": "USD",
               "displayDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
               "exchangeCurrencyCode": "iso:USD",
               "exchangeDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
             }
           }
@@ -923,15 +923,15 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
             Object {
               "displayCurrencyCode": "USD",
               "displayDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
               "exchangeCurrencyCode": "iso:USD",
               "exchangeDenomination": Object {
-                "multiplier": "1",
-                "name": "",
-                "symbol": "",
+                "multiplier": "100",
+                "name": "USD",
+                "symbol": "$",
               },
             }
           }
