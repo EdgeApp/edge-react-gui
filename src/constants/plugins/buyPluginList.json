@@ -5,7 +5,7 @@
     "paymentTypes": [
       "credit"
     ],
-    "description": "Fee: 7% / Settlement: 10 - 30min\nLimit: $18000/day",
+    "description": "Fee: 7% / Settlement: 10 - 30min\nDaily Limit: $18000\nMonthly Limit: $47000",
     "title": "Credit and Debit Card",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "forCountries": [
@@ -249,8 +249,7 @@
       "BCH",
       "BSV",
       "ETH",
-      "LTC",
-      "XRP"
+      "LTC"
     ],
     "paymentTypeLogoKey": "credit"
   },

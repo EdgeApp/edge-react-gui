@@ -114,12 +114,12 @@ Level 2 Limit: Unlimited",
       "BSV",
       "ETH",
       "LTC",
-      "XRP",
     ],
     "deepPath": "",
     "deepQuery": Object {},
     "description": "Fee: 7% / Settlement: 10 - 30min
-Limit: $18000/day",
+Daily Limit: $18000
+Monthly Limit: $47000",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "paymentTypeLogoKey": "credit",
     "paymentTypes": Array [
@@ -190,12 +190,12 @@ Limit: $5000/week",
       "BSV",
       "ETH",
       "LTC",
-      "XRP",
     ],
     "deepPath": "",
     "deepQuery": Object {},
     "description": "Fee: 7% / Settlement: 10 - 30min
-Limit: $18000/day",
+Daily Limit: $18000
+Monthly Limit: $47000",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
     "paymentTypeLogoKey": "credit",
     "paymentTypes": Array [
