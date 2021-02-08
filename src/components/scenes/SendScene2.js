@@ -30,6 +30,7 @@ import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { AddressTile } from '../themed/AddressTile.js'
 import { EdgeText } from '../themed/EdgeText'
+import { SelectFioAddress } from '../themed/SelectFioAddress.js'
 import { Tile } from '../themed/Tile.js'
 
 export const SEND_ACTION_TYPE = {
@@ -292,12 +293,48 @@ class SendComponent extends React.PureComponent<Props, State> {
     return null
   }
 
-  renderAdditionalTiles() {
-    const { actionType } = this.props
+  handleFioAddressSelect = (fioAddress: string, fioWallet: EdgeCurrencyWallet, fioError: string) => {
+    this.setState({
+      fioSender: {
+        ...this.state.fioSender,
+        fioAddress,
+        fioWallet,
+        fioError
+      }
+    })
+  }
 
-    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
-      return this.props.fioDomain && <Tile type="static" title={s.strings.fio_domain_to_transfer} body={`@${this.props.fioDomain}`} />
-    }
+  handleMemoChange = (memo: string, memoError: string) => {
+    this.setState({
+      fioSender: {
+        ...this.state.fioSender,
+        memo,
+        memoError
+      }
+    })
+  }
+
+  renderAdditionalTiles() {
+    const { actionType, guiMakeSpendInfo, fioDomain } = this.props
+    const { fioSender } = this.state
+
+    return (
+      <View>
+        {actionType === SEND_ACTION_TYPE.fioTransferDomain && !!fioDomain && (
+          <Tile type="static" title={s.strings.fio_domain_to_transfer} body={`@${fioDomain}`} />
+        )}
+        <SelectFioAddress
+          fioToAddress={guiMakeSpendInfo && guiMakeSpendInfo.fioAddress ? guiMakeSpendInfo.fioAddress : undefined}
+          selected={fioSender.fioAddress}
+          memo={fioSender.memo}
+          memoError={fioSender.memoError}
+          fioRequest={guiMakeSpendInfo ? guiMakeSpendInfo.fioPendingRequest : null}
+          isSendUsingFioAddress={guiMakeSpendInfo ? guiMakeSpendInfo.isSendUsingFioAddress : null}
+          onSelect={this.handleFioAddressSelect}
+          onMemoChange={this.handleMemoChange}
+        />
+      </View>
+    )
   }
 
   renderSelectedWallet() {

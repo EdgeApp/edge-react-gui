@@ -709,5 +709,9 @@
   "wallet_list_sort_currencyCode": "Sort by currency code",
   "wallet_list_sort_currencyName": "Sort by currency name",
   "wallet_list_sort_highest": "Sort by highest value",
-  "wallet_list_sort_lowest": "Sort by lowest value"
+  "wallet_list_sort_lowest": "Sort by lowest value",
+  "select_fio_address_address_to": "FIO Address To",
+  "select_fio_address_address_from": "FIO Address From",
+  "select_fio_address_address_memo": "FIO Memo",
+  "select_fio_address_address_memo_error": "FIO Memo Error"
 }
