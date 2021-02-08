@@ -26,10 +26,7 @@ type SelectFioAddressOwnProps = {
   memo: string,
   memoError: string,
   onSelect: (fioAddress: string, fioWallet: EdgeCurrencyWallet, error: string) => void,
-  onMemoChange: (memo: string, memoError: string) => void,
-  fioRequest: FioRequest | null,
-  isSendUsingFioAddress: boolean | null,
-  fioToAddress?: string
+  onMemoChange: (memo: string, memoError: string) => void
 }
 
 type SelectFioAddressProps = {
@@ -37,7 +34,10 @@ type SelectFioAddressProps = {
   fioAddresses: FioAddress[],
   fioWallets: EdgeCurrencyWallet[],
   selectedWallet: GuiWallet,
-  currencyCode: string
+  currencyCode: string,
+  fioRequest?: FioRequest,
+  isSendUsingFioAddress?: boolean,
+  fioToAddress?: string
 }
 
 type DispatchProps = {
@@ -91,11 +91,15 @@ class SelectFioAddressComponent extends React.Component<Props, LocalState> {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: Props) {
+    const { fioRequest, isSendUsingFioAddress } = this.props
     const { expirationUpdated } = this.state
     if (expirationUpdated) {
       this.setState({ expirationUpdated: false })
       this.setFioAddress(this.props.selected)
+    }
+    if (isSendUsingFioAddress !== prevProps.isSendUsingFioAddress && !fioRequest && isSendUsingFioAddress) {
+      this.setDefaultFioAddress()
     }
   }
 
@@ -207,10 +211,17 @@ class SelectFioAddressComponent extends React.Component<Props, LocalState> {
   }
 
   renderFioFromAddress() {
-    const { selected } = this.props
+    const { fioRequest, selected } = this.props
     const { loading } = this.state
 
-    return <Tile type={loading ? 'loading' : 'static'} title={s.strings.select_fio_address_address_from} body={selected} />
+    return (
+      <Tile
+        type={loading && !selected ? 'loading' : fioRequest ? 'static' : 'touchable'}
+        title={s.strings.select_fio_address_address_from}
+        body={selected}
+        onPress={fioRequest ? undefined : this.selectAddress}
+      />
+    )
   }
 
   renderFioMemo() {
@@ -240,9 +251,9 @@ class SelectFioAddressComponent extends React.Component<Props, LocalState> {
   }
 
   render() {
-    const { fioRequest, selected, isSendUsingFioAddress } = this.props
+    const { fioRequest, isSendUsingFioAddress } = this.props
 
-    if (!fioRequest && (!isSendUsingFioAddress || !selected)) {
+    if (!fioRequest && !isSendUsingFioAddress) {
       return this.renderFioToAddress()
     }
 
@@ -261,6 +272,7 @@ const mapStateToProps = (state: RootState): SelectFioAddressProps => {
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
   const fioWallets: EdgeCurrencyWallet[] = UI_SELECTORS.getFioWallets(state)
   const fioAddresses = state.ui.scenes.fioAddress.fioAddresses
+  const { guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
 
   if (!guiWallet || !currencyCode) {
     return {
@@ -277,7 +289,10 @@ const mapStateToProps = (state: RootState): SelectFioAddressProps => {
     fioAddresses,
     fioWallets,
     currencyCode,
-    selectedWallet: guiWallet
+    selectedWallet: guiWallet,
+    fioRequest: guiMakeSpendInfo && guiMakeSpendInfo.fioPendingRequest ? guiMakeSpendInfo.fioPendingRequest : undefined,
+    isSendUsingFioAddress: guiMakeSpendInfo ? guiMakeSpendInfo.isSendUsingFioAddress : undefined,
+    fioToAddress: guiMakeSpendInfo && guiMakeSpendInfo.fioAddress ? guiMakeSpendInfo.fioAddress : undefined
   }
 }
 

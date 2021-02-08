@@ -315,7 +315,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAdditionalTiles() {
-    const { actionType, guiMakeSpendInfo, fioDomain } = this.props
+    const { actionType, fioDomain } = this.props
     const { fioSender } = this.state
 
     return (
@@ -324,12 +324,9 @@ class SendComponent extends React.PureComponent<Props, State> {
           <Tile type="static" title={s.strings.fio_domain_to_transfer} body={`@${fioDomain}`} />
         )}
         <SelectFioAddress
-          fioToAddress={guiMakeSpendInfo && guiMakeSpendInfo.fioAddress ? guiMakeSpendInfo.fioAddress : undefined}
           selected={fioSender.fioAddress}
           memo={fioSender.memo}
           memoError={fioSender.memoError}
-          fioRequest={guiMakeSpendInfo ? guiMakeSpendInfo.fioPendingRequest : null}
-          isSendUsingFioAddress={guiMakeSpendInfo ? guiMakeSpendInfo.isSendUsingFioAddress : null}
           onSelect={this.handleFioAddressSelect}
           onMemoChange={this.handleMemoChange}
         />

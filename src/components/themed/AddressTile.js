@@ -172,7 +172,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
       }
 
       // set address
-      onChangeAddress({ fioAddress }, parsedUri)
+      onChangeAddress({ fioAddress, isSendUsingFioAddress: !!fioAddress }, parsedUri)
     } catch (e) {
       showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
       this.setState({ loading: false })
