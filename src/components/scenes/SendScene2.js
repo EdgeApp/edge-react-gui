@@ -63,7 +63,8 @@ type StateProps = {
   sliderDisabled: boolean,
   resetSlider: boolean,
   pending: boolean,
-  lockInputs?: boolean
+  lockInputs?: boolean,
+  error: Error | null
 }
 
 type DispatchProps = {
@@ -346,9 +347,31 @@ class SendComponent extends React.PureComponent<Props, State> {
     )
   }
 
+  renderFees() {
+    const { error, feeSyntax, feeSyntaxStyle, theme } = this.props
+    const { recipientAddress } = this.state
+
+    if (error) {
+      return (
+        <Tile type="static" title="Error">
+          <EdgeText style={{ color: theme.dangerText }}>{error.message}</EdgeText>
+        </Tile>
+      )
+    }
+
+    if (recipientAddress) {
+      return (
+        <Tile type="static" title={`${s.strings.string_fee}:`}>
+          <EdgeText style={{ color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText }}>{feeSyntax}</EdgeText>
+        </Tile>
+      )
+    }
+    return null
+  }
+
   // Render
   render() {
-    const { coreWallet, currencyCode, feeSyntax, feeSyntaxStyle, lockInputs, pending, resetSlider, sliderDisabled, theme } = this.props
+    const { coreWallet, currencyCode, lockInputs, pending, resetSlider, sliderDisabled, theme } = this.props
     const { loading, recipientAddress, showSlider } = this.state
     const styles = getStyles(theme)
 
@@ -369,11 +392,7 @@ class SendComponent extends React.PureComponent<Props, State> {
               />
             )}
             {this.renderAmount()}
-            {!!recipientAddress && (
-              <Tile type="static" title={`${s.strings.string_fee}:`}>
-                <EdgeText style={{ color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText }}>{feeSyntax}</EdgeText>
-              </Tile>
-            )}
+            {this.renderFees()}
             {this.renderAdditionalTiles()}
           </View>
           <Scene.Footer style={styles.footer}>
@@ -490,7 +509,8 @@ export const SendScene2 = connect(
       resetSlider: !!error && (error.message === 'broadcastError' || error.message === 'transactionCancelled'),
       sliderDisabled: !transaction || !!error || pending,
       pending,
-      lockInputs: guiMakeSpendInfo.lockInputs
+      lockInputs: guiMakeSpendInfo.lockInputs,
+      error
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
