@@ -174,7 +174,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
           }
         }
 
-        Actions[Constants.SEND_CONFIRMATION]({ guiMakeSpendInfo })
+        Actions[Constants.SEND]({ guiMakeSpendInfo, selectedWalletId: walletId, selectedCurrencyCode: paymentCurrencyCode })
       }
     } else {
       showError(s.strings.fio_network_alert_text)
