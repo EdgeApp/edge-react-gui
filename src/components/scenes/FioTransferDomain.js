@@ -71,7 +71,7 @@ type State = {
   showSlider: boolean
 }
 
-class SendComponent extends React.PureComponent<Props, State> {
+class FioTransferDomainComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
 
@@ -280,7 +280,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SendScene = connect(
+export const FioTransferDomain = connect(
   (state: RootState, ownProps: OwnProps): StateProps => {
     const walletId = getSelectedWalletId(state) || ownProps.walletId
     const wallets = getWallets(state)
@@ -327,4 +327,4 @@ export const SendScene = connect(
       dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
     }
   })
-)(withTheme(SendComponent))
+)(withTheme(FioTransferDomainComponent))

@@ -20,7 +20,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from '../themed/EdgeText'
 import { ClickableText, PrimaryButton, SecondaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
-import { SEND_ACTION_TYPE } from './SendScene'
+import { SEND_ACTION_TYPE } from './FioTransferDomain.js'
 
 type State = {
   showRenew: boolean,
@@ -102,7 +102,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
       showError(s.strings.fio_get_fee_err_msg)
     } else {
       this.cancelOperation()
-      Actions[Constants.SEND]({
+      Actions[Constants.FIO_TRANSFER_DOMAIN]({
         amount: fee,
         actionType: SEND_ACTION_TYPE.fioTransferDomain,
         walletId: this.props.fioWallet.id,
