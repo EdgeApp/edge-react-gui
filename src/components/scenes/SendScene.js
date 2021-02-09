@@ -355,7 +355,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SendScene2 = connect(
+export const SendScene = connect(
   (state: RootState): StateProps => {
     const walletId = state.ui.wallets.selectedWalletId
     const wallets = state.ui.wallets.byId

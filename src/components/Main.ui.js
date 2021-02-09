@@ -30,7 +30,6 @@ import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConf
 import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
-import { SendScene2 } from '../components/scenes/SendScene2'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
@@ -85,6 +84,7 @@ import { OtpRepairScene } from './scenes/OtpRepairScene.js'
 import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
 import { ChangeRecoveryScene } from './scenes/PasswordRecoveryScene.js'
 import { SecurityAlertsScene } from './scenes/SecurityAlertsScene.js'
+import { SendScene } from './scenes/SendScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
@@ -441,7 +441,7 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.SEND}
               navTransparent
               onExit={this.props.dispatchDisableScan}
-              component={ifLoggedIn(SendScene2)}
+              component={ifLoggedIn(SendScene)}
               renderTitle={<HeaderTitle showWalletNameOnly />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={this.renderSendConfirmationButton()}
