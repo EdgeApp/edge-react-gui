@@ -5,18 +5,15 @@ import { Scene } from 'edge-components'
 import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
-import { sprintf } from 'sprintf-js'
 
 import { type FioSenderInfo, reset, sendConfirmationUpdateTx, signBroadcastAndSave, updateSpendPending } from '../../actions/SendConfirmationActions.js'
-import { FIO_ADDRESS_LIST } from '../../constants/SceneKeys'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui'
-import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../modules/UI/selectors.js'
+import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
@@ -32,19 +29,6 @@ import { AddressTile } from '../themed/AddressTile.js'
 import { EdgeText } from '../themed/EdgeText'
 import { SelectFioAddress } from '../themed/SelectFioAddress.js'
 import { Tile } from '../themed/Tile.js'
-
-export const SEND_ACTION_TYPE = {
-  send: 'send',
-  fioTransferDomain: 'fioTransferDomain'
-}
-
-type OwnProps = {
-  amount?: string,
-  walletId?: string,
-  actionType: 'send' | 'fioTransferDomain',
-  fioDomain?: string,
-  fioWallet?: EdgeCurrencyWallet
-}
 
 type StateProps = {
   // Wallet
@@ -82,12 +66,11 @@ type RouteProps = {
   selectedCurrencyCode?: string
 }
 
-type Props = OwnProps & StateProps & DispatchProps & RouteProps & ThemeProps
+type Props = StateProps & DispatchProps & RouteProps & ThemeProps
 
 type State = {
   recipientAddress: string,
   loading: boolean,
-  showSlider: boolean,
   fioSender: FioSenderInfo
 }
 
@@ -98,7 +81,6 @@ class SendComponent extends React.PureComponent<Props, State> {
     this.state = {
       recipientAddress: '',
       loading: false,
-      showSlider: true,
       fioSender: {
         fioAddress: props.guiMakeSpendInfo && props.guiMakeSpendInfo.fioPendingRequest ? props.guiMakeSpendInfo.fioPendingRequest.payer_fio_address : '',
         fioWallet: null,
@@ -110,10 +92,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount(): void {
-    const { actionType, guiMakeSpendInfo, selectedWalletId, selectedCurrencyCode } = this.props
-    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
-      this.props.onSelectWallet(this.props.guiWallet.id, FIO_STR)
-    }
+    const { guiMakeSpendInfo, selectedWalletId, selectedCurrencyCode } = this.props
 
     if (guiMakeSpendInfo) {
       this.props.sendConfirmationUpdateTx(guiMakeSpendInfo)
@@ -130,10 +109,6 @@ class SendComponent extends React.PureComponent<Props, State> {
     if (this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.onBack) {
       this.props.guiMakeSpendInfo.onBack()
     }
-  }
-
-  resetSlider = (): void => {
-    this.setState({ showSlider: false }, () => this.setState({ showSlider: true }))
   }
 
   resetSendTransaction = () => {
@@ -153,115 +128,71 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   onChangeAddress = async (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => {
-    const { actionType, sendConfirmationUpdateTx } = this.props
+    const { sendConfirmationUpdateTx } = this.props
     const { spendTargets } = guiMakeSpendInfo
     const recipientAddress = parsedUri ? parsedUri.publicAddress : spendTargets && spendTargets[0].publicAddress ? spendTargets[0].publicAddress : ''
 
-    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
-      if (recipientAddress && recipientAddress.indexOf('FIO') < 0) {
-        showError(s.strings.scan_invalid_address_error_title)
-        return
-      }
-    }
-
-    if (actionType === SEND_ACTION_TYPE.send) {
-      if (parsedUri) {
-        const nativeAmount = parsedUri.nativeAmount || '0'
-        const spendTargets: EdgeSpendTarget[] = [
-          {
-            publicAddress: parsedUri.publicAddress,
-            nativeAmount
-          }
-        ]
-        guiMakeSpendInfo = {
-          spendTargets,
-          lockInputs: false,
-          metadata: parsedUri.metadata,
-          uniqueIdentifier: parsedUri.uniqueIdentifier,
-          nativeAmount,
-          ...guiMakeSpendInfo
+    if (parsedUri) {
+      const nativeAmount = parsedUri.nativeAmount || '0'
+      const spendTargets: EdgeSpendTarget[] = [
+        {
+          publicAddress: parsedUri.publicAddress,
+          nativeAmount
         }
+      ]
+      guiMakeSpendInfo = {
+        spendTargets,
+        lockInputs: false,
+        metadata: parsedUri.metadata,
+        uniqueIdentifier: parsedUri.uniqueIdentifier,
+        nativeAmount,
+        ...guiMakeSpendInfo
       }
-      sendConfirmationUpdateTx(guiMakeSpendInfo)
     }
+    sendConfirmationUpdateTx(guiMakeSpendInfo)
     this.setState({ recipientAddress })
   }
 
   submit = async () => {
-    const { actionType, amount } = this.props
-    const { recipientAddress } = this.state
+    const { guiMakeSpendInfo, currencyCode, updateSpendPending, signBroadcastAndSave } = this.props
     this.setState({ loading: true })
 
-    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
-      const { fioDomain, fioWallet } = this.props
-      if (!fioWallet || !fioDomain) return showError(s.strings.fio_wallet_missing_for_fio_domain)
-      try {
-        await fioWallet.otherMethods.fioAction('transferFioDomain', { fioDomain, newOwnerKey: recipientAddress, maxFee: amount })
-
-        const { theme } = this.props
-        const styles = getStyles(theme)
-        const domainName = `@${fioDomain || ''}`
-        const transferredMessage = ` ${s.strings.fio_domain_transferred.toLowerCase()}`
-        await Airship.show(bridge => (
-          <ButtonsModal
-            bridge={bridge}
-            title={s.strings.fio_domain_label}
-            buttons={{
-              ok: { label: s.strings.string_ok_cap }
-            }}
-          >
-            <EdgeText style={styles.tileTextBottom}>
-              <EdgeText style={styles.cursive}>{domainName}</EdgeText>
-              {transferredMessage}
-            </EdgeText>
-          </ButtonsModal>
-        ))
-        return Actions.popTo(FIO_ADDRESS_LIST)
-      } catch (e) {
-        showError(sprintf(s.strings.fio_transfer_err_msg, s.strings.fio_domain_label))
-        this.resetSlider()
-      }
-    }
-
-    if (actionType === SEND_ACTION_TYPE.send) {
-      const { guiMakeSpendInfo, currencyCode, updateSpendPending, signBroadcastAndSave } = this.props
-      if (guiMakeSpendInfo && (guiMakeSpendInfo.isSendUsingFioAddress || guiMakeSpendInfo.fioPendingRequest)) {
-        const { fioSender } = this.state
-        if (fioSender.fioWallet && fioSender.fioAddress && !guiMakeSpendInfo.fioPendingRequest) {
-          updateSpendPending(true)
-          try {
-            await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
-          } catch (e) {
-            updateSpendPending(false)
-            if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && currencyCode !== FIO_STR) {
-              const answer = await Airship.show(bridge => (
-                <ButtonsModal
-                  bridge={bridge}
-                  title={s.strings.fio_no_bundled_err_msg}
-                  message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`}
-                  buttons={{
-                    ok: { label: s.strings.legacy_address_modal_continue },
-                    cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
-                  }}
-                />
-              ))
-              if (answer === 'ok') {
-                fioSender.skipRecord = true
-                signBroadcastAndSave(fioSender)
-              }
-              return
+    if (guiMakeSpendInfo && (guiMakeSpendInfo.isSendUsingFioAddress || guiMakeSpendInfo.fioPendingRequest)) {
+      const { fioSender } = this.state
+      if (fioSender.fioWallet && fioSender.fioAddress && !guiMakeSpendInfo.fioPendingRequest) {
+        updateSpendPending(true)
+        try {
+          await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
+        } catch (e) {
+          updateSpendPending(false)
+          if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && currencyCode !== FIO_STR) {
+            const answer = await Airship.show(bridge => (
+              <ButtonsModal
+                bridge={bridge}
+                title={s.strings.fio_no_bundled_err_msg}
+                message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`}
+                buttons={{
+                  ok: { label: s.strings.legacy_address_modal_continue },
+                  cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+                }}
+              />
+            ))
+            if (answer === 'ok') {
+              fioSender.skipRecord = true
+              signBroadcastAndSave(fioSender)
             }
-
-            showError(e)
             return
           }
-          updateSpendPending(false)
-        }
 
-        return signBroadcastAndSave(fioSender)
+          showError(e)
+          return
+        }
+        updateSpendPending(false)
       }
-      signBroadcastAndSave()
+
+      return signBroadcastAndSave(fioSender)
     }
+    signBroadcastAndSave()
 
     this.setState({ loading: false })
   }
@@ -273,12 +204,8 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAmount() {
-    const { actionType, amountSyntax, lockInputs } = this.props
+    const { amountSyntax, lockInputs } = this.props
     const { recipientAddress } = this.state
-
-    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
-      return null
-    }
 
     if (recipientAddress) {
       return (
@@ -316,14 +243,10 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAdditionalTiles() {
-    const { actionType, fioDomain } = this.props
     const { fioSender } = this.state
 
     return (
       <View>
-        {actionType === SEND_ACTION_TYPE.fioTransferDomain && !!fioDomain && (
-          <Tile type="static" title={s.strings.fio_domain_to_transfer} body={`@${fioDomain}`} />
-        )}
         <SelectFioAddress
           selected={fioSender.fioAddress}
           memo={fioSender.memo}
@@ -336,10 +259,10 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderSelectedWallet() {
-    const { actionType, guiWallet, lockInputs } = this.props
+    const { guiWallet, lockInputs } = this.props
     return (
       <Tile
-        type={actionType === SEND_ACTION_TYPE.fioTransferDomain || lockInputs ? 'static' : 'editable'}
+        type={lockInputs ? 'static' : 'editable'}
         title={`${s.strings.step} 1: ${s.strings.select_wallet}`}
         onPress={lockInputs ? undefined : this.handleWalletPress}
         body={`${guiWallet.name} (${guiWallet.currencyCode})`}
@@ -372,7 +295,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   // Render
   render() {
     const { coreWallet, currencyCode, lockInputs, pending, resetSlider, sliderDisabled, theme } = this.props
-    const { loading, recipientAddress, showSlider } = this.state
+    const { loading, recipientAddress } = this.state
     const styles = getStyles(theme)
 
     return (
@@ -396,7 +319,7 @@ class SendComponent extends React.PureComponent<Props, State> {
             {this.renderAdditionalTiles()}
           </View>
           <Scene.Footer style={styles.footer}>
-            {showSlider && !!recipientAddress && (
+            {!!recipientAddress && (
               <Slider
                 onSlidingComplete={this.submit}
                 resetSlider={resetSlider}
@@ -413,46 +336,20 @@ class SendComponent extends React.PureComponent<Props, State> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   tilesContainer: {
-    flex: 1,
-    width: '100%',
-    flexDirection: 'column'
-  },
-  tileRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    margin: theme.rem(0.25)
-  },
-  tileTextBottom: {
-    color: theme.primaryText,
-    fontSize: theme.rem(1)
-  },
-  tileTextPrice: {
-    marginRight: theme.rem(0.25),
-    color: theme.primaryText,
-    fontSize: theme.rem(1)
-  },
-  tileTextPriceFiat: {
-    color: theme.primaryText,
-    fontSize: theme.rem(0.75)
+    flex: 1
   },
   footer: {
     margin: theme.rem(2)
-  },
-  cursive: {
-    color: theme.primaryText,
-    fontStyle: 'italic'
   }
 }))
 
 export const SendScene2 = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => {
-    const walletId = ownProps.walletId || state.ui.wallets.selectedWalletId
+  (state: RootState): StateProps => {
+    const walletId = state.ui.wallets.selectedWalletId
     const wallets = state.ui.wallets.byId
     const guiWallet = wallets[walletId]
-    const currencyCode = ownProps.walletId ? guiWallet.currencyCode : state.ui.wallets.selectedCurrencyCode
-    const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
-    const { exchangeRates, ui } = state
-    const { settings } = ui
+    const currencyCode = state.ui.wallets.selectedCurrencyCode
+    const { fiatCurrencyCode } = guiWallet
 
     // Denominations
     const cryptoDenomination = getDisplayDenomination(state, currencyCode)
@@ -464,18 +361,9 @@ export const SendScene2 = connect(
     const coreWallet = currencyWallets ? currencyWallets[walletId] : undefined
 
     // Fees
-    let feeSyntax = ''
-    let feeSyntaxStyle
-    if (ownProps.actionType === SEND_ACTION_TYPE.fioTransferDomain) {
-      const nativeAmount = ownProps.amount ? bns.abs(`${ownProps.amount}`) : ''
-      const cryptoAmount = convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
-      const currentFiatAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(cryptoAmount))
-      feeSyntax = `${cryptoDenomination.symbol || ''} ${cryptoAmount} (${fiatDenomination.symbol || ''} ${currentFiatAmount.toFixed(2)})`
-    } else if (ownProps.actionType === SEND_ACTION_TYPE.send) {
-      const transactionFee = UTILS.calculateTransactionFee(state, guiWallet, currencyCode)
-      feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
-      feeSyntaxStyle = transactionFee.fiatStyle
-    }
+    const transactionFee = UTILS.calculateTransactionFee(state, guiWallet, currencyCode)
+    const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
+    const feeSyntaxStyle = transactionFee.fiatStyle
 
     // Amount
     let amountSyntax
@@ -483,7 +371,7 @@ export const SendScene2 = connect(
     const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
     if (nativeAmount && !bns.eq(nativeAmount, '0')) {
       const exchangeAmount = bns.div(nativeAmount, cryptoDenomination.multiplier, UTILS.DIVIDE_PRECISION)
-      const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(exchangeAmount))
+      const fiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, guiWallet.isoFiatCurrencyCode, parseFloat(exchangeAmount))
       amountSyntax = `${exchangeAmount || '0'} ${cryptoDenomination.name} = (${fiatSymbol} ${fiatAmount.toFixed(2) || '0'})`
     } else {
       amountSyntax = `${'0'} ${cryptoDenomination.name} = (${fiatSymbol} ${'0'})`

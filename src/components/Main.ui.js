@@ -30,7 +30,7 @@ import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConf
 import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
-import { SEND_ACTION_TYPE, SendScene2 } from '../components/scenes/SendScene2'
+import { SendScene2 } from '../components/scenes/SendScene2'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
@@ -440,9 +440,7 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.SEND}
               navTransparent
               onExit={this.props.dispatchDisableScan}
-              component={ifLoggedIn(props => (
-                <SendScene2 actionType={SEND_ACTION_TYPE.send} {...props} />
-              ))}
+              component={ifLoggedIn(SendScene2)}
               renderTitle={<HeaderTitle showWalletNameOnly />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={this.renderSendConfirmationButton()}
