@@ -127,7 +127,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       .catch(error => console.log(error))
   }
 
-  onChangeAddress = async (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => {
+  handleChangeAddress = async (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => {
     const { sendConfirmationUpdateTx } = this.props
     const { spendTargets } = guiMakeSpendInfo
     const recipientAddress = parsedUri ? parsedUri.publicAddress : spendTargets && spendTargets[0].publicAddress ? spendTargets[0].publicAddress : ''
@@ -151,6 +151,33 @@ class SendComponent extends React.PureComponent<Props, State> {
     }
     sendConfirmationUpdateTx(guiMakeSpendInfo)
     this.setState({ recipientAddress })
+  }
+
+  handleFlipinputModal = () => {
+    Airship.show(bridge => <FlipInputModal bridge={bridge} walletId={this.props.guiWallet.id} currencyCode={this.props.currencyCode} />).catch(error =>
+      console.log(error)
+    )
+  }
+
+  handleFioAddressSelect = (fioAddress: string, fioWallet: EdgeCurrencyWallet, fioError: string) => {
+    this.setState({
+      fioSender: {
+        ...this.state.fioSender,
+        fioAddress,
+        fioWallet,
+        fioError
+      }
+    })
+  }
+
+  handleMemoChange = (memo: string, memoError: string) => {
+    this.setState({
+      fioSender: {
+        ...this.state.fioSender,
+        memo,
+        memoError
+      }
+    })
   }
 
   submit = async () => {
@@ -197,10 +224,37 @@ class SendComponent extends React.PureComponent<Props, State> {
     this.setState({ loading: false })
   }
 
-  handleFlipinputModal = () => {
-    Airship.show(bridge => <FlipInputModal bridge={bridge} walletId={this.props.guiWallet.id} currencyCode={this.props.currencyCode} />).catch(error =>
-      console.log(error)
+  renderSelectedWallet() {
+    const { guiWallet, lockInputs } = this.props
+    return (
+      <Tile
+        type={lockInputs ? 'static' : 'editable'}
+        title={`${s.strings.step} 1: ${s.strings.select_wallet}`}
+        onPress={lockInputs ? undefined : this.handleWalletPress}
+        body={`${guiWallet.name} (${guiWallet.currencyCode})`}
+      />
     )
+  }
+
+  renderAddressTile() {
+    const { coreWallet, currencyCode, lockInputs } = this.props
+    const { recipientAddress } = this.state
+
+    if (coreWallet) {
+      return (
+        <AddressTile
+          title={`${s.strings.step} 2: ${s.strings.transaction_details_recipient} ${s.strings.fragment_send_address}`}
+          recipientAddress={recipientAddress}
+          coreWallet={coreWallet}
+          currencyCode={currencyCode}
+          onChangeAddress={this.handleChangeAddress}
+          resetSendTransaction={this.resetSendTransaction}
+          lockInputs={lockInputs}
+        />
+      )
+    }
+
+    return null
   }
 
   renderAmount() {
@@ -219,55 +273,6 @@ class SendComponent extends React.PureComponent<Props, State> {
     }
 
     return null
-  }
-
-  handleFioAddressSelect = (fioAddress: string, fioWallet: EdgeCurrencyWallet, fioError: string) => {
-    this.setState({
-      fioSender: {
-        ...this.state.fioSender,
-        fioAddress,
-        fioWallet,
-        fioError
-      }
-    })
-  }
-
-  handleMemoChange = (memo: string, memoError: string) => {
-    this.setState({
-      fioSender: {
-        ...this.state.fioSender,
-        memo,
-        memoError
-      }
-    })
-  }
-
-  renderAdditionalTiles() {
-    const { fioSender } = this.state
-
-    return (
-      <View>
-        <SelectFioAddress
-          selected={fioSender.fioAddress}
-          memo={fioSender.memo}
-          memoError={fioSender.memoError}
-          onSelect={this.handleFioAddressSelect}
-          onMemoChange={this.handleMemoChange}
-        />
-      </View>
-    )
-  }
-
-  renderSelectedWallet() {
-    const { guiWallet, lockInputs } = this.props
-    return (
-      <Tile
-        type={lockInputs ? 'static' : 'editable'}
-        title={`${s.strings.step} 1: ${s.strings.select_wallet}`}
-        onPress={lockInputs ? undefined : this.handleWalletPress}
-        body={`${guiWallet.name} (${guiWallet.currencyCode})`}
-      />
-    )
   }
 
   renderFees() {
@@ -289,12 +294,29 @@ class SendComponent extends React.PureComponent<Props, State> {
         </Tile>
       )
     }
+
     return null
+  }
+
+  renderSelectFioAddress() {
+    const { fioSender } = this.state
+
+    return (
+      <View>
+        <SelectFioAddress
+          selected={fioSender.fioAddress}
+          memo={fioSender.memo}
+          memoError={fioSender.memoError}
+          onSelect={this.handleFioAddressSelect}
+          onMemoChange={this.handleMemoChange}
+        />
+      </View>
+    )
   }
 
   // Render
   render() {
-    const { coreWallet, currencyCode, lockInputs, pending, resetSlider, sliderDisabled, theme } = this.props
+    const { pending, resetSlider, sliderDisabled, theme } = this.props
     const { loading, recipientAddress } = this.state
     const styles = getStyles(theme)
 
@@ -303,20 +325,10 @@ class SendComponent extends React.PureComponent<Props, State> {
         <ScrollView>
           <View style={styles.tilesContainer}>
             {this.renderSelectedWallet()}
-            {coreWallet && (
-              <AddressTile
-                title={`${s.strings.step} 2: ${s.strings.transaction_details_recipient} ${s.strings.fragment_send_address}`}
-                recipientAddress={recipientAddress}
-                coreWallet={coreWallet}
-                currencyCode={currencyCode}
-                onChangeAddress={this.onChangeAddress}
-                resetSendTransaction={this.resetSendTransaction}
-                lockInputs={lockInputs}
-              />
-            )}
+            {this.renderAddressTile()}
             {this.renderAmount()}
             {this.renderFees()}
-            {this.renderAdditionalTiles()}
+            {this.renderSelectFioAddress()}
           </View>
           <Scene.Footer style={styles.footer}>
             {!!recipientAddress && (
