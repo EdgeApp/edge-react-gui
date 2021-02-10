@@ -189,7 +189,7 @@ const walletLoadingProgress = (state = {}, action: Action): $PropertyType<Wallet
       if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
-        [action.data.walletId]: 5
+        [action.data.walletId]: 0.05
       }
     }
 

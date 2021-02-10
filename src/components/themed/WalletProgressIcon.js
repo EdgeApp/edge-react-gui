@@ -36,7 +36,7 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
         this.setState({ isDone: true })
       }, 500)
     }
-    if (this.props.progress === 0) {
+    if (this.props.progress <= 5) {
       setTimeout(() => {
         this.setState({ isDone: false })
       }, 500)
