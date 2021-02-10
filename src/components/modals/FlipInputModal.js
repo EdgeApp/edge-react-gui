@@ -225,7 +225,13 @@ export const FlipInputModal = connect(
     const overridePrimaryExchangeAmount = bns.div(nativeAmount, primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
 
     // Fees
-    const transactionFee = calculateTransactionFee(state, guiWallet, currencyCode)
+    const transactionFee = calculateTransactionFee(
+      guiWallet,
+      currencyCode,
+      state.exchangeRates,
+      state.ui.scenes.sendConfirmation.transaction,
+      state.ui.settings
+    )
     const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
     const feeSyntaxStyle = transactionFee.fiatStyle
 

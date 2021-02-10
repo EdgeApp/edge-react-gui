@@ -373,7 +373,13 @@ export const SendScene = connect(
     const coreWallet = currencyWallets ? currencyWallets[walletId] : undefined
 
     // Fees
-    const transactionFee = UTILS.calculateTransactionFee(state, guiWallet, currencyCode)
+    const transactionFee = UTILS.calculateTransactionFee(
+      guiWallet,
+      currencyCode,
+      state.exchangeRates,
+      state.ui.scenes.sendConfirmation.transaction,
+      state.ui.settings
+    )
     const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
     const feeSyntaxStyle = transactionFee.fiatStyle
 
