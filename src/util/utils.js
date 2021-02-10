@@ -9,8 +9,8 @@ import SafariView from 'react-native-safari-view'
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD } from '../constants/WalletAndCurrencyConstants'
 import type { ExchangeRatesState } from '../modules/ExchangeRates/reducer'
-import { emptyEdgeDenomination, getDisplayDenomination as getDisplayDenominationSelector } from '../modules/Settings/selectors.js'
-import { convertCurrency, convertCurrencyFromExchangeRates, getExchangeDenomination as getExchangeDenominationSelector } from '../modules/UI/selectors.js'
+import { emptyEdgeDenomination } from '../modules/Settings/selectors.js'
+import { convertCurrency, convertCurrencyFromExchangeRates } from '../modules/UI/selectors.js'
 import { type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet, TransactionListTx } from '../types/types.js'
 
@@ -690,12 +690,12 @@ export const calculateFiatNetworkFee = (
 }
 
 export const calculateTransactionFee = (
-  state: RootState,
   guiWallet: GuiWallet,
-  currencyCode: string
+  currencyCode: string,
+  exchangeRates: ExchangeRatesState,
+  transaction: EdgeTransaction | null,
+  settings: any
 ): { fiatSymbol?: string, fiatAmount: string, fiatStyle?: string, cryptoSymbol?: string, cryptoAmount: string } => {
-  const { exchangeRates } = state
-  const { transaction } = state.ui.scenes.sendConfirmation
   const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
   const secondaryDisplayDenomination = getDenomFromIsoCode(fiatCurrencyCode)
 
@@ -710,8 +710,8 @@ export const calculateTransactionFee = (
     }
   } else if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
     // if parentNetworkFee greater than zero
-    const parentDisplayDenomination = getDisplayDenominationSelector(state, guiWallet.currencyCode)
-    const parentExchangeDenomination = getExchangeDenominationSelector(state, guiWallet.currencyCode)
+    const parentDisplayDenomination = getDisplayDenomination(guiWallet.currencyCode, settings)
+    const parentExchangeDenomination = getExchangeDenomination(guiWallet, guiWallet.currencyCode, settings)
     const cryptoFeeSymbol = parentDisplayDenomination && parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
     const displayMultiplier = parentDisplayDenomination ? parentDisplayDenomination.multiplier : ''
     const exchangeMultiplier = parentExchangeDenomination ? parentExchangeDenomination.multiplier : ''
@@ -726,8 +726,8 @@ export const calculateTransactionFee = (
     }
   } else if (networkFee && bns.gt(networkFee, '0')) {
     // if networkFee greater than zero
-    const primaryDisplayDenomination = getDisplayDenominationSelector(state, currencyCode)
-    const primaryExchangeDenomination = getExchangeDenominationSelector(state, currencyCode)
+    const primaryDisplayDenomination = getDisplayDenomination(currencyCode, settings)
+    const primaryExchangeDenomination = getExchangeDenomination(guiWallet, currencyCode, settings)
     const cryptoFeeSymbol = primaryDisplayDenomination && primaryDisplayDenomination.symbol ? primaryDisplayDenomination.symbol : ''
     const displayMultiplier = primaryDisplayDenomination ? primaryDisplayDenomination.multiplier : ''
     const exchangeMultiplier = primaryExchangeDenomination ? primaryExchangeDenomination.multiplier : ''
