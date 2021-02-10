@@ -2,7 +2,6 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -18,7 +17,7 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ClickableText, PrimaryButton, SecondaryButton } from '../themed/ThemedButtons'
+import { ClickableText, PrimaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
 import { SEND_ACTION_TYPE } from './SendScene'
 
@@ -127,6 +126,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
             title={isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}
             onSubmit={this.setDomainVisibility}
             onSuccess={this.afterSuccess}
+            cancelOperation={this.cancelOperation}
             getOperationFee={getDomainSetVisibilityFee}
             successMessage={isPublic ? s.strings.fio_domain_is_private_label : s.strings.fio_domain_is_public_label}
             fioWallet={fioWallet}
@@ -137,6 +137,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
             title={s.strings.title_fio_renew_domain}
             onSubmit={this.renewDomain}
             onSuccess={this.afterSuccess}
+            cancelOperation={this.cancelOperation}
             getOperationFee={this.getRenewalFee}
             successMessage={s.strings.fio_request_renew_domain_ok_text}
             fioWallet={fioWallet}
@@ -152,8 +153,6 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
             </ClickableText>
           </>
         )}
-        <View style={styles.spacer} />
-        {(showRenew || showVisibility) && <SecondaryButton onPress={this.cancelOperation} label={s.strings.string_cancel_cap} marginRem={[0.25, 1]} />}
       </SceneWrapper>
     )
   }

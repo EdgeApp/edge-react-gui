@@ -36,14 +36,16 @@ import { Tile } from '../themed/Tile.js'
 
 export const SEND_ACTION_TYPE = {
   send: 'send',
-  fioTransferDomain: 'fioTransferDomain'
+  fioTransferDomain: 'fioTransferDomain',
+  fioTransferAddress: 'fioTransferAddress'
 }
 
 type OwnProps = {
   amount: string,
   walletId: string,
-  actionType: 'send' | 'fioTransferDomain',
+  actionType: 'send' | 'fioTransferDomain' | 'fioTransferAddress',
   fioDomain?: string,
+  fioAddress?: string,
   fioWallet?: EdgeCurrencyWallet
 }
 type StateProps = {
@@ -84,7 +86,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   componentWillMount(): void {
-    if (this.props.actionType === SEND_ACTION_TYPE.fioTransferDomain) {
+    if ([SEND_ACTION_TYPE.fioTransferAddress, SEND_ACTION_TYPE.fioTransferDomain].indexOf(this.props.actionType) > -1) {
       this.props.onSelectWallet(this.props.walletId, FIO_STR)
     }
   }
@@ -100,7 +102,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   openWalletSelector = async () => {
     const { actionType } = this.props
     const allowedCurrencyCodes = []
-    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
+    if ([SEND_ACTION_TYPE.fioTransferAddress, SEND_ACTION_TYPE.fioTransferDomain].indexOf(actionType) > -1) {
       allowedCurrencyCodes.push(`${FIO_STR}`)
       const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
         <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
@@ -113,7 +115,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   onChangeAddress = async (recipientAddress: string) => {
     const { actionType } = this.props
-    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
+    if ([SEND_ACTION_TYPE.fioTransferAddress, SEND_ACTION_TYPE.fioTransferDomain].indexOf(actionType) > -1) {
       if (recipientAddress.indexOf('FIO') < 0) {
         showError(s.strings.scan_invalid_address_error_title)
         return
@@ -158,12 +160,45 @@ class SendComponent extends React.PureComponent<Props, State> {
       }
     }
 
+    if (actionType === SEND_ACTION_TYPE.fioTransferAddress) {
+      const { fioAddress, fioWallet } = this.props
+      if (!fioWallet || !fioAddress) return showError(s.strings.fio_wallet_missing_for_fio_domain)
+      try {
+        await fioWallet.otherMethods.fioAction('transferFioAddress', { fioAddress, newOwnerKey: recipientAddress, maxFee: amount })
+
+        const { theme } = this.props
+        const styles = getStyles(theme)
+        const transferredMessage = ` ${s.strings.fio_domain_transferred.toLowerCase()}`
+        await Airship.show(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={s.strings.fio_address_confirm_screen_label}
+            buttons={{
+              ok: { label: s.strings.string_ok_cap }
+            }}
+          >
+            <EdgeText style={styles.tileTextBottom}>
+              <EdgeText style={styles.cursive}>{fioAddress}</EdgeText>
+              {transferredMessage}
+            </EdgeText>
+          </ButtonsModal>
+        ))
+        return Actions.popTo(FIO_ADDRESS_LIST)
+      } catch (e) {
+        console.log(e)
+        console.log(e.json)
+        console.log('================')
+        showError(sprintf(s.strings.fio_transfer_err_msg, s.strings.fio_address_confirm_screen_label))
+        this.resetSlider()
+      }
+    }
+
     this.setState({ loading: false })
   }
 
   walletTileType = () => {
     const { actionType } = this.props
-    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
+    if ([SEND_ACTION_TYPE.fioTransferAddress, SEND_ACTION_TYPE.fioTransferDomain].indexOf(actionType) > -1) {
       return 'static'
     }
 
@@ -173,7 +208,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   renderAmount() {
     const { actionType } = this.props
 
-    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
+    if ([SEND_ACTION_TYPE.fioTransferAddress, SEND_ACTION_TYPE.fioTransferDomain].indexOf(actionType) > -1) {
       return null
     }
   }
@@ -182,7 +217,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { actionType, theme, walletDefaultDenomProps } = this.props
     const styles = getStyles(theme)
 
-    if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
+    if ([SEND_ACTION_TYPE.fioTransferAddress, SEND_ACTION_TYPE.fioTransferDomain].indexOf(actionType) > -1) {
       const fiatSymbol = UTILS.getFiatSymbol(this.props.guiWallet.fiatCurrencyCode)
       const symbol = `${walletDefaultDenomProps.symbol || ''} `
       const fiatPrice = `(${fiatSymbol} ${this.props.currentFiatAmount.toFixed(2)})`
@@ -203,6 +238,10 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     if (actionType === SEND_ACTION_TYPE.fioTransferDomain) {
       return this.props.fioDomain && <Tile type="static" title={s.strings.fio_domain_to_transfer} body={`@${this.props.fioDomain}`} />
+    }
+
+    if (actionType === SEND_ACTION_TYPE.fioTransferAddress) {
+      return this.props.fioAddress && <Tile type="static" title={s.strings.fio_address_to_transfer} body={this.props.fioAddress} />
     }
   }
 
