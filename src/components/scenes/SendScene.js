@@ -282,7 +282,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     if (recipientAddress) {
       let amountSyntax
-      const cryptoDenomination = UTILS.getDenomination(selectedCurrencyCode, settings)
+      const cryptoDenomination = UTILS.getDisplayDenomination(selectedCurrencyCode, settings)
       const fiatDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
       if (nativeAmount && !bns.eq(nativeAmount, '0')) {
