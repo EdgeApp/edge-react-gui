@@ -252,11 +252,10 @@ const FioNameConfirmScene = connect((state: RootState) => {
   const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
   const displayDenomination = getDisplayDenomination(state, Constants.FIO_STR)
 
-  const out: StateProps = {
+  return {
     fioPlugin,
     denominationMultiplier: displayDenomination.multiplier,
     isConnected: state.network.isConnected
   }
-  return out
 }, {})(withTheme(FioNameConfirm))
 export { FioNameConfirmScene }

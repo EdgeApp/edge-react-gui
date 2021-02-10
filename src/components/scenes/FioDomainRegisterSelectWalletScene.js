@@ -259,7 +259,7 @@ const FioDomainRegisterSelectWalletScene = connect(
 
     const defaultFiatCode = SETTINGS_SELECTORS.getDefaultIsoFiat(state)
 
-    const out: StateProps = {
+    return {
       state,
       fioWallets,
       fioPlugin,
@@ -268,7 +268,6 @@ const FioDomainRegisterSelectWalletScene = connect(
       wallets,
       isConnected: state.network.isConnected
     }
-    return out
   },
   (dispatch: Dispatch): DispatchProps => ({
     onSelectWallet: (walletId: string, currencyCode: string) => {

@@ -2,7 +2,7 @@
 
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { ActivityIndicator, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
@@ -154,13 +154,8 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
   }
 
-  fieldViewOnLayout = ({ nativeEvent }) => {
-    if (nativeEvent) {
-      const {
-        layout: { y }
-      } = nativeEvent
-      this.setState({ fieldPos: y })
-    }
+  fieldViewOnLayout = ({ nativeEvent: { layout: { y } } = { layout: { y: this.state.fieldPos } } }) => {
+    this.setState({ fieldPos: y })
   }
 
   handleFioWalletChange = (walletId: string) => {
@@ -197,9 +192,11 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         <PrimaryButton
           marginRem={1}
           onPress={this.handleNextButton}
-          label={walletLoading ? s.strings.loading : s.strings.string_next_capitalized}
+          label={walletLoading ? '' : s.strings.string_next_capitalized}
           disabled={!isAvailable || walletLoading}
-        />
+        >
+          {walletLoading ? <ActivityIndicator color={this.props.theme.iconTappable} /> : null}
+        </PrimaryButton>
       )
     }
 
@@ -315,11 +312,10 @@ const FioDomainRegisterScene = connect((state: RootState) => {
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
   const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
 
-  const out: StateProps = {
+  return {
     fioWallets,
     fioPlugin,
     isConnected: state.network.isConnected
   }
-  return out
 }, {})(withTheme(FioDomainRegister))
 export { FioDomainRegisterScene }
