@@ -120,17 +120,19 @@ export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentPr
     })
 }
 
-export const sendConfirmationUpdateTx = (guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => async (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
+export const sendConfirmationUpdateTx = (
+  guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri,
+  forceUpdateGui?: boolean = true,
+  selectedWalletId?: string,
+  selectedCurrencyCode?: string
+) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { currencyWallets = {} } = state.core.account
 
-  const walletId = getSelectedWalletId(state)
+  const walletId = selectedWalletId || getSelectedWalletId(state)
   const edgeWallet = currencyWallets[walletId]
   const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
-  const spendInfo = getSpendInfo(state, guiMakeSpendInfoClone)
+  const spendInfo = getSpendInfo(state, guiMakeSpendInfoClone, selectedCurrencyCode || getSelectedCurrencyCode(state))
 
   const authRequired = getAuthRequired(state, spendInfo)
   dispatch(newSpendInfo(spendInfo, authRequired))
@@ -204,17 +206,21 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
     .catch(showError)
 }
 
-export const signBroadcastAndSave = (fioSender?: FioSenderInfo) => async (dispatch: Dispatch, getState: GetState) => {
+export const signBroadcastAndSave = (fioSender?: FioSenderInfo, walletId?: string, selectedCurrencyCode?: string) => async (
+  dispatch: Dispatch,
+  getState: GetState
+) => {
   const state = getState()
   const { account } = state.core
   const { currencyWallets = {} } = account
 
-  const selectedWalletId = getSelectedWalletId(state)
+  const selectedWalletId = walletId || getSelectedWalletId(state)
   const wallet = currencyWallets[selectedWalletId]
   const edgeUnsignedTransaction: EdgeTransaction = getTransaction(state)
 
-  const guiWallet = getSelectedWallet(state)
-  const currencyCode = getSelectedCurrencyCode(state)
+  const wallets = state.ui.wallets.byId
+  const guiWallet = walletId ? wallets[walletId] : getSelectedWallet(state)
+  const currencyCode = selectedCurrencyCode || getSelectedCurrencyCode(state)
   const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
   const exchangeDenomination = settingsGetExchangeDenomination(state, currencyCode)
 
