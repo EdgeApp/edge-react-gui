@@ -78,6 +78,8 @@ type State = {
 } & WalletStates
 
 class SendComponent extends React.PureComponent<Props, State> {
+  addressTile: ?React.ElementRef<typeof AddressTile>
+
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -129,14 +131,25 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   handleWalletPress = () => {
     const { props } = this
+    const oldSelectedCurrencyCode = this.state.selectedCurrencyCode
+
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={this.props.allowedCurrencyCodes} />)
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
-          this.setState({
-            ...this.state,
-            ...this.setWallets(props, walletId, currencyCode)
-          })
-          this.resetSendTransaction()
+          this.setState(
+            {
+              ...this.state,
+              ...this.setWallets(props, walletId, currencyCode)
+            },
+            () => {
+              if (!this.addressTile) return
+              if (currencyCode !== oldSelectedCurrencyCode) {
+                this.addressTile.reset()
+              } else if (currencyCode === oldSelectedCurrencyCode && this.state.recipientAddress !== '') {
+                this.addressTile.onChangeAddress(this.state.recipientAddress)
+              }
+            }
+          )
         }
       })
       .catch(error => console.log(error))
@@ -269,6 +282,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           onChangeAddress={this.handleChangeAddress}
           resetSendTransaction={this.resetSendTransaction}
           lockInputs={lockInputs}
+          ref={ref => (this.addressTile = ref)}
         />
       )
     }

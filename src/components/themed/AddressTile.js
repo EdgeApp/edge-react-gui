@@ -28,7 +28,8 @@ type OwnProps = {
   recipientAddress: string,
   onChangeAddress: (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => Promise<void>,
   resetSendTransaction: () => void,
-  lockInputs?: boolean
+  lockInputs?: boolean,
+  addressTileRef: any
 }
 type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null
@@ -71,12 +72,16 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 
   componentDidMount(): void {
     this._setClipboard(this.props)
+    this.props.addressTileRef(this)
   }
 
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.recipientAddress !== this.props.recipientAddress && this.props.recipientAddress === '') {
-      this._setClipboard(this.props)
-    }
+  componentWillUnmount(): void {
+    this.props.addressTileRef(undefined)
+  }
+
+  reset() {
+    this._setClipboard(this.props)
+    this.props.resetSendTransaction()
   }
 
   shouldContinueLegacy = async () => {
@@ -232,8 +237,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
   handleTilePress = () => {
     const { lockInputs, recipientAddress } = this.props
     if (!lockInputs && !!recipientAddress) {
-      this._setClipboard(this.props)
-      this.props.resetSendTransaction()
+      this.reset()
     }
   }
 
@@ -290,9 +294,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AddressTile = connect((state: RootState): StateProps => {
+const AddressTileConnector = connect((state: RootState): StateProps => {
   const { account } = state.core
   return {
     fioPlugin: account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
   }
 })(withTheme(AddressTileComponent))
+
+// $FlowFixMe - forwardRef is not recognize by flow?
+export const AddressTile = React.forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />) // eslint-disable-line
