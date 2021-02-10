@@ -11,7 +11,6 @@ import { connect } from 'react-redux'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../modules/Settings/selectors'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import { type RootState } from '../../types/reduxTypes'
 import { getFeeDisplayed, truncateDecimals } from '../../util/utils'
@@ -19,6 +18,8 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText'
+import { Tile } from '../themed/Tile'
 
 export type LocalState = {
   balance: number | null,
@@ -188,27 +189,25 @@ class FioNameConfirm extends React.PureComponent<Props, LocalState> {
     const { balance, loading } = this.state
     const styles = getStyles(theme)
 
+    const balanceText = `${balance ? balance.toFixed(2) : '0'} ${balance ? s.strings.fio_address_confirm_screen_fio_label : ''}`
     return (
       <SceneWrapper background="theme">
         <View style={styles.scene}>
-          <View style={styles.info}>
-            <T style={styles.title}>{this.isFioAddress() ? s.strings.fio_address_confirm_screen_label : s.strings.fio_domain_label}</T>
-            <T style={styles.titleLarge}>{this.isFioAddress() ? fioName : `${Constants.FIO_ADDRESS_DELIMITER}${fioName}`}</T>
-            <View style={styles.spacer} />
-            <T style={styles.title}>{s.strings.fio_address_confirm_screen_registration_label}</T>
-            <T style={styles.title}>
-              {fee ? getFeeDisplayed(fee) : s.strings.fio_domain_free} {balance && fee ? s.strings.fio_address_confirm_screen_fio_label : ''}
-            </T>
-            <View style={styles.spacer} />
-            {fee ? (
-              <View>
-                <T style={styles.title}>{s.strings.fio_address_confirm_screen_balance_label}</T>
-                <T style={balance && fee <= balance ? styles.title : styles.titleDisabled}>
-                  {balance ? balance.toFixed(2) : '0'} {balance ? s.strings.fio_address_confirm_screen_fio_label : ''}
-                </T>
-              </View>
-            ) : null}
-          </View>
+          <Tile
+            type="static"
+            title={this.isFioAddress() ? s.strings.fio_address_confirm_screen_label : s.strings.fio_domain_label}
+            body={this.isFioAddress() ? fioName : `${Constants.FIO_ADDRESS_DELIMITER}${fioName}`}
+          />
+          <Tile
+            type="static"
+            title={s.strings.fio_address_confirm_screen_registration_label}
+            body={`${fee ? getFeeDisplayed(fee) : s.strings.fio_domain_free} ${balance && fee ? s.strings.fio_address_confirm_screen_fio_label : ''}`}
+          />
+          {fee ? (
+            <Tile type="static" title={s.strings.fio_address_confirm_screen_balance_label}>
+              <EdgeText style={balance && fee <= balance ? styles.text : styles.textDisabled}>{balanceText}</EdgeText>
+            </Tile>
+          ) : null}
           <View style={styles.blockPadding}>
             <Scene.Footer>
               <Slider
@@ -233,36 +232,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'flex-start',
     alignItems: 'stretch'
   },
-  info: {
-    paddingTop: theme.rem(2),
-    paddingLeft: theme.rem(0.5),
-    paddingRight: theme.rem(0.5)
-  },
-  title: {
+  text: {
     color: theme.primaryText,
-    fontSize: theme.rem(1),
-    fontWeight: 'normal',
-    textAlign: 'center'
+    margin: theme.rem(0.25)
   },
-  titleDisabled: {
-    color: theme.negativeText,
-    fontSize: theme.rem(1),
-    fontWeight: 'normal',
-    textAlign: 'center'
-  },
-  titleLarge: {
-    color: theme.primaryText,
-    fontSize: theme.rem(1.5),
-    fontWeight: 'bold',
-    textAlign: 'center'
+  textDisabled: {
+    color: theme.dangerText,
+    margin: theme.rem(0.25)
   },
   blockPadding: {
     paddingTop: theme.rem(4),
     paddingLeft: theme.rem(1.25),
     paddingRight: theme.rem(1.25)
-  },
-  spacer: {
-    paddingTop: theme.rem(1.25)
   }
 }))
 
@@ -271,11 +252,10 @@ const FioNameConfirmScene = connect((state: RootState) => {
   const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
   const displayDenomination = getDisplayDenomination(state, Constants.FIO_STR)
 
-  const out: StateProps = {
+  return {
     fioPlugin,
     denominationMultiplier: displayDenomination.multiplier,
     isConnected: state.network.isConnected
   }
-  return out
 }, {})(withTheme(FioNameConfirm))
 export { FioNameConfirmScene }

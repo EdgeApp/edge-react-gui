@@ -23,7 +23,8 @@ type StateProps = {
 
 type OwnProps = {
   bridge: AirshipBridge<string | null>,
-  value: string
+  value: string,
+  title: string
 }
 
 type State = {
@@ -49,13 +50,13 @@ class EditNameModalComponent extends React.PureComponent<Props, State> {
   selectItem = (value: any) => this.props.bridge.resolve(value)
 
   render() {
-    const { bridge, theme } = this.props
+    const { bridge, title, theme } = this.props
     const { input } = this.state
     const styles = getStyles(theme)
 
     return (
       <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={0}>
-        <ModalTitle>{s.strings.fio_address_choose_label}</ModalTitle>
+        <ModalTitle>{title}</ModalTitle>
         <View style={styles.field}>
           <EdgeTextField
             autoFocus
