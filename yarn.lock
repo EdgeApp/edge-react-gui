@@ -4132,6 +4132,11 @@ cleaners@^0.3.1, cleaners@^0.3.2:
   resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.2.tgz#e240a3837f5b2d59975f18d753dea7d1bab0fd4b"
   integrity sha512-SOjd7UOrU/8CF6V7QKZsfJB8MIBylrZOso+eJWYFaOm2jamKj7Wxbihg8vasnHzqtagv1vpwhN8xkD3liX/dIg==
 
+cleaners@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.3.tgz#e8c8a2b18d2d11037ed4d928310eb29c8e787ee6"
+  integrity sha512-6IgzKXTkTq4aWA2fxImk/Ux3dDhX7JPlfHbFVjDJ/6ASV/k3dl4qKgFDXvLWRiPS9t8Hn11AvDqPFjRVNQ3b0Q==
+
 cli-boxes@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-2.2.1.tgz#ddd5035d25094fce220e9cab40a45840a440318f"
@@ -5171,15 +5176,15 @@ edge-components@^0.0.31:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.22:
-  version "0.17.22"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.22.tgz#eb742439aab5b579bc1a1f0e3d2815915f672416"
-  integrity sha512-F8p10+Ywxf968AwXLkjJswGbJ8EKPFT8v9jKw3ugafoHCqaJTR/CoPP7FPVomLb7UlzzBg1WOivIICzOe8yzAQ==
+edge-core-js@^0.17.23:
+  version "0.17.23"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.23.tgz#e6f28abadb88be073ff7e838c00c45e05146906b"
+  integrity sha512-GM3I4dlqRzMKYtqqInHXWY/pM3TK7L9t3iYhFydLItxwX+SBpCEHdqrOmW0goz9tt8anEpo60wsSiSWiID0CKg==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
     biggystring "^3.0.2"
-    cleaners "^0.3.2"
+    cleaners "^0.3.3"
     currency-codes "^1.1.2"
     disklet "^0.4.5"
     elliptic "^6.4.0"
