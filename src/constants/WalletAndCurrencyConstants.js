@@ -139,7 +139,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   RBTC: 'rsk',
   RVN: 'ravencoin',
   SMART: 'smartcash',
-  TBTC: 'bitcointestnet',
+  TESTBTC: 'bitcointestnet',
   TLOS: 'telos',
   WAX: 'wax',
   UFO: 'ufo',
@@ -449,7 +449,7 @@ export const WALLET_LIST_MENU: Array<{
       'DOGE',
       'RVN',
       'RBTC',
-      'TBTC',
+      'TESTBTC',
       'XMR'
     ],
     label: s.strings.fragment_wallets_view_xpub,

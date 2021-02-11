@@ -29,6 +29,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   BTC: {
     denomination: '100000000'
   },
+  TESTBTC: {
+    denomination: '100000000'
+  },
   BCH: {
     denomination: '100000000'
   },
@@ -305,6 +308,84 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   WBTC: {
     denomination: '100000000'
   },
+  YFI: {
+    denominations: '1000000000000000000'
+  },
+  CRV: {
+    denominations: '1000000000000000000'
+  },
+  BAL: {
+    denominations: '1000000000000000000'
+  },
+  SUSHI: {
+    denominations: '1000000000000000000'
+  },
+  UMA: {
+    denominations: '1000000000000000000'
+  },
+  BADGER: {
+    denominations: '1000000000000000000'
+  },
+  IDLE: {
+    denominations: '1000000000000000000'
+  },
+  NXM: {
+    denominations: '1000000000000000000'
+  },
+  CREAM: {
+    denominations: '1000000000000000000'
+  },
+  PICKLE: {
+    denominations: '1000000000000000000'
+  },
+  CVP: {
+    denominations: '1000000000000000000'
+  },
+  ROOK: {
+    denominations: '1000000000000000000'
+  },
+  DOUGH: {
+    denominations: '1000000000000000000'
+  },
+  COMBO: {
+    denominations: '1000000000000000000'
+  },
+  INDEX: {
+    denominations: '1000000000000000000'
+  },
+  WETH: {
+    denominations: '1000000000000000000'
+  },
+  RENBTC: {
+    denominations: '100000000'
+  },
+  RENBCH: {
+    denominations: '100000000'
+  },
+  RENZEC: {
+    denominations: '100000000'
+  },
+  TBTC: {
+    denominations: '1000000000000000000'
+  },
+  DPI: {
+    denominations: '1000000000000000000'
+  },
+  YETI: {
+    denominations: '1000000000000000000'
+  },
+  BAND: {
+    denominations: '1000000000000000000'
+  },
+  REN: {
+    denominations: '1000000000000000000'
+  },
+  AMPL: {
+    denominations: '1000000000'
+  },
+  OCEAN: {
+    denominations: '1000000000000000000'
+  },
   customTokens: [],
   mostRecentWallets: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
@@ -411,6 +492,33 @@ export const SYNCED_ACCOUNT_TYPES = {
   ASUSD: 'object',
   AUNI: 'object',
   WBTC: 'object',
+  TESTBTC: 'object',
+  YFI: 'object',
+  CRV: 'object',
+  BAL: 'object',
+  SUSHI: 'object',
+  UMA: 'object',
+  BADGER: 'object',
+  IDLE: 'object',
+  NXM: 'object',
+  CREAM: 'object',
+  PICKLE: 'object',
+  CVP: 'object',
+  ROOK: 'object',
+  DOUGH: 'object',
+  COMBO: 'object',
+  INDEX: 'object',
+  WETH: 'object',
+  RENBTC: 'object',
+  RENBCH: 'object',
+  RENZEC: 'object',
+  TBTC: 'object',
+  DPI: 'object',
+  YETI: 'object',
+  BAND: 'object',
+  REN: 'object',
+  AMPL: 'object',
+  OCEAN: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   mostRecentWallets: 'object',
   passwordRecoveryRemindersShown: 'object',
