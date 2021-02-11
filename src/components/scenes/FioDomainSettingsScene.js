@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableHighlight, View } from 'react-native'
+import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -12,14 +12,14 @@ import s from '../../locales/strings'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioName, setDomainVisibility } from '../../modules/FioAddress/util'
-import { PrimaryButton2 } from '../../modules/UI/components/Buttons/PrimaryButton2.ui.js'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import type { RootState } from '../../reducers/RootReducer'
 import type { Dispatch } from '../../types/reduxTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
-import { SecondaryButton } from '../themed/ThemedButtons'
+import { EdgeText } from '../themed/EdgeText'
+import { ClickableText, PrimaryButton, SecondaryButton } from '../themed/ThemedButtons'
+import { Tile } from '../themed/Tile'
 import { SEND_ACTION_TYPE } from './SendScene'
 
 type State = {
@@ -120,19 +120,11 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
 
     return (
       <SceneWrapper background="header">
-        <View style={styles.info}>
-          <T style={styles.title}>{s.strings.fio_domain_label}</T>
-          <T style={styles.content}>
-            {Constants.FIO_ADDRESS_DELIMITER}
-            {fioDomainName}
-          </T>
-        </View>
-        <View style={styles.info}>
-          <T style={styles.title}>{s.strings.fio_address_details_screen_expires}</T>
-          <T style={styles.content}>{formatDate(new Date(expiration))}</T>
-        </View>
+        <Tile type="static" title={s.strings.fio_domain_label} body={`${Constants.FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
+        <Tile type="static" title={s.strings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
         {showVisibility && (
           <FioActionSubmit
+            title={isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}
             onSubmit={this.setDomainVisibility}
             onSuccess={this.afterSuccess}
             getOperationFee={getDomainSetVisibilityFee}
@@ -142,6 +134,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         )}
         {showRenew && (
           <FioActionSubmit
+            title={s.strings.title_fio_renew_domain}
             onSubmit={this.renewDomain}
             onSuccess={this.afterSuccess}
             getOperationFee={this.getRenewalFee}
@@ -152,66 +145,27 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         {showTransfer && <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} />}
         {!showRenew && !showVisibility && !showTransfer && (
           <>
-            <View style={styles.spacer} />
-            <View style={styles.blockPadding}>
-              <PrimaryButton2 onPress={this.onRenewPress}>
-                <PrimaryButton2.Text>{s.strings.title_fio_renew_domain}</PrimaryButton2.Text>
-              </PrimaryButton2>
-            </View>
-            <View style={styles.blockPadding}>
-              <PrimaryButton2 onPress={this.onTransferPress}>
-                <PrimaryButton2.Text>{s.strings.title_fio_transfer_domain}</PrimaryButton2.Text>
-              </PrimaryButton2>
-            </View>
-            <View style={styles.blockPadding}>
-              <TouchableHighlight onPress={this.onVisibilityPress} underlayColor="transparent">
-                <T style={styles.highlightBtn}>{isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}</T>
-              </TouchableHighlight>
-            </View>
+            <PrimaryButton label={s.strings.title_fio_renew_domain} onPress={this.onRenewPress} marginRem={[1.5, 1, 0.25]} />
+            <PrimaryButton label={s.strings.title_fio_transfer_domain} onPress={this.onTransferPress} marginRem={[0.25, 1]} />
+            <ClickableText onPress={this.onVisibilityPress} marginRem={[0.25, 1]}>
+              <EdgeText style={styles.visibilityText}>{isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}</EdgeText>
+            </ClickableText>
           </>
         )}
         <View style={styles.spacer} />
-        {(showRenew || showVisibility) && (
-          <View style={styles.blockPadding}>
-            <SecondaryButton onPress={this.cancelOperation} label={s.strings.string_cancel_cap} />
-          </View>
-        )}
+        {(showRenew || showVisibility) && <SecondaryButton onPress={this.cancelOperation} label={s.strings.string_cancel_cap} marginRem={[0.25, 1]} />}
       </SceneWrapper>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  info: {
-    backgroundColor: theme.tileBackground,
-    paddingVertical: theme.rem(1),
-    paddingHorizontal: theme.rem(1),
-    marginBottom: theme.rem(0.25)
-  },
-  title: {
-    color: theme.secondaryText,
-    marginBottom: theme.rem(0.25),
-    fontSize: theme.rem(0.75),
-    fontWeight: 'normal',
-    textAlign: 'left'
-  },
-  content: {
-    color: theme.primaryText,
-    fontSize: theme.rem(1),
-    textAlign: 'left'
-  },
-  blockPadding: {
-    paddingTop: theme.rem(0.5),
-    paddingLeft: theme.rem(1.25),
-    paddingRight: theme.rem(1.25)
+  visibilityText: {
+    color: theme.textLink,
+    textAlign: 'center'
   },
   spacer: {
     paddingTop: theme.rem(1.25)
-  },
-  highlightBtn: {
-    color: theme.primaryText,
-    textAlign: 'center',
-    padding: theme.rem(0.5)
   }
 }))
 

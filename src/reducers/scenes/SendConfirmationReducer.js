@@ -91,6 +91,7 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
         ...state.guiMakeSpendInfo,
         networkFeeOption: spendInfo.networkFeeOption || state.guiMakeSpendInfo.networkFeeOption,
         customNetworkFee: spendInfo.customNetworkFee || state.guiMakeSpendInfo.customNetworkFee,
+        spendTargets: spendInfo.spendTargets || state.guiMakeSpendInfo.spendTargets,
         publicAddress: firstSpendTarget.publicAddress || state.guiMakeSpendInfo.publicAddress,
         nativeAmount: firstSpendTarget.nativeAmount || state.guiMakeSpendInfo.nativeAmount,
         uniqueIdentifier: (firstSpendTarget.otherParams && firstSpendTarget.otherParams.uniqueIdentifier) || state.guiMakeSpendInfo.uniqueIdentifier,

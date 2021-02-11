@@ -2,12 +2,16 @@
 
 import { type EdgePluginMap, type EdgeSwapConfig } from 'edge-core-js/types'
 import * as React from 'react'
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { getSwapPluginIcon } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
-import { type AirshipBridge, AirshipModal, dayText, THEME } from './modalParts.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
+import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
+import { ThemedModal } from '../themed/ThemedModal.js'
 
 type ModalResult = { type: 'cancel' } | { type: 'select', pluginId: string | void }
 
@@ -23,6 +27,8 @@ type Props = {
  */
 export function SwapPreferredModal(props: Props) {
   const { bridge, exchanges, selected } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
   const sortedIds = Object.keys(exchanges)
     .sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
@@ -31,7 +37,7 @@ export function SwapPreferredModal(props: Props) {
   function renderRow(pluginId: string | void): React.Node {
     let check: React.Node | void
     if (selected === pluginId) {
-      check = <AntDesignIcon name="check" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.icon} />
+      check = <AntDesignIcon name="check" color={theme.positiveText} size={theme.rem(1.25)} style={styles.icon} />
     }
 
     const { text, icon } =
@@ -42,57 +48,49 @@ export function SwapPreferredModal(props: Props) {
           }
         : {
             text: s.strings.swap_preferred_cheapest,
-            icon: <AntDesignIcon name="barschart" color={THEME.COLORS.GRAY_1} size={iconSize} style={styles.icon} />
+            icon: <AntDesignIcon name="barschart" color={theme.icon} size={theme.rem(1.25)} style={styles.icon} />
           }
 
     return (
       <TouchableOpacity onPress={() => bridge.resolve({ type: 'select', pluginId })}>
         <View style={styles.row}>
           {icon}
-          <Text style={styles.rowText}>{text}</Text>
+          <EdgeText style={styles.rowText}>{text}</EdgeText>
           {check}
         </View>
       </TouchableOpacity>
     )
   }
 
+  const handleCancel = () => bridge.resolve({ type: 'cancel' })
+
+  // ScrollView maxHeight is computed by how many plugins
   return (
-    <AirshipModal bridge={bridge} padding={margin} onCancel={() => bridge.resolve({ type: 'cancel' })}>
-      {gap => (
-        <>
-          <Text style={styles.headerText}>{s.strings.swap_preferred_header}</Text>
-          <ScrollView style={{ marginBottom: -gap.bottom }} contentContainerStyle={{ paddingBottom: gap.bottom }}>
-            {renderRow(undefined)}
-            {sortedIds.map(pluginId => renderRow(pluginId))}
-          </ScrollView>
-        </>
-      )}
-    </AirshipModal>
+    <ThemedModal bridge={bridge} onCancel={handleCancel}>
+      <ModalTitle>{s.strings.swap_preferred_header}</ModalTitle>
+      <ScrollView style={{ maxHeight: (sortedIds.length + 1) * theme.rem(2.25) }}>
+        {renderRow(undefined)}
+        {sortedIds.map(pluginId => renderRow(pluginId))}
+      </ScrollView>
+      <ModalCloseArrow onPress={handleCancel} />
+    </ThemedModal>
   )
 }
 
-const margin = THEME.rem(0.5)
-const iconSize = THEME.rem(1.375)
-
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   row: {
-    // Appearance:
-    backgroundColor: THEME.COLORS.WHITE,
-    borderBottomColor: THEME.COLORS.GRAY_3,
-
-    // Layout:
-    minHeight: THEME.rem(3),
-    paddingLeft: THEME.rem(0.5),
-    paddingRight: THEME.rem(0.5),
-
-    // Children:
+    height: theme.rem(2.25),
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-start'
   },
-
-  headerText: { ...dayText('title'), margin },
-  icon: { height: iconSize, width: iconSize, margin },
-  rowText: { ...dayText(), flexGrow: 1, margin }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+  icon: {
+    height: theme.rem(1.25),
+    width: theme.rem(1.25),
+    margin: theme.rem(0.5)
+  },
+  rowText: {
+    flexGrow: 1,
+    margin: theme.rem(0.5)
+  }
+}))

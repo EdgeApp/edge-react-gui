@@ -139,7 +139,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   RBTC: 'rsk',
   RVN: 'ravencoin',
   SMART: 'smartcash',
-  TBTC: 'bitcointestnet',
+  TESTBTC: 'bitcointestnet',
   TLOS: 'telos',
   WAX: 'wax',
   UFO: 'ufo',
@@ -256,7 +256,7 @@ export const SPECIAL_CURRENCY_INFO: {
       minimumNativeBalance: '20000000',
       modalMessage: s.strings.request_xrp_minimum_notification_body
     },
-    displayBuyCrypto: true,
+    displayBuyCrypto: false,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_instructions
@@ -449,7 +449,7 @@ export const WALLET_LIST_MENU: Array<{
       'DOGE',
       'RVN',
       'RBTC',
-      'TBTC',
+      'TESTBTC',
       'XMR'
     ],
     label: s.strings.fragment_wallets_view_xpub,

@@ -19,6 +19,12 @@ Object {
     "nativeAmount": "0",
     "networkFeeOption": "standard",
     "publicAddress": "123123123",
+    "spendTargets": Array [
+      Object {
+        "nativeAmount": "0",
+        "publicAddress": "123123123",
+      },
+    ],
     "uniqueIdentifier": undefined,
   },
   "isEditable": true,
@@ -60,6 +66,13 @@ Object {
     "nativeAmount": "1000",
     "networkFeeOption": "standard",
     "publicAddress": "123123123",
+    "spendTargets": Array [
+      Object {
+        "currencyCode": "BTC",
+        "nativeAmount": "1000",
+        "publicAddress": "123123123",
+      },
+    ],
     "uniqueIdentifier": undefined,
   },
   "isEditable": true,
@@ -108,6 +121,13 @@ Object {
     "nativeAmount": "1000",
     "networkFeeOption": "standard",
     "publicAddress": "123123123",
+    "spendTargets": Array [
+      Object {
+        "currencyCode": "BTC",
+        "nativeAmount": "1000",
+        "publicAddress": "123123123",
+      },
+    ],
     "uniqueIdentifier": undefined,
   },
   "isEditable": true,

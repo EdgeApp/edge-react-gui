@@ -255,11 +255,13 @@ class FioAddressRegister extends React.Component<Props, State> {
 
   editAddressPressed = () => {
     this.handleFioAddressFocus()
-    Airship.show(bridge => <EditNameModal bridge={bridge} value={this.state.fioAddress} />).then((response: string | null) => {
-      if (response) {
-        this.handleFioAddressChange(response)
+    Airship.show(bridge => <EditNameModal bridge={bridge} title={s.strings.fio_address_choose_label} value={this.state.fioAddress} />).then(
+      (response: string | null) => {
+        if (response) {
+          this.handleFioAddressChange(response)
+        }
       }
-    })
+    )
   }
 
   handleFioWalletChange = (walletId: string) => {
