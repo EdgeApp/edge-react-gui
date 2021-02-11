@@ -21,7 +21,8 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
 
 type OwnProps = {
-  wallet: EdgeCurrencyWallet
+  wallet: EdgeCurrencyWallet,
+  currencyCode?: string
 }
 
 type StateProps = {
@@ -31,7 +32,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  onSubmit(networkFeeOption: string, customNetworkFee: Object): mixed
+  onSubmit(networkFeeOption: string, customNetworkFee: Object, walletId: string, currencyCode?: string): mixed
 }
 
 type Props = OwnProps & StateProps & DispatchProps
@@ -68,12 +69,12 @@ export class ChangeMiningFee extends React.Component<Props, State> {
 
   onSubmit = () => {
     const { networkFeeOption, customNetworkFee } = this.state
-    const { wallet, spendTargets = [] } = this.props
+    const { currencyCode, wallet, spendTargets = [] } = this.props
     const testSpendInfo = { spendTargets, networkFeeOption, customNetworkFee }
     wallet
       .makeSpend(testSpendInfo)
       .then(() => {
-        this.props.onSubmit(networkFeeOption, customNetworkFee)
+        this.props.onSubmit(networkFeeOption, customNetworkFee, wallet.id, currencyCode)
         Actions.pop()
       })
       .catch(e => {
@@ -208,8 +209,8 @@ export const ChangeMiningFeeScene = connect(
     spendTargets: getGuiMakeSpendInfo(state).spendTargets
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    onSubmit(networkFeeOption: string, customNetworkFee: Object) {
-      dispatch(sendConfirmationUpdateTx({ networkFeeOption, customNetworkFee }))
+    onSubmit(networkFeeOption: string, customNetworkFee: Object, walletId: string, currencyCode?: string) {
+      dispatch(sendConfirmationUpdateTx({ networkFeeOption, customNetworkFee }, true, walletId, currencyCode))
     }
   })
 )(ChangeMiningFee)
