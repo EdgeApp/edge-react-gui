@@ -147,10 +147,10 @@ const WalletsButton = () => {
   )
 }
 
-const popToSendScene = () => Actions.jump(Constants.SEND)
+const popToSendScan = () => Actions.jump(Constants.SCAN)
 const ScanButton = () => {
   return (
-    <Button onPress={popToSendScene}>
+    <Button onPress={popToSendScan}>
       <Button.Row>
         <Button.Left>
           <Image source={scanIcon} style={styles.iconImage} />

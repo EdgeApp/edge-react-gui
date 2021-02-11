@@ -282,7 +282,7 @@ export class MainComponent extends React.Component<Props> {
                 }}
                 onExit={this.props.dispatchDisableScan}
                 component={ifLoggedIn(Scan)}
-                renderTitle={<HeaderTitle />}
+                renderTitle={<HeaderTitle title={s.strings.send_scan_header_text} />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
                 renderRightButton={<SideMenuButton />}
               />
