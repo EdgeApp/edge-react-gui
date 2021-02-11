@@ -3709,9 +3709,9 @@ bs58check@2.1.2, bs58check@<3.0.0, bs58check@^1.0.8, bs58check@^2.1.1, bs58check
     create-hash "^1.1.0"
     safe-buffer "^5.1.2"
 
-"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
+"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
   version "2.1.2"
-  resolved "https://github.com/Groestlcoin/bs58grscheck#8ff31333a7626161c1484b461c20710bb9f97b93"
+  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#8ff31333a7626161c1484b461c20710bb9f97b93"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -5202,10 +5202,10 @@ edge-core-js@^0.17.23:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.44:
-  version "0.7.44"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.44.tgz#aa3c019b3e5cd1e28bb010642758230590054b56"
-  integrity sha512-XNELSU7w1lvDMDoZxlv92E6SEsAKYdxDzixdaBvYz3y9s/8ETovVsFAMUC2822XAW2Jo7P20EirNAKGJPnsi6A==
+edge-currency-accountbased@^0.7.45:
+  version "0.7.45"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.45.tgz#b176a927e9295bc2f8611ac4423148380540c5ab"
+  integrity sha512-9Xp43/lSIQSwQ30cimB84Gs1eDrDJKuaI4NlfMEhcW8xw3U0gYDRCqxk/uSeTcl/QJKfkWE4k/5OO9Q7E1Fpgw==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.2.1"
@@ -5231,10 +5231,10 @@ edge-currency-accountbased@^0.7.44:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.9.11:
-  version "4.9.11"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.11.tgz#a9c4ff48d20909cde469fd27dc2cffe3ba44bd87"
-  integrity sha512-WeazcIWxJbA1TT8swZicuNzRhiKkS22KFF88N7Tpk8qaI2m1pp5P/wAhaK+OE77tKydq+yPOywpWn4xMXaNfsg==
+edge-currency-bitcoin@^4.9.12:
+  version "4.9.12"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.12.tgz#ca2188e4267c8d4e94d0ac1e291484faa40224e5"
+  integrity sha512-8cM94BuWutr1NUsU9NsgsngrQHPFbYRPa9nueHsABBekoV/ZyMHTuHMk/2++D/iTLt14+1rHMuvwAwl+TVPGFg==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -5264,10 +5264,10 @@ edge-currency-monero@^0.2.9:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.18:
-  version "0.11.18"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.18.tgz#e2c484f1bb53ab6a9d9778238db7d5996bc9d82f"
-  integrity sha512-XaV85wg/Y/sAUA/VKDsdUYetLT48sZ1ZuvWdBBwRysDX2FeQy+FDapjPQ3TkuZH1QGNfsasDv6iH0qmoKryzKw==
+edge-exchange-plugins@^0.11.19:
+  version "0.11.19"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.19.tgz#809f475a759d449279b27e0ca8d9cbfcaf052128"
+  integrity sha512-FAq+SnDPVNodxnHGJz0ljzyBPrcpPxbmWMpo4nohv29bh9kHSX8YNdxnMfXEjJAYMHLDSck3kWzn7cQ7LgVCeA==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.2.0"
