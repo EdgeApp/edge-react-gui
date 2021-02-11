@@ -5,9 +5,11 @@ import { Scene } from 'edge-components'
 import type { EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { type FioSenderInfo, reset, sendConfirmationUpdateTx, signBroadcastAndSave, updateSpendPending } from '../../actions/SendConfirmationActions.js'
+import { CHANGE_MINING_FEE_SEND_CONFIRMATION } from '../../constants/indexConstants'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
@@ -187,6 +189,8 @@ class SendComponent extends React.PureComponent<Props, State> {
     )).catch(error => console.log(error))
   }
 
+  handleFeesChange = () => Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({ wallet: this.state.coreWallet, currencyCode: this.state.selectedCurrencyCode })
+
   handleFioAddressSelect = (fioAddress: string, fioWallet: EdgeCurrencyWallet, fioError: string) => {
     this.setState({
       fioSender: {
@@ -338,7 +342,7 @@ class SendComponent extends React.PureComponent<Props, State> {
       const feeSyntaxStyle = transactionFee.fiatStyle
 
       return (
-        <Tile type="static" title={`${s.strings.string_fee}:`}>
+        <Tile type="touchable" title={`${s.strings.string_fee}:`} onPress={this.handleFeesChange}>
           <EdgeText style={{ color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText }}>{feeSyntax}</EdgeText>
         </Tile>
       )
