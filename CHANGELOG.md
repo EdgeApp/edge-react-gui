@@ -1,10 +1,31 @@
 # edge-react-gui
 
-## 2.0.2 (2020-02-05)
+## 2.0.3 (2021-02-11)
+
+- Add new DeFi ERC20 tokens
+- Show loading ring when resyncing a wallet
+- Themed preferred exchange partner modal
+- Update partner descriptions and limits
+- Fix inputs error on change fee screen
+- Upgrade edge-core-js to v0.17.23
+  - Ensure all crypto to crypto exchange rates have a route to USD
+  - Add currency code column to CSV exports
+- Upgrade edge-currency-accountbased to v0.7.45
+  - Add DeFi ERC20 tokens
+  - Update FIO server list
+  - Add additional logging
+- Upgrade edge-currency-bitcoin to v4.9.12
+  - Rename TBTC to TESTBTC to avoid conflict with tBTC ERC20 token
+- Upgrade edge-exchange-plugins to v0.11.19
+  - Move aTokens to constantRate plugin
+  - Rename TBTC to TESTBTC
+  - Sideshift: add uniqueIdentifier to swaps
+
+## 2.0.2 (2021-02-05)
 
 - Fix crash when adding a Fio name
 
-## 2.0.1 (2020-02-04)
+## 2.0.1 (2021-02-04)
 
 - Fix detection of transactions with large input values
 - Themed FIO screens
@@ -20,7 +41,7 @@
   - ETH: Put RPC error handling in multicastServers
   - ETH: Throw error when custom fee isn't valid or doesn't reach network minimums
 
-## 2.0.0 (2020-01-26)
+## 2.0.0 (2021-01-26)
 
 - New dark-themed components
 - Swipable wallets to quickly send, receive, and reveal settings
