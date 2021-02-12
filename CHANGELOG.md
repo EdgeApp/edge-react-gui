@@ -10,7 +10,7 @@
 - Upgrade edge-core-js to v0.17.23
   - Ensure all crypto to crypto exchange rates have a route to USD
   - Add currency code column to CSV exports
-- Upgrade edge-currency-accountbased to v0.7.45
+- Upgrade edge-currency-accountbased to v0.7.46
   - Add DeFi ERC20 tokens
   - Update FIO server list
   - Add additional logging
