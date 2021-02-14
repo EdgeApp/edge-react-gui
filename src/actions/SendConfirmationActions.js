@@ -60,14 +60,18 @@ export const toggleCryptoOnTop = () => ({
   data: null
 })
 
-export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string, forceUpdateGui?: boolean = false) => (
-  dispatch: Dispatch,
-  getState: GetState
-) => {
+export const updateAmount = (
+  nativeAmount: string,
+  exchangeAmount: string,
+  fiatPerCrypto: string,
+  forceUpdateGui?: boolean = false,
+  selectedWalletId?: string,
+  selectedCurrencyCode?: string
+) => (dispatch: Dispatch, getState: GetState) => {
   const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto)
   const amountFiat: number = parseFloat(amountFiatString)
   const metadata: EdgeMetadata = { amountFiat }
-  dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui))
+  dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode))
 }
 
 type EdgePaymentProtocolUri = EdgeParsedUri & { paymentProtocolURL: string }
@@ -172,23 +176,24 @@ export const sendConfirmationUpdateTx = (
     })
 }
 
-export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => {
+export const updateMaxSpend = (selectedWalletId?: string, selectedCurrencyCode?: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { currencyWallets = {} } = state.core.account
 
-  const walletId = getSelectedWalletId(state)
+  const walletId = selectedWalletId || getSelectedWalletId(state)
   const edgeWallet = currencyWallets[walletId]
-  const spendInfo = getSpendInfo(state)
+  const spendInfo = getSpendInfo(state, undefined, selectedCurrencyCode)
 
   edgeWallet
     .getMaxSpendable(spendInfo)
     .then(nativeAmount => {
       const state = getState()
-      const spendInfo = getSpendInfo(state, { nativeAmount })
+      const spendInfo = getSpendInfo(state, { nativeAmount }, selectedCurrencyCode)
       const authRequired = getAuthRequired(state, spendInfo)
 
-      const guiWallet = getSelectedWallet(state)
-      const currencyCode = getSelectedCurrencyCode(state)
+      const wallets = state.ui.wallets.byId
+      const guiWallet = wallets[walletId]
+      const currencyCode = selectedCurrencyCode || getSelectedCurrencyCode(state)
       const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
       const exchangeDenomination = settingsGetExchangeDenomination(state, currencyCode)
 
@@ -201,7 +206,7 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
 
       dispatch(newSpendInfo(spendInfo, authRequired))
 
-      dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true))
+      dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true, walletId, currencyCode))
     })
     .catch(showError)
 }
