@@ -442,9 +442,7 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               onExit={this.props.dispatchDisableScan}
               component={ifLoggedIn(SendScene)}
-              renderTitle={<HeaderTitle showWalletNameOnly />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-              renderRightButton={this.renderSendConfirmationButton()}
             />
             <Scene
               key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
