@@ -3,13 +3,13 @@
 import { bns } from 'biggystring'
 import { errorNames } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { MenuProvider } from 'react-native-popup-menu'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
-import { updateTransactionAmount } from '../../actions/SendConfirmationActions.js'
+import { updateMaxSpend, updateTransactionAmount } from '../../actions/SendConfirmationActions.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../modules/Settings/selectors.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
@@ -22,16 +22,17 @@ import { ExchangeRate } from '../common/ExchangeRate.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
+import { PrimaryButton } from '../themed/ThemedButtons.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
   bridge: AirshipBridge<void>,
   walletId: string,
-  currencyCode: string,
-  nativeAmount?: string
+  currencyCode: string
 }
 
 type StateProps = {
+  // Balance
   balanceCrypto: string,
   balanceFiat: string,
 
@@ -42,6 +43,7 @@ type StateProps = {
   secondaryInfo: GuiCurrencyInfo,
   fiatPerCrypto: number,
   overridePrimaryExchangeAmount: string,
+  forceUpdateGuiCounter: number,
 
   // Fees
   feeSyntax: string,
@@ -52,11 +54,13 @@ type StateProps = {
 }
 
 type DispatchProps = {
+  updateMaxSpend: (walletId: string, currencyCode: string) => void,
   updateTransactionAmount: (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => void
 }
 
 type State = {
-  overridePrimaryExchangeAmount: string
+  overridePrimaryExchangeAmount: string,
+  forceUpdateGuiCounter: number
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -65,7 +69,8 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      overridePrimaryExchangeAmount: props.overridePrimaryExchangeAmount
+      overridePrimaryExchangeAmount: props.overridePrimaryExchangeAmount,
+      forceUpdateGuiCounter: 0
     }
   }
 
@@ -75,6 +80,17 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     const { walletId, currencyCode, updateTransactionAmount } = this.props
     updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode)
   }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
+      this.setState({
+        overridePrimaryExchangeAmount: this.props.overridePrimaryExchangeAmount,
+        forceUpdateGuiCounter: this.props.forceUpdateGuiCounter
+      })
+    }
+  }
+
+  handleSendMaxAmount = () => this.props.updateMaxSpend(this.props.walletId, this.props.currencyCode)
 
   renderExchangeRates = () => {
     const { primaryInfo, secondaryInfo, fiatPerCrypto, errorMessage, theme } = this.props
@@ -144,11 +160,14 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     return (
       <MenuProvider style={{ flexDirection: 'row' }}>
         <ThemedModal bridge={this.props.bridge} onCancel={this.handleCloseModal}>
-          <ModalTitle>{s.strings.string_enter_amount}</ModalTitle>
-          {this.renderExchangeRates()}
-          {this.renderBalance()}
-          {this.renderFlipInput()}
-          {this.renderFees()}
+          <ScrollView style={{ maxHeight: this.props.theme.rem(23) }} keyboardShouldPersistTaps="handled">
+            <ModalTitle>{s.strings.string_enter_amount}</ModalTitle>
+            {this.renderExchangeRates()}
+            {this.renderBalance()}
+            {this.renderFlipInput()}
+            {this.renderFees()}
+            <PrimaryButton label={s.strings.send_confirmation_max_button_title} marginRem={1} onPress={this.handleSendMaxAmount} />
+          </ScrollView>
           <ModalCloseArrow onPress={this.handleCloseModal} />
         </ThemedModal>
       </MenuProvider>
@@ -221,7 +240,7 @@ export const FlipInputModal = connect(
       exchangeDenomination: fiatDenomination
     }
 
-    const { nativeAmount } = state.ui.scenes.sendConfirmation
+    const { forceUpdateGuiCounter, nativeAmount } = state.ui.scenes.sendConfirmation
     const overridePrimaryExchangeAmount = bns.div(nativeAmount, primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
 
     // Fees
@@ -254,6 +273,7 @@ export const FlipInputModal = connect(
       secondaryInfo,
       fiatPerCrypto: fiatPerCrypto || 0,
       overridePrimaryExchangeAmount,
+      forceUpdateGuiCounter,
 
       // Fees
       feeSyntax,
@@ -264,6 +284,7 @@ export const FlipInputModal = connect(
     }
   },
   (dispatch: Dispatch) => ({
+    updateMaxSpend: (walletId: string, currencyCode: string) => dispatch(updateMaxSpend(walletId, currencyCode)),
     updateTransactionAmount: (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) =>
       dispatch(updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode))
   })
