@@ -5,7 +5,7 @@ import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
-import { ActivityIndicator, Dimensions, InputAccessoryView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Dimensions, InputAccessoryView, Platform, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import { sprintf } from 'sprintf-js'
@@ -25,6 +25,7 @@ import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
@@ -66,9 +67,10 @@ export type RequestDispatchProps = {
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 type CurrencyMinimumPopupState = { [currencyCode: string]: ModalState }
 
-type LoadingProps = RequestLoadingProps & RequestDispatchProps
-type LoadedProps = RequestStateProps & RequestDispatchProps
+type LoadingProps = RequestLoadingProps & RequestDispatchProps & ThemeProps
+type LoadedProps = RequestStateProps & RequestDispatchProps & ThemeProps
 type Props = LoadingProps | LoadedProps
+
 type State = {
   publicAddress: string,
   legacyAddress: string,
@@ -79,7 +81,7 @@ type State = {
 
 const inputAccessoryViewID: string = 'cancelHeaderId'
 
-export class Request extends React.Component<Props, State> {
+class RequestComponent extends React.PureComponent<Props, State> {
   amounts: ExchangedFlipInputAmounts
   flipInput: RefObject | null = null
 
@@ -253,6 +255,7 @@ export class Request extends React.Component<Props, State> {
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
     const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
     const { keysOnlyMode = false } = Constants.getSpecialCurrencyInfo(primaryCurrencyInfo.displayCurrencyCode)
+    const styles = getStyles(this.props.theme)
     return (
       <SceneWrapper background="header" hasTabs={false}>
         <View style={styles.exchangeRateContainer}>
@@ -443,7 +446,7 @@ export class Request extends React.Component<Props, State> {
   }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   main: {
     flex: 1,
     justifyContent: 'flex-start',
@@ -484,5 +487,6 @@ const rawStyles = {
     color: THEME.COLORS.WHITE,
     margin: scale(12)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+export const Request = withTheme(RequestComponent)
