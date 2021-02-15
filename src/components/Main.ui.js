@@ -289,9 +289,9 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.REQUEST}
                 navTransparent
                 component={ifLoggedIn(Request)}
-                renderTitle={<HeaderTitle />}
+                renderTitle={<EdgeLogoHeader />}
+                renderRightButton={<SideMenuButton />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-                renderRightButton={this.renderRequestMenuButton()}
                 hideTabBar
               />
 
