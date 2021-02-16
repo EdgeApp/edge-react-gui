@@ -3,16 +3,17 @@
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
-import s from '../../../../locales/strings'
-import { THEME } from '../../../../theme/variables/airbitz.js'
-import { scale } from '../../../../util/scaling.js'
-import FormattedText from '../FormattedText/FormattedText.ui.js'
+import s from '../../locales/strings'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { scale } from '../../util/scaling.js'
 
 export type Props = {
   copyToClipboard(): mixed,
   fioAddressModal(): mixed,
   shareViaShare(): mixed
 }
+
 export class ShareButtons extends React.PureComponent<Props> {
   render() {
     const { copyToClipboard, shareViaShare, fioAddressModal } = this.props
