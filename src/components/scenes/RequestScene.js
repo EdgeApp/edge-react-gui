@@ -13,6 +13,7 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshReceiveAddressRequest } from '../../actions/WalletActions'
 import * as Constants from '../../constants/indexConstants'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
@@ -25,13 +26,13 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
-import { getCurrencyInfo, getDenomFromIsoCode, getObjectDiff } from '../../util/utils.js'
-import { ExchangeRate } from '../common/ExchangeRate.js'
+import { decimalOrZero, DIVIDE_PRECISION, getCurrencyInfo, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
 import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
@@ -48,7 +49,8 @@ export type RequestStateProps = {
   secondaryCurrencyInfo: GuiCurrencyInfo,
   useLegacyAddress: boolean,
   fioAddressesExist: boolean,
-  isConnected: boolean
+  isConnected: boolean,
+  balance?: string
 }
 export type RequestLoadingProps = {
   edgeWallet: null,
@@ -254,22 +256,21 @@ export class RequestComponent extends React.PureComponent<Props, State> {
       return <ActivityIndicator color={THEME.COLORS.GRAY_2} style={{ flex: 1, alignSelf: 'center' }} size="large" />
     }
 
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, currencyInfo, guiWallet } = this.props
+    const { balance, primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, currencyInfo, guiWallet, theme } = this.props
     const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
     const qrSize = Dimensions.get('window').height / 4
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
     const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
     const { keysOnlyMode = false } = Constants.getSpecialCurrencyInfo(primaryCurrencyInfo.displayCurrencyCode)
-    const styles = getStyles(this.props.theme)
+    const { displayCurrencyCode } = primaryCurrencyInfo
+    const styles = getStyles(theme)
     return (
       <SceneWrapper background="header" hasTabs={false}>
-        <View style={styles.exchangeRateContainer}>
-          <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={exchangeSecondaryToPrimaryRatio} />
-        </View>
-
         {keysOnlyMode !== true ? (
-          <View style={styles.main}>
+          <View style={styles.container}>
+            <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
+            <EdgeText style={styles.balance}>{sprintf(s.strings.request_balance, `${balance || 0} ${displayCurrencyCode}`)}</EdgeText>
             <ExchangedFlipInput
               ref={this.flipInputRef}
               headerText={flipInputHeaderText}
@@ -453,10 +454,18 @@ export class RequestComponent extends React.PureComponent<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  main: {
+  container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+    marginHorizontal: theme.rem(1)
+  },
+
+  title: {
+    fontFamily: theme.fontFaceBold,
+    fontSize: theme.rem(2)
+  },
+  balance: {
+    fontSize: theme.rem(1.25),
+    marginBottom: theme.rem(1.5)
   },
 
   exchangeRateContainer: {
@@ -548,6 +557,12 @@ export const Request = connect(
     const exchangeSecondaryToPrimaryRatio = UI_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const fioAddressesExist = !!state.ui.scenes.fioAddress.fioAddresses.length
 
+    // balance
+    const isToken = guiWallet.currencyCode !== currencyCode
+    const nativeBalance = isToken ? guiWallet.nativeBalances[currencyCode] : guiWallet.primaryNativeBalance
+    const displayBalance = truncateDecimals(bns.div(nativeBalance, primaryDisplayDenomination.multiplier, DIVIDE_PRECISION), 6)
+    const balance = formatNumber(decimalOrZero(displayBalance, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+
     return {
       currencyCode,
       currencyInfo: currencyInfo || null,
@@ -561,7 +576,8 @@ export const Request = connect(
       secondaryCurrencyInfo,
       useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
       fioAddressesExist,
-      isConnected: state.network.isConnected
+      isConnected: state.network.isConnected,
+      balance
     }
   },
   (dispatch: Dispatch): RequestDispatchProps => ({

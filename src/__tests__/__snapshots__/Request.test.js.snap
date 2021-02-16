@@ -8,26 +8,31 @@ exports[`Request should render with loaded props 1`] = `
   <View
     style={
       Object {
-        "alignItems": "center",
-        "marginBottom": 14.045774647887324,
-      }
-    }
-  >
-    <ExchangeRate
-      primaryInfo={Object {}}
-      secondaryDisplayAmount={Object {}}
-      secondaryInfo={Object {}}
-    />
-  </View>
-  <View
-    style={
-      Object {
-        "alignItems": "center",
         "flex": 1,
-        "justifyContent": "flex-start",
+        "marginHorizontal": 22,
       }
     }
   >
+    <WithTheme(EdgeTextComponent)
+      style={
+        Object {
+          "fontFamily": "Quicksand-Medium",
+          "fontSize": 45,
+        }
+      }
+    >
+      Request
+    </WithTheme(EdgeTextComponent)>
+    <WithTheme(EdgeTextComponent)
+      style={
+        Object {
+          "fontSize": 28,
+          "marginBottom": 34,
+        }
+      }
+    >
+      You have 0 undefined
+    </WithTheme(EdgeTextComponent)>
     <ExchangedFlipInput
       color="#FFFFFF"
       exchangeSecondaryToPrimaryRatio={Object {}}
