@@ -5,7 +5,7 @@ import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
-import { ActivityIndicator, Dimensions, InputAccessoryView, Platform, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, InputAccessoryView, Platform, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import { connect } from 'react-redux'
@@ -259,7 +259,6 @@ export class RequestComponent extends React.PureComponent<Props, State> {
     const { balance, primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, currencyInfo, guiWallet, theme } = this.props
     const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
-    const qrSize = Dimensions.get('window').height / 4
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
     const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
     const { keysOnlyMode = false } = Constants.getSpecialCurrencyInfo(primaryCurrencyInfo.displayCurrencyCode)
@@ -304,8 +303,9 @@ export class RequestComponent extends React.PureComponent<Props, State> {
             ) : null}
 
             <View style={styles.qrContainer}>
-              <QrCode data={this.state.encodedURI} size={qrSize} />
+              <QrCode data={this.state.encodedURI} size={theme.rem(10)} />
             </View>
+
             <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} />
           </View>
         ) : (
@@ -455,7 +455,8 @@ export class RequestComponent extends React.PureComponent<Props, State> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
     marginHorizontal: theme.rem(1)
   },
 
@@ -468,16 +469,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginBottom: theme.rem(1.5)
   },
 
-  exchangeRateContainer: {
-    alignItems: 'center',
-    marginBottom: scale(10)
-  },
-
   qrContainer: {
-    backgroundColor: THEME.COLORS.QR_CODE_BACKGROUND,
-    marginTop: scale(15),
-    borderRadius: scale(4),
-    padding: scale(4)
+    marginTop: theme.rem(1.5),
+    marginLeft: theme.rem(2),
+    backgroundColor: theme.qrBackgroundColor,
+    borderRadius: theme.rem(0.5),
+    padding: theme.rem(0.5)
   },
 
   shareButtonsContainer: {

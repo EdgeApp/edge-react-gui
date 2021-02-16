@@ -8,7 +8,8 @@ exports[`Request should render with loaded props 1`] = `
   <View
     style={
       Object {
-        "flex": 1,
+        "alignItems": "flex-start",
+        "justifyContent": "flex-start",
         "marginHorizontal": 22,
       }
     }
@@ -109,16 +110,17 @@ exports[`Request should render with loaded props 1`] = `
     <View
       style={
         Object {
-          "backgroundColor": "white",
-          "borderRadius": 5.618309859154929,
-          "marginTop": 21.068661971830984,
-          "padding": 5.618309859154929,
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 11,
+          "marginLeft": 45,
+          "marginTop": 34,
+          "padding": 11,
         }
       }
     >
       <QrCode
         data=""
-        size={333.5}
+        size={225}
       />
     </View>
     <RequestStatus

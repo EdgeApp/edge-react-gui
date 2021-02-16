@@ -171,6 +171,10 @@ export type Theme = {
   // Tutorials
   tutorialModalUnderlay: string,
 
+  // QR code
+  qrForegroundColor: string,
+  qrBackgroundColor: string,
+
   // Images
   settingsChangellyLogo: string,
   settingsChangenowLogo: string,

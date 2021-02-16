@@ -236,6 +236,10 @@ export const edgeLight: Theme = {
   // Tutorials
   tutorialModalUnderlay: palette.transparent,
 
+  // QR code
+  qrForegroundColor: palette.black,
+  qrBackgroundColor: palette.white,
+
   // Images
   settingsChangellyLogo: changellyLogo,
   settingsChangenowLogo: changenowLogo,
