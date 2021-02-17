@@ -399,6 +399,8 @@ export class MainComponent extends React.Component<Props> {
                 hideTabBar
                 component={ifLoggedIn(CryptoExchangeQuoteProcessingScreenComponent)}
                 renderTitle={<HeaderTitle title={s.strings.title_exchange} />}
+                renderLeftButton={this.renderEmptyButton()}
+                renderRightButton={this.renderEmptyButton()}
               />
               <Scene
                 key={Constants.EXCHANGE_QUOTE_SCENE}
