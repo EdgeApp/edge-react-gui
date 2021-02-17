@@ -290,6 +290,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
           <View style={styles.container}>
             <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
             <EdgeText style={styles.balance}>{sprintf(s.strings.request_balance, `${balance || 0} ${displayCurrencyCode}`)}</EdgeText>
+
             <ExchangedFlipInput
               ref={this.flipInputRef}
               headerText={flipInputHeaderText}
@@ -321,6 +322,8 @@ export class RequestComponent extends React.PureComponent<Props, State> {
                 </View>
               </InputAccessoryView>
             ) : null}
+
+            <View style={styles.divider} />
 
             <View style={styles.qrContainer}>
               <QrCode data={this.state.encodedURI} size={theme.rem(10)} />
@@ -502,6 +505,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   spacer: {
     flex: 1
+  },
+  divider: {
+    width: '110%',
+    marginTop: theme.rem(0.75),
+    height: theme.thinLineWidth,
+    borderBottomWidth: theme.thinLineWidth,
+    borderBottomColor: theme.lineDivider
   },
 
   accessoryView: {

@@ -158,6 +158,7 @@ export type Theme = {
   // Misc
   // pressedOpacity: number,
   searchListRefreshControlIndicator: string,
+  clipboardPopupText: string,
 
   // Fonts
   fontFaceDefault: string,

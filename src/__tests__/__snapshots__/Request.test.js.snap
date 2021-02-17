@@ -110,6 +110,17 @@ exports[`Request should render with loaded props 1`] = `
     <View
       style={
         Object {
+          "borderBottomColor": "rgba(255, 255, 255, .1)",
+          "borderBottomWidth": 1,
+          "height": 1,
+          "marginTop": 17,
+          "width": "110%",
+        }
+      }
+    />
+    <View
+      style={
+        Object {
           "backgroundColor": "#FFFFFF",
           "borderRadius": 11,
           "marginLeft": 45,

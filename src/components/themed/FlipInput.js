@@ -9,11 +9,11 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { bottom, styles, top } from '../../modules/UI/components/FlipInput/styles.js'
-import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
+import { RightChevronButton } from './ThemedButtons.js'
 
 export type FlipInputFieldInfo = {
   currencyName: string,
@@ -72,7 +72,7 @@ export type FlipInputOwnProps = {
   keyboardVisible: boolean
 }
 
-type Props = FlipInputOwnProps
+type Props = FlipInputOwnProps & ThemeProps
 
 type Amounts = {
   primaryDecimalAmount: string,
@@ -107,7 +107,7 @@ const checkKeyPress = (keyPressed: string, decimalAmount: string) => {
 // Assumes a US locale decimal input
 const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string): Amounts => {
   // Formats into locale specific format. Add currency symbol
-  const primaryDisplayAmount = addCurrencySymbol(props.primaryInfo.currencySymbol, formatNumberInput(prettifyNumber(primaryDecimalAmount)))
+  const primaryDisplayAmount = formatNumberInput(prettifyNumber(primaryDecimalAmount))
 
   // Converts to secondary value using exchange rate
   let secondaryDecimalAmount = bns.mul(primaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio)
@@ -116,7 +116,7 @@ const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string): Amou
   secondaryDecimalAmount = UTILS.truncateDecimals(secondaryDecimalAmount, props.secondaryInfo.maxConversionDecimals)
 
   // Format into locale specific format. Add currency symbol
-  const secondaryDisplayAmount = addCurrencySymbol(props.secondaryInfo.currencySymbol, formatNumberInput(prettifyNumber(secondaryDecimalAmount)))
+  const secondaryDisplayAmount = formatNumberInput(prettifyNumber(secondaryDecimalAmount))
 
   // Set the state for display in render()
   return { primaryDecimalAmount, primaryDisplayAmount, secondaryDecimalAmount, secondaryDisplayAmount }
@@ -124,15 +124,11 @@ const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string): Amou
 
 // Pretty much the same as setPrimaryToSecondary
 const setSecondaryToPrimary = (props: Props, secondaryDecimalAmount: string): Amounts => {
-  const secondaryDisplayAmount = addCurrencySymbol(props.secondaryInfo.currencySymbol, formatNumberInput(prettifyNumber(secondaryDecimalAmount)))
+  const secondaryDisplayAmount = formatNumberInput(prettifyNumber(secondaryDecimalAmount))
   let primaryDecimalAmount = props.exchangeSecondaryToPrimaryRatio === '0' ? '0' : bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, 18)
   primaryDecimalAmount = UTILS.truncateDecimals(primaryDecimalAmount, props.primaryInfo.maxConversionDecimals)
-  const primaryDisplayAmount = addCurrencySymbol(props.primaryInfo.currencySymbol, formatNumberInput(prettifyNumber(primaryDecimalAmount)))
+  const primaryDisplayAmount = formatNumberInput(prettifyNumber(primaryDecimalAmount))
   return { primaryDisplayAmount, primaryDecimalAmount, secondaryDisplayAmount, secondaryDecimalAmount }
-}
-
-const addCurrencySymbol = (currencySymbol: string, displayAmount: string): string => {
-  return displayAmount.includes(currencySymbol) ? displayAmount : `${currencySymbol} ${displayAmount}`
 }
 
 const getInitialState = (props: Props) => {
@@ -155,7 +151,7 @@ const getInitialState = (props: Props) => {
   return Object.assign(state, setPrimaryToSecondary(props, primaryDecimalAmount))
 }
 
-export class FlipInput extends React.Component<Props, State> {
+class FlipInputComponent extends React.PureComponent<Props, State> {
   animatedValue: Animated.Value
   frontInterpolate: Animated.Value
   backInterpolate: Animated.Value
@@ -367,31 +363,33 @@ export class FlipInput extends React.Component<Props, State> {
   }
 
   topRowFront = () => {
+    const { theme } = this.props
+    const styles = getStyles(theme)
     const { primaryDisplayAmount, primaryDecimalAmount } = this.state
-    const displayAmountString = !primaryDecimalAmount || primaryDecimalAmount.match(/^0*$/) ? s.strings.string_enter_amount : primaryDisplayAmount
-    const displayAmountStyle = displayAmountString === s.strings.string_enter_amount ? top.amountPlaceholder : null
+    const displayAmountCheck = !primaryDecimalAmount || primaryDecimalAmount.match(/^0*$/)
+    const displayAmountString = displayAmountCheck ? s.strings.string_enter_amount : primaryDisplayAmount
+    const displayAmountStyle = displayAmountCheck ? styles.topAmountMuted : styles.topAmount
+
     return (
       <TouchableWithoutFeedback onPress={this.textInputFrontFocus}>
-        <View style={top.row} key="top">
-          <EdgeText style={top.currencyCode}>{this.props.primaryInfo.currencyCode}</EdgeText>
-          <View style={top.amountContainer}>
-            <EdgeText style={[top.amount, displayAmountStyle]}>{displayAmountString}</EdgeText>
-            <TextInput
-              style={top.textInput}
-              value=""
-              onChangeText={this.onPrimaryChangeText}
-              onKeyPress={this.onPrimaryKeyPress}
-              autoCorrect={false}
-              keyboardType="numeric"
-              returnKeyType={this.props.topReturnKeyType || 'done'}
-              ref={this.getTextInputFrontRef}
-              onFocus={this.textInputFrontFocusTrue}
-              onBlur={this.textInputFrontFocusFalse}
-              editable={this.props.isEditable}
-              onSubmitEditing={this.props.onNext}
-              inputAccessoryViewID={this.props.inputAccessoryViewID || null}
-            />
-          </View>
+        <View style={styles.topContainer} key="top">
+          <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
+          {!displayAmountCheck && <EdgeText style={styles.topCurrency}>{this.props.primaryInfo.currencyCode}</EdgeText>}
+          <TextInput
+            style={styles.hiddenTextInput}
+            value=""
+            onChangeText={this.onPrimaryChangeText}
+            onKeyPress={this.onPrimaryKeyPress}
+            autoCorrect={false}
+            keyboardType="numeric"
+            returnKeyType={this.props.topReturnKeyType || 'done'}
+            ref={this.getTextInputFrontRef}
+            onFocus={this.textInputFrontFocusTrue}
+            onBlur={this.textInputFrontFocusFalse}
+            editable={this.props.isEditable}
+            onSubmitEditing={this.props.onNext}
+            inputAccessoryViewID={this.props.inputAccessoryViewID || null}
+          />
         </View>
       </TouchableWithoutFeedback>
     )
@@ -429,45 +427,43 @@ export class FlipInput extends React.Component<Props, State> {
   }
 
   topRowBack = () => {
+    const { theme } = this.props
+    const styles = getStyles(theme)
     const { secondaryDisplayAmount, secondaryDecimalAmount } = this.state
-    const displayAmountString = !secondaryDecimalAmount || secondaryDecimalAmount.match(/^0*$/) ? s.strings.string_enter_amount : secondaryDisplayAmount
-    const displayAmountStyle = displayAmountString === s.strings.string_enter_amount ? top.amountPlaceholder : null
+    const displayAmountCheck = !secondaryDecimalAmount || secondaryDecimalAmount.match(/^0*$/)
+    const displayAmountString = displayAmountCheck ? s.strings.string_enter_amount : secondaryDisplayAmount
+    const displayAmountStyle = displayAmountCheck ? styles.topAmountMuted : styles.topAmount
+
     return (
       <TouchableWithoutFeedback onPress={this.textInputBackFocus}>
-        <View style={top.row} key="top">
-          <EdgeText style={top.currencyCode}>{this.props.secondaryInfo.currencyName}</EdgeText>
-          <View style={top.amountContainer}>
-            <EdgeText style={[top.amount, displayAmountStyle]}>{displayAmountString}</EdgeText>
-            <TextInput
-              style={top.textInput}
-              value=""
-              onChangeText={this.onSecondaryChangeText}
-              onKeyPress={this.onSecondaryKeyPress}
-              autoCorrect={false}
-              keyboardType="numeric"
-              returnKeyType={this.props.topReturnKeyType || 'done'}
-              ref={this.getTextInputBackRef}
-              onFocus={this.textInputBackFocusTrue}
-              onBlur={this.textInputBackFocusFalse}
-              editable={this.props.isEditable}
-              onSubmitEditing={this.props.onNext}
-              inputAccessoryViewID={this.props.inputAccessoryViewID || null}
-            />
-          </View>
+        <View style={styles.topContainer} key="top">
+          <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
+          {!displayAmountCheck && <EdgeText style={styles.topCurrency}>{this.props.secondaryInfo.currencyName}</EdgeText>}
+          <TextInput
+            style={styles.hiddenTextInput}
+            value=""
+            onChangeText={this.onSecondaryChangeText}
+            onKeyPress={this.onSecondaryKeyPress}
+            autoCorrect={false}
+            keyboardType="numeric"
+            returnKeyType={this.props.topReturnKeyType || 'done'}
+            ref={this.getTextInputBackRef}
+            onFocus={this.textInputBackFocusTrue}
+            onBlur={this.textInputBackFocusFalse}
+            editable={this.props.isEditable}
+            onSubmitEditing={this.props.onNext}
+            inputAccessoryViewID={this.props.inputAccessoryViewID || null}
+          />
         </View>
       </TouchableWithoutFeedback>
     )
   }
 
   bottomRow = (fieldInfo: FlipInputFieldInfo, amount: string) => {
+    const bottomText = `${amount} ${fieldInfo.currencyCode}`
     return (
       <TouchableWithoutFeedback onPress={this.onToggleFlipInput} key="bottom">
-        <View style={bottom.row}>
-          <EdgeText style={bottom.currencyCode}>{fieldInfo.currencyCode}</EdgeText>
-          <View style={top.amountContainer}>
-            <EdgeText style={[bottom.amount, !amount && bottom.alert]}>{amount}</EdgeText>
-          </View>
-        </View>
+        <EdgeText>{bottomText}</EdgeText>
       </TouchableWithoutFeedback>
     )
   }
@@ -492,63 +488,130 @@ export class FlipInput extends React.Component<Props, State> {
   }
 
   clipboardRef = (ref: any) => (this.clipboardMenu = ref)
+
+  handleWalletPress = () => {}
+
   render() {
-    const { primaryInfo, secondaryInfo, headerText, headerLogo, headerCallback } = this.props
+    const { primaryInfo, secondaryInfo, headerText, headerLogo, headerCallback, theme } = this.props
     const { isToggled } = this.state
-    const frontAnimatedStyle = {
-      transform: [{ rotateX: this.frontInterpolate }]
-    }
-    const backAnimatedStyle = {
-      transform: [{ rotateX: this.backInterpolate }]
-    }
+    const frontAnimatedStyle = { transform: [{ rotateX: this.frontInterpolate }] }
+    const backAnimatedStyle = { transform: [{ rotateX: this.backInterpolate }] }
+    const styles = getStyles(theme)
+
     return (
       <View style={styles.container}>
-        <TouchableWithoutFeedback onPress={headerCallback}>
-          <View style={styles.flipContainerHeader}>
-            <Image style={styles.flipContainerHeaderIcon} source={{ uri: headerLogo || '' }} />
-            <View style={styles.flipContainerHeaderTextContainer}>
-              <EdgeText style={styles.flipContainerHeaderText}>{headerText}</EdgeText>
-              {headerCallback && <MaterialIcon style={styles.flipContainerHeaderTextDropDown} name="keyboard-arrow-down" size={scale(20)} />}
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-        <View style={styles.flipContainerBody}>
-          <View style={styles.clipboardContainer}>
-            <Menu onSelect={this.handlePasteClipboard} ref={this.clipboardRef} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
-              <MenuTrigger />
-              <MenuOptions>
-                <MenuOption>
-                  <EdgeText style={styles.clipboardText}>{s.strings.string_paste}</EdgeText>
-                </MenuOption>
-              </MenuOptions>
-            </Menu>
-          </View>
-          <Animated.View
-            style={[styles.flipContainerFront, frontAnimatedStyle, { opacity: this.androidFrontOpacityInterpolate }]}
-            pointerEvents={isToggled ? 'none' : 'auto'}
-          >
-            <View style={styles.flipButton}>
-              <MaterialIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={scale(26)} />
-            </View>
-            <View style={styles.rows}>
+        <View style={styles.headerContainer}>
+          <Image style={styles.headerIcon} source={{ uri: headerLogo || '' }} />
+          <RightChevronButton text={headerText} onPress={headerCallback || this.handleWalletPress} />
+        </View>
+        <View style={styles.clipboardContainer}>
+          <Menu onSelect={this.handlePasteClipboard} ref={this.clipboardRef} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
+            <MenuTrigger />
+            <MenuOptions>
+              <MenuOption>
+                <EdgeText style={styles.clipboardText}>{s.strings.string_paste}</EdgeText>
+              </MenuOption>
+            </MenuOptions>
+          </Menu>
+        </View>
+        <View style={styles.flipInputContainer}>
+          <View style={styles.flipInput}>
+            <Animated.View
+              style={[styles.flipInputFront, frontAnimatedStyle, { opacity: this.androidFrontOpacityInterpolate }]}
+              pointerEvents={isToggled ? 'none' : 'auto'}
+            >
               {this.topRowFront()}
               {this.bottomRow(secondaryInfo, this.state.secondaryDisplayAmount)}
-            </View>
-          </Animated.View>
-          <Animated.View
-            style={[styles.flipContainerFront, styles.flipContainerBack, backAnimatedStyle, { opacity: this.androidBackOpacityInterpolate }]}
-            pointerEvents={isToggled ? 'auto' : 'none'}
-          >
-            <View style={styles.flipButton}>
-              <MaterialIcon style={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={scale(26)} />
-            </View>
-            <View style={styles.rows}>
+            </Animated.View>
+            <Animated.View
+              style={[styles.flipInputFront, styles.flipContainerBack, backAnimatedStyle, { opacity: this.androidBackOpacityInterpolate }]}
+              pointerEvents={isToggled ? 'auto' : 'none'}
+            >
               {this.topRowBack()}
               {this.bottomRow(primaryInfo, this.state.primaryDisplayAmount)}
-            </View>
-          </Animated.View>
+            </Animated.View>
+          </View>
+          <MaterialIcon styles={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={theme.rem(2)} color={theme.iconTappable} />
         </View>
       </View>
     )
   }
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
+    width: '100%'
+  },
+
+  // Header
+  headerContainer: {
+    flexDirection: 'row'
+  },
+  headerIcon: {
+    width: theme.rem(1.5),
+    height: theme.rem(1.5),
+    marginRight: theme.rem(0.5)
+  },
+
+  // Flip Input
+  flipInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  flipInput: {
+    flex: 1
+  },
+  flipInputFront: {
+    backfaceVisibility: 'hidden'
+  },
+  flipContainerBack: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
+  flipIcon: {
+    paddingTop: theme.rem(0.25)
+  },
+
+  // Top Amount
+  topContainer: {
+    flexDirection: 'row'
+  },
+  topAmount: {
+    fontFamily: theme.fontFaceBold,
+    fontSize: theme.rem(2),
+    marginLeft: theme.rem(-0.1), // Hack because of amount being bigger font size not aligning to the rest of the text on justified left
+    marginRight: theme.rem(0.5)
+  },
+  topAmountMuted: {
+    fontFamily: theme.fontFaceBold,
+    fontSize: theme.rem(2),
+    marginLeft: theme.rem(-0.1), // Hack because of amount being bigger font size not aligning to the rest of the text on justified left
+    marginRight: theme.rem(0.5),
+    color: theme.deactivatedText
+  },
+  topCurrency: {
+    paddingTop: theme.rem(0.25)
+  },
+  hiddenTextInput: {
+    position: 'absolute',
+    width: 0,
+    height: 0
+  },
+
+  // Clipboard Popup
+  clipboardContainer: {
+    height: 0,
+    width: '8%',
+    top: theme.rem(0.5),
+    alignItems: 'flex-end'
+  },
+  clipboardText: {
+    color: theme.clipboardPopupText,
+    padding: theme.rem(0.25)
+  }
+}))
+
+export const FlipInput = withTheme(FlipInputComponent)
