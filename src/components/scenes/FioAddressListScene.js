@@ -61,10 +61,10 @@ class FioAddressList extends React.Component<Props> {
   }
 
   componentDidUpdate(prevProps: Props): void {
-    const { fioAddresses, loading } = this.props
+    const { fioAddresses, fioDomains, loading } = this.props
 
     if (!loading && prevProps.loading) {
-      if (fioAddresses.length === 0 && Actions.currentScene === Constants.FIO_ADDRESS_LIST) {
+      if (fioAddresses.length === 0 && fioDomains.length === 0 && Actions.currentScene === Constants.FIO_ADDRESS_LIST) {
         Actions[Constants.FIO_ADDRESS_REGISTER]({ noAddresses: true })
       }
     }
@@ -90,7 +90,7 @@ class FioAddressList extends React.Component<Props> {
     const { fioAddresses, fioDomains, loading, theme } = this.props
     const styles = getStyles(theme)
 
-    if (!fioAddresses.length) {
+    if (!fioAddresses.length && !fioDomains.length) {
       return (
         <SceneWrapper background="theme">
           <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />
@@ -99,12 +99,14 @@ class FioAddressList extends React.Component<Props> {
     }
 
     const noFioDomainsText = `${s.strings.no} ${s.strings.title_fio_domains}`
+    const noFioAddressesText = `${s.strings.no} ${s.strings.title_fio_address}`
     return (
       <SceneWrapper background="theme">
         <ScrollView style={styles.row}>
           <UnderlinedHeader title={s.strings.title_fio_address} />
           <View style={styles.list}>
-            {fioAddresses.map((address: FioAddress, index: number) => (
+            {!fioAddresses.length && <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>}
+            {fioAddresses.map((address: FioAddress) => (
               <FioNameRow
                 key={`${address.name}`}
                 name={address.name}
@@ -118,7 +120,7 @@ class FioAddressList extends React.Component<Props> {
           <UnderlinedHeader title={s.strings.title_fio_domains} withTopMargin />
           <View style={styles.list}>
             {!fioDomains.length && <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>}
-            {fioDomains.map((domain: FioDomain, index: number) => (
+            {fioDomains.map((domain: FioDomain) => (
               <FioNameRow
                 key={`${domain.name}`}
                 name={domain.name}
