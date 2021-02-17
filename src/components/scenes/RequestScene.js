@@ -337,11 +337,9 @@ export class RequestComponent extends React.PureComponent<Props, State> {
         ) : (
           <Text style={styles.text}>{sprintf(s.strings.request_deprecated_currency_code, primaryCurrencyInfo.displayCurrencyCode)}</Text>
         )}
-
+        <View style={styles.spacer} />
         {keysOnlyMode !== true && (
-          <View style={styles.shareButtonsContainer}>
-            <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />
-          </View>
+          <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />
         )}
       </SceneWrapper>
     )
@@ -431,7 +429,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
     // console.log('shareViaShare')
   }
 
-  fioAddressModal = async () => {
+  fioAddressModal = () => {
     if (!this.props.isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
@@ -503,10 +501,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     padding: theme.rem(0.5)
   },
 
-  shareButtonsContainer: {
-    alignItems: 'stretch',
-    justifyContent: 'center'
+  spacer: {
+    flex: 1
   },
+
   accessoryView: {
     flex: 1,
     flexDirection: 'row',

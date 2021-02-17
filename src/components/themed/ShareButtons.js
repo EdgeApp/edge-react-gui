@@ -1,83 +1,64 @@
 // @flow
 
 import * as React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Image, TouchableOpacity, View } from 'react-native'
 
 import s from '../../locales/strings'
-import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { scale } from '../../util/scaling.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 
 export type Props = {
-  copyToClipboard(): mixed,
-  fioAddressModal(): mixed,
-  shareViaShare(): mixed
+  copyToClipboard: () => void,
+  fioAddressModal: () => void,
+  shareViaShare: () => void
 }
 
-export class ShareButtons extends React.PureComponent<Props> {
-  render() {
-    const { copyToClipboard, shareViaShare, fioAddressModal } = this.props
-
-    return (
-      <View style={styles.row}>
-        <ShareButton text={s.strings.fio_reject_request_title} onPress={fioAddressModal} border />
-        <ShareButton text={s.strings.fragment_request_copy_title} onPress={copyToClipboard} border />
-        <ShareButton text={s.strings.string_share} onPress={shareViaShare} />
-      </View>
-    )
-  }
-}
-
-function ShareButton(props: { text: string, onPress(): mixed, border?: boolean }) {
-  const { text, onPress, border = false } = props
+export function ShareButtons(props: Props) {
+  const { copyToClipboard, shareViaShare, fioAddressModal } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
   return (
-    <TouchableOpacity style={styles.shareButton} onPress={onPress}>
-      <View style={border ? [styles.borderBox, styles.borderRight] : styles.borderBox}>
-        <FormattedText style={styles.text}>{text}</FormattedText>
-      </View>
+    <View style={styles.container}>
+      <ShareButton icon={theme.requestFioRequest} text={s.strings.fio_reject_request_title} onPress={fioAddressModal} />
+      <ShareButton icon={theme.requestCopy} text={s.strings.fragment_request_copy_title} onPress={copyToClipboard} />
+      <ShareButton icon={theme.requestShare} text={s.strings.string_share} onPress={shareViaShare} />
+    </View>
+  )
+}
+
+function ShareButton(props: { text: string, onPress: () => void, icon: string }) {
+  const { icon, text, onPress } = props
+  const styles = getStyles(useTheme())
+
+  return (
+    <TouchableOpacity style={styles.button} onPress={onPress}>
+      <Image style={styles.image} source={icon} resizeMode="contain" />
+      <EdgeText style={styles.text}>{text}</EdgeText>
     </TouchableOpacity>
   )
 }
 
-const rawStyles = {
-  row: {
-    justifyContent: 'center',
-    flexDirection: 'row'
-  },
-  shareButton: {
-    // Layout:
-    flexGrow: 1,
-    flexBasis: 1,
-    paddingVertical: scale(14),
-
-    // Appearance:
-    backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
-    borderColor: THEME.COLORS.GRAY_4,
-
-    // Children:
-    alignItems: 'stretch',
-    justifyContent: 'center',
-    flexDirection: 'row'
-  },
-
-  borderBox: {
-    width: '100%',
-    paddingVertical: scale(2),
-
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
     flexDirection: 'row',
+    justifyContent: 'center',
+    marginHorizontal: theme.rem(1),
+    marginVertical: theme.rem(1)
+  },
+  button: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
   },
-  borderRight: {
-    borderColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.MID}`,
-    borderRightWidth: 1
+  image: {
+    width: theme.rem(2),
+    height: theme.rem(2),
+    marginBottom: theme.rem(0.5)
   },
-
   text: {
-    fontSize: THEME.rem(1),
-    color: THEME.COLORS.WHITE
+    fontFamily: theme.fontFaceBold,
+    textAlign: 'center',
+    color: theme.textLink
   }
-}
-
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
