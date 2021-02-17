@@ -18,9 +18,13 @@ import {
   alphabeticalSort,
   checkFilterWallet,
   decimalOrZero,
-  getDenomination,
+  getDenomFromIsoCode,
+  getDisplayDenomination,
+  getExchangeDenomination,
   getFiatSymbol,
   getYesterdayDateRoundDownHour,
+  maxPrimaryCurrencyConversionDecimals,
+  precisionAdjust,
   truncateDecimals
 } from '../../util/utils'
 import { type SortOption } from '../modals/WalletListSortModal.js'
@@ -165,10 +169,25 @@ class WalletListComponent extends React.PureComponent<Props> {
     return this.sortWalletList(walletList)
   }
 
-  getCryptoAmount(balance: string, denomination: EdgeDenomination): string {
+  getCryptoAmount(
+    balance: string,
+    denomination: EdgeDenomination,
+    exchangeDenomination: EdgeDenomination,
+    fiatDenomination: EdgeDenomination,
+    exchangeRate?: number
+  ): string {
     const { showBalance } = this.props
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), 6)
-    const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+    let maxConversionDecimals = 6
+    if (exchangeRate) {
+      const precisionAdjustValue = precisionAdjust({
+        primaryExchangeMultiplier: exchangeDenomination.multiplier,
+        secondaryExchangeMultiplier: fiatDenomination.multiplier,
+        exchangeSecondaryToPrimaryRatio: exchangeRate
+      })
+      maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(denomination.multiplier), precisionAdjustValue)
+    }
+    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), maxConversionDecimals)
+    const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
     return showBalance ? `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}` : ''
   }
 
@@ -188,10 +207,12 @@ class WalletListComponent extends React.PureComponent<Props> {
       const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
 
       // Crypto Amount And Exchange Rate
-      const denomination = getDenomination(currencyCode, settings)
-      const cryptoAmount = this.getCryptoAmount(balance || '0', denomination)
+      const denomination = getDisplayDenomination(currencyCode, settings)
+      const exchangeDenomination = getExchangeDenomination(guiWallet, currencyCode, settings)
+      const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
-      const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : null
+      const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : undefined
+      const cryptoAmount = balance && balance !== '0' ? this.getCryptoAmount(balance, denomination, exchangeDenomination, fiatDenomination, exchangeRate) : '0'
 
       // Fiat Balance
       const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)

@@ -11,7 +11,15 @@ import s from '../../locales/strings'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
-import { getDenomination, getFiatSymbol } from '../../util/utils.js'
+import {
+  DIVIDE_PRECISION,
+  getDenomFromIsoCode,
+  getDisplayDenomination,
+  getExchangeDenomination,
+  getFiatSymbol,
+  maxPrimaryCurrencyConversionDecimals,
+  precisionAdjust
+} from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { TransactionRow } from './TransactionRow.js'
 
@@ -69,7 +77,10 @@ export const TransactionListRow = connect((state: RootState, ownProps: OwnProps)
   const { metadata } = transaction
   const guiWallet = state.ui.wallets.byId[walletId]
   const { fiatCurrencyCode } = guiWallet
-  const displayDenomination = getDenomination(currencyCode, state.ui.settings)
+  const { settings } = state.ui
+  const displayDenomination = getDisplayDenomination(currencyCode, settings)
+  const exchangeDenomination = getExchangeDenomination(guiWallet, currencyCode, settings)
+  const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
 
   // Required Confirmations
   const { currencyWallets = {} } = state.core.account
@@ -91,8 +102,19 @@ export const TransactionListRow = connect((state: RootState, ownProps: OwnProps)
   }
 
   // CryptoAmount
-  const cryptoAmount = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(bns.abs(transaction.nativeAmount || ''))
-  const cryptoAmountFormat = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(cryptoAmount, 6), 6))
+  const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
+  const exchangeRate = state.exchangeRates[rateKey] ? state.exchangeRates[rateKey] : undefined
+  let maxConversionDecimals = 6
+  if (exchangeRate) {
+    const precisionAdjustValue = precisionAdjust({
+      primaryExchangeMultiplier: exchangeDenomination.multiplier,
+      secondaryExchangeMultiplier: fiatDenomination.multiplier,
+      exchangeSecondaryToPrimaryRatio: exchangeRate
+    })
+    maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(displayDenomination.multiplier), precisionAdjustValue)
+  }
+  const cryptoAmount = bns.div(bns.abs(transaction.nativeAmount || '0'), displayDenomination.multiplier, DIVIDE_PRECISION)
+  const cryptoAmountFormat = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
 
   // FiatAmount
   const fiatAmount = metadata && metadata.amountFiat ? bns.abs(metadata.amountFiat.toFixed(2)) : '0.00'

@@ -78,7 +78,7 @@ function propsToState(props: Props): State {
   const secondaryPrecision: number = bns.log10(props.secondaryCurrencyInfo.displayDenomination.multiplier)
   const primaryEntryPrecision = bns.log10(props.primaryCurrencyInfo.displayDenomination.multiplier)
   // Limit the precision of the primaryPrecision by what would be no more
-  // than 0.01 (of whateve fiat currency) accuracy when converting a fiat value into a crypto value.
+  // than 0.001 (of whatever fiat currency) accuracy when converting a fiat value into a crypto value.
   //
   // Assume secondaryInfo refers to a fiatValue and take the secondaryToPrimaryRatio (exchange rate) and
   // see how much precision this crypto denomination needs to achieve accuracy to 0.01 units of the current fiat
