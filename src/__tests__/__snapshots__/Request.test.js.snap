@@ -123,9 +123,19 @@ exports[`Request should render with loaded props 1`] = `
         size={225}
       />
     </View>
-    <RequestStatus
-      addressExplorer={null}
+    <RightChevronButton
+      marginRem={
+        Array [
+          1,
+          0,
+          0.5,
+          0,
+        ]
+      }
+      onPress={[Function]}
+      text="Your Receiving Wallet Address"
     />
+    <WithTheme(EdgeTextComponent) />
   </View>
   <View
     style={

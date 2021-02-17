@@ -5,7 +5,7 @@ import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
-import { ActivityIndicator, InputAccessoryView, Platform, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import { connect } from 'react-redux'
@@ -19,7 +19,6 @@ import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
-import { RequestStatus } from '../../modules/UI/components/RequestStatus/RequestStatus.ui.js'
 import { ShareButtons } from '../../modules/UI/components/ShareButtons/ShareButtons.ui.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -33,6 +32,7 @@ import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
+import { RightChevronButton } from '../themed/ThemedButtons.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
@@ -251,13 +251,34 @@ export class RequestComponent extends React.PureComponent<Props, State> {
     this.flipInput = ref && ref.flipInput ? ref.flipInput.current : null
   }
 
+  handleAddressBlockExplorer = () => {
+    const { currencyInfo, useLegacyAddress } = this.props
+    const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null
+    const requestAddress = useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
+
+    Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.modal_addressexplorer_message}
+        message={requestAddress}
+        buttons={{
+          confirm: { label: s.strings.string_ok_cap },
+          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+        }}
+      />
+    ))
+      .then((result?: string) => {
+        return result === 'confirm' ? Linking.openURL(sprintf(addressExplorer, requestAddress)) : null
+      })
+      .catch(error => console.log(error))
+  }
+
   render() {
     if (this.props.loading) {
       return <ActivityIndicator color={THEME.COLORS.GRAY_2} style={{ flex: 1, alignSelf: 'center' }} size="large" />
     }
 
-    const { balance, primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, currencyInfo, guiWallet, theme } = this.props
-    const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null
+    const { balance, primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, guiWallet, theme } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
     const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
@@ -306,7 +327,12 @@ export class RequestComponent extends React.PureComponent<Props, State> {
               <QrCode data={this.state.encodedURI} size={theme.rem(10)} />
             </View>
 
-            <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} />
+            <RightChevronButton
+              marginRem={[1, 0, 0.5, 0]}
+              onPress={this.handleAddressBlockExplorer}
+              text={s.strings.request_qr_your_receiving_wallet_address}
+            />
+            <EdgeText>{requestAddress}</EdgeText>
           </View>
         ) : (
           <Text style={styles.text}>{sprintf(s.strings.request_deprecated_currency_code, primaryCurrencyInfo.displayCurrencyCode)}</Text>
