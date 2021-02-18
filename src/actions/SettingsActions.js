@@ -272,6 +272,7 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
 }
 
 export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
   try {
     const input = {
       label: s.strings.settings_modal_text_entry_notes,
@@ -307,8 +308,12 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
     })
     const notes = await launchModal(unlockSettingsModal)
     if (notes || notes === '') {
-      await showActivity(s.strings.settings_modal_send_logs_loading, dispatch(sendLogs(notes)))
-      showToast(s.strings.settings_modal_send_logs_success)
+      if (state.network.isConnected) {
+        await showActivity(s.strings.settings_modal_send_logs_loading, dispatch(sendLogs(notes)))
+        showToast(s.strings.settings_modal_send_logs_success)
+      } else {
+        showError(`${s.strings.network_alert_title}`)
+      }
     }
   } catch (error) {
     showError(error)
