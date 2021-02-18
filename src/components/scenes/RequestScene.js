@@ -18,10 +18,8 @@ import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import * as UI_SELECTORS from '../../modules/UI/selectors.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
-import { scale } from '../../util/scaling.js'
 import { decimalOrZero, DIVIDE_PRECISION, getCurrencyInfo, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
 import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -273,17 +271,20 @@ export class RequestComponent extends React.PureComponent<Props, State> {
   }
 
   render() {
+    const { theme } = this.props
+    const styles = getStyles(theme)
+
     if (this.props.loading) {
-      return <ActivityIndicator color={THEME.COLORS.GRAY_2} style={{ flex: 1, alignSelf: 'center' }} size="large" />
+      return <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
     }
 
-    const { balance, primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, guiWallet, theme } = this.props
+    const { balance, primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, guiWallet } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
     const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
     const { keysOnlyMode = false } = Constants.getSpecialCurrencyInfo(primaryCurrencyInfo.displayCurrencyCode)
     const { displayCurrencyCode } = primaryCurrencyInfo
-    const styles = getStyles(theme)
+
     return (
       <SceneWrapper background="header" hasTabs={false}>
         {keysOnlyMode !== true ? (
@@ -302,7 +303,6 @@ export class RequestComponent extends React.PureComponent<Props, State> {
               forceUpdateGuiCounter={0}
               onExchangeAmountChanged={this.onExchangeAmountChanged}
               keyboardVisible={false}
-              color={THEME.COLORS.WHITE}
               isFiatOnTop
               isFocus={false}
               onNext={this.onNext}
@@ -311,12 +311,12 @@ export class RequestComponent extends React.PureComponent<Props, State> {
             />
 
             {Platform.OS === 'ios' ? (
-              <InputAccessoryView backgroundColor={THEME.COLORS.OPAQUE_WHITE} nativeID={inputAccessoryViewID}>
+              <InputAccessoryView backgroundColor={theme.inputAccessoryBackground} nativeID={inputAccessoryViewID}>
                 <View style={styles.accessoryView}>
-                  <TouchableOpacity style={styles.accessoryBtn} onPress={this.cancelFioMode}>
+                  <TouchableOpacity style={styles.accessoryButton} onPress={this.cancelFioMode}>
                     <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_cancel_cap : ''}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.accessoryBtn} onPress={this.nextFioMode}>
+                  <TouchableOpacity style={styles.accessoryButton} onPress={this.nextFioMode}>
                     <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_next_capitalized : 'Done'}</Text>
                   </TouchableOpacity>
                 </View>
@@ -337,7 +337,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
             <EdgeText>{requestAddress}</EdgeText>
           </View>
         ) : (
-          <Text style={styles.text}>{sprintf(s.strings.request_deprecated_currency_code, primaryCurrencyInfo.displayCurrencyCode)}</Text>
+          <EdgeText>{sprintf(s.strings.request_deprecated_currency_code, primaryCurrencyInfo.displayCurrencyCode)}</EdgeText>
         )}
         <View style={styles.spacer} />
         {keysOnlyMode !== true && (
@@ -518,19 +518,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: THEME.COLORS.WHITE
+    backgroundColor: theme.inputAccessoryBackground
   },
-  accessoryBtn: {
-    paddingVertical: scale(7),
-    paddingHorizontal: scale(15)
+  accessoryButton: {
+    paddingVertical: theme.rem(0.5),
+    paddingHorizontal: theme.rem(1)
   },
   accessoryText: {
-    color: THEME.COLORS.ACCENT_BLUE,
-    fontSize: scale(16)
+    color: theme.inputAccessoryText
   },
-  text: {
-    color: THEME.COLORS.WHITE,
-    margin: scale(12)
+
+  loader: {
+    flex: 1,
+    alignSelf: 'center'
   }
 }))
 

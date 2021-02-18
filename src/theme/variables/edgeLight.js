@@ -244,6 +244,10 @@ export const edgeLight: Theme = {
   qrForegroundColor: palette.black,
   qrBackgroundColor: palette.white,
 
+  // Input Accessory
+  inputAccessoryBackground: palette.white,
+  inputAccessoryText: palette.accentBlue,
+
   // Images
   settingsChangellyLogo: changellyLogo,
   settingsChangenowLogo: changenowLogo,

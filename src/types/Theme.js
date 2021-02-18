@@ -176,6 +176,10 @@ export type Theme = {
   qrForegroundColor: string,
   qrBackgroundColor: string,
 
+  // Input Accessory
+  inputAccessoryBackground: string,
+  inputAccessoryText: string,
+
   // Images
   settingsChangellyLogo: string,
   settingsChangenowLogo: string,

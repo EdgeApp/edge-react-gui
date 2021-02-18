@@ -35,7 +35,6 @@ exports[`Request should render with loaded props 1`] = `
       You have 0 undefined
     </WithTheme(EdgeTextComponent)>
     <ExchangedFlipInput
-      color="#FFFFFF"
       exchangeSecondaryToPrimaryRatio={Object {}}
       forceUpdateGuiCounter={0}
       headerText="Receive to undefined"
@@ -52,7 +51,7 @@ exports[`Request should render with loaded props 1`] = `
       topReturnKeyType="done"
     />
     <InputAccessoryView
-      backgroundColor="rgba(255, 255, 255, 0.5)"
+      backgroundColor="#FFFFFF"
       nativeID="cancelHeaderId"
     >
       <View
@@ -69,8 +68,8 @@ exports[`Request should render with loaded props 1`] = `
           onPress={[Function]}
           style={
             Object {
-              "paddingHorizontal": 21.068661971830984,
-              "paddingVertical": 9.832042253521127,
+              "paddingHorizontal": 22,
+              "paddingVertical": 11,
             }
           }
         >
@@ -78,7 +77,6 @@ exports[`Request should render with loaded props 1`] = `
             style={
               Object {
                 "color": "#0073D9",
-                "fontSize": 22.473239436619718,
               }
             }
           >
@@ -89,8 +87,8 @@ exports[`Request should render with loaded props 1`] = `
           onPress={[Function]}
           style={
             Object {
-              "paddingHorizontal": 21.068661971830984,
-              "paddingVertical": 9.832042253521127,
+              "paddingHorizontal": 22,
+              "paddingVertical": 11,
             }
           }
         >
@@ -98,7 +96,6 @@ exports[`Request should render with loaded props 1`] = `
             style={
               Object {
                 "color": "#0073D9",
-                "fontSize": 22.473239436619718,
               }
             }
           >
@@ -166,7 +163,7 @@ exports[`Request should render with loaded props 1`] = `
 exports[`Request should render with loading props 1`] = `
 <ActivityIndicator
   animating={true}
-  color="#87939E"
+  color="#FFFFFF"
   hidesWhenStopped={true}
   size="large"
   style={
