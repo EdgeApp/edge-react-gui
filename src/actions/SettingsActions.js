@@ -309,7 +309,7 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
     const notes = await launchModal(unlockSettingsModal)
     if (notes || notes === '') {
       if (state.network.isConnected) {
-        showActivity(s.strings.settings_modal_send_logs_loading, dispatch(sendLogs(notes)))
+        await showActivity(s.strings.settings_modal_send_logs_loading, dispatch(sendLogs(notes)))
         showToast(s.strings.settings_modal_send_logs_success)
       } else {
         showError(`${s.strings.network_alert_title}`)
