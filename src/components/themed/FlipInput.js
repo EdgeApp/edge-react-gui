@@ -489,8 +489,6 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
 
   clipboardRef = (ref: any) => (this.clipboardMenu = ref)
 
-  handleWalletPress = () => {}
-
   render() {
     const { primaryInfo, secondaryInfo, headerText, headerLogo, headerCallback, theme } = this.props
     const { isToggled } = this.state
@@ -502,7 +500,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
       <View style={styles.container}>
         <View style={styles.headerContainer}>
           <Image style={styles.headerIcon} source={{ uri: headerLogo || '' }} />
-          <RightChevronButton text={headerText} onPress={headerCallback || this.handleWalletPress} />
+          {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
         </View>
         <View style={styles.clipboardContainer}>
           <Menu onSelect={this.handlePasteClipboard} ref={this.clipboardRef} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
@@ -551,6 +549,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(1.5),
     height: theme.rem(1.5),
     marginRight: theme.rem(0.5)
+  },
+  headerText: {
+    fontSize: theme.rem(1.25)
   },
 
   // Flip Input

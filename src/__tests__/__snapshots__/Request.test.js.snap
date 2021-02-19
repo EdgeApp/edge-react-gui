@@ -37,6 +37,7 @@ exports[`Request should render with loaded props 1`] = `
     <ExchangedFlipInput
       exchangeSecondaryToPrimaryRatio={Object {}}
       forceUpdateGuiCounter={0}
+      headerCallback={[Function]}
       headerText="Receive to undefined"
       inputAccessoryViewID=""
       isEditable={true}

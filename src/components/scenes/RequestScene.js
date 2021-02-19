@@ -11,7 +11,7 @@ import Share from 'react-native-share'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
-import { refreshReceiveAddressRequest } from '../../actions/WalletActions'
+import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
 import * as Constants from '../../constants/indexConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
@@ -24,6 +24,7 @@ import { decimalOrZero, DIVIDE_PRECISION, getCurrencyInfo, getDenomFromIsoCode, 
 import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -67,7 +68,8 @@ export type RequestLoadingProps = {
 
 export type RequestDispatchProps = {
   refreshReceiveAddressRequest(string): void,
-  refreshAllFioAddresses: () => Promise<void>
+  refreshAllFioAddresses: () => Promise<void>,
+  onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 type CurrencyMinimumPopupState = { [currencyCode: string]: ModalState }
@@ -270,6 +272,14 @@ export class RequestComponent extends React.PureComponent<Props, State> {
       .catch(error => console.log(error))
   }
 
+  handleOpenWalletListModal = () => {
+    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
+      if (walletId && currencyCode) {
+        this.props.onSelectWallet(walletId, currencyCode)
+      }
+    })
+  }
+
   render() {
     const { theme } = this.props
     const styles = getStyles(theme)
@@ -308,6 +318,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
               onNext={this.onNext}
               topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
               inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
+              headerCallback={this.handleOpenWalletListModal}
             />
 
             {Platform.OS === 'ios' ? (
@@ -614,6 +625,7 @@ export const Request = connect(
     refreshReceiveAddressRequest: (walletId: string) => {
       dispatch(refreshReceiveAddressRequest(walletId))
     },
-    refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses())
+    refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses()),
+    onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
   })
 )(withTheme(RequestComponent))
