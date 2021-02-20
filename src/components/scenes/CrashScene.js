@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Text } from 'react-native'
+import { Button, DevSettings, Text } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import s from '../../locales/strings.js'
@@ -20,6 +20,7 @@ function CrashSceneComponent(props: ThemeProps): React.Node {
       <AntDesignIcon name="frowno" style={styles.icon} />
       <Text style={styles.titleText}>{s.strings.error_boundary_title}</Text>
       <Text style={styles.messageText}>{s.strings.error_boundary_message}</Text>
+      <Button title="Reload" onPress={() => DevSettings.reload()} />
     </SceneWrapper>
   )
 }
