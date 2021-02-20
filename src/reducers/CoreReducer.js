@@ -11,6 +11,7 @@ export type CoreState = {
   +account: EdgeAccount,
   +context: EdgeContext,
   +disklet: Disklet,
+  +otpErrorShown: boolean,
 
   // Nested reducers:
   +edgeLogin: EdgeLoginState
@@ -38,6 +39,16 @@ export const core: Reducer<CoreState, Action> = combineReducers({
 
   disklet(state: Disklet = defaultDisklet, action: Action): Disklet {
     return action.type === 'CORE/CONTEXT/ADD_CONTEXT' ? action.data.disklet : state
+  },
+
+  otpErrorShown(state: boolean = false, action: Action): boolean {
+    switch (action.type) {
+      case 'OTP_ERROR_SHOWN':
+        return true
+      case 'LOGOUT':
+        return false
+    }
+    return state
   },
 
   // Nested reducers:

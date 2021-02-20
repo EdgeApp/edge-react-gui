@@ -80,9 +80,10 @@ import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
 import { NotificationScene } from './scenes/NotificationScene'
+import { OtpRepairScene } from './scenes/OtpRepairScene.js'
 import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
 import { ChangeRecoveryScene } from './scenes/PasswordRecoveryScene.js'
-import { SecurityAlertsScene } from './scenes/SecurityAlertsScene'
+import { SecurityAlertsScene } from './scenes/SecurityAlertsScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
@@ -455,6 +456,10 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
             />
+          </Stack>
+
+          <Stack key={Constants.OTP_REPAIR_SCENE} hideNavBar>
+            <Scene key={Constants.OTP_REPAIR_SCENE} navTransparent component={ifLoggedIn(OtpRepairScene)} />
           </Stack>
 
           <Stack key={Constants.SECURITY_ALERTS_SCENE} hideNavBar>
