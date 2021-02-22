@@ -85,6 +85,7 @@ const mapStateToProps = (state: RootState): SendConfirmationStateProps => {
     balanceInCrypto,
     balanceInFiat,
     currencyCode,
+    currencySettings: state.ui.settings[getSelectedCurrencyCode(state)],
     currencyInfo: currencyInfo || null,
     transactionMetadata,
     errorMsg,
