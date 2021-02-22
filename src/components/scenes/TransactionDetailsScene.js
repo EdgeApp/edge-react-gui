@@ -611,6 +611,10 @@ export const TransactionDetailsScene = connect(
     const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, parseFloat(cryptoAmount))
 
     const { swapData } = edgeTransaction
+    if (swapData != null && typeof swapData.payoutCurrencyCode === 'string') {
+      swapData.payoutCurrencyCode = swapData.payoutCurrencyCode.toUpperCase()
+    }
+
     const destinationDenomination = swapData ? getDisplayDenomination(state, swapData.payoutCurrencyCode) : undefined
     const destinationWallet = swapData ? getWallet(state, swapData.payoutWalletId) : undefined
 
