@@ -1,8 +1,17 @@
 // @flow
 
 import { type Disklet } from 'disklet'
-import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet, type EdgeLobby, type EdgeParsedUri, type EdgeReceiveAddress } from 'edge-core-js'
+import {
+  type EdgeAccount,
+  type EdgeContext,
+  type EdgeCurrencyWallet,
+  type EdgeLobby,
+  type EdgeParsedUri,
+  type EdgeReceiveAddress,
+  type JsonObject
+} from 'edge-core-js'
 
+import type { FeeOption } from '../../reducers/scenes/SendConfirmationReducer.js'
 import type { CcWalletMap } from '../reducers/FioReducer'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
@@ -183,6 +192,7 @@ export type Action =
   | { type: 'SET_LOBBY_ERROR', data: string }
   | { type: 'SET_FROM_WALLET_MAX', data: string }
   | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME', data: { autoLogoutTimeInSeconds: number } }
+  | { type: 'UI/SETTINGS/SET_DEFAULT_FEE', data: { currencyCode: string, defaultFee: FeeOption, customFee: JsonObject } }
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: string | void }
   | {
       type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',

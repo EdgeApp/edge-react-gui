@@ -1,10 +1,11 @@
 /* eslint-disable quote-props */
 // @flow
 
-import type { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount, JsonObject } from 'edge-core-js'
 
 import type { SortOption } from '../../../components/modals/WalletListSortModal.js'
 import { showError } from '../../../components/services/AirshipInstance.js'
+import type { FeeOption } from '../../../reducers/scenes/SettingsReducer'
 import type { MostRecentWallet, PasswordReminder } from '../../../types/types.js'
 import { categories } from './subcategories.js'
 
@@ -657,6 +658,14 @@ export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, le
 export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: string, denomination: string) =>
   getSyncedSettings(account).then(settings => {
     const updatedSettings = updateCurrencySettings(settings, currencyCode, { denomination })
+    return setSyncedSettings(account, updatedSettings)
+  })
+// Save default fee setting to disk
+export const saveDefaultFeeSetting = (account: EdgeAccount, currencyCode: string, defaultFee: FeeOption, customFee?: JsonObject) =>
+  getSyncedSettings(account).then(settings => {
+    console.log(`Saving default fee to disk: ${defaultFee} for ${currencyCode}`)
+    const updatedSettings = updateCurrencySettings(settings, currencyCode, { defaultFee, customFee })
+    console.log(`Updated Settings: ${JSON.stringify(updatedSettings)}`)
     return setSyncedSettings(account, updatedSettings)
   })
 

@@ -2,7 +2,7 @@
 
 import { downgradeDisklet } from 'disklet'
 import { createInputModal, createSecureTextModal } from 'edge-components'
-import type { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount, JsonObject } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
@@ -19,6 +19,7 @@ import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import { sendLogs } from '../modules/Logs/action.js'
 import * as SETTINGS_ACTIONS from '../modules/Settings/SettingsActions.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
+import type { FeeOption } from '../reducers/scenes/SettingsReducer'
 import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
@@ -128,6 +129,16 @@ export const setDenominationKeyRequest = (currencyCode: string, denominationKey:
 
   return ACCOUNT_SETTINGS.setDenominationKeyRequest(account, currencyCode, denominationKey)
     .then(() => dispatch(SETTINGS_ACTIONS.setDenominationKey(currencyCode, denominationKey)))
+    .catch(showError)
+}
+
+export const setDefaultFeeSetting = (currencyCode: string, defaultFee: FeeOption, customFee: JsonObject) => (dispatch: Dispatch, getState: GetState) => {
+  // Thunk
+  const state = getState()
+  const { account } = state.core
+
+  return ACCOUNT_SETTINGS.saveDefaultFeeSetting(account, currencyCode, defaultFee, customFee)
+    .then(() => dispatch(SETTINGS_ACTIONS.setDefaultFee(currencyCode, defaultFee, customFee)))
     .catch(showError)
 }
 

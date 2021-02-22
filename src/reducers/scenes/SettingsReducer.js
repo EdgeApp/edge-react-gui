@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeDenomination } from 'edge-core-js'
+import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeDenomination, type JsonObject } from 'edge-core-js'
 import _ from 'lodash'
 
 import type { SortOption } from '../../components/modals/WalletListSortModal.js'
@@ -8,6 +8,8 @@ import { LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/C
 import type { Action } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, MostRecentWallet } from '../../types/types.js'
 import { spendingLimits } from '../SpendingLimitsReducer.js'
+
+export type FeeOption = 'custom' | 'high' | 'low' | 'standard'
 
 export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
@@ -45,7 +47,9 @@ export const initialState = {
 
 export type CurrencySetting = {
   denomination: string,
-  denominations?: EdgeDenomination[]
+  denominations?: EdgeDenomination[],
+  defaultFee?: FeeOption,
+  customFee?: JsonObject
 }
 
 export type SettingsState = {
@@ -497,6 +501,15 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       passwordRecoveryRemindersShown[level] = true
       return { ...state, passwordRecoveryRemindersShown }
     }
+
+    case 'UI/SETTINGS/SET_DEFAULT_FEE': {
+      const { currencyCode, ...defaultFeeData } = action.data
+      return {
+        ...state,
+        [currencyCode]: { ...state[currencyCode], ...defaultFeeData }
+      }
+    }
+
     default:
       return state
   }
