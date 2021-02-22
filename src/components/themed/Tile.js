@@ -2,7 +2,7 @@
 
 import Clipboard from '@react-native-community/clipboard'
 import * as React from 'react'
-import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Animated, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'
@@ -20,11 +20,23 @@ type OwnProps = {
 }
 type Props = OwnProps & ThemeProps
 
-class TileComponent extends React.PureComponent<Props> {
+type LocalState = {
+  animation: any
+}
+
+class TileComponent extends React.PureComponent<Props, LocalState> {
+  state: LocalState = {
+    animation: new Animated.Value(0)
+  }
+
   copy = () => {
     if (!this.props.body) return
     Clipboard.setString(this.props.body)
     showToast(s.strings.fragment_copied)
+  }
+
+  expand = ({ nativeEvent }) => {
+    if (nativeEvent.layout.height) Animated.spring(this.state.animation, { toValue: nativeEvent.layout.height }).start()
   }
 
   render() {
@@ -43,27 +55,29 @@ class TileComponent extends React.PureComponent<Props> {
     }
     return (
       <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
-        <View>
-          <View style={styles.container}>
-            <View style={styles.content}>
-              {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
-              {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
-              <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
-              {typeof body === 'string' && (
-                <EdgeText style={styles.textBody} numberOfLines={3} adjustsFontSizeToFit={false}>
-                  {body}
-                </EdgeText>
-              )}
-              {children}
-            </View>
-            {type === 'touchable' && (
-              <View style={styles.iconContainer}>
-                <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
+        <Animated.View style={[styles.animatedContainer, { height: this.state.animation._value ? this.state.animation : 'auto' }]}>
+          <View onLayout={this.expand}>
+            <View style={styles.container}>
+              <View style={styles.content}>
+                {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
+                {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
+                <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
+                {typeof body === 'string' && (
+                  <EdgeText style={styles.textBody} numberOfLines={3} adjustsFontSizeToFit={false}>
+                    {body}
+                  </EdgeText>
+                )}
+                {children}
               </View>
-            )}
+              {type === 'touchable' && (
+                <View style={styles.iconContainer}>
+                  <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
+                </View>
+              )}
+            </View>
+            <View style={styles.divider} />
           </View>
-          <View style={styles.divider} />
-        </View>
+        </Animated.View>
       </TouchableWithoutFeedback>
     )
   }
@@ -77,6 +91,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingBottom: theme.rem(1),
     flexDirection: 'row',
     alignItems: 'center'
+  },
+  animatedContainer: {
+    overflow: 'hidden'
   },
   content: {
     flex: 1

@@ -255,10 +255,9 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     const styles = getStyles(theme)
     const copyMessage = this.state.clipboard ? `${s.strings.string_paste}: ${this.state.clipboard}` : null
     const tileType = loading ? 'loading' : isSetAddress ? 'touchable' : 'static'
-    const tileBody = isSetAddress ? recipientAddress : undefined
     return (
       <View>
-        <Tile type={tileType} title={title} body={tileBody} onPress={this.handleTilePress}>
+        <Tile type={tileType} title={title} body={recipientAddress || undefined} onPress={this.handleTilePress}>
           {!isSetAddress && (
             <View style={styles.buttonsContainer}>
               <TouchableOpacity style={styles.buttonContainer} onPress={this.handleChangeAddress}>
