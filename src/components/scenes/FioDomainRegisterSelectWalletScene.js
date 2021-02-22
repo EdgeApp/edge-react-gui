@@ -50,6 +50,7 @@ type LocalState = {
   supportedCurrencies: { [currencyCode: string]: boolean },
   paymentInfo: { [currencyCode: string]: { amount: string, address: string } },
   activationCost: number,
+  feeValue: number,
   paymentWallet?: {
     id: string,
     currencyCode: string
@@ -63,6 +64,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   state: LocalState = {
     loading: false,
     activationCost: 800,
+    feeValue: 0,
     supportedCurrencies: {},
     paymentInfo: {}
   }
@@ -76,13 +78,13 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
 
     if (this.props.fioPlugin) {
       try {
-        const { activationCost, supportedCurrencies, paymentInfo } = await getDomainRegInfo(
+        const { activationCost, feeValue, supportedCurrencies, paymentInfo } = await getDomainRegInfo(
           this.props.fioPlugin,
           this.props.fioDomain,
           this.props.selectedWallet,
           this.props.fioDisplayDenomination
         )
-        this.setState({ activationCost, supportedCurrencies, paymentInfo })
+        this.setState({ activationCost, feeValue, supportedCurrencies, paymentInfo })
       } catch (e) {
         showError(e)
         this.setState({ errorMessage: e.message })
@@ -119,7 +121,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
 
   onNextPress = async () => {
     const { isConnected, selectedWallet, fioDomain, state } = this.props
-    const { activationCost, paymentInfo: allPaymentInfo, paymentWallet } = this.state
+    const { feeValue, paymentInfo: allPaymentInfo, paymentWallet } = this.state
 
     if (!paymentWallet || !paymentWallet.id) return
 
@@ -131,7 +133,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         Actions[Constants.FIO_DOMAIN_CONFIRM]({
           fioName: fioDomain,
           paymentWallet,
-          fee: activationCost,
+          fee: feeValue,
           ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
         })
       } else {
