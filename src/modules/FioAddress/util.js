@@ -515,7 +515,7 @@ export const getFioDomains = async (fioPlugin: EdgeCurrencyConfig, fioAddress: s
  * @param selectedDomain
  * @param displayDenomination
  * @param isFallback
- * @returns {Promise<{activationCost: number, supportedCurrencies:{[string]: boolean}, paymentInfo: {[string]: {amount: string, address: string}}}>}
+ * @returns {Promise<{activationCost: number, feeValue: number, supportedCurrencies:{[string]: boolean}, paymentInfo: {[string]: {amount: string, address: string}}}>}
  */
 export const getRegInfo = async (
   fioPlugin: EdgeCurrencyConfig,
@@ -527,13 +527,15 @@ export const getRegInfo = async (
 ): Promise<{
   supportedCurrencies: { [currencyCode: string]: boolean },
   activationCost: number,
+  feeValue: number,
   paymentInfo: { [currencyCode: string]: { amount: string, address: string } }
 }> => {
   let activationCost = 0
+  let feeValue = 0
 
   try {
-    const fee = await selectedWallet.otherMethods.getFee('registerFioAddress')
-    activationCost = parseFloat(truncateDecimals(bns.div(`${fee}`, displayDenomination.multiplier, 18), 6))
+    feeValue = await selectedWallet.otherMethods.getFee('registerFioAddress')
+    activationCost = parseFloat(truncateDecimals(bns.div(`${feeValue}`, displayDenomination.multiplier, 18), 6))
   } catch (e) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
@@ -541,6 +543,7 @@ export const getRegInfo = async (
   if (selectedDomain.walletId) {
     return {
       activationCost,
+      feeValue,
       supportedCurrencies: { [FIO_STR]: true },
       paymentInfo: {
         [FIO_STR]: {
@@ -553,7 +556,11 @@ export const getRegInfo = async (
   }
   // todo: temporary commented to use fallback referral code by default.
   // const referralCode = isFallback ? fioPlugin.currencyInfo.defaultSettings.fallbackRef : fioPlugin.currencyInfo.defaultSettings.defaultRef
-  return buyAddressRequest(fioPlugin, fioAddress, fioPlugin.currencyInfo.defaultSettings.fallbackRef, selectedWallet, activationCost)
+  const reqResult = await buyAddressRequest(fioPlugin, fioAddress, fioPlugin.currencyInfo.defaultSettings.fallbackRef, selectedWallet, activationCost)
+  return {
+    ...reqResult,
+    feeValue
+  }
 }
 
 /**
@@ -562,7 +569,7 @@ export const getRegInfo = async (
  * @param fioDomain
  * @param selectedWallet
  * @param displayDenomination
- * @returns {Promise<{activationCost: number, supportedCurrencies:{[string]: boolean}, paymentInfo: {[string]: {amount: string, address: string}}}>}
+ * @returns {Promise<{activationCost: number, feeValue: number, supportedCurrencies:{[string]: boolean}, paymentInfo: {[string]: {amount: string, address: string}}}>}
  */
 export const getDomainRegInfo = async (
   fioPlugin: EdgeCurrencyConfig,
@@ -572,18 +579,24 @@ export const getDomainRegInfo = async (
 ): Promise<{
   supportedCurrencies: { [currencyCode: string]: boolean },
   activationCost: number,
+  feeValue: number,
   paymentInfo: { [currencyCode: string]: { amount: string, address: string } }
 }> => {
   let activationCost = 0
+  let feeValue = 0
 
   try {
-    const fee = await selectedWallet.otherMethods.getFee('registerFioDomain')
-    activationCost = parseFloat(truncateDecimals(bns.div(`${fee}`, displayDenomination.multiplier, 18), 6))
+    feeValue = await selectedWallet.otherMethods.getFee('registerFioDomain')
+    activationCost = parseFloat(truncateDecimals(bns.div(`${feeValue}`, displayDenomination.multiplier, 18), 6))
   } catch (e) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
 
-  return buyAddressRequest(fioPlugin, fioDomain, fioPlugin.currencyInfo.defaultSettings.defaultRef, selectedWallet, activationCost)
+  const reqResult = await buyAddressRequest(fioPlugin, fioDomain, fioPlugin.currencyInfo.defaultSettings.defaultRef, selectedWallet, activationCost)
+  return {
+    ...reqResult,
+    feeValue
+  }
 }
 
 const buyAddressRequest = async (

@@ -88,12 +88,13 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
       this.setState({ loading: true })
       if (onSubmit) await onSubmit(fee)
 
+      this.setState({ loading: false })
       if (onSuccess) onSuccess()
       showToast(successMessage || s.strings.string_done_cap)
     } catch (e) {
+      this.setState({ loading: false })
       showError(e)
     }
-    this.setState({ loading: false })
   }
 
   setFee = async (): Promise<void> => {
@@ -171,7 +172,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     return (
       <View>
         {feeLoading && <ActivityIndicator color={theme.iconTappable} style={styles.loader} size="small" />}
-        <EdgeText style={styles.actionTitle}>{title || ''}</EdgeText>
+        {title ? <EdgeText style={styles.actionTitle}>{title}</EdgeText> : null}
         {this.renderFeeAndBalance()}
         <View style={styles.spacer} />
         {showSlider && (

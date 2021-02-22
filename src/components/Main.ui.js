@@ -681,7 +681,6 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.FIO_DOMAIN_CONFIRM}
               navTransparent
               component={ifLoggedIn(FioNameConfirmScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
@@ -693,7 +692,6 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.FIO_NAME_CONFIRM}
               navTransparent
               component={ifLoggedIn(FioNameConfirmScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
