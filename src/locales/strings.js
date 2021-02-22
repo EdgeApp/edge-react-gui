@@ -2,7 +2,8 @@
 
 import { getLocales } from 'react-native-localize'
 
-import en from './en_US'
+import en from './en_US.js'
+import de from './strings/de.json'
 import es from './strings/es.json'
 import fr from './strings/fr.json'
 import it from './strings/it.json'
@@ -13,7 +14,7 @@ import ru from './strings/ru.json'
 import vi from './strings/vi.json'
 import zh from './strings/zh.json'
 
-const allLocales = { en, ru, es, it, pt, ja, fr, ko, vi, zh }
+const allLocales = { en, de, ru, es, it, pt, ja, fr, ko, vi, zh }
 
 const strings: typeof en = { ...en }
 const out = { strings }
