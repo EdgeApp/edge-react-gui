@@ -1,14 +1,18 @@
 // @flow
+
+import { bns } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
 import { playSendSound } from '../../actions/SoundActions.js'
 import { TRANSACTION_DETAILS } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
+import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
-import type { GuiWallet } from '../../types/types.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import * as UTILS from '../../util/utils.js'
 import { showError, showToast, showWarning } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -22,12 +26,12 @@ type Status = 'confirming' | 'sending' | 'sent'
 type OwnProps = {
   bridge: AirshipBridge<Status>,
   edgeTransaction: EdgeTransaction,
-  guiWallet: GuiWallet,
-  walletDefaultDenomProps: EdgeDenomination,
   wallet: EdgeCurrencyWallet
 }
-
-type Props = OwnProps & ThemeProps
+type StateProps = {
+  edgeDenomination: EdgeDenomination
+}
+type Props = OwnProps & StateProps & ThemeProps
 
 type State = {
   edgeUnsignedTransaction?: EdgeTransaction,
@@ -145,22 +149,27 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
     this.closeModal()
   }
 
+  getTxFeeDisplay = (edgeTransaction: EdgeTransaction, edgeDenomination: EdgeDenomination): string => {
+    const txFee = bns.gt(edgeTransaction.networkFee, '0')
+      ? edgeTransaction.networkFee
+      : edgeTransaction.parentNetworkFee && bns.gt(edgeTransaction.parentNetworkFee, '0')
+      ? edgeTransaction.parentNetworkFee
+      : ''
+
+    const feeAmount = txFee ? UTILS.convertNativeToDisplay(edgeDenomination.multiplier)(txFee) : ''
+    const symbolString = edgeDenomination.symbol ? edgeDenomination.symbol : ''
+
+    return feeAmount !== '' ? `${symbolString} ${feeAmount}` : ''
+  }
+
   render() {
-    const { bridge, edgeTransaction, guiWallet, theme, walletDefaultDenomProps } = this.props
+    const { bridge, edgeTransaction, theme, edgeDenomination } = this.props
     const { error, status, edgeUnsignedTransaction } = this.state
 
     const styles = getStyles(theme)
 
-    const symbolString =
-      UTILS.isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
-
-    const oldFeeAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(edgeTransaction.networkFee)
-    const oldFee = `${symbolString} ${oldFeeAmount}`
-
-    const newFeeAmount = edgeUnsignedTransaction
-      ? UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(edgeUnsignedTransaction.networkFee)
-      : undefined
-    const newFee = newFeeAmount ? `${symbolString} ${newFeeAmount}` : ''
+    const oldFee = this.getTxFeeDisplay(edgeTransaction, edgeDenomination)
+    const newFee = edgeUnsignedTransaction != null ? this.getTxFeeDisplay(edgeUnsignedTransaction, edgeDenomination) : ''
 
     const isSending = status === 'sending'
 
@@ -222,4 +231,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionAccelerateModal = withTheme(TransactionAccelerateModalComponent)
+export const TransactionAccelerateModal = connect((state: RootState, ownProps: OwnProps): StateProps => {
+  const { wallet } = ownProps
+
+  const edgeDenomination = getDisplayDenomination(state, wallet.currencyInfo.currencyCode)
+
+  return {
+    edgeDenomination
+  }
+})(withTheme(TransactionAccelerateModalComponent))
