@@ -1,13 +1,36 @@
 // @flow
 
 import * as React from 'react'
-import { AppState } from 'react-native'
-import RNPermissions from 'react-native-permissions'
+import { AppState, Platform } from 'react-native'
+import { check, checkMultiple, PERMISSIONS, request, RESULTS } from 'react-native-permissions'
 import { connect } from 'react-redux'
 
 import { type Permission, type PermissionsState, type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { showError } from './AirshipInstance.js'
+
+const PLATFORM = {
+  ios: 'IOS',
+  android: 'ANDROID'
+}
+
+const OS = PLATFORM[Platform.OS]
+
+const LOCATION = {
+  IOS: 'LOCATION_WHEN_IN_USE',
+  ANDROID: 'ACCESS_FINE_LOCATION'
+}
+
+const CONTACTS = {
+  IOS: 'CONTACTS',
+  ANDROID: 'READ_CONTACTS'
+}
+
+const PERMISSIONS_ITEM = {
+  camera: 'CAMERA',
+  contacts: CONTACTS[OS],
+  location: LOCATION[OS]
+}
 
 type StateProps = {
   permissions: PermissionsState
@@ -39,15 +62,17 @@ class PermissionsManagerComponent extends React.Component<Props> {
   }
 
   async checkPermissions() {
-    const { permissions } = this.props
-    const names = Object.keys(permissions)
-    const response: PermissionsState = await RNPermissions.checkMultiple(names)
+    const statePermissions = this.props.permissions
+    const names = Object.keys(statePermissions)
+    const permissions = names.map(name => PERMISSIONS[OS][PERMISSIONS_ITEM[name]])
+    const response: PermissionsState = await checkMultiple(permissions)
 
     // Figure out which ones have changed to avoid a pointless dispatch:
     const newPermissions: PermissionsState = {}
     for (const name of names) {
-      if (response[name] !== permissions[name]) {
-        newPermissions[name] = response[name]
+      const responsePermission = PERMISSIONS[OS][PERMISSIONS_ITEM[name]]
+      if (response[responsePermission] !== statePermissions[name]) {
+        newPermissions[name] = response[responsePermission]
       }
     }
 
@@ -60,10 +85,10 @@ class PermissionsManagerComponent extends React.Component<Props> {
   }
 }
 
-export async function requestPermission(permission: Permission): Promise<PermissionStatus> {
-  const status: PermissionStatus = await RNPermissions.check(permission)
-  if (status === 'undetermined') {
-    return RNPermissions.request(permission)
+export async function requestPermission(data: Permission): Promise<PermissionStatus> {
+  const status: PermissionStatus = await check(PERMISSIONS[OS][PERMISSIONS_ITEM[data]])
+  if (status === RESULTS.DENIED) {
+    return request(PERMISSIONS[OS][PERMISSIONS_ITEM[data]]).then(result => this.props.updatePermissions({ data: result }))
   }
   return status
 }

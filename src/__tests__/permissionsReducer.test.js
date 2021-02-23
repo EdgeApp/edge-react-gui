@@ -13,12 +13,34 @@ test('initialState', () => {
   expect(actual).toEqual(expected)
 })
 
-test('updatePermissions => AUTHORIZED', () => {
+test('updatePermissions => UNAVAILABLE', () => {
   const expected = {
     ...initialState,
-    camera: 'authorized'
+    camera: 'unavailable'
   }
-  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'authorized' } }
+  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'unavailable' } }
+  const actual = permissionsReducer(initialState, action)
+
+  expect(actual).toEqual(expected)
+})
+
+test('updatePermissions => BLOCKED', () => {
+  const expected = {
+    ...initialState,
+    camera: 'blocked'
+  }
+  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'blocked' } }
+  const actual = permissionsReducer(initialState, action)
+
+  expect(actual).toEqual(expected)
+})
+
+test('updatePermissions => GRANTED', () => {
+  const expected = {
+    ...initialState,
+    camera: 'granted'
+  }
+  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'granted' } }
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -35,12 +57,12 @@ test('updatePermissions => DENIED', () => {
   expect(actual).toEqual(expected)
 })
 
-test('updatePermissions => RESTRICTED', () => {
+test('updatePermissions => LIMITED', () => {
   const expected = {
     ...initialState,
-    camera: 'restricted'
+    camera: 'limited'
   }
-  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'restricted' } }
+  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'limited' } }
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -49,14 +71,14 @@ test('updatePermissions => RESTRICTED', () => {
 test('updatePermissions => MULTI', () => {
   const expected = {
     ...initialState,
-    camera: 'restricted',
-    contacts: 'authorized'
+    camera: 'limited',
+    contacts: 'granted'
   }
   const action = {
     type: 'PERMISSIONS/UPDATE',
     data: {
-      camera: 'restricted',
-      contacts: 'authorized'
+      camera: 'limited',
+      contacts: 'granted'
     }
   }
   const actual = permissionsReducer(initialState, action)

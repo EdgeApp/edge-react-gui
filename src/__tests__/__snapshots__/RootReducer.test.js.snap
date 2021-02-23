@@ -83,9 +83,9 @@ Object {
   "nextUsername": null,
   "pendingDeepLink": null,
   "permissions": Object {
-    "camera": "undetermined",
-    "contacts": "undetermined",
-    "location": "undetermined",
+    "camera": "denied",
+    "contacts": "denied",
+    "location": "denied",
   },
   "ui": Object {
     "fio": Object {
