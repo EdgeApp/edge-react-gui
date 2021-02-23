@@ -39,45 +39,67 @@ class TileComponent extends React.PureComponent<Props, LocalState> {
     if (nativeEvent.layout.height) Animated.spring(this.state.animation, { toValue: nativeEvent.layout.height }).start()
   }
 
+  renderContent() {
+
+  }
+
   render() {
     const { body, title, children, theme, type, error } = this.props
     const styles = getStyles(theme)
     const onPress = type === 'copy' ? () => this.copy() : this.props.onPress
-    if (type === 'loading') {
-      return (
-        <View style={styles.container}>
-          <View style={styles.content}>
-            <EdgeText style={styles.textHeader}>{title}</EdgeText>
-            <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
-          </View>
-        </View>
-      )
-    }
+    // if (type === 'loading') {
+    //   return (
+    //     <View style={styles.container}>
+    //       <View style={styles.content}>
+    //         <EdgeText style={styles.textHeader}>{title}</EdgeText>
+    //         <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
+    //       </View>
+    //     </View>
+    //   )
+    // }
+
+    // Add/Remove component animation
+    // 1. expand from height 0 and opacity 0
+    // 2. collapse to height 0 and opacity 0 and then remove
+
+    // Changing Tile options
+    // 1. Add children: put child -> animate
+    // 2. Remove children: animate -> remove child
+    // 3. Replace children: Remove children -> Add children
+    // 4. Spinner: should be shown next to the title and be small. Remove children -> wait for loading -> Add children
     return (
       <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
-        <Animated.View style={[styles.animatedContainer, { height: this.state.animation._value ? this.state.animation : 'auto' }]}>
-          <View onLayout={this.expand}>
-            <View style={styles.container}>
-              <View style={styles.content}>
-                {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
-                {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
-                <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
-                {typeof body === 'string' && (
-                  <EdgeText style={styles.textBody} numberOfLines={3} adjustsFontSizeToFit={false}>
-                    {body}
-                  </EdgeText>
-                )}
-                {children}
-              </View>
-              {type === 'touchable' && (
-                <View style={styles.iconContainer}>
-                  <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
+        <View>
+          <Animated.View style={[styles.animatedContainer, { height: this.state.animation._value ? this.state.animation : 'auto' }]}>
+            <View onLayout={this.expand}>
+              <View style={styles.container}>
+                <View style={styles.content}>
+                  {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
+                  {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
+                  <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
+                  {type === 'loading' ? (
+                    <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
+                  ) : (
+                    <>
+                      {typeof body === 'string' && (
+                        <EdgeText style={styles.textBody} numberOfLines={3} adjustsFontSizeToFit={false}>
+                          {body}
+                        </EdgeText>
+                      )}
+                      {children}
+                    </>
+                  )}
                 </View>
-              )}
+                {type === 'touchable' && (
+                  <View style={styles.iconContainer}>
+                    <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
+                  </View>
+                )}
+              </View>
             </View>
-            <View style={styles.divider} />
-          </View>
-        </Animated.View>
+          </Animated.View>
+          <View style={styles.divider} />
+        </View>
       </TouchableWithoutFeedback>
     )
   }
@@ -132,7 +154,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     right: theme.rem(0.25)
   },
   loader: {
-    marginTop: theme.rem(0.25)
+    marginVertical: theme.rem(0.25)
   },
   divider: {
     height: theme.thinLineWidth,
