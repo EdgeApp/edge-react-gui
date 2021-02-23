@@ -13,26 +13,22 @@ import { EdgeText } from './EdgeText.js'
 
 type Props = {
   walletId?: string,
-  rowKey: string,
   swipeRef: ?React.ElementRef<typeof SwipeRow>,
-  rowMap: { [string]: SwipeRow }
+  swipeRow?: SwipeRow
 }
 
 class WalletListEmptyRowComponent extends React.PureComponent<Props & ThemeProps> {
-  handleOpenWalletListMenuModal = async () => {
-    const { rowKey, rowMap } = this.props
-    rowMap[rowKey].closeRow()
-    if (this.props.walletId) {
-      await Airship.show(bridge => <WalletListMenuModal bridge={bridge} walletId={this.props.walletId} />)
+  closeRow = () => {
+    const { swipeRow } = this.props
+    if (swipeRow) {
+      swipeRow.closeRow()
     }
   }
 
-  handleRowOpen = () => {
-    const { rowKey, rowMap } = this.props
-    for (const key in rowMap) {
-      if (rowMap.hasOwnProperty(key) && key !== rowKey) {
-        rowMap[key].closeRow()
-      }
+  handleOpenWalletListMenuModal = async () => {
+    this.closeRow()
+    if (this.props.walletId) {
+      await Airship.show(bridge => <WalletListMenuModal bridge={bridge} walletId={this.props.walletId} />)
     }
   }
 
@@ -40,7 +36,7 @@ class WalletListEmptyRowComponent extends React.PureComponent<Props & ThemeProps
     const { theme } = this.props
     const styles = getStyles(theme)
     return (
-      <SwipeRow onRowOpen={this.handleRowOpen} rightOpenValue={theme.rem(-2.5)} disableRightSwipe ref={this.props.swipeRef} useNativeDriver>
+      <SwipeRow {...this.props} rightOpenValue={theme.rem(-2.5)} disableRightSwipe ref={this.props.swipeRef} useNativeDriver>
         <View style={styles.swipeContainer}>
           <TouchableOpacity style={styles.swipeButton} onPress={this.handleOpenWalletListMenuModal}>
             <EdgeText style={styles.swipeIcon}>{WALLET_LIST_OPTIONS_ICON}</EdgeText>

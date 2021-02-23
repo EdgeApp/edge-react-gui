@@ -197,7 +197,7 @@ class WalletListComponent extends React.PureComponent<Props> {
     const guiWallet = wallets[walletId]
 
     if (guiWallet == null || !data.item.fullCurrencyCode) {
-      return <WalletListEmptyRow rowKey={data.item.key} rowMap={rowMap} walletId={walletId} />
+      return <WalletListEmptyRow walletId={walletId} swipeRow={rowMap[data.item.key]} />
     } else {
       const isToken = guiWallet.currencyCode !== data.item.fullCurrencyCode
       const walletCodesArray = data.item.fullCurrencyCode.split('-')
