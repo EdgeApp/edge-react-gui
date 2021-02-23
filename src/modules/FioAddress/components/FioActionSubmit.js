@@ -10,6 +10,7 @@ import { showError, showToast } from '../../../components/services/AirshipInstan
 import type { Theme, ThemeProps } from '../../../components/services/ThemeContext'
 import { cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
+import { SecondaryButton } from '../../../components/themed/ThemedButtons'
 import { Tile } from '../../../components/themed/Tile'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings'
@@ -24,10 +25,12 @@ type OwnProps = {
   title?: string,
   successMessage?: string,
   onSubmit?: number => Promise<any>,
-  onSuccess?: () => void,
+  onSuccess?: ({ expiration?: string }) => void,
+  cancelOperation?: () => void,
   goTo?: (params: any) => void,
   getOperationFee: EdgeCurrencyWallet => Promise<number>,
-  fioWallet: EdgeCurrencyWallet
+  fioWallet: EdgeCurrencyWallet,
+  addressTitles?: boolean
 }
 
 export type State = {
@@ -70,11 +73,12 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   }
 
   onConfirm = async () => {
-    const { fioWallet, onSubmit, onSuccess, successMessage } = this.props
+    const { fioWallet, onSubmit, onSuccess, successMessage, addressTitles } = this.props
     const { fee } = this.state
     if (!fioWallet) {
-      showError(s.strings.fio_wallet_missing_for_fio_domain)
-      this.setState({ error: s.strings.fio_wallet_missing_for_fio_domain })
+      const msg = addressTitles ? s.strings.fio_wallet_missing_for_fio_address : s.strings.fio_wallet_missing_for_fio_domain
+      showError(msg)
+      this.setState({ error: msg })
       return
     }
 
@@ -86,10 +90,13 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
     try {
       this.setState({ loading: true })
-      if (onSubmit) await onSubmit(fee)
+      let result: { expiration?: string } = {}
+      if (onSubmit) {
+        result = await onSubmit(fee)
+      }
 
       this.setState({ loading: false })
-      if (onSuccess) onSuccess()
+      if (onSuccess) onSuccess(result)
       if (successMessage) showToast(successMessage)
     } catch (e) {
       this.setState({ loading: false })
@@ -123,12 +130,12 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   }
 
   setBalance = async (): Promise<void> => {
-    const { fioWallet } = this.props
+    const { fioWallet, addressTitles } = this.props
     if (fioWallet) {
       const balance = await fioWallet.getBalance()
       this.setState({ balance: this.formatFio(balance) })
     } else {
-      showError(s.strings.fio_wallet_missing_for_fio_domain)
+      showError(addressTitles ? s.strings.fio_wallet_missing_for_fio_address : s.strings.fio_wallet_missing_for_fio_domain)
     }
   }
 
@@ -187,6 +194,10 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
             />
           </View>
         )}
+        <View style={styles.spacer} />
+        <View style={styles.blockPadding}>
+          {!feeLoading && <SecondaryButton onPress={this.props.cancelOperation} disabled={loading || feeLoading} label={s.strings.string_cancel_cap} />}
+        </View>
       </View>
     )
   }
