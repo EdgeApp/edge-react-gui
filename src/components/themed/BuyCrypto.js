@@ -12,7 +12,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox } from './ThemedButtons.js'
 
-const allowedCurrencies = { BTC: true, BCH: true, ETH: true, LTC: true, XRP: true, BSV: true }
+const allowedCurrencies = { BTC: true, BCH: true, ETH: true, LTC: true, BSV: true }
 
 type OwnProps = {
   walletId: string,
