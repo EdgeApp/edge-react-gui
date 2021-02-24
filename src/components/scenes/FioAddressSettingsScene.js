@@ -5,7 +5,7 @@ import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { SEND } from '../../constants/SceneKeys'
+import { FIO_ADDRESS_LIST, SEND } from '../../constants/SceneKeys'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
@@ -16,11 +16,12 @@ import { getDisplayDenomination } from '../../modules/Settings/selectors'
 import { type Dispatch, type RootState } from '../../types/reduxTypes'
 import type { FioAddress } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { showError, showToast } from '../services/AirshipInstance'
+import { ButtonsModal } from '../modals/ButtonsModal'
+import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText'
 import { PrimaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
-import { SEND_ACTION_TYPE } from './SendScene'
 
 type LocalState = {
   showRenew: boolean,
@@ -75,6 +76,24 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
     }
   }
 
+  afterTransferSuccess = async () => {
+    const addressName = `@${this.props.fioAddressName || ''}`
+    // todo: styles for message
+    const transferredMessage = `${addressName} ${s.strings.fio_domain_transferred.toLowerCase()}`
+    await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.fio_domain_transferred}
+        buttons={{
+          ok: { label: s.strings.string_ok_cap }
+        }}
+      >
+        <EdgeText>{transferredMessage}</EdgeText>
+      </ButtonsModal>
+    ))
+    return Actions.popTo(FIO_ADDRESS_LIST)
+  }
+
   getExpiration = (): string => {
     const { fioAddresses, fioAddressName } = this.props
     const fioAddress = fioAddresses.find(({ name }) => fioAddressName === name)
@@ -98,28 +117,50 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
 
   getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet)
 
-  renewAddress = async (fee: number) => {
+  renewAddress = async (renewalFee: number) => {
     const { fioWallet, fioAddressName, isConnected } = this.props
 
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    return renewFioName(fioWallet, fioAddressName, fee)
+    return renewFioName(fioWallet, fioAddressName, renewalFee)
   }
 
   goToTransfer = (params: { fee: number }) => {
-    const { fee } = params
-    if (!fee) {
+    const { fee: transferFee } = params
+    if (!transferFee) {
       showError(s.strings.fio_get_fee_err_msg)
     } else {
       this.cancelOperation()
+
+      const guiMakeSpendInfo = {
+        nativeAmount: '0',
+        publicAddress: '',
+        currencyCode: this.props.fioWallet.currencyInfo.currencyCode,
+        otherParams: {
+          fioAction: 'transferFioAddress',
+          fioParams: { fioAddress: this.props.fioAddressName, newOnwerKey: '', maxFee: transferFee }
+        },
+        onDone: (err, edgeTransaction) => {
+          if (!err) {
+            this.afterTransferSuccess()
+          }
+        }
+      }
+
       Actions[SEND]({
-        amount: fee,
-        actionType: SEND_ACTION_TYPE.fioTransferAddress,
-        walletId: this.props.fioWallet.id,
-        fioAddress: this.props.fioAddressName,
-        fioWallet: this.props.fioWallet
+        guiMakeSpendInfo,
+        selectedWalletId: this.props.fioWallet.id,
+        selectedCurrencyCode: this.props.fioWallet.currencyInfo.currencyCode,
+        lockTilesMap: {
+          wallet: true
+        },
+        hiddenTilesMap: {
+          amount: true,
+          fioAddressSelect: true
+        },
+        infoTiles: [{ label: s.strings.fio_address_to_transfer, value: this.props.fioAddressName }]
       })
     }
   }

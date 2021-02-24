@@ -74,4 +74,3 @@ export const TRANSACTIONS_EXPORT = 'transactionsExport'
 export const WALLET_LIST = 'walletList'
 export const WALLET_LIST_NOT_USED = 'walletList_notused'
 export const WALLET_LIST_SCENE = 'walletListScene' // distinguished as actual scene vs. stack
-export const FIO_TRANSFER_DOMAIN = 'fioTransferDomain'

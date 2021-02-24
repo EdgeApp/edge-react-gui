@@ -75,7 +75,6 @@ import { EditTokenScene } from './scenes/EditTokenScene.js'
 import { FioDomainRegisterScene } from './scenes/FioDomainRegisterScene'
 import { FioDomainRegisterSelectWalletScene } from './scenes/FioDomainRegisterSelectWalletScene'
 import { FioNameConfirmScene } from './scenes/FioNameConfirmScene'
-import { FioTransferDomain } from './scenes/FioTransferDomain.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
@@ -778,19 +777,6 @@ export class MainComponent extends React.Component<Props> {
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
-            />
-          </Stack>
-
-          <Stack key={Constants.FIO_TRANSFER_DOMAIN}>
-            <Scene
-              key={Constants.FIO_TRANSFER_DOMAIN}
-              navTransparent
-              hideTabBar
-              panHandlers={null}
-              component={ifLoggedIn(FioTransferDomain)}
-              renderTitle={<HeaderTitle title={s.strings.title_send} />}
-              renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-              renderRightButton={<HeaderTextButton type="help" />}
             />
           </Stack>
         </Scene>
