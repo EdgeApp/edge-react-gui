@@ -61,7 +61,19 @@ type RouteProps = {
   allowedCurrencyCodes?: string[],
   guiMakeSpendInfo?: GuiMakeSpendInfo,
   selectedWalletId?: string,
-  selectedCurrencyCode?: string
+  selectedCurrencyCode?: string,
+  lockTilesMap?: {
+    address: boolean,
+    wallet: boolean,
+    amount: boolean
+  },
+  hiddenTilesMap?: {
+    address: boolean,
+    fee: boolean,
+    amount: boolean,
+    fioAddressSelect: boolean
+  },
+  infoTiles?: Array<{ label: string, value: string }>
 }
 
 type Props = StateProps & DispatchProps & RouteProps & ThemeProps
@@ -157,9 +169,9 @@ class SendComponent extends React.PureComponent<Props, State> {
       .catch(error => console.log(error))
   }
 
-  handleChangeAddress = async (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => {
-    const { sendConfirmationUpdateTx } = this.props
-    const { spendTargets } = guiMakeSpendInfo
+  handleChangeAddress = async (newGuiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => {
+    const { sendConfirmationUpdateTx, guiMakeSpendInfo } = this.props
+    const { spendTargets } = newGuiMakeSpendInfo
     const recipientAddress = parsedUri ? parsedUri.publicAddress : spendTargets && spendTargets[0].publicAddress ? spendTargets[0].publicAddress : ''
 
     if (parsedUri) {
@@ -170,16 +182,17 @@ class SendComponent extends React.PureComponent<Props, State> {
           nativeAmount
         }
       ]
-      guiMakeSpendInfo = {
+      newGuiMakeSpendInfo = {
+        ...guiMakeSpendInfo,
         spendTargets,
         lockInputs: false,
         metadata: parsedUri.metadata,
         uniqueIdentifier: parsedUri.uniqueIdentifier,
         nativeAmount,
-        ...guiMakeSpendInfo
+        ...newGuiMakeSpendInfo
       }
     }
-    sendConfirmationUpdateTx(guiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
+    sendConfirmationUpdateTx(newGuiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
     this.setState({ recipientAddress })
   }
 
@@ -258,21 +271,21 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderSelectedWallet() {
-    const { lockInputs } = this.props
+    const { lockInputs, lockTilesMap = {} } = this.props
     const { guiWallet, selectedCurrencyCode } = this.state
 
     return (
       <Tile
-        type={lockInputs ? 'static' : 'editable'}
+        type={lockInputs || lockTilesMap.wallet ? 'static' : 'editable'}
         title={`${s.strings.step} 1: ${s.strings.select_wallet}`}
-        onPress={lockInputs ? undefined : this.handleWalletPress}
+        onPress={lockInputs || lockTilesMap.wallet ? undefined : this.handleWalletPress}
         body={`${guiWallet.name} (${selectedCurrencyCode})`}
       />
     )
   }
 
   renderAddressTile() {
-    const { lockInputs } = this.props
+    const { lockInputs, lockTilesMap = {} } = this.props
     const { recipientAddress } = this.state
     const { coreWallet, selectedCurrencyCode } = this.state
 
@@ -285,7 +298,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           currencyCode={selectedCurrencyCode}
           onChangeAddress={this.handleChangeAddress}
           resetSendTransaction={this.resetSendTransaction}
-          lockInputs={lockInputs}
+          lockInputs={lockInputs || lockTilesMap.address}
           ref={ref => (this.addressTile = ref)}
         />
       )
@@ -295,10 +308,10 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAmount() {
-    const { exchangeRates, lockInputs, nativeAmount, settings } = this.props
+    const { exchangeRates, lockInputs, lockTilesMap = {}, hiddenTilesMap = {}, nativeAmount, settings } = this.props
     const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
 
-    if (recipientAddress) {
+    if (recipientAddress && !hiddenTilesMap.amount) {
       let amountSyntax
       const cryptoDenomination = UTILS.getDenomination(selectedCurrencyCode, settings)
       const fiatDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
@@ -313,9 +326,9 @@ class SendComponent extends React.PureComponent<Props, State> {
 
       return (
         <Tile
-          type={lockInputs ? 'static' : 'touchable'}
+          type={lockInputs || lockTilesMap.amount ? 'static' : 'touchable'}
           title={s.strings.fio_request_amount}
-          onPress={lockInputs ? undefined : this.handleFlipinputModal}
+          onPress={lockInputs || lockTilesMap.amount ? undefined : this.handleFlipinputModal}
           body={amountSyntax}
         />
       )
@@ -352,8 +365,10 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderSelectFioAddress() {
+    const { hiddenTilesMap = {} } = this.props
     const { fioSender } = this.state
 
+    if (hiddenTilesMap.fioAddressSelect) return null
     return (
       <View>
         <SelectFioAddress
@@ -365,6 +380,13 @@ class SendComponent extends React.PureComponent<Props, State> {
         />
       </View>
     )
+  }
+
+  renderInfoTiles() {
+    const { infoTiles } = this.props
+
+    if (!infoTiles || !infoTiles.length) return null
+    return infoTiles.map(({ label, value }) => <Tile key={label} type="static" title={label} body={value} />)
   }
 
   // Render
@@ -382,6 +404,7 @@ class SendComponent extends React.PureComponent<Props, State> {
             {this.renderAmount()}
             {this.renderFees()}
             {this.renderSelectFioAddress()}
+            {this.renderInfoTiles()}
           </View>
           <Scene.Footer style={styles.footer}>
             {!!recipientAddress && (
@@ -411,6 +434,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const SendScene = connect(
   (state: RootState): StateProps => {
     const { nativeAmount, transaction, error, pending, guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
+    console.log(guiMakeSpendInfo.otherParams, transaction)
     return {
       account: state.core.account,
       defaultSelectedWalletId: state.ui.wallets.selectedWalletId,
