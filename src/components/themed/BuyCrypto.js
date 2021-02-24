@@ -6,13 +6,14 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
+import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox } from './ThemedButtons.js'
 
-const allowedCurrencies = { BTC: true, BCH: true, ETH: true, LTC: true, BSV: true }
+const allowedCurrencies = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => !!SPECIAL_CURRENCY_INFO[code].displayBuyCrypto)
 
 type OwnProps = {
   walletId: string,
@@ -33,7 +34,7 @@ class BuyCryptoComponent extends React.PureComponent<Props> {
 
     return (
       <>
-        {allowedCurrencies[currencyCode] && (
+        {allowedCurrencies.includes(currencyCode) && (
           <ButtonBox onPress={Actions.pluginBuy} paddingRem={1}>
             <View style={styles.container}>
               <View style={styles.buyCrypto}>
