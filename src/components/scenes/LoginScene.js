@@ -119,10 +119,9 @@ class LoginSceneComponent extends React.Component<Props, State> {
     showHelpModal()
   }
 
-  onLogin = (error: Error | string | null | void, account: EdgeAccount | null | void, touchIdInfo: GuiTouchIdInfo | null | void) => {
-    if (error != null) return
+  onLogin = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | void) => {
     this.setState({ passwordRecoveryKey: undefined })
-    if (account != null) this.props.initializeAccount(account, touchIdInfo ?? dummyTouchIdInfo)
+    this.props.initializeAccount(account, touchIdInfo ?? dummyTouchIdInfo)
   }
 
   render() {
