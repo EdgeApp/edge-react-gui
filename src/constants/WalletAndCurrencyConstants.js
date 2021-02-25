@@ -213,6 +213,9 @@ export const SPECIAL_CURRENCY_INFO: {
   BSV: {
     displayBuyCrypto: true
   },
+  DGB: {
+    displayBuyCrypto: true
+  },
   LTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
