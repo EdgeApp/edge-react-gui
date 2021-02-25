@@ -488,7 +488,7 @@
       "bank"
     ],
     "description": "Fee: 1.5% / Settlement: 5min - 24hours\nDaily Limit: $30000\nMonthly Limit: $500000",
-    "title": "POLi Bank Transfer",
+    "title": "Bank Transfer",
     "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
     "forCountries": [
       "AU"
@@ -496,7 +496,7 @@
     "cryptoCodes": [
       "BTC"
     ],
-    "paymentTypeLogoKey": "poli",
+    "paymentTypeLogoKey": "bank",
     "deepQuery": {
       "sellMode": null,
       "country": "AU",
