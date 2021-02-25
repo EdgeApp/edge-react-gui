@@ -292,7 +292,14 @@ class WalletListModalConnected extends React.Component<Props, State> {
   createAndSelectWallet = async ({ currencyCode, walletType }: CreateWalletType) => {
     try {
       const wallet = await this.createWallet(currencyCode, walletType)
-      this.props.bridge.resolve({ walletId: wallet.id, currencyCode: wallet.currencyInfo.currencyCode })
+      const checkWalletsThenSelect = () => {
+        if (this.props.wallets[wallet.id]) {
+          this.props.bridge.resolve({ walletId: wallet.id, currencyCode: wallet.currencyInfo.currencyCode })
+        } else {
+          setTimeout(checkWalletsThenSelect, 50)
+        }
+      }
+      checkWalletsThenSelect() // To avoid race condition of selecting a wallet that is not yet on the redux state
     } catch (error) {
       showError(error)
     }
