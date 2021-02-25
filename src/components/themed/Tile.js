@@ -2,13 +2,14 @@
 
 import Clipboard from '@react-native-community/clipboard'
 import * as React from 'react'
-import { ActivityIndicator, Animated, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, TouchableWithoutFeedback, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
+import { Fade } from './Fade.js'
 
 type OwnProps = {
   body?: string,
@@ -20,28 +21,14 @@ type OwnProps = {
 }
 type Props = OwnProps & ThemeProps
 
-type LocalState = {
-  animation: any
-}
-
 class TileComponent extends React.PureComponent<Props, LocalState> {
-  state: LocalState = {
-    animation: new Animated.Value(0)
-  }
-
   copy = () => {
     if (!this.props.body) return
     Clipboard.setString(this.props.body)
     showToast(s.strings.fragment_copied)
   }
 
-  expand = ({ nativeEvent }) => {
-    if (nativeEvent.layout.height) Animated.spring(this.state.animation, { toValue: nativeEvent.layout.height }).start()
-  }
-
-  renderContent() {
-
-  }
+  renderContent() {}
 
   render() {
     const { body, title, children, theme, type, error } = this.props
@@ -68,37 +55,30 @@ class TileComponent extends React.PureComponent<Props, LocalState> {
     // 3. Replace children: Remove children -> Add children
     // 4. Spinner: should be shown next to the title and be small. Remove children -> wait for loading -> Add children
     return (
-      <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
+      <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static' || type === 'loading'}>
         <View>
-          <Animated.View style={[styles.animatedContainer, { height: this.state.animation._value ? this.state.animation : 'auto' }]}>
-            <View onLayout={this.expand}>
-              <View style={styles.container}>
-                <View style={styles.content}>
-                  {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
-                  {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
-                  <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
-                  {type === 'loading' ? (
-                    <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
-                  ) : (
-                    <>
-                      {typeof body === 'string' && (
-                        <EdgeText style={styles.textBody} numberOfLines={3} adjustsFontSizeToFit={false}>
-                          {body}
-                        </EdgeText>
-                      )}
-                      {children}
-                    </>
-                  )}
-                </View>
-                {type === 'touchable' && (
-                  <View style={styles.iconContainer}>
-                    <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
-                  </View>
+          <Fade visible>
+            <View style={styles.container}>
+              <View style={styles.content}>
+                {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
+                {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
+                <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
+                {typeof body === 'string' && (
+                  <EdgeText style={styles.textBody} numberOfLines={3} adjustsFontSizeToFit={false}>
+                    {body}
+                  </EdgeText>
                 )}
+                {children}
+                {type === 'loading' && <ActivityIndicator style={[styles.loader, styles.editIcon]} color={theme.iconTappable} size="small" />}
               </View>
+              {type === 'touchable' && (
+                <View style={styles.iconContainer}>
+                  <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
+                </View>
+              )}
             </View>
-          </Animated.View>
-          <View style={styles.divider} />
+            <View style={styles.divider} />
+          </Fade>
         </View>
       </TouchableWithoutFeedback>
     )

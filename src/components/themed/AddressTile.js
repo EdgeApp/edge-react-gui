@@ -20,6 +20,7 @@ import { ScanModal } from '../modals/ScanModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText'
+import { FadeHeight } from './FadeHeight'
 import { Tile } from './Tile.js'
 
 type SpendInfo = {
@@ -258,7 +259,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     return (
       <View>
         <Tile type={tileType} title={title} body={recipientAddress || undefined} onPress={this.handleTilePress}>
-          {!isSetAddress && (
+          <FadeHeight visible={!isSetAddress}>
             <View style={styles.buttonsContainer}>
               <TouchableOpacity style={styles.buttonContainer} onPress={this.handleChangeAddress}>
                 <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
@@ -275,7 +276,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
                 </TouchableOpacity>
               )}
             </View>
-          )}
+          </FadeHeight>
         </Tile>
       </View>
     )
@@ -287,7 +288,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingTop: theme.rem(1),
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    height: theme.rem(5)
   },
   buttonContainer: {
     flex: 1,

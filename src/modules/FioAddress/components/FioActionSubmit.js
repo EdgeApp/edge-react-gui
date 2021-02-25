@@ -10,6 +10,8 @@ import { showError, showToast } from '../../../components/services/AirshipInstan
 import type { Theme, ThemeProps } from '../../../components/services/ThemeContext'
 import { cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
+import { Fade } from '../../../components/themed/Fade'
+import { SecondaryButton } from '../../../components/themed/ThemedButtons'
 import { Tile } from '../../../components/themed/Tile'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings'
@@ -24,10 +26,12 @@ type OwnProps = {
   title?: string,
   successMessage?: string,
   onSubmit?: number => Promise<any>,
-  onSuccess?: () => void,
+  onSuccess?: ({ expiration?: string }) => void,
+  cancelOperation?: () => void,
   goTo?: (params: any) => void,
   getOperationFee: EdgeCurrencyWallet => Promise<number>,
-  fioWallet: EdgeCurrencyWallet
+  fioWallet: EdgeCurrencyWallet,
+  addressTitles?: boolean
 }
 
 export type State = {
@@ -147,14 +151,12 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
     if (feeLoading || !showSlider) return null
 
+    let feeBody = displayFee ? `${displayFee} ${s.strings.fio_address_confirm_screen_fio_label}` : s.strings.fio_address_confirm_screen_free_label
+    feeBody = feeLoading ? '-' : feeBody
     const balanceText = `${balance ? balance.toFixed(2) : '0'} ${balance ? s.strings.fio_address_confirm_screen_fio_label : ''}`
     return (
       <>
-        <Tile
-          type="static"
-          title={s.strings.fio_action_fee_label}
-          body={displayFee ? `${displayFee} ${s.strings.fio_address_confirm_screen_fio_label}` : s.strings.fio_address_confirm_screen_free_label}
-        />
+        <Tile type="static" title={s.strings.fio_action_fee_label} body={feeBody} />
         {displayFee ? (
           <Tile type="static" title={s.strings.fio_address_confirm_screen_balance_label}>
             <EdgeText style={displayFee > balance ? styles.balanceTitleDisabled : styles.balanceTitle}>{balanceText}</EdgeText>
@@ -171,22 +173,32 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
     return (
       <View>
-        {feeLoading && <ActivityIndicator color={theme.iconTappable} style={styles.loader} size="small" />}
         {title ? <EdgeText style={styles.actionTitle}>{title}</EdgeText> : null}
+        {feeLoading && <ActivityIndicator color={theme.iconTappable} style={styles.loader} size="small" />}
         {this.renderFeeAndBalance()}
         <View style={styles.spacer} />
-        {showSlider && (
-          <View style={styles.blockPadding}>
-            <Slider
-              forceUpdateGuiCounter={0}
-              resetSlider={false}
-              onSlidingComplete={this.onConfirm}
-              sliderDisabled={displayFee > balance || loading}
-              showSpinner={loading}
-              disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label}
-            />
-          </View>
-        )}
+        <View style={styles.blockPadding}>
+          {showSlider && (
+            <Fade visible>
+              <Slider
+                forceUpdateGuiCounter={0}
+                resetSlider={false}
+                onSlidingComplete={this.onConfirm}
+                sliderDisabled={displayFee > balance || loading}
+                showSpinner={loading}
+                disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label}
+              />
+            </Fade>
+          )}
+        </View>
+        <View style={styles.spacer} />
+        <View style={styles.blockPadding}>
+          {!feeLoading && (
+            <Fade visible>
+              <SecondaryButton onPress={this.props.cancelOperation} disabled={loading || feeLoading} label={s.strings.string_cancel_cap} />
+            </Fade>
+          )}
+        </View>
       </View>
     )
   }
