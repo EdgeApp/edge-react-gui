@@ -5151,10 +5151,10 @@ edge-core-js@^0.17.24:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.47:
-  version "0.7.47"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.47.tgz#a42b46757ff4591e966008a2cc702c76760463f9"
-  integrity sha512-nBsHkgUd9VRKAUntYo0FNCaUHEYG5CAL7dIXb3EnR6j+N+fV0JH+Aso0sAQzy5cYeod6nsxHA/aiowuPqxMusw==
+edge-currency-accountbased@^0.7.48:
+  version "0.7.48"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.48.tgz#aeca99fdc1901d66afbdafc8765bcda114240743"
+  integrity sha512-NqCqdphS4FfttR/6zE0/F07njF1rnxiNLKoIp9hXIrBL0fJwuFAlL9EaKwo4lW/oZJKxSbqoNDehUXFrpmI/gg==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.2.1"
@@ -10983,16 +10983,6 @@ react-native-localize@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-2.0.2.tgz#b0df6a88cf9947489deaa828c4c29246681fde16"
   integrity sha512-4Ii7lqiD9iL0LxTWifAiEsDcDPpvos/29fEVkHxgEDD7J5f+NROMkFSFomKgz1Cab1TmN5mau3o8yFmYrPFcnw==
-
-react-native-localize@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-2.0.2.tgz#b0df6a88cf9947489deaa828c4c29246681fde16"
-  integrity sha512-4Ii7lqiD9iL0LxTWifAiEsDcDPpvos/29fEVkHxgEDD7J5f+NROMkFSFomKgz1Cab1TmN5mau3o8yFmYrPFcnw==
-
-react-native-mail@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.0.0.tgz#7e8014cccff794098f8de012fc822c57d28f7d72"
-  integrity sha512-aQjCxKmPIwwX+voC2oK5Lj54Gfuvkodhp9lYFpPMxYYCXXtADuuZMsNWN7jSeqVuQHQzJZvYhgRtYqx0UDoKoQ==
 
 react-native-mail@^6.0.0:
   version "6.0.0"

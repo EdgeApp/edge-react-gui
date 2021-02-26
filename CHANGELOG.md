@@ -1,5 +1,45 @@
 # edge-react-gui
 
+## 2.0.4 (2021-02-26)
+
+- Banxa: Add support for selling BTC in Australia
+- MoonPay: Add support for buying DGB
+- Fix transaction searching
+- More themed components
+- Various bug fixes and improvements
+- Upgrade edge-login-ui-rn to v0.7.0
+  - Breaking changes:
+    - Add a native react-native-localize dependency
+    - Remove the unused folder parameter from various touch-related functions:
+      - isTouchEnabled
+      - isTouchDisabled
+      - enableTouchId
+      - disableTouchId
+    - Remove the error parameter from the onLogin callback
+    - Remove the ChooseTestAppScreen component
+    - Upgrade other native dependencies
+  - Other changes:
+    - Add German translation
+    - Flip the background gradient direction
+    - Improve the security alerts screen appearance
+    - Add a new 2fa repair screen component
+- Upgrade edge-core-js to v0.17.24
+  - Fix the parentNetworkFee field missing in certain EdgeTransaction instances
+  - Fix missing transactions while searching
+  - Perform more data validation on network requests
+  - Fix a bug that would prevent login vouchers from working on Airbitz accounts with 2fa turned on
+  - Expose periodic 2fa errors through the context's error event
+  - Add an EdgeAccount.repairOtp method
+- Upgrade edge-currency-accountbased to v0.7.48
+  - FIO: Added transfer address action
+  - ETH: Fix RBF bug: Use correct currencyCode for tx lookup in ethEngine saveTx
+  - ETH: Double estimated gas limits when sending ETH to contract address
+  - EOS: Add dfuse API to getKeyAccounts method
+  - Fix variable typo
+- Upgrade edge-exchange-plugins to v0.11.20
+  - Sideshift: Add order status URL
+  - Sideshift: Throw appropriate error messages instead of relying on cleaners
+
 ## 2.0.3 (2021-02-11)
 
 - Add new DeFi ERC20 tokens
