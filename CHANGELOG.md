@@ -1,6 +1,6 @@
 # edge-react-gui
 
-## 2.0.4 (2021-02-26)
+## 2.0.5 (2021-02-27)
 
 - Banxa: Add support for selling BTC in Australia
 - MoonPay: Add support for buying DGB
@@ -23,7 +23,8 @@
     - Flip the background gradient direction
     - Improve the security alerts screen appearance
     - Add a new 2fa repair screen component
-- Upgrade edge-core-js to v0.17.24
+- Upgrade edge-core-js to v0.17.25
+  - Load all supported currency pairs at launch to improve exchange rate loading speed
   - Fix the parentNetworkFee field missing in certain EdgeTransaction instances
   - Fix missing transactions while searching
   - Perform more data validation on network requests
