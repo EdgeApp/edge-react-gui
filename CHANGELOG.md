@@ -37,9 +37,12 @@
   - ETH: Double estimated gas limits when sending ETH to contract address
   - EOS: Add dfuse API to getKeyAccounts method
   - Fix variable typo
-- Upgrade edge-exchange-plugins to v0.11.20
+- Upgrade edge-exchange-plugins to v0.11.21
   - Sideshift: Add order status URL
   - Sideshift: Throw appropriate error messages instead of relying on cleaners
+  - Coingecko: Add FIO
+  - Bitmax: Remove FIO fallback value
+  - Log issues with API responses as warnings
 
 ## 2.0.3 (2021-02-11)
 
