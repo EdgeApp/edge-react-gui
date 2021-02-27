@@ -24,6 +24,7 @@ Object {
       "isProcessing": false,
       "lobby": null,
     },
+    "otpErrorShown": false,
   },
   "cryptoExchange": Object {
     "calculatingMax": false,

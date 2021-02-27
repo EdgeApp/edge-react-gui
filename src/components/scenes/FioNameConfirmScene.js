@@ -1,7 +1,5 @@
 // @flow
 
-import { bns } from 'biggystring'
-import { Scene } from 'edge-components'
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -10,22 +8,15 @@ import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
+import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { getDisplayDenomination } from '../../modules/Settings/selectors'
-import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import { type RootState } from '../../types/reduxTypes'
-import { getFeeDisplayed, truncateDecimals } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from '../themed/EdgeText'
+import { cacheStyles } from '../services/ThemeContext.js'
 import { Tile } from '../themed/Tile'
-
-export type LocalState = {
-  balance: number | null,
-  sliderDisabled: boolean | false,
-  loading: boolean | false
-}
+import { UnderlinedHeader } from '../themed/UnderlinedHeader'
 
 export type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null,
@@ -40,128 +31,84 @@ export type NavigationProps = {
   ownerPublicKey: string
 }
 
-type Props = NavigationProps & StateProps & ThemeProps
+type Props = NavigationProps & StateProps
 
 const ONE_FREE_ADDRESS_PER_DOMAIN_ERROR = 'ONE_FREE_ADDRESS_PER_DOMAIN_ERROR'
 
-class FioNameConfirm extends React.PureComponent<Props, LocalState> {
-  state: LocalState = {
-    balance: null,
-    sliderDisabled: false,
-    loading: false
-  }
-
-  componentDidMount() {
-    this.setBalance()
-  }
-
+class FioNameConfirm extends React.PureComponent<Props> {
   isFioAddress = () => {
     const { fioName } = this.props
     return fioName.indexOf(Constants.FIO_ADDRESS_DELIMITER) > -1
   }
 
-  toggleButton = () => {
-    const { fee } = this.props
-    const { balance } = this.state
-    if (balance !== null) {
-      if (fee > balance) {
-        this.setState({
-          sliderDisabled: true
-        })
-      }
-    }
-  }
-
-  setBalance = async () => {
-    const { paymentWallet } = this.props
-    try {
-      const balance = await paymentWallet.getBalance()
-
-      if (balance != null) {
-        const newBalance = parseFloat(truncateDecimals(bns.div(balance, this.props.denominationMultiplier, 18), 6))
-        this.setState({
-          balance: newBalance
-        })
-      }
-
-      this.toggleButton()
-    } catch (e) {
-      this.setState({
-        balance: 0
-      })
-    }
+  getFee = async () => {
+    return this.props.fee
   }
 
   saveFioName = async () => {
     const { isConnected, fioName, paymentWallet, fioPlugin, ownerPublicKey, fee } = this.props
     if (!isConnected) {
-      showError(s.strings.fio_network_alert_text)
-      return
+      throw new Error(s.strings.fio_network_alert_text)
     }
-
-    this.setState({ loading: true })
 
     if (!fee) {
       if (this.isFioAddress()) {
-        try {
-          if (!fioPlugin) {
-            throw new Error(s.strings.fio_register_address_err_msg)
-          }
-          const response = await fioPlugin.otherMethods.buyAddressRequest(
-            {
-              address: fioName,
-              referralCode: fioPlugin.currencyInfo.defaultSettings.defaultRef,
-              publicKey: ownerPublicKey
-            },
-            true
-          )
-          if (response.error) {
-            if (response.errorCode && response.errorCode === ONE_FREE_ADDRESS_PER_DOMAIN_ERROR && response.code === 400) {
-              const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.fallbackRef)
-              const domainExists = publicDomains.find(domain => domain.domain === fioName.split(Constants.FIO_ADDRESS_DELIMITER)[1])
-              if (domainExists && !domainExists.free) {
-                await Airship.show(bridge => (
-                  <ButtonsModal
-                    bridge={bridge}
-                    title={s.strings.fio_address_register_pay_title}
-                    message={s.strings.fio_address_register_pay}
-                    buttons={{
-                      ok: { label: s.strings.string_ok_cap }
-                    }}
-                  />
-                ))
-                return Actions[Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET]({
-                  fioAddress: fioName,
-                  selectedWallet: paymentWallet,
-                  selectedDomain: {
-                    name: domainExists.domain,
-                    expiration: new Date().toDateString(),
-                    isPublic: true,
-                    walletId: '',
-                    isFree: domainExists.free
-                  },
-                  isFallback: true
-                })
-              }
-            }
-            throw new Error(response.error)
-          }
-
-          await Airship.show(bridge => (
-            <ButtonsModal
-              bridge={bridge}
-              title={`${s.strings.fio_address_register_form_field_label} ${s.strings.fragment_wallet_unconfirmed}`}
-              message={s.strings.fio_address_register_pending_free}
-              buttons={{
-                ok: { label: s.strings.string_ok_cap }
-              }}
-            />
-          ))
-          Actions[Constants.WALLET_LIST]()
-        } catch (e) {
-          showError(e)
+        if (!fioPlugin) {
+          throw new Error(s.strings.fio_register_address_err_msg)
         }
+        const response = await fioPlugin.otherMethods.buyAddressRequest(
+          {
+            address: fioName,
+            referralCode: fioPlugin.currencyInfo.defaultSettings.defaultRef,
+            publicKey: ownerPublicKey
+          },
+          true
+        )
+        if (response.error) {
+          if (response.errorCode && response.errorCode === ONE_FREE_ADDRESS_PER_DOMAIN_ERROR && response.code === 400) {
+            const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.fallbackRef)
+            const domainExists = publicDomains.find(domain => domain.domain === fioName.split(Constants.FIO_ADDRESS_DELIMITER)[1])
+            if (domainExists && !domainExists.free) {
+              await Airship.show(bridge => (
+                <ButtonsModal
+                  bridge={bridge}
+                  title={s.strings.fio_address_register_pay_title}
+                  message={s.strings.fio_address_register_pay}
+                  buttons={{
+                    ok: { label: s.strings.string_ok_cap }
+                  }}
+                />
+              ))
+              return Actions[Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET]({
+                fioAddress: fioName,
+                selectedWallet: paymentWallet,
+                selectedDomain: {
+                  name: domainExists.domain,
+                  expiration: new Date().toDateString(),
+                  isPublic: true,
+                  walletId: '',
+                  isFree: domainExists.free
+                },
+                isFallback: true
+              })
+            }
+          }
+          throw new Error(response.error)
+        }
+
+        await Airship.show(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            title={`${s.strings.fio_address_register_form_field_label} ${s.strings.fragment_wallet_unconfirmed}`}
+            message={s.strings.fio_address_register_pending_free}
+            buttons={{
+              ok: { label: s.strings.string_ok_cap }
+            }}
+          />
+        ))
+        Actions[Constants.WALLET_LIST]()
       } else {
+        // no free domains
         showError(s.strings.fio_get_fee_err_msg)
       }
     } else {
@@ -181,69 +128,34 @@ class FioNameConfirm extends React.PureComponent<Props, LocalState> {
         showError(s.strings.fio_register_address_err_msg)
       }
     }
-    this.setState({ loading: false })
   }
 
   render() {
-    const { fioName, fee, theme } = this.props
-    const { balance, loading } = this.state
-    const styles = getStyles(theme)
+    const { fioName, paymentWallet } = this.props
+    const styles = getStyles()
 
-    const balanceText = `${balance ? balance.toFixed(2) : '0'} ${balance ? s.strings.fio_address_confirm_screen_fio_label : ''}`
     return (
       <SceneWrapper background="theme">
         <View style={styles.scene}>
+          <UnderlinedHeader title={this.isFioAddress() ? s.strings.title_fio_address_confirmation : s.strings.title_register_fio_domain} />
           <Tile
             type="static"
             title={this.isFioAddress() ? s.strings.fio_address_confirm_screen_label : s.strings.fio_domain_label}
             body={this.isFioAddress() ? fioName : `${Constants.FIO_ADDRESS_DELIMITER}${fioName}`}
           />
-          <Tile
-            type="static"
-            title={s.strings.fio_address_confirm_screen_registration_label}
-            body={`${fee ? getFeeDisplayed(fee) : s.strings.fio_domain_free} ${balance && fee ? s.strings.fio_address_confirm_screen_fio_label : ''}`}
-          />
-          {fee ? (
-            <Tile type="static" title={s.strings.fio_address_confirm_screen_balance_label}>
-              <EdgeText style={balance && fee <= balance ? styles.text : styles.textDisabled}>{balanceText}</EdgeText>
-            </Tile>
-          ) : null}
-          <View style={styles.blockPadding}>
-            <Scene.Footer>
-              <Slider
-                resetSlider={false}
-                onSlidingComplete={this.saveFioName}
-                sliderDisabled={(!balance && !!fee) || (balance !== null && fee > balance) || loading}
-                showSpinner={loading}
-                disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label}
-              />
-            </Scene.Footer>
-          </View>
+          <FioActionSubmit onSubmit={this.saveFioName} getOperationFee={this.getFee} fioWallet={paymentWallet} />
         </View>
       </SceneWrapper>
     )
   }
 }
 
-const getStyles = cacheStyles((theme: Theme) => ({
+const getStyles = cacheStyles(() => ({
   scene: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'stretch'
-  },
-  text: {
-    color: theme.primaryText,
-    margin: theme.rem(0.25)
-  },
-  textDisabled: {
-    color: theme.dangerText,
-    margin: theme.rem(0.25)
-  },
-  blockPadding: {
-    paddingTop: theme.rem(4),
-    paddingLeft: theme.rem(1.25),
-    paddingRight: theme.rem(1.25)
   }
 }))
 
@@ -257,5 +169,5 @@ const FioNameConfirmScene = connect((state: RootState) => {
     denominationMultiplier: displayDenomination.multiplier,
     isConnected: state.network.isConnected
   }
-}, {})(withTheme(FioNameConfirm))
+}, {})(FioNameConfirm)
 export { FioNameConfirmScene }

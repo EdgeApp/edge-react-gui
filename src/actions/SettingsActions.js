@@ -1,6 +1,5 @@
 // @flow
 
-import { downgradeDisklet } from 'disklet'
 import { createInputModal, createSecureTextModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
@@ -133,14 +132,12 @@ export const setDenominationKeyRequest = (currencyCode: string, denominationKey:
 
 // touch id interaction
 export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const folder = downgradeDisklet(state.core.disklet)
   // dispatch the update for the new state for
   dispatch(SETTINGS_ACTIONS.updateTouchIdEnabled(arg))
   if (arg) {
-    enableTouchId(folder, account)
+    enableTouchId(account)
   } else {
-    disableTouchId(folder, account)
+    disableTouchId(account)
   }
 }
 
@@ -272,6 +269,7 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
 }
 
 export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
   try {
     const input = {
       label: s.strings.settings_modal_text_entry_notes,
@@ -307,8 +305,12 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
     })
     const notes = await launchModal(unlockSettingsModal)
     if (notes || notes === '') {
-      await showActivity(s.strings.settings_modal_send_logs_loading, dispatch(sendLogs(notes)))
-      showToast(s.strings.settings_modal_send_logs_success)
+      if (state.network.isConnected) {
+        await showActivity(s.strings.settings_modal_send_logs_loading, dispatch(sendLogs(notes)))
+        showToast(s.strings.settings_modal_send_logs_success)
+      } else {
+        showError(`${s.strings.network_alert_title}`)
+      }
     }
   } catch (error) {
     showError(error)

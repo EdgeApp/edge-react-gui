@@ -215,19 +215,11 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openAccelerateModel = () => {
-    const { edgeTransaction, walletDefaultDenomProps, guiWallet } = this.props
+    const { edgeTransaction } = this.props
     const { wallet } = edgeTransaction
 
     if (wallet) {
-      Airship.show(bridge => (
-        <TransactionAccelerateModal
-          bridge={bridge}
-          edgeTransaction={edgeTransaction}
-          walletDefaultDenomProps={walletDefaultDenomProps}
-          guiWallet={guiWallet}
-          wallet={wallet}
-        />
-      ))
+      Airship.show(bridge => <TransactionAccelerateModal bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} />)
     } else {
       showError(new Error('Transaction is missing wallet data.'))
     }
@@ -611,6 +603,10 @@ export const TransactionDetailsScene = connect(
     const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, parseFloat(cryptoAmount))
 
     const { swapData } = edgeTransaction
+    if (swapData != null && typeof swapData.payoutCurrencyCode === 'string') {
+      swapData.payoutCurrencyCode = swapData.payoutCurrencyCode.toUpperCase()
+    }
+
     const destinationDenomination = swapData ? getDisplayDenomination(state, swapData.payoutCurrencyCode) : undefined
     const destinationWallet = swapData ? getWallet(state, swapData.payoutWalletId) : undefined
 

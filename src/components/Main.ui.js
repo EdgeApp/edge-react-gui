@@ -80,9 +80,10 @@ import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
 import { NotificationScene } from './scenes/NotificationScene'
+import { OtpRepairScene } from './scenes/OtpRepairScene.js'
 import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
 import { ChangeRecoveryScene } from './scenes/PasswordRecoveryScene.js'
-import { SecurityAlertsScene } from './scenes/SecurityAlertsScene'
+import { SecurityAlertsScene } from './scenes/SecurityAlertsScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
@@ -399,6 +400,8 @@ export class MainComponent extends React.Component<Props> {
                 hideTabBar
                 component={ifLoggedIn(CryptoExchangeQuoteProcessingScreenComponent)}
                 renderTitle={<HeaderTitle title={s.strings.title_exchange} />}
+                renderLeftButton={this.renderEmptyButton()}
+                renderRightButton={this.renderEmptyButton()}
               />
               <Scene
                 key={Constants.EXCHANGE_QUOTE_SCENE}
@@ -453,6 +456,10 @@ export class MainComponent extends React.Component<Props> {
               renderTitle={<HeaderTitle title={s.strings.title_password_recovery} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
             />
+          </Stack>
+
+          <Stack key={Constants.OTP_REPAIR_SCENE} hideNavBar>
+            <Scene key={Constants.OTP_REPAIR_SCENE} navTransparent component={ifLoggedIn(OtpRepairScene)} />
           </Stack>
 
           <Stack key={Constants.SECURITY_ALERTS_SCENE} hideNavBar>
@@ -674,7 +681,6 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.FIO_DOMAIN_CONFIRM}
               navTransparent
               component={ifLoggedIn(FioNameConfirmScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
@@ -686,7 +692,6 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.FIO_NAME_CONFIRM}
               navTransparent
               component={ifLoggedIn(FioNameConfirmScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}

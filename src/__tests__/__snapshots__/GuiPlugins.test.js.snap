@@ -134,6 +134,7 @@ Monthly Limit: $47000",
       "BCH",
       "ETH",
       "DAI",
+      "DGB",
       "LTC",
       "EOS",
       "XLM",
@@ -149,7 +150,7 @@ Monthly Limit: $47000",
     "deepPath": "",
     "deepQuery": Object {},
     "description": "Fee: 6.5% / Settlement: 10 minutes
-Daily Limit: $10800
+Daily Limit: $5500
 Monthly Limit: $54000",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
     "paymentTypeLogoKey": "credit",
@@ -210,6 +211,7 @@ Monthly Limit: $47000",
       "BCH",
       "ETH",
       "DAI",
+      "DGB",
       "LTC",
       "EOS",
       "XLM",
@@ -225,7 +227,7 @@ Monthly Limit: $47000",
     "deepPath": "",
     "deepQuery": Object {},
     "description": "Fee: 6.5% / Settlement: 10 minutes
-Daily Limit: $10800
+Daily Limit: $5500
 Monthly Limit: $54000",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
     "paymentTypeLogoKey": "applepay",

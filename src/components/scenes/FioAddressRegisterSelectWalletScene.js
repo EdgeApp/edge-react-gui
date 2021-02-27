@@ -50,6 +50,7 @@ type LocalState = {
   supportedCurrencies: { [currencyCode: string]: boolean },
   paymentInfo: { [currencyCode: string]: { amount: string, address: string } },
   activationCost: number,
+  feeValue: number,
   paymentWallet?: {
     id: string,
     currencyCode: string
@@ -63,6 +64,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
   state: LocalState = {
     loading: false,
     activationCost: 40,
+    feeValue: 0,
     supportedCurrencies: {},
     paymentInfo: {}
   }
@@ -76,7 +78,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
 
     if (this.props.fioPlugin) {
       try {
-        const { activationCost, supportedCurrencies, paymentInfo } = await getRegInfo(
+        const { activationCost, feeValue, supportedCurrencies, paymentInfo } = await getRegInfo(
           this.props.fioPlugin,
           this.props.fioAddress,
           this.props.selectedWallet,
@@ -84,7 +86,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
           this.props.fioDisplayDenomination,
           this.props.isFallback
         )
-        this.setState({ activationCost, supportedCurrencies, paymentInfo })
+        this.setState({ activationCost, feeValue, supportedCurrencies, paymentInfo })
       } catch (e) {
         showError(e)
         this.setState({ errorMessage: e.message })
@@ -135,7 +137,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
 
   proceed = async (walletId: string, paymentCurrencyCode: string) => {
     const { isConnected, selectedWallet, fioAddress, state } = this.props
-    const { activationCost, paymentInfo: allPaymentInfo } = this.state
+    const { feeValue, paymentInfo: allPaymentInfo } = this.state
 
     if (isConnected) {
       if (paymentCurrencyCode === Constants.FIO_STR) {
@@ -144,7 +146,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
         Actions[Constants.FIO_NAME_CONFIRM]({
           fioName: fioAddress,
           paymentWallet,
-          fee: activationCost,
+          fee: feeValue,
           ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
         })
       } else {

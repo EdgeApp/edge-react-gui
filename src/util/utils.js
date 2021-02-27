@@ -313,8 +313,8 @@ export function precisionAdjust(params: PrecisionAdjustParams): number {
   const order = Math.floor(Math.log(params.exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
   const exchangeRateOrderOfMagnitude = Math.pow(10, order)
 
-  // Get the exchange rate in pennies
-  const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), params.secondaryExchangeMultiplier)
+  // Get the exchange rate in tenth of pennies
+  const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), bns.mul(params.secondaryExchangeMultiplier, '10'))
 
   const precisionAdjust = bns.div(exchangeRateString, params.primaryExchangeMultiplier, DIVIDE_PRECISION)
 
@@ -604,10 +604,31 @@ export function debounce(func: Function, wait: number, immediate: boolean): any 
   }
 }
 
-export function getDenomination(currencyCode: string, settings: Object): EdgeDenomination {
-  const denominationMultiplier = settings[currencyCode].denomination
-  const denomination = settings[currencyCode].denominations.find(denomination => denomination.multiplier === denominationMultiplier)
-  return denomination || emptyEdgeDenomination
+export function getCustomTokenDenomination(currencyCode: string, settings: Object) {
+  const customTokenCurrencyInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
+  return customTokenCurrencyInfo ? customTokenCurrencyInfo.denominations[0] : emptyEdgeDenomination
+}
+
+export function getDisplayDenomination(currencyCode: string, settings: Object): EdgeDenomination {
+  const currencyInfo = settings[currencyCode]
+  if (currencyInfo) {
+    const denominationMultiplier = currencyInfo.denomination
+    const denomination = currencyInfo.denominations.find(denomination => denomination.multiplier === denominationMultiplier)
+    return denomination || emptyEdgeDenomination
+  }
+  return getCustomTokenDenomination(currencyCode, settings)
+}
+
+export function getExchangeDenomination(guiWallet: GuiWallet, currencyCode: string, settings: Object): EdgeDenomination {
+  const currencyExchangeInfo = guiWallet.allDenominations[currencyCode]
+  if (currencyExchangeInfo) {
+    for (const key in currencyExchangeInfo) {
+      if (currencyExchangeInfo[key] && currencyExchangeInfo[key].name === currencyCode) {
+        return currencyExchangeInfo[key]
+      }
+    }
+  }
+  return getCustomTokenDenomination(currencyCode, settings)
 }
 
 export function getDefaultDenomination(currencyCode: string, settings: Object): EdgeDenomination {
@@ -631,4 +652,9 @@ export function alphabeticalSort(itemA: string, itemB: string): number {
   } else {
     return 0
   }
+}
+
+export function maxPrimaryCurrencyConversionDecimals(primaryPrecision: number, precisionAdjustValue: number): number {
+  const newPrimaryPrecision = primaryPrecision - precisionAdjustValue
+  return newPrimaryPrecision >= 0 ? newPrimaryPrecision : 0
 }

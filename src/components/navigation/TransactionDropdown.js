@@ -84,7 +84,7 @@ const ConnectedTransactionDropdown = connect(
     const displayAmount = convertNativeToDisplay(multiplier)(nativeAmount)
 
     return {
-      message: sprintf(s.strings.bitcoin_received, `${symbol || name} ${displayAmount}`)
+      message: sprintf(s.strings.bitcoin_received, `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`)
     }
   },
   (dispatch: Dispatch) => ({})

@@ -342,9 +342,17 @@ async function createCustomWallets(account: EdgeAccount, fiatCurrencyCode: strin
  */
 async function createDefaultWallets(account: EdgeAccount, fiatCurrencyCode: string, dispatch: Dispatch) {
   // TODO: Run these in parallel once the Core has safer locking:
-  await safeCreateWallet(account, 'wallet:bitcoin', s.strings.string_first_bitcoin_wallet_name, fiatCurrencyCode, dispatch)
-  await safeCreateWallet(account, 'wallet:bitcoincash', s.strings.string_first_bitcoincash_wallet_name, fiatCurrencyCode, dispatch)
-  await safeCreateWallet(account, 'wallet:ethereum', s.strings.string_first_ethereum_wallet_name, fiatCurrencyCode, dispatch)
+  if (!account.allKeys.find(({ type }) => type === 'wallet:bitcoin')) {
+    await safeCreateWallet(account, 'wallet:bitcoin', s.strings.string_first_bitcoin_wallet_name, fiatCurrencyCode, dispatch)
+  }
+
+  if (!account.allKeys.find(({ type }) => type === 'wallet:bitcoincash')) {
+    await safeCreateWallet(account, 'wallet:bitcoincash', s.strings.string_first_bitcoincash_wallet_name, fiatCurrencyCode, dispatch)
+  }
+
+  if (!account.allKeys.find(({ type }) => type === 'wallet:ethereum')) {
+    await safeCreateWallet(account, 'wallet:ethereum', s.strings.string_first_ethereum_wallet_name, fiatCurrencyCode, dispatch)
+  }
 
   dispatch(trackAccountEvent('SignupWalletsCreated'))
 }

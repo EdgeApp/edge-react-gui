@@ -90,8 +90,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   renewDomain = async (fee: number) => {
     const { fioWallet, fioDomainName, isConnected } = this.props
     if (!isConnected) {
-      showError(s.strings.fio_network_alert_text)
-      return
+      throw new Error(s.strings.fio_network_alert_text)
     }
 
     await renewFioName(fioWallet, fioDomainName, fee, true)

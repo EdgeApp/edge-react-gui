@@ -95,7 +95,7 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
       const feeString = localizedFeeText[feeKey] || feeKey
       feeRows.push(
         <View key={feeKey} style={styles.feesRow}>
-          <EdgeText style={styles.feesRowText}>{feeString}</EdgeText>
+          <EdgeText style={styles.feesRowText}>{feeString + ' '}</EdgeText>
           <EdgeText style={styles.feesRowText}>{fees[feeKey]}</EdgeText>
         </View>
       )

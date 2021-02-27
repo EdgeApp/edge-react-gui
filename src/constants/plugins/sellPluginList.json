@@ -481,6 +481,28 @@
       "country": "US"
     }
   },
+  {
+    "id": "banxa.bank",
+    "pluginId": "banxa",
+    "paymentTypes": [
+      "bank"
+    ],
+    "description": "Fee: 1.5% / Settlement: 5min - 24hours\nDaily Limit: $30000\nMonthly Limit: $500000",
+    "title": "Bank Transfer",
+    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
+    "forCountries": [
+      "AU"
+    ],
+    "cryptoCodes": [
+      "BTC"
+    ],
+    "paymentTypeLogoKey": "bank",
+    "deepQuery": {
+      "sellMode": null,
+      "country": "AU",
+      "payment_id": "5006"
+    }
+  },
   "----- Sorting -----",
   {
     "id": "simplex",
@@ -509,6 +531,10 @@
   {
     "id": "bitaccess",
     "sortIndex": 4.5
+  },
+  {
+    "id": "banxa.bank",
+    "sortIndex": 2
   },
   "----- iOS specifics -----",
   "----- Country Specifics -----",

@@ -1,5 +1,6 @@
 // @flow
 /* globals describe test expect */
+import { bns } from 'biggystring'
 
 import { sanitizeDecimalAmount } from '../modules/UI/components/FlipInput/FlipInput2.ui.js'
 import {
@@ -9,6 +10,7 @@ import {
   convertNativeToDisplay,
   convertNativeToExchange,
   daysBetween,
+  getDisplayDenomination,
   getNewArrayWithItem,
   getNewArrayWithoutItem,
   getObjectDiff,
@@ -17,10 +19,13 @@ import {
   isTooFarAhead,
   isTooFarBehind,
   isValidInput,
+  maxPrimaryCurrencyConversionDecimals,
   mergeTokens,
   MILLISECONDS_PER_DAY,
+  precisionAdjust,
   truncateDecimals
 } from '../util/utils.js'
+import fixtures from './fixtures.json'
 
 describe('isValidInput', function () {
   describe('when input is valid', function () {
@@ -658,5 +663,33 @@ describe('Sanitize Decimal Amount', function () {
     const input = '123.456.789'
     const expected = '123.45'
     expect(sanitizeDecimalAmount(input, maxEntryDecimals)).toBe(expected)
+  })
+})
+
+describe('precisionAdjust', function () {
+  const tests = fixtures.precisionAdjust
+
+  for (const key in tests) {
+    const { input, output } = tests[key]
+    const { displayDenominationMultiplier, primaryExchangeMultiplier, secondaryExchangeMultiplier, exchangeSecondaryToPrimaryRatio } = input
+
+    test(key, function () {
+      const precisionAdjustmentValue = precisionAdjust({ primaryExchangeMultiplier, secondaryExchangeMultiplier, exchangeSecondaryToPrimaryRatio })
+      expect(precisionAdjustmentValue).toBe(output.precisionAdjustmentValue)
+      expect(maxPrimaryCurrencyConversionDecimals(bns.log10(displayDenominationMultiplier), precisionAdjustmentValue)).toBe(
+        output.maxPrimaryCurrencyConversionDecimals
+      )
+    })
+  }
+})
+
+describe('getDisplayDenomination', function () {
+  const tests = fixtures.getDisplayDenomination
+  const { title, input, output } = tests
+
+  input.forEach((currency, index) => {
+    test(`${title} ${currency}`, function () {
+      expect(getDisplayDenomination(currency, fixtures.settings)).toMatchObject(output[index])
+    })
   })
 })
