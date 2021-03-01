@@ -75,7 +75,10 @@ device: ${getBrand()} ${getDeviceId()}
 
   return LOGGER.log('SENDING LOGS WITH MESSAGE: ' + text)
     .then(() => LOGGER.readLogs())
-    .then(logs => LOGS_API.sendLogs((logOutput.data += logs || '')))
+    .then(logs => {
+      logOutput.data += logs || ''
+      return LOGS_API.sendLogs(logOutput)
+    })
     .catch(e => {
       throw new Error(`${s.strings.settings_modal_send_logs_failure} code ${e.message}`)
     })
