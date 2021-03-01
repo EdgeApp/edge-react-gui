@@ -1,5 +1,15 @@
 # edge-react-gui
 
+## 2.0.6 (2021-03-01)
+
+- Fix an issue with password recovery
+- Update plugin list sorting
+- Upgrade edge-core-js to v0.17.26
+  - Fix the `EdgeContext.listRecoveryQuestionChoices` method.
+    - Fix the runtime data validation to accept the actual server return values.
+    - The return type of `Promise<string[]>` has always been incorrect, so the correct return type is now `Promise<EdgeRecoveryQuestionChoice[]>`.
+    - As a stop-gap measure, though the return-type definitions is now `any`. We will insert the correct return type definition in the next breaking release.
+
 ## 2.0.5 (2021-02-27)
 
 - Banxa: Add support for selling BTC in Australia
