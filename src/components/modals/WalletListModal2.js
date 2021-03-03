@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 
+import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { WalletList } from '../themed/WalletList.js'
 import { type AirshipBridge } from './modalParts.js'
@@ -35,10 +36,12 @@ class WalletListMenuModalComponent extends React.PureComponent<Props, State> {
   onSearchFilterChange = (search: string) => this.setState({ search })
   handleOnPress = (walletId: string, currencyCode: string) => this.props.bridge.resolve({ walletId, currencyCode })
   render() {
-    const { bridge } = this.props
+    const { bridge, headerTitle } = this.props
     return (
       <ThemedModal bridge={bridge} onCancel={() => bridge.resolve({})}>
+        <ModalTitle>{headerTitle}</ModalTitle>
         <WalletList onPress={this.handleOnPress} searchText="" searching={false} isModal />
+        <ModalCloseArrow onPress={() => bridge.resolve({})} />
       </ThemedModal>
     )
   }
