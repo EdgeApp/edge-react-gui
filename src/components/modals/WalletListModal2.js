@@ -2,6 +2,8 @@
 
 import * as React from 'react'
 
+import s from '../../locales/strings.js'
+import { EdgeTextFieldOutlined } from '../themed/EdgeTextField.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { WalletList } from '../themed/WalletList.js'
@@ -22,25 +24,49 @@ type OwnProps = {
 }
 
 type State = {
-  search: string
+  search: string,
+  searching: boolean
 }
 
 type Props = OwnProps
 
 class WalletListMenuModalComponent extends React.PureComponent<Props, State> {
+  textInput = React.createRef()
+
   constructor(props: Props) {
     super(props)
-    this.state = { search: '' }
+    this.state = { search: '', searching: false }
   }
 
-  onSearchFilterChange = (search: string) => this.setState({ search })
   handleOnPress = (walletId: string, currencyCode: string) => this.props.bridge.resolve({ walletId, currencyCode })
+
+  handleChangeSearchInput = (search: string) => this.setState({ search })
+
+  handleTextFieldFocus = () => this.setState({ searching: true })
+
+  handleTextFieldBlur = () => this.setState({ searching: false })
+
+  handleClearText = () => this.setState({ search: '' })
+
   render() {
     const { bridge, headerTitle } = this.props
+    const { search, searching } = this.state
     return (
       <ThemedModal bridge={bridge} onCancel={() => bridge.resolve({})}>
         <ModalTitle>{headerTitle}</ModalTitle>
-        <WalletList onPress={this.handleOnPress} searchText="" searching={false} isModal />
+        <EdgeTextFieldOutlined
+          returnKeyType="search"
+          label={s.strings.search_wallets}
+          onChangeText={this.handleChangeSearchInput}
+          onFocus={this.handleTextFieldFocus}
+          onBlur={this.handleTextFieldBlur}
+          ref={this.textInput}
+          isClearable={searching}
+          onClear={this.handleClearText}
+          value={search}
+          marginRem={0}
+        />
+        <WalletList onPress={this.handleOnPress} searchText={search} searching={searching} isModal />
         <ModalCloseArrow onPress={() => bridge.resolve({})} />
       </ThemedModal>
     )
