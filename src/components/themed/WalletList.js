@@ -45,6 +45,7 @@ type OwnProps = {
   footer?: React.Node,
   searching: boolean,
   searchText: string,
+  excludeWalletIds?: string[],
   activateSearch?: () => void,
   showSlidingTutorial?: boolean,
   isModal?: boolean,
@@ -118,11 +119,14 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   getWalletList(activeWalletIds: string[], wallets: { [walletId: string]: GuiWallet }): WalletListItem[] {
-    const { searching, searchText } = this.props
+    const { excludeWalletIds, searching, searchText } = this.props
     const walletList = []
 
     for (const walletId of activeWalletIds) {
       const wallet = wallets[walletId]
+
+      if (excludeWalletIds && excludeWalletIds.length > 0 && excludeWalletIds.find(excludeWalletId => excludeWalletId === walletId)) continue // Skip if excluded
+
       if (wallet == null && !searching) {
         walletList.push({
           id: walletId,
