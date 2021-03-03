@@ -37,7 +37,9 @@ type Props = {
   walletId: string,
   walletName: string,
   swipeRef: ?React.ElementRef<typeof SwipeRow>,
-  swipeRow?: SwipeRow
+  swipeRow?: SwipeRow,
+  isModal?: boolean,
+  onPress?: (walletId: string, currencyCode: string) => void
 }
 
 type State = {
@@ -120,8 +122,12 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
     }
   }
 
-  render() {
-    const { swipeDirection } = this.state
+  handleOnPress = () => {
+    const { currencyCode, onPress, walletId } = this.props
+    return onPress ? onPress(walletId, currencyCode) : undefined
+  }
+
+  renderRow = () => {
     const {
       currencyCode,
       cryptoAmount,
@@ -131,10 +137,47 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
       exchangeRateFiatSymbol,
       fiatBalance,
       fiatBalanceSymbol,
+      isModal,
+      onPress,
       theme,
       walletId,
       walletName
     } = this.props
+    const styles = getStyles(theme)
+    const handlePress = onPress ? this.handleOnPress : this.handleSelectWallet
+    const handleLongPress = isModal ? onPress : this.handleOpenWalletListMenuModal
+
+    return (
+      <TouchableOpacity onPress={handlePress} onLongPress={handleLongPress}>
+        <View style={styles.rowContainer}>
+          <View style={styles.iconContainer}>
+            <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} />
+          </View>
+          <View style={styles.detailsContainer}>
+            <View style={styles.detailsRow}>
+              <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
+              {!isModal ? (
+                <EdgeText style={[styles.exchangeRate, { color: differencePercentageStyle }]}>
+                  {exchangeRateFiatSymbol + exchangeRate + '  ' + differencePercentage}
+                </EdgeText>
+              ) : (
+                <View style={{ flex: 1 }} />
+              )}
+              <EdgeText style={styles.detailsValue}>{cryptoAmount}</EdgeText>
+            </View>
+            <View style={styles.detailsRow}>
+              <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
+              <EdgeText style={styles.detailsFiat}>{fiatBalanceSymbol + fiatBalance}</EdgeText>
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
+  render() {
+    const { swipeDirection } = this.state
+    const { isModal, theme } = this.props
     const styles = getStyles(theme)
     const isSwipingLeft = swipeDirection === 'left'
     const isSwipingRight = swipeDirection === 'right'
@@ -155,6 +198,8 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
         onRightActionStatusChange={this.handleOpenSend}
         directionalDistanceChangeThreshold={5}
         useNativeDriver
+        disableLeftSwipe={isModal}
+        disableRightSwipe={isModal}
       >
         <HiddenMenuButtons
           left={{
@@ -193,28 +238,7 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
           isSwipingLeft={isSwipingLeft}
           swipeDirection={swipeDirection}
         />
-        <Gradient style={styles.container}>
-          <TouchableOpacity onPress={this.handleSelectWallet} onLongPress={this.handleOpenWalletListMenuModal}>
-            <View style={styles.rowContainer}>
-              <View style={styles.iconContainer}>
-                <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} />
-              </View>
-              <View style={styles.detailsContainer}>
-                <View style={styles.detailsRow}>
-                  <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
-                  <EdgeText style={[styles.exchangeRate, { color: differencePercentageStyle }]}>
-                    {exchangeRateFiatSymbol + exchangeRate + '  ' + differencePercentage}
-                  </EdgeText>
-                  <EdgeText style={styles.detailsValue}>{cryptoAmount}</EdgeText>
-                </View>
-                <View style={styles.detailsRow}>
-                  <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
-                  <EdgeText style={styles.detailsFiat}>{fiatBalanceSymbol + fiatBalance}</EdgeText>
-                </View>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </Gradient>
+        {isModal ? <View style={styles.containerModal}>{this.renderRow()}</View> : <Gradient style={styles.container}>{this.renderRow()}</Gradient>}
       </SwipeRow>
     )
   }
@@ -224,6 +248,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
     paddingHorizontal: theme.rem(1)
+  },
+  containerModal: {
+    backgroundColor: theme.modal
   },
   rowContainer: {
     flex: 1,
