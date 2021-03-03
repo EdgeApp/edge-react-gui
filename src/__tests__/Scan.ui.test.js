@@ -10,7 +10,7 @@ describe('Scan component', () => {
   it('should render with DENIED props', () => {
     const renderer = new ShallowRenderer()
     const props = {
-      cameraPermission: 'denied',
+      cameraPermission: 'blocked',
       torchEnabled: false,
       scanEnabled: false,
       showToWalletModal: false,
@@ -34,7 +34,7 @@ describe('Scan component', () => {
   it('should render with AUTHORIZED props', () => {
     const renderer = new ShallowRenderer()
     const props = {
-      cameraPermission: 'authorized',
+      cameraPermission: 'granted',
       torchEnabled: false,
       scanEnabled: false,
       showToWalletModal: false,
