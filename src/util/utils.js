@@ -605,9 +605,38 @@ export function getDefaultDenomination(currencyCode: string, settings: Object): 
   return settings[currencyCode].denominations.find(denomination => denomination.name === currencyCode)
 }
 
-export function checkFilterWallet(wallet: GuiWallet, currencyCodeString: string, filterText: string, customToken?: CustomTokenInfo): boolean {
-  const walletName = wallet.name.replace(' ', '').toLowerCase()
+export function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: string[]): boolean {
+  return !!currencyCodesArray.find(item => {
+    const [parent, token] = item.split('-')
+    const checkToken = token ? currencyCode.toLowerCase() === token.toLowerCase() : false
+    const checkParent = !token ? currencyCode.toLowerCase() === parent.toLowerCase() : false
+    return checkToken || checkParent
+  })
+}
+
+export function checkFilterWallet(
+  wallet: GuiWallet,
+  currencyCodeString: string,
+  filterText: string,
+  customToken?: CustomTokenInfo,
+  allowedCurrencyCodes?: string[],
+  excludeCurrencyCodes?: string[]
+): boolean {
   const currencyCode = currencyCodeString.toLowerCase()
+
+  if (allowedCurrencyCodes && allowedCurrencyCodes.length > 0 && !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes)) {
+    return false
+  }
+
+  if (excludeCurrencyCodes && excludeCurrencyCodes.length > 0 && checkCurrencyCodesArray(currencyCode, excludeCurrencyCodes)) {
+    return false
+  }
+
+  if (filterText === '') {
+    return true
+  }
+
+  const walletName = wallet.name.replace(' ', '').toLowerCase()
   const currencyNameString = customToken ? customToken.currencyName : wallet.currencyNames[currencyCodeString]
   const currencyName = currencyNameString ? currencyNameString.toLowerCase() : '' // Added fallback if cannot find currency name on both guiWallet and customTokenInfo
   const filterString = filterText.toLowerCase()
