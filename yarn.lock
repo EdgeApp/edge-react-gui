@@ -5225,10 +5225,10 @@ edge-exchange-plugins@^0.11.21:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.7.0.tgz#9dd3ec5b382a5f7c5ef3beb095974f667e7b1368"
-  integrity sha512-qz8p8x4voLg6/O+KpEQTin3PJuwGWPRHvVXUCwwmn2ntDly6rdNXiExywPxpVFjQbQuotC+ckYtlhBuJgaTBxw==
+edge-login-ui-rn@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.7.1.tgz#856e66a2670d8cfc7c72a5ce63048aa071cca120"
+  integrity sha512-1FLcN1lgZ9x9V9N2Gtz/V46m/6ZubcWiITIAe2bdpdceKC2IMfooalrx/zgldr8Woz7Wp5iu2BcAvl0a8pAeug==
   dependencies:
     cleaners "^0.3.1"
     qrcode-generator "^1.4.4"
