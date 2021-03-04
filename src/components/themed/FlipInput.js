@@ -293,30 +293,6 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  textInputTopFocus = () => {
-    if (this.state.isToggled) {
-      if (this.textInputBack) {
-        this.textInputBack.focus()
-      }
-    } else {
-      if (this.textInputFront) {
-        this.textInputFront.focus()
-      }
-    }
-  }
-
-  textInputTopBlur = () => {
-    if (this.state.isToggled) {
-      if (this.textInputBack) {
-        this.textInputBack.blur()
-      }
-    } else {
-      if (this.textInputFront) {
-        this.textInputFront.blur()
-      }
-    }
-  }
-
   getTextInputFrontRef = (ref: TextInput | null) => {
     this.textInputFront = ref
   }
