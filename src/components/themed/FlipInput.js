@@ -338,39 +338,6 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     this.onKeyPress(e.nativeEvent.key, this.state.primaryDecimalAmount, this.props.primaryInfo.maxEntryDecimals, setPrimaryToSecondary)
   }
 
-  topRowFront = () => {
-    const { theme } = this.props
-    const styles = getStyles(theme)
-    const { primaryDisplayAmount, primaryDecimalAmount } = this.state
-    const displayAmountCheck = !primaryDecimalAmount || primaryDecimalAmount.match(/^0*$/)
-    const displayAmountString = displayAmountCheck ? s.strings.string_enter_amount : primaryDisplayAmount
-    const displayAmountStyle = displayAmountCheck ? styles.topAmountMuted : styles.topAmount
-
-    return (
-      <TouchableWithoutFeedback onPress={this.textInputFrontFocus}>
-        <View style={styles.topContainer} key="top">
-          <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
-          {!displayAmountCheck && <EdgeText style={styles.topCurrency}>{this.props.primaryInfo.currencyCode}</EdgeText>}
-          <TextInput
-            style={styles.hiddenTextInput}
-            value=""
-            onChangeText={this.onPrimaryChangeText}
-            onKeyPress={this.onPrimaryKeyPress}
-            autoCorrect={false}
-            keyboardType="numeric"
-            returnKeyType={this.props.topReturnKeyType || 'done'}
-            ref={this.getTextInputFrontRef}
-            onFocus={this.textInputFrontFocusTrue}
-            onBlur={this.textInputFrontFocusFalse}
-            editable={this.props.isEditable}
-            onSubmitEditing={this.props.onNext}
-            inputAccessoryViewID={this.props.inputAccessoryViewID || null}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-    )
-  }
-
   getTextInputBackRef = (ref: TextInput | null) => {
     this.textInputBack = ref
   }
@@ -402,33 +369,41 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     this.onKeyPress(e.nativeEvent.key, this.state.secondaryDecimalAmount, this.props.secondaryInfo.maxEntryDecimals, setSecondaryToPrimary)
   }
 
-  topRowBack = () => {
-    const { theme } = this.props
+  topRow = (isFront: boolean) => {
+    const { isEditable, inputAccessoryViewID, onNext, topReturnKeyType, theme } = this.props
     const styles = getStyles(theme)
-    const { secondaryDisplayAmount, secondaryDecimalAmount } = this.state
-    const displayAmountCheck = !secondaryDecimalAmount || secondaryDecimalAmount.match(/^0*$/)
-    const displayAmountString = displayAmountCheck ? s.strings.string_enter_amount : secondaryDisplayAmount
+    const displayAmount = isFront ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
+    const decimalAmount = isFront ? this.state.primaryDecimalAmount : this.state.secondaryDecimalAmount
+    const currencyName = isFront ? this.props.primaryInfo.currencyName : this.props.secondaryInfo.currencyName
+    const onPress = isFront ? this.textInputFrontFocus : this.textInputBackFocus
+    const onChangeText = isFront ? this.onPrimaryChangeText : this.onSecondaryChangeText
+    const onKeyPress = isFront ? this.onPrimaryKeyPress : this.onSecondaryKeyPress
+    const onFocus = isFront ? this.textInputFrontFocusTrue : this.textInputBackFocusTrue
+    const onBlur = isFront ? this.textInputFrontFocusFalse : this.textInputBackFocusFalse
+    const ref = isFront ? this.getTextInputFrontRef : this.getTextInputBackRef
+    const displayAmountCheck = !decimalAmount || decimalAmount.match(/^0*$/)
+    const displayAmountString = displayAmountCheck ? s.strings.string_enter_amount : displayAmount
     const displayAmountStyle = displayAmountCheck ? styles.topAmountMuted : styles.topAmount
 
     return (
-      <TouchableWithoutFeedback onPress={this.textInputBackFocus}>
+      <TouchableWithoutFeedback onPress={onPress}>
         <View style={styles.topContainer} key="top">
           <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
-          {!displayAmountCheck && <EdgeText style={styles.topCurrency}>{this.props.secondaryInfo.currencyName}</EdgeText>}
+          {!displayAmountCheck && <EdgeText style={styles.topCurrency}>{currencyName}</EdgeText>}
           <TextInput
             style={styles.hiddenTextInput}
             value=""
-            onChangeText={this.onSecondaryChangeText}
-            onKeyPress={this.onSecondaryKeyPress}
+            onChangeText={onChangeText}
+            onKeyPress={onKeyPress}
             autoCorrect={false}
             keyboardType="numeric"
-            returnKeyType={this.props.topReturnKeyType || 'done'}
-            ref={this.getTextInputBackRef}
-            onFocus={this.textInputBackFocusTrue}
-            onBlur={this.textInputBackFocusFalse}
-            editable={this.props.isEditable}
-            onSubmitEditing={this.props.onNext}
-            inputAccessoryViewID={this.props.inputAccessoryViewID || null}
+            returnKeyType={topReturnKeyType || 'done'}
+            ref={ref}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            editable={isEditable}
+            onSubmitEditing={onNext}
+            inputAccessoryViewID={inputAccessoryViewID || null}
           />
         </View>
       </TouchableWithoutFeedback>
@@ -494,14 +469,14 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
               style={[styles.flipInputFront, frontAnimatedStyle, { opacity: this.androidFrontOpacityInterpolate }]}
               pointerEvents={isToggled ? 'none' : 'auto'}
             >
-              {this.topRowFront()}
+              {this.topRow(true)}
               {this.bottomRow(secondaryInfo, this.state.secondaryDisplayAmount)}
             </Animated.View>
             <Animated.View
               style={[styles.flipInputFront, styles.flipContainerBack, backAnimatedStyle, { opacity: this.androidBackOpacityInterpolate }]}
               pointerEvents={isToggled ? 'auto' : 'none'}
             >
-              {this.topRowBack()}
+              {this.topRow(false)}
               {this.bottomRow(primaryInfo, this.state.primaryDisplayAmount)}
             </Animated.View>
           </View>
