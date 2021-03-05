@@ -213,7 +213,9 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
         if (this.state.isToggled) {
           const { exchangeSecondaryToPrimaryRatio } = this.props
           if (bns.eq(exchangeSecondaryToPrimaryRatio, '0') || exchangeSecondaryToPrimaryRatio === '') {
-            this.toggleCryptoOnTop()
+            if (this.state.isToggled) {
+              this.onToggleFlipInput()
+            }
           } else {
             this.textInputBack && this.textInputBack.focus()
           }
@@ -249,12 +251,6 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  toggleCryptoOnTop = () => {
-    if (this.state.isToggled) {
-      this.onToggleFlipInput()
-    }
-  }
-
   onToggleFlipInput = () => {
     this.clipboardMenu.close()
     this.setState({
@@ -287,6 +283,25 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     try {
       if ((this.state.textInputFrontFocus || this.state.textInputBackFocus) && (await Clipboard.getString())) {
         this.clipboardMenu.open()
+      }
+    } catch (error) {
+      showError(error)
+    }
+  }
+
+  handlePasteClipboard = async () => {
+    try {
+      const clipboard = await Clipboard.getString()
+      if (this.state.isToggled) {
+        this.setStateAmounts('', setSecondaryToPrimary)
+        for (const string of clipboard.split('')) {
+          this.onKeyPress(string, this.state.secondaryDecimalAmount, this.props.secondaryInfo.maxEntryDecimals, setSecondaryToPrimary)
+        }
+      } else {
+        this.setStateAmounts('', setSecondaryToPrimary)
+        for (const string of clipboard.split('')) {
+          this.onKeyPress(string, this.state.primaryDecimalAmount, this.props.primaryInfo.maxEntryDecimals, setPrimaryToSecondary)
+        }
       }
     } catch (error) {
       showError(error)
@@ -417,25 +432,6 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
         <EdgeText>{bottomText}</EdgeText>
       </TouchableWithoutFeedback>
     )
-  }
-
-  handlePasteClipboard = async () => {
-    try {
-      const clipboard = await Clipboard.getString()
-      if (this.state.isToggled) {
-        this.setStateAmounts('', setSecondaryToPrimary)
-        for (const string of clipboard.split('')) {
-          this.onKeyPress(string, this.state.secondaryDecimalAmount, this.props.secondaryInfo.maxEntryDecimals, setSecondaryToPrimary)
-        }
-      } else {
-        this.setStateAmounts('', setSecondaryToPrimary)
-        for (const string of clipboard.split('')) {
-          this.onKeyPress(string, this.state.primaryDecimalAmount, this.props.primaryInfo.maxEntryDecimals, setPrimaryToSecondary)
-        }
-      }
-    } catch (error) {
-      showError(error)
-    }
   }
 
   clipboardRef = (ref: any) => (this.clipboardMenu = ref)
