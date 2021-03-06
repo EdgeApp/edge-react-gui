@@ -5,7 +5,6 @@
   "drawer_exchange_rate_loading": "Загрузка обменного курса",
   "drawer_exchange": "Обмен",
   "drawer_request": "Запрос",
-  "drawer_scan_qr_send": "Сканировать [QR code]",
   "drawer_sweep_private_key": "Очистить приватный ключ (перевод всех монет)",
   "drawer_wallets": "Кошельки",
   "dropdown_exchange_max_amount": "Обменять максимальное количество",
