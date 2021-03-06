@@ -4,7 +4,6 @@ import * as React from 'react'
 import { ActivityIndicator, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { RNCamera } from 'react-native-camera'
 import { Actions } from 'react-native-router-flux'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
@@ -39,20 +38,6 @@ export class Scan extends React.Component<Props> {
         <SceneWrapper background="header" hasTabs={false}>
           {this.renderCameraArea()}
           <View style={styles.overlayButtonAreaWrap}>
-            <TouchableHighlight style={styles.bottomButton} onPress={this._onPressTransfer} underlayColor={THEME.COLORS.SECONDARY}>
-              <View style={styles.bottomButtonTextWrap}>
-                <FontAwesomeIcon style={styles.transferIcon} name="share" size={scale(18)} />
-                <T style={styles.bottomButtonText}>{s.strings.fragment_transaction_transfer}</T>
-              </View>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={THEME.COLORS.SECONDARY}>
-              <View style={styles.bottomButtonTextWrap}>
-                <FontAwesomeIcon style={styles.addressBookIcon} name="address-book-o" size={scale(18)} />
-                <T style={styles.bottomButtonText}>{s.strings.fragment_send_address}</T>
-              </View>
-            </TouchableHighlight>
-
             <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
                 <IonIcon style={styles.flashIcon} name="ios-flash" size={scale(24)} />

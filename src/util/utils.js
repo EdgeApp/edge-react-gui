@@ -7,8 +7,10 @@ import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
+import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD } from '../constants/WalletAndCurrencyConstants'
+import type { ExchangeRatesState } from '../modules/ExchangeRates/reducer'
 import { emptyEdgeDenomination } from '../modules/Settings/selectors.js'
-import { convertCurrency } from '../modules/UI/selectors.js'
+import { convertCurrency, convertCurrencyFromExchangeRates } from '../modules/UI/selectors.js'
 import { type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet, TransactionListTx } from '../types/types.js'
 
@@ -658,3 +660,94 @@ export function maxPrimaryCurrencyConversionDecimals(primaryPrecision: number, p
   const newPrimaryPrecision = primaryPrecision - precisionAdjustValue
   return newPrimaryPrecision >= 0 ? newPrimaryPrecision : 0
 }
+
+// Convert Transaction Fee to Display Fee
+//
+// returns fiatSymbol, fiatAmount, fiatStyle, cryptoSymbol and cryptoAmount when transaction fee is present
+// return cryptoAmount and fiatAmount when fee is not present
+
+export const convertToCryptoFee = (networkFee: string, displayMultiplier: string, exchangeMultiplier: string): string => {
+  const cryptoFeeExchangeDenomAmount = networkFee ? convertNativeToDisplay(exchangeMultiplier)(networkFee) : ''
+  const exchangeToDisplayMultiplierRatio = bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
+  return bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
+}
+
+export const feeStyle = {
+  danger: 'dangerText',
+  warning: 'warningText'
+}
+
+export const convertToFiatFee = (
+  networkFee: string,
+  exchangeMultiplier: string,
+  currencyCode: string,
+  exchangeRates: ExchangeRatesState,
+  isoFiatCurrencyCode: string
+): { amount: string, style?: string } => {
+  const cryptoFeeExchangeAmount = convertNativeToExchange(exchangeMultiplier)(networkFee)
+  const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(cryptoFeeExchangeAmount))
+  const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
+  return {
+    amount: bns.toFixed(fiatFeeAmount.toString(), 2, 2),
+    style: feeAmountInUSD > FEE_ALERT_THRESHOLD ? feeStyle.danger : feeAmountInUSD > FEE_COLOR_THRESHOLD ? feeStyle.warning : undefined
+  }
+}
+
+export const convertTransactionFeeToDisplayFee = (
+  guiWallet: GuiWallet,
+  currencyCode: string,
+  exchangeRates: ExchangeRatesState,
+  transaction: EdgeTransaction | null,
+  settings: any
+): { fiatSymbol?: string, fiatAmount: string, fiatStyle?: string, cryptoSymbol?: string, cryptoAmount: string } => {
+  const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
+  const secondaryDisplayDenomination = getDenomFromIsoCode(fiatCurrencyCode)
+
+  const networkFee = transaction ? transaction.networkFee : undefined
+  const parentNetworkFee = transaction && transaction.parentNetworkFee ? transaction.parentNetworkFee : undefined
+
+  if (!networkFee && !parentNetworkFee) {
+    // if no fee
+    return {
+      fiatAmount: '0',
+      cryptoAmount: '0'
+    }
+  } else if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
+    // if parentNetworkFee greater than zero
+    const parentDisplayDenomination = getDisplayDenomination(guiWallet.currencyCode, settings)
+    const parentExchangeDenomination = getExchangeDenomination(guiWallet, guiWallet.currencyCode, settings)
+    const cryptoFeeSymbol = parentDisplayDenomination && parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
+    const displayMultiplier = parentDisplayDenomination ? parentDisplayDenomination.multiplier : ''
+    const exchangeMultiplier = parentExchangeDenomination ? parentExchangeDenomination.multiplier : ''
+    const cryptoAmount = convertToCryptoFee(parentNetworkFee, displayMultiplier, exchangeMultiplier)
+    const fiatAmount = convertToFiatFee(parentNetworkFee, exchangeMultiplier, parentExchangeDenomination.name, exchangeRates, isoFiatCurrencyCode)
+    return {
+      fiatSymbol: secondaryDisplayDenomination.symbol,
+      fiatAmount: fiatAmount.amount,
+      fiatStyle: fiatAmount.style,
+      cryptoSymbol: cryptoFeeSymbol,
+      cryptoAmount: cryptoAmount
+    }
+  } else if (networkFee && bns.gt(networkFee, '0')) {
+    // if networkFee greater than zero
+    const primaryDisplayDenomination = getDisplayDenomination(currencyCode, settings)
+    const primaryExchangeDenomination = getExchangeDenomination(guiWallet, currencyCode, settings)
+    const cryptoFeeSymbol = primaryDisplayDenomination && primaryDisplayDenomination.symbol ? primaryDisplayDenomination.symbol : ''
+    const displayMultiplier = primaryDisplayDenomination ? primaryDisplayDenomination.multiplier : ''
+    const exchangeMultiplier = primaryExchangeDenomination ? primaryExchangeDenomination.multiplier : ''
+    const cryptoAmount = convertToCryptoFee(networkFee, displayMultiplier, exchangeMultiplier)
+    const fiatAmount = convertToFiatFee(networkFee, exchangeMultiplier, currencyCode, exchangeRates, isoFiatCurrencyCode)
+    return {
+      fiatSymbol: secondaryDisplayDenomination.symbol,
+      fiatAmount: fiatAmount.amount,
+      fiatStyle: fiatAmount.style,
+      cryptoSymbol: cryptoFeeSymbol,
+      cryptoAmount: cryptoAmount
+    }
+  }
+  return {
+    fiatAmount: '0',
+    cryptoAmount: '0'
+  }
+}
+// End of convert Transaction Fee to Display Fee

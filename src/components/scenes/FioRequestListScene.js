@@ -353,7 +353,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
     if (availableWallets.length) {
       onSelectWallet(availableWallets[0].id, availableWallets[0].currencyCode)
-      this.sendCrypto(fioRequest, availableWallets[0].id)
+      this.sendCrypto(fioRequest, availableWallets[0].id, availableWallets[0].currencyCode)
       return
     }
     Airship.show(bridge => (
@@ -380,11 +380,11 @@ class FioRequestList extends React.Component<Props, LocalState> {
     ))
     if (walletId && currencyCode) {
       onSelectWallet(walletId, currencyCode)
-      this.sendCrypto(selectedFioPendingRequest, walletId)
+      this.sendCrypto(selectedFioPendingRequest, walletId, currencyCode)
     }
   }
 
-  sendCrypto = async (pendingRequest: FioRequest, walletId: string) => {
+  sendCrypto = async (pendingRequest: FioRequest, walletId: string, selectedCurrencyCode: string) => {
     const { fioWallets = [], currencyWallets = {}, state } = this.props
     const fioWalletByAddress = fioWallets.find(wallet => wallet.id === pendingRequest.fioWalletId) || null
     if (!fioWalletByAddress) return showError(s.strings.fio_wallet_missing_for_fio_address)
@@ -426,7 +426,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       }
     }
 
-    Actions[Constants.SEND_CONFIRMATION]({ guiMakeSpendInfo })
+    Actions[Constants.SEND]({ guiMakeSpendInfo, selectedWalletId: walletId, selectedCurrencyCode })
   }
 
   selectSentRequest = (fioRequest: FioRequest) => {

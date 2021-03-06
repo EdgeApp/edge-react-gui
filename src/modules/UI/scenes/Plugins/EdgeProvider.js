@@ -15,7 +15,7 @@ import { selectWallet } from '../../../../actions/WalletActions'
 import { ButtonsModal } from '../../../../components/modals/ButtonsModal.js'
 import { type WalletListResult, WalletListModal } from '../../../../components/modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
-import { SEND_CONFIRMATION } from '../../../../constants/SceneKeys.js'
+import { SEND } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
 import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
@@ -304,7 +304,7 @@ export class EdgeProvider extends Bridgeable {
     info.spendTargets = edgeSpendTargets
 
     // Launch:
-    return this._makeSpendRequest(info, coreWallet, orderId)
+    return this._makeSpendRequest(info, coreWallet, orderId, UI_SELECTORS.getSelectedCurrencyCode(this._state))
   }
 
   // Request that the user spend to a URI
@@ -329,7 +329,7 @@ export class EdgeProvider extends Bridgeable {
     }
 
     // Launch:
-    return this._makeSpendRequest(info, coreWallet, orderId)
+    return this._makeSpendRequest(info, coreWallet, orderId, UI_SELECTORS.getSelectedCurrencyCode(this._state))
   }
 
   // log body and signature and pubic address and final message (returned from signMessage)
@@ -348,7 +348,12 @@ export class EdgeProvider extends Bridgeable {
   /**
    * Internal helper to launch the send confirmation scene.
    */
-  async _makeSpendRequest(guiMakeSpendInfo: GuiMakeSpendInfo, coreWallet: EdgeCurrencyWallet, orderId?: string): Promise<EdgeTransaction | void> {
+  async _makeSpendRequest(
+    guiMakeSpendInfo: GuiMakeSpendInfo,
+    coreWallet: EdgeCurrencyWallet,
+    orderId?: string,
+    selectedCurrencyCode: string
+  ): Promise<EdgeTransaction | void> {
     const transaction: EdgeTransaction | void = await new Promise((resolve, reject) => {
       guiMakeSpendInfo.onDone = (error: Error | null, transaction?: EdgeTransaction) => {
         error ? reject(error) : resolve(transaction)
@@ -356,7 +361,7 @@ export class EdgeProvider extends Bridgeable {
       guiMakeSpendInfo.onBack = () => {
         resolve()
       }
-      Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
+      Actions[SEND]({ guiMakeSpendInfo, selectedWalletId: coreWallet.id, selectedCurrencyCode })
     })
 
     if (transaction != null) {

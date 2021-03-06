@@ -62,7 +62,7 @@ exports[`SendConfirmation should render with destination 1`] = `
           ]
         }
       >
-        <ExchangeRate
+        <WithTheme(ExchangeRateComponent)
           primaryInfo={
             Object {
               "displayCurrencyCode": "BTC",
@@ -341,7 +341,7 @@ exports[`SendConfirmation should render with standard props 1`] = `
           ]
         }
       >
-        <ExchangeRate
+        <WithTheme(ExchangeRateComponent)
           primaryInfo={
             Object {
               "displayCurrencyCode": "BTC",
@@ -605,7 +605,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           ]
         }
       >
-        <ExchangeRate
+        <WithTheme(ExchangeRateComponent)
           primaryInfo={
             Object {
               "displayCurrencyCode": "XMR",
@@ -849,7 +849,7 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           ]
         }
       >
-        <ExchangeRate
+        <WithTheme(ExchangeRateComponent)
           primaryInfo={
             Object {
               "displayCurrencyCode": "XRP",

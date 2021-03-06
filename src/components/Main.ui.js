@@ -30,7 +30,6 @@ import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConf
 import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
-import { SendScene } from '../components/scenes/SendScene'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
@@ -76,6 +75,7 @@ import { EditTokenScene } from './scenes/EditTokenScene.js'
 import { FioDomainRegisterScene } from './scenes/FioDomainRegisterScene'
 import { FioDomainRegisterSelectWalletScene } from './scenes/FioDomainRegisterSelectWalletScene'
 import { FioNameConfirmScene } from './scenes/FioNameConfirmScene'
+import { FioTransferDomain } from './scenes/FioTransferDomain.js'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
@@ -84,6 +84,7 @@ import { OtpRepairScene } from './scenes/OtpRepairScene.js'
 import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
 import { ChangeRecoveryScene } from './scenes/PasswordRecoveryScene.js'
 import { SecurityAlertsScene } from './scenes/SecurityAlertsScene.js'
+import { SendScene } from './scenes/SendScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
@@ -281,7 +282,7 @@ export class MainComponent extends React.Component<Props> {
                 }}
                 onExit={this.props.dispatchDisableScan}
                 component={ifLoggedIn(Scan)}
-                renderTitle={<HeaderTitle />}
+                renderTitle={<HeaderTitle title={s.strings.send_scan_header_text} />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
                 renderRightButton={<SideMenuButton />}
               />
@@ -439,10 +440,15 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.SEND}
               navTransparent
-              hideTabBar
-              panHandlers={null}
+              onExit={this.props.dispatchDisableScan}
               component={ifLoggedIn(SendScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_send} />}
+              renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
+            />
+            <Scene
+              key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
+              navTransparent
+              component={ifLoggedIn(ChangeMiningFeeScene)}
+              renderTitle={<HeaderTitle title={s.strings.title_change_mining_fee} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={<HeaderTextButton type="help" />}
             />
@@ -772,6 +778,19 @@ export class MainComponent extends React.Component<Props> {
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={this.renderEmptyButton()}
               onLeft={Actions.pop}
+            />
+          </Stack>
+
+          <Stack key={Constants.FIO_TRANSFER_DOMAIN}>
+            <Scene
+              key={Constants.FIO_TRANSFER_DOMAIN}
+              navTransparent
+              hideTabBar
+              panHandlers={null}
+              component={ifLoggedIn(FioTransferDomain)}
+              renderTitle={<HeaderTitle title={s.strings.title_send} />}
+              renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
+              renderRightButton={<HeaderTextButton type="help" />}
             />
           </Stack>
         </Scene>

@@ -13,7 +13,7 @@ exports[`Request should render with loaded props 1`] = `
       }
     }
   >
-    <ExchangeRate
+    <WithTheme(ExchangeRateComponent)
       primaryInfo={Object {}}
       secondaryDisplayAmount={Object {}}
       secondaryInfo={Object {}}
