@@ -52,7 +52,7 @@ type LocalState = {
   prevFioAddresses: FioAddress[]
 }
 
-class SelectFioAddressComponent extends React.Component<Props, LocalState> {
+class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
   constructor(props: Props) {
     super(props)
     this.state = {

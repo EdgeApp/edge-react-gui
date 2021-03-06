@@ -148,17 +148,20 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     const { feeSyntax, feeSyntaxStyle, theme } = this.props
     const styles = getStyles(theme)
     const feeText = `+ ${s.strings.string_fee}`
+    const feeStyle =
+      feeSyntaxStyle === 'dangerText' ? styles.feesSyntaxDanger : feeSyntaxStyle === 'warningText' ? styles.feesSyntaxWarning : styles.feesSyntaxDefault
     return (
       <View style={styles.feesContainer}>
         <EdgeText style={styles.feesContainerText}>{feeText}</EdgeText>
-        <EdgeText style={{ color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText }}>{feeSyntax}</EdgeText>
+        <EdgeText style={feeStyle}>{feeSyntax}</EdgeText>
       </View>
     )
   }
 
   render() {
+    const styles = getStyles(this.props.theme)
     return (
-      <MenuProvider style={{ flexDirection: 'row' }}>
+      <MenuProvider style={styles.menuProvider}>
         <ThemedModal bridge={this.props.bridge} onCancel={this.handleCloseModal}>
           <ScrollView style={{ maxHeight: this.props.theme.rem(23) }} keyboardShouldPersistTaps="handled">
             <ModalTitle>{s.strings.string_enter_amount}</ModalTitle>
@@ -176,6 +179,9 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  menuProvider: {
+    flexDirection: 'row'
+  },
   balanceContainer: {
     flexDirection: 'row',
     marginHorizontal: theme.rem(0.5)
@@ -204,6 +210,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   feesContainerText: {
     flex: 1
+  },
+  feesSyntaxDefault: {
+    color: theme.primaryText
+  },
+  feesSyntaxWarning: {
+    color: theme.warningText
+  },
+  feesSyntaxDanger: {
+    color: theme.dangerText
   }
 }))
 
