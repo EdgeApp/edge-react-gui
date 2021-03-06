@@ -337,7 +337,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     }
 
     if (recipientAddress) {
-      const transactionFee = UTILS.calculateTransactionFee(guiWallet, selectedCurrencyCode, exchangeRates, transaction, settings)
+      const transactionFee = UTILS.convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, transaction, settings)
       const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
       const feeSyntaxStyle = transactionFee.fiatStyle
 

@@ -17,7 +17,7 @@ import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/Exchan
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getExchangeRate } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
-import { calculateTransactionFee, DIVIDE_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
+import { convertTransactionFeeToDisplayFee, DIVIDE_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
 import { ExchangeRate } from '../common/ExchangeRate.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -259,7 +259,7 @@ export const FlipInputModal = connect(
     const overridePrimaryExchangeAmount = bns.div(nativeAmount, primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
 
     // Fees
-    const transactionFee = calculateTransactionFee(
+    const transactionFee = convertTransactionFeeToDisplayFee(
       guiWallet,
       currencyCode,
       state.exchangeRates,

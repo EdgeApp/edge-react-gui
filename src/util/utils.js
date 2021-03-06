@@ -661,8 +661,12 @@ export function maxPrimaryCurrencyConversionDecimals(primaryPrecision: number, p
   return newPrimaryPrecision >= 0 ? newPrimaryPrecision : 0
 }
 
-// Fees calculation
-export const calculateCryptoNetworkFee = (networkFee: string, displayMultiplier: string, exchangeMultiplier: string): string => {
+// Convert Transaction Fee to Display Fee
+//
+// returns fiatSymbol, fiatAmount, fiatStyle, cryptoSymbol and cryptoAmount when transaction fee is present
+// return cryptoAmount and fiatAmount when fee is not present
+
+export const convertToCryptoFee = (networkFee: string, displayMultiplier: string, exchangeMultiplier: string): string => {
   const cryptoFeeExchangeDenomAmount = networkFee ? convertNativeToDisplay(exchangeMultiplier)(networkFee) : ''
   const exchangeToDisplayMultiplierRatio = bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
   return bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
@@ -673,7 +677,7 @@ export const feeStyle = {
   warning: 'warningText'
 }
 
-export const calculateFiatNetworkFee = (
+export const convertToFiatFee = (
   networkFee: string,
   exchangeMultiplier: string,
   currencyCode: string,
@@ -689,7 +693,7 @@ export const calculateFiatNetworkFee = (
   }
 }
 
-export const calculateTransactionFee = (
+export const convertTransactionFeeToDisplayFee = (
   guiWallet: GuiWallet,
   currencyCode: string,
   exchangeRates: ExchangeRatesState,
@@ -715,8 +719,8 @@ export const calculateTransactionFee = (
     const cryptoFeeSymbol = parentDisplayDenomination && parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
     const displayMultiplier = parentDisplayDenomination ? parentDisplayDenomination.multiplier : ''
     const exchangeMultiplier = parentExchangeDenomination ? parentExchangeDenomination.multiplier : ''
-    const cryptoAmount = calculateCryptoNetworkFee(parentNetworkFee, displayMultiplier, exchangeMultiplier)
-    const fiatAmount = calculateFiatNetworkFee(parentNetworkFee, exchangeMultiplier, parentExchangeDenomination.name, exchangeRates, isoFiatCurrencyCode)
+    const cryptoAmount = convertToCryptoFee(parentNetworkFee, displayMultiplier, exchangeMultiplier)
+    const fiatAmount = convertToFiatFee(parentNetworkFee, exchangeMultiplier, parentExchangeDenomination.name, exchangeRates, isoFiatCurrencyCode)
     return {
       fiatSymbol: secondaryDisplayDenomination.symbol,
       fiatAmount: fiatAmount.amount,
@@ -731,8 +735,8 @@ export const calculateTransactionFee = (
     const cryptoFeeSymbol = primaryDisplayDenomination && primaryDisplayDenomination.symbol ? primaryDisplayDenomination.symbol : ''
     const displayMultiplier = primaryDisplayDenomination ? primaryDisplayDenomination.multiplier : ''
     const exchangeMultiplier = primaryExchangeDenomination ? primaryExchangeDenomination.multiplier : ''
-    const cryptoAmount = calculateCryptoNetworkFee(networkFee, displayMultiplier, exchangeMultiplier)
-    const fiatAmount = calculateFiatNetworkFee(networkFee, exchangeMultiplier, currencyCode, exchangeRates, isoFiatCurrencyCode)
+    const cryptoAmount = convertToCryptoFee(networkFee, displayMultiplier, exchangeMultiplier)
+    const fiatAmount = convertToFiatFee(networkFee, exchangeMultiplier, currencyCode, exchangeRates, isoFiatCurrencyCode)
     return {
       fiatSymbol: secondaryDisplayDenomination.symbol,
       fiatAmount: fiatAmount.amount,
@@ -746,4 +750,4 @@ export const calculateTransactionFee = (
     cryptoAmount: '0'
   }
 }
-// End of Fees calculation
+// End of convert Transaction Fee to Display Fee
