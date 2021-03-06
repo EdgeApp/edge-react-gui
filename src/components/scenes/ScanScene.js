@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { ActivityIndicator, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { RNCamera } from 'react-native-camera'
+import RNPermissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -91,7 +92,7 @@ export class Scan extends React.Component<Props> {
       return <View style={styles.cameraArea} />
     }
 
-    if (this.props.cameraPermission === 'denied') {
+    if (this.props.cameraPermission === RNPermissions.RESULTS.BLOCKED) {
       return (
         <View style={styles.cameraArea}>
           <Text style={styles.cameraPermissionDeniedText}>{s.strings.scan_camera_permission_denied}</Text>
@@ -102,7 +103,7 @@ export class Scan extends React.Component<Props> {
       )
     }
 
-    if (this.props.cameraPermission === 'authorized') {
+    if (this.props.cameraPermission === RNPermissions.RESULTS.GRANTED) {
       const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
       return (

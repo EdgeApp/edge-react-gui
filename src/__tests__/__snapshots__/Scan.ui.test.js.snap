@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Scan component should render with AUTHORIZED props 1`] = `
+exports[`Scan component should render with BLOCKED props 1`] = `
 <React.Fragment>
   <SceneWrapper
     background="header"
@@ -83,7 +83,7 @@ exports[`Scan component should render with AUTHORIZED props 1`] = `
 </React.Fragment>
 `;
 
-exports[`Scan component should render with DENIED props 1`] = `
+exports[`Scan component should render with GRANTED props 1`] = `
 <React.Fragment>
   <SceneWrapper
     background="header"
