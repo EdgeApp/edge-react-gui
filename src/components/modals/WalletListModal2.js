@@ -49,7 +49,7 @@ class WalletListMenuModalComponent extends React.PureComponent<Props, State> {
   handleClearText = () => this.setState({ search: '' })
 
   render() {
-    const { bridge, excludeWalletIds, allowedCurrencyCodes, excludeCurrencyCodes, headerTitle } = this.props
+    const { bridge, excludeWalletIds, allowedCurrencyCodes, excludeCurrencyCodes, showCreateWallet, headerTitle } = this.props
     const { search, searching } = this.state
     return (
       <ThemedModal bridge={bridge} onCancel={() => bridge.resolve({})}>
@@ -68,6 +68,7 @@ class WalletListMenuModalComponent extends React.PureComponent<Props, State> {
         />
         <WalletList
           onPress={this.handleOnPress}
+          showCreateWallet={showCreateWallet}
           excludeWalletIds={excludeWalletIds}
           allowedCurrencyCodes={allowedCurrencyCodes}
           excludeCurrencyCodes={excludeCurrencyCodes}

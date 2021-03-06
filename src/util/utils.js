@@ -606,22 +606,19 @@ export function getDefaultDenomination(currencyCode: string, settings: Object): 
 }
 
 export function checkCurrencyCodes(fullCurrencyCode: string, currencyCode: string): boolean {
-    const [parent, token] = fullCurrencyCode.split('-')
-    const checkToken = token ? currencyCode.toLowerCase() === token.toLowerCase() : false
-    const checkParent = !token ? currencyCode.toLowerCase() === parent.toLowerCase() : false
-    return checkToken || checkParent
+  const [parent, token] = fullCurrencyCode.split('-')
+  const checkToken = token ? currencyCode.toLowerCase() === token.toLowerCase() : false
+  const checkParent = !token ? currencyCode.toLowerCase() === parent.toLowerCase() : false
+  return checkToken || checkParent
 }
 
 export function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: string[]): boolean {
   return !!currencyCodesArray.find(item => checkCurrencyCodes(item, currencyCode))
 }
 
-export function checkFilterWallet(
-  details: { name: string, currencyCode: string, currencyName: string },
-  filterText: string,
-  allowedCurrencyCodes?: string[],
-  excludeCurrencyCodes?: string[]
-): boolean {
+export type FilterDetailsType = { name: string, currencyCode: string, currencyName: string }
+
+export function checkFilterWallet(details: FilterDetailsType, filterText: string, allowedCurrencyCodes?: string[], excludeCurrencyCodes?: string[]): boolean {
   const currencyCode = details.currencyCode.toLowerCase()
 
   if (allowedCurrencyCodes && allowedCurrencyCodes.length > 0 && !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes)) {
