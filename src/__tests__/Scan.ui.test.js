@@ -2,15 +2,16 @@
 /* globals jest describe it expect */
 
 import * as React from 'react'
+import RNPermissions from 'react-native-permissions'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { Scan } from '../components/scenes/ScanScene.js'
 
 describe('Scan component', () => {
-  it('should render with DENIED props', () => {
+  it('should render with BLOCKED props', () => {
     const renderer = new ShallowRenderer()
     const props = {
-      cameraPermission: 'blocked',
+      cameraPermission: RNPermissions.BLOCKED,
       torchEnabled: false,
       scanEnabled: false,
       showToWalletModal: false,
@@ -31,10 +32,10 @@ describe('Scan component', () => {
     expect(actual).toMatchSnapshot()
   })
 
-  it('should render with AUTHORIZED props', () => {
+  it('should render with GRANTED props', () => {
     const renderer = new ShallowRenderer()
     const props = {
-      cameraPermission: 'granted',
+      cameraPermission: RNPermissions.GRANTED,
       torchEnabled: false,
       scanEnabled: false,
       showToWalletModal: false,

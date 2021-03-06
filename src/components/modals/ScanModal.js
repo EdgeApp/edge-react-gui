@@ -4,6 +4,7 @@ import * as React from 'react'
 import { ActivityIndicator, Linking, TouchableHighlight, View } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import { RNCamera } from 'react-native-camera'
+import RNPermissions from 'react-native-permissions'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
@@ -61,7 +62,7 @@ export class ScanModalComponent extends React.Component<Props> {
       return <View style={styles.cameraArea} />
     }
 
-    if (this.props.cameraPermission === 'denied') {
+    if (this.props.cameraPermission === RNPermissions.RESULTS.BLOCKED) {
       return (
         <View style={styles.cameraArea}>
           <T style={styles.cameraPermissionDeniedText}>{s.strings.scan_camera_permission_denied}</T>
@@ -72,7 +73,7 @@ export class ScanModalComponent extends React.Component<Props> {
       )
     }
 
-    if (this.props.cameraPermission === 'authorized') {
+    if (this.props.cameraPermission === RNPermissions.RESULTS.GRANTED) {
       const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
       return (

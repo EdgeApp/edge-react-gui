@@ -1,6 +1,7 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import dateformat from 'dateformat'
+import RNPermissionsMock from 'react-native-permissions/mock'
 
 /* globals jest */
 jest.mock('dateformat', () => (number, format) => dateformat(number, format, true)) // force timezone to UTC
@@ -137,4 +138,8 @@ jest.mock('react-native-localize', () => {
       }
     }
   }
+})
+
+jest.mock('react-native-permissions', () => {
+  return RNPermissionsMock
 })

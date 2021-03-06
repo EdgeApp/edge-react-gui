@@ -1,6 +1,7 @@
 // @flow
 
 /* globals test expect */
+import { RESULTS } from 'react-native-permissions'
 
 import { initialState, permissions as permissionsReducer } from '../reducers/PermissionsReducer.js'
 
@@ -16,9 +17,9 @@ test('initialState', () => {
 test('updatePermissions => UNAVAILABLE', () => {
   const expected = {
     ...initialState,
-    camera: 'unavailable'
+    camera: RESULTS.UNAVAILABLE
   }
-  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'unavailable' } }
+  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: RESULTS.UNAVAILABLE } }
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -27,9 +28,9 @@ test('updatePermissions => UNAVAILABLE', () => {
 test('updatePermissions => BLOCKED', () => {
   const expected = {
     ...initialState,
-    camera: 'blocked'
+    camera: RESULTS.BLOCKED
   }
-  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'blocked' } }
+  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: RESULTS.BLOCKED } }
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -38,9 +39,9 @@ test('updatePermissions => BLOCKED', () => {
 test('updatePermissions => GRANTED', () => {
   const expected = {
     ...initialState,
-    camera: 'granted'
+    camera: RESULTS.GRANTED
   }
-  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'granted' } }
+  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: RESULTS.GRANTED } }
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -49,9 +50,9 @@ test('updatePermissions => GRANTED', () => {
 test('updatePermissions => DENIED', () => {
   const expected = {
     ...initialState,
-    camera: 'denied'
+    camera: RESULTS.DENIED
   }
-  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'denied' } }
+  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: RESULTS.DENIED } }
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -60,9 +61,9 @@ test('updatePermissions => DENIED', () => {
 test('updatePermissions => LIMITED', () => {
   const expected = {
     ...initialState,
-    camera: 'limited'
+    camera: RESULTS.LIMITED
   }
-  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: 'limited' } }
+  const action = { type: 'PERMISSIONS/UPDATE', data: { camera: RESULTS.LIMITED } }
   const actual = permissionsReducer(initialState, action)
 
   expect(actual).toEqual(expected)
@@ -71,14 +72,14 @@ test('updatePermissions => LIMITED', () => {
 test('updatePermissions => MULTI', () => {
   const expected = {
     ...initialState,
-    camera: 'limited',
-    contacts: 'granted'
+    camera: RESULTS.LIMITED,
+    contacts: RESULTS.GRANTED
   }
   const action = {
     type: 'PERMISSIONS/UPDATE',
     data: {
-      camera: 'limited',
-      contacts: 'granted'
+      camera: RESULTS.LIMITED,
+      contacts: RESULTS.GRANTED
     }
   }
   const actual = permissionsReducer(initialState, action)
