@@ -68,15 +68,14 @@ type RouteProps = {
   selectedCurrencyCode?: string,
   isCameraOpen?: boolean,
   lockTilesMap?: {
-    address: boolean,
-    wallet: boolean,
-    amount: boolean
+    address?: boolean,
+    wallet?: boolean,
+    amount?: boolean
   },
   hiddenTilesMap?: {
-    address: boolean,
-    fee: boolean,
-    amount: boolean,
-    fioAddressSelect: boolean
+    address?: boolean,
+    amount?: boolean,
+    fioAddressSelect?: boolean
   },
   infoTiles?: Array<{ label: string, value: string }>
 }
@@ -290,11 +289,11 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAddressTile() {
-    const { isCameraOpen, lockInputs, lockTilesMap = {} } = this.props
+    const { isCameraOpen, lockInputs, lockTilesMap = {}, hiddenTilesMap = {} } = this.props
     const { recipientAddress } = this.state
     const { coreWallet, selectedCurrencyCode } = this.state
 
-    if (coreWallet) {
+    if (coreWallet && !hiddenTilesMap.address) {
       return (
         <AddressTile
           title={`${s.strings.step} 2: ${s.strings.transaction_details_recipient} ${s.strings.fragment_send_address}`}

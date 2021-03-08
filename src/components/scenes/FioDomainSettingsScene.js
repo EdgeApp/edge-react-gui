@@ -120,40 +120,36 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
 
   goToTransfer = (params: { fee: number }) => {
     const { fee: transferFee } = params
-    if (!transferFee) {
-      showError(s.strings.fio_get_fee_err_msg)
-    } else {
-      this.cancelOperation()
+    if (!transferFee) return showError(s.strings.fio_get_fee_err_msg)
+    this.cancelOperation()
 
-      const guiMakeSpendInfo = {
-        nativeAmount: `${transferFee}`,
-        publicAddress: '',
-        currencyCode: this.props.fioWallet.currencyInfo.currencyCode,
-        otherParams: {
-          fioAction: 'transferFioDomain',
-          fioParams: { fioDomain: this.props.fioDomainName, newOwnerKey: '', maxFee: transferFee }
-        },
-        onDone: (err, edgeTransaction) => {
-          if (!err) {
-            this.afterTransferSuccess()
-          }
+    const guiMakeSpendInfo = {
+      nativeAmount: `${transferFee}`,
+      currencyCode: this.props.fioWallet.currencyInfo.currencyCode,
+      otherParams: {
+        fioAction: 'transferFioDomain',
+        fioParams: { fioDomain: this.props.fioDomainName, newOwnerKey: '', maxFee: transferFee }
+      },
+      onDone: (err, edgeTransaction) => {
+        if (!err) {
+          this.afterTransferSuccess()
         }
       }
-
-      Actions[Constants.SEND]({
-        guiMakeSpendInfo,
-        selectedWalletId: this.props.fioWallet.id,
-        selectedCurrencyCode: this.props.fioWallet.currencyInfo.currencyCode,
-        lockTilesMap: {
-          wallet: true
-        },
-        hiddenTilesMap: {
-          amount: true,
-          fioAddressSelect: true
-        },
-        infoTiles: [{ label: s.strings.fio_domain_to_transfer, value: `@${this.props.fioDomainName}` }]
-      })
     }
+
+    Actions[Constants.SEND]({
+      guiMakeSpendInfo,
+      selectedWalletId: this.props.fioWallet.id,
+      selectedCurrencyCode: this.props.fioWallet.currencyInfo.currencyCode,
+      lockTilesMap: {
+        wallet: true
+      },
+      hiddenTilesMap: {
+        amount: true,
+        fioAddressSelect: true
+      },
+      infoTiles: [{ label: s.strings.fio_domain_to_transfer, value: `@${this.props.fioDomainName}` }]
+    })
   }
 
   render() {
