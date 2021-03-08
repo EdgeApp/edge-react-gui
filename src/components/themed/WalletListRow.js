@@ -99,7 +99,7 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
     const { currencyCode, walletId } = this.props
     this.closeRow()
     this.props.selectWallet(walletId, currencyCode)
-    Actions.jump(key)
+    Actions.jump(key, { selectedWalletId: walletId, selectedCurrencyCode: currencyCode, isCameraOpen: true })
   }
 
   handleOpenRequest = () => {
@@ -107,7 +107,7 @@ class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, Sta
   }
 
   handleOpenSend = () => {
-    this.openScene(Constants.SCAN)
+    this.openScene(Constants.SEND)
   }
 
   handleSwipeValueChange = ({ value }) => {

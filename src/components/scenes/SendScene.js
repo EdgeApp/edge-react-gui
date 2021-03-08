@@ -61,7 +61,8 @@ type RouteProps = {
   allowedCurrencyCodes?: string[],
   guiMakeSpendInfo?: GuiMakeSpendInfo,
   selectedWalletId?: string,
-  selectedCurrencyCode?: string
+  selectedCurrencyCode?: string,
+  isCameraOpen?: boolean
 }
 
 type Props = StateProps & DispatchProps & RouteProps & ThemeProps
@@ -272,7 +273,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAddressTile() {
-    const { lockInputs } = this.props
+    const { isCameraOpen, lockInputs } = this.props
     const { recipientAddress } = this.state
     const { coreWallet, selectedCurrencyCode } = this.state
 
@@ -286,6 +287,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           onChangeAddress={this.handleChangeAddress}
           resetSendTransaction={this.resetSendTransaction}
           lockInputs={lockInputs}
+          isCameraOpen={!!isCameraOpen}
           ref={ref => (this.addressTile = ref)}
         />
       )
