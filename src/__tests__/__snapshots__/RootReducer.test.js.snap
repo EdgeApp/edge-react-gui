@@ -378,6 +378,9 @@ Object {
       "FUN": Object {
         "denomination": "100000000",
       },
+      "GLM": Object {
+        "denomination": "1000000000000000000",
+      },
       "GNO": Object {
         "denomination": "1000000000000000000",
       },

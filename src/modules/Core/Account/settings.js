@@ -131,6 +131,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   GNT: {
     denomination: '1000000000000000000'
   },
+  GLM: {
+    denomination: '1000000000000000000'
+  },
   KNC: {
     denomination: '1000000000000000000'
   },
@@ -434,6 +437,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   BAT: 'object',
   BNT: 'object',
   GNT: 'object',
+  GLM: 'object',
   KNC: 'object',
   POLY: 'object',
   STORJ: 'object',
