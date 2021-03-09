@@ -170,13 +170,15 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   getCryptoAmount(
-    balance: string,
+    balanceString: string,
     denomination: EdgeDenomination,
     exchangeDenomination: EdgeDenomination,
     fiatDenomination: EdgeDenomination,
     exchangeRate?: number
   ): string {
     const { showBalance } = this.props
+    const balance = !isNaN(balanceString) ? balanceString : '0'
+    const denominationMultiplier = !isNaN(denomination.multiplier) ? denomination.multiplier : '1'
     let maxConversionDecimals = 6
     if (exchangeRate) {
       const precisionAdjustValue = precisionAdjust({
@@ -184,9 +186,9 @@ class WalletListComponent extends React.PureComponent<Props> {
         secondaryExchangeMultiplier: fiatDenomination.multiplier,
         exchangeSecondaryToPrimaryRatio: exchangeRate
       })
-      maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(denomination.multiplier), precisionAdjustValue)
+      maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(denominationMultiplier), precisionAdjustValue) || 0
     }
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), maxConversionDecimals)
+    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denominationMultiplier, DIVIDE_PRECISION), maxConversionDecimals)
     const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
     return showBalance ? `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}` : ''
   }
