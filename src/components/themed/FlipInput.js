@@ -426,7 +426,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   }
 
   bottomRow = (fieldInfo: FlipInputFieldInfo, amount: string) => {
-    const bottomText = `${amount} ${fieldInfo.currencyCode}`
+    const bottomText = `${amount} ${fieldInfo.currencyName}`
     return (
       <TouchableWithoutFeedback onPress={this.onToggleFlipInput} key="bottom">
         <EdgeText>{bottomText}</EdgeText>
