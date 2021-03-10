@@ -9,7 +9,9 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { type FioSenderInfo, reset, sendConfirmationUpdateTx, signBroadcastAndSave, updateSpendPending } from '../../actions/SendConfirmationActions.js'
-import { CHANGE_MINING_FEE_SEND_CONFIRMATION } from '../../constants/indexConstants'
+import { activated as uniqueIdentifierModalActivated } from '../../actions/UniqueIdentifierModalActions.js'
+import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
+import { CHANGE_MINING_FEE_SEND_CONFIRMATION, getSpecialCurrencyInfo } from '../../constants/indexConstants'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
@@ -46,6 +48,7 @@ type StateProps = {
   settings: any,
   sliderDisabled: boolean,
   transaction: EdgeTransaction | null,
+  uniqueIdentifier?: string,
   wallets: { [walletId: string]: GuiWallet }
 }
 
@@ -54,7 +57,8 @@ type DispatchProps = {
   reset: () => void,
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId: string, selectedCurrencyCode: string) => Promise<void>, // Somehow has a return??
   signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => void,
-  updateSpendPending: boolean => void
+  updateSpendPending: boolean => void,
+  uniqueIdentifierButtonPressed: () => void
 }
 
 type RouteProps = {
@@ -369,6 +373,27 @@ class SendComponent extends React.PureComponent<Props, State> {
     )
   }
 
+  renderUniqueIdentifier() {
+    const { sendConfirmationUpdateTx, uniqueIdentifier, uniqueIdentifierButtonPressed } = this.props
+    const { recipientAddress, selectedCurrencyCode } = this.state
+    const uniqueIdentifierInfo = getSpecialCurrencyInfo(selectedCurrencyCode || '').uniqueIdentifier
+
+    if (recipientAddress && uniqueIdentifierInfo) {
+      const { addButtonText, identifierName } = uniqueIdentifierInfo
+
+      return (
+        <>
+          <Tile type="touchable" title={identifierName} onPress={uniqueIdentifierButtonPressed}>
+            <EdgeText>{uniqueIdentifier || addButtonText}</EdgeText>
+          </Tile>
+          <UniqueIdentifierModal onConfirm={sendConfirmationUpdateTx} currencyCode={selectedCurrencyCode} />
+        </>
+      )
+    }
+
+    return null
+  }
+
   // Render
   render() {
     const { pending, resetSlider, sliderDisabled, theme } = this.props
@@ -384,6 +409,7 @@ class SendComponent extends React.PureComponent<Props, State> {
             {this.renderAmount()}
             {this.renderFees()}
             {this.renderSelectFioAddress()}
+            {this.renderUniqueIdentifier()}
           </View>
           <Scene.Footer style={styles.footer}>
             {!!recipientAddress && (
@@ -427,6 +453,7 @@ export const SendScene = connect(
       settings: state.ui.settings,
       sliderDisabled: !transaction || !!error || pending,
       transaction,
+      uniqueIdentifier: guiMakeSpendInfo.uniqueIdentifier,
       wallets: state.ui.wallets.byId
     }
   },
@@ -439,6 +466,7 @@ export const SendScene = connect(
       dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode)),
     updateSpendPending: (pending: boolean) => dispatch(updateSpendPending(pending)),
     signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string): any =>
-      dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode))
+      dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)),
+    uniqueIdentifierButtonPressed: () => dispatch(uniqueIdentifierModalActivated())
   })
 )(withTheme(SendComponent))
