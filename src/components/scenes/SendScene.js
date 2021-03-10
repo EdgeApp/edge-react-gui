@@ -300,15 +300,17 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     if (recipientAddress) {
       let amountSyntax
-      const cryptoDenomination = UTILS.getDisplayDenomination(selectedCurrencyCode, settings)
+      const cryptoDisplayDenomination = UTILS.getDisplayDenomination(selectedCurrencyCode, settings)
+      const cryptoExchangeDenomination = UTILS.getExchangeDenomination(guiWallet, selectedCurrencyCode, settings)
       const fiatDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
       if (nativeAmount && !bns.eq(nativeAmount, '0')) {
-        const exchangeAmount = bns.div(nativeAmount, cryptoDenomination.multiplier, UTILS.DIVIDE_PRECISION)
+        const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, UTILS.DIVIDE_PRECISION)
+        const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, UTILS.DIVIDE_PRECISION)
         const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, parseFloat(exchangeAmount))
-        amountSyntax = `${exchangeAmount || '0'} ${cryptoDenomination.name} = (${fiatSymbol} ${fiatAmount.toFixed(2) || '0'})`
+        amountSyntax = `${displayAmount || '0'} ${cryptoDisplayDenomination.name} = (${fiatSymbol} ${fiatAmount.toFixed(2) || '0'})`
       } else {
-        amountSyntax = `${'0'} ${cryptoDenomination.name} = (${fiatSymbol} ${'0'})`
+        amountSyntax = `${'0'} ${cryptoDisplayDenomination.name} = (${fiatSymbol} ${'0'})`
       }
 
       return (
