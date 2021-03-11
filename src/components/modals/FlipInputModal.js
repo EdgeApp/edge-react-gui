@@ -3,9 +3,8 @@
 import { bns } from 'biggystring'
 import { errorNames } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
-import { MenuProvider } from 'react-native-popup-menu'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
@@ -169,30 +168,20 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const styles = getStyles(this.props.theme)
     return (
-      <MenuProvider style={styles.menuProvider}>
-        <ThemedModal bridge={this.props.bridge} onCancel={this.handleCloseModal}>
-          <ScrollView style={{ maxHeight: this.props.theme.rem(23) }} keyboardShouldPersistTaps="handled">
-            {this.renderTitle()}
-            {this.renderExchangeRates()}
-            {this.renderBalance()}
-            {this.renderFlipInput()}
-            {this.renderFees()}
-            <PrimaryButton label={s.strings.send_confirmation_max_button_title} marginRem={1} onPress={this.handleSendMaxAmount} />
-            <ModalCloseArrow onPress={this.handleCloseModal} />
-          </ScrollView>
-          <ModalCloseArrow onPress={this.handleCloseModal} />
-        </ThemedModal>
-      </MenuProvider>
+      <ThemedModal bridge={this.props.bridge} onCancel={this.handleCloseModal}>
+        {this.renderTitle()}
+        {this.renderExchangeRates()}
+        {this.renderBalance()}
+        {this.renderFlipInput()}
+        {this.renderFees()}
+        <ModalCloseArrow onPress={this.handleCloseModal} />
+      </ThemedModal>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  menuProvider: {
-    flexDirection: 'row'
-  },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center'
