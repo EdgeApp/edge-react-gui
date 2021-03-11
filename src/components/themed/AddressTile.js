@@ -29,7 +29,8 @@ type OwnProps = {
   onChangeAddress: (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => Promise<void>,
   resetSendTransaction: () => void,
   lockInputs?: boolean,
-  addressTileRef: any
+  addressTileRef: any,
+  isCameraOpen: boolean
 }
 type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null
@@ -73,10 +74,19 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
   componentDidMount(): void {
     this._setClipboard(this.props)
     this.props.addressTileRef(this)
+    if (this.props.isCameraOpen) {
+      this.handleScan()
+    }
   }
 
   componentWillUnmount(): void {
     this.props.addressTileRef(undefined)
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.isCameraOpen && !prevProps.isCameraOpen) {
+      this.handleScan()
+    }
   }
 
   reset() {
