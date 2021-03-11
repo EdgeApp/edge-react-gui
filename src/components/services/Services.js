@@ -73,6 +73,7 @@ export class Services extends React.PureComponent<Props> {
     return (
       <MenuProvider>
         <Main />
+        <Airship avoidAndroidKeyboard statusBarTranslucent />
       </MenuProvider>
     )
   }
@@ -82,7 +83,6 @@ export class Services extends React.PureComponent<Props> {
       <Provider store={this.store}>
         <>
           {this.renderGui()}
-          <Airship avoidAndroidKeyboard statusBarTranslucent />
           <AutoLogout />
           <ContactsLoader />
           <DeepLinkingManager />
