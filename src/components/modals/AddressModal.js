@@ -35,7 +35,8 @@ type OwnProps = {
   showPasteButton?: boolean,
   isFioOnly?: boolean,
   useUserFioAddressesOnly?: boolean,
-  checkAddressConnected?: boolean
+  checkAddressConnected?: boolean,
+  autoFocus?: boolean
 }
 
 type StateProps = {
@@ -326,7 +327,7 @@ class AddressModalConnected extends React.Component<Props, State> {
   render() {
     const copyMessage = this.state.clipboard ? sprintf(s.strings.string_paste_address, this.state.clipboard) : null
     const { uri, statusLabel, fieldError, filteredFioAddresses } = this.state
-    const { title, subtitle, showPasteButton, userFioAddressesLoading } = this.props
+    const { autoFocus, title, subtitle, showPasteButton, userFioAddressesLoading } = this.props
     return (
       <AirshipModal bridge={this.props.bridge} onCancel={this.handleClose} icon>
         {gap => (
@@ -364,6 +365,7 @@ class AddressModalConnected extends React.Component<Props, State> {
                   </InputAccessoryView>
                 ) : null}
                 <FormField
+                  autoFocus={autoFocus}
                   blurOnSubmit
                   returnKeyType="done"
                   autoCapitalize="none"

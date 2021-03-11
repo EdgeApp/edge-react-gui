@@ -233,7 +233,9 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 
   handleChangeAddress = async () => {
     const { coreWallet, currencyCode } = this.props
-    Airship.show(bridge => <AddressModal bridge={bridge} walletId={coreWallet.id} currencyCode={currencyCode} title={s.strings.scan_address_modal_title} />)
+    Airship.show(bridge => (
+      <AddressModal bridge={bridge} walletId={coreWallet.id} currencyCode={currencyCode} title={s.strings.scan_address_modal_title} autoFocus />
+    ))
       .then((result: string | null) => {
         if (result) {
           this.onChangeAddress(result)
