@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import { errorNames } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { MenuProvider } from 'react-native-popup-menu'
 import { connect } from 'react-redux'
@@ -21,8 +21,7 @@ import { convertTransactionFeeToDisplayFee, DIVIDE_PRECISION, getDenomFromIsoCod
 import { ExchangeRate } from '../common/ExchangeRate.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
-import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
-import { PrimaryButton } from '../themed/ThemedButtons.js'
+import { ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
@@ -91,6 +90,18 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   }
 
   handleSendMaxAmount = () => this.props.updateMaxSpend(this.props.walletId, this.props.currencyCode)
+
+  renderTitle = () => {
+    const styles = getStyles(this.props.theme)
+    return (
+      <View style={styles.headerContainer}>
+        <ModalTitle>{s.strings.string_enter_amount}</ModalTitle>
+        <TouchableOpacity onPress={this.handleSendMaxAmount}>
+          <EdgeText style={styles.headerMaxAmountText}>{s.strings.send_confirmation_max_button_title}</EdgeText>
+        </TouchableOpacity>
+      </View>
+    )
+  }
 
   renderExchangeRates = () => {
     const { primaryInfo, secondaryInfo, fiatPerCrypto, errorMessage, theme } = this.props
@@ -164,14 +175,12 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
       <MenuProvider style={styles.menuProvider}>
         <ThemedModal bridge={this.props.bridge} onCancel={this.handleCloseModal}>
           <ScrollView style={{ maxHeight: this.props.theme.rem(23) }} keyboardShouldPersistTaps="handled">
-            <ModalTitle>{s.strings.string_enter_amount}</ModalTitle>
+            {this.renderTitle()}
             {this.renderExchangeRates()}
             {this.renderBalance()}
             {this.renderFlipInput()}
             {this.renderFees()}
-            <PrimaryButton label={s.strings.send_confirmation_max_button_title} marginRem={1} onPress={this.handleSendMaxAmount} />
           </ScrollView>
-          <ModalCloseArrow onPress={this.handleCloseModal} />
         </ThemedModal>
       </MenuProvider>
     )
@@ -181,6 +190,14 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
 const getStyles = cacheStyles((theme: Theme) => ({
   menuProvider: {
     flexDirection: 'row'
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  headerMaxAmountText: {
+    color: theme.textLink
   },
   balanceContainer: {
     flexDirection: 'row',
@@ -219,6 +236,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   feesSyntaxDanger: {
     color: theme.dangerText
+  },
+  spacer: {
+    flex: 1
   }
 }))
 
