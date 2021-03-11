@@ -2,7 +2,7 @@
 
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
-import type { EdgeAccount, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import { type EdgeAccount, type EdgeCurrencyWallet, type EdgeParsedUri, type EdgeSpendTarget, type EdgeTransaction, errorNames } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -336,7 +336,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { error, exchangeRates, settings, transaction, theme } = this.props
     const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
 
-    if (error) {
+    if (error && error.name !== errorNames.NoAmountSpecifiedError) {
       return (
         <Tile type="static" title="Error">
           <EdgeText style={{ color: theme.dangerText }}>{error.message}</EdgeText>
@@ -418,7 +418,7 @@ class SendComponent extends React.PureComponent<Props, State> {
               <Slider
                 onSlidingComplete={this.submit}
                 resetSlider={resetSlider}
-                sliderDisabled={!recipientAddress && sliderDisabled}
+                sliderDisabled={sliderDisabled}
                 showSpinner={loading || pending}
               />
             )}
@@ -453,7 +453,7 @@ export const SendScene = connect(
       pending,
       resetSlider: !!error && (error.message === 'broadcastError' || error.message === 'transactionCancelled'),
       settings: state.ui.settings,
-      sliderDisabled: !transaction || !!error || pending,
+      sliderDisabled: !transaction || !!error || !!pending,
       transaction,
       uniqueIdentifier: guiMakeSpendInfo.uniqueIdentifier,
       wallets: state.ui.wallets.byId
