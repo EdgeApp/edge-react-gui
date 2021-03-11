@@ -774,7 +774,11 @@ const strings = {
   select_fio_address_address_to: 'FIO Address To',
   select_fio_address_address_from: 'FIO Address From',
   select_fio_address_address_memo: 'FIO Memo',
-  select_fio_address_address_memo_error: 'FIO Memo Error'
+  select_fio_address_address_memo_error: 'FIO Memo Error',
+
+  // Send Scene
+  send_scene_send_from_wallet: 'Send from Wallet',
+  send_scene_send_to_address: 'Send to Address'
 }
 
 // export default strings
