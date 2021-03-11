@@ -120,13 +120,11 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
   renderBalance = () => {
     const { balanceCrypto, balanceFiat, theme } = this.props
     const styles = getStyles(theme)
+    const balance = `${balanceCrypto} (${balanceFiat})`
     return (
       <View style={styles.balanceContainer}>
         <EdgeText style={styles.balanceString}>{s.strings.send_confirmation_balance}</EdgeText>
-        <View style={styles.balanceValueContainer}>
-          <EdgeText style={styles.balanceValue}>{balanceFiat}</EdgeText>
-          <EdgeText style={styles.balanceValue}>{balanceCrypto}</EdgeText>
-        </View>
+        <EdgeText style={styles.balanceValue}>{balance}</EdgeText>
       </View>
     )
   }
@@ -208,9 +206,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   exchangeRateErrorText: {
     color: theme.dangerText
-  },
-  balanceValueContainer: {
-    flexDirection: 'column'
   },
   balanceValue: {
     textAlign: 'right'
