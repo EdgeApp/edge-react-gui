@@ -20,7 +20,7 @@ import { convertTransactionFeeToDisplayFee, DIVIDE_PRECISION, getDenomFromIsoCod
 import { ExchangeRate } from '../common/ExchangeRate.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
-import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
+import { ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
@@ -175,7 +175,6 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
         {this.renderBalance()}
         {this.renderFlipInput()}
         {this.renderFees()}
-        <ModalCloseArrow onPress={this.handleCloseModal} />
       </ThemedModal>
     )
   }
