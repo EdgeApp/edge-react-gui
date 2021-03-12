@@ -425,6 +425,7 @@ export const displayFeeAlert = async (feeAmountInFiatSyntax: string) => {
   return resolveValue === 'confirm'
 }
 
+// Should be removed when Send Confirmation Scene is removed
 export const getAuthRequiredDispatch = (spendInfo: EdgeSpendInfo) => (dispatch: Dispatch, getState: GetState) => {
   return getAuthRequired(getState(), spendInfo)
 }
@@ -447,7 +448,7 @@ export const updateTransactionAmount = (nativeAmount: string, exchangeAmount: st
   const guiMakeSpendInfo = { nativeAmount, metadata }
   const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
   const spendInfo = getSpendInfoWithoutState(guiMakeSpendInfoClone, sceneState, currencyCode)
-  const authType: any = getAuthRequiredDispatch(spendInfo) // Type casting any cause dispatch returns a function
+  const authType = getAuthRequired(state, spendInfo)
 
   // Transaction Update
   dispatch(newSpendInfo(spendInfo, authType))
