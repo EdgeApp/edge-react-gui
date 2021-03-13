@@ -6,6 +6,7 @@ pipeline {
   options {
     timestamps()
     skipDefaultCheckout true
+    overrideIndexTriggers false
   }
   triggers {
     pollSCM("H/5 * * * *")
