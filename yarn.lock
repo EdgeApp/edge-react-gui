@@ -5151,10 +5151,10 @@ edge-core-js@^0.17.26:
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
 
-edge-currency-accountbased@^0.7.48:
-  version "0.7.48"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.48.tgz#aeca99fdc1901d66afbdafc8765bcda114240743"
-  integrity sha512-NqCqdphS4FfttR/6zE0/F07njF1rnxiNLKoIp9hXIrBL0fJwuFAlL9EaKwo4lW/oZJKxSbqoNDehUXFrpmI/gg==
+edge-currency-accountbased@^0.7.49:
+  version "0.7.49"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.49.tgz#741704d6324e8b28caca80890eed511dcff96e8d"
+  integrity sha512-vkvvp/uJcu0YY/dgYHmTW+PJFF+CeIHtQHgdvL3Y2UKjnDomXp1mj0a9Z487OPYhrChx3BS6STr0QeEENXJsiw==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.2.1"
@@ -5213,10 +5213,10 @@ edge-currency-monero@^0.2.9:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.21:
-  version "0.11.21"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.21.tgz#fbafd2a4a64c54c4d097388ceb9307984f4858ac"
-  integrity sha512-njzxAhj28XCs53Q9xc4douwcLmRRFIcQJqnk2rlsl4BFqtAT4mEnWI1duidVyLBJjVcvcWwzGcSZP6e24HsIkw==
+edge-exchange-plugins@^0.11.22:
+  version "0.11.22"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.22.tgz#6daa2443a725c82208e4ac67fc076ef360f467fb"
+  integrity sha512-q+BMyKm9Bnb7m/qmj2JEWul7n6SYbxQIVhhLyJ/bALoEdp+tOutrKN7s9CL+Xp+2t6/7JxebxmrP8PrgbrCn5w==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.2.0"
