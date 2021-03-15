@@ -87,8 +87,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
 const getStyles = cacheStyles((theme: Theme) => ({
   status: {
     color: theme.warningText,
-    fontSize: theme.rem(1),
-    margin: theme.rem(0.25)
+    fontSize: theme.rem(1)
   },
   statusRejected: {
     color: theme.dangerText

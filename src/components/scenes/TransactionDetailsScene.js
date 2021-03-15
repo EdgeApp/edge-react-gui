@@ -519,13 +519,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   tileRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    margin: theme.rem(0.25)
+    alignItems: 'center'
   },
   tileColumn: {
     flexDirection: 'column',
-    justifyContent: 'center',
-    margin: theme.rem(0.25)
+    justifyContent: 'center'
   },
   tileTextBottom: {
     color: theme.primaryText,

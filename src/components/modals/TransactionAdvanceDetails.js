@@ -172,13 +172,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   text: {
     color: theme.primaryText,
-    fontSize: theme.rem(1),
-    margin: theme.rem(0.25)
+    fontSize: theme.rem(1)
   },
   feesContainer: {
     width: '100%',
-    flexDirection: 'row',
-    margin: theme.rem(0.25)
+    flexDirection: 'row'
   },
   feesBodyContainer: {
     flexDirection: 'column',
@@ -190,9 +188,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   feesRowText: {
     color: theme.primaryText,
     fontSize: theme.rem(1)
-  },
-  rawBytesText: {
-    margin: theme.rem(0.25)
   }
 }))
 
