@@ -31,6 +31,7 @@ import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { AddressTile } from '../themed/AddressTile.js'
 import { EdgeText } from '../themed/EdgeText'
+import { PinDots } from '../themed/PinDots.js'
 import { SelectFioAddress } from '../themed/SelectFioAddress.js'
 import { Tile } from '../themed/Tile.js'
 
@@ -453,6 +454,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     if (authRequired === 'pin') {
       return (
         <Tile type="touchable" title={s.strings.four_digit_pin} onPress={this.handleFocusPin}>
+          <PinDots pin={pin} />
           <TextInput
             ref={this.pinInput}
             maxLength={4}
@@ -524,7 +526,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(0.25),
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
-    color: theme.primaryText
+    color: theme.primaryText,
+    position: 'absolute',
+    width: 0,
+    height: 0
   }
 }))
 
