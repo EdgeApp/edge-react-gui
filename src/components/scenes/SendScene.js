@@ -437,12 +437,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           </View>
           <Scene.Footer style={styles.footer}>
             {!!recipientAddress && (
-              <Slider
-                onSlidingComplete={this.submit}
-                resetSlider={resetSlider}
-                sliderDisabled={sliderDisabled}
-                showSpinner={loading || pending}
-              />
+              <Slider onSlidingComplete={this.submit} resetSlider={resetSlider} sliderDisabled={sliderDisabled} showSpinner={loading || pending} />
             )}
           </Scene.Footer>
         </ScrollView>
@@ -463,7 +458,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const SendScene = connect(
   (state: RootState): StateProps => {
     const { nativeAmount, transaction, error, pending, guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
-    console.log(guiMakeSpendInfo.otherParams, transaction)
     return {
       account: state.core.account,
       defaultSelectedWalletId: state.ui.wallets.selectedWalletId,
