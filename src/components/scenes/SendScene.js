@@ -120,7 +120,13 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     if (guiMakeSpendInfo) {
       this.props.sendConfirmationUpdateTx(guiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
-      this.setState({ recipientAddress: guiMakeSpendInfo.publicAddress || '' })
+      const recipientAddress =
+        guiMakeSpendInfo && guiMakeSpendInfo.publicAddress
+          ? guiMakeSpendInfo.publicAddress
+          : guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets[0].publicAddress
+          ? guiMakeSpendInfo.spendTargets[0].publicAddress
+          : ''
+      this.setState({ recipientAddress })
     }
   }
 
@@ -415,12 +421,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           </View>
           <Scene.Footer style={styles.footer}>
             {!!recipientAddress && (
-              <Slider
-                onSlidingComplete={this.submit}
-                resetSlider={resetSlider}
-                sliderDisabled={sliderDisabled}
-                showSpinner={loading || pending}
-              />
+              <Slider onSlidingComplete={this.submit} resetSlider={resetSlider} sliderDisabled={sliderDisabled} showSpinner={loading || pending} />
             )}
           </Scene.Footer>
         </ScrollView>

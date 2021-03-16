@@ -122,7 +122,6 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
 
       // If we don't know what this is, fake a barcode scan:
       if (currencyCode == null) {
-        Actions.push(SCAN)
         dispatch(parseScannedUri(link.uri))
         return true
       }
@@ -133,7 +132,6 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
         const wallet = byId[walletId]
         if (wallet.currencyCode !== currencyCode) continue
         dispatch(selectWallet(wallet.id, wallet.currencyCode))
-        Actions.push(SCAN)
         dispatch(parseScannedUri(link.uri))
         return true
       }
