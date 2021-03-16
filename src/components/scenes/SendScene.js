@@ -437,7 +437,13 @@ class SendComponent extends React.PureComponent<Props, State> {
           </View>
           <Scene.Footer style={styles.footer}>
             {!!recipientAddress && (
-              <Slider onSlidingComplete={this.submit} resetSlider={resetSlider} sliderDisabled={sliderDisabled} showSpinner={loading || pending} />
+              <Slider
+                onSlidingComplete={this.submit}
+                resetSlider={resetSlider}
+                sliderDisabled={sliderDisabled}
+                showSpinner={loading || pending}
+                parentStyle={styles.slider}
+              />
             )}
           </Scene.Footer>
         </ScrollView>
@@ -451,7 +457,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1
   },
   footer: {
-    margin: theme.rem(2)
+    margin: theme.rem(2),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  slider: {
+    width: theme.rem(16)
   }
 }))
 
