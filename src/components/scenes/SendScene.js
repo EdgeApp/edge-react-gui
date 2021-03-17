@@ -281,7 +281,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     return (
       <Tile
         type={lockInputs || lockTilesMap.wallet ? 'static' : 'editable'}
-        title={`${s.strings.step} 1: ${s.strings.select_wallet}`}
+        title={s.strings.send_scene_send_from_wallet}
         onPress={lockInputs || lockTilesMap.wallet ? undefined : this.handleWalletPress}
         body={`${guiWallet.name} (${selectedCurrencyCode})`}
       />
@@ -296,7 +296,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     if (coreWallet && !hiddenTilesMap.address) {
       return (
         <AddressTile
-          title={`${s.strings.step} 2: ${s.strings.transaction_details_recipient} ${s.strings.fragment_send_address}`}
+          title={s.strings.send_scene_send_to_address}
           recipientAddress={recipientAddress}
           coreWallet={coreWallet}
           currencyCode={selectedCurrencyCode}
@@ -313,11 +313,12 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAmount() {
-    const { exchangeRates, lockInputs, lockTilesMap = {}, hiddenTilesMap = {}, nativeAmount, settings } = this.props
+    const { exchangeRates, lockInputs, lockTilesMap = {}, hiddenTilesMap = {}, nativeAmount, settings, theme } = this.props
     const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
 
     if (recipientAddress && !hiddenTilesMap.amount) {
-      let amountSyntax
+      let cryptoAmountSyntax
+      let fiatAmountSyntax
       const cryptoDisplayDenomination = UTILS.getDisplayDenomination(selectedCurrencyCode, settings)
       const cryptoExchangeDenomination = UTILS.getExchangeDenomination(guiWallet, selectedCurrencyCode, settings)
       const fiatDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
@@ -326,9 +327,12 @@ class SendComponent extends React.PureComponent<Props, State> {
         const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, UTILS.DIVIDE_PRECISION)
         const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, UTILS.DIVIDE_PRECISION)
         const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, parseFloat(exchangeAmount))
-        amountSyntax = `${displayAmount || '0'} ${cryptoDisplayDenomination.name} = (${fiatSymbol} ${fiatAmount.toFixed(2) || '0'})`
+        cryptoAmountSyntax = `${displayAmount ?? '0'} ${cryptoDisplayDenomination.name}`
+        if (fiatAmount) {
+          fiatAmountSyntax = `${fiatSymbol} ${fiatAmount.toFixed(2) ?? '0'}`
+        }
       } else {
-        amountSyntax = `${'0'} ${cryptoDisplayDenomination.name} = (${fiatSymbol} ${'0'})`
+        cryptoAmountSyntax = `0 ${cryptoDisplayDenomination.name}`
       }
 
       return (
@@ -336,8 +340,10 @@ class SendComponent extends React.PureComponent<Props, State> {
           type={lockInputs || lockTilesMap.amount ? 'static' : 'touchable'}
           title={s.strings.fio_request_amount}
           onPress={lockInputs || lockTilesMap.amount ? undefined : this.handleFlipinputModal}
-          body={amountSyntax}
-        />
+        >
+          <EdgeText style={{ fontSize: theme.rem(2) }}>{cryptoAmountSyntax}</EdgeText>
+          {fiatAmountSyntax == null ? null : <EdgeText>{fiatAmountSyntax}</EdgeText>}
+        </Tile>
       )
     }
 

@@ -364,6 +364,7 @@ class AddressModalConnected extends React.Component<Props, State> {
                   </InputAccessoryView>
                 ) : null}
                 <FormField
+                  autoFocus
                   blurOnSubmit
                   returnKeyType="done"
                   autoCapitalize="none"

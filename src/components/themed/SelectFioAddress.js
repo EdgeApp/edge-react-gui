@@ -36,8 +36,7 @@ type SelectFioAddressProps = {
   selectedWallet: GuiWallet,
   currencyCode: string,
   fioRequest?: FioRequest,
-  isSendUsingFioAddress?: boolean,
-  fioToAddress?: string
+  isSendUsingFioAddress?: boolean
 }
 
 type DispatchProps = {
@@ -206,10 +205,6 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
     this.props.onMemoChange(memo, memoError)
   }
 
-  renderFioToAddress() {
-    return this.props.fioToAddress ? <Tile type="static" title={s.strings.select_fio_address_address_to} body={this.props.fioToAddress} /> : null
-  }
-
   renderFioFromAddress() {
     const { fioRequest, selected } = this.props
     const { loading } = this.state
@@ -254,12 +249,11 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
     const { fioRequest, isSendUsingFioAddress } = this.props
 
     if (!fioRequest && !isSendUsingFioAddress) {
-      return this.renderFioToAddress()
+      return null
     }
 
     return (
       <View>
-        {this.renderFioToAddress()}
         {this.renderFioFromAddress()}
         {this.renderFioMemo()}
       </View>
@@ -291,8 +285,7 @@ const mapStateToProps = (state: RootState): SelectFioAddressProps => {
     currencyCode,
     selectedWallet: guiWallet,
     fioRequest: guiMakeSpendInfo && guiMakeSpendInfo.fioPendingRequest ? guiMakeSpendInfo.fioPendingRequest : undefined,
-    isSendUsingFioAddress: guiMakeSpendInfo ? guiMakeSpendInfo.isSendUsingFioAddress : undefined,
-    fioToAddress: guiMakeSpendInfo && guiMakeSpendInfo.fioAddress ? guiMakeSpendInfo.fioAddress : undefined
+    isSendUsingFioAddress: guiMakeSpendInfo ? guiMakeSpendInfo.isSendUsingFioAddress : undefined
   }
 }
 

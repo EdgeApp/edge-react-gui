@@ -30,7 +30,8 @@ type OwnProps = {
   resetSendTransaction: () => void,
   lockInputs?: boolean,
   addressTileRef: any,
-  isCameraOpen: boolean
+  isCameraOpen: boolean,
+  fioToAddress?: string
 }
 type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null
@@ -252,15 +253,14 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { recipientAddress, lockInputs, theme, title } = this.props
+    const { fioToAddress, recipientAddress, lockInputs, theme, title } = this.props
     const { loading } = this.state
     const styles = getStyles(theme)
     const copyMessage = this.state.clipboard ? `${s.strings.string_paste}: ${this.state.clipboard}` : null
     const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'touchable' : 'static'
-    const tileBody = recipientAddress || undefined
     return (
       <View>
-        <Tile type={tileType} title={title} body={tileBody} onPress={this.handleTilePress}>
+        <Tile type={tileType} title={title} onPress={this.handleTilePress}>
           {!recipientAddress && (
             <View style={styles.buttonsContainer}>
               <TouchableOpacity style={styles.buttonContainer} onPress={this.handleChangeAddress}>
@@ -278,6 +278,12 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
                 </TouchableOpacity>
               )}
             </View>
+          )}
+          {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
+          {recipientAddress == null ? null : (
+            <EdgeText numberOfLines={3} adjustsFontSizeToFit={false}>
+              {recipientAddress}
+            </EdgeText>
           )}
         </Tile>
       </View>
@@ -305,7 +311,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const AddressTileConnector = connect((state: RootState): StateProps => {
   const { account } = state.core
+  const { guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
   return {
+    fioToAddress: guiMakeSpendInfo && guiMakeSpendInfo.fioAddress ? guiMakeSpendInfo.fioAddress : undefined,
     fioPlugin: account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
   }
 })(withTheme(AddressTileComponent))
