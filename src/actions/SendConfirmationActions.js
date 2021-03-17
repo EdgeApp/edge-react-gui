@@ -377,6 +377,16 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo, walletId?: strin
       message = s.strings.send_confirmation_eos_error_net
     } else if (e.name === 'ErrorEosInsufficientRam') {
       message = s.strings.send_confirmation_eos_error_ram
+    } else if (
+      edgeSignedTransaction &&
+      edgeSignedTransaction.otherParams &&
+      edgeSignedTransaction.otherParams.transactionJson &&
+      edgeSignedTransaction.otherParams.transactionJson.fioAction === 'transferFioAddress' &&
+      e.json &&
+      e.json.code === 500 &&
+      e.json.error.code === 3050003
+    ) {
+      message = s.strings.transfer_fio_address_exception
     }
 
     Alert.alert(s.strings.transaction_failure, message, [
