@@ -712,8 +712,6 @@
   "wallet_list_sort_currencyName": "Nach Währungsnamen sortieren",
   "wallet_list_sort_highest": "Nach höchsten Wert sortieren",
   "wallet_list_sort_lowest": "Nach niedrigsten Wert sortieren",
-  "select_fio_address_address_to": "FIO-Adresse an",
-  "select_fio_address_address_from": "FIO-Adresse von",
   "select_fio_address_address_memo": "FIO Memo",
   "select_fio_address_address_memo_error": "FIO Memo Error"
 }
