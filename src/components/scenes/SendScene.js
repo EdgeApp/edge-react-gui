@@ -131,7 +131,13 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     if (guiMakeSpendInfo) {
       this.props.sendConfirmationUpdateTx(guiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
-      this.setState({ recipientAddress: guiMakeSpendInfo.publicAddress || '' })
+      const recipientAddress =
+        guiMakeSpendInfo && guiMakeSpendInfo.publicAddress
+          ? guiMakeSpendInfo.publicAddress
+          : guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets[0].publicAddress
+          ? guiMakeSpendInfo.spendTargets[0].publicAddress
+          : ''
+      this.setState({ recipientAddress })
     }
   }
 
