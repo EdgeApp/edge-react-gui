@@ -657,6 +657,7 @@ const strings = {
   fio_domain_is_private_label: 'Your FIO Domain is private now',
   fio_domain_set_visibility_err: 'There was an issue changing visibility of your domain. Please try again later.',
   fio_transfer_err_msg: 'There was an issue transferring your %s. Please try again later.',
+  transfer_fio_address_exception: 'FIO Addresses with existing FIO Requests or FIO memos can not be transferred now.',
   fio_no_bundled_err_msg: 'Your FIO Address ran out of bundled transactions.',
   fio_no_bundled_non_fio_err_msg: 'If you continue, metadata for this transaction will not be recorded.',
   fio_no_bundled_renew_err_msg: 'Please renew your FIO Address to receive additional bundled transactions.',
