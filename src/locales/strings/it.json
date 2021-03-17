@@ -710,8 +710,6 @@
   "wallet_list_sort_currencyName": "Ordina per nome valuta",
   "wallet_list_sort_highest": "Ordina per valore più alto",
   "wallet_list_sort_lowest": "Ordina per valore più basso",
-  "select_fio_address_address_to": "A Indirizzi FIO",
-  "select_fio_address_address_from": "Da indirizzo FIO",
   "select_fio_address_address_memo": "FIO Memo",
   "select_fio_address_address_memo_error": "Errore FIO memo"
 }
