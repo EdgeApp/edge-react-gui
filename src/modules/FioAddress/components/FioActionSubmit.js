@@ -212,11 +212,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'center'
   },
   balanceTitle: {
-    margin: theme.rem(0.25),
     color: theme.primaryText
   },
   balanceTitleDisabled: {
-    margin: theme.rem(0.25),
     color: theme.dangerText
   },
   errorMessage: {

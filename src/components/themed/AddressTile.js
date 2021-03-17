@@ -298,7 +298,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   buttonText: {
-    marginTop: theme.rem(0.25),
     fontSize: theme.rem(0.75),
     color: theme.textLink
   }

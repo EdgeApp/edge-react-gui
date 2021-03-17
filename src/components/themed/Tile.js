@@ -91,13 +91,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   arrowIcon: {
     color: theme.iconTappable,
-    height: theme.rem(1),
     marginHorizontal: theme.rem(0.5),
     textAlign: 'center'
   },
   textHeader: {
     color: theme.secondaryText,
-    fontSize: theme.rem(0.75)
+    fontSize: theme.rem(0.75),
+    paddingBottom: theme.rem(0.25)
   },
   textHeaderError: {
     color: theme.dangerText,
@@ -112,8 +112,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.iconTappable,
     width: theme.rem(0.75),
     height: theme.rem(0.75),
-    top: theme.rem(0.5),
-    right: theme.rem(0.25)
+    top: theme.rem(0.25),
+    right: 0
   },
   loader: {
     marginTop: theme.rem(0.25)

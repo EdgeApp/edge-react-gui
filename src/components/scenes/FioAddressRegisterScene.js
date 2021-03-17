@@ -443,8 +443,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
 
   addressTileBody: {
-    flexDirection: 'row',
-    margin: theme.rem(0.25)
+    flexDirection: 'row'
   },
   fioAddressName: {
     marginRight: theme.rem(1)
