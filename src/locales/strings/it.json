@@ -349,6 +349,7 @@
   "title_fio_make_public_domain": "Rendi pubblico il dominio",
   "title_fio_make_private_domain": "Rendi privato il dominio",
   "title_fio_transfer_domain": "Trasferisci dominio FIO",
+  "title_fio_transfer_address": "Trasferisci un indirizzo FIO",
   "title_fio_address": "Indirizzi FIO",
   "title_fio_names": "Nomi FIO",
   "title_fio_domains": "Domini FIO",
@@ -608,6 +609,7 @@
   "fio_domain_is_private_label": "Il tuo dominio FIO è ora privato",
   "fio_domain_set_visibility_err": "C'è stato un problema mentre cambiavo la visibilità del tuo dominio. Riprova più tardi.",
   "fio_transfer_err_msg": "Si è verificato un problema nel trasferire %s. Riprova più tardi.",
+  "transfer_fio_address_exception": "Gli indirizzi FIO con richieste FIO esistenti o con memo FIO non possono essere trasferiti ora.",
   "fio_no_bundled_err_msg": "Il tuo indirizzo FIO ha esaurito le transazioni in bundle.",
   "fio_no_bundled_non_fio_err_msg": "Se si continua, i metadati per questa transazione non verranno registrati.",
   "fio_no_bundled_renew_err_msg": "Per favore rinnova il tuo indirizzo FIO per ricevere ulteriori transazioni in bundle.",
@@ -664,6 +666,7 @@
   "fio_select_address_no_wallet_err": "Non è stato trovato nessun portafoglio FIO per l'indirizzo fio selezionato",
   "fio_sender_memo_label": "FIO Memo",
   "fio_sender_memo_placeholder": "Il tuo messaggio.",
+  "fio_address_to_transfer": "Indirizzo da trasferire",
   "fio_domain_to_transfer": "Dominio da trasferire",
   "fio_domain_transferred": "Trasferimento riuscito",
   "scan_address_modal_title": "Inserisci indirizzo FIO, ENS o indirizzo pubblico del destinatario",
@@ -710,6 +713,9 @@
   "wallet_list_sort_currencyName": "Ordina per nome valuta",
   "wallet_list_sort_highest": "Ordina per valore più alto",
   "wallet_list_sort_lowest": "Ordina per valore più basso",
+  "select_fio_address_address_from": "Invia da questo indirizzo",
   "select_fio_address_address_memo": "FIO Memo",
-  "select_fio_address_address_memo_error": "Errore FIO memo"
+  "select_fio_address_address_memo_error": "Errore FIO memo",
+  "send_scene_send_from_wallet": "Invia da Wallet",
+  "send_scene_send_to_address": "Invia all'indirizzo"
 }
