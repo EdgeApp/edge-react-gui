@@ -184,7 +184,8 @@ type SpecialCurrencyInfo = {|
   needsAccountNameSetup?: boolean,
   noChangeMiningFee?: boolean,
   noMaxSpend?: boolean,
-  keysOnlyMode?: boolean
+  keysOnlyMode?: boolean,
+  isPrivateKeySweepable?: boolean
 |}
 
 export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInfo => {
@@ -197,29 +198,45 @@ export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInf
   }
 }
 
+export const getPrivateKeySweepableCurrencies = (): string[] => {
+  const sweepableCurrencies = []
+  for (const currencyCode in SPECIAL_CURRENCY_INFO) {
+    const currencyInfo = SPECIAL_CURRENCY_INFO[currencyCode]
+    if (currencyInfo.isPrivateKeySweepable) {
+      sweepableCurrencies.push(currencyCode)
+    }
+  }
+  return sweepableCurrencies
+}
+
 export const SPECIAL_CURRENCY_INFO: {
   [currencyCode: string]: SpecialCurrencyInfo
 } = {
   BTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    showEarnInterestCard: false
+    showEarnInterestCard: false,
+    isPrivateKeySweepable: true
   },
   BCH: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    showEarnInterestCard: false
+    showEarnInterestCard: false,
+    isPrivateKeySweepable: true
   },
   BSV: {
-    displayBuyCrypto: true
+    displayBuyCrypto: true,
+    isPrivateKeySweepable: true
   },
   DGB: {
-    displayBuyCrypto: true
+    displayBuyCrypto: true,
+    isPrivateKeySweepable: true
   },
   LTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    showEarnInterestCard: false
+    showEarnInterestCard: false,
+    isPrivateKeySweepable: true
   },
   RBTC: {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
@@ -391,6 +408,21 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     }
+  },
+  DASH: {
+    isPrivateKeySweepable: true
+  },
+  RVN: {
+    isPrivateKeySweepable: true
+  },
+  DOGE: {
+    isPrivateKeySweepable: true
+  },
+  FIRO: {
+    isPrivateKeySweepable: true
+  },
+  SMART: {
+    isPrivateKeySweepable: true
   }
 }
 
