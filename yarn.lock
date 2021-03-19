@@ -4100,15 +4100,10 @@ cleaners@^0.2.0:
   resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.2.0.tgz#b1a583878f4c217c8f0bd2e7756dca3eaca91003"
   integrity sha512-UsCPC3eYtqBgk9kYSh8WbFoXbDD4lr9r7wz57MSsluMLFb78ws3ER6Bs2q+7iUmaeBiwZ/+S02FOQ5gEA2y4Sg==
 
-cleaners@^0.3.1, cleaners@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.2.tgz#e240a3837f5b2d59975f18d753dea7d1bab0fd4b"
-  integrity sha512-SOjd7UOrU/8CF6V7QKZsfJB8MIBylrZOso+eJWYFaOm2jamKj7Wxbihg8vasnHzqtagv1vpwhN8xkD3liX/dIg==
-
-cleaners@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.3.tgz#e8c8a2b18d2d11037ed4d928310eb29c8e787ee6"
-  integrity sha512-6IgzKXTkTq4aWA2fxImk/Ux3dDhX7JPlfHbFVjDJ/6ASV/k3dl4qKgFDXvLWRiPS9t8Hn11AvDqPFjRVNQ3b0Q==
+cleaners@^0.3.1, cleaners@^0.3.3, cleaners@^0.3.7:
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.7.tgz#b8fa056a430974d1125a1bb523ee128a6763fbfd"
+  integrity sha512-pRzWeIOXnbgJa211YAHjU1zW1kFMCdftJrB6DJC98nRAcd5XepWy0sAmvZ3kuh1g0y9gukRNSCli0+8aVNhwRg==
 
 cli-boxes@^2.2.0:
   version "2.2.1"
