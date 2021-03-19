@@ -32,9 +32,6 @@ import paymentTypeLogoPoli from '../../assets/images/paymentTypes/paymentTypeLog
 import paymentTypeLogoSofort from '../../assets/images/paymentTypes/paymentTypeLogoSofort.png'
 import paymentTypeLogoSwish from '../../assets/images/paymentTypes/paymentTypeLogoSwish.png'
 import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogoUpi.png'
-import requestCopy from '../../assets/images/request/requestCopyDark.png'
-import requestFioRequest from '../../assets/images/request/requestFioRequestDark.png'
-import requestShare from '../../assets/images/request/requestShareDark.png'
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_light.gif'
 import { type Theme } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
@@ -282,9 +279,5 @@ export const edgeLight: Theme = {
   walletListSlideTutorialImage: walletListSlidingTutorial,
 
   guiPluginLogoBitaccess: guiPluginLogoBitaccess,
-  guiPluginLogoMoonpay: guiPluginLogoMoonpay,
-
-  requestCopy: requestCopy,
-  requestFioRequest: requestFioRequest,
-  requestShare: requestShare
+  guiPluginLogoMoonpay: guiPluginLogoMoonpay
 }

@@ -214,9 +214,5 @@ export type Theme = {
   walletListSlideTutorialImage: string,
 
   guiPluginLogoBitaccess: string,
-  guiPluginLogoMoonpay: string,
-
-  requestCopy: string,
-  requestFioRequest: string,
-  requestShare: string
+  guiPluginLogoMoonpay: string
 }

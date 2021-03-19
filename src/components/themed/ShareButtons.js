@@ -1,8 +1,9 @@
 // @flow
 
 import * as React from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 
+import { Fontello } from '../../assets/vector/index.js'
 import s from '../../locales/strings'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -20,20 +21,21 @@ export function ShareButtons(props: Props) {
 
   return (
     <View style={styles.container}>
-      <ShareButton icon={theme.requestFioRequest} text={s.strings.fio_reject_request_title} onPress={fioAddressModal} />
-      <ShareButton icon={theme.requestCopy} text={s.strings.fragment_request_copy_title} onPress={copyToClipboard} />
-      <ShareButton icon={theme.requestShare} text={s.strings.string_share} onPress={shareViaShare} />
+      <ShareButton icon="FIO-geometric" text={s.strings.fio_reject_request_title} onPress={fioAddressModal} />
+      <ShareButton icon="Copy-icon" text={s.strings.fragment_request_copy_title} onPress={copyToClipboard} />
+      <ShareButton icon="group-(2)" text={s.strings.string_share} onPress={shareViaShare} />
     </View>
   )
 }
 
 function ShareButton(props: { text: string, onPress: () => void, icon: string }) {
   const { icon, text, onPress } = props
-  const styles = getStyles(useTheme())
+  const theme = useTheme()
+  const styles = getStyles(theme)
 
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Image style={styles.image} source={icon} resizeMode="contain" />
+      <Fontello name={icon} size={theme.rem(2)} style={styles.image} color={theme.icon} />
       <EdgeText style={styles.text}>{text}</EdgeText>
     </TouchableOpacity>
   )
@@ -52,8 +54,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center'
   },
   image: {
-    width: theme.rem(2),
-    height: theme.rem(2),
     marginBottom: theme.rem(0.5)
   },
   text: {
