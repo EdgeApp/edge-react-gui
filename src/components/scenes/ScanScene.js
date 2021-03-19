@@ -109,7 +109,7 @@ export class Scan extends React.Component<Props> {
       return (
         <RNCamera style={styles.cameraArea} captureAudio={false} flashMode={flashMode} onBarCodeRead={this.onBarCodeRead} type={RNCamera.Constants.Type.back}>
           <View style={styles.overlayTop}>
-            <T style={styles.overlayTopText}>{s.strings.send_scan_header_text}</T>
+            <T style={styles.overlayTopText}>{s.strings.send_scan_edge_login_or_sweep_private_key}</T>
           </View>
         </RNCamera>
       )
