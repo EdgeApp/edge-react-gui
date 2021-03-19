@@ -271,7 +271,7 @@ Array [
     "deepPath": "",
     "deepQuery": Object {},
     "description": "Fee: 1% / Settlement: 1 - 5days
-Limit: Unlimited",
+Monthly Limit: $150000",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": Array [

@@ -20,7 +20,7 @@
     "paymentTypes": [
       "bank"
     ],
-    "description": "Fee: 1% / Settlement: 1 - 5days\nLimit: Unlimited",
+    "description": "Fee: 1% / Settlement: 1 - 5days\nMonthly Limit: $150000",
     "title": "ACH Bank Transfer",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "forCountries": [
