@@ -1,10 +1,10 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { Scene } from 'edge-components'
 import { type EdgeAccount, type EdgeCurrencyWallet, type EdgeParsedUri, type EdgeSpendTarget, type EdgeTransaction, errorNames } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, TextInput, View } from 'react-native'
+import { TextInput, View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -482,18 +482,16 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     return (
       <SceneWrapper background="theme">
-        <ScrollView>
-          <View style={styles.tilesContainer}>
-            {this.renderSelectedWallet()}
-            {this.renderAddressTile()}
-            {this.renderAmount()}
-            {this.renderFees()}
-            {this.renderSelectFioAddress()}
-            {this.renderUniqueIdentifier()}
-            {this.renderInfoTiles()}
-            {this.renderAuthentication()}
-          </View>
-          <Scene.Footer style={styles.footer}>
+        <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.5)}>
+          {this.renderSelectedWallet()}
+          {this.renderAddressTile()}
+          {this.renderAmount()}
+          {this.renderFees()}
+          {this.renderSelectFioAddress()}
+          {this.renderUniqueIdentifier()}
+          {this.renderInfoTiles()}
+          {this.renderAuthentication()}
+          <View style={styles.footer}>
             {!!recipientAddress && (
               <Slider
                 onSlidingComplete={this.submit}
@@ -503,17 +501,14 @@ class SendComponent extends React.PureComponent<Props, State> {
                 parentStyle={styles.slider}
               />
             )}
-          </Scene.Footer>
-        </ScrollView>
+          </View>
+        </KeyboardAwareScrollView>
       </SceneWrapper>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  tilesContainer: {
-    flex: 1
-  },
   footer: {
     margin: theme.rem(2),
     justifyContent: 'center',
