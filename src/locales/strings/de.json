@@ -8,7 +8,7 @@
   "drawer_exchange_rate_loading": "Wechselkurs-Zuschlag",
   "drawer_exchange": "Tauschbörse",
   "drawer_request": "Angefordert",
-  "drawer_scan_qr_send": "QR-Code scannen (Senden)",
+  "drawer_scan_qr_send": "QR scannen (Edge Login)",
   "drawer_sweep_private_key": "Private Schlüssel verwerfen",
   "drawer_wallets": "Wallets",
   "drawer_fio_names": "FIO Names",
@@ -198,7 +198,6 @@
   "send_confirmation_eos_error_cpu": "Nicht genügend CPU zur Verfügung, um EOS-Transaktion zu senden. Bitte warten Sie 1-3 Tage, bis die CPU-Ressourcen sich wieder erholt haben.",
   "send_confirmation_eos_error_net": "Unzureichendes NET zum Senden von EOS-Transaktionen. Bitte warten Sie 1-3 Tage, bis NET wieder verfügbar wird.",
   "send_confirmation_eos_error_ram": "Nicht genügend RAM zur Verfügung, um EOS-Transaktion zu senden. Bitte recherchieren Sie nach Details für eine Lösung auf edge.app/eos.",
-  "send_scan_header_text": "Scannen zum Senden, Importieren oder in Edge einloggen",
   "send_scan_edge_login_success_title": "Edge-Login erfolgreich",
   "send_scan_edge_login_success_message": "Um fortzufahren, wenden Sie sich bitte an den Browser oder die Anwendung, die die Edge-Anmeldung angefordert hat.",
   "send_to_title": "An: %s",
@@ -349,6 +348,7 @@
   "title_fio_make_public_domain": "Domain öffentlich machen",
   "title_fio_make_private_domain": "Domain privat machen",
   "title_fio_transfer_domain": "FIO-Domain übertragen",
+  "title_fio_transfer_address": "FIO-Adresse übertragen",
   "title_fio_address": "FIO-Adresse",
   "title_fio_names": "FIO Names",
   "title_fio_domains": "FIO Domains",
@@ -664,6 +664,7 @@
   "fio_select_address_no_wallet_err": "Es wurde keine FIO-Wallet für ausgewählte Fio-Adresse gefunden",
   "fio_sender_memo_label": "FIO Notiz",
   "fio_sender_memo_placeholder": "Ihre Nachricht.",
+  "fio_address_to_transfer": "Adresse zum Übertragen",
   "fio_domain_to_transfer": "Zu übertragende Domain",
   "fio_domain_transferred": "Erfolgreich übertragen",
   "scan_address_modal_title": "Empfänger FIO, ENS oder öffentliche Adresse eingeben",
@@ -709,5 +710,7 @@
   "wallet_list_sort_currencyCode": "Nach Währungscode sortieren",
   "wallet_list_sort_currencyName": "Nach Währungsnamen sortieren",
   "wallet_list_sort_highest": "Nach höchsten Wert sortieren",
-  "wallet_list_sort_lowest": "Nach niedrigsten Wert sortieren"
+  "wallet_list_sort_lowest": "Nach niedrigsten Wert sortieren",
+  "select_fio_address_address_memo": "FIO Memo",
+  "select_fio_address_address_memo_error": "FIO Memo Error"
 }
