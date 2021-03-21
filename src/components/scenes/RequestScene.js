@@ -341,7 +341,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
             </View>
 
             <RightChevronButton
-              marginRem={[1, 0, 0.5, 0]}
+              marginRem={[0.5, 0, 0.5, 0]}
               onPress={this.handleAddressBlockExplorer}
               text={s.strings.request_qr_your_receiving_wallet_address}
             />
@@ -492,9 +492,8 @@ export class RequestComponent extends React.PureComponent<Props, State> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    marginHorizontal: theme.rem(1)
+    paddingHorizontal: theme.rem(1)
   },
 
   title: {
@@ -503,14 +502,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   balance: {
     fontSize: theme.rem(1.25),
-    marginBottom: theme.rem(1.5)
+    marginBottom: theme.rem(0.5)
   },
 
   qrContainer: {
-    marginTop: theme.rem(1.5),
+    marginTop: theme.rem(1),
     marginLeft: theme.rem(2),
     backgroundColor: theme.qrBackgroundColor,
     borderRadius: theme.rem(0.5),
+    width: theme.rem(11),
+    height: theme.rem(11),
     padding: theme.rem(0.5)
   },
 

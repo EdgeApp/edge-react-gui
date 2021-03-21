@@ -224,6 +224,7 @@ export const edgeLight: Theme = {
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
   searchListRefreshControlIndicator: palette.transparent,
   clipboardPopupText: palette.black,
+  flipInputBorder: palette.edgeBlue,
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,

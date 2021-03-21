@@ -384,7 +384,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     this.onKeyPress(e.nativeEvent.key, this.state.secondaryDecimalAmount, this.props.secondaryInfo.maxEntryDecimals, setSecondaryToPrimary)
   }
 
-  topRow = (isFront: boolean) => {
+  bottomRow = (isFront: boolean) => {
     const { isEditable, inputAccessoryViewID, onNext, topReturnKeyType, theme } = this.props
     const styles = getStyles(theme)
     const displayAmount = isFront ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
@@ -425,7 +425,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     )
   }
 
-  bottomRow = (fieldInfo: FlipInputFieldInfo, amount: string) => {
+  topRow = (fieldInfo: FlipInputFieldInfo, amount: string) => {
     const bottomText = `${amount} ${fieldInfo.currencyName}`
     return (
       <TouchableWithoutFeedback onPress={this.onToggleFlipInput} key="bottom">
@@ -465,15 +465,15 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
               style={[styles.flipInputFront, frontAnimatedStyle, { opacity: this.androidFrontOpacityInterpolate }]}
               pointerEvents={isToggled ? 'none' : 'auto'}
             >
-              {this.topRow(true)}
-              {this.bottomRow(secondaryInfo, this.state.secondaryDisplayAmount)}
+              {this.topRow(secondaryInfo, this.state.secondaryDisplayAmount)}
+              {this.bottomRow(true)}
             </Animated.View>
             <Animated.View
               style={[styles.flipInputFront, styles.flipContainerBack, backAnimatedStyle, { opacity: this.androidBackOpacityInterpolate }]}
               pointerEvents={isToggled ? 'auto' : 'none'}
             >
-              {this.topRow(false)}
-              {this.bottomRow(primaryInfo, this.state.primaryDisplayAmount)}
+              {this.topRow(primaryInfo, this.state.primaryDisplayAmount)}
+              {this.bottomRow(false)}
             </Animated.View>
           </View>
           <MaterialIcon styles={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={theme.rem(2)} color={theme.iconTappable} />
@@ -485,12 +485,17 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    width: '100%'
+    padding: theme.rem(1),
+    borderRadius: theme.rem(0.25),
+    borderWidth: theme.thinLineWidth,
+    borderColor: theme.flipInputBorder
   },
 
   // Header
   headerContainer: {
-    flexDirection: 'row'
+    marginRight: theme.rem(5),
+    flexDirection: 'row',
+    marginBottom: theme.rem(1)
   },
   headerIcon: {
     width: theme.rem(1.5),
@@ -530,7 +535,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   topAmount: {
     fontFamily: theme.fontFaceBold,
     fontSize: theme.rem(2),
-    marginLeft: theme.rem(-0.1), // Hack because of amount being bigger font size not aligning to the rest of the text on justified left
     marginRight: theme.rem(0.5)
   },
   topAmountMuted: {

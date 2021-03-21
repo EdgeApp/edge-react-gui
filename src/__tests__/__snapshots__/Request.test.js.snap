@@ -8,9 +8,8 @@ exports[`Request should render with loaded props 1`] = `
   <View
     style={
       Object {
-        "alignItems": "flex-start",
         "justifyContent": "flex-start",
-        "marginHorizontal": 22,
+        "paddingHorizontal": 22,
       }
     }
   >
@@ -28,7 +27,7 @@ exports[`Request should render with loaded props 1`] = `
       style={
         Object {
           "fontSize": 28,
-          "marginBottom": 34,
+          "marginBottom": 11,
         }
       }
     >
@@ -121,9 +120,11 @@ exports[`Request should render with loaded props 1`] = `
         Object {
           "backgroundColor": "#FFFFFF",
           "borderRadius": 11,
+          "height": 247,
           "marginLeft": 45,
-          "marginTop": 34,
+          "marginTop": 22,
           "padding": 11,
+          "width": 247,
         }
       }
     >
@@ -135,7 +136,7 @@ exports[`Request should render with loaded props 1`] = `
     <RightChevronButton
       marginRem={
         Array [
-          1,
+          0.5,
           0,
           0.5,
           0,
