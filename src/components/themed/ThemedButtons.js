@@ -135,14 +135,14 @@ export function RadioIcon(props: { value: boolean }) {
   return icon
 }
 
-export function RightChevronButton(props: { text: string, onPress: () => void, marginRem?: number[] | number }) {
-  const { text, onPress, marginRem } = props
+export function RightChevronButton(props: { text: string, onPress: () => void, paddingRem?: number[] | number }) {
+  const { text, onPress, paddingRem = 0 } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={[spacingStyles({ marginRem, paddingRem: 0 }, theme), styles.rightChevronContainer]}>
+      <View style={[spacingStyles({ marginRem: [0, 1.25, 0, 0], paddingRem }, theme), styles.rightChevronContainer]}>
         <EdgeText style={styles.rightChevronText}>{text}</EdgeText>
         <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
       </View>
@@ -244,7 +244,8 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     spinner: { height: theme.rem(2) },
     rightChevronContainer: {
-      flexDirection: 'row'
+      flexDirection: 'row',
+      alignItems: 'center'
     },
     rightChevronText: {
       marginRight: theme.rem(0.25),

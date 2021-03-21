@@ -493,8 +493,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   // Header
   headerContainer: {
-    marginRight: theme.rem(5),
+    marginRight: Platform.OS === 'ios' ? theme.rem(3.5) : theme.rem(1.5), // Different because adjustsFontSizeToFit behaves differently on android vs ios
     flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: theme.rem(1)
   },
   headerIcon: {

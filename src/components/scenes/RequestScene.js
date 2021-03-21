@@ -341,7 +341,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
             </View>
 
             <RightChevronButton
-              marginRem={[0.5, 0, 0.5, 0]}
+              paddingRem={[0.5, 0, 0.5, 0]}
               onPress={this.handleAddressBlockExplorer}
               text={s.strings.request_qr_your_receiving_wallet_address}
             />
