@@ -5,17 +5,19 @@ import { View } from 'react-native'
 
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
-export function PinDots(props: { pin: string }) {
+export function PinDots(props: { pinLength: number, maxLength: number }) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  return (
-    <View style={styles.container}>
-      <View style={[styles.circle, props.pin.length > 0 && styles.circleFilled]} />
-      <View style={[styles.circle, props.pin.length > 1 && styles.circleFilled]} />
-      <View style={[styles.circle, props.pin.length > 2 && styles.circleFilled]} />
-      <View style={[styles.circle, props.pin.length > 3 && styles.circleFilled]} />
-    </View>
-  )
+
+  const renderCircle = () => {
+    const circle = []
+    for (let i = 0; i < props.maxLength; i++) {
+      circle.push(<View style={[styles.circle, props.pinLength > i && styles.circleFilled]} />)
+    }
+    return circle
+  }
+
+  return <View style={styles.container}>{renderCircle()}</View>
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

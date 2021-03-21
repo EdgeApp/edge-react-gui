@@ -35,6 +35,8 @@ import { PinDots } from '../themed/PinDots.js'
 import { SelectFioAddress } from '../themed/SelectFioAddress.js'
 import { Tile } from '../themed/Tile.js'
 
+const PIN_MAX_LENGTH = 4
+
 type StateProps = {
   account: EdgeAccount,
   authRequired: 'pin' | 'none',
@@ -248,7 +250,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   handleChangePin = (pin: string) => {
     this.props.onChangePin(pin)
-    if (pin.length >= 4 && this.pinInput) {
+    if (pin.length >= PIN_MAX_LENGTH && this.pinInput) {
       this.pinInput.current.blur()
     }
   }
@@ -454,10 +456,12 @@ class SendComponent extends React.PureComponent<Props, State> {
     if (authRequired === 'pin') {
       return (
         <Tile type="touchable" title={s.strings.four_digit_pin} onPress={this.handleFocusPin}>
-          <PinDots pin={pin} />
+          <View style={styles.pinContainer}>
+            <PinDots pinLength={pin.length} maxLength={PIN_MAX_LENGTH} />
+          </View>
           <TextInput
             ref={this.pinInput}
-            maxLength={4}
+            maxLength={PIN_MAX_LENGTH}
             onChangeText={this.handleChangePin}
             keyboardType="numeric"
             returnKeyType="done"
@@ -482,7 +486,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     return (
       <SceneWrapper background="theme">
-        <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.5)}>
+        <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)}>
           {this.renderSelectedWallet()}
           {this.renderAddressTile()}
           {this.renderAmount()}
@@ -517,8 +521,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   slider: {
     width: theme.rem(16)
   },
+  pinContainer: {
+    marginTop: theme.rem(0.25)
+  },
   pinInput: {
-    marginTop: theme.rem(0.25),
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
     color: theme.primaryText,
