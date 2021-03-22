@@ -70,11 +70,15 @@ Use Android Studio's Preferences to install NDK (Side by side):
 
 ![Android Studio Preferences Screenshot](docs/images/android-studio-ndk-preferences.png)
 
+Ensuring the correct version:
+![Android Studio Preferences Screenshot](docs/images/android-studio-ndk-version.png)
+
 1. Open Preferences
 2. Navigate to `Appearance & Behavior -> System Settings -> Android SDK` in the sidebar
 3. Navigate to `SDK Tools` tab
-4. Check `NDK (Side by side)` checkbox
-5. Click OK or Apply and follow the download instructions.
+4. Check `Show Package Details` checkbox at the bottom right-hand corner.
+5. Check Version `21.0.6011959` under `NDK (Side by side)`
+6. Click OK or Apply and follow the download instructions.
 
 > If the NDK is already installed from Android Studio, it should be in `/Users/[user]/Library/Android/sdk/ndk-bundle` (macOS) or `C:\Users\[username]\AppData\Local\Android\Sdk\ndk-bundle` (Windows).
 
@@ -92,7 +96,8 @@ The following environment variables should be exported from your `.bashrc` or eq
 
 For best results, please consider using the following versions (up-to-date as of 2020-11-16)
 
-- **Java 8 & Java JDK** version 8u202 (([link](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html)))
+- **Java 8 & Java JDK** version 8u202
+    brew install --cask adoptopenjdk8
 
 ### Add API key in env.json
 
