@@ -96,7 +96,7 @@ The following environment variables should be exported from your `.bashrc` or eq
 
 For best results, please consider using the following versions (up-to-date as of 2020-11-16)
 
-- **Java 8 & Java JDK** version 8u202
+### **Java 8 & Java JDK** version 8u202 recommended via brew
     brew install --cask adoptopenjdk8
 
 ### Add API key in env.json
