@@ -1,14 +1,14 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { Scene } from 'edge-components'
 import { type EdgeAccount, type EdgeCurrencyWallet, type EdgeParsedUri, type EdgeSpendTarget, type EdgeTransaction, errorNames } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { TextInput, View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { type FioSenderInfo, reset, sendConfirmationUpdateTx, signBroadcastAndSave, updateSpendPending } from '../../actions/SendConfirmationActions.js'
+import { type FioSenderInfo, newPin, reset, sendConfirmationUpdateTx, signBroadcastAndSave, updateSpendPending } from '../../actions/SendConfirmationActions.js'
 import { activated as uniqueIdentifierModalActivated } from '../../actions/UniqueIdentifierModalActions.js'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
 import { CHANGE_MINING_FEE_SEND_CONFIRMATION, getSpecialCurrencyInfo } from '../../constants/indexConstants'
@@ -31,11 +31,15 @@ import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { AddressTile } from '../themed/AddressTile.js'
 import { EdgeText } from '../themed/EdgeText'
+import { PinDots } from '../themed/PinDots.js'
 import { SelectFioAddress } from '../themed/SelectFioAddress.js'
 import { Tile } from '../themed/Tile.js'
 
+const PIN_MAX_LENGTH = 4
+
 type StateProps = {
   account: EdgeAccount,
+  authRequired: 'pin' | 'none',
   defaultSelectedWalletId: string,
   defaultSelectedWalletCurrencyCode: string,
   error: Error | null,
@@ -44,6 +48,7 @@ type StateProps = {
   metadata?: any,
   nativeAmount: string | null,
   pending: boolean,
+  pin: string,
   resetSlider: boolean,
   settings: any,
   sliderDisabled: boolean,
@@ -58,7 +63,8 @@ type DispatchProps = {
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId: string, selectedCurrencyCode: string) => Promise<void>, // Somehow has a return??
   signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => void,
   updateSpendPending: boolean => void,
-  uniqueIdentifierButtonPressed: () => void
+  uniqueIdentifierButtonPressed: () => void,
+  onChangePin: (pin: string) => void
 }
 
 type RouteProps = {
@@ -97,6 +103,7 @@ type State = {
 
 class SendComponent extends React.PureComponent<Props, State> {
   addressTile: ?React.ElementRef<typeof AddressTile>
+  pinInput: ?React.ElementRef<typeof TextInput> = React.createRef()
 
   constructor(props: Props) {
     super(props)
@@ -233,6 +240,19 @@ class SendComponent extends React.PureComponent<Props, State> {
         memoError
       }
     })
+  }
+
+  handleFocusPin = () => {
+    if (this.pinInput && this.pinInput.current) {
+      this.pinInput.current.focus()
+    }
+  }
+
+  handleChangePin = (pin: string) => {
+    this.props.onChangePin(pin)
+    if (pin.length >= PIN_MAX_LENGTH && this.pinInput) {
+      this.pinInput.current.blur()
+    }
   }
 
   submit = async () => {
@@ -429,6 +449,35 @@ class SendComponent extends React.PureComponent<Props, State> {
     return infoTiles.map(({ label, value }) => <Tile key={label} type="static" title={label} body={value} />)
   }
 
+  renderAuthentication() {
+    const { authRequired, pin, theme } = this.props
+    const styles = getStyles(theme)
+
+    if (authRequired === 'pin') {
+      return (
+        <Tile type="touchable" title={s.strings.four_digit_pin} onPress={this.handleFocusPin}>
+          <View style={styles.pinContainer}>
+            <PinDots pinLength={pin.length} maxLength={PIN_MAX_LENGTH} />
+          </View>
+          <TextInput
+            ref={this.pinInput}
+            maxLength={PIN_MAX_LENGTH}
+            onChangeText={this.handleChangePin}
+            keyboardType="numeric"
+            returnKeyType="done"
+            placeholder="Enter PIN"
+            placeholderTextColor={theme.textLink}
+            style={styles.pinInput}
+            value={pin}
+            secureTextEntry
+          />
+        </Tile>
+      )
+    }
+
+    return null
+  }
+
   // Render
   render() {
     const { pending, resetSlider, sliderDisabled, theme } = this.props
@@ -437,17 +486,16 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     return (
       <SceneWrapper background="theme">
-        <ScrollView>
-          <View style={styles.tilesContainer}>
-            {this.renderSelectedWallet()}
-            {this.renderAddressTile()}
-            {this.renderAmount()}
-            {this.renderFees()}
-            {this.renderSelectFioAddress()}
-            {this.renderUniqueIdentifier()}
-            {this.renderInfoTiles()}
-          </View>
-          <Scene.Footer style={styles.footer}>
+        <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)}>
+          {this.renderSelectedWallet()}
+          {this.renderAddressTile()}
+          {this.renderAmount()}
+          {this.renderFees()}
+          {this.renderSelectFioAddress()}
+          {this.renderUniqueIdentifier()}
+          {this.renderInfoTiles()}
+          {this.renderAuthentication()}
+          <View style={styles.footer}>
             {!!recipientAddress && (
               <Slider
                 onSlidingComplete={this.submit}
@@ -457,17 +505,14 @@ class SendComponent extends React.PureComponent<Props, State> {
                 parentStyle={styles.slider}
               />
             )}
-          </Scene.Footer>
-        </ScrollView>
+          </View>
+        </KeyboardAwareScrollView>
       </SceneWrapper>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  tilesContainer: {
-    flex: 1
-  },
   footer: {
     margin: theme.rem(2),
     justifyContent: 'center',
@@ -475,6 +520,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   slider: {
     width: theme.rem(16)
+  },
+  pinContainer: {
+    marginTop: theme.rem(0.25)
+  },
+  pinInput: {
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    color: theme.primaryText,
+    position: 'absolute',
+    width: 0,
+    height: 0
   }
 }))
 
@@ -483,6 +539,7 @@ export const SendScene = connect(
     const { nativeAmount, transaction, error, pending, guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
     return {
       account: state.core.account,
+      authRequired: state.ui.scenes.sendConfirmation.authRequired,
       defaultSelectedWalletId: state.ui.wallets.selectedWalletId,
       defaultSelectedWalletCurrencyCode: state.ui.wallets.selectedCurrencyCode,
       error,
@@ -491,6 +548,7 @@ export const SendScene = connect(
       metadata: guiMakeSpendInfo && guiMakeSpendInfo.metadata ? guiMakeSpendInfo : undefined,
       nativeAmount,
       pending,
+      pin: state.ui.scenes.sendConfirmation.pin,
       resetSlider: !!error && (error.message === 'broadcastError' || error.message === 'transactionCancelled'),
       settings: state.ui.settings,
       sliderDisabled: !transaction || !!error || !!pending,
@@ -509,6 +567,7 @@ export const SendScene = connect(
     updateSpendPending: (pending: boolean) => dispatch(updateSpendPending(pending)),
     signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string): any =>
       dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)),
-    uniqueIdentifierButtonPressed: () => dispatch(uniqueIdentifierModalActivated())
+    uniqueIdentifierButtonPressed: () => dispatch(uniqueIdentifierModalActivated()),
+    onChangePin: (pin: string) => dispatch(newPin(pin))
   })
 )(withTheme(SendComponent))
