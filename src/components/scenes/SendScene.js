@@ -1,7 +1,15 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { type EdgeAccount, type EdgeCurrencyWallet, type EdgeParsedUri, type EdgeSpendTarget, type EdgeTransaction, errorNames } from 'edge-core-js'
+import {
+  type EdgeAccount,
+  type EdgeCurrencyWallet,
+  type EdgeMetadata,
+  type EdgeParsedUri,
+  type EdgeSpendTarget,
+  type EdgeTransaction,
+  errorNames
+} from 'edge-core-js'
 import * as React from 'react'
 import { TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -53,6 +61,7 @@ type StateProps = {
   settings: any,
   sliderDisabled: boolean,
   transaction: EdgeTransaction | null,
+  transactionMetadata: EdgeMetadata | null,
   uniqueIdentifier?: string,
   wallets: { [walletId: string]: GuiWallet }
 }
@@ -382,7 +391,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     if (error && error.name !== errorNames.NoAmountSpecifiedError) {
       return (
-        <Tile type="static" title="Error">
+        <Tile type="static" title={s.strings.send_scene_error_title}>
           <EdgeText style={{ color: theme.dangerText }}>{error.message}</EdgeText>
         </Tile>
       )
@@ -396,6 +405,20 @@ class SendComponent extends React.PureComponent<Props, State> {
       return (
         <Tile type="touchable" title={`${s.strings.string_fee}:`} onPress={this.handleFeesChange}>
           <EdgeText style={{ color: feeSyntaxStyle ? theme[feeSyntaxStyle] : theme.primaryText }}>{feeSyntax}</EdgeText>
+        </Tile>
+      )
+    }
+
+    return null
+  }
+
+  renderMetadata() {
+    const { transactionMetadata } = this.props
+
+    if (transactionMetadata && transactionMetadata.name) {
+      return (
+        <Tile type="static" title={s.strings.send_scene_metadata_name_title}>
+          <EdgeText>{transactionMetadata.name}</EdgeText>
         </Tile>
       )
     }
@@ -491,6 +514,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           {this.renderAddressTile()}
           {this.renderAmount()}
           {this.renderFees()}
+          {this.renderMetadata()}
           {this.renderSelectFioAddress()}
           {this.renderUniqueIdentifier()}
           {this.renderInfoTiles()}
@@ -536,7 +560,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const SendScene = connect(
   (state: RootState): StateProps => {
-    const { nativeAmount, transaction, error, pending, guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
+    const { nativeAmount, transaction, transactionMetadata, error, pending, guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
     return {
       account: state.core.account,
       authRequired: state.ui.scenes.sendConfirmation.authRequired,
@@ -553,6 +577,7 @@ export const SendScene = connect(
       settings: state.ui.settings,
       sliderDisabled: !transaction || !!error || !!pending,
       transaction,
+      transactionMetadata,
       uniqueIdentifier: guiMakeSpendInfo.uniqueIdentifier,
       wallets: state.ui.wallets.byId
     }

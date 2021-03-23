@@ -779,6 +779,8 @@ const strings = {
   // Send Scene
   send_scene_send_from_wallet: 'Send from Wallet',
   send_scene_send_to_address: 'Send to Address',
+  send_scene_error_title: 'Error',
+  send_scene_metadata_name_title: 'Payee',
 
   // Request Scene
   request_balance: 'You have %s'
