@@ -198,6 +198,7 @@
   "send_confirmation_eos_error_cpu": "Nicht genügend CPU zur Verfügung, um EOS-Transaktion zu senden. Bitte warten Sie 1-3 Tage, bis die CPU-Ressourcen sich wieder erholt haben.",
   "send_confirmation_eos_error_net": "Unzureichendes NET zum Senden von EOS-Transaktionen. Bitte warten Sie 1-3 Tage, bis NET wieder verfügbar wird.",
   "send_confirmation_eos_error_ram": "Nicht genügend RAM zur Verfügung, um EOS-Transaktion zu senden. Bitte recherchieren Sie nach Details für eine Lösung auf edge.app/eos.",
+  "send_scan_edge_login_or_sweep_private_key": "Kantenanmeldung oder privater Schlüssel anwenden",
   "send_scan_edge_login_success_title": "Edge-Login erfolgreich",
   "send_scan_edge_login_success_message": "Um fortzufahren, wenden Sie sich bitte an den Browser oder die Anwendung, die die Edge-Anmeldung angefordert hat.",
   "send_to_title": "An: %s",
@@ -608,6 +609,7 @@
   "fio_domain_is_private_label": "Ihre FIO-Domain ist jetzt privat",
   "fio_domain_set_visibility_err": "Es gab ein Problem beim Ändern der Sichtbarkeit deiner Domain. Bitte versuche es später erneut.",
   "fio_transfer_err_msg": "Es gab ein Problem beim Übertragen von %s. Bitte versuchen Sie es später erneut.",
+  "transfer_fio_address_exception": "FIO-Adressen mit bestehenden FIO-Anfragen oder FIO-Memos können jetzt nicht übertragen werden.",
   "fio_no_bundled_err_msg": "Ihrer FIO-Adresse sind die gebündelten Transaktionen ausgegangen.",
   "fio_no_bundled_non_fio_err_msg": "Wenn Sie fortfahren, werden Metadaten für diese Transaktion nicht aufgezeichnet.",
   "fio_no_bundled_renew_err_msg": "Bitte erneuern Sie Ihre FIO-Adresse, um zusätzliche gebündelte Transaktionen zu erhalten.",
@@ -711,6 +713,9 @@
   "wallet_list_sort_currencyName": "Nach Währungsnamen sortieren",
   "wallet_list_sort_highest": "Nach höchsten Wert sortieren",
   "wallet_list_sort_lowest": "Nach niedrigsten Wert sortieren",
+  "select_fio_address_address_from": "Von FIO-Adresse senden",
   "select_fio_address_address_memo": "FIO Memo",
-  "select_fio_address_address_memo_error": "FIO Memo Error"
+  "select_fio_address_address_memo_error": "FIO Memo Error",
+  "send_scene_send_from_wallet": "Von Wallet senden",
+  "send_scene_send_to_address": "An Adresse senden"
 }
