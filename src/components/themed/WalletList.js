@@ -174,7 +174,8 @@ class WalletListComponent extends React.PureComponent<Props> {
     denomination: EdgeDenomination,
     exchangeDenomination: EdgeDenomination,
     fiatDenomination: EdgeDenomination,
-    exchangeRate?: number
+    exchangeRate?: number,
+    guiWallet: GuiWallet
   ): string {
     const { showBalance } = this.props
     let maxConversionDecimals = 6
@@ -186,9 +187,17 @@ class WalletListComponent extends React.PureComponent<Props> {
       })
       maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(denomination.multiplier), precisionAdjustValue)
     }
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), maxConversionDecimals)
-    const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
-    return showBalance ? `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}` : ''
+    try {
+      const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), maxConversionDecimals)
+      const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+      return showBalance ? `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}` : ''
+    } catch (error) {
+      if (error.message === 'Cannot operate on base16 float values') {
+        const errorMessage = `${error.message}: GuiWallet currency code - ${guiWallet.currencyCode}, balance - ${balance}, demonination multiplier: ${denomination.multiplier}`
+        throw new Error(errorMessage)
+      }
+      throw new Error(error)
+    }
   }
 
   renderRow = (data: FlatListItem<WalletListItem>, rowMap: { [string]: SwipeRow }) => {
@@ -212,7 +221,8 @@ class WalletListComponent extends React.PureComponent<Props> {
       const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
       const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : undefined
-      const cryptoAmount = balance && balance !== '0' ? this.getCryptoAmount(balance, denomination, exchangeDenomination, fiatDenomination, exchangeRate) : '0'
+      const cryptoAmount =
+        balance && balance !== '0' ? this.getCryptoAmount(balance, denomination, exchangeDenomination, fiatDenomination, exchangeRate, guiWallet) : '0'
 
       // Fiat Balance
       const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)
