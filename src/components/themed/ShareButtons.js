@@ -35,7 +35,7 @@ function ShareButton(props: { text: string, onPress: () => void, icon: string })
 
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Fontello name={icon} size={theme.rem(2)} style={styles.image} color={theme.icon} />
+      <Fontello name={icon} size={theme.rem(2)} style={styles.image} color={theme.iconTappable} />
       <EdgeText style={styles.text}>{text}</EdgeText>
     </TouchableOpacity>
   )
@@ -58,7 +58,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   text: {
     fontFamily: theme.fontFaceBold,
-    textAlign: 'center',
-    color: theme.textLink
+    textAlign: 'center'
   }
 }))

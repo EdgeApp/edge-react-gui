@@ -8,6 +8,7 @@ exports[`Request should render with loaded props 1`] = `
   <View
     style={
       Object {
+        "flex": 1,
         "justifyContent": "flex-start",
         "paddingHorizontal": 22,
       }
@@ -107,22 +108,12 @@ exports[`Request should render with loaded props 1`] = `
     <View
       style={
         Object {
-          "borderBottomColor": "rgba(255, 255, 255, .1)",
-          "borderBottomWidth": 1,
-          "height": 1,
-          "marginTop": 17,
-          "width": "110%",
-        }
-      }
-    />
-    <View
-      style={
-        Object {
           "backgroundColor": "#FFFFFF",
           "borderRadius": 11,
+          "flex": 1,
           "height": 247,
           "marginLeft": 45,
-          "marginTop": 22,
+          "marginVertical": 45,
           "padding": 11,
           "width": 247,
         }
@@ -133,27 +124,28 @@ exports[`Request should render with loaded props 1`] = `
         size={225}
       />
     </View>
-    <RightChevronButton
-      onPress={[Function]}
-      paddingRem={
-        Array [
-          0.5,
-          0,
-          0.5,
-          0,
-        ]
+    <View
+      style={
+        Object {
+          "marginBottom": 22,
+        }
       }
-      text="Your Receiving Wallet Address"
-    />
-    <WithTheme(EdgeTextComponent) />
+    >
+      <RightChevronButton
+        onPress={[Function]}
+        paddingRem={
+          Array [
+            0.5,
+            0,
+            0.5,
+            0,
+          ]
+        }
+        text="Your Receiving Wallet Address"
+      />
+      <WithTheme(EdgeTextComponent) />
+    </View>
   </View>
-  <View
-    style={
-      Object {
-        "flex": 1,
-      }
-    }
-  />
   <ShareButtons
     copyToClipboard={[Function]}
     fioAddressModal={[Function]}

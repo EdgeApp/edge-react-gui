@@ -334,23 +334,22 @@ export class RequestComponent extends React.PureComponent<Props, State> {
               </InputAccessoryView>
             ) : null}
 
-            <View style={styles.divider} />
-
             <View style={styles.qrContainer}>
               <QrCode data={this.state.encodedURI} size={theme.rem(10)} />
             </View>
 
-            <RightChevronButton
-              paddingRem={[0.5, 0, 0.5, 0]}
-              onPress={this.handleAddressBlockExplorer}
-              text={s.strings.request_qr_your_receiving_wallet_address}
-            />
-            <EdgeText>{requestAddress}</EdgeText>
+            <View style={styles.addressContainer}>
+              <RightChevronButton
+                paddingRem={[0.5, 0, 0.5, 0]}
+                onPress={this.handleAddressBlockExplorer}
+                text={s.strings.request_qr_your_receiving_wallet_address}
+              />
+              <EdgeText>{requestAddress}</EdgeText>
+            </View>
           </View>
         ) : (
           <EdgeText>{sprintf(s.strings.request_deprecated_currency_code, primaryCurrencyInfo.displayCurrencyCode)}</EdgeText>
         )}
-        <View style={styles.spacer} />
         {keysOnlyMode !== true && (
           <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />
         )}
@@ -492,6 +491,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
+    flex: 1,
     justifyContent: 'flex-start',
     paddingHorizontal: theme.rem(1)
   },
@@ -506,7 +506,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
 
   qrContainer: {
-    marginTop: theme.rem(1),
+    flex: 1,
+    marginVertical: theme.rem(2),
     marginLeft: theme.rem(2),
     backgroundColor: theme.qrBackgroundColor,
     borderRadius: theme.rem(0.5),
@@ -515,15 +516,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     padding: theme.rem(0.5)
   },
 
-  spacer: {
-    flex: 1
-  },
-  divider: {
-    width: '110%',
-    marginTop: theme.rem(0.75),
-    height: theme.thinLineWidth,
-    borderBottomWidth: theme.thinLineWidth,
-    borderBottomColor: theme.lineDivider
+  addressContainer: {
+    marginBottom: theme.rem(1)
   },
 
   accessoryView: {
