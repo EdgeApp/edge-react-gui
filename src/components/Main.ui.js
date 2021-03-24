@@ -42,7 +42,6 @@ import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWa
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
-import Request from '../connectors/scenes/RequestConnector.js'
 import Scan from '../connectors/scenes/ScanConnector'
 import SendConfirmation from '../connectors/scenes/SendConfirmationConnector.js'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
@@ -82,6 +81,7 @@ import { NotificationScene } from './scenes/NotificationScene'
 import { OtpRepairScene } from './scenes/OtpRepairScene.js'
 import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
 import { ChangeRecoveryScene } from './scenes/PasswordRecoveryScene.js'
+import { Request } from './scenes/RequestScene.js'
 import { SecurityAlertsScene } from './scenes/SecurityAlertsScene.js'
 import { SendScene } from './scenes/SendScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
@@ -289,9 +289,9 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.REQUEST}
                 navTransparent
                 component={ifLoggedIn(Request)}
-                renderTitle={<HeaderTitle />}
+                renderTitle={<EdgeLogoHeader />}
+                renderRightButton={<SideMenuButton />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-                renderRightButton={this.renderRequestMenuButton()}
                 hideTabBar
               />
 
