@@ -128,27 +128,19 @@ exports[`Request should render with loaded props 1`] = `
         size={-22}
       />
     </View>
-    <View
-      style={
-        Object {
-          "marginBottom": 22,
-        }
+    <RightChevronButton
+      onPress={[Function]}
+      paddingRem={
+        Array [
+          0,
+          0,
+          0.5,
+          0,
+        ]
       }
-    >
-      <RightChevronButton
-        onPress={[Function]}
-        paddingRem={
-          Array [
-            0,
-            0,
-            0.5,
-            0,
-          ]
-        }
-        text="Your Receiving Wallet Address"
-      />
-      <WithTheme(EdgeTextComponent) />
-    </View>
+      text="Your Receiving Wallet Address"
+    />
+    <WithTheme(EdgeTextComponent) />
   </View>
   <ShareButtons
     copyToClipboard={[Function]}

@@ -45,7 +45,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginHorizontal: theme.rem(1),
+    marginTop: theme.rem(2),
+    marginBottom: theme.rem(1),
     marginVertical: theme.rem(1)
   },
   button: {

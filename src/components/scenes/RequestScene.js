@@ -340,19 +340,15 @@ export class RequestComponent extends React.PureComponent<Props, State> {
                 </View>
               </InputAccessoryView>
             ) : null}
-
             <View style={[styles.qrContainer, { width: this.state.qrCodeContainerHeight }]} onLayout={this.handleQrCodeLayout}>
               <QrCode data={this.state.encodedURI} size={this.state.qrCodeContainerHeight - theme.rem(1)} />
             </View>
-
-            <View style={styles.addressContainer}>
-              <RightChevronButton
-                paddingRem={[0, 0, 0.5, 0]}
-                onPress={this.handleAddressBlockExplorer}
-                text={s.strings.request_qr_your_receiving_wallet_address}
-              />
-              <EdgeText>{requestAddress}</EdgeText>
-            </View>
+            <RightChevronButton
+              paddingRem={[0, 0, 0.5, 0]}
+              onPress={this.handleAddressBlockExplorer}
+              text={s.strings.request_qr_your_receiving_wallet_address}
+            />
+            <EdgeText>{requestAddress}</EdgeText>
           </View>
         ) : (
           <EdgeText>{sprintf(s.strings.request_deprecated_currency_code, primaryCurrencyInfo.displayCurrencyCode)}</EdgeText>
@@ -521,10 +517,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     padding: theme.rem(0.5)
   },
 
-  addressContainer: {
-    marginBottom: theme.rem(1)
-  },
-
   accessoryView: {
     flex: 1,
     flexDirection: 'row',
@@ -610,8 +602,8 @@ export const Request = connect(
       edgeWallet,
       exchangeSecondaryToPrimaryRatio,
       guiWallet,
-      publicAddress: guiWallet.receiveAddress && guiWallet.receiveAddress.publicAddress ? guiWallet.receiveAddress.publicAddress : '',
-      legacyAddress: guiWallet.receiveAddress && guiWallet.receiveAddress.legacyAddress ? guiWallet.receiveAddress.legacyAddress : '',
+      publicAddress: guiWallet?.receiveAddress?.publicAddress ?? '',
+      legacyAddress: guiWallet?.receiveAddress?.legacyAddress ?? '',
       loading: false,
       primaryCurrencyInfo,
       secondaryCurrencyInfo,
