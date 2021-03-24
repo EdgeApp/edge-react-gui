@@ -397,13 +397,13 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     const ref = isFront ? this.getTextInputFrontRef : this.getTextInputBackRef
     const displayAmountCheck = !decimalAmount || decimalAmount.match(/^0*$/)
     const displayAmountString = displayAmountCheck ? s.strings.string_enter_amount : displayAmount
-    const displayAmountStyle = displayAmountCheck ? styles.topAmountMuted : styles.topAmount
+    const displayAmountStyle = displayAmountCheck ? styles.bottomAmountMuted : styles.bottomAmount
 
     return (
       <TouchableWithoutFeedback onPress={onPress}>
-        <View style={styles.topContainer} key="top">
+        <View style={styles.bottomContainer} key="bottom">
           <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
-          {!displayAmountCheck && <EdgeText style={styles.topCurrency}>{currencyName}</EdgeText>}
+          {!displayAmountCheck && <EdgeText style={styles.bottomCurrency}>{currencyName}</EdgeText>}
           <TextInput
             style={styles.hiddenTextInput}
             value=""
@@ -529,22 +529,23 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
 
   // Top Amount
-  topContainer: {
-    flexDirection: 'row'
+  bottomContainer: {
+    flexDirection: 'row',
+    marginRight: theme.rem(1.5)
   },
-  topAmount: {
+  bottomAmount: {
     fontFamily: theme.fontFaceBold,
     fontSize: theme.rem(2),
     marginRight: theme.rem(0.5)
   },
-  topAmountMuted: {
+  bottomAmountMuted: {
     fontFamily: theme.fontFaceBold,
     fontSize: theme.rem(2),
     marginLeft: theme.rem(-0.1), // Hack because of amount being bigger font size not aligning to the rest of the text on justified left
     marginRight: theme.rem(0.5),
     color: theme.deactivatedText
   },
-  topCurrency: {
+  bottomCurrency: {
     paddingTop: theme.rem(0.25)
   },
   hiddenTextInput: {
