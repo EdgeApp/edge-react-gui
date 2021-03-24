@@ -455,10 +455,41 @@ PODS:
     - RNFBApp
   - RNFS (2.13.3):
     - React
+  - RNGestureHandler (1.10.3):
+    - React-Core
   - RNLocalize (2.0.2):
     - React-Core
   - RNPermissions (3.0.0):
     - React-Core
+  - RNReanimated (2.0.0):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - Folly
+    - glog
+    - RCTRequired
+    - RCTTypeSafety
+    - React
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - React-RCTVibration
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNShare (5.1.4):
     - React-Core
   - RNSound (0.11.0):
@@ -557,8 +588,10 @@ DEPENDENCIES:
   - "RNFBIid (from `../node_modules/@react-native-firebase/iid`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNFS (from `../node_modules/react-native-fs`)
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNLocalize (from `../node_modules/react-native-localize`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNShare (from `../node_modules/react-native-share`)
   - RNSound (from `../node_modules/react-native-sound`)
   - RNStoreReview (from `../node_modules/react-native-store-review/ios`)
@@ -710,10 +743,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFS:
     :path: "../node_modules/react-native-fs"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNLocalize:
     :path: "../node_modules/react-native-localize"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNShare:
     :path: "../node_modules/react-native-share"
   RNSound:
@@ -756,7 +793,7 @@ SPEC CHECKSUMS:
   Flipper-RSocket: 64e7431a55835eb953b0bf984ef3b90ae9fdddd7
   FlipperKit: ab353d41aea8aae2ea6daaf813e67496642f3d7d
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
-  glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
+  glog: aefd1eb5dda2ab95ba0938556f34b98e2da3a60d
   GoogleAppMeasurement: dfe55efa543e899d906309eaaac6ca26d249862f
   GoogleDataTransport: 9a8a16f79feffc7f42096743de2a7c4815e84020
   GoogleDataTransportCCTSupport: 0f39025e8cf51f168711bd3fb773938d7e62ddb5
@@ -812,8 +849,10 @@ SPEC CHECKSUMS:
   RNFBIid: 8f673a41f45f04273d0759c5df0aef113b580822
   RNFBMessaging: c55142d3b2d34d706bf12bd5eef9ef35254c2df1
   RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
+  RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNLocalize: 43f6c30d8e19ad92282ae434d310fb463b31f419
   RNPermissions: 99dd8d4a30ff13509b949ca63cd1f69edc461775
+  RNReanimated: 5231286440b796e09df3bfa5c1b12b02bfe07664
   RNShare: 8af5349f05fc042d230674dd650d19789187ff9c
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
