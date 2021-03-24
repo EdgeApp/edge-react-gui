@@ -307,7 +307,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
         {keysOnlyMode !== true ? (
           <View style={styles.container}>
             <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
-            <EdgeText style={styles.balance}>{sprintf(s.strings.request_balance, `${balance || 0} ${displayCurrencyCode}`)}</EdgeText>
+            <EdgeText style={styles.balance}>{sprintf(s.strings.request_balance, `${balance ?? 0} ${displayCurrencyCode}`)}</EdgeText>
 
             <ExchangedFlipInput
               ref={this.flipInputRef}
@@ -610,8 +610,8 @@ export const Request = connect(
       edgeWallet,
       exchangeSecondaryToPrimaryRatio,
       guiWallet,
-      publicAddress: guiWallet.receiveAddress.publicAddress || '',
-      legacyAddress: guiWallet.receiveAddress.legacyAddress || '',
+      publicAddress: guiWallet.receiveAddress && guiWallet.receiveAddress.publicAddress ? guiWallet.receiveAddress.publicAddress : '',
+      legacyAddress: guiWallet.receiveAddress && guiWallet.receiveAddress.legacyAddress ? guiWallet.receiveAddress.legacyAddress : '',
       loading: false,
       primaryCurrencyInfo,
       secondaryCurrencyInfo,

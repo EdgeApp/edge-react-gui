@@ -292,13 +292,12 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   handlePasteClipboard = async () => {
     try {
       const clipboard = await Clipboard.getString()
+      this.setStateAmounts('', setSecondaryToPrimary)
       if (this.state.isToggled) {
-        this.setStateAmounts('', setSecondaryToPrimary)
         for (const string of clipboard.split('')) {
           this.onKeyPress(string, this.state.secondaryDecimalAmount, this.props.secondaryInfo.maxEntryDecimals, setSecondaryToPrimary)
         }
       } else {
-        this.setStateAmounts('', setSecondaryToPrimary)
         for (const string of clipboard.split('')) {
           this.onKeyPress(string, this.state.primaryDecimalAmount, this.props.primaryInfo.maxEntryDecimals, setPrimaryToSecondary)
         }
