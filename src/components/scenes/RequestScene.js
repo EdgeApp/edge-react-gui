@@ -83,7 +83,8 @@ type State = {
   legacyAddress: string,
   encodedURI: string,
   minimumPopupModalState: CurrencyMinimumPopupState,
-  isFioMode: boolean
+  isFioMode: boolean,
+  qrCodeContainerHeight: number
 }
 
 const inputAccessoryViewID: string = 'cancelHeaderId'
@@ -105,7 +106,8 @@ export class RequestComponent extends React.PureComponent<Props, State> {
       legacyAddress: props.legacyAddress,
       encodedURI: '',
       minimumPopupModalState,
-      isFioMode: false
+      isFioMode: false,
+      qrCodeContainerHeight: 0
     }
     if (this.shouldShowMinimumModal(props)) {
       if (!props.currencyCode) return
@@ -280,6 +282,11 @@ export class RequestComponent extends React.PureComponent<Props, State> {
     })
   }
 
+  handleQrCodeLayout = (event: any) => {
+    const { height } = event.nativeEvent.layout
+    this.setState({ qrCodeContainerHeight: height })
+  }
+
   render() {
     const { theme } = this.props
     const styles = getStyles(theme)
@@ -334,13 +341,13 @@ export class RequestComponent extends React.PureComponent<Props, State> {
               </InputAccessoryView>
             ) : null}
 
-            <View style={styles.qrContainer}>
-              <QrCode data={this.state.encodedURI} size={theme.rem(10)} />
+            <View style={[styles.qrContainer, { width: this.state.qrCodeContainerHeight }]} onLayout={this.handleQrCodeLayout}>
+              <QrCode data={this.state.encodedURI} size={this.state.qrCodeContainerHeight - theme.rem(1)} />
             </View>
 
             <View style={styles.addressContainer}>
               <RightChevronButton
-                paddingRem={[0.5, 0, 0.5, 0]}
+                paddingRem={[0, 0, 0.5, 0]}
                 onPress={this.handleAddressBlockExplorer}
                 text={s.strings.request_qr_your_receiving_wallet_address}
               />
@@ -511,8 +518,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(2),
     backgroundColor: theme.qrBackgroundColor,
     borderRadius: theme.rem(0.5),
-    width: theme.rem(11),
-    height: theme.rem(11),
     padding: theme.rem(0.5)
   },
 

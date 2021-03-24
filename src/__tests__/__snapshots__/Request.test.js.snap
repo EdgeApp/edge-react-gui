@@ -106,22 +106,26 @@ exports[`Request should render with loaded props 1`] = `
       </View>
     </InputAccessoryView>
     <View
+      onLayout={[Function]}
       style={
-        Object {
-          "backgroundColor": "#FFFFFF",
-          "borderRadius": 11,
-          "flex": 1,
-          "height": 247,
-          "marginLeft": 45,
-          "marginVertical": 45,
-          "padding": 11,
-          "width": 247,
-        }
+        Array [
+          Object {
+            "backgroundColor": "#FFFFFF",
+            "borderRadius": 11,
+            "flex": 1,
+            "marginLeft": 45,
+            "marginVertical": 45,
+            "padding": 11,
+          },
+          Object {
+            "width": 0,
+          },
+        ]
       }
     >
       <QrCode
         data=""
-        size={225}
+        size={-22}
       />
     </View>
     <View
@@ -135,7 +139,7 @@ exports[`Request should render with loaded props 1`] = `
         onPress={[Function]}
         paddingRem={
           Array [
-            0.5,
+            0,
             0,
             0.5,
             0,
