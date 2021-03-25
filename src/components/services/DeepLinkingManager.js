@@ -56,7 +56,11 @@ class DeepLinkingManagerComponent extends React.Component<Props> {
   }
 
   handleLinkEvent = (event: any) => {
-    this.props.launchDeepLink(parseDeepLink(event.url))
+    try {
+      this.props.launchDeepLink(parseDeepLink(event.url))
+    } catch (error) {
+      showError(error)
+    }
   }
 }
 
