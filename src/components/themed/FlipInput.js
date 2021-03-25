@@ -503,7 +503,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginRight: theme.rem(0.5)
   },
   headerText: {
-    fontSize: theme.rem(1.25)
+    fontSize: theme.rem(1.0)
   },
 
   // Flip Input
@@ -535,18 +535,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   bottomAmount: {
     fontFamily: theme.fontFaceBold,
-    fontSize: theme.rem(2),
+    fontSize: theme.rem(1.5),
     marginRight: theme.rem(0.5)
   },
   bottomAmountMuted: {
     fontFamily: theme.fontFaceBold,
-    fontSize: theme.rem(2),
+    fontSize: theme.rem(1.5),
     marginLeft: theme.rem(-0.1), // Hack because of amount being bigger font size not aligning to the rest of the text on justified left
     marginRight: theme.rem(0.5),
     color: theme.deactivatedText
   },
   bottomCurrency: {
-    paddingTop: theme.rem(0.25)
+    paddingTop: theme.rem(0.125)
   },
   hiddenTextInput: {
     position: 'absolute',

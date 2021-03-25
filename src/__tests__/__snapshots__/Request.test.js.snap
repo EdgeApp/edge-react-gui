@@ -27,7 +27,7 @@ exports[`Request should render with loaded props 1`] = `
     <WithTheme(EdgeTextComponent)
       style={
         Object {
-          "fontSize": 28,
+          "fontSize": 22,
           "marginBottom": 11,
         }
       }
@@ -140,7 +140,13 @@ exports[`Request should render with loaded props 1`] = `
       }
       text="Your Receiving Wallet Address"
     />
-    <WithTheme(EdgeTextComponent) />
+    <WithTheme(EdgeTextComponent)
+      style={
+        Object {
+          "fontSize": 17,
+        }
+      }
+    />
   </View>
   <ShareButtons
     copyToClipboard={[Function]}

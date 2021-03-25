@@ -249,7 +249,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
     rightChevronText: {
       marginRight: theme.rem(0.25),
-      fontSize: theme.rem(1.25)
+      fontSize: theme.rem(1.0)
     }
   }
 })
