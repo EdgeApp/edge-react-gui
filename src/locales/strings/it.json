@@ -717,5 +717,8 @@
   "select_fio_address_address_memo": "FIO Memo",
   "select_fio_address_address_memo_error": "Errore FIO memo",
   "send_scene_send_from_wallet": "Invia da Wallet",
-  "send_scene_send_to_address": "Invia all'indirizzo"
+  "send_scene_send_to_address": "Invia all'indirizzo",
+  "send_scene_error_title": "Errore",
+  "send_scene_metadata_name_title": "Beneficiario",
+  "request_balance": "Hai %s"
 }
