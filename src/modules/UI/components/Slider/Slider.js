@@ -1,15 +1,14 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native'
-import { PanGestureHandler, TapGestureHandler } from 'react-native-gesture-handler'
+import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
+import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
 import s from '../../../../locales/strings.js'
 import { THEME } from '../../../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
-import { scale } from '../../../../util/scaling.js'
 
 type Props = {
   onSlidingComplete(): mixed,
@@ -17,46 +16,48 @@ type Props = {
   showSpinner?: boolean,
 
   // Reset logic:
-  forceUpdateGuiCounter?: number,
-  resetSlider?: boolean,
+  reset?: boolean,
 
   // Disabled logic:
   disabledText?: string,
-  sliderDisabled: boolean
+  disabled: boolean
 }
 
-type State = {
-  forceUpdateGuiCounter: number,
-  value: number
-}
-
-const SLIDER_WIDTH = 300
-const KNOB_WIDTH = 70
-const MAX_RANGE = 20
+const SLIDER_WIDTH = PLATFORM.deviceWidth >= 720 ? 680 : PLATFORM.deviceWidth - 45
+const KNOB_WIDTH = 55
+const UPPER_BOUND = SLIDER_WIDTH - KNOB_WIDTH
 
 const clamp = (value, lowerBound, upperBound) => {
   'worklet'
   return Math.min(Math.max(lowerBound, value), upperBound)
 }
 
-export const Slider1 = props => {
-  const { sliderText, onSlidingComplete } = props
-  const translateX = useSharedValue(SLIDER_WIDTH - KNOB_WIDTH)
+export const Slider = (props: Props) => {
+  const { disabledText, disabled, reset, showSpinner, onSlidingComplete, parentStyle } = props
+  const sliderDisabled = disabled || showSpinner
+  const sliderText = !sliderDisabled ? s.strings.send_confirmation_slide_to_confirm : disabledText || s.strings.select_exchange_amount_short
+  const translateX = useSharedValue(UPPER_BOUND)
   const isSliding = useSharedValue(false)
 
+  if (reset) translateX.value = withTiming(UPPER_BOUND)
+
+  const disabledOnGestureEvent = () => null
   const onGestureEvent = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
       ctx.offsetX = translateX.value
     },
     onActive: (event, ctx) => {
       isSliding.value = true
-      translateX.value = clamp(event.translationX + ctx.offsetX, SLIDER_WIDTH - KNOB_WIDTH, 0)
+      translateX.value = clamp(event.translationX + ctx.offsetX, 0, UPPER_BOUND)
     },
     onEnd: () => {
       isSliding.value = false
 
       if (translateX.value < 3) {
-        // runOnJS(onSlidingComplete)()
+        // runOnJS(fff)()
+        runOnJS(onSlidingComplete)()
+      } else {
+        translateX.value = withTiming(UPPER_BOUND)
       }
     }
   })
@@ -72,135 +73,49 @@ export const Slider1 = props => {
   })
 
   return (
-    <View
-      style={[
-        { borderRadius: KNOB_WIDTH / 2, backgroundColor: '#ddd', justifyContent: 'flex-end' },
-        { height: KNOB_WIDTH, width: SLIDER_WIDTH }
-      ]}
-    >
-      <Animated.View
-        style={[
-          {
-            ...StyleSheet.absoluteFillObject,
-            backgroundColor: THEME.COLORS.ACCENT_MINT,
-            borderRadius: KNOB_WIDTH / 2
-          },
-          progressStyle
-        ]}
-      >
-        {props.showSpinner ? (
-          <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.activityIndicator} />
-        ) : (
-          <Text style={styles.textOverlay}>something</Text>
-        )}
-      </Animated.View>
-      <PanGestureHandler onGestureEvent={onGestureEvent}>
-        <Animated.View
-          style={[
-            {
-              height: KNOB_WIDTH,
-              width: KNOB_WIDTH,
-              borderRadius: KNOB_WIDTH / 2,
-              backgroundColor: THEME.COLORS.ACCENT_MINT,
-              justifyContent: 'center',
-              alignItems: 'center'
-            },
-            scrollTranslationStyle
-          ]}
-        />
+    <View style={[parentStyle, styles.slider, showSpinner || sliderDisabled ? styles.disabledSlider : null]}>
+      <Animated.View style={[styles.progress, progressStyle]} />
+      <PanGestureHandler onGestureEvent={sliderDisabled || showSpinner ? disabledOnGestureEvent : onGestureEvent}>
+        <Animated.View style={[styles.thumb, sliderDisabled || showSpinner ? styles.disabledThumb : null, scrollTranslationStyle]}>
+          <Image source={leftArrowImg} />
+        </Animated.View>
       </PanGestureHandler>
+      {showSpinner ? (
+        <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.activityIndicator} />
+      ) : (
+        <Text style={styles.textOverlay}>{sliderText}</Text>
+      )}
     </View>
   )
 }
 
-export class Slider extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props)
-
-    this.state = {
-      forceUpdateGuiCounter: 0,
-      value: 10
-    }
-  }
-
-  onSlidingComplete = (value: number) => {
-    if (value <= 1) {
-      this.props.onSlidingComplete()
-    } else {
-      this.setState({ value: 10 })
-    }
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.resetSlider && nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
-      this.setState({
-        value: 10,
-        forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
-      })
-    }
-  }
-
-  onValueChange = (value: number) => {
-    this.setState({ value })
-  }
-
-  render() {
-    const thumbStyle = !this.props.sliderDisabled ? styles.thumb : styles.disabledThumb
-    const sliderText = !this.props.sliderDisabled
-      ? s.strings.send_confirmation_slide_to_confirm
-      : this.props.disabledText || s.strings.select_exchange_amount_short
-
-    return (
-      <View style={this.props.parentStyle}>
-        <PanGestureHandler onGestureEvent={onGestureEvent}>
-          <Animated.View style={styles.knob} />
-        </PanGestureHandler>
-        {/* <NativeSlider */}
-        {/*  disabled={this.props.sliderDisabled} */}
-        {/*  onValueChange={this.onValueChange} */}
-        {/*  onSlidingComplete={this.onSlidingComplete} */}
-        {/*  minimumValue={0} */}
-        {/*  maximumValue={10} */}
-        {/*  value={this.state.value} */}
-        {/*  style={styles.slider} */}
-        {/*  thumbStyle={thumbStyle} */}
-        {/*  thumbImage={leftArrowImg} */}
-        {/*  minimumTrackTintColor={THEME.COLORS.TRANSPARENT} */}
-        {/*  maximumTrackTintColor={THEME.COLORS.TRANSPARENT} */}
-        {/*  thumbTouchSize={{ width: scale(160), height: scale(160) }} */}
-        {/* /> */}
-
-        {this.props.showSpinner ? (
-          <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.activityIndicator} />
-        ) : (
-          <Text style={styles.textOverlay}>{sliderText}</Text>
-        )}
-      </View>
-    )
-  }
-}
-
 const rawStyles = {
   slider: {
+    borderRadius: KNOB_WIDTH / 2,
     backgroundColor: THEME.COLORS.OPACITY_WHITE,
-    overflow: 'hidden',
-    borderRadius: 26,
-    height: 52,
-    zIndex: 2
+    justifyContent: 'center',
+    height: KNOB_WIDTH,
+    width: SLIDER_WIDTH
+  },
+  disabledSlider: {
+    backgroundColor: THEME.COLORS.OPACITY_GRAY_1
   },
   thumb: {
-    width: 52,
-    height: 52,
-    position: 'absolute',
+    height: KNOB_WIDTH,
+    width: KNOB_WIDTH,
+    borderRadius: KNOB_WIDTH / 2,
     backgroundColor: THEME.COLORS.ACCENT_MINT,
-    borderRadius: 52
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 5
   },
   disabledThumb: {
-    width: 52,
-    height: 52,
-    position: 'absolute',
-    backgroundColor: THEME.COLORS.GRAY_2,
-    borderRadius: 52
+    backgroundColor: THEME.COLORS.GRAY_2
+  },
+  progress: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: THEME.COLORS.OPACITY_WHITE,
+    borderRadius: KNOB_WIDTH / 2
   },
   textOverlay: {
     backgroundColor: THEME.COLORS.TRANSPARENT,

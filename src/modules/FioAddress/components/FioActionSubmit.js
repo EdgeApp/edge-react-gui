@@ -17,8 +17,7 @@ import s from '../../../locales/strings'
 import type { RootState } from '../../../reducers/RootReducer'
 import { truncateDecimals } from '../../../util/utils'
 import { getDisplayDenomination } from '../../Settings/selectors'
-import { Slider } from '../../UI/components/Slider/Slider.ui'
-import { Slider1, Box } from '../../UI/components/Slider/Slider'
+import { Slider } from '../../UI/components/Slider/Slider'
 
 const DIVIDE_PRECISION = 18
 
@@ -185,20 +184,10 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         <View style={styles.spacer} />
         {showSlider && (
           <View style={styles.blockPadding}>
-            {/*<Slider*/}
-            {/*  forceUpdateGuiCounter={0}*/}
-            {/*  resetSlider={false}*/}
-            {/*  onSlidingComplete={this.onConfirm}*/}
-            {/*  // sliderDisabled={displayFee > balance || loading}*/}
-            {/*  showSpinner={loading}*/}
-            {/*  disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label}*/}
-            {/*/>*/}
-
-            <Slider1
-              // forceUpdateGuiCounter={0}
-              // resetSlider={false}
+            <Slider
+              reset={false}
               onSlidingComplete={this.onConfirm}
-              // sliderDisabled={displayFee > balance || loading}
+              disabled={displayFee > balance || loading}
               showSpinner={loading}
               disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label}
             />
