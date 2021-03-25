@@ -107,7 +107,7 @@ async function logToUtilServer(event: TrackingEvent, values: TrackingValues) {
 }
 
 export async function utilWaterfall(path: string, options?: any): Promise<any> {
-  const utilServers = ['https://util2.edge.app/', 'https://util1.edge.app/']
+  const utilServers = ['https://referral1.edge.app/']
   const funcs = utilServers.map(server => async () => {
     const result = await fetch(server + path, options)
     if (typeof result !== 'object') {
