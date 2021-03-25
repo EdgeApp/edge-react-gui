@@ -58,7 +58,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginBottom: theme.rem(0.5)
   },
   text: {
-    fontFamily: theme.fontFaceBold,
     textAlign: 'center'
   }
 }))

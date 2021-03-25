@@ -348,7 +348,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
               onPress={this.handleAddressBlockExplorer}
               text={s.strings.request_qr_your_receiving_wallet_address}
             />
-            <EdgeText>{requestAddress}</EdgeText>
+            <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
           </View>
         ) : (
           <EdgeText>{sprintf(s.strings.request_deprecated_currency_code, primaryCurrencyInfo.displayCurrencyCode)}</EdgeText>
@@ -504,7 +504,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(2)
   },
   balance: {
-    fontSize: theme.rem(1.25),
+    fontSize: theme.rem(1.0),
     marginBottom: theme.rem(0.5)
   },
 
@@ -530,7 +530,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   accessoryText: {
     color: theme.inputAccessoryText
   },
-
+  publicAddressText: {
+    fontSize: theme.rem(0.75)
+  },
   loader: {
     flex: 1,
     alignSelf: 'center'
