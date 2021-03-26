@@ -4096,14 +4096,14 @@ clean-stack@^2.0.0:
   integrity sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==
 
 cleaners@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.2.0.tgz#b1a583878f4c217c8f0bd2e7756dca3eaca91003"
-  integrity sha512-UsCPC3eYtqBgk9kYSh8WbFoXbDD4lr9r7wz57MSsluMLFb78ws3ER6Bs2q+7iUmaeBiwZ/+S02FOQ5gEA2y4Sg==
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.2.1.tgz#535849cfabc91e3ae1fc872b43d450446cd1a1a1"
+  integrity sha512-DSz39+aAcvfqwruSz7H7xY9kE3tRbMTiq2GQtZHpNWox2npyoQGdMUYR7pYgApJNSDY5Q9GNRo+JyncxI5USIA==
 
-cleaners@^0.3.1, cleaners@^0.3.3, cleaners@^0.3.7:
-  version "0.3.7"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.7.tgz#b8fa056a430974d1125a1bb523ee128a6763fbfd"
-  integrity sha512-pRzWeIOXnbgJa211YAHjU1zW1kFMCdftJrB6DJC98nRAcd5XepWy0sAmvZ3kuh1g0y9gukRNSCli0+8aVNhwRg==
+cleaners@^0.3.1, cleaners@^0.3.7, cleaners@^0.3.8:
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.8.tgz#87f97daea68b5fde04284eb265de09a9b46de65f"
+  integrity sha512-/Udp5zxPQ/SqZwsfdCHHnlqgTvEuO4ejDFG2Ut6zHr/qXT5IHdbGXGh6yXWRynvDPEUdhafvArLEgErX8N6dDA==
 
 cli-boxes@^2.2.0:
   version "2.2.1"
@@ -5120,15 +5120,15 @@ edge-components@^0.0.31:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.26:
-  version "0.17.26"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.26.tgz#882a2e8d2e2bcadb858a64e3e12a5cfd48e4352f"
-  integrity sha512-GucwagWf2ILw92jW0KoxZo4FNjlmUq7GONXAzpRI45QdBJDe7A3lp21xh7mhvZ9BbHelqKMAUYDiC9swD4gvcg==
+edge-core-js@^0.17.28:
+  version "0.17.28"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.28.tgz#2d6b8b2ca46c59662d6420dc3e07185691deb6df"
+  integrity sha512-iyVAombNBVIKIHRNw+sx6OHlLMHzjVLPVr2KMbeghd+ODn9hXiORPjmLcW/5JbE0R+dFM8JDuX3SLNaSc/85Tg==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
     biggystring "^3.0.2"
-    cleaners "^0.3.3"
+    cleaners "^0.3.8"
     currency-codes "^1.1.2"
     disklet "^0.4.5"
     elliptic "^6.4.0"
@@ -5145,6 +5145,7 @@ edge-core-js@^0.17.26:
     rfc4648 "^1.4.0"
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
+    yavent "^0.1.1"
 
 edge-currency-accountbased@^0.7.50:
   version "0.7.50"
