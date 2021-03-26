@@ -745,7 +745,7 @@
   "fio_address_to_transfer": "Dirección a transferir",
   "fio_domain_to_transfer": "Dominio a transferir",
   "fio_domain_transferred": "Transferido con éxito",
-  "scan_address_modal_title": "Introduce el destinatario FIO, ENS, o dirección pública",
+  "scan_address_modal_title": "Introduce el destinatario FIO, ENS, RNS o dirección pública",
   "scan_private_key_modal_title": "Introducir clave privada",
   "scan_private_key_modal_label": "Clave Privada",
   "address_modal_default_header": "Introducir dirección",

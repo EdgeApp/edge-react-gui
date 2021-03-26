@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler'
+import './shim'
 import './src/app'
 
 import { AppRegistry } from 'react-native'

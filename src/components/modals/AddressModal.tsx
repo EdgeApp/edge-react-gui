@@ -1,4 +1,6 @@
+import Resolver from '@rsksmart/rns-resolver.js'
 import { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import nodeFetch from 'node-fetch'
 import * as React from 'react'
 import { ActivityIndicator, FlatList, Image, TouchableWithoutFeedback, View } from 'react-native'
 import { AirshipBridge } from 'react-native-airship'
@@ -7,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions'
 import ENS_LOGO from '../../assets/images/ens_logo.png'
 import FIO_LOGO from '../../assets/images/fio/fio_logo.png'
-import { ENS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurrencyConstants'
+import { ENS_DOMAINS, RNS_DOMAINS, UNSTOPPABLE_DOMAINS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import { checkPubAddress, FioAddresses, getFioAddressCache } from '../../modules/FioAddress/util'
 import { FormattedText as Text } from '../../modules/UI/components/FormattedText/FormattedText.ui'
@@ -19,6 +21,8 @@ import { MainButton } from '../themed/MainButton'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 import { OutlinedTextInput } from '../themed/OutlinedTextInput'
 import { ThemedModal } from '../themed/ThemedModal'
+
+const resolver = Resolver.forRskMainnet({ fetch: nodeFetch })
 
 type OwnProps = {
   bridge: AirshipBridge<string | undefined>
@@ -137,17 +141,64 @@ export class AddressModalComponent extends React.Component<Props, State> {
   }
 
   checkIfDomain = (domain: string): boolean => {
-    return this.checkIfUnstoppableDomain(domain) || this.checkIfEnsDomain(domain)
+    return this.checkIfUnstoppableDomain(domain) || this.checkIfEnsDomain(domain) || this.checkIfRnsDomain(domain)
   }
 
   checkIfUnstoppableDomain = (name: string): boolean => UNSTOPPABLE_DOMAINS.some(domain => name.endsWith(domain))
 
   checkIfEnsDomain = (name: string): boolean => ENS_DOMAINS.some(domain => name.endsWith(domain))
 
+  checkIfRnsDomain = (name: string): boolean => RNS_DOMAINS.some(domain => name.endsWith(domain))
+
+  // This approach considers resolution for tokens
+  getRnsChainIdFromPluginId = (pluginId: string): number => {
+    switch (pluginId) {
+      case 'rsk':
+        return 137
+      case 'ethereum':
+        return 60
+      case 'ethereumclassic':
+        return 61
+      case 'bitcoin':
+        return 0
+      case 'litecoin':
+        return 2
+      case 'dogecoin':
+        return 3
+      case 'dash':
+        return 5
+      case 'ripple':
+        return 144
+      case 'bitcoincash':
+        return 145
+      case 'binance':
+        return 714
+      case 'stellar':
+        return 148
+      case 'eos':
+        return 194
+      default:
+        return -1
+    }
+  }
+
   fetchDomain = async (domain: string, currencyTicker: string): Promise<string> => {
     domain = domain.trim().toLowerCase()
     if (!this.checkIfDomain(domain)) {
       throw new ResolutionError('UnsupportedDomain', { domain })
+    }
+    if (this.checkIfRnsDomain(domain)) {
+      const chainId = this.getRnsChainIdFromPluginId(this.props.coreWallet.currencyInfo.pluginId)
+      if (chainId === -1) {
+        throw new ResolutionError('UnspecifiedCurrency', { domain, currencyTicker })
+      }
+
+      try {
+        const response = await resolver.addr(domain, chainId)
+        return response
+      } catch (e) {
+        throw new ResolutionError('UnregisteredDomain', { domain })
+      }
     }
     const baseurl = `https://unstoppabledomains.com/api/v1`
     const url = this.checkIfEnsDomain(domain) ? `${baseurl}/${domain}/${currencyTicker}` : `${baseurl}/${domain}`
