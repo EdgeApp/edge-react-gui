@@ -108,26 +108,17 @@ exports[`Request should render with loaded props 1`] = `
     <View
       onLayout={[Function]}
       style={
-        Array [
-          Object {
-            "backgroundColor": "#FFFFFF",
-            "borderRadius": 11,
-            "flex": 1,
-            "marginLeft": 45,
-            "marginVertical": 45,
-            "padding": 11,
-          },
-          Object {
-            "width": 0,
-          },
-        ]
+        Object {
+          "alignSelf": "center",
+          "aspectRatio": 1,
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": 11,
+          "flex": 1,
+          "margin": 45,
+          "padding": 11,
+        }
       }
-    >
-      <QrCode
-        data=""
-        size={-22}
-      />
-    </View>
+    />
     <RightChevronButton
       onPress={[Function]}
       paddingRem={
