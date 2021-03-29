@@ -69,7 +69,8 @@ export type FlipInputOwnProps = {
   headerText: string,
   headerLogo: string | void,
   headerCallback?: () => void,
-  keyboardVisible: boolean
+  keyboardVisible: boolean,
+  flipInputRef: any
 }
 
 type Props = FlipInputOwnProps & ThemeProps
@@ -187,6 +188,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
+    this.props.flipInputRef(this)
     setTimeout(() => {
       if (this.props.keyboardVisible && this.props.overridePrimaryDecimalAmount === '0' && this.textInputFront) {
         this.textInputFront.focus()
@@ -213,9 +215,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
         if (this.state.isToggled) {
           const { exchangeSecondaryToPrimaryRatio } = this.props
           if (bns.eq(exchangeSecondaryToPrimaryRatio, '0') || exchangeSecondaryToPrimaryRatio === '') {
-            if (this.state.isToggled) {
-              this.onToggleFlipInput()
-            }
+            this.toggleCryptoOnTop()
           } else {
             this.textInputBack && this.textInputBack.focus()
           }
@@ -224,6 +224,10 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
         }
       }, 650)
     }
+  }
+
+  componentDidUnMount() {
+    this.props.flipInputRef(undefined)
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
@@ -248,6 +252,39 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     }
     if (nextProps.primaryInfo.currencyCode !== this.props.primaryInfo.currencyCode) {
       setTimeout(() => this.onKeyPress('0', '', this.props.primaryInfo.maxEntryDecimals, setPrimaryToSecondary), 50)
+    }
+  }
+
+  // Used on parent ExchangedFlipInput
+  toggleCryptoOnTop = () => {
+    if (this.state.isToggled) {
+      this.onToggleFlipInput()
+    }
+  }
+
+  // Used on refs parent (Request Scene)
+  textInputTopFocus = () => {
+    if (this.state.isToggled) {
+      if (this.textInputBack) {
+        this.textInputBack.focus()
+      }
+    } else {
+      if (this.textInputFront) {
+        this.textInputFront.focus()
+      }
+    }
+  }
+
+  // Used on refs parent (Request Scene)
+  textInputTopBlur = () => {
+    if (this.state.isToggled) {
+      if (this.textInputBack) {
+        this.textInputBack.blur()
+      }
+    } else {
+      if (this.textInputFront) {
+        this.textInputFront.blur()
+      }
     }
   }
 
@@ -567,4 +604,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FlipInput = withTheme(FlipInputComponent)
+const FlipInputThemed = withTheme(FlipInputComponent)
+
+// $FlowFixMe - forwardRef is not recognize by flow?
+export const FlipInput = React.forwardRef((props, ref) => <FlipInputThemed {...props} flipInputRef={ref} />) // eslint-disable-line

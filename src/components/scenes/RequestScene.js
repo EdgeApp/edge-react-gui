@@ -29,6 +29,7 @@ import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput.js'
+import { FlipInput } from '../themed/FlipInput.js'
 import { ShareButtons } from '../themed/ShareButtons.js'
 import { RightChevronButton } from '../themed/ThemedButtons.js'
 
@@ -91,7 +92,7 @@ const inputAccessoryViewID: string = 'cancelHeaderId'
 
 export class RequestComponent extends React.PureComponent<Props, State> {
   amounts: ExchangedFlipInputAmounts
-  flipInput: RefObject | null = null
+  flipInput: ?React.ElementRef<typeof FlipInput>
 
   constructor(props: Props) {
     super(props)
@@ -249,7 +250,9 @@ export class RequestComponent extends React.PureComponent<Props, State> {
   }
 
   flipInputRef = (ref: RefObject) => {
-    this.flipInput = ref && ref.flipInput ? ref.flipInput.current : null
+    if (ref?.flipInput) {
+      this.flipInput = ref.flipInput
+    }
   }
 
   handleAddressBlockExplorer = () => {
