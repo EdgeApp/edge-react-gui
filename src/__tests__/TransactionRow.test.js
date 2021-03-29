@@ -9,6 +9,7 @@ import { getTheme } from '../components/services/ThemeContext.js'
 import { TransactionListRowComponent } from '../components/themed/TransactionListRow.js'
 import * as intl from '../locales/intl.js'
 import * as UTILS from '../util/utils'
+import { imageServerUrl } from './../constants/WalletAndCurrencyConstants.js'
 
 describe('Transaction List Row', () => {
   it('should render props', () => {
@@ -29,8 +30,8 @@ describe('Transaction List Row', () => {
       enabledTokens: [],
       receiveAddress: { metadata: {}, nativeAmount: '0', publicAddress: '432hJPUp2C...' },
       blockHeight: 1688551,
-      symbolImage: 'https://developer.airbitz.co/content/monero-symbol-orange-64.png',
-      symbolImageDarkMono: 'https://developer.airbitz.co/content/monero-symbol-64-87939D.png',
+      symbolImage: `${imageServerUrl}/monero-symbol-orange-64.png`,
+      symbolImageDarkMono: `${imageServerUrl}/monero-symbol-64-87939D.png`,
       key: 'SXq1f3x21H2e/h5A4ANvrMoK5xs+sQcDoFWHtCG25BA='
     }
     const transaction = {

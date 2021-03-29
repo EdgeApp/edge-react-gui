@@ -7,7 +7,7 @@
     ],
     "description": "Fee: 7% / Settlement: 10 - 30min\nDaily Limit: $18000\nMonthly Limit: $47000",
     "title": "Credit and Debit Card",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
+    "partnerIconPath": "https://content.edge.app/simplex-logo-sm-square.png",
     "forCountries": [
       "AF",
       "AL",
@@ -261,7 +261,7 @@
     ],
     "description": "Fee: 1% / Settlement: 1 - 5days\nWeekly Limit: $25000\nMonthly Limit: $50000",
     "title": "ACH Bank Transfer",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
+    "partnerIconPath": "https://content.edge.app/wyre-logo-square-small.png",
     "forCountries": [
       "US"
     ],
@@ -315,7 +315,7 @@
     ],
     "description": "Fee: 1.55% / Settlement: 1 - 2days\nLimit: €900/day with no KYC",
     "title": "SEPA Bank Transfer",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
+    "partnerIconPath": "https://content.edge.app/logoBity.png",
     "paymentTypeLogoKey": "bank"
   },
   {
@@ -326,7 +326,7 @@
     ],
     "description": "Fee: 6.5% / Settlement: 10 minutes\nDaily Limit: $5500\nMonthly Limit: $54000",
     "title": "Credit Card",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/icon_black_small.png",
+    "partnerIconPath": "https://content.edge.app/icon_black_small.png",
     "forCountries": [
       "AF",
       "DZ",
@@ -519,7 +519,7 @@
     ],
     "description": "Fee: 5.75% / Settlement: Instant\nLimit: €2500/day",
     "title": "Credit Card",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
+    "partnerIconPath": "https://content.edge.app/Safello-Logo-Green-background.png",
     "forCountries": [
       "SE"
     ],
@@ -537,7 +537,7 @@
     ],
     "description": "Fee: 4% / Settlement: 1 - 2days\nLimit: €2500/day",
     "title": "Bank Transfer",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
+    "partnerIconPath": "https://content.edge.app/Safello-Logo-Green-background.png",
     "forCountries": [
       "SE"
     ],
@@ -557,7 +557,7 @@
     ],
     "description": "Fee: 3-8% / Settlement: Instant\nLimit: $200 - $3000/day",
     "title": "In-person Cash and Debit Card",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/05/libertyXlogo.png",
+    "partnerIconPath": "https://content.edge.app/libertyXlogo.png",
     "forCountries": [
       "US"
     ],
@@ -575,7 +575,7 @@
     ],
     "description": "Fee: 2.5% / Settlement: 5min - 24hours\nLimit: $50000/day",
     "title": "POLi Bank Transfer",
-    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
+    "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
       "GB",
       "AU",
@@ -601,7 +601,7 @@
     ],
     "description": "Fee: 5.5% / Settlement: 5min - 24hours\nLimit: $1000/day",
     "title": "Cash with Newsagent",
-    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
+    "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
       "AU"
     ],
@@ -625,7 +625,7 @@
     ],
     "description": "Fee: 3% / Settlement: Instant\nLimit: $50000/day",
     "title": "PayID",
-    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
+    "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
       "AU"
     ],
@@ -649,7 +649,7 @@
     ],
     "description": "Fee: 4.5% / Settlement: Instant\nLimit: $1000/day",
     "title": "Australia Post",
-    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
+    "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
       "AU"
     ],
@@ -673,7 +673,7 @@
     ],
     "description": "Fee: 2.9% / Settlement: Instant\nLimit: $5000/day",
     "title": "Credit and Debit Card",
-    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
+    "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
       "AU",
       "HK"
@@ -698,7 +698,7 @@
     ],
     "description": "Fee: 1.15% / Settlement: Instant - 3days\nDaily Limit: €14000\nMonthly Limit: €150000",
     "title": "Sofort - Klarna",
-    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
+    "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
       "DE",
       "AT",
@@ -727,7 +727,7 @@
     ],
     "description": "Fee: 3% / Settlement: 1 - 48hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
     "title": "SEPA Bank Transfer",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
+    "partnerIconPath": "https://content.edge.app/bits-of-gold-logo-sm.png",
     "forCountries": [
       "AD",
       "AT",
@@ -798,7 +798,7 @@
     ],
     "description": "Fee: 0.75% / Settlement: Instant\nLimit: ₹1,000,000/day",
     "title": "United Payments Interface",
-    "partnerIconPath": "https://developer.airbitz.co/content/transak_logo.png",
+    "partnerIconPath": "https://content.edge.app/transak_logo.png",
     "forCountries": [
       "IN"
     ],
@@ -822,7 +822,7 @@
     ],
     "description": "Fee: 0.75% / Settlement: 2min - 4hours\nLimit: ₹1,000,000/day",
     "title": "NEFT Transfer",
-    "partnerIconPath": "https://developer.airbitz.co/content/transak_logo.png",
+    "partnerIconPath": "https://content.edge.app/transak_logo.png",
     "forCountries": [
       "IN"
     ],
@@ -853,7 +853,7 @@
       "USDC",
       "DAI"
     ],
-    "partnerIconPath": "https://developer.airbitz.co/content/transak_logo.png",
+    "partnerIconPath": "https://content.edge.app/transak_logo.png",
     "paymentTypeLogoKey": "debit",
     "deepQuery": {
       "countryCode": "US",
