@@ -277,7 +277,6 @@ export class MainComponent extends React.Component<Props> {
                 onEnter={props => {
                   this.props.requestPermission('camera')
                   this.props.dispatchEnableScan()
-                  this.props.checkAndShowGetCryptoModal(props.data)
                 }}
                 onExit={this.props.dispatchDisableScan}
                 component={ifLoggedIn(Scan)}

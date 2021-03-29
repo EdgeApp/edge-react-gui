@@ -340,8 +340,10 @@ export class RequestComponent extends React.PureComponent<Props, State> {
                 </View>
               </InputAccessoryView>
             ) : null}
-            <View style={[styles.qrContainer, { width: this.state.qrCodeContainerHeight }]} onLayout={this.handleQrCodeLayout}>
-              <QrCode data={this.state.encodedURI} size={this.state.qrCodeContainerHeight - theme.rem(1)} />
+            <View style={styles.qrContainer} onLayout={this.handleQrCodeLayout}>
+              {this.state.qrCodeContainerHeight < theme.rem(1) ? null : (
+                <QrCode data={this.state.encodedURI} size={this.state.qrCodeContainerHeight - theme.rem(1)} />
+              )}
             </View>
             <RightChevronButton
               paddingRem={[0, 0, 0.5, 0]}
@@ -509,11 +511,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
 
   qrContainer: {
-    flex: 1,
-    marginVertical: theme.rem(2),
-    marginLeft: theme.rem(2),
+    alignSelf: 'center',
+    aspectRatio: 1,
     backgroundColor: theme.qrBackgroundColor,
     borderRadius: theme.rem(0.5),
+    flex: 1,
+    margin: theme.rem(2),
     padding: theme.rem(0.5)
   },
 
