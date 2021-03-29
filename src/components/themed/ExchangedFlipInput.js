@@ -117,8 +117,7 @@ function propsToState(props: Props): State {
 }
 
 export class ExchangedFlipInput extends React.PureComponent<Props, State> {
-  flipInput: ?React.ElementRef<typeof FlipInput>
-  toggleCryptoOnTop: ?() => void
+  flipInput: React.ElementRef<typeof FlipInput> | null = null
 
   static defaultProps = {
     isEditable: true
@@ -131,10 +130,6 @@ export class ExchangedFlipInput extends React.PureComponent<Props, State> {
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     this.setState(propsToState(nextProps))
-  }
-
-  componentDidMount() {
-    this.toggleCryptoOnTop = this.flipInput ? this.flipInput.toggleCryptoOnTop : undefined
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
@@ -163,6 +158,12 @@ export class ExchangedFlipInput extends React.PureComponent<Props, State> {
       return false
     }
     return !bns.eq(this.state.exchangeSecondaryToPrimaryRatio, '0')
+  }
+
+  toggleCryptoOnBottom = () => {
+    if (this.flipInput != null) {
+      this.flipInput.toggleCryptoOnBottom()
+    }
   }
 
   render() {

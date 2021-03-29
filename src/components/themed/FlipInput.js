@@ -70,7 +70,7 @@ export type FlipInputOwnProps = {
   headerLogo: string | void,
   headerCallback?: () => void,
   keyboardVisible: boolean,
-  flipInputRef: any
+  flipInputRef: (FlipInput: any) => void
 }
 
 type Props = FlipInputOwnProps & ThemeProps
@@ -215,7 +215,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
         if (this.state.isToggled) {
           const { exchangeSecondaryToPrimaryRatio } = this.props
           if (bns.eq(exchangeSecondaryToPrimaryRatio, '0') || exchangeSecondaryToPrimaryRatio === '') {
-            this.toggleCryptoOnTop()
+            this.toggleCryptoOnBottom()
           } else {
             this.textInputBack && this.textInputBack.focus()
           }
@@ -226,8 +226,8 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  componentDidUnMount() {
-    this.props.flipInputRef(undefined)
+  componentWillUnmount() {
+    this.props.flipInputRef(null)
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
@@ -256,14 +256,14 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   }
 
   // Used on parent ExchangedFlipInput
-  toggleCryptoOnTop = () => {
+  toggleCryptoOnBottom = () => {
     if (this.state.isToggled) {
       this.onToggleFlipInput()
     }
   }
 
   // Used on refs parent (Request Scene)
-  textInputTopFocus = () => {
+  textInputBottomFocus = () => {
     if (this.state.isToggled) {
       if (this.textInputBack) {
         this.textInputBack.focus()
@@ -276,7 +276,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   }
 
   // Used on refs parent (Request Scene)
-  textInputTopBlur = () => {
+  textInputBottomBlur = () => {
     if (this.state.isToggled) {
       if (this.textInputBack) {
         this.textInputBack.blur()

@@ -92,7 +92,7 @@ const inputAccessoryViewID: string = 'cancelHeaderId'
 
 export class RequestComponent extends React.PureComponent<Props, State> {
   amounts: ExchangedFlipInputAmounts
-  flipInput: ?React.ElementRef<typeof FlipInput>
+  flipInput: React.ElementRef<typeof FlipInput> | null = null
 
   constructor(props: Props) {
     super(props)
@@ -472,7 +472,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
 
   fioMode = () => {
     if (this.flipInput && Platform.OS === 'ios') {
-      this.flipInput.textInputTopFocus()
+      this.flipInput.textInputBottomFocus()
       this.setState({ isFioMode: true })
     }
   }
@@ -480,7 +480,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
   cancelFioMode = () => {
     this.setState({ isFioMode: false }, () => {
       if (this.flipInput) {
-        this.flipInput.textInputTopBlur()
+        this.flipInput.textInputBottomBlur()
       }
     })
   }
@@ -490,7 +490,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
       showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
     } else {
       if (this.flipInput) {
-        this.flipInput.textInputTopBlur()
+        this.flipInput.textInputBottomBlur()
       }
       this.onNext()
     }
