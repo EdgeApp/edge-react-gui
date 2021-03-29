@@ -137,8 +137,13 @@ class WalletListComponent extends React.PureComponent<Props> {
       } else if (wallet != null) {
         const { enabledTokens } = wallet
         const { allowedCurrencyCodes, excludeCurrencyCodes, customTokens } = this.props
+        const details = {
+          name: wallet.name,
+          currencyCode: wallet.currencyCode,
+          currencyName: wallet.currencyNames[wallet.currencyCode]
+        }
 
-        if (checkFilterWallet(wallet, wallet.currencyCode, searchText, undefined, allowedCurrencyCodes, excludeCurrencyCodes)) {
+        if (checkFilterWallet(details, searchText, allowedCurrencyCodes, excludeCurrencyCodes)) {
           walletList.push({
             id: walletId,
             fullCurrencyCode: wallet.currencyCode,
@@ -162,7 +167,12 @@ class WalletListComponent extends React.PureComponent<Props> {
         for (const currencyCode of enabledNotHiddenTokens) {
           const fullCurrencyCode = `${wallet.currencyCode}-${currencyCode}`
           const customTokenInfo = wallet.currencyNames[currencyCode] ? undefined : customTokens.find(token => token.currencyCode === currencyCode)
-          if (checkFilterWallet(wallet, currencyCode, searchText, customTokenInfo, allowedCurrencyCodes, excludeCurrencyCodes)) {
+          const details = {
+            name: wallet.name,
+            currencyCode,
+            currencyName: customTokenInfo?.currencyName ?? wallet.currencyNames[currencyCode] ?? ''
+          }
+          if (checkFilterWallet(details, searchText, allowedCurrencyCodes, excludeCurrencyCodes)) {
             walletList.push({
               id: walletId,
               fullCurrencyCode: fullCurrencyCode,

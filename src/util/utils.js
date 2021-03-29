@@ -605,24 +605,24 @@ export function getDefaultDenomination(currencyCode: string, settings: Object): 
   return settings[currencyCode].denominations.find(denomination => denomination.name === currencyCode)
 }
 
-export function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: string[]): boolean {
-  return !!currencyCodesArray.find(item => {
-    const [parent, token] = item.split('-')
+export function checkCurrencyCodes(fullCurrencyCode: string, currencyCode: string): boolean {
+    const [parent, token] = fullCurrencyCode.split('-')
     const checkToken = token ? currencyCode.toLowerCase() === token.toLowerCase() : false
     const checkParent = !token ? currencyCode.toLowerCase() === parent.toLowerCase() : false
     return checkToken || checkParent
-  })
+}
+
+export function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: string[]): boolean {
+  return !!currencyCodesArray.find(item => checkCurrencyCodes(item, currencyCode))
 }
 
 export function checkFilterWallet(
-  wallet: GuiWallet,
-  currencyCodeString: string,
+  details: { name: string, currencyCode: string, currencyName: string },
   filterText: string,
-  customToken?: CustomTokenInfo,
   allowedCurrencyCodes?: string[],
   excludeCurrencyCodes?: string[]
 ): boolean {
-  const currencyCode = currencyCodeString.toLowerCase()
+  const currencyCode = details.currencyCode.toLowerCase()
 
   if (allowedCurrencyCodes && allowedCurrencyCodes.length > 0 && !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes)) {
     return false
@@ -636,9 +636,8 @@ export function checkFilterWallet(
     return true
   }
 
-  const walletName = wallet.name.replace(' ', '').toLowerCase()
-  const currencyNameString = customToken ? customToken.currencyName : wallet.currencyNames[currencyCodeString]
-  const currencyName = currencyNameString ? currencyNameString.toLowerCase() : '' // Added fallback if cannot find currency name on both guiWallet and customTokenInfo
+  const walletName = details.name.replace(' ', '').toLowerCase()
+  const currencyName = details.currencyName.toLowerCase()
   const filterString = filterText.toLowerCase()
   return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
 }
