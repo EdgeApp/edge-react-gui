@@ -295,19 +295,17 @@ export class RequestComponent extends React.PureComponent<Props, State> {
       return <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
     }
 
-    const { balance, primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, guiWallet } = this.props
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, guiWallet } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
     const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
     const { keysOnlyMode = false } = Constants.getSpecialCurrencyInfo(primaryCurrencyInfo.displayCurrencyCode)
-    const { displayCurrencyCode } = primaryCurrencyInfo
 
     return (
       <SceneWrapper background="header" hasTabs={false}>
         {keysOnlyMode !== true ? (
           <View style={styles.container}>
             <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
-            <EdgeText style={styles.balance}>{sprintf(s.strings.request_balance, `${balance ?? 0} ${displayCurrencyCode}`)}</EdgeText>
 
             <ExchangedFlipInput
               ref={this.flipInputRef}
@@ -345,11 +343,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
                 <QrCode data={this.state.encodedURI} size={this.state.qrCodeContainerHeight - theme.rem(1)} />
               )}
             </View>
-            <RightChevronButton
-              paddingRem={[0, 0, 0.5, 0]}
-              onPress={this.handleAddressBlockExplorer}
-              text={s.strings.request_qr_your_receiving_wallet_address}
-            />
+            <RightChevronButton paddingRem={[0, 0, 0, 0]} onPress={this.handleAddressBlockExplorer} text={s.strings.request_qr_your_receiving_wallet_address} />
             <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
           </View>
         ) : (
@@ -503,10 +497,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   title: {
     fontFamily: theme.fontFaceBold,
-    fontSize: theme.rem(2)
-  },
-  balance: {
-    fontSize: theme.rem(1.0),
+    fontSize: theme.rem(2),
     marginBottom: theme.rem(0.5)
   },
 

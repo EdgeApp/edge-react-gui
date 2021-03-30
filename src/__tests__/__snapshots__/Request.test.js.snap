@@ -19,20 +19,11 @@ exports[`Request should render with loaded props 1`] = `
         Object {
           "fontFamily": "Quicksand-Medium",
           "fontSize": 45,
-        }
-      }
-    >
-      Request
-    </WithTheme(EdgeTextComponent)>
-    <WithTheme(EdgeTextComponent)
-      style={
-        Object {
-          "fontSize": 22,
           "marginBottom": 11,
         }
       }
     >
-      You have 0 undefined
+      Request
     </WithTheme(EdgeTextComponent)>
     <ExchangedFlipInput
       exchangeSecondaryToPrimaryRatio={Object {}}
@@ -125,7 +116,7 @@ exports[`Request should render with loaded props 1`] = `
         Array [
           0,
           0,
-          0.5,
+          0,
           0,
         ]
       }
