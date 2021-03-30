@@ -437,6 +437,9 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.SEND}
               navTransparent
+              onEnter={props => {
+                this.props.checkAndShowGetCryptoModal()
+              }}
               onExit={this.props.dispatchDisableScan}
               component={ifLoggedIn(SendScene)}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
@@ -860,8 +863,7 @@ export const Main = connect(
     },
 
     // Things to do when we enter certain scenes:
-    checkAndShowGetCryptoModal(routeData: string | void): void {
-      if (routeData === 'sweepPrivateKey') return
+    checkAndShowGetCryptoModal() {
       dispatch(checkAndShowGetCryptoModal())
     },
     checkEnabledExchanges() {
