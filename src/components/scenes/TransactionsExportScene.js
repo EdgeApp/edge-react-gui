@@ -189,7 +189,12 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
   async exportFiles(): Promise<void> {
     const { isExportQbo, isExportCsv, startDate, endDate } = this.state
-    const { sourceWallet, currencyCode, multiplier } = this.props
+    const { sourceWallet, currencyCode } = this.props
+    let { multiplier } = this.props
+    // Grab the base unit (BTC, ETH, etc) by selecting denomination with highest multiplier
+    if (sourceWallet.currencyInfo.currencyCode === currencyCode) {
+      multiplier = Math.max(...sourceWallet.currencyInfo.denominations.map(denom => Number(denom.multiplier))).toString()
+    }
     const transactionOptions: EdgeGetTransactionsOptions = {
       denomination: multiplier,
       currencyCode,
