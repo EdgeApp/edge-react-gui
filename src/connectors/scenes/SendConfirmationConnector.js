@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeCurrencyInfo, type EdgeSpendInfo, type EdgeTransaction, errorNames } from 'edge-core-js'
+import { type EdgeCurrencyInfo, type EdgeSpendInfo, type EdgeTransaction, asMaybeNoAmountSpecifiedError } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import {
@@ -73,7 +73,7 @@ const mapStateToProps = (state: RootState): SendConfirmationStateProps => {
     resetSlider = true
   }
   errorMsg = error ? error.message : ''
-  if (error && error.name === errorNames.NoAmountSpecifiedError) errorMsg = ''
+  if (error && asMaybeNoAmountSpecifiedError(error.name) != null) errorMsg = ''
   const networkFee = transaction ? transaction.networkFee : null
   const parentNetworkFee = transaction && transaction.parentNetworkFee ? transaction.parentNetworkFee : null
   const uniqueIdentifier = sceneState.guiMakeSpendInfo.uniqueIdentifier

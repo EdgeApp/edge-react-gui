@@ -8,7 +8,7 @@ import {
   type EdgeParsedUri,
   type EdgeSpendTarget,
   type EdgeTransaction,
-  errorNames
+  asMaybeNoAmountSpecifiedError
 } from 'edge-core-js'
 import * as React from 'react'
 import { TextInput, View } from 'react-native'
@@ -389,7 +389,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { error, exchangeRates, settings, transaction, theme } = this.props
     const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
 
-    if (error && error.name !== errorNames.NoAmountSpecifiedError) {
+    if (error && asMaybeNoAmountSpecifiedError(error) == null) {
       return (
         <Tile type="static" title={s.strings.send_scene_error_title}>
           <EdgeText style={{ color: theme.dangerText }}>{error.message}</EdgeText>

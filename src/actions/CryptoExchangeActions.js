@@ -8,8 +8,12 @@ import {
   type EdgeSwapQuote,
   type EdgeSwapRequest,
   type EdgeSwapResult,
-  errorNames
-} from 'edge-core-js/types'
+  asMaybeInsufficientFundsError,
+  asMaybeSwapAboveLimitError,
+  asMaybeSwapBelowLimitError,
+  asMaybeSwapCurrencyError,
+  asMaybeSwapPermissionError
+} from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -67,8 +71,9 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
   } catch (error) {
     Actions.popTo(Constants.EXCHANGE_SCENE)
-    if (error.name === 'InsufficientFundsError' && error.currencyCode != null && fromCurrencyCode !== error.currencyCode) {
-      const { currencyCode } = error
+    const insufficientFunds = asMaybeInsufficientFundsError(error)
+    if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode) {
+      const { currencyCode } = insufficientFunds
       const result = await Airship.show(bridge => (
         <ButtonsModal
           bridge={bridge}
@@ -88,7 +93,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
         case 'exchange':
           dispatch({ type: 'SHIFT_COMPLETE' })
           if (fromWallet != null) {
-            dispatch(selectWalletForExchange(fromWallet.id, error.currencyCode, 'to'))
+            dispatch(selectWalletForExchange(fromWallet.id, currencyCode, 'to'))
           }
           break
       }
@@ -222,7 +227,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   return swapInfo
 }
 
-const processSwapQuoteError = (error: any) => (dispatch: Dispatch, getState: GetState) => {
+const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
 
@@ -231,70 +236,73 @@ const processSwapQuoteError = (error: any) => (dispatch: Dispatch, getState: Get
   if (fromCurrencyCode == null || toCurrencyCode == null) return
 
   // Check for known error types:
-  switch (error.name) {
-    case errorNames.InsufficientFundsError: {
-      return dispatch({ type: 'RECEIVED_INSUFFICENT_FUNDS_ERROR' })
-    }
+  const insufficientFunds = asMaybeInsufficientFundsError(error)
+  if (insufficientFunds != null) {
+    return dispatch({ type: 'RECEIVED_INSUFFICENT_FUNDS_ERROR' })
+  }
 
-    case errorNames.SwapAboveLimitError: {
-      const settings = SETTINGS_SELECTORS.getSettings(state)
-      const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
+  const aboveLimit = asMaybeSwapAboveLimitError(error)
+  if (aboveLimit != null) {
+    const settings = SETTINGS_SELECTORS.getSettings(state)
+    const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
 
-      const nativeMax: string = error.nativeMax
-      const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
-      const nativeToDisplayRatio = displayDenomination.multiplier
-      const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
+    const { nativeMax } = aboveLimit
+    const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+    const nativeToDisplayRatio = displayDenomination.multiplier
+    const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
 
-      return dispatch({
-        type: 'GENERIC_SHAPE_SHIFT_ERROR',
-        data: sprintf(s.strings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
-      })
-    }
+    return dispatch({
+      type: 'GENERIC_SHAPE_SHIFT_ERROR',
+      data: sprintf(s.strings.amount_above_limit, displayMax, currentCurrencyDenomination.name)
+    })
+  }
 
-    case errorNames.SwapBelowLimitError: {
-      const settings = SETTINGS_SELECTORS.getSettings(state)
-      const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
+  const belowLimit = asMaybeSwapBelowLimitError(error)
+  if (belowLimit) {
+    const settings = SETTINGS_SELECTORS.getSettings(state)
+    const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
 
-      const nativeMin: string = error.nativeMin
-      const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
-      const nativeToDisplayRatio = displayDenomination.multiplier
-      const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
+    const { nativeMin } = belowLimit
+    const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+    const nativeToDisplayRatio = displayDenomination.multiplier
+    const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
 
-      return dispatch({
-        type: 'GENERIC_SHAPE_SHIFT_ERROR',
-        data: sprintf(s.strings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
-      })
-    }
+    return dispatch({
+      type: 'GENERIC_SHAPE_SHIFT_ERROR',
+      data: sprintf(s.strings.amount_below_limit, displayMin, currentCurrencyDenomination.name)
+    })
+  }
 
-    case errorNames.SwapCurrencyError: {
-      return dispatch({
-        type: 'GENERIC_SHAPE_SHIFT_ERROR',
-        data: sprintf(s.strings.ss_unable, fromCurrencyCode, toCurrencyCode)
-      })
-    }
+  const currencyError = asMaybeSwapCurrencyError(error)
+  if (currencyError != null) {
+    return dispatch({
+      type: 'GENERIC_SHAPE_SHIFT_ERROR',
+      data: sprintf(s.strings.ss_unable, fromCurrencyCode, toCurrencyCode)
+    })
+  }
 
-    case errorNames.SwapPermissionError: {
-      switch (error.reason) {
-        case 'geoRestriction': {
-          return dispatch({
-            type: 'GENERIC_SHAPE_SHIFT_ERROR',
-            data: s.strings.ss_geolock
-          })
-        }
+  const permissionError = asMaybeSwapPermissionError(error)
+  if (permissionError != null) {
+    switch (permissionError.reason) {
+      case 'geoRestriction': {
+        return dispatch({
+          type: 'GENERIC_SHAPE_SHIFT_ERROR',
+          data: s.strings.ss_geolock
+        })
       }
-      break // Not handled
     }
   }
 
   // Some plugins get this error wrong:
-  if (error.message === errorNames.InsufficientFundsError) {
+  if (error.message === 'InsufficientFundsError') {
     return dispatch({ type: 'RECEIVED_INSUFFICENT_FUNDS_ERROR' })
   }
 
   // Anything else:
+  const typeHack: any = error
   return dispatch({
     type: 'GENERIC_SHAPE_SHIFT_ERROR',
-    data: error.message
+    data: typeHack.message
   })
 }
 
