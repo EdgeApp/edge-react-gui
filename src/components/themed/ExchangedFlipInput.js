@@ -116,9 +116,8 @@ function propsToState(props: Props): State {
   return { primaryInfo, secondaryInfo, exchangeSecondaryToPrimaryRatio, overridePrimaryDecimalAmount }
 }
 
-export class ExchangedFlipInput extends React.Component<Props, State> {
-  flipInput: any
-  toggleCryptoOnTop: any
+export class ExchangedFlipInput extends React.PureComponent<Props, State> {
+  flipInput: React.ElementRef<typeof FlipInput> | null = null
 
   static defaultProps = {
     isEditable: true
@@ -127,15 +126,10 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = propsToState(props)
-    this.flipInput = React.createRef()
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     this.setState(propsToState(nextProps))
-  }
-
-  componentDidMount() {
-    this.toggleCryptoOnTop = this.flipInput.current ? this.flipInput.current.toggleCryptoOnTop : null
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
@@ -166,6 +160,12 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
     return !bns.eq(this.state.exchangeSecondaryToPrimaryRatio, '0')
   }
 
+  toggleCryptoOnBottom = () => {
+    if (this.flipInput != null) {
+      this.flipInput.toggleCryptoOnBottom()
+    }
+  }
+
   render() {
     return (
       <FlipInput
@@ -185,7 +185,7 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
         onNext={this.props.onNext}
         topReturnKeyType={this.props.topReturnKeyType}
         inputAccessoryViewID={this.props.inputAccessoryViewID}
-        ref={this.flipInput}
+        ref={ref => (this.flipInput = ref)}
       />
     )
   }

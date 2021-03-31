@@ -29,6 +29,7 @@ import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput.js'
+import { FlipInput } from '../themed/FlipInput.js'
 import { ShareButtons } from '../themed/ShareButtons.js'
 import { RightChevronButton } from '../themed/ThemedButtons.js'
 
@@ -91,7 +92,7 @@ const inputAccessoryViewID: string = 'cancelHeaderId'
 
 export class RequestComponent extends React.PureComponent<Props, State> {
   amounts: ExchangedFlipInputAmounts
-  flipInput: RefObject | null = null
+  flipInput: React.ElementRef<typeof FlipInput> | null = null
 
   constructor(props: Props) {
     super(props)
@@ -249,7 +250,9 @@ export class RequestComponent extends React.PureComponent<Props, State> {
   }
 
   flipInputRef = (ref: RefObject) => {
-    this.flipInput = ref && ref.flipInput ? ref.flipInput.current : null
+    if (ref?.flipInput) {
+      this.flipInput = ref.flipInput
+    }
   }
 
   handleAddressBlockExplorer = () => {
@@ -463,7 +466,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
 
   fioMode = () => {
     if (this.flipInput && Platform.OS === 'ios') {
-      this.flipInput.textInputTopFocus()
+      this.flipInput.textInputBottomFocus()
       this.setState({ isFioMode: true })
     }
   }
@@ -471,7 +474,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
   cancelFioMode = () => {
     this.setState({ isFioMode: false }, () => {
       if (this.flipInput) {
-        this.flipInput.textInputTopBlur()
+        this.flipInput.textInputBottomBlur()
       }
     })
   }
@@ -481,7 +484,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
       showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
     } else {
       if (this.flipInput) {
-        this.flipInput.textInputTopBlur()
+        this.flipInput.textInputBottomBlur()
       }
       this.onNext()
     }
