@@ -49,7 +49,13 @@ class EdgeContextCallbackManager extends React.Component<Props> {
     for (const cleanup of this.cleanups) cleanup()
   }
 
+  /**
+   * Like AirshipInstance/showWarning,
+   * but asynchronous so we don't spam multiple pop-ups.
+   */
   showError(error: mixed): Promise<void> {
+    console.error('Showing core drop-down alert:', error)
+
     // TODO: Run the errors through our translation infrastructure:
     const message = error instanceof Error ? error.message : String(error)
 
