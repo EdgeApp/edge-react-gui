@@ -88,7 +88,7 @@ class PermissionsManagerComponent extends React.Component<Props> {
 export async function requestPermission(data: Permission): Promise<PermissionStatus> {
   const status: PermissionStatus = await check(PERMISSIONS[OS][PERMISSIONS_ITEM[data]])
   if (status === RESULTS.DENIED) {
-    return request(PERMISSIONS[OS][PERMISSIONS_ITEM[data]]).then(result => this.props.updatePermissions({ data: result }))
+    return request(PERMISSIONS[OS][PERMISSIONS_ITEM[data]])
   }
   return status
 }
