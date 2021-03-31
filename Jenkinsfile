@@ -120,6 +120,7 @@ pipeline {
       echo 'Trying to publish the code coverage report'
       cobertura(
         coberturaReportFile: '**/coverage/cobertura-coverage.xml',
+        failUnhealthy: false,
         failNoReports: false,
         failUnstable: false,
         onlyStable: false,
