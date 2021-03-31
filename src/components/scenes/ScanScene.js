@@ -3,8 +3,8 @@
 import * as React from 'react'
 import { ActivityIndicator, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { RNCamera } from 'react-native-camera'
+import RNPermissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
@@ -39,20 +39,6 @@ export class Scan extends React.Component<Props> {
         <SceneWrapper background="header" hasTabs={false}>
           {this.renderCameraArea()}
           <View style={styles.overlayButtonAreaWrap}>
-            <TouchableHighlight style={styles.bottomButton} onPress={this._onPressTransfer} underlayColor={THEME.COLORS.SECONDARY}>
-              <View style={styles.bottomButtonTextWrap}>
-                <FontAwesomeIcon style={styles.transferIcon} name="share" size={scale(18)} />
-                <T style={styles.bottomButtonText}>{s.strings.fragment_transaction_transfer}</T>
-              </View>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={THEME.COLORS.SECONDARY}>
-              <View style={styles.bottomButtonTextWrap}>
-                <FontAwesomeIcon style={styles.addressBookIcon} name="address-book-o" size={scale(18)} />
-                <T style={styles.bottomButtonText}>{s.strings.fragment_send_address}</T>
-              </View>
-            </TouchableHighlight>
-
             <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
                 <IonIcon style={styles.flashIcon} name="ios-flash" size={scale(24)} />
@@ -106,7 +92,7 @@ export class Scan extends React.Component<Props> {
       return <View style={styles.cameraArea} />
     }
 
-    if (this.props.cameraPermission === 'denied') {
+    if (this.props.cameraPermission === RNPermissions.RESULTS.BLOCKED) {
       return (
         <View style={styles.cameraArea}>
           <Text style={styles.cameraPermissionDeniedText}>{s.strings.scan_camera_permission_denied}</Text>
@@ -117,13 +103,13 @@ export class Scan extends React.Component<Props> {
       )
     }
 
-    if (this.props.cameraPermission === 'authorized') {
+    if (this.props.cameraPermission === RNPermissions.RESULTS.GRANTED) {
       const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
 
       return (
         <RNCamera style={styles.cameraArea} captureAudio={false} flashMode={flashMode} onBarCodeRead={this.onBarCodeRead} type={RNCamera.Constants.Type.back}>
           <View style={styles.overlayTop}>
-            <T style={styles.overlayTopText}>{s.strings.send_scan_header_text}</T>
+            <T style={styles.overlayTopText}>{s.strings.send_scan_edge_login_or_sweep_private_key}</T>
           </View>
         </RNCamera>
       )

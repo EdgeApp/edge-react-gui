@@ -11,7 +11,7 @@ const strings = {
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
   drawer_exchange: 'Exchange',
   drawer_request: 'Request',
-  drawer_scan_qr_send: 'Scan QR (Send)',
+  drawer_scan_qr_send: 'Scan QR (Edge Login)',
   drawer_sweep_private_key: 'Sweep Private Key',
   drawer_wallets: 'Wallets',
   drawer_fio_names: 'FIO Names',
@@ -218,7 +218,7 @@ const strings = {
   send_confirmation_eos_error_cpu: 'Insufficient CPU available to send EOS transaction. Please wait 1-3 days for CPU to recharge.',
   send_confirmation_eos_error_net: 'Insufficient NET available to send EOS transaction. Please wait 1-3 days for NET to recharge.',
   send_confirmation_eos_error_ram: 'Insufficient RAM available to send EOS transaction. Please see edge.app/eos for details on how to resolve.',
-  send_scan_header_text: 'Scan to Send, Sweep, or Edge Login',
+  send_scan_edge_login_or_sweep_private_key: 'Edge Login or Sweep Private Key',
   send_scan_edge_login_success_title: 'Edge Login Successful',
   send_scan_edge_login_success_message: 'To continue, please return to the browser or application that requested the Edge Login.',
   send_to_title: 'To: %s',
@@ -370,6 +370,7 @@ const strings = {
   title_fio_make_public_domain: 'Make Domain Public',
   title_fio_make_private_domain: 'Make Domain Private',
   title_fio_transfer_domain: 'Transfer FIO Domain',
+  title_fio_transfer_address: 'Transfer FIO Address',
   title_fio_address: 'FIO Addresses',
   title_fio_names: 'FIO Names',
   title_fio_domains: 'FIO Domains',
@@ -656,6 +657,7 @@ const strings = {
   fio_domain_is_private_label: 'Your FIO Domain is private now',
   fio_domain_set_visibility_err: 'There was an issue changing visibility of your domain. Please try again later.',
   fio_transfer_err_msg: 'There was an issue transferring your %s. Please try again later.',
+  transfer_fio_address_exception: 'FIO Addresses with existing FIO Requests or FIO memos can not be transferred now.',
   fio_no_bundled_err_msg: 'Your FIO Address ran out of bundled transactions.',
   fio_no_bundled_non_fio_err_msg: 'If you continue, metadata for this transaction will not be recorded.',
   fio_no_bundled_renew_err_msg: 'Please renew your FIO Address to receive additional bundled transactions.',
@@ -713,6 +715,7 @@ const strings = {
   fio_select_address_no_wallet_err: 'There is no FIO wallet found for selected fio address',
   fio_sender_memo_label: 'FIO Memo',
   fio_sender_memo_placeholder: 'Your message.',
+  fio_address_to_transfer: 'Address to Transfer',
   fio_domain_to_transfer: 'Domain to Transfer',
   fio_domain_transferred: 'Successfully transferred',
   scan_address_modal_title: 'Enter Recipient FIO, ENS, or Public Address',
@@ -766,7 +769,21 @@ const strings = {
   wallet_list_sort_currencyCode: 'Sort by currency code',
   wallet_list_sort_currencyName: 'Sort by currency name',
   wallet_list_sort_highest: 'Sort by highest value',
-  wallet_list_sort_lowest: 'Sort by lowest value'
+  wallet_list_sort_lowest: 'Sort by lowest value',
+
+  // Select Fio Address
+  select_fio_address_address_from: 'Send from FIO address',
+  select_fio_address_address_memo: 'FIO Memo',
+  select_fio_address_address_memo_error: 'FIO Memo Error',
+
+  // Send Scene
+  send_scene_send_from_wallet: 'Send from Wallet',
+  send_scene_send_to_address: 'Send to Address',
+  send_scene_error_title: 'Error',
+  send_scene_metadata_name_title: 'Payee',
+
+  // Request Scene
+  request_balance: 'You have %s'
 }
 
 // export default strings

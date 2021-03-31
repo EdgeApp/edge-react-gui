@@ -10,7 +10,7 @@ import URL from 'url-parse'
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { ADD_TOKEN, CURRENCY_PLUGIN_NAMES, EXCHANGE_SCENE, getSpecialCurrencyInfo, PLUGIN_BUY, SEND_CONFIRMATION } from '../constants/indexConstants.js'
+import { ADD_TOKEN, CURRENCY_PLUGIN_NAMES, EXCHANGE_SCENE, getSpecialCurrencyInfo, PLUGIN_BUY, SEND, SEND_CONFIRMATION } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
 import * as UI_SELECTORS from '../modules/UI/selectors.js'
@@ -101,21 +101,25 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
   }
 
   // Check for things other than coins:
-  const deepLink = parseDeepLink(data)
-  switch (deepLink.type) {
-    case 'other':
-      // Handle this link type below:
-      break
-    case 'returnAddress':
-      try {
-        return doRequestAddress(dispatch, edgeWallet, guiWallet, deepLink)
-      } catch (e) {
-        console.log(e)
-      }
-      break
-    default:
-      dispatch(launchDeepLink(deepLink))
-      return
+  try {
+    const deepLink = parseDeepLink(data)
+    switch (deepLink.type) {
+      case 'other':
+        // Handle this link type below:
+        break
+      case 'returnAddress':
+        try {
+          return doRequestAddress(dispatch, edgeWallet, guiWallet, deepLink)
+        } catch (e) {
+          console.log(e)
+        }
+        break
+      default:
+        dispatch(launchDeepLink(deepLink))
+        return
+    }
+  } catch (error) {
+    return showError(error)
   }
 
   edgeWallet.parseUri(data, currencyCode).then(
@@ -181,7 +185,7 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
         guiMakeSpendInfo.fioAddress = fioAddress
         guiMakeSpendInfo.isSendUsingFioAddress = true
       }
-      Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
+      Actions[SEND]({ guiMakeSpendInfo, selectedWalletId, selectedCurrencyCode: currencyCode })
       // dispatch(sendConfirmationUpdateTx(parsedUri))
     },
     () => {

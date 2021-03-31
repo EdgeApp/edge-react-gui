@@ -7,6 +7,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { unpackEdges } from '../../util/edges.js'
 import { type Theme, useTheme } from '../services/ThemeContext.js'
+import { EdgeText } from './EdgeText.js'
 
 type Props = {
   children?: React.Node,
@@ -134,6 +135,21 @@ export function RadioIcon(props: { value: boolean }) {
   return icon
 }
 
+export function RightChevronButton(props: { text: string, onPress: () => void, paddingRem?: number[] | number }) {
+  const { text, onPress, paddingRem = 0 } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <View style={[spacingStyles({ marginRem: [0, 1.25, 0, 0], paddingRem }, theme), styles.rightChevronContainer]}>
+        <EdgeText style={styles.rightChevronText}>{text}</EdgeText>
+        <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+      </View>
+    </TouchableOpacity>
+  )
+}
+
 function spacingStyles(props: Props, theme: Theme) {
   const marginRem = unpackEdges(props.marginRem)
   const paddingRem = unpackEdges(props.paddingRem ?? 0.5)
@@ -226,6 +242,14 @@ const getStyles = cacheStyles((theme: Theme) => {
 
       elevation: theme.rem(0.5)
     },
-    spinner: { height: theme.rem(2) }
+    spinner: { height: theme.rem(2) },
+    rightChevronContainer: {
+      flexDirection: 'row',
+      alignItems: 'center'
+    },
+    rightChevronText: {
+      marginRight: theme.rem(0.25),
+      fontSize: theme.rem(1.0)
+    }
   }
 })

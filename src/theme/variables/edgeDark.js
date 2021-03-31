@@ -225,6 +225,8 @@ export const edgeDark: Theme = {
   // Misc
   // pressedOpacity: 0.25, // Should be removed when press colors are given to buttons and links
   searchListRefreshControlIndicator: palette.transparent,
+  clipboardPopupText: palette.black,
+  flipInputBorder: palette.blueGray,
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
@@ -237,6 +239,14 @@ export const edgeDark: Theme = {
 
   // Tutorials
   tutorialModalUnderlay: palette.transparent,
+
+  // QR code
+  qrForegroundColor: palette.black,
+  qrBackgroundColor: palette.white,
+
+  // Input Accessory
+  inputAccessoryBackground: palette.white,
+  inputAccessoryText: palette.accentBlue,
 
   // Images
   settingsChangellyLogo: changellyLogo,

@@ -5,26 +5,33 @@ import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
-import { ActivityIndicator, Dimensions, InputAccessoryView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
+import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
+import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
 import * as Constants from '../../constants/indexConstants'
+import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
-import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
-import { RequestStatus } from '../../modules/UI/components/RequestStatus/RequestStatus.ui.js'
-import { ShareButtons } from '../../modules/UI/components/ShareButtons/ShareButtons.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
-import { scale } from '../../util/scaling.js'
-import { getObjectDiff } from '../../util/utils'
-import { ExchangeRate } from '../common/ExchangeRate.js'
+import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
+import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
+import * as UI_SELECTORS from '../../modules/UI/selectors.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
+import { decimalOrZero, DIVIDE_PRECISION, getCurrencyInfo, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
 import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
+import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput.js'
+import { FlipInput } from '../themed/FlipInput.js'
+import { ShareButtons } from '../themed/ShareButtons.js'
+import { RightChevronButton } from '../themed/ThemedButtons.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
@@ -41,7 +48,8 @@ export type RequestStateProps = {
   secondaryCurrencyInfo: GuiCurrencyInfo,
   useLegacyAddress: boolean,
   fioAddressesExist: boolean,
-  isConnected: boolean
+  isConnected: boolean,
+  balance?: string
 }
 export type RequestLoadingProps = {
   edgeWallet: null,
@@ -61,27 +69,30 @@ export type RequestLoadingProps = {
 
 export type RequestDispatchProps = {
   refreshReceiveAddressRequest(string): void,
-  refreshAllFioAddresses: () => Promise<void>
+  refreshAllFioAddresses: () => Promise<void>,
+  onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 type CurrencyMinimumPopupState = { [currencyCode: string]: ModalState }
 
-type LoadingProps = RequestLoadingProps & RequestDispatchProps
-type LoadedProps = RequestStateProps & RequestDispatchProps
+type LoadingProps = RequestLoadingProps & RequestDispatchProps & ThemeProps
+type LoadedProps = RequestStateProps & RequestDispatchProps & ThemeProps
 type Props = LoadingProps | LoadedProps
+
 type State = {
   publicAddress: string,
   legacyAddress: string,
   encodedURI: string,
   minimumPopupModalState: CurrencyMinimumPopupState,
-  isFioMode: boolean
+  isFioMode: boolean,
+  qrCodeContainerHeight: number
 }
 
 const inputAccessoryViewID: string = 'cancelHeaderId'
 
-export class Request extends React.Component<Props, State> {
+export class RequestComponent extends React.PureComponent<Props, State> {
   amounts: ExchangedFlipInputAmounts
-  flipInput: RefObject | null = null
+  flipInput: React.ElementRef<typeof FlipInput> | null = null
 
   constructor(props: Props) {
     super(props)
@@ -96,7 +107,8 @@ export class Request extends React.Component<Props, State> {
       legacyAddress: props.legacyAddress,
       encodedURI: '',
       minimumPopupModalState,
-      isFioMode: false
+      isFioMode: false,
+      qrCodeContainerHeight: 0
     }
     if (this.shouldShowMinimumModal(props)) {
       if (!props.currencyCode) return
@@ -238,29 +250,66 @@ export class Request extends React.Component<Props, State> {
   }
 
   flipInputRef = (ref: RefObject) => {
-    this.flipInput = ref && ref.flipInput ? ref.flipInput.current : null
+    if (ref?.flipInput) {
+      this.flipInput = ref.flipInput
+    }
+  }
+
+  handleAddressBlockExplorer = () => {
+    const { currencyInfo, useLegacyAddress } = this.props
+    const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null
+    const requestAddress = useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
+
+    Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.modal_addressexplorer_message}
+        message={requestAddress}
+        buttons={{
+          confirm: { label: s.strings.string_ok_cap },
+          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+        }}
+      />
+    ))
+      .then((result?: string) => {
+        return result === 'confirm' ? Linking.openURL(sprintf(addressExplorer, requestAddress)) : null
+      })
+      .catch(error => console.log(error))
+  }
+
+  handleOpenWalletListModal = () => {
+    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
+      if (walletId && currencyCode) {
+        this.props.onSelectWallet(walletId, currencyCode)
+      }
+    })
+  }
+
+  handleQrCodeLayout = (event: any) => {
+    const { height } = event.nativeEvent.layout
+    this.setState({ qrCodeContainerHeight: height })
   }
 
   render() {
+    const { theme } = this.props
+    const styles = getStyles(theme)
+
     if (this.props.loading) {
-      return <ActivityIndicator color={THEME.COLORS.GRAY_2} style={{ flex: 1, alignSelf: 'center' }} size="large" />
+      return <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
     }
 
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, currencyInfo, guiWallet } = this.props
-    const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, guiWallet } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
-    const qrSize = Dimensions.get('window').height / 4
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
     const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
     const { keysOnlyMode = false } = Constants.getSpecialCurrencyInfo(primaryCurrencyInfo.displayCurrencyCode)
+
     return (
       <SceneWrapper background="header" hasTabs={false}>
-        <View style={styles.exchangeRateContainer}>
-          <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={exchangeSecondaryToPrimaryRatio} />
-        </View>
-
         {keysOnlyMode !== true ? (
-          <View style={styles.main}>
+          <View style={styles.container}>
+            <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
+
             <ExchangedFlipInput
               ref={this.flipInputRef}
               headerText={flipInputHeaderText}
@@ -272,40 +321,39 @@ export class Request extends React.Component<Props, State> {
               forceUpdateGuiCounter={0}
               onExchangeAmountChanged={this.onExchangeAmountChanged}
               keyboardVisible={false}
-              color={THEME.COLORS.WHITE}
               isFiatOnTop
               isFocus={false}
               onNext={this.onNext}
               topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
               inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
+              headerCallback={this.handleOpenWalletListModal}
             />
 
             {Platform.OS === 'ios' ? (
-              <InputAccessoryView backgroundColor={THEME.COLORS.OPAQUE_WHITE} nativeID={inputAccessoryViewID}>
+              <InputAccessoryView backgroundColor={theme.inputAccessoryBackground} nativeID={inputAccessoryViewID}>
                 <View style={styles.accessoryView}>
-                  <TouchableOpacity style={styles.accessoryBtn} onPress={this.cancelFioMode}>
+                  <TouchableOpacity style={styles.accessoryButton} onPress={this.cancelFioMode}>
                     <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_cancel_cap : ''}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.accessoryBtn} onPress={this.nextFioMode}>
+                  <TouchableOpacity style={styles.accessoryButton} onPress={this.nextFioMode}>
                     <Text style={styles.accessoryText}>{this.state.isFioMode ? s.strings.string_next_capitalized : 'Done'}</Text>
                   </TouchableOpacity>
                 </View>
               </InputAccessoryView>
             ) : null}
-
-            <View style={styles.qrContainer}>
-              <QrCode data={this.state.encodedURI} size={qrSize} />
+            <View style={styles.qrContainer} onLayout={this.handleQrCodeLayout}>
+              {this.state.qrCodeContainerHeight < theme.rem(1) ? null : (
+                <QrCode data={this.state.encodedURI} size={this.state.qrCodeContainerHeight - theme.rem(1)} />
+              )}
             </View>
-            <RequestStatus requestAddress={requestAddress} addressExplorer={addressExplorer} />
+            <RightChevronButton paddingRem={[0, 0, 0, 0]} onPress={this.handleAddressBlockExplorer} text={s.strings.request_qr_your_receiving_wallet_address} />
+            <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
           </View>
         ) : (
-          <Text style={styles.text}>{sprintf(s.strings.request_deprecated_currency_code, primaryCurrencyInfo.displayCurrencyCode)}</Text>
+          <EdgeText>{sprintf(s.strings.request_deprecated_currency_code, primaryCurrencyInfo.displayCurrencyCode)}</EdgeText>
         )}
-
         {keysOnlyMode !== true && (
-          <View style={styles.shareButtonsContainer}>
-            <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />
-          </View>
+          <ShareButtons shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} fioAddressModal={this.fioAddressModal} />
         )}
       </SceneWrapper>
     )
@@ -395,7 +443,7 @@ export class Request extends React.Component<Props, State> {
     // console.log('shareViaShare')
   }
 
-  fioAddressModal = async () => {
+  fioAddressModal = () => {
     if (!this.props.isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
@@ -418,7 +466,7 @@ export class Request extends React.Component<Props, State> {
 
   fioMode = () => {
     if (this.flipInput && Platform.OS === 'ios') {
-      this.flipInput.textInputTopFocus()
+      this.flipInput.textInputBottomFocus()
       this.setState({ isFioMode: true })
     }
   }
@@ -426,7 +474,7 @@ export class Request extends React.Component<Props, State> {
   cancelFioMode = () => {
     this.setState({ isFioMode: false }, () => {
       if (this.flipInput) {
-        this.flipInput.textInputTopBlur()
+        this.flipInput.textInputBottomBlur()
       }
     })
   }
@@ -436,53 +484,139 @@ export class Request extends React.Component<Props, State> {
       showError(`${s.strings.fio_request_by_fio_address_error_invalid_amount_header}. ${s.strings.fio_request_by_fio_address_error_invalid_amount}`)
     } else {
       if (this.flipInput) {
-        this.flipInput.textInputTopBlur()
+        this.flipInput.textInputBottomBlur()
       }
       this.onNext()
     }
   }
 }
 
-const rawStyles = {
-  main: {
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
     flex: 1,
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    paddingHorizontal: theme.rem(1)
   },
 
-  exchangeRateContainer: {
-    alignItems: 'center',
-    marginBottom: scale(10)
+  title: {
+    fontFamily: theme.fontFaceBold,
+    fontSize: theme.rem(2),
+    marginBottom: theme.rem(0.5)
   },
 
   qrContainer: {
-    backgroundColor: THEME.COLORS.QR_CODE_BACKGROUND,
-    marginTop: scale(15),
-    borderRadius: scale(4),
-    padding: scale(4)
+    alignSelf: 'center',
+    aspectRatio: 1,
+    backgroundColor: theme.qrBackgroundColor,
+    borderRadius: theme.rem(0.5),
+    flex: 1,
+    margin: theme.rem(2),
+    padding: theme.rem(0.5)
   },
 
-  shareButtonsContainer: {
-    alignItems: 'stretch',
-    justifyContent: 'center'
-  },
   accessoryView: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: THEME.COLORS.WHITE
+    backgroundColor: theme.inputAccessoryBackground
   },
-  accessoryBtn: {
-    paddingVertical: scale(7),
-    paddingHorizontal: scale(15)
+  accessoryButton: {
+    paddingVertical: theme.rem(0.5),
+    paddingHorizontal: theme.rem(1)
   },
   accessoryText: {
-    color: THEME.COLORS.ACCENT_BLUE,
-    fontSize: scale(16)
+    color: theme.inputAccessoryText
   },
-  text: {
-    color: THEME.COLORS.WHITE,
-    margin: scale(12)
+  publicAddressText: {
+    fontSize: theme.rem(0.75)
+  },
+  loader: {
+    flex: 1,
+    alignSelf: 'center'
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+export const Request = connect(
+  (state: RootState): RequestStateProps | RequestLoadingProps => {
+    const { account } = state.core
+    const { currencyWallets = {} } = account
+    const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
+    const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
+
+    const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
+    const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
+    const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
+
+    if (!guiWallet || !currencyCode) {
+      return {
+        currencyCode: null,
+        currencyInfo: null,
+        edgeWallet: null,
+        exchangeSecondaryToPrimaryRatio: null,
+        guiWallet: null,
+        loading: true,
+        primaryCurrencyInfo: null,
+        secondaryCurrencyInfo: null,
+        publicAddress: '',
+        legacyAddress: '',
+        useLegacyAddress: null,
+        fioAddressesExist: false,
+        isConnected: state.network.isConnected
+      }
+    }
+
+    const edgeWallet: EdgeCurrencyWallet = currencyWallets[guiWallet.id]
+    const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+    const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
+    const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+    const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
+    const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
+    const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
+
+    const primaryCurrencyInfo: GuiCurrencyInfo = {
+      displayCurrencyCode: currencyCode,
+      displayDenomination: primaryDisplayDenomination,
+      exchangeCurrencyCode: primaryExchangeCurrencyCode,
+      exchangeDenomination: primaryExchangeDenomination
+    }
+    const secondaryCurrencyInfo: GuiCurrencyInfo = {
+      displayCurrencyCode: guiWallet.fiatCurrencyCode,
+      displayDenomination: secondaryDisplayDenomination,
+      exchangeCurrencyCode: secondaryExchangeCurrencyCode,
+      exchangeDenomination: secondaryExchangeDenomination
+    }
+    const isoFiatCurrencyCode: string = guiWallet.isoFiatCurrencyCode
+    const exchangeSecondaryToPrimaryRatio = UI_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    const fioAddressesExist = !!state.ui.scenes.fioAddress.fioAddresses.length
+
+    // balance
+    const isToken = guiWallet.currencyCode !== currencyCode
+    const nativeBalance = isToken ? guiWallet.nativeBalances[currencyCode] : guiWallet.primaryNativeBalance
+    const displayBalance = truncateDecimals(bns.div(nativeBalance, primaryDisplayDenomination.multiplier, DIVIDE_PRECISION), 6)
+    const balance = formatNumber(decimalOrZero(displayBalance, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+
+    return {
+      currencyCode,
+      currencyInfo: currencyInfo || null,
+      edgeWallet,
+      exchangeSecondaryToPrimaryRatio,
+      guiWallet,
+      publicAddress: guiWallet?.receiveAddress?.publicAddress ?? '',
+      legacyAddress: guiWallet?.receiveAddress?.legacyAddress ?? '',
+      loading: false,
+      primaryCurrencyInfo,
+      secondaryCurrencyInfo,
+      useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
+      fioAddressesExist,
+      isConnected: state.network.isConnected,
+      balance
+    }
+  },
+  (dispatch: Dispatch): RequestDispatchProps => ({
+    refreshReceiveAddressRequest: (walletId: string) => {
+      dispatch(refreshReceiveAddressRequest(walletId))
+    },
+    refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses()),
+    onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
+  })
+)(withTheme(RequestComponent))

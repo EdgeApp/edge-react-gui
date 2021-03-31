@@ -1,7 +1,7 @@
 // @flow
 
 import Clipboard from '@react-native-community/clipboard'
-import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -12,8 +12,7 @@ import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstant
 import s from '../../locales/strings.js'
 import { checkPubAddress } from '../../modules/FioAddress/util'
 import type { RootState } from '../../reducers/RootReducer'
-import type { FeeOption } from '../../reducers/scenes/SendConfirmationReducer'
-import type { FioRequest } from '../../types/types'
+import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { ScanModal } from '../modals/ScanModal.js'
@@ -22,40 +21,24 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from './EdgeText'
 import { Tile } from './Tile.js'
 
-type SpendInfo = {
-  currencyCode?: string,
-  metadata?: any,
-  nativeAmount?: string,
-  networkFeeOption?: FeeOption,
-  customNetworkFee?: Object,
-  publicAddress?: string,
-  spendTargets?: EdgeSpendTarget[],
-  lockInputs?: boolean,
-  uniqueIdentifier?: string,
-  otherParams?: Object,
-  dismissAlert?: boolean,
-  fioAddress?: string,
-  fioPendingRequest?: FioRequest,
-  isSendUsingFioAddress?: boolean,
-  onBack?: () => void,
-  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
-  beforeTransaction?: () => Promise<void>
-}
-
 type OwnProps = {
   coreWallet: EdgeCurrencyWallet,
   currencyCode: string,
   title: string,
   recipientAddress: string,
-  onChangeAddress: (address: string, spendInfo?: SpendInfo) => Promise<void>
+  onChangeAddress: (guiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => Promise<void>,
+  resetSendTransaction: () => void,
+  lockInputs?: boolean,
+  addressTileRef: any,
+  isCameraOpen: boolean,
+  fioToAddress?: string
 }
 type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null
 }
 type State = {
   clipboard: string,
-  loading: boolean,
-  isSetAddress: boolean
+  loading: boolean
 }
 type Props = OwnProps & StateProps & ThemeProps
 
@@ -85,13 +68,31 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 
     this.state = {
       clipboard: '',
-      loading: false,
-      isSetAddress: false
+      loading: false
     }
   }
 
   componentDidMount(): void {
     this._setClipboard(this.props)
+    this.props.addressTileRef(this)
+    if (this.props.isCameraOpen) {
+      this.handleScan()
+    }
+  }
+
+  componentWillUnmount(): void {
+    this.props.addressTileRef(undefined)
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.isCameraOpen && !prevProps.isCameraOpen) {
+      this.handleScan()
+    }
+  }
+
+  reset() {
+    this._setClipboard(this.props)
+    this.props.resetSendTransaction()
   }
 
   shouldContinueLegacy = async () => {
@@ -133,7 +134,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
         spendTargets,
         otherParams: { paymentProtocolInfo }
       }
-      onChangeAddress(spendTargets.length && spendTargets[0].publicAddress ? spendTargets[0].publicAddress : '', spendInfo)
+      onChangeAddress(spendInfo)
     } catch (e) {
       console.log(e)
       await Airship.show(bridge => (
@@ -176,6 +177,8 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
         if (!(await this.shouldContinueLegacy())) return
       }
 
+      // Missing isPrivateKeyUri Modal
+
       if (isPaymentProtocolUri(parsedUri)) {
         return this.paymentProtocolUriReceived(parsedUri)
       }
@@ -185,8 +188,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
       }
 
       // set address
-      onChangeAddress(parsedUri.publicAddress, { fioAddress })
-      this.setState({ isSetAddress: true })
+      onChangeAddress({ fioAddress, isSendUsingFioAddress: !!fioAddress }, parsedUri)
     } catch (e) {
       showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
       this.setState({ loading: false })
@@ -208,7 +210,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
         loading: false
       })
     } catch (e) {
-      this.setState({ loading: false })
+      this.setState({ loading: false, clipboard: '' })
       // Failure is acceptable
     }
   }
@@ -244,22 +246,22 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   handleTilePress = () => {
-    if (this.state.isSetAddress) {
-      this.setState({ isSetAddress: false })
+    const { lockInputs, recipientAddress } = this.props
+    if (!lockInputs && !!recipientAddress) {
+      this.reset()
     }
   }
 
   render() {
-    const { recipientAddress, theme, title } = this.props
-    const { loading, isSetAddress } = this.state
+    const { fioToAddress, recipientAddress, lockInputs, theme, title } = this.props
+    const { loading } = this.state
     const styles = getStyles(theme)
     const copyMessage = this.state.clipboard ? `${s.strings.string_paste}: ${this.state.clipboard}` : null
-    const tileType = loading ? 'loading' : isSetAddress ? 'touchable' : 'static'
-    const tileBody = isSetAddress ? recipientAddress : undefined
+    const tileType = loading ? 'loading' : !!recipientAddress && !lockInputs ? 'touchable' : 'static'
     return (
       <View>
-        <Tile type={tileType} title={title} body={tileBody} onPress={this.handleTilePress}>
-          {!isSetAddress && (
+        <Tile type={tileType} title={title} onPress={this.handleTilePress}>
+          {!recipientAddress && (
             <View style={styles.buttonsContainer}>
               <TouchableOpacity style={styles.buttonContainer} onPress={this.handleChangeAddress}>
                 <FontAwesome name="edit" size={theme.rem(2)} color={theme.iconTappable} />
@@ -276,6 +278,12 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
                 </TouchableOpacity>
               )}
             </View>
+          )}
+          {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
+          {recipientAddress == null ? null : (
+            <EdgeText numberOfLines={3} adjustsFontSizeToFit={false}>
+              {recipientAddress}
+            </EdgeText>
           )}
         </Tile>
       </View>
@@ -296,15 +304,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   buttonText: {
-    marginTop: theme.rem(0.25),
     fontSize: theme.rem(0.75),
     color: theme.textLink
   }
 }))
 
-export const AddressTile = connect((state: RootState): StateProps => {
+const AddressTileConnector = connect((state: RootState): StateProps => {
   const { account } = state.core
+  const { guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
   return {
+    fioToAddress: guiMakeSpendInfo && guiMakeSpendInfo.fioAddress ? guiMakeSpendInfo.fioAddress : undefined,
     fioPlugin: account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
   }
 })(withTheme(AddressTileComponent))
+
+// $FlowFixMe - forwardRef is not recognize by flow?
+export const AddressTile = React.forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />) // eslint-disable-line

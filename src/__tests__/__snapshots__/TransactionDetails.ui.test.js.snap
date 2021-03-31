@@ -24,7 +24,6 @@ exports[`TransactionDetails.ui should render 1`] = `
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -70,7 +69,6 @@ exports[`TransactionDetails.ui should render 1`] = `
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -105,7 +103,6 @@ exports[`TransactionDetails.ui should render 1`] = `
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -152,7 +149,6 @@ exports[`TransactionDetails.ui should render 1`] = `
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -257,7 +253,6 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -303,7 +298,6 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -338,7 +332,6 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -385,7 +378,6 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -490,7 +482,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -536,7 +527,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -571,7 +561,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -618,7 +607,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -723,7 +711,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -769,7 +756,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -804,7 +790,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >
@@ -851,7 +836,6 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             Object {
               "alignItems": "center",
               "flexDirection": "row",
-              "margin": 6,
             }
           }
         >

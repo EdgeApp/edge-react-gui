@@ -175,7 +175,8 @@ Array [
     "deepPath": "",
     "deepQuery": Object {},
     "description": "Fee: 1% / Settlement: 1 - 5days
-Limit: $5000/week",
+Weekly Limit: $25000
+Monthly Limit: $50000",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": Array [
@@ -253,7 +254,7 @@ Limit: $200 - $3000/day",
       "credit",
     ],
     "pluginId": "libertyx",
-    "title": "Cash and Debit Card",
+    "title": "In-person Cash and Debit Card",
   },
 ]
 `;
@@ -270,7 +271,7 @@ Array [
     "deepPath": "",
     "deepQuery": Object {},
     "description": "Fee: 1% / Settlement: 1 - 5days
-Limit: Unlimited",
+Monthly Limit: $150000",
     "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
     "paymentTypeLogoKey": "bank",
     "paymentTypes": Array [

@@ -19,7 +19,10 @@ import shareIcon from '../../../../../assets/images/sidenav/share.png'
 import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
+import { type WalletListResult, WalletListModal } from '../../../../../components/modals/WalletListModal.js'
+import { Airship } from '../../../../../components/services/AirshipInstance.js'
 import * as Constants from '../../../../../constants/indexConstants.js'
+import { getPrivateKeySweepableCurrencies } from '../../../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../../../locales/strings.js'
 import { THEME } from '../../../../../theme/variables/airbitz.js'
 import { scale } from '../../../../../util/scaling.js'
@@ -30,11 +33,12 @@ import UserList from './UserListConnector'
 
 export type Props = {
   logout: (username?: string) => void,
-  usersView: boolean
+  usersView: boolean,
+  onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 export default class Main extends React.Component<Props> {
   render() {
-    const { usersView } = this.props
+    const { onSelectWallet, usersView } = this.props
 
     return usersView ? (
       <UserList />
@@ -58,7 +62,7 @@ export default class Main extends React.Component<Props> {
               <Separator />
               <ScanButton />
               <Separator />
-              <SweepPrivateKeyButton />
+              <SweepPrivateKeyButton onSelectWallet={onSelectWallet} />
               <Separator />
               <RequestButton />
               <Separator />
@@ -147,10 +151,10 @@ const WalletsButton = () => {
   )
 }
 
-const popToScanScene = () => Actions.jump(Constants.SCAN)
+const popToSendScan = () => Actions.jump(Constants.SCAN)
 const ScanButton = () => {
   return (
-    <Button onPress={popToScanScene}>
+    <Button onPress={popToSendScan}>
       <Button.Row>
         <Button.Left>
           <Image source={scanIcon} style={styles.iconImage} />
@@ -166,10 +170,20 @@ const ScanButton = () => {
   )
 }
 
-const popToSweepPrivateKeyScene = () => Actions.jump(Constants.SCAN, { data: 'sweepPrivateKey' })
-const SweepPrivateKeyButton = () => {
+const SweepPrivateKeyButton = ({ onSelectWallet }) => {
+  const handlePress = () => {
+    Airship.show(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={getPrivateKeySweepableCurrencies()} showCreateWallet />
+    )).then(({ walletId, currencyCode }: WalletListResult) => {
+      if (walletId && currencyCode) {
+        onSelectWallet(walletId, currencyCode)
+        Actions.jump(Constants.SCAN, { data: 'sweepPrivateKey' })
+      }
+    })
+  }
+
   return (
-    <Button onPress={popToSweepPrivateKeyScene}>
+    <Button onPress={handlePress}>
       <Button.Row>
         <Button.Left>
           <Image source={sweepIcon} style={styles.iconImage} />

@@ -33,11 +33,14 @@ class TileComponent extends React.PureComponent<Props> {
     const onPress = type === 'copy' ? () => this.copy() : this.props.onPress
     if (type === 'loading') {
       return (
-        <View style={styles.container}>
-          <View style={styles.content}>
-            <EdgeText style={styles.textHeader}>{title}</EdgeText>
-            <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
+        <View>
+          <View style={styles.container}>
+            <View style={styles.content}>
+              <EdgeText style={styles.textHeader}>{title}</EdgeText>
+              <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
+            </View>
           </View>
+          <View style={styles.divider} />
         </View>
       )
     }
@@ -79,7 +82,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   content: {
-    flex: 1
+    flex: 1,
+    paddingLeft: theme.rem(0.25)
   },
   iconContainer: {
     justifyContent: 'center',
@@ -87,32 +91,29 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   arrowIcon: {
     color: theme.iconTappable,
-    height: theme.rem(1),
     marginHorizontal: theme.rem(0.5),
     textAlign: 'center'
   },
   textHeader: {
     color: theme.secondaryText,
     fontSize: theme.rem(0.75),
-    margin: theme.rem(0.25)
+    paddingBottom: theme.rem(0.25)
   },
   textHeaderError: {
     color: theme.dangerText,
-    fontSize: theme.rem(0.75),
-    margin: theme.rem(0.25)
+    fontSize: theme.rem(0.75)
   },
   textBody: {
     color: theme.primaryText,
-    fontSize: theme.rem(1),
-    margin: theme.rem(0.25)
+    fontSize: theme.rem(1)
   },
   editIcon: {
     position: 'absolute',
     color: theme.iconTappable,
     width: theme.rem(0.75),
     height: theme.rem(0.75),
-    top: theme.rem(0.5),
-    right: theme.rem(0.25)
+    top: theme.rem(0.25),
+    right: 0
   },
   loader: {
     marginTop: theme.rem(0.25)

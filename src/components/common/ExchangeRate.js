@@ -2,14 +2,12 @@
 
 import { log10 } from 'biggystring'
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
 
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz'
-import { scale } from '../../util/scaling.js'
-import * as UTILS from '../../util/utils.js'
+import { getObjectDiff, isCompleteExchangeData } from '../../util/utils'
+import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 
 type Props = {
   primaryInfo: Object,
@@ -18,9 +16,9 @@ type Props = {
   secondaryDisplayAmount: string | number
 }
 
-export class ExchangeRate extends React.Component<Props> {
+class ExchangeRateComponent extends React.PureComponent<Props & ThemeProps> {
   shouldComponentUpdate(nextProps: Props) {
-    const diffElement = UTILS.getObjectDiff(this.props, nextProps, {
+    const diffElement = getObjectDiff(this.props, nextProps, {
       primaryInfo: true,
       secondaryInfo: true,
       displayDenomination: true,
@@ -58,26 +56,13 @@ export class ExchangeRate extends React.Component<Props> {
     const formattedPrimaryAmount = formatNumber(primaryDisplayAmount || '1')
     const formattedSecondaryAmount = formatNumber(formattedSecondaryDisplayAmount, { toFixed: precision })
 
-    return (
-      <View style={styles.view}>
-        {!UTILS.isCompleteExchangeData(exchangeData) ? (
-          <T style={styles.text}>{s.strings.drawer_exchange_rate_loading}</T>
-        ) : (
-          <T style={styles.text}>
-            {formattedPrimaryAmount} {primaryDisplayName} = {secondaryDisplaySymbol} {formattedSecondaryAmount} {secondaryCurrencyCode}
-          </T>
-        )}
-      </View>
-    )
+    if (!isCompleteExchangeData(exchangeData)) {
+      return <EdgeText>{s.strings.drawer_exchange_rate_loading}</EdgeText>
+    }
+
+    const exchangeRate = `${formattedPrimaryAmount} ${primaryDisplayName} = ${secondaryDisplaySymbol} ${formattedSecondaryAmount} ${secondaryCurrencyCode}`
+    return <EdgeText>{exchangeRate}</EdgeText>
   }
 }
 
-const styles = StyleSheet.create({
-  view: {
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  text: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(16)
-  }
-})
+export const ExchangeRate = withTheme(ExchangeRateComponent)

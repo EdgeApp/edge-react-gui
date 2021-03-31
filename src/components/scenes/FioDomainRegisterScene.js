@@ -278,8 +278,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingBottom: theme.rem(30)
   },
   domainView: {
-    flexDirection: 'row',
-    margin: theme.rem(0.25)
+    flexDirection: 'row'
   },
   domainText: {
     color: theme.primaryText,

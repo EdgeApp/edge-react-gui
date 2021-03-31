@@ -6,7 +6,7 @@ import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmat
 import { type RootState } from '../../../../types/reduxTypes.js'
 import { convertNativeToExchange } from '../../../../util/utils.js'
 import { getExchangeDenomination } from '../../../Settings/selectors.js'
-import { convertCurrency, getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
+import { convertCurrency, getSceneState } from '../../selectors.js'
 
 export const initialState = {
   isKeyboardVisible: false,
@@ -94,7 +94,7 @@ export const getUniqueIdentifier = (state: RootState): string => {
 export const getNetworkFee = (state: RootState): string => getTransaction(state).networkFee
 export const getParentNetworkFee = (state: RootState): string | void => getTransaction(state).parentNetworkFee
 
-export const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo = {}): EdgeSpendInfo => {
+export const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo = {}, selectedCurrencyCode?: string): EdgeSpendInfo => {
   const uniqueIdentifier = newSpendInfo.uniqueIdentifier || getUniqueIdentifier(state)
   let spendTargets = []
   if (newSpendInfo.spendTargets) {
@@ -112,7 +112,7 @@ export const getSpendInfo = (state: RootState, newSpendInfo?: GuiMakeSpendInfo =
   }
 
   return {
-    currencyCode: newSpendInfo.currencyCode || getSelectedCurrencyCode(state),
+    currencyCode: newSpendInfo.currencyCode || selectedCurrencyCode,
     metadata: newSpendInfo.metadata ? { ...getMetadata(state), ...newSpendInfo.metadata } : getMetadata(state),
     spendTargets,
     networkFeeOption: newSpendInfo.networkFeeOption || getNetworkFeeOption(state),

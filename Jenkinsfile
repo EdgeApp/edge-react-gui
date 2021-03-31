@@ -6,6 +6,9 @@ pipeline {
   options {
     timestamps()
     skipDefaultCheckout true
+    overrideIndexTriggers false
+    buildDiscarder logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '7', numToKeepStr: '10')
+    disableConcurrentBuilds()
   }
   triggers {
     pollSCM("H/5 * * * *")
@@ -117,6 +120,7 @@ pipeline {
       echo 'Trying to publish the code coverage report'
       cobertura(
         coberturaReportFile: '**/coverage/cobertura-coverage.xml',
+        failUnhealthy: false,
         failNoReports: false,
         failUnstable: false,
         onlyStable: false,

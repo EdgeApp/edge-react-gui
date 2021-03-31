@@ -209,7 +209,7 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
                 </TouchableOpacity>
                 <View style={styles.buttonsDivider} />
-                <TouchableOpacity onPress={Actions.scan} style={styles.buttons}>
+                <TouchableOpacity onPress={Actions.send} style={styles.buttons}>
                   <Ionicons name="arrow-up" size={theme.rem(1.5)} color={theme.iconTappable} />
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
                 </TouchableOpacity>

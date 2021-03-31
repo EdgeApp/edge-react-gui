@@ -4096,19 +4096,14 @@ clean-stack@^2.0.0:
   integrity sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==
 
 cleaners@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.2.0.tgz#b1a583878f4c217c8f0bd2e7756dca3eaca91003"
-  integrity sha512-UsCPC3eYtqBgk9kYSh8WbFoXbDD4lr9r7wz57MSsluMLFb78ws3ER6Bs2q+7iUmaeBiwZ/+S02FOQ5gEA2y4Sg==
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.2.1.tgz#535849cfabc91e3ae1fc872b43d450446cd1a1a1"
+  integrity sha512-DSz39+aAcvfqwruSz7H7xY9kE3tRbMTiq2GQtZHpNWox2npyoQGdMUYR7pYgApJNSDY5Q9GNRo+JyncxI5USIA==
 
-cleaners@^0.3.1, cleaners@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.2.tgz#e240a3837f5b2d59975f18d753dea7d1bab0fd4b"
-  integrity sha512-SOjd7UOrU/8CF6V7QKZsfJB8MIBylrZOso+eJWYFaOm2jamKj7Wxbihg8vasnHzqtagv1vpwhN8xkD3liX/dIg==
-
-cleaners@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.3.tgz#e8c8a2b18d2d11037ed4d928310eb29c8e787ee6"
-  integrity sha512-6IgzKXTkTq4aWA2fxImk/Ux3dDhX7JPlfHbFVjDJ/6ASV/k3dl4qKgFDXvLWRiPS9t8Hn11AvDqPFjRVNQ3b0Q==
+cleaners@^0.3.1, cleaners@^0.3.7, cleaners@^0.3.8:
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/cleaners/-/cleaners-0.3.8.tgz#87f97daea68b5fde04284eb265de09a9b46de65f"
+  integrity sha512-/Udp5zxPQ/SqZwsfdCHHnlqgTvEuO4ejDFG2Ut6zHr/qXT5IHdbGXGh6yXWRynvDPEUdhafvArLEgErX8N6dDA==
 
 cli-boxes@^2.2.0:
   version "2.2.1"
@@ -5125,15 +5120,15 @@ edge-components@^0.0.31:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.17.26:
-  version "0.17.26"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.26.tgz#882a2e8d2e2bcadb858a64e3e12a5cfd48e4352f"
-  integrity sha512-GucwagWf2ILw92jW0KoxZo4FNjlmUq7GONXAzpRI45QdBJDe7A3lp21xh7mhvZ9BbHelqKMAUYDiC9swD4gvcg==
+edge-core-js@^0.17.29:
+  version "0.17.29"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.17.29.tgz#1541f7376d222be9ad0dbb156c944c8b130b1905"
+  integrity sha512-svG6q2xHYanKEGLvXuYO5nn+rLkU1d4VpTHQLtN/kNagMPJmNjHrXByP/wXsPms2RTNO7hSFnrL6aYNaSj4lHg==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
     biggystring "^3.0.2"
-    cleaners "^0.3.3"
+    cleaners "^0.3.8"
     currency-codes "^1.1.2"
     disklet "^0.4.5"
     elliptic "^6.4.0"
@@ -5150,11 +5145,12 @@ edge-core-js@^0.17.26:
     rfc4648 "^1.4.0"
     scrypt-js "^2.0.3"
     yaob "^0.3.6"
+    yavent "^0.1.1"
 
-edge-currency-accountbased@^0.7.48:
-  version "0.7.48"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.48.tgz#aeca99fdc1901d66afbdafc8765bcda114240743"
-  integrity sha512-NqCqdphS4FfttR/6zE0/F07njF1rnxiNLKoIp9hXIrBL0fJwuFAlL9EaKwo4lW/oZJKxSbqoNDehUXFrpmI/gg==
+edge-currency-accountbased@^0.7.50:
+  version "0.7.50"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.50.tgz#90956ee0d9c4a7e682463366b403d64de168542d"
+  integrity sha512-UjLzI+1NTtz9Y/xOTk+AOiKuxUJlcyhz1fh/DBd9s9exoLmyXc7pxfaqGOpskgMF/Osy+6UqXVCGmROXoIMHgg==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.2.1"
@@ -5180,10 +5176,10 @@ edge-currency-accountbased@^0.7.48:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.9.12:
-  version "4.9.12"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.12.tgz#ca2188e4267c8d4e94d0ac1e291484faa40224e5"
-  integrity sha512-8cM94BuWutr1NUsU9NsgsngrQHPFbYRPa9nueHsABBekoV/ZyMHTuHMk/2++D/iTLt14+1rHMuvwAwl+TVPGFg==
+edge-currency-bitcoin@^4.9.13:
+  version "4.9.13"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.13.tgz#ce1ea4bc734cb4460e4fc48ef10424b78c958529"
+  integrity sha512-UYrAjde0jzPn5cDUqihNbkB720fBErsYUWIgMsTx94xM8sBrPE0pLl+MrPnSxHXSRoH265IclT5EDzDAcM3W4g==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -5213,10 +5209,10 @@ edge-currency-monero@^0.2.9:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.21:
-  version "0.11.21"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.21.tgz#fbafd2a4a64c54c4d097388ceb9307984f4858ac"
-  integrity sha512-njzxAhj28XCs53Q9xc4douwcLmRRFIcQJqnk2rlsl4BFqtAT4mEnWI1duidVyLBJjVcvcWwzGcSZP6e24HsIkw==
+edge-exchange-plugins@^0.11.23:
+  version "0.11.23"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.23.tgz#03ab753fedc8896f05956e9a456388257deee3fd"
+  integrity sha512-oNuRPMBGyshncCxp3bT6Efk4y0PtzNikM1mr2geE/pSeZZ0IKyGlRh3B9a0bS693l32lc8aN22L9tGkPEaduYg==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.2.0"
@@ -5225,10 +5221,10 @@ edge-exchange-plugins@^0.11.21:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.7.0.tgz#9dd3ec5b382a5f7c5ef3beb095974f667e7b1368"
-  integrity sha512-qz8p8x4voLg6/O+KpEQTin3PJuwGWPRHvVXUCwwmn2ntDly6rdNXiExywPxpVFjQbQuotC+ckYtlhBuJgaTBxw==
+edge-login-ui-rn@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.8.1.tgz#69a9c73c223847598119890f9b3f07178d3427f0"
+  integrity sha512-RE0+yp1S8k8PL9yIrsMFqXuHgvOSbc5l68Eiw/Jt5bV8CSitsyq6GbUKZxAAkdz/fvOq7GEvVECgjq5dXo5UOg==
   dependencies:
     cleaners "^0.3.1"
     qrcode-generator "^1.4.4"
@@ -5241,6 +5237,7 @@ edge-login-ui-rn@^0.7.0:
     react-native-material-textfield "git://github.com/EdgeApp/react-native-material-textfield.git"
     react-native-modal "^11.0.1"
     react-native-patina "^0.1.3"
+    react-native-share "^5.1.4"
     react-native-vector-icons "^7.1.0"
     react-redux "^6.0.1"
     redux "~3.5.2"
@@ -10880,10 +10877,10 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-native-airship@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.3.tgz#d027f4eeef7293d1cb171c751ee20997f36acbe6"
-  integrity sha512-ysJHiZtSYialYli5Jf1X5n5myT7W5hpdaU/zit0XFW7XBgTXcXp/rKEt6oDQD5UCG5lXxYn5kxt8HxoPwsgQoA==
+react-native-airship@^0.2.3, react-native-airship@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.4.tgz#3bbd98b29860515520d13564cb7a4dd18a4934de"
+  integrity sha512-fs5JW9J7JEwXhjHRuKCFJeq5Yg8r7Tp3xU7NlGWxmDszShHkYDxM/o9JaHFeGbN3nLqhL23Xbt2Z/jUQdZLYOA==
   dependencies:
     yavent "^0.1.1"
 
@@ -11014,10 +11011,10 @@ react-native-patina@^0.1.3:
   resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.3.tgz#1704aa63f08dcd09534b2b01a29ee7e1fb046a49"
   integrity sha512-R1vWHseI9pNLGYxQCLbqCJmjjOVJoChoLz8uH2o19SYFdb+VnhfBGZSlDks3RKFHgUkFcvQg/biMCr+mNfBoQA==
 
-react-native-permissions@1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.0.6.tgz#504f01728191431ad4b82895c4a349981fb5802b"
-  integrity sha512-I9UXYcxkQw8umXsnQIlTj+l6Usgi5kvBPaz62K04tb/OTMXHn10a1BBYlacs4MYdGu3Fy+sSvxfeze9RPPaM3g==
+react-native-permissions@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.0.0.tgz#d9d107700741d41f8392f202f35a61f481fb0e68"
+  integrity sha512-zBvf+o3NhgKmBk1I06GzZXaDfc9SUyO4M5TMcaCF1pwG1h4sI+XAv3gWSbryl6WnaZQc1zA+g7SocSoYcpJN5g==
 
 react-native-popup-menu@0.13.3:
   version "0.13.3"
@@ -14078,9 +14075,9 @@ xtend@^4.0.0, xtend@~4.0.1:
   integrity sha1-pcbVMr5lbiPbgg77lDofBJmNY68=
 
 y18n@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/y18n/-/y18n-4.0.0.tgz#95ef94f85ecc81d007c264e190a120f0a3c8566b"
-  integrity sha512-r9S/ZyXu/Xu9q1tYlpsLIsa3EeLXXk0VwlxqTcFRfg9EhMW+17kbt9G0NrgCmhGb5vT2hyhJZLfDGx+7+5Uj/w==
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/y18n/-/y18n-4.0.1.tgz#8db2b83c31c5d75099bb890b23f3094891e247d4"
+  integrity sha512-wNcy4NvjMYL8gogWWYAO7ZFWFfHcbdbE57tZO8e4cbpj8tfUcwrwqSl3ad8HxpYWCdXcJUCeKKZS62Av1affwQ==
 
 yallist@^2.1.2:
   version "2.1.2"

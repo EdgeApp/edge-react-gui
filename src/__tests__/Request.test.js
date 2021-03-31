@@ -4,7 +4,8 @@
 import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
-import { Request } from '../components/scenes/RequestScene.js'
+import { RequestComponent as Request } from '../components/scenes/RequestScene.js'
+import { getTheme } from '../components/services/ThemeContext.js'
 
 describe('Request', () => {
   it('should render with loading props', () => {
@@ -22,7 +23,8 @@ describe('Request', () => {
       secondaryCurrencyInfo: null,
       showToWalletModal: null,
       useLegacyAddress: null,
-      wallets: {}
+      wallets: {},
+      theme: getTheme()
     }
     const actual = renderer.render(<Request {...props} />)
 
@@ -44,7 +46,9 @@ describe('Request', () => {
       showToWalletModal: false,
       useLegacyAddress: false,
       currentScene: 'request',
-      wallets: {}
+      wallets: {},
+      balance: '0',
+      theme: getTheme()
     }
     const actual = renderer.render(<Request {...props} />)
 

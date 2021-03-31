@@ -30,7 +30,6 @@ import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConf
 import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
-import { SendScene } from '../components/scenes/SendScene'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
@@ -43,7 +42,6 @@ import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWa
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
-import Request from '../connectors/scenes/RequestConnector.js'
 import Scan from '../connectors/scenes/ScanConnector'
 import SendConfirmation from '../connectors/scenes/SendConfirmationConnector.js'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
@@ -83,7 +81,9 @@ import { NotificationScene } from './scenes/NotificationScene'
 import { OtpRepairScene } from './scenes/OtpRepairScene.js'
 import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
 import { ChangeRecoveryScene } from './scenes/PasswordRecoveryScene.js'
+import { Request } from './scenes/RequestScene.js'
 import { SecurityAlertsScene } from './scenes/SecurityAlertsScene.js'
+import { SendScene } from './scenes/SendScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
@@ -277,11 +277,9 @@ export class MainComponent extends React.Component<Props> {
                 onEnter={props => {
                   this.props.requestPermission('camera')
                   this.props.dispatchEnableScan()
-                  this.props.checkAndShowGetCryptoModal(props.data)
                 }}
                 onExit={this.props.dispatchDisableScan}
                 component={ifLoggedIn(Scan)}
-                renderTitle={<HeaderTitle />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
                 renderRightButton={<SideMenuButton />}
               />
@@ -290,9 +288,9 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.REQUEST}
                 navTransparent
                 component={ifLoggedIn(Request)}
-                renderTitle={<HeaderTitle />}
+                renderTitle={<EdgeLogoHeader />}
+                renderRightButton={<SideMenuButton />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-                renderRightButton={this.renderRequestMenuButton()}
                 hideTabBar
               />
 
@@ -439,10 +437,18 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.SEND}
               navTransparent
-              hideTabBar
-              panHandlers={null}
+              onEnter={props => {
+                this.props.checkAndShowGetCryptoModal()
+              }}
+              onExit={this.props.dispatchDisableScan}
               component={ifLoggedIn(SendScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_send} />}
+              renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
+            />
+            <Scene
+              key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
+              navTransparent
+              component={ifLoggedIn(ChangeMiningFeeScene)}
+              renderTitle={<HeaderTitle title={s.strings.title_change_mining_fee} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
               renderRightButton={<HeaderTextButton type="help" />}
             />
@@ -857,8 +863,7 @@ export const Main = connect(
     },
 
     // Things to do when we enter certain scenes:
-    checkAndShowGetCryptoModal(routeData: string | void): void {
-      if (routeData === 'sweepPrivateKey') return
+    checkAndShowGetCryptoModal() {
       dispatch(checkAndShowGetCryptoModal())
     },
     checkEnabledExchanges() {

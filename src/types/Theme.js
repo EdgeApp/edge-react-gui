@@ -158,6 +158,8 @@ export type Theme = {
   // Misc
   // pressedOpacity: number,
   searchListRefreshControlIndicator: string,
+  clipboardPopupText: string,
+  flipInputBorder: string,
 
   // Fonts
   fontFaceDefault: string,
@@ -170,6 +172,14 @@ export type Theme = {
 
   // Tutorials
   tutorialModalUnderlay: string,
+
+  // QR code
+  qrForegroundColor: string,
+  qrBackgroundColor: string,
+
+  // Input Accessory
+  inputAccessoryBackground: string,
+  inputAccessoryText: string,
 
   // Images
   settingsChangellyLogo: string,

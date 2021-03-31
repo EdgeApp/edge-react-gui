@@ -2,11 +2,11 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
+import { FIO_ADDRESS_LIST } from '../../constants/indexConstants'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
@@ -15,12 +15,12 @@ import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioName,
 import type { RootState } from '../../reducers/RootReducer'
 import type { Dispatch } from '../../types/reduxTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { showError } from '../services/AirshipInstance'
+import { ButtonsModal } from '../modals/ButtonsModal'
+import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ClickableText, PrimaryButton, SecondaryButton } from '../themed/ThemedButtons'
+import { ClickableText, PrimaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
-import { SEND_ACTION_TYPE } from './SendScene'
 
 type State = {
   showRenew: boolean,
@@ -58,6 +58,28 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     Actions.pop()
   }
 
+  afterTransferSuccess = async () => {
+    const { theme } = this.props
+    const styles = getStyles(theme)
+    const domainName = `@${this.props.fioDomainName || ''}`
+    const transferredMessage = ` ${s.strings.fio_domain_transferred.toLowerCase()}`
+    await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.fio_domain_label}
+        buttons={{
+          ok: { label: s.strings.string_ok_cap }
+        }}
+      >
+        <EdgeText style={styles.tileTextBottom}>
+          <EdgeText style={styles.cursive}>{domainName}</EdgeText>
+          {transferredMessage}
+        </EdgeText>
+      </ButtonsModal>
+    ))
+    return Actions.popTo(FIO_ADDRESS_LIST)
+  }
+
   onVisibilityPress = () => {
     this.setState({ showVisibility: true })
   }
@@ -87,29 +109,47 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     await setDomainVisibility(fioWallet, fioDomainName, !isPublic, fee)
   }
 
-  renewDomain = async (fee: number) => {
+  renewDomain = async (renewalFee: number) => {
     const { fioWallet, fioDomainName, isConnected } = this.props
     if (!isConnected) {
       throw new Error(s.strings.fio_network_alert_text)
     }
 
-    await renewFioName(fioWallet, fioDomainName, fee, true)
+    await renewFioName(fioWallet, fioDomainName, renewalFee, true)
   }
 
   goToTransfer = (params: { fee: number }) => {
-    const { fee } = params
-    if (!fee) {
-      showError(s.strings.fio_get_fee_err_msg)
-    } else {
-      this.cancelOperation()
-      Actions[Constants.SEND]({
-        amount: fee,
-        actionType: SEND_ACTION_TYPE.fioTransferDomain,
-        walletId: this.props.fioWallet.id,
-        fioDomain: this.props.fioDomainName,
-        fioWallet: this.props.fioWallet
-      })
+    const { fee: transferFee } = params
+    if (!transferFee) return showError(s.strings.fio_get_fee_err_msg)
+    this.cancelOperation()
+
+    const guiMakeSpendInfo = {
+      nativeAmount: `${transferFee}`,
+      currencyCode: this.props.fioWallet.currencyInfo.currencyCode,
+      otherParams: {
+        fioAction: 'transferFioDomain',
+        fioParams: { fioDomain: this.props.fioDomainName, newOwnerKey: '', maxFee: transferFee }
+      },
+      onDone: (err, edgeTransaction) => {
+        if (!err) {
+          this.afterTransferSuccess()
+        }
+      }
     }
+
+    Actions[Constants.SEND]({
+      guiMakeSpendInfo,
+      selectedWalletId: this.props.fioWallet.id,
+      selectedCurrencyCode: this.props.fioWallet.currencyInfo.currencyCode,
+      lockTilesMap: {
+        wallet: true
+      },
+      hiddenTilesMap: {
+        amount: true,
+        fioAddressSelect: true
+      },
+      infoTiles: [{ label: s.strings.fio_domain_to_transfer, value: `@${this.props.fioDomainName}` }]
+    })
   }
 
   render() {
@@ -126,6 +166,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
             title={isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}
             onSubmit={this.setDomainVisibility}
             onSuccess={this.afterSuccess}
+            cancelOperation={this.cancelOperation}
             getOperationFee={getDomainSetVisibilityFee}
             successMessage={isPublic ? s.strings.fio_domain_is_private_label : s.strings.fio_domain_is_public_label}
             fioWallet={fioWallet}
@@ -136,6 +177,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
             title={s.strings.title_fio_renew_domain}
             onSubmit={this.renewDomain}
             onSuccess={this.afterSuccess}
+            cancelOperation={this.cancelOperation}
             getOperationFee={this.getRenewalFee}
             successMessage={s.strings.fio_request_renew_domain_ok_text}
             fioWallet={fioWallet}
@@ -151,8 +193,6 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
             </ClickableText>
           </>
         )}
-        <View style={styles.spacer} />
-        {(showRenew || showVisibility) && <SecondaryButton onPress={this.cancelOperation} label={s.strings.string_cancel_cap} marginRem={[0.25, 1]} />}
       </SceneWrapper>
     )
   }
@@ -165,6 +205,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   spacer: {
     paddingTop: theme.rem(1.25)
+  },
+  tileTextBottom: {
+    color: theme.primaryText,
+    fontSize: theme.rem(1)
+  },
+  cursive: {
+    color: theme.primaryText,
+    fontStyle: 'italic'
   }
 }))
 

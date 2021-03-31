@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import Contacts from 'react-native-contacts'
+import RNPermissions from 'react-native-permissions'
 import { connect } from 'react-redux'
 
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
@@ -201,7 +202,7 @@ class ContactsLoaderComponent extends React.Component<Props> {
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const { contactsPermission } = nextProps
 
-    if (this.props.contactsPermission !== 'authorized' && contactsPermission === 'authorized') {
+    if (this.props.contactsPermission !== RNPermissions.RESULTS.GRANTED && contactsPermission === RNPermissions.RESULTS.GRANTED) {
       this.loadContacts()
     }
   }

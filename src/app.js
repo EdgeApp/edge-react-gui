@@ -10,7 +10,13 @@ import ENV from '../env.json'
 import { THEME } from './theme/variables/airbitz.js'
 import { log, logToServer } from './util/logger'
 
-Bugsnag.start()
+Bugsnag.start({
+  apiKey: ENV.BUGSNAG_API_KEY,
+  onError: event => {
+    log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
+    return event
+  }
+})
 
 // Set up the transparent status bar at boot time on Android:
 StatusBar.setBarStyle('light-content')

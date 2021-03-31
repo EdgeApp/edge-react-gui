@@ -1,5 +1,33 @@
 # edge-react-gui
 
+## 2.0.7 (2021-03-19)
+
+- Brand new themed send screen and workflow
+- Add new Golem ERC20 token GLM
+- Update partner descriptions
+- Update translations
+- edge-currency-accountbased to v0.7.50
+  - FIO: Refactor FIO action to be passed in otherParams of edgeSpendInfo
+  - EOS: Add dfuse graphql API to search for transactions
+  - ETH: Add new Golem token GLM
+  - Add promiseNy util to verify API responses from multiple sources
+  - Add contract address checking to Blockbook
+- edge-currency-bitcoin to v4.9.13
+  - RVN: Support old specification of blockheader check in newer blocks
+- edge-exchange-plugins to v0.11.23
+  - Move REPV2 to constantRate plugin
+  - Convert Coingecko to handle bulk queries
+  - Fix Sideshift error handling
+- edge-login-ui-rn to v0.8.0
+  - Breaking changes:
+    - rn: Add react-native-share as a native dependency.
+  - Other changes:
+    - Add a "share" option for the password recovery token.
+    - rn: Catch & display errors while launching screens.
+    - rn: Make the OTP error & OTP repair screens less confusing based on user feedback.
+    - rn: Upgrade edge-core-js & use its latest type definitions internally.
+    - all: Upgrade linting tools.
+
 ## 2.0.6 (2021-03-01)
 
 - Fix an issue with password recovery
