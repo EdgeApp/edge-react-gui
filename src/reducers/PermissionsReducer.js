@@ -1,18 +1,21 @@
 // @flow
 
+import RNPermissions from 'react-native-permissions'
+
 import type { Action } from '../types/reduxTypes.js'
+const { UNAVAILABLE, BLOCKED, DENIED, GRANTED, LIMITED } = RNPermissions.RESULTS
 
 // To add new permissions, just put them in this list an in `initialState`:
 export type Permission = 'camera' | 'contacts' | 'location'
-export type PermissionStatus = 'unavailable' | 'blocked' | 'denied' | 'granted' | 'limited'
+export type PermissionStatus = UNAVAILABLE | BLOCKED | DENIED | GRANTED | LIMITED
 export type PermissionsState = {
   [permission: Permission]: PermissionStatus
 }
 
 export const initialState = {
-  camera: 'denied',
-  contacts: 'denied',
-  location: 'denied'
+  camera: DENIED,
+  contacts: DENIED,
+  location: DENIED
 }
 
 export const permissions = (state: PermissionsState = initialState, action: Action) => {
