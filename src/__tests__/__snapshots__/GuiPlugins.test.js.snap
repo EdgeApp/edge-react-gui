@@ -254,7 +254,7 @@ Limit: $200 - $3000/day",
       "credit",
     ],
     "pluginId": "libertyx",
-    "title": "Cash and Debit Card",
+    "title": "In-person Cash and Debit Card",
   },
 ]
 `;
