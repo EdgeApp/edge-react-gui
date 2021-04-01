@@ -6,12 +6,14 @@
 - Add new Golem ERC20 token GLM
 - Update partner descriptions
 - Update translations
-- edge-currency-accountbased to v0.7.50
+- edge-currency-accountbased to v0.7.51
   - FIO: Refactor FIO action to be passed in otherParams of edgeSpendInfo
   - EOS: Add dfuse graphql API to search for transactions
   - ETH: Add new Golem token GLM
   - Add promiseNy util to verify API responses from multiple sources
   - Add contract address checking to Blockbook
+  - XRP: Use default fee of (0.00001 XRP) if SDK is unable to query for recommended fee
+  - Update content URL
 - edge-currency-bitcoin to v4.9.13
   - RVN: Support old specification of blockheader check in newer blocks
 - edge-exchange-plugins to v0.11.23
