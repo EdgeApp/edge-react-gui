@@ -11,10 +11,11 @@ import { connect } from 'react-redux'
 import { selectWallet } from '../../actions/WalletActions.js'
 import { WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
 import { formatNumber } from '../../locales/intl.js'
+import s from '../../locales/strings'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import { calculateWalletFiatBalanceUsingDefaultIsoFiat, calculateWalletFiatBalanceWithoutState, getActiveWalletIds } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import type { CreateTokenType, CreateWalletType, CustomTokenInfo, FlatListItem, GuiWallet } from '../../types/types.js'
+import type { CreateTokenType, CreateWalletType, CustomTokenInfo, FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import {
   type FilterDetailsType,
@@ -35,6 +36,7 @@ import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { WalletListCreateRow } from './WalletListCreateRow.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
 import { WalletListRow } from './WalletListRow.js'
+import { WalletListSectionHeader } from './WalletListSectionHeader.js'
 
 type WalletListItem = {
   id: string | null,
@@ -42,6 +44,11 @@ type WalletListItem = {
   key: string,
   createWalletType?: CreateWalletType,
   createTokenType?: CreateTokenType
+}
+
+type Section = {
+  title: string,
+  data: WalletListItem[]
 }
 
 const DIVIDE_PRECISION = 18
@@ -71,6 +78,7 @@ type StateProps = {
   account: EdgeAccount,
   customTokens: CustomTokenInfo[],
   exchangeRates: { [string]: number },
+  mostRecentWallets: MostRecentWallet[],
   showBalance: boolean,
   settings: Object,
   walletsSort: SortOption,
@@ -379,9 +387,71 @@ class WalletListComponent extends React.PureComponent<Props> {
     }
   }
 
+  renderSectionHeader = (section: { section: Section }) => <WalletListSectionHeader title={section.section.title} />
+
+  getMostRecentlyUsedWallets(size: number, walletListItem: WalletListItem[]): WalletListItem[] {
+    const { mostRecentWallets } = this.props
+    const recentWallets = []
+
+    for (let i = 0; i < size; i++) {
+      const recentUsed = mostRecentWallets[i]
+      if (!recentUsed) break
+      const wallet = walletListItem.find(item => {
+        const fullCurrencyCodeLowerCase = item.fullCurrencyCode ? item.fullCurrencyCode.toLowerCase() : ''
+        return item.id === recentUsed.id && fullCurrencyCodeLowerCase.includes(recentUsed.currencyCode.toLowerCase())
+      })
+      if (wallet) {
+        recentWallets.push(wallet)
+      }
+    }
+
+    return recentWallets
+  }
+
+  getSection = (walletList: WalletListItem[], walletListOnlyCount: number) => {
+    const sections: Section[] = []
+
+    let mostRecentWalletsCount = 0
+    if (walletListOnlyCount > 4 && walletListOnlyCount < 11) {
+      mostRecentWalletsCount = 2
+    } else if (walletListOnlyCount > 10) {
+      mostRecentWalletsCount = 3
+    }
+
+    sections.push({
+      title: s.strings.wallet_list_modal_header_mru,
+      data: this.getMostRecentlyUsedWallets(mostRecentWalletsCount, walletList)
+    })
+
+    sections.push({
+      title: s.strings.wallet_list_modal_header_all,
+      data: walletList
+    })
+
+    return sections
+  }
+
   render() {
-    const { activeWalletIds, footer, header, isModal, searching, theme, wallets } = this.props
+    const { activeWalletIds, footer, header, isModal, mostRecentWallets, searchText, searching, theme, wallets } = this.props
     const walletList = this.getWalletList(activeWalletIds, wallets)
+
+    if (isModal && !searching && searchText.length === 0 && mostRecentWallets.length > 1) {
+      const walletOnlyList = walletList.filter(item => item.id)
+      if (walletOnlyList.length > 4) {
+        return (
+          <SwipeListView
+            ListFooterComponent={footer}
+            ListHeaderComponent={header}
+            sections={this.getSection(walletList, walletOnlyList.length)}
+            renderSectionHeader={this.renderSectionHeader}
+            renderItem={this.renderRow}
+            keyboardShouldPersistTaps="handled"
+            useSectionList
+          />
+        )
+      }
+    }
+
     return (
       <SwipeListView
         data={walletList}
@@ -417,6 +487,7 @@ export const WalletList = connect(
       account: state.core.account,
       customTokens: state.ui.settings.customTokens,
       exchangeRates: state.exchangeRates,
+      mostRecentWallets: state.ui.settings.mostRecentWallets,
       walletsSort: state.ui.settings.walletsSort,
       showBalance: state.ui.settings.isAccountBalanceVisible,
       settings: state.ui.settings,

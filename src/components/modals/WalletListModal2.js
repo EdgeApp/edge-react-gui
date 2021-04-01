@@ -64,7 +64,7 @@ class WalletListMenuModalComponent extends React.PureComponent<Props, State> {
           isClearable={searching}
           onClear={this.handleClearText}
           value={search}
-          marginRem={0}
+          marginRem={[0, 0, 0.25, 0]}
         />
         <WalletList
           onPress={this.handleOnPress}
