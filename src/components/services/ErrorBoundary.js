@@ -5,7 +5,8 @@ import * as React from 'react'
 
 type Props = {
   children: React.Node,
-  FallbackComponent: React.ComponentType<any>
+  FallbackComponent: React.ComponentType<{}>,
+  onError?: (error: { originalError: mixed }) => void
 }
 type State = {
   hasError: boolean
@@ -21,9 +22,14 @@ class ErrorBoundaryComponent extends React.Component<Props, State> {
     this.state = { hasError: false }
   }
 
-  static getDerivedStateFromError(error: mixed) {
-    console.error(error)
+  static getDerivedStateFromError() {
     return { hasError: true }
+  }
+
+  componentDidCatch(error: mixed) {
+    if (this.props.onError != null) {
+      this.props.onError({ originalError: error })
+    }
   }
 
   render(): React.Node {
