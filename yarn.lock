@@ -14181,9 +14181,9 @@ yargs@^15.0.2, yargs@^15.1.0, yargs@^15.3.1:
     yargs-parser "^18.1.2"
 
 yavent@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/yavent/-/yavent-0.1.1.tgz#cc6458d24ded144da7126b8445163b11b967646f"
-  integrity sha512-jeFpwxVlI7AM9D+a+K36gmKV7lE41Nq0LZ48NhLQ+dKSWkf4GzxKn9NZ3yat/EsvEfNkKBdY1JTNNuXi0TdRuA==
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/yavent/-/yavent-0.1.2.tgz#eb826c8c5e344e86e1398a463a3d5092f919edeb"
+  integrity sha512-hd1tUDabbB6dUoOcHLB1rRlydNC9DGKGMMwotnEvWdNyFNgSN7k4djW6Db6MtGPctGgiJyhDr26PFF1APfqoqA==
 
 yazl@2.5.1:
   version "2.5.1"
