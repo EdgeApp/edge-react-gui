@@ -201,7 +201,8 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
       })
       Animated.timing(this.animatedValue, {
         toValue: 1,
-        duration: 0
+        duration: 0,
+        useNativeDriver: true
       }).start()
       setTimeout(() => {
         this.setState({
@@ -300,7 +301,8 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
       Animated.spring(this.animatedValue, {
         toValue: 0,
         friction: 8,
-        tension: 10
+        tension: 10,
+        useNativeDriver: true
       }).start()
     }
     if (!this.state.isToggled) {
@@ -310,7 +312,8 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
       Animated.spring(this.animatedValue, {
         toValue: 1,
         friction: 8,
-        tension: 10
+        tension: 10,
+        useNativeDriver: true
       }).start()
     }
   }
