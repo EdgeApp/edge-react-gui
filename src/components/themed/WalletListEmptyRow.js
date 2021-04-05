@@ -13,6 +13,7 @@ import { EdgeText } from './EdgeText.js'
 
 type Props = {
   walletId?: string,
+  isModal?: boolean,
   swipeRef: ?React.ElementRef<typeof SwipeRow>,
   swipeRow?: SwipeRow
 }
@@ -32,21 +33,30 @@ class WalletListEmptyRowComponent extends React.PureComponent<Props & ThemeProps
     }
   }
 
-  render() {
+  renderRow = () => {
     const { theme } = this.props
+    return (
+      <TouchableOpacity onLongPress={this.handleOpenWalletListMenuModal}>
+        <ActivityIndicator color={theme.primaryText} size="large" />
+      </TouchableOpacity>
+    )
+  }
+
+  render() {
+    const { isModal, theme } = this.props
     const styles = getStyles(theme)
     return (
-      <SwipeRow {...this.props} rightOpenValue={theme.rem(-2.5)} disableRightSwipe ref={this.props.swipeRef} useNativeDriver>
+      <SwipeRow {...this.props} rightOpenValue={theme.rem(-2.5)} disableRightSwipe disableLeftSwipe={isModal} ref={this.props.swipeRef} useNativeDriver>
         <View style={styles.swipeContainer}>
           <TouchableOpacity style={styles.swipeButton} onPress={this.handleOpenWalletListMenuModal}>
             <EdgeText style={styles.swipeIcon}>{WALLET_LIST_OPTIONS_ICON}</EdgeText>
           </TouchableOpacity>
         </View>
-        <Gradient style={styles.container}>
-          <TouchableOpacity onLongPress={this.handleOpenWalletListMenuModal}>
-            <ActivityIndicator color={theme.primaryText} size="large" />
-          </TouchableOpacity>
-        </Gradient>
+        {isModal ? (
+          <View style={[styles.container, styles.containerModal]}>{this.renderRow()}</View>
+        ) : (
+          <Gradient style={styles.container}>{this.renderRow()}</Gradient>
+        )}
       </SwipeRow>
     )
   }
@@ -60,6 +70,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     height: theme.rem(4.25),
     paddingHorizontal: theme.rem(1.75)
+  },
+  containerModal: {
+    backgroundColor: theme.modal
   },
   swipeContainer: {
     flex: 1,
