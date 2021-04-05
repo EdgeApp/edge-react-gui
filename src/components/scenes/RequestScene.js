@@ -39,6 +39,7 @@ export type RequestStateProps = {
   currencyCode: string,
   currencyInfo: EdgeCurrencyInfo | null,
   edgeWallet: EdgeCurrencyWallet,
+  currencyIcon?: string,
   exchangeSecondaryToPrimaryRatio: number,
   guiWallet: GuiWallet,
   loading: false,
@@ -55,6 +56,7 @@ export type RequestLoadingProps = {
   edgeWallet: null,
   currencyCode: null,
   currencyInfo: null,
+  currencyIcon?: string,
   exchangeSecondaryToPrimaryRatio: null,
   guiWallet: null,
   loading: true,
@@ -291,7 +293,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { theme } = this.props
+    const { currencyIcon, theme } = this.props
     const styles = getStyles(theme)
 
     if (this.props.loading) {
@@ -301,7 +303,6 @@ export class RequestComponent extends React.PureComponent<Props, State> {
     const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, guiWallet } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
-    const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
     const { keysOnlyMode = false } = Constants.getSpecialCurrencyInfo(primaryCurrencyInfo.displayCurrencyCode)
 
     return (
@@ -313,7 +314,7 @@ export class RequestComponent extends React.PureComponent<Props, State> {
             <ExchangedFlipInput
               ref={this.flipInputRef}
               headerText={flipInputHeaderText}
-              headerLogo={flipInputHeaderLogo}
+              headerLogo={currencyIcon}
               primaryCurrencyInfo={primaryCurrencyInfo}
               secondaryCurrencyInfo={secondaryCurrencyInfo}
               exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
@@ -595,9 +596,19 @@ export const Request = connect(
     const displayBalance = truncateDecimals(bns.div(nativeBalance, primaryDisplayDenomination.multiplier, DIVIDE_PRECISION), 6)
     const balance = formatNumber(decimalOrZero(displayBalance, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
 
+    // Icon
+    let currencyIcon
+    if (guiWallet.currencyCode === currencyCode) {
+      currencyIcon = guiWallet.symbolImage
+    } else {
+      const meta = guiWallet.metaTokens.find(token => token.currencyCode === currencyCode)
+      currencyIcon = meta ? meta.symbolImage : undefined
+    }
+
     return {
       currencyCode,
       currencyInfo: currencyInfo || null,
+      currencyIcon,
       edgeWallet,
       exchangeSecondaryToPrimaryRatio,
       guiWallet,

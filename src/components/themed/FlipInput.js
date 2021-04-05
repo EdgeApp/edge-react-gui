@@ -482,7 +482,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
-          <Image style={styles.headerIcon} source={{ uri: headerLogo || '' }} />
+          {headerLogo ? <Image style={styles.headerIcon} source={{ uri: headerLogo }} /> : null}
           {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
         </View>
         <View style={styles.clipboardContainer}>
