@@ -69,7 +69,7 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
   }
 
   createAndSelectToken = async () => {
-    const { account, createTokenType, onPress, tokenCreated } = this.props
+    const { account, createTokenType, onPress, tokenCreated, wallets } = this.props
     const { currencyWallets } = account
 
     try {
@@ -92,9 +92,11 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
         wallet = await this.createWallet(walletType.currencyCode, walletType.walletType)
       }
 
+      const guiWalletEnabledTokens = wallets[wallet.id]?.enabledTokens ?? []
       const enabledTokens = await showFullScreenSpinner(
         s.strings.wallet_list_modal_enabling_token,
-        setEnabledTokens(wallet, [...(await wallet.getEnabledTokens()), currencyCode], [])
+        // Should use EdgeCurrencyWallet.getEnabledTokens() but function seems to return parent currency code as part of the array
+        setEnabledTokens(wallet, [...guiWalletEnabledTokens, currencyCode], [])
       )
 
       tokenCreated(wallet.id, enabledTokens)
