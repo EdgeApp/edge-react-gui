@@ -5221,10 +5221,10 @@ edge-exchange-plugins@^0.11.23:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.8.1.tgz#69a9c73c223847598119890f9b3f07178d3427f0"
-  integrity sha512-RE0+yp1S8k8PL9yIrsMFqXuHgvOSbc5l68Eiw/Jt5bV8CSitsyq6GbUKZxAAkdz/fvOq7GEvVECgjq5dXo5UOg==
+edge-login-ui-rn@^0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.8.2.tgz#6757f39a8400b8e9f17c9e2d42851163ed245a61"
+  integrity sha512-euUyVlF5uJnkds5zLG3uCJuWI8EbU6SUY52IoR8/LF2EP3hjfGfHYaLuqy99LiDixMB4X3DnZK0ClGJjchnK6w==
   dependencies:
     cleaners "^0.3.1"
     qrcode-generator "^1.4.4"
@@ -5235,7 +5235,6 @@ edge-login-ui-rn@^0.8.1:
     react-native-localize "^2.0.2"
     react-native-mail "^6.0.0"
     react-native-material-textfield "git://github.com/EdgeApp/react-native-material-textfield.git"
-    react-native-modal "^11.0.1"
     react-native-patina "^0.1.3"
     react-native-share "^5.1.4"
     react-native-vector-icons "^7.1.0"
