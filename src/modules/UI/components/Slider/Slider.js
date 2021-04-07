@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 import { PanGestureHandler } from 'react-native-gesture-handler'
-import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, { Easing, runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
@@ -17,7 +17,6 @@ type OwnProps = {
   showSpinner?: boolean,
   completePoint?: number,
   width?: number,
-  thumbWidth: number,
 
   // Reset logic:
   reset?: boolean,
@@ -44,18 +43,22 @@ export const SliderComponent = (props: Props) => {
     parentStyle,
     completePoint = COMPLETE_POINT,
     theme,
-    thumbWidth = props.theme.confirmationSliderThumbWidth,
     width = props.theme.confirmationSliderWidth
   } = props
-  const styles = getStyles(theme, width, thumbWidth)
-  const upperBound = width - thumbWidth
-
+  const styles = getStyles(theme)
+  const upperBound = width - theme.confirmationSliderThumbWidth
+  const widthStyle = { width }
   const sliderDisabled = disabled || showSpinner
   const sliderText = !sliderDisabled ? s.strings.send_confirmation_slide_to_confirm : disabledText || s.strings.select_exchange_amount_short
+
   const translateX = useSharedValue(upperBound)
   const isSliding = useSharedValue(false)
 
-  if (reset) translateX.value = withTiming(upperBound)
+  if (reset)
+    translateX.value = withTiming(upperBound, {
+      duration: 500,
+      easing: Easing.inOut(Easing.exp)
+    })
 
   const onGestureEvent = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
@@ -74,7 +77,10 @@ export const SliderComponent = (props: Props) => {
         if (translateX.value < completePoint) {
           runOnJS(onSlidingComplete)()
         } else {
-          translateX.value = withTiming(upperBound)
+          translateX.value = withTiming(upperBound, {
+            duration: 500,
+            easing: Easing.inOut(Easing.exp)
+          })
         }
       }
     }
@@ -86,12 +92,12 @@ export const SliderComponent = (props: Props) => {
 
   const progressStyle = useAnimatedStyle(() => {
     return {
-      width: translateX.value + thumbWidth
+      width: translateX.value + theme.confirmationSliderThumbWidth
     }
   })
 
   return (
-    <View style={[parentStyle, styles.slider, sliderDisabled ? styles.disabledSlider : null]}>
+    <View style={[parentStyle, styles.slider, sliderDisabled ? styles.disabledSlider : null, widthStyle]}>
       <Animated.View style={[styles.progress, progressStyle]} />
 
       <PanGestureHandler onGestureEvent={onGestureEvent}>
@@ -108,55 +114,51 @@ export const SliderComponent = (props: Props) => {
   )
 }
 
-const getStyles = cacheStyles((theme: Theme, { sliderWidth, thumbWidth }: { sliderWidth?: number, thumbWidth?: number }) => {
-  sliderWidth = sliderWidth || theme.confirmationSliderWidth
-  thumbWidth = thumbWidth || theme.confirmationSliderThumbWidth
-  return {
-    slider: {
-      borderRadius: thumbWidth / 2,
-      backgroundColor: theme.confirmationSlider,
-      justifyContent: 'center',
-      height: thumbWidth,
-      width: sliderWidth
-    },
-    disabledSlider: {
-      backgroundColor: theme.confirmationSlider
-    },
-    thumb: {
-      height: thumbWidth,
-      width: thumbWidth,
-      borderRadius: thumbWidth / 2,
-      backgroundColor: theme.confirmationSliderThumb,
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 5
-    },
-    disabledThumb: {
-      backgroundColor: theme.confirmationThumbDeactivated
-    },
-    progress: {
-      ...StyleSheet.absoluteFillObject,
-      backgroundColor: theme.confirmationSlider,
-      borderRadius: thumbWidth / 2
-    },
-    textOverlay: {
-      fontSize: theme.rem(0.75),
-      position: 'absolute',
-      color: theme.confirmationSliderText,
-      alignSelf: 'center',
-      top: theme.rem(1),
-      zIndex: 1
-    },
-    textOverlayDisabled: {
-      color: theme.confirmationSliderTextDeactivated
-    },
-    activityIndicator: {
-      position: 'absolute',
-      alignSelf: 'center',
-      top: theme.rem(1),
-      zIndex: 1
-    }
+const getStyles = cacheStyles((theme: Theme) => ({
+  slider: {
+    borderRadius: theme.confirmationSliderThumbWidth / 2,
+    backgroundColor: theme.confirmationSlider,
+    justifyContent: 'center',
+    height: theme.confirmationSliderThumbWidth,
+    width: theme.confirmationSliderWidth
+  },
+  disabledSlider: {
+    backgroundColor: theme.confirmationSlider
+  },
+  thumb: {
+    height: theme.confirmationSliderThumbWidth,
+    width: theme.confirmationSliderThumbWidth,
+    borderRadius: theme.confirmationSliderThumbWidth / 2,
+    backgroundColor: theme.confirmationSliderThumb,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 5
+  },
+  disabledThumb: {
+    backgroundColor: theme.confirmationThumbDeactivated
+  },
+  progress: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: theme.confirmationSlider,
+    borderRadius: theme.confirmationSliderThumbWidth / 2
+  },
+  textOverlay: {
+    fontSize: theme.rem(0.75),
+    position: 'absolute',
+    color: theme.confirmationSliderText,
+    alignSelf: 'center',
+    top: theme.rem(1),
+    zIndex: 1
+  },
+  textOverlayDisabled: {
+    color: theme.confirmationSliderTextDeactivated
+  },
+  activityIndicator: {
+    position: 'absolute',
+    alignSelf: 'center',
+    top: theme.rem(1),
+    zIndex: 1
   }
-})
+}))
 
 export const Slider = withTheme(SliderComponent)
