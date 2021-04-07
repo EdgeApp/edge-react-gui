@@ -3,7 +3,7 @@
 
 import { Date } from 'core-js'
 
-import { launchAppWithPermissions } from '../utils.js'
+import { launchAppWithPermissions, navigateToLanding } from '../utils.js'
 
 // FUNCTIONS
 // const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds))
@@ -125,6 +125,9 @@ describe('Edge GUI: ', () => {
 
   xit('should be able to fix invalid inputs & create account', async () => {
     const loginScene = loginscene()
+
+    // NAVIGATE TO LANDING PAGE
+    await navigateToLanding()
 
     // NAVIGATE TO CREATE ACCOUNT
     await waitFor(loginScene.createAccountButton).toBeVisible().withTimeout(5000)
