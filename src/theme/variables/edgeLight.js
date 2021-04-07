@@ -35,6 +35,7 @@ import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogo
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_light.gif'
 import { type Theme } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
+import { PLATFORM } from './platform'
 
 const palette = {
   black: '#000000',
@@ -173,12 +174,14 @@ export const edgeLight: Theme = {
   // warningBubble: palette.accentOrange,
 
   // Confirmation slider
-  // confirmationSlider: palette.blackOp10,
-  // confirmationSliderText: palette.edgeBlue,
-  // confirmationSliderArrow: palette.white,
-  // confirmationSliderThumb: palette.edgeBlue,
-  // confirmationSliderTextDeactivated: palette.gray,
-  // confirmationThumbDeactivated: palette.gray,
+  confirmationSlider: palette.blackOp10,
+  confirmationSliderText: palette.edgeBlue,
+  confirmationSliderArrow: palette.white,
+  confirmationSliderThumb: palette.edgeBlue,
+  confirmationSliderTextDeactivated: palette.gray,
+  confirmationThumbDeactivated: palette.gray,
+  confirmationSliderWidth: PLATFORM.deviceWidth >= 720 ? 680 : PLATFORM.deviceWidth - 45,
+  confirmationSliderThumbWidth: 55,
 
   // Lines
   lineDivider: palette.edgeBlue,

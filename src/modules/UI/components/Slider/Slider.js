@@ -6,14 +6,18 @@ import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
 import s from '../../../../locales/strings.js'
-import { THEME } from '../../../../theme/variables/airbitz.js'
-import { PLATFORM } from '../../../../theme/variables/platform.js'
 
-type Props = {
+const COMPLETE_POINT: number = 3
+
+type OwnProps = {
   onSlidingComplete(): mixed,
   parentStyle?: any,
   showSpinner?: boolean,
+  completePoint?: number,
+  width?: number,
+  thumbWidth: number,
 
   // Reset logic:
   reset?: boolean,
@@ -23,41 +27,55 @@ type Props = {
   disabled: boolean
 }
 
-const SLIDER_WIDTH = PLATFORM.deviceWidth >= 720 ? 680 : PLATFORM.deviceWidth - 45
-const KNOB_WIDTH = 55
-const UPPER_BOUND = SLIDER_WIDTH - KNOB_WIDTH
+type Props = OwnProps & ThemeProps
 
 const clamp = (value, lowerBound, upperBound) => {
   'worklet'
   return Math.min(Math.max(lowerBound, value), upperBound)
 }
 
-export const Slider = (props: Props) => {
-  const { disabledText, disabled, reset, showSpinner, onSlidingComplete, parentStyle } = props
+export const SliderComponent = (props: Props) => {
+  const {
+    disabledText,
+    disabled,
+    reset,
+    showSpinner,
+    onSlidingComplete,
+    parentStyle,
+    completePoint = COMPLETE_POINT,
+    theme,
+    thumbWidth = props.theme.confirmationSliderThumbWidth,
+    width = props.theme.confirmationSliderWidth
+  } = props
+  const styles = getStyles(theme, width, thumbWidth)
+  const upperBound = width - thumbWidth
+
   const sliderDisabled = disabled || showSpinner
   const sliderText = !sliderDisabled ? s.strings.send_confirmation_slide_to_confirm : disabledText || s.strings.select_exchange_amount_short
-  const translateX = useSharedValue(UPPER_BOUND)
+  const translateX = useSharedValue(upperBound)
   const isSliding = useSharedValue(false)
 
-  if (reset) translateX.value = withTiming(UPPER_BOUND)
+  if (reset) translateX.value = withTiming(upperBound)
 
-  const disabledOnGestureEvent = () => null
   const onGestureEvent = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
-      ctx.offsetX = translateX.value
+      if (!sliderDisabled) ctx.offsetX = translateX.value
     },
     onActive: (event, ctx) => {
-      isSliding.value = true
-      translateX.value = clamp(event.translationX + ctx.offsetX, 0, UPPER_BOUND)
+      if (!sliderDisabled) {
+        isSliding.value = true
+        translateX.value = clamp(event.translationX + ctx.offsetX, 0, upperBound)
+      }
     },
     onEnd: () => {
-      isSliding.value = false
+      if (!sliderDisabled) {
+        isSliding.value = false
 
-      if (translateX.value < 3) {
-        // runOnJS(fff)()
-        runOnJS(onSlidingComplete)()
-      } else {
-        translateX.value = withTiming(UPPER_BOUND)
+        if (translateX.value < completePoint) {
+          runOnJS(onSlidingComplete)()
+        } else {
+          translateX.value = withTiming(upperBound)
+        }
       }
     }
   })
@@ -68,71 +86,77 @@ export const Slider = (props: Props) => {
 
   const progressStyle = useAnimatedStyle(() => {
     return {
-      width: translateX.value + KNOB_WIDTH
+      width: translateX.value + thumbWidth
     }
   })
 
   return (
-    <View style={[parentStyle, styles.slider, showSpinner || sliderDisabled ? styles.disabledSlider : null]}>
+    <View style={[parentStyle, styles.slider, sliderDisabled ? styles.disabledSlider : null]}>
       <Animated.View style={[styles.progress, progressStyle]} />
-      <PanGestureHandler onGestureEvent={sliderDisabled || showSpinner ? disabledOnGestureEvent : onGestureEvent}>
-        <Animated.View style={[styles.thumb, sliderDisabled || showSpinner ? styles.disabledThumb : null, scrollTranslationStyle]}>
+
+      <PanGestureHandler onGestureEvent={onGestureEvent}>
+        <Animated.View style={[styles.thumb, sliderDisabled ? styles.disabledThumb : null, scrollTranslationStyle]}>
           <Image source={leftArrowImg} />
         </Animated.View>
       </PanGestureHandler>
       {showSpinner ? (
-        <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.activityIndicator} />
+        <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
       ) : (
-        <Text style={styles.textOverlay}>{sliderText}</Text>
+        <Text style={sliderDisabled ? [styles.textOverlay, styles.textOverlayDisabled] : styles.textOverlay}>{sliderText}</Text>
       )}
     </View>
   )
 }
 
-const rawStyles = {
-  slider: {
-    borderRadius: KNOB_WIDTH / 2,
-    backgroundColor: THEME.COLORS.OPACITY_WHITE,
-    justifyContent: 'center',
-    height: KNOB_WIDTH,
-    width: SLIDER_WIDTH
-  },
-  disabledSlider: {
-    backgroundColor: THEME.COLORS.OPACITY_GRAY_1
-  },
-  thumb: {
-    height: KNOB_WIDTH,
-    width: KNOB_WIDTH,
-    borderRadius: KNOB_WIDTH / 2,
-    backgroundColor: THEME.COLORS.ACCENT_MINT,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 5
-  },
-  disabledThumb: {
-    backgroundColor: THEME.COLORS.GRAY_2
-  },
-  progress: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: THEME.COLORS.OPACITY_WHITE,
-    borderRadius: KNOB_WIDTH / 2
-  },
-  textOverlay: {
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: PLATFORM.deviceWidth >= 320 ? 13 : 16,
-    position: 'absolute',
-    color: THEME.COLORS.WHITE,
-    alignSelf: 'center',
-    top: 17,
-    zIndex: 1
-  },
-  activityIndicator: {
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    position: 'absolute',
-    alignSelf: 'center',
-    top: 17,
-    zIndex: 1
+const getStyles = cacheStyles((theme: Theme, { sliderWidth, thumbWidth }: { sliderWidth?: number, thumbWidth?: number }) => {
+  sliderWidth = sliderWidth || theme.confirmationSliderWidth
+  thumbWidth = thumbWidth || theme.confirmationSliderThumbWidth
+  return {
+    slider: {
+      borderRadius: thumbWidth / 2,
+      backgroundColor: theme.confirmationSlider,
+      justifyContent: 'center',
+      height: thumbWidth,
+      width: sliderWidth
+    },
+    disabledSlider: {
+      backgroundColor: theme.confirmationSlider
+    },
+    thumb: {
+      height: thumbWidth,
+      width: thumbWidth,
+      borderRadius: thumbWidth / 2,
+      backgroundColor: theme.confirmationSliderThumb,
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 5
+    },
+    disabledThumb: {
+      backgroundColor: theme.confirmationThumbDeactivated
+    },
+    progress: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: theme.confirmationSlider,
+      borderRadius: thumbWidth / 2
+    },
+    textOverlay: {
+      fontSize: theme.rem(0.75),
+      position: 'absolute',
+      color: theme.confirmationSliderText,
+      alignSelf: 'center',
+      top: theme.rem(1),
+      zIndex: 1
+    },
+    textOverlayDisabled: {
+      color: theme.confirmationSliderTextDeactivated
+    },
+    activityIndicator: {
+      position: 'absolute',
+      alignSelf: 'center',
+      top: theme.rem(1),
+      zIndex: 1
+    }
   }
-}
+})
 
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+export const Slider = withTheme(SliderComponent)
