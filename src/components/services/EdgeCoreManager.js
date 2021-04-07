@@ -144,10 +144,10 @@ export class EdgeCoreManager extends React.PureComponent<Props, State> {
       <MakeEdgeContext
         crashReporter={crashReporter}
         debug={ENV.DEBUG_CORE_BRIDGE}
-        options={contextOptions}
         onLoad={this.onContext}
         onError={this.onError}
         nativeIo={nativeIo}
+        {...contextOptions}
       />
     )
   }
