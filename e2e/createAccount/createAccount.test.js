@@ -5,7 +5,7 @@
 import { Date } from 'core-js'
 import { waitFor } from 'detox'
 
-import { launchAppWithPermissions } from '../utils.js'
+import { launchAppWithPermissions, navigateToLanding } from '../utils.js'
 
 // FUNCTIONS
 // const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds))
@@ -66,7 +66,7 @@ describe('Edge GUI: ', () => {
     await expect(nextButton).toBeVisible()
 
     // VALID USERNAME
-    await usernameInput.typeText(USERNAME.valid)
+    await usernameInput.typeText(genUsername())
     await expect(usernameTakenError).toBeNotVisible()
 
     // NAVIGATE TO CHOOSE PASSWORD
@@ -118,7 +118,7 @@ describe('Edge GUI: ', () => {
     await expect(findByText('Slide wallets to show more options')).toBeVisible()
   })
 
-  xit('should be able to fix invalid inputs & create account', async () => {
+  it('should be able to fix invalid inputs & create account', async () => {
     // MATCHERS(Caon't be in before. Will be moved to POM)
     const createAccountButton = element(by.text('Create account'))
     const getStartedButton = element(by.text('Get Started'))
@@ -137,6 +137,9 @@ describe('Edge GUI: ', () => {
     const confirmation4 = element(by.type('RCTImageView')).atIndex(3)
     const confirmFinishButton = element(by.text('Confirm & Finish'))
     // const walletListScene = element(by.text('Slide wallets to show more options'))
+
+    // NAVIGATE TO LANDING PAGE
+    await navigateToLanding()
 
     // NAVIGATE TO CREATE ACCOUNT
     await expect(createAccountButton).toExist()
@@ -165,7 +168,7 @@ describe('Edge GUI: ', () => {
     await usernameInput.clearText()
 
     // VALID USERNAME
-    await usernameInput.typeText(USERNAME.valid)
+    await usernameInput.typeText(genUsername())
     await expect(usernameTakenError).toBeNotVisible()
 
     // NAVIGATE TO CHOOSE PASSWORD
