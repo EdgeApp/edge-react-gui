@@ -129,6 +129,7 @@
     "core-js": "^2.5.2",
     "dateformat": "^3.0.3",
     "detect-bundler": "^1.0.0",
+    "detox": "^18.10.0",
     "disklet": "^0.4.5",
     "edge-components": "^0.0.31",
     "edge-core-js": "^0.17.30",
@@ -200,6 +201,7 @@
     "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#3ff34e5f6ebdfea1199f6acccedc703cc9abcd7a",
     "eslint": "7.14.0",
     "eslint-config-standard-kit": "^0.14.4",
+    "eslint-plugin-detox": "^1.0.0",
     "eslint-plugin-flowtype": "^5.1.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^11.1.0",
@@ -239,7 +241,7 @@
         "name": "iPhone 8"
       },
       "ios.sim.debug": {
-        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/edge.app",
+        "binaryPath": "/Users/marcusbates/Library/Developer/Xcode/DerivedData/edge-hhrsbwmzjemvddgtqahjbywenytl/Build/Products/Debug-iphonesimulator/edge.app",
         "build": "xcodebuild -workspace ios/edge.xcworkspace -scheme edge -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
         "type": "ios.simulator",
         "name": "iPhone 8"
