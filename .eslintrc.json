@@ -11,7 +11,7 @@
     "fetch": true
   },
   "parser": "babel-eslint",
-  "plugins": ["react-native", "react", "simple-import-sort"],
+  "plugins": ["react-native", "react", "simple-import-sort", "detox"],
   "rules": {
     "camelcase": "warn",
     "flowtype/array-style-complex-type": ["error", "verbose"],

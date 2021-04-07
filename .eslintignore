@@ -5,3 +5,4 @@
 /src/util/bridge/injectThisInWebView.js
 /src/util/bridge/rolledUp.js
 node_modules
+artifacts
