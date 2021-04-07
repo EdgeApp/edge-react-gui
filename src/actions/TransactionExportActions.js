@@ -14,7 +14,13 @@ export async function exportTransactionsToQBO(wallet: EdgeCurrencyWallet, opts: 
 export async function exportTransactionsToCSV(wallet: EdgeCurrencyWallet, opts: EdgeGetTransactionsOptions = {}): Promise<string> {
   const txs: EdgeTransaction[] = await wallet.getTransactions(opts)
   const { currencyCode = wallet.currencyInfo.currencyCode, denomination } = opts
-  return exportTransactionsToCSVInner(txs, currencyCode, wallet.fiatCurrencyCode, denomination)
+
+  let denomName = ''
+  if (denomination != null) {
+    const denomObj = wallet.currencyInfo.denominations.find(edgeDenom => edgeDenom.multiplier === denomination)
+    if (denomObj != null) denomName = denomObj.name
+  }
+  return exportTransactionsToCSVInner(txs, currencyCode, wallet.fiatCurrencyCode, denomination, denomName)
 }
 
 function padZero(val: string): string {
@@ -223,7 +229,8 @@ export async function exportTransactionsToCSVInner(
   edgeTransactions: EdgeTransaction[],
   currencyCode: string,
   fiatCurrencyCode: string,
-  denom?: string
+  denom?: string,
+  denomName: string = ''
 ): Promise<string> {
   const currencyField = 'AMT_' + currencyCode
   const networkFeeField = 'AMT_NETWORK_FEES_' + currencyCode
@@ -286,6 +293,11 @@ export async function exportTransactionsToCSVInner(
       {
         name: 'amount',
         label: currencyField,
+        quoted: true
+      },
+      {
+        name: 'denomName',
+        label: 'DENOMINATION',
         quoted: true
       },
       {
