@@ -38,7 +38,6 @@ const paymentTypeLogosById = {
   applepay: 'paymentTypeLogoApplePay',
   bank: 'paymentTypeLogoBankTransfer',
   bankgirot: 'paymentTypeLogoBankgirot',
-  bpay: 'paymentTypeLogoBpay',
   cash: 'paymentTypeLogoCash',
   debit: 'paymentTypeLogoDebitCard',
   fasterPayments: 'paymentTypeLogoFasterPayments',

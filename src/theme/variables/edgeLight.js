@@ -19,7 +19,6 @@ import paymentTypeLogoApplePay from '../../assets/images/paymentTypes/paymentTyp
 import paymentTypeLogoAuspost from '../../assets/images/paymentTypes/paymentTypeLogoAuspost.png'
 import paymentTypeLogoBankgirot from '../../assets/images/paymentTypes/paymentTypeLogoBankgirot.png'
 import paymentTypeLogoBankTransfer from '../../assets/images/paymentTypes/paymentTypeLogoBankTransfer.png'
-import paymentTypeLogoBpay from '../../assets/images/paymentTypes/paymentTypeLogoBpay.png'
 import paymentTypeLogoCash from '../../assets/images/paymentTypes/paymentTypeLogoCash.png'
 import paymentTypeLogoCreditCard from '../../assets/images/paymentTypes/paymentTypeLogoCreditCard.png'
 import paymentTypeLogoDebitCard from '../../assets/images/paymentTypes/paymentTypeLogoDebitCard.png'
@@ -262,7 +261,6 @@ export const edgeLight: Theme = {
   paymentTypeLogoAuspost: paymentTypeLogoAuspost,
   paymentTypeLogoBankgirot: paymentTypeLogoBankgirot,
   paymentTypeLogoBankTransfer: paymentTypeLogoBankTransfer,
-  paymentTypeLogoBpay: paymentTypeLogoBpay,
   paymentTypeLogoCash: paymentTypeLogoCash,
   paymentTypeLogoCreditCard: paymentTypeLogoCreditCard,
   paymentTypeLogoDebitCard: paymentTypeLogoDebitCard,
