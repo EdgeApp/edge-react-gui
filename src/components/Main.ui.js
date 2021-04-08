@@ -233,7 +233,6 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.CREATE_WALLET_REVIEW}
                 navTransparent
                 component={ifLoggedIn(CreateWalletReviewScene)}
-                renderTitle={<HeaderTitle title={s.strings.title_create_wallet} />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
                 renderRightButton={this.renderEmptyButton()}
               />

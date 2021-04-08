@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Image, Keyboard, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, Image, Keyboard, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -9,18 +9,16 @@ import { createCurrencyWallet } from '../../actions/CreateWalletActions.js'
 import CheckIcon from '../../assets/images/createWallet/check_icon_lg.png'
 import { WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
-import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { PLATFORM } from '../../theme/variables/platform.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
-import { scale } from '../../util/scaling.js'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { FullScreenTransitionComponent } from '../common/FullScreenTransition.js'
+import { SceneWrapper } from '../common/SceneWrapper'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText'
+import { SecondaryButton } from '../themed/ThemedButtons'
+import { Tile } from '../themed/Tile'
+import { UnderlinedHeader } from '../themed/UnderlinedHeader'
 
 type OwnProps = {
   walletName: string,
@@ -34,7 +32,7 @@ type StateProps = {
 type DispatchProps = {
   createCurrencyWallet(walletName: string, walletType: string, fiatCurrencyCode: string, cleanedPrivateKey?: string): void
 }
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type State = {
   isAnimationVisible: boolean
@@ -52,6 +50,8 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
     Keyboard.dismiss()
   }
 
+  goToWalletList = () => Actions.popTo(WALLET_LIST_SCENE)
+
   onSubmit = async () => {
     const { walletName, selectedWalletType, selectedFiat, cleanedPrivateKey, createCurrencyWallet } = this.props
     const createdWallet = await createCurrencyWallet(walletName, selectedWalletType.walletType, fixFiatCurrencyCode(selectedFiat.value), cleanedPrivateKey)
@@ -68,122 +68,73 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { isCreatingWallet } = this.props
+    const { isCreatingWallet, theme } = this.props
     const { isAnimationVisible } = this.state
+    const styles = getStyles(theme)
 
     return (
-      <SafeAreaView>
+      <SceneWrapper background="theme">
         {!isAnimationVisible ? (
-          <View style={styles.scene}>
-            <Gradient style={styles.gradient} />
+          <View style={styles.view}>
+            <UnderlinedHeader title={s.strings.title_create_wallet} />
+            <EdgeText style={styles.instructionalText} numberOfLines={2}>
+              {s.strings.create_wallet_top_instructions}
+            </EdgeText>
+            <Tile
+              type="static"
+              title={s.strings.create_wallet_crypto_type_label}
+              body={`${this.props.selectedWalletType.currencyName} - ${this.props.selectedWalletType.currencyCode}`}
+            />
+            <Tile type="static" title={s.strings.create_wallet_fiat_type_label} body={this.props.selectedFiat.label} />
+            <Tile type="static" title={s.strings.create_wallet_name_label} body={this.props.walletName} />
 
-            <View style={styles.view}>
-              <View style={styles.instructionalArea}>
-                <Text style={styles.instructionalText}>{s.strings.create_wallet_top_instructions}</Text>
-              </View>
-              <View style={styles.reviewArea}>
-                <Text style={styles.reviewAreaText}>
-                  {s.strings.create_wallet_crypto_type_label} {this.props.selectedWalletType.currencyName} - {this.props.selectedWalletType.currencyCode}
-                </Text>
-                <Text style={styles.reviewAreaText}>
-                  {s.strings.create_wallet_fiat_type_label} {this.props.selectedFiat.label}
-                </Text>
-                <Text style={styles.reviewAreaText}>
-                  {s.strings.create_wallet_name_label} {this.props.walletName}
-                </Text>
-              </View>
-
-              <View style={styles.buttons}>
-                <SecondaryButton style={styles.cancel} onPress={this.onBack}>
-                  <SecondaryButton.Text>{s.strings.title_back}</SecondaryButton.Text>
-                </SecondaryButton>
-
-                <PrimaryButton style={styles.create} onPress={this.onSubmit} disabled={isCreatingWallet}>
-                  {isCreatingWallet ? (
-                    <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
-                  ) : (
-                    <PrimaryButton.Text>{s.strings.fragment_create_wallet_create_wallet}</PrimaryButton.Text>
-                  )}
-                </PrimaryButton>
-              </View>
-            </View>
+            <SecondaryButton style={styles.create} onPress={this.onSubmit} disabled={isCreatingWallet} marginRem={[2, 5, 1]}>
+              {isCreatingWallet ? <ActivityIndicator color={theme.iconTappable} /> : <EdgeText>{s.strings.fragment_create_wallet_create_wallet}</EdgeText>}
+            </SecondaryButton>
           </View>
         ) : (
           <FullScreenTransitionComponent
-            onDone={() => Actions.popTo(WALLET_LIST_SCENE)}
-            image={<Image source={CheckIcon} style={[styles.currencyLogo, { marginBottom: 36 }]} resizeMode="cover" />}
-            text={<Text style={styles.createWalletImportTransitionText}>{s.strings.create_wallet_import_successful}</Text>}
+            onDone={this.goToWalletList}
+            image={<Image source={CheckIcon} style={styles.currencyLogo} resizeMode="cover" />}
+            text={<EdgeText style={styles.createWalletImportTransitionText}>{s.strings.create_wallet_import_successful}</EdgeText>}
           />
         )}
-      </SafeAreaView>
+      </SceneWrapper>
     )
   }
 }
 
-const rawStyles = {
-  scene: {
-    flex: 1,
-    backgroundColor: THEME.COLORS.WHITE
-  },
-  gradient: {
-    height: THEME.HEADER,
-    width: '100%',
-    position: 'absolute'
-  },
+const getStyles = cacheStyles((theme: Theme) => ({
   view: {
-    position: 'relative',
-    top: THEME.HEADER,
-    paddingHorizontal: 20,
-    height: PLATFORM.usableHeight
+    flex: 1,
+    position: 'relative'
   },
   currencyLogo: {
     alignSelf: 'center',
-    marginTop: scale(24),
-    height: scale(64),
-    width: scale(64)
-  },
-  instructionalArea: {
-    paddingVertical: scale(16),
-    paddingHorizontal: scale(20)
+    marginTop: theme.rem(1.5),
+    marginBottom: theme.rem(2.25),
+    height: theme.rem(4),
+    width: theme.rem(4)
   },
   instructionalText: {
-    fontSize: scale(16),
-    textAlign: 'center',
-    color: THEME.COLORS.GRAY_1
-  },
-  reviewArea: {
-    paddingVertical: scale(18)
-  },
-  reviewAreaText: {
-    fontSize: scale(16),
-    lineHeight: scale(24),
-    color: THEME.COLORS.BLACK
+    fontSize: theme.rem(1),
+    color: theme.primaryText,
+    paddingHorizontal: theme.rem(1),
+    marginTop: theme.rem(0.5),
+    marginBottom: theme.rem(2)
   },
   text: {
-    color: THEME.COLORS.WHITE
-  },
-  buttons: {
-    marginTop: scale(24),
-    flexDirection: 'row'
+    color: theme.primaryText
   },
   create: {
     flex: 1
   },
-  cancel: {
-    flex: 1,
-    marginRight: scale(2),
-    backgroundColor: THEME.COLORS.GRAY_2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 3
-  },
   createWalletImportTransitionText: {
-    fontSize: 24,
+    fontSize: theme.rem(1.5),
     textAlign: 'center',
-    color: THEME.COLORS.SECONDARY
+    color: theme.secondaryText
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 export const CreateWalletReviewScene = connect(
   (state: RootState): StateProps => ({
@@ -194,4 +145,4 @@ export const CreateWalletReviewScene = connect(
       dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, true, false, importText))
     }
   })
-)(CreateWalletReviewComponent)
+)(withTheme(CreateWalletReviewComponent))
