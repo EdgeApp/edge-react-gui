@@ -1,29 +1,31 @@
 // @flow
 
 import Clipboard from '@react-native-community/clipboard'
-import { FormField, MaterialInputStyle, TertiaryButton } from 'edge-components'
+import { TertiaryButton } from 'edge-components'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, FlatList, Image, InputAccessoryView, Platform, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import { ActivityIndicator, FlatList, Image, InputAccessoryView, Platform, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import ENS_LOGO from '../../assets/images/ens_logo.png'
-import FIO_LOGO from '../../assets/images/fio_logo.png'
+import FIO_LOGO from '../../assets/images/fio/fio_logo.png'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { type FioAddresses, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import THEME from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
 import { KeyboardTracker } from '../common/KeyboardTracker.js'
 import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
-import { type AirshipBridge, AirshipModal, dayText, IconCircle } from './modalParts.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
+import { SecondaryButton } from '../themed/ThemedButtons.js'
+import { ThemedModal } from '../themed/ThemedModal.js'
+import { type AirshipBridge } from './modalParts.js'
 
-const MODAL_ICON = 'address-book-o'
 const inputAccessoryViewID: string = 'inputAccessoryViewID'
 
 type OwnProps = {
@@ -31,7 +33,6 @@ type OwnProps = {
   walletId: string,
   currencyCode: string,
   title?: string,
-  subtitle?: string,
   showPasteButton?: boolean,
   isFioOnly?: boolean,
   useUserFioAddressesOnly?: boolean,
@@ -57,13 +58,15 @@ type State = {
   fieldError: string,
   cryptoAddress?: string,
   fioAddresses: FioAddresses,
-  filteredFioAddresses: string[]
+  filteredFioAddresses: string[],
+  isFocused: boolean
 }
 
-type Props = StateProps & OwnProps & DispatchProps
+type Props = StateProps & OwnProps & DispatchProps & ThemeProps
 
 class AddressModalConnected extends React.Component<Props, State> {
   fioCheckQueue: number = 0
+  textInput = React.createRef()
 
   constructor(props: Props) {
     super(props)
@@ -75,13 +78,18 @@ class AddressModalConnected extends React.Component<Props, State> {
       cryptoAddress: undefined,
       fieldError: '',
       fioAddresses: { addresses: {} },
-      filteredFioAddresses: []
+      filteredFioAddresses: [],
+      isFocused: false
     }
   }
 
   componentDidMount() {
     this._setClipboard(this.props)
     this.getFioAddresses()
+
+    if (this.textInput.current) {
+      this.textInput.current.focus()
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -149,6 +157,21 @@ class AddressModalConnected extends React.Component<Props, State> {
     }
 
     this.setState({ filteredFioAddresses: fioAddressesArray.sort() })
+  }
+
+  clearText = () => {
+    this.setState({ uri: '' })
+    if (this.textInput.current) {
+      this.textInput.current.blur()
+    }
+  }
+
+  fieldOnFocus = () => {
+    this.setState({ isFocused: true })
+  }
+
+  fieldOnBlur = () => {
+    this.setState({ isFocused: false })
   }
 
   onChangeTextDelayed = (domain: string) => {
@@ -296,6 +319,7 @@ class AddressModalConnected extends React.Component<Props, State> {
   }
 
   renderFioAddressRow = ({ item }: FlatListItem<string>) => {
+    const styles = getStyles(this.props.theme)
     let addressType
     if (this.checkIfDomain(item)) {
       addressType = ENS_LOGO
@@ -306,7 +330,7 @@ class AddressModalConnected extends React.Component<Props, State> {
     }
     return (
       <TouchableWithoutFeedback onPress={() => this.onPressFioAddress(item)}>
-        <View style={styles.tileContainer}>
+        <View style={styles.rowContainer}>
           <Image source={addressType} style={styles.fioAddressAvatarContainer} resizeMode="cover" />
           <Text style={styles.fioAddressText}>{item}</Text>
         </View>
@@ -323,80 +347,83 @@ class AddressModalConnected extends React.Component<Props, State> {
 
   handleClose = () => this.props.bridge.resolve(null)
   keyExtractor = (item: string, index: number) => index.toString()
-  render() {
+
+  renderTracker = (keyboardAnimation, keyboardLayout) => {
+    const { showPasteButton } = this.props
+    const styles = getStyles(this.props.theme)
     const copyMessage = this.state.clipboard ? sprintf(s.strings.string_paste_address, this.state.clipboard) : null
-    const { uri, statusLabel, fieldError, filteredFioAddresses } = this.state
-    const { title, subtitle, showPasteButton, userFioAddressesLoading } = this.props
+    if (keyboardLayout === 0 && showPasteButton && copyMessage) {
+      return (
+        <View style={styles.tileContainerButtons}>
+          <TertiaryButton ellipsizeMode="middle" onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
+            <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
+          </TertiaryButton>
+        </View>
+      )
+    }
+    return null
+  }
+
+  render() {
+    const { uri, statusLabel, fieldError, filteredFioAddresses, isFocused } = this.state
+    const { title, userFioAddressesLoading } = this.props
+    const styles = getStyles(this.props.theme)
+
     return (
-      <AirshipModal bridge={this.props.bridge} onCancel={this.handleClose} icon>
-        {gap => (
-          <>
-            <IconCircle>
-              <FontAwesomeIcon name={MODAL_ICON} size={iconStyles.size} color={iconStyles.color} />
-            </IconCircle>
-            <View style={styles.container}>
-              <View style={styles.tileContainerHeader}>
-                <Text style={dayText('title')}>{title || s.strings.address_modal_default_header}</Text>
-                {subtitle && <Text style={dayText('autoCenter')}>{subtitle}</Text>}
+      <ThemedModal bridge={this.props.bridge} onCancel={this.handleClose} paddingRem={1}>
+        <ModalTitle center paddingRem={[0, 3, 1]}>
+          {title || s.strings.address_modal_default_header}
+        </ModalTitle>
+        <View style={styles.container}>
+          <KeyboardTracker>{this.renderTracker}</KeyboardTracker>
+          {Platform.OS === 'ios' ? (
+            <InputAccessoryView nativeID={inputAccessoryViewID}>
+              <View style={styles.accessoryView}>
+                <TouchableOpacity style={styles.accessoryButton} onPress={this.handleClose}>
+                  <Text style={styles.accessoryText}>{s.strings.string_cancel_cap}</Text>
+                </TouchableOpacity>
               </View>
-              <KeyboardTracker>
-                {(keyboardAnimation, keyboardLayout) => {
-                  if (keyboardLayout === 0 && showPasteButton && copyMessage) {
-                    return (
-                      <View style={styles.tileContainerButtons}>
-                        <TertiaryButton ellipsizeMode="middle" onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
-                          <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
-                        </TertiaryButton>
-                      </View>
-                    )
-                  }
-                  return null
-                }}
-              </KeyboardTracker>
-              <View style={styles.tileContainerInput}>
-                {Platform.OS === 'ios' ? (
-                  <InputAccessoryView nativeID={inputAccessoryViewID}>
-                    <View style={styles.accessoryView}>
-                      <TouchableOpacity style={styles.accessoryButton} onPress={this.handleClose}>
-                        <Text style={styles.accessoryText}>{s.strings.string_cancel_cap}</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </InputAccessoryView>
-                ) : null}
-                <FormField
-                  autoFocus
-                  blurOnSubmit
-                  returnKeyType="done"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  style={addressInputStyles}
-                  value={uri}
-                  onChangeText={this.onChangeTextDelayed}
-                  error={fieldError}
-                  label={statusLabel}
-                  onSubmitEditing={this.handleSubmit}
-                  inputAccessoryViewID={inputAccessoryViewID}
-                />
-              </View>
-              {!userFioAddressesLoading ? (
-                <FlatList
-                  style={{ flex: 1, marginBottom: -gap.bottom }}
-                  contentContainerStyle={{ paddingBottom: gap.bottom }}
-                  data={filteredFioAddresses}
-                  initialNumToRender={24}
-                  keyboardShouldPersistTaps="handled"
-                  keyExtractor={this.keyExtractor}
-                  renderItem={this.renderFioAddressRow}
-                />
-              ) : (
-                <View style={styles.loaderContainer}>
-                  <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
-                </View>
-              )}
+            </InputAccessoryView>
+          ) : null}
+
+          <EdgeTextFieldOutlined
+            autoFocus
+            autoCorrect={false}
+            returnKeyType="search"
+            autoCapitalize="none"
+            label={statusLabel}
+            onChangeText={this.onChangeTextDelayed}
+            onSubmitEditing={this.handleSubmit}
+            onFocus={this.fieldOnFocus}
+            onBlur={this.fieldOnBlur}
+            value={uri}
+            onClear={this.clearText}
+            isClearable={isFocused}
+            marginRem={[0, 1]}
+            ref={this.textInput}
+            error={fieldError}
+            inputAccessoryViewID={inputAccessoryViewID}
+            blurOnSubmit
+            // style={addressInputStyles}
+            // returnKeyType="done"
+          />
+          {!userFioAddressesLoading ? (
+            <FlatList
+              data={filteredFioAddresses}
+              initialNumToRender={24}
+              keyboardShouldPersistTaps="handled"
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderFioAddressRow}
+            />
+          ) : (
+            <View style={styles.loaderContainer}>
+              <ActivityIndicator color={this.props.theme.iconTappable} />
             </View>
-          </>
-        )}
-      </AirshipModal>
+          )}
+          <SecondaryButton label={s.strings.submit} onPress={this.handleSubmit} marginRem={[0, 4]} />
+        </View>
+        <ModalCloseArrow onPress={this.handleClose} />
+      </ThemedModal>
     )
   }
 }
@@ -414,75 +441,38 @@ const AddressModal = connect(
     }
   },
   (dispatch: Dispatch): DispatchProps => ({ refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses()) })
-)(AddressModalConnected)
+)(withTheme(AddressModalConnected))
 export { AddressModal }
 
-const { rem } = THEME
-
-const addressInputStyles = {
-  ...MaterialInputStyle,
-  container: {
-    ...MaterialInputStyle.container,
-    paddingTop: 0
-  }
-}
-
-const iconStyles = {
-  size: rem(1.5),
-  color: THEME.COLORS.SECONDARY
-}
-
-const tileStyles = {
-  width: '100%',
-  backgroundColor: THEME.COLORS.WHITE,
-  borderBottomWidth: 1,
-  borderBottomColor: THEME.COLORS.GRAY_3,
-  padding: rem(0.75)
-}
-
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
     width: '100%',
     flexDirection: 'column'
   },
-  tileContainerHeader: {
-    ...tileStyles,
-    borderBottomWidth: 0,
-    paddingTop: rem(0.75),
-    paddingBottom: rem(0.375)
-  },
   tileContainerButtons: {
-    ...tileStyles,
-    paddingTop: rem(0.375),
-    paddingBottom: 0,
+    paddingBottom: theme.rem(0.5),
+    paddingHorizontal: theme.rem(0.75),
     borderBottomWidth: 0,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center'
   },
-  tileContainerInput: {
-    ...tileStyles,
-    paddingVertical: 0,
+  rowContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  tileContainer: {
-    ...tileStyles,
-    flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginVertical: theme.rem(0.5)
   },
   fioAddressAvatarContainer: {
-    width: rem(2.2),
-    height: rem(2.2),
-    borderRadius: rem(1.1),
+    width: theme.rem(1.25),
+    height: theme.rem(2.2),
     justifyContent: 'center',
     alignItems: 'center'
   },
   fioAddressText: {
-    fontSize: rem(1),
-    paddingLeft: rem(0.75)
+    fontSize: theme.rem(1),
+    paddingLeft: theme.rem(0.75),
+    color: theme.primaryText
   },
   addressModalButton: {
     width: '100%'
@@ -498,14 +488,13 @@ const rawStyles = {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: THEME.COLORS.WHITE
+    backgroundColor: theme.tileBackground
   },
   accessoryButton: {
-    padding: rem(0.5)
+    padding: theme.rem(0.5)
   },
   accessoryText: {
-    color: THEME.COLORS.ACCENT_BLUE,
-    fontSize: rem(1)
+    color: theme.secondaryText,
+    fontSize: theme.rem(1)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))

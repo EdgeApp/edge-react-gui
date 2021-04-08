@@ -67,7 +67,7 @@ class EdgeTextFieldOutlinedComponent extends React.PureComponent<EdgeOutlinedTex
           {...rest}
         />
         {isClearable && (
-          <TouchableOpacity onPress={this.clearText} style={styles.outlinedTextFieldClearContainer}>
+          <TouchableOpacity onPress={this.clearText} style={[styles.outlinedTextFieldClearContainer, { marginRight: spacings.marginRight }]}>
             <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
           </TouchableOpacity>
         )}
@@ -91,7 +91,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   outlinedTextFieldContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: theme.rem(4.5)
+    height: theme.rem(4.5),
+    position: 'relative'
   },
   outlinedTextField: {
     flex: 1
