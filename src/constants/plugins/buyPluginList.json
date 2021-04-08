@@ -642,30 +642,6 @@
     }
   },
   {
-    "id": "banxa.bpay",
-    "pluginId": "banxa",
-    "paymentTypes": [
-      "bank"
-    ],
-    "description": "Fee: 2% / Settlement: 1 - 48hours\nLimit: $10000+/day",
-    "title": "BPay",
-    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
-    "forCountries": [
-      "AU"
-    ],
-    "cryptoCodes": [
-      "BTC",
-      "LTC",
-      "ETH",
-      "USDT"
-    ],
-    "paymentTypeLogoKey": "bpay",
-    "deepQuery": {
-      "country": "AU",
-      "payment_id": "5034"
-    }
-  },
-  {
     "id": "banxa.auspost",
     "pluginId": "banxa",
     "paymentTypes": [
@@ -917,10 +893,6 @@
   {
     "id": "banxa.cash",
     "sortIndex": 7
-  },
-  {
-    "id": "banxa.bpay",
-    "sortIndex": 3
   },
   {
     "id": "banxa.payid",

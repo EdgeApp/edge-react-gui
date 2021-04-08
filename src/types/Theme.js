@@ -197,7 +197,6 @@ export type Theme = {
   paymentTypeLogoAuspost: string,
   paymentTypeLogoBankgirot: string,
   paymentTypeLogoBankTransfer: string,
-  paymentTypeLogoBpay: string,
   paymentTypeLogoCash: string,
   paymentTypeLogoCreditCard: string,
   paymentTypeLogoDebitCard: string,
