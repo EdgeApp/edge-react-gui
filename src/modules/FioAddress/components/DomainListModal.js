@@ -1,18 +1,18 @@
 // @flow
 
-import { FormField, MaterialInputStyle } from 'edge-components'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, TouchableHighlight, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { Actions } from 'react-native-router-flux'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
+import { Fontello } from '../../../assets/vector'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
+import { EdgeTextFieldOutlined } from '../../../components/themed/EdgeTextField'
 import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
-import { PrimaryButton } from '../../../components/themed/ThemedButtons.js'
+import { SecondaryButton } from '../../../components/themed/ThemedButtons.js'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
@@ -40,6 +40,7 @@ type OwnProps = {
 
 type State = {
   input: string,
+  isFocused: boolean,
   domains: Item[],
   prevDomainsJson: string
 }
@@ -53,12 +54,14 @@ const newDomainItem = {
 }
 
 class DomainListModalComponent extends React.Component<Props, State> {
+  textInput = React.createRef()
   constructor(props: Props) {
     super(props)
     this.state = {
       input: '',
       domains: [],
-      prevDomainsJson: ''
+      prevDomainsJson: '',
+      isFocused: false
     }
   }
 
@@ -81,6 +84,27 @@ class DomainListModalComponent extends React.Component<Props, State> {
     userDomainsConverted.sort((userDomainA: Item, userDomainB: Item) => (userDomainA.value.name < userDomainB.value.name ? -1 : 1))
 
     return { domains: [...domains, ...userDomainsConverted], prevDomainsJson }
+  }
+
+  componentDidMount() {
+    if (this.textInput.current) {
+      this.textInput.current.focus()
+    }
+  }
+
+  clearText = () => {
+    this.setState({ input: '' })
+    if (this.textInput.current) {
+      this.textInput.current.blur()
+    }
+  }
+
+  fieldOnFocus = () => {
+    this.setState({ isFocused: true })
+  }
+
+  fieldOnBlur = () => {
+    this.setState({ isFocused: false })
   }
 
   getItems = () => {
@@ -106,8 +130,9 @@ class DomainListModalComponent extends React.Component<Props, State> {
     return filteredRecords
   }
 
-  selectCustom = (name: string) => {
-    const fioDomain = { ...Constants.FIO_DOMAIN_DEFAULT, name }
+  selectCustom = () => {
+    const { input } = this.state
+    const fioDomain = { ...Constants.FIO_DOMAIN_DEFAULT, name: input }
 
     this.props.bridge.resolve(fioDomain)
   }
@@ -125,9 +150,9 @@ class DomainListModalComponent extends React.Component<Props, State> {
     if (createNew) {
       return (
         <TouchableHighlight onPress={this.registerNewDomain} underlayColor="transparent">
-          <View style={[styles.rowContainerTop, styles.domainListRowContainerTop]}>
-            <EdgeText style={styles.domainListRowName}>{label}</EdgeText>
-            <FontAwesomeIcon name="angle-right" style={{ color: theme.primaryText }} size={theme.rem(1)} />
+          <View style={[styles.rowContainerTop, styles.registerDomainRow]}>
+            <Fontello name="register-custom-fio" style={styles.domainRegisterIcon} color={theme.iconTappable} size={theme.rem(1)} />
+            <EdgeText style={styles.domainRegisterText}>{s.strings.fio_address_list_domain_register}</EdgeText>
           </View>
         </TouchableHighlight>
       )
@@ -135,7 +160,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     if (value) {
       return (
         <TouchableHighlight onPress={() => this.selectItem(value)} underlayColor="transparent">
-          <View style={[styles.rowContainerTop, styles.domainListRowContainerTop]}>
+          <View style={styles.rowContainerTop}>
             <EdgeText style={styles.domainListRowName}>{label}</EdgeText>
             <EdgeText style={styles.domainListRowFree}>{value.isFree ? s.strings.fio_domain_free : ''}</EdgeText>
           </View>
@@ -149,32 +174,34 @@ class DomainListModalComponent extends React.Component<Props, State> {
   onSearchFilterChange = (input: string) => this.setState({ input })
   render() {
     const { bridge, theme } = this.props
-    const { input } = this.state
+    const { input, isFocused } = this.state
     const items = this.getItems()
-    const formFieldStyles = {
-      ...MaterialInputStyle,
-      container: {
-        ...MaterialInputStyle.container,
-        paddingTop: theme.rem(0.25)
-      },
-      textColor: theme.primaryText,
-      tintColor: theme.primaryButton
-    }
     return (
       <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={0}>
-        <ModalTitle>{s.strings.fio_address_choose_domain_label}</ModalTitle>
+        <ModalTitle center paddingRem={[0, 3, 1]}>
+          {s.strings.fio_address_choose_domain_label}
+        </ModalTitle>
         <View style={{ marginHorizontal: theme.rem(0.75) }}>
-          <FormField
+          <EdgeTextFieldOutlined
             autoFocus
+            autoCorrect={false}
+            returnKeyType="search"
             keyboardType="default"
-            label=""
+            autoCapitalize="none"
+            label={s.strings.fio_domain_label}
             onChangeText={this.onSearchFilterChange}
-            onSubmitEditing={() => this.selectCustom(input)}
-            style={formFieldStyles}
+            onSubmitEditing={this.selectCustom}
+            onFocus={this.fieldOnFocus}
+            onBlur={this.fieldOnBlur}
             value={input}
+            onClear={this.clearText}
+            isClearable={isFocused}
+            marginRem={[0, 1]}
+            ref={this.textInput}
+            blurOnSubmit
           />
         </View>
-        {!items.length && <PrimaryButton label={s.strings.submit} onPress={() => this.selectCustom(input)} marginRem={1} />}
+        {!items.length && <SecondaryButton label={s.strings.submit} onPress={this.selectCustom} marginRem={[2, 4, 0]} />}
         <FlatList data={items} initialNumToRender={24} keyboardShouldPersistTaps="handled" keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
         <ModalCloseArrow onPress={() => bridge.resolve(null)} />
       </ThemedModal>
@@ -185,14 +212,11 @@ class DomainListModalComponent extends React.Component<Props, State> {
 const getStyles = cacheStyles((theme: Theme) => ({
   rowContainerTop: {
     width: '100%',
-    height: theme.rem(4.75),
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: theme.rem(0.625),
-    paddingRight: theme.rem(0.625),
-    borderBottomWidth: theme.rem(0.05),
-    borderBottomColor: theme.secondaryButtonOutline
+    justifyContent: 'flex-start',
+    paddingHorizontal: theme.rem(1),
+    paddingVertical: theme.rem(1)
   },
   domainListRowName: {
     flex: 1,
@@ -206,11 +230,20 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.negativeText,
     textAlign: 'right'
   },
-  domainListRowContainerTop: {
-    height: 'auto',
-    paddingLeft: theme.rem(0.75),
-    paddingRight: theme.rem(0.75),
-    paddingVertical: theme.rem(0.75)
+  registerDomainRow: {
+    paddingLeft: 0,
+    marginLeft: theme.rem(1),
+    marginTop: theme.rem(0.25),
+    paddingTop: theme.rem(1.25),
+    borderTopWidth: theme.rem(0.05),
+    borderTopColor: theme.lineDivider
+  },
+  domainRegisterText: {
+    marginLeft: theme.rem(0.5),
+    color: theme.textLink
+  },
+  domainRegisterIcon: {
+    marginTop: theme.rem(0.25)
   }
 }))
 

@@ -404,8 +404,6 @@ class AddressModalConnected extends React.Component<Props, State> {
             error={fieldError}
             inputAccessoryViewID={inputAccessoryViewID}
             blurOnSubmit
-            // style={addressInputStyles}
-            // returnKeyType="done"
           />
           {!userFioAddressesLoading ? (
             <FlatList
