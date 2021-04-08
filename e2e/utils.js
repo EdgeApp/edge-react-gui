@@ -1,6 +1,10 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 /* globals device expect element by */
 
+export const sleep = async milliseconds => {
+  new Promise(resolve => setTimeout(resolve, milliseconds)) // eslint-disable-line no-new
+}
+
 export const navigateToHome = async () => {
   // NAVIGATE TO HOME
   const loginScene = element(by.id('edge: login-scene'))

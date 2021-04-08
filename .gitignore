@@ -102,3 +102,6 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+# E2E Detox test artifacts
+artifacts/*
