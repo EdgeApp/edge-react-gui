@@ -17,6 +17,10 @@ export const navigateFromPinToLanding = async () => {
   await exitButton.tap()
 }
 
+export const sleep = async milliseconds => {
+  new Promise(resolve => setTimeout(resolve, milliseconds)) // eslint-disable-line no-new
+}
+
 export const launchAppWithPermissions = async () => {
   await device.launchApp({
     permissions: {
