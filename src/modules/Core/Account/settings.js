@@ -389,6 +389,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   OCEAN: {
     denominations: '1000000000000000000'
   },
+  UNI: {
+    denominations: '1000000000000000000'
+  },
   customTokens: [],
   mostRecentWallets: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
@@ -523,6 +526,7 @@ export const SYNCED_ACCOUNT_TYPES = {
   REN: 'object',
   AMPL: 'object',
   OCEAN: 'object',
+  UNI: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   mostRecentWallets: 'object',
   passwordRecoveryRemindersShown: 'object',
