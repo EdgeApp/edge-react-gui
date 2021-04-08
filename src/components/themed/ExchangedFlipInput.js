@@ -116,7 +116,7 @@ function propsToState(props: Props): State {
   return { primaryInfo, secondaryInfo, exchangeSecondaryToPrimaryRatio, overridePrimaryDecimalAmount }
 }
 
-export class ExchangedFlipInput extends React.PureComponent<Props, State> {
+export class ExchangedFlipInput extends React.Component<Props, State> {
   flipInput: React.ElementRef<typeof FlipInput> | null = null
 
   static defaultProps = {

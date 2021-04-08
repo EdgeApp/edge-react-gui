@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeContext, type OtpError } from 'edge-core-js'
+import { type EdgeContext, type OtpError, asMaybeOtpError } from 'edge-core-js'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
@@ -30,8 +30,9 @@ class EdgeContextCallbackManager extends React.Component<Props> {
       context.on('error', (error: mixed) => {
         console.log(error)
 
-        if (error instanceof Error && error.name === 'OtpError') {
-          return this.props.onOtpError(error)
+        const otpError = asMaybeOtpError(error)
+        if (otpError != null) {
+          return this.props.onOtpError(otpError)
         }
 
         if (!errorShown) {
@@ -48,7 +49,13 @@ class EdgeContextCallbackManager extends React.Component<Props> {
     for (const cleanup of this.cleanups) cleanup()
   }
 
+  /**
+   * Like AirshipInstance/showWarning,
+   * but asynchronous so we don't spam multiple pop-ups.
+   */
   showError(error: mixed): Promise<void> {
+    console.error('Showing core drop-down alert:', error)
+
     // TODO: Run the errors through our translation infrastructure:
     const message = error instanceof Error ? error.message : String(error)
 

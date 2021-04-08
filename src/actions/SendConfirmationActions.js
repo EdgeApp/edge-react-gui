@@ -1,7 +1,14 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import {
+  type EdgeCurrencyWallet,
+  type EdgeMetadata,
+  type EdgeParsedUri,
+  type EdgeSpendInfo,
+  type EdgeTransaction,
+  asMaybeInsufficientFundsError
+} from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -146,10 +153,11 @@ export const sendConfirmationUpdateTx = (
     .then(edgeTransaction => {
       return dispatch(updateTransaction(edgeTransaction, guiMakeSpendInfoClone, forceUpdateGui, null))
     })
-    .catch(async e => {
-      console.log(e)
-      if (e.name === 'InsufficientFundsError' && e.currencyCode != null && spendInfo.currencyCode !== e.currencyCode) {
-        const { currencyCode } = e
+    .catch(async (error: mixed) => {
+      console.log(error)
+      const insufficientFunds = asMaybeInsufficientFundsError(error)
+      if (insufficientFunds != null && insufficientFunds.currencyCode != null && spendInfo.currencyCode !== insufficientFunds.currencyCode) {
+        const { currencyCode } = insufficientFunds
         const result = await Airship.show(bridge => (
           <ButtonsModal
             bridge={bridge}
@@ -172,7 +180,8 @@ export const sendConfirmationUpdateTx = (
             break
         }
       }
-      return dispatch(updateTransaction(null, guiMakeSpendInfoClone, forceUpdateGui, e))
+      const typeHack: any = error
+      return dispatch(updateTransaction(null, guiMakeSpendInfoClone, forceUpdateGui, typeHack))
     })
 }
 
@@ -273,7 +282,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo, walletId?: strin
   try {
     if (authRequired === 'pin') {
       const isAuthorized = await account.checkPin(pin)
-      if (!isAuthorized) throw new IncorrectPinError()
+      if (!isAuthorized) throw new Error(s.strings.incorrect_pin)
     }
     edgeSignedTransaction = await wallet.signTx(edgeUnsignedTransaction)
     edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
@@ -397,15 +406,6 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo, walletId?: strin
       }
     ])
   }
-}
-
-const errorNames = {
-  IncorrectPinError: 'IncorrectPinError'
-}
-export function IncorrectPinError(message: ?string = s.strings.incorrect_pin) {
-  const error = new Error(message)
-  error.name = errorNames.IncorrectPinError
-  return error
 }
 
 export const displayFeeAlert = async (feeAmountInFiatSyntax: string) => {

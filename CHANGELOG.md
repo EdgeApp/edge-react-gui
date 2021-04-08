@@ -1,5 +1,18 @@
 # edge-react-gui
 
+## 2.0.8 (2021-04-08)
+
+- Reset the slider on the send screen when the pending state changes.
+- Hide 0 crypto amount if balance is hidden.
+- Fix tokens not showing the correct icon on Request Scene.
+- Fix a crash when initiating password recovery.
+- Remove the BPay option for Banxa Australia.
+- edge-currency-bitcoin v4.9.14
+  - Fix the BECH32 Litecoin prefix.
+- edge-login-ui-rn to v0.8.0
+  - Re-theme the change password recovery modals.
+  - Fix broken links when setting up password recovery using the "share" option.
+
 ## 2.0.7 (2021-03-19)
 
 - Brand new themed send screen and workflow

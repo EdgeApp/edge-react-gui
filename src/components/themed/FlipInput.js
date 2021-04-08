@@ -201,7 +201,8 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
       })
       Animated.timing(this.animatedValue, {
         toValue: 1,
-        duration: 0
+        duration: 0,
+        useNativeDriver: true
       }).start()
       setTimeout(() => {
         this.setState({
@@ -300,7 +301,8 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
       Animated.spring(this.animatedValue, {
         toValue: 0,
         friction: 8,
-        tension: 10
+        tension: 10,
+        useNativeDriver: true
       }).start()
     }
     if (!this.state.isToggled) {
@@ -310,7 +312,8 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
       Animated.spring(this.animatedValue, {
         toValue: 1,
         friction: 8,
-        tension: 10
+        tension: 10,
+        useNativeDriver: true
       }).start()
     }
   }
@@ -482,7 +485,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
-          <Image style={styles.headerIcon} source={{ uri: headerLogo || '' }} />
+          {headerLogo ? <Image style={styles.headerIcon} source={{ uri: headerLogo }} /> : null}
           {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
         </View>
         <View style={styles.clipboardContainer}>

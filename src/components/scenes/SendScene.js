@@ -8,7 +8,7 @@ import {
   type EdgeParsedUri,
   type EdgeSpendTarget,
   type EdgeTransaction,
-  errorNames
+  asMaybeNoAmountSpecifiedError
 } from 'edge-core-js'
 import * as React from 'react'
 import { TextInput, View } from 'react-native'
@@ -107,6 +107,7 @@ type WalletStates = {
 type State = {
   recipientAddress: string,
   loading: boolean,
+  resetSlider: boolean,
   fioSender: FioSenderInfo
 } & WalletStates
 
@@ -119,6 +120,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     this.state = {
       recipientAddress: '',
       loading: false,
+      resetSlider: false,
       fioSender: {
         fioAddress: props.guiMakeSpendInfo && props.guiMakeSpendInfo.fioPendingRequest ? props.guiMakeSpendInfo.fioPendingRequest.payer_fio_address : '',
         fioWallet: null,
@@ -161,6 +163,15 @@ class SendComponent extends React.PureComponent<Props, State> {
     this.props.reset()
     if (this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.onBack) {
       this.props.guiMakeSpendInfo.onBack()
+    }
+  }
+
+  componentDidUpdate(prevProps: Props): void {
+    if (prevProps.pending && !this.props.pending) {
+      this.setState({ resetSlider: true })
+    }
+    if (!prevProps.pending && !this.props.pending && this.state.resetSlider) {
+      this.setState({ resetSlider: false })
     }
   }
 
@@ -389,7 +400,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { error, exchangeRates, settings, transaction, theme } = this.props
     const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
 
-    if (error && error.name !== errorNames.NoAmountSpecifiedError) {
+    if (error && asMaybeNoAmountSpecifiedError(error) == null) {
       return (
         <Tile type="static" title={s.strings.send_scene_error_title}>
           <EdgeText style={{ color: theme.dangerText }}>{error.message}</EdgeText>
@@ -504,7 +515,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   // Render
   render() {
     const { pending, resetSlider, sliderDisabled, theme } = this.props
-    const { loading, recipientAddress } = this.state
+    const { loading, recipientAddress, resetSlider: localResetSlider } = this.state
     const styles = getStyles(theme)
 
     return (
@@ -520,10 +531,10 @@ class SendComponent extends React.PureComponent<Props, State> {
           {this.renderInfoTiles()}
           {this.renderAuthentication()}
           <View style={styles.footer}>
-            {!!recipientAddress && (
+            {!!recipientAddress && !localResetSlider && (
               <Slider
                 onSlidingComplete={this.submit}
-                resetSlider={resetSlider}
+                resetSlider={resetSlider || localResetSlider}
                 sliderDisabled={sliderDisabled}
                 showSpinner={loading || pending}
                 parentStyle={styles.slider}

@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { errorNames } from 'edge-core-js'
+import { asMaybeNoAmountSpecifiedError } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
@@ -278,7 +278,7 @@ export const FlipInputModal = connect(
     // Error
     const error = state.ui.scenes.sendConfirmation.error
     let errorMessage
-    if (error && error.message !== 'broadcastError' && error.message !== 'transactionCancelled' && error.name !== errorNames.NoAmountSpecifiedError) {
+    if (error && error.message !== 'broadcastError' && error.message !== 'transactionCancelled' && asMaybeNoAmountSpecifiedError(error) == null) {
       errorMessage = error.message
     }
 

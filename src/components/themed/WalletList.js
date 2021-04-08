@@ -221,8 +221,11 @@ class WalletListComponent extends React.PureComponent<Props> {
       const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
       const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : undefined
-      const cryptoAmount =
-        balance && balance !== '0' ? this.getCryptoAmount(balance, denomination, exchangeDenomination, fiatDenomination, exchangeRate, guiWallet) : '0'
+      const cryptoAmount = showBalance
+        ? balance && balance !== '0'
+          ? this.getCryptoAmount(balance, denomination, exchangeDenomination, fiatDenomination, exchangeRate, guiWallet)
+          : '0'
+        : ''
 
       // Fiat Balance
       const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)
