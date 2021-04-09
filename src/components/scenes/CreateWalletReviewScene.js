@@ -89,7 +89,11 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
             <Tile type="static" title={s.strings.create_wallet_name_label} body={this.props.walletName} />
 
             <SecondaryButton style={styles.create} onPress={this.onSubmit} disabled={isCreatingWallet} marginRem={[2, 5, 1]}>
-              {isCreatingWallet ? <ActivityIndicator color={theme.iconTappable} /> : <EdgeText>{s.strings.fragment_create_wallet_create_wallet}</EdgeText>}
+              {isCreatingWallet ? (
+                <ActivityIndicator color={theme.iconTappable} />
+              ) : (
+                <EdgeText style={styles.createWalletBtnText}>{s.strings.fragment_create_wallet_create_wallet}</EdgeText>
+              )}
             </SecondaryButton>
           </View>
         ) : (
@@ -133,6 +137,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1.5),
     textAlign: 'center',
     color: theme.secondaryText
+  },
+  createWalletBtnText: {
+    color: theme.secondaryButtonText
   }
 }))
 
