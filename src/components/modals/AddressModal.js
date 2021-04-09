@@ -371,7 +371,7 @@ class AddressModalConnected extends React.Component<Props, State> {
 
     return (
       <ThemedModal bridge={this.props.bridge} onCancel={this.handleClose} paddingRem={1}>
-        <ModalTitle center paddingRem={[0, 3, 1]}>
+        <ModalTitle center paddingRem={[0, 2, 1]}>
           {title || s.strings.address_modal_default_header}
         </ModalTitle>
         <View style={styles.container}>
