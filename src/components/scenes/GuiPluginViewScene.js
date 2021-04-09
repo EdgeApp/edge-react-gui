@@ -251,6 +251,7 @@ class GuiPluginView extends React.Component<Props, State> {
           source={{ uri }}
           userAgent={userAgent + ' hasEdgeProvider edge/app.edge.'}
           useWebKit
+          mediaPlaybackRequiresUserAction={false}
         />
       </SceneWrapper>
     )
