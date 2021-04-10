@@ -102,7 +102,7 @@ type DispatchProps = {
   openDrawer(): void,
 
   // Things to do when we enter certain scenes:
-  checkAndShowGetCryptoModal(routeData: string | void): void,
+  checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCurrencyCode?: string): void,
   checkEnabledExchanges(): void,
   dispatchDisableScan(): void,
   dispatchEnableScan(): void,
@@ -438,7 +438,7 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.SEND}
               navTransparent
               onEnter={props => {
-                this.props.checkAndShowGetCryptoModal()
+                this.props.checkAndShowGetCryptoModal(props.selectedWalletId, props.selectedCurrencyCode)
               }}
               onExit={this.props.dispatchDisableScan}
               component={ifLoggedIn(SendScene)}
@@ -863,8 +863,8 @@ export const Main = connect(
     },
 
     // Things to do when we enter certain scenes:
-    checkAndShowGetCryptoModal() {
-      dispatch(checkAndShowGetCryptoModal())
+    checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCurrencyCode?: string) {
+      dispatch(checkAndShowGetCryptoModal(selectedWalletId, selectedCurrencyCode))
     },
     checkEnabledExchanges() {
       dispatch(checkEnabledExchanges())
