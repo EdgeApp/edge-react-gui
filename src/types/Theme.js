@@ -114,12 +114,14 @@ export type Theme = {
   // warningBubble: string,
 
   // Confirmation slider
-  // confirmationSlider: string,
-  // confirmationSliderText: string,
-  // confirmationSliderArrow: string,
-  // confirmationSliderThumb: string,
-  // confirmationSliderTextDeactivated: string,
-  // confirmationThumbDeactivated: string,
+  confirmationSlider: string,
+  confirmationSliderText: string,
+  confirmationSliderArrow: string,
+  confirmationSliderThumb: string,
+  confirmationSliderTextDeactivated: string,
+  confirmationThumbDeactivated: string,
+  confirmationSliderWidth: number,
+  confirmationSliderThumbWidth: number,
 
   // Lines
   lineDivider: string,
