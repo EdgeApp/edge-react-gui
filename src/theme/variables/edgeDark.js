@@ -92,7 +92,7 @@ export const edgeDark: Theme = {
   backgroundGradientRight: palette.darkBlue,
 
   // Modal
-  modal: palette.royalBlue,
+  modal: palette.edgeNavy,
   modalBlurType: 'light',
   modalCloseIcon: palette.edgeMint,
   // modalFullGradientLeft: palette.darkBlue,
