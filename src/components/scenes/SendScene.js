@@ -365,8 +365,8 @@ class SendComponent extends React.PureComponent<Props, State> {
     if (recipientAddress && !hiddenTilesMap.amount) {
       let cryptoAmountSyntax
       let fiatAmountSyntax
-      const cryptoDisplayDenomination = UTILS.getDisplayDenomination(selectedCurrencyCode, settings)
-      const cryptoExchangeDenomination = UTILS.getExchangeDenomination(guiWallet, selectedCurrencyCode, settings)
+      const cryptoDisplayDenomination = UTILS.getDenomination(selectedCurrencyCode, settings, UTILS.DENOMINATION_TYPE.DISPLAY)
+      const cryptoExchangeDenomination = UTILS.getDenomination(selectedCurrencyCode, settings, UTILS.DENOMINATION_TYPE.EXCHANGE)
       const fiatDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
       if (nativeAmount && !bns.eq(nativeAmount, '0')) {
