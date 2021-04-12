@@ -64,8 +64,8 @@
         "name": "sats",
         "symbol": "s"
       }],
-      "symbolImage": "https://developer.airbitz.co/content/bitcoin-logo-solo-64.png",
-      "symbolImageDarkMono": "https://developer.airbitz.co/content/bitcoin-logo-solo-64.png"
+      "symbolImage": "https://content.edge.app/bitcoin-logo-solo-64.png",
+      "symbolImageDarkMono": "https://content.edge.app/bitcoin-logo-solo-64.png"
     },
     "ETH": {
       "currencyCode": "ETH",
@@ -80,8 +80,8 @@
           "symbol": "mΞ"
         }],
         "displayName": "Ethereum",
-        "symbolImage": "https://developer.airbitz.co/content/ethereum-logo-solo-64.png",
-        "symbolImageDarkMono": "https://developer.airbitz.co/content/ethereum-logo-solo-64.png"
+        "symbolImage": "https://content.edge.app/ethereum-logo-solo-64.png",
+        "symbolImageDarkMono": "https://content.edge.app/ethereum-logo-solo-64.png"
     },
     "customTokens": [{
       "contractAddress": "0x0C658Fa2eAA292E8dcA085Dab0E5CBD2da21C494",

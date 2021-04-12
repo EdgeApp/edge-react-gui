@@ -7,7 +7,7 @@
     ],
     "description": "Fee: 4% / Settlement: 10 - 30minutes\nLimit: €4400/day",
     "title": "Credit and Debit Card",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/03/simplex-logo-sm-square.png",
+    "partnerIconPath": "https://content.edge.app/simplex-logo-sm-square.png",
     "forCountries": [],
     "cryptoCodes": [
       "BTC"
@@ -22,7 +22,7 @@
     ],
     "description": "Fee: 1% / Settlement: 1 - 5days\nMonthly Limit: $150000",
     "title": "ACH Bank Transfer",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/wyre-logo-square-small.png",
+    "partnerIconPath": "https://content.edge.app/wyre-logo-square-small.png",
     "forCountries": [
       "US"
     ],
@@ -42,7 +42,7 @@
     ],
     "description": "Fee: 3% / Settlement: 1 - 48hours\nLevel 1 Limit: €10000/day\nLevel 2 Limit: Unlimited",
     "title": "SEPA Bank Transfer",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/08/bits-of-gold-logo-sm.png",
+    "partnerIconPath": "https://content.edge.app/bits-of-gold-logo-sm.png",
     "forCountries": [
       "AD",
       "AT",
@@ -117,7 +117,7 @@
     ],
     "description": "Buy gift cards and reload phones with crypto",
     "title": "Gift Cards",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/01/bitrefill-2.png",
+    "partnerIconPath": "https://content.edge.app/bitrefill-2.png",
     "forCountries": [
       "AD",
       "AE",
@@ -419,7 +419,7 @@
     ],
     "description": "Fee: 1.55% / Settlement: 1 - 2days\nLimit: €900/day with no KYC",
     "title": "SEPA Bank Transfer",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/09/logoBity.png",
+    "partnerIconPath": "https://content.edge.app/logoBity.png",
     "paymentTypeLogoKey": "bank",
     "deepQuery": {
       "type": "sell"
@@ -433,7 +433,7 @@
     ],
     "description": "Fee: 3% / Settlement: 1 - 2days\nLimit: €2500/day",
     "title": "Bank Transfer",
-    "partnerIconPath": "https://edge.app/wp-content/uploads/2019/06/Safello-Logo-Green-background.png",
+    "partnerIconPath": "https://content.edge.app/Safello-Logo-Green-background.png",
     "forCountries": [
       "SE"
     ],
@@ -457,7 +457,7 @@
     ],
     "description": "Fee: Varies / Settlement: 10 - 20min\nLimit: Varies",
     "title": "Cash",
-    "partnerIconPath": "https://developer.airbitz.co/content/mktg/bitaccess.png",
+    "partnerIconPath": "https://content.edge.app/mktg/bitaccess.png",
     "forCountries": [
       "US",
       "CA",
@@ -489,7 +489,7 @@
     ],
     "description": "Fee: 1.5% / Settlement: 5min - 24hours\nDaily Limit: $30000\nMonthly Limit: $500000",
     "title": "Bank Transfer",
-    "partnerIconPath": "https://developer.airbitz.co/content/banxa.png",
+    "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
       "AU"
     ],
