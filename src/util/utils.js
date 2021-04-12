@@ -62,31 +62,6 @@ export const getSettingsTokenMultiplier = (currencyCode: string, settings: Objec
   return multiplier
 }
 
-export function getWalletDefaultDenomProps(
-  wallet: GuiWallet,
-  settingsState: Object,
-  currencyCode?: string // for metaTokens
-): EdgeDenomination {
-  const allWalletDenoms = wallet.allDenominations
-  let walletCurrencyCode
-  if (currencyCode) {
-    // if metaToken
-    walletCurrencyCode = currencyCode
-  } else {
-    // if not a metaToken
-    walletCurrencyCode = wallet.currencyCode
-  }
-  const currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
-  let denomProperties: EdgeDenomination
-  if (allWalletDenoms[walletCurrencyCode] != null && allWalletDenoms[walletCurrencyCode][currencySettings.denomination] != null) {
-    denomProperties = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
-  } else {
-    // This is likely a custom token which has no denom setup in allWalletDenominations
-    denomProperties = currencySettings.denominations[0]
-  }
-  return denomProperties
-}
-
 export const getFiatSymbol = (code: string) => {
   code = code.replace('iso:', '')
   return getSymbolFromCurrency(code)
