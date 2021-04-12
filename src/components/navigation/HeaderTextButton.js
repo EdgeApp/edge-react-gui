@@ -9,8 +9,19 @@ import { showHelpModal } from '../modals/HelpModal.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 
+export const TYPE = {
+  EXIT: 'exit',
+  HELP: 'help'
+}
+
+export const PLACEMENT = {
+  LEFT: 'left',
+  RIGHT: 'right'
+}
+
 type Props = {
-  type: 'exit' | 'help'
+  type: typeof TYPE.EXIT | typeof TYPE.HELP,
+  placement: typeof PLACEMENT.LEFT | typeof PLACEMENT.RIGHT
 }
 
 const title = {
@@ -31,7 +42,7 @@ class HeaderTextButtonComponent extends React.PureComponent<Props & ThemeProps> 
   render() {
     const styles = getStyles(this.props.theme)
     return (
-      <TouchableOpacity style={styles.container} onPress={this.handlePress}>
+      <TouchableOpacity style={[styles.container, this.props.placement === 'left' ? styles.left : styles.right]} onPress={this.handlePress}>
         <EdgeText>{title[this.props.type]}</EdgeText>
       </TouchableOpacity>
     )
@@ -45,6 +56,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingLeft: theme.rem(1),
     paddingRight: theme.rem(2.5),
     height: 44 // This is a fixed height of the navigation header no matter what screen size. Default by router-flux
+  },
+  left: {
+    paddingLeft: theme.rem(1),
+    paddingRight: theme.rem(2.5)
+  },
+  right: {
+    paddingLeft: theme.rem(2.5),
+    paddingRight: theme.rem(1)
   }
 }))
 
