@@ -347,8 +347,14 @@ export class RequestComponent extends React.PureComponent<Props, State> {
                 <QrCode data={this.state.encodedURI} size={this.state.qrCodeContainerHeight - theme.rem(1)} />
               )}
             </View>
-            <RightChevronButton paddingRem={[0, 0, 0, 0]} onPress={this.handleAddressBlockExplorer} text={s.strings.request_qr_your_receiving_wallet_address} />
-            <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
+            <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
+              <RightChevronButton
+                paddingRem={[0, 0, 0, 0]}
+                onPress={this.handleAddressBlockExplorer}
+                text={s.strings.request_qr_your_receiving_wallet_address}
+              />
+              <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
+            </TouchableOpacity>
           </View>
         ) : (
           <EdgeText>{sprintf(s.strings.request_deprecated_currency_code, primaryCurrencyInfo.displayCurrencyCode)}</EdgeText>

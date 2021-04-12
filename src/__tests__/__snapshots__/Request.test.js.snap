@@ -110,25 +110,29 @@ exports[`Request should render with loaded props 1`] = `
         }
       }
     />
-    <RightChevronButton
+    <ForwardRef
       onPress={[Function]}
-      paddingRem={
-        Array [
-          0,
-          0,
-          0,
-          0,
-        ]
-      }
-      text="Your Receiving Wallet Address"
-    />
-    <WithTheme(EdgeTextComponent)
-      style={
-        Object {
-          "fontSize": 17,
+    >
+      <RightChevronButton
+        onPress={[Function]}
+        paddingRem={
+          Array [
+            0,
+            0,
+            0,
+            0,
+          ]
         }
-      }
-    />
+        text="Your Receiving Wallet Address"
+      />
+      <WithTheme(EdgeTextComponent)
+        style={
+          Object {
+            "fontSize": 17,
+          }
+        }
+      />
+    </ForwardRef>
   </View>
   <ShareButtons
     copyToClipboard={[Function]}
