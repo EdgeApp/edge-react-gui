@@ -3,7 +3,7 @@
 import Clipboard from '@react-native-community/clipboard'
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { type Event, Animated, Image, Platform, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { type Event, Animated, Image, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
@@ -13,7 +13,7 @@ import * as UTILS from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
-import { RightChevronButton } from './ThemedButtons.js'
+import { IconButton, RightChevronButton } from './ThemedButtons.js'
 
 export type FlipInputFieldInfo = {
   currencyName: string,
@@ -484,10 +484,10 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
 
     return (
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={headerCallback} style={styles.headerContainer}>
           {headerLogo ? <Image style={styles.headerIcon} source={{ uri: headerLogo }} /> : null}
           {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
-        </View>
+        </TouchableOpacity>
         <View style={styles.clipboardContainer}>
           <Menu onSelect={this.handlePasteClipboard} ref={this.clipboardRef} renderer={renderers.Popover} rendererProps={{ placement: 'top' }}>
             <MenuTrigger />
@@ -515,7 +515,9 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
               {this.bottomRow(false)}
             </Animated.View>
           </View>
-          <MaterialIcon styles={styles.flipIcon} onPress={this.onToggleFlipInput} name="swap-vert" size={theme.rem(2)} color={theme.iconTappable} />
+          <IconButton onPress={this.onToggleFlipInput} paddingRem={[0.5, 0, 0.5, 1]}>
+            <MaterialIcon name="swap-vert" size={theme.rem(2)} color={theme.iconTappable} />
+          </IconButton>
         </View>
       </View>
     )
@@ -563,9 +565,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     bottom: 0,
     left: 0,
     right: 0
-  },
-  flipIcon: {
-    paddingTop: theme.rem(0.25)
   },
 
   // Top Amount
