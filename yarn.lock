@@ -5178,10 +5178,10 @@ edge-core-js@^0.17.29:
     yaob "^0.3.6"
     yavent "^0.1.1"
 
-edge-currency-accountbased@^0.7.51:
-  version "0.7.51"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.51.tgz#7edb3a52114e08b20925ffb3bf544ce8da5043c0"
-  integrity sha512-ZNDl8MumdGR3AWQnXcVFnksWXJ5Z8Bi4dOPk5URig4ggmnxyvuE6m9C0OZUlHVJhi7dhpIgC4Y+eszdhjBc89A==
+edge-currency-accountbased@^0.7.52:
+  version "0.7.52"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.52.tgz#8ead92747a18694c94d322a46196ec92c91e81fb"
+  integrity sha512-+aXJ70aDuHbRgmH5VAEURLQuuBWyJkai9ytNlayvDpVJxTFc47a8kmLc0JxcBqF2pZ+yPZBoWq/enAfTbr8HNA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.2.1"
@@ -5229,10 +5229,10 @@ edge-currency-bitcoin@^4.9.14:
     uri-js "^4.2.2"
     url-parse "^1.4.3"
 
-edge-currency-monero@^0.2.9:
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.2.9.tgz#fe026a40ee43280a664fc3a9cdb188002d065548"
-  integrity sha512-zoWjchwX3zv9XpK7s4Piuj6NPfQTNWOQjNcpBtKbY8X2I4UtpxitlVnyqVh/FoITcFFVj9VDcI3qUTODuzgIOg==
+edge-currency-monero@^0.2.10:
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.2.10.tgz#b01a78f45fd91063823a9c387bf8f19b8b5e307e"
+  integrity sha512-fWLHnZb+421WwkF3g5x+gPMoeEYzi1HbBRTeOXBMLY4+8VooDWiXUBnWaq7w6r3G4TUP0P1kz1DTOdxT+i5o2A==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
