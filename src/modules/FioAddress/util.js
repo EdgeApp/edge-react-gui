@@ -13,6 +13,9 @@ import { truncateDecimals } from '../../util/utils'
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
 const FIO_ADDRESS_CACHE = 'FioAddressCache.json'
 
+const INVALID_DOMAIN_ERROR_1 = 'Domain does not exist'
+const INVALID_DOMAIN_ERROR_2 = 'Domain is not registered'
+
 type DiskletConnectedWallets = {
   [fullCurrencyCode: string]: {
     walletId: string,
@@ -618,7 +621,9 @@ const buyAddressRequest = async (
     })
 
     if (buyAddressResponse.error) {
-      console.log(buyAddressResponse.error)
+      if (buyAddressResponse.error === INVALID_DOMAIN_ERROR_1 || buyAddressResponse.error === INVALID_DOMAIN_ERROR_2) {
+        throw new Error(s.strings.fio_get_reg_domain_err_msg)
+      }
       throw new Error(s.strings.fio_get_reg_info_err_msg)
     }
 
@@ -648,8 +653,9 @@ const buyAddressRequest = async (
         paymentInfo
       }
     }
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    console.log(error)
+    throw new Error(error.message)
   }
   throw new Error(s.strings.fio_get_reg_info_err_msg)
 }

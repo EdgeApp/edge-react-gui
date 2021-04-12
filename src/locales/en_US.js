@@ -648,6 +648,7 @@ const strings = {
   fio_address_list_register_domain: 'Register New Domain',
   fio_get_fee_err_msg: 'There was an issue getting the FIO fee. Please try again later.',
   fio_get_reg_info_err_msg: 'There was an issue getting registration information.',
+  fio_get_reg_domain_err_msg: 'Domain does not exist',
   fio_register_address_err_msg: 'There was an issue registering an address. Please try later.',
   fio_error_invalid_address: 'Invalid FIO address',
   fio_renew_err_msg: 'There was an issue renewing your %s. Please try again later.',
