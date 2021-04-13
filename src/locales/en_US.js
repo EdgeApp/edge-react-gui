@@ -351,7 +351,7 @@ const strings = {
   string_add_edit_tokens: 'Add / Edit Tokens',
   string_get_raw_keys: 'Get Raw Keys',
   string_raw_keys: 'Raw Keys',
-  title_create_wallet_select_crypto: 'Select Type',
+  title_create_wallet_select_crypto: 'Select Wallet Type',
   title_create_wallet_select_fiat: 'Select Fiat',
   title_back: 'Back',
   title_change_mining_fee: 'Change Mining Fee',

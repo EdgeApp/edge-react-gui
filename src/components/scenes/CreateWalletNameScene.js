@@ -1,21 +1,17 @@
 // @flow
 
 import * as React from 'react'
-import { Alert, StyleSheet, View } from 'react-native'
+import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
-import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { PLATFORM } from '../../theme/variables/platform.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
-import { scale } from '../../util/scaling.js'
-import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
+import { SceneWrapper } from '../common/SceneWrapper'
+import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { SecondaryButton } from '../themed/ThemedButtons'
+import { UnderlinedHeader } from '../themed/UnderlinedHeader'
 
 export type CreateWalletNameOwnProps = {
   selectedFiat: GuiFiatType,
@@ -24,10 +20,13 @@ export type CreateWalletNameOwnProps = {
 }
 type Props = CreateWalletNameOwnProps
 type State = {
-  walletName: string
+  walletName: string,
+  isFocused: boolean
 }
 
 export class CreateWalletName extends React.Component<Props, State> {
+  textInput = React.createRef()
+
   constructor(props: Props) {
     super(props)
     let walletName = ''
@@ -37,7 +36,7 @@ export class CreateWalletName extends React.Component<Props, State> {
     } else {
       walletName = sprintf(s.strings.my_crypto_wallet_name, this.props.selectedWalletType.currencyName)
     }
-    this.state = { walletName }
+    this.state = { walletName, isFocused: true }
   }
 
   isValidWalletName = () => {
@@ -45,6 +44,21 @@ export class CreateWalletName extends React.Component<Props, State> {
     const isValid = walletName.length > 0
 
     return isValid
+  }
+
+  clearText = () => {
+    this.setState({ walletName: '' })
+    if (this.textInput.current) {
+      this.textInput.current.blur()
+    }
+  }
+
+  handleOnFocus = () => {
+    this.setState({ isFocused: true })
+  }
+
+  handleOnBlur = () => {
+    this.setState({ isFocused: false })
   }
 
   onNext = () => {
@@ -61,98 +75,34 @@ export class CreateWalletName extends React.Component<Props, State> {
     }
   }
 
-  onBack = () => {
-    Actions.pop()
-  }
-
   handleChangeWalletName = (walletName: string) => {
     this.setState({ walletName })
   }
 
   render() {
     return (
-      <SafeAreaView>
-        <View style={styles.scene}>
-          <Gradient style={styles.gradient} />
-          <View style={styles.view}>
-            <WalletNameInput onChangeText={this.handleChangeWalletName} value={this.state.walletName} onNext={this.onNext} />
-            <View style={styles.buttons}>
-              <SecondaryButton style={styles.back} onPress={this.onBack}>
-                <SecondaryButton.Text>{s.strings.title_back}</SecondaryButton.Text>
-              </SecondaryButton>
+      <SceneWrapper avoidKeyboard background="theme">
+        <UnderlinedHeader withTopMargin title={s.strings.title_create_wallet} />
 
-              <PrimaryButton style={styles.next} onPress={this.onNext}>
-                <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
-              </PrimaryButton>
-            </View>
-          </View>
-        </View>
-      </SafeAreaView>
-    )
-  }
-}
-
-// //////////////////////////// WalletNameInput /////////////////////////////////
-
-export type WalletNameInputProps = {
-  value: string,
-  onChangeText: (walletName: string) => void,
-  onNext: () => void
-}
-
-class WalletNameInput extends React.Component<WalletNameInputProps> {
-  render() {
-    return (
-      <View style={styles.pickerView}>
-        <FormField
-          {...MaterialInputOnWhite}
-          containerStyle={{
-            ...MaterialInputOnWhite.containerStyle,
-            width: '100%'
-          }}
+        <EdgeTextFieldOutlined
+          onChangeText={this.handleChangeWalletName}
+          value={this.state.walletName}
+          onSubmitEditing={this.onNext}
           autoFocus
           autoCorrect={false}
-          onChangeText={this.props.onChangeText}
-          label={s.strings.fragment_wallets_addwallet_name_hint}
-          value={this.props.value}
           returnKeyType="next"
-          onSubmitEditing={this.props.onNext}
+          onFocus={this.handleOnFocus}
+          onBlur={this.handleOnBlur}
+          label={s.strings.fragment_wallets_addwallet_name_hint}
+          small
+          onClear={this.clearText}
+          isClearable={this.state.isFocused}
+          marginRem={[0, 1.75]}
+          ref={this.textInput}
+          blurOnSubmit
         />
-      </View>
+        <SecondaryButton onPress={this.onNext} label={s.strings.string_next_capitalized} marginRem={[3, 6]} />
+      </SceneWrapper>
     )
   }
 }
-
-const rawStyles = {
-  scene: {
-    flex: 1,
-    backgroundColor: THEME.COLORS.WHITE
-  },
-  gradient: {
-    height: THEME.HEADER,
-    width: '100%',
-    position: 'absolute'
-  },
-  view: {
-    position: 'relative',
-    top: THEME.HEADER,
-    paddingHorizontal: 20,
-    height: PLATFORM.usableHeight
-  },
-  pickerView: {
-    marginBottom: scale(15)
-  },
-  buttons: {
-    marginTop: scale(24),
-    flexDirection: 'row'
-  },
-  next: {
-    marginLeft: scale(1),
-    flex: 1
-  },
-  back: {
-    marginRight: scale(1),
-    flex: 1
-  }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)

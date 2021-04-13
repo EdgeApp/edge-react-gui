@@ -2,37 +2,41 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, FlatList, Image, Keyboard, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { Alert, FlatList, Image, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { CREATE_WALLET_CHOICE, CREATE_WALLET_SELECT_FIAT, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type CreateWalletType, type FlatListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
-import { scale } from '../../util/scaling.js'
-import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { SelectableRow } from '../themed/SelectableRow'
+import { UnderlinedHeader } from '../themed/UnderlinedHeader'
 
 type StateProps = {
   account: EdgeAccount
 }
-type Props = StateProps
+type Props = StateProps & ThemeProps
 
 type State = {
   selectedWalletType: string,
-  searchTerm: string
+  searchTerm: string,
+  isFocused: boolean
 }
 
 class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
+  textInput = React.createRef()
+
   constructor(props: Props) {
     super(props)
     this.state = {
       selectedWalletType: '',
-      searchTerm: ''
+      searchTerm: '',
+      isFocused: true
     }
   }
 
@@ -67,11 +71,6 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     }
   }
 
-  onBack = () => {
-    Keyboard.dismiss()
-    Actions.pop() // redirect to the list of wallets
-  }
-
   handleSearchTermChange = (searchTerm: string): void => {
     this.setState({
       searchTerm
@@ -82,14 +81,50 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     this.setState({ selectedWalletType: item.walletType }, this.onNext)
   }
 
-  handleOnFocus = () => {}
+  clearText = () => {
+    this.setState({ searchTerm: '' })
+    if (this.textInput.current) {
+      this.textInput.current.blur()
+    }
+  }
 
-  handleOnBlur = () => {}
+  handleOnFocus = () => {
+    this.setState({ isFocused: true })
+  }
+
+  handleOnBlur = () => {
+    this.setState({ isFocused: false })
+  }
+
+  renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
+    const { theme } = this.props
+    const { walletType, symbolImageDarkMono, currencyCode } = data.item
+    const styles = getStyles(theme)
+
+    // Ripple hack:
+    let { currencyName } = data.item
+    if (currencyCode.toLowerCase() === 'xrp') currencyName = 'Ripple'
+
+    return (
+      <SelectableRow
+        onPress={() => this.handleSelectWalletType(data.item)}
+        icon={symbolImageDarkMono ? <Image source={{ uri: symbolImageDarkMono }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
+        title={currencyCode}
+        subTitle={currencyName}
+        selected={walletType === this.state.selectedWalletType}
+      />
+    )
+  }
+
+  keyExtractor = (item: CreateWalletType, index: number): string => {
+    return item.walletType
+  }
 
   render() {
     const { account } = this.props
-    const { searchTerm } = this.state
+    const { searchTerm, isFocused } = this.state
     const lowerSearch = searchTerm.toLowerCase()
+    const styles = getStyles(this.props.theme)
 
     // Sort and filter the available types:
     const sortedArray = getCreateWalletTypes(account)
@@ -100,10 +135,11 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     )
 
     return (
-      <SceneWrapper avoidKeyboard background="body">
+      <SceneWrapper avoidKeyboard background="theme">
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-            <FormField
+            <UnderlinedHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
+            <EdgeTextFieldOutlined
               autoFocus
               onFocus={this.handleOnFocus}
               onBlur={this.handleOnBlur}
@@ -113,6 +149,12 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
               value={this.state.searchTerm}
               label={s.strings.create_wallet_choose_crypto}
               returnKeyType="search"
+              small
+              onClear={this.clearText}
+              isClearable={isFocused}
+              marginRem={[0, 1.75]}
+              ref={this.textInput}
+              blurOnSubmit
             />
             <FlatList
               style={styles.resultList}
@@ -129,101 +171,26 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
       </SceneWrapper>
     )
   }
-
-  renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
-    const { walletType, symbolImageDarkMono, currencyCode } = data.item
-
-    // Ripple hack:
-    let { currencyName } = data.item
-    if (currencyCode.toLowerCase() === 'xrp') currencyName = 'Ripple'
-
-    return (
-      <View style={[styles.singleCryptoTypeWrap, walletType === this.state.selectedWalletType && styles.selectedItem]}>
-        <TouchableHighlight style={styles.singleCryptoType} onPress={() => this.handleSelectWalletType(data.item)} underlayColor={THEME.COLORS.GRAY_4}>
-          <View style={styles.cryptoTypeInfoWrap}>
-            <View style={styles.cryptoTypeLeft}>
-              <View style={styles.cryptoTypeLogo}>
-                {symbolImageDarkMono ? (
-                  <Image source={{ uri: symbolImageDarkMono }} style={[styles.cryptoTypeLogo, { borderRadius: 20 }]} />
-                ) : (
-                  <View style={styles.cryptoTypeLogo} />
-                )}
-              </View>
-              <View style={styles.cryptoTypeLeftTextWrap}>
-                <Text style={styles.cryptoTypeName}>
-                  {currencyName} - {currencyCode}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </TouchableHighlight>
-      </View>
-    )
-  }
-
-  keyExtractor = (item: CreateWalletType, index: number): string => {
-    return item.walletType
-  }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    backgroundColor: THEME.COLORS.WHITE,
-    flex: 1,
-    paddingHorizontal: scale(20)
+    flex: 1
   },
   resultList: {
-    backgroundColor: THEME.COLORS.WHITE,
-    borderTopColor: THEME.COLORS.GRAY_3,
-    borderTopWidth: 1,
     flex: 1
-  },
-  selectedItem: {
-    backgroundColor: THEME.COLORS.GRAY_4,
-    borderLeftWidth: scale(1),
-    borderLeftColor: THEME.COLORS.GRAY_3,
-    borderRightWidth: scale(1),
-    borderRightColor: THEME.COLORS.GRAY_3
-  },
-  singleCryptoType: {
-    height: scale(60),
-    borderBottomWidth: scale(1),
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    paddingVertical: scale(10),
-    paddingHorizontal: scale(15)
-  },
-  singleCryptoTypeWrap: {
-    flexDirection: 'column',
-    flex: 1
-  },
-  cryptoTypeInfoWrap: {
-    flexDirection: 'row',
-    height: scale(40),
-    flex: 1,
-    justifyContent: 'space-between'
-  },
-  cryptoTypeLeft: {
-    flexDirection: 'row'
   },
   cryptoTypeLogo: {
-    width: scale(40),
-    height: scale(40),
-    marginRight: scale(10)
-  },
-  cryptoTypeLeftTextWrap: {
-    justifyContent: 'center'
-  },
-  cryptoTypeName: {
-    fontSize: scale(16),
-    color: THEME.COLORS.GRAY_1,
-    textAlignVertical: 'center'
+    width: theme.rem(2),
+    height: theme.rem(2),
+    borderRadius: theme.rem(1),
+    marginLeft: theme.rem(0.25)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 export const CreateWalletSelectCryptoScene = connect(
   (state: RootState): StateProps => ({
     account: state.core.account
   }),
   (dispatch: Dispatch) => ({})
-)(CreateWalletSelectCryptoComponent)
+)(withTheme(CreateWalletSelectCryptoComponent))
