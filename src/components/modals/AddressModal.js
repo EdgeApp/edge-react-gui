@@ -1,10 +1,8 @@
 // @flow
 
-import Clipboard from '@react-native-community/clipboard'
-import { TertiaryButton } from 'edge-components'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, FlatList, Image, InputAccessoryView, Platform, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, FlatList, Image, TouchableWithoutFeedback, View } from 'react-native'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
@@ -17,7 +15,6 @@ import { type FioAddresses, checkPubAddress, getFioAddressCache } from '../../mo
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
-import { KeyboardTracker } from '../common/KeyboardTracker.js'
 import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
@@ -26,14 +23,11 @@ import { SecondaryButton } from '../themed/ThemedButtons.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { type AirshipBridge } from './modalParts.js'
 
-const inputAccessoryViewID: string = 'inputAccessoryViewID'
-
 type OwnProps = {
   bridge: AirshipBridge<string | null>,
   walletId: string,
   currencyCode: string,
   title?: string,
-  showPasteButton?: boolean,
   isFioOnly?: boolean,
   useUserFioAddressesOnly?: boolean,
   checkAddressConnected?: boolean
@@ -52,7 +46,6 @@ type DispatchProps = {
 }
 
 type State = {
-  clipboard: string,
   uri: string,
   statusLabel: string,
   fieldError: string,
@@ -72,7 +65,6 @@ class AddressModalConnected extends React.Component<Props, State> {
     super(props)
     this.fioCheckQueue = 0
     this.state = {
-      clipboard: '',
       uri: '',
       statusLabel: s.strings.fragment_send_address,
       cryptoAddress: undefined,
@@ -84,7 +76,6 @@ class AddressModalConnected extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this._setClipboard(this.props)
     this.getFioAddresses()
 
     if (this.textInput.current) {
@@ -95,23 +86,6 @@ class AddressModalConnected extends React.Component<Props, State> {
   componentDidUpdate(prevProps) {
     if (this.props.useUserFioAddressesOnly && prevProps.userFioAddresses !== this.props.userFioAddresses) {
       this.filterFioAddresses(this.state.uri)
-    }
-  }
-
-  _setClipboard = async props => {
-    const coreWallet = props.coreWallet
-
-    try {
-      const uri = await Clipboard.getString()
-
-      // Will throw in case uri is invalid
-      await coreWallet.parseUri(uri)
-
-      this.setState({
-        clipboard: uri
-      })
-    } catch (e) {
-      // Failure is acceptable
     }
   }
 
@@ -299,16 +273,6 @@ class AddressModalConnected extends React.Component<Props, State> {
     this.filterFioAddresses(uri)
   }
 
-  onPasteFromClipboard = () => {
-    const { clipboard } = this.state
-    this.setState({ uri: clipboard }, async () => {
-      if (await this.isFioAddressValid(clipboard)) {
-        await this.checkIfFioAddress(clipboard)
-      }
-      this.handleSubmit()
-    })
-  }
-
   onPressFioAddress = (address: string) => {
     this.setState({ uri: address }, async () => {
       if (await this.isFioAddressValid(address)) {
@@ -348,22 +312,6 @@ class AddressModalConnected extends React.Component<Props, State> {
   handleClose = () => this.props.bridge.resolve(null)
   keyExtractor = (item: string, index: number) => index.toString()
 
-  renderTracker = (keyboardAnimation, keyboardLayout) => {
-    const { showPasteButton } = this.props
-    const styles = getStyles(this.props.theme)
-    const copyMessage = this.state.clipboard ? sprintf(s.strings.string_paste_address, this.state.clipboard) : null
-    if (keyboardLayout === 0 && showPasteButton && copyMessage) {
-      return (
-        <View style={styles.tileContainerButtons}>
-          <TertiaryButton ellipsizeMode="middle" onPress={this.onPasteFromClipboard} numberOfLines={1} style={styles.addressModalButton}>
-            <TertiaryButton.Text>{copyMessage}</TertiaryButton.Text>
-          </TertiaryButton>
-        </View>
-      )
-    }
-    return null
-  }
-
   render() {
     const { uri, statusLabel, fieldError, filteredFioAddresses, isFocused } = this.state
     const { title, userFioAddressesLoading } = this.props
@@ -375,18 +323,8 @@ class AddressModalConnected extends React.Component<Props, State> {
           {title || s.strings.address_modal_default_header}
         </ModalTitle>
         <View style={styles.container}>
-          <KeyboardTracker>{this.renderTracker}</KeyboardTracker>
-          {Platform.OS === 'ios' ? (
-            <InputAccessoryView nativeID={inputAccessoryViewID}>
-              <View style={styles.accessoryView}>
-                <TouchableOpacity style={styles.accessoryButton} onPress={this.handleClose}>
-                  <Text style={styles.accessoryText}>{s.strings.string_cancel_cap}</Text>
-                </TouchableOpacity>
-              </View>
-            </InputAccessoryView>
-          ) : null}
-
           <EdgeTextFieldOutlined
+            small
             autoFocus
             autoCorrect={false}
             returnKeyType="search"
@@ -402,10 +340,7 @@ class AddressModalConnected extends React.Component<Props, State> {
             marginRem={[0, 1]}
             ref={this.textInput}
             error={fieldError}
-            inputAccessoryViewID={inputAccessoryViewID}
             blurOnSubmit
-            // style={addressInputStyles}
-            // returnKeyType="done"
           />
           {!userFioAddressesLoading ? (
             <FlatList
@@ -450,14 +385,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: '100%',
     flexDirection: 'column'
   },
-  tileContainerButtons: {
-    paddingBottom: theme.rem(0.5),
-    paddingHorizontal: theme.rem(0.75),
-    borderBottomWidth: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
   rowContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -474,27 +401,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingLeft: theme.rem(0.75),
     color: theme.primaryText
   },
-  addressModalButton: {
-    width: '100%'
-  },
   loaderContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-
-  // Accessory Input
-  accessoryView: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: theme.tileBackground
-  },
-  accessoryButton: {
-    padding: theme.rem(0.5)
-  },
-  accessoryText: {
-    color: theme.secondaryText,
-    fontSize: theme.rem(1)
   }
 }))

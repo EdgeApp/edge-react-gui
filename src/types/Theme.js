@@ -8,6 +8,7 @@ export type Theme = {
   // Icons
   icon: string,
   iconTappable: string,
+  iconDeactivated: string,
   warningIcon: string,
   iconLoadingOverlay: string,
   transactionListIconBackground: string,
