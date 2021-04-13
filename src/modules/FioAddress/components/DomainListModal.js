@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { FlatList, TouchableHighlight, View } from 'react-native'
+import { FlatList, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
@@ -12,7 +12,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../co
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { EdgeTextFieldOutlined } from '../../../components/themed/EdgeTextField'
 import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
-import { SecondaryButton } from '../../../components/themed/ThemedButtons.js'
+import { ClickableText, SecondaryButton } from '../../../components/themed/ThemedButtons'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
@@ -149,22 +149,22 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
     if (createNew) {
       return (
-        <TouchableHighlight onPress={this.registerNewDomain} underlayColor="transparent">
+        <ClickableText onPress={this.registerNewDomain} paddingRem={0}>
           <View style={[styles.rowContainerTop, styles.registerDomainRow]}>
             <Fontello name="register-custom-fio" style={styles.domainRegisterIcon} color={theme.iconTappable} size={theme.rem(1)} />
             <EdgeText style={styles.domainRegisterText}>{s.strings.fio_address_list_domain_register}</EdgeText>
           </View>
-        </TouchableHighlight>
+        </ClickableText>
       )
     }
     if (value) {
       return (
-        <TouchableHighlight onPress={() => this.selectItem(value)} underlayColor="transparent">
+        <ClickableText onPress={() => this.selectItem(value)} paddingRem={0}>
           <View style={styles.rowContainerTop}>
             <EdgeText style={styles.domainListRowName}>{label}</EdgeText>
             <EdgeText style={styles.domainListRowFree}>{value.isFree ? s.strings.fio_domain_free : ''}</EdgeText>
           </View>
-        </TouchableHighlight>
+        </ClickableText>
       )
     }
     return null
@@ -215,8 +215,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingHorizontal: theme.rem(1),
-    paddingVertical: theme.rem(1)
+    padding: theme.rem(1)
   },
   domainListRowName: {
     flex: 1,
