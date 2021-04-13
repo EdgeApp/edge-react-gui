@@ -55,9 +55,9 @@ class EdgeTextFieldOutlinedComponent extends React.PureComponent<EdgeOutlinedTex
   showSearchIcon = () => {
     const { fieldRef, value } = this.props
     if (fieldRef && fieldRef.current) {
-      if (fieldRef.current.focused) return false
+      return !fieldRef.current.focused
     }
-    return !value
+    return value == null
   }
 
   render() {
