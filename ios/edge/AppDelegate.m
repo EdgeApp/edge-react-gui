@@ -78,15 +78,6 @@ static void InitializeFlipper(UIApplication *application) {
   // Client-side background fetch interval:
   [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:60*60*12];
 
-  // Notification permissions:
-  [UNUserNotificationCenter currentNotificationCenter].delegate = self;
-  [[UNUserNotificationCenter currentNotificationCenter]
-      requestAuthorizationWithOptions:UNAuthorizationOptionBadge | UNAuthorizationOptionAlert
-      completionHandler: ^(BOOL granted, NSError *error) {
-        if (error) NSLog(@"failed to get notification permission");
-        else NSLog(granted ? @"notifications granted" : @"notifications not granted");
-      }];
-
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
