@@ -16,9 +16,9 @@ import { FullScreenTransitionComponent } from '../common/FullScreenTransition.js
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
+import { SceneHeader } from '../themed/SceneHeader'
 import { SecondaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
-import { UnderlinedHeader } from '../themed/UnderlinedHeader'
 
 type OwnProps = {
   walletName: string,
@@ -63,10 +63,6 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
     }
   }
 
-  onBack = () => {
-    Actions.pop()
-  }
-
   render() {
     const { isCreatingWallet, theme } = this.props
     const { isAnimationVisible } = this.state
@@ -76,7 +72,7 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
       <SceneWrapper background="theme">
         {!isAnimationVisible ? (
           <View style={styles.view}>
-            <UnderlinedHeader title={s.strings.title_create_wallet} />
+            <SceneHeader withTopMargin title={s.strings.title_create_wallet} />
             <EdgeText style={styles.instructionalText} numberOfLines={2}>
               {s.strings.create_wallet_top_instructions}
             </EdgeText>
@@ -84,9 +80,10 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
               type="static"
               title={s.strings.create_wallet_crypto_type_label}
               body={`${this.props.selectedWalletType.currencyName} - ${this.props.selectedWalletType.currencyCode}`}
+              contentPadding={false}
             />
-            <Tile type="static" title={s.strings.create_wallet_fiat_type_label} body={this.props.selectedFiat.label} />
-            <Tile type="static" title={s.strings.create_wallet_name_label} body={this.props.walletName} />
+            <Tile type="static" title={s.strings.create_wallet_fiat_type_label} body={this.props.selectedFiat.label} contentPadding={false} />
+            <Tile type="static" title={s.strings.create_wallet_name_label} body={this.props.walletName} contentPadding={false} />
 
             <SecondaryButton style={styles.create} onPress={this.onSubmit} disabled={isCreatingWallet} marginRem={[2, 5, 1]}>
               {isCreatingWallet ? (
