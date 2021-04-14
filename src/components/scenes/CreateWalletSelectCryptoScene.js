@@ -14,8 +14,8 @@ import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
-import { UnderlinedHeader } from '../themed/UnderlinedHeader'
 
 type StateProps = {
   account: EdgeAccount
@@ -138,7 +138,7 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
       <SceneWrapper avoidKeyboard background="theme">
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-            <UnderlinedHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
+            <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
             <EdgeTextFieldOutlined
               autoFocus
               onFocus={this.handleOnFocus}

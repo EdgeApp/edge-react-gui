@@ -15,8 +15,8 @@ import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
-import { UnderlinedHeader } from '../themed/UnderlinedHeader'
 
 type OwnProps = {
   selectedWalletType: CreateWalletType,
@@ -127,7 +127,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
         onPress={() => this.handleSelectFiatType(data.item)}
         icon={fiatCountry.logoUrl ? <Image source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
         title={data.item.value}
-        subTitle={fiatCountry.fiatName}
+        subTitle={s.strings[`currency_label_${data.item.value}`]}
         selected={data.item.value === this.state.selectedFiat}
       />
     )
@@ -148,7 +148,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
       <SceneWrapper avoidKeyboard background="theme">
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-            <UnderlinedHeader withTopMargin title={s.strings.title_create_wallet_select_fiat} />
+            <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_fiat} />
             <EdgeTextFieldOutlined
               autoFocus
               onFocus={this.handleOnFocus}
