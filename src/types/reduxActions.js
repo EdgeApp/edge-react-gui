@@ -1,24 +1,16 @@
 // @flow
 
-import { type Disklet } from 'disklet'
-import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet, type EdgeLobby, type EdgeParsedUri, type EdgeReceiveAddress } from 'edge-core-js'
+import type { Disklet } from 'disklet'
+import type { EdgeAccount, EdgeContext, EdgeCurrencyWallet, EdgeLobby, EdgeParsedUri, EdgeReceiveAddress, JsonObject } from 'edge-core-js'
 
 import type { CcWalletMap } from '../reducers/FioReducer'
-import { type PermissionsState } from '../reducers/PermissionsReducer.js'
+import type { PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
-import { type TweakSource } from '../util/ReferralHelpers.js'
-import { type DeepLink } from './DeepLink.js'
-import { type AccountReferral, type DeviceReferral, type Promotion, type ReferralCache } from './ReferralTypes.js'
-import {
-  type CustomTokenInfo,
-  type FioAddress,
-  type FioDomain,
-  type FioObtRecord,
-  type GuiContact,
-  type GuiCurrencyInfo,
-  type GuiSwapInfo,
-  type GuiWallet
-} from './types.js'
+import type { FeeOption } from '../reducers/scenes/SettingsReducer.js'
+import type { TweakSource } from '../util/ReferralHelpers.js'
+import type { DeepLink } from './DeepLink.js'
+import type { AccountReferral, DeviceReferral, Promotion, ReferralCache } from './ReferralTypes.js'
+import type { CustomTokenInfo, FioAddress, FioDomain, FioObtRecord, GuiContact, GuiCurrencyInfo, GuiSwapInfo, GuiWallet } from './types.js'
 
 type LegacyActionName =
   | 'ACCOUNT_INIT_COMPLETE'
@@ -190,6 +182,10 @@ export type Action =
         walletId: string,
         receiveAddress: EdgeReceiveAddress
       }
+    }
+  | {
+      type: 'UI/SETTINGS/SET_DEFAULT_FEE',
+      data: { currencyCode: string, defaultFee: FeeOption, customFee: JsonObject }
     }
   | {
       type: 'UI/WALLETS/SELECT_WALLET',
