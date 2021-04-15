@@ -1,21 +1,22 @@
 // @flow
 
 import * as React from 'react'
-import { Alert, FlatList, StyleSheet, TouchableHighlight, View } from 'react-native'
+import { Alert, FlatList, Image, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
+import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { getDefaultFiat } from '../../modules/Settings/selectors.js'
-import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { CreateWalletType, FlatListItem, GuiFiatType } from '../../types/types.js'
-import { scale } from '../../util/scaling.js'
 import { getSupportedFiats } from '../../util/utils'
-import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { SceneHeader } from '../themed/SceneHeader'
+import { SelectableRow } from '../themed/SelectableRow'
 
 type OwnProps = {
   selectedWalletType: CreateWalletType,
@@ -24,19 +25,23 @@ type OwnProps = {
 type StateProps = {
   supportedFiats: GuiFiatType[]
 }
-type Props = OwnProps & StateProps
+type Props = OwnProps & StateProps & ThemeProps
 
 type State = {
   searchTerm: string,
-  selectedFiat: string
+  selectedFiat: string,
+  isFocused: boolean
 }
 
 class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
+  textInput = React.createRef()
+
   constructor(props: Props) {
     super(props)
     this.state = {
       searchTerm: '',
-      selectedFiat: ''
+      selectedFiat: '',
+      isFocused: true
     }
   }
 
@@ -87,28 +92,63 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     if (selectedFiat) {
       this.setState(
         {
-          selectedFiat: selectedFiat.value,
-          searchTerm: selectedFiat.label
+          selectedFiat: selectedFiat.value
         },
         this.onNext
       )
     }
   }
 
-  handleOnFocus = () => {}
+  clearText = () => {
+    this.setState({ searchTerm: '' })
+    if (this.textInput.current) {
+      this.textInput.current.blur()
+    }
+  }
 
-  handleOnBlur = () => {}
+  handleOnFocus = () => {
+    this.setState({ isFocused: true })
+  }
+
+  handleOnBlur = () => {
+    this.setState({ isFocused: false })
+  }
+
+  renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
+    const styles = getStyles(this.props.theme)
+    const fiatCountry = FIAT_COUNTRY[data.item.value]
+    if (!fiatCountry) {
+      return null
+    }
+
+    return (
+      <SelectableRow
+        onPress={() => this.handleSelectFiatType(data.item)}
+        icon={fiatCountry.logoUrl ? <Image source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
+        title={data.item.value}
+        subTitle={s.strings[`currency_label_${data.item.value}`]}
+        selected={data.item.value === this.state.selectedFiat}
+      />
+    )
+  }
+
+  keyExtractor = (item: GuiFiatType, index: string) => {
+    return item.value
+  }
 
   render() {
+    const { isFocused } = this.state
+    const styles = getStyles(this.props.theme)
     const filteredArray = this.props.supportedFiats.filter(entry => {
       return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
     })
 
     return (
-      <SceneWrapper avoidKeyboard background="body">
+      <SceneWrapper avoidKeyboard background="theme">
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-            <FormField
+            <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_fiat} />
+            <EdgeTextFieldOutlined
               autoFocus
               onFocus={this.handleOnFocus}
               onBlur={this.handleOnBlur}
@@ -118,6 +158,12 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
               value={this.state.searchTerm}
               label={s.strings.fragment_wallets_addwallet_fiat_hint}
               returnKeyType="search"
+              small
+              onClear={this.clearText}
+              isClearable={isFocused}
+              marginRem={[0, 1.75]}
+              ref={this.textInput}
+              blurOnSubmit
             />
             <FlatList
               style={styles.resultList}
@@ -134,81 +180,27 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
       </SceneWrapper>
     )
   }
-
-  renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
-    return (
-      <View style={[styles.singleCryptoTypeWrap, data.item.value === this.state.selectedFiat && styles.selectedItem]}>
-        <TouchableHighlight style={styles.singleCryptoType} onPress={() => this.handleSelectFiatType(data.item)} underlayColor={THEME.COLORS.GRAY_4}>
-          <View style={styles.cryptoTypeInfoWrap}>
-            <View style={styles.cryptoTypeLeft}>
-              <View style={styles.cryptoTypeLeftTextWrap}>
-                <Text style={styles.cryptoTypeName}>{data.item.label}</Text>
-              </View>
-            </View>
-          </View>
-        </TouchableHighlight>
-      </View>
-    )
-  }
-
-  keyExtractor = (item: GuiFiatType, index: string) => {
-    return item.value
-  }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   content: {
-    backgroundColor: THEME.COLORS.WHITE,
-    flex: 1,
-    paddingHorizontal: scale(20)
+    flex: 1
   },
   resultList: {
-    backgroundColor: THEME.COLORS.WHITE,
-    borderTopColor: THEME.COLORS.GRAY_3,
-    borderTopWidth: 1,
     flex: 1
   },
-  selectedItem: {
-    backgroundColor: THEME.COLORS.GRAY_4,
-    borderLeftWidth: scale(1),
-    borderLeftColor: THEME.COLORS.GRAY_3,
-    borderRightWidth: scale(1),
-    borderRightColor: THEME.COLORS.GRAY_3
-  },
-  singleCryptoType: {
-    height: scale(60),
-    borderBottomWidth: scale(1),
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    paddingVertical: scale(10),
-    paddingHorizontal: scale(15)
-  },
-  singleCryptoTypeWrap: {
-    flexDirection: 'column',
-    flex: 1
-  },
-  cryptoTypeInfoWrap: {
-    flexDirection: 'row',
-    height: scale(40),
-    flex: 1,
-    justifyContent: 'space-between'
-  },
-  cryptoTypeLeft: {
-    flexDirection: 'row'
-  },
-  cryptoTypeLeftTextWrap: {
-    justifyContent: 'center'
-  },
-  cryptoTypeName: {
-    fontSize: scale(16),
-    color: THEME.COLORS.GRAY_1,
-    textAlignVertical: 'center'
+  cryptoTypeLogo: {
+    width: theme.rem(2),
+    height: theme.rem(2),
+    borderRadius: theme.rem(1),
+    marginLeft: theme.rem(0.25),
+    backgroundColor: theme.backgroundGradientRight
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 export const CreateWalletSelectFiatScene = connect(
   (state: RootState): StateProps => ({
     supportedFiats: getSupportedFiats(getDefaultFiat(state))
   }),
   (dispatch: Dispatch) => ({})
-)(CreateWalletSelectFiatComponent)
+)(withTheme(CreateWalletSelectFiatComponent))
