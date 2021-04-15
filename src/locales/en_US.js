@@ -791,6 +791,7 @@ const strings = {
   send_scene_send_to_address: 'Send to Address',
   send_scene_error_title: 'Error',
   send_scene_metadata_name_title: 'Payee',
+  send_make_spend_xrp_dest_tag_error: 'XRP Destination Tag must be 9 characters or less',
 
   // Request Scene
   request_balance: 'You have %s',

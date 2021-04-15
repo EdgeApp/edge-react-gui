@@ -458,7 +458,12 @@ export const updateTransactionAmount = (nativeAmount: string, exchangeAmount: st
       dispatch(updateTransaction(edgeTransaction, guiMakeSpendInfoClone, false, null))
     })
     .catch(error => {
-      dispatch(updateTransaction(null, guiMakeSpendInfoClone, false, error))
+      let customError
+      if (coreWallet.currencyInfo.defaultSettings.errorCodes.UNIQUE_IDENTIFIER_EXCEEDS_LENGTH === error.labelCode) {
+        customError = new Error(s.strings.send_make_spend_xrp_dest_tag_error)
+      }
+
       console.log(error)
+      dispatch(updateTransaction(null, guiMakeSpendInfoClone, false, customError ?? error))
     })
 }
