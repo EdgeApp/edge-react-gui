@@ -17,6 +17,7 @@ type EdgeOutlinedTextFieldProps = {
   fieldRef?: ?React.ElementRef<typeof OutlinedTextField>,
   marginRem?: number | number[],
   isClearable: boolean,
+  small?: boolean,
   onClear: () => void
 }
 
@@ -51,14 +52,31 @@ class EdgeTextFieldOutlinedComponent extends React.PureComponent<EdgeOutlinedTex
     }
   }
 
+  showSearchIcon = () => {
+    const { fieldRef, value } = this.props
+    if (fieldRef && fieldRef.current) {
+      return !fieldRef.current.focused
+    }
+    return value == null
+  }
+
   render() {
-    const { isClearable, marginRem = 0.5, theme, ...rest } = this.props
+    const { isClearable, marginRem = 0.5, small, theme, ...rest } = this.props
     const spacings = spacingStyles(marginRem, theme)
     const styles = getStyles(theme)
+    const searchContentInset = this.showSearchIcon() ? { left: theme.rem(2.25) } : null
+    const contentInset = small ? { input: theme.rem(0.75), label: 0, ...searchContentInset } : searchContentInset
+
     return (
       <View style={styles.outlinedTextFieldContainer}>
+        {this.showSearchIcon() ? (
+          <View style={[styles.search, { marginLeft: spacings.marginLeft }]}>
+            <AntDesignIcon name="search1" color={theme.iconDeactivated} size={theme.rem(1)} />
+          </View>
+        ) : null}
         <OutlinedTextField
           containerStyle={[spacings, styles.outlinedTextField]}
+          contentInset={contentInset}
           baseColor={theme.secondaryText}
           errorColor={theme.dangerText}
           textColor={theme.primaryText}
@@ -67,7 +85,7 @@ class EdgeTextFieldOutlinedComponent extends React.PureComponent<EdgeOutlinedTex
           {...rest}
         />
         {isClearable && (
-          <TouchableOpacity onPress={this.clearText} style={styles.outlinedTextFieldClearContainer}>
+          <TouchableOpacity onPress={this.clearText} style={[styles.outlinedTextFieldClearContainer, { marginRight: spacings.marginRight }]}>
             <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
           </TouchableOpacity>
         )}
@@ -91,10 +109,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   outlinedTextFieldContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: theme.rem(4.5)
+    height: theme.rem(4.5),
+    position: 'relative'
   },
   outlinedTextField: {
     flex: 1
+  },
+  outlinedTextInput: {
+    paddingLeft: theme.rem(2)
   },
   outlinedTextFieldClearContainer: {
     position: 'absolute',
@@ -102,6 +124,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingHorizontal: theme.rem(0.75),
     justifyContent: 'center',
     paddingBottom: theme.rem(0.25) // This is needed because the OutlinedTextField also has innate padding/margin/height on the bottom
+  },
+  search: {
+    position: 'absolute',
+    left: 0,
+    paddingHorizontal: theme.rem(0.75),
+    paddingBottom: theme.rem(0.5)
   }
 }))
 export const EdgeTextField = withTheme(EdgeTextFieldComponent)

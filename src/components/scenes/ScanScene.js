@@ -65,14 +65,7 @@ export class Scan extends React.Component<Props> {
   _onToggleAddressModal = async () => {
     const { walletId, currencyCode } = this.props
     const uri = await Airship.show(bridge => (
-      <AddressModal
-        bridge={bridge}
-        walletId={walletId}
-        currencyCode={currencyCode}
-        title={s.strings.scan_address_modal_title}
-        showPasteButton
-        checkAddressConnected
-      />
+      <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={s.strings.scan_address_modal_title} checkAddressConnected />
     ))
     if (uri) {
       this.props.parseScannedUri(uri)

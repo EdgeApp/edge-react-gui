@@ -169,7 +169,7 @@ function spacingStyles(props: Props, theme: Theme) {
 const getStyles = cacheStyles((theme: Theme) => {
   const commonButton = {
     alignItems: 'center',
-    borderRadius: theme.rem(1.5),
+    borderRadius: theme.rem(0.25),
     borderWidth: theme.rem(0.1),
     flexDirection: 'row',
     justifyContent: 'center'
