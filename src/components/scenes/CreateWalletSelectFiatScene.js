@@ -92,8 +92,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     if (selectedFiat) {
       this.setState(
         {
-          selectedFiat: selectedFiat.value,
-          searchTerm: selectedFiat.label
+          selectedFiat: selectedFiat.value
         },
         this.onNext
       )
