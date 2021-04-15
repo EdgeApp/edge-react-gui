@@ -13,16 +13,21 @@ type Props = {
   title: string,
   subTitle: string,
   icon?: React.Node,
-  selected: boolean
+  selected?: boolean,
+  arrowColor?: string,
+  underline?: boolean,
+
+  marginRem?: number[] | number,
+  paddingRem?: number[] | number
 }
 
 class SelectableRowComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
-    const { icon, title, subTitle, onPress, theme } = this.props
+    const { icon, title, subTitle, arrowColor, underline, marginRem, paddingRem, onPress, theme } = this.props
     const styles = getStyles(theme)
 
     return (
-      <ClickableRow onPress={onPress}>
+      <ClickableRow onPress={onPress} underline={underline} marginRem={marginRem} paddingRem={paddingRem}>
         <View style={styles.rowContainer}>
           <View style={styles.iconTitleContainer}>
             {icon}
@@ -31,7 +36,7 @@ class SelectableRowComponent extends React.PureComponent<Props & ThemeProps> {
               <EdgeText style={styles.subTitle}>{subTitle}</EdgeText>
             </View>
           </View>
-          <IonIcon size={theme.rem(1.5)} color={this.props.theme.icon} name="chevron-forward-outline" style={styles.iconStyle} />
+          <IonIcon size={theme.rem(1.5)} color={arrowColor || theme.icon} name="chevron-forward-outline" style={styles.iconStyle} />
         </View>
       </ClickableRow>
     )
