@@ -7,9 +7,9 @@ import { type AirshipBridge } from 'react-native-airship'
 import { connect } from 'react-redux'
 
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
-import { EdgeTextField } from '../../../components/themed/EdgeTextField.js'
+import { EdgeTextFieldOutlined } from '../../../components/themed/EdgeTextField.js'
 import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
-import { PrimaryButton } from '../../../components/themed/ThemedButtons'
+import { SecondaryButton } from '../../../components/themed/ThemedButtons'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
@@ -24,54 +24,87 @@ type StateProps = {
 type OwnProps = {
   bridge: AirshipBridge<string | null>,
   value: string,
+  label: string,
   title: string
 }
 
 type State = {
-  input: string
+  input: string,
+  isFocused: boolean
 }
 
 type Props = OwnProps & ThemeProps & StateProps
 
 class EditNameModalComponent extends React.PureComponent<Props, State> {
+  textInput = React.createRef()
   constructor(props: Props) {
     super(props)
     this.state = {
-      input: this.props.value || ''
+      input: this.props.value || '',
+      isFocused: false
     }
   }
 
   componentDidMount(): * {
     this.setState({ input: this.props.value })
+    if (this.textInput.current) {
+      this.textInput.current.focus()
+    }
   }
 
-  onChange = input => this.setState({ input })
+  clearText = () => {
+    this.setState({ input: '' })
+    if (this.textInput.current) {
+      this.textInput.current.blur()
+    }
+  }
 
-  selectItem = (value: any) => this.props.bridge.resolve(value)
+  fieldOnFocus = () => {
+    this.setState({ isFocused: true })
+  }
+
+  fieldOnBlur = () => {
+    this.setState({ isFocused: false })
+  }
+
+  onClose = () => this.props.bridge.resolve(null)
+
+  onChange = (input: string) => this.setState({ input })
+
+  selectItem = () => this.props.bridge.resolve(this.state.input)
 
   render() {
-    const { bridge, title, theme } = this.props
-    const { input } = this.state
+    const { bridge, title, label, theme } = this.props
+    const { input, isFocused } = this.state
     const styles = getStyles(theme)
 
     return (
-      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={0}>
-        <ModalTitle>{title}</ModalTitle>
+      <ThemedModal bridge={bridge} onCancel={this.onClose} paddingRem={0}>
+        <ModalTitle center paddingRem={[0, 3, 1]}>
+          {title}
+        </ModalTitle>
         <View style={styles.field}>
-          <EdgeTextField
+          <EdgeTextFieldOutlined
             autoFocus
             keyboardType="default"
-            label=""
+            label={label}
             onChangeText={this.onChange}
-            onSubmitEditing={() => this.selectItem(input)}
+            onSubmitEditing={this.selectItem}
             value={input}
             autoCorrect={false}
             autoCapitalize="none"
             returnKeyType="next"
+            onFocus={this.fieldOnFocus}
+            onBlur={this.fieldOnBlur}
+            onClear={this.clearText}
+            isClearable={isFocused}
+            marginRem={[0, 1]}
+            ref={this.textInput}
+            blurOnSubmit
           />
         </View>
-        <PrimaryButton label={s.strings.submit} onPress={() => this.selectItem(input)} marginRem={1} />
-        <ModalCloseArrow onPress={() => bridge.resolve(null)} />
+        {!!input && <SecondaryButton label={s.strings.submit} onPress={this.selectItem} marginRem={[2, 4, 0]} />}
+        <ModalCloseArrow onPress={this.onClose} />
       </ThemedModal>
     )
   }
