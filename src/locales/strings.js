@@ -2,8 +2,8 @@
 
 import { getLocales } from 'react-native-localize'
 
-import en from './en_US.js'
 import de from './strings/de.json'
+import en from './strings/enUS.json'
 import es from './strings/es.json'
 import fr from './strings/fr.json'
 import it from './strings/it.json'
