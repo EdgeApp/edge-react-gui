@@ -26,7 +26,9 @@ type SelectFioAddressOwnProps = {
   memo: string,
   memoError: string,
   onSelect: (fioAddress: string, fioWallet: EdgeCurrencyWallet, error: string) => void,
-  onMemoChange: (memo: string, memoError: string) => void
+  onMemoChange: (memo: string, memoError: string) => void,
+  fioRequest?: FioRequest,
+  isSendUsingFioAddress?: boolean
 }
 
 type SelectFioAddressProps = {
@@ -34,9 +36,7 @@ type SelectFioAddressProps = {
   fioAddresses: FioAddress[],
   fioWallets: EdgeCurrencyWallet[],
   selectedWallet: GuiWallet,
-  currencyCode: string,
-  fioRequest?: FioRequest,
-  isSendUsingFioAddress?: boolean
+  currencyCode: string
 }
 
 type DispatchProps = {
@@ -266,7 +266,6 @@ const mapStateToProps = (state: RootState): SelectFioAddressProps => {
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
   const fioWallets: EdgeCurrencyWallet[] = UI_SELECTORS.getFioWallets(state)
   const fioAddresses = state.ui.scenes.fioAddress.fioAddresses
-  const { guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
 
   if (!guiWallet || !currencyCode) {
     return {
@@ -283,9 +282,7 @@ const mapStateToProps = (state: RootState): SelectFioAddressProps => {
     fioAddresses,
     fioWallets,
     currencyCode,
-    selectedWallet: guiWallet,
-    fioRequest: guiMakeSpendInfo && guiMakeSpendInfo.fioPendingRequest ? guiMakeSpendInfo.fioPendingRequest : undefined,
-    isSendUsingFioAddress: guiMakeSpendInfo ? guiMakeSpendInfo.isSendUsingFioAddress : undefined
+    selectedWallet: guiWallet
   }
 }
 
