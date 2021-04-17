@@ -7,7 +7,7 @@ strings=$(jq -r 'keys[]' src/locales/strings/enUS.json)
 for string in $strings; do
   count=$(git grep -c "$string" | grep -v src/locales/strings/ | wc -l)
   # echo $count $string
-  if [ $count -le 1 ]; then
+  if [ $count -le 0 ]; then
     echo unused: $string
   fi
 done
