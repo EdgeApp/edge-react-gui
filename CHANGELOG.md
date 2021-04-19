@@ -1,5 +1,34 @@
 # edge-react-gui
 
+## 2.0.9 (2021-04-16)
+
+- Add UNI ERC20 token
+- Various bug fixes and improvements
+- Upgrade edge-core-js to v0.17.30
+  - Deprecate several methods:
+    - EdgeContext.getRecovery2Key - Use EdgeUserInfo.recovery2Key instead.
+    - EdgeCurrencyWallet.exportTransactionsToCSV - Moved to edge-react-gui project.
+    - EdgeCurrencyWallet.exportTransactionsToQBO - Moved to edge-react-gui project.
+    - EdgeCurrencyWallet.getDisplayPrivateSeed - Use EdgeCurrencyWallet.displayPrivateSeed instead.
+    - EdgeCurrencyWallet.getDisplayPublicSeed - Use EdgeCurrencyWallet.displayPublicSeed instead.
+  - Upgrade build scripts to use Webpack 5.
+- Upgrade edge-currency-accountbased to v0.7.52
+  - ETH: Add UNI ERC20 token
+  - ETH: Add eth_call to token balance loop
+  - FIO: Logging cleanup
+  - FIO: Allow sending tokens without transactionJson or otherParams
+- Upgrade edge-exchange-plugins to v0.11.24
+  - Sideshift: Move permission check after currency check
+  - Upgrade eslint-config-standard-kit to v0.15.1
+  - Upgrade to edge-core-js v0.17.29
+  - Upgrade to Webpack 5
+- Upgrade edge-login-ui-rn to v0.9.0
+  - *Breaking change*: This release contains a breaking change that was not indicated in the minor version update:
+    - rn: Prompt for notification permissions to support security features
+  - rn: Update modal colors
+- Upgrade edge-currency-monero to v0.2.10
+  - Update image URL
+
 ## 2.0.8 (2021-04-08)
 
 - Reset the slider on the send screen when the pending state changes.
