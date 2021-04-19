@@ -258,6 +258,7 @@ export async function exportTransactionsToCSVInner(
       amount,
       amountFiat,
       category,
+      denomName,
       notes,
       networkFeeField,
       txid: edgeTx.txid,
