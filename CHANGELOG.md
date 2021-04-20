@@ -12,11 +12,12 @@
     - EdgeCurrencyWallet.getDisplayPrivateSeed - Use EdgeCurrencyWallet.displayPrivateSeed instead.
     - EdgeCurrencyWallet.getDisplayPublicSeed - Use EdgeCurrencyWallet.displayPublicSeed instead.
   - Upgrade build scripts to use Webpack 5.
-- Upgrade edge-currency-accountbased to v0.7.52
+- Upgrade edge-currency-accountbased to v0.7.53
   - ETH: Add UNI ERC20 token
   - ETH: Add eth_call to token balance loop
   - FIO: Logging cleanup
   - FIO: Allow sending tokens without transactionJson or otherParams
+  - FIO: Change some error logging levels from error to info to reduce log verbosity
 - Upgrade edge-exchange-plugins to v0.11.24
   - Sideshift: Move permission check after currency check
   - Upgrade eslint-config-standard-kit to v0.15.1
