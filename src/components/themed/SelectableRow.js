@@ -14,7 +14,7 @@ type Props = {
   subTitle: string,
   icon?: React.Node,
   selected?: boolean,
-  arrowColor?: string,
+  arrowTappable?: boolean,
   underline?: boolean,
 
   marginRem?: number[] | number,
@@ -23,7 +23,7 @@ type Props = {
 
 class SelectableRowComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
-    const { icon, title, subTitle, arrowColor, underline, marginRem, paddingRem, onPress, theme } = this.props
+    const { icon, title, subTitle, arrowTappable, underline, marginRem, paddingRem, onPress, theme } = this.props
     const styles = getStyles(theme)
 
     return (
@@ -33,10 +33,12 @@ class SelectableRowComponent extends React.PureComponent<Props & ThemeProps> {
             {icon}
             <View style={styles.title}>
               <EdgeText>{title}</EdgeText>
-              <EdgeText style={styles.subTitle}>{subTitle}</EdgeText>
+              <EdgeText style={styles.subTitle} numberOfLines={2}>
+                {subTitle}
+              </EdgeText>
             </View>
           </View>
-          <IonIcon size={theme.rem(1.5)} color={arrowColor || theme.icon} name="chevron-forward-outline" style={styles.iconStyle} />
+          <IonIcon size={theme.rem(1.5)} color={arrowTappable ? theme.iconTappable : theme.icon} name="chevron-forward-outline" style={styles.iconStyle} />
         </View>
       </ClickableRow>
     )
@@ -51,14 +53,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'space-between'
   },
   iconTitleContainer: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center'
   },
   title: {
+    width: '100%',
     flexDirection: 'column',
     marginLeft: theme.rem(1.25)
   },
   subTitle: {
+    maxWidth: '85%',
     color: theme.deactivatedText,
     fontSize: theme.rem(0.75),
     marginTop: theme.rem(0.25)

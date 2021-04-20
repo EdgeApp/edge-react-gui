@@ -8,6 +8,7 @@ import { WebView } from 'react-native-webview'
 
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import s from '../../locales/strings.js'
+import { PLATFORM } from '../../theme/variables/platform.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
@@ -81,7 +82,7 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
           subTitle={s.strings.help_knowledge_base_text}
           onPress={() => showWebViewModal(HELP_URIS.knowledgeBase, s.strings.help_knowledge_base)}
           underline
-          arrowColor={theme.iconTappable}
+          arrowTappable
           marginRem={optionMarginRem}
           paddingRem={optionPaddingRem}
         />
@@ -92,7 +93,7 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
           subTitle={s.strings.help_support_text}
           onPress={() => showWebViewModal(HELP_URIS.support, s.strings.help_support)}
           underline
-          arrowColor={theme.iconTappable}
+          arrowTappable
           marginRem={optionMarginRem}
           paddingRem={optionPaddingRem}
         />
@@ -103,7 +104,7 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
           subTitle={s.strings.help_call_text}
           onPress={() => Linking.openURL(`tel:${HELP_URIS.call}`)}
           underline
-          arrowColor={theme.iconTappable}
+          arrowTappable
           marginRem={optionMarginRem}
           paddingRem={optionPaddingRem}
         />
@@ -113,7 +114,7 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
           title={s.strings.help_site}
           subTitle={s.strings.help_site_text}
           onPress={() => showWebViewModal(HELP_URIS.site, s.strings.help_site_text)}
-          arrowColor={theme.iconTappable}
+          arrowTappable
           marginRem={optionMarginRem}
           paddingRem={optionPaddingRem}
         />
@@ -138,8 +139,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: theme.rem(2.25)
   },
   footer: {
-    marginTop: theme.rem(1.5),
-    paddingVertical: theme.rem(0.5),
+    marginTop: PLATFORM.deviceHeight < theme.rem(42) ? 0 : theme.rem(1.5),
+    paddingVertical: PLATFORM.deviceHeight < theme.rem(42) ? theme.rem(0.25) : theme.rem(0.5),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
