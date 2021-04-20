@@ -150,15 +150,6 @@ export function RightChevronButton(props: { text: string, onPress: () => void, p
   )
 }
 
-export function IconButton(props: Props) {
-  const { children, onPress, marginRem = 0, paddingRem = 0 } = props
-  return (
-    <TouchableOpacity style={spacingStyles({ marginRem, paddingRem }, useTheme())} onPress={onPress}>
-      {children}
-    </TouchableOpacity>
-  )
-}
-
 function spacingStyles(props: Props, theme: Theme) {
   const marginRem = unpackEdges(props.marginRem)
   const paddingRem = unpackEdges(props.paddingRem ?? 0.5)

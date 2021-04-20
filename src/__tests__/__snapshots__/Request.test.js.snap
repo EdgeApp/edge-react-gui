@@ -113,18 +113,24 @@ exports[`Request should render with loaded props 1`] = `
     <ForwardRef
       onPress={[Function]}
     >
-      <RightChevronButton
-        onPress={[Function]}
-        paddingRem={
-          Array [
-            0,
-            0,
-            0,
-            0,
-          ]
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "flexDirection": "row",
+          }
         }
-        text="Your Receiving Wallet Address"
-      />
+      >
+        <WithTheme(EdgeTextComponent)>
+          Your Receiving Wallet Address
+        </WithTheme(EdgeTextComponent)>
+        <Icon
+          allowFontScaling={false}
+          color="#66EDA8"
+          name="chevron-forward"
+          size={34}
+        />
+      </View>
       <WithTheme(EdgeTextComponent)
         style={
           Object {

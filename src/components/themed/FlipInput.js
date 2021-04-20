@@ -13,7 +13,7 @@ import * as UTILS from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
-import { IconButton, RightChevronButton } from './ThemedButtons.js'
+import { ButtonBox, RightChevronButton } from './ThemedButtons.js'
 
 export type FlipInputFieldInfo = {
   currencyName: string,
@@ -515,9 +515,9 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
               {this.bottomRow(false)}
             </Animated.View>
           </View>
-          <IconButton onPress={this.onToggleFlipInput} paddingRem={[0.5, 0, 0.5, 1]}>
+          <ButtonBox onPress={this.onToggleFlipInput} paddingRem={[0.5, 0, 0.5, 1]}>
             <MaterialIcon name="swap-vert" size={theme.rem(2)} color={theme.iconTappable} />
-          </IconButton>
+          </ButtonBox>
         </View>
       </View>
     )

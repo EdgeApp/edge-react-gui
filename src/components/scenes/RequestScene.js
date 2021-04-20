@@ -8,6 +8,7 @@ import type { RefObject } from 'react-native'
 import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
@@ -31,7 +32,6 @@ import { EdgeText } from '../themed/EdgeText.js'
 import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput.js'
 import { FlipInput } from '../themed/FlipInput.js'
 import { ShareButtons } from '../themed/ShareButtons.js'
-import { RightChevronButton } from '../themed/ThemedButtons.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
@@ -348,11 +348,10 @@ export class RequestComponent extends React.PureComponent<Props, State> {
               )}
             </View>
             <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
-              <RightChevronButton
-                paddingRem={[0, 0, 0, 0]}
-                onPress={this.handleAddressBlockExplorer}
-                text={s.strings.request_qr_your_receiving_wallet_address}
-              />
+              <View style={styles.rightChevronContainer}>
+                <EdgeText>{s.strings.request_qr_your_receiving_wallet_address}</EdgeText>
+                <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+              </View>
               <EdgeText style={styles.publicAddressText}>{requestAddress}</EdgeText>
             </TouchableOpacity>
           </View>
@@ -519,6 +518,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1,
     margin: theme.rem(2),
     padding: theme.rem(0.5)
+  },
+
+  rightChevronContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
   },
 
   accessoryView: {
