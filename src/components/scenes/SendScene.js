@@ -63,7 +63,8 @@ type StateProps = {
   transaction: EdgeTransaction | null,
   transactionMetadata: EdgeMetadata | null,
   uniqueIdentifier?: string,
-  wallets: { [walletId: string]: GuiWallet }
+  wallets: { [walletId: string]: GuiWallet },
+  isSendUsingFioAddress?: boolean
 }
 
 type DispatchProps = {
@@ -438,7 +439,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderSelectFioAddress() {
-    const { hiddenTilesMap = {} } = this.props
+    const { hiddenTilesMap = {}, guiMakeSpendInfo, isSendUsingFioAddress } = this.props
     const { fioSender } = this.state
 
     if (hiddenTilesMap.fioAddressSelect) return null
@@ -450,6 +451,8 @@ class SendComponent extends React.PureComponent<Props, State> {
           memoError={fioSender.memoError}
           onSelect={this.handleFioAddressSelect}
           onMemoChange={this.handleMemoChange}
+          fioRequest={guiMakeSpendInfo && guiMakeSpendInfo.fioPendingRequest ? guiMakeSpendInfo.fioPendingRequest : undefined}
+          isSendUsingFioAddress={isSendUsingFioAddress}
         />
       </View>
     )
@@ -570,8 +573,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const SendScene = connect(
-  (state: RootState): StateProps => {
+  (state: RootState, ownProps: RouteProps): StateProps => {
     const { nativeAmount, transaction, transactionMetadata, error, pending, guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
+    const isSendUsingFioAddress = guiMakeSpendInfo.isSendUsingFioAddress || (ownProps.guiMakeSpendInfo && ownProps.guiMakeSpendInfo.isSendUsingFioAddress)
+
     return {
       account: state.core.account,
       authRequired: state.ui.scenes.sendConfirmation.authRequired,
@@ -590,7 +595,8 @@ export const SendScene = connect(
       transaction,
       transactionMetadata,
       uniqueIdentifier: guiMakeSpendInfo.uniqueIdentifier,
-      wallets: state.ui.wallets.byId
+      wallets: state.ui.wallets.byId,
+      isSendUsingFioAddress
     }
   },
   (dispatch: Dispatch): DispatchProps => ({

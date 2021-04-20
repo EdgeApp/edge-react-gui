@@ -528,6 +528,9 @@ Object {
       "UMA": Object {
         "denominations": "1000000000000000000",
       },
+      "UNI": Object {
+        "denominations": "1000000000000000000",
+      },
       "USDC": Object {
         "denomination": "1000000",
       },

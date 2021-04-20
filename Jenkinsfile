@@ -86,6 +86,7 @@ pipeline {
       when {
         anyOf {
           branch 'develop'
+          branch 'staging'
           branch 'master'
           branch 'test-feta'
           branch 'test-gouda'

@@ -34,6 +34,7 @@ import paymentTypeLogoUpi from '../../assets/images/paymentTypes/paymentTypeLogo
 import walletListSlidingTutorial from '../../assets/images/tutorials/walletList_sliding_dark.gif'
 import { type Theme } from '../../types/Theme.js'
 import { scale } from '../../util/scaling.js'
+import { PLATFORM } from './platform'
 
 const palette = {
   white: '#FFFFFF',
@@ -92,7 +93,7 @@ export const edgeDark: Theme = {
   backgroundGradientRight: palette.darkBlue,
 
   // Modal
-  modal: palette.royalBlue,
+  modal: palette.edgeNavy,
   modalBlurType: 'light',
   modalCloseIcon: palette.edgeMint,
   // modalFullGradientLeft: palette.darkBlue,
@@ -174,12 +175,14 @@ export const edgeDark: Theme = {
   // warningBubble: palette.accentOrange,
 
   // Confirmation slider
-  // confirmationSlider: palette.whiteOp10,
-  // confirmationSliderText: palette.edgeMint,
-  // confirmationSliderArrow: palette.edgeBlue,
-  // confirmationSliderThumb: palette.edgeMint,
-  // confirmationSliderTextDeactivated: palette.gray,
-  // confirmationThumbDeactivated: palette.gray,
+  confirmationSlider: palette.whiteOp10,
+  confirmationSliderText: palette.edgeMint,
+  confirmationSliderArrow: palette.edgeBlue,
+  confirmationSliderThumb: palette.edgeMint,
+  confirmationSliderTextDeactivated: palette.gray,
+  confirmationThumbDeactivated: palette.gray,
+  confirmationSliderWidth: PLATFORM.deviceWidth >= 720 ? 680 : PLATFORM.deviceWidth - 45,
+  confirmationSliderThumbWidth: 55,
 
   // Lines
   lineDivider: palette.whiteOp10,

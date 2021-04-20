@@ -1,5 +1,6 @@
 // @flow
 
+import 'react-native-gesture-handler'
 import './src/app.js'
 
 import { AppRegistry } from 'react-native'

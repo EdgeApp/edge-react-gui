@@ -316,11 +316,12 @@ export const privateKeyModalActivated = () => async (dispatch: Dispatch, getStat
 
 const shownWalletGetCryptoModals = []
 
-export const checkAndShowGetCryptoModal = () => async (dispatch: Dispatch, getState: GetState) => {
+export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCurrencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {
   try {
     const state = getState()
-    const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-    const wallet = UI_SELECTORS.getSelectedWallet(state)
+    const currencyCode = selectedCurrencyCode ?? UI_SELECTORS.getSelectedCurrencyCode(state)
+    const wallets = state.ui.wallets.byId
+    const wallet = selectedWalletId ? wallets[selectedWalletId] : UI_SELECTORS.getSelectedWallet(state)
     // check if balance is zero
     const balance = wallet.nativeBalances[currencyCode]
     if (balance !== '0' || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit

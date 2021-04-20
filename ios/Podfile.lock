@@ -9,7 +9,7 @@ PODS:
   - disklet (0.4.5):
     - React
   - DoubleConversion (1.1.6)
-  - edge-login-ui-rn (0.8.2):
+  - edge-login-ui-rn (0.9.1):
     - React
   - FBLazyVector (0.63.4)
   - FBReactNativeSpec (0.63.4):
@@ -455,10 +455,41 @@ PODS:
     - RNFBApp
   - RNFS (2.13.3):
     - React
+  - RNGestureHandler (1.10.3):
+    - React-Core
   - RNLocalize (2.0.2):
     - React-Core
   - RNPermissions (3.0.0):
     - React-Core
+  - RNReanimated (2.0.0):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - Folly
+    - glog
+    - RCTRequired
+    - RCTTypeSafety
+    - React
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - React-RCTVibration
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNShare (5.1.4):
     - React-Core
   - RNSound (0.11.0):
@@ -557,8 +588,10 @@ DEPENDENCIES:
   - "RNFBIid (from `../node_modules/@react-native-firebase/iid`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNFS (from `../node_modules/react-native-fs`)
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNLocalize (from `../node_modules/react-native-localize`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNShare (from `../node_modules/react-native-share`)
   - RNSound (from `../node_modules/react-native-sound`)
   - RNStoreReview (from `../node_modules/react-native-store-review/ios`)
@@ -710,10 +743,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFS:
     :path: "../node_modules/react-native-fs"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNLocalize:
     :path: "../node_modules/react-native-localize"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNShare:
     :path: "../node_modules/react-native-share"
   RNSound:
@@ -737,7 +774,7 @@ SPEC CHECKSUMS:
   CocoaLibEvent: 2fab71b8bd46dd33ddb959f7928ec5909f838e3f
   disklet: 4f586f90b70fdb46f06614a5b7342eda5c90f253
   DoubleConversion: cde416483dac037923206447da6e1454df403714
-  edge-login-ui-rn: cd93e2dcabc89a20b30cee9f7a0909b86b3e8ece
+  edge-login-ui-rn: 965cb13c3287f750f8ad25911020f9dc874b5886
   FBLazyVector: 3bb422f41b18121b71783a905c10e58606f7dc3e
   FBReactNativeSpec: f2c97f2529dd79c083355182cc158c9f98f4bd6e
   Firebase: 458d109512200d1aca2e1b9b6cf7d68a869a4a46
@@ -812,8 +849,10 @@ SPEC CHECKSUMS:
   RNFBIid: 8f673a41f45f04273d0759c5df0aef113b580822
   RNFBMessaging: c55142d3b2d34d706bf12bd5eef9ef35254c2df1
   RNFS: c9bbde46b0d59619f8e7b735991c60e0f73d22c1
+  RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNLocalize: 43f6c30d8e19ad92282ae434d310fb463b31f419
   RNPermissions: 99dd8d4a30ff13509b949ca63cd1f69edc461775
+  RNReanimated: 5231286440b796e09df3bfa5c1b12b02bfe07664
   RNShare: 8af5349f05fc042d230674dd650d19789187ff9c
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
