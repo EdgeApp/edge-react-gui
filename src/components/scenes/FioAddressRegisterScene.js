@@ -12,7 +12,7 @@ import s from '../../locales/strings.js'
 import { createFioWallet } from '../../modules/FioAddress/action'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
 import { EditNameModal } from '../../modules/FioAddress/components/EditNameModal'
-import { FIO_DOMAIN_IS_NOT_PUBLIC, FioError } from '../../modules/FioAddress/util'
+import { checkIsDomainPublic } from '../../modules/FioAddress/util'
 import { getFioWallets } from '../../modules/UI/selectors'
 import type { RootState } from '../../reducers/RootReducer'
 import type { Dispatch } from '../../types/reduxTypes'
@@ -194,14 +194,9 @@ class FioAddressRegister extends React.Component<Props, State> {
       const { fioPlugin } = this.props
       if (isCustomDomain) {
         try {
-          const isDomainPublic = fioPlugin.otherMethods ? await fioPlugin.otherMethods.isDomainPublic(domain) : false
-          if (!isDomainPublic) {
-            throw new FioError(s.strings.fio_address_register_domain_is_not_public, FIO_DOMAIN_IS_NOT_PUBLIC)
-          }
+          await checkIsDomainPublic(fioPlugin, domain)
         } catch (e) {
-          if (!e.labelCode || e.name !== 'FioError') {
-            showError(s.strings.fio_connect_wallets_err)
-          }
+          showError(e.message)
           return this.setState({
             isAvailable: false,
             loading: false
@@ -233,7 +228,7 @@ class FioAddressRegister extends React.Component<Props, State> {
         loading: false
       })
     }
-    this.checkFioAddress(fioAddressChanged, this.state.selectedDomain.name)
+    this.checkFioAddress(fioAddressChanged, this.state.selectedDomain.name, !this.state.selectedDomain.walletId)
 
     this.setState({
       fioAddress: fioAddressChanged.toLowerCase()
