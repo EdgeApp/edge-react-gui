@@ -18,7 +18,6 @@ import {
   alphabeticalSort,
   checkFilterWallet,
   decimalOrZero,
-  DENOMINATION_TYPE,
   getDenomFromIsoCode,
   getDenomination,
   getFiatSymbol,
@@ -216,8 +215,8 @@ class WalletListComponent extends React.PureComponent<Props> {
       const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
 
       // Crypto Amount And Exchange Rate
-      const denomination = getDenomination(currencyCode, settings, DENOMINATION_TYPE.DISPLAY)
-      const exchangeDenomination = getDenomination(currencyCode, settings, DENOMINATION_TYPE.EXCHANGE)
+      const denomination = getDenomination(currencyCode, settings, 'display')
+      const exchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
       const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
       const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : undefined

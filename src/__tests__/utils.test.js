@@ -10,7 +10,6 @@ import {
   convertNativeToDisplay,
   convertNativeToExchange,
   daysBetween,
-  DENOMINATION_TYPE,
   getDenomination,
   getNewArrayWithItem,
   getNewArrayWithoutItem,
@@ -690,7 +689,7 @@ describe('getDisplayDenomination', function () {
 
   input.forEach((currency, index) => {
     test(`${title} ${currency}`, function () {
-      expect(getDenomination(currency, fixtures.settings, DENOMINATION_TYPE.DISPLAY)).toMatchObject(output[index])
+      expect(getDenomination(currency, fixtures.settings, 'display')).toMatchObject(output[index])
     })
   })
 })
@@ -701,7 +700,7 @@ describe('getExchangeDenomination', function () {
 
   input.forEach((currency, index) => {
     test(`${title} ${currency}`, function () {
-      expect(getDenomination(currency, fixtures.settings, DENOMINATION_TYPE.EXCHANGE)).toMatchObject(output[index])
+      expect(getDenomination(currency, fixtures.settings, 'exchange')).toMatchObject(output[index])
     })
   })
 })

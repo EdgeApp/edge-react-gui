@@ -12,7 +12,6 @@ import { type RootState } from '../../types/reduxTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import {
-  DENOMINATION_TYPE,
   DIVIDE_PRECISION,
   getDenomFromIsoCode,
   getDenomination,
@@ -78,8 +77,8 @@ export const TransactionListRow = connect((state: RootState, ownProps: OwnProps)
   const guiWallet = state.ui.wallets.byId[walletId]
   const { fiatCurrencyCode } = guiWallet
   const { settings } = state.ui
-  const displayDenomination = getDenomination(currencyCode, settings, DENOMINATION_TYPE.DISPLAY)
-  const exchangeDenomination = getDenomination(currencyCode, settings, DENOMINATION_TYPE.EXCHANGE)
+  const displayDenomination = getDenomination(currencyCode, settings, 'display')
+  const exchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
   const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
 
   // Required Confirmations

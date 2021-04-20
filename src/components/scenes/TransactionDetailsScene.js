@@ -593,8 +593,8 @@ export const TransactionDetailsScene = connect(
     const allCurrencyInfos = plugins.allCurrencyInfos
     const currencyInfo = UTILS.getCurrencyInfo(allCurrencyInfos, currencyCode)
     const walletDefaultDenomProps: EdgeDenomination = UTILS.isCryptoParentCurrency(wallet, edgeTransaction.currencyCode)
-      ? UTILS.getDenomination(wallet.currencyCode, settings, UTILS.DENOMINATION_TYPE.EXCHANGE)
-      : UTILS.getDenomination(edgeTransaction.currencyCode, settings, UTILS.DENOMINATION_TYPE.EXCHANGE)
+      ? UTILS.getDenomination(wallet.currencyCode, settings, 'exchange')
+      : UTILS.getDenomination(edgeTransaction.currencyCode, settings, 'exchange')
 
     const nativeAmount = edgeTransaction && edgeTransaction.nativeAmount ? bns.abs(edgeTransaction.nativeAmount) : ''
     const cryptoAmount = convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)

@@ -586,15 +586,13 @@ export function getCustomTokenDenomination(currencyCode: string, settings: Objec
   return customTokenCurrencyInfo ? customTokenCurrencyInfo.denominations[0] : emptyEdgeDenomination
 }
 
-export const DENOMINATION_TYPE = { DISPLAY: 'display', EXCHANGE: 'exchange' }
-export type DenominationType = typeof DENOMINATION_TYPE.DISPLAY | typeof DENOMINATION_TYPE.EXCHANGE
-export function getDenomination(currencyCode: string, settings: Object, type: DenominationType) {
+export function getDenomination(currencyCode: string, settings: Object, type: 'display' | 'exchange') {
   const currencyInfo = settings[currencyCode]
   if (currencyInfo) {
     const denomination = currencyInfo.denominations.find(denomination => {
-      if (type === DENOMINATION_TYPE.DISPLAY) {
+      if (type === 'display') {
         return denomination.multiplier === currencyInfo.denomination
-      } else if (type === DENOMINATION_TYPE.EXCHANGE) {
+      } else if (type === 'exchange') {
         return denomination.name === currencyInfo.currencyCode
       }
     })
@@ -684,8 +682,8 @@ export const convertTransactionFeeToDisplayFee = (
     }
   } else if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
     // if parentNetworkFee greater than zero
-    const parentDisplayDenomination = getDenomination(guiWallet.currencyCode, settings, DENOMINATION_TYPE.DISPLAY)
-    const parentExchangeDenomination = getDenomination(guiWallet.currencyCode, settings, DENOMINATION_TYPE.EXCHANGE)
+    const parentDisplayDenomination = getDenomination(guiWallet.currencyCode, settings, 'display')
+    const parentExchangeDenomination = getDenomination(guiWallet.currencyCode, settings, 'exchange')
     const cryptoFeeSymbol = parentDisplayDenomination && parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
     const displayMultiplier = parentDisplayDenomination ? parentDisplayDenomination.multiplier : ''
     const exchangeMultiplier = parentExchangeDenomination ? parentExchangeDenomination.multiplier : ''
@@ -700,8 +698,8 @@ export const convertTransactionFeeToDisplayFee = (
     }
   } else if (networkFee && bns.gt(networkFee, '0')) {
     // if networkFee greater than zero
-    const primaryDisplayDenomination = getDenomination(currencyCode, settings, DENOMINATION_TYPE.DISPLAY)
-    const primaryExchangeDenomination = getDenomination(currencyCode, settings, DENOMINATION_TYPE.EXCHANGE)
+    const primaryDisplayDenomination = getDenomination(currencyCode, settings, 'display')
+    const primaryExchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
     const cryptoFeeSymbol = primaryDisplayDenomination && primaryDisplayDenomination.symbol ? primaryDisplayDenomination.symbol : ''
     const displayMultiplier = primaryDisplayDenomination ? primaryDisplayDenomination.multiplier : ''
     const exchangeMultiplier = primaryExchangeDenomination ? primaryExchangeDenomination.multiplier : ''
