@@ -73,7 +73,11 @@ static void InitializeFlipper(UIApplication *application) {
                                             initialProperties:nil];
 
   [RCTSplashScreen open:rootView withImageNamed:@"splash"];
-  rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
+  if (@available(iOS 13.0, *)) {
+      rootView.backgroundColor = [UIColor systemBackgroundColor];
+  } else {
+      rootView.backgroundColor = [UIColor whiteColor];
+  }
 
   // Client-side background fetch interval:
   [[UIApplication sharedApplication] setMinimumBackgroundFetchInterval:60*60*12];

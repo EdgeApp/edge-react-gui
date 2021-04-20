@@ -123,7 +123,5 @@
         <data android:scheme="https" android:host="deep.edge.app" android:pathPrefix="/"></data>
       </intent-filter>
     </activity>
-    <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
   </application>
-
 </manifest>
