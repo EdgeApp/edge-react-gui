@@ -510,6 +510,13 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         [currencyCode]: { ...state[currencyCode], ...defaultFeeData }
       }
     }
+    case 'UI/SETTINGS/REMOVE_DEFAULT_FEE': {
+      const { currencyCode, ...defaultFee } = action.data
+      return {
+        ...state,
+        [currencyCode]: { ...state[currencyCode], ...defaultFee }
+      }
+    }
     default:
       return state
   }

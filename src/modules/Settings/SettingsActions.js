@@ -53,10 +53,16 @@ export const setDenominationKey = (currencyCode: string, denominationKey: string
   data: { currencyCode, denominationKey }
 })
 
-// Default fee
+// Set Default Fee
 export const setDefaultFee = (currencyCode: string, defaultFee: FeeOption, customFee: JsonObject) => ({
   type: 'UI/SETTINGS/SET_DEFAULT_FEE',
   data: { currencyCode: currencyCode, defaultFee: defaultFee, customFee: customFee }
+})
+
+// Remove Default Fee
+export const removeDefaultFee = (currencyCode: string) => ({
+  type: 'UI/SETTINGS/REMOVE_DEFAULT_FEE',
+  data: { currencyCode: currencyCode, defaultFee: 'none' }
 })
 
 // touch id settings

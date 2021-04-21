@@ -9,7 +9,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { connect } from 'react-redux'
 
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions.js'
-import { setDefaultFeeSetting } from '../../actions/SettingsActions.js'
+import { removeDefaultFeeSetting, setDefaultFeeSetting } from '../../actions/SettingsActions.js'
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
@@ -51,10 +51,13 @@ type State = {
 export class ChangeMiningFee extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    const { customNetworkFee = {} } = props // Initially standard
+    const defaultNetworkFee = 'standard'
 
-    const isDefault = !(props.currencySettings?.defaultFee == null) // Set false if null, true if exists
-    const networkFeeOption = props.currencySettings?.defaultFee || 'standard' // Set default fee if exists, otherwise standard if undefined
+    const { customNetworkFee = {} } = props // Initially standard
+    let { networkFeeOption = defaultNetworkFee } = props // Initially standard
+
+    const isDefault = !(props.currencySettings?.defaultFee == null) && props.currencySettings?.defaultFee !== 'none' // Set false if null, true if exists and not equal to none
+    if (isDefault) networkFeeOption = props.currencySettings?.defaultFee || defaultNetworkFee
 
     // const currencyCode = props.wallet.currencyInfo.currencyCode
     const customFormat = this.getCustomFormat()
@@ -245,6 +248,10 @@ export const ChangeMiningFeeScene = connect(
     onSubmit(networkFeeOption: FeeOption, isDefault: boolean, customFee: JsonObject, walletId: string, currencyCode?: string) {
       if (isDefault && currencyCode) {
         dispatch(setDefaultFeeSetting(currencyCode, networkFeeOption, customFee))
+      } else if (currencyCode) {
+        // Remove default
+
+        dispatch(removeDefaultFeeSetting(currencyCode))
       }
       dispatch(sendConfirmationUpdateTx({ networkFeeOption, customFee }))
     }

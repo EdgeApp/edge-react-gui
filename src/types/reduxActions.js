@@ -188,6 +188,10 @@ export type Action =
       data: { currencyCode: string, defaultFee: FeeOption, customFee: JsonObject }
     }
   | {
+      type: 'UI/SETTINGS/REMOVE_DEFAULT_FEE',
+      data: { currencyCode: string }
+    }
+  | {
       type: 'UI/WALLETS/SELECT_WALLET',
       data: { currencyCode: string, walletId: string }
     }

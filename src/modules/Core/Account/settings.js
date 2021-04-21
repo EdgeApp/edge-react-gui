@@ -675,6 +675,14 @@ export const saveDefaultFeeSetting = (account: EdgeAccount, currencyCode: string
     return setSyncedSettings(account, updatedSettings)
   })
 
+// Remove default fee setting from disk
+export const removeDefaultFeeSetting = (account: EdgeAccount, currencyCode: string) =>
+  getSyncedSettings(account).then(settings => {
+    const defaultFee = 'none'
+    const updatedSettings = updateCurrencySettings(settings, currencyCode, { defaultFee })
+    return setSyncedSettings(account, updatedSettings)
+  })
+
 // Helper Functions
 export async function getSyncedSettings(account: EdgeAccount): Promise<any> {
   try {
