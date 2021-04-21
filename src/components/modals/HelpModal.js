@@ -3,10 +3,10 @@
 import * as React from 'react'
 import { Image, Linking, View } from 'react-native'
 import { getBuildNumber, getVersion } from 'react-native-device-info'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { WebView } from 'react-native-webview'
 
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
+import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -77,7 +77,7 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
         </View>
 
         <SelectableRow
-          icon={<MaterialIcon size={theme.rem(1.5)} color={theme.iconTappable} name="lightbulb" />}
+          icon={<Fontello name="help_idea" color={theme.iconTappable} size={theme.rem(1.5)} />}
           title={s.strings.help_knowledge_base}
           subTitle={s.strings.help_knowledge_base_text}
           onPress={() => showWebViewModal(HELP_URIS.knowledgeBase, s.strings.help_knowledge_base)}
@@ -88,7 +88,7 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
         />
 
         <SelectableRow
-          icon={<MaterialIcon size={theme.rem(1.5)} color={theme.iconTappable} name="headset-mic" />}
+          icon={<Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />}
           title={s.strings.help_support}
           subTitle={s.strings.help_support_text}
           onPress={() => showWebViewModal(HELP_URIS.support, s.strings.help_support)}
@@ -99,7 +99,7 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
         />
 
         <SelectableRow
-          icon={<MaterialIcon size={theme.rem(1.5)} color={theme.iconTappable} name="phone-in-talk" />}
+          icon={<Fontello name="help_call" color={theme.iconTappable} size={theme.rem(1.5)} />}
           title={s.strings.help_call}
           subTitle={s.strings.help_call_text}
           onPress={() => Linking.openURL(`tel:${HELP_URIS.call}`)}
@@ -110,7 +110,7 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
         />
 
         <SelectableRow
-          icon={<MaterialIcon size={theme.rem(1.5)} color={theme.iconTappable} name="language" />}
+          icon={<Fontello name="globe" color={theme.iconTappable} size={theme.rem(1.5)} />}
           title={s.strings.help_site}
           subTitle={s.strings.help_site_text}
           onPress={() => showWebViewModal(HELP_URIS.site, s.strings.help_site_text)}
@@ -131,6 +131,7 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   titleContainer: {
+    marginTop: theme.rem(0.5),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
