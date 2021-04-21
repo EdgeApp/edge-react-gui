@@ -229,7 +229,6 @@
   "string_master_private_key": "マスタープライベートキー",
   "string_split_wallet": "%sをスプリットさせる",
   "string_add_edit_tokens": "トークンを追加 / 編集する",
-  "title_create_wallet_select_crypto": "タイプを選択",
   "title_create_wallet_select_fiat": "法定通貨を選択",
   "title_back": "戻る",
   "title_change_mining_fee": "マイニング手数料の変更",
