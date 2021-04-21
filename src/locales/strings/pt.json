@@ -152,7 +152,6 @@
   "exchange_rates_loading": "Taxa de câmbio Carregando...",
   "string_master_private_key": "Chave Privada Mestra",
   "string_add_edit_tokens": "Adicionar / Editar Tokens",
-  "title_create_wallet_select_crypto": "Selecionar Tipo",
   "title_create_wallet_select_fiat": "Selecionar moeda fiduciária",
   "title_back": "Voltar",
   "title_change_mining_fee": "Alterar Taxa do Minerador",
