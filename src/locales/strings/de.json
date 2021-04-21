@@ -330,7 +330,6 @@
   "string_add_edit_tokens": "Hinzufügen / Bearbeiten von Token",
   "string_get_raw_keys": "Nackten Schlüssel erhalten",
   "string_raw_keys": "Nackten Schlüssel",
-  "title_create_wallet_select_crypto": "Typ auswählen",
   "title_create_wallet_select_fiat": "Fiatwährung auswählen",
   "title_back": "Zurück",
   "title_change_mining_fee": "Mining-Gebühr ändern",
