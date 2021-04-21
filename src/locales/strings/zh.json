@@ -230,7 +230,6 @@
   "string_master_private_key": "主私钥",
   "string_split_wallet": "拆分：%s",
   "string_add_edit_tokens": "添加/编辑代币",
-  "title_create_wallet_select_crypto": "选择类型",
   "title_create_wallet_select_fiat": "选择法定货币",
   "title_back": "返回",
   "title_change_mining_fee": "更改采矿费",
