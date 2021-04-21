@@ -330,7 +330,6 @@
   "string_add_edit_tokens": "Aggiungi / modifica token",
   "string_get_raw_keys": "Ottieni le chiavi grezze",
   "string_raw_keys": "Chiavi grezze (Raw)",
-  "title_create_wallet_select_crypto": "Seleziona il tipo",
   "title_create_wallet_select_fiat": "Seleziona la valuta fiat",
   "title_back": "Indietro",
   "title_change_mining_fee": "Cambia la commissione di mining",
