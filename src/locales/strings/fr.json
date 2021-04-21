@@ -229,7 +229,6 @@
   "string_master_private_key": "Clés privées maîtresses",
   "string_split_wallet": "Diviser %s",
   "string_add_edit_tokens": "Ajouter/ Modifier les Tokens",
-  "title_create_wallet_select_crypto": "Sélectionner un Type",
   "title_create_wallet_select_fiat": "Sélectionner la monnaie fiduciaire",
   "title_back": "Précédent",
   "title_change_mining_fee": "Changer frais minimum",
