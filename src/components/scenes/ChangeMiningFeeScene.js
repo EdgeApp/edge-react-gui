@@ -111,7 +111,7 @@ export class ChangeMiningFee extends React.Component<Props, State> {
           {customFormat != null ? this.renderCustomFee(customFormat) : null}
           {this.renderFeeWarning()}
 
-          <SwitchButton label="Make Default Setting" value={this.state.isDefault} onChange={() => this.toggleDefaultFee()} />
+          <SwitchButton label={s.strings.settings_toggle_default_fee} value={this.state.isDefault} onChange={() => this.toggleDefaultFee()} />
 
           <PrimaryButton onPress={this.onSubmit} style={styles.saveButton}>
             <PrimaryButton.Text>{s.strings.save}</PrimaryButton.Text>
