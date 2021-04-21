@@ -226,7 +226,6 @@
   "string_master_private_key": "Quét từ khóa riêng",
   "string_split_wallet": "Phân chia %s",
   "string_add_edit_tokens": "Thêm / chỉnh sửa thẻ",
-  "title_create_wallet_select_crypto": "Chọn Kiểu",
   "title_create_wallet_select_fiat": "Chọn Fiat",
   "title_back": "Trở lại",
   "title_change_mining_fee": "Thay đổi phí giao dịch",
