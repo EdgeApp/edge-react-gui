@@ -209,8 +209,7 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.CREATE_WALLET_SELECT_CRYPTO}
                 navTransparent
                 component={ifLoggedIn(CreateWalletSelectCryptoScene)}
-                renderTitle={<HeaderTitle title={s.strings.title_create_wallet_select_crypto} />}
-                renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
+                renderLeftButton={<BackButton withArrow onPress={this.handleBack} />}
                 renderRightButton={this.renderEmptyButton()}
               />
 
@@ -218,8 +217,7 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.CREATE_WALLET_NAME}
                 navTransparent
                 component={ifLoggedIn(CreateWalletName)}
-                renderTitle={<HeaderTitle title={s.strings.title_create_wallet} />}
-                renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
+                renderLeftButton={<BackButton withArrow onPress={this.handleBack} />}
                 renderRightButton={this.renderEmptyButton()}
               />
 
@@ -227,8 +225,7 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.CREATE_WALLET_SELECT_FIAT}
                 navTransparent
                 component={ifLoggedIn(CreateWalletSelectFiatScene)}
-                renderTitle={<HeaderTitle title={s.strings.title_create_wallet_select_fiat} />}
-                renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
+                renderLeftButton={<BackButton withArrow onPress={this.handleBack} />}
                 renderRightButton={this.renderEmptyButton()}
               />
 
