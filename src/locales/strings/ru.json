@@ -162,7 +162,6 @@
   "string_master_private_key": "Master Private Key",
   "string_split_wallet": "Разделить %s",
   "string_add_edit_tokens": "Добавить / редактировать токены",
-  "title_create_wallet_select_crypto": "Выберите тип",
   "title_create_wallet_select_fiat": "Выберите официальную валюту",
   "title_back": "Назад",
   "title_change_mining_fee": "Изменить комиссию сети",
