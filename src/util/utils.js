@@ -62,31 +62,6 @@ export const getSettingsTokenMultiplier = (currencyCode: string, settings: Objec
   return multiplier
 }
 
-export function getWalletDefaultDenomProps(
-  wallet: GuiWallet,
-  settingsState: Object,
-  currencyCode?: string // for metaTokens
-): EdgeDenomination {
-  const allWalletDenoms = wallet.allDenominations
-  let walletCurrencyCode
-  if (currencyCode) {
-    // if metaToken
-    walletCurrencyCode = currencyCode
-  } else {
-    // if not a metaToken
-    walletCurrencyCode = wallet.currencyCode
-  }
-  const currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
-  let denomProperties: EdgeDenomination
-  if (allWalletDenoms[walletCurrencyCode] != null && allWalletDenoms[walletCurrencyCode][currencySettings.denomination] != null) {
-    denomProperties = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
-  } else {
-    // This is likely a custom token which has no denom setup in allWalletDenominations
-    denomProperties = currencySettings.denominations[0]
-  }
-  return denomProperties
-}
-
 export const getFiatSymbol = (code: string) => {
   code = code.replace('iso:', '')
   return getSymbolFromCurrency(code)
@@ -611,24 +586,17 @@ export function getCustomTokenDenomination(currencyCode: string, settings: Objec
   return customTokenCurrencyInfo ? customTokenCurrencyInfo.denominations[0] : emptyEdgeDenomination
 }
 
-export function getDisplayDenomination(currencyCode: string, settings: Object): EdgeDenomination {
+export function getDenomination(currencyCode: string, settings: Object, type: 'display' | 'exchange') {
   const currencyInfo = settings[currencyCode]
   if (currencyInfo) {
-    const denominationMultiplier = currencyInfo.denomination
-    const denomination = currencyInfo.denominations.find(denomination => denomination.multiplier === denominationMultiplier)
-    return denomination || emptyEdgeDenomination
-  }
-  return getCustomTokenDenomination(currencyCode, settings)
-}
-
-export function getExchangeDenomination(guiWallet: GuiWallet, currencyCode: string, settings: Object): EdgeDenomination {
-  const currencyExchangeInfo = guiWallet.allDenominations[currencyCode]
-  if (currencyExchangeInfo) {
-    for (const key in currencyExchangeInfo) {
-      if (currencyExchangeInfo[key] && currencyExchangeInfo[key].name === currencyCode) {
-        return currencyExchangeInfo[key]
+    const denomination = currencyInfo.denominations.find(denomination => {
+      if (type === 'display') {
+        return denomination.multiplier === currencyInfo.denomination
+      } else if (type === 'exchange') {
+        return denomination.name === currencyInfo.currencyCode
       }
-    }
+    })
+    return denomination ?? emptyEdgeDenomination
   }
   return getCustomTokenDenomination(currencyCode, settings)
 }
@@ -714,8 +682,8 @@ export const convertTransactionFeeToDisplayFee = (
     }
   } else if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
     // if parentNetworkFee greater than zero
-    const parentDisplayDenomination = getDisplayDenomination(guiWallet.currencyCode, settings)
-    const parentExchangeDenomination = getExchangeDenomination(guiWallet, guiWallet.currencyCode, settings)
+    const parentDisplayDenomination = getDenomination(guiWallet.currencyCode, settings, 'display')
+    const parentExchangeDenomination = getDenomination(guiWallet.currencyCode, settings, 'exchange')
     const cryptoFeeSymbol = parentDisplayDenomination && parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
     const displayMultiplier = parentDisplayDenomination ? parentDisplayDenomination.multiplier : ''
     const exchangeMultiplier = parentExchangeDenomination ? parentExchangeDenomination.multiplier : ''
@@ -730,8 +698,8 @@ export const convertTransactionFeeToDisplayFee = (
     }
   } else if (networkFee && bns.gt(networkFee, '0')) {
     // if networkFee greater than zero
-    const primaryDisplayDenomination = getDisplayDenomination(currencyCode, settings)
-    const primaryExchangeDenomination = getExchangeDenomination(guiWallet, currencyCode, settings)
+    const primaryDisplayDenomination = getDenomination(currencyCode, settings, 'display')
+    const primaryExchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
     const cryptoFeeSymbol = primaryDisplayDenomination && primaryDisplayDenomination.symbol ? primaryDisplayDenomination.symbol : ''
     const displayMultiplier = primaryDisplayDenomination ? primaryDisplayDenomination.multiplier : ''
     const exchangeMultiplier = primaryExchangeDenomination ? primaryExchangeDenomination.multiplier : ''
