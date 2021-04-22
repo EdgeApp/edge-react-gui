@@ -816,7 +816,7 @@ SPEC CHECKSUMS:
   DoubleConversion: cde416483dac037923206447da6e1454df403714
   edge-login-ui-rn: 965cb13c3287f750f8ad25911020f9dc874b5886
   FBLazyVector: 49cbe4b43e445b06bf29199b6ad2057649e4c8f5
-  FBReactNativeSpec: 1e13267222bde0a00017bffd3e9c3e895de2fbaa
+  FBReactNativeSpec: b6c58b9ac738711300d613f8a1e2e19272a68ba8
   Firebase: e1e089d9aac215a52442583f818ab61de3c4581b
   FirebaseAnalytics: 9f8f4feab1f3fddf4e4515f8f022fe6aa9e51043
   FirebaseCore: 0a43b7f1c5b36f3358cd703011ca4c7e0df55870
