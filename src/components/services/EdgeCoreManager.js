@@ -1,7 +1,8 @@
 // @flow
 
+import Bugsnag from '@bugsnag/react-native'
 import detectBundler from 'detect-bundler'
-import { type EdgeContext, type EdgeContextOptions, type EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
+import { type EdgeContext, type EdgeContextOptions, type EdgeCrashReporter, type EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
 import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io.js'
 import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
@@ -50,6 +51,17 @@ const nativeIo = isReactNative
       'edge-currency-monero': makeMoneroIo()
     }
   : {}
+
+const crashReporter: EdgeCrashReporter = {
+  logBreadcrumb(event) {
+    return Bugsnag.leaveBreadcrumb(event.message, event.metadata)
+  },
+  logCrash(event) {
+    return Bugsnag.notify(event.error, report => {
+      report.addMetadata(event.source, event.metadata)
+    })
+  }
+}
 
 /**
  * Mounts the edge-core-js WebView, and then mounts the rest of the app
@@ -120,9 +132,23 @@ export class EdgeCoreManager extends React.PureComponent<Props, State> {
 
   renderCore() {
     return ENV.USE_FAKE_CORE ? (
-      <MakeFakeEdgeWorld debug={ENV.DEBUG_CORE_BRIDGE} users={[fakeUser]} onLoad={this.onFakeEdgeWorld} onError={this.onError} nativeIo={nativeIo} />
+      <MakeFakeEdgeWorld
+        crashReporter={crashReporter}
+        debug={ENV.DEBUG_CORE_BRIDGE}
+        users={[fakeUser]}
+        onLoad={this.onFakeEdgeWorld}
+        onError={this.onError}
+        nativeIo={nativeIo}
+      />
     ) : (
-      <MakeEdgeContext debug={ENV.DEBUG_CORE_BRIDGE} options={contextOptions} onLoad={this.onContext} onError={this.onError} nativeIo={nativeIo} />
+      <MakeEdgeContext
+        crashReporter={crashReporter}
+        debug={ENV.DEBUG_CORE_BRIDGE}
+        onLoad={this.onContext}
+        onError={this.onError}
+        nativeIo={nativeIo}
+        {...contextOptions}
+      />
     )
   }
 
