@@ -18,6 +18,7 @@ type EdgeOutlinedTextFieldProps = {
   marginRem?: number | number[],
   isClearable: boolean,
   small?: boolean,
+  hideSearchIcon?: boolean,
   onClear: () => void
 }
 
@@ -53,7 +54,7 @@ class EdgeTextFieldOutlinedComponent extends React.PureComponent<EdgeOutlinedTex
   }
 
   render() {
-    const { isClearable, marginRem = 0.5, small, theme, ...rest } = this.props
+    const { isClearable, marginRem = 0.5, small, theme, hideSearchIcon, ...rest } = this.props
     const spacings = spacingStyles(marginRem, theme)
     const styles = getStyles(theme)
     const contentInset = small ? { input: theme.rem(0.75), label: 0 } : null
@@ -68,7 +69,7 @@ class EdgeTextFieldOutlinedComponent extends React.PureComponent<EdgeOutlinedTex
           textColor={theme.primaryText}
           tintColor={theme.textLink}
           ref={this.props.fieldRef}
-          prefix={<AntDesignIcon name="search1" color={theme.iconDeactivated} size={theme.rem(1)} />}
+          prefix={hideSearchIcon ? null : <AntDesignIcon name="search1" color={theme.iconDeactivated} size={theme.rem(1)} />}
           suffix={
             isClearable && (
               <TouchableOpacity onPress={this.clearText} style={styles.outlinedTextFieldClearContainer}>
