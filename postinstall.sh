@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # The `usb` and 'node-hid' modules doesn't properly install on some boxes:
 mkdir -p node_modules/usb
