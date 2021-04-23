@@ -1,14 +1,20 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-/* globals jasmine beforeAll afterAll */
+// /* globals jasmine beforeAll afterAll */
+/* eslint-env detox/detox, jest */
 
 import detox from 'detox'
 
-import config from '../package.json'
-
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 120000
+// jasmine.DEFAULT_TIMEOUT_INTERVAL = 120000
 
 beforeAll(async () => {
-  await detox.init(config.detox)
+  await detox.init()
+  await device.launchApp({
+    permissions: {
+      notifications: 'YES',
+      camera: 'YES',
+      contacts: 'YES'
+    }
+  })
 })
 
 afterAll(async () => {

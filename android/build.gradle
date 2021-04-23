@@ -19,6 +19,9 @@ buildscript {
 
         // Edge additions:
         classpath 'com.google.gms:google-services:4.3.3'
+
+        // Detox Configuration
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
 
@@ -32,6 +35,10 @@ allprojects {
         maven {
             // Android JSC is installed from npm
             url("$rootDir/../node_modules/jsc-android/dist")
+        }
+
+        maven {
+            url("$rootDir/../node_modules/detox/Detox-android")
         }
 
         google()

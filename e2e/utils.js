@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-/* globals device expect element by */
+/* eslint-env detox/detox, jest */
 
 export const sleep = async milliseconds => {
   new Promise(resolve => setTimeout(resolve, milliseconds)) // eslint-disable-line no-new
@@ -35,14 +35,4 @@ export const navigateToLanding = async () => {
   // tap exit
   await expect(exitButton).toExist()
   await exitButton.tap()
-}
-
-export const launchAppWithPermissions = async () => {
-  await device.launchApp({
-    permissions: {
-      notifications: 'YES',
-      camera: 'YES',
-      contacts: 'YES'
-    }
-  })
 }

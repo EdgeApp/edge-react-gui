@@ -1,0 +1,39 @@
+{
+  "testRunner": "jest",
+  "runnerConfig": "e2e/config.json",
+  "specs": "e2e",
+  "apps": {
+    "ios": {
+      "type": "ios.app",
+      "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/edge.app"
+    },
+    "android": {
+      "type": "android.apk",
+      "binaryPath": "/Users/marcusbates/Library/Developer/Xcode/DerivedData/edge-hhrsbwmzjemvddgtqahjbywenytl/Build/Products/Debug-iphonesimulator/edge.app"
+    }
+  },
+  "devices": {
+    "simulator": {
+      "type": "ios.simulator",
+      "device": {
+        "type": "iPhone 11"
+      }
+    },
+    "emulator": {
+      "type": "android.emulator",
+      "device": {
+        "avdName": "Pixel_3a_API_30_x86"
+      }
+    }
+  },
+  "configurations": {
+    "ios": {
+      "device": "simulator",
+      "app": "ios"
+    },
+    "android": {
+      "device": "emulator",
+      "app": "android"
+    }
+  }
+}

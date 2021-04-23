@@ -35,27 +35,39 @@ beforeEach(async () => {
 })
 
 describe('Edge GUI: ', () => {
+  it('TEST BY ID', async () => {
+    const createAccountButton = element(by.id('createAccountButton'))
+    await expect(createAccountButton).toExist()
+  })
   it('should be able to simply create an account', async () => {
-    // MATCHERS(Caon't be in before. Will be moved to POM)
-    const createAccountButton = element(by.text('Create account'))
-    const getStartedButton = element(by.text('Get Started'))
-    const usernameInput = element(by.type('RCTUITextField'))
-    const nextButton = element(by.text('Next'))
-    const usernameTakenError = element(by.text('Username already exists'))
-    const passwordInput = element(by.type('RCTUITextField')).atIndex(0)
-    const confirmPasswordInput = element(by.type('RCTUITextField')).atIndex(1)
-    const passwordMismatchError = element(by.text('Does not match password'))
-    const pinInput = element(by.type('RCTUITextField'))
-    const confirmation1 = element(by.type('RCTImageView')).atIndex(0)
-    const confirmation2 = element(by.type('RCTImageView')).atIndex(1)
-    const confirmation3 = element(by.type('RCTImageView')).atIndex(2)
-    const confirmation4 = element(by.type('RCTImageView')).atIndex(3)
-    const confirmFinishButton = element(by.text('Confirm & Finish'))
+    // MATCHERS(Cannot be in before. Will be moved to POM)
+    // LandingScreen
+    const createAccountButton = element(by.id('createAccountButton'))
+    // NewAccountWelcomeScreen
+    const getStartedButton = element(by.id('getStartedButton'))
+    // NewAccountUsernameScreen
+    const usernameInput = element(by.id('usernameInput'))
+    const nextButton = element(by.id('nextButton'))
     // const usernameTooShortError = element(by.text('Minimum 3 characters'))
     // const usernameInvalidCharactersError = element(by.text('Must only be ascii characters'))
+    const usernameTakenError = element(by.text('Username already exists'))
+    // NewAccountPasswordScreen
+    const passwordInput = element(by.id('passwordInput'))
+    const confirmPasswordInput = element(by.id('confirmPasswordInput'))
+    const passwordMismatchError = element(by.text('Does not match password'))
+    // NewAccountPinScreen
+    const pinInput = element(by.id('pinInput'))
+    // const nextButton = element(by.id('nextButton'))
+    // TermsAndConditionsScreen
+    const confirmation1 = element(by.id('termsCB')).atIndex(0)
+    const confirmation2 = element(by.id('termsCB')).atIndex(1)
+    const confirmation3 = element(by.id('termsCB')).atIndex(2)
+    const confirmation4 = element(by.id('termsCB')).atIndex(3)
+    const confirmFinishButton = element(by.id('confirm&FinishButton'))
     // const walletListScene = element(by.text('Slide wallets to show more options'))
 
     // NAVIGATE TO CREATE ACCOUNT
+    await element(by.id('edge scene: login UI'))
     await expect(createAccountButton).toExist()
     await createAccountButton.tap()
     await expect(getStartedButton).toBeVisible()
@@ -118,24 +130,31 @@ describe('Edge GUI: ', () => {
     await expect(findByText('Slide wallets to show more options')).toBeVisible()
   })
 
-  it('should be able to fix invalid inputs & create account', async () => {
-    // MATCHERS(Caon't be in before. Will be moved to POM)
-    const createAccountButton = element(by.text('Create account'))
-    const getStartedButton = element(by.text('Get Started'))
-    const usernameInput = element(by.type('RCTUITextField'))
-    const nextButton = element(by.text('Next'))
+  it.only('should be able to fix invalid inputs & create account', async () => {
+    // MATCHERS(Cannot be in before. Will be moved to POM)
+    // LandingScreen
+    const createAccountButton = element(by.id('createAccountButton'))
+    // NewAccountWelcomeScreen
+    const getStartedButton = element(by.id('getStartedButton'))
+    // NewAccountUsernameScreen
+    const usernameInput = element(by.id('usernameInput'))
+    const nextButton = element(by.id('nextButton'))
     const usernameTooShortError = element(by.text('Minimum 3 characters'))
     const usernameInvalidCharactersError = element(by.text('Must only be ascii characters'))
     const usernameTakenError = element(by.text('Username already exists'))
-    const passwordInput = element(by.type('RCTUITextField')).atIndex(0)
-    const confirmPasswordInput = element(by.type('RCTUITextField')).atIndex(1)
+    // NewAccountPasswordScreen
+    const passwordInput = element(by.id('passwordInput'))
+    const confirmPasswordInput = element(by.id('confirmPasswordInput'))
     const passwordMismatchError = element(by.text('Does not match password'))
-    const pinInput = element(by.type('RCTUITextField'))
-    const confirmation1 = element(by.type('RCTImageView')).atIndex(0)
-    const confirmation2 = element(by.type('RCTImageView')).atIndex(1)
-    const confirmation3 = element(by.type('RCTImageView')).atIndex(2)
-    const confirmation4 = element(by.type('RCTImageView')).atIndex(3)
-    const confirmFinishButton = element(by.text('Confirm & Finish'))
+    // NewAccountPinScreen
+    const pinInput = element(by.id('pinInput'))
+    // const nextButton = element(by.id('nextButton'))
+    // TermsAndConditionsScreen
+    const confirmation1 = element(by.id('termsCB')).atIndex(0)
+    const confirmation2 = element(by.id('termsCB')).atIndex(1)
+    const confirmation3 = element(by.id('termsCB')).atIndex(2)
+    const confirmation4 = element(by.id('termsCB')).atIndex(3)
+    const confirmFinishButton = element(by.id('confirmAndFinishButton'))
     // const walletListScene = element(by.text('Slide wallets to show more options'))
 
     // NAVIGATE TO LANDING PAGE

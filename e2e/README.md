@@ -23,6 +23,12 @@ Global install items
 - ??? Detox??? Depending on your workflows with detox, you may want it globally installed
 - brew install android-platform-tools
 
+## Android Install/setup
+
+Android setup is pretty involved...
+
+See the [detox introduction for Android Development Environment](https://github.com/wix/Detox/blob/master/docs/Introduction.AndroidDevEnv.md)
+
 <br>
 <br>
 <br>
