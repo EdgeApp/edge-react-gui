@@ -100,6 +100,7 @@ export class CreateWalletName extends React.Component<Props, State> {
           marginRem={[0, 1.75]}
           ref={this.textInput}
           blurOnSubmit
+          hideSearchIcon
         />
         <SecondaryButton onPress={this.onNext} label={s.strings.string_next_capitalized} marginRem={[3, 6]} />
       </SceneWrapper>
