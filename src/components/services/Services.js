@@ -72,8 +72,9 @@ export class Services extends React.PureComponent<Props> {
   renderGui() {
     return (
       <MenuProvider>
-        <Main />
-        <Airship avoidAndroidKeyboard statusBarTranslucent />
+        <Airship>
+          <Main />
+        </Airship>
       </MenuProvider>
     )
   }
