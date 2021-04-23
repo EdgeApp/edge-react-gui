@@ -1,4 +1,5 @@
 // @flow
+// console.disableYellowBox = true
 
 import * as React from 'react'
 

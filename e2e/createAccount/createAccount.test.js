@@ -56,6 +56,10 @@ afterEach(async () => {
 })
 
 describe('Edge GUI: ', () => {
+  it('TEST BY ID', async () => {
+    const createAccountButton = element(by.id('createAccountButton'))
+    await expect(createAccountButton).toExist()
+  })
   it('should be able to simply create an account', async () => {
     const loginScene = loginscene()
 
