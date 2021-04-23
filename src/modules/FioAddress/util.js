@@ -21,7 +21,6 @@ type DiskletConnectedWallets = {
 }
 
 type BuyAddressResponse = {
-  error: any,
   success: {
     charge: {
       pricing: {
@@ -507,6 +506,23 @@ export const getFioDomains = async (fioPlugin: EdgeCurrencyConfig, fioAddress: s
   return ''
 }
 
+export const checkIsDomainPublic = async (fioPlugin: EdgeCurrencyConfig, domain: string): Promise<void> => {
+  let isDomainPublic = false
+  try {
+    isDomainPublic = fioPlugin.otherMethods ? await fioPlugin.otherMethods.isDomainPublic(domain) : false
+  } catch (e) {
+    if (e.labelCode && e.labelCode === fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_DOMAIN_IS_NOT_EXIST) {
+      throw new Error(s.strings.fio_get_reg_info_domain_err_msg)
+    }
+
+    throw new Error(s.strings.fio_connect_wallets_err)
+  }
+
+  if (!isDomainPublic) {
+    throw new Error(s.strings.fio_address_register_domain_is_not_public)
+  }
+}
+
 /**
  *
  * @param fioPlugin
@@ -617,11 +633,6 @@ const buyAddressRequest = async (
       publicKey: selectedWallet.publicWalletInfo.keys.publicKey
     })
 
-    if (buyAddressResponse.error) {
-      console.log(buyAddressResponse.error)
-      throw new Error(s.strings.fio_get_reg_info_err_msg)
-    }
-
     if (buyAddressResponse.success) {
       const supportedCurrencies = { [FIO_STR]: true }
       const paymentInfo = {
@@ -649,7 +660,16 @@ const buyAddressRequest = async (
       }
     }
   } catch (e) {
-    console.log(e)
+    const errorMessages = {
+      [fioPlugin.currencyInfo.defaultSettings.errorCodes.INVALID_FIO_ADDRESS]: s.strings.fio_error_invalid_address,
+      [fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_DOMAIN_IS_NOT_EXIST]: s.strings.fio_get_reg_info_domain_err_msg,
+      [fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_DOMAIN_IS_NOT_PUBLIC]: s.strings.fio_address_register_domain_is_not_public,
+      [fioPlugin.currencyInfo.defaultSettings.errorCodes.SERVER_ERROR]: s.strings.fio_get_reg_info_err_msg,
+      [fioPlugin.currencyInfo.defaultSettings.errorCodes.ALREADY_SENT_REGISTRATION_REQ_FOR_DOMAIN]: s.strings.fio_get_reg_info_already_sent_err_msg
+    }
+    if (e.labelCode && errorMessages[e.labelCode]) {
+      throw new Error(errorMessages[e.labelCode])
+    }
   }
   throw new Error(s.strings.fio_get_reg_info_err_msg)
 }
