@@ -608,6 +608,8 @@
   "fio_address_list_register_domain": "Registra un nuovo dominio",
   "fio_get_fee_err_msg": "C'è stato un problema nell'ottenere la commissione FIO. Riprova più tardi.",
   "fio_get_reg_info_err_msg": "Si è verificato un problema nell'ottenere le informazioni di registrazione.",
+  "fio_get_reg_info_domain_err_msg": "Il dominio non esiste",
+  "fio_get_reg_info_already_sent_err_msg": "La richiesta di registrazione è già stata inviata",
   "fio_register_address_err_msg": "Si è verificato un problema durante la registrazione dell'indirizzo. Riprova più tardi.",
   "fio_error_invalid_address": "Indirizzo FIO non valido",
   "fio_renew_err_msg": "Si è verificato un problema nel rinnovo del tuo %s. Riprova più tardi.",
