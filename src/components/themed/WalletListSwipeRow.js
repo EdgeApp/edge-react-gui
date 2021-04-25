@@ -47,7 +47,7 @@ type State = {
   leftRowOpened: boolean
 }
 
-class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, State> {
+class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps, State> {
   constructor(props) {
     super(props)
     this.state = {
@@ -304,9 +304,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const WalletListRowInner = withTheme(WalletListRowComponent)
+const WalletListSwipeRowInner = withTheme(WalletListSwipeRowComponent)
 // $FlowFixMe - forwardRef is not recognize by flow?
-const WalletListRow = React.forwardRef((props, ref) => <WalletListRowInner {...props} swipeRef={ref} />)
+const WalletListSwipeRow = React.forwardRef((props, ref) => <WalletListSwipeRowInner {...props} swipeRef={ref} />)
 // Lint error about component not having a displayName
-WalletListRow.displayName = 'WalletListRow'
-export { WalletListRow }
+WalletListSwipeRow.displayName = 'WalletListRow'
+export { WalletListSwipeRow }

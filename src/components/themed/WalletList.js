@@ -35,8 +35,8 @@ import { type SortOption } from '../modals/WalletListSortModal.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { WalletListCreateRow } from './WalletListCreateRow.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
-import { WalletListRow } from './WalletListRow.js'
 import { WalletListSectionHeader } from './WalletListSectionHeader.js'
+import { WalletListSwipeRow } from './WalletListSwipeRow.js'
 
 type WalletListItem = {
   id: string | null,
@@ -363,7 +363,7 @@ class WalletListComponent extends React.PureComponent<Props> {
       }
 
       return (
-        <WalletListRow
+        <WalletListSwipeRow
           cryptoAmount={cryptoAmount}
           currencyCode={currencyCode}
           differencePercentage={differencePercentageString}
