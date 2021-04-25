@@ -207,22 +207,8 @@ class ContactsLoaderComponent extends React.Component<Props> {
     }
   }
 
-  fetchContacts(): Promise<GuiContact[]> {
-    return new Promise((resolve, reject) => {
-      return Contacts.getAll((error, result) => {
-        // The native code sometimes sends strings instead of errors:
-        if (error) return reject(typeof error === 'string' ? new Error(error) : error)
-        return resolve(result)
-      })
-    })
-  }
-
   loadContacts = () => {
-    return this.fetchContacts()
-      .catch(error => {
-        showError(error)
-        return []
-      })
+    return Contacts.getAll()
       .then(contacts => {
         const cleanContacts = contacts
           .filter(item => item.givenName)
@@ -230,6 +216,10 @@ class ContactsLoaderComponent extends React.Component<Props> {
           .sort((a, b) => a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase()))
 
         this.props.loadContactsSuccess(cleanContacts)
+      })
+      .catch(error => {
+        showError(error)
+        return []
       })
   }
 
