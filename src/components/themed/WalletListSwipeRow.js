@@ -8,6 +8,7 @@ import { SwipeRow } from 'react-native-swipe-list-view'
 import { Fontello } from '../../assets/vector/index.js'
 import * as Constants from '../../constants/indexConstants'
 import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
+import type { GuiWallet } from '../../types/types.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -20,25 +21,15 @@ const WIDTH_DIMENSION_HIDE = FULL_WIDTH * 0.35
 const WIDTH_DIMENSION_SHOW = FULL_WIDTH * 0.15
 
 type Props = {
-  cryptoAmount: string,
   currencyCode: string,
-  differencePercentage: string,
-  differencePercentageStyle: string,
-  exchangeRate: string,
-  exchangeRateFiatSymbol: string,
-  fiatBalance: string,
-  fiatBalanceSymbol: string,
+  guiWallet: GuiWallet,
+  isModal?: boolean,
   isToken: boolean,
-  publicAddress: string,
+  onPress?: (walletId: string, currencyCode: string) => void,
   openRowLeft: boolean,
   selectWallet(walletId: string, currencyCode: string): void,
-  symbolImage?: string,
-  walletId: string,
-  walletName: string,
   swipeRef: ?React.ElementRef<typeof SwipeRow>,
-  swipeRow?: SwipeRow,
-  isModal?: boolean,
-  onPress?: (walletId: string, currencyCode: string) => void
+  swipeRow?: SwipeRow
 }
 
 type State = {
@@ -73,7 +64,10 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
   }
 
   handleSelectWallet = (): void => {
-    const { currencyCode, isToken, publicAddress, walletId } = this.props
+    const { currencyCode, guiWallet, isToken } = this.props
+    const walletId = guiWallet.id
+    const publicAddress = guiWallet.receiveAddress.publicAddress
+
     this.closeRow()
     this.props.selectWallet(walletId, currencyCode)
     if (!isToken) {
@@ -89,15 +83,31 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
   }
 
   handleOpenWalletListMenuModal = (): void => {
-    const { currencyCode, isToken, symbolImage, walletId, walletName } = this.props
+    const { currencyCode, guiWallet, isToken } = this.props
+    let symbolImage
+    if (isToken) {
+      const meta = guiWallet.metaTokens.find(token => token.currencyCode === currencyCode)
+      symbolImage = meta ? meta.symbolImage : undefined
+    } else {
+      symbolImage = guiWallet.symbolImageDarkMono
+    }
+
     this.closeRow()
     Airship.show(bridge => (
-      <WalletListMenuModal bridge={bridge} walletId={walletId} walletName={walletName} currencyCode={currencyCode} image={symbolImage} isToken={isToken} />
+      <WalletListMenuModal
+        bridge={bridge}
+        walletId={guiWallet.id}
+        walletName={guiWallet.name}
+        currencyCode={currencyCode}
+        image={symbolImage}
+        isToken={isToken}
+      />
     ))
   }
 
   openScene(key: string) {
-    const { currencyCode, walletId } = this.props
+    const { currencyCode, guiWallet } = this.props
+    const walletId = guiWallet.id
     this.closeRow()
     this.props.selectWallet(walletId, currencyCode)
     Actions.jump(key, { selectedWalletId: walletId, selectedCurrencyCode: currencyCode, isCameraOpen: true })
@@ -122,8 +132,8 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
   }
 
   handlePropsPress = () => {
-    const { currencyCode, onPress, walletId } = this.props
-    return onPress ? onPress(walletId, currencyCode) : undefined
+    const { currencyCode, guiWallet, onPress } = this.props
+    return onPress ? onPress(guiWallet.id, currencyCode) : undefined
   }
 
   handleOnLongPress = () => {
@@ -144,7 +154,7 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
 
   render() {
     const { swipeDirection } = this.state
-    const { currencyCode, isModal, walletId, walletName, theme } = this.props
+    const { currencyCode, guiWallet, isModal, theme } = this.props
     const styles = getStyles(theme)
     const isSwipingLeft = swipeDirection === 'left'
     const isSwipingRight = swipeDirection === 'right'
@@ -210,8 +220,8 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
           isModal={isModal}
           onPress={this.handleOnPress}
           onLongPress={this.handleOnLongPress}
-          walletId={walletId}
-          walletName={walletName}
+          walletId={guiWallet.id}
+          walletName={guiWallet.name}
         />
       </SwipeRow>
     )
@@ -219,52 +229,6 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1,
-    paddingHorizontal: theme.rem(1)
-  },
-  containerModal: {
-    backgroundColor: theme.modal
-  },
-  rowContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    marginVertical: theme.rem(1)
-  },
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: theme.rem(1)
-  },
-  detailsContainer: {
-    flex: 1,
-    flexDirection: 'column'
-  },
-  detailsRow: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  detailsCurrency: {
-    fontFamily: theme.fontFaceBold,
-    marginRight: theme.rem(0.75)
-  },
-  detailsValue: {
-    marginLeft: theme.rem(0.5),
-    textAlign: 'right'
-  },
-  detailsName: {
-    flex: 1,
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
-  },
-  detailsFiat: {
-    fontSize: theme.rem(0.75),
-    textAlign: 'right',
-    color: theme.secondaryText
-  },
-  exchangeRate: {
-    flex: 1
-  },
   swipeOptionsContainer: {
     height: '100%',
     alignItems: 'center',

@@ -1,7 +1,5 @@
 // @flow
 
-import { bns } from 'biggystring'
-import type { EdgeDenomination } from 'edge-core-js'
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl } from 'react-native'
@@ -10,27 +8,13 @@ import { connect } from 'react-redux'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import { WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
-import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
-import { calculateWalletFiatBalanceUsingDefaultIsoFiat, calculateWalletFiatBalanceWithoutState, getActiveWalletIds } from '../../modules/UI/selectors.js'
+import { calculateWalletFiatBalanceUsingDefaultIsoFiat, getActiveWalletIds } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CreateTokenType, CreateWalletType, CustomTokenInfo, FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
-import {
-  type FilterDetailsType,
-  alphabeticalSort,
-  checkCurrencyCodes,
-  checkFilterWallet,
-  decimalOrZero,
-  getDenomFromIsoCode,
-  getDenomination,
-  getFiatSymbol,
-  getYesterdayDateRoundDownHour,
-  maxPrimaryCurrencyConversionDecimals,
-  precisionAdjust,
-  truncateDecimals
-} from '../../util/utils'
+import { type FilterDetailsType, alphabeticalSort, checkCurrencyCodes, checkFilterWallet } from '../../util/utils'
 import { type SortOption } from '../modals/WalletListSortModal.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { WalletListCreateRow } from './WalletListCreateRow.js'
@@ -50,8 +34,6 @@ type Section = {
   title: string,
   data: WalletListItem[]
 }
-
-const DIVIDE_PRECISION = 18
 
 const getSortOptionsCurrencyCode = (fullCurrencyCode: string): string => {
   const splittedCurrencyCode = fullCurrencyCode.split('-')
@@ -79,7 +61,6 @@ type StateProps = {
   customTokens: CustomTokenInfo[],
   exchangeRates: { [string]: number },
   mostRecentWallets: MostRecentWallet[],
-  showBalance: boolean,
   settings: Object,
   walletsSort: SortOption,
   wallets: { [walletId: string]: GuiWallet }
@@ -253,39 +234,8 @@ class WalletListComponent extends React.PureComponent<Props> {
     return this.sortWalletList(walletList)
   }
 
-  getCryptoAmount(
-    balance: string,
-    denomination: EdgeDenomination,
-    exchangeDenomination: EdgeDenomination,
-    fiatDenomination: EdgeDenomination,
-    exchangeRate?: number,
-    guiWallet: GuiWallet
-  ): string {
-    const { showBalance } = this.props
-    let maxConversionDecimals = 6
-    if (exchangeRate) {
-      const precisionAdjustValue = precisionAdjust({
-        primaryExchangeMultiplier: exchangeDenomination.multiplier,
-        secondaryExchangeMultiplier: fiatDenomination.multiplier,
-        exchangeSecondaryToPrimaryRatio: exchangeRate
-      })
-      maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(denomination.multiplier), precisionAdjustValue)
-    }
-    try {
-      const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), maxConversionDecimals)
-      const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
-      return showBalance ? `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}` : ''
-    } catch (error) {
-      if (error.message === 'Cannot operate on base16 float values') {
-        const errorMessage = `${error.message}: GuiWallet currency code - ${guiWallet.currencyCode}, balance - ${balance}, demonination multiplier: ${denomination.multiplier}`
-        throw new Error(errorMessage)
-      }
-      throw new Error(error)
-    }
-  }
-
   renderRow = (data: FlatListItem<WalletListItem>, rowMap: { [string]: SwipeRow }) => {
-    const { exchangeRates, isModal, onPress, settings, showBalance, showSlidingTutorial, theme, wallets } = this.props
+    const { isModal, onPress, showSlidingTutorial, wallets } = this.props
 
     // Create Wallet/Token
     if (data.item.id == null) {
@@ -302,86 +252,16 @@ class WalletListComponent extends React.PureComponent<Props> {
       const isToken = guiWallet.currencyCode !== data.item.fullCurrencyCode
       const walletCodesArray = data.item.fullCurrencyCode.split('-')
       const currencyCode = isToken ? walletCodesArray[1] : walletCodesArray[0]
-      const balance = isToken ? guiWallet.nativeBalances[currencyCode] : guiWallet.primaryNativeBalance
-
-      const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
-
-      // Crypto Amount And Exchange Rate
-      const denomination = getDenomination(currencyCode, settings, 'display')
-      const exchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
-      const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
-      const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
-      const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : undefined
-      const cryptoAmount = showBalance
-        ? balance && balance !== '0'
-          ? this.getCryptoAmount(balance, denomination, exchangeDenomination, fiatDenomination, exchangeRate, guiWallet)
-          : '0'
-        : ''
-
-      // Fiat Balance
-      const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)
-      const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : '0'
-      const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
-      const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
-
-      // Currency Exhange Rate
-      const exchangeRateFormat = exchangeRate ? formatNumber(exchangeRate, { toFixed: exchangeRate && Math.log10(exchangeRate) >= 3 ? 0 : 2 }) : null
-      const exchangeRateFiatSymbol = exchangeRateFormat ? `${walletFiatSymbol} ` : ''
-      const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}` : ''
-
-      // Yesterdays Percentage Difference
-      const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`]
-      const fiatExchangeRate = guiWallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${guiWallet.isoFiatCurrencyCode}`] : 1
-      const yesterdayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
-      const differenceYesterday = exchangeRate ? exchangeRate - yesterdayExchangeRate : null
-
-      let differencePercentage = differenceYesterday ? (differenceYesterday / yesterdayExchangeRate) * 100 : null
-      if (!yesterdayExchangeRate) {
-        differencePercentage = ''
-      }
-
-      let differencePercentageString = ''
-      let differencePercentageStringStyle = theme.secondaryText
-      if (!exchangeRate || !differencePercentage || isNaN(differencePercentage)) {
-        differencePercentageString = ''
-      } else if (exchangeRate && differencePercentage && differencePercentage === 0) {
-        differencePercentageString = '0.00%'
-      } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
-        differencePercentageStringStyle = theme.negativeText
-        differencePercentageString = `-${Math.abs(differencePercentage).toFixed(1)}%`
-      } else if (exchangeRate && differencePercentage && differencePercentage > 0) {
-        differencePercentageStringStyle = theme.positiveText
-        differencePercentageString = `+${Math.abs(differencePercentage).toFixed(1)}%`
-      }
-
-      let symbolImage
-      if (isToken) {
-        const meta = guiWallet.metaTokens.find(token => token.currencyCode === currencyCode)
-        symbolImage = meta ? meta.symbolImage : undefined
-      } else {
-        symbolImage = guiWallet.symbolImageDarkMono
-      }
-
       return (
         <WalletListSwipeRow
-          cryptoAmount={cryptoAmount}
           currencyCode={currencyCode}
-          differencePercentage={differencePercentageString}
-          differencePercentageStyle={differencePercentageStringStyle}
-          exchangeRate={exchangeRateString}
-          exchangeRateFiatSymbol={exchangeRateFiatSymbol}
-          fiatBalance={fiatBalanceString}
-          fiatBalanceSymbol={fiatBalanceSymbol}
-          isToken={isToken}
-          publicAddress={guiWallet.receiveAddress.publicAddress}
-          selectWallet={this.props.selectWallet}
-          symbolImage={symbolImage}
-          openRowLeft={data.index === 0 && showSlidingTutorial}
-          walletId={walletId}
-          walletName={guiWallet.name}
-          swipeRow={rowMap[data.item.key]}
+          guiWallet={guiWallet}
           isModal={isModal}
+          isToken={isToken}
           onPress={onPress}
+          openRowLeft={data.index === 0 && showSlidingTutorial}
+          selectWallet={this.props.selectWallet}
+          swipeRow={rowMap[data.item.key]}
         />
       )
     }
@@ -489,7 +369,6 @@ export const WalletList = connect(
       exchangeRates: state.exchangeRates,
       mostRecentWallets: state.ui.settings.mostRecentWallets,
       walletsSort: state.ui.settings.walletsSort,
-      showBalance: state.ui.settings.isAccountBalanceVisible,
       settings: state.ui.settings,
       wallets: state.ui.wallets.byId
     }
