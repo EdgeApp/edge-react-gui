@@ -274,7 +274,7 @@
     },
     {
       "uid": "a5e29651241e61b20a2fcc67902d0f10",
-      "css": "sort-2",
+      "css": "sort-1",
       "code": 59407,
       "src": "custom_icons",
       "selected": true,
@@ -283,7 +283,7 @@
         "width": 1000
       },
       "search": [
-        "sort-1"
+        "sort"
       ]
     }
   ]
