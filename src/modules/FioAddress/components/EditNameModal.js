@@ -79,7 +79,7 @@ class EditNameModalComponent extends React.PureComponent<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <ThemedModal bridge={bridge} onCancel={this.onClose} paddingRem={0}>
+      <ThemedModal bridge={bridge} onCancel={this.onClose} paddingRem={[1, 0]}>
         <ModalTitle center paddingRem={[0, 3, 1]}>
           {title}
         </ModalTitle>
@@ -103,7 +103,7 @@ class EditNameModalComponent extends React.PureComponent<Props, State> {
             blurOnSubmit
           />
         </View>
-        {!!input && <SecondaryButton label={s.strings.submit} onPress={this.selectItem} marginRem={[2, 4, 0]} />}
+        {!!input && !isFocused && <SecondaryButton label={s.strings.submit} onPress={this.selectItem} marginRem={[2, 4, 0]} />}
         <ModalCloseArrow onPress={this.onClose} />
       </ThemedModal>
     )

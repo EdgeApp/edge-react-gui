@@ -177,7 +177,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const { input, isFocused } = this.state
     const items = this.getItems()
     return (
-      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={0}>
+      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={[1, 0]}>
         <ModalTitle center paddingRem={[0, 3, 1]}>
           {s.strings.fio_address_choose_domain_label}
         </ModalTitle>
@@ -201,7 +201,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
             blurOnSubmit
           />
         </View>
-        {!items.length && <SecondaryButton label={s.strings.submit} onPress={this.selectCustom} marginRem={[2, 4, 0]} />}
+        {!items.length && !isFocused && <SecondaryButton label={s.strings.submit} onPress={this.selectCustom} marginRem={[2, 4, 0]} />}
         <FlatList data={items} initialNumToRender={24} keyboardShouldPersistTaps="handled" keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
         <ModalCloseArrow onPress={() => bridge.resolve(null)} />
       </ThemedModal>
