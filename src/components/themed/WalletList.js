@@ -132,8 +132,8 @@ class WalletListComponent extends React.PureComponent<Props> {
     return checkFilterWallet(details, searchText, allowedCurrencyCodes, excludeCurrencyCodes)
   }
 
-  getWalletList(activeWalletIds: string[], wallets: { [walletId: string]: GuiWallet }): WalletListItem[] {
-    const { account, excludeWalletIds, searching, showCreateWallet } = this.props
+  getWalletList(): WalletListItem[] {
+    const { activeWalletIds, account, excludeWalletIds, searching, showCreateWallet, wallets } = this.props
     const walletList = []
 
     for (const walletId of activeWalletIds) {
@@ -267,6 +267,10 @@ class WalletListComponent extends React.PureComponent<Props> {
     }
   }
 
+  renderRefreshControl = () => (
+    <RefreshControl refreshing={false} onRefresh={this.props.activateSearch} tintColor={this.props.theme.searchListRefreshControlIndicator} />
+  )
+
   renderSectionHeader = (section: { section: Section }) => <WalletListSectionHeader title={section.section.title} />
 
   getMostRecentlyUsedWallets(size: number, walletListItem: WalletListItem[]): WalletListItem[] {
@@ -312,38 +316,31 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { activeWalletIds, footer, header, isModal, mostRecentWallets, searchText, searching, theme, wallets } = this.props
-    const walletList = this.getWalletList(activeWalletIds, wallets)
+    const { footer, header, isModal, mostRecentWallets, searchText, searching } = this.props
+    const walletList = this.getWalletList()
 
+    let isSectionList = false
+    let walletOnlyList = []
     if (isModal && !searching && searchText.length === 0 && mostRecentWallets.length > 1) {
-      const walletOnlyList = walletList.filter(item => item.id)
+      walletOnlyList = walletList.filter(item => item.id)
       if (walletOnlyList.length > 4) {
-        return (
-          <SwipeListView
-            ListFooterComponent={footer}
-            ListHeaderComponent={header}
-            sections={this.getSection(walletList, walletOnlyList.length)}
-            renderSectionHeader={this.renderSectionHeader}
-            renderItem={this.renderRow}
-            keyboardShouldPersistTaps="handled"
-            useSectionList
-          />
-        )
+        isSectionList = true
       }
     }
 
     return (
       <SwipeListView
-        data={walletList}
         ListFooterComponent={footer}
         ListHeaderComponent={header}
+        data={!isSectionList ? walletList : undefined}
+        sections={isSectionList ? this.getSection(walletList, walletOnlyList.length) : undefined}
+        renderSectionHeader={isSectionList ? this.renderSectionHeader : undefined}
         renderItem={this.renderRow}
-        refreshControl={
-          !isModal ? <RefreshControl refreshing={false} onRefresh={this.props.activateSearch} tintColor={theme.searchListRefreshControlIndicator} /> : undefined
-        }
-        contentOffset={{ y: !searching && !isModal ? this.props.theme.rem(4.5) : 0 }}
+        refreshControl={!isModal && !isSectionList ? this.renderRefreshControl() : undefined}
+        contentOffset={{ y: !searching && !isModal && !isSectionList ? this.props.theme.rem(4.5) : 0 }}
         keyboardShouldPersistTaps="handled"
-        useFlatList
+        useSectionList={isSectionList === true}
+        useFlatList={isSectionList === false}
       />
     )
   }
