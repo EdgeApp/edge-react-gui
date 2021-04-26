@@ -61,6 +61,7 @@ import { BackButton } from './navigation/BackButton.js'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle.js'
 import { EdgeLogoHeader } from './navigation/EdgeLogoHeader.js'
 import { handlePluginBack, renderPluginBackButton } from './navigation/GuiPluginBackButton.js'
+import { HeaderTextButton } from './navigation/HeaderTextButton.js'
 import { HeaderTitle } from './navigation/HeaderTitle.js'
 import { SideMenuButton } from './navigation/SideMenuButton.js'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle.js'
@@ -89,7 +90,6 @@ import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
 import { TransactionList } from './scenes/TransactionListScene.js'
 import { Airship } from './services/AirshipInstance.js'
-import { HeaderTextButton } from './themed/HeaderTextButton.js'
 import { MenuTab } from './themed/MenuTab.js'
 
 const RouterWithRedux = connect()(Router)
@@ -146,7 +146,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(EdgeLoginSceneConnector)}
               renderTitle={<HeaderTitle title={s.strings.title_edge_login} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-              renderRightButton={<HeaderTextButton type="help" />}
+              renderRightButton={<HeaderTextButton type="help" placement="right" />}
             />
             {this.renderTransactionDetailsView()}
             {this.renderTabView()}
@@ -183,7 +183,7 @@ export class MainComponent extends React.Component<Props> {
                 navTransparent
                 component={ifLoggedIn(WalletListScene)}
                 renderTitle={<EdgeLogoHeader />}
-                renderLeftButton={<HeaderTextButton type="help" />}
+                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
               />
 
@@ -243,7 +243,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(CreateWalletAccountSetupConnector)}
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_create_account} />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-                renderRightButton={<HeaderTextButton type="help" />}
+                renderRightButton={<HeaderTextButton type="help" placement="right" />}
               />
 
               <Scene
@@ -252,7 +252,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(CreateWalletAccountSelectConnector)}
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_account_activate} />}
                 renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-                renderRightButton={<HeaderTextButton type="help" />}
+                renderRightButton={<HeaderTextButton type="help" placement="right" />}
               />
 
               <Scene
@@ -341,7 +341,7 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.PLUGIN_BUY}
                 navTransparent
                 component={ifLoggedIn(GuiPluginListScene)}
-                renderLeftButton={<HeaderTextButton type="help" />}
+                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
                 direction="buy"
@@ -352,7 +352,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(GuiPluginViewScene)}
                 renderTitle={props => <HeaderTitle title={props.plugin.displayName} />}
                 renderLeftButton={renderPluginBackButton()}
-                renderRightButton={<HeaderTextButton type="exit" />}
+                renderRightButton={<HeaderTextButton type="exit" placement="right" />}
                 hideTabBar
               />
             </Stack>
@@ -362,7 +362,7 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.PLUGIN_SELL}
                 navTransparent
                 component={ifLoggedIn(GuiPluginListScene)}
-                renderLeftButton={<HeaderTextButton type="help" />}
+                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
                 direction="sell"
@@ -373,7 +373,7 @@ export class MainComponent extends React.Component<Props> {
                 component={ifLoggedIn(GuiPluginViewScene)}
                 renderTitle={props => <HeaderTitle title={props.plugin.displayName} />}
                 renderLeftButton={renderPluginBackButton()}
-                renderRightButton={<HeaderTextButton type="exit" />}
+                renderRightButton={<HeaderTextButton type="exit" placement="right" />}
                 hideTabBar
               />
             </Stack>
@@ -425,7 +425,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(ChangeMiningFeeScene)}
               renderTitle={<HeaderTitle title={s.strings.title_change_mining_fee} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-              renderRightButton={<HeaderTextButton type="help" />}
+              renderRightButton={<HeaderTextButton type="help" placement="right" />}
             />
           </Stack>
 
@@ -446,7 +446,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(ChangeMiningFeeScene)}
               renderTitle={<HeaderTitle title={s.strings.title_change_mining_fee} />}
               renderLeftButton={<BackButton withArrow onPress={this.handleBack} label={s.strings.title_back} />}
-              renderRightButton={<HeaderTextButton type="help" />}
+              renderRightButton={<HeaderTextButton type="help" placement="right" />}
             />
           </Stack>
 
@@ -495,7 +495,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(GuiPluginViewScene)}
               renderTitle={props => <HeaderTitle title={props.plugin.displayName} />}
               renderLeftButton={renderPluginBackButton()}
-              renderRightButton={<HeaderTextButton type="exit" />}
+              renderRightButton={<HeaderTextButton type="exit" placement="right" />}
               hideTabBar
             />
           </Stack>
@@ -609,7 +609,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(GuiPluginViewScene)}
               renderTitle={props => <HeaderTitle title={props.plugin.displayName} />}
               renderLeftButton={renderPluginBackButton()}
-              renderRightButton={<HeaderTextButton type="exit" />}
+              renderRightButton={<HeaderTextButton type="exit" placement="right" />}
             />
           </Stack>
 
