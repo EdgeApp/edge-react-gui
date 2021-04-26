@@ -1,8 +1,8 @@
 // @flow
 
 import { abs, div, lt } from 'biggystring'
+import csvStringify from 'csv-stringify/lib/sync'
 import { type EdgeCurrencyWallet, type EdgeGetTransactionsOptions, type EdgeTransaction } from 'edge-core-js'
-import jsoncsv from 'json-csv'
 
 export async function exportTransactionsToQBO(wallet: EdgeCurrencyWallet, opts: EdgeGetTransactionsOptions): Promise<string> {
   const txs: EdgeTransaction[] = await this.getTransactions(opts)
@@ -225,15 +225,13 @@ export function exportTransactionsToQBOInner(
   return exportOfx(header, body)
 }
 
-export async function exportTransactionsToCSVInner(
+export function exportTransactionsToCSVInner(
   edgeTransactions: EdgeTransaction[],
   currencyCode: string,
   fiatCurrencyCode: string,
   denom?: string,
   denomName: string = ''
-): Promise<string> {
-  const currencyField = 'AMT_' + currencyCode
-  const networkFeeField = 'AMT_NETWORK_FEES_' + currencyCode
+): string {
   const items: any[] = []
 
   for (const edgeTx of edgeTransactions) {
@@ -251,100 +249,26 @@ export async function exportTransactionsToCSVInner(
       notes = edgeTx.metadata.notes ? edgeTx.metadata.notes : ''
     }
 
-    const csvTx = {
-      date,
-      time,
-      name,
-      amount,
-      amountFiat,
-      category,
-      denomName,
-      notes,
-      networkFeeField,
-      txid: edgeTx.txid,
-      ourReceiveAddresses: edgeTx.ourReceiveAddresses,
-      version: 1,
-      currencyCode
-    }
-    items.push(csvTx)
-  }
-
-  const options = {
-    fields: [
-      {
-        name: 'currencyCode',
-        label: 'CURRENCY_CODE',
-        quoted: true
-      },
-      {
-        name: 'date',
-        label: 'DATE',
-        quoted: true
-      },
-      {
-        name: 'time',
-        label: 'TIME',
-        quoted: true
-      },
-      {
-        name: 'name',
-        label: 'PAYEE_PAYER_NAME',
-        quoted: true
-      },
-      {
-        name: 'amount',
-        label: currencyField,
-        quoted: true
-      },
-      {
-        name: 'denomName',
-        label: 'DENOMINATION',
-        quoted: true
-      },
-      {
-        name: 'amountFiat',
-        label: fiatCurrencyCode,
-        quoted: true
-      },
-      {
-        name: 'category',
-        label: 'CATEGORY',
-        quoted: true
-      },
-      {
-        name: 'notes',
-        label: 'NOTES',
-        quoted: true
-      },
-      {
-        name: 'networkFeeField',
-        label: networkFeeField,
-        quoted: true
-      },
-      {
-        name: 'txid',
-        label: 'TXID',
-        quoted: true
-      },
-      {
-        name: 'ourReceiveAddresses',
-        label: 'OUR_RECEIVE_ADDRESSES',
-        quoted: true
-      },
-      {
-        name: 'version',
-        label: 'VER'
-      }
-    ]
-  }
-
-  return new Promise((resolve, reject) => {
-    jsoncsv.csvBuffered(items, options, (err, csv) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(csv)
-      }
+    items.push({
+      CURRENCY_CODE: currencyCode,
+      DATE: date,
+      TIME: time,
+      PAYEE_PAYER_NAME: name,
+      ['AMT_' + currencyCode]: amount,
+      DENOMINATION: denomName,
+      [fiatCurrencyCode]: String(amountFiat),
+      CATEGORY: category,
+      NOTES: notes,
+      ['AMT_NETWORK_FEES_' + currencyCode]: networkFeeField,
+      TXID: edgeTx.txid,
+      OUR_RECEIVE_ADDRESSES: edgeTx.ourReceiveAddresses.join(','),
+      VER: 1
     })
+  }
+
+  return csvStringify(items, {
+    header: true,
+    quoted_string: true,
+    record_delimiter: 'windows'
   })
 }
