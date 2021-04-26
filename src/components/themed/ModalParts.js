@@ -12,7 +12,7 @@ export function ModalTitle(props: { children: React.Node, center?: boolean, padd
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  return <Text style={[styles.titleText, props.center ? styles.titleCenter : null, paddingStyles(props.paddingRem || 1, theme)]}>{props.children}</Text>
+  return <Text style={[styles.titleText, props.center ? styles.titleCenter : null, paddingStyles(props.paddingRem, theme)]}>{props.children}</Text>
 }
 
 export function ModalMessage(props: { children: React.Node }) {
@@ -33,8 +33,8 @@ export function ModalCloseArrow(props: { onPress: () => void }) {
   )
 }
 
-function paddingStyles(paddingRem: number[] | number, theme: Theme) {
-  const padding = unpackEdges(paddingRem ?? 1)
+function paddingStyles(paddingRem?: number[] | number, theme: Theme) {
+  const padding = unpackEdges(paddingRem == null ? 0 : paddingRem)
 
   return {
     paddingBottom: theme.rem(padding.bottom),
