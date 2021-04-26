@@ -378,8 +378,8 @@ PODS:
     - React
   - react-native-camera/RN (1.13.1):
     - React
-  - react-native-contacts (2.2.5):
-    - React
+  - react-native-contacts (7.0.0):
+    - React-Core
   - react-native-fast-crypto (2.0.0):
     - OpenSSL-Universal
     - React
@@ -813,10 +813,10 @@ SPEC CHECKSUMS:
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   disklet: 4f586f90b70fdb46f06614a5b7342eda5c90f253
-  DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
+  DoubleConversion: cde416483dac037923206447da6e1454df403714
   edge-login-ui-rn: 965cb13c3287f750f8ad25911020f9dc874b5886
   FBLazyVector: 49cbe4b43e445b06bf29199b6ad2057649e4c8f5
-  FBReactNativeSpec: 4ad043e3c940f5c3e9c6b81120dbee3551df24ee
+  FBReactNativeSpec: 8bc18d8b4bd9a5e9d1bc5ed6a2411bdeaadbbb4b
   Firebase: e1e089d9aac215a52442583f818ab61de3c4581b
   FirebaseAnalytics: 9f8f4feab1f3fddf4e4515f8f022fe6aa9e51043
   FirebaseCore: 0a43b7f1c5b36f3358cd703011ca4c7e0df55870
@@ -831,7 +831,7 @@ SPEC CHECKSUMS:
   Flipper-PeerTalk: 116d8f857dc6ef55c7a5a75ea3ceaafe878aadc9
   Flipper-RSocket: 127954abe8b162fcaf68d2134d34dc2bd7076154
   FlipperKit: 8a20b5c5fcf9436cac58551dc049867247f64b00
-  glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
+  glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   GoogleAppMeasurement: c542a2feaac9ab98fd074e8f1a02c3585bbfbd47
   GoogleDataTransport: 8b0e733ea77c9218778e5a9e34ba9508b8328939
   GoogleUtilities: e1d9ed4e544fc32a93e00e721400cbc3f377200d
@@ -859,7 +859,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 0ae35a37b20d5e031eb020a69cc5afdbd6406301
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-camera: b322bc25f47536219473c6d00c666d221f7f2695
-  react-native-contacts: f6e5c518598762081ff9cf7c70db36f71668538e
+  react-native-contacts: 493b583e87eb9cb1ab09268e89e526baf1a7cb30
   react-native-fast-crypto: b6dea8324fb1b095dd4f29a80356b43acb3ee2e9
   react-native-mail: 88305252f4c3fb0157015ff8a7ac9c41b321a0dd
   react-native-mymonero-core: c5e0e039b4977be65ed936a1d5301da3448edff7

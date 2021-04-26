@@ -3,8 +3,6 @@
 
 import { Date } from 'core-js'
 
-import { launchAppWithPermissions } from '../utils.js'
-
 // FUNCTIONS
 // const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds))
 const genUsername = () => 'TU' + Date.now()
@@ -48,7 +46,7 @@ const loginscene = () => ({
 })
 
 beforeEach(async () => {
-  await launchAppWithPermissions()
+  // await launchAppWithPermissions()
 })
 
 afterEach(async () => {

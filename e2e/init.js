@@ -15,7 +15,7 @@ beforeAll(async () => {
       contacts: 'YES'
     }
   })
-})
+}, 300000)
 
 afterAll(async () => {
   await detox.cleanup()

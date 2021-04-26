@@ -3,13 +3,19 @@
   "runnerConfig": "e2e/config.json",
   "specs": "e2e",
   "apps": {
-    "ios": {
+    "ios.release": {
       "type": "ios.app",
-      "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/edge.app"
-    },
-    "android": {
-      "type": "android.apk",
       "binaryPath": "/Users/marcusbates/Library/Developer/Xcode/DerivedData/edge-hhrsbwmzjemvddgtqahjbywenytl/Build/Products/Debug-iphonesimulator/edge.app"
+    },
+    "android.debug": {
+      "type": "android.apk",
+      "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
+      "build": "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug && cd .."
+    },
+    "android.release": {
+      "type": "android.apk",
+      "binaryPath": "android/app/build/outputs/apk/release/app-release.apk",
+      "build": "cd android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release && cd .."
     }
   },
   "devices": {
@@ -29,11 +35,11 @@
   "configurations": {
     "ios": {
       "device": "simulator",
-      "app": "ios"
+      "app": "ios.release"
     },
     "android": {
       "device": "emulator",
-      "app": "android"
+      "app": "android.release"
     }
   }
 }
