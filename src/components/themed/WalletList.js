@@ -73,7 +73,7 @@ type DispatchProps = {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class WalletListComponent extends React.PureComponent<Props> {
-  sortWalletList(walletList: WalletListItem[]) {
+  sortWalletList(walletList: WalletListItem[]): WalletListItem[] {
     const getFiatBalance = (wallet: GuiWallet, fullCurrencyCode: string) => {
       const { settings, exchangeRates } = this.props
       const currencyCode = getSortOptionsCurrencyCode(fullCurrencyCode)
@@ -191,6 +191,8 @@ class WalletListComponent extends React.PureComponent<Props> {
       }
     }
 
+    const sortedWalletlist = this.sortWalletList(walletList)
+
     if (showCreateWallet) {
       // Initialize Create Wallets
       const createWalletCurrencies = getCreateWalletTypes(account)
@@ -198,7 +200,7 @@ class WalletListComponent extends React.PureComponent<Props> {
         const { currencyCode, currencyName } = createWalletCurrency
 
         if (this.checkFilterWallet({ name: '', currencyCode, currencyName }) && !this.checkFromExistingWallets(walletList, currencyCode)) {
-          walletList.push({
+          sortedWalletlist.push({
             id: null,
             fullCurrencyCode: currencyCode,
             key: currencyCode,
@@ -215,7 +217,7 @@ class WalletListComponent extends React.PureComponent<Props> {
 
           if (this.checkFilterWallet({ name: '', currencyCode, currencyName }) && !this.checkFromExistingWallets(walletList, currencyCode)) {
             const fullCurrencyCode = `${currencyInfo.currencyCode}-${currencyCode}`
-            walletList.push({
+            sortedWalletlist.push({
               id: null,
               fullCurrencyCode,
               key: fullCurrencyCode,
@@ -231,7 +233,7 @@ class WalletListComponent extends React.PureComponent<Props> {
       }
     }
 
-    return this.sortWalletList(walletList)
+    return sortedWalletlist
   }
 
   renderRow = (data: FlatListItem<WalletListItem>, rowMap: { [string]: SwipeRow }) => {
