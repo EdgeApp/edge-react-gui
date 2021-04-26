@@ -1,20 +1,19 @@
 // @flow
 
 import * as React from 'react'
-import { Dimensions, Platform, TouchableOpacity, View } from 'react-native'
+import { Dimensions, Platform, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { Fontello } from '../../assets/vector/index.js'
 import * as Constants from '../../constants/indexConstants'
 import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { HiddenMenuButtons } from './HiddenMenuButtons'
-import { WalletProgressIcon } from './WalletProgressIcon.js'
+import { WalletListRow } from './WalletListRow.js'
 
 const FULL_WIDTH = Dimensions.get('window').width
 const WIDTH_DIMENSION_HIDE = FULL_WIDTH * 0.35
@@ -122,62 +121,30 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
     }
   }
 
-  handleOnPress = () => {
+  handlePropsPress = () => {
     const { currencyCode, onPress, walletId } = this.props
     return onPress ? onPress(walletId, currencyCode) : undefined
   }
 
-  renderRow = () => {
-    const {
-      currencyCode,
-      cryptoAmount,
-      differencePercentage,
-      differencePercentageStyle,
-      exchangeRate,
-      exchangeRateFiatSymbol,
-      fiatBalance,
-      fiatBalanceSymbol,
-      isModal,
-      onPress,
-      theme,
-      walletId,
-      walletName
-    } = this.props
-    const styles = getStyles(theme)
-    const handlePress = onPress ? this.handleOnPress : this.handleSelectWallet
-    const handleLongPress = isModal ? onPress : this.handleOpenWalletListMenuModal
+  handleOnLongPress = () => {
+    if (this.props.isModal) {
+      this.handlePropsPress()
+    } else {
+      this.handleOpenWalletListMenuModal()
+    }
+  }
 
-    return (
-      <TouchableOpacity onPress={handlePress} onLongPress={handleLongPress}>
-        <View style={styles.rowContainer}>
-          <View style={styles.iconContainer}>
-            <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} />
-          </View>
-          <View style={styles.detailsContainer}>
-            <View style={styles.detailsRow}>
-              <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
-              {!isModal ? (
-                <EdgeText style={[styles.exchangeRate, { color: differencePercentageStyle }]}>
-                  {exchangeRateFiatSymbol + exchangeRate + '  ' + differencePercentage}
-                </EdgeText>
-              ) : (
-                <View style={{ flex: 1 }} />
-              )}
-              <EdgeText style={styles.detailsValue}>{cryptoAmount}</EdgeText>
-            </View>
-            <View style={styles.detailsRow}>
-              <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
-              <EdgeText style={styles.detailsFiat}>{fiatBalanceSymbol + fiatBalance}</EdgeText>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
-    )
+  handleOnPress = () => {
+    if (this.props.onPress) {
+      this.handlePropsPress()
+    } else {
+      this.handleSelectWallet()
+    }
   }
 
   render() {
     const { swipeDirection } = this.state
-    const { isModal, theme } = this.props
+    const { currencyCode, isModal, walletId, walletName, theme } = this.props
     const styles = getStyles(theme)
     const isSwipingLeft = swipeDirection === 'left'
     const isSwipingRight = swipeDirection === 'right'
@@ -238,7 +205,14 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
           isSwipingLeft={isSwipingLeft}
           swipeDirection={swipeDirection}
         />
-        {isModal ? <View style={styles.containerModal}>{this.renderRow()}</View> : <Gradient style={styles.container}>{this.renderRow()}</Gradient>}
+        <WalletListRow
+          currencyCode={currencyCode}
+          isModal={isModal}
+          onPress={this.handleOnPress}
+          onLongPress={this.handleOnLongPress}
+          walletId={walletId}
+          walletName={walletName}
+        />
       </SwipeRow>
     )
   }

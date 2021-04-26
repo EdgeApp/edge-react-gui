@@ -2,7 +2,6 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { refreshWallet } from '../../actions/WalletActions.js'
@@ -13,8 +12,7 @@ import { type RootState } from '../../types/reduxTypes.js'
 import type { CreateTokenType, CreateWalletType, GuiWallet } from '../../types/types.js'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { showError, showFullScreenSpinner } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from './EdgeText.js'
+import { WalletListRow } from './WalletListRow.js'
 
 type OwnProps = {
   createWalletType?: CreateWalletType,
@@ -32,7 +30,7 @@ type DispatchProps = {
   tokenCreated(string, string[]): void
 }
 
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps
 
 class WalletListCreateRowComponent extends React.PureComponent<Props> {
   createWallet = (currencyCode: string, walletType: string) => {
@@ -106,73 +104,29 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
     }
   }
 
-  handlePress = () => (this.props.createWalletType ? this.createAndSelectWallet() : this.createAndSelectToken())
+  handlePress = () => {
+    if (this.props.createWalletType) {
+      this.createAndSelectWallet()
+    } else {
+      this.createAndSelectToken()
+    }
+  }
 
   render() {
-    const { createWalletType, createTokenType, theme } = this.props
-    const currencyCode = createWalletType?.currencyCode ?? createTokenType?.currencyCode ?? ''
-    const currencyName = createWalletType?.currencyName ?? createTokenType?.currencyName ?? ''
-    const symbolImage = createWalletType?.symbolImage ?? createTokenType?.symbolImage ?? ''
-    const createText = createWalletType ? s.strings.fragment_create_wallet_create_wallet : s.strings.wallet_list_add_token
-    const styles = getStyles(theme)
+    const { createWalletType, createTokenType } = this.props
+
     return (
-      <TouchableOpacity onPress={this.handlePress}>
-        <View style={styles.container}>
-          {!!symbolImage && (
-            <View style={styles.iconContainer}>
-              <Image style={styles.iconSize} source={{ uri: symbolImage }} />
-            </View>
-          )}
-          <View style={styles.detailsContainer}>
-            <EdgeText style={styles.detailsCurrencyCode}>{currencyCode}</EdgeText>
-            <EdgeText style={styles.detailsName}>{currencyName}</EdgeText>
-          </View>
-          <EdgeText style={styles.createText}>{createText}</EdgeText>
-        </View>
-      </TouchableOpacity>
+      <WalletListRow
+        currencyCode={createWalletType?.currencyCode ?? createTokenType?.currencyCode ?? ''}
+        icon={createWalletType?.symbolImage ?? createTokenType?.symbolImage ?? ''}
+        isModal
+        label={createWalletType ? s.strings.fragment_create_wallet_create_wallet : s.strings.wallet_list_add_token}
+        onPress={this.handlePress}
+        walletName={createWalletType?.currencyName ?? createTokenType?.currencyName ?? ''}
+      />
     )
   }
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: theme.rem(1)
-  },
-
-  // Icon
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: theme.rem(1)
-  },
-  iconSize: {
-    width: theme.rem(2),
-    height: theme.rem(2)
-  },
-
-  // Details
-  detailsContainer: {
-    flex: 1,
-    flexDirection: 'column'
-  },
-  detailsCurrencyCode: {
-    fontFamily: theme.fontFaceBold,
-    marginRight: theme.rem(0.75)
-  },
-  detailsName: {
-    flex: 1,
-    fontSize: theme.rem(0.75),
-    color: theme.secondaryText
-  },
-
-  // Create Text
-  createText: {
-    fontFamily: theme.fontFaceBold
-  }
-}))
 
 export const WalletListCreateRow = connect(
   (state: RootState): StateProps => {
@@ -191,4 +145,4 @@ export const WalletListCreateRow = connect(
       dispatch(refreshWallet(walletId))
     }
   })
-)(withTheme(WalletListCreateRowComponent))
+)(WalletListCreateRowComponent)

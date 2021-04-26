@@ -8,6 +8,7 @@ import SafariView from 'react-native-safari-view'
 
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD } from '../constants/WalletAndCurrencyConstants'
+import { formatNumber } from '../locales/intl.js'
 import type { ExchangeRatesState } from '../modules/ExchangeRates/reducer'
 import { emptyEdgeDenomination } from '../modules/Settings/selectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../modules/UI/selectors.js'
@@ -744,3 +745,33 @@ export const convertTransactionFeeToDisplayFee = (
   }
 }
 // End of convert Transaction Fee to Display Fee
+
+export function getCryptoAmount(
+  balance: string,
+  denomination: EdgeDenomination,
+  exchangeDenomination: EdgeDenomination,
+  fiatDenomination: EdgeDenomination,
+  exchangeRate?: number,
+  guiWallet: GuiWallet
+): string {
+  let maxConversionDecimals = 6
+  if (exchangeRate) {
+    const precisionAdjustValue = precisionAdjust({
+      primaryExchangeMultiplier: exchangeDenomination.multiplier,
+      secondaryExchangeMultiplier: fiatDenomination.multiplier,
+      exchangeSecondaryToPrimaryRatio: exchangeRate
+    })
+    maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(denomination.multiplier), precisionAdjustValue)
+  }
+  try {
+    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), maxConversionDecimals)
+    const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+    return `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}`
+  } catch (error) {
+    if (error.message === 'Cannot operate on base16 float values') {
+      const errorMessage = `${error.message}: GuiWallet currency code - ${guiWallet.currencyCode}, balance - ${balance}, demonination multiplier: ${denomination.multiplier}`
+      throw new Error(errorMessage)
+    }
+    throw new Error(error)
+  }
+}

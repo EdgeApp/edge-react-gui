@@ -1,15 +1,15 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
-import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
+import { WalletListRow } from './WalletListRow.js'
 
 type Props = {
   walletId?: string,
@@ -26,24 +26,15 @@ class WalletListEmptyRowComponent extends React.PureComponent<Props & ThemeProps
     }
   }
 
-  handleOpenWalletListMenuModal = async () => {
+  handleOpenWalletListMenuModal = () => {
     this.closeRow()
     if (this.props.walletId) {
-      await Airship.show(bridge => <WalletListMenuModal bridge={bridge} walletId={this.props.walletId} />)
+      Airship.show(bridge => <WalletListMenuModal bridge={bridge} walletId={this.props.walletId} />)
     }
   }
 
-  renderRow = () => {
-    const { theme } = this.props
-    return (
-      <TouchableOpacity onLongPress={this.handleOpenWalletListMenuModal}>
-        <ActivityIndicator color={theme.primaryText} size="large" />
-      </TouchableOpacity>
-    )
-  }
-
   render() {
-    const { isModal, theme } = this.props
+    const { isModal, walletId, theme } = this.props
     const styles = getStyles(theme)
     return (
       <SwipeRow {...this.props} rightOpenValue={theme.rem(-2.5)} disableRightSwipe disableLeftSwipe={isModal} ref={this.props.swipeRef} useNativeDriver>
@@ -52,28 +43,13 @@ class WalletListEmptyRowComponent extends React.PureComponent<Props & ThemeProps
             <EdgeText style={styles.swipeIcon}>{WALLET_LIST_OPTIONS_ICON}</EdgeText>
           </TouchableOpacity>
         </View>
-        {isModal ? (
-          <View style={[styles.container, styles.containerModal]}>{this.renderRow()}</View>
-        ) : (
-          <Gradient style={styles.container}>{this.renderRow()}</Gradient>
-        )}
+        <WalletListRow currencyCode="" isModal={isModal} onLongPress={this.handleOpenWalletListMenuModal} walletId={walletId} walletName="" />
       </SwipeRow>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: theme.rem(4.25),
-    paddingHorizontal: theme.rem(1.75)
-  },
-  containerModal: {
-    backgroundColor: theme.modal
-  },
   swipeContainer: {
     flex: 1,
     alignItems: 'center',
