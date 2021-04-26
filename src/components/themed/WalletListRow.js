@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { formatNumber } from '../../locales/intl.js'
@@ -49,18 +49,8 @@ function WalletRow(props: { isModal?: boolean, children: React.Node }) {
 
 class WalletListRowComponent extends React.PureComponent<Props> {
   renderIcon() {
-    const { currencyCode, icon, walletId, theme } = this.props
-    const styles = getStyles(theme)
-
-    if (icon) {
-      return <Image style={styles.iconSize} source={{ uri: icon }} />
-    }
-
-    if (walletId) {
-      return <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} />
-    }
-
-    return null
+    const { currencyCode, icon, walletId } = this.props
+    return <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} iconImage={icon} />
   }
 
   renderRate() {
