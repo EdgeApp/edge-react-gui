@@ -182,7 +182,6 @@
     "redux": "^3.7.1",
     "redux-thunk": "^2.2.0",
     "sprintf-js": "^1.1.1",
-    "stream": "^0.0.2",
     "url-parse": "^1.4.4",
     "why-did-you-update": "^0.1.1"
   },
