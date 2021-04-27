@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
+import ConfettiCannon from 'react-native-confetti-cannon'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../constants/indexConstants'
@@ -16,6 +17,12 @@ type LocalState = {
   showButton: boolean
 }
 
+const confettiProps = {
+  count: 250,
+  origin: { x: -50, y: -50 },
+  fallSpeed: 4000
+}
+
 class CryptoExchangeSuccessComponent extends React.PureComponent<ThemeProps, LocalState> {
   constructor() {
     super()
@@ -25,7 +32,7 @@ class CryptoExchangeSuccessComponent extends React.PureComponent<ThemeProps, Loc
   componentDidMount(): * {
     setTimeout(() => {
       this.setState({ showButton: true })
-    }, 5000)
+    }, 4500)
   }
 
   continue = () => {
@@ -33,11 +40,15 @@ class CryptoExchangeSuccessComponent extends React.PureComponent<ThemeProps, Loc
     Actions.popTo(Constants.EXCHANGE_SCENE)
   }
 
+  renderConfetti() {
+    return <ConfettiCannon {...confettiProps} />
+  }
+
   render() {
     const { showButton } = this.state
     const styles = getStyles(this.props.theme)
     return (
-      <SceneWrapper background="theme" hasTabs={false}>
+      <SceneWrapper background="theme">
         <View style={styles.container}>
           <EdgeText style={styles.title} isBold>
             {s.strings.exchange_congratulations}
@@ -48,6 +59,7 @@ class CryptoExchangeSuccessComponent extends React.PureComponent<ThemeProps, Loc
           <Fade visible={showButton} hidden>
             <SecondaryButton label={s.strings.legacy_address_modal_continue} onPress={this.continue} />
           </Fade>
+          {this.renderConfetti()}
         </View>
       </SceneWrapper>
     )

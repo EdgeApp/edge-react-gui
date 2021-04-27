@@ -67,31 +67,6 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
     }
 
     const swapInfo = await fetchSwapQuote(state, request)
-    // todo: remove
-    // const swapInfo = {
-    //   quote: {
-    //     isEstimate: true,
-    //     fromNativeAmount: '1',
-    //     toNativeAmount: '1',
-    //     networkFee: {
-    //       currencyCode: 'FIO',
-    //       nativeAmount: 100000
-    //     },
-    //     pluginId: 'changenow',
-    //
-    //     approve: () => {},
-    //     close: () => {}
-    //   },
-    //   request,
-    //
-    //   // Formatted amounts:
-    //   fee: '0',
-    //   fromDisplayAmount: '1',
-    //   fromFiat: '1',
-    //   fromTotalFiat: '2',
-    //   toDisplayAmount: '1',
-    //   toFiat: '1'
-    // }
 
     Actions[Constants.EXCHANGE_QUOTE_SCENE]({ swapInfo })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
@@ -335,7 +310,6 @@ const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: G
 }
 
 export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: Dispatch, getState: GetState) => {
-  // return Actions[Constants.EXCHANGE_SUCCESS_SCENE]()
   const state = getState()
   const { account } = state.core
   dispatch({ type: 'START_SHIFT_TRANSACTION' })
