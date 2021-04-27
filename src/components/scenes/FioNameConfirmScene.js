@@ -15,8 +15,8 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { cacheStyles } from '../services/ThemeContext.js'
+import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../themed/Tile'
-import { UnderlinedHeader } from '../themed/UnderlinedHeader'
 
 export type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null,
@@ -137,7 +137,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
     return (
       <SceneWrapper background="theme">
         <View style={styles.scene}>
-          <UnderlinedHeader title={this.isFioAddress() ? s.strings.title_fio_address_confirmation : s.strings.title_register_fio_domain} />
+          <SceneHeader title={this.isFioAddress() ? s.strings.title_fio_address_confirmation : s.strings.title_register_fio_domain} underline />
           <Tile
             type="static"
             title={this.isFioAddress() ? s.strings.fio_address_confirm_screen_label : s.strings.fio_domain_label}

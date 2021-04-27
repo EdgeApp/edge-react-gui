@@ -30,7 +30,7 @@ import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { HIDDEN_MENU_BUTTONS_WIDTH, HiddenMenuButtons } from '../themed/HiddenMenuButtons'
-import { UnderlinedHeader } from '../themed/UnderlinedHeader.js'
+import { SceneHeader } from '../themed/SceneHeader.js'
 
 const SCROLL_THRESHOLD = 0.5
 
@@ -539,7 +539,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         {fullScreenLoader && <FullScreenLoader indicatorStyles={styles.fullScreenLoader} />}
         <View style={styles.scene}>
           <View style={styles.row}>
-            <UnderlinedHeader title={s.strings.fio_pending_requests} />
+            <SceneHeader title={s.strings.fio_pending_requests} underline />
             {!loadingPending && !fioRequestsPending.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
             <View style={styles.container}>
               {loadingPending && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
@@ -556,7 +556,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
             </View>
           </View>
           <View style={styles.row}>
-            <UnderlinedHeader title={s.strings.fio_sent_requests} withTopMargin />
+            <SceneHeader title={s.strings.fio_sent_requests} underline withTopMargin />
             {!loadingSent && !fioRequestsSent.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
             <View style={styles.container}>
               {loadingSent && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
