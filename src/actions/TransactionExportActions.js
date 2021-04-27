@@ -1,7 +1,7 @@
 // @flow
 
 import { abs, div, lt } from 'biggystring'
-import csvStringify from 'csv-stringify/lib/sync'
+import csvStringify from 'csv-stringify/lib/browser/sync'
 import { type EdgeCurrencyWallet, type EdgeGetTransactionsOptions, type EdgeTransaction } from 'edge-core-js'
 
 export async function exportTransactionsToQBO(wallet: EdgeCurrencyWallet, opts: EdgeGetTransactionsOptions): Promise<string> {
