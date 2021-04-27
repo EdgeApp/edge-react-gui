@@ -5,14 +5,12 @@ import { Platform, TouchableOpacity } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../components/services/ThemeContext.js'
-import { EdgeText } from '../../components/themed/EdgeText.js'
 
 const isIos = Platform.OS === 'ios'
 
 export type Props = {
-  withArrow: boolean,
   onPress: () => mixed,
-  label?: string
+  isEmpty?: boolean
 }
 
 class BackButtonComponent extends React.PureComponent<Props & ThemeProps> {
@@ -22,8 +20,9 @@ class BackButtonComponent extends React.PureComponent<Props & ThemeProps> {
   }
 
   renderIcon = () => {
-    const { theme } = this.props
+    const { isEmpty, theme } = this.props
     const styles = getStyles(theme)
+    if (isEmpty) return null
     return isIos ? (
       <IonIcon size={theme.rem(1.5)} color={this.props.theme.icon} name="chevron-back-outline" style={styles.backIconStyle} />
     ) : (
@@ -32,12 +31,11 @@ class BackButtonComponent extends React.PureComponent<Props & ThemeProps> {
   }
 
   render() {
-    const { label, theme, withArrow } = this.props
+    const { theme } = this.props
     const styles = getStyles(theme)
     return (
       <TouchableOpacity style={styles.container} onPress={this.props.onPress}>
-        {withArrow && this.renderIcon()}
-        {withArrow && !isIos ? null : <EdgeText>{label || ''}</EdgeText>}
+        {this.renderIcon()}
       </TouchableOpacity>
     )
   }
@@ -51,7 +49,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: 44 // This is a fixed height of the navigation header no matter what screen size. Default by router-flux
   },
   backIconStyle: {
-    paddingRight: theme.rem(0.25)
+    marginLeft: theme.rem(-0.25),
+    paddingRight: theme.rem(0.75)
   },
   backIconAndroid: {
     paddingRight: theme.rem(1)
