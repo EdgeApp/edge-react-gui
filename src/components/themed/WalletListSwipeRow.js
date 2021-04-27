@@ -14,7 +14,7 @@ import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { HiddenMenuButtons } from './HiddenMenuButtons'
-import { WalletListRow } from './WalletListRow.js'
+import { WalletListCurrencyRow } from './WalletListCurrencyRow.js'
 
 const FULL_WIDTH = Dimensions.get('window').width
 const WIDTH_DIMENSION_HIDE = FULL_WIDTH * 0.35
@@ -23,9 +23,7 @@ const WIDTH_DIMENSION_SHOW = FULL_WIDTH * 0.15
 type Props = {
   currencyCode: string,
   guiWallet: GuiWallet,
-  isModal?: boolean,
   isToken: boolean,
-  onPress?: (walletId: string, currencyCode: string) => void,
   openRowLeft: boolean,
   selectWallet(walletId: string, currencyCode: string): void,
   swipeRef: ?React.ElementRef<typeof SwipeRow>,
@@ -131,30 +129,9 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
     }
   }
 
-  handlePropsPress = () => {
-    const { currencyCode, guiWallet, onPress } = this.props
-    return onPress ? onPress(guiWallet.id, currencyCode) : undefined
-  }
-
-  handleOnLongPress = () => {
-    if (this.props.isModal) {
-      this.handlePropsPress()
-    } else {
-      this.handleOpenWalletListMenuModal()
-    }
-  }
-
-  handleOnPress = () => {
-    if (this.props.onPress) {
-      this.handlePropsPress()
-    } else {
-      this.handleSelectWallet()
-    }
-  }
-
   render() {
     const { swipeDirection } = this.state
-    const { currencyCode, guiWallet, isModal, theme } = this.props
+    const { currencyCode, guiWallet, theme } = this.props
     const styles = getStyles(theme)
     const isSwipingLeft = swipeDirection === 'left'
     const isSwipingRight = swipeDirection === 'right'
@@ -175,8 +152,6 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
         onRightActionStatusChange={this.handleOpenSend}
         directionalDistanceChangeThreshold={5}
         useNativeDriver
-        disableLeftSwipe={isModal}
-        disableRightSwipe={isModal}
       >
         <HiddenMenuButtons
           left={{
@@ -215,13 +190,13 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
           isSwipingLeft={isSwipingLeft}
           swipeDirection={swipeDirection}
         />
-        <WalletListRow
+        <WalletListCurrencyRow
           currencyCode={currencyCode}
-          isModal={isModal}
-          onPress={this.handleOnPress}
-          onLongPress={this.handleOnLongPress}
+          gradient
+          onPress={this.handleSelectWallet}
+          onLongPress={this.handleOpenWalletListMenuModal}
+          showRate
           walletId={guiWallet.id}
-          walletName={guiWallet.name}
         />
       </SwipeRow>
     )

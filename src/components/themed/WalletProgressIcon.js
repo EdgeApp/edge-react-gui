@@ -8,9 +8,8 @@ import type { RootState } from '../../types/reduxTypes.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 
 type OwnProps = {
-  walletId?: string,
-  currencyCode?: string,
-  iconImage?: string,
+  walletId: string,
+  currencyCode: string,
   size?: number
 }
 
@@ -85,11 +84,11 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
 }
 
 export const WalletProgressIcon = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const { iconImage, walletId, currencyCode } = ownProps
-  let icon = ownProps.iconImage
+  const { walletId, currencyCode } = ownProps
+  let icon
   let progress = 100
 
-  if (!iconImage && walletId) {
+  if (walletId) {
     const guiWallet = state.ui.wallets.byId[walletId]
     const walletsProgress = state.ui.wallets.walletLoadingProgress
     if (guiWallet.currencyCode === currencyCode) {

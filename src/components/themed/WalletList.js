@@ -15,9 +15,12 @@ import { type RootState } from '../../types/reduxTypes.js'
 import type { CreateTokenType, CreateWalletType, CustomTokenInfo, FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { type FilterDetailsType, alphabeticalSort, checkCurrencyCodes, checkFilterWallet } from '../../util/utils'
+import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { type SortOption } from '../modals/WalletListSortModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { WalletListCreateRow } from './WalletListCreateRow.js'
+import { WalletListCurrencyRow } from './WalletListCurrencyRow.js'
 import { WalletListEmptyRow } from './WalletListEmptyRow.js'
 import { WalletListSectionHeader } from './WalletListSectionHeader.js'
 import { WalletListSwipeRow } from './WalletListSwipeRow.js'
@@ -27,7 +30,9 @@ type WalletListItem = {
   fullCurrencyCode?: string,
   key: string,
   createWalletType?: CreateWalletType,
-  createTokenType?: CreateTokenType
+  createTokenType?: CreateTokenType,
+  onPress?: () => void,
+  onLongPress?: (walletId: string) => void
 }
 
 type Section = {
@@ -133,7 +138,7 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   getWalletList(): WalletListItem[] {
-    const { activeWalletIds, account, excludeWalletIds, searching, showCreateWallet, wallets } = this.props
+    const { activeWalletIds, account, excludeWalletIds, isModal, searching, showCreateWallet, wallets } = this.props
     const walletList = []
 
     for (const walletId of activeWalletIds) {
@@ -145,7 +150,12 @@ class WalletListComponent extends React.PureComponent<Props> {
         // Initialize wallets that is still loading
         walletList.push({
           id: walletId,
-          key: walletId
+          key: walletId,
+          onLongPress: !isModal
+            ? () => {
+                Airship.show(bridge => <WalletListMenuModal bridge={bridge} walletId={walletId} />)
+              }
+            : () => {}
         })
       } else if (wallet != null) {
         const { enabledTokens } = wallet
@@ -156,7 +166,9 @@ class WalletListComponent extends React.PureComponent<Props> {
           walletList.push({
             id: walletId,
             fullCurrencyCode: wallet.currencyCode,
-            key: `${walletId}-${wallet.currencyCode}`
+            key: `${walletId}-${wallet.currencyCode}`,
+            onPress: () =>
+              this.props.onPress != null ? this.props.onPress(walletId, wallet.currencyCode) : this.props.selectWallet(walletId, wallet.currencyCode)
           })
         }
 
@@ -184,7 +196,8 @@ class WalletListComponent extends React.PureComponent<Props> {
             walletList.push({
               id: walletId,
               fullCurrencyCode: fullCurrencyCode,
-              key: `${walletId}-${fullCurrencyCode}`
+              key: `${walletId}-${fullCurrencyCode}`,
+              onPress: () => (this.props.onPress != null ? this.props.onPress(walletId, currencyCode) : this.props.selectWallet(walletId, currencyCode))
             })
           }
         }
@@ -248,19 +261,23 @@ class WalletListComponent extends React.PureComponent<Props> {
     const walletId = data.item.id.replace(/:.*/, '')
     const guiWallet = wallets[walletId]
 
-    if (guiWallet == null || !data.item.fullCurrencyCode) {
-      return <WalletListEmptyRow walletId={walletId} isModal={isModal} swipeRow={rowMap[data.item.key]} />
+    if (guiWallet == null) {
+      const { key, onLongPress } = data.item
+      return <WalletListEmptyRow gradient={!isModal} onLongPress={onLongPress} walletId={walletId} swipeRow={rowMap[key]} />
     } else {
       const isToken = guiWallet.currencyCode !== data.item.fullCurrencyCode
-      const walletCodesArray = data.item.fullCurrencyCode.split('-')
+      const walletCodesArray = data.item.fullCurrencyCode != null ? data.item.fullCurrencyCode.split('-') : []
       const currencyCode = isToken ? walletCodesArray[1] : walletCodesArray[0]
+
+      if (isModal) {
+        return <WalletListCurrencyRow currencyCode={currencyCode} onPress={data.item.onPress} walletId={walletId} />
+      }
+
       return (
         <WalletListSwipeRow
           currencyCode={currencyCode}
           guiWallet={guiWallet}
-          isModal={isModal}
           isToken={isToken}
-          onPress={onPress}
           openRowLeft={data.index === 0 && showSlidingTutorial}
           selectWallet={this.props.selectWallet}
           swipeRow={rowMap[data.item.key]}
@@ -320,6 +337,7 @@ class WalletListComponent extends React.PureComponent<Props> {
   render() {
     const { footer, header, isModal, mostRecentWallets, searchText, searching } = this.props
     const walletList = this.getWalletList()
+    console.log('render isModal', isModal)
 
     let isSectionList = false
     let walletOnlyList = []
@@ -329,6 +347,8 @@ class WalletListComponent extends React.PureComponent<Props> {
         isSectionList = true
       }
     }
+    console.log('walletList.length', walletList.length)
+    console.log('walletOnlyList.length', walletOnlyList.length)
 
     return (
       <SwipeListView

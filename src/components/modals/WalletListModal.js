@@ -30,7 +30,7 @@ type State = {
 
 type Props = OwnProps
 
-class WalletListMenuModalComponent extends React.PureComponent<Props, State> {
+export class WalletListModal extends React.PureComponent<Props, State> {
   textInput = React.createRef()
 
   constructor(props: Props) {
@@ -81,5 +81,3 @@ class WalletListMenuModalComponent extends React.PureComponent<Props, State> {
     )
   }
 }
-
-export const WalletListModal = WalletListMenuModalComponent

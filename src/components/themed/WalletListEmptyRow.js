@@ -5,20 +5,21 @@ import { TouchableOpacity, View } from 'react-native'
 import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
-import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
-import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { WalletListRow } from './WalletListRow.js'
 
-type Props = {
+type OwnProps = {
   walletId?: string,
-  isModal?: boolean,
+  gradient?: boolean,
+  onLongPress: () => void,
   swipeRef: ?React.ElementRef<typeof SwipeRow>,
   swipeRow?: SwipeRow
 }
 
-class WalletListEmptyRowComponent extends React.PureComponent<Props & ThemeProps> {
+type Props = OwnProps & ThemeProps
+
+class WalletListEmptyRowComponent extends React.PureComponent<Props> {
   closeRow = () => {
     const { swipeRow } = this.props
     if (swipeRow) {
@@ -27,23 +28,30 @@ class WalletListEmptyRowComponent extends React.PureComponent<Props & ThemeProps
   }
 
   handleOpenWalletListMenuModal = () => {
-    this.closeRow()
-    if (this.props.walletId) {
-      Airship.show(bridge => <WalletListMenuModal bridge={bridge} walletId={this.props.walletId} />)
+    if (this.props.onLongPress != null) {
+      this.closeRow()
+      this.props.onLongPress()
     }
   }
 
+  renderRow = () => {
+    return <WalletListRow {...this.props} onLongPress={this.handleOpenWalletListMenuModal} currencyCode="" walletName="" />
+  }
+
   render() {
-    const { isModal, walletId, theme } = this.props
+    const { onLongPress, theme } = this.props
     const styles = getStyles(theme)
+
+    if (!onLongPress) return this.renderRow()
+
     return (
-      <SwipeRow {...this.props} rightOpenValue={theme.rem(-2.5)} disableRightSwipe disableLeftSwipe={isModal} ref={this.props.swipeRef} useNativeDriver>
+      <SwipeRow {...this.props} rightOpenValue={theme.rem(-2.5)} disableRightSwipe ref={this.props.swipeRef} useNativeDriver>
         <View style={styles.swipeContainer}>
           <TouchableOpacity style={styles.swipeButton} onPress={this.handleOpenWalletListMenuModal}>
             <EdgeText style={styles.swipeIcon}>{WALLET_LIST_OPTIONS_ICON}</EdgeText>
           </TouchableOpacity>
         </View>
-        <WalletListRow currencyCode="" isModal={isModal} onLongPress={this.handleOpenWalletListMenuModal} walletId={walletId} walletName="" />
+        {this.renderRow()}
       </SwipeRow>
     )
   }

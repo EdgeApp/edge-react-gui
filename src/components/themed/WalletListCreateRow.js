@@ -2,6 +2,7 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
+import { Image, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { refreshWallet } from '../../actions/WalletActions.js'
@@ -12,6 +13,8 @@ import { type RootState } from '../../types/reduxTypes.js'
 import type { CreateTokenType, CreateWalletType, GuiWallet } from '../../types/types.js'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { showError, showFullScreenSpinner } from '../services/AirshipInstance.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from './EdgeText.js'
 import { WalletListRow } from './WalletListRow.js'
 
 type OwnProps = {
@@ -30,7 +33,7 @@ type DispatchProps = {
   tokenCreated(string, string[]): void
 }
 
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class WalletListCreateRowComponent extends React.PureComponent<Props> {
   createWallet = (currencyCode: string, walletType: string) => {
@@ -112,21 +115,62 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
     }
   }
 
+  renderIcon() {
+    const { createWalletType, createTokenType } = this.props
+    const styles = getStyles(this.props.theme)
+    return (
+      <View style={styles.iconContainer}>
+        <Image style={styles.iconSize} source={{ uri: createWalletType?.symbolImage ?? createTokenType?.symbolImage ?? '' }} />
+      </View>
+    )
+  }
+
+  renderChildren() {
+    const { createWalletType } = this.props
+    const styles = getStyles(this.props.theme)
+    return (
+      <View style={styles.labelContainer}>
+        <EdgeText style={styles.labelText}>{createWalletType ? s.strings.fragment_create_wallet_create_wallet : s.strings.wallet_list_add_token}</EdgeText>
+      </View>
+    )
+  }
+
   render() {
     const { createWalletType, createTokenType } = this.props
 
     return (
       <WalletListRow
         currencyCode={createWalletType?.currencyCode ?? createTokenType?.currencyCode ?? ''}
-        icon={createWalletType?.symbolImage ?? createTokenType?.symbolImage ?? ''}
-        isModal
-        label={createWalletType ? s.strings.fragment_create_wallet_create_wallet : s.strings.wallet_list_add_token}
+        icon={this.renderIcon()}
         onPress={this.handlePress}
         walletName={createWalletType?.currencyName ?? createTokenType?.currencyName ?? ''}
-      />
+      >
+        {this.renderChildren()}
+      </WalletListRow>
     )
   }
 }
+
+const getStyles = cacheStyles((theme: Theme) => ({
+  // Icons
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: theme.rem(1)
+  },
+  iconSize: {
+    width: theme.rem(2),
+    height: theme.rem(2)
+  },
+
+  // Label
+  labelContainer: {
+    justifyContent: 'center'
+  },
+  labelText: {
+    fontFamily: theme.fontFaceBold
+  }
+}))
 
 export const WalletListCreateRow = connect(
   (state: RootState): StateProps => {
@@ -145,4 +189,4 @@ export const WalletListCreateRow = connect(
       dispatch(refreshWallet(walletId))
     }
   })
-)(WalletListCreateRowComponent)
+)(withTheme(WalletListCreateRowComponent))
