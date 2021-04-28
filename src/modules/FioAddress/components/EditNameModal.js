@@ -9,10 +9,8 @@ import { connect } from 'react-redux'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeTextFieldOutlined } from '../../../components/themed/EdgeTextField.js'
 import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
-import { SecondaryButton } from '../../../components/themed/ThemedButtons'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import * as Constants from '../../../constants/indexConstants'
-import s from '../../../locales/strings.js'
 import { type RootState } from '../../../types/reduxTypes'
 import { getFioWallets } from '../../UI/selectors'
 
@@ -103,7 +101,6 @@ class EditNameModalComponent extends React.PureComponent<Props, State> {
             blurOnSubmit
           />
         </View>
-        {!!input && !isFocused && <SecondaryButton label={s.strings.submit} onPress={this.selectItem} marginRem={[2, 4, 0]} />}
         <ModalCloseArrow onPress={this.onClose} />
       </ThemedModal>
     )
