@@ -15,7 +15,6 @@ import {
   setAutoLogoutTimeInSecondsRequest,
   setDeveloperModeOn,
   showRestoreWalletsModal,
-  showSendLogsModal,
   showUnlockSettingsModal,
   togglePinLoginEnabled,
   updateTouchIdEnabled
@@ -30,6 +29,7 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
+import { SendLogsModal } from '../modals/SendLogsModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
@@ -55,7 +55,6 @@ type DispatchProps = {
   onTogglePinLoginEnabled(enableLogin: boolean): void,
   setAutoLogoutTimeInSeconds(number): void,
   showRestoreWalletsModal: () => void,
-  showSendLogsModal: () => void,
   showUnlockSettingsModal: () => void,
   toggleDeveloperMode(developerModeOn: boolean): void
 }
@@ -186,6 +185,8 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     }
   }
 
+  showSendLogsModal = () => Airship.show(bridge => <SendLogsModal bridge={bridge} />)
+
   render() {
     const { account, theme, isLocked } = this.props
     const iconSize = theme.rem(1.25)
@@ -271,7 +272,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             value={this.state.defaultLogLevel === 'info'}
             onPress={this.handleVerboseLoggingPress}
           />
-          <PrimaryButton onPress={this.props.showSendLogsModal} label={s.strings.settings_button_send_logs} marginRem={2} />
+          <PrimaryButton onPress={this.showSendLogsModal} label={s.strings.settings_button_send_logs} marginRem={2} />
         </ScrollView>
       </SceneWrapper>
     )
@@ -324,9 +325,6 @@ export const SettingsScene = connect(
     },
     showRestoreWalletsModal() {
       dispatch(showRestoreWalletsModal())
-    },
-    showSendLogsModal() {
-      dispatch(showSendLogsModal())
     },
     showUnlockSettingsModal() {
       dispatch(showUnlockSettingsModal())

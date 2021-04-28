@@ -10,7 +10,6 @@ import { getBundleId } from 'react-native-device-info'
 import { connect } from 'react-redux'
 
 import ENV from '../../../env.json'
-import { showSendLogsModal } from '../../actions/SettingsActions'
 import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.gif'
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_L.png'
 import s from '../../locales/strings.js'
@@ -20,6 +19,7 @@ import { type DeepLink } from '../../types/DeepLink.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiTouchIdInfo } from '../../types/types.js'
 import { showHelpModal } from '../modals/HelpModal.js'
+import { SendLogsModal } from '../modals/SendLogsModal'
 import { UpdateModal } from '../modals/UpdateModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { LoadingScene } from './LoadingScene.js'
@@ -34,8 +34,7 @@ type StateProps = {
 type DispatchProps = {
   deepLinkHandled(): void,
   initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdInfo): void,
-  logout(): void,
-  showSendLogsModal(): void
+  logout(): void
 }
 type Props = StateProps & DispatchProps
 
@@ -124,6 +123,10 @@ class LoginSceneComponent extends React.Component<Props, State> {
     this.props.initializeAccount(account, touchIdInfo ?? dummyTouchIdInfo)
   }
 
+  showSendLogsModal = () => {
+    Airship.show(bridge => <SendLogsModal bridge={bridge} />)
+  }
+
   render() {
     const { counter, passwordRecoveryKey } = this.state
 
@@ -140,7 +143,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
           appName={s.strings.app_name_short}
           backgroundImage={edgeBackgroundImage}
           primaryLogo={edgeLogo}
-          primaryLogoCallback={this.props.showSendLogsModal}
+          primaryLogoCallback={this.showSendLogsModal}
           parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
           skipSecurityAlerts
         />
@@ -184,9 +187,6 @@ export const LoginScene = connect(
     },
     logout() {
       dispatch(logoutRequest())
-    },
-    showSendLogsModal() {
-      dispatch(showSendLogsModal())
     }
   })
 )(LoginSceneComponent)
