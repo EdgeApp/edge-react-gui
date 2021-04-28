@@ -8,6 +8,7 @@ import SafariView from 'react-native-safari-view'
 
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD } from '../constants/WalletAndCurrencyConstants'
+import { formatNumber } from '../locales/intl.js'
 import type { ExchangeRatesState } from '../modules/ExchangeRates/reducer'
 import { emptyEdgeDenomination } from '../modules/Settings/selectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../modules/UI/selectors.js'
@@ -605,11 +606,36 @@ export function getDefaultDenomination(currencyCode: string, settings: Object): 
   return settings[currencyCode].denominations.find(denomination => denomination.name === currencyCode)
 }
 
-export function checkFilterWallet(wallet: GuiWallet, currencyCodeString: string, filterText: string, customToken?: CustomTokenInfo): boolean {
-  const walletName = wallet.name.replace(' ', '').toLowerCase()
-  const currencyCode = currencyCodeString.toLowerCase()
-  const currencyNameString = customToken ? customToken.currencyName : wallet.currencyNames[currencyCodeString]
-  const currencyName = currencyNameString ? currencyNameString.toLowerCase() : '' // Added fallback if cannot find currency name on both guiWallet and customTokenInfo
+export function checkCurrencyCodes(fullCurrencyCode: string, currencyCode: string): boolean {
+  const [parent, token] = fullCurrencyCode.split('-')
+  const checkToken = token ? currencyCode.toLowerCase() === token.toLowerCase() : false
+  const checkParent = !token ? currencyCode.toLowerCase() === parent.toLowerCase() : false
+  return checkToken || checkParent
+}
+
+export function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: string[]): boolean {
+  return !!currencyCodesArray.find(item => checkCurrencyCodes(item, currencyCode))
+}
+
+export type FilterDetailsType = { name: string, currencyCode: string, currencyName: string }
+
+export function checkFilterWallet(details: FilterDetailsType, filterText: string, allowedCurrencyCodes?: string[], excludeCurrencyCodes?: string[]): boolean {
+  const currencyCode = details.currencyCode.toLowerCase()
+
+  if (allowedCurrencyCodes && allowedCurrencyCodes.length > 0 && !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes)) {
+    return false
+  }
+
+  if (excludeCurrencyCodes && excludeCurrencyCodes.length > 0 && checkCurrencyCodesArray(currencyCode, excludeCurrencyCodes)) {
+    return false
+  }
+
+  if (filterText === '') {
+    return true
+  }
+
+  const walletName = details.name.replace(' ', '').toLowerCase()
+  const currencyName = details.currencyName.toLowerCase()
   const filterString = filterText.toLowerCase()
   return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
 }
@@ -719,3 +745,33 @@ export const convertTransactionFeeToDisplayFee = (
   }
 }
 // End of convert Transaction Fee to Display Fee
+
+export function getCryptoAmount(
+  balance: string,
+  denomination: EdgeDenomination,
+  exchangeDenomination: EdgeDenomination,
+  fiatDenomination: EdgeDenomination,
+  exchangeRate?: number,
+  guiWallet: GuiWallet
+): string {
+  let maxConversionDecimals = 6
+  if (exchangeRate) {
+    const precisionAdjustValue = precisionAdjust({
+      primaryExchangeMultiplier: exchangeDenomination.multiplier,
+      secondaryExchangeMultiplier: fiatDenomination.multiplier,
+      exchangeSecondaryToPrimaryRatio: exchangeRate
+    })
+    maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(denomination.multiplier), precisionAdjustValue)
+  }
+  try {
+    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), maxConversionDecimals)
+    const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+    return `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}`
+  } catch (error) {
+    if (error.message === 'Cannot operate on base16 float values') {
+      const errorMessage = `${error.message}: GuiWallet currency code - ${guiWallet.currencyCode}, balance - ${balance}, demonination multiplier: ${denomination.multiplier}`
+      throw new Error(errorMessage)
+    }
+    throw new Error(error)
+  }
+}
