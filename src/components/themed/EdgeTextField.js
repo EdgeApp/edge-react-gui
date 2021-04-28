@@ -17,6 +17,8 @@ type EdgeOutlinedTextFieldProps = {
   fieldRef?: ?React.ElementRef<typeof OutlinedTextField>,
   marginRem?: number | number[],
   isClearable: boolean,
+  small?: boolean,
+  hideSearchIcon?: boolean,
   onClear: () => void
 }
 
@@ -52,25 +54,31 @@ class EdgeTextFieldOutlinedComponent extends React.PureComponent<EdgeOutlinedTex
   }
 
   render() {
-    const { isClearable, marginRem = 0.5, theme, ...rest } = this.props
+    const { isClearable, marginRem = 0.5, small, theme, hideSearchIcon, ...rest } = this.props
     const spacings = spacingStyles(marginRem, theme)
     const styles = getStyles(theme)
+    const contentInset = small ? { input: theme.rem(0.75), label: 0 } : null
+
     return (
       <View style={styles.outlinedTextFieldContainer}>
         <OutlinedTextField
           containerStyle={[spacings, styles.outlinedTextField]}
+          contentInset={contentInset}
           baseColor={theme.secondaryText}
           errorColor={theme.dangerText}
           textColor={theme.primaryText}
           tintColor={theme.textLink}
           ref={this.props.fieldRef}
+          prefix={hideSearchIcon ? null : <AntDesignIcon name="search1" color={theme.iconDeactivated} size={theme.rem(1)} />}
+          suffix={
+            isClearable && (
+              <TouchableOpacity onPress={this.clearText} style={styles.outlinedTextFieldClearContainer}>
+                <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
+              </TouchableOpacity>
+            )
+          }
           {...rest}
         />
-        {isClearable && (
-          <TouchableOpacity onPress={this.clearText} style={styles.outlinedTextFieldClearContainer}>
-            <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
-          </TouchableOpacity>
-        )}
       </View>
     )
   }
@@ -91,17 +99,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   outlinedTextFieldContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: theme.rem(4.5)
+    height: theme.rem(4.5),
+    position: 'relative'
   },
   outlinedTextField: {
     flex: 1
   },
+  outlinedTextInput: {
+    paddingLeft: theme.rem(2)
+  },
   outlinedTextFieldClearContainer: {
-    position: 'absolute',
-    right: 0,
-    paddingHorizontal: theme.rem(0.75),
-    justifyContent: 'center',
-    paddingBottom: theme.rem(0.25) // This is needed because the OutlinedTextField also has innate padding/margin/height on the bottom
+    paddingTop: theme.rem(0.125)
   }
 }))
 export const EdgeTextField = withTheme(EdgeTextFieldComponent)

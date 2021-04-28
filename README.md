@@ -55,7 +55,7 @@ Edge is known to build with this exact tool set. Updated versions of these tools
     yarn
 
 ### Run the bundler
-    
+
     yarn start
 
 ### XCode Setup - Use Legacy Build System
@@ -163,22 +163,7 @@ Run deploy
 
 ## Debugging
 
-For debugging, we recommend using [React Native Debugger](https://github.com/jhen0409/react-native-debugger). The current latest version (0.11) works well.
-
-### Installation
-
-You can download React Native Debgger 0.10.11 at
-[https://github.com/jhen0409/react-native-debugger/releases/tag/v0.10.11](https://github.com/jhen0409/react-native-debugger/releases/tag/v0.10.11).
-
-#### Debugging in iOS Simulator
-
-    ⌘ + d (command + d)
-    Select "Debug JS Remotely"
-
-#### Debugging in Android Emulator (GenyMotion / Android Studios)
-
-    ⌘ + m (command + m)
-    Select "Debug JS Remotely"
+As with any modern React Native app, [Flipper](https://fbflipper.com/) is the officially-supported debugging app. Use the "React Native Hermes Debugger" to debug Javascript running in the UI.
 
 ## Contributing
 

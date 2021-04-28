@@ -25,7 +25,7 @@ class BackButtonComponent extends React.PureComponent<Props & ThemeProps> {
     const { theme } = this.props
     const styles = getStyles(theme)
     return isIos ? (
-      <IonIcon size={theme.rem(1.25)} color={this.props.theme.icon} name="ios-arrow-back" style={styles.backIconStyle} />
+      <IonIcon size={theme.rem(1.5)} color={this.props.theme.icon} name="chevron-back-outline" style={styles.backIconStyle} />
     ) : (
       <IonIcon size={theme.rem(1.25)} color={this.props.theme.icon} name="md-arrow-back" style={styles.backIconAndroid} />
     )
@@ -47,7 +47,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: theme.rem(1)
+    paddingHorizontal: theme.rem(1),
+    height: 44 // This is a fixed height of the navigation header no matter what screen size. Default by router-flux
   },
   backIconStyle: {
     paddingRight: theme.rem(0.25)

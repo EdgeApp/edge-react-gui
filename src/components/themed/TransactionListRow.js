@@ -14,8 +14,7 @@ import * as UTILS from '../../util/utils'
 import {
   DIVIDE_PRECISION,
   getDenomFromIsoCode,
-  getDisplayDenomination,
-  getExchangeDenomination,
+  getDenomination,
   getFiatSymbol,
   maxPrimaryCurrencyConversionDecimals,
   precisionAdjust
@@ -78,8 +77,8 @@ export const TransactionListRow = connect((state: RootState, ownProps: OwnProps)
   const guiWallet = state.ui.wallets.byId[walletId]
   const { fiatCurrencyCode } = guiWallet
   const { settings } = state.ui
-  const displayDenomination = getDisplayDenomination(currencyCode, settings)
-  const exchangeDenomination = getExchangeDenomination(guiWallet, currencyCode, settings)
+  const displayDenomination = getDenomination(currencyCode, settings, 'display')
+  const exchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
   const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
 
   // Required Confirmations

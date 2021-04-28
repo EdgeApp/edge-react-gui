@@ -16,7 +16,8 @@ type OwnProps = {
   error?: boolean,
   onPress?: () => void,
   title: string,
-  type: 'editable' | 'static' | 'touchable' | 'copy' | 'loading'
+  type: 'editable' | 'static' | 'touchable' | 'copy' | 'loading',
+  contentPadding?: boolean
 }
 type Props = OwnProps & ThemeProps
 
@@ -28,14 +29,14 @@ class TileComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { body, title, children, theme, type, error } = this.props
+    const { body, title, contentPadding = true, children, theme, type, error } = this.props
     const styles = getStyles(theme)
     const onPress = type === 'copy' ? () => this.copy() : this.props.onPress
     if (type === 'loading') {
       return (
         <View>
           <View style={styles.container}>
-            <View style={styles.content}>
+            <View style={[styles.content, contentPadding ? styles.contentPadding : null]}>
               <EdgeText style={styles.textHeader}>{title}</EdgeText>
               <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
             </View>
@@ -48,7 +49,7 @@ class TileComponent extends React.PureComponent<Props> {
       <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
         <View>
           <View style={styles.container}>
-            <View style={styles.content}>
+            <View style={[styles.content, contentPadding ? styles.contentPadding : null]}>
               {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
               {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
               <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
@@ -82,7 +83,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   content: {
-    flex: 1,
+    flex: 1
+  },
+  contentPadding: {
     paddingLeft: theme.rem(0.25)
   },
   iconContainer: {

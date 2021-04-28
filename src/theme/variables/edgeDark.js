@@ -83,6 +83,7 @@ export const edgeDark: Theme = {
   // Icons
   icon: palette.white,
   iconTappable: palette.edgeMint,
+  iconDeactivated: palette.whiteOp75,
   warningIcon: palette.accentOrange,
   iconLoadingOverlay: palette.whiteOp75,
   transactionListIconBackground: palette.darkBlue,
