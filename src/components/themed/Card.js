@@ -9,7 +9,8 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 type Props = {
   children: React.Node,
   warning?: boolean,
-  marginRem?: number[] | number
+  marginRem?: number[] | number,
+  paddingRem?: number[] | number
 }
 
 class CardComponent extends React.PureComponent<Props & ThemeProps> {
@@ -17,24 +18,35 @@ class CardComponent extends React.PureComponent<Props & ThemeProps> {
     const { children, warning, theme } = this.props
     const styles = getStyles(theme)
 
-    return <View style={[styles.container, warning ? styles.warning : null, marginRem(this.props, theme)]}>{children}</View>
+    return (
+      <View style={styles.wrapper}>
+        <View style={[styles.container, warning ? styles.warning : null, spacingStyles(this.props, theme)]}>{children}</View>
+      </View>
+    )
   }
 }
 
-function marginRem(props: Props, theme: Theme) {
-  const marginRem = unpackEdges(props.marginRem || [0, 1])
+function spacingStyles(props: Props, theme: Theme) {
+  const marginRem = unpackEdges(props.marginRem ?? [0, 1])
+  const paddingRem = unpackEdges(props.paddingRem ?? 1)
 
   return {
     marginBottom: theme.rem(marginRem.bottom),
     marginLeft: theme.rem(marginRem.left),
     marginRight: theme.rem(marginRem.right),
-    marginTop: theme.rem(marginRem.top)
+    marginTop: theme.rem(marginRem.top),
+    paddingBottom: theme.rem(paddingRem.bottom),
+    paddingLeft: theme.rem(paddingRem.left),
+    paddingRight: theme.rem(paddingRem.right),
+    paddingTop: theme.rem(paddingRem.top)
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  wrapper: {
+    width: '100%'
+  },
   container: {
-    padding: theme.rem(1),
     borderWidth: theme.cardBorder,
     borderColor: theme.cardBorderColor,
     borderRadius: theme.cardBorderRadius

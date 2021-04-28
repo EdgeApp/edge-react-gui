@@ -5,6 +5,7 @@ import { ActivityIndicator, Image, View } from 'react-native'
 
 import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { Card } from './Card'
 import { EdgeText } from './EdgeText'
 import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput'
 import { ExchangedFlipInput } from './ExchangedFlipInput.js'
@@ -69,7 +70,7 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & Th
 
     if (!this.props.isFocused) {
       return (
-        <View style={styles.container}>
+        <Card paddingRem={0}>
           <View style={styles.containerSelectedWalletNotFocus}>
             <SelectableRow
               autoWidth
@@ -83,12 +84,12 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & Th
               }
             />
           </View>
-        </View>
+        </Card>
       )
     }
 
     return (
-      <View style={styles.container}>
+      <Card>
         <ExchangedFlipInput
           onNext={onNext}
           headerText={this.props.headerText}
@@ -104,15 +105,14 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & Th
           isFiatOnTop
           isFocus={false}
         />
-      </View>
+      </Card>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    width: '100%',
-    paddingHorizontal: theme.rem(1)
+    width: '100%'
   },
   containerNoFee: {
     backgroundColor: theme.tileBackground,
@@ -125,9 +125,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   containerSelectedWalletNotFocus: {
-    borderRadius: theme.rem(0.25),
-    borderWidth: theme.thinLineWidth,
-    borderColor: theme.flipInputBorder,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center'

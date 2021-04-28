@@ -5,7 +5,6 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 import { type Event, Animated, Image, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
@@ -484,7 +483,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <View style={styles.container}>
+      <>
         <TouchableOpacity onPress={headerCallback} style={styles.headerContainer}>
           {headerLogo ? <Image style={styles.headerIcon} source={{ uri: headerLogo }} /> : null}
           {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
@@ -520,19 +519,12 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
             <Fontello name="exchange" color={theme.iconTappable} size={theme.rem(1.75)} />
           </ButtonBox>
         </View>
-      </View>
+      </>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    padding: theme.rem(1),
-    borderRadius: theme.rem(0.25),
-    borderWidth: theme.thinLineWidth,
-    borderColor: theme.flipInputBorder
-  },
-
   // Header
   headerContainer: {
     marginRight: Platform.OS === 'ios' ? theme.rem(3.5) : theme.rem(1.5), // Different because adjustsFontSizeToFit behaves differently on android vs ios

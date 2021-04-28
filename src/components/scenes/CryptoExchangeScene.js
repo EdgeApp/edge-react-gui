@@ -26,7 +26,6 @@ import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInpu
 import { CryptoExchangeMessageBox } from '../themed/CryptoExchangeMessageBoxComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { SceneHeader } from '../themed/SceneHeader'
-import { SecondaryButton } from '../themed/ThemedButtons'
 
 type StateProps = {
   account: EdgeAccount,
@@ -158,16 +157,6 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     this.toAmountDisplay = amounts.exchangeAmount
   }
 
-  renderButton = () => {
-    if (this.props.calculatingMax) {
-      const styles = getStyles(this.props.theme)
-      return <ActivityIndicator style={styles.spinner} color={this.props.theme.iconTappable} />
-    } else if (this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '') {
-      return <SecondaryButton onPress={this.getQuote} label={s.strings.string_next_capitalized} paddingRem={[0.5, 2.5]} marginRem={[1.5, 0]} />
-    }
-    return null
-  }
-
   renderDropUp = (whichWallet: 'from' | 'to') => {
     Airship.show(bridge => (
       <WalletListModal
@@ -254,7 +243,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             focusMe={this.focusToWallet}
             onNext={this.getQuote}
           />
-          {this.renderButton()}
+          {this.props.calculatingMax && <ActivityIndicator style={styles.spinner} color={this.props.theme.iconTappable} />}
           <View style={styles.spacer} />
         </KeyboardAwareScrollView>
       </SceneWrapper>
