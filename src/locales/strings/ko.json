@@ -252,8 +252,6 @@
   "title_use_regular_address": "보통 주소를 사용",
   "no_exchanges_available": "거래소가 활성화되어 있지 않습니다.",
   "check_exchange_settings": "거래소 설정에서 거래소를 활성화 시키십시오.",
-  "amount_above_limit": "거래 금액이 한도액 %1$s %2$s 를 초과하였습니다.",
-  "amount_below_limit": "거래 금액이 최소한도액 %1$s %2$s 보다 낮습니다.",
   "transaction_details_category_title": "카테고리",
   "transaction_details_payee": "피지불인",
   "transaction_details_view_advanced_data": "고급 거래 내용 보기",
