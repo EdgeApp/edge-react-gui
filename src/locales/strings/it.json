@@ -385,8 +385,6 @@
   "title_use_regular_address": "Usa l'indirizzo regolare",
   "no_exchanges_available": "Nessun cambio valuta abilitato",
   "check_exchange_settings": "Abilitali nelle Impostazioni Cambio Valuta.",
-  "amount_above_limit": "La transazione è oltre il limite massimo di %1$s %2$s",
-  "amount_below_limit": "La transazione è inferiore al limite minimo di %1$s %2$s",
   "transaction_details_category_title": "Categoria",
   "transaction_details_payee": "Beneficiario",
   "transaction_details_payer": "Pagatore",
