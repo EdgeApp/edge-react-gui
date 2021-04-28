@@ -12,7 +12,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../co
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { EdgeTextFieldOutlined } from '../../../components/themed/EdgeTextField'
 import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
-import { ClickableText, SecondaryButton } from '../../../components/themed/ThemedButtons'
+import { ClickableText } from '../../../components/themed/ThemedButtons'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
@@ -201,7 +201,6 @@ class DomainListModalComponent extends React.Component<Props, State> {
             blurOnSubmit
           />
         </View>
-        {!items.length && !isFocused && <SecondaryButton label={s.strings.submit} onPress={this.selectCustom} marginRem={[2, 4, 0]} />}
         <FlatList data={items} initialNumToRender={24} keyboardShouldPersistTaps="handled" keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
         <ModalCloseArrow onPress={() => bridge.resolve(null)} />
       </ThemedModal>
