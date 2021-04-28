@@ -273,6 +273,7 @@ const strings = {
   settings_modal_send_logs_loading: 'Sending logs is in progress',
   settings_modal_send_logs_success: 'Logs have been sent',
   settings_modal_send_logs_failure: 'Sending logs has failed',
+  settings_modal_send_logs_label: 'Type Notes Here',
   settings_modal_text_entry_notes: 'Notes',
   settings_options_title_cap: 'Options',
   settings_seconds: 'Second(s)',

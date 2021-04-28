@@ -41,7 +41,6 @@ describe('MyComponent', () => {
         resetConfirmPasswordError={nop}
         setAutoLogoutTimeInSeconds={nop}
         showRestoreWalletsModal={nop}
-        showSendLogsModal={nop}
         showUnlockSettingsModal={nop}
         toggleDeveloperMode={nop}
       />
@@ -72,7 +71,6 @@ describe('MyComponent', () => {
         resetConfirmPasswordError={nop}
         setAutoLogoutTimeInSeconds={nop}
         showRestoreWalletsModal={nop}
-        showSendLogsModal={nop}
         showUnlockSettingsModal={nop}
         toggleDeveloperMode={nop}
       />
