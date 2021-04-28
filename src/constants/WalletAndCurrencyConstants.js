@@ -255,7 +255,7 @@ export const SPECIAL_CURRENCY_INFO: {
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo_id,
       identifierName: s.strings.unique_identifier_memo_id,
-      identifierKeyboardType: 'numeric'
+      identifierKeyboardType: 'default'
     },
     minimumPopupModals: {
       minimumNativeBalance: '10000000',
