@@ -8,7 +8,7 @@ beforeEach(async () => {
   await navigateToHome()
 })
 
-describe('Edge', () => {
+describe.skip('Edge', () => {
   it('should be able to password login', async () => {
     const usernameInput = element(by.type('RCTTextField')).atIndex(1)
     const passwordInput = element(by.type('RCTTextField')).atIndex(0)
