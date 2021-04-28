@@ -385,8 +385,6 @@
   "title_use_regular_address": "Reguläre Adresse verwenden",
   "no_exchanges_available": "Kein Umtausch möglich",
   "check_exchange_settings": "Bitte aktivieren sie diese in ihrern Tauschbörsen-Einstellungen.",
-  "amount_above_limit": "Transaktionsbetrag ist über dem maximalen Limit von %1$s %2$s",
-  "amount_below_limit": "Transaktionsbetrag ist unter dem minimalen Limit von %1$s %2$s",
   "transaction_details_category_title": "Kategorie",
   "transaction_details_payee": "Zahlungsempfänger",
   "transaction_details_payer": "Zahler",
