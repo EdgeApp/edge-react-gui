@@ -5,10 +5,9 @@ import csvStringify from 'csv-stringify/lib/browser/sync'
 import { type EdgeCurrencyWallet, type EdgeGetTransactionsOptions, type EdgeTransaction } from 'edge-core-js'
 
 export async function exportTransactionsToQBO(wallet: EdgeCurrencyWallet, opts: EdgeGetTransactionsOptions): Promise<string> {
-  const txs: EdgeTransaction[] = await this.getTransactions(opts)
+  const txs: EdgeTransaction[] = await wallet.getTransactions(opts)
   const { currencyCode = wallet.currencyInfo.currencyCode, denomination } = opts
-  const qbo: string = exportTransactionsToQBOInner(txs, currencyCode, this.fiatCurrencyCode, denomination, Date.now())
-  return qbo
+  return exportTransactionsToQBOInner(txs, currencyCode, wallet.fiatCurrencyCode, denomination, Date.now())
 }
 
 export async function exportTransactionsToCSV(wallet: EdgeCurrencyWallet, opts: EdgeGetTransactionsOptions = {}): Promise<string> {
