@@ -74,6 +74,7 @@ declare module 'react-native-material-textfield' {
     onSubmitEditing?: () => void,
     returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send',
     secureTextEntry?: boolean,
+    testID?: string,
     value?: string
   |}
 
