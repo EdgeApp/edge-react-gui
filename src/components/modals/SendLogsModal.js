@@ -76,7 +76,7 @@ class SendLogsModalComponent extends React.PureComponent<Props, State> {
           value={input}
           autoCorrect={false}
           autoCapitalize="none"
-          returnKeyType="search"
+          returnKeyType="done"
           marginRem={[1, 1.75]}
           ref={this.textInput}
           blurOnSubmit
