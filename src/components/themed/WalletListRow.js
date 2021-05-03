@@ -71,7 +71,7 @@ class WalletListRowComponent extends React.PureComponent<Props> {
               <View style={styles.iconContainer}>{icon}</View>
               <View style={styles.detailsContainer}>
                 <View style={styles.detailsRow}>
-                  <EdgeText style={[styles.detailsCurrency, { width: theme.rem(2.75) }]}>{currencyCode}</EdgeText>
+                  <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
                   <EdgeText style={styles[`percentage${exchangeRateType}`]}>{exchangeRateString}</EdgeText>
                 </View>
                 <EdgeText style={styles.detailsName}>{walletNameString}</EdgeText>
@@ -125,10 +125,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   detailsRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    width: '70%'
+    width: '65%'
   },
   detailsCurrency: {
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceBold,
+    width: theme.rem(3.5)
   },
   detailsName: {
     flex: 1,
