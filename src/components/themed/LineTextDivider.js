@@ -34,7 +34,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: theme.rem(2)
+    marginVertical: theme.rem(1)
   },
   line: {
     flex: 1,

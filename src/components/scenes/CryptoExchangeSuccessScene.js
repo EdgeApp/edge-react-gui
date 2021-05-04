@@ -35,7 +35,7 @@ class CryptoExchangeSuccessComponent extends React.PureComponent<ThemeProps, Loc
     }, 4500)
   }
 
-  continue = () => {
+  done = () => {
     this.setState({ showButton: false })
     Actions.popTo(Constants.EXCHANGE_SCENE)
   }
@@ -57,7 +57,7 @@ class CryptoExchangeSuccessComponent extends React.PureComponent<ThemeProps, Loc
             {s.strings.exchange_congratulations_msg}
           </EdgeText>
           <Fade visible={showButton} hidden>
-            <SecondaryButton label={s.strings.legacy_address_modal_continue} onPress={this.continue} />
+            <SecondaryButton label={s.strings.string_done_cap} onPress={this.done} />
           </Fade>
           {this.renderConfetti()}
         </View>
