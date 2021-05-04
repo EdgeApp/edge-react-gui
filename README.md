@@ -25,11 +25,15 @@ Edge Wallet is:
 # Working with the Source Code
 <br>
 
+#### __Note:__ _This guide __assumes a Mac/OSX environment.__ You can setup a windows/linux environment with small adaptations to the insturctions._
+
+<br>
+
 ## Requirements
 
-#### Note: 
+<br>
 
-This guide assumes a Mac/OSX environment. Edge is known to build with this exact tool set. Updated versions of these toolsets may break the build or app. If you have issues, try mirroring these exact versions.
+Edge is known to build with this exact tool set. Updated versions of these toolsets may break the build or app. If you have issues, try mirroring these exact versions.
 
 - macOS Catalina 10.15.6
 - Xcode 12.1
@@ -211,7 +215,7 @@ First, run `./scripts/updateVersion.js` to copy the `package.json` version into 
 <br>
 <br>
 
-## Deploying (macOS Only)
+## Deploying
 
 The included `deploy.js` is a script to automate building, signing, and deploying release builds of Edge. It provides the following:
 
