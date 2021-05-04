@@ -67,6 +67,32 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
     }
 
     const swapInfo = await fetchSwapQuote(state, request)
+    // todo: remove
+    // const swapInfo = {
+    //   quote: {
+    //     isEstimate: true,
+    //     fromNativeAmount: '1',
+    //     toNativeAmount: '1',
+    //     networkFee: {
+    //       currencyCode: 'FIO',
+    //       nativeAmount: 100000
+    //     },
+    //     pluginId: 'changenow',
+    //
+    //     approve: () => {},
+    //     close: () => {}
+    //   },
+    //   request,
+    //
+    //   // Formatted amounts:
+    //   fee: '0',
+    //   fromDisplayAmount: '1',
+    //   fromFiat: '1',
+    //   fromTotalFiat: '2',
+    //   toDisplayAmount: '1',
+    //   toFiat: '1'
+    // }
+
     Actions[Constants.EXCHANGE_QUOTE_SCENE]({ swapInfo })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
   } catch (error) {
@@ -202,6 +228,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   )
   const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
   const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${fromWallet.fiatCurrencyCode.replace('iso:', '')})`
+  const fromTotalFiat = formatNumber(fromBalanceInFiatRaw + feeFiatAmountRaw, { toFixed: 2 })
 
   // Format to amount:
   const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
@@ -221,6 +248,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
     fee,
     fromDisplayAmount,
     fromFiat,
+    fromTotalFiat,
     toDisplayAmount,
     toFiat
   }
@@ -307,6 +335,7 @@ const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: G
 }
 
 export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: Dispatch, getState: GetState) => {
+  // return Actions[Constants.EXCHANGE_SUCCESS_SCENE]()
   const state = getState()
   const { account } = state.core
   dispatch({ type: 'START_SHIFT_TRANSACTION' })
@@ -336,16 +365,13 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
       name,
       category
     }
-    Actions.popTo(Constants.EXCHANGE_SCENE)
+    Actions[Constants.EXCHANGE_SUCCESS_SCENE]()
     await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)
 
     dispatch({ type: 'SHIFT_COMPLETE' })
 
     updateSwapCount(state)
 
-    setTimeout(() => {
-      Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes)
-    }, 1)
     const exchangeAmount = await toWallet.nativeToDenomination(toNativeAmount, toCurrencyCode)
     const trackConversionOpts: { [key: string]: any } = {
       account,
@@ -362,7 +388,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
     logEvent('SwapFailed')
     dispatch({ type: 'DONE_SHIFT_TRANSACTION' })
     setTimeout(() => {
-      Alert.alert(s.strings.exchange_failed, error.message)
+      showError(`${s.strings.exchange_failed}. ${error.message}`)
     }, 1)
   }
 }

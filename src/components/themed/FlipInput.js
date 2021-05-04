@@ -7,6 +7,7 @@ import { type Event, Animated, Image, Platform, TextInput, TouchableOpacity, Tou
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
+import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import * as UTILS from '../../util/utils.js'
@@ -516,7 +517,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
             </Animated.View>
           </View>
           <ButtonBox onPress={this.onToggleFlipInput} paddingRem={[0.5, 0, 0.5, 1]}>
-            <MaterialIcon name="swap-vert" size={theme.rem(2)} color={theme.iconTappable} />
+            <Fontello name="exchange" color={theme.iconTappable} size={theme.rem(1.75)} />
           </ButtonBox>
         </View>
       </View>
@@ -542,9 +543,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   headerIcon: {
     width: theme.rem(1.5),
     height: theme.rem(1.5),
-    marginRight: theme.rem(0.5)
+    marginRight: theme.rem(1)
   },
   headerText: {
+    fontWeight: '600',
     fontSize: theme.rem(1.0)
   },
 
@@ -554,7 +556,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   flipInput: {
-    flex: 1
+    flex: 1,
+    paddingRight: theme.rem(0.5)
   },
   flipInputFront: {
     backfaceVisibility: 'hidden'

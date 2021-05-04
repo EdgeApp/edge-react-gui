@@ -143,7 +143,9 @@ export function RightChevronButton(props: { text: string, onPress: () => void, p
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={[spacingStyles({ marginRem: [0, 1.25, 0, 0], paddingRem }, theme), styles.rightChevronContainer]}>
-        <EdgeText style={styles.rightChevronText}>{text}</EdgeText>
+        <EdgeText ellipsizeMode="middle" style={styles.rightChevronText}>
+          {text}
+        </EdgeText>
         <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
       </View>
     </TouchableOpacity>
@@ -248,7 +250,8 @@ const getStyles = cacheStyles((theme: Theme) => {
       alignItems: 'center'
     },
     rightChevronText: {
-      marginRight: theme.rem(0.25),
+      marginRight: theme.rem(0.75),
+      fontWeight: '600',
       fontSize: theme.rem(1.0)
     }
   }
