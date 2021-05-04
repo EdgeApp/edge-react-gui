@@ -2,7 +2,7 @@
 
 ## A multicurrency mobile wallet for Bitcoin, Bitcoin Cash, Ethereum, Dash, Litecoin, Ripple/XRP and Monero
 
-![Edge Wallet Screenshots](https://cdn-images-1.medium.com/max/1600/1*xMZMuK0_jGNZNzduvggsdw.png)
+<br>
 
 Edge Wallet is:
 
@@ -15,11 +15,21 @@ Edge Wallet is:
 - mobile first
 - open source
 
----
+![Edge Wallet Screenshots](https://cdn-images-1.medium.com/max/1600/1*xMZMuK0_jGNZNzduvggsdw.png)
+
+<br>
+<br>
+<br>
+<br>
+
+# Working with the Source Code
+<br>
 
 ## Requirements
 
-Edge is known to build with this exact tool set. Updated versions of these toolsets may break the build or app. If you have issues, try mirroring these exact versions.
+#### Note: 
+
+This guide assumes a Mac/OSX environment. Edge is known to build with this exact tool set. Updated versions of these toolsets may break the build or app. If you have issues, try mirroring these exact versions.
 
 - macOS Catalina 10.15.6
 - Xcode 12.1
@@ -29,9 +39,14 @@ Edge is known to build with this exact tool set. Updated versions of these tools
 - NodeJS 14.15.0
 - NPM 6.14.8
 - Yarn 1.22.10
-- Java 1.8.0_202
+- OpenJDK Java 1.8
 
-## Getting Started
+<br>
+<br>
+<br>
+<br>
+
+## Getting Started - General
 
 ### Install NodeJS & NPM
 
@@ -45,10 +60,6 @@ Edge is known to build with this exact tool set. Updated versions of these tools
 
     npm install -g react-native-cli
 
-### Install CocoaPods (macOS)
-
-    sudo gem install cocoapods
-
 ### Checkout develop branch & install node_modules
 
     cd edge-react-gui
@@ -58,11 +69,30 @@ Edge is known to build with this exact tool set. Updated versions of these tools
 
     yarn start
 
+<br>
+<br>
+<br>
+<br>
+
+## Getting Started - iOS Setup
+
+### Install CocoaPods
+
+    brew install cocoapods
+
 ### XCode Setup - Use Legacy Build System
 
     Open edge-react-gui/ios/edge.xcworkspace in Xcode
     File -> Workspace Settings
     Set `Build System` to `Legacy Build System`
+
+<br>
+<br>
+<br>
+<br>
+
+## Getting Started - Android Setup
+
 
 ### Android NDK Setup
 
@@ -78,7 +108,10 @@ Use Android Studio's Preferences to install NDK (Side by side):
 
 > If the NDK is already installed from Android Studio, it should be in `/Users/[user]/Library/Android/sdk/ndk-bundle` (macOS) or `C:\Users\[username]\AppData\Local\Android\Sdk\ndk-bundle` (Windows).
 
-### Set the following environment vars
+<br>
+<br>
+
+### Environment Variables
 
 The following environment variables should be exported from your `.bashrc` or equivalent file.
 
@@ -88,26 +121,48 @@ The following environment variables should be exported from your `.bashrc` or eq
     export ANDROID_HOME=/Users/[username]/Library/Android/sdk
     export JAVA_HOME="/Applications/Android Studio.app/Contents/jre/jdk/Contents/Home"
 
-### Android Recommended Versioning & Configuration
+<br>
+<br>
 
-For best results, please consider using the following versions (up-to-date as of 2020-11-16)
+### Java(OpenJDK)
 
-- **Java 8 & Java JDK** version 8u202 (([link](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html)))
+For best results, please consider using the following versions (up-to-date as of 2021-5-4)
 
-### Add API key in env.json
+- ```brew install --cask adoptopenjdk14``` 
+[github](https://github.com/AdoptOpenJDK/homebrew-openjdk)
+
+<br>
+<br>
+
+### Add API Key to "env.json"
 
 A public API key is built into the edge-core-js which can be used to build and test the Edge app. This key is severely rate limited and should not be used for production. For production use, get an API key by emailing info@edge.app.
 
 Copy the `env.example.json` to `env.json` and change the `AIRBITZ_API_KEY` to the API key you received from Edge. To use the public API key, leave `AIRBITZ_API_KEY` blank.
 
-### Run the app in debug mode
+<br>
+<br>
 
-#### iOS
+---
+
+<br>
+<br>
+<br>
+<br>
+
+## Build/Run(Debug)
+
+<br>
+
+### iOS(Debug)
 
 - Open `edge-react-gui/ios/edge.xcworkspace` in Xcode
 - Choose a target device or simulator and tap the Play button on the top nav bar
 
-#### Android
+<br>
+<br>
+
+### Android(Debug)
 
     cd android
     ./gradlew assembleDebug
@@ -115,11 +170,18 @@ Copy the `env.example.json` to `env.json` and change the `AIRBITZ_API_KEY` to th
 - The resulting APK will be in `./app/build/outputs/apk/debug/app-debug.apk`
 - Copy the APK to a simulator like Genymotion or a real device via Email or messaging app
 
-### Build release version of app
+<br>
+<br>
+<br>
+<br>
+
+## Build/Run(Release)
 
 First, run `./scripts/updateVersion.js` to copy the `package.json` version into the native project files, and to assign a unique build number.
 
-#### iOS
+<br>
+
+### iOS(Release)
 
 - Open `edge-react-gui/ios/edge.xcworkspace` in Xcode
 - Hold [ option/alt ] and click on the Edge button on the top bar to the right of the Play and Stop icons.
@@ -128,7 +190,10 @@ First, run `./scripts/updateVersion.js` to copy the `package.json` version into 
 - Close window
 - Choose a device and hit Play
 
-#### Android
+<br>
+<br>
+
+### Android(Release)
 
     cd android
     ./gradlew assembleRelease
@@ -136,7 +201,15 @@ First, run `./scripts/updateVersion.js` to copy the `package.json` version into 
 - The resulting APK will be in `./app/build/outputs/apk/release/app-release.apk`
 - Copy the APK to a simulator like Genymotion or a real device via Email or messaging app
 
+<br>
+<br>
+
 ---
+
+<br>
+<br>
+<br>
+<br>
 
 ## Deploying (macOS Only)
 
@@ -145,7 +218,10 @@ The included `deploy.js` is a script to automate building, signing, and deployin
 - Auto sign Android APK with Android keystore files
 - Auto sign iOS IPA with provisioning profiles
 
-### To Use
+<br>
+<br>
+
+### Build for Deploy
 
 - Run `./scripts/updateVersion.js` to set up your build number & version.
 - Set the env var KEYCHAIN_PASSWORD to the keychain password of the current user
@@ -154,12 +230,23 @@ The included `deploy.js` is a script to automate building, signing, and deployin
 - If using Firebase, put your account's `google-services.json` and `GoogleService-Info.plist` into `edge-react-gui/`
 - Install xcpretty `sudo gem install xcpretty`
 
-Run deploy
+<br>
+<br>
+
+### Execute deploy
 
     ./deploy.js edge ios master
     ./deploy.js edge android master
 
+<br>
+<br>
+
 ---
+
+<br>
+<br>
+<br>
+<br>
 
 ## Debugging
 
