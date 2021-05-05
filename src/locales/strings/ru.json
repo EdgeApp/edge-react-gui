@@ -183,8 +183,6 @@
   "title_use_regular_address": "Использовать общепринятый тип адреса",
   "no_exchanges_available": "Нет включённых обменников",
   "check_exchange_settings": "Пожалуйста включите их в настройках обменников.",
-  "amount_above_limit": "Сумма транзакции превышает максимальный лимит %1$s %2$s",
-  "amount_below_limit": "Сумма транзакции ниже необходимого минимума из %1$s %2$s",
   "transaction_details_category_title": "Категория",
   "transaction_details_payee": "Получатель платежа",
   "transaction_details_view_advanced_data": "Посмотреть расширенные детали транзакции",
