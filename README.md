@@ -165,6 +165,8 @@ Run deploy
 
 As with any modern React Native app, [Flipper](https://fbflipper.com/) is the officially-supported debugging app. Use the "React Native Hermes Debugger" to debug Javascript running in the UI.
 
+If you want to inspect Redux, you can install the [redux-debugger](https://github.com/jk-gan/flipper-plugin-redux-debugger) plugin for Flipper, which this app supports.
+
 ## Contributing
 
 Please follow the coding conventions defined in [Edge Conventions](https://github.com/Airbitz/edge-conventions)
