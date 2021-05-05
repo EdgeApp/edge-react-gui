@@ -1,6 +1,9 @@
 // @flow
 
+import type { JsonObject } from 'edge-core-js'
+
 import type { SortOption } from '../../components/modals/WalletListSortModal.js'
+import type { DefaultFeeOption } from '../../reducers/scenes/SettingsReducer.js'
 import type { MostRecentWallet } from '../../types/types.js'
 
 export const updateSettings = (settings: Object) => ({
@@ -48,6 +51,18 @@ export const setSettingsLock = (bool: boolean) => ({
 export const setDenominationKey = (currencyCode: string, denominationKey: string) => ({
   type: 'UI/SETTINGS/SET_DENOMINATION_KEY',
   data: { currencyCode, denominationKey }
+})
+
+// Set Default Fee
+export const setDefaultFee = (currencyCode: string, defaultFee: DefaultFeeOption, customFee: JsonObject) => ({
+  type: 'UI/SETTINGS/SET_DEFAULT_FEE',
+  data: { currencyCode: currencyCode, defaultFee: defaultFee, customFee: customFee }
+})
+
+// Remove Default Fee
+export const removeDefaultFee = (currencyCode: string) => ({
+  type: 'UI/SETTINGS/REMOVE_DEFAULT_FEE',
+  data: { currencyCode: currencyCode, defaultFee: 'none' }
 })
 
 // touch id settings

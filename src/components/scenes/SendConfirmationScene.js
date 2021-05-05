@@ -23,6 +23,7 @@ import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
 import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducers/scenes/SendConfirmationReducer.js'
+import type { CurrencySetting } from '../../reducers/scenes/SettingsReducer'
 import { THEME } from '../../theme/variables/airbitz.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
@@ -38,6 +39,7 @@ const DIVIDE_PRECISION = 18
 export type SendConfirmationStateProps = {
   fiatCurrencyCode: string,
   currencyInfo: EdgeCurrencyInfo | null,
+  currencySettings: CurrencySetting,
   currencyCode: string,
   nativeAmount: string,
   parentNetworkFee: string | null,

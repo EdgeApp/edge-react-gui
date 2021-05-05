@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Switch, Text, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -12,6 +12,7 @@ import { EdgeText } from './EdgeText.js'
 type Props = {
   children?: React.Node,
   onPress?: () => void | Promise<void>,
+  onChange?: () => void | Promise<void>,
 
   // If this is set, the component will insert a text node before the other children:
   label?: string,
@@ -36,6 +37,7 @@ type ColorProps = {
 
 type SquareButtonProps = Props & ColorProps
 type RadioButtonProps = Props & { value: boolean, right?: boolean }
+type SwitchButtonProps = Props & { value: boolean }
 
 export function PrimaryButton(props: Props) {
   const { children, label, onPress, disabled, spinner } = props
@@ -118,6 +120,21 @@ export function Radio(props: RadioButtonProps) {
           {children}
         </View>
       </TouchableHighlight>
+    </View>
+  )
+}
+
+export function SwitchButton(props: SwitchButtonProps) {
+  const { label, onChange, value } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  return (
+    <View style={styles.row}>
+      {label != null ? <Text style={styles.primaryText}>{label}</Text> : null}
+      <TouchableWithoutFeedback style={[styles.secondaryButton, spacingStyles(props, theme)]} onChange={onChange} disabled={value}>
+        <Switch value={value} onChange={onChange} />
+      </TouchableWithoutFeedback>
     </View>
   )
 }
@@ -251,6 +268,11 @@ const getStyles = cacheStyles((theme: Theme) => {
       marginRight: theme.rem(0.75),
       fontWeight: '600',
       fontSize: theme.rem(1.0)
+    },
+    row: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'flex-start'
     }
   }
 })
