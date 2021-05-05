@@ -78,7 +78,7 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & Th
               onPress={this.props.focusMe}
               icon={this.renderLogo(this.props.currencyLogo)}
               title={
-                <EdgeText style={styles.iconText} ellipsizeMode="middle" numberOfLines={1}>
+                <EdgeText style={styles.iconText} numberOfLines={1}>
                   {guiWalletName + ': ' + displayDenomination}
                 </EdgeText>
               }

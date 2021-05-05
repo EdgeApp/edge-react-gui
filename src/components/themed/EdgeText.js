@@ -21,7 +21,7 @@ class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps> {
       numberOfLines = numberOfLines + (children.match(/\n/g) || []).length
     }
     return (
-      <Text style={[text, style]} numberOfLines={numberOfLines} adjustsFontSizeToFit {...props}>
+      <Text style={[text, style]} numberOfLines={numberOfLines} adjustsFontSizeToFit minimumFontScale={0.65} {...props}>
         {children}
       </Text>
     )

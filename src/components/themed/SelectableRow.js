@@ -33,7 +33,7 @@ class SelectableRowComponent extends React.PureComponent<Props & ThemeProps> {
           <View style={autoWidth ? styles.iconTitleContainerAutoWidth : styles.iconTitleContainer}>
             {icon}
             <View style={[styles.title, autoWidth ? styles.titleAutoWidth : null]}>
-              <EdgeText ellipsizeMode="middle">{title}</EdgeText>
+              <EdgeText>{title}</EdgeText>
               {subTitle ? (
                 <EdgeText style={styles.subTitle} numberOfLines={2}>
                   {subTitle}
@@ -75,7 +75,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   titleAutoWidth: {
     width: 'auto',
-    maxWidth: '77%',
+    maxWidth: '75%',
     marginLeft: theme.rem(0.75),
     marginRight: theme.rem(0.75)
   },
@@ -87,8 +87,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   iconStyle: {
     marginRight: theme.rem(-0.5)
-    // position: 'absolute',
-    // paddingHorizontal: theme.rem(0.75)
   }
 }))
 

@@ -516,7 +516,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
             </Animated.View>
           </View>
           <ButtonBox onPress={this.onToggleFlipInput} paddingRem={[0.5, 0, 0.5, 1]}>
-            <Fontello name="exchange" color={theme.iconTappable} size={theme.rem(1.75)} />
+            <Fontello style={styles.flipIcon} name="exchange" color={theme.iconTappable} size={theme.rem(1.75)} />
           </ButtonBox>
         </View>
       </>
@@ -560,6 +560,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     bottom: 0,
     left: 0,
     right: 0
+  },
+  flipIcon: {
+    marginRight: -theme.rem(0.125)
   },
 
   // Top Amount
