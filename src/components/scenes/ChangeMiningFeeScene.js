@@ -11,11 +11,12 @@ import { connect } from 'react-redux'
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions.js'
 import { removeDefaultFeeSetting, setDefaultFeeSetting } from '../../actions/SettingsActions.js'
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants.js'
+import { save } from '../../locales/en_US.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { getGuiMakeSpendInfo } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
 import { getSelectedCurrencyCode } from '../../modules/UI/selectors'
-import type { CurrencySetting, FeeOption } from '../../reducers/scenes/SettingsReducer.js'
+import type { CurrencySetting, DefaultFeeOption, FeeOption } from '../../reducers/scenes/SettingsReducer.js'
 import { dayText, nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
@@ -37,7 +38,14 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  onSubmit(networkFeeOption: FeeOption, isDefault: boolean, customNetworkFee: Object, walletId: string, currencyCode?: string): mixed
+  onSubmit(
+    networkFeeOption: FeeOption,
+    isDefault: boolean,
+    currentDefault: DefaultFeeOption,
+    customNetworkFee: Object,
+    walletId: string,
+    currencyCode?: string
+  ): mixed
 }
 
 type Props = OwnProps & StateProps & DispatchProps
@@ -45,6 +53,7 @@ type Props = OwnProps & StateProps & DispatchProps
 type State = {
   networkFeeOption: FeeOption,
   isDefault: boolean,
+  currentDefault: DefaultFeeOption,
   customNetworkFee: Object
 }
 
@@ -52,12 +61,16 @@ export class ChangeMiningFee extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const defaultNetworkFee = 'standard'
+    let isDefault = false
 
     const { customNetworkFee = {} } = props // Initially standard
     let { networkFeeOption = defaultNetworkFee } = props // Initially standard
 
-    const isDefault = !(props.currencySettings?.defaultFee == null) && props.currencySettings?.defaultFee !== 'none' // Set false if null, true if exists and not equal to none
-    if (isDefault) networkFeeOption = props.currencySettings?.defaultFee || defaultNetworkFee
+    const currentDefault = props.currencySettings?.defaultFee ?? 'none'
+    if (currentDefault !== 'none') {
+      networkFeeOption = (props.currencySettings?.defaultFee: any)
+      isDefault = true
+    }
 
     // const currencyCode = props.wallet.currencyInfo.currencyCode
     const customFormat = this.getCustomFormat()
@@ -66,10 +79,10 @@ export class ChangeMiningFee extends React.Component<Props, State> {
       // Reset the custom fees if they don't match the format:
       const defaultCustomFee = {}
       for (const key of customFormat) defaultCustomFee[key] = ''
-      this.state = { networkFeeOption, isDefault, customNetworkFee: defaultCustomFee }
+      this.state = { networkFeeOption, isDefault, currentDefault, customNetworkFee: defaultCustomFee }
     } else {
       // Otherwise, use the custom fees from before:
-      this.state = { networkFeeOption, isDefault, customNetworkFee }
+      this.state = { networkFeeOption, isDefault, currentDefault, customNetworkFee }
     }
   }
 
@@ -82,13 +95,13 @@ export class ChangeMiningFee extends React.Component<Props, State> {
   }
 
   onSubmit = () => {
-    const { networkFeeOption, isDefault, customNetworkFee } = this.state
+    const { networkFeeOption, isDefault, currentDefault, customNetworkFee } = this.state
     const { currencyCode, wallet, spendTargets = [] } = this.props
     const testSpendInfo = { spendTargets, networkFeeOption, customNetworkFee }
     wallet
       .makeSpend(testSpendInfo)
       .then(() => {
-        this.props.onSubmit(networkFeeOption, isDefault, customNetworkFee, wallet.id, currencyCode)
+        this.props.onSubmit(networkFeeOption, isDefault, currentDefault, customNetworkFee, wallet.id, currencyCode)
         Actions.pop()
       })
       .catch(e => {
@@ -125,6 +138,12 @@ export class ChangeMiningFee extends React.Component<Props, State> {
     this.setState(prevState => ({
       isDefault: !prevState.isDefault
     }))
+
+    if (this.state.isDefault)
+      // If saving default,
+      this.setState(prevState => ({
+        currentDefault: prevState.networkFeeOption // Set state's current default
+      }))
   }
 
   renderRadioRow(value: FeeOption, label: string) {
@@ -245,13 +264,23 @@ export const ChangeMiningFeeScene = connect(
   },
   (dispatch: Dispatch): DispatchProps => ({
     // dispatch = setter
-    onSubmit(networkFeeOption: FeeOption, isDefault: boolean, customFee: JsonObject, walletId: string, currencyCode?: string) {
-      if (isDefault && currencyCode) {
+    onSubmit(
+      networkFeeOption: FeeOption,
+      isDefault: boolean,
+      currentDefault: DefaultFeeOption,
+      customFee: JsonObject,
+      walletId: string,
+      currencyCode?: string
+    ) {
+      console.log(`273: currentDefault: ${currentDefault}`)
+      console.log(`274: networkFeeOption: ${networkFeeOption}`)
+      console.log(`274: isDefault: ${isDefault.toString()}`)
+      if (currencyCode && currentDefault !== networkFeeOption && isDefault) {
+        // Isn't same as currently set fee option
         dispatch(setDefaultFeeSetting(currencyCode, networkFeeOption, customFee))
-      } else if (currencyCode) {
-        // Remove default
-
-        dispatch(removeDefaultFeeSetting(currencyCode))
+      } else if (currencyCode && currentDefault !== 'none' && !isDefault) {
+        // Isn't already turned off
+        dispatch(setDefaultFeeSetting(currencyCode, 'none', customFee))
       }
       dispatch(sendConfirmationUpdateTx({ networkFeeOption, customFee }))
     }

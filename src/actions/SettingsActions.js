@@ -18,7 +18,7 @@ import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import { sendLogs } from '../modules/Logs/action.js'
 import * as SETTINGS_ACTIONS from '../modules/Settings/SettingsActions.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
-import type { FeeOption } from '../reducers/scenes/SettingsReducer.js'
+import type { DefaultFeeOption } from '../reducers/scenes/SettingsReducer.js'
 import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
@@ -131,7 +131,7 @@ export const setDenominationKeyRequest = (currencyCode: string, denominationKey:
     .catch(showError)
 }
 
-export const setDefaultFeeSetting = (currencyCode: string, defaultFee: FeeOption, customFee: JsonObject) => (dispatch: Dispatch, getState: GetState) => {
+export const setDefaultFeeSetting = (currencyCode: string, defaultFee: DefaultFeeOption, customFee: JsonObject) => (dispatch: Dispatch, getState: GetState) => {
   // Thunk
   const state = getState()
   const { account } = state.core

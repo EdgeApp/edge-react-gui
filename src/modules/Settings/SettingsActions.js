@@ -3,7 +3,7 @@
 import type { JsonObject } from 'edge-core-js'
 
 import type { SortOption } from '../../components/modals/WalletListSortModal.js'
-import type { FeeOption } from '../../reducers/scenes/SettingsReducer.js'
+import type { DefaultFeeOption } from '../../reducers/scenes/SettingsReducer.js'
 import type { MostRecentWallet } from '../../types/types.js'
 
 export const updateSettings = (settings: Object) => ({
@@ -54,7 +54,7 @@ export const setDenominationKey = (currencyCode: string, denominationKey: string
 })
 
 // Set Default Fee
-export const setDefaultFee = (currencyCode: string, defaultFee: FeeOption, customFee: JsonObject) => ({
+export const setDefaultFee = (currencyCode: string, defaultFee: DefaultFeeOption, customFee: JsonObject) => ({
   type: 'UI/SETTINGS/SET_DEFAULT_FEE',
   data: { currencyCode: currencyCode, defaultFee: defaultFee, customFee: customFee }
 })

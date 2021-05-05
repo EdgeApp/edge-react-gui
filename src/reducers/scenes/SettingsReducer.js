@@ -44,11 +44,12 @@ export const initialState = {
 }
 
 export type FeeOption = 'custom' | 'high' | 'low' | 'standard'
+export type DefaultFeeOption = FeeOption | 'none'
 
 export type CurrencySetting = {
   denomination: string,
   denominations?: EdgeDenomination[],
-  defaultFee?: FeeOption
+  defaultFee?: DefaultFeeOption
 }
 
 export type SettingsState = {
