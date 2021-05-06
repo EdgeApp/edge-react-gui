@@ -22,8 +22,8 @@ import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { EdgeTextFieldOutlined } from './EdgeTextField.js'
+import { SceneHeader } from './SceneHeader'
 import { ButtonBox } from './ThemedButtons.js'
-import { UnderlinedHeader } from './UnderlinedHeader'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 type OwnProps = {
@@ -220,9 +220,9 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
         </View>
 
         {!isEmpty && !searching && (
-          <UnderlinedHeader>
+          <SceneHeader underline>
             <EdgeText style={styles.transactionsDividerText}>{s.strings.fragment_transaction_list_transaction}</EdgeText>
-          </UnderlinedHeader>
+          </SceneHeader>
         )}
       </>
     )

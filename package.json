@@ -1,6 +1,6 @@
 {
   "name": "edge-react-gui",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "private": true,
   "description": "Edge Wallet React GUI",
   "homepage": "https://edge.app",
@@ -130,6 +130,7 @@
     "csv-stringify": "^5.6.2",
     "dateformat": "^3.0.3",
     "detect-bundler": "^1.0.0",
+    "detox": "^18.10.0",
     "disklet": "^0.4.5",
     "edge-components": "^0.0.31",
     "edge-core-js": "^0.17.32",
@@ -150,6 +151,7 @@
     "react-native-device-info": "^5.6.1",
     "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-fast-crypto": "^2.0.0",
+    "react-native-flipper": "^0.87.0",
     "react-native-fs": "git://github.com/EdgeApp/react-native-fs.git#edge/removeEncoding",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-keyboard-aware-scroll-view": "^0.9.3",
@@ -180,6 +182,7 @@
     "react-native-webview": "^10.2.3",
     "react-redux": "^7.2.2",
     "redux": "^3.7.1",
+    "redux-flipper": "^1.4.2",
     "redux-thunk": "^2.2.0",
     "sprintf-js": "^1.1.1",
     "url-parse": "^1.4.4",
@@ -199,6 +202,7 @@
     "edge-plugin-wyre": "https://github.com/EdgeApp/edge-plugin-wyre.git#3ff34e5f6ebdfea1199f6acccedc703cc9abcd7a",
     "eslint": "7.14.0",
     "eslint-config-standard-kit": "^0.14.4",
+    "eslint-plugin-detox": "^1.0.0",
     "eslint-plugin-flowtype": "^5.1.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^11.1.0",
@@ -238,7 +242,7 @@
         "name": "iPhone 8"
       },
       "ios.sim.debug": {
-        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/edge.app",
+        "binaryPath": "/Users/marcusbates/Library/Developer/Xcode/DerivedData/edge-hhrsbwmzjemvddgtqahjbywenytl/Build/Products/Debug-iphonesimulator/edge.app",
         "build": "xcodebuild -workspace ios/edge.xcworkspace -scheme edge -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
         "type": "ios.simulator",
         "name": "iPhone 8"

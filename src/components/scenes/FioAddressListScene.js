@@ -21,8 +21,8 @@ import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
+import { SceneHeader } from '../themed/SceneHeader'
 import { ClickableText } from '../themed/ThemedButtons'
-import { UnderlinedHeader } from '../themed/UnderlinedHeader'
 
 export type StateProps = {
   fioAddresses: FioAddress[],
@@ -103,7 +103,7 @@ class FioAddressList extends React.Component<Props> {
     return (
       <SceneWrapper background="theme">
         <ScrollView style={styles.row}>
-          <UnderlinedHeader title={s.strings.title_fio_address} />
+          <SceneHeader title={s.strings.title_fio_address} underline />
           <View style={styles.list}>
             {!fioAddresses.length && <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>}
             {fioAddresses.map((address: FioAddress) => (
@@ -117,7 +117,7 @@ class FioAddressList extends React.Component<Props> {
               />
             ))}
           </View>
-          <UnderlinedHeader title={s.strings.title_fio_domains} withTopMargin />
+          <SceneHeader title={s.strings.title_fio_domains} withTopMargin underline />
           <View style={styles.list}>
             {!fioDomains.length && <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>}
             {fioDomains.map((domain: FioDomain) => (

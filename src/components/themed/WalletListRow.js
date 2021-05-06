@@ -1,285 +1,170 @@
 // @flow
-
+import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { Dimensions, Platform, TouchableOpacity, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
-import { SwipeRow } from 'react-native-swipe-list-view'
+import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
+import { connect } from 'react-redux'
 
-import { Fontello } from '../../assets/vector/index.js'
-import * as Constants from '../../constants/indexConstants'
-import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
+import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
-import { Airship } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import type { RootState } from '../../types/reduxTypes.js'
+import { getCurrencyInfo } from '../../util/utils'
+import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
-import { HiddenMenuButtons } from './HiddenMenuButtons'
-import { WalletProgressIcon } from './WalletProgressIcon.js'
 
-const FULL_WIDTH = Dimensions.get('window').width
-const WIDTH_DIMENSION_HIDE = FULL_WIDTH * 0.35
-const WIDTH_DIMENSION_SHOW = FULL_WIDTH * 0.15
-
-type Props = {
-  cryptoAmount: string,
+type OwnProps = {
   currencyCode: string,
-  differencePercentage: string,
-  differencePercentageStyle: string,
-  exchangeRate: string,
-  exchangeRateFiatSymbol: string,
-  fiatBalance: string,
-  fiatBalanceSymbol: string,
-  isToken: boolean,
-  publicAddress: string,
-  openRowLeft: boolean,
-  selectWallet(walletId: string, currencyCode: string): void,
-  symbolImage?: string,
-  walletId: string,
-  walletName: string,
-  swipeRef: ?React.ElementRef<typeof SwipeRow>,
-  swipeRow?: SwipeRow
+  children?: React.Node,
+  exchangeRateString?: string,
+  exchangeRateType?: 'Neutral' | 'Positive' | 'Negative',
+  icon?: React.Node,
+  gradient?: boolean,
+  onPress?: () => void,
+  onLongPress?: () => void,
+  walletId?: string,
+  walletName?: string
 }
 
-type State = {
-  swipeDirection: 'left' | 'right' | null,
-  leftRowOpened: boolean
+type StateProps = {
+  loading: boolean,
+  walletNameString: string
 }
 
-class WalletListRowComponent extends React.PureComponent<Props & ThemeProps, State> {
-  constructor(props) {
-    super(props)
-    this.state = {
-      swipeDirection: null,
-      leftRowOpened: false
-    }
+type Props = OwnProps & StateProps & ThemeProps
+
+function WalletRow(props: { gradient?: boolean, children: React.Node }) {
+  const { gradient, children } = props
+  const styles = getStyles(useTheme())
+
+  if (gradient === true) {
+    return <Gradient style={styles.containerGradient}>{children}</Gradient>
   }
 
-  componentDidUpdate() {
-    if (this.props.openRowLeft && !this.state.leftRowOpened) {
-      const { swipeRow, theme } = this.props
-      if (swipeRow) {
-        swipeRow.manuallySwipeRow(theme.rem(-6.25))
-      }
-      this.setState({ leftRowOpened: true })
-    }
-  }
+  return <View style={styles.container}>{children}</View>
+}
 
-  closeRow = () => {
-    const { swipeRow } = this.props
-    if (swipeRow) {
-      swipeRow.closeRow()
-    }
-  }
-
-  handleSelectWallet = (): void => {
-    const { currencyCode, isToken, publicAddress, walletId } = this.props
-    this.closeRow()
-    this.props.selectWallet(walletId, currencyCode)
-    if (!isToken) {
-      // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
-      // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
-      const { isAccountActivationRequired } = getSpecialCurrencyInfo(currencyCode)
-      if (!isAccountActivationRequired || (isAccountActivationRequired && publicAddress)) {
-        Actions.transactionList({ params: 'walletList' })
-      }
-    } else {
-      Actions.transactionList({ params: 'walletList' })
-    }
-  }
-
-  handleOpenWalletListMenuModal = (): void => {
-    const { currencyCode, isToken, symbolImage, walletId, walletName } = this.props
-    this.closeRow()
-    Airship.show(bridge => (
-      <WalletListMenuModal bridge={bridge} walletId={walletId} walletName={walletName} currencyCode={currencyCode} image={symbolImage} isToken={isToken} />
-    ))
-  }
-
-  openScene(key: string) {
-    const { currencyCode, walletId } = this.props
-    this.closeRow()
-    this.props.selectWallet(walletId, currencyCode)
-    Actions.jump(key, { selectedWalletId: walletId, selectedCurrencyCode: currencyCode, isCameraOpen: true })
-  }
-
-  handleOpenRequest = () => {
-    this.openScene(Constants.REQUEST)
-  }
-
-  handleOpenSend = () => {
-    this.openScene(Constants.SEND)
-  }
-
-  handleSwipeValueChange = ({ value }) => {
-    if ((value < WIDTH_DIMENSION_SHOW && value >= 0) || (value > -WIDTH_DIMENSION_SHOW && value <= 0)) {
-      this.setState({ swipeDirection: null })
-    } else if (value > WIDTH_DIMENSION_HIDE) {
-      this.setState({ swipeDirection: 'right' })
-    } else if (value < -WIDTH_DIMENSION_HIDE) {
-      this.setState({ swipeDirection: 'left' })
-    }
-  }
-
+class WalletListRowComponent extends React.PureComponent<Props> {
   render() {
-    const { swipeDirection } = this.state
     const {
       currencyCode,
-      cryptoAmount,
-      differencePercentage,
-      differencePercentageStyle,
-      exchangeRate,
-      exchangeRateFiatSymbol,
-      fiatBalance,
-      fiatBalanceSymbol,
-      theme,
-      walletId,
-      walletName
+      children,
+      exchangeRateString = '',
+      exchangeRateType = 'Neutral',
+      gradient = false,
+      icon,
+      loading = false,
+      onPress,
+      onLongPress,
+      walletNameString,
+      theme
     } = this.props
     const styles = getStyles(theme)
-    const isSwipingLeft = swipeDirection === 'left'
-    const isSwipingRight = swipeDirection === 'right'
-    const leftOpenValue = isSwipingRight ? FULL_WIDTH : theme.rem(6.25)
-    const rightOpenValue = isSwipingLeft ? -FULL_WIDTH : theme.rem(-6.25)
-    const swipeToOpenPercent = isSwipingLeft || isSwipingRight ? 0 : 50
+
     return (
-      <SwipeRow
-        {...this.props}
-        onSwipeValueChange={this.handleSwipeValueChange}
-        leftOpenValue={leftOpenValue}
-        rightOpenValue={rightOpenValue}
-        swipeToOpenPercent={swipeToOpenPercent}
-        ref={this.props.swipeRef}
-        leftActivationValue={FULL_WIDTH}
-        rightActivationValue={-FULL_WIDTH}
-        onLeftActionStatusChange={this.handleOpenRequest}
-        onRightActionStatusChange={this.handleOpenSend}
-        directionalDistanceChangeThreshold={5}
-        useNativeDriver
-      >
-        <HiddenMenuButtons
-          left={{
-            children: (
-              <View style={styles.swipeOptionsContainer}>
-                <EdgeText style={styles.swipeOptionsIcon} adjustsFontSizeToFit={false}>
-                  {WALLET_LIST_OPTIONS_ICON}
-                </EdgeText>
-              </View>
-            ),
-            color: 'default',
-            onPress: this.handleOpenWalletListMenuModal
-          }}
-          leftSwipable={{
-            children: <Fontello name="request" color={theme.icon} size={theme.rem(isSwipingRight ? 1.5 : 1)} />,
-            color: 'success',
-            onPress: this.handleOpenRequest
-          }}
-          rightSwipable={{
-            children: <Fontello name="send" color={theme.icon} size={theme.rem(isSwipingLeft ? 1.5 : 1)} />,
-            color: 'danger',
-            onPress: this.handleOpenSend
-          }}
-          right={{
-            children: (
-              <View style={styles.swipeOptionsContainer}>
-                <EdgeText style={styles.swipeOptionsIcon} adjustsFontSizeToFit={false}>
-                  {WALLET_LIST_OPTIONS_ICON}
-                </EdgeText>
-              </View>
-            ),
-            color: 'default',
-            onPress: this.handleOpenWalletListMenuModal
-          }}
-          isSwipingRight={isSwipingRight}
-          isSwipingLeft={isSwipingLeft}
-          swipeDirection={swipeDirection}
-        />
-        <Gradient style={styles.container}>
-          <TouchableOpacity onPress={this.handleSelectWallet} onLongPress={this.handleOpenWalletListMenuModal}>
+      <WalletRow gradient={gradient}>
+        <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
+          {loading === true ? (
+            <View style={styles.loaderContainer}>
+              <ActivityIndicator color={theme.primaryText} size="large" />
+            </View>
+          ) : (
             <View style={styles.rowContainer}>
-              <View style={styles.iconContainer}>
-                <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} />
-              </View>
+              <View style={styles.iconContainer}>{icon}</View>
               <View style={styles.detailsContainer}>
                 <View style={styles.detailsRow}>
-                  <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
-                  <EdgeText style={[styles.exchangeRate, { color: differencePercentageStyle }]}>
-                    {exchangeRateFiatSymbol + exchangeRate + '  ' + differencePercentage}
-                  </EdgeText>
-                  <EdgeText style={styles.detailsValue}>{cryptoAmount}</EdgeText>
+                  <EdgeText style={[styles.detailsCurrency, { width: theme.rem(2.75) }]}>{currencyCode}</EdgeText>
+                  <EdgeText style={styles[`percentage${exchangeRateType}`]}>{exchangeRateString}</EdgeText>
                 </View>
-                <View style={styles.detailsRow}>
-                  <EdgeText style={styles.detailsName}>{walletName}</EdgeText>
-                  <EdgeText style={styles.detailsFiat}>{fiatBalanceSymbol + fiatBalance}</EdgeText>
-                </View>
+                <EdgeText style={styles.detailsName}>{walletNameString}</EdgeText>
               </View>
+              {children}
             </View>
-          </TouchableOpacity>
-        </Gradient>
-      </SwipeRow>
+          )}
+        </TouchableOpacity>
+      </WalletRow>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
+  // Row Component
+  containerGradient: {
     flex: 1,
     paddingHorizontal: theme.rem(1)
   },
+  container: {
+    backgroundColor: theme.modal
+  },
+
+  // Row Containers
   rowContainer: {
     flex: 1,
     flexDirection: 'row',
     marginVertical: theme.rem(1)
   },
+  loaderContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: theme.rem(4.25),
+    paddingHorizontal: theme.rem(1.75)
+  },
+
+  // Icons
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: theme.rem(1)
   },
+
+  // Details
   detailsContainer: {
     flex: 1,
     flexDirection: 'column'
   },
   detailsRow: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'flex-end',
+    width: '70%'
   },
   detailsCurrency: {
-    fontFamily: theme.fontFaceBold,
-    marginRight: theme.rem(0.75)
-  },
-  detailsValue: {
-    marginLeft: theme.rem(0.5),
-    textAlign: 'right'
+    fontFamily: theme.fontFaceBold
   },
   detailsName: {
     flex: 1,
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   },
-  detailsFiat: {
-    fontSize: theme.rem(0.75),
-    textAlign: 'right',
+
+  // Difference Percentage Styles
+  percentageNeutral: {
     color: theme.secondaryText
   },
-  exchangeRate: {
-    flex: 1
+  percentagePositive: {
+    color: theme.positiveText
   },
-  swipeOptionsContainer: {
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: theme.rem(3.125),
-    paddingBottom: Platform.OS === 'ios' ? theme.rem(0.75) : theme.rem(1), // As the swipe options icon behaves like a text. This padding ensures the icon is centered vertically
-    backgroundColor: theme.sliderTabMore
-  },
-  swipeOptionsIcon: {
-    fontSize: theme.rem(1.25)
+  percentageNegative: {
+    color: theme.negativeText
   }
 }))
 
-const WalletListRowInner = withTheme(WalletListRowComponent)
-// $FlowFixMe - forwardRef is not recognize by flow?
-const WalletListRow = React.forwardRef((props, ref) => <WalletListRowInner {...props} swipeRef={ref} />)
-// Lint error about component not having a displayName
-WalletListRow.displayName = 'WalletListRow'
-export { WalletListRow }
+export const WalletListRow = connect((state: RootState, ownProps: OwnProps): StateProps => {
+  const { currencyCode, walletId, walletName } = ownProps
+  const guiWallet = walletId ? state.ui.wallets.byId[walletId] : null
+  let walletNameString = walletName
+  if (walletNameString == null) {
+    if (guiWallet != null) {
+      walletNameString = guiWallet.name
+    } else {
+      const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
+      const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
+      const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
+      walletNameString = `My ${currencyInfo?.displayName ?? ''}`
+    }
+  }
+
+  return {
+    loading: walletId != null && guiWallet == null,
+    walletNameString
+  }
+})(withTheme(WalletListRowComponent))

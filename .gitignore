@@ -102,3 +102,6 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+
+# Detox Test Artifacts
+artifacts/
