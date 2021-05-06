@@ -14,8 +14,8 @@ import type { FioRequest } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
+import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../themed/Tile'
-import { UnderlinedHeader } from '../themed/UnderlinedHeader'
 
 type NavigationProps = {
   selectedFioSentRequest: FioRequest
@@ -72,7 +72,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
     const { selectedFioSentRequest } = this.props
     return (
       <SceneWrapper background="header">
-        <UnderlinedHeader title={s.strings.title_fio_sent_request_details} />
+        <SceneHeader title={s.strings.title_fio_sent_request_details} underline />
         {this.amountField()}
         <Tile type="static" title={s.strings.fio_request_sent_details_from} body={selectedFioSentRequest.payee_fio_address} />
         <Tile type="static" title={s.strings.fio_request_sent_details_to} body={selectedFioSentRequest.payer_fio_address} />

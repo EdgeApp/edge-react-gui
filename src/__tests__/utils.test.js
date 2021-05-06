@@ -10,7 +10,7 @@ import {
   convertNativeToDisplay,
   convertNativeToExchange,
   daysBetween,
-  getDisplayDenomination,
+  getDenomination,
   getNewArrayWithItem,
   getNewArrayWithoutItem,
   getObjectDiff,
@@ -689,7 +689,18 @@ describe('getDisplayDenomination', function () {
 
   input.forEach((currency, index) => {
     test(`${title} ${currency}`, function () {
-      expect(getDisplayDenomination(currency, fixtures.settings)).toMatchObject(output[index])
+      expect(getDenomination(currency, fixtures.settings, 'display')).toMatchObject(output[index])
+    })
+  })
+})
+
+describe('getExchangeDenomination', function () {
+  const tests = fixtures.getExchangeDenomination
+  const { title, input, output } = tests
+
+  input.forEach((currency, index) => {
+    test(`${title} ${currency}`, function () {
+      expect(getDenomination(currency, fixtures.settings, 'exchange')).toMatchObject(output[index])
     })
   })
 })

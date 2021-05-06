@@ -46,6 +46,11 @@ export class Services extends React.PureComponent<Props> {
     const middleware: Object[] = [errorAlert, loginStatusChecker, thunk]
     if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
 
+    if (global.__DEV__) {
+      const createDebugger = require('redux-flipper').default
+      middleware.push(createDebugger())
+    }
+
     const composeEnhancers =
       typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && ENV.ENABLE_REDUX_DEBUG
         ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ name: 'ui', maxAge: 50 })

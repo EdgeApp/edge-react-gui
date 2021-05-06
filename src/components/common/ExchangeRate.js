@@ -16,7 +16,7 @@ type Props = {
   secondaryDisplayAmount: string | number
 }
 
-class ExchangeRateComponent extends React.PureComponent<Props & ThemeProps> {
+class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
   shouldComponentUpdate(nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, {
       primaryInfo: true,

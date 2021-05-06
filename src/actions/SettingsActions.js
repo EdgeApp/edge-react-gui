@@ -1,12 +1,11 @@
 // @flow
 
-import { createInputModal, createSecureTextModal } from 'edge-components'
+import { createSecureTextModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { launchModal } from '../components/common/ModalProvider.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
@@ -268,50 +267,10 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
   }
 }
 
-export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
+export const submitLogs = (notes: string) => async (dispatch: Dispatch) => {
   try {
-    const input = {
-      label: s.strings.settings_modal_text_entry_notes,
-      autoCorrect: false,
-      returnKeyType: 'go',
-      initialValue: '',
-      autoFocus: true
-    }
-    const yesButton = {
-      title: s.strings.string_done_cap
-    }
-    const noButton = {
-      title: s.strings.string_cancel_cap
-    }
-    // use standard icon instead?
-    const unlockSettingsModal = createInputModal({
-      icon: (
-        <IonIcon
-          name="ios-paper-plane"
-          size={24}
-          color={THEME.COLORS.SECONDARY}
-          style={{
-            backgroundColor: THEME.COLORS.TRANSPARENT,
-            zIndex: 1015,
-            elevation: 1015
-          }}
-        />
-      ),
-      title: s.strings.settings_button_send_logs,
-      input,
-      yesButton,
-      noButton
-    })
-    const notes = await launchModal(unlockSettingsModal)
-    if (notes || notes === '') {
-      if (state.network.isConnected) {
-        await showActivity(s.strings.settings_modal_send_logs_loading, dispatch(sendLogs(notes)))
-        showToast(s.strings.settings_modal_send_logs_success)
-      } else {
-        showError(`${s.strings.network_alert_title}`)
-      }
-    }
+    await showActivity(s.strings.settings_modal_send_logs_loading, dispatch(sendLogs(notes)))
+    showToast(s.strings.settings_modal_send_logs_success)
   } catch (error) {
     showError(error)
   }

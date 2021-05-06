@@ -88,7 +88,16 @@ export default class Main extends React.Component<Props> {
   }
 }
 
-const popToPluginBuyScene = () => Actions.jump(Constants.PLUGIN_BUY)
+const goToScene = (scene: string) => {
+  const { currentScene, drawerClose } = Actions
+  if (currentScene === scene) {
+    drawerClose()
+  } else {
+    Actions.jump(scene)
+  }
+}
+
+const popToPluginBuyScene = () => goToScene(Constants.PLUGIN_BUY)
 const BuyButton = () => {
   return (
     <Button onPress={popToPluginBuyScene}>
@@ -109,7 +118,7 @@ const BuyButton = () => {
   )
 }
 
-const popToPluginSellScene = () => Actions.jump(Constants.PLUGIN_SELL)
+const popToPluginSellScene = () => goToScene(Constants.PLUGIN_SELL)
 const SellButton = () => {
   return (
     <Button onPress={popToPluginSellScene}>
@@ -130,7 +139,7 @@ const SellButton = () => {
   )
 }
 
-const popToWalletListScene = () => Actions.jump(Constants.WALLET_LIST_SCENE)
+const popToWalletListScene = () => goToScene(Constants.WALLET_LIST_SCENE)
 const WalletsButton = () => {
   return (
     <Button onPress={popToWalletListScene}>
@@ -151,7 +160,7 @@ const WalletsButton = () => {
   )
 }
 
-const popToSendScan = () => Actions.jump(Constants.SCAN)
+const popToSendScan = () => goToScene(Constants.SCAN)
 const ScanButton = () => {
   return (
     <Button onPress={popToSendScan}>
@@ -199,7 +208,7 @@ const SweepPrivateKeyButton = ({ onSelectWallet }) => {
   )
 }
 
-const popToRequestScene = () => Actions.jump(Constants.REQUEST)
+const popToRequestScene = () => goToScene(Constants.REQUEST)
 const RequestButton = () => {
   return (
     <Button onPress={popToRequestScene}>
@@ -218,9 +227,10 @@ const RequestButton = () => {
   )
 }
 
+const popToExchangeScene = () => goToScene(Constants.EXCHANGE_SCENE)
 const ExchangeButton = () => {
   return (
-    <Button onPress={Actions.exchange}>
+    <Button onPress={popToExchangeScene}>
       <Button.Row>
         <Button.Left>
           <Image source={exchangeIcon} style={styles.iconImage} />
@@ -236,9 +246,10 @@ const ExchangeButton = () => {
   )
 }
 
+const popToTermsOfServiceScene = () => goToScene(Constants.TERMS_OF_SERVICE)
 const TermsOfServiceButton = () => {
   return (
-    <Button onPress={Actions[Constants.TERMS_OF_SERVICE]}>
+    <Button onPress={popToTermsOfServiceScene}>
       <Button.Row>
         <Button.Left>
           <Image source={termsIcon} style={styles.iconImage} />
@@ -281,9 +292,10 @@ const ShareButton = () => {
   )
 }
 
+const popToSettingsScene = () => goToScene(Constants.SETTINGS_OVERVIEW_TAB)
 const SettingsButton = () => {
   return (
-    <Button onPress={Actions.settingsOverviewTab}>
+    <Button onPress={popToSettingsScene}>
       <Button.Row>
         <Button.Left>
           <Image style={[styles.iconImage, { height: scale(20), width: scale(20) }]} source={settings} />
@@ -317,7 +329,7 @@ const LogoutButton = ({ onPress }) => {
   )
 }
 
-const goToFioNamesScene = () => Actions.jump(Constants.FIO_ADDRESS_LIST)
+const goToFioNamesScene = () => goToScene(Constants.FIO_ADDRESS_LIST)
 const FioAddressButton = () => {
   // FIO disable changes below
   if (global.isFioDisabled) return null
@@ -338,7 +350,7 @@ const FioAddressButton = () => {
   )
 }
 
-const goToFioRequestsScene = () => Actions.jump(Constants.FIO_REQUEST_LIST)
+const goToFioRequestsScene = () => goToScene(Constants.FIO_REQUEST_LIST)
 const FioRequestsButton = () => {
   return (
     <Button onPress={goToFioRequestsScene}>

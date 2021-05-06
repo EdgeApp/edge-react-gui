@@ -77,25 +77,31 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
         backgroundColor={theme.walletProgressIconBackground}
         rotation={0}
       >
-        {() => (icon ? <Image style={iconSize} source={{ uri: icon }} /> : <View style={iconSize} />)}
+        {() => (icon != null ? <Image style={iconSize} source={{ uri: icon }} /> : <View style={iconSize} />)}
       </AnimatedCircularProgress>
     )
   }
 }
 
 export const WalletProgressIcon = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const guiWallet = state.ui.wallets.byId[ownProps.walletId]
-  const walletsProgress = state.ui.wallets.walletLoadingProgress
+  const { walletId, currencyCode } = ownProps
   let icon
-  if (guiWallet.currencyCode === ownProps.currencyCode) {
-    icon = guiWallet.symbolImage
-  } else {
-    const meta = guiWallet.metaTokens.find(token => token.currencyCode === ownProps.currencyCode)
-    icon = meta ? meta.symbolImage : undefined
+  let progress = 100
+
+  if (walletId) {
+    const guiWallet = state.ui.wallets.byId[walletId]
+    const walletsProgress = state.ui.wallets.walletLoadingProgress
+    if (guiWallet.currencyCode === currencyCode) {
+      icon = guiWallet.symbolImage
+    } else {
+      const meta = guiWallet.metaTokens.find(token => token.currencyCode === ownProps.currencyCode)
+      icon = meta ? meta.symbolImage : undefined
+    }
+    progress = walletsProgress[walletId] ? walletsProgress[walletId] * 100 : 0
   }
 
   return {
     icon,
-    progress: walletsProgress[ownProps.walletId] ? walletsProgress[ownProps.walletId] * 100 : 0
+    progress
   }
 })(withTheme(WalletProgressIconComponent))

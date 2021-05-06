@@ -9,7 +9,7 @@ import { type RootState } from '../../types/reduxTypes.js'
 import { getFiatSymbol } from '../../util/utils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
-import { UnderlinedHeader } from './UnderlinedHeader'
+import { SceneHeader } from './SceneHeader'
 
 type StateProps = {
   showBalance: boolean,
@@ -46,7 +46,7 @@ class BalanceBox extends React.PureComponent<Props> {
     const noExchangeRates = !exchangeRates || !Object.keys(exchangeRates).length || !Object.values(exchangeRates).reduce(summation)
 
     return (
-      <UnderlinedHeader>
+      <SceneHeader underline>
         <TouchableOpacity onPress={this.props.onPress} style={styles.balanceBoxContainer}>
           {showBalance && !noExchangeRates ? (
             <>
@@ -59,7 +59,7 @@ class BalanceBox extends React.PureComponent<Props> {
             <EdgeText style={styles.showBalance}>{noExchangeRates ? s.strings.exchange_rates_loading : s.strings.string_show_balance}</EdgeText>
           )}
         </TouchableOpacity>
-      </UnderlinedHeader>
+      </SceneHeader>
     )
   }
 }

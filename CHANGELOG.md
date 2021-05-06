@@ -1,5 +1,28 @@
 # edge-react-gui
 
+## 2.0.10 (2021-05-05)
+
+- Upgrade to RN 0.64
+- Various bug fixes and improvements
+- Upgrade edge-core-js to v0.17.32
+  - Enable safari10 option in webpack minimizer to fix stuck loading screens on iOS 10
+  - Add crash and breadcrumb methods to EdgeLog for crash reporting
+  - Deprecate the options prop on the MakeEdgeContext React Native component
+  - Just pass any context options as normal props
+  - Reset the wallet sync ratio as part of a resync
+- Upgrade edge-currency-accountbased to v0.7.55
+  - Remove allowance transaction filtering from addTransaction
+  - ETH: Add error reporting to tx lists and gas price query for future debugging
+  - FIO: Reduce logging verbosity
+  - BNB: Enable resync
+  - Add additional log types crash and breadcrumb
+  - FIO: Change some error logging levels from error to info to reduce log verbosity
+- Upgrade edge-exchange-plugins to v0.11.25
+  - Convert Nomics, Coincap, and Currencyconverter API to use bulk requests
+  - Sideshift: Add refund address
+- Upgrade edge-login-ui-rn v0.9.1
+  - Disable the password recovery email on Android. This works around a tricky crash in the React Native rendering code.
+
 ## 2.0.9 (2021-04-16)
 
 - Add UNI ERC20 token

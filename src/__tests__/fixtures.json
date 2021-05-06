@@ -1,6 +1,6 @@
 {
-  "getDisplayDenomination": {
-    "title": "Display Denomination of",
+  "getExchangeDenomination": {
+    "title": "Exchange Denomination of",
     "input": ["BTC", "ETH", "TKN"],
     "output": [{
       "multiplier": "100000000",
@@ -10,6 +10,23 @@
       "multiplier": "1000000000000000000",
       "name": "ETH",
       "symbol": "Ξ"
+    }, {
+      "multiplier": "10000000000000000000000000000000000000000000000000",
+      "name": "TKN",
+      "symbol": ""
+    }]
+  },
+  "getDisplayDenomination": {
+    "title": "Display Denomination of",
+    "input": ["BTC", "ETH", "TKN"],
+    "output": [{
+      "multiplier": "1",
+      "name": "sats",
+      "symbol": "s"
+    }, {
+      "multiplier": "1000000000000000",
+      "name": "mETH",
+      "symbol": "mΞ"
     }, {
       "multiplier": "10000000000000000000000000000000000000000000000000",
       "name": "TKN",
@@ -45,7 +62,7 @@
   "settings": {
     "BTC": {
       "currencyCode": "BTC",
-      "denomination": "100000000",
+      "denomination": "1",
       "displayName": "Bitcoin",
       "denominations": [{
         "multiplier": "100000000",
@@ -69,7 +86,7 @@
     },
     "ETH": {
       "currencyCode": "ETH",
-        "denomination": "1000000000000000000",
+        "denomination": "1000000000000000",
         "denominations": [{
           "multiplier": "1000000000000000000",
           "name": "ETH",

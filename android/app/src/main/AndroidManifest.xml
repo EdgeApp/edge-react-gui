@@ -31,7 +31,8 @@
     android:icon="@mipmap/ic_launcher"
     android:roundIcon="@mipmap/ic_launcher_round"
     android:allowBackup="false"
-    android:theme="@style/AppTheme">
+    android:theme="@style/AppTheme"
+    android:usesCleartextTraffic="true">
     <meta-data android:name="com.bugsnag.android.API_KEY"
                android:value="5aca2dbe708503471d8137625e092675"/>
     <activity
@@ -123,7 +124,5 @@
         <data android:scheme="https" android:host="deep.edge.app" android:pathPrefix="/"></data>
       </intent-filter>
     </activity>
-    <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
   </application>
-
 </manifest>

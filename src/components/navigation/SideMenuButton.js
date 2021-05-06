@@ -28,7 +28,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     height: 44, // This is a fixed height of the navigation header no matter what screen size. Default by router-flux
     justifyContent: 'center',
     paddingRight: theme.rem(1),
-    paddingLeft: theme.rem(1.75)
+    paddingLeft: theme.rem(2.5)
   }
 }))
 

@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-/* globals jasmine beforeAll beforeEach afterAll */
+/* globals jasmine beforeAll afterAll */
 
 import detox from 'detox'
 
@@ -10,8 +10,6 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 120000
 beforeAll(async () => {
   await detox.init(config.detox)
 })
-
-beforeEach(async function () {})
 
 afterAll(async () => {
   await detox.cleanup()

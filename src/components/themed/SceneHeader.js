@@ -9,15 +9,16 @@ import { EdgeText } from './EdgeText.js'
 type Props = {
   title?: string,
   children?: React.Node,
+  underline?: boolean,
   withTopMargin?: boolean
 }
 
-class UnderlinedHeaderComponent extends React.PureComponent<Props & ThemeProps> {
+class SceneHeaderComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
-    const { title, children, theme } = this.props
+    const { title, underline, withTopMargin, children, theme } = this.props
     const styles = getStyles(theme)
     return (
-      <View style={[styles.container, this.props.withTopMargin ? styles.topMargin : null]}>
+      <View style={[styles.container, withTopMargin ? styles.topMargin : null, underline ? styles.underline : null]}>
         {title ? <EdgeText style={styles.title}>{title}</EdgeText> : null}
         {children}
       </View>
@@ -30,7 +31,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center',
     marginLeft: theme.rem(1),
     marginBottom: theme.rem(0.5),
-    paddingBottom: theme.rem(1),
+    paddingBottom: theme.rem(1)
+  },
+  underline: {
     borderBottomWidth: theme.thinLineWidth,
     borderBottomColor: theme.lineDivider
   },
@@ -43,4 +46,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const UnderlinedHeader = withTheme(UnderlinedHeaderComponent)
+export const SceneHeader = withTheme(SceneHeaderComponent)

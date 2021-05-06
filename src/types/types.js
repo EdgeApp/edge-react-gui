@@ -95,6 +95,14 @@ export type CreateWalletType = {
   symbolImageDarkMono?: string,
   currencyCode: string
 }
+
+export type CreateTokenType = {
+  currencyCode: string,
+  currencyName: string,
+  symbolImage?: string,
+  parentCurrencyCode: string
+}
+
 export type CustomNodeSetting = {
   isEnabled: boolean,
   nodesList: string[]

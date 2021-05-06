@@ -16,14 +16,14 @@ import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { convertCurrency } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import { convertNativeToDenomination, getDefaultDenomination, getDisplayDenomination, getFiatSymbol } from '../../util/utils'
+import { convertNativeToDenomination, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { EdgeTextFieldOutlined } from './EdgeTextField.js'
+import { SceneHeader } from './SceneHeader'
 import { ButtonBox } from './ThemedButtons.js'
-import { UnderlinedHeader } from './UnderlinedHeader'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 type OwnProps = {
@@ -220,9 +220,9 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
         </View>
 
         {!isEmpty && !searching && (
-          <UnderlinedHeader>
+          <SceneHeader underline>
             <EdgeText style={styles.transactionsDividerText}>{s.strings.fragment_transaction_list_transaction}</EdgeText>
-          </UnderlinedHeader>
+          </SceneHeader>
         )}
       </>
     )
@@ -335,7 +335,7 @@ export const TransactionListTop = connect(
     const balance = guiWallet.nativeBalances[selectedCurrencyCode]
 
     // Crypto Amount Formatting
-    const currencyDenomination = getDisplayDenomination(selectedCurrencyCode, state.ui.settings)
+    const currencyDenomination = getDenomination(selectedCurrencyCode, state.ui.settings, 'display')
     const cryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(balance) // convert to correct denomination
     const cryptoAmountFormat = intl.formatNumber(bns.add(cryptoAmount, '0'))
 

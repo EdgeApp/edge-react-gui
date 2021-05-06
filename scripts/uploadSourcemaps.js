@@ -31,7 +31,7 @@ async function main() {
   console.log(`Generating ${map}`)
   childProcess.execSync(
     `react-native bundle \
-  --platform $platform \
+  --platform ${platform} \
   --dev false \
   --entry-file index.js \
   --bundle-output ${bundle} \

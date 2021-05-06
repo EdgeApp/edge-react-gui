@@ -8,6 +8,7 @@ import SafariView from 'react-native-safari-view'
 
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD } from '../constants/WalletAndCurrencyConstants'
+import { formatNumber } from '../locales/intl.js'
 import type { ExchangeRatesState } from '../modules/ExchangeRates/reducer'
 import { emptyEdgeDenomination } from '../modules/Settings/selectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../modules/UI/selectors.js'
@@ -60,31 +61,6 @@ export const getSettingsTokenMultiplier = (currencyCode: string, settings: Objec
     }
   }
   return multiplier
-}
-
-export function getWalletDefaultDenomProps(
-  wallet: GuiWallet,
-  settingsState: Object,
-  currencyCode?: string // for metaTokens
-): EdgeDenomination {
-  const allWalletDenoms = wallet.allDenominations
-  let walletCurrencyCode
-  if (currencyCode) {
-    // if metaToken
-    walletCurrencyCode = currencyCode
-  } else {
-    // if not a metaToken
-    walletCurrencyCode = wallet.currencyCode
-  }
-  const currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
-  let denomProperties: EdgeDenomination
-  if (allWalletDenoms[walletCurrencyCode] != null && allWalletDenoms[walletCurrencyCode][currencySettings.denomination] != null) {
-    denomProperties = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
-  } else {
-    // This is likely a custom token which has no denom setup in allWalletDenominations
-    denomProperties = currencySettings.denominations[0]
-  }
-  return denomProperties
 }
 
 export const getFiatSymbol = (code: string) => {
@@ -611,24 +587,17 @@ export function getCustomTokenDenomination(currencyCode: string, settings: Objec
   return customTokenCurrencyInfo ? customTokenCurrencyInfo.denominations[0] : emptyEdgeDenomination
 }
 
-export function getDisplayDenomination(currencyCode: string, settings: Object): EdgeDenomination {
+export function getDenomination(currencyCode: string, settings: Object, type: 'display' | 'exchange') {
   const currencyInfo = settings[currencyCode]
   if (currencyInfo) {
-    const denominationMultiplier = currencyInfo.denomination
-    const denomination = currencyInfo.denominations.find(denomination => denomination.multiplier === denominationMultiplier)
-    return denomination || emptyEdgeDenomination
-  }
-  return getCustomTokenDenomination(currencyCode, settings)
-}
-
-export function getExchangeDenomination(guiWallet: GuiWallet, currencyCode: string, settings: Object): EdgeDenomination {
-  const currencyExchangeInfo = guiWallet.allDenominations[currencyCode]
-  if (currencyExchangeInfo) {
-    for (const key in currencyExchangeInfo) {
-      if (currencyExchangeInfo[key] && currencyExchangeInfo[key].name === currencyCode) {
-        return currencyExchangeInfo[key]
+    const denomination = currencyInfo.denominations.find(denomination => {
+      if (type === 'display') {
+        return denomination.multiplier === currencyInfo.denomination
+      } else if (type === 'exchange') {
+        return denomination.name === currencyInfo.currencyCode
       }
-    }
+    })
+    return denomination ?? emptyEdgeDenomination
   }
   return getCustomTokenDenomination(currencyCode, settings)
 }
@@ -637,11 +606,36 @@ export function getDefaultDenomination(currencyCode: string, settings: Object): 
   return settings[currencyCode].denominations.find(denomination => denomination.name === currencyCode)
 }
 
-export function checkFilterWallet(wallet: GuiWallet, currencyCodeString: string, filterText: string, customToken?: CustomTokenInfo): boolean {
-  const walletName = wallet.name.replace(' ', '').toLowerCase()
-  const currencyCode = currencyCodeString.toLowerCase()
-  const currencyNameString = customToken ? customToken.currencyName : wallet.currencyNames[currencyCodeString]
-  const currencyName = currencyNameString ? currencyNameString.toLowerCase() : '' // Added fallback if cannot find currency name on both guiWallet and customTokenInfo
+export function checkCurrencyCodes(fullCurrencyCode: string, currencyCode: string): boolean {
+  const [parent, token] = fullCurrencyCode.split('-')
+  const checkToken = token ? currencyCode.toLowerCase() === token.toLowerCase() : false
+  const checkParent = !token ? currencyCode.toLowerCase() === parent.toLowerCase() : false
+  return checkToken || checkParent
+}
+
+export function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: string[]): boolean {
+  return !!currencyCodesArray.find(item => checkCurrencyCodes(item, currencyCode))
+}
+
+export type FilterDetailsType = { name: string, currencyCode: string, currencyName: string }
+
+export function checkFilterWallet(details: FilterDetailsType, filterText: string, allowedCurrencyCodes?: string[], excludeCurrencyCodes?: string[]): boolean {
+  const currencyCode = details.currencyCode.toLowerCase()
+
+  if (allowedCurrencyCodes && allowedCurrencyCodes.length > 0 && !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes)) {
+    return false
+  }
+
+  if (excludeCurrencyCodes && excludeCurrencyCodes.length > 0 && checkCurrencyCodesArray(currencyCode, excludeCurrencyCodes)) {
+    return false
+  }
+
+  if (filterText === '') {
+    return true
+  }
+
+  const walletName = details.name.replace(' ', '').toLowerCase()
+  const currencyName = details.currencyName.toLowerCase()
   const filterString = filterText.toLowerCase()
   return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
 }
@@ -714,8 +708,8 @@ export const convertTransactionFeeToDisplayFee = (
     }
   } else if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
     // if parentNetworkFee greater than zero
-    const parentDisplayDenomination = getDisplayDenomination(guiWallet.currencyCode, settings)
-    const parentExchangeDenomination = getExchangeDenomination(guiWallet, guiWallet.currencyCode, settings)
+    const parentDisplayDenomination = getDenomination(guiWallet.currencyCode, settings, 'display')
+    const parentExchangeDenomination = getDenomination(guiWallet.currencyCode, settings, 'exchange')
     const cryptoFeeSymbol = parentDisplayDenomination && parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
     const displayMultiplier = parentDisplayDenomination ? parentDisplayDenomination.multiplier : ''
     const exchangeMultiplier = parentExchangeDenomination ? parentExchangeDenomination.multiplier : ''
@@ -730,8 +724,8 @@ export const convertTransactionFeeToDisplayFee = (
     }
   } else if (networkFee && bns.gt(networkFee, '0')) {
     // if networkFee greater than zero
-    const primaryDisplayDenomination = getDisplayDenomination(currencyCode, settings)
-    const primaryExchangeDenomination = getExchangeDenomination(guiWallet, currencyCode, settings)
+    const primaryDisplayDenomination = getDenomination(currencyCode, settings, 'display')
+    const primaryExchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
     const cryptoFeeSymbol = primaryDisplayDenomination && primaryDisplayDenomination.symbol ? primaryDisplayDenomination.symbol : ''
     const displayMultiplier = primaryDisplayDenomination ? primaryDisplayDenomination.multiplier : ''
     const exchangeMultiplier = primaryExchangeDenomination ? primaryExchangeDenomination.multiplier : ''
@@ -751,3 +745,33 @@ export const convertTransactionFeeToDisplayFee = (
   }
 }
 // End of convert Transaction Fee to Display Fee
+
+export function getCryptoAmount(
+  balance: string,
+  denomination: EdgeDenomination,
+  exchangeDenomination: EdgeDenomination,
+  fiatDenomination: EdgeDenomination,
+  exchangeRate?: number,
+  guiWallet: GuiWallet
+): string {
+  let maxConversionDecimals = 6
+  if (exchangeRate) {
+    const precisionAdjustValue = precisionAdjust({
+      primaryExchangeMultiplier: exchangeDenomination.multiplier,
+      secondaryExchangeMultiplier: fiatDenomination.multiplier,
+      exchangeSecondaryToPrimaryRatio: exchangeRate
+    })
+    maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(denomination.multiplier), precisionAdjustValue)
+  }
+  try {
+    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), maxConversionDecimals)
+    const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
+    return `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}`
+  } catch (error) {
+    if (error.message === 'Cannot operate on base16 float values') {
+      const errorMessage = `${error.message}: GuiWallet currency code - ${guiWallet.currencyCode}, balance - ${balance}, demonination multiplier: ${denomination.multiplier}`
+      throw new Error(errorMessage)
+    }
+    throw new Error(error)
+  }
+}
