@@ -3,6 +3,8 @@
 
 import { Date } from 'core-js'
 
+import { AccountInfo, GetStarted, Password, Pin, Terms, Username } from '../pages/createAccountFlow'
+import Landing from '../pages/landing.screen'
 import { launchAppWithPermissions } from '../utils.js'
 
 // FUNCTIONS
@@ -27,26 +29,6 @@ const PASSWORD = {
   valid: 'y768Mv4PLFupQjMu'
 }
 
-const loginscene = () => ({
-  createAccountButton: element(by.text('Create account')),
-  getStartedButton: element(by.text('Get Started')),
-  usernameInput: element(by.type('RCTUITextField')),
-  nextButton: element(by.text('Next')),
-  usernameTakenError: element(by.text('Username already exists')),
-  passwordInput: element(by.type('RCTUITextField')).atIndex(0),
-  confirmPasswordInput: element(by.type('RCTUITextField')).atIndex(1),
-  passwordMismatchError: element(by.text('Does not match password')),
-  pinInput: element(by.type('RCTUITextField')),
-  confirmation1: element(by.type('RCTImageView')).atIndex(0),
-  confirmation2: element(by.type('RCTImageView')).atIndex(1),
-  confirmation3: element(by.type('RCTImageView')).atIndex(2),
-  confirmation4: element(by.type('RCTImageView')).atIndex(3),
-  confirmFinishButton: element(by.text('Confirm & Finish')),
-  usernameTooShortError: element(by.text('Minimum 3 characters')),
-  usernameInvalidCharactersError: element(by.text('Must only be ascii characters')),
-  walletListScene: element(by.text('Slide wallets to show more options'))
-})
-
 beforeEach(async () => {
   await launchAppWithPermissions()
 })
@@ -55,158 +37,89 @@ afterEach(async () => {
   // await navigateFromPinToLanding()
 })
 
-describe('Edge GUI: ', () => {
-  it('should be able to simply create an account', async () => {
-    const loginScene = loginscene()
-
+describe('Edge GUI: When Creating an Account: ', () => {
+  it('should be able to fix invalid inputs & create account', async () => {
     // NAVIGATE TO CREATE ACCOUNT
-    await waitFor(loginScene.createAccountButton).toBeVisible().withTimeout(5000)
-    await expect(loginScene.createAccountButton).toExist()
-    await loginScene.createAccountButton.tap()
-    await expect(loginScene.getStartedButton).toBeVisible()
+    await waitFor(Landing.createAccountButton).toBeVisible().withTimeout(5000)
+    await expect(Landing.createAccountButton).toExist()
+    await Landing.createAccountButton.tap()
+    await expect(GetStarted.getStartedButton).toBeVisible()
 
     // NAVIGATE TO CHOOSE USERNAME
-    await loginScene.getStartedButton.tap()
-    await expect(loginScene.usernameInput).toBeVisible()
-    await expect(loginScene.nextButton).toBeVisible()
-
-    // VALID USERNAME
-    await loginScene.usernameInput.typeText(USERNAME.valid)
-    await expect(loginScene.usernameTakenError).toBeNotVisible()
-
-    // NAVIGATE TO CHOOSE PASSWORD
-    await loginScene.nextButton.tap()
-    await expect(loginScene.passwordInput).toBeVisible()
-    await expect(loginScene.confirmPasswordInput).toBeVisible()
-    await expect(loginScene.nextButton).toBeVisible()
-
-    // VALID PASSWORD
-    await loginScene.passwordInput.typeText(PASSWORD.valid)
-    await loginScene.confirmPasswordInput.typeText(PASSWORD.valid)
-    await expect(loginScene.passwordMismatchError).toNotExist()
-
-    // NAVIGATE TO CHOOSE PIN
-    await loginScene.nextButton.tap()
-    await expect(loginScene.pinInput).toExist()
-    await expect(loginScene.nextButton).toBeVisible()
-
-    // VALID PIN
-    await loginScene.pinInput.typeText('1234')
-
-    // NAVIGATE TO ACCOUNT CONFIRMATION
-    await loginScene.nextButton.tap()
-
-    // WAIT FOR LOADING SCREEN
-    await waitFor(findByText("Almost done! Let's write down your account information")).toBeVisible().withTimeout(5000)
-
-    // NAVIGATE TO REVIEW
-    await loginScene.nextButton.tap()
-    // await waitFor(confirmation1).toBeVisible().withTimeout(5000)
-    await expect(loginScene.confirmation1).toBeVisible()
-    await expect(loginScene.confirmation2).toBeVisible()
-    await expect(loginScene.confirmation3).toBeVisible()
-    await expect(loginScene.confirmation4).toBeVisible()
-    await expect(loginScene.confirmFinishButton).toBeNotVisible()
-
-    // CONFIRM
-    await loginScene.confirmation1.tap()
-    await loginScene.confirmation2.tap()
-    await loginScene.confirmation3.tap()
-    await loginScene.confirmation4.tap()
-    expect(loginScene.confirmFinishButton).toBeVisible()
-
-    // NAVIGATE TO WALLET LIST
-    await loginScene.confirmFinishButton.tap()
-
-    // ASSERT DASHBOARD SHOWN
-    await waitFor(findByText('Slide wallets to show more options')).toBeVisible().withTimeout(10000)
-    await expect(findByText('Slide wallets to show more options')).toBeVisible()
-  })
-
-  xit('should be able to fix invalid inputs & create account', async () => {
-    const loginScene = loginscene()
-
-    // NAVIGATE TO CREATE ACCOUNT
-    await waitFor(loginScene.createAccountButton).toBeVisible().withTimeout(5000)
-    await expect(loginScene.createAccountButton).toExist()
-    await loginScene.createAccountButton.tap()
-    await expect(loginScene.getStartedButton).toBeVisible()
-
-    // NAVIGATE TO CHOOSE USERNAME
-    await loginScene.getStartedButton.tap()
-    await expect(loginScene.usernameInput).toBeVisible()
-    await expect(loginScene.nextButton).toBeVisible()
+    await GetStarted.getStartedButton.tap()
+    // await waitFor(Username.usernameInput).toBeVisible().withTimeout(5000)
+    // await expect(Username.nextButton).toBeVisible()
 
     // TOO SHORT
-    await loginScene.usernameInput.typeText(USERNAME.tooShort)
-    await expect(loginScene.usernameTooShortError).toBeVisible()
-    await loginScene.usernameInput.clearText()
+    await Username.usernameInput.typeText(USERNAME.tooShort)
+    await expect(Username.usernameTooShortError).toBeVisible()
+    await Username.usernameInput.clearText()
 
     // INVALID CHARACTERS
-    await loginScene.usernameInput.typeText(USERNAME.invalidCharacters)
-    await expect(loginScene.usernameInvalidCharactersError).toBeVisible()
-    await loginScene.usernameInput.clearText()
+    await Username.usernameInput.typeText(USERNAME.invalidCharacters)
+    await expect(Username.usernameInvalidCharactersError).toBeVisible()
+    await Username.usernameInput.clearText()
 
     // USERNAME TAKEN
-    await loginScene.usernameInput.typeText(USERNAME.taken)
-    await loginScene.nextButton.tap()
-    await expect(loginScene.usernameTakenError).toBeVisible()
-    await loginScene.usernameInput.clearText()
+    await Username.usernameInput.typeText(USERNAME.taken)
+    await Username.nextButton.tap()
+    await expect(Username.usernameTakenError).toBeVisible()
+    await Username.usernameInput.clearText()
 
     // VALID USERNAME
-    await loginScene.usernameInput.typeText(USERNAME.valid)
-    await expect(loginScene.usernameTakenError).toBeNotVisible()
+    await Username.usernameInput.typeText(USERNAME.valid)
+    await expect(Username.usernameTakenError).toBeNotVisible()
 
     // NAVIGATE TO CHOOSE PASSWORD
-    await loginScene.nextButton.tap()
-    await expect(loginScene.passwordInput).toBeVisible()
-    await expect(loginScene.confirmPasswordInput).toBeVisible()
-    await expect(loginScene.nextButton).toBeVisible()
+    await Username.nextButton.tap()
+    await expect(Password.passwordInput).toBeVisible()
+    await expect(Password.confirmPasswordInput).toBeVisible()
+    await expect(Password.nextButton).toBeVisible()
 
     // PASSWORD MISMATCH(confirm password is fixed before password is fixed)
-    await loginScene.confirmPasswordInput.typeText(PASSWORD.mismatch)
-    await loginScene.passwordInput.typeText(PASSWORD.valid)
-    await expect(loginScene.passwordMismatchError).toExist()
-    await loginScene.passwordInput.clearText()
-    await loginScene.confirmPasswordInput.clearText()
+    await Password.confirmPasswordInput.typeText(PASSWORD.mismatch)
+    await Password.passwordInput.typeText(PASSWORD.valid)
+    await expect(Password.passwordMismatchError).toExist()
+    await Password.passwordInput.clearText()
+    await Password.confirmPasswordInput.clearText()
 
     // VALID PASSWORD
-    await loginScene.passwordInput.typeText(PASSWORD.valid)
-    await loginScene.confirmPasswordInput.typeText(PASSWORD.valid)
-    await expect(loginScene.passwordMismatchError).toNotExist()
+    await Password.passwordInput.typeText(PASSWORD.valid)
+    await Password.confirmPasswordInput.typeText(PASSWORD.valid)
+    await expect(Password.passwordMismatchError).toNotExist()
 
     // NAVIGATE TO CHOOSE PIN
-    await loginScene.nextButton.tap()
-    await expect(loginScene.pinInput).toExist()
-    await expect(loginScene.nextButton).toBeVisible()
+    await Password.nextButton.tap()
+    await expect(Pin.pinInput).toExist()
+    await expect(Pin.nextButton).toBeVisible()
 
     // VALID PIN
-    await loginScene.pinInput.typeText('1234')
+    await Pin.pinInput.typeText('1234')
 
     // NAVIGATE TO ACCOUNT CONFIRMATION
-    await loginScene.nextButton.tap()
+    await Pin.nextButton.tap()
 
     // WAIT FOR LOADING SCREEN
     await waitFor(findByText("Almost done! Let's write down your account information")).toBeVisible().withTimeout(5000)
 
     // NAVIGATE TO REVIEW
-    await loginScene.nextButton.tap()
+    await AccountInfo.nextButton.tap()
     // await waitFor(confirmation1).toBeVisible().withTimeout(5000)
-    await expect(loginScene.confirmation1).toBeVisible()
-    await expect(loginScene.confirmation2).toBeVisible()
-    await expect(loginScene.confirmation3).toBeVisible()
-    await expect(loginScene.confirmation4).toBeVisible()
-    await expect(loginScene.confirmFinishButton).toBeNotVisible()
+    await expect(Terms.confirmation1).toBeVisible()
+    await expect(Terms.confirmation2).toBeVisible()
+    await expect(Terms.confirmation3).toBeVisible()
+    await expect(Terms.confirmation4).toBeVisible()
+    await expect(Terms.confirmFinishButton).toBeNotVisible()
 
     // CONFIRM
-    await loginScene.confirmation1.tap()
-    await loginScene.confirmation2.tap()
-    await loginScene.confirmation3.tap()
-    await loginScene.confirmation4.tap()
-    expect(loginScene.confirmFinishButton).toBeVisible()
+    await Terms.confirmation1.tap()
+    await Terms.confirmation2.tap()
+    await Terms.confirmation3.tap()
+    await Terms.confirmation4.tap()
+    expect(Terms.confirmFinishButton).toBeVisible()
 
     // NAVIGATE TO WALLET LIST
-    await loginScene.confirmFinishButton.tap()
+    await Terms.confirmFinishButton.tap()
 
     // ASSERT DASHBOARD SHOWN
     await waitFor(findByText('Slide wallets to show more options')).toBeVisible().withTimeout(10000)
