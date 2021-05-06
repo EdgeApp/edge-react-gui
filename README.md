@@ -82,7 +82,7 @@ Edge is known to build with this exact tool set. Updated versions of these tools
 
 ### Install CocoaPods
 
-    brew install cocoapods
+    sudo gem install cocoapods
 
 ### XCode Setup - Use Legacy Build System
 
