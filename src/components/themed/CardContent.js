@@ -10,23 +10,40 @@ import { EdgeText } from './EdgeText.js'
 
 type Props = {
   image?: React.Node,
-  title: string,
+  title: string | React.Node,
   subTitle: string,
-  value: string,
+  value: string | React.Node,
   subValue: string,
   paddingRem?: number[] | number
 }
 
 class CardContentComponent extends React.PureComponent<Props & ThemeProps> {
+  renderTitle() {
+    const { title, theme } = this.props
+    const styles = getStyles(theme)
+    if (typeof title === 'string') return <EdgeText style={styles.contentTitle}>{title}</EdgeText>
+
+    return title
+  }
+
+  renderValue() {
+    const { value, theme } = this.props
+    const styles = getStyles(theme)
+
+    if (typeof value === 'string') return <EdgeText style={styles.contentValue}>{value}</EdgeText>
+
+    return value
+  }
+
   render() {
-    const { image, title, subTitle, value, subValue, paddingRem, theme } = this.props
+    const { image, subTitle, subValue, paddingRem, theme } = this.props
     const styles = getStyles(theme)
 
     return (
       <View style={[styles.container, paddingStyles(paddingRem, theme)]}>
         {image ? <View style={styles.iconContainer}>{image}</View> : null}
         <View style={styles.contentContainer}>
-          <DataRow label={<EdgeText style={styles.contentTitle}>{title}</EdgeText>} value={<EdgeText style={styles.contentValue}>{value}</EdgeText>} />
+          <DataRow label={this.renderTitle()} value={this.renderValue()} />
           <DataRow
             label={<EdgeText style={styles.contentSubTitle}>{subTitle}</EdgeText>}
             value={<EdgeText style={styles.contentSubValue}>{subValue}</EdgeText>}
@@ -71,6 +88,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'right'
   },
   contentSubTitle: {
+    flex: 1,
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
   },

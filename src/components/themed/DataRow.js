@@ -45,10 +45,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   label: {
     flex: 1,
-    marginRight: theme.rem(0.75)
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   value: {
-    marginLeft: theme.rem(0.5),
+    marginLeft: theme.rem(0.25),
     textAlign: 'right'
   }
 }))
