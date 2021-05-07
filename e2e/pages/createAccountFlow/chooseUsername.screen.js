@@ -1,27 +1,18 @@
 /* eslint-disable no-undef */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-class Username {
-  // Element getters
-  get usernameInput() {
-    return element(by.type('RCTUITextField'))
+const Username = () => {
+  const elements = {
+    usernameInput: () => element(by.type('RCTUITextField')),
+    usernameTakenError: () => element(by.text('Username already exists')),
+    usernameTooShortError: () => element(by.text('Minimum 3 characters')),
+    usernameInvalidCharactersError: () => element(by.text('Must only be ascii characters')),
+    nextButton: () => element(by.text('Next'))
   }
 
-  get usernameTakenError() {
-    return element(by.text('Username already exists'))
-  }
-
-  get usernameTooShortError() {
-    return element(by.text('Minimum 3 characters'))
-  }
-
-  get usernameInvalidCharactersError() {
-    return element(by.text('Must only be ascii characters'))
-  }
-
-  get nextButton() {
-    return element(by.text('Next'))
+  return {
+    ...elements
   }
 }
 
-export default new Username()
+export default Username()

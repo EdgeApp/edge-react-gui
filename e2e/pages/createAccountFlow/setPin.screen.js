@@ -1,15 +1,22 @@
 /* eslint-disable no-undef */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-class Pin {
-  // Element getters
-  get nextButton() {
-    return element(by.text('Next'))
+const Pin = () => {
+  const elements = {
+    nextButton: () => element(by.text('Next')),
+    pinInput: () => element(by.type('RCTUITextField'))
   }
 
-  get pinInput() {
-    return element(by.type('RCTUITextField'))
+  const actions = {
+    check: async () => {
+      await waitFor(elements.pinInput()).toBeVisible().withTimeout(5000)
+      await expect(elements.pinInput()).toExist()
+    }
+  }
+
+  return {
+    ...elements,
+    ...actions
   }
 }
-
-export default new Pin()
+export default Pin()

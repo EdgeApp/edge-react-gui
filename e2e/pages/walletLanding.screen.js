@@ -1,11 +1,17 @@
 /* eslint-disable no-undef */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-class WallentLanding {
-  // Element getters
-  get walletListScene() {
-    return element(by.text('Slide wallets to show more options'))
+const WallentLanding = () => {
+  const elements = {
+    walletListScene: () => element(by.text('Slide wallets to show more options'))
+  }
+
+  const actions = {}
+
+  return {
+    ...elements,
+    ...actions
   }
 }
 
-export default new WallentLanding()
+export default WallentLanding()

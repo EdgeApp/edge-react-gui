@@ -1,27 +1,34 @@
 /* eslint-disable no-undef */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-class Terms {
-  // Element getters
-  get confirmation1() {
-    return element(by.type('RCTImageView')).atIndex(0)
+const Terms = () => {
+  const elements = {
+    confirmation1: () => element(by.type('RCTImageView')).atIndex(0),
+    confirmation2: () => element(by.type('RCTImageView')).atIndex(1),
+    confirmation3: () => element(by.type('RCTImageView')).atIndex(2),
+    confirmation4: () => element(by.type('RCTImageView')).atIndex(3),
+    confirmFinishButton: () => element(by.text('Confirm & Finish'))
   }
 
-  get confirmation2() {
-    return element(by.type('RCTImageView')).atIndex(1)
+  const actions = {
+    check: async () => {
+      await waitFor(elements.createAccountButton()).toBeVisible().withTimeout(5000)
+      await expect(elements.createAccountButton()).toExist()
+    },
+
+    acceptTerms: async () => {
+      elements.confirmation1.tap()
+      elements.confirmation2.tap()
+      elements.confirmation3.tap()
+      elements.confirmation4.tap()
+      elements.confirmFinishButton.tap()
+    }
   }
 
-  get confirmation3() {
-    return element(by.type('RCTImageView')).atIndex(2)
-  }
-
-  get confirmation4() {
-    return element(by.type('RCTImageView')).atIndex(3)
-  }
-
-  get confirmFinishButton() {
-    return element(by.text('Confirm & Finish'))
+  return {
+    ...elements,
+    ...actions
   }
 }
 
-export default new Terms()
+export default Terms()

@@ -1,12 +1,22 @@
 /* eslint-disable no-undef */
-/* eslint-disable no-undef */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-class Landing {
-  // Element getters
-  get createAccountButton() {
-    return element(by.text('Create account'))
+const Landing = () => {
+  const elements = {
+    createAccountButton: () => element(by.text('Create account'))
+  }
+
+  const actions = {
+    check: async () => {
+      await waitFor(elements.createAccountButton()).toBeVisible().withTimeout(5000)
+      await expect(elements.createAccountButton()).toExist()
+    }
+  }
+
+  return {
+    ...elements,
+    ...actions
   }
 }
 
-export default new Landing()
+export default Landing()

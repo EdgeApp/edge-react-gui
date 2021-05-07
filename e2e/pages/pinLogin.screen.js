@@ -1,6 +1,15 @@
 /* eslint-disable no-undef */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-class PinLogin {}
+const PinLogin = () => {
+  const elements = {}
 
-export default new PinLogin()
+  const actions = {}
+
+  return {
+    ...elements,
+    ...actions
+  }
+}
+
+export default PinLogin()

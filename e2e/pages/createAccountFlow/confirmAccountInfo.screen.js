@@ -1,11 +1,13 @@
 /* eslint-disable no-undef */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-class AccountInfo {
-  // Element getters
-  get nextButton() {
-    return element(by.text('Next'))
+const AccountInfo = () => {
+  const elements = {
+    nextButton: () => element(by.text('Next'))
+  }
+  return {
+    ...elements
   }
 }
 
-export default new AccountInfo()
+export default AccountInfo()

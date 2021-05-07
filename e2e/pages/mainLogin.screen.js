@@ -1,6 +1,15 @@
 /* eslint-disable no-undef */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-class MainLogin {}
+const MainLogin = () => {
+  const elements = {}
 
-export default new MainLogin()
+  const actions = {}
+
+  return {
+    ...elements,
+    ...actions
+  }
+}
+
+export default MainLogin()

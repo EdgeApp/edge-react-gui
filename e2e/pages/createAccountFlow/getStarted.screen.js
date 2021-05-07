@@ -1,11 +1,14 @@
 /* eslint-disable no-undef */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-class GetStarted {
-  // Element getters
-  get getStartedButton() {
-    return element(by.text('Get Started'))
+const GetStarted = () => {
+  const elements = {
+    getStartedButton: () => element(by.text('Get Started'))
+  }
+
+  return {
+    ...elements
   }
 }
 
-export default new GetStarted()
+export default GetStarted()
