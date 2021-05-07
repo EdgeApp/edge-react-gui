@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - "14.15.0"
 install:
-  - yarn
+  - travis_retry yarn install --network-concurrency 1 --child-concurrency 1 --ignore-optional
 script:
   - yarn lint
   - yarn flow
