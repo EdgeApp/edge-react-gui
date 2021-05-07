@@ -1,78 +1,9 @@
 language: node_js
 node_js:
   - "14.15.0"
-sudo: required
-cache:
-  directories:
-    - $HOME/.npm
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-    - $HOME/.android/build-cache
+install:
+  - yarn
 script:
-  - npm i react-native-cli -g
-matrix:
-  include:
-    - language: android
-      os: linux
-      jdk: oraclejdk8
-      before_cache:
-        - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-        - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-      sudo: required
-      node_js: false
-      before_install:
-        - nvm install 14.15.0
-        - nvm use 14.15.0
-        - node --version
-        # install NDK
-        - openssl aes-256-cbc -K $encrypted_e28d423744bc_key -iv $encrypted_e28d423744bc_iv -in env.json.enc -out env.json -d
-        - git clone https://github.com/Airbitz/android-ndk-linux.git $HOME/android-ndk-root
-        - export ANDROID_NDK_HOME=$HOME/android-ndk-root
-        - echo "y" | sdkmanager "cmake;3.6.4111459"
-        - npm install -g yarn@1.5.1
-        - echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-      install:
-        - travis_retry yarn install --network-concurrency 1 --child-concurrency 1 --ignore-optional
-      android:
-        components:
-          - tools
-          - platform-tools
-          - build-tools-23.0.1
-          - build-tools-23.0.3
-          - build-tools-25.0.1
-          - build-tools-25.0.3
-          - android-23
-          - android-25
-          - android-27
-          - extra
-          - extra-android-m2repository
-          - extra-android-support
-          - extra-google-google_play_services
-          - extra-google-m2repository
-          - addon-google_apis-google-16
-          - cmake
-        licenses:
-          - '.+'
-      # before_script:
-      #   - npm run precommit
-      script:
-        - cd android && ./gradlew assembleDebug && ./gradlew assembleRelease
-    - language: objective-c
-      os: osx
-      osx_image: xcode10.2
-      node_js: false
-      before_install:
-        - nvm install 14.15.0
-        - nvm use 14.15.0
-        - node --version
-        - openssl aes-256-cbc -K $encrypted_e28d423744bc_key -iv $encrypted_e28d423744bc_iv -in env.json.enc -out env.json -d
-        - npm install -g yarn@1.5.1
-      install:
-        - travis_retry gem install xcpretty xcpretty-travis-formatter
-        - travis_retry yarn install --network-concurrency 1 --child-concurrency 1
-
-      xcode_project: ios/edge.xcworkspace
-      xcode_scheme: ios/edge
-      script:
-        - cd ios
-        - node ../execKeepAlive.js 'xcodebuild -workspace edge.xcworkspace -derivedDataPath build clean build -scheme edge -configuration release -sdk iphonesimulator12.2 CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""' | xcpretty -f `xcpretty-travis-formatter`
+  - yarn lint
+  - yarn flow
+  - yarn cover
