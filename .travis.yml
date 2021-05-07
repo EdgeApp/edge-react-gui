@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "10.15.3"
+  - "14.15.0"
 sudo: required
 cache:
   directories:
@@ -21,8 +21,8 @@ matrix:
       sudo: required
       node_js: false
       before_install:
-        - nvm install 10.15.3
-        - nvm use 10.15.3
+        - nvm install 14.15.0
+        - nvm use 14.15.0
         - node --version
         # install NDK
         - openssl aes-256-cbc -K $encrypted_e28d423744bc_key -iv $encrypted_e28d423744bc_iv -in env.json.enc -out env.json -d
@@ -62,8 +62,8 @@ matrix:
       osx_image: xcode10.2
       node_js: false
       before_install:
-        - nvm install 10.15.3
-        - nvm use 10.15.3
+        - nvm install 14.15.0
+        - nvm use 14.15.0
         - node --version
         - openssl aes-256-cbc -K $encrypted_e28d423744bc_key -iv $encrypted_e28d423744bc_iv -in env.json.enc -out env.json -d
         - npm install -g yarn@1.5.1
