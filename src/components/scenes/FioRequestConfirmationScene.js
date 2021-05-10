@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import * as Constants from '../../constants/indexConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { addToFioAddressCache, checkPubAddress } from '../../modules/FioAddress/util'
+import { addToFioAddressCache, checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddress/util'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui'
@@ -218,6 +218,13 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     this.setState({ fioAddressFrom: fioAddressFrom || '' })
   }
 
+  showError(error?: string) {
+    this.setState({ settingFioAddressTo: false })
+    if (error != null) {
+      showError(error)
+    }
+  }
+
   openFioAddressToModal = async () => {
     this.setState({ settingFioAddressTo: true })
     const fioAddressTo = await Airship.show(bridge => (
@@ -231,18 +238,16 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       />
     ))
     if (fioAddressTo === null) {
-      this.setState({ settingFioAddressTo: false })
-      return
+      this.showError()
+    } else if (await checkExpiredFioAddress(this.props.fioWallets[0], fioAddressTo ?? '')) {
+      this.showError(s.strings.fio_address_expired)
+    } else if (this.props.fioPlugin && !(await this.props.fioPlugin.otherMethods.doesAccountExist(fioAddressTo))) {
+      this.showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
+    } else if (this.state.fioAddressFrom === fioAddressTo) {
+      this.showError(s.strings.fio_confirm_request_error_to_same)
+    } else {
+      this.setState({ fioAddressTo: fioAddressTo || '', settingFioAddressTo: false })
     }
-    if (this.props.fioPlugin && !(await this.props.fioPlugin.otherMethods.doesAccountExist(fioAddressTo))) {
-      this.setState({ settingFioAddressTo: false })
-      return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
-    }
-    if (this.state.fioAddressFrom === fioAddressTo) {
-      this.setState({ settingFioAddressTo: false })
-      return showError(s.strings.fio_confirm_request_error_to_same)
-    }
-    this.setState({ fioAddressTo: fioAddressTo || '', settingFioAddressTo: false })
   }
 
   openMemoModal = async () => {

@@ -11,7 +11,7 @@ import FIO_LOGO from '../../assets/images/fio/fio_logo.png'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
-import { type FioAddresses, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
+import { type FioAddresses, checkExpiredFioAddress, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
@@ -38,7 +38,8 @@ type StateProps = {
   userFioAddresses: FioAddress[],
   userFioAddressesLoading: boolean,
   coreWallet: EdgeCurrencyWallet,
-  fioPlugin: EdgeCurrencyConfig
+  fioPlugin: EdgeCurrencyConfig,
+  fioWallets: EdgeCurrencyWallet[]
 }
 
 type DispatchProps = {
@@ -237,7 +238,10 @@ class AddressModalConnected extends React.Component<Props, State> {
       }
       this.fioCheckQueue = 0
       try {
-        const { fioPlugin } = this.props
+        const { fioPlugin, fioWallets } = this.props
+        if (await checkExpiredFioAddress(fioWallets[0], fioAddress)) {
+          return this.setState({ fieldError: s.strings.fio_address_expired })
+        }
         const doesAccountExist = await fioPlugin.otherMethods.doesAccountExist(fioAddress)
         this.setStatusLabel(s.strings.fragment_send_address)
         if (!doesAccountExist) {
@@ -372,7 +376,8 @@ const AddressModal = connect(
       coreWallet: currencyWallets[ownProps.walletId],
       userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
       userFioAddressesLoading: state.ui.scenes.fioAddress.fioAddressesLoading,
-      fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+      fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+      fioWallets: state.ui.wallets.fioWallets
     }
   },
   (dispatch: Dispatch): DispatchProps => ({ refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses()) })
