@@ -58,8 +58,8 @@ export function SecondaryButton(props: Props) {
 
   return (
     <TouchableOpacity style={[styles.secondaryButton, spacingStyles(props, theme), disabled ? styles.disabled : null]} onPress={onPress} disabled={disabled}>
-      {label != null ? <Text style={styles.secondaryText}>{label}</Text> : null}
-      {spinner != null ? <ActivityIndicator color={theme.primaryButtonText} style={styles.spinner} /> : null}
+      {label ? <Text style={styles.secondaryText}>{label}</Text> : null}
+      {spinner ? <ActivityIndicator color={theme.primaryButtonText} style={styles.spinner} /> : null}
       {children}
     </TouchableOpacity>
   )

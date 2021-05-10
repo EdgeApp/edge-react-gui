@@ -3,15 +3,13 @@
 import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import * as React from 'react'
-import { ActivityIndicator, FlatList, View } from 'react-native'
+import { FlatList, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions.js'
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type RootState } from '../../types/reduxTypes.js'
@@ -22,6 +20,7 @@ import ManageTokenRow from '../common/ManageTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
+import { SecondaryButton } from '../themed/ThemedButtons'
 import { WalletProgressIcon } from '../themed/WalletProgressIcon.js'
 
 export type ManageTokensOwnProps = {
@@ -80,6 +79,7 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
   render() {
     const { metaTokens, name, currencyCode } = this.props.guiWallet
     const { manageTokensPending } = this.props
+
     let accountMetaTokenInfo = []
     const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
     // this will need refactoring later
@@ -107,16 +107,15 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
       }
     }
 
-    const HeaderIcon = <WalletProgressIcon currencyCode={currencyCode} walletId={this.props.guiWallet.id} size={THEME.rem(1.5)} />
-
     const { theme } = this.props
 
     const styles = getStyles(theme)
 
-    return (
-      <SceneWrapper background="body">
-        <SettingsHeaderRow text={name} icon={HeaderIcon} />
+    const HeaderIcon = <WalletProgressIcon currencyCode={currencyCode} walletId={this.props.guiWallet.id} size={theme.rem(1.5)} />
 
+    return (
+      <SceneWrapper>
+        <SettingsHeaderRow text={name} icon={HeaderIcon} />
         <View style={styles.container}>
           <View style={styles.instructionalArea}>
             <Text style={styles.instructionalText}>{s.strings.managetokens_top_instructions}</Text>
@@ -131,7 +130,7 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
                     goToEditTokenScene={this.goToEditTokenScene}
                     metaToken={metaToken}
                     walletId={this.props.guiWallet.id}
-                    // symbolImage={this.props.guiWallet.symbolImage}
+                    symbolImage={this.props.guiWallet.symbolImage}
                     toggleToken={this.toggleToken}
                     enabledList={this.state.enabledList}
                     metaTokens={this.props.guiWallet.metaTokens}
@@ -140,30 +139,16 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
                 style={styles.tokenList}
               />
             </View>
-            {specialCurrencyInfo.isCustomTokensSupported ? (
-              <View style={styles.buttonsArea}>
-                <PrimaryButton style={styles.saveButton} onPress={this.saveEnabledTokenList}>
-                  {manageTokensPending ? (
-                    <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
-                  ) : (
-                    <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_save}</PrimaryButton.Text>
-                  )}
-                </PrimaryButton>
-                <SecondaryButton style={styles.addButton} onPress={this.goToAddTokenScene}>
-                  <SecondaryButton.Text style={styles.buttonText}>{s.strings.addtoken_add}</SecondaryButton.Text>
-                </SecondaryButton>
-              </View>
-            ) : (
-              <View style={styles.buttonsArea}>
-                <PrimaryButton style={styles.oneButton} onPress={this.saveEnabledTokenList}>
-                  {manageTokensPending ? (
-                    <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
-                  ) : (
-                    <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_save}</PrimaryButton.Text>
-                  )}
-                </PrimaryButton>
-              </View>
-            )}
+            <View style={styles.buttonsArea}>
+              <SecondaryButton
+                label={s.strings.string_save}
+                spinner={manageTokensPending}
+                onPress={this.saveEnabledTokenList}
+                marginRem={[0.75]}
+                paddingRem={[0.5, 2.7]}
+              />
+              <SecondaryButton label={s.strings.addtoken_add} onPress={this.goToAddTokenScene} marginRem={[0.75]} paddingRem={[0.5, 1]} />
+            </View>
           </View>
         </View>
       </SceneWrapper>
@@ -199,7 +184,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     position: 'relative',
     flex: 1,
-    backgroundColor: THEME.COLORS.WHITE,
     paddingBottom: scale(50)
   },
   instructionalArea: {
@@ -207,8 +191,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingHorizontal: scale(20)
   },
   instructionalText: {
-    fontSize: scale(16),
-    textAlign: 'center'
+    fontSize: theme.rem(0.85),
+    textAlign: 'left',
+    color: theme.deactivatedText
   },
   metaTokenListArea: {
     borderTopWidth: 1,
@@ -222,34 +207,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1
   },
   buttonsArea: {
-    height: scale(52),
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'flex-end',
-    paddingVertical: scale(4),
-    paddingHorizontal: scale(20)
-  },
-  addButton: {
-    flex: 1,
-    marginLeft: scale(2),
-    backgroundColor: THEME.COLORS.GRAY_2,
-    borderRadius: 3
-  },
-  buttonText: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(17.5)
-  },
-  saveButton: {
-    flex: 1,
-    marginRight: scale(2),
-    backgroundColor: THEME.COLORS.SECONDARY,
-    borderRadius: 3
-  },
-  oneButton: {
-    flex: 1,
-    backgroundColor: THEME.COLORS.SECONDARY,
-    borderRadius: 3
+    alignSelf: 'stretch'
   }
 }))
 
