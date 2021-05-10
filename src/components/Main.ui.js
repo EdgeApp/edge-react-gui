@@ -29,6 +29,7 @@ import { FioDomainSettingsScene } from '../components/scenes/FioDomainSettingsSc
 import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConfirmationScene.js'
 import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
+import ManageTokensScene from '../components/scenes/ManageTokensScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
@@ -41,7 +42,6 @@ import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateW
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
-import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import Scan from '../connectors/scenes/ScanConnector'
 import SendConfirmation from '../connectors/scenes/SendConfirmationConnector.js'
 import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
@@ -304,7 +304,7 @@ export class MainComponent extends React.Component<Props> {
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={this.renderEmptyButton()}
                 navTransparent
-                component={ifLoggedIn(ManageTokens)}
+                component={ifLoggedIn(ManageTokensScene)}
                 renderTitle={<HeaderTitle title={s.strings.title_manage_tokens} />}
                 animation="fade"
                 duration={600}
@@ -472,7 +472,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={Constants.MANAGE_TOKENS_NOT_USED}
               navTransparent
-              component={ifLoggedIn(ManageTokens)}
+              component={ifLoggedIn(ManageTokensScene)}
               renderTitle={<HeaderTitle title={s.strings.title_manage_tokens} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
