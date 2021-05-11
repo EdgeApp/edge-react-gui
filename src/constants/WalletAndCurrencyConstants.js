@@ -200,16 +200,20 @@ export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInf
   }
 }
 
-export const getPrivateKeySweepableCurrencies = (): string[] => {
-  const sweepableCurrencies = []
+export const getSpecificCurrencies = (key: string): string[] => {
+  const currencies = []
   for (const currencyCode in SPECIAL_CURRENCY_INFO) {
     const currencyInfo = SPECIAL_CURRENCY_INFO[currencyCode]
-    if (currencyInfo.isPrivateKeySweepable) {
-      sweepableCurrencies.push(currencyCode)
+    if (currencyInfo[key]) {
+      currencies.push(currencyCode)
     }
   }
-  return sweepableCurrencies
+  return currencies
 }
+
+export const getPrivateKeySweepableCurrencies = (): string[] => getSpecificCurrencies('isPrivateKeySweepable')
+
+export const getCurrenciesWithTokens = (): string[] => getSpecificCurrencies('isTokensSupported')
 
 export const SPECIAL_CURRENCY_INFO: {
   [currencyCode: string]: SpecialCurrencyInfo

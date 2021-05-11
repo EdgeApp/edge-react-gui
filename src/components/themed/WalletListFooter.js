@@ -8,12 +8,13 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants.js'
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
+import { getCurrenciesWithTokens } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { makeCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { type WalletListResult, WalletListModal } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
@@ -52,43 +53,54 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
 
   addToken = () => {
     const { account, wallets } = this.props
+    let isExistingTokenEnabled: boolean = false
+    const allowedCurrencyCodes = getCurrenciesWithTokens()
 
-    // check for existence of any token-enabled wallets
-    for (const key of Object.keys(wallets)) {
-      const wallet = wallets[key]
-      const specialCurrencyInfo = getSpecialCurrencyInfo(wallet.currencyCode)
-      if (specialCurrencyInfo.isCustomTokensSupported) {
-        return Actions.manageTokens({ guiWallet: wallet })
+    for (const walletId in wallets) {
+      const guiWallet = wallets[walletId]
+      if (allowedCurrencyCodes.find(allowedCurrencyCode => allowedCurrencyCode === guiWallet.currencyCode) != null) {
+        isExistingTokenEnabled = true
+        break
       }
     }
 
-    // if no token-enabled wallets then allow creation of token-enabled wallet
-    const { ethereum } = account.currencyConfig
-    if (ethereum == null) {
-      return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
-    }
-
-    Airship.show(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={s.strings.wallet_list_add_token_modal_title}
-        message={s.strings.wallet_list_add_token_modal_message}
-        buttons={{
-          confirm: { label: s.strings.title_create_wallet },
-          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
-        }}
-      />
-    ))
-      .then(answer => {
-        if (answer === 'confirm') {
-          Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
-            selectedWalletType: makeCreateWalletType(ethereum.currencyInfo)
-          })
+    if (isExistingTokenEnabled) {
+      Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />).then(
+        ({ walletId }: WalletListResult) => {
+          if (walletId != null) {
+            return Actions.manageTokens({ guiWallet: wallets[walletId] })
+          }
         }
-      })
-      .catch(error => {
-        console.log(error)
-      })
+      )
+    } else {
+      // if no token-enabled wallets then allow creation of token-enabled wallet
+      const { ethereum } = account.currencyConfig
+      if (ethereum == null) {
+        return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
+      }
+
+      Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.wallet_list_add_token_modal_title}
+          message={s.strings.wallet_list_add_token_modal_message}
+          buttons={{
+            confirm: { label: s.strings.title_create_wallet },
+            cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+          }}
+        />
+      ))
+        .then(answer => {
+          if (answer === 'confirm') {
+            Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
+              selectedWalletType: makeCreateWalletType(ethereum.currencyInfo)
+            })
+          }
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
   }
 }
 
