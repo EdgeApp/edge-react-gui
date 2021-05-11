@@ -1,16 +1,18 @@
 // @flow
+import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { formatNumber } from '../../locales/intl.js'
 import { type ExchangeRatesState } from '../../modules/ExchangeRates/reducer.js'
+import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import type { RootState } from '../../types/reduxTypes.js'
-import { getCryptoAmount, getDenomFromIsoCode, getDenomination, getFiatSymbol, getYesterdayDateRoundDownHour } from '../../util/utils'
+import { getCryptoAmount, getCurrencyInfo, getDenomFromIsoCode, getDenomination, getFiatSymbol, getYesterdayDateRoundDownHour } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { CardContent } from './CardContent'
+import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText.js'
-import { WalletListRow } from './WalletListRow.js'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 type OwnProps = {
@@ -19,6 +21,7 @@ type OwnProps = {
   onPress?: () => void,
   onLongPress?: () => void,
   showRate?: boolean,
+  paddingRem?: number | number[],
   walletId: string,
   walletName?: string
 }
@@ -27,6 +30,7 @@ type StateProps = {
   cryptoAmount: string,
   fiatBalanceSymbol: string,
   fiatBalanceString: string,
+  walletNameString: string,
   exchangeRate?: number,
   exchangeRates: ExchangeRatesState,
   fiatExchangeRate: number,
@@ -36,6 +40,7 @@ type StateProps = {
 type Props = OwnProps & StateProps & ThemeProps
 
 class WalletListRowComponent extends React.PureComponent<Props> {
+  noOnPress = () => {}
   renderIcon() {
     return <WalletProgressIcon currencyCode={this.props.currencyCode} walletId={this.props.walletId} />
   }
@@ -81,19 +86,9 @@ class WalletListRowComponent extends React.PureComponent<Props> {
   }
 
   renderChildren() {
-    const { cryptoAmount, fiatBalanceString, fiatBalanceSymbol, theme } = this.props
+    const { cryptoAmount, fiatBalanceString, fiatBalanceSymbol, walletNameString, currencyCode, showRate = false, theme } = this.props
     const styles = getStyles(theme)
 
-    return (
-      <View>
-        <EdgeText style={styles.detailsValue}>{cryptoAmount}</EdgeText>
-        <EdgeText style={styles.detailsFiat}>{fiatBalanceSymbol + fiatBalanceString}</EdgeText>
-      </View>
-    )
-  }
-
-  render() {
-    const { showRate = false } = this.props
     const exchangeData = {
       exchangeRateString: '',
       exchangeRateType: 'Neutral'
@@ -105,9 +100,27 @@ class WalletListRowComponent extends React.PureComponent<Props> {
     }
 
     return (
-      <WalletListRow {...this.props} {...exchangeData} icon={this.renderIcon()}>
+      <CardContent
+        image={this.renderIcon()}
+        title={
+          <>
+            <EdgeText style={styles.detailsCurrency}>{currencyCode}</EdgeText>
+            <EdgeText style={[styles.detailsExchange, styles[`percentage${exchangeData.exchangeRateType}`]]}>{exchangeData.exchangeRateString}</EdgeText>
+          </>
+        }
+        value={<EdgeText style={styles.detailsValue}>{cryptoAmount}</EdgeText>}
+        subTitle={walletNameString}
+        subValue={fiatBalanceSymbol + fiatBalanceString}
+      />
+    )
+  }
+
+  render() {
+    const { onPress, onLongPress, paddingRem, gradient } = this.props
+    return (
+      <ClickableRow onPress={onPress || this.noOnPress} onLongPress={onLongPress} gradient={gradient} paddingRem={paddingRem} highlight>
         {this.renderChildren()}
-      </WalletListRow>
+      </ClickableRow>
     )
   }
 }
@@ -121,11 +134,30 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(0.75),
     textAlign: 'right',
     color: theme.secondaryText
+  },
+  detailsCurrency: {
+    fontFamily: theme.fontFaceBold,
+    marginRight: theme.rem(0.75),
+    flexShrink: 1
+  },
+  detailsExchange: {
+    flexShrink: 2
+  },
+
+  // Difference Percentage Styles
+  percentageNeutral: {
+    color: theme.secondaryText
+  },
+  percentagePositive: {
+    color: theme.positiveText
+  },
+  percentageNegative: {
+    color: theme.negativeText
   }
 }))
 
 export const WalletListCurrencyRow = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const { currencyCode, walletId } = ownProps
+  const { currencyCode, walletName, walletId } = ownProps
   const guiWallet = state.ui.wallets.byId[walletId]
 
   const exchangeRates = state.exchangeRates
@@ -155,11 +187,24 @@ export const WalletListCurrencyRow = connect((state: RootState, ownProps: OwnPro
 
   const fiatExchangeRate = guiWallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${guiWallet.isoFiatCurrencyCode}`] : 1
 
+  let walletNameString = walletName
+  if (walletNameString == null) {
+    if (guiWallet != null) {
+      walletNameString = guiWallet.name
+    } else {
+      const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
+      const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
+      const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
+      walletNameString = `My ${currencyInfo?.displayName ?? ''}`
+    }
+  }
+
   return {
     // Render Children
     cryptoAmount,
     fiatBalanceSymbol,
     fiatBalanceString,
+    walletNameString,
 
     // Exchange rate with style
     exchangeRate,

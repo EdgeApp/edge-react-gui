@@ -9,8 +9,10 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 
 type Props = {
   onPress: () => void | (() => Promise<void>),
+  onLongPress?: () => void | (() => Promise<void>),
   highlight?: boolean,
   gradient?: boolean,
+  autoHeight?: boolean,
   children?: React.Node,
   underline?: boolean,
 
@@ -20,9 +22,9 @@ type Props = {
 
 class ClickableRowComponent extends React.PureComponent<Props & ThemeProps> {
   renderContent() {
-    const { gradient, children, underline, theme } = this.props
+    const { gradient, children, underline, autoHeight, theme } = this.props
     const styles = getStyles(theme)
-    const containerStyles = [styles.rowContainer, spacingStyles(this.props, theme), underline ? styles.underline : null]
+    const containerStyles = [styles.rowContainer, spacingStyles(this.props, theme), underline ? styles.underline : null, autoHeight ? styles.autoHeight : null]
     if (gradient) {
       return <Gradient style={containerStyles}>{children}</Gradient>
     }
@@ -31,17 +33,21 @@ class ClickableRowComponent extends React.PureComponent<Props & ThemeProps> {
   }
 
   render() {
-    const { onPress, highlight, theme } = this.props
+    const { onPress, onLongPress, highlight, theme } = this.props
 
     if (highlight) {
       return (
-        <TouchableHighlight onPress={onPress} underlayColor={theme.backgroundGradientLeft}>
+        <TouchableHighlight onPress={onPress} onLongPress={onLongPress} underlayColor={theme.backgroundGradientLeft}>
           {this.renderContent()}
         </TouchableHighlight>
       )
     }
 
-    return <TouchableOpacity onPress={onPress}>{this.renderContent()}</TouchableOpacity>
+    return (
+      <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
+        {this.renderContent()}
+      </TouchableOpacity>
+    )
   }
 }
 
@@ -66,11 +72,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: theme.rem(4.25)
+    height: theme.rem(4.25),
+    paddingHorizontal: theme.rem(1)
   },
   underline: {
     borderBottomWidth: theme.thinLineWidth,
     borderBottomColor: theme.lineDivider
+  },
+  autoHeight: {
+    height: 'auto'
   }
 }))
 

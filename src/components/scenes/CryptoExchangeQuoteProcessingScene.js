@@ -1,51 +1,52 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, View } from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 
 import s from '../../locales/strings.js'
-import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
-import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText'
 
-export function CryptoExchangeQuoteProcessingScreenComponent(props: {}) {
+function CryptoExchangeQuoteProcessingScreenComponent(props: ThemeProps) {
+  const styles = getStyles(props.theme)
   return (
     <SceneWrapper background="header" hasTabs={false}>
-      <View style={styles.top}>
-        <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
-      </View>
-      <View style={styles.bottom}>
-        <FormattedText style={styles.momentText} isBold>
-          {s.strings.just_a_moment}
-        </FormattedText>
-        <FormattedText style={styles.findingText}>{s.strings.trying_to_find}</FormattedText>
+      <View style={styles.container}>
+        <EdgeText style={styles.title} isBold>
+          {s.strings.hang_tight}
+        </EdgeText>
+        <EdgeText style={styles.findingText} numberOfLines={2}>
+          {s.strings.trying_to_find}
+        </EdgeText>
+        <ActivityIndicator style={styles.spinner} color={props.theme.iconTappable} />
       </View>
     </SceneWrapper>
   )
 }
 
-const rawStyles = {
-  top: {
+const getStyles = cacheStyles((theme: Theme) => ({
+  container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'center'
   },
-  bottom: {
-    flex: 1
+  spinner: {
+    marginTop: theme.rem(3)
   },
-  momentText: {
-    color: THEME.COLORS.WHITE,
+  title: {
     width: '100%',
     textAlign: 'center',
-    fontSize: scale(18),
-    marginBottom: scale(20)
+    fontWeight: '600',
+    fontSize: theme.rem(1.25),
+    marginBottom: theme.rem(1.25)
   },
   findingText: {
-    color: THEME.COLORS.WHITE,
-    width: '100%',
+    maxWidth: theme.rem(10),
     textAlign: 'center',
-    fontSize: scale(14)
+    fontWeight: '600',
+    fontSize: theme.rem(0.75)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+export const CryptoExchangeQuoteProcessingScreen = withTheme(CryptoExchangeQuoteProcessingScreenComponent)

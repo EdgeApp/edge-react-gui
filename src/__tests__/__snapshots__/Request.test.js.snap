@@ -25,23 +25,27 @@ exports[`Request should render with loaded props 1`] = `
     >
       Request
     </WithTheme(EdgeTextComponent)>
-    <ExchangedFlipInput
-      exchangeSecondaryToPrimaryRatio={Object {}}
-      forceUpdateGuiCounter={0}
-      headerCallback={[Function]}
-      headerText="Receive to undefined"
-      inputAccessoryViewID=""
-      isEditable={true}
-      isFiatOnTop={true}
-      isFocus={false}
-      keyboardVisible={false}
-      onExchangeAmountChanged={[Function]}
-      onNext={[Function]}
-      overridePrimaryExchangeAmount=""
-      primaryCurrencyInfo={Object {}}
-      secondaryCurrencyInfo={Object {}}
-      topReturnKeyType="done"
-    />
+    <WithTheme(CardComponent)
+      marginRem={0}
+    >
+      <ExchangedFlipInput
+        exchangeSecondaryToPrimaryRatio={Object {}}
+        forceUpdateGuiCounter={0}
+        headerCallback={[Function]}
+        headerText="Receive to undefined"
+        inputAccessoryViewID=""
+        isEditable={true}
+        isFiatOnTop={true}
+        isFocus={false}
+        keyboardVisible={false}
+        onExchangeAmountChanged={[Function]}
+        onNext={[Function]}
+        overridePrimaryExchangeAmount=""
+        primaryCurrencyInfo={Object {}}
+        secondaryCurrencyInfo={Object {}}
+        topReturnKeyType="done"
+      />
+    </WithTheme(CardComponent)>
     <InputAccessoryView
       backgroundColor="#FFFFFF"
       nativeID="cancelHeaderId"

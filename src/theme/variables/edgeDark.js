@@ -152,8 +152,12 @@ export const edgeDark: Theme = {
 
   buttonBoxShadow: palette.black,
 
+  // Card
   // cardBackground: palette.edgeBlue,
   // cardShadow: palette.blackOp25,
+  cardBorder: 1,
+  cardBorderColor: palette.whiteOp10,
+  cardBorderRadius: 4,
 
   tabBarBackground: palette.edgeNavy,
   tabBarIcon: palette.white,
@@ -187,6 +191,7 @@ export const edgeDark: Theme = {
 
   // Lines
   lineDivider: palette.whiteOp10,
+  titleLineDivider: palette.whiteOp75,
   // textInputLine: palette.blueGray,
   // orLine: palette.blueGray,
   // tileDivider: palette.blueGray,

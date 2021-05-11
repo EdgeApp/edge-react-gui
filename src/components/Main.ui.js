@@ -15,7 +15,9 @@ import { CreateWalletImportScene } from '../components/scenes/CreateWalletImport
 import { CreateWalletReviewScene } from '../components/scenes/CreateWalletReviewScene.js'
 import { CreateWalletSelectCryptoScene } from '../components/scenes/CreateWalletSelectCryptoScene.js'
 import { CreateWalletSelectFiatScene } from '../components/scenes/CreateWalletSelectFiatScene.js'
+import { CryptoExchangeQuote } from '../components/scenes/CryptoExchangeQuoteScene.js'
 import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene.js'
+import { CryptoExchangeSuccessScene } from '../components/scenes/CryptoExchangeSuccessScene.js'
 import { CurrencySettingsScene } from '../components/scenes/CurrencySettingsScene.js'
 import { DefaultFiatSettingScene } from '../components/scenes/DefaultFiatSettingScene.js'
 import { FioAddressDetailsScene } from '../components/scenes/FioAddressDetailsScene'
@@ -39,7 +41,6 @@ import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector
 import AddToken from '../connectors/scenes/AddTokenConnector.js'
 import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
-import { CryptoExchangeQuoteConnector } from '../connectors/scenes/CryptoExchangeQuoteConnector.js'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import ManageTokens from '../connectors/scenes/ManageTokensConnector.js'
 import Scan from '../connectors/scenes/ScanConnector'
@@ -69,7 +70,7 @@ import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { ChangePasswordScene } from './scenes/ChangePasswordScene.js'
 import { ChangePinScene } from './scenes/ChangePinScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
-import { CryptoExchangeQuoteProcessingScreenComponent } from './scenes/CryptoExchangeQuoteProcessingScene.js'
+import { CryptoExchangeQuoteProcessingScreen } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { CurrencyNotificationScene } from './scenes/CurrencyNotificationScene'
 import { EditTokenScene } from './scenes/EditTokenScene.js'
 import { FioDomainRegisterScene } from './scenes/FioDomainRegisterScene'
@@ -335,7 +336,6 @@ export class MainComponent extends React.Component<Props> {
                 renderRightButton={this.renderEmptyButton()}
               />
             </Stack>
-
             <Stack key={Constants.PLUGIN_BUY}>
               <Scene
                 key={Constants.PLUGIN_BUY}
@@ -356,7 +356,6 @@ export class MainComponent extends React.Component<Props> {
                 hideTabBar
               />
             </Stack>
-
             <Stack key={Constants.PLUGIN_SELL}>
               <Scene
                 key={Constants.PLUGIN_SELL}
@@ -377,13 +376,11 @@ export class MainComponent extends React.Component<Props> {
                 hideTabBar
               />
             </Stack>
-
             <Stack key={Constants.EXCHANGE}>
               <Scene
                 key={Constants.EXCHANGE_SCENE}
                 navTransparent
                 component={ifLoggedIn(CryptoExchangeScene)}
-                renderTitle={<HeaderTitle title={s.strings.title_exchange} />}
                 renderLeftButton={this.renderExchangeButton()}
                 renderRightButton={<SideMenuButton />}
                 onEnter={() => this.props.checkEnabledExchanges()}
@@ -392,18 +389,21 @@ export class MainComponent extends React.Component<Props> {
                 key={Constants.EXCHANGE_QUOTE_PROCESSING_SCENE}
                 navTransparent
                 hideTabBar
-                component={ifLoggedIn(CryptoExchangeQuoteProcessingScreenComponent)}
-                renderTitle={<HeaderTitle title={s.strings.title_exchange} />}
+                component={ifLoggedIn(CryptoExchangeQuoteProcessingScreen)}
                 renderLeftButton={this.renderEmptyButton()}
                 renderRightButton={this.renderEmptyButton()}
               />
               <Scene
                 key={Constants.EXCHANGE_QUOTE_SCENE}
                 navTransparent
-                component={ifLoggedIn(CryptoExchangeQuoteConnector)}
-                renderTitle={<HeaderTitle title={s.strings.title_exchange} />}
+                component={ifLoggedIn(CryptoExchangeQuote)}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
-                renderRightButton={<SideMenuButton />}
+              />
+              <Scene
+                key={Constants.EXCHANGE_SUCCESS_SCENE}
+                navTransparent
+                component={ifLoggedIn(CryptoExchangeSuccessScene)}
+                renderLeftButton={this.renderEmptyButton()}
               />
             </Stack>
           </Tabs>

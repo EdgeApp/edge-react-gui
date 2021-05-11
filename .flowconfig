@@ -2,6 +2,7 @@
 ; Edge additions
 .*/node_modules/edge-plugin-bity/.*
 .*/node_modules/metro/.*
+.*/node_modules/react-native-confetti-cannon/.*
 .*/node_modules/react-native-camera/.*
 .*/node_modules/react-native-keyboard-aware-scroll-view/.*
 .*/node_modules/react-native-permissions/.*
