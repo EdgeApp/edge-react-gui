@@ -22,6 +22,7 @@ const strings = {
   fio_address_choose_label: 'Choose a FIO Address',
   fio_domain_choose_label: 'Choose a FIO Domain',
   fio_address_choose_domain_label: 'Choose FIO Domain for Your Address',
+  fio_address_expired: 'The FIO address has expired',
 
   scan_qr_label: 'Scan QR',
 

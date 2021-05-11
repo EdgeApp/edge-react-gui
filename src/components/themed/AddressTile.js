@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
-import { checkPubAddress } from '../../modules/FioAddress/util'
+import { checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddress/util'
 import type { RootState } from '../../reducers/RootReducer'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { AddressModal } from '../modals/AddressModal'
@@ -34,7 +34,8 @@ type OwnProps = {
   fioToAddress?: string
 }
 type StateProps = {
-  fioPlugin: EdgeCurrencyConfig | null
+  fioPlugin: EdgeCurrencyConfig | null,
+  fioWallets: EdgeCurrencyWallet[]
 }
 type State = {
   clipboard: string,
@@ -150,6 +151,12 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     }
   }
 
+  checkIfFioAddressExpired = async (address: string) => {
+    if (await checkExpiredFioAddress(this.props.fioWallets[0], address)) {
+      throw new Error(s.strings.fio_address_expired)
+    }
+  }
+
   onChangeAddress = async (address: string) => {
     if (!address) return
     const { onChangeAddress, coreWallet, currencyCode, fioPlugin } = this.props
@@ -158,6 +165,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     let fioAddress
     if (fioPlugin) {
       try {
+        await this.checkIfFioAddressExpired(address)
         const publicAddress = await checkPubAddress(fioPlugin, address.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
         fioAddress = address.toLowerCase()
         address = publicAddress
@@ -314,7 +322,8 @@ const AddressTileConnector = connect((state: RootState): StateProps => {
   const { guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
   return {
     fioToAddress: guiMakeSpendInfo && guiMakeSpendInfo.fioAddress ? guiMakeSpendInfo.fioAddress : undefined,
-    fioPlugin: account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
+    fioPlugin: account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null,
+    fioWallets: state.ui.wallets.fioWallets
   }
 })(withTheme(AddressTileComponent))
 
