@@ -184,7 +184,7 @@ export const edgeLight: Theme = {
   confirmationSliderThumb: palette.edgeBlue,
   confirmationSliderTextDeactivated: palette.gray,
   confirmationThumbDeactivated: palette.gray,
-  confirmationSliderWidth: PLATFORM.deviceWidth >= 720 ? 680 : PLATFORM.deviceWidth - 45,
+  confirmationSliderWidth: PLATFORM.deviceWidth >= 340 ? 295 : PLATFORM.deviceWidth - 45,
   confirmationSliderThumbWidth: 55,
 
   // Lines

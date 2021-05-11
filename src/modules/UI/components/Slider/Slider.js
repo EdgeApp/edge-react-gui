@@ -2,12 +2,13 @@
 
 // $FlowFixMe
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
 import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { Easing, runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
+import { EdgeText } from '../../../../components/themed/EdgeText'
 import s from '../../../../locales/strings.js'
 
 const COMPLETE_POINT: number = 3
@@ -126,7 +127,7 @@ export const SliderComponent = (props: Props) => {
         {showSpinner ? (
           <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
         ) : (
-          <Text style={sliderDisabled ? [styles.textOverlay, styles.textOverlayDisabled] : styles.textOverlay}>{sliderText}</Text>
+          <EdgeText style={sliderDisabled ? [styles.textOverlay, styles.textOverlayDisabled] : styles.textOverlay}>{sliderText}</EdgeText>
         )}
       </View>
     </View>
@@ -166,7 +167,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'absolute',
     color: theme.confirmationSliderText,
     alignSelf: 'center',
-    top: theme.rem(1),
+    lineHeight: theme.confirmationSliderThumbWidth,
     zIndex: 1
   },
   textOverlayDisabled: {

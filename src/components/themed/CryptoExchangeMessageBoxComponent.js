@@ -20,7 +20,9 @@ export class CryptoExchangeMessageBoxComponent extends React.PureComponent<Props
 
     return (
       <View style={styles.container}>
-        <EdgeText style={styles.text}>{this.props.message}</EdgeText>
+        <EdgeText style={styles.text} numberOfLines={3}>
+          {this.props.message}
+        </EdgeText>
       </View>
     )
   }
@@ -33,10 +35,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingTop: theme.rem(1)
+    paddingTop: theme.rem(1),
+    paddingHorizontal: theme.rem(1)
   },
   text: {
     color: theme.dangerText,
+    textAlign: 'center',
     fontSize: theme.rem(0.75)
   }
 }))
