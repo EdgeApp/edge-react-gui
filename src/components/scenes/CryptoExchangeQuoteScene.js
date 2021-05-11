@@ -222,7 +222,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
             walletName={toWallet.name || ''}
           />
           {isEstimate && (
-            <Card warning marginRem={[1.5, 1]}>
+            <Card warning marginRem={[1.5, 1, 0]}>
               <ClickableText paddingRem={0} onPress={this.showExplanationForEstimate}>
                 <View style={styles.estimatedContainer}>
                   <IonIcon
@@ -276,6 +276,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.warningText
   },
   slider: {
+    marginTop: theme.rem(1.5),
     alignItems: 'center'
   },
   spacer: {
