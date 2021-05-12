@@ -800,7 +800,9 @@ const strings = {
   send_scene_send_to_address: 'Send to Address',
   send_scene_error_title: 'Error',
   send_scene_metadata_name_title: 'Payee',
-  send_make_spend_xrp_dest_tag_error: 'XRP Destination Tag must be 9 characters or less',
+  send_make_spend_xrp_dest_tag_length_error: 'XRP Destination Tag must be 10 characters or less',
+  send_make_spend_xrp_dest_tag_limit_error: 'XRP Destination Tag is above its maximum limit',
+  send_make_spend_xrp_dest_tag_format_error: 'Please enter a valid Destination Tag',
 
   // Request Scene
   request_balance: 'You have %s',
