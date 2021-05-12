@@ -739,7 +739,6 @@
   "send_scene_send_to_address": "Invia all'indirizzo",
   "send_scene_error_title": "Errore",
   "send_scene_metadata_name_title": "Beneficiario",
-  "send_make_spend_xrp_dest_tag_error": "Il tag di destinazione XRP deve contenere al massimo 9 caratteri",
   "request_balance": "Hai %s",
   "currency_label_AFN": "Afghani",
   "currency_label_ALL": "Lek",
