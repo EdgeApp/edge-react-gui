@@ -215,11 +215,11 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openAccelerateModel = () => {
-    const { edgeTransaction } = this.props
+    const { edgeTransaction, guiWallet } = this.props
     const { wallet } = edgeTransaction
 
     if (wallet) {
-      Airship.show(bridge => <TransactionAccelerateModal bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} />)
+      Airship.show(bridge => <TransactionAccelerateModal bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} guiWallet={guiWallet} />)
     } else {
       showError(new Error('Transaction is missing wallet data.'))
     }
