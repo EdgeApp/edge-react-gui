@@ -332,8 +332,6 @@
   "title_use_regular_address": "Usar dirección normal",
   "no_exchanges_available": "No hay casas de cambio activadas",
   "check_exchange_settings": "Por favor actívalas en los ajustes de casa de cambio.",
-  "amount_above_limit": "La cantidad de la transacción está por encima del máximo de %1$s %2$s",
-  "amount_below_limit": "La cantidad de la transacción está por debajo del mínimo de %1$s %2$s",
   "transaction_details_category_title": "Categoría",
   "transaction_details_payee": "Beneficiario",
   "transaction_details_payer": "Pagador",
