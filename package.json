@@ -134,7 +134,7 @@
     "disklet": "^0.4.5",
     "edge-components": "^0.0.31",
     "edge-core-js": "^0.17.33",
-    "edge-currency-accountbased": "^0.7.57",
+    "edge-currency-accountbased": "^0.7.58",
     "edge-currency-bitcoin": "^4.9.14",
     "edge-currency-monero": "^0.2.10",
     "edge-exchange-plugins": "^0.11.26",
