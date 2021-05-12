@@ -129,7 +129,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     if (metadata && metadata.amountFiat) {
       const initialAmount = metadata.amountFiat.toFixed(2)
       const absoluteAmount = bns.abs(initialAmount)
-      return formatNumber(bns.toFixed(absoluteAmount, 2, 2), { noGrouping: true })
+      return formatNumber(bns.toFixed(absoluteAmount, 2, 2), { toFixed: 2 })
     }
     return formatNumber('0.00')
   }
@@ -407,7 +407,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { currentFiatAmount } = this.props
     const { amountFiat } = this.state
 
-    const amount = currentFiatAmount ? parseFloat(currentFiatAmount).toFixed(2).toString() : '0'
+    const amount = currentFiatAmount ? formatNumber(parseFloat(currentFiatAmount).toFixed(2).toString(), { toFixed: 2 }) : '0'
     const fiatAmount = amountFiat.replace(',', '.')
     const difference = amount ? parseFloat(amount) - parseFloat(fiatAmount) : 0
     const percentageFloat = amount && parseFloat(fiatAmount) > 0 ? (difference / parseFloat(fiatAmount)) * 100 : 0
