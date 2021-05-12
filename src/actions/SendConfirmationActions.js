@@ -29,6 +29,12 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { convertNativeToExchange } from '../util/utils'
 import { playSendSound } from './SoundActions.js'
 
+const XRP_DESTINATION_TAG_ERRORS = {
+  UNIQUE_IDENTIFIER_EXCEEDS_LENGTH: s.strings.send_make_spend_xrp_dest_tag_length_error,
+  UNIQUE_IDENTIFIER_EXCEEDS_LIMIT: s.strings.send_make_spend_xrp_dest_tag_limit_error,
+  UNIQUE_IDENTIFIER_FORMAT: s.strings.send_make_spend_xrp_dest_tag_format_error
+}
+
 export type FioSenderInfo = {
   fioAddress: string,
   fioWallet: EdgeCurrencyWallet | null,
@@ -459,9 +465,9 @@ export const updateTransactionAmount = (nativeAmount: string, exchangeAmount: st
     })
     .catch(error => {
       let customError
-      const xrpLengthErrorCode = coreWallet.currencyInfo.defaultSettings.errorCodes.UNIQUE_IDENTIFIER_EXCEEDS_LENGTH
-      if (xrpLengthErrorCode != null && xrpLengthErrorCode === error.labelCode) {
-        customError = new Error(s.strings.send_make_spend_xrp_dest_tag_error)
+
+      if (coreWallet.currencyInfo.defaultSettings.errorCodes[error.labelCode] != null) {
+        customError = new Error(XRP_DESTINATION_TAG_ERRORS[error.labelCode])
       }
 
       console.log(error)
