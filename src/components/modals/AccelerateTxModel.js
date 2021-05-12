@@ -45,7 +45,7 @@ type State = {
   mounted: boolean
 }
 
-class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
+class AccelerateTxModelComponent extends PureComponent<Props, State> {
   constructor() {
     super()
 
@@ -238,7 +238,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionAccelerateModal = connect((state: RootState, ownProps: OwnProps): StateProps => {
+export const AccelerateTxModel = connect((state: RootState, ownProps: OwnProps): StateProps => {
   const { wallet } = ownProps
 
   const edgeDenomination = getDisplayDenomination(state, wallet.currencyInfo.currencyCode)
@@ -249,4 +249,4 @@ export const TransactionAccelerateModal = connect((state: RootState, ownProps: O
     exchangeRates: state.exchangeRates,
     settings: state.ui.settings
   }
-})(withTheme(TransactionAccelerateModalComponent))
+})(withTheme(AccelerateTxModelComponent))
