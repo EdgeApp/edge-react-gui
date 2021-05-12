@@ -10,18 +10,16 @@ import { connect } from 'react-redux'
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions.js'
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
-import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import ManageTokenRow from '../common/ManageTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
+import { ManageTokensHeader } from '../themed/ManageTokensHeader'
+import SceneFooter from '../themed/SceneFooter'
+import { SceneHeader } from '../themed/SceneHeader'
 import { SecondaryButton } from '../themed/ThemedButtons'
-import { WalletProgressIcon } from '../themed/WalletProgressIcon.js'
 
 export type ManageTokensOwnProps = {
   guiWallet: GuiWallet
@@ -111,22 +109,21 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
 
     const styles = getStyles(theme)
 
-    const HeaderIcon = <WalletProgressIcon currencyCode={currencyCode} walletId={this.props.guiWallet.id} size={theme.rem(1.5)} />
-
     return (
       <SceneWrapper>
-        <SettingsHeaderRow text={name} icon={HeaderIcon} />
         <View style={styles.container}>
-          <View style={styles.instructionalArea}>
-            <Text style={styles.instructionalText}>{s.strings.managetokens_top_instructions}</Text>
-          </View>
-          <View style={styles.metaTokenListArea}>
-            <View style={styles.metaTokenListWrap}>
+          <SceneHeader underline>
+            <ManageTokensHeader walletName={name} walletId={this.props.guiWallet.id} currencyCode={currencyCode} />
+          </SceneHeader>
+
+          <View style={styles.tokensWrapper}>
+            <View style={styles.tokensArea}>
               <FlatList
                 keyExtractor={item => item.currencyCode}
                 data={sortedTokenInfo}
                 renderItem={metaToken => (
                   <ManageTokenRow
+                    theme={theme}
                     goToEditTokenScene={this.goToEditTokenScene}
                     metaToken={metaToken}
                     walletId={this.props.guiWallet.id}
@@ -136,19 +133,18 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
                     metaTokens={this.props.guiWallet.metaTokens}
                   />
                 )}
-                style={styles.tokenList}
               />
             </View>
-            <View style={styles.buttonsArea}>
+            <SceneFooter style={styles.buttonsArea} underline>
               <SecondaryButton
                 label={s.strings.string_save}
                 spinner={manageTokensPending}
                 onPress={this.saveEnabledTokenList}
                 marginRem={[0.75]}
-                paddingRem={[0.5, 2.7]}
+                paddingRem={[0.3, 2.3, 0.5, 2.3]}
               />
-              <SecondaryButton label={s.strings.addtoken_add} onPress={this.goToAddTokenScene} marginRem={[0.75]} paddingRem={[0.5, 1]} />
-            </View>
+              <SecondaryButton label={s.strings.addtoken_add} onPress={this.goToAddTokenScene} marginRem={[0.75]} paddingRem={[0.3, 0.5, 0.5, 0.5]} />
+            </SceneFooter>
           </View>
         </View>
       </SceneWrapper>
@@ -183,34 +179,21 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     position: 'relative',
-    flex: 1,
-    paddingBottom: scale(50)
-  },
-  instructionalArea: {
-    paddingVertical: scale(16),
-    paddingHorizontal: scale(20)
-  },
-  instructionalText: {
-    fontSize: theme.rem(0.85),
-    textAlign: 'left',
-    color: theme.deactivatedText
-  },
-  metaTokenListArea: {
-    borderTopWidth: 1,
-    borderTopColor: THEME.COLORS.GRAY_3,
     flex: 1
   },
-  metaTokenListWrap: {
+  tokensWrapper: {
     flex: 1
   },
-  tokenList: {
-    flex: 1
+  tokensArea: {
+    flex: 4
   },
   buttonsArea: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'stretch'
+    alignSelf: 'stretch',
+    marginTop: 5
   }
 }))
 

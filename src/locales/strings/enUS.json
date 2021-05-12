@@ -39,7 +39,7 @@
   "select_exchange_amount_short": "Enter an Amount",
   "exchanges_may_take_minutes": "Exchanges may take several minutes to process. Please check your destination wallet after a few minutes",
   "fragment_wallets_addwallet_fiat_hint": "Choose a fiat currency",
-  "managetokens_top_instructions": "Please select which tokens you would like displayed within the wallet:",
+  "managetokens_top_instructions": "Select tokens to display in wallet:",
   "manage_tokens_duplicate_currency_code": "A token with that currency code already exists.",
   "addtoken_top_instructions": "To add a token, please fill out the following form and press \"Save\" ",
   "accept_button_text": "Accept",

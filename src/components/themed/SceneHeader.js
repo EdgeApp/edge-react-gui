@@ -10,15 +10,17 @@ type Props = {
   title?: string,
   children?: React.Node,
   underline?: boolean,
-  withTopMargin?: boolean
+  withTopMargin?: boolean,
+  viewStyles?: any
 }
 
 class SceneHeaderComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
-    const { title, underline, withTopMargin, children, theme } = this.props
+    const { title, underline, withTopMargin, children, theme, viewStyles } = this.props
     const styles = getStyles(theme)
+
     return (
-      <View style={[styles.container, withTopMargin ? styles.topMargin : null, underline ? styles.underline : null]}>
+      <View style={[styles.container, viewStyles, withTopMargin ? styles.topMargin : null, underline ? styles.underline : null]}>
         {title ? <EdgeText style={styles.title}>{title}</EdgeText> : null}
         {children}
       </View>
