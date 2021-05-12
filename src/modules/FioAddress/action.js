@@ -1,27 +1,31 @@
 // @flow
 import type { EdgeCurrencyWallet } from 'edge-core-js'
+import React from 'react'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions'
+import { ButtonsModal } from '../../components/modals/ButtonsModal'
+import { Airship } from '../../components/services/AirshipInstance'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import type { Dispatch, GetState } from '../../types/reduxTypes'
+import type { FioAddress, FioDomain } from '../../types/types'
 import { getDefaultIsoFiat } from '../Settings/selectors'
-import { findWalletByFioAddress, refreshConnectedWalletsForFioAddress } from './util'
+import { findWalletByFioAddress, getExpiredSoonFioNames, refreshConnectedWalletsForFioAddress } from './util'
 
 export const createFioWallet = () => (dispatch: Dispatch, getState: GetState): Promise<EdgeCurrencyWallet | any> => {
   const fiatCurrencyCode = getDefaultIsoFiat(getState())
   return dispatch(createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, Constants.FIO_WALLET_TYPE, fiatCurrencyCode, false, false))
 }
 
-export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState: GetState) => {
+export const refreshAllFioAddresses = (checkExpired: boolean = false) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({
     type: 'FIO/SET_FIO_ADDRESSES_PROGRESS'
   })
   const state = getState()
   const { currencyWallets } = state.core.account
   const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-  let fioAddresses = []
-  let fioDomains = []
+  let fioAddresses: FioAddress[] = []
+  let fioDomains: FioDomain[] = []
 
   if (fioWallets != null) {
     for (const wallet of fioWallets) {
@@ -58,6 +62,21 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
           ccWalletMap
         }
       })
+    }
+  }
+
+  if (checkExpired) {
+    const expired: Array<FioAddress | FioDomain> = getExpiredSoonFioNames(fioAddresses, fioDomains)
+    console.log('====================', expired)
+    if (expired.length) {
+      Airship.show(bridge => (
+        <ButtonsModal
+          bridge={bridge}
+          title={s.strings.create_wallet_account_handle_unavailable_modal_title}
+          message={s.strings.expired_msg}
+          buttons={{ ok: { label: s.strings.string_ok } }}
+        />
+      ))
     }
   }
 }
