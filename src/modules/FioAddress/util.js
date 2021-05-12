@@ -783,3 +783,22 @@ export const cancelFioRequest = async (fioWallet: EdgeCurrencyWallet | null, fio
     throw new Error(s.strings.fio_cancel_request_error)
   }
 }
+
+export const checkExpiredFioAddress = async (fioWallet?: EdgeCurrencyWallet, address?: string): Promise<boolean> => {
+  if (fioWallet == null) return false
+
+  try {
+    const { fioAction } = fioWallet.otherMethods
+    const { public_address } = await fioAction('getPublicAddress', { fioAddress: address, chainCode: 'FIO', tokenCode: 'FIO' })
+    const { fio_addresses } = await fioAction('getFioNames', { fioPublicKey: public_address })
+    const fioAddress = fio_addresses.find(fioAddress => fioAddress.fio_address === address)
+    if (fioAddress != null) {
+      return new Date(fioAddress.expiration).getTime() < new Date().getTime()
+    } else {
+      return false
+    }
+  } catch (error) {
+    console.log('FioAddressExpiredError', error)
+    return false
+  }
+}

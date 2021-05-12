@@ -5,8 +5,8 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 import { type Event, Animated, Image, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
+import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import * as UTILS from '../../util/utils.js'
@@ -483,7 +483,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <View style={styles.container}>
+      <>
         <TouchableOpacity onPress={headerCallback} style={styles.headerContainer}>
           {headerLogo ? <Image style={styles.headerIcon} source={{ uri: headerLogo }} /> : null}
           {headerCallback ? <RightChevronButton text={headerText} onPress={headerCallback} /> : <EdgeText style={styles.headerText}>{headerText}</EdgeText>}
@@ -516,22 +516,15 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
             </Animated.View>
           </View>
           <ButtonBox onPress={this.onToggleFlipInput} paddingRem={[0.5, 0, 0.5, 1]}>
-            <MaterialIcon name="swap-vert" size={theme.rem(2)} color={theme.iconTappable} />
+            <Fontello style={styles.flipIcon} name="exchange" color={theme.iconTappable} size={theme.rem(1.75)} />
           </ButtonBox>
         </View>
-      </View>
+      </>
     )
   }
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    padding: theme.rem(1),
-    borderRadius: theme.rem(0.25),
-    borderWidth: theme.thinLineWidth,
-    borderColor: theme.flipInputBorder
-  },
-
   // Header
   headerContainer: {
     marginRight: Platform.OS === 'ios' ? theme.rem(3.5) : theme.rem(1.5), // Different because adjustsFontSizeToFit behaves differently on android vs ios
@@ -542,9 +535,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   headerIcon: {
     width: theme.rem(1.5),
     height: theme.rem(1.5),
-    marginRight: theme.rem(0.5)
+    marginRight: theme.rem(1)
   },
   headerText: {
+    fontWeight: '600',
     fontSize: theme.rem(1.0)
   },
 
@@ -554,7 +548,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   flipInput: {
-    flex: 1
+    flex: 1,
+    paddingRight: theme.rem(0.5)
   },
   flipInputFront: {
     backfaceVisibility: 'hidden'
@@ -565,6 +560,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     bottom: 0,
     left: 0,
     right: 0
+  },
+  flipIcon: {
+    marginRight: -theme.rem(0.125)
   },
 
   // Top Amount

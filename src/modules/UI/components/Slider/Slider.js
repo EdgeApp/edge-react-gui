@@ -1,12 +1,14 @@
 // @flow
 
-import * as React from 'react'
-import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
+// $FlowFixMe
+import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
 import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { Easing, runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
+import { EdgeText } from '../../../../components/themed/EdgeText'
 import s from '../../../../locales/strings.js'
 
 const COMPLETE_POINT: number = 3
@@ -46,6 +48,8 @@ export const SliderComponent = (props: Props) => {
     width = props.theme.confirmationSliderWidth
   } = props
   const styles = getStyles(theme)
+  const [completed, setCompleted] = useState(false)
+
   const upperBound = width - theme.confirmationSliderThumbWidth
   const widthStyle = { width }
   const sliderDisabled = disabled || showSpinner
@@ -54,11 +58,19 @@ export const SliderComponent = (props: Props) => {
   const translateX = useSharedValue(upperBound)
   const isSliding = useSharedValue(false)
 
-  if (reset)
+  const resetSlider = () => {
     translateX.value = withTiming(upperBound, {
       duration: 500,
       easing: Easing.inOut(Easing.exp)
     })
+    setCompleted(false)
+  }
+  const complete = () => {
+    onSlidingComplete()
+    setCompleted(true)
+  }
+
+  if (reset) resetSlider()
 
   const onGestureEvent = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
@@ -75,7 +87,7 @@ export const SliderComponent = (props: Props) => {
         isSliding.value = false
 
         if (translateX.value < completePoint) {
-          runOnJS(onSlidingComplete)()
+          runOnJS(complete)()
         } else {
           translateX.value = withTiming(upperBound, {
             duration: 500,
@@ -96,20 +108,28 @@ export const SliderComponent = (props: Props) => {
     }
   })
 
-  return (
-    <View style={[parentStyle, styles.slider, sliderDisabled ? styles.disabledSlider : null, widthStyle]}>
-      <Animated.View style={[styles.progress, progressStyle]} />
+  useEffect(() => {
+    if (completed && !props.showSpinner) {
+      resetSlider()
+    }
+  }, [props.showSpinner])
 
-      <PanGestureHandler onGestureEvent={onGestureEvent}>
-        <Animated.View style={[styles.thumb, sliderDisabled ? styles.disabledThumb : null, scrollTranslationStyle]}>
-          <Image source={leftArrowImg} />
-        </Animated.View>
-      </PanGestureHandler>
-      {showSpinner ? (
-        <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
-      ) : (
-        <Text style={sliderDisabled ? [styles.textOverlay, styles.textOverlayDisabled] : styles.textOverlay}>{sliderText}</Text>
-      )}
+  return (
+    <View style={parentStyle}>
+      <View style={[styles.slider, sliderDisabled ? styles.disabledSlider : null, widthStyle]}>
+        <Animated.View style={[styles.progress, progressStyle]} />
+
+        <PanGestureHandler onGestureEvent={onGestureEvent}>
+          <Animated.View style={[styles.thumb, sliderDisabled ? styles.disabledThumb : null, scrollTranslationStyle]}>
+            <Image source={leftArrowImg} />
+          </Animated.View>
+        </PanGestureHandler>
+        {showSpinner ? (
+          <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
+        ) : (
+          <EdgeText style={sliderDisabled ? [styles.textOverlay, styles.textOverlayDisabled] : styles.textOverlay}>{sliderText}</EdgeText>
+        )}
+      </View>
     </View>
   )
 }
@@ -147,7 +167,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'absolute',
     color: theme.confirmationSliderText,
     alignSelf: 'center',
-    top: theme.rem(1),
+    lineHeight: theme.confirmationSliderThumbWidth,
     zIndex: 1
   },
   textOverlayDisabled: {

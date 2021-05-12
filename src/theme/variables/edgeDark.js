@@ -59,6 +59,7 @@ const palette = {
   blackOp50: 'rgba(0, 0, 0, .5)',
 
   whiteOp10: 'rgba(255, 255, 255, .1)',
+  whiteOp05: 'rgba(255, 255, 255, .05)',
   whiteOp75: 'rgba(255, 255, 255, .75)',
 
   grayOp80: 'rgba(135, 147, 158, .8)',
@@ -152,8 +153,12 @@ export const edgeDark: Theme = {
 
   buttonBoxShadow: palette.black,
 
+  // Card
   // cardBackground: palette.edgeBlue,
   // cardShadow: palette.blackOp25,
+  cardBorder: 1,
+  cardBorderColor: palette.whiteOp10,
+  cardBorderRadius: 4,
 
   tabBarBackground: palette.edgeNavy,
   tabBarIcon: palette.white,
@@ -176,17 +181,18 @@ export const edgeDark: Theme = {
   // warningBubble: palette.accentOrange,
 
   // Confirmation slider
-  confirmationSlider: palette.whiteOp10,
-  confirmationSliderText: palette.edgeMint,
+  confirmationSlider: palette.whiteOp05,
+  confirmationSliderText: palette.white,
   confirmationSliderArrow: palette.edgeBlue,
   confirmationSliderThumb: palette.edgeMint,
   confirmationSliderTextDeactivated: palette.gray,
   confirmationThumbDeactivated: palette.gray,
-  confirmationSliderWidth: PLATFORM.deviceWidth >= 720 ? 680 : PLATFORM.deviceWidth - 45,
+  confirmationSliderWidth: PLATFORM.deviceWidth >= 340 ? 295 : PLATFORM.deviceWidth - 45,
   confirmationSliderThumbWidth: 55,
 
   // Lines
   lineDivider: palette.whiteOp10,
+  titleLineDivider: palette.whiteOp75,
   // textInputLine: palette.blueGray,
   // orLine: palette.blueGray,
   // tileDivider: palette.blueGray,

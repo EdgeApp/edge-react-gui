@@ -28,6 +28,7 @@ import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { Card } from '../themed/Card.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput.js'
 import { FlipInput } from '../themed/FlipInput.js'
@@ -311,24 +312,26 @@ export class RequestComponent extends React.Component<Props, State> {
           <View style={styles.container}>
             <EdgeText style={styles.title}>{s.strings.fragment_request_subtitle}</EdgeText>
 
-            <ExchangedFlipInput
-              ref={this.flipInputRef}
-              headerText={flipInputHeaderText}
-              headerLogo={currencyIcon}
-              primaryCurrencyInfo={primaryCurrencyInfo}
-              secondaryCurrencyInfo={secondaryCurrencyInfo}
-              exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
-              overridePrimaryExchangeAmount=""
-              forceUpdateGuiCounter={0}
-              onExchangeAmountChanged={this.onExchangeAmountChanged}
-              keyboardVisible={false}
-              isFiatOnTop
-              isFocus={false}
-              onNext={this.onNext}
-              topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
-              inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
-              headerCallback={this.handleOpenWalletListModal}
-            />
+            <Card marginRem={0}>
+              <ExchangedFlipInput
+                ref={this.flipInputRef}
+                headerText={flipInputHeaderText}
+                headerLogo={currencyIcon}
+                primaryCurrencyInfo={primaryCurrencyInfo}
+                secondaryCurrencyInfo={secondaryCurrencyInfo}
+                exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
+                overridePrimaryExchangeAmount=""
+                forceUpdateGuiCounter={0}
+                onExchangeAmountChanged={this.onExchangeAmountChanged}
+                keyboardVisible={false}
+                isFiatOnTop
+                isFocus={false}
+                onNext={this.onNext}
+                topReturnKeyType={this.state.isFioMode ? 'next' : 'done'}
+                inputAccessoryViewID={this.state.isFioMode ? inputAccessoryViewID : ''}
+                headerCallback={this.handleOpenWalletListModal}
+              />
+            </Card>
 
             {Platform.OS === 'ios' ? (
               <InputAccessoryView backgroundColor={theme.inputAccessoryBackground} nativeID={inputAccessoryViewID}>

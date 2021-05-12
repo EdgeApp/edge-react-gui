@@ -248,7 +248,8 @@ const getStyles = cacheStyles((theme: Theme) => {
       alignItems: 'center'
     },
     rightChevronText: {
-      marginRight: theme.rem(0.25),
+      marginRight: theme.rem(0.75),
+      fontWeight: '600',
       fontSize: theme.rem(1.0)
     }
   }

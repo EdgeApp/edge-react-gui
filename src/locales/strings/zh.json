@@ -251,8 +251,6 @@
   "title_use_regular_address": "使用常规地址",
   "no_exchanges_available": "没有可用的交易。",
   "check_exchange_settings": "请在交易设置中启用它们。",
-  "amount_above_limit": "交易金额高于 %1$s%2$s 的最大限制",
-  "amount_below_limit": "交易金额低于 %1$s%2$s 的最小限制",
   "transaction_details_category_title": "类别",
   "transaction_details_payee": "收款人",
   "transaction_details_view_advanced_data": "查看高级交易记录数据",

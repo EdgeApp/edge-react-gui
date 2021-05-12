@@ -105,13 +105,15 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
       this.setState({ status: 'sending' })
 
       try {
+        // Sign and broadcast the RBF transaction
         edgeSignedTransaction = await wallet.signTx(edgeUnsignedTransaction)
         edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
-        await wallet.saveTx(edgeSignedTransaction)
 
-        // Save a clone of the replaced transaction's metadata
-        const edgeMetadata = { ...edgeTransaction.metadata }
-        await wallet.saveTxMetadata(edgeSignedTransaction.txid, edgeSignedTransaction.currencyCode, edgeMetadata)
+        // Copy the replaced transaction's metadata to the RBF transaction
+        edgeSignedTransaction = { ...edgeSignedTransaction, metadata: edgeTransaction.metadata }
+
+        // Save the RBF transactoin
+        await wallet.saveTx(edgeSignedTransaction)
 
         if (this.state.mounted) {
           playSendSound().catch(error => console.log(error)) // Fail quietly

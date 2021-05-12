@@ -53,7 +53,8 @@ export const DEFAULT_STARTER_WALLET_NAMES = {
   XMR: s.strings.string_first_monero_wallet_name,
   XRP: s.strings.string_first_ripple_wallet_name,
   XTZ: s.strings.string_first_tezos_wallet_name,
-  FIRO: s.strings.string_first_zcoin_wallet_name
+  FIRO: s.strings.string_first_zcoin_wallet_name,
+  FTM: s.strings.string_first_fantom_wallet_name
 }
 
 /**
@@ -113,7 +114,8 @@ export const WALLET_TYPE_ORDER = [
   'wallet:zcoin',
   'wallet:ufo',
   'wallet:telos',
-  'wallet:wax'
+  'wallet:wax',
+  'wallet:fantom'
 ]
 
 // Put these in reverse order of preference
@@ -135,6 +137,7 @@ export const CURRENCY_PLUGIN_NAMES = {
   ETC: 'ethereumclassic',
   FIO: 'fio',
   FTC: 'feathercoin',
+  FTM: 'fantom',
   GRS: 'groestlcoin',
   LTC: 'litecoin',
   QTUM: 'qtum',
@@ -459,7 +462,7 @@ export const WALLET_LIST_MENU: Array<{
     value: 'split'
   },
   {
-    currencyCodes: ['ETH', 'RBTC', 'EOS', 'TLOS', 'WAX'],
+    currencyCodes: ['ETH', 'RBTC', 'FTM', 'EOS', 'TLOS', 'WAX'],
     label: s.strings.string_add_edit_tokens,
     value: 'manageTokens'
   },

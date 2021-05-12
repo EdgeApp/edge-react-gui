@@ -24,7 +24,7 @@ Edge is known to build with this exact tool set. Updated versions of these tools
 - macOS Catalina 10.15.6
 - Xcode 12.1
 - Android Studio 4.1
-- CocoaPods 1.10.0
+- CocoaPods 1.10.1
 - Android NDK r21d
 - NodeJS 14.15.0
 - NPM 6.14.8
