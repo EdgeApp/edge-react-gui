@@ -250,8 +250,6 @@
   "title_use_regular_address": "Utiliser Regular Adresse ",
   "no_exchanges_available": "Impossible d'effectuer l'échange",
   "check_exchange_settings": "Veuillez les activer dans le réglages d’Echange.",
-  "amount_above_limit": "Le montant de la transaction est supérieur au limit maximal de %1$s %2$s",
-  "amount_below_limit": "Le montant de la transaction est inférieur à la limite minimale de %1$s %2$s",
   "transaction_details_category_title": "Catégorie",
   "transaction_details_payee": "Bénéficiaire",
   "transaction_details_view_advanced_data": "Voir les informations de la transactiondossiers",
