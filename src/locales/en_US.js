@@ -546,6 +546,10 @@ const strings = {
   unique_identifier_modal_confirm: 'Confirm',
   unique_identifier_modal_cancel: 'Cancel',
 
+  cannot_delete_last_wallet_modal_title: 'Cannot Delete Wallet',
+  cannot_delete_last_wallet_modal_message:
+    'Edge requires at least one wallet in this account. If you’d like to delete this wallet, you’ll need to add an additional wallet(s) to this account.',
+
   enter_your_password: 'Enter your password',
   spending_limits: 'Spending Limits',
   spending_limits_tx_title: 'Transaction Spending Limit',
