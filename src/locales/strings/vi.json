@@ -247,8 +247,6 @@
   "title_use_regular_address": "Sử dụng địa chỉ thường xuyên",
   "no_exchanges_available": "Không có trao đổi được kích hoạt",
   "check_exchange_settings": "Xin vui lòng cho phép trong thiết lập giao dịch của bạn.",
-  "amount_above_limit": "Số tiền giao dịch là trên giới hạn tối đa là %1$s %2$s",
-  "amount_below_limit": "Số tiền giao dịch là trên giới hạn tối thiểu là %1$s %2$s",
   "transaction_details_category_title": "Danh mục",
   "transaction_details_payee": "Người nhận thanh toán",
   "transaction_details_view_advanced_data": "Xem dữ liệu giao dịch",
