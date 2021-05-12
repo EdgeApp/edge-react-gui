@@ -33,6 +33,7 @@ export const currencyPlugins = {
   wax: true,
   ethereum: ENV.ETHEREUM_INIT,
   ethereumclassic: true,
+  fantom: true,
   fio: ENV.FIO_INIT || true,
   ripple: true,
   rsk: true,

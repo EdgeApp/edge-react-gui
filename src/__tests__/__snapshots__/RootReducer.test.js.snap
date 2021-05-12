@@ -375,8 +375,14 @@ Object {
       "FTC": Object {
         "denomination": "100000000",
       },
+      "FTM": Object {
+        "denomination": "1000000000000000000",
+      },
       "FUN": Object {
         "denomination": "100000000",
+      },
+      "FUSDT": Object {
+        "denomination": "1000000",
       },
       "GLM": Object {
         "denomination": "1000000000000000000",

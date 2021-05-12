@@ -341,6 +341,7 @@ const strings = {
   string_first_bnb_wallet_name: 'My BNB',
   string_first_eboost_wallet_name: 'My eBoost',
   string_first_doge_wallet_name: 'My Doge',
+  string_first_fantom_wallet_name: 'My Fantom',
   my_crypto_wallet_name: 'My %s',
   string_help: 'Help',
   string_exit: 'Exit',
