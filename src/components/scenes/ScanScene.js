@@ -44,6 +44,12 @@ export class Scan extends React.Component<Props> {
                 <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
               </View>
             </TouchableHighlight>
+            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={THEME.COLORS.SECONDARY}>
+              <View style={styles.bottomButtonTextWrap}>
+                <IonIcon style={styles.addressBookIcon} name="ios-book" size={scale(24)} />
+                <T style={styles.bottomButtonText}>{s.strings.fragment_send_address}</T>
+              </View>
+            </TouchableHighlight>
           </View>
         </SceneWrapper>
         <SecondaryModal />
@@ -157,6 +163,7 @@ const rawStyles = {
 
   // Bottom button area:
   overlayButtonAreaWrap: {
+    flexWrap: 'wrap',
     flexDirection: 'row',
     paddingTop: scale(11),
     paddingBottom: scale(11),
@@ -165,13 +172,14 @@ const rawStyles = {
   },
   bottomButton: {
     flex: 1,
+    flexBasis: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
     borderRadius: scale(3),
     height: scale(50),
-    marginLeft: scale(1),
-    marginRight: scale(1)
+    marginHorizontal: scale(1),
+    marginBottom: scale(10)
   },
   bottomButtonTextWrap: {
     flexDirection: 'column',
