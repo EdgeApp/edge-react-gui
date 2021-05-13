@@ -81,6 +81,9 @@ class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalSta
           <EdgeText style={styles.text} numberOfLines={2}>
             {s.strings.exchange_congratulations_msg}
           </EdgeText>
+          <EdgeText style={[styles.text, styles.textInfo]} numberOfLines={3}>
+            {s.strings.exchange_congratulations_msg_info}
+          </EdgeText>
           <Fade visible={showButton} hidden>
             <SecondaryButton label={s.strings.string_done_cap} onPress={this.done} />
           </Fade>
@@ -110,6 +113,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontWeight: '600',
     fontSize: theme.rem(0.75),
     marginBottom: theme.rem(1.5)
+  },
+  textInfo: {
+    maxWidth: theme.rem(9.5)
   }
 }))
 

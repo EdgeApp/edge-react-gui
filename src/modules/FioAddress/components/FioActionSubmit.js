@@ -185,6 +185,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         {showSlider && (
           <View style={styles.blockPadding}>
             <Slider
+              parentStyle={styles.slider}
               reset={false}
               onSlidingComplete={this.onConfirm}
               disabled={displayFee > balance || loading}
@@ -223,6 +224,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingTop: theme.rem(0.5),
     paddingLeft: theme.rem(1.25),
     paddingRight: theme.rem(1.25)
+  },
+  slider: {
+    alignItems: 'center'
   },
   spacer: {
     paddingTop: theme.rem(1.25)
