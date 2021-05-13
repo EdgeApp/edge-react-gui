@@ -1,11 +1,13 @@
 // @flow
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React from 'react'
+import { Actions } from 'react-native-router-flux'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions'
 import { ButtonsModal } from '../../components/modals/ButtonsModal'
 import { Airship } from '../../components/services/AirshipInstance'
 import * as Constants from '../../constants/indexConstants'
+import { FIO_ADDRESS_DELIMITER } from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import type { Dispatch, GetState } from '../../types/reduxTypes'
 import type { FioAddress, FioDomain } from '../../types/types'
@@ -67,16 +69,44 @@ export const refreshAllFioAddresses = (checkExpired: boolean = false) => async (
 
   if (checkExpired) {
     const expired: Array<FioAddress | FioDomain> = getExpiredSoonFioNames(fioAddresses, fioDomains)
-    console.log('====================', expired)
+
     if (expired.length) {
-      Airship.show(bridge => (
+      const list = expired.map(item => item.name).join(', ')
+      const first = expired[0]
+      const firstIsAddress = first.name.indexOf(FIO_ADDRESS_DELIMITER) > 0
+      const fioWallet: EdgeCurrencyWallet | void = fioWallets.find((item: EdgeCurrencyWallet) => item.id === first.walletId)
+      if (!fioWallet) return
+
+      const answer = await Airship.show(bridge => (
         <ButtonsModal
           bridge={bridge}
-          title={s.strings.create_wallet_account_handle_unavailable_modal_title}
-          message={s.strings.expired_msg}
-          buttons={{ ok: { label: s.strings.string_ok } }}
+          title={s.strings.fio_address_confirm_screen_fio_label}
+          message={`${s.strings.fio_address_details_expired_soon}: ${list}`}
+          buttons={{
+            ok: { label: firstIsAddress ? s.strings.title_fio_renew_address : s.strings.title_fio_renew_domain },
+            cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+          }}
         />
       ))
+
+      if (answer === 'ok') {
+        if (firstIsAddress) {
+          return Actions[Constants.FIO_ADDRESS_SETTINGS]({
+            showRenew: true,
+            fioWallet,
+            fioAddressName: first.name,
+            expiration: first.expiration
+          })
+        }
+
+        return Actions[Constants.FIO_DOMAIN_SETTINGS]({
+          showRenew: true,
+          fioWallet,
+          fioDomainName: first.name,
+          isPublic: first.isPublic || false,
+          expiration: first.expiration
+        })
+      }
     }
   }
 }

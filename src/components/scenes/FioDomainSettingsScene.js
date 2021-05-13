@@ -41,7 +41,8 @@ type NavigationProps = {
   fioWallet: EdgeCurrencyWallet,
   fioDomainName: string,
   isPublic: boolean,
-  expiration: string
+  expiration: string,
+  showRenew?: boolean
 }
 
 type Props = NavigationProps & StateProps & ThemeProps & DispatchProps
@@ -51,6 +52,13 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     showRenew: false,
     showVisibility: false,
     showTransfer: false
+  }
+
+  componentDidMount() {
+    const { showRenew } = this.props
+    if (showRenew) {
+      this.setState({ showRenew: true })
+    }
   }
 
   afterSuccess = () => {
