@@ -423,7 +423,6 @@
   "transaction_details_advance_details_gasprice": "Gaspreis Gwei",
   "transaction_details_advance_details_gaslimit": "Gaslimit",
   "transaction_details_accelerate_transaction_header": "Transaktion beschleunigen",
-  "transaction_details_accelerate_transaction_instructional": "Diese Funktion wird Ihre Transaktion mit einer höheren Gebühr erneut senden, um sie zur Bestätigung zu priorisieren. Bitte bestätigen Sie die neue Gebühr.",
   "transaction_details_accelerate_transaction_old_fee_title": "Alte Gebühr",
   "transaction_details_accelerate_transaction_new_fee_title": "Neue Gebühr",
   "transaction_details_accelerate_transaction_slider_disabled": "Transaktion kann nicht beschleunigt werden",
