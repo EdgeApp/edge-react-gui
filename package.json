@@ -109,7 +109,8 @@
     "safe-buffer": "5.1.2",
     "scrypt.js": "0.3.0",
     "sha.js": "2.4.11",
-    "uuid": "3.3.2"
+    "uuid": "3.3.2",
+    "react-devtools-core": "4.13.2"
   },
   "dependencies": {
     "@bugsnag/react-native": "^7.3.5",

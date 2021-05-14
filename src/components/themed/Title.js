@@ -3,18 +3,18 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
-type OwnProps = {
+type Props = {
   icon?: React.Node,
   text: string
 }
 
-type Props = OwnProps & ThemeProps
+export function Title(props: Props): React.Node {
+  const { icon, text } = props
 
-export function TitleComponent(props: Props): React.Node {
-  const { icon, text, theme } = props
+  const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
@@ -51,4 +51,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const Title = withTheme(TitleComponent)
+export default Title

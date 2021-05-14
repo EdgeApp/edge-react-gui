@@ -7,16 +7,14 @@ import { FlatList, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions.js'
-import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
+import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
+import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
-import * as UTILS from '../../util/utils'
-import ManageTokenRow from '../common/ManageTokenRow.js'
-import { SceneWrapper } from '../common/SceneWrapper.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { ManageTokensHeader } from '../themed/ManageTokensHeader'
+import type { CustomTokenInfo, GuiWallet } from '../../types/types'
+import { mergeTokensRemoveInvisible, TokenRow, TokensHeader } from '../common/ManageToken'
+import { SceneWrapper } from '../common/SceneWrapper'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import SceneFooter from '../themed/SceneFooter'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SecondaryButton } from '../themed/ThemedButtons'
@@ -80,14 +78,17 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
 
     let accountMetaTokenInfo = []
     const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+
     // this will need refactoring later
     if (specialCurrencyInfo.isCustomTokensSupported) {
       accountMetaTokenInfo = [...this.props.settingsCustomTokens]
     }
+
     const filteredTokenInfo = accountMetaTokenInfo.filter(token => {
       return token.walletType === this.props.guiWallet.type || token.walletType === undefined
     })
-    const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
+
+    const combinedTokenInfo = mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
 
     const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
       if (a.currencyCode < b.currencyCode) return -1
@@ -113,7 +114,7 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
       <SceneWrapper>
         <View style={styles.container}>
           <SceneHeader underline>
-            <ManageTokensHeader walletName={name} walletId={this.props.guiWallet.id} currencyCode={currencyCode} />
+            <TokensHeader walletName={name} walletId={this.props.guiWallet.id} currencyCode={currencyCode} />
           </SceneHeader>
 
           <View style={styles.tokensWrapper}>
@@ -122,8 +123,7 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
                 keyExtractor={item => item.currencyCode}
                 data={sortedTokenInfo}
                 renderItem={metaToken => (
-                  <ManageTokenRow
-                    theme={theme}
+                  <TokenRow
                     goToEditTokenScene={this.goToEditTokenScene}
                     metaToken={metaToken}
                     walletId={this.props.guiWallet.id}

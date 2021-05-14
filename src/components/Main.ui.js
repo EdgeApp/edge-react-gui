@@ -305,7 +305,6 @@ export class MainComponent extends React.Component<Props> {
                 renderRightButton={this.renderEmptyButton()}
                 navTransparent
                 component={ifLoggedIn(ManageTokensScene)}
-                renderTitle={<HeaderTitle title={s.strings.title_manage_tokens} />}
                 animation="fade"
                 duration={600}
               />
