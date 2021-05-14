@@ -21,8 +21,8 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { AccelerateTxModel } from '../modals/AccelerateTxModel.js'
 import { RawTextModal } from '../modals/RawTextModal.js'
-import { TransactionAccelerateModal } from '../modals/TransactionAccelerateModal.js'
 import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
 import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInput.js'
@@ -215,11 +215,11 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openAccelerateModel = () => {
-    const { edgeTransaction } = this.props
+    const { edgeTransaction, guiWallet } = this.props
     const { wallet } = edgeTransaction
 
     if (wallet) {
-      Airship.show(bridge => <TransactionAccelerateModal bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} />)
+      Airship.show(bridge => <AccelerateTxModel bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} guiWallet={guiWallet} />)
     } else {
       showError(new Error('Transaction is missing wallet data.'))
     }

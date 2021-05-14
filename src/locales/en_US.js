@@ -447,7 +447,7 @@ const strings = {
   transaction_details_advance_details_gaslimit: 'Gas Limit',
   transaction_details_accelerate_transaction_header: 'Accelerate Transaction',
   transaction_details_accelerate_transaction_instructional:
-    'This feature will resend your transaction with a higher fee to help prioritize it for confirmation. Please confirm the new fee.',
+    'This will resend your transaction with its fee doubled to help prioritize it for network confirmation. Please review new fee amount before confirming.',
   transaction_details_accelerate_transaction_old_fee_title: 'Old Fee',
   transaction_details_accelerate_transaction_new_fee_title: 'New Fee',
   transaction_details_accelerate_transaction_slider_disabled: 'Unable to Accelerate Transaction',
