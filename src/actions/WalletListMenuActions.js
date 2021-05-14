@@ -43,7 +43,10 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const wallets = WALLET_SELECTORS.getWallets(state)
 
         if (Object.values(wallets).length === 1) {
-          showInfoModal(s.strings.cannot_delete_last_wallet_modal_title, s.strings.cannot_delete_last_wallet_modal_message)
+          showInfoModal(s.strings.cannot_delete_last_wallet_modal_title, [
+            s.strings.cannot_delete_last_wallet_modal_message_part_1,
+            s.strings.cannot_delete_last_wallet_modal_message_part_2
+          ])
           return
         }
 
