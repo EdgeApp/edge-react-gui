@@ -424,7 +424,6 @@
   "transaction_details_advance_details_gasprice": "Prezzo Gas Gwei",
   "transaction_details_advance_details_gaslimit": "Limite Gas",
   "transaction_details_accelerate_transaction_header": "Accelera la transazione",
-  "transaction_details_accelerate_transaction_instructional": "Questa funzionalità invierà nuovamente la transazione con una commissione più alta per aiutarla a essere inserita prima nella blockchain. Conferma la nuova commissione.",
   "transaction_details_accelerate_transaction_old_fee_title": "Vecchia commissione",
   "transaction_details_accelerate_transaction_new_fee_title": "Nuova commissione",
   "transaction_details_accelerate_transaction_slider_disabled": "Impossibile accelerare la transazione",
