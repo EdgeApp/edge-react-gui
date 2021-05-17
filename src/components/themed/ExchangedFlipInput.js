@@ -22,6 +22,8 @@ export type ExchangedFlipInputOwnProps = {
   primaryCurrencyInfo: GuiCurrencyInfo,
   secondaryCurrencyInfo: GuiCurrencyInfo,
   onNext?: () => void,
+  onFocus?: () => void,
+  onBlur?: () => void,
 
   // Exchange rate
   exchangeSecondaryToPrimaryRatio: number,
@@ -183,6 +185,8 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
         isFiatOnTop={this.isFiatOnTop()}
         isFocus={this.props.isFocus}
         onNext={this.props.onNext}
+        onFocus={this.props.onFocus}
+        onBlur={this.props.onBlur}
         topReturnKeyType={this.props.topReturnKeyType}
         inputAccessoryViewID={this.props.inputAccessoryViewID}
         ref={ref => (this.flipInput = ref)}
