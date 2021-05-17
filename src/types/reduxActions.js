@@ -23,7 +23,6 @@ import {
 } from './types.js'
 
 type LegacyActionName =
-  | 'SET_TRANSACTION_SUBCATEGORIES'
   | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
   | 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS'
   | 'UI/SEND_CONFIMATION/NEW_PIN'
@@ -183,6 +182,7 @@ export type Action =
   | { type: 'SAVE_EDGE_LOBBY', data: EdgeLobby }
   | { type: 'SET_LOBBY_ERROR', data: string }
   | { type: 'SET_FROM_WALLET_MAX', data: string }
+  | { type: 'SET_TRANSACTION_SUBCATEGORIES', data: { subcategories: string[] } }
   | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME', data: { autoLogoutTimeInSeconds: number } }
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: string | void }
   | {
