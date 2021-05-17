@@ -10,7 +10,6 @@ import { updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import s from '../../locales/strings.js'
 import { getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
-import { getWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
@@ -119,7 +118,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
 
     return (
       <SceneWrapper>
-        <WiredProgressBar progress={getWalletLoadingPercent} />
+        <WiredProgressBar />
         {sorting && (
           <View style={styles.headerContainer}>
             <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>

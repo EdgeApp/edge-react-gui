@@ -41,26 +41,6 @@ export const getActiveWalletCurrencyInfos = (state: RootState) => {
   return currencyInfos
 }
 
-export const getWalletLoadingPercent = (state: RootState) => {
-  const walletsForProgress = state.ui.wallets.walletLoadingProgress
-  const walletIds = Object.keys(walletsForProgress)
-  const numberOfWallets = walletIds.length
-  let progressBeforeDivision = 0
-  for (const walletId of Object.keys(walletsForProgress)) {
-    progressBeforeDivision += walletsForProgress[walletId]
-  }
-  const progressAfterDivision = progressBeforeDivision / numberOfWallets
-  let progressPercentage = 0
-  if (numberOfWallets > 0) {
-    if (progressAfterDivision > 0.99999) {
-      progressPercentage = 100
-    } else {
-      progressPercentage = parseInt(progressAfterDivision * 100)
-    }
-  }
-  return progressPercentage
-}
-
 export const getTransactions = (state: RootState): TransactionListTx[] => {
   const transactions = state.ui.scenes.transactionList.transactions
   return transactions
