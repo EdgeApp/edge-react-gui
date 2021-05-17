@@ -37,7 +37,6 @@
   "exchange_succeeded": "Il cambio ha avuto successo",
   "exchange_congratulations": "Congratulazioni!",
   "exchange_congratulations_msg": "Lo scambio è stato completato con successo!",
-  "exchange_congratulations_msg_info": "Gli scambi possono richiedere da alcuni minuti fino a 24 ore per essere processati.",
   "no_exchange_amount": "Nessun importo selezionato",
   "select_exchange_amount": "Inserisci un importo da scambiare",
   "select_exchange_amount_short": "Inserisci un importo",
