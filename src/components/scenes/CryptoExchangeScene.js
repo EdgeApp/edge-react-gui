@@ -26,6 +26,7 @@ import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInpu
 import { CryptoExchangeMessageBox } from '../themed/CryptoExchangeMessageBoxComponent'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { SceneHeader } from '../themed/SceneHeader'
+import { SecondaryButton } from '../themed/ThemedButtons'
 
 type StateProps = {
   account: EdgeAccount,
@@ -70,7 +71,8 @@ type State = {
   forceUpdateGuiCounter: number,
   toExchangeAmount: string,
   fromAmountNative: string,
-  toAmountNative: string
+  toAmountNative: string,
+  fieldIsFocused: boolean
 }
 
 const disabledCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => !!SPECIAL_CURRENCY_INFO[code].keysOnlyMode)
@@ -84,7 +86,8 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
       fromExchangeAmount: '',
       toExchangeAmount: '',
       fromAmountNative: '',
-      toAmountNative: ''
+      toAmountNative: '',
+      fieldIsFocused: false
     }
     this.state = newState
   }
@@ -131,7 +134,8 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
 
   focusFromWallet = () => {
     this.setState({
-      whichWalletFocus: 'from'
+      whichWalletFocus: 'from',
+      fieldIsFocused: false
     })
   }
 
@@ -139,6 +143,14 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     this.setState({
       whichWalletFocus: 'to'
     })
+  }
+
+  fieldFocused = () => {
+    this.setState({ fieldIsFocused: true })
+  }
+
+  fieldBlurred = () => {
+    this.setState({ fieldIsFocused: false })
   }
 
   fromAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
@@ -151,6 +163,18 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     this.setState({
       toAmountNative: amounts.nativeAmount
     })
+  }
+
+  renderButton = () => {
+    const primaryNativeAmount = this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
+    const showNext =
+      this.props.fromCurrencyCode !== '' &&
+      this.props.toCurrencyCode !== '' &&
+      !this.state.fieldIsFocused &&
+      !this.props.calculatingMax &&
+      !!parseFloat(primaryNativeAmount)
+    if (!showNext) return null
+    return <SecondaryButton onPress={this.getQuote} label={s.strings.string_next_capitalized} marginRem={[1.5, 0, 0]} />
   }
 
   renderDropUp = (whichWallet: 'from' | 'to') => {
@@ -220,6 +244,8 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             isFocused={isFromFocused}
             focusMe={this.focusFromWallet}
             onNext={this.getQuote}
+            onFocus={this.fieldFocused}
+            onBlur={this.fieldBlurred}
           />
           <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
           <CryptoExchangeFlipInputWrapper
@@ -238,8 +264,11 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             isThinking={this.props.creatingWallet}
             focusMe={this.focusToWallet}
             onNext={this.getQuote}
+            onFocus={this.fieldFocused}
+            onBlur={this.fieldBlurred}
           />
           {this.props.calculatingMax && <ActivityIndicator style={styles.spinner} color={this.props.theme.iconTappable} />}
+          {this.renderButton()}
           <View style={styles.spacer} />
         </KeyboardAwareScrollView>
       </SceneWrapper>

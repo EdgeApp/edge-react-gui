@@ -27,7 +27,9 @@ export type Props = {
   focusMe(): void,
   launchWalletSelector: () => void,
   onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void,
-  onNext: () => void
+  onNext: () => void,
+  onFocus?: () => void,
+  onBlur?: () => void
 }
 
 class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & ThemeProps> {
@@ -92,6 +94,8 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & Th
       <Card>
         <ExchangedFlipInput
           onNext={onNext}
+          onFocus={this.props.onFocus}
+          onBlur={this.props.onBlur}
           headerText={this.props.headerText}
           headerLogo={this.props.currencyLogo}
           headerCallback={this.launchSelector}
