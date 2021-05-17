@@ -217,6 +217,10 @@ export type SpendingLimits = {
   }
 }
 
+export type GuiExchangeRates = {
+  [pair: string]: number
+}
+
 export type CountryData = {
   name: string,
   'alpha-2': string,

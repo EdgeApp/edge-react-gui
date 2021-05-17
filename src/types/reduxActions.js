@@ -17,12 +17,12 @@ import {
   type FioObtRecord,
   type GuiContact,
   type GuiCurrencyInfo,
+  type GuiExchangeRates,
   type GuiSwapInfo,
   type GuiWallet
 } from './types.js'
 
 type LegacyActionName =
-  | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
   | 'NEW_RECEIVE_ADDRESS'
   | 'RESET_WALLET_LOADING_PROGRESS'
   | 'SET_TRANSACTION_SUBCATEGORIES'
@@ -143,6 +143,7 @@ export type Action =
   | { type: 'DEEP_LINK_RECEIVED', data: DeepLink }
   | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
   | { type: 'DEVICE_REFERRAL_LOADED', data: DeviceReferral }
+  | { type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES', data: { exchangeRates: GuiExchangeRates } }
   | {
       type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
       data: { activeWalletIds: string[] }
