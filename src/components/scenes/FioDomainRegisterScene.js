@@ -28,7 +28,8 @@ type LocalState = {
   loading: boolean,
   walletLoading: boolean,
   isAvailable: boolean | null,
-  fieldPos: number
+  fieldPos: number,
+  errorMessage: string
 }
 
 type StateProps = {
@@ -49,6 +50,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   state = {
     selectedWallet: null,
     fioDomain: '',
+    errorMessage: '',
     isValid: true,
     isAvailable: false,
     loading: false,
@@ -118,12 +120,24 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         return --this.fioCheckQueue
       }
       this.fioCheckQueue = 0
+
+      if (/[^\p{L}\p{N}]+/gu.test(fioDomain)) {
+        this.setState({
+          loading: false,
+          isValid: false,
+          errorMessage: s.strings.fio_domain_register_alphanumeric_error
+        })
+        return
+      }
+
       try {
         const { fioPlugin } = this.props
         const isAvailable = fioPlugin.otherMethods ? await fioPlugin.otherMethods.validateAccount(fioDomain, true) : false
         this.setState({
           isAvailable,
-          loading: false
+          isValid: true,
+          loading: false,
+          errorMessage: ''
         })
       } catch (e) {
         this.setState({
@@ -222,7 +236,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
   render() {
     const { theme } = this.props
-    const { fioDomain, isAvailable, loading } = this.state
+    const { fioDomain, isAvailable, loading, errorMessage, isValid } = this.state
     const styles = getStyles(theme)
     let chooseHandleErrorMessage = ''
     if (fioDomain && !this.props.isConnected) {
@@ -230,6 +244,10 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     }
     if (fioDomain && isAvailable === false) {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_not_available
+    }
+
+    if (fioDomain && !isValid && errorMessage) {
+      chooseHandleErrorMessage = errorMessage
     }
 
     return (

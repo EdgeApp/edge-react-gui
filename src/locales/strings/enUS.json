@@ -586,6 +586,7 @@
   "fio_domain_reg_descr": "FIO Addresses consist of a username and a domain. If you purchase your custom domain, only you will able to register FIO Addresses on it. FIO Address registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.",
   "fio_address_reg_free": "Register Free FIO Address",
   "fio_domain_label": "FIO Domain",
+  "fio_domain_register_alphanumeric_error": "Only letters and numbers can be used",
   "fio_domain_free": "Free",
   "fio_address_wallet_selection_text": "FIO Address requires an annual fee. This payment is required by the FIO Protocol and not a requirement of Edge. The current annual cost is equivalent to %s FIO, but may fluctuate in the future. Each FIO Address includes a number of free actions, such as payment requests, where the mining fee is waived. Select a wallet to pay from:",
   "fio_domain_wallet_selection_text": "FIO Domains require an annual fee. This payment is required by the FIO Protocol and not a requirement of Edge. The current annual cost is equivalent to %s FIO, but may fluctuate in the future. Select a wallet to pay from:",
