@@ -68,23 +68,23 @@ type State = {
   whichWalletFocus: 'from' | 'to', // Which wallet FlipInput was last focused and edited
   fromExchangeAmount: string,
   forceUpdateGuiCounter: number,
-  toExchangeAmount: string
+  toExchangeAmount: string,
+  fromAmountNative: string,
+  toAmountNative: string
 }
 
 const disabledCurrencyCodes = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => !!SPECIAL_CURRENCY_INFO[code].keysOnlyMode)
 
 class CryptoExchangeComponent extends React.Component<Props, State> {
-  fromAmountNative: string
-  fromAmountDisplay: string
-  toAmountNative: string
-  toAmountDisplay: string
   constructor(props: Props) {
     super(props)
     const newState: State = {
       whichWalletFocus: 'from',
       forceUpdateGuiCounter: 0,
       fromExchangeAmount: '',
-      toExchangeAmount: ''
+      toExchangeAmount: '',
+      fromAmountNative: '',
+      toAmountNative: ''
     }
     this.state = newState
   }
@@ -92,6 +92,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
   static getDerivedStateFromProps(props: Props, state: State) {
     if (props.forceUpdateGuiCounter !== state.forceUpdateGuiCounter) {
       return {
+        fromAmountNative: bns.mul(props.fromExchangeAmount, props.fromPrimaryInfo.exchangeDenomination.multiplier),
         fromExchangeAmount: props.fromExchangeAmount,
         toExchangeAmount: props.toExchangeAmount,
         forceUpdateGuiCounter: props.forceUpdateGuiCounter
@@ -107,19 +108,12 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     }
   }
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
-    if (prevState.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
-      this.fromAmountNative = bns.mul(this.props.fromExchangeAmount, this.props.fromPrimaryInfo.exchangeDenomination.multiplier)
-      this.fromAmountDisplay = this.props.fromExchangeAmount
-    }
-  }
-
   getQuote = () => {
     const data: SetNativeAmountInfo = {
       whichWallet: this.state.whichWalletFocus,
-      primaryNativeAmount: this.state.whichWalletFocus === 'from' ? this.fromAmountNative : this.toAmountNative
+      primaryNativeAmount: this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
     }
-    if (data.primaryNativeAmount && data.primaryNativeAmount !== '0') {
+    if (data.primaryNativeAmount && data.primaryNativeAmount !== '0' && data.primaryNativeAmount) {
       this.props.getQuoteForTransaction(data)
       Keyboard.dismiss()
       return
@@ -148,13 +142,15 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
   }
 
   fromAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
-    this.fromAmountNative = amounts.nativeAmount
-    this.fromAmountDisplay = amounts.exchangeAmount
+    this.setState({
+      fromAmountNative: amounts.nativeAmount
+    })
   }
 
   toAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
-    this.toAmountNative = amounts.nativeAmount
-    this.toAmountDisplay = amounts.exchangeAmount
+    this.setState({
+      toAmountNative: amounts.nativeAmount
+    })
   }
 
   renderDropUp = (whichWallet: 'from' | 'to') => {
