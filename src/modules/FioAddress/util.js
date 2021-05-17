@@ -14,6 +14,7 @@ import { truncateDecimals } from '../../util/utils'
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
 const FIO_ADDRESS_CACHE = 'FioAddressCache.json'
 const FIO_EXPIRED_CHECK = 'FioExpiredCheck.json'
+const MONTH = 1000 * 60 * 60 * 24 * 30
 
 type DiskletConnectedWallets = {
   [fullCurrencyCode: string]: {
@@ -107,7 +108,7 @@ const getFioExpiredCheckFromDislket = async (disklet: Disklet): Promise<Date> =>
     return new Date(lastCheck)
   } catch (error) {
     const defaultDate = new Date()
-    defaultDate.setMonth(new Date().getMonth() - 2)
+    defaultDate.setMonth(new Date().getMonth() - 1)
     return defaultDate
   }
 }
@@ -824,34 +825,27 @@ export const checkExpiredFioAddress = async (fioWallet?: EdgeCurrencyWallet, add
 }
 
 export const expiredSoon = (expDate: string): boolean => {
-  const month = 1000 * 60 * 60 * 24 * 30
-  return new Date(expDate).getTime() - new Date().getTime() < month
+  return new Date(expDate).getTime() - new Date().getTime() < MONTH
 }
 
 export const needToCheckExpired = async (disklet: Disklet): Promise<boolean> => {
-  let needToCheck: boolean = true
   try {
     const lastCheck = await getFioExpiredCheckFromDislket(disklet)
-    if (new Date().getMonth() !== lastCheck.getMonth()) {
+    const now = new Date()
+    if (now.getMonth() !== lastCheck.getMonth()) {
       setFioExpiredCheckToDislket(new Date(), disklet)
-    } else {
-      needToCheck = false
+      return true
     }
   } catch (e) {
-    needToCheck = false
+    //
   }
-  return needToCheck
+  return false
 }
 export const getExpiredSoonFioNames = (fioAddresses: FioAddress[], fioDomains: FioDomain[]): Array<FioAddress | FioDomain> => {
   const expiredFioNames: Array<FioAddress | FioDomain> = []
-  for (const fioAddress of fioAddresses) {
-    if (expiredSoon(fioAddress.expiration)) {
-      expiredFioNames.push(fioAddress)
-    }
-  }
-  for (const fioDomain of fioDomains) {
-    if (expiredSoon(fioDomain.expiration)) {
-      expiredFioNames.push(fioDomain)
+  for (const fioName of [...fioAddresses, ...fioDomains]) {
+    if (expiredSoon(fioName.expiration)) {
+      expiredFioNames.push(fioName)
     }
   }
 

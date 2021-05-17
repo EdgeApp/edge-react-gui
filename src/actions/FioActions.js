@@ -59,9 +59,16 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
   }
 }
 
+export const needToCheckExpiredFioNames = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const data = await needToCheckExpired(state.core.disklet)
+  dispatch({ type: 'FIO/NEED_TO_CHECK_EXPIRED', data })
+}
+
 export const checkExpiredFioNames = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  if (await needToCheckExpired(state.core.disklet)) {
+  if (state.ui.fio.needToCheckExpired) {
     dispatch(refreshAllFioAddresses(true))
+    dispatch({ type: 'FIO/NEED_TO_CHECK_EXPIRED', data: false })
   }
 }
