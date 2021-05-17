@@ -56,7 +56,6 @@ export type SendConfirmationState = {
 export const sendConfirmationLegacy = (state: SendConfirmationState = initialState, action: Action) => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
-      if (!action.data) throw new Error('Invalid Action')
       const { guiMakeSpendInfo, forceUpdateGui } = action.data
       let forceUpdateGuiCounter = state.forceUpdateGuiCounter
       if (forceUpdateGui) {
@@ -84,7 +83,6 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
     }
 
     case 'UI/SEND_CONFIMATION/NEW_SPEND_INFO': {
-      if (!action.data) throw new Error('Invalid Action')
       const { spendInfo } = action.data
       const firstSpendTarget = spendInfo.spendTargets[0]
       const guiMakeSpendInfo = {
@@ -109,17 +107,13 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
   }
 }
 
-export const nativeAmount: Reducer<string, Action> = (state = '0', action) => {
+export const nativeAmount: Reducer<string, Action> = (state = '0', action): string => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/NEW_SPEND_INFO': {
-      if (!action.data) throw new Error('Invalid Action')
-      const nativeAmount = action.data.spendInfo.nativeAmount || action.data.spendInfo.spendTargets.reduce((sum, target) => add(sum, target.nativeAmount), '0')
-      return nativeAmount
+      return action.data.spendInfo.spendTargets.reduce((sum, target) => add(sum, target.nativeAmount ?? '0'), '0')
     }
 
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
-      if (!action.data) throw new Error('Invalid Action')
-      if (!action.data.guiMakeSpendInfo) return state
       return action.data.guiMakeSpendInfo.nativeAmount || state || '0'
     }
 
@@ -128,10 +122,9 @@ export const nativeAmount: Reducer<string, Action> = (state = '0', action) => {
   }
 }
 
-export const spendInfo = (state: EdgeSpendInfo | null = null, action: Action) => {
+export const spendInfo = (state: EdgeSpendInfo | null = null, action: Action): EdgeSpendInfo | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/NEW_SPEND_INFO': {
-      if (!action.data) throw new Error('Invalid Action')
       return action.data.spendInfo
     }
 
@@ -140,11 +133,10 @@ export const spendInfo = (state: EdgeSpendInfo | null = null, action: Action) =>
   }
 }
 
-export const address = (state: string = '', action: Action) => {
+export const address = (state: string = '', action: Action): string => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/NEW_SPEND_INFO': {
-      if (!action.data) throw new Error('Invalid Action')
-      return action.data.spendInfo.spendTargets[0].publicAddress
+      return action.data.spendInfo.spendTargets[0].publicAddress ?? ''
     }
 
     default:
@@ -152,10 +144,9 @@ export const address = (state: string = '', action: Action) => {
   }
 }
 
-export const authRequired = (state: 'none' | 'pin' = 'none', action: Action) => {
+export const authRequired = (state: 'none' | 'pin' = 'none', action: Action): 'none' | 'pin' => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/NEW_SPEND_INFO': {
-      if (!action.data) throw new Error('Invalid Action')
       return action.data.authRequired || 'none'
     }
 
@@ -164,17 +155,15 @@ export const authRequired = (state: 'none' | 'pin' = 'none', action: Action) => 
   }
 }
 
-export const transactionMetadata = (state: EdgeMetadata | null = null, action: Action) => {
+export const transactionMetadata = (state: EdgeMetadata | null = null, action: Action): EdgeMetadata | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
-      if (!action.data) throw new Error('Invalid Action')
       if (!action.data.guiMakeSpendInfo || !action.data.guiMakeSpendInfo.metadata || !action.data.guiMakeSpendInfo.metadata.name) return state
 
       return action.data.guiMakeSpendInfo.metadata || null
     }
 
     case 'UI/SEND_CONFIMATION/NEW_SPEND_INFO': {
-      if (!action.data) throw new Error('Invalid Action')
       return action.data.spendInfo.metadata || null
     }
 
@@ -183,10 +172,9 @@ export const transactionMetadata = (state: EdgeMetadata | null = null, action: A
   }
 }
 
-export const error = (state: Error | null = null, action: Action) => {
+export const error = (state: Error | null = null, action: Action): Error | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
-      if (!action.data) throw new Error('Invalid Action')
       return action.data.error
     }
 
@@ -199,10 +187,9 @@ export const error = (state: Error | null = null, action: Action) => {
   }
 }
 
-export const isEditable = (state: boolean = true, action: Action) => {
+export const isEditable = (state: boolean = true, action: Action): boolean => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
-      if (!action.data) throw new Error('Invalid Action')
       const { guiMakeSpendInfo } = action.data
       if (!guiMakeSpendInfo || guiMakeSpendInfo.lockInputs) {
         return false
@@ -214,10 +201,9 @@ export const isEditable = (state: boolean = true, action: Action) => {
   }
 }
 
-export const pin = (state: string = '', action: Action) => {
+export const pin = (state: string = '', action: Action): string => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/NEW_PIN': {
-      if (!action.data) throw new Error('Invalid Action')
       return action.data.pin
     }
 
@@ -226,10 +212,9 @@ export const pin = (state: string = '', action: Action) => {
   }
 }
 
-export const pending = (state: boolean = false, action: Action) => {
+export const pending = (state: boolean = false, action: Action): boolean => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING': {
-      if (!action.data) throw new Error('Invalid Action')
       return action.data.pending
     }
 
@@ -238,10 +223,9 @@ export const pending = (state: boolean = false, action: Action) => {
   }
 }
 
-export const transaction = (state: EdgeTransaction | null = null, action: Action) => {
+export const transaction = (state: EdgeTransaction | null = null, action: Action): EdgeTransaction | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION': {
-      if (!action.data) throw new Error('Invalid Action')
       return action.data.transaction
     }
 
@@ -254,7 +238,7 @@ export const transaction = (state: EdgeTransaction | null = null, action: Action
   }
 }
 
-export const toggleCryptoOnTop = (state: number = 0, action: Action) => {
+export const toggleCryptoOnTop = (state: number = 0, action: Action): number => {
   switch (action.type) {
     case 'UI/SEND_CONFIMATION/TOGGLE_CRYPTO_ON_TOP': {
       return state + 1

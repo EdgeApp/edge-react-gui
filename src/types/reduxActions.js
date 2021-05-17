@@ -1,11 +1,21 @@
 // @flow
 
 import { type Disklet } from 'disklet'
-import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet, type EdgeLobby, type EdgeParsedUri, type EdgeReceiveAddress } from 'edge-core-js'
+import {
+  type EdgeAccount,
+  type EdgeContext,
+  type EdgeCurrencyWallet,
+  type EdgeLobby,
+  type EdgeParsedUri,
+  type EdgeReceiveAddress,
+  type EdgeSpendInfo,
+  type EdgeTransaction
+} from 'edge-core-js'
 
 import type { CcWalletMap } from '../reducers/FioReducer'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
+import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { type AccountInitPayload } from '../reducers/scenes/SettingsReducer.js'
 import { type TweakSource } from '../util/ReferralHelpers.js'
 import { type DeepLink } from './DeepLink.js'
@@ -20,16 +30,12 @@ import {
   type GuiExchangeRates,
   type GuiSwapInfo,
   type GuiWallet,
+  type SpendAuthType,
   type SpendingLimits,
   type TransactionListTx
 } from './types.js'
 
 type LegacyActionName =
-  | 'UI/SEND_CONFIMATION/NEW_PIN'
-  | 'UI/SEND_CONFIMATION/NEW_SPEND_INFO'
-  | 'UI/SEND_CONFIMATION/TOGGLE_CRYPTO_ON_TOP'
-  | 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING'
-  | 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION'
   | 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS'
   | 'UI/SETTINGS/LOAD_SETTINGS'
   | 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY'
@@ -83,6 +89,7 @@ type NoDataActionName =
   | 'START_SHIFT_TRANSACTION'
   | 'TOGGLE_ENABLE_TORCH'
   | 'UI/SEND_CONFIMATION/RESET'
+  | 'UI/SEND_CONFIMATION/TOGGLE_CRYPTO_ON_TOP'
   | 'UI/WALLETS/CREATE_WALLET_FAILURE'
   | 'UI/WALLETS/CREATE_WALLET_START'
   | 'UI/WALLETS/CREATE_WALLET_SUCCESS'
@@ -193,6 +200,24 @@ export type Action =
         currentCurrencyCode: string,
         currentWalletId: string,
         currentEndIndex: number
+      }
+    }
+  | { type: 'UI/SEND_CONFIMATION/NEW_PIN', data: { pin: string } }
+  | {
+      type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
+      data: {
+        spendInfo: EdgeSpendInfo,
+        authRequired: SpendAuthType
+      }
+    }
+  | { type: 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING', data: { pending: boolean } }
+  | {
+      type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
+      data: {
+        error: Error | null,
+        forceUpdateGui: boolean,
+        guiMakeSpendInfo: GuiMakeSpendInfo,
+        transaction: EdgeTransaction | null
       }
     }
   | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME', data: { autoLogoutTimeInSeconds: number } }

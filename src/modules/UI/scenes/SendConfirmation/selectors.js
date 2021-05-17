@@ -4,6 +4,7 @@ import type { EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import { type RootState } from '../../../../types/reduxTypes.js'
+import { type SpendAuthType } from '../../../../types/types.js'
 import { convertNativeToExchange } from '../../../../util/utils.js'
 import { getExchangeDenomination } from '../../../Settings/selectors.js'
 import { convertCurrency } from '../../selectors.js'
@@ -137,8 +138,7 @@ export const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, s
   }
 }
 
-export type AuthType = 'pin' | 'none'
-export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo): AuthType => {
+export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo): SpendAuthType => {
   const isEnabled = state.ui.settings.spendingLimits.transaction.isEnabled
   if (!isEnabled) return 'none'
 

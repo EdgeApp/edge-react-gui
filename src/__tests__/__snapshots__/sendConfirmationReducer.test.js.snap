@@ -196,7 +196,7 @@ Object {
     "networkFeeOption": "standard",
     "publicAddress": "",
   },
-  "isEditable": false,
+  "isEditable": true,
   "nativeAmount": "0",
   "pending": false,
   "pin": "",
@@ -305,36 +305,6 @@ Object {
   "transactionMetadata": Object {
     "name": "airbitz",
   },
-}
-`;
-
-exports[`sendConfirmation reducer error UPDATE_TRANSACTION 1`] = `
-Object {
-  "address": "",
-  "authRequired": "none",
-  "error": [Error],
-  "forceUpdateGuiCounter": 0,
-  "guiMakeSpendInfo": Object {
-    "customNetworkFee": Object {},
-    "metadata": Object {
-      "amountFiat": 0,
-      "bizId": 0,
-      "category": "",
-      "name": "",
-      "notes": "",
-    },
-    "nativeAmount": "0",
-    "networkFeeOption": "standard",
-    "publicAddress": "",
-  },
-  "isEditable": false,
-  "nativeAmount": "0",
-  "pending": false,
-  "pin": "",
-  "spendInfo": null,
-  "toggleCryptoOnTop": 0,
-  "transaction": null,
-  "transactionMetadata": null,
 }
 `;
 
