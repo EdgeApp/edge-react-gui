@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { launchModal } from '../components/common/ModalProvider.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
+import { showInfoModal } from '../components/modals/InfoModal'
 import { RawTextModal } from '../components/modals/RawTextModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { getTheme } from '../components/services/ThemeContext.js'
@@ -39,6 +40,16 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const wallet = WALLET_SELECTORS.getWallet(state, walletId)
+        const wallets = WALLET_SELECTORS.getWallets(state)
+
+        if (Object.values(wallets).length === 1) {
+          showInfoModal(s.strings.cannot_delete_last_wallet_modal_title, [
+            s.strings.cannot_delete_last_wallet_modal_message_part_1,
+            s.strings.cannot_delete_last_wallet_modal_message_part_2
+          ])
+          return
+        }
+
         const type = wallet.type.replace('wallet:', '')
         let fioAddress = ''
 
