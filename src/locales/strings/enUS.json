@@ -37,7 +37,7 @@
   "exchange_succeeded": "Exchange Succeeded",
   "exchange_congratulations": "Congratulations!",
   "exchange_congratulations_msg": "Your exchange has been successfully completed!",
-  "exchange_congratulations_msg_info": "Exchanges may take a few minutes up to 24 hours to process.",
+  "exchange_congratulations_msg_info": "Exchanges may take a few minutes and up to 24 hours to process.",
   "no_exchange_amount": "No Amount Selected",
   "select_exchange_amount": "Please enter an amount to exchange",
   "select_exchange_amount_short": "Enter an Amount",
