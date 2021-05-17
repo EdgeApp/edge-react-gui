@@ -125,7 +125,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
     }
 
     case 'UI/WALLETS/UPSERT_WALLETS': {
-      if (!action.data) return state
       const { wallets } = action.data
       const out = { ...state }
       for (const wallet of wallets) {

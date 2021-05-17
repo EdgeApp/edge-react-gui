@@ -37,8 +37,6 @@ import {
   type TransactionListTx
 } from './types.js'
 
-type LegacyActionName = 'UI/WALLETS/UPSERT_WALLETS' | 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED'
-
 // Actions with no payload:
 type NoDataActionName =
   | 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
@@ -87,7 +85,6 @@ type NoDataActionName =
   | 'USE_REGULAR_REQUEST_ADDRESS'
 
 export type Action =
-  | { type: LegacyActionName, data: any }
   | { type: NoDataActionName }
   // Actions with known payloads:
   | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
@@ -232,6 +229,8 @@ export type Action =
       type: 'UI/WALLETS/SELECT_WALLET',
       data: { currencyCode: string, walletId: string }
     }
+  | { type: 'UI/WALLETS/UPSERT_WALLETS', data: { wallets: EdgeCurrencyWallet[] } }
+  | { type: 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED', data: { uniqueIdentifier: string } }
   | {
       type: 'UPDATE_EXISTING_TOKEN_SUCCESS',
       data: { tokenObj: CustomTokenInfo }
