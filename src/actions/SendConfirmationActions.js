@@ -102,7 +102,7 @@ const BITPAY = {
 
 export const paymentProtocolUriReceived = ({ paymentProtocolURL }: EdgePaymentProtocolUri) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
 
   const walletId = getSelectedWalletId(state)
   const edgeWallet = currencyWallets[walletId]
@@ -144,7 +144,7 @@ export const sendConfirmationUpdateTx = (
   selectedCurrencyCode?: string
 ) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
 
   const walletId = selectedWalletId || getSelectedWalletId(state)
   const edgeWallet = currencyWallets[walletId]
@@ -193,7 +193,7 @@ export const sendConfirmationUpdateTx = (
 
 export const updateMaxSpend = (selectedWalletId?: string, selectedCurrencyCode?: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
 
   const walletId = selectedWalletId || getSelectedWalletId(state)
   const edgeWallet = currencyWallets[walletId]
@@ -232,7 +232,7 @@ export const signBroadcastAndSave = (fioSender?: FioSenderInfo, walletId?: strin
 ) => {
   const state = getState()
   const { account } = state.core
-  const { currencyWallets = {} } = account
+  const { currencyWallets } = account
 
   const selectedWalletId = walletId || getSelectedWalletId(state)
   const wallet = currencyWallets[selectedWalletId]
@@ -444,7 +444,7 @@ export const updateTransactionAmount = (nativeAmount: string, exchangeAmount: st
   const guiWallet = state.ui.wallets.byId[walletId]
   const sceneState = state.ui.scenes.sendConfirmation
   const { isoFiatCurrencyCode } = guiWallet
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const coreWallet = currencyWallets[guiWallet.id]
 
   // Spend Info

@@ -19,7 +19,7 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
     type: 'FIO/SET_FIO_ADDRESSES_PROGRESS'
   })
   const state = getState()
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
   let fioAddresses = []
   let fioDomains = []

@@ -76,7 +76,7 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
   if (!data) return
   const state = getState()
   const { account } = state.core
-  const { currencyWallets = {} } = account
+  const { currencyWallets } = account
 
   const selectedWalletId = state.ui.wallets.selectedWalletId
   const edgeWallet = currencyWallets[selectedWalletId]
@@ -287,7 +287,7 @@ export const privateKeyModalActivated = () => async (dispatch: Dispatch, getStat
     const parsedUri = state.ui.scenes.scan.parsedUri
     if (!parsedUri) return
 
-    const { currencyWallets = {} } = state.core.account
+    const { currencyWallets } = state.core.account
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const edgeWallet = currencyWallets[selectedWalletId]
 

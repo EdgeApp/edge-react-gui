@@ -16,7 +16,10 @@ Object {
   },
   "contacts": Array [],
   "core": Object {
-    "account": Object {},
+    "account": Object {
+      "activeWalletIds": Array [],
+      "currencyWallets": Object {},
+    },
     "context": Object {},
     "disklet": Object {},
     "edgeLogin": Object {

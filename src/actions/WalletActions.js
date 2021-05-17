@@ -25,7 +25,7 @@ import { addTokenAsync } from './AddTokenActions.js'
 
 export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const currentWalletId = state.ui.wallets.selectedWalletId
 
   if (walletId === currentWalletId) {
@@ -48,7 +48,7 @@ export const selectWallet = (walletId: string, currencyCode: string, from?: stri
     return
   }
   const state = getState()
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const currentWalletId = state.ui.wallets.selectedWalletId
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
   if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
@@ -134,7 +134,7 @@ const upsertFrequency = 3000
 
 export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const wallet = currencyWallets[walletId]
   if (wallet) {
     if (!refreshDetails.delayUpsert) {
@@ -182,7 +182,7 @@ export const setWalletEnabledTokens = (walletId: string, enabledTokens: string[]
   dispatch({ type: 'MANAGE_TOKENS_START' })
   // get a snapshot of the state
   const state = getState()
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   // get a copy of the relevant core wallet
   const wallet = currencyWallets[walletId]
   // now actually tell the wallet to enable the token(s) in the core and save to file
@@ -201,7 +201,7 @@ export const setWalletEnabledTokens = (walletId: string, enabledTokens: string[]
 export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
   // get a snapshot of the state
   const state = getState()
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
 
   // get the AbcWallet
   const wallet = currencyWallets[walletId]
@@ -352,7 +352,7 @@ export const editCustomToken = (
 export async function deleteCustomTokenAsync(walletId: string, currencyCode: string, getState: GetState) {
   const state = getState()
   const { account } = state.core
-  const { currencyWallets = {} } = account
+  const { currencyWallets } = account
   const guiWallets = state.ui.wallets.byId
   const coreWalletsToUpdate = []
   const receivedSyncSettings = await getSyncedSettings(account)
@@ -382,7 +382,7 @@ export async function deleteCustomTokenAsync(walletId: string, currencyCode: str
 export const deleteCustomToken = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  const { currencyWallets = {} } = account
+  const { currencyWallets } = account
   const guiWallets = state.ui.wallets.byId
   const localSettings = {
     ...getSettings(state)

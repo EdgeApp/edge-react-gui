@@ -215,7 +215,7 @@ export class EdgeProvider extends Bridgeable {
 
   async getWalletHistory() {
     // Get Wallet Info
-    const { currencyWallets = {} } = this._state.core.account
+    const { currencyWallets } = this._state.core.account
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = currencyWallets[guiWallet.id]
     const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(this._state)
@@ -268,7 +268,7 @@ export class EdgeProvider extends Bridgeable {
 
   // Request that the user spend to an address or multiple addresses
   async requestSpend(spendTargets: EdgeProviderSpendTarget[], options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | void> {
-    const { currencyWallets = {} } = this._state.core.account
+    const { currencyWallets } = this._state.core.account
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = currencyWallets[guiWallet.id]
 
@@ -310,7 +310,7 @@ export class EdgeProvider extends Bridgeable {
   // Request that the user spend to a URI
   async requestSpendUri(uri: string, options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | void> {
     console.log(`requestSpendUri ${uri}`)
-    const { currencyWallets = {} } = this._state.core.account
+    const { currencyWallets } = this._state.core.account
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = currencyWallets[guiWallet.id]
     const result = await coreWallet.parseUri(uri)
@@ -336,7 +336,7 @@ export class EdgeProvider extends Bridgeable {
   // log response afterwards line 451
   async signMessage(message: string) /* EdgeSignedMessage */ {
     console.log(`signMessage message:***${message}***`)
-    const { currencyWallets = {} } = this._state.core.account
+    const { currencyWallets } = this._state.core.account
     const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
     const coreWallet = currencyWallets[guiWallet.id]
     const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)

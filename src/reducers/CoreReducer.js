@@ -18,9 +18,14 @@ export type CoreState = {
 }
 
 const flowHack: any = {}
-const defaultAccount: EdgeAccount = flowHack
 const defaultContext: EdgeContext = flowHack
 const defaultDisklet: Disklet = flowHack
+
+const accountHack: any = {
+  activeWalletIds: [],
+  currencyWallets: {}
+}
+const defaultAccount: EdgeAccount = accountHack
 
 export const core: Reducer<CoreState, Action> = combineReducers({
   account(state: EdgeAccount = defaultAccount, action: Action): EdgeAccount {

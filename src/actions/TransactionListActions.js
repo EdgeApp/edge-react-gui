@@ -82,7 +82,7 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
 }
 
 const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const wallet = currencyWallets[walletId]
   if (!wallet) return
   // initialize the master array of transactions that will eventually go into Redux

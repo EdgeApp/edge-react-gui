@@ -374,7 +374,7 @@ export const WalletList = connect(
 
     // FIO disable changes below
     if (global.isFioDisabled) {
-      const { currencyWallets = {} } = state.core.account
+      const { currencyWallets } = state.core.account
       activeWalletIds = activeWalletIds.filter(id => {
         const wallet = currencyWallets[id]
         return wallet == null || wallet.type !== 'wallet:fio'

@@ -10,7 +10,7 @@ import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 
 export const showResyncWalletModal = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const wallet = currencyWallets[walletId]
 
   const resolveValue = await Airship.show(bridge => (

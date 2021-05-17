@@ -137,7 +137,7 @@ export const createAccountTransaction = (createdWalletId: string, accountName: s
   // check available funds
   const state = getState()
   const { account } = state.core
-  const { currencyWallets = {} } = account
+  const { currencyWallets } = account
   const createdWallet = UI_SELECTORS.getWallet(state, createdWalletId)
   const paymentWallet = currencyWallets[paymentWalletId]
   const createdWalletCurrencyCode = createdWallet.currencyCode

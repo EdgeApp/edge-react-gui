@@ -82,7 +82,7 @@ export const TransactionListRow = connect((state: RootState, ownProps: OwnProps)
   const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
 
   // Required Confirmations
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
   const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
   const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed

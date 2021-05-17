@@ -385,7 +385,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   sendCrypto = async (pendingRequest: FioRequest, walletId: string, selectedCurrencyCode: string) => {
-    const { fioWallets = [], currencyWallets = {}, state } = this.props
+    const { fioWallets = [], currencyWallets, state } = this.props
     const fioWalletByAddress = fioWallets.find(wallet => wallet.id === pendingRequest.fioWalletId) || null
     if (!fioWalletByAddress) return showError(s.strings.fio_wallet_missing_for_fio_address)
     const exchangeDenomination = getExchangeDenomination(state, pendingRequest.content.token_code.toUpperCase())

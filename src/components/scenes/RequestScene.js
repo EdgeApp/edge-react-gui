@@ -553,7 +553,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const Request = connect(
   (state: RootState): RequestStateProps | RequestLoadingProps => {
     const { account } = state.core
-    const { currencyWallets = {} } = account
+    const { currencyWallets } = account
     const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
     const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
 

@@ -87,7 +87,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     case 'viewXPub': {
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const { currencyWallets = {} } = state.core.account
+        const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
         const xPub = wallet.getDisplayPublicSeed()
         const xPubExplorer = wallet.currencyInfo.xpubExplorer && xPub ? sprintf(wallet.currencyInfo.xpubExplorer, xPub) : ''
@@ -98,7 +98,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     case 'exportWalletTransactions': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const { currencyWallets = {} } = state.core.account
+        const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
         Actions[Constants.TRANSACTIONS_EXPORT]({ sourceWallet: wallet, currencyCode })
       }
@@ -108,7 +108,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const { account } = state.core
-        const { currencyWallets = {} } = account
+        const { currencyWallets } = account
         const wallet = currencyWallets[walletId]
         const message = `${s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}\n${getWalletName(wallet)}`
 
@@ -199,7 +199,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return async (dispatch: Dispatch, getState: GetState) => {
         try {
           const state = getState()
-          const { currencyWallets = {} } = state.core.account
+          const { currencyWallets } = state.core.account
           const wallet = currencyWallets[walletId]
           const walletName = wallet.name
           const input = {

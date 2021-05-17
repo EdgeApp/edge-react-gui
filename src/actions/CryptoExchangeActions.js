@@ -54,7 +54,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
       throw new Error('No currency selected') // Should never happen
     }
 
-    const { currencyWallets = {} } = state.core.account
+    const { currencyWallets } = state.core.account
     const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWallet.id]
     const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWallet.id]
     const request: EdgeSwapRequest = {
@@ -123,7 +123,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   if (!fromWallet) {
     return
   }
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const wallet: EdgeCurrencyWallet = currencyWallets[fromWallet.id]
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const parentCurrencyCode = wallet.currencyInfo.currencyCode

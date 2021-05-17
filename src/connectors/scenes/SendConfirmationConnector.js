@@ -38,7 +38,7 @@ const mapStateToProps = (state: RootState): SendConfirmationStateProps => {
   let fiatPerCrypto = 0
   let secondaryExchangeCurrencyCode = ''
 
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const guiWallet = getSelectedWallet(state)
   const coreWallet = currencyWallets[guiWallet.id]
   const currencyCode = getSelectedCurrencyCode(state)
