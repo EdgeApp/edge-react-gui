@@ -59,7 +59,7 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
       switchain: this.checkSwitchainKYC
     }
     try {
-      check[this.props.swapInfo.quote.pluginId]()
+      if (check[this.props.swapInfo.quote.pluginId]) check[this.props.swapInfo.quote.pluginId]()
     } catch (e) {
       showError(e)
     }
