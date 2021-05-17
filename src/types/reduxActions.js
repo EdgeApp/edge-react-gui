@@ -23,7 +23,6 @@ import {
 } from './types.js'
 
 type LegacyActionName =
-  | 'NEW_RECEIVE_ADDRESS'
   | 'RESET_WALLET_LOADING_PROGRESS'
   | 'SET_TRANSACTION_SUBCATEGORIES'
   | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
@@ -180,6 +179,7 @@ export type Action =
     }
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS', data: { contacts: GuiContact[] } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
+  | { type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress: EdgeReceiveAddress } }
   | { type: 'PARSE_URI_SUCCEEDED', data: { parsedUri: EdgeParsedUri } }
   | { type: 'SAVE_EDGE_LOBBY', data: EdgeLobby }
   | { type: 'SET_LOBBY_ERROR', data: string }
