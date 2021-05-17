@@ -89,7 +89,6 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
     }
 
     case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         fromWallet: action.data.wallet,
@@ -109,7 +108,6 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
     }
 
     case 'SELECT_TO_WALLET_CRYPTO_EXCHANGE': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         toWallet: action.data.wallet,

@@ -23,7 +23,6 @@ export type WalletsState = {
 const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> => {
   switch (action.type) {
     case 'CORE/WALLETS/UPDATE_WALLETS': {
-      if (!action.data) return state
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
@@ -146,7 +145,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
     }
 
     case 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS': {
-      if (!action.data) return state
       const { walletId, receiveAddress } = action.data
       return {
         ...state,
@@ -199,7 +197,6 @@ const activeWalletIds = (state = [], action: Action): string[] => {
     return action.data.activeWalletIds
   }
   if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
-    if (!action.data) return state
     return action.data.activeWalletIds
   }
 
@@ -211,7 +208,6 @@ const archivedWalletIds = (state = [], action: Action): string[] => {
     return action.data.archivedWalletIds
   }
   if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
-    if (!action.data) return state
     return action.data.archivedWalletIds
   }
 
@@ -365,7 +361,6 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
 const fioWallets = (state = [], action: Action): $PropertyType<WalletsState, 'fioWallets'> => {
   switch (action.type) {
     case 'CORE/WALLETS/UPDATE_WALLETS': {
-      if (!action.data) return state
       const wallets = action.data.currencyWallets
       const fioWallets = []
       for (const walletId of Object.keys(wallets)) {
