@@ -19,11 +19,11 @@ import {
   type GuiCurrencyInfo,
   type GuiExchangeRates,
   type GuiSwapInfo,
-  type GuiWallet
+  type GuiWallet,
+  type SpendingLimits
 } from './types.js'
 
 type LegacyActionName =
-  | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
   | 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS'
   | 'UI/SEND_CONFIMATION/NEW_PIN'
   | 'UI/SEND_CONFIMATION/NEW_SPEND_INFO'
@@ -183,6 +183,7 @@ export type Action =
   | { type: 'SET_LOBBY_ERROR', data: string }
   | { type: 'SET_FROM_WALLET_MAX', data: string }
   | { type: 'SET_TRANSACTION_SUBCATEGORIES', data: { subcategories: string[] } }
+  | { type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS', data: { spendingLimits: SpendingLimits } }
   | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME', data: { autoLogoutTimeInSeconds: number } }
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: string | void }
   | {

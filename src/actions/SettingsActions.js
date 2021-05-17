@@ -17,7 +17,6 @@ import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import { sendLogs } from '../modules/Logs/action.js'
 import * as SETTINGS_ACTIONS from '../modules/Settings/SettingsActions.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
-import { newSpendingLimits } from '../reducers/SpendingLimitsReducer.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 
@@ -85,7 +84,10 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
       // update spending limits in account settings
       ACCOUNT_SETTINGS.setSpendingLimits(account, nextSpendingLimits)
       // update spending limits in settings
-      dispatch(newSpendingLimits(nextSpendingLimits))
+      dispatch({
+        type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
+        data: { spendingLimits: nextSpendingLimits }
+      })
       dispatch(updateExchangeRates())
     })
     .catch(showError)
