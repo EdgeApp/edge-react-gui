@@ -1,38 +1,45 @@
 // @flow
 
 import type { EdgeMetaToken } from 'edge-core-js'
-import _ from 'lodash'
 
-import type { CustomTokenInfo } from '../../../types/types.js'
+import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../../constants/WalletAndCurrencyConstants'
+import type { CustomTokenInfo } from '../../../types/types'
+import * as UTILS from '../../../util/utils'
 
-// will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
-// $FlowFixMe
-export const mergeTokens = (preferredEdgeMetaTokens: $ReadOnly<EdgeMetaToken | CustomTokenInfo>[], edgeMetaTokens: CustomTokenInfo[]) => {
-  const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
-  for (const x of edgeMetaTokens) {
-    // loops through the account-level array
-    let found = false // assumes it is not present in the currencyInfo from plugin
-    for (const val of tokensEnabled) {
-      // loops through currencyInfo array to see if already present
-      if (x.currencyCode === val.currencyCode) {
-        found = true // if present, then set 'found' to true
-      }
-    }
-    if (!found) tokensEnabled.push(x) // if not already in the currencyInfo, then add to tokensEnabled array
-  }
-  return tokensEnabled
+export type getTokensProps = {
+  metaTokens: EdgeMetaToken[],
+  customTokens: CustomTokenInfo[],
+  currencyCode: string,
+  guiWalletType: string
 }
 
-export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: EdgeMetaToken[], edgeMetaTokens: CustomTokenInfo[]): EdgeMetaToken[] => {
-  const tokensEnabled: EdgeMetaToken[] = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
-  const tokensToAdd = []
-  for (const x of edgeMetaTokens) {
-    // loops through the account-level array
-    if (x.isVisible !== false && _.findIndex(tokensEnabled, walletToken => walletToken.currencyCode === x.currencyCode) === -1) {
-      tokensToAdd.push(x)
+export const getTokens = (props: getTokensProps) => {
+  const { metaTokens, customTokens, currencyCode, guiWalletType } = props
+
+  const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+
+  const accountMetaTokenInfo: CustomTokenInfo[] = specialCurrencyInfo.isCustomTokensSupported ? [...customTokens] : []
+
+  const filteredTokenInfo = accountMetaTokenInfo.filter(token => {
+    return token.walletType === guiWalletType || token.walletType === undefined
+  })
+
+  const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
+
+  const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
+    if (a.currencyCode < b.currencyCode) return -1
+    if (a === b) return 0
+    return 1
+  })
+
+  // put preferred tokens at the top
+  for (const cc of PREFERRED_TOKENS) {
+    const idx = sortedTokenInfo.findIndex(e => e.currencyCode === cc)
+    if (idx > -1) {
+      const tokenInfo = sortedTokenInfo[idx]
+      sortedTokenInfo.splice(idx, 1)
+      sortedTokenInfo.unshift(tokenInfo)
     }
   }
-
-  // $FlowFixMe this is actually an error, but I don't know how to fix it:
-  return tokensEnabled.concat(tokensToAdd)
+  return sortedTokenInfo
 }

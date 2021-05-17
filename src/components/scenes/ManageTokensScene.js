@@ -8,11 +8,10 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
-import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types'
-import { mergeTokensRemoveInvisible, TokenRow, TokensHeader } from '../common/ManageToken'
+import { getTokens, TokenRow, TokensHeader } from '../common/ManageToken'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import SceneFooter from '../themed/SceneFooter'
@@ -76,35 +75,12 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
     const { metaTokens, name, currencyCode } = this.props.guiWallet
     const { manageTokensPending } = this.props
 
-    let accountMetaTokenInfo = []
-    const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
-
-    // this will need refactoring later
-    if (specialCurrencyInfo.isCustomTokensSupported) {
-      accountMetaTokenInfo = [...this.props.settingsCustomTokens]
-    }
-
-    const filteredTokenInfo = accountMetaTokenInfo.filter(token => {
-      return token.walletType === this.props.guiWallet.type || token.walletType === undefined
+    const tokens = getTokens({
+      metaTokens,
+      customTokens: this.props.settingsCustomTokens,
+      currencyCode,
+      guiWalletType: this.props.guiWallet.type
     })
-
-    const combinedTokenInfo = mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
-
-    const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
-      if (a.currencyCode < b.currencyCode) return -1
-      if (a === b) return 0
-      return 1
-    })
-
-    // put preferred tokens at the top
-    for (const cc of PREFERRED_TOKENS) {
-      const idx = sortedTokenInfo.findIndex(e => e.currencyCode === cc)
-      if (idx > -1) {
-        const tokenInfo = sortedTokenInfo[idx]
-        sortedTokenInfo.splice(idx, 1)
-        sortedTokenInfo.unshift(tokenInfo)
-      }
-    }
 
     const { theme } = this.props
 
@@ -121,7 +97,7 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
             <View style={styles.tokensArea}>
               <FlatList
                 keyExtractor={item => item.currencyCode}
-                data={sortedTokenInfo}
+                data={tokens}
                 renderItem={metaToken => (
                   <TokenRow
                     goToEditTokenScene={this.goToEditTokenScene}
