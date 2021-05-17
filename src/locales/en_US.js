@@ -548,7 +548,7 @@ const strings = {
 
   cannot_delete_last_wallet_modal_title: 'Cannot Delete Wallet',
   cannot_delete_last_wallet_modal_message_part_1: 'Edge requires at least one wallet in this account.',
-  cannot_delete_last_wallet_modal_message_part_2: 'If you’d like to delete this wallet, you’ll need to add an additional wallet(s) to this account.',
+  cannot_delete_last_wallet_modal_message_part_2: 'If you’d like to delete this wallet, you’ll need to add an additional wallet to this account.',
 
   enter_your_password: 'Enter your password',
   spending_limits: 'Spending Limits',
