@@ -145,22 +145,6 @@ export const getExchangeDenomination = (state: RootState, currencyCode: string, 
   throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
 }
 
-export const getUIState = (state: RootState) => {
-  const uiState = state.ui
-  return uiState
-}
-
-export const getScenesState = (state: RootState) => {
-  const uiState = getUIState(state)
-  const scenesState = uiState.scenes
-  return scenesState
-}
-
-export const getSceneState = (state: RootState, sceneKey: string) => {
-  const sceneState = getScenesState(state)[sceneKey]
-  return sceneState
-}
-
 export const getExchangeRate = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string): number => {
   const exchangeRates = state.exchangeRates
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`

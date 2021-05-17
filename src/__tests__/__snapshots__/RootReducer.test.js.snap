@@ -168,7 +168,6 @@ Object {
           "publicAddress": "",
         },
         "isEditable": true,
-        "isKeyboardVisible": false,
         "nativeAmount": "0",
         "pending": false,
         "pin": "",
