@@ -20,11 +20,11 @@ import {
   type GuiExchangeRates,
   type GuiSwapInfo,
   type GuiWallet,
-  type SpendingLimits
+  type SpendingLimits,
+  type TransactionListTx
 } from './types.js'
 
 type LegacyActionName =
-  | 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS'
   | 'UI/SEND_CONFIMATION/NEW_PIN'
   | 'UI/SEND_CONFIMATION/NEW_SPEND_INFO'
   | 'UI/SEND_CONFIMATION/TOGGLE_CRYPTO_ON_TOP'
@@ -184,6 +184,17 @@ export type Action =
   | { type: 'SET_FROM_WALLET_MAX', data: string }
   | { type: 'SET_TRANSACTION_SUBCATEGORIES', data: { subcategories: string[] } }
   | { type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS', data: { spendingLimits: SpendingLimits } }
+  | {
+      type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS',
+      data: {
+        numTransactions: number,
+        transactions: TransactionListTx[],
+        transactionIdMap: { [txid: string]: TransactionListTx },
+        currentCurrencyCode: string,
+        currentWalletId: string,
+        currentEndIndex: number
+      }
+    }
   | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME', data: { autoLogoutTimeInSeconds: number } }
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: string | void }
   | {
