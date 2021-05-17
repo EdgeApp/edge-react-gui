@@ -16,7 +16,6 @@ import { CheckPasswordModal } from '../components/themed/CheckPasswordModal.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
-import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
@@ -31,7 +30,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const wallet = WALLET_SELECTORS.getWallet(state, walletId)
+        const wallet = state.ui.wallets.byId[walletId]
         Actions.manageTokens({ guiWallet: wallet })
       }
     }
@@ -39,8 +38,8 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     case 'delete': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const wallet = WALLET_SELECTORS.getWallet(state, walletId)
-        const wallets = WALLET_SELECTORS.getWallets(state)
+        const wallets = state.ui.wallets.byId
+        const wallet = wallets[walletId]
 
         if (Object.values(wallets).length === 1) {
           showInfoModal(s.strings.cannot_delete_last_wallet_modal_title, [

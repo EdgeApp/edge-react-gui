@@ -10,7 +10,7 @@ import { updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import s from '../../locales/strings.js'
 import { getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
-import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
+import { getWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
@@ -199,7 +199,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const WalletListScene = connect(
   (state: RootState): StateProps => {
-    let activeWalletIds = getActiveWalletIds(state)
+    let { activeWalletIds } = state.ui.wallets
 
     // FIO disable changes below
     if (global.isFioDisabled) {

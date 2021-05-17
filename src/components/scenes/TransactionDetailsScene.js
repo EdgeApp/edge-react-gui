@@ -16,7 +16,7 @@ import * as Constants from '../../constants/indexConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/Settings/selectors.js'
-import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getSelectedWallet, getWallet } from '../../modules/UI/selectors.js'
+import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
@@ -584,7 +584,7 @@ export const TransactionDetailsScene = connect(
   (state: RootState, ownProps: OwnProps): StateProps => {
     const { edgeTransaction } = ownProps
     const walletId = edgeTransaction.wallet ? edgeTransaction.wallet.id : null
-    const wallet = walletId ? getWallet(state, walletId) : getSelectedWallet(state)
+    const wallet = state.ui.wallets.byId[walletId || state.ui.wallets.selectedWalletId]
     const contacts = state.contacts
     const subcategoriesList = state.ui.scenes.transactionDetails.subcategories.sort()
     const settings = getSettings(state)
@@ -606,7 +606,7 @@ export const TransactionDetailsScene = connect(
     }
 
     const destinationDenomination = swapData ? getDisplayDenomination(state, swapData.payoutCurrencyCode) : undefined
-    const destinationWallet = swapData ? getWallet(state, swapData.payoutWalletId) : undefined
+    const destinationWallet = swapData ? state.ui.wallets.byId[swapData.payoutWalletId] : undefined
 
     return {
       contacts,

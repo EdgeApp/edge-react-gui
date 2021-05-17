@@ -13,7 +13,6 @@ import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
 import { findWalletByFioAddress } from '../../modules/FioAddress/util'
-import { getFioWallets } from '../../modules/UI/selectors'
 import type { RootState } from '../../reducers/RootReducer'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -171,11 +170,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioAddressDetailsScene = connect((state: RootState) => {
-  const fioWallets = getFioWallets(state)
-
-  const out: StateProps = {
-    fioWallets
-  }
-  return out
-}, {})(withTheme(FioAddressDetails))
+export const FioAddressDetailsScene = connect(
+  (state: RootState): StateProps => ({
+    fioWallets: state.ui.wallets.fioWallets
+  }),
+  {}
+)(withTheme(FioAddressDetails))

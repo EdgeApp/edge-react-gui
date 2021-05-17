@@ -21,7 +21,7 @@ import { SendConfirmation } from '../../components/scenes/SendConfirmationScene'
 import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination, getPlugins } from '../../modules/Settings/selectors.js'
 import { getPublicAddress, getTransaction } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import type { AuthType } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
-import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../modules/UI/selectors.js'
+import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils'
@@ -34,7 +34,7 @@ const mapStateToProps = (state: RootState): SendConfirmationStateProps => {
   const { currencyWallets } = state.core.account
   const guiWallet = getSelectedWallet(state)
   const coreWallet = currencyWallets[guiWallet.id]
-  const currencyCode = getSelectedCurrencyCode(state)
+  const currencyCode = state.ui.wallets.selectedCurrencyCode
   const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
 
   const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode

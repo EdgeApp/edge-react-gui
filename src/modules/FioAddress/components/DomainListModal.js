@@ -18,7 +18,6 @@ import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
 import { type RootState } from '../../../types/reduxTypes'
 import type { FioDomain, FlatListItem } from '../../../types/types.js'
-import { getFioWallets } from '../../UI/selectors'
 
 type Item = {
   label: string,
@@ -247,7 +246,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const DomainListModal = connect((state: RootState): StateProps => {
   const { account } = state.core
-  const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
+  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
   const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
   return {
     userDomains: state.ui.scenes.fioAddress.fioDomains,

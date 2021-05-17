@@ -18,7 +18,7 @@ import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
-import * as UI_SELECTORS from '../../modules/UI/selectors.js'
+import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
 import { decimalOrZero, DIVIDE_PRECISION, getCurrencyInfo, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
@@ -554,8 +554,8 @@ export const Request = connect(
   (state: RootState): RequestStateProps | RequestLoadingProps => {
     const { account } = state.core
     const { currencyWallets } = account
-    const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
-    const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
+    const guiWallet: GuiWallet = getSelectedWallet(state)
+    const currencyCode: string = state.ui.wallets.selectedCurrencyCode
 
     const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
     const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
@@ -581,7 +581,7 @@ export const Request = connect(
 
     const edgeWallet: EdgeCurrencyWallet = currencyWallets[guiWallet.id]
     const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
-    const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
+    const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, currencyCode)
     const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
     const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
     const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
@@ -600,7 +600,7 @@ export const Request = connect(
       exchangeDenomination: secondaryExchangeDenomination
     }
     const isoFiatCurrencyCode: string = guiWallet.isoFiatCurrencyCode
-    const exchangeSecondaryToPrimaryRatio = UI_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const fioAddressesExist = !!state.ui.scenes.fioAddress.fioAddresses.length
 
     // balance

@@ -13,7 +13,6 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { FioNameRow } from '../../modules/FioAddress/components/FioName'
-import { getFioWallets } from '../../modules/UI/selectors'
 import type { RootState } from '../../reducers/RootReducer'
 import type { Dispatch } from '../../types/reduxTypes'
 import type { FioAddress, FioDomain } from '../../types/types'
@@ -201,7 +200,7 @@ const FioAddressListScene = connect(
     const { account } = state.core
     const fioAddresses: FioAddress[] = state.ui.scenes.fioAddress.fioAddresses
     const fioDomains: FioDomain[] = state.ui.scenes.fioAddress.fioDomains
-    const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
+    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
     const loading: boolean = state.ui.scenes.fioAddress.fioAddressesLoading
     const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
 

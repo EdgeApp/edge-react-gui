@@ -13,7 +13,6 @@ import { Airship, showError } from '../components/services/AirshipInstance'
 import { ADD_TOKEN, CURRENCY_PLUGIN_NAMES, EXCHANGE_SCENE, getSpecialCurrencyInfo, PLUGIN_BUY, SEND, SEND_CONFIRMATION } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
-import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { type ReturnAddressLink, parseDeepLink } from '../types/DeepLink.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
@@ -86,9 +85,9 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
   let fioAddress
   if (account && account.currencyConfig) {
     const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
-    const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
+    const walletId: string = state.ui.wallets.selectedWalletId
     const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
-    const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
+    const currencyCode: string = state.ui.wallets.selectedCurrencyCode
     try {
       const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
       fioAddress = data.toLowerCase()
@@ -319,9 +318,9 @@ const shownWalletGetCryptoModals = []
 export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCurrencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {
   try {
     const state = getState()
-    const currencyCode = selectedCurrencyCode ?? UI_SELECTORS.getSelectedCurrencyCode(state)
+    const currencyCode = selectedCurrencyCode ?? state.ui.wallets.selectedCurrencyCode
     const wallets = state.ui.wallets.byId
-    const wallet = selectedWalletId ? wallets[selectedWalletId] : UI_SELECTORS.getSelectedWallet(state)
+    const wallet = wallets[selectedWalletId || state.ui.wallets.selectedWalletId]
     // check if balance is zero
     const balance = wallet.nativeBalances[currencyCode]
     if (balance !== '0' || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit

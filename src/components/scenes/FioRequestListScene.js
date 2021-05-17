@@ -17,7 +17,6 @@ import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioReques
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { getExchangeDenomination } from '../../modules/Settings/selectors'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
-import { getFioWallets, getWallets } from '../../modules/UI/selectors'
 import type { Dispatch } from '../../types/reduxTypes'
 import { type RootState } from '../../types/reduxTypes'
 import type { FioRequest, GuiWallet } from '../../types/types'
@@ -621,20 +620,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 const FioRequestListScene = connect(
-  (state: RootState) => {
-    const fioWallets = getFioWallets(state)
-    const wallets = getWallets(state)
-    const account = state.core.account
-
-    return {
-      state,
-      account,
-      wallets,
-      fioWallets,
-      currencyWallets: state.core.account.currencyWallets,
-      isConnected: state.network.isConnected
-    }
-  },
+  (state: RootState): StateProps => ({
+    state,
+    account: state.core.account,
+    wallets: state.ui.wallets.byId,
+    fioWallets: state.ui.wallets.fioWallets,
+    currencyWallets: state.core.account.currencyWallets,
+    isConnected: state.network.isConnected
+  }),
   (dispatch: Dispatch): DispatchProps => ({
     onSelectWallet: (walletId: string, currencyCode: string) => {
       dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })

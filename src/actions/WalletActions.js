@@ -16,7 +16,6 @@ import { getEnabledTokensFromFile, setEnabledTokens, updateEnabledTokens } from 
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import { getCustomTokens, getSettings } from '../modules/Settings/selectors.js'
 import { updateMostRecentWallets, updateSettings } from '../modules/Settings/SettingsActions'
-import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
@@ -71,7 +70,7 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
   const state = getState()
   const currentWalletId = state.ui.wallets.selectedWalletId
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
-  const guiWallet = UI_SELECTORS.getWallet(state, walletId)
+  const guiWallet = state.ui.wallets.byId[walletId]
   if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode || from === Constants.WALLET_LIST_SCENE) {
     const { publicAddress } = guiWallet.receiveAddress
 
@@ -206,7 +205,7 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
   // get the AbcWallet
   const wallet = currencyWallets[walletId]
   if (!wallet) return
-  const guiWallet = UI_SELECTORS.getWallet(state, walletId)
+  const guiWallet = state.ui.wallets.byId[walletId]
 
   // get token information from settings
   const customTokens: CustomTokenInfo[] = getCustomTokens(state)
@@ -282,7 +281,7 @@ export const editCustomToken = (
     const state = getState()
     const settings = getSettings(state)
     const customTokens = settings.customTokens
-    const guiWallet = UI_SELECTORS.getWallet(state, walletId)
+    const guiWallet = state.ui.wallets.byId[walletId]
     const allTokens = UTILS.mergeTokens(guiWallet.metaTokens, customTokens)
     const indexInAllTokens = _.findIndex(allTokens, token => token.currencyCode === currencyCode)
     const tokenObj = assembleCustomToken(currencyName, currencyCode, contractAddress, denomination, guiWallet.type)
@@ -493,7 +492,7 @@ export const removeMostRecentWallet = (walletId: string, currencyCode: string) =
 
 export const checkEnabledTokensArray = (walletId: string, newEnabledTokens: string[]) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const wallet = UI_SELECTORS.getWallet(state, walletId)
+  const wallet = state.ui.wallets.byId[walletId]
   const oldEnabledTokens = wallet.enabledTokens
 
   oldEnabledTokens.forEach(oldToken => {

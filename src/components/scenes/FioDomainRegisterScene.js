@@ -10,7 +10,6 @@ import { connect } from 'react-redux'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { EditNameModal } from '../../modules/FioAddress/components/EditNameModal'
-import { getFioWallets } from '../../modules/UI/selectors'
 import { type RootState } from '../../types/reduxTypes'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import type { WalletListResult } from '../modals/WalletListModal'
@@ -310,7 +309,7 @@ const FioDomainRegisterScene = connect((state: RootState) => {
       isConnected: state.network.isConnected
     }
   }
-  const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
+  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
   const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
 
   return {

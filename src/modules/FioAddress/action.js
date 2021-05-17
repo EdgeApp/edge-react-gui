@@ -6,7 +6,6 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import type { Dispatch, GetState } from '../../types/reduxTypes'
 import { getDefaultIsoFiat } from '../Settings/selectors'
-import { getFioWallets } from '../UI/selectors'
 import { findWalletByFioAddress, refreshConnectedWalletsForFioAddress } from './util'
 
 export const createFioWallet = () => (dispatch: Dispatch, getState: GetState): Promise<EdgeCurrencyWallet | any> => {
@@ -20,7 +19,7 @@ export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState:
   })
   const state = getState()
   const { currencyWallets } = state.core.account
-  const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
+  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
   let fioAddresses = []
   let fioDomains = []
 

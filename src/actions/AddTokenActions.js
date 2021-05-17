@@ -7,7 +7,6 @@ import { showError } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../modules/Core/Account/settings'
 import { setEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
-import * as UI_WALLET_SELECTORS from '../modules/UI/selectors.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
 import * as UTILS from '../util/utils.js'
@@ -58,7 +57,7 @@ export const addTokenAsync = async (
   const { account } = state.core
   const { currencyConfig, currencyWallets } = account
 
-  const uiWallet = UI_WALLET_SELECTORS.getWallet(state, walletId)
+  const uiWallet = state.ui.wallets.byId[walletId]
   // create modified object structure to match metaTokens
   const newTokenObj: CustomTokenInfo = WALLET_ACTIONS.assembleCustomToken(currencyName, currencyCode, contractAddress, denomination, uiWallet.type)
 
