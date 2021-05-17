@@ -32,7 +32,7 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
         <TouchableOpacity onPress={onPress}>
           <View style={styles.addButtonsInnerContainer}>
             <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
-            <EdgeText style={styles.addItem}>{title}</EdgeText>
+            <EdgeText style={[styles.addItem, styles.addItemText]}>{title}</EdgeText>
           </View>
         </TouchableOpacity>
       </View>
@@ -118,6 +118,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.25),
     color: theme.textLink,
     fontFamily: theme.fontFaceBold
+  },
+  addItemText: {
+    flex: 1
   },
   buyCryptoContainer: {
     backgroundColor: theme.tileBackground,
