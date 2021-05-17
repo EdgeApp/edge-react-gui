@@ -443,19 +443,14 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
 }
 
 export const updateWalletLoadingProgress = (walletId: string, newWalletProgress: number) => (dispatch: Dispatch, getState: GetState) => {
-  const data = {
-    walletId,
-    addressLoadingProgress: newWalletProgress
-  }
   const state = getState()
   const currentWalletProgress = state.ui.wallets.walletLoadingProgress[walletId]
   const marginalProgress = newWalletProgress - currentWalletProgress
-
   if (newWalletProgress !== 1 && marginalProgress < 0.1) return
 
   dispatch({
     type: 'UPDATE_WALLET_LOADING_PROGRESS',
-    data
+    data: { walletId, addressLoadingProgress: newWalletProgress }
   })
 }
 

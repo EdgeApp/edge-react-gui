@@ -23,7 +23,6 @@ import {
 } from './types.js'
 
 type LegacyActionName =
-  | 'RESET_WALLET_LOADING_PROGRESS'
   | 'SET_TRANSACTION_SUBCATEGORIES'
   | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
   | 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS'
@@ -47,7 +46,6 @@ type LegacyActionName =
   | 'UI/SETTINGS/UPDATE_SETTINGS'
   | 'UI/WALLETS/UPSERT_WALLETS'
   | 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED'
-  | 'UPDATE_WALLET_LOADING_PROGRESS'
 
 // Actions with no payload:
 type NoDataActionName =
@@ -181,6 +179,7 @@ export type Action =
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
   | { type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress: EdgeReceiveAddress } }
   | { type: 'PARSE_URI_SUCCEEDED', data: { parsedUri: EdgeParsedUri } }
+  | { type: 'RESET_WALLET_LOADING_PROGRESS', data: { walletId: string } }
   | { type: 'SAVE_EDGE_LOBBY', data: EdgeLobby }
   | { type: 'SET_LOBBY_ERROR', data: string }
   | { type: 'SET_FROM_WALLET_MAX', data: string }
@@ -207,6 +206,7 @@ export type Action =
       data: { walletId: string, tokens: string[] }
     }
   | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL', data: number }
+  | { type: 'UPDATE_WALLET_LOADING_PROGRESS', data: { walletId: string, addressLoadingProgress: number } }
   | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: string }
   | { type: 'NETWORK/NETWORK_STATUS', data: { isConnected: boolean } }
   | { type: 'FIO/SET_FIO_ADDRESSES', data: { fioAddresses: FioAddress[] } }

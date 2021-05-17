@@ -166,7 +166,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
 const walletLoadingProgress = (state = {}, action: Action): $PropertyType<WalletsState, 'walletLoadingProgress'> => {
   switch (action.type) {
     case 'INSERT_WALLET_IDS_FOR_PROGRESS': {
-      if (!action.data) throw new Error('Invalid action')
       const activeWalletIdList = action.data.activeWalletIds
       const activeWalletIdProgress = {}
       activeWalletIdList.forEach(item => {
@@ -176,7 +175,6 @@ const walletLoadingProgress = (state = {}, action: Action): $PropertyType<Wallet
     }
 
     case 'UPDATE_WALLET_LOADING_PROGRESS': {
-      if (!action.data) throw new Error('Invalid action')
       // prevent backwards progress
       if (action.data.addressLoadingProgress < state[action.data.walletId]) return state
       return {
@@ -186,7 +184,6 @@ const walletLoadingProgress = (state = {}, action: Action): $PropertyType<Wallet
     }
 
     case 'RESET_WALLET_LOADING_PROGRESS': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         [action.data.walletId]: 0.05
