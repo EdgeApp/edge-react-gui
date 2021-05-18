@@ -12,11 +12,12 @@ import {
   type EdgeTransaction
 } from 'edge-core-js'
 
+import { type SortOption } from '../components/modals/WalletListSortModal.js'
 import type { CcWalletMap } from '../reducers/FioReducer'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
-import { type AccountInitPayload } from '../reducers/scenes/SettingsReducer.js'
+import { type AccountInitPayload, type SettingsState } from '../reducers/scenes/SettingsReducer.js'
 import { type TweakSource } from '../util/ReferralHelpers.js'
 import { type DeepLink } from './DeepLink.js'
 import { type AccountReferral, type DeviceReferral, type Promotion, type ReferralCache } from './ReferralTypes.js'
@@ -30,27 +31,13 @@ import {
   type GuiExchangeRates,
   type GuiSwapInfo,
   type GuiWallet,
+  type MostRecentWallet,
   type SpendAuthType,
   type SpendingLimits,
   type TransactionListTx
 } from './types.js'
 
-type LegacyActionName =
-  | 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS'
-  | 'UI/SETTINGS/LOAD_SETTINGS'
-  | 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY'
-  | 'UI/SETTINGS/SET_BLUETOOTH_MODE'
-  | 'UI/SETTINGS/SET_DEFAULT_FIAT'
-  | 'UI/SETTINGS/SET_DENOMINATION_KEY'
-  | 'UI/SETTINGS/SET_MERCHANT_MODE'
-  | 'UI/SETTINGS/SET_MOST_RECENT_WALLETS'
-  | 'UI/SETTINGS/SET_PIN_MODE'
-  | 'UI/SETTINGS/SET_SETTINGS_LOCK'
-  | 'UI/SETTINGS/SET_WALLETS_SORT'
-  | 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED'
-  | 'UI/SETTINGS/UPDATE_SETTINGS'
-  | 'UI/WALLETS/UPSERT_WALLETS'
-  | 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED'
+type LegacyActionName = 'UI/WALLETS/UPSERT_WALLETS' | 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED'
 
 // Actions with no payload:
 type NoDataActionName =
@@ -220,8 +207,20 @@ export type Action =
         transaction: EdgeTransaction | null
       }
     }
+  | { type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS', data: { isTouchEnabled: boolean } }
+  | { type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY', data: { isAccountBalanceVisible: boolean } }
   | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME', data: { autoLogoutTimeInSeconds: number } }
+  | { type: 'UI/SETTINGS/SET_BLUETOOTH_MODE', data: { bluetoothMode: boolean } }
+  | { type: 'UI/SETTINGS/SET_DEFAULT_FIAT', data: { defaultFiat: string } }
+  | { type: 'UI/SETTINGS/SET_DENOMINATION_KEY', data: { currencyCode: string, denominationKey: string } }
+  | { type: 'UI/SETTINGS/SET_MERCHANT_MODE', data: { merchantMode: boolean } }
+  | { type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS', data: { mostRecentWallets: MostRecentWallet[] } }
+  | { type: 'UI/SETTINGS/SET_PIN_MODE', data: { pinMode: boolean } }
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: string | void }
+  | { type: 'UI/SETTINGS/SET_SETTINGS_LOCK', data: boolean }
+  | { type: 'UI/SETTINGS/SET_WALLETS_SORT', data: { walletsSort: SortOption } }
+  | { type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED', data: { pinLoginEnabled: boolean } }
+  | { type: 'UI/SETTINGS/UPDATE_SETTINGS', data: { settings: SettingsState } }
   | {
       type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
       data: {

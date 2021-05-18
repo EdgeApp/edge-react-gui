@@ -15,7 +15,6 @@ import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import { sendLogs } from '../modules/Logs/action.js'
-import * as SETTINGS_ACTIONS from '../modules/Settings/SettingsActions.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
@@ -27,14 +26,22 @@ export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getSta
     ...settings,
     ...setting
   }
-  dispatch(SETTINGS_ACTIONS.updateSettings(updatedSettings))
+  dispatch({
+    type: 'UI/SETTINGS/UPDATE_SETTINGS',
+    data: { settings: updatedSettings }
+  })
 }
 
 export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
   ACCOUNT_SETTINGS.setPINModeRequest(account, pinMode)
-    .then(() => dispatch(SETTINGS_ACTIONS.setPINMode(pinMode)))
+    .then(() =>
+      dispatch({
+        type: 'UI/SETTINGS/SET_PIN_MODE',
+        data: { pinMode }
+      })
+    )
     .catch(showError)
 }
 
@@ -68,7 +75,10 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
     })
     .then(() => {
       // update default fiat in settings
-      dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat))
+      dispatch({
+        type: 'UI/SETTINGS/SET_DEFAULT_FIAT',
+        data: { defaultFiat }
+      })
       const nextDefaultIsoFiat = getState().ui.settings.defaultIsoFiat
       // convert from previous fiat to next fiat
       return convertCurrency(state, previousDefaultIsoFiat, nextDefaultIsoFiat, transaction.amount)
@@ -97,7 +107,12 @@ export const setMerchantModeRequest = (merchantMode: boolean) => (dispatch: Disp
   const state = getState()
   const { account } = state.core
   ACCOUNT_SETTINGS.setMerchantModeRequest(account, merchantMode)
-    .then(() => dispatch(SETTINGS_ACTIONS.setMerchantMode(merchantMode)))
+    .then(() =>
+      dispatch({
+        type: 'UI/SETTINGS/SET_MERCHANT_MODE',
+        data: { merchantMode }
+      })
+    )
     .catch(showError)
 }
 
@@ -105,7 +120,12 @@ export const setPreferredSwapPluginId = (pluginId: string | void) => (dispatch: 
   const state = getState()
   const { account } = state.core
   ACCOUNT_SETTINGS.setPreferredSwapPluginId(account, pluginId)
-    .then(() => dispatch({ type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: pluginId }))
+    .then(() =>
+      dispatch({
+        type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN',
+        data: pluginId
+      })
+    )
     .catch(showError)
 }
 
@@ -113,12 +133,20 @@ export const setBluetoothModeRequest = (bluetoothMode: boolean) => (dispatch: Di
   const state = getState()
   const { account } = state.core
   ACCOUNT_SETTINGS.setBluetoothModeRequest(account, bluetoothMode)
-    .then(() => dispatch(SETTINGS_ACTIONS.setBluetoothMode(bluetoothMode)))
+    .then(() =>
+      dispatch({
+        type: 'UI/SETTINGS/SET_BLUETOOTH_MODE',
+        data: { bluetoothMode }
+      })
+    )
     .catch(showError)
 }
 
 export const lockSettings = () => async (dispatch: Dispatch) => {
-  dispatch(SETTINGS_ACTIONS.setSettingsLock(true))
+  dispatch({
+    type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
+    data: true
+  })
 }
 
 // Denominations
@@ -127,15 +155,23 @@ export const setDenominationKeyRequest = (currencyCode: string, denominationKey:
   const { account } = state.core
 
   return ACCOUNT_SETTINGS.setDenominationKeyRequest(account, currencyCode, denominationKey)
-    .then(() => dispatch(SETTINGS_ACTIONS.setDenominationKey(currencyCode, denominationKey)))
+    .then(() =>
+      dispatch({
+        type: 'UI/SETTINGS/SET_DENOMINATION_KEY',
+        data: { currencyCode, denominationKey }
+      })
+    )
     .catch(showError)
 }
 
 // touch id interaction
-export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {
+export const updateTouchIdEnabled = (isTouchEnabled: boolean, account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {
   // dispatch the update for the new state for
-  dispatch(SETTINGS_ACTIONS.updateTouchIdEnabled(arg))
-  if (arg) {
+  dispatch({
+    type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS',
+    data: { isTouchEnabled }
+  })
+  if (isTouchEnabled) {
     enableTouchId(account)
   } else {
     disableTouchId(account)
@@ -147,12 +183,18 @@ export function togglePinLoginEnabled(pinLoginEnabled: boolean) {
     const state = getState()
     const { context, account } = state.core
 
-    dispatch(SETTINGS_ACTIONS.togglePinLoginEnabled(pinLoginEnabled))
+    dispatch({
+      type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED',
+      data: { pinLoginEnabled }
+    })
     return account.changePin({ enableLogin: pinLoginEnabled }).catch(async error => {
       showError(error)
 
       const pinLoginEnabled = await context.pinLoginEnabled(account.username)
-      dispatch(SETTINGS_ACTIONS.togglePinLoginEnabled(pinLoginEnabled))
+      dispatch({
+        type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED',
+        data: { pinLoginEnabled }
+      })
     })
   }
 }
@@ -262,7 +304,10 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
     })
     const resolveValue = await launchModal(unlockSettingsModal)
     if (resolveValue) {
-      dispatch(SETTINGS_ACTIONS.setSettingsLock(false))
+      dispatch({
+        type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
+        data: false
+      })
     }
   } catch (error) {
     showError(error)

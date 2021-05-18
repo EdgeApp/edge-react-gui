@@ -10,7 +10,6 @@ import { Airship, showError, showFullScreenSpinner } from '../components/service
 import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { getSettings } from '../modules/Settings/selectors.js'
-import { setAccountBalanceVisibility, setWalletsSort } from '../modules/Settings/SettingsActions.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 
@@ -32,7 +31,10 @@ export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getStat
   const currentAccountBalanceVisibility = state.ui.settings.isAccountBalanceVisible
   ACCOUNT_SETTINGS.setAccountBalanceVisibility(account, !currentAccountBalanceVisibility)
     .then(() => {
-      dispatch(setAccountBalanceVisibility(!currentAccountBalanceVisibility))
+      dispatch({
+        type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
+        data: { isAccountBalanceVisible: !currentAccountBalanceVisibility }
+      })
     })
     .catch(showError)
 }
@@ -41,7 +43,10 @@ export const updateWalletsSort = (walletsSort: SortOption) => (dispatch: Dispatc
   const state = getState()
   const { account } = state.core
   // For speed efficiency, dispatch is independent of persistence
-  dispatch(setWalletsSort(walletsSort))
+  dispatch({
+    type: 'UI/SETTINGS/SET_WALLETS_SORT',
+    data: { walletsSort }
+  })
   ACCOUNT_SETTINGS.setWalletsSort(account, walletsSort).catch(showError)
 }
 

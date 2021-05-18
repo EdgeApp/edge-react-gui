@@ -15,7 +15,6 @@ import { updateWalletsRequest } from '../modules/Core/Wallets/action.js'
 import { getEnabledTokensFromFile, setEnabledTokens, updateEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import { getCustomTokens, getSettings } from '../modules/Settings/selectors.js'
-import { updateMostRecentWallets, updateSettings } from '../modules/Settings/SettingsActions'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
@@ -430,7 +429,10 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
       })
     })
     .then(() => {
-      dispatch(updateSettings(localSettings))
+      dispatch({
+        type: 'UI/SETTINGS/UPDATE_SETTINGS',
+        data: { settings: localSettings }
+      })
       dispatch({
         type: 'DELETE_CUSTOM_TOKEN_SUCCESS',
         data: { currencyCode }
@@ -468,7 +470,10 @@ export const updateMostRecentWalletsSelected = (walletId: string, currencyCode: 
 
   setMostRecentWalletsSelected(account, currentMostRecentWallets)
     .then(() => {
-      dispatch(updateMostRecentWallets(currentMostRecentWallets))
+      dispatch({
+        type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS',
+        data: { mostRecentWallets: currentMostRecentWallets }
+      })
     })
     .catch(showError)
 }
@@ -480,7 +485,10 @@ export const removeMostRecentWallet = (walletId: string, currencyCode: string) =
   const currentMostRecentWallets = mostRecentWallets.filter(wallet => wallet.id !== walletId || wallet.currencyCode !== currencyCode)
   setMostRecentWalletsSelected(account, currentMostRecentWallets)
     .then(() => {
-      dispatch(updateMostRecentWallets(currentMostRecentWallets))
+      dispatch({
+        type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS',
+        data: { mostRecentWallets: currentMostRecentWallets }
+      })
     })
     .catch(showError)
 }

@@ -298,7 +298,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED': {
-      if (!action.data) throw new Error('Invalid action')
       const { pinLoginEnabled } = action.data
       return {
         ...state,
@@ -407,7 +406,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_DENOMINATION_KEY': {
-      if (!action.data) throw new Error('Invalid action')
       const currencyCode = action.data.currencyCode
       const denomination = action.data.denominationKey
       const currencyState = state[currencyCode]
@@ -421,19 +419,11 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/UPDATE_SETTINGS': {
-      if (!action.data) throw new Error('Invalid action')
-      const { settings } = action.data
-      return settings
-    }
-
-    case 'UI/SETTINGS/LOAD_SETTINGS': {
-      if (!action.data) throw new Error('Invalid action')
       const { settings } = action.data
       return settings
     }
 
     case 'UI/SETTINGS/SET_PIN_MODE': {
-      if (!action.data) throw new Error('Invalid action')
       const { pinMode } = action.data
       return {
         ...state,
@@ -450,7 +440,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_DEFAULT_FIAT': {
-      if (!action.data) throw new Error('Invalid action')
       const { defaultFiat } = action.data
       return {
         ...state,
@@ -460,7 +449,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_MERCHANT_MODE': {
-      if (!action.data) throw new Error('Invalid action')
       const { merchantMode } = action.data
       return {
         ...state,
@@ -474,7 +462,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_BLUETOOTH_MODE': {
-      if (!action.data) throw new Error('Invalid action')
       const { bluetoothMode } = action.data
       return {
         ...state,
@@ -490,7 +477,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         isTouchEnabled: action.data.isTouchEnabled
@@ -498,7 +484,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_MOST_RECENT_WALLETS': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         mostRecentWallets: action.data.mostRecentWallets
@@ -506,7 +491,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         isAccountBalanceVisible: action.data.isAccountBalanceVisible
@@ -514,7 +498,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_WALLETS_SORT': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         walletsSort: action.data.walletsSort
