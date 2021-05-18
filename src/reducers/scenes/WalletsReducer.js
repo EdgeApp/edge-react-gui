@@ -200,7 +200,6 @@ const walletLoadingProgress = (state = {}, action: Action): $PropertyType<Wallet
 
 const activeWalletIds = (state = [], action: Action): string[] => {
   if (action.type === 'ACCOUNT_INIT_COMPLETE') {
-    if (!action.data) return state
     return action.data.activeWalletIds
   }
   if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
@@ -213,7 +212,6 @@ const activeWalletIds = (state = [], action: Action): string[] => {
 
 const archivedWalletIds = (state = [], action: Action): string[] => {
   if (action.type === 'ACCOUNT_INIT_COMPLETE') {
-    if (!action.data) return state
     return action.data.archivedWalletIds
   }
   if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {

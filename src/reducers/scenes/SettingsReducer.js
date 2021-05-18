@@ -6,8 +6,46 @@ import _ from 'lodash'
 import type { SortOption } from '../../components/modals/WalletListSortModal.js'
 import { LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import type { Action } from '../../types/reduxTypes.js'
-import type { CustomTokenInfo, MostRecentWallet } from '../../types/types.js'
+import { type CustomTokenInfo, type GuiTouchIdInfo, type MostRecentWallet, type SpendingLimits } from '../../types/types.js'
+import { type PasswordReminderState } from '../PasswordReminderReducer.js'
 import { spendingLimits } from '../SpendingLimitsReducer.js'
+
+// prettier-ignore
+export type PasswordReminderLevels = {
+  '20': false,
+  '200': false,
+  '2000': false,
+  '20000': false,
+  '200000': false
+}
+
+export type AccountInitPayload = {|
+  account: EdgeAccount,
+  activeWalletIds: string[],
+  archivedWalletIds: string[],
+  autoLogoutTimeInSeconds: number,
+  bluetoothMode: boolean,
+  countryCode: string,
+  currencyCode: string,
+  customTokens: CustomTokenInfo[],
+  customTokensSettings: Array<{ currencyCode: string }>,
+  defaultFiat: string,
+  defaultIsoFiat: string,
+  denominationKeys: Array<{ currencyCode: string, denominationKey: string }>,
+  developerModeOn: boolean,
+  isAccountBalanceVisible: boolean,
+  merchantMode: boolean,
+  mostRecentWallets: MostRecentWallet[],
+  passwordRecoveryRemindersShown: PasswordReminderLevels,
+  passwordReminder: PasswordReminderState,
+  pinLoginEnabled: boolean,
+  pinMode: boolean,
+  preferredSwapPluginId: string | void,
+  spendingLimits: SpendingLimits,
+  touchIdInfo: GuiTouchIdInfo,
+  walletId: string,
+  walletsSort: SortOption
+|}
 
 export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
@@ -100,14 +138,7 @@ export type SettingsState = {
     }
   },
   developerModeOn: boolean,
-  // prettier-ignore
-  passwordRecoveryRemindersShown: {
-    '20': boolean,
-    '200': boolean,
-    '2000': boolean,
-    '20000': boolean,
-    '200000': boolean
-  }
+  passwordRecoveryRemindersShown: PasswordReminderLevels
 }
 
 function currencyPLuginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo): SettingsState {
@@ -192,7 +223,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'ACCOUNT_INIT_COMPLETE': {
-      if (!action.data) throw new Error('Invalid action')
       const account: EdgeAccount = action.data.account
       const {
         touchIdInfo,
@@ -214,7 +244,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         passwordRecoveryRemindersShown,
         developerModeOn
       } = action.data
-      let newState = {
+      let newState: SettingsState = {
         ...state,
         loginStatus: true,
         autoLogoutTimeInSeconds,

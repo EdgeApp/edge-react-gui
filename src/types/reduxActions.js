@@ -6,6 +6,7 @@ import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet, type EdgeL
 import type { CcWalletMap } from '../reducers/FioReducer'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
+import { type AccountInitPayload } from '../reducers/scenes/SettingsReducer.js'
 import { type TweakSource } from '../util/ReferralHelpers.js'
 import { type DeepLink } from './DeepLink.js'
 import { type AccountReferral, type DeviceReferral, type Promotion, type ReferralCache } from './ReferralTypes.js'
@@ -21,7 +22,6 @@ import {
 } from './types.js'
 
 type LegacyActionName =
-  | 'ACCOUNT_INIT_COMPLETE'
   | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
   | 'NEW_RECEIVE_ADDRESS'
   | 'RESET_WALLET_LOADING_PROGRESS'
@@ -102,6 +102,7 @@ export type Action =
   // Actions with known payloads:
   | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
   | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
+  | { type: 'ACCOUNT_INIT_COMPLETE', data: AccountInitPayload }
   | { type: 'ACCOUNT_REFERRAL_LOADED', data: { referral: AccountReferral, cache: ReferralCache } }
   | { type: 'ACCOUNT_SWAP_IGNORED', data: boolean }
   | { type: 'ACCOUNT_TWEAKS_REFRESHED', data: ReferralCache }

@@ -14,6 +14,8 @@ import { showError } from '../../components/services/AirshipInstance.js'
 import * as Constants from '../../constants/indexConstants'
 import { SECURITY_ALERTS_SCENE } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
+import { initialState as passwordReminderInitialState } from '../../reducers/PasswordReminderReducer.js'
+import { type AccountInitPayload } from '../../reducers/scenes/SettingsReducer.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo, type GuiTouchIdInfo } from '../../types/types.js'
 import { runWithTimeout } from '../../util/utils.js'
@@ -67,29 +69,32 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
   const filteredWalletInfos = walletInfos.map(({ keys, id, ...info }) => info)
   console.log('Wallet Infos:', filteredWalletInfos)
 
-  let accountInitObject = {
+  let accountInitObject: AccountInitPayload = {
     account,
-    touchIdInfo,
-    walletId: '',
-    currencyCode: '',
-    autoLogoutTimeInSeconds: 3600,
-    bluetoothMode: false,
-    pinLoginEnabled: false,
-    pinMode: false,
-    countryCode: '',
-    customTokens: [],
-    defaultFiat: '',
-    defaultIsoFiat: '',
-    merchantMode: '',
-    denominationKeys: [],
-    customTokensSettings: [],
     activeWalletIds: [],
     archivedWalletIds: [],
-    passwordReminder: {},
+    autoLogoutTimeInSeconds: 3600,
+    bluetoothMode: false,
+    countryCode: '',
+    currencyCode: '',
+    customTokens: [],
+    customTokensSettings: [],
+    defaultFiat: '',
+    defaultIsoFiat: '',
+    denominationKeys: [],
+    developerModeOn: false,
     isAccountBalanceVisible: false,
-    isWalletFiatBalanceVisible: false,
-    spendingLimits: {},
-    passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN
+    merchantMode: false,
+    mostRecentWallets: [],
+    passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
+    passwordReminder: passwordReminderInitialState,
+    pinLoginEnabled: false,
+    pinMode: false,
+    preferredSwapPluginId: undefined,
+    spendingLimits: { transaction: { isEnabled: false, amount: 0 } },
+    touchIdInfo,
+    walletId: '',
+    walletsSort: 'default'
   }
   try {
     let newAccount = false
@@ -133,13 +138,9 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
       })
     }
     for (const key of Object.keys(accountInitObject)) {
-      if (accountInitObject[key]) {
-        // avoid trying to look at property 'denomination' of undefined
-        const typeofDenomination = typeof accountInitObject[key].denomination
-        if (typeofDenomination === 'string') {
-          accountInitObject.denominationKeys.push({ currencyCode: key, denominationKey: accountInitObject[key].denomination })
-        }
-      }
+      const row: any = accountInitObject[key]
+      if (row == null || typeof row.denomination !== 'string') continue
+      accountInitObject.denominationKeys.push({ currencyCode: key, denominationKey: row.denomination })
     }
     const loadedLocalSettings = await getLocalSettings(account)
     const localSettings = { ...loadedLocalSettings }
@@ -193,8 +194,8 @@ export const mergeSettings = (
   defaults: Object,
   types: Object,
   account?: Object
-): { finalSettings: Object, isOverwriteNeeded: boolean, isDefaultTypeIncorrect: boolean } => {
-  const finalSettings = {}
+): { finalSettings: AccountInitPayload, isOverwriteNeeded: boolean, isDefaultTypeIncorrect: boolean } => {
+  const finalSettings: any = {}
   // begin process for repairing damaged settings data
   let isOverwriteNeeded = false
   let isDefaultTypeIncorrect = false

@@ -23,6 +23,7 @@ describe('spendingLimits', () => {
           }
         }
       }
+      // $FlowFixMe: The action should have many other properties
       const actual = spendingLimits(initialState, loginAction)
 
       expect(actual).toMatchSnapshot()

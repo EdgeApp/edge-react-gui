@@ -26,11 +26,10 @@ export const initialState = {
 }
 
 export const isEnabled = (state: boolean = initialState.transaction.isEnabled, action: Action) => {
-  if (!action.data) return state
   switch (action.type) {
     case 'ACCOUNT_INIT_COMPLETE':
     case 'SPENDING_LIMITS/NEW_SPENDING_LIMITS': {
-      // $FlowFixMe
+      if (!action.data) return state
       return action.data.spendingLimits.transaction.isEnabled
     }
     default:
@@ -39,11 +38,10 @@ export const isEnabled = (state: boolean = initialState.transaction.isEnabled, a
 }
 
 export const amount = (state: number = initialState.transaction.amount, action: Action) => {
-  if (!action.data) return state
   switch (action.type) {
     case 'ACCOUNT_INIT_COMPLETE':
     case 'SPENDING_LIMITS/NEW_SPENDING_LIMITS': {
-      // $FlowFixMe
+      if (!action.data) return state
       return action.data.spendingLimits.transaction.amount
     }
     default:
