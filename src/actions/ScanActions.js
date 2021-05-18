@@ -10,7 +10,7 @@ import URL from 'url-parse'
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { ADD_TOKEN, CURRENCY_PLUGIN_NAMES, EXCHANGE_SCENE, getSpecialCurrencyInfo, PLUGIN_BUY, SEND, SEND_CONFIRMATION } from '../constants/indexConstants.js'
+import { ADD_TOKEN, CURRENCY_PLUGIN_NAMES, EXCHANGE_SCENE, getSpecialCurrencyInfo, PLUGIN_BUY, SEND } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
@@ -19,7 +19,6 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { GuiWallet } from '../types/types.js'
 import { denominationToDecimalPlaces, noOp } from '../util/utils.js'
 import { launchDeepLink } from './DeepLinkingActions.js'
-import { paymentProtocolUriReceived } from './SendConfirmationActions.js'
 
 export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, link: ReturnAddressLink) => {
   const { currencyName, sourceName = '', successUri = '' } = link
@@ -149,7 +148,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
 
       if (isLegacyAddressUri(parsedUri)) {
         // LEGACY ADDRESS URI
-        return dispatch(showLegacyAddressModal())
+        // BUSTED!
       }
 
       if (isPrivateKeyUri(parsedUri)) {
@@ -159,8 +158,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
 
       if (isPaymentProtocolUri(parsedUri)) {
         // BIP70 URI
-        // $FlowFixMe
-        return dispatch(paymentProtocolUriReceived(parsedUri))
+        // BUSTED!
       }
 
       // PUBLIC ADDRESS URI
@@ -232,38 +230,6 @@ export const isPrivateKeyUri = (parsedUri: EdgeParsedUri): boolean => {
 export const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
   // $FlowFixMe should be paymentProtocolUrl (lowercased)?
   return !!parsedUri.paymentProtocolURL && !parsedUri.publicAddress
-}
-
-export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const parsedUri = state.ui.scenes.scan.parsedUri
-  setImmediate(() => {
-    if (!parsedUri) {
-      dispatch({ type: 'ENABLE_SCAN' })
-      return
-    }
-
-    Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo: parsedUri })
-  })
-}
-
-export const showLegacyAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
-  const response = await Airship.show(bridge => (
-    <ButtonsModal
-      bridge={bridge}
-      title={s.strings.legacy_address_modal_title}
-      message={s.strings.legacy_address_modal_warning}
-      buttons={{
-        confirm: { label: s.strings.legacy_address_modal_continue },
-        cancel: { label: s.strings.legacy_address_modal_cancel, type: 'secondary' }
-      }}
-    />
-  ))
-  if (response === 'confirm') {
-    dispatch(legacyAddressModalContinueButtonPressed())
-  } else {
-    dispatch({ type: 'ENABLE_SCAN' })
-  }
 }
 
 export const privateKeyModalActivated = () => async (dispatch: Dispatch, getState: GetState) => {
