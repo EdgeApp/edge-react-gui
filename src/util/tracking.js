@@ -86,7 +86,7 @@ async function logToFirebase(event: TrackingEvent, values: TrackingValues) {
 
   // If we get passed a dollarValue, translate the event into a purchase:
   if (dollarValue != null) {
-    params.items = name
+    params.items = [name]
     global.firebase.analytics().logEvent('purchase', params)
     global.firebase.analytics().logEvent('ecommerce_purchase', params)
   }
