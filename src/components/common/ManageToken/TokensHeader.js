@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 
 import s from '../../../locales/strings.js'
 import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
@@ -22,7 +22,7 @@ type Props = {
 function TokensHeader(props: Props) {
   // const textInput = React.createRef()
 
-  const { searching, searchText, currencyCode, walletName, walletId } = props
+  const { searchText, currencyCode, walletName, walletId } = props
 
   const theme = useTheme()
 
@@ -40,21 +40,15 @@ function TokensHeader(props: Props) {
         <View style={{ flex: 1, flexDirection: 'column' }}>
           <EdgeTextFieldOutlined
             returnKeyType="search"
-            label={s.strings.wallet_list_wallet_search}
+            label="Search Tokens"
             onChangeText={this.handleOnChangeText}
             value={searchText}
             onFocus={this.handleTextFieldFocus}
             ref={this.textInput}
-            isClearable={searching}
             onClear={this.clearText}
             marginRem={0}
           />
         </View>
-        {searching && (
-          <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
-            <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
-          </TouchableOpacity>
-        )}
       </View>
     </>
   )
@@ -71,13 +65,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   searchContainer: {
     flexDirection: 'row',
     marginTop: theme.rem(0.5),
-    marginHorizontal: theme.rem(1)
-  },
-  searchDoneButton: {
-    justifyContent: 'center',
-    height: theme.rem(4.5),
-    paddingLeft: theme.rem(0.75),
-    paddingBottom: theme.rem(0.25)
+    marginRight: theme.rem(2),
+    marginLeft: theme.rem(1)
   }
 }))
 

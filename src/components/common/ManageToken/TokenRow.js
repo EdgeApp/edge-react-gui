@@ -37,10 +37,6 @@ function TokenRow(props: Props) {
 
   const enabled = enabledList.indexOf(item.currencyCode) >= 0
 
-  // disable editing if token is native to the app
-  // const isEditable = !Object.keys(SYNCED_ACCOUNT_DEFAULTS).includes(item.currencyCode)
-  // const onEditPress = isEditable ? goToEditTokenScene : UTILS.noOp
-
   return (
     <WalletListRow gradient icon={<Icon />} currencyCode={item.currencyCode} walletName={item.currencyName}>
       <View style={styles.touchableCheckboxInterior}>
@@ -61,8 +57,7 @@ function TokenRow(props: Props) {
 const getStyles = cacheStyles((theme: Theme) => ({
   iconContainer: {
     alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: theme.rem(1)
+    justifyContent: 'center'
   },
   iconSize: {
     width: theme.rem(2),

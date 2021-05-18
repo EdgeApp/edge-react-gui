@@ -168,8 +168,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'stretch',
-    marginTop: 5
+    alignSelf: 'stretch'
   }
 }))
 

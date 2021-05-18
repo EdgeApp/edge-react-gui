@@ -59,9 +59,12 @@ class EdgeTextFieldOutlinedComponent extends React.PureComponent<EdgeOutlinedTex
     const styles = getStyles(theme)
     const contentInset = small ? { input: theme.rem(0.75), label: 0 } : null
 
+    const IconSearch = () => (!hideSearchIcon ? <AntDesignIcon style={styles.searchIcon} name="search1" size={theme.rem(1)} /> : null)
+
     return (
       <View style={styles.outlinedTextFieldContainer}>
         <OutlinedTextField
+          renderLeftAccessory={IconSearch}
           containerStyle={[spacings, styles.outlinedTextField]}
           contentInset={contentInset}
           baseColor={theme.secondaryText}
@@ -69,7 +72,9 @@ class EdgeTextFieldOutlinedComponent extends React.PureComponent<EdgeOutlinedTex
           textColor={theme.primaryText}
           tintColor={theme.textLink}
           ref={this.props.fieldRef}
-          prefix={hideSearchIcon ? null : <AntDesignIcon name="search1" color={theme.iconDeactivated} size={theme.rem(1)} />}
+          labelOffset={{
+            x1: -30
+          }}
           suffix={
             isClearable && (
               <TouchableOpacity onPress={this.clearText} style={styles.outlinedTextFieldClearContainer}>
@@ -96,6 +101,12 @@ function spacingStyles(margin: number | number[], theme: Theme) {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  searchIcon: {
+    color: theme.iconDeactivated,
+    marginBottom: theme.rem(0.2),
+    marginRight: theme.rem(0.5)
+  },
+
   outlinedTextFieldContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -104,9 +115,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   outlinedTextField: {
     flex: 1
-  },
-  outlinedTextInput: {
-    paddingLeft: theme.rem(2)
   },
   outlinedTextFieldClearContainer: {
     paddingTop: theme.rem(0.125)
