@@ -11,7 +11,7 @@ import { TRANSACTION_DETAILS } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
-import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
+import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
@@ -199,7 +199,7 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
             )}
             <View style={styles.container}>
               <Slider
-                sliderDisabled={isSending || !!error}
+                disabled={isSending || !!error}
                 onSlidingComplete={this.handleConfirmation}
                 showSpinner={isSending}
                 disabledText={s.strings.transaction_details_accelerate_transaction_slider_disabled}
@@ -234,7 +234,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   container: {
     maxHeight: theme.rem(20),
-    margin: theme.rem(0.5)
+    marginVertical: theme.rem(0.5)
   }
 }))
 
