@@ -55,6 +55,8 @@ export type FlipInputOwnProps = {
   primaryInfo: FlipInputFieldInfo,
   secondaryInfo: FlipInputFieldInfo,
   onNext?: () => void,
+  onFocus?: () => void,
+  onBlur?: () => void,
   forceUpdateGuiCounter: number,
 
   // Callback when primaryDecimalAmount changes. **This is only called when the user types into a field or if
@@ -353,10 +355,12 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
 
   textInputFrontFocusTrue = () => {
     this.setState({ textInputFrontFocus: true, rerenderCounter: this.state.rerenderCounter + 1 })
+    if (this.props.onFocus) this.props.onFocus()
   }
 
   textInputFrontFocusFalse = () => {
     this.setState({ textInputFrontFocus: false })
+    if (this.props.onBlur) this.props.onBlur()
   }
 
   textInputFrontFocus = async () => {
@@ -398,10 +402,12 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
 
   textInputBackFocusTrue = () => {
     this.setState({ textInputBackFocus: true })
+    if (this.props.onFocus) this.props.onFocus()
   }
 
   textInputBackFocusFalse = () => {
     this.setState({ textInputBackFocus: false })
+    if (this.props.onBlur) this.props.onBlur()
   }
 
   textInputBackFocus = async () => {
