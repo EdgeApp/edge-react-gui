@@ -261,17 +261,11 @@ exports[`SendConfirmation should render with destination 1`] = `
           ]
         }
       >
-        <Slider
-          forceUpdateGuiCounter={0}
+        <WithTheme(SliderComponent)
+          disabled={true}
           onSlidingComplete={[Function]}
-          parentStyle={
-            Object {
-              "width": 379.23591549295776,
-            }
-          }
-          resetSlider={false}
+          reset={false}
           showSpinner={false}
-          sliderDisabled={true}
         />
       </Footer>
     </View>
@@ -525,17 +519,11 @@ exports[`SendConfirmation should render with standard props 1`] = `
           ]
         }
       >
-        <Slider
-          forceUpdateGuiCounter={0}
+        <WithTheme(SliderComponent)
+          disabled={true}
           onSlidingComplete={[Function]}
-          parentStyle={
-            Object {
-              "width": 379.23591549295776,
-            }
-          }
-          resetSlider={false}
+          reset={false}
           showSpinner={false}
-          sliderDisabled={true}
         />
       </Footer>
     </View>
@@ -769,17 +757,11 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           ]
         }
       >
-        <Slider
-          forceUpdateGuiCounter={0}
+        <WithTheme(SliderComponent)
+          disabled={true}
           onSlidingComplete={[Function]}
-          parentStyle={
-            Object {
-              "width": 379.23591549295776,
-            }
-          }
-          resetSlider={false}
+          reset={false}
           showSpinner={false}
-          sliderDisabled={true}
         />
       </Footer>
     </View>
@@ -1045,17 +1027,11 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           ]
         }
       >
-        <Slider
-          forceUpdateGuiCounter={0}
+        <WithTheme(SliderComponent)
+          disabled={true}
           onSlidingComplete={[Function]}
-          parentStyle={
-            Object {
-              "width": 379.23591549295776,
-            }
-          }
-          resetSlider={false}
+          reset={false}
           showSpinner={false}
-          sliderDisabled={true}
         />
       </Footer>
     </View>

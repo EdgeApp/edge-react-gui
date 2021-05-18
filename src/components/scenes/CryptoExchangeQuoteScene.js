@@ -276,8 +276,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.warningText
   },
   slider: {
-    marginTop: theme.rem(1.5),
-    alignItems: 'center'
+    marginTop: theme.rem(1.5)
   },
   spacer: {
     height: theme.rem(8)

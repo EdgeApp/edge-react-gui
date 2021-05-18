@@ -24,7 +24,7 @@ import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
-import { Slider } from '../../modules/UI/components/Slider/Slider.ui'
+import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
@@ -535,13 +535,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           {this.renderAuthentication()}
           <View style={styles.footer}>
             {!!recipientAddress && !localResetSlider && (
-              <Slider
-                onSlidingComplete={this.submit}
-                resetSlider={resetSlider || localResetSlider}
-                sliderDisabled={sliderDisabled}
-                showSpinner={loading || pending}
-                parentStyle={styles.slider}
-              />
+              <Slider onSlidingComplete={this.submit} reset={resetSlider || localResetSlider} disabled={sliderDisabled} showSpinner={loading || pending} />
             )}
           </View>
         </KeyboardAwareScrollView>
@@ -555,9 +549,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(2),
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  slider: {
-    width: theme.rem(16)
   },
   pinContainer: {
     marginTop: theme.rem(0.25)

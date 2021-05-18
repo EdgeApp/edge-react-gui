@@ -115,7 +115,7 @@ export const SliderComponent = (props: Props) => {
   }, [props.showSpinner])
 
   return (
-    <View style={parentStyle}>
+    <View style={[parentStyle, styles.sliderContainer]}>
       <View style={[styles.slider, sliderDisabled ? styles.disabledSlider : null, widthStyle]}>
         <Animated.View style={[styles.progress, progressStyle]} />
 
@@ -135,6 +135,9 @@ export const SliderComponent = (props: Props) => {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  sliderContainer: {
+    alignItems: 'center'
+  },
   slider: {
     borderRadius: theme.confirmationSliderThumbWidth / 2,
     backgroundColor: theme.confirmationSlider,
