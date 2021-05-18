@@ -15,7 +15,7 @@ export const updateExchangeRates = () => async (dispatch: Dispatch, getState: Ge
 
 async function buildExchangeRates(state: RootState) {
   const { account } = state.core
-  const { currencyWallets = {}, exchangeCache } = account
+  const { currencyWallets, exchangeCache } = account
   const accountIsoFiat = getDefaultIsoFiat(state)
 
   const exchangeRates: { [pair: string]: Promise<number> } = {}

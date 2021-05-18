@@ -19,16 +19,9 @@ import { activated as uniqueIdentifierModalActivated } from '../../actions/Uniqu
 import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from '../../components/scenes/SendConfirmationScene'
 import { SendConfirmation } from '../../components/scenes/SendConfirmationScene'
 import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination, getPlugins } from '../../modules/Settings/selectors.js'
-import {
-  getError,
-  getForceUpdateGuiCounter,
-  getKeyboardIsVisible,
-  getPending,
-  getPublicAddress,
-  getTransaction
-} from '../../modules/UI/scenes/SendConfirmation/selectors'
+import { getPublicAddress, getTransaction } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import type { AuthType } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
-import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../modules/UI/selectors.js'
+import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils'
@@ -38,10 +31,10 @@ const mapStateToProps = (state: RootState): SendConfirmationStateProps => {
   let fiatPerCrypto = 0
   let secondaryExchangeCurrencyCode = ''
 
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const guiWallet = getSelectedWallet(state)
   const coreWallet = currencyWallets[guiWallet.id]
-  const currencyCode = getSelectedCurrencyCode(state)
+  const currencyCode = state.ui.wallets.selectedCurrencyCode
   const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
 
   const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
@@ -60,10 +53,9 @@ const mapStateToProps = (state: RootState): SendConfirmationStateProps => {
   }
 
   const transaction = getTransaction(state)
-  const pending = getPending(state)
+  const pending = sceneState.pending
   const nativeAmount = sceneState.nativeAmount
-  // const nativeAmount = getNativeAmount(state)
-  let error = getError(state)
+  let error = sceneState.error
 
   let errorMsg = null
   let resetSlider = false
@@ -92,9 +84,8 @@ const mapStateToProps = (state: RootState): SendConfirmationStateProps => {
     exchangeRates,
     fiatCurrencyCode: guiWallet.fiatCurrencyCode,
     fiatPerCrypto,
-    forceUpdateGuiCounter: getForceUpdateGuiCounter(state),
+    forceUpdateGuiCounter: sceneState.forceUpdateGuiCounter,
     isEditable: sceneState.isEditable,
-    keyboardIsVisible: getKeyboardIsVisible(state),
     nativeAmount,
     networkFee,
     parentDisplayDenomination: getDisplayDenomination(state, guiWallet.currencyCode),
@@ -108,8 +99,8 @@ const mapStateToProps = (state: RootState): SendConfirmationStateProps => {
     secondaryExchangeCurrencyCode,
     sliderDisabled: !transaction || !!error || !!pending,
     uniqueIdentifier,
-    authRequired: state.ui.scenes.sendConfirmation.authRequired,
-    address: state.ui.scenes.sendConfirmation.address,
+    authRequired: sceneState.authRequired,
+    address: sceneState.address,
     sceneState,
     coreWallet,
     toggleCryptoOnTop,

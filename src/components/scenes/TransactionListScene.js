@@ -193,7 +193,7 @@ export const TransactionList = connect(
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
 
     // getTransactions
-    const { currencyWallets = {} } = state.core.account
+    const { currencyWallets } = state.core.account
     const currencyWallet = currencyWallets[selectedWalletId]
     const { getTransactions } = currencyWallet
 

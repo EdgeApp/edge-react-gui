@@ -21,7 +21,6 @@ import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmat
 import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { type GuiWallet } from '../../../../types/types.js'
-import * as UI_SELECTORS from '../../../UI/selectors.js'
 
 type EdgeReceiveAddress = {
   publicAddress?: string,
@@ -136,7 +135,7 @@ export class EdgeProvider extends Bridgeable {
 
   // Get an address from the user's wallet
   getReceiveAddress(options: EdgeGetReceiveAddressOptions): EdgeReceiveAddress {
-    const wallet: GuiWallet = UI_SELECTORS.getSelectedWallet(this._state)
+    const wallet: GuiWallet = this._state.ui.wallets.byId[this._state.ui.wallets.selectedWalletId]
     if (options && options.metadata) {
       wallet.receiveAddress.metadata = options.metadata
     }
@@ -144,8 +143,8 @@ export class EdgeProvider extends Bridgeable {
   }
 
   getCurrentWalletInfo(): Promise<WalletDetails> {
-    const wallet: GuiWallet = UI_SELECTORS.getSelectedWallet(this._state)
-    const currentCode = UI_SELECTORS.getSelectedCurrencyCode(this._state)
+    const wallet: GuiWallet = this._state.ui.wallets.byId[this._state.ui.wallets.selectedWalletId]
+    const currentCode = this._state.ui.wallets.selectedCurrencyCode
     let walletName = wallet.name
     if (wallet.enabledTokens.length > 1) {
       console.log('EP: We have tokens.. what do we do with them ')
@@ -215,10 +214,10 @@ export class EdgeProvider extends Bridgeable {
 
   async getWalletHistory() {
     // Get Wallet Info
-    const { currencyWallets = {} } = this._state.core.account
-    const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
+    const { currencyWallets } = this._state.core.account
+    const guiWallet = this._state.ui.wallets.byId[this._state.ui.wallets.selectedWalletId]
     const coreWallet = currencyWallets[guiWallet.id]
-    const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(this._state)
+    const currencyCode = this._state.ui.wallets.selectedCurrencyCode
 
     // Prompt user with yes/no modal for permission
     const confirmTxShare = await Airship.show(bridge => (
@@ -268,8 +267,8 @@ export class EdgeProvider extends Bridgeable {
 
   // Request that the user spend to an address or multiple addresses
   async requestSpend(spendTargets: EdgeProviderSpendTarget[], options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | void> {
-    const { currencyWallets = {} } = this._state.core.account
-    const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
+    const { currencyWallets } = this._state.core.account
+    const guiWallet = this._state.ui.wallets.byId[this._state.ui.wallets.selectedWalletId]
     const coreWallet = currencyWallets[guiWallet.id]
 
     const { currencyCode = coreWallet.currencyInfo.currencyCode, customNetworkFee, metadata, lockInputs = true, uniqueIdentifier, orderId } = options
@@ -304,14 +303,14 @@ export class EdgeProvider extends Bridgeable {
     info.spendTargets = edgeSpendTargets
 
     // Launch:
-    return this._makeSpendRequest(info, coreWallet, orderId, UI_SELECTORS.getSelectedCurrencyCode(this._state))
+    return this._makeSpendRequest(info, coreWallet, orderId, this._state.ui.wallets.selectedCurrencyCode)
   }
 
   // Request that the user spend to a URI
   async requestSpendUri(uri: string, options: EdgeRequestSpendOptions = {}): Promise<EdgeTransaction | void> {
     console.log(`requestSpendUri ${uri}`)
-    const { currencyWallets = {} } = this._state.core.account
-    const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
+    const { currencyWallets } = this._state.core.account
+    const guiWallet = this._state.ui.wallets.byId[this._state.ui.wallets.selectedWalletId]
     const coreWallet = currencyWallets[guiWallet.id]
     const result = await coreWallet.parseUri(uri)
 
@@ -329,15 +328,15 @@ export class EdgeProvider extends Bridgeable {
     }
 
     // Launch:
-    return this._makeSpendRequest(info, coreWallet, orderId, UI_SELECTORS.getSelectedCurrencyCode(this._state))
+    return this._makeSpendRequest(info, coreWallet, orderId, this._state.ui.wallets.selectedCurrencyCode)
   }
 
   // log body and signature and pubic address and final message (returned from signMessage)
   // log response afterwards line 451
   async signMessage(message: string) /* EdgeSignedMessage */ {
     console.log(`signMessage message:***${message}***`)
-    const { currencyWallets = {} } = this._state.core.account
-    const guiWallet = UI_SELECTORS.getSelectedWallet(this._state)
+    const { currencyWallets } = this._state.core.account
+    const guiWallet = this._state.ui.wallets.byId[this._state.ui.wallets.selectedWalletId]
     const coreWallet = currencyWallets[guiWallet.id]
     const signedMessage = await coreWallet.otherMethods.signMessageBase64(message, guiWallet.receiveAddress.publicAddress)
     console.log(`signMessage public address:***${guiWallet.receiveAddress.publicAddress}***`)

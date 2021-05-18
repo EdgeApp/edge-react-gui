@@ -12,7 +12,6 @@ import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalPar
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import * as Constants from '../../../constants/indexConstants'
 import { type RootState } from '../../../types/reduxTypes'
-import { getFioWallets } from '../../UI/selectors'
 
 type StateProps = {
   fioWallets: EdgeCurrencyWallet[],
@@ -115,7 +114,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const EditNameModal = connect((state: RootState): StateProps => {
   const { account } = state.core
-  const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
+  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
   const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
   return {
     userDomains: state.ui.scenes.fioAddress.fioDomains,

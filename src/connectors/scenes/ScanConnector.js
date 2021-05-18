@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { parseScannedUri, qrCodeScanned } from '../../actions/ScanActions'
 import Scan from '../../components/scenes/ScanScene'
-import { getSelectedCurrencyCode, getSelectedWalletId } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: RootState) => ({
@@ -14,8 +13,8 @@ const mapStateToProps = (state: RootState) => ({
   scanEnabled: state.ui.scenes.scan.scanEnabled,
   currentWalletId: state.ui.scenes.transactionList.currentWalletId,
   currentCurrencyCode: state.ui.scenes.transactionList.currentCurrencyCode,
-  walletId: getSelectedWalletId(state),
-  currencyCode: getSelectedCurrencyCode(state)
+  walletId: state.ui.wallets.selectedWalletId,
+  currencyCode: state.ui.wallets.selectedCurrencyCode
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

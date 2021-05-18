@@ -13,7 +13,6 @@ import { createFioWallet } from '../../modules/FioAddress/action'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
 import { EditNameModal } from '../../modules/FioAddress/components/EditNameModal'
 import { checkIsDomainPublic } from '../../modules/FioAddress/util'
-import { getFioWallets } from '../../modules/UI/selectors'
 import type { RootState } from '../../reducers/RootReducer'
 import type { Dispatch } from '../../types/reduxTypes'
 import type { FioDomain, FioPublicDomain } from '../../types/types'
@@ -522,7 +521,7 @@ const FioAddressRegisterScene = connect(
         isConnected: state.network.isConnected
       }
     }
-    const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
+    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
     const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
 
     const out: StateProps = {

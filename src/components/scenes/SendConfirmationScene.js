@@ -43,7 +43,6 @@ export type SendConfirmationStateProps = {
   parentNetworkFee: string | null,
   networkFee: string | null,
   pending: boolean,
-  keyboardIsVisible: boolean,
   balanceInCrypto: string,
   balanceInFiat: number,
   parentDisplayDenomination: EdgeDenomination,

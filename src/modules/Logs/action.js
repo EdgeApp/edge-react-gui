@@ -32,7 +32,7 @@ export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: G
   }
 
   if (account.loggedIn === true) {
-    const { currencyWallets = {}, rootLoginId, keys, username } = account
+    const { currencyWallets, rootLoginId, keys, username } = account
     logOutput.loggedInUser = {
       userId: rootLoginId,
       userName: username,
@@ -54,11 +54,7 @@ export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: G
       // Wallet info
       const wallet = currencyWallets[walletId]
       if (wallet && logOutput.loggedInUser) {
-        const currencyCode = wallet.currencyInfo.currencyCode
-          ? wallet.currencyInfo.currencyCode
-          : typeof wallet.currencyCode === 'string'
-          ? wallet.currencyCode
-          : ''
+        const currencyCode = wallet.currencyInfo.currencyCode ?? ''
         logOutput.loggedInUser.wallets.push({
           currencyCode,
           repoId: getRepoId(wallet.keys.syncKey),

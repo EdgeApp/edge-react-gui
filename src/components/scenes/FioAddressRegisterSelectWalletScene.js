@@ -12,7 +12,6 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { getRegInfo } from '../../modules/FioAddress/util'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
-import { getFioWallets } from '../../modules/UI/selectors'
 import type { Dispatch } from '../../types/reduxTypes'
 import { type RootState } from '../../types/reduxTypes'
 import type { FioDomain, GuiWallet } from '../../types/types'
@@ -271,7 +270,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 const FioAddressRegisterSelectWalletScene = connect(
   (state: RootState) => {
     const wallets = state.ui.wallets.byId
-    const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
+    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
     const { account } = state.core
     const fioPlugin = account && account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
     const fioDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, Constants.FIO_STR)

@@ -13,7 +13,7 @@ import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 export const showDeleteWalletModal = (walletId: string, additionalMsg?: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  const { currencyWallets = {} } = account
+  const { currencyWallets } = account
 
   const resolveValue = await Airship.show(bridge => (
     <ButtonsModal

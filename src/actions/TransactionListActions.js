@@ -5,7 +5,6 @@ import _ from 'lodash'
 
 import { showTransactionDropdown } from '../components/navigation/TransactionDropdown.js'
 import { showError } from '../components/services/AirshipInstance.js'
-import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import type { TransactionListTx } from '../types/types.js'
 import * as UTILS from '../util/utils'
@@ -82,7 +81,7 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
 }
 
 const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const wallet = currencyWallets[walletId]
   if (!wallet) return
   // initialize the master array of transactions that will eventually go into Redux
@@ -144,8 +143,8 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
 
 export const refreshTransactionsRequest = (walletId: string, transactions: EdgeTransaction[]) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-  const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const selectedWalletId = state.ui.wallets.selectedWalletId
+  const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
   let shouldFetch = false
   for (const transaction of transactions) {
     if (transaction.currencyCode === selectedCurrencyCode) {
@@ -163,8 +162,8 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeT
   const edgeTransaction: EdgeTransaction = edgeTransactions[0]
   const state = getState()
   const currentViewableTransactions = state.ui.scenes.transactionList.transactions
-  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-  const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const selectedWalletId = state.ui.wallets.selectedWalletId
+  const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
   let numberOfRelevantTransactions = 0
   let isTransactionForSelectedWallet = false
   const receivedTxs = []

@@ -10,7 +10,6 @@ import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui'
-import { getSelectedCurrencyCode, getSelectedWalletId } from '../../modules/UI/selectors'
 import type { PermissionStatus } from '../../reducers/PermissionsReducer'
 import type { RootState } from '../../reducers/RootReducer'
 import type { Dispatch } from '../../types/reduxTypes'
@@ -172,8 +171,8 @@ export const ScanModal = connect(
     cameraPermission: state.permissions.camera,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
     scanEnabled: state.ui.scenes.scan.scanEnabled,
-    walletId: getSelectedWalletId(state),
-    currencyCode: getSelectedCurrencyCode(state)
+    walletId: state.ui.wallets.selectedWalletId,
+    currencyCode: state.ui.wallets.selectedCurrencyCode
   }),
   (dispatch: Dispatch) => ({
     toggleEnableTorch: () => dispatch({ type: 'TOGGLE_ENABLE_TORCH' }),

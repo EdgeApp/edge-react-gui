@@ -16,7 +16,10 @@ Object {
   },
   "contacts": Array [],
   "core": Object {
-    "account": Object {},
+    "account": Object {
+      "activeWalletIds": Array [],
+      "currencyWallets": Object {},
+    },
     "context": Object {},
     "disklet": Object {},
     "edgeLogin": Object {
@@ -165,7 +168,6 @@ Object {
           "publicAddress": "",
         },
         "isEditable": true,
-        "isKeyboardVisible": false,
         "nativeAmount": "0",
         "pending": false,
         "pin": "",

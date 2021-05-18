@@ -8,9 +8,9 @@ import { formatDate, formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
-import * as UI_SELECTORS from '../../modules/UI/selectors'
+import { getSelectedWallet } from '../../modules/UI/selectors'
 import type { RootState } from '../../reducers/RootReducer'
-import type { FioRequest } from '../../types/types'
+import { type FioRequest, type GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
@@ -98,7 +98,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 const FioSentRequestDetailsScene = connect((state: RootState) => {
-  const wallet = UI_SELECTORS.getSelectedWallet(state)
+  const wallet: GuiWallet = getSelectedWallet(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const exchangeRates = state.exchangeRates
   const fiatSymbol = FIAT_CODES_SYMBOLS[wallet.fiatCurrencyCode]
