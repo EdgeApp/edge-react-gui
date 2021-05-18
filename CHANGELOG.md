@@ -1,5 +1,30 @@
 # edge-react-gui
 
+## 2.0.11 (2021-05-17)
+
+- Add Fantom (FTM) support with fUSDT
+- New themed Exchange scene with confetti
+- Visual and text fixes
+- XLM and XRP unique identifier fixes
+- Upgrade edge-core-js to v0.17.33
+  - Add a paused flag to EdgeCurrencyWallet, and a matching changePaused method
+  - Deprecate EdgeCurrencyWallet.startEngine - Use EdgeCurrencyWallet.changePaused(false) instead
+  - Deprecate EdgeCurrencyWallet.stopEngine - Use EdgeCurrencyWallet.changePaused(true) instead
+  - Clean legacy Airbitz wallet files to prevent potential crashes at login
+- Upgrade edge-currency-accountbased to v0.7.58
+  - Add Fantom
+  - FTM: Add fUSDT support
+  - XRP: Pass default fee to preparePayment
+  - XRP: Remove unused 'type' field from transaction validation
+  - XRP: Change destination tag limit to 10 digits and less than UINT32
+  - Fix metadata issue for accelerated ETH txs (RBF tx)
+- Upgrade edge-exchange-plugins to v0.11.27
+  - Add constant rate for fUSDT to USDT
+  - ChangeNow: Add ERC20-only filter to prevent trading for mainnet tokens when only the ETH ERC20 token is available
+- Upgrade edge-login-ui-rn to v0.9.2
+  - Add testID's to various screens
+  - Improve internal type-safety. This should not have any extenally-visible effects
+
 ## 2.0.10 (2021-05-05)
 
 - Upgrade to RN 0.64
