@@ -1,14 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import {
-  type EdgeCurrencyWallet,
-  type EdgeMetadata,
-  type EdgeParsedUri,
-  type EdgeSpendInfo,
-  type EdgeTransaction,
-  asMaybeInsufficientFundsError
-} from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeParsedUri, type EdgeTransaction, asMaybeInsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -391,11 +384,6 @@ export const displayFeeAlert = async (currency: string) => {
 
   console.log('resolveValue is: ', resolveValue)
   return resolveValue === 'confirm'
-}
-
-// Should be removed when Send Confirmation Scene is removed
-export const getAuthRequiredDispatch = (spendInfo: EdgeSpendInfo) => (dispatch: Dispatch, getState: GetState) => {
-  return getAuthRequired(getState(), spendInfo)
 }
 
 export const updateTransactionAmount =
