@@ -508,7 +508,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(SettingsScene)}
               renderTitle={<HeaderTitle title={s.strings.title_settings} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={this.renderEmptyButton()}
+              renderRightButton={<SideMenuButton />}
             />
             <Scene
               key={Constants.CHANGE_PASSWORD}
@@ -620,7 +620,7 @@ export class MainComponent extends React.Component<Props> {
               component={ifLoggedIn(TermsOfServiceComponent)}
               renderTitle={<HeaderTitle title={s.strings.title_terms_of_service} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={this.renderEmptyButton()}
+              renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
             />
           </Stack>
