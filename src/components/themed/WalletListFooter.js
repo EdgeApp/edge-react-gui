@@ -120,7 +120,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceBold
   },
   addItemText: {
-    flex: 1
+    flexShrink: 1
   },
   buyCryptoContainer: {
     backgroundColor: theme.tileBackground,
