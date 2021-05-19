@@ -31,6 +31,7 @@ const strings = {
 
   // Warning messages:
   warning_low_or_custom_fee: 'Using a low fee may increase the amount of time it takes for your transaction to confirm.',
+  warning_alphanumeric: 'Only letters and numbers can be used',
 
   // Alert component:
   alert_dropdown_alert: 'Alert! ',
@@ -633,7 +634,6 @@ const strings = {
     'FIO Addresses consist of a username and a domain. If you purchase your custom domain, only you will able to register FIO Addresses on it. FIO Address registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.',
   fio_address_reg_free: 'Register Free FIO Address',
   fio_domain_label: 'FIO Domain',
-  fio_domain_register_alphanumeric_error: 'Only letters and numbers can be used',
   fio_domain_free: 'Free',
   fio_address_wallet_selection_text:
     'FIO Address requires an annual fee. This payment is required by the FIO Protocol and not a requirement of Edge. The current annual cost is equivalent to %s FIO, but may fluctuate in the future. Each FIO Address includes a number of free actions, such as payment requests, where the mining fee is waived. Select a wallet to pay from:',

@@ -125,7 +125,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         this.setState({
           loading: false,
           isValid: false,
-          errorMessage: s.strings.fio_domain_register_alphanumeric_error
+          errorMessage: s.strings.warning_alphanumeric
         })
         return
       }
