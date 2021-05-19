@@ -5,18 +5,22 @@ import _ from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
+import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import ManageTokenRow from '../common/ManageTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { type ThemeProps, withTheme } from '../services/ThemeContext'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 
 export type ManageTokensOwnProps = {
@@ -32,14 +36,14 @@ export type ManageTokensStateProps = {
   settingsCustomTokens: CustomTokenInfo[]
 }
 
-type ManageTokensProps = ManageTokensOwnProps & ManageTokensDispatchProps & ManageTokensStateProps
+type ManageTokensProps = ManageTokensOwnProps & ManageTokensDispatchProps & ManageTokensStateProps & ThemeProps
 
 type State = {
   enabledList: string[],
   combinedCurrencyInfos: EdgeMetaToken[]
 }
 
-export default class ManageTokens extends React.Component<ManageTokensProps, State> {
+class ManageTokensScene extends React.Component<ManageTokensProps, State> {
   constructor(props: ManageTokensProps) {
     super(props)
     this.state = {
@@ -241,3 +245,18 @@ const rawStyles = {
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+
+const mapStateToProps = (state: RootState, ownProps: ManageTokensOwnProps): ManageTokensStateProps => ({
+  manageTokensPending: state.ui.wallets.manageTokensPending,
+  guiWallet: ownProps.guiWallet,
+  settingsCustomTokens: state.ui.settings.customTokens
+})
+
+const mapDispatchToProps = (dispatch: Dispatch): ManageTokensDispatchProps => ({
+  setEnabledTokensList: (walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) => {
+    dispatch(setWalletEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
+    dispatch(checkEnabledTokensArray(walletId, enabledTokens))
+  }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ManageTokensScene))
