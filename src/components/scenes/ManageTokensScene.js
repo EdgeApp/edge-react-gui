@@ -3,15 +3,13 @@
 import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import * as React from 'react'
-import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native'
+import { FlatList, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type RootState } from '../../types/reduxTypes.js'
@@ -21,7 +19,9 @@ import * as UTILS from '../../util/utils'
 import ManageTokenRow from '../common/ManageTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext'
+import SceneFooter from '../themed/SceneFooter'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
+import { SecondaryButton } from '../themed/ThemedButtons'
 
 export type ManageTokensOwnProps = {
   guiWallet: GuiWallet
@@ -131,30 +131,16 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
                 style={styles.tokenList}
               />
             </View>
-            {specialCurrencyInfo.isCustomTokensSupported ? (
-              <View style={styles.buttonsArea}>
-                <PrimaryButton style={styles.saveButton} onPress={this.saveEnabledTokenList}>
-                  {manageTokensPending ? (
-                    <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
-                  ) : (
-                    <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_save}</PrimaryButton.Text>
-                  )}
-                </PrimaryButton>
-                <SecondaryButton style={styles.addButton} onPress={this.goToAddTokenScene}>
-                  <SecondaryButton.Text style={styles.buttonText}>{s.strings.addtoken_add}</SecondaryButton.Text>
-                </SecondaryButton>
-              </View>
-            ) : (
-              <View style={styles.buttonsArea}>
-                <PrimaryButton style={styles.oneButton} onPress={this.saveEnabledTokenList}>
-                  {manageTokensPending ? (
-                    <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
-                  ) : (
-                    <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_save}</PrimaryButton.Text>
-                  )}
-                </PrimaryButton>
-              </View>
-            )}
+            <SceneFooter style={styles.buttonsArea} underline>
+              <SecondaryButton
+                label={s.strings.string_save}
+                spinner={manageTokensPending}
+                onPress={this.saveEnabledTokenList}
+                marginRem={[0.75]}
+                paddingRem={[0.3, 2.3, 0.5, 2.3]}
+              />
+              <SecondaryButton label={s.strings.addtoken_add} onPress={this.goToAddTokenScene} marginRem={[0.75]} paddingRem={[0.3, 0.5, 0.5, 0.5]} />
+            </SceneFooter>
           </View>
         </View>
       </SceneWrapper>
