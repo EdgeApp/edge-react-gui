@@ -304,7 +304,7 @@ export class MainComponent extends React.Component<Props> {
                 renderRightButton={this.renderEmptyButton()}
                 navTransparent
                 component={ifLoggedIn(ManageTokensScene)}
-                renderTitle={<HeaderTitle title={s.strings.title_manage_tokens} />}
+                renderTitle=""
                 animation="fade"
                 duration={600}
               />
@@ -471,7 +471,7 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.MANAGE_TOKENS_NOT_USED}
               navTransparent
               component={ifLoggedIn(ManageTokensScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_manage_tokens} />}
+              renderTitle=""
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
             />

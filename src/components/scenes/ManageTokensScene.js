@@ -8,15 +8,14 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
-import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
-import * as UTILS from '../../util/utils'
-import { getTokens, TokenRow } from '../common/ManageTokens'
+import { getTokens, TokenRow, TokensHeader } from '../common/ManageTokens'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import SceneFooter from '../themed/SceneFooter'
+import { SceneHeader } from '../themed/SceneHeader'
 import { SecondaryButton } from '../themed/ThemedButtons'
 
 export type ManageTokensOwnProps = {
@@ -73,7 +72,7 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
   }
 
   render() {
-    const { metaTokens, currencyCode } = this.props.guiWallet
+    const { metaTokens, name, currencyCode } = this.props.guiWallet
     const { manageTokensPending } = this.props
 
     const tokens = getTokens({
@@ -90,6 +89,9 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
     return (
       <SceneWrapper>
         <View style={styles.container}>
+          <SceneHeader underline>
+            <TokensHeader walletName={name} walletId={this.props.guiWallet.id} currencyCode={currencyCode} />
+          </SceneHeader>
           <View style={styles.tokensWrapper}>
             <View style={styles.tokensArea}>
               <FlatList
