@@ -3,7 +3,7 @@
 import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import * as React from 'react'
-import { FlatList, StyleSheet, View } from 'react-native'
+import { FlatList, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -11,14 +11,12 @@ import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/W
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
-import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
 import ManageTokenRow from '../common/ManageTokenRow.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { type ThemeProps, withTheme } from '../services/ThemeContext'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import SceneFooter from '../themed/SceneFooter'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SecondaryButton } from '../themed/ThemedButtons'
@@ -106,15 +104,19 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
       }
     }
 
+    const { theme } = this.props
+
+    const styles = getStyles(theme)
+
     return (
       <SceneWrapper background="body">
         <SettingsHeaderRow text={name} />
         <View style={styles.container}>
-          <View style={styles.instructionalArea}>
-            <Text style={styles.instructionalText}>{s.strings.managetokens_top_instructions}</Text>
+          <View>
+            <Text>{s.strings.managetokens_top_instructions}</Text>
           </View>
-          <View style={styles.metaTokenListArea}>
-            <View style={styles.metaTokenListWrap}>
+          <View>
+            <View>
               <FlatList
                 keyExtractor={item => item.currencyCode}
                 data={sortedTokenInfo}
@@ -128,7 +130,6 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
                     metaTokens={this.props.guiWallet.metaTokens}
                   />
                 )}
-                style={styles.tokenList}
               />
             </View>
             <SceneFooter style={styles.buttonsArea} underline>
@@ -172,65 +173,25 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
   }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     position: 'relative',
-    flex: 1,
-    backgroundColor: THEME.COLORS.WHITE,
-    paddingBottom: scale(50)
-  },
-  instructionalArea: {
-    paddingVertical: scale(16),
-    paddingHorizontal: scale(20)
-  },
-  instructionalText: {
-    fontSize: scale(16),
-    textAlign: 'center'
-  },
-  metaTokenListArea: {
-    borderTopWidth: 1,
-    borderTopColor: THEME.COLORS.GRAY_3,
     flex: 1
   },
-  metaTokenListWrap: {
+  tokensWrapper: {
     flex: 1
   },
-  tokenList: {
-    flex: 1
+  tokensArea: {
+    flex: 4
   },
-
   buttonsArea: {
-    height: scale(52),
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    alignSelf: 'flex-end',
-    paddingVertical: scale(4),
-    paddingHorizontal: scale(20)
-  },
-  addButton: {
-    flex: 1,
-    marginLeft: scale(2),
-    backgroundColor: THEME.COLORS.GRAY_2,
-    borderRadius: 3
-  },
-  buttonText: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(17.5)
-  },
-  saveButton: {
-    flex: 1,
-    marginRight: scale(2),
-    backgroundColor: THEME.COLORS.SECONDARY,
-    borderRadius: 3
-  },
-  oneButton: {
-    flex: 1,
-    backgroundColor: THEME.COLORS.SECONDARY,
-    borderRadius: 3
+    alignSelf: 'stretch'
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
 
 const mapStateToProps = (state: RootState, ownProps: ManageTokensOwnProps): ManageTokensStateProps => ({
   manageTokensPending: state.ui.wallets.manageTokensPending,
