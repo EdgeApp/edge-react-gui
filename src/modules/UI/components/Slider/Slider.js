@@ -1,7 +1,6 @@
 // @flow
 
-// $FlowFixMe
-import React, { useEffect, useState } from 'react'
+import * as React from 'react'
 import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
 import { PanGestureHandler } from 'react-native-gesture-handler'
 import Animated, { Easing, runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
@@ -10,6 +9,7 @@ import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.p
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
 import { EdgeText } from '../../../../components/themed/EdgeText'
 import s from '../../../../locales/strings.js'
+import { useEffect, useState } from '../../../../util/hooks.js'
 
 const COMPLETE_POINT: number = 3
 
