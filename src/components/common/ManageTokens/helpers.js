@@ -41,5 +41,11 @@ export const getTokens = (props: getTokensProps) => {
       sortedTokenInfo.unshift(tokenInfo)
     }
   }
+
   return sortedTokenInfo
+}
+
+export const getFilteredTokens = (searchValue: string, tokens: EdgeMetaToken[]) => {
+  const RegexObj = new RegExp(searchValue, 'i')
+  return tokens.filter(({ currencyCode, currencyName }) => RegexObj.test(currencyCode) || RegexObj.test(currencyName))
 }

@@ -11,7 +11,7 @@ import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/W
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
-import { getTokens, TokenRow, TokensHeader } from '../common/ManageTokens'
+import { getFilteredTokens, getTokens, TokenRow, TokensHeader } from '../common/ManageTokens'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import SceneFooter from '../themed/SceneFooter'
@@ -35,16 +35,36 @@ type ManageTokensProps = ManageTokensOwnProps & ManageTokensDispatchProps & Mana
 
 type State = {
   enabledList: string[],
-  combinedCurrencyInfos: EdgeMetaToken[]
+  combinedCurrencyInfos: EdgeMetaToken[],
+  tokens: EdgeMetaToken[],
+  searchValue: string
 }
 
 class ManageTokensScene extends React.Component<ManageTokensProps, State> {
   constructor(props: ManageTokensProps) {
     super(props)
+
+    const { metaTokens, currencyCode, enabledTokens } = this.props.guiWallet
+
     this.state = {
-      enabledList: [...this.props.guiWallet.enabledTokens],
-      combinedCurrencyInfos: []
+      enabledList: [...enabledTokens],
+      combinedCurrencyInfos: [],
+      tokens: getTokens({
+        metaTokens,
+        customTokens: this.props.settingsCustomTokens,
+        currencyCode,
+        guiWalletType: this.props.guiWallet.type
+      }),
+      searchValue: ''
     }
+  }
+
+  getFilteredTokensHandler() {
+    return getFilteredTokens(this.state.searchValue, this.state.tokens)
+  }
+
+  changeSearchValue = value => {
+    this.setState({ searchValue: value })
   }
 
   toggleToken = (currencyCode: string) => {
@@ -72,15 +92,8 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
   }
 
   render() {
-    const { metaTokens, name, currencyCode } = this.props.guiWallet
+    const { name, currencyCode } = this.props.guiWallet
     const { manageTokensPending } = this.props
-
-    const tokens = getTokens({
-      metaTokens,
-      customTokens: this.props.settingsCustomTokens,
-      currencyCode,
-      guiWalletType: this.props.guiWallet.type
-    })
 
     const { theme } = this.props
 
@@ -90,13 +103,19 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
       <SceneWrapper>
         <View style={styles.container}>
           <SceneHeader underline>
-            <TokensHeader walletName={name} walletId={this.props.guiWallet.id} currencyCode={currencyCode} />
+            <TokensHeader
+              walletName={name}
+              walletId={this.props.guiWallet.id}
+              currencyCode={currencyCode}
+              changeSearchValue={this.changeSearchValue}
+              searchValue={this.state.searchValue}
+            />
           </SceneHeader>
           <View style={styles.tokensWrapper}>
             <View style={styles.tokensArea}>
               <FlatList
                 keyExtractor={item => item.currencyCode}
-                data={tokens}
+                data={this.getFilteredTokensHandler()}
                 renderItem={metaToken => (
                   <TokenRow
                     goToEditTokenScene={this.goToEditTokenScene}

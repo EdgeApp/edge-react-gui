@@ -13,14 +13,15 @@ import { WalletProgressIcon } from '../../themed/WalletProgressIcon.js'
 type Props = {
   sorting?: boolean,
   searching?: boolean,
-  searchText?: string,
   walletId: string,
   walletName: string,
-  currencyCode: string
+  currencyCode: string,
+  changeSearchValue: (value: string) => void,
+  searchValue: string
 }
 
 function TokensHeader(props: Props) {
-  const { searchText, currencyCode, walletName, walletId } = props
+  const { currencyCode, walletName, walletId, changeSearchValue, searchValue } = props
 
   const theme = useTheme()
 
@@ -39,8 +40,8 @@ function TokensHeader(props: Props) {
           <EdgeTextFieldOutlined
             returnKeyType="search"
             label={s.strings.search_tokens}
-            onChangeText={this.handleOnChangeText}
-            value={searchText}
+            onChangeText={changeSearchValue}
+            value={searchValue}
             onFocus={this.handleTextFieldFocus}
             ref={this.textInput}
             onClear={this.clearText}
