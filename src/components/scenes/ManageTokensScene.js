@@ -10,15 +10,13 @@ import { connect } from 'react-redux'
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
-import ManageTokenRow from '../common/ManageTokenRow.js'
+import { TokenRow } from '../common/ManageTokens'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import SceneFooter from '../themed/SceneFooter'
-import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SecondaryButton } from '../themed/ThemedButtons'
 
 export type ManageTokensOwnProps = {
@@ -75,7 +73,7 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
   }
 
   render() {
-    const { metaTokens, name, currencyCode } = this.props.guiWallet
+    const { metaTokens, currencyCode } = this.props.guiWallet
     const { manageTokensPending } = this.props
     let accountMetaTokenInfo = []
     const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
@@ -109,22 +107,19 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper background="body">
-        <SettingsHeaderRow text={name} />
+      <SceneWrapper>
         <View style={styles.container}>
-          <View>
-            <Text>{s.strings.managetokens_top_instructions}</Text>
-          </View>
-          <View>
-            <View>
+          <View style={styles.tokensWrapper}>
+            <View style={styles.tokensArea}>
               <FlatList
                 keyExtractor={item => item.currencyCode}
                 data={sortedTokenInfo}
                 renderItem={metaToken => (
-                  <ManageTokenRow
+                  <TokenRow
                     goToEditTokenScene={this.goToEditTokenScene}
                     metaToken={metaToken}
                     walletId={this.props.guiWallet.id}
+                    symbolImage={this.props.guiWallet.symbolImage}
                     toggleToken={this.toggleToken}
                     enabledList={this.state.enabledList}
                     metaTokens={this.props.guiWallet.metaTokens}
