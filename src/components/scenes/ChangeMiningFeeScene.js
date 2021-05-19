@@ -9,7 +9,7 @@ import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { connect } from 'react-redux'
 
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions.js'
-import { removeDefaultFeeSetting, setDefaultFeeSetting } from '../../actions/SettingsActions.js'
+import { setDefaultFeeSetting } from '../../actions/SettingsActions.js'
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants.js'
 import { save } from '../../locales/en_US.js'
 import s from '../../locales/strings.js'
@@ -68,7 +68,7 @@ export class ChangeMiningFee extends React.Component<Props, State> {
 
     const currentDefault = props.currencySettings?.defaultFee ?? 'none'
     if (currentDefault !== 'none') {
-      networkFeeOption = (props.currencySettings?.defaultFee: any)
+      networkFeeOption = (currentDefault: any)
       isDefault = true
     }
 
@@ -272,15 +272,17 @@ export const ChangeMiningFeeScene = connect(
       walletId: string,
       currencyCode?: string
     ) {
-      console.log(`273: currentDefault: ${currentDefault}`)
-      console.log(`274: networkFeeOption: ${networkFeeOption}`)
-      console.log(`274: isDefault: ${isDefault.toString()}`)
-      if (currencyCode && currentDefault !== networkFeeOption && isDefault) {
-        // Isn't same as currently set fee option
-        dispatch(setDefaultFeeSetting(currencyCode, networkFeeOption, customFee))
-      } else if (currencyCode && currentDefault !== 'none' && !isDefault) {
-        // Isn't already turned off
-        dispatch(setDefaultFeeSetting(currencyCode, 'none', customFee))
+      const outDated = currentDefault !== networkFeeOption || currentDefault === 'standard'
+      const currentlyOff = currentDefault === 'none'
+      if (currencyCode) {
+        if (outDated && isDefault) {
+          // Set default fee
+          dispatch(setDefaultFeeSetting(currencyCode, networkFeeOption, customFee))
+        }
+        if (!currentlyOff && !isDefault) {
+          // Turn off default fee
+          dispatch(setDefaultFeeSetting(currencyCode, 'none', customFee))
+        }
       }
       dispatch(sendConfirmationUpdateTx({ networkFeeOption, customFee }))
     }

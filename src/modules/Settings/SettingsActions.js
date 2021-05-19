@@ -59,12 +59,6 @@ export const setDefaultFee = (currencyCode: string, defaultFee: DefaultFeeOption
   data: { currencyCode: currencyCode, defaultFee: defaultFee, customFee: customFee }
 })
 
-// Remove Default Fee
-export const removeDefaultFee = (currencyCode: string) => ({
-  type: 'UI/SETTINGS/REMOVE_DEFAULT_FEE',
-  data: { currencyCode: currencyCode, defaultFee: 'none' }
-})
-
 // touch id settings
 export const updateTouchIdEnabled = (bool: boolean) => ({
   type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS',

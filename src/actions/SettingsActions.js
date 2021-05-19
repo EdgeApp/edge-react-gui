@@ -1,6 +1,6 @@
 // @flow
 
-import { createInputModal, createSecureTextModal } from 'edge-components'
+import { createSecureTextModal } from 'edge-components'
 import type { EdgeAccount, JsonObject } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
@@ -135,19 +135,11 @@ export const setDefaultFeeSetting = (currencyCode: string, defaultFee: DefaultFe
   const state = getState()
   const { account } = state.core
 
-  return ACCOUNT_SETTINGS.saveDefaultFeeSetting(account, currencyCode, defaultFee, customFee)
-    .then(() => dispatch(SETTINGS_ACTIONS.setDefaultFee(currencyCode, defaultFee, customFee)))
-    .catch(showError)
-}
+  // Save to disk
+  ACCOUNT_SETTINGS.saveDefaultFeeSetting(account, currencyCode, defaultFee, customFee).catch(showError)
 
-export const removeDefaultFeeSetting = (currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
-  // Thunk
-  const state = getState()
-  const { account } = state.core
-
-  return ACCOUNT_SETTINGS.removeDefaultFeeSetting(account, currencyCode)
-    .then(() => dispatch(SETTINGS_ACTIONS.removeDefaultFee(currencyCode)))
-    .catch(showError)
+  // Update Redux
+  return dispatch(SETTINGS_ACTIONS.setDefaultFee(currencyCode, defaultFee, customFee))
 }
 
 // touch id interaction

@@ -131,8 +131,8 @@ export function SwitchButton(props: SwitchButtonProps) {
 
   return (
     <View style={styles.row}>
-      {label != null ? <Text style={styles.primaryText}>{label}</Text> : null}
-      <TouchableWithoutFeedback style={[styles.secondaryButton, spacingStyles(props, theme)]} onChange={onChange} disabled={value}>
+      {label != null ? <Text style={(styles.primaryText, spacingStyles({ marginRem: [0, 0, 0, 0], paddingRem: [0, 5, 0, 0] }, theme))}>{label}</Text> : null}
+      <TouchableWithoutFeedback style={(styles.secondaryButton, styles.rightSwitch)} onChange={onChange} disabled={value}>
         <Switch value={value} onChange={onChange} />
       </TouchableWithoutFeedback>
     </View>
@@ -213,6 +213,10 @@ const getStyles = cacheStyles((theme: Theme) => {
       ...commonButton,
       backgroundColor: theme.secondaryButton,
       borderColor: theme.secondaryButtonOutline
+    },
+    rightSwitch: {
+      alignItems: 'flex-end',
+      justifyContent: 'flex-end'
     },
     secondaryText: {
       ...commonText,

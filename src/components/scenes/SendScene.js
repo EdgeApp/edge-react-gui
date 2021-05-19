@@ -27,7 +27,6 @@ import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAd
 import { Slider } from '../../modules/UI/components/Slider/Slider.ui'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
-import type { CurrencySetting } from '../../reducers/scenes/SettingsReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
@@ -51,7 +50,6 @@ type StateProps = {
   authRequired: 'pin' | 'none',
   defaultSelectedWalletId: string,
   defaultSelectedWalletCurrencyCode: string,
-  currencySettings?: CurrencySetting,
   error: Error | null,
   exchangeRates: ExchangeRatesState,
   lockInputs?: boolean,
