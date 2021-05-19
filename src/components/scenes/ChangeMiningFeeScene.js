@@ -70,7 +70,7 @@ export class ChangeMiningFee extends React.Component<Props, State> {
   onSubmit = () => {
     const { networkFeeOption, customNetworkFee } = this.state
     const { currencyCode, wallet, spendTargets = [] } = this.props
-    const testSpendInfo = { spendTargets, networkFeeOption, customNetworkFee }
+    const testSpendInfo = { spendTargets, networkFeeOption, customNetworkFee, currencyCode }
     wallet
       .makeSpend(testSpendInfo)
       .then(() => {
