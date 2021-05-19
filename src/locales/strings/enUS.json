@@ -22,6 +22,7 @@
   "scan_qr_label": "Scan QR",
   "error_token_exists": "A currency named %s already exists",
   "warning_low_or_custom_fee": "Using a low fee may increase the amount of time it takes for your transaction to confirm.",
+  "warning_alphanumeric": "Only letters and numbers can be used",
   "alert_dropdown_alert": "Alert! ",
   "alert_dropdown_warning": "Warning! ",
   "azteco_success": "You've redeemed an Azteco bitcoin card. Funds should arrive shortly.",

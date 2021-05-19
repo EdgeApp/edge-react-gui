@@ -38,7 +38,8 @@ type State = {
   isAvailable: boolean,
   fieldPos: number,
   inputWidth: number,
-  showFreeAddressLink: boolean
+  showFreeAddressLink: boolean,
+  errorMessage: string
 }
 
 type StateProps = {
@@ -68,7 +69,8 @@ class FioAddressRegister extends React.Component<Props, State> {
     domainsLoading: true,
     fieldPos: 200,
     inputWidth: 0,
-    showFreeAddressLink: false
+    showFreeAddressLink: false,
+    errorMessage: ''
   }
 
   componentDidMount() {
@@ -181,7 +183,8 @@ class FioAddressRegister extends React.Component<Props, State> {
 
   checkFioAddress(fioAddress: string, domain: string, isCustomDomain: boolean = false) {
     this.setState({
-      loading: true
+      loading: true,
+      errorMessage: ''
     })
     this.fioCheckQueue++
     setTimeout(async () => {
@@ -202,13 +205,24 @@ class FioAddressRegister extends React.Component<Props, State> {
           })
         }
       }
+
+      if (/[^\p{L}\p{N}]+/gu.test(fioAddress)) {
+        this.setState({
+          loading: false,
+          isValid: false,
+          errorMessage: s.strings.warning_alphanumeric
+        })
+        return
+      }
+
       try {
         const fullAddress = `${fioAddress}${Constants.FIO_ADDRESS_DELIMITER}${domain}`
         const isAvailable = fioPlugin.otherMethods ? await fioPlugin.otherMethods.validateAccount(fullAddress) : false
         this.setState({
           isValid: true,
           isAvailable,
-          loading: false
+          loading: false,
+          errorMessage: ''
         })
       } catch (e) {
         this.setState({
@@ -337,7 +351,7 @@ class FioAddressRegister extends React.Component<Props, State> {
   }
 
   renderErrorMessage() {
-    const { fioAddress, isAvailable, isValid, loading } = this.state
+    const { fioAddress, isAvailable, isValid, loading, errorMessage } = this.state
     const styles = getStyles(this.props.theme)
     let chooseHandleErrorMessage = ''
 
@@ -349,8 +363,13 @@ class FioAddressRegister extends React.Component<Props, State> {
     if (fioAddress && !isAvailable) {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_not_available
     }
+
     if (fioAddress && !isValid) {
       chooseHandleErrorMessage = s.strings.fio_error_invalid_address
+    }
+
+    if (fioAddress && !isValid && errorMessage) {
+      chooseHandleErrorMessage = errorMessage
     }
 
     return <EdgeText style={styles.errorMessage}>{chooseHandleErrorMessage}</EdgeText>
