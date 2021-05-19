@@ -2,22 +2,29 @@
 
 import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
-import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
-import { sprintf } from 'sprintf-js'
+import { Image, Platform, ScrollView, View } from 'react-native'
+import IonIcon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
 
+import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
 import { swapPluginLogos } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
-import { ExchangeQuoteComponent } from '../../modules/UI/components/ExchangeQuote/ExchangeQuoteComponent.js'
-import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
-import { THEME } from '../../theme/variables/airbitz.js'
+import { Slider } from '../../modules/UI/components/Slider/Slider'
+import type { RootState } from '../../reducers/RootReducer'
+import type { Dispatch } from '../../types/reduxTypes'
 import { type GuiSwapInfo } from '../../types/types.js'
-import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
 import { CircleTimer } from '../common/CircleTimer'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { ButtonsModal } from '../modals/ButtonsModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal.js'
-import { showError } from '../services/AirshipInstance.js'
+import { Airship, showError } from '../services/AirshipInstance'
+import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { Card } from '../themed/Card'
+import { EdgeText } from '../themed/EdgeText'
+import { ExchangeQuote } from '../themed/ExchangeQuoteComponent.js'
+import { LineTextDivider } from '../themed/LineTextDivider'
+import { ClickableText } from '../themed/ThemedButtons'
 
 export type OwnProps = {
   swapInfo: GuiSwapInfo
@@ -36,7 +43,7 @@ export type DispatchProps = {
   shift(swapInfo: GuiSwapInfo): mixed,
   timeExpired(swapInfo: GuiSwapInfo): void
 }
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type State = {}
 
@@ -44,18 +51,17 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
   calledApprove: true
 
   componentDidMount = () => {
-    const { swapInfo } = this.props
-    const { pluginId } = swapInfo.quote
-    if (pluginId === 'changelly') {
-      this.checkChangellyKYC().catch(showError)
-    } else if (pluginId === 'changenow') {
-      this.checkChangeNowKYC().catch(showError)
-    } else if (pluginId === 'coinswitch') {
-      this.checkCoinswitchKYC().catch(showError)
-    } else if (pluginId === 'foxExchange') {
-      this.checkFoxExchangeKYC().catch(showError)
-    } else if (pluginId === 'switchain') {
-      this.checkSwitchainKYC().catch(showError)
+    const check = {
+      changelly: this.checkChangellyKYC,
+      changenow: this.checkChangeNowKYC,
+      coinswitch: this.checkCoinswitchKYC,
+      foxExchange: this.checkFoxExchangeKYC,
+      switchain: this.checkSwitchainKYC
+    }
+    try {
+      if (check[this.props.swapInfo.quote.pluginId]) check[this.props.swapInfo.quote.pluginId]()
+    } catch (e) {
+      showError(e)
     }
     logEvent('SwapQuote')
   }
@@ -69,14 +75,6 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const { shift, swapInfo } = this.props
     this.calledApprove = true
     shift(swapInfo)
-  }
-
-  renderSlider = () => {
-    const { pending } = this.props
-    if (pending) {
-      return <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={{ flex: 1, alignSelf: 'center' }} size="small" />
-    }
-    return <Slider onSlidingComplete={this.doShift} sliderDisabled={pending} parentStyle={styles.slideContainer} />
   }
 
   renderTimer = () => {
@@ -166,90 +164,154 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     if (!result) timeExpired(swapInfo)
   }
 
+  showExplanationForEstimate = () => {
+    Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.estimated_exchange_rate}
+        message={s.strings.estimated_exchange_rate_body}
+        buttons={{ ok: { label: s.strings.string_ok } }}
+      />
+    ))
+  }
+
   render() {
-    const { fromCurrencyIcon, fromDenomination, fromWalletCurrencyName, swapInfo, toCurrencyIcon, toDenomination, toWalletCurrencyName } = this.props
-    const { fee, fromDisplayAmount, fromFiat, toDisplayAmount, toFiat } = swapInfo
+    const {
+      fromCurrencyIcon,
+      fromDenomination,
+      fromWalletCurrencyName,
+      swapInfo,
+      toCurrencyIcon,
+      toDenomination,
+      toWalletCurrencyName,
+      pending,
+      theme
+    } = this.props
+    const { fee, fromDisplayAmount, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
     const { isEstimate, pluginId } = swapInfo.quote
     const { fromWallet, toWallet } = swapInfo.request
+    const styles = getStyles(theme)
 
     return (
-      <SceneWrapper background="header">
+      <SceneWrapper background="theme">
         <ScrollView>
           <View style={styles.topLogoRow}>
             <Image source={swapPluginLogos[pluginId]} resizeMode="contain" style={styles.logoImage} />
           </View>
-          <View style={styles.centerRow}>
-            <ExchangeQuoteComponent
-              cryptoAmount={fromDisplayAmount}
-              currency={fromWalletCurrencyName}
-              currencyCode={fromDenomination}
-              fiatCurrencyAmount={fromFiat}
-              fiatCurrencyCode={fromWallet.fiatCurrencyCode.replace('iso:', '')}
-              headline={sprintf(s.strings.exchange_will_be_sent, fromDisplayAmount, fromDenomination)}
-              isTop
-              miningFee={fee}
-              walletIcon={fromCurrencyIcon}
-              walletName={fromWallet.name || ''}
-            />
-            <ExchangeQuoteComponent
-              cryptoAmount={toDisplayAmount}
-              currency={toWalletCurrencyName}
-              currencyCode={toDenomination}
-              fiatCurrencyAmount={toFiat}
-              fiatCurrencyCode={toWallet.fiatCurrencyCode.replace('iso:', '')}
-              headline={sprintf(s.strings.exchange_will_be_received, toDisplayAmount, toDenomination)}
-              isEstimate={isEstimate}
-              walletIcon={toCurrencyIcon}
-              walletName={toWallet.name || ''}
-            />
-          </View>
-          <View style={styles.confirmTextRow}>
-            <FormattedText style={styles.confirmText}>{s.strings.confirm_to_complete_exchange}</FormattedText>
-          </View>
-          <View style={styles.bottomRow}>
-            {this.renderSlider()}
-            {this.renderTimer()}
-          </View>
-          <View style={{ height: 200 }} />
+          <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
+          <ExchangeQuote
+            cryptoAmount={fromDisplayAmount}
+            currency={fromWalletCurrencyName}
+            currencyCode={fromDenomination}
+            fiatCurrencyAmount={fromFiat}
+            fiatCurrencyCode={fromWallet.fiatCurrencyCode.replace('iso:', '')}
+            isTop
+            miningFee={fee}
+            total={fromTotalFiat}
+            walletIcon={fromCurrencyIcon}
+            walletName={fromWallet.name || ''}
+          />
+          <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
+          <ExchangeQuote
+            cryptoAmount={toDisplayAmount}
+            currency={toWalletCurrencyName}
+            currencyCode={toDenomination}
+            fiatCurrencyAmount={toFiat}
+            fiatCurrencyCode={toWallet.fiatCurrencyCode.replace('iso:', '')}
+            walletIcon={toCurrencyIcon}
+            walletName={toWallet.name || ''}
+          />
+          {isEstimate && (
+            <Card warning marginRem={[1.5, 1, 0]}>
+              <ClickableText paddingRem={0} onPress={this.showExplanationForEstimate}>
+                <View style={styles.estimatedContainer}>
+                  <IonIcon
+                    name={Platform.OS === 'ios' ? 'ios-information-circle-outline' : 'md-information-circle-outline'}
+                    color={theme.warningIcon}
+                    size={theme.rem(1.25)}
+                  />
+                  <EdgeText style={styles.estimatedTitle}>{s.strings.estimated_quote}</EdgeText>
+                </View>
+                <EdgeText style={styles.estimatedText} numberOfLines={2}>
+                  {s.strings.estimated_exchange_message}
+                </EdgeText>
+              </ClickableText>
+            </Card>
+          )}
+          <Slider parentStyle={styles.slider} onSlidingComplete={this.doShift} disabled={pending} showSpinner={pending} />
+          {this.renderTimer()}
+          <View style={styles.spacer} />
         </ScrollView>
       </SceneWrapper>
     )
   }
 }
 
-const rawStyles = {
+const getStyles = cacheStyles((theme: Theme) => ({
   topLogoRow: {
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingTop: scale(8),
-    height: scale(55),
-    paddingBottom: 4
+    paddingTop: theme.rem(0.5),
+    height: theme.rem(3.25),
+    paddingBottom: theme.rem(0.25)
   },
   logoImage: {
     position: 'relative',
     maxWidth: '70%',
     resizeMode: 'contain'
   },
-  centerRow: {
+  estimatedContainer: {
+    marginBottom: theme.rem(0.25),
+    flexDirection: 'row',
     alignItems: 'center'
   },
-  confirmTextRow: {
-    paddingVertical: scale(12),
-    alignItems: 'center',
-    justifyContent: 'center'
+  estimatedTitle: {
+    color: theme.warningText,
+    marginLeft: theme.rem(0.5),
+    fontSize: theme.rem(0.75),
+    fontWeight: '600'
   },
-  bottomRow: {
+  estimatedText: {
+    fontSize: theme.rem(0.75),
+    color: theme.warningText
+  },
+  slider: {
+    marginTop: theme.rem(1.5),
     alignItems: 'center'
   },
-  slideContainer: {
-    height: scale(35),
-    width: 270
-  },
-  confirmText: {
-    color: THEME.COLORS.WHITE,
-    fontSize: scale(14),
-    width: '100%',
-    textAlign: 'center'
+  spacer: {
+    height: theme.rem(8)
   }
-}
-const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+}))
+
+export const CryptoExchangeQuote = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => {
+    const { request } = ownProps.swapInfo
+
+    const { account } = state.core
+    const fromWallet = state.cryptoExchange.fromWallet
+    const toWallet = state.cryptoExchange.toWallet
+
+    const toWalletCurrencyName = toWallet != null ? toWallet.currencyNames[request.toCurrencyCode] : ''
+    const fromWalletCurrencyName = fromWallet != null ? fromWallet.currencyNames[request.fromCurrencyCode] : ''
+
+    return {
+      account,
+      fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon || '',
+      fromDenomination: state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
+      fromWalletCurrencyName,
+      pending: state.cryptoExchange.shiftPendingTransaction,
+      toCurrencyIcon: state.cryptoExchange.toCurrencyIcon || '',
+      toDenomination: state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
+      toWalletCurrencyName
+    }
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    shift(swapInfo: GuiSwapInfo) {
+      dispatch(shiftCryptoCurrency(swapInfo))
+    },
+    timeExpired(swapInfo: GuiSwapInfo) {
+      dispatch(exchangeTimerExpired(swapInfo))
+    }
+  })
+)(withTheme(CryptoExchangeQuoteScreenComponent))

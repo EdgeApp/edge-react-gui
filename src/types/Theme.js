@@ -91,8 +91,12 @@ export type Theme = {
 
   buttonBoxShadow: string,
 
+  // Card
   // cardBackground: string,
   // cardShadow: string,
+  cardBorder: number,
+  cardBorderColor: string,
+  cardBorderRadius: number,
 
   tabBarBackground: string,
   tabBarIcon: string,
@@ -126,6 +130,7 @@ export type Theme = {
 
   // Lines
   lineDivider: string,
+  titleLineDivider: string,
   // textInputLine: string,
   // orLine: string,
   // tileDivider: string,

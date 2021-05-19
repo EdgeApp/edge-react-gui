@@ -171,8 +171,6 @@
   "title_wallets": "Carteiras",
   "title_use_legacy_address": "Use o endereço legacy",
   "title_use_regular_address": "Use o endereço regular",
-  "amount_above_limit": "O valor da transação é superior ao limite máximo de %1$s %2$s",
-  "amount_below_limit": "O valor da transação está abaixo do limite mínimo de %1$s %2$s",
   "transaction_details_category_title": "Categoria",
   "transaction_details_payee": "Pagador",
   "transaction_details_view_advanced_data": "Ver os dados avançados da transação",

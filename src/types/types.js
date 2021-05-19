@@ -65,6 +65,7 @@ export type GuiSwapInfo = {
   fee: string,
   fromDisplayAmount: string,
   fromFiat: string,
+  fromTotalFiat: string,
   toDisplayAmount: string,
   toFiat: string
 }

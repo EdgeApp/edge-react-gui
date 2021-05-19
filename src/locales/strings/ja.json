@@ -250,8 +250,6 @@
   "title_use_regular_address": "通常のアドレスを使う",
   "no_exchanges_available": "取引所を有効化していません",
   "check_exchange_settings": "エクスチェンジ設定で取引所を有効化してください。",
-  "amount_above_limit": "取引数量が限度額の%1$s%2$sを越しています",
-  "amount_below_limit": "取引数量が最小限額の%1$s%2$sを下回っています",
   "transaction_details_category_title": "カテゴリー",
   "transaction_details_payee": "受取人",
   "transaction_details_view_advanced_data": "高度な取引詳細を表示",

@@ -38,7 +38,7 @@ export const updateWalletsEnabledTokens = (getState: GetState) => {
   const { currencyWallets } = account
   for (const walletId: string of Object.keys(currencyWallets)) {
     const edgeWallet: EdgeCurrencyWallet = currencyWallets[walletId]
-    if (edgeWallet.type === 'wallet:ethereum' || edgeWallet.type === 'wallet:rsk') {
+    if (edgeWallet.type === 'wallet:ethereum' || edgeWallet.type === 'wallet:rsk' || edgeWallet.type === 'wallet:fantom') {
       if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
         const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
         const customTokens = state.ui.settings.customTokens

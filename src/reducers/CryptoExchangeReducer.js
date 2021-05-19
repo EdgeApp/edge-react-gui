@@ -103,7 +103,8 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         fromDisplayAmount: '0',
         toDisplayAmount: '0',
         minerFee: '0',
-        genericShapeShiftError: null
+        genericShapeShiftError: null,
+        insufficientError: false
       }
     }
 

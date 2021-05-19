@@ -155,8 +155,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Icons
   iconContainer: {
     alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: theme.rem(1)
+    justifyContent: 'center'
   },
   iconSize: {
     width: theme.rem(2),

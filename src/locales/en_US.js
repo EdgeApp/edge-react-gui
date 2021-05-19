@@ -22,6 +22,7 @@ const strings = {
   fio_address_choose_label: 'Choose a FIO Address',
   fio_domain_choose_label: 'Choose a FIO Domain',
   fio_address_choose_domain_label: 'Choose FIO Domain for Your Address',
+  fio_address_expired: 'The FIO address has expired',
 
   scan_qr_label: 'Scan QR',
 
@@ -47,6 +48,9 @@ const strings = {
     'WARNING: The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',
   exchange_failed: 'Exchange Failed',
   exchange_succeeded: 'Exchange Succeeded',
+  exchange_congratulations: 'Congratulations!',
+  exchange_congratulations_msg: 'Your exchange has been successfully completed!',
+  exchange_congratulations_msg_info: 'Exchanges may take a few minutes and up to 24 hours to process.',
   no_exchange_amount: 'No Amount Selected',
   select_exchange_amount: 'Please enter an amount to exchange',
   select_exchange_amount_short: 'Enter an Amount',
@@ -338,6 +342,7 @@ const strings = {
   string_first_bnb_wallet_name: 'My BNB',
   string_first_eboost_wallet_name: 'My eBoost',
   string_first_doge_wallet_name: 'My Doge',
+  string_first_fantom_wallet_name: 'My Fantom',
   my_crypto_wallet_name: 'My %s',
   string_help: 'Help',
   string_exit: 'Exit',
@@ -550,6 +555,7 @@ const strings = {
   pin: 'PIN',
 
   just_a_moment: 'Just a moment',
+  hang_tight: 'Hang tight',
   trying_to_find: 'Searching for the best exchange rate...',
   exchange_will_be_sent: '%1$s %2$s will be sent',
   exchange_will_be_received: '%1$s %2$s will be received',
@@ -596,6 +602,7 @@ const strings = {
   estimated_exchange_rate: 'Estimated Exchange Rate',
   estimated_exchange_rate_body:
     'No exchange providers are able to provide a fixed quote for the exchange requested. This exchange may result in less funds received than quoted.',
+  estimated_exchange_message: 'The amount above is an estimate. This exchange may result in less funds received than quoted.',
   buy_sell_crypto_select_country_button: 'Select your region',
   buy_sell_crypto_no_plugin_region: "We're sorry but there are no available plugins for your region.",
   user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
@@ -766,6 +773,7 @@ const strings = {
   string_status: 'Status',
   string_enter: 'Enter',
   string_fee: 'Fee',
+  string_total_amount: 'Total Amount',
   export_transaction_error: 'Start date should be earlier than the end date',
   export_transaction_export_error: 'No transactions in the date range chosen',
   export_transaction_loading: 'Exporting Transactions…',
@@ -793,7 +801,9 @@ const strings = {
   send_scene_send_to_address: 'Send to Address',
   send_scene_error_title: 'Error',
   send_scene_metadata_name_title: 'Payee',
-  send_make_spend_xrp_dest_tag_error: 'XRP Destination Tag must be 9 characters or less',
+  send_make_spend_xrp_dest_tag_length_error: 'XRP Destination Tag must be 10 characters or less',
+  send_make_spend_xrp_dest_tag_limit_error: 'XRP Destination Tag is above its maximum limit',
+  send_make_spend_xrp_dest_tag_format_error: 'Please enter a valid Destination Tag',
 
   // Request Scene
   request_balance: 'You have %s',

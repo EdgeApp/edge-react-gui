@@ -150,8 +150,12 @@ export const edgeLight: Theme = {
 
   buttonBoxShadow: palette.black,
 
+  // Card
   // cardBackground: palette.white,
   // cardShadow: palette.blackOp25,
+  cardBorder: 1,
+  cardBorderColor: palette.whiteOp10,
+  cardBorderRadius: 4,
 
   tabBarBackground: palette.white,
   tabBarIcon: palette.gray,
@@ -180,11 +184,12 @@ export const edgeLight: Theme = {
   confirmationSliderThumb: palette.edgeBlue,
   confirmationSliderTextDeactivated: palette.gray,
   confirmationThumbDeactivated: palette.gray,
-  confirmationSliderWidth: PLATFORM.deviceWidth >= 720 ? 680 : PLATFORM.deviceWidth - 45,
+  confirmationSliderWidth: PLATFORM.deviceWidth >= 340 ? 295 : PLATFORM.deviceWidth - 45,
   confirmationSliderThumbWidth: 55,
 
   // Lines
   lineDivider: palette.edgeBlue,
+  titleLineDivider: palette.edgeBlue,
   // textInputLine: palette.gray,
   // orLine: palette.gray,
   // tileDivider: palette.gray,
