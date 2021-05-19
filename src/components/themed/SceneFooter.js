@@ -26,7 +26,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   underline: {
     borderTopWidth: theme.thinLineWidth,
-    borderTopColor: theme.lineDivider
+    borderTopColor: theme.lineDivider,
+    marginLeft: theme.rem(1)
   },
   topMargin: {
     marginTop: theme.rem(1)
