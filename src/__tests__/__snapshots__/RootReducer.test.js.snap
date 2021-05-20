@@ -159,7 +159,6 @@ Object {
             "amountFiat": 0,
             "bizId": 0,
             "category": "",
-            "miscJson": "",
             "name": "",
             "notes": "",
           },
