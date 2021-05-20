@@ -88,13 +88,16 @@ export default class Main extends React.Component<Props> {
   }
 }
 
-const goToScene = (scene: string) => {
+const goToScene = (scene: string, sceneProps?: any) => {
   const { currentScene, drawerClose } = Actions
-  if (currentScene === scene) {
-    drawerClose()
-  } else {
-    Actions.jump(scene)
+
+  if (currentScene !== scene) {
+    Actions.jump(scene, sceneProps)
+  } else if (sceneProps) {
+    Actions.refresh(sceneProps)
   }
+
+  drawerClose()
 }
 
 const popToPluginBuyScene = () => goToScene(Constants.PLUGIN_BUY)
@@ -160,7 +163,7 @@ const WalletsButton = () => {
   )
 }
 
-const popToSendScan = () => goToScene(Constants.SCAN)
+const popToSendScan = () => goToScene(Constants.SCAN, { isSweepPrivateKey: false })
 const ScanButton = () => {
   return (
     <Button onPress={popToSendScan}>
@@ -191,7 +194,7 @@ const SweepPrivateKeyButton = (props: SweepPrivateKeyButtonProps) => {
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         onSelectWallet(walletId, currencyCode)
-        Actions.jump(Constants.SCAN, { data: 'sweepPrivateKey' })
+        Actions.jump(Constants.SCAN, { isSweepPrivateKey: true })
       }
     })
   }

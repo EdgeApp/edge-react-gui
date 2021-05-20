@@ -71,7 +71,7 @@ export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWal
   }
 }
 
-export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getState: GetState) => {
+export const parseScannedUri = (data: string, customErrorTitle?: string, customErrorDescription?: string) => async (dispatch: Dispatch, getState: GetState) => {
   if (!data) return
   const state = getState()
   const { account } = state.core
@@ -192,12 +192,16 @@ export const parseScannedUri = (data: string) => async (dispatch: Dispatch, getS
       dispatch({ type: 'DISABLE_SCAN' })
       setTimeout(
         () =>
-          Alert.alert(s.strings.scan_invalid_address_error_title, s.strings.scan_invalid_address_error_description, [
-            {
-              text: s.strings.string_ok,
-              onPress: () => dispatch({ type: 'ENABLE_SCAN' })
-            }
-          ]),
+          Alert.alert(
+            customErrorTitle || s.strings.scan_invalid_address_error_title,
+            customErrorDescription || s.strings.scan_invalid_address_error_description,
+            [
+              {
+                text: s.strings.string_ok,
+                onPress: () => dispatch({ type: 'ENABLE_SCAN' })
+              }
+            ]
+          ),
         500
       )
     }

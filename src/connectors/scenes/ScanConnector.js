@@ -19,7 +19,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   qrCodeScanned: data => dispatch(qrCodeScanned(data)),
-  parseScannedUri: data => dispatch(parseScannedUri(data)),
+  parseScannedUri: (data, customErrorTitle, customErrorDescription) => dispatch(parseScannedUri(data, customErrorTitle, customErrorDescription)),
   toggleEnableTorch: () => dispatch({ type: 'TOGGLE_ENABLE_TORCH' }),
   selectFromWalletForExchange: (walletId, currencyCode) => dispatch(selectWalletForExchange(walletId, currencyCode, 'from'))
 })

@@ -5,6 +5,7 @@ import { ActivityIndicator, Linking, StyleSheet, Text, TouchableHighlight, View 
 import { RNCamera } from 'react-native-camera'
 import RNPermissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
@@ -14,7 +15,7 @@ import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { AddressModal } from '../modals/AddressModal.js'
+import { SingleInputModal } from '../modals/SingleInputModal.js'
 import { Airship } from '../services/AirshipInstance'
 
 type Props = {
@@ -26,28 +27,37 @@ type Props = {
   walletId: string,
   currencyCode: string,
   qrCodeScanned: (data: string) => void,
-  parseScannedUri: (data: string) => Promise<void>,
+  parseScannedUri: (data: string, customErrorTitle: string, customErrorDescription: string) => Promise<void>,
   toggleEnableTorch: () => void,
-  selectFromWalletForExchange: (walletId: string, currencyCode: string) => void
+  selectFromWalletForExchange: (walletId: string, currencyCode: string) => void,
+  isSweepPrivateKey?: boolean
 }
 
 export class Scan extends React.Component<Props> {
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.isSweepPrivateKey !== prevProps.isSweepPrivateKey && Actions.currentScene !== 'DrawerOpen') {
+      Actions.drawerClose()
+    }
+  }
+
   render() {
     return (
       <>
         <SceneWrapper background="header" hasTabs={false}>
           {this.renderCameraArea()}
           <View style={styles.overlayButtonAreaWrap}>
+            {this.props.isSweepPrivateKey && (
+              <TouchableHighlight style={styles.bottomButton} onPress={this._onTogglePrivateKeyModal} underlayColor={THEME.COLORS.SECONDARY}>
+                <View style={styles.bottomButtonTextWrap}>
+                  <FontAwesome name="edit" style={styles.privateKeyIcon} />
+                  <T style={styles.bottomButtonText}>{s.strings.scan_private_key_button_title}</T>
+                </View>
+              </TouchableHighlight>
+            )}
             <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
                 <IonIcon style={styles.flashIcon} name="ios-flash" size={scale(24)} />
                 <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={THEME.COLORS.SECONDARY}>
-              <View style={styles.bottomButtonTextWrap}>
-                <IonIcon style={styles.addressBookIcon} name="ios-book" size={scale(24)} />
-                <T style={styles.bottomButtonText}>{s.strings.fragment_send_address}</T>
               </View>
             </TouchableHighlight>
           </View>
@@ -67,13 +77,13 @@ export class Scan extends React.Component<Props> {
     this.props.toggleEnableTorch()
   }
 
-  _onToggleAddressModal = async () => {
-    const { walletId, currencyCode } = this.props
+  _onTogglePrivateKeyModal = async () => {
     const uri = await Airship.show(bridge => (
-      <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={s.strings.scan_address_modal_title} checkAddressConnected />
+      <SingleInputModal bridge={bridge} title={s.strings.scan_private_key_modal_title} label={s.strings.scan_private_key_modal_label} />
     ))
+
     if (uri) {
-      this.props.parseScannedUri(uri)
+      this.props.parseScannedUri(uri, s.strings.scan_private_key_error_title, s.strings.scan_private_key_error_description)
     }
   }
 
@@ -163,7 +173,6 @@ const rawStyles = {
 
   // Bottom button area:
   overlayButtonAreaWrap: {
-    flexWrap: 'wrap',
     flexDirection: 'row',
     paddingTop: scale(11),
     paddingBottom: scale(11),
@@ -172,7 +181,7 @@ const rawStyles = {
   },
   bottomButton: {
     flex: 1,
-    flexBasis: '100%',
+    flexBasis: '48%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
@@ -191,7 +200,7 @@ const rawStyles = {
     fontSize: scale(16),
     height: scale(16)
   },
-  addressBookIcon: {
+  privateKeyIcon: {
     color: THEME.COLORS.WHITE,
     fontSize: scale(16),
     height: scale(16),

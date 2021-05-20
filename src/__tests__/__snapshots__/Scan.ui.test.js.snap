@@ -19,7 +19,6 @@ exports[`Scan component should render with BLOCKED props 1`] = `
       style={
         Object {
           "flexDirection": "row",
-          "flexWrap": "wrap",
           "paddingBottom": 15.450352112676057,
           "paddingLeft": 11.236619718309859,
           "paddingRight": 11.236619718309859,
@@ -35,7 +34,7 @@ exports[`Scan component should render with BLOCKED props 1`] = `
             "backgroundColor": "#FFFFFF10",
             "borderRadius": 4.213732394366197,
             "flex": 1,
-            "flexBasis": "100%",
+            "flexBasis": "48%",
             "height": 70.22887323943662,
             "justifyContent": "center",
             "marginBottom": 14.045774647887324,
@@ -76,63 +75,6 @@ exports[`Scan component should render with BLOCKED props 1`] = `
             }
           >
             Flash
-          </FormattedText>
-        </View>
-      </ForwardRef>
-      <ForwardRef
-        onPress={[Function]}
-        style={
-          Object {
-            "alignItems": "center",
-            "backgroundColor": "#FFFFFF10",
-            "borderRadius": 4.213732394366197,
-            "flex": 1,
-            "flexBasis": "100%",
-            "height": 70.22887323943662,
-            "justifyContent": "center",
-            "marginBottom": 14.045774647887324,
-            "marginHorizontal": 1.4045774647887324,
-          }
-        }
-        underlayColor="#0E4B75"
-      >
-        <View
-          style={
-            Object {
-              "alignItems": "center",
-              "flexDirection": "column",
-              "justifyContent": "center",
-            }
-          }
-        >
-          <Icon
-            allowFontScaling={false}
-            name="ios-book"
-            size={33.709859154929575}
-            style={
-              Object {
-                "color": "#FFFFFF",
-                "fontSize": 22.473239436619718,
-                "height": 22.473239436619718,
-                "transform": Array [
-                  Object {
-                    "scaleX": -1,
-                  },
-                ],
-              }
-            }
-          />
-          <FormattedText
-            style={
-              Object {
-                "backgroundColor": "transparent",
-                "color": "#FFFFFF",
-                "fontSize": 19.664084507042254,
-                "opacity": 1,
-              }
-            }
-          >
-            Address
           </FormattedText>
         </View>
       </ForwardRef>
@@ -161,7 +103,6 @@ exports[`Scan component should render with GRANTED props 1`] = `
       style={
         Object {
           "flexDirection": "row",
-          "flexWrap": "wrap",
           "paddingBottom": 15.450352112676057,
           "paddingLeft": 11.236619718309859,
           "paddingRight": 11.236619718309859,
@@ -177,7 +118,7 @@ exports[`Scan component should render with GRANTED props 1`] = `
             "backgroundColor": "#FFFFFF10",
             "borderRadius": 4.213732394366197,
             "flex": 1,
-            "flexBasis": "100%",
+            "flexBasis": "48%",
             "height": 70.22887323943662,
             "justifyContent": "center",
             "marginBottom": 14.045774647887324,
@@ -218,63 +159,6 @@ exports[`Scan component should render with GRANTED props 1`] = `
             }
           >
             Flash
-          </FormattedText>
-        </View>
-      </ForwardRef>
-      <ForwardRef
-        onPress={[Function]}
-        style={
-          Object {
-            "alignItems": "center",
-            "backgroundColor": "#FFFFFF10",
-            "borderRadius": 4.213732394366197,
-            "flex": 1,
-            "flexBasis": "100%",
-            "height": 70.22887323943662,
-            "justifyContent": "center",
-            "marginBottom": 14.045774647887324,
-            "marginHorizontal": 1.4045774647887324,
-          }
-        }
-        underlayColor="#0E4B75"
-      >
-        <View
-          style={
-            Object {
-              "alignItems": "center",
-              "flexDirection": "column",
-              "justifyContent": "center",
-            }
-          }
-        >
-          <Icon
-            allowFontScaling={false}
-            name="ios-book"
-            size={33.709859154929575}
-            style={
-              Object {
-                "color": "#FFFFFF",
-                "fontSize": 22.473239436619718,
-                "height": 22.473239436619718,
-                "transform": Array [
-                  Object {
-                    "scaleX": -1,
-                  },
-                ],
-              }
-            }
-          />
-          <FormattedText
-            style={
-              Object {
-                "backgroundColor": "transparent",
-                "color": "#FFFFFF",
-                "fontSize": 19.664084507042254,
-                "opacity": 1,
-              }
-            }
-          >
-            Address
           </FormattedText>
         </View>
       </ForwardRef>

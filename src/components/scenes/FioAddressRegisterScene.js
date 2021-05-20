@@ -11,13 +11,13 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { createFioWallet } from '../../modules/FioAddress/action'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
-import { EditNameModal } from '../../modules/FioAddress/components/EditNameModal'
 import { checkIsDomainPublic } from '../../modules/FioAddress/util'
 import type { RootState } from '../../reducers/RootReducer'
 import type { Dispatch } from '../../types/reduxTypes'
 import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { openLink } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { SingleInputModal } from '../modals/SingleInputModal'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -251,7 +251,7 @@ class FioAddressRegister extends React.Component<Props, State> {
   editAddressPressed = () => {
     this.handleFioAddressFocus()
     Airship.show(bridge => (
-      <EditNameModal
+      <SingleInputModal
         bridge={bridge}
         title={s.strings.fio_address_choose_label}
         label={s.strings.fio_address_register_form_field_label}
