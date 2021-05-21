@@ -31,9 +31,10 @@ type LocalState = {
 type Props = StateProps & ThemeProps
 
 const confettiLeftProps = {
-  count: 150,
+  explosionSpeed: 500,
+  count: 100,
   origin: { x: -50, y: 100 },
-  fallSpeed: 4000
+  fallSpeed: 6500
 }
 
 const confettiRightProps = {
@@ -63,7 +64,7 @@ class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalSta
       this.setState({ showConfetti: true })
       setTimeout(() => {
         this.setState({ showButton: true })
-      }, 4500)
+      }, 6500)
     } else {
       this.setState({ showButton: true })
     }
