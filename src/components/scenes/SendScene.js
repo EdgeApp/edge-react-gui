@@ -235,9 +235,9 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleFlipinputModal = () => {
-    Airship.show(bridge => (
-      <FlipInputModal bridge={bridge} walletId={this.state.selectedWalletId} currencyCode={this.state.selectedCurrencyCode} />
-    )).catch(error => console.log(error))
+    Airship.show(bridge => <FlipInputModal bridge={bridge} walletId={this.state.selectedWalletId} currencyCode={this.state.selectedCurrencyCode} />).catch(
+      error => console.log(error)
+    )
   }
 
   handleFeesChange = () => Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({ wallet: this.state.coreWallet, currencyCode: this.state.selectedCurrencyCode })

@@ -100,18 +100,8 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   renderBalanceBox = () => {
-    const {
-      cryptoAmount,
-      currencyCode,
-      denominationName,
-      fiatSymbol,
-      fiatBalance,
-      fiatCurrencyCode,
-      walletId,
-      walletName,
-      isAccountBalanceVisible,
-      theme
-    } = this.props
+    const { cryptoAmount, currencyCode, denominationName, fiatSymbol, fiatBalance, fiatCurrencyCode, walletId, walletName, isAccountBalanceVisible, theme } =
+      this.props
     const styles = getStyles(theme)
 
     return (

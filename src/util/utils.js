@@ -139,8 +139,10 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
 }
 
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
-export const convertNativeToDenomination = (nativeToTargetRatio: string) => (nativeAmount: string): string =>
-  div(nativeAmount, nativeToTargetRatio, DIVIDE_PRECISION)
+export const convertNativeToDenomination =
+  (nativeToTargetRatio: string) =>
+  (nativeAmount: string): string =>
+    div(nativeAmount, nativeToTargetRatio, DIVIDE_PRECISION)
 
 // Alias for convertNativeToDenomination
 // Used to convert outputs from core to amounts ready for display
@@ -150,8 +152,10 @@ export const convertNativeToDisplay = convertNativeToDenomination
 export const convertNativeToExchange = convertNativeToDenomination
 
 // Used to convert amounts from display to core inputs
-export const convertDisplayToNative = (nativeToDisplayRatio: string) => (displayAmount: string): string =>
-  !displayAmount ? '' : mul(displayAmount, nativeToDisplayRatio)
+export const convertDisplayToNative =
+  (nativeToDisplayRatio: string) =>
+  (displayAmount: string): string =>
+    !displayAmount ? '' : mul(displayAmount, nativeToDisplayRatio)
 
 export const isCryptoParentCurrency = (wallet: GuiWallet, currencyCode: string) => currencyCode === wallet.currencyCode
 
@@ -487,9 +491,7 @@ export const getFeeDisplayed = (number: number): string => {
   return number.toFixed(defaultAmount)
 }
 
-export function splitTransactionCategory(
-  fullCategory: string
-): {
+export function splitTransactionCategory(fullCategory: string): {
   category: string,
   subCategory: string
 } {

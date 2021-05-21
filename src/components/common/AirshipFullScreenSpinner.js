@@ -79,6 +79,21 @@ export class AirshipFullScreenSpinner extends React.Component<Props> {
 const unit = scale(13)
 
 const styles = StyleSheet.create({
+  body: {
+    // Layout:
+    maxWidth: 32 * unit,
+
+    // Visuals:
+    backgroundColor: THEME.COLORS.GRAY_3,
+    borderRadius: (3 / 2) * unit,
+
+    // Children:
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    padding: unit
+  },
+
   container: {
     // Layout:
     padding: unit,
@@ -105,21 +120,6 @@ const styles = StyleSheet.create({
     // Visuals:
     backgroundColor: THEME.COLORS.SHADOW,
     opacity: THEME.OPACITY.MODAL_DARKNESS
-  },
-
-  body: {
-    // Layout:
-    maxWidth: 32 * unit,
-
-    // Visuals:
-    backgroundColor: THEME.COLORS.GRAY_3,
-    borderRadius: (3 / 2) * unit,
-
-    // Children:
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    padding: unit
   },
 
   text: {

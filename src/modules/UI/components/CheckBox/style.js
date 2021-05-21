@@ -6,14 +6,14 @@ import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({
   checkBoxOutline: {
-    borderWidth: 1,
-    borderRadius: 3,
-    height: 28,
-    width: 28,
-    borderColor: THEME.COLORS.GRAY_1,
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    borderColor: THEME.COLORS.GRAY_1,
+    borderRadius: 3,
+    borderWidth: 1,
+    height: 28,
+    justifyContent: 'center',
+    width: 28
   },
   checkmark: {}
 })

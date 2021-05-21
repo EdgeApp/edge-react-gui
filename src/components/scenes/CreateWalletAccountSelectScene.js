@@ -174,17 +174,8 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   renderPaymentReview = () => {
-    const {
-      wallets,
-      paymentCurrencyCode,
-      accountName,
-      isCreatingWallet,
-      amount,
-      selectedWalletType,
-      selectedFiat,
-      activationCost,
-      paymentDenominationSymbol
-    } = this.props
+    const { wallets, paymentCurrencyCode, accountName, isCreatingWallet, amount, selectedWalletType, selectedFiat, activationCost, paymentDenominationSymbol } =
+      this.props
     const { walletId, createdWallet } = this.state
     const wallet = wallets[walletId]
     if (!wallet) return null
