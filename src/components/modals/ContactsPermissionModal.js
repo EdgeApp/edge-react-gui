@@ -7,7 +7,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import s from '../../locales/strings.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { ModalMessage, ModalTitle } from '../themed/ModalParts.js'
+import { EdgeText } from '../themed/EdgeText.js'
 import { type AirshipBridge } from './modalParts.js'
 
 export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
@@ -23,14 +23,21 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
       }}
       closeButton
     >
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
+      <View style={styles.heanderContainer}>
+        <View style={styles.iconCircle}>
           <FontAwesome name="address-book" size={theme.rem(1.5)} color={theme.icon} />
-          <ModalTitle>{s.strings.contacts_permission_modal_title}</ModalTitle>
         </View>
-        <ModalMessage>{s.strings.contacts_permission_modal_text_1}</ModalMessage>
-        <ModalMessage>{s.strings.contacts_permission_modal_text_2}</ModalMessage>
+        <EdgeText style={styles.header}>{s.strings.contacts_permission_modal_title}</EdgeText>
       </View>
+      <EdgeText numberOfLines={0} style={styles.message}>
+        {s.strings.contacts_permission_modal_text_1}
+      </EdgeText>
+      <EdgeText numberOfLines={0} style={styles.message}>
+        {s.strings.contacts_permission_modal_text_2}
+      </EdgeText>
+      <EdgeText numberOfLines={0} style={styles.messageLast}>
+        {s.strings.contacts_permission_modal_text_3}
+      </EdgeText>
     </ButtonsModal>
   )
 }
@@ -38,6 +45,32 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1
+  },
+  heanderContainer: {
+    marginTop: theme.rem(1),
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  iconCircle: {
+    width: theme.rem(2.5),
+    height: theme.rem(2.5),
+    borderWidth: theme.thinLineWidth,
+    borderRadius: theme.rem(1.25),
+    borderColor: theme.icon,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  header: {
+    marginVertical: theme.rem(1),
+    fontFamily: theme.fontFaceBold,
+    fontSize: theme.rem(1.25),
+    includeFontPadding: false
+  },
+  message: {
+    marginBottom: theme.rem(1)
+  },
+  messageLast: {
+    marginBottom: theme.rem(4)
   },
   headerContainer: {
     flexDirection: 'row',
