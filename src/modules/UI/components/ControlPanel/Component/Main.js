@@ -20,6 +20,7 @@ import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import { type WalletListResult, WalletListModal } from '../../../../../components/modals/WalletListModal.js'
+import { SWEEP_PRIVATE_KEY } from '../../../../../components/scenes/ScanScene'
 import { Airship } from '../../../../../components/services/AirshipInstance.js'
 import * as Constants from '../../../../../constants/indexConstants.js'
 import { getPrivateKeySweepableCurrencies } from '../../../../../constants/WalletAndCurrencyConstants.js'
@@ -163,7 +164,7 @@ const WalletsButton = () => {
   )
 }
 
-const popToSendScan = () => goToScene(Constants.SCAN, { isSweepPrivateKey: false })
+const popToSendScan = () => goToScene(Constants.SCAN, { data: '' })
 const ScanButton = () => {
   return (
     <Button onPress={popToSendScan}>
@@ -194,7 +195,7 @@ const SweepPrivateKeyButton = (props: SweepPrivateKeyButtonProps) => {
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         onSelectWallet(walletId, currencyCode)
-        Actions.jump(Constants.SCAN, { isSweepPrivateKey: true })
+        Actions.jump(Constants.SCAN, { data: SWEEP_PRIVATE_KEY })
       }
     })
   }

@@ -30,12 +30,14 @@ type Props = {
   parseScannedUri: (data: string, customErrorTitle: string, customErrorDescription: string) => Promise<void>,
   toggleEnableTorch: () => void,
   selectFromWalletForExchange: (walletId: string, currencyCode: string) => void,
-  isSweepPrivateKey?: boolean
+  data?: string
 }
+
+export const SWEEP_PRIVATE_KEY = 'sweepPrivateKey'
 
 export class Scan extends React.Component<Props> {
   componentDidUpdate(prevProps: Props) {
-    if (this.props.isSweepPrivateKey !== prevProps.isSweepPrivateKey && Actions.currentScene !== 'DrawerOpen') {
+    if (this.props.data !== prevProps.data && Actions.currentScene !== 'DrawerOpen') {
       Actions.drawerClose()
     }
   }
@@ -46,7 +48,7 @@ export class Scan extends React.Component<Props> {
         <SceneWrapper background="header" hasTabs={false}>
           {this.renderCameraArea()}
           <View style={styles.overlayButtonAreaWrap}>
-            {this.props.isSweepPrivateKey && (
+            {this.props.data === SWEEP_PRIVATE_KEY && (
               <TouchableHighlight style={styles.bottomButton} onPress={this._onTogglePrivateKeyModal} underlayColor={THEME.COLORS.SECONDARY}>
                 <View style={styles.bottomButtonTextWrap}>
                   <FontAwesome name="edit" style={styles.privateKeyIcon} />
