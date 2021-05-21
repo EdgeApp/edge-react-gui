@@ -2,8 +2,8 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
+import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
@@ -25,7 +25,7 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
     >
       <View style={styles.heanderContainer}>
         <View style={styles.iconCircle}>
-          <FontAwesome name="address-book" size={theme.rem(1.5)} color={theme.icon} />
+          <Fontello name="edge.addresbook" size={theme.rem(1.5)} color={theme.icon} />
         </View>
         <EdgeText style={styles.header}>{s.strings.contacts_permission_modal_title}</EdgeText>
       </View>
