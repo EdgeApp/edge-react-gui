@@ -428,6 +428,21 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   SMART: {
     isPrivateKeySweepable: true
+  },
+  VTC: {
+    isPrivateKeySweepable: true
+  },
+  BTG: {
+    isPrivateKeySweepable: true
+  },
+  FTC: {
+    isPrivateKeySweepable: true
+  },
+  GRS: {
+    isPrivateKeySweepable: true
+  },
+  QTUM: {
+    isPrivateKeySweepable: true
   }
 }
 
