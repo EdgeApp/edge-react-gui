@@ -177,8 +177,9 @@ const getStyles = cacheStyles((theme: Theme) => {
   const commonText = {
     fontFamily: theme.fontFaceBold,
     fontSize: theme.rem(1),
-    lineHeight: theme.rem(2),
-    marginHorizontal: theme.rem(0.5)
+    marginVertical: theme.rem(0.25),
+    marginHorizontal: theme.rem(0.5),
+    includeFontPadding: false
   }
 
   return {
