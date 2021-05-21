@@ -781,10 +781,17 @@ const strings = {
   export_transaction_error: 'Start date should be earlier than the end date',
   export_transaction_export_error: 'No transactions in the date range chosen',
   export_transaction_loading: 'Exporting Transactions…',
+  string_allow: 'Allow',
 
   step: 'Step',
   scan_as_in_scan_barcode: 'Scan',
   enter_as_in_enter_address_with_keyboard: 'Enter',
+
+  // Contacts Permission Modal
+  contacts_permission_modal_title: 'Access to Contacts',
+  contacts_permission_modal_text_1: 'Edge would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
+  contacts_permission_modal_text_2: 'No contact information is shared with Edge or any other entities. All information is encrypted and only seen by YOU.',
+  contacts_permission_modal_text_3: 'If you deny access, Edge can still function to buy, sell, trade, and transact cryptocurrency.',
 
   // Wallet List Sort
   wallet_list_sort_title: 'Sort Wallets',
