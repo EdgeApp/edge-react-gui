@@ -21,7 +21,7 @@ export const trackConversion = (
 
   // Look up the dollar value:
   const { account } = state.core
-  const dollarValue: number = await account.exchangeCache.convertCurrency(currencyCode, 'iso:USD', exchangeAmount)
+  const dollarValue: number = await account.rateCache.convertCurrency(currencyCode, 'iso:USD', exchangeAmount)
 
   // Record the event:
   const { accountReferral } = state.account

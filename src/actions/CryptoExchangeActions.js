@@ -174,7 +174,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
 
   // Currency conversion tools:
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
-  const currencyConverter = account.exchangeCache
+  const currencyConverter = account.rateCache
 
   // Format from amount:
   const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
@@ -414,7 +414,7 @@ export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetSta
 
 async function getBalanceMessage(state: RootState, wallet: GuiWallet, currencyCode: string) {
   const { account } = state.core
-  const currencyConverter = account.exchangeCache
+  const currencyConverter = account.rateCache
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)

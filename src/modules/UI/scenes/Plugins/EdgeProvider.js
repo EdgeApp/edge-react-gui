@@ -237,7 +237,7 @@ export class EdgeProvider extends Bridgeable {
 
     // Grab transactions from current wallet
     const fiatCurrencyCode = coreWallet.fiatCurrencyCode
-    const balance = coreWallet.getBalance({ currencyCode })
+    const balance = coreWallet.balances[currencyCode] ?? '0'
 
     const txs = await coreWallet.getTransactions({ currencyCode })
     const transactions: EdgeTransaction[] = []

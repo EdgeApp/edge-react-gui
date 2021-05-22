@@ -32,7 +32,7 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
           const enabledTokensOnWallet = state[walletId].enabledTokens
           tempWallet.enabledTokens = enabledTokensOnWallet
           enabledTokensOnWallet.forEach(customToken => {
-            tempWallet.nativeBalances[customToken] = wallets[walletId].getBalance({ currencyCode: customToken })
+            tempWallet.nativeBalances[customToken] = wallets[walletId].balances[customToken] ?? '0'
           })
         }
         out[walletId] = {
@@ -136,7 +136,7 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
         const enabledTokensOnWallet = state[wallet.id].enabledTokens
         guiWallet.enabledTokens = enabledTokensOnWallet
         enabledTokensOnWallet.forEach(customToken => {
-          guiWallet.nativeBalances[customToken] = wallet.getBalance({ currencyCode: customToken })
+          guiWallet.nativeBalances[customToken] = wallet.balances[customToken] ?? '0'
         })
         out[wallet.id] = {
           ...state[wallet.id],
@@ -299,7 +299,7 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
   const symbolImageDarkMono = wallet.currencyInfo.symbolImageDarkMono
   const metaTokens: EdgeMetaToken[] = wallet.currencyInfo.metaTokens
   const denominations: EdgeDenomination[] = wallet.currencyInfo.denominations
-  const blockHeight: number = wallet.getBlockHeight()
+  const blockHeight: number = wallet.blockHeight
   // TODO: Fetch the token list asynchonously before dispatching `schema`:
   const enabledTokens: string[] = []
 
@@ -320,7 +320,7 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
 
   const nativeBalances: { [currencyCode: string]: string } = {}
   // Add parent currency balance to balances
-  nativeBalances[currencyCode] = wallet.getBalance({ currencyCode })
+  nativeBalances[currencyCode] = wallet.balances[currencyCode] ?? '0'
 
   // Add parent currency currencyCode
   const currencyNames: { [currencyCode: string]: string } = {}
@@ -329,7 +329,7 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
   metaTokens.forEach(metaToken => {
     const currencyCode: string = metaToken.currencyCode
     const currencyName: string = metaToken.currencyName
-    const balance: string = wallet.getBalance({ currencyCode })
+    const balance: string = wallet.balances[currencyCode] ?? '0'
     const denominations: EdgeDenomination[] = metaToken.denominations
 
     // Add token balance to allBalances

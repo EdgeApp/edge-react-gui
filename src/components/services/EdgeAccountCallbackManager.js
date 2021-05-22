@@ -75,7 +75,7 @@ class EdgeAccountCallbackManager extends React.Component<Props> {
         }
       }),
 
-      account.exchangeCache.on('update', () => {
+      account.rateCache.on('update', () => {
         this.props.updateExchangeRates()
       })
 

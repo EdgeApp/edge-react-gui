@@ -13630,9 +13630,9 @@ yaml@^1.10.0:
   integrity sha512-yr2icI4glYaNG+KWONODapy2/jDdMSDnrONSjblABjD9B4Z5LgiircSt8m8sRZFNi08kG9Sm0uSHtEmP3zaEGg==
 
 yaob@^0.3.6:
-  version "0.3.6"
-  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.6.tgz#84f9970d2e3629e041a791d1dea41f8a5387e91f"
-  integrity sha512-MGfSGsmQsRgWM62vPn+7NjSeU70EH78aZg5uXhLGAw94C7nMDxKJaamozTTGuiF4cwp8bsoM4cOhiDogk23INg==
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/yaob/-/yaob-0.3.7.tgz#f33f6a7869a8cabaec761a31ae577aaee659d9d0"
+  integrity sha512-r48BLEBGUhkUHBVudB4X+JvID4ZczwzPJg0zDynZ3gbBguEwtO7WE+djKQSY1uclVOB6a7Y51oB8OhAyhQNCxg==
   dependencies:
     rfc4648 "^1.1.0"
 
