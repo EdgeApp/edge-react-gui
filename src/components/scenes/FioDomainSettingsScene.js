@@ -29,7 +29,6 @@ type State = {
 }
 
 type StateProps = {
-  denominationMultiplier: string,
   isConnected: boolean
 }
 

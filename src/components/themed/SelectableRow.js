@@ -14,7 +14,6 @@ type Props = {
   subTitle?: string,
   icon?: React.Node,
   autoWidth?: boolean,
-  selected?: boolean,
   arrowTappable?: boolean,
   underline?: boolean,
 

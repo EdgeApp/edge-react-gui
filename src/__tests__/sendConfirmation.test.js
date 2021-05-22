@@ -17,7 +17,6 @@ describe('SendConfirmation', () => {
       parentNetworkFee: '0',
       networkFee: '0',
       pending: false,
-      keyboardIsVisible: true,
       balanceInCrypto: '0',
       balanceInFiat: '0',
       parentDisplayDenomination: {
@@ -69,7 +68,6 @@ describe('SendConfirmation', () => {
       parentNetworkFee: '0',
       networkFee: '0',
       pending: false,
-      keyboardIsVisible: true,
       balanceInCrypto: '0',
       balanceInFiat: '0',
       parentDisplayDenomination: {
@@ -121,7 +119,6 @@ describe('SendConfirmation', () => {
       parentNetworkFee: '0',
       networkFee: '0',
       pending: false,
-      keyboardIsVisible: true,
       balanceInCrypto: '0',
       balanceInFiat: '0',
       parentDisplayDenomination: {
@@ -172,7 +169,6 @@ describe('SendConfirmation', () => {
       parentNetworkFee: '0',
       networkFee: '0',
       pending: false,
-      keyboardIsVisible: true,
       balanceInCrypto: '0',
       balanceInFiat: '0',
       parentDisplayDenomination: {

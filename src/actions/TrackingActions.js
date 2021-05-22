@@ -7,46 +7,50 @@ import { type TrackingEvent, type TrackingValues, logEvent } from '../util/track
 /**
  * Tracks a conversion, which involves some type of revenue.
  */
-export const trackConversion = (
-  event: TrackingEvent,
-  opts: {
-    currencyCode: string,
-    exchangeAmount: number,
-    pluginId: string,
-    orderId?: string
+export const trackConversion =
+  (
+    event: TrackingEvent,
+    opts: {
+      currencyCode: string,
+      exchangeAmount: number,
+      pluginId: string,
+      orderId?: string
+    }
+  ) =>
+  async (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { currencyCode, exchangeAmount, pluginId, orderId } = opts
+
+    // Look up the dollar value:
+    const { account } = state.core
+    const dollarValue: number = await account.rateCache.convertCurrency(currencyCode, 'iso:USD', exchangeAmount)
+
+    // Record the event:
+    const { accountReferral } = state.account
+    return logEvent(event, {
+      dollarValue,
+      pluginId,
+      orderId,
+      ...makeTrackingValues(accountReferral)
+    })
   }
-) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { currencyCode, exchangeAmount, pluginId, orderId } = opts
-
-  // Look up the dollar value:
-  const { account } = state.core
-  const dollarValue: number = await account.rateCache.convertCurrency(currencyCode, 'iso:USD', exchangeAmount)
-
-  // Record the event:
-  const { accountReferral } = state.account
-  return logEvent(event, {
-    dollarValue,
-    pluginId,
-    orderId,
-    ...makeTrackingValues(accountReferral)
-  })
-}
 
 /**
  * Tracks an event tied to a particular account's affiliate information,
  * such as creating the initial wallets.
  */
-export const trackAccountEvent = (event: TrackingEvent, trackingValues: TrackingValues = {}) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
+export const trackAccountEvent =
+  (event: TrackingEvent, trackingValues: TrackingValues = {}) =>
+  async (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
 
-  // Record the event:
-  const { accountReferral } = state.account
-  return logEvent(event, {
-    ...trackingValues,
-    ...makeTrackingValues(accountReferral)
-  })
-}
+    // Record the event:
+    const { accountReferral } = state.account
+    return logEvent(event, {
+      ...trackingValues,
+      ...makeTrackingValues(accountReferral)
+    })
+  }
 
 /**
  * Turn account affiliate information into clean tracking values.

@@ -32,7 +32,6 @@ type SelectFioAddressOwnProps = {
 }
 
 type SelectFioAddressProps = {
-  loading: boolean,
   fioAddresses: FioAddress[],
   fioWallets: EdgeCurrencyWallet[],
   selectedWallet: GuiWallet,
@@ -94,6 +93,7 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
     const { fioRequest, isSendUsingFioAddress } = this.props
     const { expirationUpdated } = this.state
     if (expirationUpdated) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ expirationUpdated: false })
       this.setFioAddress(this.props.selected)
     }

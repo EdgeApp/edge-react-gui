@@ -31,7 +31,6 @@ type OwnProps = {
   fiatSymbol: string,
   fiatBalance: string,
   nativeAmount: string,
-  parentCryptoBalance: string,
   disabled: boolean,
   image: any,
   name: string,

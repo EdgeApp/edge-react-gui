@@ -102,6 +102,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
 
     addToFioAddressCache(this.props.account, addressArray)
+    // eslint-disable-next-line react/no-did-update-set-state
     this.setState({ addressCachedUpdated: true })
   }
 

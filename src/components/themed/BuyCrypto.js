@@ -16,6 +16,7 @@ import { ButtonBox } from './ThemedButtons.js'
 const allowedCurrencies = Object.keys(SPECIAL_CURRENCY_INFO).filter(code => !!SPECIAL_CURRENCY_INFO[code].displayBuyCrypto)
 
 type OwnProps = {
+  // eslint-disable-next-line react/no-unused-prop-types
   walletId: string,
   currencyCode: string
 }

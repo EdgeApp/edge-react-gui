@@ -16,7 +16,9 @@ type Props = {
   children?: React.Node,
   underline?: boolean,
 
+  // eslint-disable-next-line react/no-unused-prop-types
   marginRem?: number[] | number,
+  // eslint-disable-next-line react/no-unused-prop-types
   paddingRem?: number[] | number
 }
 

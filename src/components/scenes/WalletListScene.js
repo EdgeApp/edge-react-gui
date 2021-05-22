@@ -31,7 +31,6 @@ type StateProps = {
   activeWalletIds: string[],
   userId: string,
   wallets: { [walletId: string]: GuiWallet },
-  accountDisklet: Disklet,
   disklet: Disklet,
   needsPasswordCheck: boolean
 }
@@ -213,7 +212,6 @@ export const WalletListScene = connect(
       activeWalletIds,
       userId: state.core.account.id,
       wallets: state.ui.wallets.byId,
-      accountDisklet: state.core.account.disklet,
       disklet: state.core.disklet,
       needsPasswordCheck: state.ui.passwordReminder.needsPasswordCheck
     }

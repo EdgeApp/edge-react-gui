@@ -53,7 +53,6 @@ type StateProps = {
   error: Error | null,
   exchangeRates: ExchangeRatesState,
   lockInputs?: boolean,
-  metadata?: any,
   nativeAmount: string | null,
   pending: boolean,
   pin: string,
@@ -68,7 +67,6 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  onSelectWallet(walletId: string, currencyCode: string): void,
   reset: () => void,
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId: string, selectedCurrencyCode: string) => Promise<void>, // Somehow has a return??
   signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => void,
@@ -169,9 +167,11 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   componentDidUpdate(prevProps: Props): void {
     if (prevProps.pending && !this.props.pending) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ resetSlider: true })
     }
     if (!prevProps.pending && !this.props.pending && this.state.resetSlider) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ resetSlider: false })
     }
   }
@@ -235,9 +235,9 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleFlipinputModal = () => {
-    Airship.show(bridge => (
-      <FlipInputModal bridge={bridge} walletId={this.state.selectedWalletId} currencyCode={this.state.selectedCurrencyCode} />
-    )).catch(error => console.log(error))
+    Airship.show(bridge => <FlipInputModal bridge={bridge} walletId={this.state.selectedWalletId} currencyCode={this.state.selectedCurrencyCode} />).catch(
+      error => console.log(error)
+    )
   }
 
   handleFeesChange = () => Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({ wallet: this.state.coreWallet, currencyCode: this.state.selectedCurrencyCode })
@@ -591,9 +591,6 @@ export const SendScene = connect(
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    onSelectWallet: (walletId: string, currencyCode: string) => {
-      dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
-    },
     reset: () => dispatch(reset()),
     sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId: string, selectedCurrencyCode: string) =>
       dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode)),

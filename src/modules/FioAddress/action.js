@@ -8,10 +8,12 @@ import type { Dispatch, GetState } from '../../types/reduxTypes'
 import { getDefaultIsoFiat } from '../Settings/selectors'
 import { findWalletByFioAddress, refreshConnectedWalletsForFioAddress } from './util'
 
-export const createFioWallet = () => (dispatch: Dispatch, getState: GetState): Promise<EdgeCurrencyWallet | any> => {
-  const fiatCurrencyCode = getDefaultIsoFiat(getState())
-  return dispatch(createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, Constants.FIO_WALLET_TYPE, fiatCurrencyCode, false, false))
-}
+export const createFioWallet =
+  () =>
+  (dispatch: Dispatch, getState: GetState): Promise<EdgeCurrencyWallet | any> => {
+    const fiatCurrencyCode = getDefaultIsoFiat(getState())
+    return dispatch(createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, Constants.FIO_WALLET_TYPE, fiatCurrencyCode, false, false))
+  }
 
 export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({

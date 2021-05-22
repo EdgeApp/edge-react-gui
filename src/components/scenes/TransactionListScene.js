@@ -69,6 +69,7 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     if (walletIdChanged || currencyCodeChanged) {
       this.props.fetchMoreTransactions(this.props.selectedWalletId, this.props.selectedCurrencyCode, this.state.reset)
       if (this.state.reset) {
+        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ reset: false })
       }
     }

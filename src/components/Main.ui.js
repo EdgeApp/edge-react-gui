@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 import ENV from '../../env.json'
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
 import { checkAndShowGetCryptoModal } from '../actions/ScanActions.js'
-import { openDrawer } from '../actions/ScenesActions.js'
 import { showReEnableOtpModal } from '../actions/SettingsActions.js'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
 import { CreateWalletImportScene } from '../components/scenes/CreateWalletImportScene.js'
@@ -100,7 +99,6 @@ type DispatchProps = {
 
   // Navigation actions:
   logout(username?: string): void,
-  openDrawer(): void,
 
   // Things to do when we enter certain scenes:
   checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCurrencyCode?: string): void,
@@ -853,9 +851,6 @@ export const Main = connect(
     // Navigation actions:
     logout(username?: string): void {
       dispatch(logoutRequest(username))
-    },
-    openDrawer() {
-      dispatch(openDrawer())
     },
 
     // Things to do when we enter certain scenes:

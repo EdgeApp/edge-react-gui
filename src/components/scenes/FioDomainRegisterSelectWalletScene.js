@@ -31,7 +31,6 @@ type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null,
   fioWallets: EdgeCurrencyWallet[],
   fioDisplayDenomination: EdgeDenomination,
-  defaultFiatCode: string,
   isConnected: boolean
 }
 
@@ -258,14 +257,11 @@ const FioDomainRegisterSelectWalletScene = connect(
     const fioPlugin = account && account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
     const fioDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, Constants.FIO_STR)
 
-    const defaultFiatCode = SETTINGS_SELECTORS.getDefaultIsoFiat(state)
-
     return {
       state,
       fioWallets,
       fioPlugin,
       fioDisplayDenomination,
-      defaultFiatCode,
       wallets,
       isConnected: state.network.isConnected
     }

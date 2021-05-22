@@ -789,7 +789,9 @@ export const checkExpiredFioAddress = async (fioWallet?: EdgeCurrencyWallet, add
 
   try {
     const { fioAction } = fioWallet.otherMethods
+    // eslint-disable-next-line camelcase
     const { public_address } = await fioAction('getPublicAddress', { fioAddress: address, chainCode: 'FIO', tokenCode: 'FIO' })
+    // eslint-disable-next-line camelcase
     const { fio_addresses } = await fioAction('getFioNames', { fioPublicKey: public_address })
     const fioAddress = fio_addresses.find(fioAddress => fioAddress.fio_address === address)
     if (fioAddress != null) {

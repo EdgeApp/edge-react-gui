@@ -150,6 +150,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   }
 
   handleFioDomainFocus = () => {
+    // eslint-disable-next-line react/no-string-refs
     this.refs._scrollView.scrollTo({ x: 0, y: this.state.fieldPos, animated: true })
   }
 
@@ -233,6 +234,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
     return (
       <SceneWrapper background="theme" bodySplit={theme.rem(1.5)}>
+        {/* eslint-disable-next-line react/no-string-refs */}
         <ScrollView ref="_scrollView">
           <IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(4)} />
           <EdgeText style={[styles.paddings, styles.instructionalText, styles.title]} numberOfLines={3}>
@@ -242,7 +244,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
             {s.strings.fio_domain_reg_descr}
           </EdgeText>
 
-          <View ref="_fieldView" onLayout={this.fieldViewOnLayout}>
+          <View onLayout={this.fieldViewOnLayout}>
             <Tile type="editable" title={s.strings.fio_domain_choose_label} onPress={this.onDomainPress}>
               <View style={styles.domainView}>
                 <EdgeText style={styles.domainText}>{fioDomain}</EdgeText>

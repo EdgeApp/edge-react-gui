@@ -28,7 +28,6 @@ type Props = {
   qrCodeScanned: (data: string) => void,
   parseScannedUri: (data: string) => Promise<void>,
   toggleEnableTorch: () => void,
-  toggleScanToWalletListModal: () => void,
   selectFromWalletForExchange: (walletId: string, currencyCode: string) => void
 }
 

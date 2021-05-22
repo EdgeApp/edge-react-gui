@@ -11,7 +11,6 @@ import {
   reset,
   sendConfirmationUpdateTx,
   signBroadcastAndSave,
-  updateAmount,
   updateSpendPending,
   updateTransaction
 } from '../../actions/SendConfirmationActions.js'
@@ -103,16 +102,12 @@ const mapStateToProps = (state: RootState): SendConfirmationStateProps => {
     address: sceneState.address,
     sceneState,
     coreWallet,
-    toggleCryptoOnTop,
-    isConnected: state.network.isConnected
+    toggleCryptoOnTop
   }
   return out
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps => ({
-  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => {
-    return dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto))
-  },
   sendConfirmationUpdateTx: guiMakeSpendInfo => dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo)),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
