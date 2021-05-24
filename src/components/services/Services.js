@@ -84,7 +84,10 @@ export class Services extends React.PureComponent<Props> {
   }
 
   render() {
-    global.db = this.store.getState
+    if (global.__DEV__) {
+      global.reduxStore = this.store.getState
+    }
+
     return (
       <Provider store={this.store}>
         <>
