@@ -23,6 +23,7 @@ import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
+import { FormError } from '../themed/FormError'
 import { ClickableText, PrimaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
 
@@ -206,7 +207,8 @@ class FioAddressRegister extends React.Component<Props, State> {
         }
       }
 
-      if (/[^\p{L}\p{N}]+/gu.test(fioAddress)) {
+      // regexp from edge-currency-accountbased
+      if (!/^[a-zA-Z0-9]{1}((?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$/.test(fioAddress)) {
         this.setState({
           loading: false,
           isValid: false,
@@ -372,7 +374,11 @@ class FioAddressRegister extends React.Component<Props, State> {
       chooseHandleErrorMessage = errorMessage
     }
 
-    return <EdgeText style={styles.errorMessage}>{chooseHandleErrorMessage}</EdgeText>
+    return (
+      <FormError style={styles.error} isVisible={!!chooseHandleErrorMessage}>
+        {chooseHandleErrorMessage}
+      </FormError>
+    )
   }
 
   render() {
@@ -411,7 +417,6 @@ class FioAddressRegister extends React.Component<Props, State> {
                     <EdgeText style={styles.muted}>{s.strings.fio_address_register_placeholder}</EdgeText>
                   )}
                   {this.renderLoader()}
-                  {this.renderErrorMessage()}
                 </View>
               </Tile>
               <Tile
@@ -428,6 +433,7 @@ class FioAddressRegister extends React.Component<Props, State> {
                 <EdgeText style={styles.link}>{s.strings.fio_address_reg_free}</EdgeText>
               </ClickableText>
             ) : null}
+            {this.renderErrorMessage()}
             <View style={styles.bottomSpace} />
           </View>
         </ScrollView>
@@ -461,7 +467,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   next: {
     flex: 1
   },
-
+  error: {
+    flex: 1,
+    margin: theme.rem(1)
+  },
   addressTileBody: {
     flexDirection: 'row'
   },
