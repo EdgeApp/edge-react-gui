@@ -9,9 +9,9 @@ import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { EditNameModal } from '../../modules/FioAddress/components/EditNameModal'
 import { type RootState } from '../../types/reduxTypes'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { SingleInputModal } from '../modals/SingleInputModal'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -181,7 +181,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     this.handleFioDomainFocus()
 
     const fioDomain = await Airship.show(bridge => (
-      <EditNameModal bridge={bridge} title={s.strings.fio_domain_choose_label} label={s.strings.fio_domain_label} value={this.state.fioDomain} />
+      <SingleInputModal bridge={bridge} title={s.strings.fio_domain_choose_label} label={s.strings.fio_domain_label} value={this.state.fioDomain} />
     ))
     if (fioDomain) this.handleFioDomainChange(fioDomain)
   }
