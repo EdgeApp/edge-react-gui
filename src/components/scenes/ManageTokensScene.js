@@ -8,7 +8,6 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
-import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
@@ -25,8 +24,7 @@ export type ManageTokensOwnProps = {
   guiWallet: GuiWallet
 }
 export type ManageTokensDispatchProps = {
-  setEnabledTokensList: (string, string[], string[]) => void,
-  walletListMenuAction(walletId: string, option: WalletListMenuKey, currencyCode?: string): void
+  setEnabledTokensList: (string, string[], string[]) => void
 }
 
 export type ManageTokensStateProps = {
@@ -71,7 +69,7 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
       <WalletListModal excludeWalletIds={getWalletIdsIfNotTokens(this.props.wallets)} bridge={bridge} headerTitle={s.strings.select_wallet} />
     ))
     if (walletId && currencyCode) {
-      this.props.walletListMenuAction(walletId, 'manageTokens', currencyCode)
+      Actions.refresh({ guiWallet: this.props.wallets[walletId] })
     }
   }
 
@@ -227,9 +225,6 @@ const mapDispatchToProps = (dispatch: Dispatch): ManageTokensDispatchProps => ({
   setEnabledTokensList: (walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) => {
     dispatch(setWalletEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
     dispatch(checkEnabledTokensArray(walletId, enabledTokens))
-  },
-  walletListMenuAction(walletId, option, currencyCode) {
-    dispatch(walletListMenuAction(walletId, option, currencyCode))
   }
 })
 
