@@ -7,31 +7,38 @@ import RNPermissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
 
+import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
+import { parseScannedUri, qrCodeScanned } from '../../actions/ScanActions'
 import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SingleInputModal } from '../modals/SingleInputModal.js'
 import { Airship } from '../services/AirshipInstance'
 
-type Props = {
+type StateProps = {
   cameraPermission: PermissionStatus,
   torchEnabled: boolean,
   scanEnabled: boolean,
   currentWalletId: string,
-  currentCurrencyCode: string,
-  walletId: string,
-  currencyCode: string,
+  currentCurrencyCode: string
+}
+
+type DispatchProps = {
   qrCodeScanned: (data: string) => void,
   parseScannedUri: (data: string, customErrorTitle: string, customErrorDescription: string) => Promise<void>,
   toggleEnableTorch: () => void,
   selectFromWalletForExchange: (walletId: string, currencyCode: string) => void,
   data?: string
 }
+
+type Props = StateProps & DispatchProps
 
 export const SWEEP_PRIVATE_KEY = 'sweepPrivateKey'
 
@@ -222,4 +229,26 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export default Scan
+export const ScanScene = connect(
+  (state: RootState): StateProps => ({
+    cameraPermission: state.permissions.camera,
+    torchEnabled: state.ui.scenes.scan.torchEnabled,
+    scanEnabled: state.ui.scenes.scan.scanEnabled,
+    currentWalletId: state.ui.scenes.transactionList.currentWalletId,
+    currentCurrencyCode: state.ui.scenes.transactionList.currentCurrencyCode
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    qrCodeScanned(data) {
+      dispatch(qrCodeScanned(data))
+    },
+    async parseScannedUri(data, customErrorTitle, customErrorDescription) {
+      await dispatch(parseScannedUri(data, customErrorTitle, customErrorDescription))
+    },
+    toggleEnableTorch() {
+      dispatch({ type: 'TOGGLE_ENABLE_TORCH' })
+    },
+    selectFromWalletForExchange(walletId, currencyCode) {
+      dispatch(selectWalletForExchange(walletId, currencyCode, 'from'))
+    }
+  })
+)(Scan)
