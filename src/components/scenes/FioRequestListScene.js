@@ -141,7 +141,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       }
     }
 
-    this.setState({ fioRequestsPending: fioRequestsPending.sort((a, b) => (a.time_stamp < b.time_stamp ? -1 : 1)), loadingPending: false })
+    this.setState({ fioRequestsPending: fioRequestsPending.sort((a, b) => (a.time_stamp < b.time_stamp ? 1 : -1)), loadingPending: false })
   }
 
   getFioRequestsSent = async () => {
