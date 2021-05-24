@@ -3,8 +3,7 @@
 import * as React from 'react'
 import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-// $FlowFixMe
-const { useEffect, useRef, useState } = React
+import { useEffect, useRef, useState } from '../../util/hooks'
 
 type Props = {
   visible: boolean,
