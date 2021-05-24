@@ -1,10 +1,10 @@
 // @flow
 
-// $FlowFixMe
-import React, { useEffect, useRef, useState } from 'react'
+import * as React from 'react'
 import { View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
+import { useEffect, useRef, useState } from '../../util/hooks'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeTextFieldOutlined } from '../themed/EdgeTextField.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
@@ -12,18 +12,20 @@ import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
   bridge: AirshipBridge<string | null>,
-  value: string,
   label: string,
-  title: string
+  title: string,
+  value?: string,
+  onSubmit?: (value: string) => void
 }
 
 type Props = OwnProps & ThemeProps
 
-const SingleInputModalComponent = ({ bridge, title, label, theme, value: propsValue }: Props) => {
+const SingleInputModalComponent = ({ bridge, title, label, theme, onSubmit, value: propsValue = '' }: Props) => {
   const textInput = useRef(null)
   const [value, setValue] = useState(propsValue)
   const [isFocused, setIsFocused] = useState(false)
   const styles = getStyles(theme)
+  const handleSubmit = onSubmit || bridge.resolve
 
   useEffect(() => {
     if (textInput.current) {
@@ -50,11 +52,11 @@ const SingleInputModalComponent = ({ bridge, title, label, theme, value: propsVa
           keyboardType="default"
           label={label}
           onChangeText={setValue}
-          onSubmitEditing={() => bridge.resolve(value)}
+          onSubmitEditing={handleSubmit}
           value={value}
           autoCorrect={false}
           autoCapitalize="none"
-          returnKeyType="next"
+          returnKeyType="done"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           onClear={clearText}
