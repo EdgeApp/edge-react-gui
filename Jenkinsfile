@@ -78,7 +78,7 @@ pipeline {
 
     stage ("Test") {
       steps {
-        sh "npm run cover"
+        sh "JEST_JENKINS=1 yarn cover --ci"
       }
     }
 
