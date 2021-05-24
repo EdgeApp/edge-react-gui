@@ -1,9 +1,10 @@
 // @flow
 
 import type { EdgeMetaToken } from 'edge-core-js'
+import keys from 'lodash/keys'
 
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../../constants/WalletAndCurrencyConstants'
-import type { CustomTokenInfo } from '../../../types/types'
+import type { CustomTokenInfo, GuiWallet } from '../../../types/types'
 import * as UTILS from '../../../util/utils'
 
 export type getTokensProps = {
@@ -13,7 +14,7 @@ export type getTokensProps = {
   guiWalletType: string
 }
 
-export const getTokens = (props: getTokensProps) => {
+export const getTokens = (props: getTokensProps): EdgeMetaToken[] => {
   const { metaTokens, customTokens, currencyCode, guiWalletType } = props
 
   const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
@@ -45,7 +46,10 @@ export const getTokens = (props: getTokensProps) => {
   return sortedTokenInfo
 }
 
-export const getFilteredTokens = (searchValue: string, tokens: EdgeMetaToken[]) => {
+export const getFilteredTokens = (searchValue: string, tokens: EdgeMetaToken[]): EdgeMetaToken[] => {
   const RegexObj = new RegExp(searchValue, 'i')
   return tokens.filter(({ currencyCode, currencyName }) => RegexObj.test(currencyCode) || RegexObj.test(currencyName))
 }
+
+export const getWalletIdsIfNotTokens = (wallets: { [walletId: string]: GuiWallet }): string[] =>
+  keys(wallets).filter((key: string) => wallets[key].metaTokens.length === 0)
