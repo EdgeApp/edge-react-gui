@@ -4,7 +4,7 @@ import React from 'react'
 import { Actions } from 'react-native-router-flux'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions'
-import { ButtonsModal } from '../../components/modals/ButtonsModal'
+import { FioExpiredModal } from '../../components/modals/FioExpiredModal'
 import { Airship } from '../../components/services/AirshipInstance'
 import * as Constants from '../../constants/indexConstants'
 import { FIO_ADDRESS_DELIMITER } from '../../constants/indexConstants'
@@ -70,41 +70,31 @@ export const refreshAllFioAddresses = (checkExpired: boolean = false) => async (
   if (checkExpired) {
     const expired: Array<FioAddress | FioDomain> = getExpiredSoonFioNames(fioAddresses, fioDomains)
 
-    if (expired.length) {
-      const list = expired.map(item => item.name).join(', ')
-      const first = expired[0]
-      const firstIsAddress = first.name.indexOf(FIO_ADDRESS_DELIMITER) > 0
-      const fioWallet: EdgeCurrencyWallet | void = fioWallets.find((item: EdgeCurrencyWallet) => item.id === first.walletId)
-      if (!fioWallet) return
+    for (const item: FioAddress | FioDomain of expired) {
+      const fioWallet: EdgeCurrencyWallet | void = fioWallets.find((walletItem: EdgeCurrencyWallet) => walletItem.id === item.walletId)
+      if (!fioWallet) continue
 
-      const answer = await Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={s.strings.fio_address_confirm_screen_fio_label}
-          message={`${s.strings.fio_address_details_expired_soon}: ${list}`}
-          buttons={{
-            ok: { label: firstIsAddress ? s.strings.title_fio_renew_address : s.strings.title_fio_renew_domain },
-            cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
-          }}
-        />
-      ))
+      const isAddress = item.name.indexOf(FIO_ADDRESS_DELIMITER) > 0
 
-      if (answer === 'ok') {
-        if (firstIsAddress) {
-          return Actions[Constants.FIO_ADDRESS_SETTINGS]({
+      const answer = await Airship.show(bridge => <FioExpiredModal bridge={bridge} fioName={item.name} isAddress={isAddress} />)
+
+      if (answer) {
+        if (isAddress) {
+          Actions[Constants.FIO_ADDRESS_SETTINGS]({
             showRenew: true,
             fioWallet,
-            fioAddressName: first.name,
-            expiration: first.expiration
+            fioAddressName: item.name,
+            expiration: item.expiration
           })
+          continue
         }
 
-        return Actions[Constants.FIO_DOMAIN_SETTINGS]({
+        Actions[Constants.FIO_DOMAIN_SETTINGS]({
           showRenew: true,
           fioWallet,
-          fioDomainName: first.name,
-          isPublic: first.isPublic || false,
-          expiration: first.expiration
+          fioDomainName: item.name,
+          isPublic: item.isPublic || false,
+          expiration: item.expiration
         })
       }
     }
