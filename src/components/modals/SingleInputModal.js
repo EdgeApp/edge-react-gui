@@ -56,7 +56,7 @@ const SingleInputModalComponent = ({ bridge, title, label, theme, onSubmit, valu
           value={value}
           autoCorrect={false}
           autoCapitalize="none"
-          returnKeyType="done"
+          returnKeyType="send"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           onClear={clearText}
