@@ -12,7 +12,7 @@ import * as Constants from '../../constants/indexConstants'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
-import { findWalletByFioAddress } from '../../modules/FioAddress/util'
+import { expiredSoon, findWalletByFioAddress } from '../../modules/FioAddress/util'
 import type { RootState } from '../../reducers/RootReducer'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -74,11 +74,7 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
     }
   }
 
-  checkExpiredSoon = (): boolean => {
-    const { expiration } = this.props
-    const month = 1000 * 60 * 60 * 24 * 30
-    return new Date(expiration).getTime() - new Date().getTime() < month
-  }
+  checkExpiredSoon = (): boolean => expiredSoon(this.props.expiration)
 
   renderTitle = (title: string) => {
     const styles = getStyles(this.props.theme)

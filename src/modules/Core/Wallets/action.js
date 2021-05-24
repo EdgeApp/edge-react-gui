@@ -3,7 +3,7 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 
-import { refreshConnectedWallets } from '../../../actions/FioActions'
+import { checkExpiredFioNames, refreshConnectedWallets } from '../../../actions/FioActions'
 import type { Dispatch, GetState } from '../../../types/reduxTypes.js'
 import { getReceiveAddresses } from '../../../util/utils.js'
 import { registerNotifications } from '../../Notifications/action'
@@ -28,6 +28,7 @@ export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: G
       }
     })
     refreshConnectedWallets(dispatch, getState, currencyWallets)
+    dispatch(checkExpiredFioNames())
     return updateWalletsEnabledTokens(getState)
   })
 }
