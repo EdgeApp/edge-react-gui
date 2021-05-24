@@ -159,9 +159,16 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
                 spinner={manageTokensPending}
                 onPress={this.saveEnabledTokenList}
                 marginRem={[0.75]}
-                paddingRem={[0.3, 2.3, 0.5, 2.3]}
+                paddingRem={[0.3, 0, 0.5, 0]}
+                widthRem={theme.rem(8.5)}
               />
-              <SecondaryButton label={s.strings.addtoken_add} onPress={this.goToAddTokenScene} marginRem={[0.75]} paddingRem={[0.3, 0.5, 0.5, 0.5]} />
+              <SecondaryButton
+                label={s.strings.addtoken_add}
+                onPress={this.goToAddTokenScene}
+                marginRem={[0.75]}
+                paddingRem={[0.3, 0, 0.5, 0]}
+                widthRem={theme.rem(8.5)}
+              />
             </SceneFooter>
           </View>
         </View>

@@ -32,7 +32,9 @@ type Props = {
   paddingRem?: number[] | number,
 
   // eslint-disable-next-line react/no-unused-prop-types
-  disabled?: boolean
+  disabled?: boolean,
+
+  widthRem?: number
 }
 
 type ColorProps = {
@@ -57,12 +59,18 @@ export function PrimaryButton(props: Props) {
 }
 
 export function SecondaryButton(props: Props) {
-  const { children, label, onPress, disabled, spinner } = props
+  const { children, label, onPress, disabled, spinner, widthRem } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
+  const propsStyles = { width: widthRem }
+
   return (
-    <TouchableOpacity style={[styles.secondaryButton, spacingStyles(props, theme), disabled ? styles.disabled : null]} onPress={onPress} disabled={disabled}>
+    <TouchableOpacity
+      style={[styles.secondaryButton, spacingStyles(props, theme), disabled ? styles.disabled : null, propsStyles]}
+      onPress={onPress}
+      disabled={disabled}
+    >
       {label != null ? <Text style={styles.secondaryText}>{label}</Text> : null}
       {spinner ? <ActivityIndicator color={theme.primaryButtonText} style={styles.spinner} /> : null}
       {children}
