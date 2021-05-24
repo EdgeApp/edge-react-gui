@@ -368,7 +368,7 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 }
 
-export const WalletList = connect(
+export const WalletList: React.ComponentType<OwnProps> = connect(
   (state: RootState): StateProps => {
     let { activeWalletIds } = state.ui.wallets
 

@@ -86,19 +86,6 @@ class WalletListComponent extends React.PureComponent<Props, State> {
 
   handleActivateSearch = () => this.setState({ searching: true })
 
-  renderHeader = () => (
-    <WalletListHeader
-      sorting={this.state.sorting}
-      searching={this.state.searching}
-      searchText={this.state.searchText}
-      openSortModal={this.handleSort}
-      onChangeSearchText={this.handleChangeSearchText}
-      onChangeSearchingState={this.handleChangeSearchingState}
-    />
-  )
-
-  renderFooter = () => (this.state.searching ? null : <WalletListFooter />)
-
   handleSort = () => {
     Airship.show(bridge => <WalletListSortModal bridge={bridge} />)
       .then(sort => {
@@ -131,8 +118,17 @@ class WalletListComponent extends React.PureComponent<Props, State> {
             <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
             <WalletList
               key="fullList"
-              header={this.renderHeader}
-              footer={this.renderFooter}
+              header={
+                <WalletListHeader
+                  sorting={this.state.sorting}
+                  searching={this.state.searching}
+                  searchText={this.state.searchText}
+                  openSortModal={this.handleSort}
+                  onChangeSearchText={this.handleChangeSearchText}
+                  onChangeSearchingState={this.handleChangeSearchingState}
+                />
+              }
+              footer={this.state.searching ? null : <WalletListFooter />}
               searching={searching}
               searchText={searchText}
               activateSearch={this.handleActivateSearch}
