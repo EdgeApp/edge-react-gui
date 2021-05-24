@@ -32,8 +32,6 @@ const strings = {
   // Warning messages:
   warning_low_or_custom_fee: 'Using a low fee may increase the amount of time it takes for your transaction to confirm.',
   warning_alphanumeric: 'Only letters and numbers can be used',
-  warning_address_too_small: 'Address too small',
-  warning_address_too_large: 'Address too large',
 
   // Alert component:
   alert_dropdown_alert: 'Alert! ',

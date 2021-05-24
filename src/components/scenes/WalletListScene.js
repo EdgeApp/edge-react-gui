@@ -116,6 +116,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
         <View style={styles.listStack}>
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
             <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
+            {/* $FlowFixMe */}
             <WalletList
               key="fullList"
               header={
