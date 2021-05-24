@@ -3,7 +3,10 @@
 import type { EdgeMetaToken } from 'edge-core-js'
 import * as React from 'react'
 import { Image, Switch, View } from 'react-native'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
+import { SYNCED_ACCOUNT_DEFAULTS } from '../../../modules/Core/Account/settings.js'
+import * as UTILS from '../../../util/utils.js'
 import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
 import { WalletListRow } from '../../themed/WalletListRow'
 
@@ -26,22 +29,30 @@ function TokenRow(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { item } = props.metaToken
-  const { enabledList, toggleToken } = props
+  const { symbolImage, currencyCode, currencyName } = props.metaToken.item
+  const { enabledList, toggleToken, goToEditTokenScene } = props
 
   const Icon = () => (
     <View style={styles.iconContainer}>
-      <Image style={styles.iconSize} source={{ uri: item.symbolImage }} />
+      <Image style={styles.iconSize} source={{ uri: symbolImage }} />
     </View>
   )
 
-  const enabled = enabledList.indexOf(item.currencyCode) >= 0
+  const EditIcon = () => (isEditable ? <FontAwesomeIcon name="edit" size={theme.rem(0.95)} color={theme.iconTappable} /> : null)
+
+  const enabled = enabledList.indexOf(currencyCode) >= 0
+  // disable editing if token is native to the app
+  const isEditable = !Object.keys(SYNCED_ACCOUNT_DEFAULTS).includes(currencyCode)
+
+  const onPress = () => {
+    isEditable ? goToEditTokenScene(currencyCode) : UTILS.noOp()
+  }
 
   return (
-    <WalletListRow gradient icon={<Icon />} currencyCode={item.currencyCode} walletName={item.currencyName}>
+    <WalletListRow onPress={onPress} gradient icon={<Icon />} editIcon={<EditIcon />} currencyCode={currencyCode} walletName={currencyName}>
       <View style={styles.touchableCheckboxInterior}>
         <Switch
-          onChange={() => toggleToken(item.currencyCode)}
+          onChange={() => toggleToken(currencyCode)}
           value={enabled}
           ios_backgroundColor={theme.toggleButtonOff}
           trackColor={{

@@ -112,6 +112,30 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
     Actions.pop()
   }
 
+  _onDeleteToken = (currencyCode: string) => {
+    const enabledListAfterDelete = _.difference(this.state.enabledList, [currencyCode])
+    this.setState({
+      enabledList: enabledListAfterDelete
+    })
+  }
+
+  _onAddToken = (currencyCode: string) => {
+    const newEnabledList = _.union(this.state.enabledList, [currencyCode])
+    this.setState({
+      enabledList: newEnabledList
+    })
+  }
+
+  goToAddTokenScene = () => {
+    const { id, metaTokens } = this.props.guiWallet
+    Actions.addToken({ walletId: id, metaTokens, onAddToken: this._onAddToken })
+  }
+
+  goToEditTokenScene = (currencyCode: string) => {
+    const { id, metaTokens } = this.props.guiWallet
+    Actions.editToken({ walletId: id, currencyCode, metaTokens, onDeleteToken: this._onDeleteToken })
+  }
+
   render() {
     const { name, currencyCode } = this.props.guiWallet
     const { manageTokensPending } = this.props
@@ -174,30 +198,6 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
         </View>
       </SceneWrapper>
     )
-  }
-
-  _onDeleteToken = (currencyCode: string) => {
-    const enabledListAfterDelete = _.difference(this.state.enabledList, [currencyCode])
-    this.setState({
-      enabledList: enabledListAfterDelete
-    })
-  }
-
-  _onAddToken = (currencyCode: string) => {
-    const newEnabledList = _.union(this.state.enabledList, [currencyCode])
-    this.setState({
-      enabledList: newEnabledList
-    })
-  }
-
-  goToAddTokenScene = () => {
-    const { id, metaTokens } = this.props.guiWallet
-    Actions.addToken({ walletId: id, metaTokens, onAddToken: this._onAddToken })
-  }
-
-  goToEditTokenScene = (currencyCode: string) => {
-    const { id, metaTokens } = this.props.guiWallet
-    Actions.editToken({ walletId: id, currencyCode, metaTokens, onDeleteToken: this._onDeleteToken })
   }
 }
 
