@@ -213,7 +213,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 4
   },
   buttonsArea: {
-    flex: 1,
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
