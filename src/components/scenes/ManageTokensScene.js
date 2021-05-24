@@ -8,11 +8,14 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
+import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import { getFilteredTokens, getTokens, TokenRow, TokensHeader } from '../common/ManageTokens'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { WalletListModal } from '../modals/WalletListModal'
+import { Airship } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import SceneFooter from '../themed/SceneFooter'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -22,7 +25,8 @@ export type ManageTokensOwnProps = {
   guiWallet: GuiWallet
 }
 export type ManageTokensDispatchProps = {
-  setEnabledTokensList: (string, string[], string[]) => void
+  setEnabledTokensList: (string, string[], string[]) => void,
+  walletListMenuAction(walletId: string, option: WalletListMenuKey, currencyCode?: string): void
 }
 
 export type ManageTokensStateProps = {
@@ -41,6 +45,8 @@ type State = {
 }
 
 class ManageTokensScene extends React.Component<ManageTokensProps, State> {
+  textInput = React.createRef()
+
   constructor(props: ManageTokensProps) {
     super(props)
 
@@ -59,12 +65,26 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
     }
   }
 
+  onSelectWallet = async () => {
+    const { walletId, currencyCode } = await Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />)
+    if (walletId && currencyCode) {
+      this.props.walletListMenuAction(walletId, 'manageTokens', currencyCode)
+    }
+  }
+
   getFilteredTokensHandler() {
     return getFilteredTokens(this.state.searchValue, this.state.tokens)
   }
 
   changeSearchValue = value => {
     this.setState({ searchValue: value })
+  }
+
+  onSearchClear = () => {
+    this.setState({ searchValue: '' })
+    if (this.textInput.current) {
+      this.textInput.current.blur()
+    }
   }
 
   toggleToken = (currencyCode: string) => {
@@ -104,10 +124,13 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
         <View style={styles.container}>
           <SceneHeader underline>
             <TokensHeader
+              textInput={this.textInput}
               walletName={name}
               walletId={this.props.guiWallet.id}
               currencyCode={currencyCode}
               changeSearchValue={this.changeSearchValue}
+              onSearchClear={this.onSearchClear}
+              onSelectWallet={this.onSelectWallet}
               searchValue={this.state.searchValue}
             />
           </SceneHeader>
@@ -200,6 +223,9 @@ const mapDispatchToProps = (dispatch: Dispatch): ManageTokensDispatchProps => ({
   setEnabledTokensList: (walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) => {
     dispatch(setWalletEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
     dispatch(checkEnabledTokensArray(walletId, enabledTokens))
+  },
+  walletListMenuAction(walletId, option, currencyCode) {
+    dispatch(walletListMenuAction(walletId, option, currencyCode))
   }
 })
 

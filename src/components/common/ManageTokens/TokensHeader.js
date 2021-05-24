@@ -1,7 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { View } from 'react-native'
+import { Pressable, View } from 'react-native'
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../../locales/strings.js'
 import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
@@ -17,24 +18,29 @@ type Props = {
   walletName: string,
   currencyCode: string,
   changeSearchValue: (value: string) => void,
-  searchValue: string
+  onSearchClear: () => void,
+  onSelectWallet: () => Promise<void>,
+  searchValue: string,
+  textInput: any
 }
 
 function TokensHeader(props: Props) {
-  const { currencyCode, walletName, walletId, changeSearchValue, searchValue } = props
+  const { currencyCode, walletName, walletId, changeSearchValue, onSearchClear, onSelectWallet, searchValue, textInput } = props
 
   const theme = useTheme()
 
-  const Icon = <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} size={theme.rem(1.5)} />
+  const LeftIcon = <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} size={theme.rem(1.5)} />
+  const RightIcon = <FontAwesomeIcon name="angle-right" color={theme.iconTappable} size={theme.rem(2)} />
 
   const styles = getStyles(theme)
 
   return (
     <>
-      <View>
-        <Title icon={Icon} text={walletName} />
-        <EdgeText style={styles.subTitle}>{s.strings.managetokens_top_instructions}</EdgeText>
-      </View>
+      <Pressable onPress={onSelectWallet}>
+        <Title styleRightIcon={styles.rightIcon} leftIcon={LeftIcon} rightIcon={RightIcon} text={walletName} />
+      </Pressable>
+      <EdgeText style={styles.subTitle}>{s.strings.managetokens_top_instructions}</EdgeText>
+
       <View style={styles.searchContainer}>
         <View style={styles.searchView}>
           <EdgeTextFieldOutlined
@@ -42,10 +48,10 @@ function TokensHeader(props: Props) {
             label={s.strings.search_tokens}
             onChangeText={changeSearchValue}
             value={searchValue}
-            onFocus={this.handleTextFieldFocus}
-            ref={this.textInput}
-            onClear={this.clearText}
+            ref={textInput}
+            onClear={onSearchClear}
             marginRem={0}
+            isClearable
             small
           />
         </View>
@@ -69,6 +75,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   searchView: {
     flex: 1,
     flexDirection: 'column'
+  },
+  rightIcon: {
+    marginRight: theme.rem(1)
   }
 }))
 

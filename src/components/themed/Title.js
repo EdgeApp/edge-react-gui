@@ -7,34 +7,39 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
 type Props = {
-  icon?: React.Node,
+  leftIcon?: React.Node,
+  rightIcon?: React.Node,
+  styleLeftIcon?: any,
+  styleRightIcon?: any,
   text: string
 }
 
 export function Title(props: Props): React.Node {
-  const { icon, text } = props
+  const { leftIcon, text, rightIcon, styleLeftIcon, styleRightIcon } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
     <View style={styles.row}>
-      {icon ? <View style={styles.padding}>{icon}</View> : null}
+      {leftIcon ? <View style={[styles.leftIcon, styleLeftIcon]}>{leftIcon}</View> : null}
       <EdgeText style={styles.text}>{text}</EdgeText>
+      {rightIcon ? <View style={styleRightIcon}>{rightIcon}</View> : null}
     </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   row: {
-    // Layout:
     minHeight: theme.rem(1.75),
     marginBottom: theme.rem(0.7),
-
-    // Children:
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-start'
+  },
+
+  leftIcon: {
+    marginRight: theme.rem(0.75)
   },
 
   text: {
@@ -44,10 +49,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1),
     textAlign: 'left',
     color: theme.primaryText
-  },
-
-  padding: {
-    paddingRight: theme.rem(0.75)
   }
 }))
 
