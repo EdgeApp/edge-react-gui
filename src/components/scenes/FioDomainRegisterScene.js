@@ -18,6 +18,7 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import type { Theme, ThemeProps } from '../services/ThemeContext'
 import { cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { FormError } from '../themed/FormError'
 import { PrimaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
 
@@ -266,12 +267,14 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
             <Tile type="editable" title={s.strings.fio_domain_choose_label} onPress={this.onDomainPress}>
               <View style={styles.domainView}>
                 <EdgeText style={styles.domainText}>{fioDomain}</EdgeText>
-                <EdgeText style={styles.errorMessage}>{chooseHandleErrorMessage ? `(${chooseHandleErrorMessage})` : ''}</EdgeText>
                 <EdgeText style={styles.loadingText}>{loading ? `(${s.strings.loading})` : ''}</EdgeText>
               </View>
             </Tile>
           </View>
 
+          <FormError style={styles.error} isVisible={!!chooseHandleErrorMessage}>
+            {chooseHandleErrorMessage}
+          </FormError>
           {this.renderFioWallets()}
           {this.renderButton()}
           <View style={styles.bottomSpace} />
@@ -305,8 +308,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText,
     marginRight: theme.rem(0.5)
   },
-  errorMessage: {
-    color: theme.dangerText
+  error: {
+    flex: 1,
+    margin: theme.rem(1)
   },
   loadingText: {
     color: theme.deactivatedText
