@@ -53,3 +53,15 @@ export const getFilteredTokens = (searchValue: string, tokens: EdgeMetaToken[]):
 
 export const getWalletIdsIfNotTokens = (wallets: { [walletId: string]: GuiWallet }): string[] =>
   keys(wallets).filter((key: string) => wallets[key].metaTokens.length === 0)
+
+export const getAllowedWalletCurrencyCodes = (wallets: { [walletId: string]: GuiWallet }): string[] =>
+  keys(wallets).reduce((acc, key: string) => {
+    const wallet = wallets[key]
+    const isKey = acc.length > 0 && acc.includes(wallet.currencyCode)
+
+    if (wallet.metaTokens.length > 0 && !isKey) {
+      acc.push(wallet.currencyCode)
+    }
+
+    return acc
+  }, [])

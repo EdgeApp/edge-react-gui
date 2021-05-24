@@ -12,7 +12,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
-import { getFilteredTokens, getTokens, getWalletIdsIfNotTokens, TokenRow, TokensHeader } from '../common/ManageTokens'
+import { getFilteredTokens, getTokens, getWalletIdsIfNotTokens, TokenRow, TokensHeader, getAllowedWalletCurrencyCodes } from '../common/ManageTokens'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
@@ -66,8 +66,14 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
 
   onSelectWallet = async () => {
     const { walletId, currencyCode } = await Airship.show(bridge => (
-      <WalletListModal excludeWalletIds={getWalletIdsIfNotTokens(this.props.wallets)} bridge={bridge} headerTitle={s.strings.select_wallet} />
+      <WalletListModal
+        allowedCurrencyCodes={getAllowedWalletCurrencyCodes(this.props.wallets)}
+        excludeWalletIds={getWalletIdsIfNotTokens(this.props.wallets)}
+        bridge={bridge}
+        headerTitle={s.strings.select_wallet}
+      />
     ))
+
     if (walletId && currencyCode) {
       Actions.refresh({ guiWallet: this.props.wallets[walletId] })
     }
