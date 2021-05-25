@@ -663,9 +663,9 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.FIO_DOMAIN_REGISTER}
               navTransparent
               component={ifLoggedIn(FioDomainRegisterScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_register_fio_domain} />}
+              renderTitle={<EdgeLogoHeader />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={this.renderEmptyButton()}
+              renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
             />
             <Scene
