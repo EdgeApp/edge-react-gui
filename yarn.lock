@@ -4731,17 +4731,17 @@ edge-core-js@^0.17.33:
     yaob "^0.3.6"
     yavent "^0.1.1"
 
-edge-currency-accountbased@^0.7.58:
-  version "0.7.58"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.58.tgz#082d1aa7a0fff2405a087f3a08c9d584058c6142"
-  integrity sha512-nl3QYP33XJDAQsf0mx08pqHsTRmBOST2fCJhcbw30vOLaUtCogdS1vBsWfLcPUNjNc1TWIOfg/94C8GyGiVq1A==
+edge-currency-accountbased@^0.7.59:
+  version "0.7.59"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.59.tgz#a5f9c9f524e976997c6d886bcab7560623170f98"
+  integrity sha512-cbn6AXLUWexzyxmxfC5/8lFi7uscKFY4ABr1Zc7S/4SUOUOOz2gTto0WHoaGCaYQWN9V5TK/IicBm5EMHr/W6Q==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.2.1"
     base-x "^1.0.4"
     biggystring "^3.0.0"
     bip39 "^3.0.2"
-    cleaners "^0.3.1"
+    cleaners "^0.3.9"
     eosjs "^21.0.3"
     eosjs-api "^7.0.4"
     eosjs-ecc "^4.0.7"
@@ -4782,10 +4782,10 @@ edge-currency-bitcoin@^4.9.14:
     uri-js "^4.2.2"
     url-parse "^1.4.3"
 
-edge-currency-monero@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.3.0.tgz#d3b9ab1f7c4dc736e68256486a9f2c78178f34b4"
-  integrity sha512-eLU/ur15ltoQwlZJaPRn/sTg6C1JdcJ2wNXqWo8YDoF85UBMJBi0EuVbrI2je+ZutLwJ/VHKqYqpGAUvB0jMPw==
+edge-currency-monero@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.3.1.tgz#4ee0eef8320cd413afeb18e8362bfbb16bf20450"
+  integrity sha512-c+zoSE1j4+ymIQCIRaqJ5vvct2uVRDBuwRv4IVyF9Hte0tWLd0fXweNXJ1LL0jOJMQICYl5KVkhEhcpwdcfyIA==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
@@ -4793,10 +4793,10 @@ edge-currency-monero@^0.3.0:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.27:
-  version "0.11.27"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.27.tgz#51cc18b779619f82d72be54bf2353db2d3ff2ff3"
-  integrity sha512-w0Hcv4VFHoyNzDrEXOqzcipCDHxngqv3fvYR+lzBy3s9h84Oi3TFQ0GS5OdGp2ZOonyemHJRNQzpysXSxOXvlw==
+edge-exchange-plugins@^0.11.28:
+  version "0.11.28"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.28.tgz#2cca055d4e30694ec56a4ad0cb9b5dcff1d2cfc2"
+  integrity sha512-ZPuWhGsNRmgf3L2vgCD6Xmb7C80FUFX1w0gQpLZU9zFq1WAdzyLX9SDKe7qf8ldTBWh5tn+uK8Vp1Cw7RdPslw==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.3.9"
