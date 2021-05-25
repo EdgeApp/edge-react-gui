@@ -4,7 +4,8 @@ import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 
 import * as Constants from '../constants/indexConstants'
 import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
-import { addToFioAddressCache, refreshConnectedWalletsForFioAddress } from '../modules/FioAddress/util.js'
+import { refreshAllFioAddresses } from '../modules/FioAddress/action'
+import { addToFioAddressCache, needToCheckExpired, refreshConnectedWalletsForFioAddress } from '../modules/FioAddress/util'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 
 export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetState, currencyWallets: { [walletId: string]: EdgeCurrencyWallet }) => {
@@ -55,5 +56,19 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
     }
   } catch (e) {
     console.log(e)
+  }
+}
+
+export const needToCheckExpiredFioNames = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const data = await needToCheckExpired(state.core.disklet)
+  dispatch({ type: 'FIO/NEED_TO_CHECK_EXPIRED', data })
+}
+
+export const checkExpiredFioNames = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  if (state.ui.fio.needToCheckExpired) {
+    dispatch(refreshAllFioAddresses(true))
+    dispatch({ type: 'FIO/NEED_TO_CHECK_EXPIRED', data: false })
   }
 }

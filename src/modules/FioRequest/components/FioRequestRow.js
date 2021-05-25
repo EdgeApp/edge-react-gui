@@ -12,7 +12,7 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { formatNumber, formatTime } from '../../../locales/intl.js'
 import s from '../../../locales/strings'
 import { type RootState } from '../../../types/reduxTypes'
-import type { FioRequest } from '../../../types/types'
+import { type FioRequest, type GuiWallet } from '../../../types/types'
 import { getFiatSymbol } from '../../../util/utils'
 import { getDisplayDenomination } from '../../Settings/selectors'
 import { getSelectedWallet } from '../../UI/selectors'
@@ -164,7 +164,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const { fioRequest } = ownProps
-  const wallet = getSelectedWallet(state)
+  const wallet: GuiWallet = getSelectedWallet(state)
   if (!wallet) {
     return {
       displayDenomination: {},

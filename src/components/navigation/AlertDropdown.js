@@ -40,18 +40,18 @@ const padding = THEME.rem(1 / 2)
 
 const styles = StyleSheet.create({
   container: {
-    minHeight: getHeaderHeight(),
-    padding,
-
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+
+    justifyContent: 'space-between',
+    minHeight: getHeaderHeight(),
+    padding
   },
 
   icon: {
     color: THEME.COLORS.WHITE,
-    textAlign: 'center',
-    minWidth: THEME.rem(1.4)
+    minWidth: THEME.rem(1.4),
+    textAlign: 'center'
   },
 
   text: {

@@ -18,7 +18,7 @@ import s from '../../../locales/strings.js'
 import { type Dispatch, type RootState } from '../../../types/reduxTypes'
 import type { FioAddress, FioRequest, GuiWallet } from '../../../types/types'
 import Text from '../../UI/components/FormattedText/FormattedText.ui.js'
-import * as UI_SELECTORS from '../../UI/selectors.js'
+import { getSelectedWallet } from '../../UI/selectors.js'
 import { refreshAllFioAddresses } from '../action'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../util'
 
@@ -94,6 +94,7 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
   componentDidUpdate() {
     const { expirationUpdated } = this.state
     if (expirationUpdated) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ expirationUpdated: false })
       this.setFioAddress(this.props.selected)
     }
@@ -298,9 +299,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 const mapStateToProps = (state: RootState): SelectFioAddressProps => {
-  const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
-  const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const fioWallets: EdgeCurrencyWallet[] = UI_SELECTORS.getFioWallets(state)
+  const guiWallet: GuiWallet = getSelectedWallet(state)
+  const currencyCode: string = state.ui.wallets.selectedCurrencyCode
+  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
   const fioAddresses = state.ui.scenes.fioAddress.fioAddresses
 
   if (!guiWallet || !currencyCode) {

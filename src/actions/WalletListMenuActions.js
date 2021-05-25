@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { launchModal } from '../components/common/ModalProvider.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
+import { showInfoModal } from '../components/modals/InfoModal'
 import { RawTextModal } from '../components/modals/RawTextModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { getTheme } from '../components/services/ThemeContext.js'
@@ -15,7 +16,6 @@ import { CheckPasswordModal } from '../components/themed/CheckPasswordModal.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
-import * as WALLET_SELECTORS from '../modules/UI/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
@@ -30,7 +30,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const wallet = WALLET_SELECTORS.getWallet(state, walletId)
+        const wallet = state.ui.wallets.byId[walletId]
         Actions.manageTokens({ guiWallet: wallet })
       }
     }
@@ -38,7 +38,17 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     case 'delete': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const wallet = WALLET_SELECTORS.getWallet(state, walletId)
+        const wallets = state.ui.wallets.byId
+        const wallet = wallets[walletId]
+
+        if (Object.values(wallets).length === 1) {
+          showInfoModal(s.strings.cannot_delete_last_wallet_modal_title, [
+            s.strings.cannot_delete_last_wallet_modal_message_part_1,
+            s.strings.cannot_delete_last_wallet_modal_message_part_2
+          ])
+          return
+        }
+
         const type = wallet.type.replace('wallet:', '')
         let fioAddress = ''
 
@@ -76,9 +86,9 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     case 'viewXPub': {
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const { currencyWallets = {} } = state.core.account
+        const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
-        const xPub = wallet.getDisplayPublicSeed()
+        const xPub = wallet.displayPublicSeed
         const xPubExplorer = wallet.currencyInfo.xpubExplorer && xPub ? sprintf(wallet.currencyInfo.xpubExplorer, xPub) : ''
         dispatch({ type: 'OPEN_VIEWXPUB_WALLET_MODAL', data: { xPub, walletId, xPubExplorer } })
       }
@@ -87,7 +97,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
     case 'exportWalletTransactions': {
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
-        const { currencyWallets = {} } = state.core.account
+        const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
         Actions[Constants.TRANSACTIONS_EXPORT]({ sourceWallet: wallet, currencyCode })
       }
@@ -97,7 +107,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const { account } = state.core
-        const { currencyWallets = {} } = account
+        const { currencyWallets } = account
         const wallet = currencyWallets[walletId]
         const message = `${s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}\n${getWalletName(wallet)}`
 
@@ -115,7 +125,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
             <ButtonsModal
               title={s.strings.fragment_wallets_get_seed_wallet}
               bridge={bridge}
-              message={wallet.getDisplayPrivateSeed() || undefined}
+              message={wallet.displayPrivateSeed || undefined}
               buttons={{ ok: { label: s.strings.string_ok_cap } }}
             />
           ))
@@ -188,7 +198,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return async (dispatch: Dispatch, getState: GetState) => {
         try {
           const state = getState()
-          const { currencyWallets = {} } = state.core.account
+          const { currencyWallets } = state.core.account
           const wallet = currencyWallets[walletId]
           const walletName = wallet.name
           const input = {

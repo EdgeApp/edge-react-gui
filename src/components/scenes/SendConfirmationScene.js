@@ -19,7 +19,7 @@ import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/Flip
 import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Recipient from '../../modules/UI/components/Recipient/Recipient.ui.js'
-import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
+import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes/SendConfirmation/selectors'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducers/scenes/SendConfirmationReducer.js'
@@ -43,7 +43,6 @@ export type SendConfirmationStateProps = {
   parentNetworkFee: string | null,
   networkFee: string | null,
   pending: boolean,
-  keyboardIsVisible: boolean,
   balanceInCrypto: string,
   balanceInFiat: number,
   parentDisplayDenomination: EdgeDenomination,
@@ -65,15 +64,13 @@ export type SendConfirmationStateProps = {
   coreWallet: EdgeCurrencyWallet,
   sceneState: SendConfirmationState,
   toggleCryptoOnTop: number,
-  guiWallet: GuiWallet,
-  isConnected: boolean
+  guiWallet: GuiWallet
 }
 
 export type SendConfirmationDispatchProps = {
   updateSpendPending: boolean => any,
   signBroadcastAndSave: (fioSender?: FioSenderInfo) => any,
   reset: () => any,
-  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any,
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => any,
   onChangePin: (pin: string) => mixed,
   uniqueIdentifierButtonPressed: () => void,
@@ -150,6 +147,7 @@ export class SendConfirmation extends React.Component<Props, State> {
     }
 
     if (this.props.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         overridePrimaryExchangeAmount: bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION),
         forceUpdateGuiCounter: this.props.forceUpdateGuiCounter
@@ -354,14 +352,7 @@ export class SendConfirmation extends React.Component<Props, State> {
               />
             </View>
             <Scene.Footer style={[styles.footer, uniqueIdentifierInfo != null && styles.footerWithPaymentId]}>
-              <Slider
-                forceUpdateGuiCounter={this.props.forceUpdateGuiCounter}
-                resetSlider={this.props.resetSlider}
-                parentStyle={styles.sliderStyle}
-                onSlidingComplete={this.signBroadcastAndSave}
-                sliderDisabled={sliderDisabled}
-                showSpinner={showSpinner}
-              />
+              <Slider reset={this.props.resetSlider} onSlidingComplete={this.signBroadcastAndSave} disabled={sliderDisabled} showSpinner={showSpinner} />
             </Scene.Footer>
           </View>
         </SceneWrapper>
@@ -568,9 +559,6 @@ const rawStyles = {
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
 
-  sliderStyle: {
-    width: scale(270)
-  },
   error: {
     marginHorizontal: scale(10),
     backgroundColor: THEME.COLORS.TRANSPARENT

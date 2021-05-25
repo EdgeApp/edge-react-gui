@@ -6,154 +6,154 @@ import THEME from '../../../../theme/variables/airbitz'
 import { scale } from '../../../../util/scaling.js'
 
 export const styles = StyleSheet.create({
-  container: {
-    width: '90%',
-    minHeight: Platform.OS === 'ios' ? THEME.rem(7.875) : THEME.rem(8.5),
-    backgroundColor: THEME.COLORS.BLUE_3,
-    borderRadius: 5,
-    flexDirection: 'column',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    paddingVertical: scale(12)
-  },
-  flipContainerHeader: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginBottom: scale(8)
-  },
-  flipContainerHeaderIcon: {
-    height: scale(22),
-    width: scale(22),
-    marginLeft: scale(13),
-    marginRight: scale(13),
-    resizeMode: 'cover'
-  },
-  flipContainerHeaderTextContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    color: THEME.COLORS.WHITE
-  },
-  flipContainerHeaderText: {
-    fontSize: scale(15),
-    color: THEME.COLORS.WHITE
-  },
-  flipContainerHeaderTextDropDown: {
-    marginLeft: scale(3),
-    color: THEME.COLORS.WHITE
-  },
-  flipContainerBody: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  flipContainerFront: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    backfaceVisibility: 'hidden'
-  },
-  flipContainerBack: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0
-  },
-  flipButton: {
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    marginLeft: scale(13),
-    marginRight: scale(9),
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  flipIcon: {
-    color: THEME.COLORS.GRAY_3
-  },
-  rows: {
-    flex: 1,
-    flexDirection: 'column',
-    marginRight: scale(23),
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
   clipboardContainer: {
-    width: '70%',
+    alignItems: 'flex-end',
     height: 0,
     right: 0,
-    alignItems: 'flex-end'
+    width: '70%'
   },
   clipboardText: {
     color: THEME.COLORS.BLACK,
     fontSize: scale(16),
     padding: scale(4)
+  },
+  container: {
+    alignSelf: 'center',
+    backgroundColor: THEME.COLORS.BLUE_3,
+    borderRadius: 5,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    minHeight: Platform.OS === 'ios' ? THEME.rem(7.875) : THEME.rem(8.5),
+    paddingVertical: scale(12),
+    width: '90%'
+  },
+  flipButton: {
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    justifyContent: 'center',
+    marginLeft: scale(13),
+    marginRight: scale(9)
+  },
+  flipContainerBack: {
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0
+  },
+  flipContainerBody: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center'
+  },
+  flipContainerFront: {
+    alignItems: 'center',
+    backfaceVisibility: 'hidden',
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
+  },
+  flipContainerHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginBottom: scale(8)
+  },
+  flipContainerHeaderIcon: {
+    height: scale(22),
+    marginLeft: scale(13),
+    marginRight: scale(13),
+    resizeMode: 'cover',
+    width: scale(22)
+  },
+  flipContainerHeaderText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(15)
+  },
+  flipContainerHeaderTextContainer: {
+    alignItems: 'center',
+    color: THEME.COLORS.WHITE,
+    flex: 1,
+    flexDirection: 'row'
+  },
+  flipContainerHeaderTextDropDown: {
+    color: THEME.COLORS.WHITE,
+    marginLeft: scale(3)
+  },
+  flipIcon: {
+    color: THEME.COLORS.GRAY_3
+  },
+  rows: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    flex: 1,
+    flexDirection: 'column',
+    marginRight: scale(23)
   }
 })
 
 export const top = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: scale(4),
-    borderBottomColor: THEME.COLORS.OPAQUE_WHITE,
-    borderBottomWidth: scale(1)
+  amount: {
+    fontFamily: THEME.FONTS.SYMBOLS,
+    fontSize: THEME.rem(1.5),
+    padding: 0,
+    textAlign: 'right',
+    width: '100%'
   },
   amountContainer: {
+    alignItems: 'flex-end',
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end'
-  },
-  amount: {
-    width: '100%',
-    fontSize: THEME.rem(1.5),
-    fontFamily: THEME.FONTS.SYMBOLS,
-    textAlign: 'right',
-    padding: 0
+    justifyContent: 'flex-end'
   },
   amountPlaceholder: {
     color: THEME.COLORS.GRAY_2,
     fontSize: Platform.OS === 'ios' ? THEME.rem(1.5) : THEME.rem(1)
   },
   currencyCode: {
-    fontSize: THEME.rem(1.5),
     color: THEME.COLORS.WHITE,
-    textAlign: 'left',
-    marginRight: THEME.rem(0.5)
+    fontSize: THEME.rem(1.5),
+    marginRight: THEME.rem(0.5),
+    textAlign: 'left'
+  },
+  row: {
+    alignItems: 'center',
+    borderBottomColor: THEME.COLORS.OPAQUE_WHITE,
+    borderBottomWidth: scale(1),
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingBottom: scale(4)
   },
   textInput: {
+    height: 0,
     position: 'absolute',
-    width: 0,
-    height: 0
+    width: 0
   }
 })
 
 export const bottom = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: scale(8)
-  },
-  amount: {
-    width: '100%',
-    fontSize: scale(10),
-    color: THEME.COLORS.WHITE,
-    opacity: THEME.OPACITY.MID,
-    fontFamily: THEME.FONTS.SYMBOLS,
-    textAlign: 'right',
-    padding: 0
-  },
-  currencyCode: {
-    fontSize: scale(10),
-    color: THEME.COLORS.WHITE,
-    opacity: THEME.OPACITY.MID,
-    textAlign: 'right'
-  },
   alert: {
     color: THEME.COLORS.WHITE,
     opacity: THEME.OPACITY.MID
+  },
+  amount: {
+    color: THEME.COLORS.WHITE,
+    fontFamily: THEME.FONTS.SYMBOLS,
+    fontSize: scale(10),
+    opacity: THEME.OPACITY.MID,
+    padding: 0,
+    textAlign: 'right',
+    width: '100%'
+  },
+  currencyCode: {
+    color: THEME.COLORS.WHITE,
+    fontSize: scale(10),
+    opacity: THEME.OPACITY.MID,
+    textAlign: 'right'
+  },
+  row: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingTop: scale(8)
   }
 })

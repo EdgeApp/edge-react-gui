@@ -176,17 +176,8 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
   }
 
   render() {
-    const {
-      fromCurrencyIcon,
-      fromDenomination,
-      fromWalletCurrencyName,
-      swapInfo,
-      toCurrencyIcon,
-      toDenomination,
-      toWalletCurrencyName,
-      pending,
-      theme
-    } = this.props
+    const { fromCurrencyIcon, fromDenomination, fromWalletCurrencyName, swapInfo, toCurrencyIcon, toDenomination, toWalletCurrencyName, pending, theme } =
+      this.props
     const { fee, fromDisplayAmount, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
     const { isEstimate, pluginId } = swapInfo.quote
     const { fromWallet, toWallet } = swapInfo.request
@@ -276,8 +267,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.warningText
   },
   slider: {
-    marginTop: theme.rem(1.5),
-    alignItems: 'center'
+    marginTop: theme.rem(1.5)
   },
   spacer: {
     height: theme.rem(8)

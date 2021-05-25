@@ -14,7 +14,6 @@ import s from '../../locales/strings.js'
 import { getDomainRegInfo } from '../../modules/FioAddress/util'
 import { getExchangeDenomination } from '../../modules/Settings/selectors'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
-import { getFioWallets } from '../../modules/UI/selectors'
 import { type Dispatch, type RootState } from '../../types/reduxTypes'
 import type { GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -32,7 +31,6 @@ type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null,
   fioWallets: EdgeCurrencyWallet[],
   fioDisplayDenomination: EdgeDenomination,
-  defaultFiatCode: string,
   isConnected: boolean
 }
 
@@ -254,19 +252,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
 const FioDomainRegisterSelectWalletScene = connect(
   (state: RootState) => {
     const wallets = state.ui.wallets.byId
-    const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
+    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
     const { account } = state.core
     const fioPlugin = account && account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
     const fioDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, Constants.FIO_STR)
-
-    const defaultFiatCode = SETTINGS_SELECTORS.getDefaultIsoFiat(state)
 
     return {
       state,
       fioWallets,
       fioPlugin,
       fioDisplayDenomination,
-      defaultFiatCode,
       wallets,
       isConnected: state.network.isConnected
     }

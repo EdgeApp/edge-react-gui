@@ -5,27 +5,27 @@ import { StyleSheet } from 'react-native'
 import THEME from '../../../../theme/variables/airbitz.js'
 
 export default StyleSheet.create({
-  recipient: {
-    flexDirection: 'column',
-    width: '100%',
-    alignItems: 'center',
-    padding: 6
-  },
-  row: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
   item: {
-    backgroundColor: THEME.COLORS.TRANSPARENT,
     alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     justifyContent: 'center'
   },
-  text: {
-    color: THEME.COLORS.WHITE,
+  recipient: {
+    alignItems: 'center',
+    flexDirection: 'column',
+    padding: 6,
+    width: '100%'
+  },
+  row: {
+    alignItems: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: '100%'
+  },
+  text: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    color: THEME.COLORS.WHITE,
     fontFamily: THEME.FONTS.DEFAULT,
     fontSize: 14
   }

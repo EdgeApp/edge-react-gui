@@ -13,7 +13,6 @@ import s from '../../../locales/strings.js'
 type FioNameProps = {
   name: string,
   expiration: string,
-  isLast?: boolean,
   icon: React.Node,
   onPress: () => void
 }

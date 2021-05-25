@@ -78,8 +78,6 @@ class LoginSceneComponent extends React.Component<Props, State> {
       Airship.show(bridge => (
         <UpdateModal
           bridge={bridge}
-          newVersion={response.version}
-          released={response.released}
           onUpdate={() => {
             const bundleId = getBundleId()
             const url =
@@ -108,6 +106,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
 
       // Pass the link to our component:
       const { passwordRecoveryKey } = pendingDeepLink
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState(state => ({ passwordRecoveryKey, counter: state.counter + 1 }))
       this.props.deepLinkHandled()
     }

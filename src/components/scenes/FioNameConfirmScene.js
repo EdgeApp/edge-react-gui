@@ -9,7 +9,6 @@ import { connect } from 'react-redux'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
-import { getDisplayDenomination } from '../../modules/Settings/selectors'
 import { type RootState } from '../../types/reduxTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -20,7 +19,6 @@ import { Tile } from '../themed/Tile'
 
 export type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null,
-  denominationMultiplier: string,
   isConnected: boolean
 }
 
@@ -162,11 +160,9 @@ const getStyles = cacheStyles(() => ({
 const FioNameConfirmScene = connect((state: RootState) => {
   const { account } = state.core
   const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
-  const displayDenomination = getDisplayDenomination(state, Constants.FIO_STR)
 
   return {
     fioPlugin,
-    denominationMultiplier: displayDenomination.multiplier,
     isConnected: state.network.isConnected
   }
 }, {})(FioNameConfirm)

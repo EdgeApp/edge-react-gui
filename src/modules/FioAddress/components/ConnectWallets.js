@@ -14,7 +14,6 @@ import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
 import { type RootState } from '../../../types/reduxTypes'
 import type { FioConnectionWalletItem } from '../../../types/types'
-import { getWallets } from '../../UI/selectors'
 import { makeConnectWallets } from '../util'
 
 export type LocalState = {
@@ -272,7 +271,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 const mapStateToProps = (state: RootState, ownProps): FioConnectWalletStateProps => {
-  const wallets = getWallets(state)
+  const wallets = state.ui.wallets.byId
   const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
 
   if (!ccWalletMap) return { walletItems: {}, loading: true }

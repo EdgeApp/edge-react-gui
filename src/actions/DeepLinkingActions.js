@@ -52,7 +52,7 @@ export const retryPendingDeepLink = () => (dispatch: Dispatch, getState: GetStat
  * Launches a link if it app is able to do so.
  */
 function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boolean {
-  const { activeWalletIds = [], currencyWallets = {}, username } = state.core.account
+  const { activeWalletIds, currencyWallets, username } = state.core.account
   const { byId = {}, selectedWalletId } = state.ui.wallets
   const hasCurrentWallet = byId[selectedWalletId] != null
 

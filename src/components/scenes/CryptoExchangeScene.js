@@ -1,7 +1,6 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -12,7 +11,6 @@ import { type SetNativeAmountInfo, getQuoteForTransaction, selectWalletForExchan
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { getSettings } from '../../modules/Settings/selectors.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
 import { getExchangeRate } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
@@ -29,8 +27,6 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { SecondaryButton } from '../themed/ThemedButtons'
 
 type StateProps = {
-  account: EdgeAccount,
-
   // The following props are used to populate the CryptoExchangeFlipInputs
   fromWallet: GuiWallet,
   fromExchangeAmount: string,
@@ -46,18 +42,13 @@ type StateProps = {
   // The following props are used to populate the confirmation modal
   fromCurrencyCode: string,
   fromCurrencyIcon: string,
-  fromCurrencyIconDark: string,
-  fromDisplayAmount: string,
   toCurrencyIcon: string,
-  toCurrencyIconDark: string,
   toCurrencyCode: string,
-  toDisplayAmount: string,
 
   // Number of times To and From wallets were flipped
   forceUpdateGuiCounter: number,
   calculatingMax: boolean,
-  creatingWallet: boolean,
-  defaultIsoFiat: string
+  creatingWallet: boolean
 }
 type DispatchProps = {
   onSelectWallet(walletId: string, currencyCode: string, direction: 'from' | 'to'): void,
@@ -314,10 +305,7 @@ export const CryptoExchangeScene = connect(
       toFiatToCrypto = 1
     }
     const creatingWallet = state.cryptoExchange.creatingWallet
-    const settings = getSettings(state)
-    const defaultIsoFiat = settings.defaultIsoFiat
     return {
-      account: state.core.account,
       fromWallet: fromWallet || emptyGuiWallet,
       fromExchangeAmount,
       fromCurrencyCode,
@@ -330,16 +318,11 @@ export const CryptoExchangeScene = connect(
       toPrimaryInfo,
       toButtonText,
       toFiatToCrypto,
-      fromDisplayAmount: state.cryptoExchange.fromDisplayAmount,
-      toDisplayAmount: state.cryptoExchange.toDisplayAmount,
       fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon || '',
-      fromCurrencyIconDark: state.cryptoExchange.fromCurrencyIconDark || '',
       toCurrencyIcon: state.cryptoExchange.toCurrencyIcon || '',
-      toCurrencyIconDark: state.cryptoExchange.toCurrencyIconDark || '',
       forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
       calculatingMax: state.cryptoExchange.calculatingMax,
-      creatingWallet,
-      defaultIsoFiat
+      creatingWallet
     }
   },
   (dispatch: Dispatch): DispatchProps => ({

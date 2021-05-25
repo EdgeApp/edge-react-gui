@@ -4,13 +4,13 @@ import { connect } from 'react-redux'
 
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { getDisplayDenominationFull } from '../../../Settings/selectors.js'
-import { getExchangeDenomination, getExchangeRate, getSelectedCurrencyCode, getSelectedWallet } from '../../../UI/selectors.js'
+import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../../UI/selectors.js'
 import ControlPanel from './ControlPanel.ui'
 
 const mapStateToProps = (state: RootState) => {
   let secondaryToPrimaryRatio = 0
   const guiWallet = getSelectedWallet(state)
-  const currencyCode = getSelectedCurrencyCode(state)
+  const currencyCode = state.ui.wallets.selectedCurrencyCode
   const exchangeRate = guiWallet ? getExchangeRate(state, currencyCode, guiWallet.isoFiatCurrencyCode) : 0
   let primaryDisplayDenomination = null
   let primaryExchangeDenomination = null
@@ -18,27 +18,37 @@ const mapStateToProps = (state: RootState) => {
   let secondaryDisplayCurrencyCode = ''
   let currencyLogo = ''
 
-  if (guiWallet && currencyCode) {
-    const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
-    // if selected currencyCode is parent wallet currencyCode
-    if (guiWallet.currencyCode === currencyCode) {
-      currencyLogo = guiWallet.symbolImage
-    } else {
-      // otherwise it is likely a token, so find the metaToken object and get symbolImage
-      const metaToken = guiWallet.metaTokens.find(metaToken => currencyCode === metaToken.currencyCode)
-      if (metaToken && metaToken.symbolImage) {
-        currencyLogo = metaToken.symbolImage
-      } else {
+  // Try catch block to check specific details why the guiWallet.metaTokens becomes undefined
+  try {
+    if (guiWallet && currencyCode) {
+      const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
+      // if selected currencyCode is parent wallet currencyCode
+      if (guiWallet.currencyCode === currencyCode) {
         currencyLogo = guiWallet.symbolImage
+      } else {
+        // otherwise it is likely a token, so find the metaToken object and get symbolImage
+        const metaToken = guiWallet.metaTokens.find(metaToken => currencyCode === metaToken.currencyCode)
+        if (metaToken && metaToken.symbolImage) {
+          currencyLogo = metaToken.symbolImage
+        } else {
+          currencyLogo = guiWallet.symbolImage
+        }
       }
+      secondaryDisplayCurrencyCode = guiWallet.fiatCurrencyCode
+      secondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+      primaryDisplayDenomination = getDisplayDenominationFull(state, currencyCode)
+      primaryExchangeDenomination = getExchangeDenomination(state, currencyCode)
+      secondaryDisplayAmount =
+        (parseFloat(1) * parseFloat(secondaryToPrimaryRatio) * parseFloat(primaryDisplayDenomination.multiplier)) /
+        parseFloat(primaryExchangeDenomination.multiplier)
     }
-    secondaryDisplayCurrencyCode = guiWallet.fiatCurrencyCode
-    secondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-    primaryDisplayDenomination = getDisplayDenominationFull(state, currencyCode)
-    primaryExchangeDenomination = getExchangeDenomination(state, currencyCode)
-    secondaryDisplayAmount =
-      (parseFloat(1) * parseFloat(secondaryToPrimaryRatio) * parseFloat(primaryDisplayDenomination.multiplier)) /
-      parseFloat(primaryExchangeDenomination.multiplier)
+  } catch (error) {
+    console.log('ControlPanelGuiWalletId', guiWallet.id)
+    console.log('ControlPanelGuiWalletCurrencyCode', guiWallet.currencyCode)
+    console.log('ControlPanelGuiWalletNativeBalances', guiWallet.nativeBalances)
+    console.log('ControlPanelGuiWalletMetaTokens', guiWallet.metaTokens)
+    console.log('ControlPanelGuiWalletEnabledTokens', guiWallet.enabledTokens)
+    throw new Error(error)
   }
 
   return {

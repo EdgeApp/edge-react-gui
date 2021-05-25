@@ -6,13 +6,11 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { FIO_ADDRESS_LIST, SEND } from '../../constants/SceneKeys'
-import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { getRenewalFee, getTransferFee, renewFioName } from '../../modules/FioAddress/util'
-import { getDisplayDenomination } from '../../modules/Settings/selectors'
 import { type Dispatch, type RootState } from '../../types/reduxTypes'
 import type { FioAddress } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -30,7 +28,6 @@ type LocalState = {
 
 type StateProps = {
   fioAddresses: FioAddress[],
-  denominationMultiplier: string,
   isConnected: boolean
 }
 
@@ -198,17 +195,10 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 }
 
-const mapStateToProps = (state: RootState) => {
-  const displayDenomination = getDisplayDenomination(state, FIO_STR)
-
-  const out: StateProps = {
-    fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
-    denominationMultiplier: displayDenomination.multiplier,
-    isConnected: state.network.isConnected
-  }
-
-  return out
-}
+const mapStateToProps = (state: RootState): StateProps => ({
+  fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+  isConnected: state.network.isConnected
+})
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   refreshAllFioAddresses: () => {

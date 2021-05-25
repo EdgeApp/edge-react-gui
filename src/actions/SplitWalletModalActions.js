@@ -14,7 +14,7 @@ const getSplitType = (currencyCode: string) => (currencyCode === 'BCH' ? 'wallet
 export const showSplitWalletModal = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  const { currencyWallets = {} } = account
+  const { currencyWallets } = account
   const edgeWallet = currencyWallets[walletId]
 
   let bodyText = s.strings.fragment_wallets_split_wallet_first_confirm_message_mobile

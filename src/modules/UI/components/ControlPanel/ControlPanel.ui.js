@@ -23,7 +23,6 @@ export type Props = {
   primaryExchangeDenomination: GuiDenomination,
   secondaryDisplayCurrencyCode: string,
   secondaryToPrimaryRatio: number,
-  styles: Object,
   username: string,
   openSelectUser: () => void,
   closeSelectUser: () => void,

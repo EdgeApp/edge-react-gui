@@ -46,6 +46,6 @@ export const setNewSubcategory = (newSubcategory: string) => (dispatch: Dispatch
 
 export const getSelectedWallet = (state: RootState): EdgeCurrencyWallet => {
   const { selectedWalletId } = state.ui.wallets
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   return currencyWallets[selectedWalletId]
 }
