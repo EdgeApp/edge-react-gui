@@ -21,8 +21,7 @@ export const initialState = {
       category: '',
       notes: '',
       amountFiat: 0,
-      bizId: 0,
-      miscJson: ''
+      bizId: 0
     }
   },
   spendInfo: null,

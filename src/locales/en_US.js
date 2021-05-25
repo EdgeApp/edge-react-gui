@@ -382,6 +382,7 @@ const strings = {
   title_fio_domain_settings: 'Domain Settings',
   title_fio_renew_address: 'Renew FIO Address',
   title_fio_renew_domain: 'Renew FIO Domain',
+  title_fio_renew: 'Renew',
   title_fio_make_public_domain: 'Make Domain Public',
   title_fio_make_private_domain: 'Make Domain Private',
   title_fio_transfer_domain: 'Transfer FIO Domain',
@@ -678,6 +679,7 @@ const strings = {
   fio_action_fee_label: 'Operation Fee',
   fio_domain_is_public_label: 'Your FIO Domain is public now',
   fio_domain_is_private_label: 'Your FIO Domain is private now',
+  fio_domain_details_expired_soon: 'Your FIO Domain is about to expire.\nWould you like to renew it?',
   fio_domain_set_visibility_err: 'There was an issue changing visibility of your domain. Please try again later.',
   fio_transfer_err_msg: 'There was an issue transferring your %s. Please try again later.',
   transfer_fio_address_exception: 'FIO Addresses with existing FIO Requests or FIO memos can not be transferred now.',
@@ -742,6 +744,11 @@ const strings = {
   fio_domain_to_transfer: 'Domain to Transfer',
   fio_domain_transferred: 'Successfully transferred',
   scan_address_modal_title: 'Enter Recipient FIO, ENS, or Public Address',
+  scan_private_key_modal_title: 'Enter Private Key',
+  scan_private_key_modal_label: 'Private Key',
+  scan_private_key_error_title: 'Invalid Private Key',
+  scan_private_key_error_description: 'Not a valid private key',
+  scan_private_key_button_title: 'Enter Key',
   address_modal_default_header: 'Enter Address',
   open_url_err: 'Can not open this url - %s',
   // Unstoppable resolution error codes
@@ -778,13 +785,21 @@ const strings = {
   string_enter: 'Enter',
   string_fee: 'Fee',
   string_total_amount: 'Total Amount',
+  string_expiration: 'Expiration',
   export_transaction_error: 'Start date should be earlier than the end date',
   export_transaction_export_error: 'No transactions in the date range chosen',
   export_transaction_loading: 'Exporting Transactions…',
+  string_allow: 'Allow',
 
   step: 'Step',
   scan_as_in_scan_barcode: 'Scan',
   enter_as_in_enter_address_with_keyboard: 'Enter',
+
+  // Contacts Permission Modal
+  contacts_permission_modal_title: 'Access to Contacts',
+  contacts_permission_modal_text_1: 'Edge would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
+  contacts_permission_modal_text_2: 'No contact information is shared with Edge or any other entities. All information is encrypted and only seen by YOU.',
+  contacts_permission_modal_text_3: 'If you deny access, Edge can still function to buy, sell, trade, and transact cryptocurrency.',
 
   // Wallet List Sort
   wallet_list_sort_title: 'Sort Wallets',

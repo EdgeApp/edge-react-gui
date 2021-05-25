@@ -23,7 +23,6 @@ import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship, showActivity } from '../services/AirshipInstance.js'
 
 type OwnProps = {
-  addTokenPending: boolean,
   currencyCode: string,
   metaTokens: EdgeMetaToken[],
   onDeleteToken(currencyCode: string): void,

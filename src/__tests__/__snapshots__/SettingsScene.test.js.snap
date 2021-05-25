@@ -94,6 +94,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           </View>
           <Text
             adjustsFontSizeToFit={true}
+            allowFontScaling={true}
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
@@ -514,6 +515,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           </View>
           <Text
             adjustsFontSizeToFit={true}
+            allowFontScaling={true}
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
@@ -1400,8 +1402,9 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "color": "#0E4B75",
                 "fontFamily": "Quicksand-Medium",
                 "fontSize": 22,
-                "lineHeight": 45,
+                "includeFontPadding": false,
                 "marginHorizontal": 11,
+                "marginVertical": 6,
               }
             }
           >
@@ -1508,6 +1511,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           </View>
           <Text
             adjustsFontSizeToFit={true}
+            allowFontScaling={true}
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
@@ -1928,6 +1932,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           </View>
           <Text
             adjustsFontSizeToFit={true}
+            allowFontScaling={true}
             minimumFontScale={0.65}
             numberOfLines={1}
             style={
@@ -2814,8 +2819,9 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "color": "#0E4B75",
                 "fontFamily": "Quicksand-Medium",
                 "fontSize": 22,
-                "lineHeight": 45,
+                "includeFontPadding": false,
                 "marginHorizontal": 11,
+                "marginVertical": 6,
               }
             }
           >

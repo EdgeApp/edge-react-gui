@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import * as React from 'react'
@@ -26,14 +27,18 @@ export default class FormattedText extends React.Component {
     }
   }
 
+  handleRef = element => {
+    this.nativeForward = element
+  }
+
   setNativeProps(props) {
-    this.refs.nativeForward.setNativeProps(props)
+    this.nativeForward.setNativeProps(props)
   }
 
   render() {
     const fontSize = this.props.fontSize ? scale(this.props.fontSize) : scale(14)
     return (
-      <Text {...this.props} style={[this.style, { fontSize }, this.props.style]} ref="nativeForward" allowFontScaling={false}>
+      <Text {...this.props} style={[this.style, { fontSize }, this.props.style]} ref={this.handleRef} allowFontScaling={false}>
         {this.props.children}
       </Text>
     )

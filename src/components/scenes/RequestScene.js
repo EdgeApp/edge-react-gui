@@ -206,6 +206,7 @@ export class RequestComponent extends React.Component<Props, State> {
         }, PUBLIC_ADDRESS_REFRESH_MS)
       }
 
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
         encodedURI,
         publicAddress: publicAddress,
@@ -221,6 +222,7 @@ export class RequestComponent extends React.Component<Props, State> {
           this.enqueueMinimumAmountModal()
         }
         minimumPopupModalState[props.currencyCode] = 'VISIBLE'
+        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ minimumPopupModalState })
       }
     }

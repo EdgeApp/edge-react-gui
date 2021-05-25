@@ -102,6 +102,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
 
     addToFioAddressCache(this.props.account, addressArray)
+    // eslint-disable-next-line react/no-did-update-set-state
     this.setState({ addressCachedUpdated: true })
   }
 
@@ -140,7 +141,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       }
     }
 
-    this.setState({ fioRequestsPending: fioRequestsPending.sort((a, b) => (a.time_stamp < b.time_stamp ? -1 : 1)), loadingPending: false })
+    this.setState({ fioRequestsPending: fioRequestsPending.sort((a, b) => (a.time_stamp < b.time_stamp ? 1 : -1)), loadingPending: false })
   }
 
   getFioRequestsSent = async () => {
@@ -372,7 +373,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
     const { content } = selectedFioPendingRequest
     const chainCode = content.chain_code.toUpperCase()
     const tokenCode = content.token_code.toUpperCase()
-    const allowedFullCurrencyCode = chainCode !== tokenCode && tokenCode && tokenCode !== '' ? [`${chainCode}:${tokenCode}`] : [chainCode]
+    const allowedFullCurrencyCode = chainCode !== tokenCode && tokenCode && tokenCode !== '' ? [`${chainCode}-${tokenCode}`] : [chainCode]
 
     const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={allowedFullCurrencyCode} />

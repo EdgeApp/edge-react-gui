@@ -23,7 +23,6 @@ describe('Scan component', () => {
       qrCodeScanned: jest.fn(),
       parseScannedUri: jest.fn(),
       toggleEnableTorch: jest.fn(),
-      toggleScanToWalletListModal: jest.fn(),
       onSelectWallet: jest.fn(),
       selectFromWalletForExchange: jest.fn()
     }
@@ -47,7 +46,6 @@ describe('Scan component', () => {
       qrCodeScanned: jest.fn(),
       parseScannedUri: jest.fn(),
       toggleEnableTorch: jest.fn(),
-      toggleScanToWalletListModal: jest.fn(),
       onSelectWallet: jest.fn(),
       selectFromWalletForExchange: jest.fn()
     }

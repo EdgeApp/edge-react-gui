@@ -88,7 +88,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const state = getState()
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
-        const xPub = wallet.getDisplayPublicSeed()
+        const xPub = wallet.displayPublicSeed
         const xPubExplorer = wallet.currencyInfo.xpubExplorer && xPub ? sprintf(wallet.currencyInfo.xpubExplorer, xPub) : ''
         dispatch({ type: 'OPEN_VIEWXPUB_WALLET_MODAL', data: { xPub, walletId, xPubExplorer } })
       }
@@ -125,7 +125,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
             <ButtonsModal
               title={s.strings.fragment_wallets_get_seed_wallet}
               bridge={bridge}
-              message={wallet.getDisplayPrivateSeed() || undefined}
+              message={wallet.displayPrivateSeed || undefined}
               buttons={{ ok: { label: s.strings.string_ok_cap } }}
             />
           ))

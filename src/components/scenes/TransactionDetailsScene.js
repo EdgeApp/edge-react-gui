@@ -63,7 +63,6 @@ type State = {
   amountFiat: string,
   direction: string,
   bizId: number,
-  miscJson: any, // core receives this as a string
   category: string,
   subCategory: string
 }
@@ -120,8 +119,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       subCategory: category.subCategory,
       thumbnailPath,
       direction,
-      bizId: 0,
-      miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : ''
+      bizId: 0
     }
   }
 
@@ -335,7 +333,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   onSaveTxDetails = () => {
-    const { payeeName, notes, bizId, miscJson, category, subCategory, amountFiat } = this.state
+    const { payeeName, notes, bizId, category, subCategory, amountFiat } = this.state
     const { edgeTransaction } = this.props
     let finalAmountFiat
     const fullCategory = category ? `${UTILS.capitalize(category)}:${subCategory}` : undefined
@@ -347,7 +345,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       // if a valid number or empty string then set to zero (empty) or actual number
       finalAmountFiat = !amountFiat ? 0.0 : decimalAmountFiat
     }
-    edgeTransaction.metadata = { name: payeeName, category: fullCategory, notes, amountFiat: finalAmountFiat, bizId, miscJson }
+    edgeTransaction.metadata = { name: payeeName, category: fullCategory, notes, amountFiat: finalAmountFiat, bizId }
     this.props.setTransactionDetails(edgeTransaction, edgeTransaction.metadata)
   }
 

@@ -7,7 +7,8 @@ import { connect } from 'react-redux'
 
 import { type Permission, type PermissionsState, type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import { showError } from './AirshipInstance.js'
+import { ContactsPermissionModal } from '../modals/ContactsPermissionModal.js'
+import { Airship, showError } from './AirshipInstance.js'
 
 const PLATFORM = {
   ios: 'IOS',
@@ -88,6 +89,9 @@ class PermissionsManagerComponent extends React.Component<Props> {
 export async function requestPermission(data: Permission): Promise<PermissionStatus> {
   const status: PermissionStatus = await check(PERMISSIONS[OS][PERMISSIONS_ITEM[data]])
   if (status === RESULTS.DENIED) {
+    if (data === 'contacts') {
+      await Airship.show(bridge => <ContactsPermissionModal bridge={bridge} />)
+    }
     return request(PERMISSIONS[OS][PERMISSIONS_ITEM[data]])
   }
   return status

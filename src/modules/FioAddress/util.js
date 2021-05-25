@@ -1,17 +1,20 @@
 // @flow
 
 import { bns } from 'biggystring'
+import type { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_STR, FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import type { FioConnectionWalletItem, FioDomain, GuiWallet } from '../../types/types'
+import type { FioAddress, FioConnectionWalletItem, FioDomain, GuiWallet } from '../../types/types'
 import { truncateDecimals } from '../../util/utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
 const FIO_ADDRESS_CACHE = 'FioAddressCache.json'
+const FIO_EXPIRED_CHECK = 'FioExpiredCheck.json'
+const MONTH = 1000 * 60 * 60 * 24 * 30
 
 type DiskletConnectedWallets = {
   [fullCurrencyCode: string]: {
@@ -96,6 +99,24 @@ const setConnectedWalletsFromFile = async (fioWallet: EdgeCurrencyWallet, fioAdd
     await fioWallet.disklet.setText(CONNECTED_WALLETS, JSON.stringify(savedConnectedWallets))
   } catch (e) {
     console.log('setConnectedWalletsFromFile error - ', e)
+  }
+}
+
+const getFioExpiredCheckFromDislket = async (disklet: Disklet): Promise<Date> => {
+  try {
+    const { lastCheck } = JSON.parse(await disklet.getText(FIO_EXPIRED_CHECK))
+    return new Date(lastCheck)
+  } catch (error) {
+    const defaultDate = new Date()
+    defaultDate.setMonth(new Date().getMonth() - 1)
+    return defaultDate
+  }
+}
+const setFioExpiredCheckToDislket = async (lastCheck: Date, disklet: Disklet): Promise<void> => {
+  try {
+    await disklet.setText(FIO_EXPIRED_CHECK, JSON.stringify({ lastCheck }))
+  } catch (error) {
+    console.log(error)
   }
 }
 
@@ -789,7 +810,9 @@ export const checkExpiredFioAddress = async (fioWallet?: EdgeCurrencyWallet, add
 
   try {
     const { fioAction } = fioWallet.otherMethods
+    // eslint-disable-next-line camelcase
     const { public_address } = await fioAction('getPublicAddress', { fioAddress: address, chainCode: 'FIO', tokenCode: 'FIO' })
+    // eslint-disable-next-line camelcase
     const { fio_addresses } = await fioAction('getFioNames', { fioPublicKey: public_address })
     const fioAddress = fio_addresses.find(fioAddress => fioAddress.fio_address === address)
     if (fioAddress != null) {
@@ -801,4 +824,32 @@ export const checkExpiredFioAddress = async (fioWallet?: EdgeCurrencyWallet, add
     console.log('FioAddressExpiredError', error)
     return false
   }
+}
+
+export const expiredSoon = (expDate: string): boolean => {
+  return new Date(expDate).getTime() - new Date().getTime() < MONTH
+}
+
+export const needToCheckExpired = async (disklet: Disklet): Promise<boolean> => {
+  try {
+    const lastCheck = await getFioExpiredCheckFromDislket(disklet)
+    const now = new Date()
+    if (now.getMonth() !== lastCheck.getMonth()) {
+      setFioExpiredCheckToDislket(new Date(), disklet)
+      return true
+    }
+  } catch (e) {
+    //
+  }
+  return false
+}
+export const getExpiredSoonFioNames = (fioAddresses: FioAddress[], fioDomains: FioDomain[]): Array<FioAddress | FioDomain> => {
+  const expiredFioNames: Array<FioAddress | FioDomain> = []
+  for (const fioName of [...fioAddresses, ...fioDomains]) {
+    if (expiredSoon(fioName.expiration)) {
+      expiredFioNames.push(fioName)
+    }
+  }
+
+  return expiredFioNames
 }

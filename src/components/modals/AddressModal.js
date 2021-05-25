@@ -25,6 +25,7 @@ import { type AirshipBridge } from './modalParts.js'
 
 type OwnProps = {
   bridge: AirshipBridge<string | null>,
+  // eslint-disable-next-line react/no-unused-prop-types
   walletId: string,
   currencyCode: string,
   title?: string,

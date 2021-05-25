@@ -113,7 +113,7 @@ export class AirshipDropdown extends React.Component<Props> {
 
 const borderRadius = THEME.rem(1 / 4)
 
-const styles = StyleSheet.create({
+const rawStyles = {
   body: {
     // Layout:
     flexShrink: 1,
@@ -143,4 +143,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center'
   }
-})
+}
+const styles: typeof rawStyles = StyleSheet.create(rawStyles)

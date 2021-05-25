@@ -1,9 +1,14 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
+/* globals jest */
 
 import dateformat from 'dateformat'
 import RNPermissionsMock from 'react-native-permissions/mock'
 
-/* globals jest */
+jest.mock('usb', () => {})
+jest.mock('react-native-gesture-handler', () => ({
+  PanGestureHandler() {}
+}))
+
 jest.mock('dateformat', () => (number, format) => dateformat(number, format, true)) // force timezone to UTC
 
 jest.mock('@react-native-firebase/analytics', () => () => ({

@@ -16,7 +16,9 @@ type StateProps = {
   pendingDeepLink: DeepLink | null,
 
   // We don't actually read these, but we need them to trigger updates:
+  // eslint-disable-next-line react/no-unused-prop-types
   accountReferralLoaded: boolean,
+  // eslint-disable-next-line react/no-unused-prop-types
   wallets: WalletsState
 }
 

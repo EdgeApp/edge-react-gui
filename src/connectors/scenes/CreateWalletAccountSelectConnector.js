@@ -24,7 +24,7 @@ const mapStateToProps = (state: RootState, ownProps: CreateWalletAccountSelectOw
   const handleActivationInfo = state.ui.scenes.createWallet.handleActivationInfo
   const walletAccountActivationPaymentInfo = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
   const { supportedCurrencies, activationCost } = handleActivationInfo
-  const { currencyCode, paymentAddress, amount, expireTime } = walletAccountActivationPaymentInfo
+  const { currencyCode, amount } = walletAccountActivationPaymentInfo
   const isCreatingWallet = state.ui.scenes.createWallet.isCreatingWallet
   const existingCoreWallet = ownProps.existingWalletId ? currencyWallets[ownProps.existingWalletId] : null
   const paymentDenomination = currencyCode ? getDefaultDenomination(state, currencyCode) : {}
@@ -38,9 +38,7 @@ const mapStateToProps = (state: RootState, ownProps: CreateWalletAccountSelectOw
   const walletAccountActivationQuoteError = state.ui.scenes.createWallet.walletAccountActivationQuoteError
   return {
     paymentCurrencyCode: currencyCode,
-    paymentAddress,
     amount,
-    expireTime,
     supportedCurrencies,
     activationCost,
     wallets,

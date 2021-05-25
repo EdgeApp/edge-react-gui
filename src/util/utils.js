@@ -139,8 +139,10 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
 }
 
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
-export const convertNativeToDenomination = (nativeToTargetRatio: string) => (nativeAmount: string): string =>
-  div(nativeAmount, nativeToTargetRatio, DIVIDE_PRECISION)
+export const convertNativeToDenomination =
+  (nativeToTargetRatio: string) =>
+  (nativeAmount: string): string =>
+    div(nativeAmount, nativeToTargetRatio, DIVIDE_PRECISION)
 
 // Alias for convertNativeToDenomination
 // Used to convert outputs from core to amounts ready for display
@@ -150,8 +152,10 @@ export const convertNativeToDisplay = convertNativeToDenomination
 export const convertNativeToExchange = convertNativeToDenomination
 
 // Used to convert amounts from display to core inputs
-export const convertDisplayToNative = (nativeToDisplayRatio: string) => (displayAmount: string): string =>
-  !displayAmount ? '' : mul(displayAmount, nativeToDisplayRatio)
+export const convertDisplayToNative =
+  (nativeToDisplayRatio: string) =>
+  (displayAmount: string): string =>
+    !displayAmount ? '' : mul(displayAmount, nativeToDisplayRatio)
 
 export const isCryptoParentCurrency = (wallet: GuiWallet, currencyCode: string) => currencyCode === wallet.currencyCode
 
@@ -343,6 +347,7 @@ export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Obje
       continue
     }
     comparedElements[e] = true
+    // eslint-disable-next-line no-prototype-builtins
     if (obj2.hasOwnProperty(e)) {
       if (obj1[e] !== obj2[e]) {
         if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
@@ -365,6 +370,7 @@ export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Obje
     if ((comparedElements && comparedElements[e]) || (ignoreObjects && ignoreObjects[e])) {
       continue
     }
+    // eslint-disable-next-line no-prototype-builtins
     if (obj1.hasOwnProperty(e)) {
       if (obj1[e] !== obj2[e]) {
         if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
@@ -487,9 +493,7 @@ export const getFeeDisplayed = (number: number): string => {
   return number.toFixed(defaultAmount)
 }
 
-export function splitTransactionCategory(
-  fullCategory: string
-): {
+export function splitTransactionCategory(fullCategory: string): {
   category: string,
   subCategory: string
 } {
@@ -596,6 +600,7 @@ export function getDenomination(currencyCode: string, settings: Object, type: 'd
       } else if (type === 'exchange') {
         return denomination.name === currencyInfo.currencyCode
       }
+      return false
     })
     return denomination ?? emptyEdgeDenomination
   }

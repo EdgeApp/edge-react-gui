@@ -20,7 +20,9 @@ type OwnProps = {
   gradient?: boolean,
   onPress?: () => void,
   onLongPress?: () => void,
+  // eslint-disable-next-line react/no-unused-prop-types
   walletId?: string,
+  // eslint-disable-next-line react/no-unused-prop-types
   walletName?: string
 }
 

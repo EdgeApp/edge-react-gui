@@ -34,10 +34,11 @@ exports[`Scan component should render with BLOCKED props 1`] = `
             "backgroundColor": "#FFFFFF10",
             "borderRadius": 4.213732394366197,
             "flex": 1,
+            "flexBasis": "48%",
             "height": 70.22887323943662,
             "justifyContent": "center",
-            "marginLeft": 1.4045774647887324,
-            "marginRight": 1.4045774647887324,
+            "marginBottom": 14.045774647887324,
+            "marginHorizontal": 1.4045774647887324,
           }
         }
         underlayColor="#0E4B75"
@@ -117,10 +118,11 @@ exports[`Scan component should render with GRANTED props 1`] = `
             "backgroundColor": "#FFFFFF10",
             "borderRadius": 4.213732394366197,
             "flex": 1,
+            "flexBasis": "48%",
             "height": 70.22887323943662,
             "justifyContent": "center",
-            "marginLeft": 1.4045774647887324,
-            "marginRight": 1.4045774647887324,
+            "marginBottom": 14.045774647887324,
+            "marginHorizontal": 1.4045774647887324,
           }
         }
         underlayColor="#0E4B75"

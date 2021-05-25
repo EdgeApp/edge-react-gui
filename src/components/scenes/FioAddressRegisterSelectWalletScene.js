@@ -29,7 +29,6 @@ type StateProps = {
   fioPlugin: EdgeCurrencyConfig | null,
   fioWallets: EdgeCurrencyWallet[],
   fioDisplayDenomination: EdgeDenomination,
-  defaultFiatCode: string,
   isConnected: boolean
 }
 
