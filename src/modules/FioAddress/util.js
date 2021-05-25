@@ -834,7 +834,7 @@ export const needToCheckExpired = async (disklet: Disklet): Promise<boolean> => 
   try {
     const lastCheck = await getFioExpiredCheckFromDislket(disklet)
     const now = new Date()
-    if (now.getMonth() !== lastCheck.getMonth()) {
+    if (now.getMonth() !== lastCheck.getMonth() || now.getFullYear() !== lastCheck.getFullYear()) {
       setFioExpiredCheckToDislket(new Date(), disklet)
       return true
     }
