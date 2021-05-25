@@ -19,6 +19,7 @@ import type { Theme, ThemeProps } from '../services/ThemeContext'
 import { cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FormError } from '../themed/FormError'
+import { SceneHeader } from '../themed/SceneHeader'
 import { PrimaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
 
@@ -253,9 +254,11 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
     return (
       <SceneWrapper background="theme" bodySplit={theme.rem(1.5)}>
+        <SceneHeader style={styles.header} title={s.strings.title_register_fio_domain}>
+          <IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />
+        </SceneHeader>
         {/* eslint-disable-next-line react/no-string-refs */}
         <ScrollView ref="_scrollView">
-          <IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(4)} />
           <EdgeText style={[styles.paddings, styles.instructionalText, styles.title]} numberOfLines={3}>
             {s.strings.fio_domain_reg_text}
           </EdgeText>
@@ -291,12 +294,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   instructionalText: {
     fontSize: theme.rem(1),
-    textAlign: 'center',
     color: theme.secondaryText
   },
-
   title: {
     paddingTop: theme.rem(1.5)
+  },
+  header: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'flex-end',
+    marginRight: theme.rem(1),
+    marginTop: theme.rem(0.5)
   },
   bottomSpace: {
     paddingBottom: theme.rem(30)
@@ -316,11 +323,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.deactivatedText
   },
   iconIon: {
-    alignSelf: 'center',
-    marginTop: theme.rem(1.5),
-    height: theme.rem(4),
-    width: theme.rem(4),
-    textAlign: 'center'
+    marginRight: theme.rem(0.5)
   }
 }))
 
