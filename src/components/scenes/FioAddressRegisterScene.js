@@ -7,6 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
+import { Fontello } from '../../assets/vector'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { createFioWallet } from '../../modules/FioAddress/action'
@@ -23,6 +24,8 @@ import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
+import { FormError } from '../themed/FormError'
+import { SceneHeader } from '../themed/SceneHeader'
 import { ClickableText, PrimaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
 
@@ -38,7 +41,8 @@ type State = {
   isAvailable: boolean,
   fieldPos: number,
   inputWidth: number,
-  showFreeAddressLink: boolean
+  showFreeAddressLink: boolean,
+  errorMessage: string
 }
 
 type StateProps = {
@@ -68,7 +72,8 @@ class FioAddressRegister extends React.Component<Props, State> {
     domainsLoading: true,
     fieldPos: 200,
     inputWidth: 0,
-    showFreeAddressLink: false
+    showFreeAddressLink: false,
+    errorMessage: ''
   }
 
   componentDidMount() {
@@ -181,7 +186,8 @@ class FioAddressRegister extends React.Component<Props, State> {
 
   checkFioAddress(fioAddress: string, domain: string, isCustomDomain: boolean = false) {
     this.setState({
-      loading: true
+      loading: true,
+      errorMessage: ''
     })
     this.fioCheckQueue++
     setTimeout(async () => {
@@ -202,13 +208,25 @@ class FioAddressRegister extends React.Component<Props, State> {
           })
         }
       }
+
+      // regexp from edge-currency-accountbased
+      if (!/^[a-zA-Z0-9]{1}((?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$/.test(fioAddress)) {
+        this.setState({
+          loading: false,
+          isValid: false,
+          errorMessage: s.strings.warning_alphanumeric
+        })
+        return
+      }
+
       try {
         const fullAddress = `${fioAddress}${Constants.FIO_ADDRESS_DELIMITER}${domain}`
         const isAvailable = fioPlugin.otherMethods ? await fioPlugin.otherMethods.validateAccount(fullAddress) : false
         this.setState({
           isValid: true,
           isAvailable,
-          loading: false
+          loading: false,
+          errorMessage: ''
         })
       } catch (e) {
         this.setState({
@@ -337,7 +355,7 @@ class FioAddressRegister extends React.Component<Props, State> {
   }
 
   renderErrorMessage() {
-    const { fioAddress, isAvailable, isValid, loading } = this.state
+    const { fioAddress, isAvailable, isValid, loading, errorMessage } = this.state
     const styles = getStyles(this.props.theme)
     let chooseHandleErrorMessage = ''
 
@@ -349,11 +367,20 @@ class FioAddressRegister extends React.Component<Props, State> {
     if (fioAddress && !isAvailable) {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_not_available
     }
+
     if (fioAddress && !isValid) {
       chooseHandleErrorMessage = s.strings.fio_error_invalid_address
     }
 
-    return <EdgeText style={styles.errorMessage}>{chooseHandleErrorMessage}</EdgeText>
+    if (fioAddress && !isValid && errorMessage) {
+      chooseHandleErrorMessage = errorMessage
+    }
+
+    return (
+      <FormError style={styles.error} isVisible={!!chooseHandleErrorMessage}>
+        {chooseHandleErrorMessage}
+      </FormError>
+    )
   }
 
   render() {
@@ -363,10 +390,12 @@ class FioAddressRegister extends React.Component<Props, State> {
 
     return (
       <SceneWrapper background="theme">
+        <SceneHeader style={styles.header} title={s.strings.title_fio_address_confirmation}>
+          <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
+        </SceneHeader>
         {/* eslint-disable-next-line react/no-string-refs */}
         <ScrollView ref="_scrollView">
           <View style={styles.view}>
-            <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
             <View style={[styles.createWalletPromptArea, styles.title]}>
               <EdgeText style={styles.instructionalText} numberOfLines={2}>
                 {s.strings.fio_address_first_screen_title}
@@ -392,7 +421,6 @@ class FioAddressRegister extends React.Component<Props, State> {
                     <EdgeText style={styles.muted}>{s.strings.fio_address_register_placeholder}</EdgeText>
                   )}
                   {this.renderLoader()}
-                  {this.renderErrorMessage()}
                 </View>
               </Tile>
               <Tile
@@ -406,9 +434,13 @@ class FioAddressRegister extends React.Component<Props, State> {
             {this.renderButton()}
             {this.props.fioWallets.length && showFreeAddressLink ? (
               <ClickableText onPress={this.registerFreeAddress}>
-                <EdgeText style={styles.link}>{s.strings.fio_address_reg_free}</EdgeText>
+                <View style={styles.linkContainer}>
+                  <Fontello name="register-new-fio-icon" style={styles.linkIcon} color={theme.iconTappable} size={theme.rem(1)} />
+                  <EdgeText style={styles.link}>{s.strings.fio_address_reg_free}</EdgeText>
+                </View>
               </ClickableText>
             ) : null}
+            {this.renderErrorMessage()}
             <View style={styles.bottomSpace} />
           </View>
         </ScrollView>
@@ -427,7 +459,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   instructionalText: {
     fontSize: theme.rem(1),
-    textAlign: 'center',
     color: theme.primaryText
   },
   handleRequirementsText: {
@@ -442,18 +473,26 @@ const getStyles = cacheStyles((theme: Theme) => ({
   next: {
     flex: 1
   },
-
+  error: {
+    flex: 1,
+    margin: theme.rem(1)
+  },
   addressTileBody: {
     flexDirection: 'row'
   },
   fioAddressName: {
     marginRight: theme.rem(1)
   },
+  header: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'flex-end',
+    marginRight: theme.rem(1),
+    marginTop: theme.rem(0.5)
+  },
   image: {
-    alignSelf: 'center',
-    marginTop: theme.rem(1.5),
-    height: theme.rem(3.25),
-    width: theme.rem(3.5)
+    height: theme.rem(1.5),
+    width: theme.rem(1.65),
+    marginRight: theme.rem(0.5)
   },
   title: {
     paddingTop: theme.rem(1.5)
@@ -499,6 +538,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingLeft: theme.rem(0.75),
     paddingRight: theme.rem(0.75),
     paddingVertical: theme.rem(0.75)
+  },
+  linkContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  linkIcon: {
+    alignSelf: 'center',
+    marginRight: theme.rem(0.5)
   },
   link: {
     fontSize: theme.rem(1),

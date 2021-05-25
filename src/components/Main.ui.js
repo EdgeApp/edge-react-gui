@@ -639,7 +639,7 @@ export class MainComponent extends React.Component<Props> {
               key={Constants.FIO_ADDRESS_REGISTER}
               navTransparent
               component={ifLoggedIn(FioAddressRegisterScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_fio_address_confirmation} />}
+              renderTitle={<EdgeLogoHeader />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
               onLeft={Actions.pop}
