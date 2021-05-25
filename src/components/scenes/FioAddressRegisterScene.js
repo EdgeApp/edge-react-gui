@@ -7,6 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
+import { Fontello } from '../../assets/vector'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { createFioWallet } from '../../modules/FioAddress/action'
@@ -24,6 +25,7 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { FormError } from '../themed/FormError'
+import { SceneHeader } from '../themed/SceneHeader'
 import { ClickableText, PrimaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
 
@@ -388,10 +390,12 @@ class FioAddressRegister extends React.Component<Props, State> {
 
     return (
       <SceneWrapper background="theme">
+        <SceneHeader style={styles.header} title={s.strings.title_fio_address_confirmation}>
+          <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
+        </SceneHeader>
         {/* eslint-disable-next-line react/no-string-refs */}
         <ScrollView ref="_scrollView">
           <View style={styles.view}>
-            <Image source={theme.fioAddressLogo} style={styles.image} resizeMode="cover" />
             <View style={[styles.createWalletPromptArea, styles.title]}>
               <EdgeText style={styles.instructionalText} numberOfLines={2}>
                 {s.strings.fio_address_first_screen_title}
@@ -430,7 +434,10 @@ class FioAddressRegister extends React.Component<Props, State> {
             {this.renderButton()}
             {this.props.fioWallets.length && showFreeAddressLink ? (
               <ClickableText onPress={this.registerFreeAddress}>
-                <EdgeText style={styles.link}>{s.strings.fio_address_reg_free}</EdgeText>
+                <View style={styles.linkContainer}>
+                  <Fontello name="register-new-fio-icon" style={styles.linkIcon} color={theme.iconTappable} size={theme.rem(1)} />
+                  <EdgeText style={styles.link}>{s.strings.fio_address_reg_free}</EdgeText>
+                </View>
               </ClickableText>
             ) : null}
             {this.renderErrorMessage()}
@@ -452,7 +459,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   instructionalText: {
     fontSize: theme.rem(1),
-    textAlign: 'center',
     color: theme.primaryText
   },
   handleRequirementsText: {
@@ -477,11 +483,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
   fioAddressName: {
     marginRight: theme.rem(1)
   },
+  header: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'flex-end',
+    marginRight: theme.rem(1),
+    marginTop: theme.rem(0.5)
+  },
   image: {
-    alignSelf: 'center',
-    marginTop: theme.rem(1.5),
-    height: theme.rem(3.25),
-    width: theme.rem(3.5)
+    height: theme.rem(1.5),
+    width: theme.rem(1.65),
+    marginRight: theme.rem(0.5)
   },
   title: {
     paddingTop: theme.rem(1.5)
@@ -527,6 +538,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingLeft: theme.rem(0.75),
     paddingRight: theme.rem(0.75),
     paddingVertical: theme.rem(0.75)
+  },
+  linkContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  linkIcon: {
+    alignSelf: 'center',
+    marginRight: theme.rem(0.5)
   },
   link: {
     fontSize: theme.rem(1),
