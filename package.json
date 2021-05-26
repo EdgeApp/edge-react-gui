@@ -133,7 +133,7 @@
     "detox": "^18.10.0",
     "disklet": "^0.4.5",
     "edge-components": "^0.0.31",
-    "edge-core-js": "^0.17.33",
+    "edge-core-js": "^0.18.0",
     "edge-currency-accountbased": "^0.7.60",
     "edge-currency-bitcoin": "^4.9.14",
     "edge-currency-monero": "^0.3.1",
