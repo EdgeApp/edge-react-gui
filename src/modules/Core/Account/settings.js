@@ -1,10 +1,11 @@
 /* eslint-disable quote-props */
 // @flow
 
-import type { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount, JsonObject } from 'edge-core-js'
 
 import type { SortOption } from '../../../components/modals/WalletListSortModal.js'
 import { showError } from '../../../components/services/AirshipInstance.js'
+import type { DefaultFeeOption } from '../../../reducers/scenes/SettingsReducer.js'
 import type { MostRecentWallet, PasswordReminder } from '../../../types/types.js'
 import { categories } from './subcategories.js'
 
@@ -16,16 +17,14 @@ export const PASSWORD_RECOVERY_REMINDERS_SHOWN = {
   '20000': false,
   '200000': false
 }
-
-// TODO:  Remove hardcoded currency defaults
-// Default Account Settings
-export const SYNCED_ACCOUNT_DEFAULTS = {
-  autoLogoutTimeInSeconds: 3600,
-  defaultFiat: 'USD',
-  defaultIsoFiat: 'iso:USD',
-  merchantMode: false,
-  preferredSwapPluginId: '',
-  countryCode: '',
+type CurrencyDefault = {
+  [currency: string]: {
+    denominations?: string,
+    denomination?: string,
+    defaultFee?: DefaultFeeOption
+  }
+}
+const currencyDefaults: CurrencyDefault = {
   BTC: {
     denomination: '100000000'
   },
@@ -397,7 +396,23 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   },
   FUSDT: {
     denomination: '1000000'
-  },
+  }
+}
+
+Object.keys(currencyDefaults).forEach(currency => {
+  currencyDefaults[currency].defaultFee = 'none'
+})
+
+// TODO:  Remove hardcoded currency defaults
+// Default Account Settings
+export const SYNCED_ACCOUNT_DEFAULTS = {
+  autoLogoutTimeInSeconds: 3600,
+  defaultFiat: 'USD',
+  defaultIsoFiat: 'iso:USD',
+  merchantMode: false,
+  preferredSwapPluginId: '',
+  countryCode: '',
+  ...currencyDefaults,
   customTokens: [],
   mostRecentWallets: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
@@ -673,6 +688,12 @@ export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, le
 export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: string, denomination: string) =>
   getSyncedSettings(account).then(settings => {
     const updatedSettings = updateCurrencySettings(settings, currencyCode, { denomination })
+    return setSyncedSettings(account, updatedSettings)
+  })
+// Save default fee setting to disk
+export const saveDefaultFeeSetting = (account: EdgeAccount, currencyCode: string, defaultFee: DefaultFeeOption, customFee?: JsonObject) =>
+  getSyncedSettings(account).then(settings => {
+    const updatedSettings = updateCurrencySettings(settings, currencyCode, { defaultFee, customFee })
     return setSyncedSettings(account, updatedSettings)
   })
 

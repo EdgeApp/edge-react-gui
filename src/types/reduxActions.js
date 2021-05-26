@@ -9,14 +9,16 @@ import {
   type EdgeParsedUri,
   type EdgeReceiveAddress,
   type EdgeSpendInfo,
-  type EdgeTransaction
+  type EdgeTransaction,
+  type JsonObject
 } from 'edge-core-js'
 
 import { type SortOption } from '../components/modals/WalletListSortModal.js'
 import type { CcWalletMap } from '../reducers/FioReducer'
-import { type PermissionsState } from '../reducers/PermissionsReducer.js'
+import type { PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
+import type { DefaultFeeOption } from '../reducers/scenes/SettingsReducer.js'
 import { type AccountInitPayload, type SettingsState } from '../reducers/scenes/SettingsReducer.js'
 import { type TweakSource } from '../util/ReferralHelpers.js'
 import { type DeepLink } from './DeepLink.js'
@@ -224,6 +226,10 @@ export type Action =
         walletId: string,
         receiveAddress: EdgeReceiveAddress
       }
+    }
+  | {
+      type: 'UI/SETTINGS/SET_DEFAULT_FEE',
+      data: { currencyCode: string, defaultFee: DefaultFeeOption, customFee: JsonObject }
     }
   | {
       type: 'UI/WALLETS/SELECT_WALLET',

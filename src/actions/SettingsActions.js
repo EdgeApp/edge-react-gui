@@ -1,7 +1,7 @@
 // @flow
 
 import { createSecureTextModal } from 'edge-components'
-import type { EdgeAccount } from 'edge-core-js'
+import type { EdgeAccount, JsonObject } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
@@ -15,7 +15,9 @@ import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import { sendLogs } from '../modules/Logs/action.js'
+import { setDefaultFee } from '../modules/Settings/SettingsActions.js'
 import { convertCurrency } from '../modules/UI/selectors.js'
+import type { DefaultFeeOption } from '../reducers/scenes/SettingsReducer.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 
@@ -162,6 +164,18 @@ export const setDenominationKeyRequest = (currencyCode: string, denominationKey:
       })
     )
     .catch(showError)
+}
+
+export const setDefaultFeeSetting = (currencyCode: string, defaultFee: DefaultFeeOption, customFee: JsonObject) => (dispatch: Dispatch, getState: GetState) => {
+  // Thunk
+  const state = getState()
+  const { account } = state.core
+
+  // Save to disk
+  ACCOUNT_SETTINGS.saveDefaultFeeSetting(account, currencyCode, defaultFee, customFee).catch(showError)
+
+  // Update Redux
+  return dispatch(setDefaultFee(currencyCode, defaultFee, customFee))
 }
 
 // touch id interaction
