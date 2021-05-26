@@ -303,6 +303,7 @@ const strings = {
   settings_notifications: 'Notifications',
   settings_currency_notifications_percent_change_hour: '%1$s%% change within 1 hour',
   settings_currency_notifications_percent_change_hours: '%1$s%% change within %2$s hours',
+  settings_toggle_default_fee: 'Make Default Setting',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',

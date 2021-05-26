@@ -577,6 +577,9 @@ export const SendScene = connect(
     const { nativeAmount, transaction, transactionMetadata, error, pending, guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
     const isSendUsingFioAddress = guiMakeSpendInfo.isSendUsingFioAddress || (ownProps.guiMakeSpendInfo && ownProps.guiMakeSpendInfo.isSendUsingFioAddress)
 
+    const defaultFee = state.ui.settings[state.ui.wallets.selectedCurrencyCode].defaultFee
+    if (defaultFee !== 'none' && guiMakeSpendInfo.networkFeeOption != null) guiMakeSpendInfo.networkFeeOption = defaultFee
+
     return {
       account: state.core.account,
       authRequired: state.ui.scenes.sendConfirmation.authRequired,

@@ -6,10 +6,9 @@ import { isEqual } from 'lodash'
 import { type Reducer } from 'redux'
 
 import { initialState } from '../../modules/UI/scenes/SendConfirmation/selectors'
+import type { FeeOption } from '../../reducers/scenes/SettingsReducer.js'
 import type { Action } from '../../types/reduxTypes.js'
 import type { FioRequest } from '../../types/types'
-
-export type FeeOption = 'custom' | 'high' | 'low' | 'standard'
 
 export type GuiMakeSpendInfo = {
   currencyCode?: string,
