@@ -18,7 +18,7 @@ describe('sendConfirmation reducer', () => {
   })
 
   test('reset', () => {
-    const action = { type: 'UI/SEND_CONFIMATION/RESET' }
+    const action = { type: 'UI/SEND_CONFIRMATION/RESET' }
     const actual = sendConfirmation(undefined, action)
 
     expect(actual).toMatchSnapshot()
@@ -47,7 +47,7 @@ describe('sendConfirmation reducer', () => {
         }
         const initialStateClone = cloneDeep(initialState)
         const action = {
-          type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
             error: null,
             forceUpdateGui: true,
@@ -82,7 +82,7 @@ describe('sendConfirmation reducer', () => {
         }
         const initialStateClone = cloneDeep(initialState)
         const action = {
-          type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
             error: null,
             forceUpdateGui: true,
@@ -100,7 +100,7 @@ describe('sendConfirmation reducer', () => {
         const error = new Error()
         const initialStateClone = cloneDeep(initialState)
         const action = {
-          type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
             error,
             forceUpdateGui: true,
@@ -129,7 +129,7 @@ describe('sendConfirmation reducer', () => {
         const error = new Error(s.strings.incorrect_pin)
         const initialStateClone = cloneDeep(initialState)
         const action = {
-          type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
             error,
             forceUpdateGui: true,
@@ -152,7 +152,7 @@ describe('sendConfirmation reducer', () => {
           metadata: { name: 'airbitz' }
         }
         const action = {
-          type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
+          type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
           data: { spendInfo, authRequired: 'none' }
         }
         const initialStateClone = cloneDeep(initialState)
@@ -169,7 +169,7 @@ describe('sendConfirmation reducer', () => {
           metadata: {}
         }
         const action = {
-          type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
+          type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
           data: { spendInfo, authRequired: 'none' }
         }
         const initialStateClone = cloneDeep(initialState)
@@ -187,7 +187,7 @@ describe('sendConfirmation reducer', () => {
         metadata: {}
       }
       const action = {
-        type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
+        type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
         data: { spendInfo, authRequired: 'none' }
       }
       const initialStateClone = cloneDeep(initialState)
@@ -200,7 +200,7 @@ describe('sendConfirmation reducer', () => {
 
   test('pin', () => {
     const action = {
-      type: 'UI/SEND_CONFIMATION/NEW_PIN',
+      type: 'UI/SEND_CONFIRMATION/NEW_PIN',
       data: { pin: '1234' }
     }
     const initialStateClone = cloneDeep(initialState)
@@ -211,7 +211,7 @@ describe('sendConfirmation reducer', () => {
 
   test('pending', () => {
     const action = {
-      type: 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING',
+      type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
       data: { pending: true }
     }
     const initialStateClone = cloneDeep(initialState)

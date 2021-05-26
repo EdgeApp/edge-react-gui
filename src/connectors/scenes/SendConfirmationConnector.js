@@ -100,18 +100,18 @@ const mapStateToProps = (state: RootState): SendConfirmationStateProps => {
 const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps => ({
   sendConfirmationUpdateTx: guiMakeSpendInfo => dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo)),
   reset() {
-    dispatch({ type: 'UI/SEND_CONFIMATION/RESET' })
+    dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
   },
   updateSpendPending(pending: boolean) {
     dispatch({
-      type: 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING',
+      type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
       data: { pending }
     })
   },
   signBroadcastAndSave: (fioSender?: FioSenderInfo): any => dispatch(signBroadcastAndSave(fioSender)),
   onChangePin(pin: string) {
     dispatch({
-      type: 'UI/SEND_CONFIMATION/NEW_PIN',
+      type: 'UI/SEND_CONFIRMATION/NEW_PIN',
       data: { pin }
     })
   },
@@ -120,13 +120,13 @@ const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps =
   },
   newSpendInfo(spendInfo: EdgeSpendInfo, isLimitExceeded: SpendAuthType) {
     dispatch({
-      type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
+      type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
       data: { spendInfo, authRequired: isLimitExceeded }
     })
   },
   updateTransaction(transaction: EdgeTransaction | null, guiMakeSpendInfo: GuiMakeSpendInfo, forceUpdateGui: boolean, error: Error | null) {
     dispatch({
-      type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
+      type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
       data: {
         error,
         forceUpdateGui,

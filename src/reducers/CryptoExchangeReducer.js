@@ -137,7 +137,7 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
       }
     }
 
-    case 'RECEIVED_INSUFFICENT_FUNDS_ERROR': {
+    case 'RECEIVED_INSUFFICIENT_FUNDS_ERROR': {
       return {
         ...state,
         insufficientError: true,

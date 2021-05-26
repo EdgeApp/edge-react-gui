@@ -68,13 +68,13 @@ type NoDataActionName =
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_START'
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_SUCCESS'
   | 'PROCESS_EDGE_LOGIN'
-  | 'RECEIVED_INSUFFICENT_FUNDS_ERROR'
+  | 'RECEIVED_INSUFFICIENT_FUNDS_ERROR'
   | 'SHIFT_COMPLETE'
   | 'START_CALC_MAX'
   | 'START_SHIFT_TRANSACTION'
   | 'TOGGLE_ENABLE_TORCH'
-  | 'UI/SEND_CONFIMATION/RESET'
-  | 'UI/SEND_CONFIMATION/TOGGLE_CRYPTO_ON_TOP'
+  | 'UI/SEND_CONFIRMATION/RESET'
+  | 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP'
   | 'UI/WALLETS/CREATE_WALLET_FAILURE'
   | 'UI/WALLETS/CREATE_WALLET_START'
   | 'UI/WALLETS/CREATE_WALLET_SUCCESS'
@@ -186,17 +186,17 @@ export type Action =
         currentEndIndex: number
       }
     }
-  | { type: 'UI/SEND_CONFIMATION/NEW_PIN', data: { pin: string } }
+  | { type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin: string } }
   | {
-      type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
+      type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
       data: {
         spendInfo: EdgeSpendInfo,
         authRequired: SpendAuthType
       }
     }
-  | { type: 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING', data: { pending: boolean } }
+  | { type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING', data: { pending: boolean } }
   | {
-      type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
+      type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
       data: {
         error: Error | null,
         forceUpdateGui: boolean,

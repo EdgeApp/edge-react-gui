@@ -592,13 +592,13 @@ export const SendScene = connect(
   },
   (dispatch: Dispatch): DispatchProps => ({
     reset() {
-      dispatch({ type: 'UI/SEND_CONFIMATION/RESET' })
+      dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
     },
     sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId: string, selectedCurrencyCode: string) =>
       dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode)),
     updateSpendPending(pending: boolean) {
       dispatch({
-        type: 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING',
+        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
         data: { pending }
       })
     },
@@ -606,7 +606,7 @@ export const SendScene = connect(
       dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)),
     uniqueIdentifierButtonPressed: () => dispatch(uniqueIdentifierModalActivated()),
     onChangePin(pin: string) {
-      dispatch({ type: 'UI/SEND_CONFIMATION/NEW_PIN', data: { pin } })
+      dispatch({ type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin } })
     }
   })
 )(withTheme(SendComponent))

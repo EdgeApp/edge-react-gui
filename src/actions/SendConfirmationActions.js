@@ -125,7 +125,7 @@ export const sendConfirmationUpdateTx =
 
     const authRequired = getAuthRequired(state, spendInfo)
     dispatch({
-      type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
+      type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
       data: { spendInfo, authRequired }
     })
 
@@ -133,7 +133,7 @@ export const sendConfirmationUpdateTx =
       .makeSpend(spendInfo)
       .then(edgeTransaction => {
         return dispatch({
-          type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
             error: null,
             forceUpdateGui,
@@ -171,7 +171,7 @@ export const sendConfirmationUpdateTx =
         }
         const typeHack: any = error
         return dispatch({
-          type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
             error: typeHack,
             forceUpdateGui,
@@ -206,10 +206,10 @@ export const updateMaxSpend = (selectedWalletId?: string, selectedCurrencyCode?:
       const exchangeAmount = convertNativeToExchange(exchangeDenomination.multiplier)(nativeAmount)
       const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
 
-      dispatch({ type: 'UI/SEND_CONFIMATION/RESET' })
-      dispatch({ type: 'UI/SEND_CONFIMATION/TOGGLE_CRYPTO_ON_TOP' })
+      dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
+      dispatch({ type: 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP' })
       dispatch({
-        type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
+        type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
         data: { spendInfo, authRequired }
       })
 
@@ -244,20 +244,20 @@ export const signBroadcastAndSave =
 
     if (guiMakeSpendInfo.beforeTransaction) {
       dispatch({
-        type: 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING',
+        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
         data: { pending: true }
       })
       try {
         guiMakeSpendInfo.beforeTransaction && (await guiMakeSpendInfo.beforeTransaction())
       } catch (e) {
         dispatch({
-          type: 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING',
+          type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
           data: { pending: false }
         })
         return
       }
       dispatch({
-        type: 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING',
+        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
         data: { pending: false }
       })
     }
@@ -278,7 +278,7 @@ export const signBroadcastAndSave =
       const feeAlertResponse = await displayFeeAlert(feeAmountInWalletFiatSyntax)
       if (!feeAlertResponse) {
         dispatch({
-          type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
             error: new Error('transactionCancelled'),
             forceUpdateGui: true,
@@ -291,7 +291,7 @@ export const signBroadcastAndSave =
     }
 
     dispatch({
-      type: 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING',
+      type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
       data: { pending: true }
     })
     let edgeSignedTransaction: EdgeTransaction = edgeUnsignedTransaction
@@ -375,7 +375,7 @@ export const signBroadcastAndSave =
         }
       }
       dispatch({
-        type: 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING',
+        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
         data: { pending: false }
       })
 
@@ -398,7 +398,7 @@ export const signBroadcastAndSave =
     } catch (e) {
       console.log(e)
       dispatch({
-        type: 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING',
+        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
         data: { pending: false }
       })
       let message = sprintf(s.strings.transaction_failure_message, e.message)
@@ -472,14 +472,14 @@ export const updateTransactionAmount =
 
     // Transaction Update
     dispatch({
-      type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
+      type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
       data: { spendInfo, authRequired: authType }
     })
     coreWallet
       .makeSpend(spendInfo)
       .then(edgeTransaction => {
         dispatch({
-          type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
             error: null,
             forceUpdateGui: false,
@@ -497,7 +497,7 @@ export const updateTransactionAmount =
 
         console.log(error)
         dispatch({
-          type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
           data: {
             error: customError != null ? customError : error,
             forceUpdateGui: false,
