@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Switch, Text, TouchableHighlight, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -41,6 +41,7 @@ type ColorProps = {
 
 type SquareButtonProps = Props & ColorProps
 type RadioButtonProps = Props & { value: boolean, right?: boolean }
+type SwitchButtonProps = Props & { value: boolean, onChange?: () => void | Promise<void> }
 
 export function PrimaryButton(props: Props) {
   const { children, label, onPress, disabled, spinner } = props
@@ -133,6 +134,22 @@ export function Radio(props: RadioButtonProps) {
   )
 }
 
+export function SwitchButton(props: SwitchButtonProps) {
+  const { label, onChange, value, onPress, children } = props
+  const theme = useTheme()
+  const styles = getStyles(theme)
+
+  return (
+    <View style={styles.row}>
+      {label != null ? <Text style={(styles.primaryText, spacingStyles({ marginRem: [0, 0, 0, 0], paddingRem: [0, 5, 0, 0] }, theme))}>{label}</Text> : null}
+      <TouchableWithoutFeedback style={(styles.secondaryButton, styles.rightSwitch)} onPress={onPress} onChange={onChange} disabled={value}>
+        <Switch value={value} onChange={onChange} />
+        {children}
+      </TouchableWithoutFeedback>
+    </View>
+  )
+}
+
 export function RadioIcon(props: { value: boolean }) {
   const { value } = props
   const theme = useTheme()
@@ -209,6 +226,10 @@ const getStyles = cacheStyles((theme: Theme) => {
       backgroundColor: theme.secondaryButton,
       borderColor: theme.secondaryButtonOutline
     },
+    rightSwitch: {
+      alignItems: 'flex-end',
+      justifyContent: 'flex-end'
+    },
     secondaryText: {
       ...commonText,
       color: theme.secondaryButtonText
@@ -263,6 +284,11 @@ const getStyles = cacheStyles((theme: Theme) => {
       marginRight: theme.rem(0.75),
       fontWeight: '600',
       fontSize: theme.rem(1.0)
+    },
+    row: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'flex-start'
     }
   }
 })
