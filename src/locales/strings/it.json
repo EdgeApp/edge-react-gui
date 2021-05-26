@@ -22,6 +22,7 @@
   "scan_qr_label": "Scansiona il QR",
   "error_token_exists": "Una valuta denominata %s esiste già",
   "warning_low_or_custom_fee": "Usare una commissione bassa può aumentare il tempo necessario per confermare la transazione.",
+  "warning_alphanumeric": "Sono consentite solo lettere e numeri",
   "alert_dropdown_alert": "Avviso! ",
   "alert_dropdown_warning": "Attenzione! ",
   "azteco_success": "Hai riscattato una carta bitcoin Azteco. I fondi dovrebbero arrivare a breve.",
