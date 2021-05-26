@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeDenomination } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
 
 import type { SortOption } from '../../components/modals/WalletListSortModal.js'
@@ -82,9 +82,14 @@ export const initialState = {
   }
 }
 
+export type FeeOption = 'custom' | 'high' | 'low' | 'standard'
+export type DefaultFeeOption = FeeOption | 'none'
+
 export type CurrencySetting = {
   denomination: string,
-  denominations?: EdgeDenomination[]
+  denominations?: EdgeDenomination[],
+  defaultFee?: DefaultFeeOption,
+  customFee?: Object
 }
 
 export type SettingsState = {
@@ -239,7 +244,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         walletsSort,
         mostRecentWallets,
         passwordRecoveryRemindersShown,
-        developerModeOn
+        developerModeOn,
+        ...currencies
       } = action.data
       let newState: SettingsState = {
         ...state,
@@ -266,11 +272,15 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         const currencyCode = key.currencyCode
         const denomination = key.denominationKey
         const currencyState = newState[currencyCode]
+        const defaultFee = currencies[currencyCode]?.defaultFee ?? 'none'
+        const customFee = currencies[currencyCode]?.customFee ?? {}
         newState = {
           ...newState,
           [currencyCode]: {
             ...currencyState,
-            denomination
+            denomination,
+            defaultFee,
+            customFee
           }
         }
       })
@@ -503,6 +513,13 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       const passwordRecoveryRemindersShown = { ...state.passwordRecoveryRemindersShown }
       passwordRecoveryRemindersShown[level] = true
       return { ...state, passwordRecoveryRemindersShown }
+    }
+    case 'UI/SETTINGS/SET_DEFAULT_FEE': {
+      const { currencyCode, ...defaultFeeData } = action.data
+      return {
+        ...state,
+        [currencyCode]: { ...state[currencyCode], ...defaultFeeData }
+      }
     }
     default:
       return state
