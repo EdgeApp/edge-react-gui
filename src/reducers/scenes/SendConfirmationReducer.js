@@ -41,8 +41,6 @@ export type SendConfirmationState = {
   guiMakeSpendInfo: GuiMakeSpendInfo,
   spendInfo: EdgeSpendInfo | null,
 
-  isEditable: boolean,
-
   pending: boolean,
   transaction: EdgeTransaction | null,
   error: Error | null,
@@ -256,7 +254,6 @@ export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state =
   const legacySendConfirmation = sendConfirmationLegacy(state, action)
   return {
     ...legacySendConfirmation,
-    isEditable: isEditable(state.isEditable, action),
     error: error(state.error, action),
     pin: pin(state.pin, action),
     pending: pending(state.pending, action),
