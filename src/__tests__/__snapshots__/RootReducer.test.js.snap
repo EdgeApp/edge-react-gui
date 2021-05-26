@@ -211,375 +211,497 @@ Object {
     },
     "settings": Object {
       "AAVE": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "ABAT": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "ADAI": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "AGLD": Object {
+        "defaultFee": "none",
         "denomination": "1000000000",
       },
       "AKNC": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "ALINK": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "AMANA": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "AMKR": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "AMPL": Object {
+        "defaultFee": "none",
         "denominations": "1000000000",
       },
       "ANT": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "ANTV1": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "AREN": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "ASNX": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "ASUSD": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "AUNI": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "AUSDC": Object {
+        "defaultFee": "none",
         "denomination": "1000000",
       },
       "AUSDT": Object {
+        "defaultFee": "none",
         "denomination": "1000000",
       },
       "AWBTC": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "AWETH": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "AYFI": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "AZRX": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "BADGER": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "BAL": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "BAND": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "BAT": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "BCH": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "BNB": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "BNT": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "BRZ": Object {
+        "defaultFee": "none",
         "denomination": "10000",
       },
       "BTC": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "CBAT": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "CDAI": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "CETH": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "COMBO": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "COMP": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "CREAM": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "CREP": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "CRV": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "CSAI": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "CUSDC": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "CVP": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "CWBTC": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "CZRX": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "DAI": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "DASH": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "DGB": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "DOGE": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "DOUGH": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "DPI": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "EOS": Object {
+        "defaultFee": "none",
         "denomination": "10000",
       },
       "ETC": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "ETH": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "ETHBNT": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "FIRO": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "FTC": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "FTM": Object {
         "denomination": "1000000000000000000",
       },
       "FUN": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "FUSDT": Object {
         "denomination": "1000000",
       },
       "GLM": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "GNO": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "GNT": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "GUSD": Object {
+        "defaultFee": "none",
         "denomination": "100",
       },
       "HERC": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "HUR": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "IDLE": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "IND": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "INDEX": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "KIN": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "KNC": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "LINK": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "LTC": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "MANA": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "MET": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "MKR": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "NEXO": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "NMR": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "NXM": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "OCEAN": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "OMG": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "OXT": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "PAX": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "PICKLE": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "POLY": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "QTUM": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "RBTC": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "REN": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "RENBCH": Object {
+        "defaultFee": "none",
         "denominations": "100000000",
       },
       "RENBTC": Object {
+        "defaultFee": "none",
         "denominations": "100000000",
       },
       "RENZEC": Object {
+        "defaultFee": "none",
         "denominations": "100000000",
       },
       "REP": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "REPV2": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "RIF": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "ROOK": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "RVN": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "SAI": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "SALT": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "SBTC": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "SMART": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "SNX": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "STORJ": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "SUSD": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "SUSHI": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "TBTC": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "TESTBTC": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "TLOS": Object {
+        "defaultFee": "none",
         "denomination": "10000",
       },
       "TUSD": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "UFO": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "UMA": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "UNI": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "USDC": Object {
+        "defaultFee": "none",
         "denomination": "1000000",
       },
       "USDS": Object {
+        "defaultFee": "none",
         "denomination": "1000000",
       },
       "USDT": Object {
+        "defaultFee": "none",
         "denomination": "1000000",
       },
       "VTC": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "WAX": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "WBTC": Object {
+        "defaultFee": "none",
         "denomination": "100000000",
       },
       "WETH": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "WINGS": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "XLM": Object {
+        "defaultFee": "none",
         "denomination": "10000000",
       },
       "XMR": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000",
       },
       "XRP": Object {
+        "defaultFee": "none",
         "denomination": "1000000",
       },
       "XTZ": Object {
+        "defaultFee": "none",
         "denomination": "1000000",
       },
       "YETI": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "YFI": Object {
+        "defaultFee": "none",
         "denominations": "1000000000000000000",
       },
       "ZRX": Object {
+        "defaultFee": "none",
         "denomination": "1000000000000000000",
       },
       "account": null,
