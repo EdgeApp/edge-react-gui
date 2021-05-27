@@ -15,8 +15,6 @@ import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { SelectFioAddressConnector as SelectFioAddress } from '../../modules/FioAddress/components/SelectFioAddress'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
-import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
-import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Recipient from '../../modules/UI/components/Recipient/Recipient.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
@@ -32,6 +30,9 @@ import { ExchangeRate } from '../common/ExchangeRate.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
+import { Card } from '../themed/Card'
+import type { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
+import { ExchangedFlipInput } from '../themed/ExchangedFlipInput'
 
 const DIVIDE_PRECISION = 18
 
@@ -244,21 +245,23 @@ export class SendConfirmation extends React.Component<Props, State> {
             </View>
 
             <View style={styles.main}>
-              <ExchangedFlipInput
-                headerText={flipInputHeaderText}
-                headerLogo={flipInputHeaderLogo}
-                primaryCurrencyInfo={{ ...primaryInfo }}
-                secondaryCurrencyInfo={{ ...secondaryInfo }}
-                exchangeSecondaryToPrimaryRatio={this.props.fiatPerCrypto}
-                overridePrimaryExchangeAmount={this.state.overridePrimaryExchangeAmount}
-                forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
-                onExchangeAmountChanged={this.onExchangeAmountChanged}
-                keyboardVisible={this.state.keyboardVisible}
-                isEditable={this.props.isEditable}
-                isFiatOnTop={this.state.isFiatOnTop}
-                isFocus={this.state.isFocus}
-                ref={this.flipInput}
-              />
+              <Card>
+                <ExchangedFlipInput
+                  headerText={flipInputHeaderText}
+                  headerLogo={flipInputHeaderLogo}
+                  primaryCurrencyInfo={{ ...primaryInfo }}
+                  secondaryCurrencyInfo={{ ...secondaryInfo }}
+                  exchangeSecondaryToPrimaryRatio={this.props.fiatPerCrypto}
+                  overridePrimaryExchangeAmount={this.state.overridePrimaryExchangeAmount}
+                  forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
+                  onExchangeAmountChanged={this.onExchangeAmountChanged}
+                  keyboardVisible={this.state.keyboardVisible}
+                  isEditable={this.props.isEditable}
+                  isFiatOnTop={this.state.isFiatOnTop}
+                  isFocus={this.state.isFocus}
+                  ref={this.flipInput}
+                />
+              </Card>
 
               <Scene.Padding style={{ paddingHorizontal: 54 }}>
                 <Scene.Item style={{ alignItems: 'center', flex: -1 }}>
