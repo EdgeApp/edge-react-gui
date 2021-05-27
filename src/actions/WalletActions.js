@@ -38,6 +38,13 @@ export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dis
 }
 
 export const selectWallet = (walletId: string, currencyCode: string, from?: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const { currencyWallets } = state.core.account
+
+  // Manually un-pause the wallet, if necessary:
+  const wallet: EdgeCurrencyWallet = currencyWallets[walletId]
+  if (wallet.paused) wallet.changePaused(false).catch(showError)
+
   dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
   const { isAccountActivationRequired } = Constants.getSpecialCurrencyInfo(currencyCode)
   if (isAccountActivationRequired) {
@@ -45,8 +52,6 @@ export const selectWallet = (walletId: string, currencyCode: string, from?: stri
     dispatch(selectEOSWallet(walletId, currencyCode, from))
     return
   }
-  const state = getState()
-  const { currencyWallets } = state.core.account
   const currentWalletId = state.ui.wallets.selectedWalletId
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
   if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {

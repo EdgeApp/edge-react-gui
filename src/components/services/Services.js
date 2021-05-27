@@ -29,6 +29,7 @@ import EdgeWalletsCallbackManager from './EdgeWalletsCallbackManager.js'
 import { NetworkActivity } from './NetworkActivity.js'
 import { PasswordReminderService } from './PasswordReminderService.js'
 import { PermissionsManager } from './PermissionsManager.js'
+import { WalletLifecycle } from './WalletLifecycle.js'
 
 type Props = { context: EdgeContext }
 
@@ -98,6 +99,7 @@ export class Services extends React.PureComponent<Props> {
           <PermissionsManager />
           <NetworkActivity />
           <PasswordReminderService />
+          <WalletLifecycle />
         </>
       </Provider>
     )

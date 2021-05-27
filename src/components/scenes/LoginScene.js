@@ -133,7 +133,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
       <View style={styles.container} testID="edge: login-scene">
         <LoginScreen
           username={this.props.username}
-          accountOptions={{}}
+          accountOptions={{ pauseWallets: true }}
           context={this.props.context}
           recoveryLogin={passwordRecoveryKey}
           onLogin={this.onLogin}
