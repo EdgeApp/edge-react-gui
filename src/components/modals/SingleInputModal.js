@@ -22,7 +22,7 @@ type OwnProps = {
 
 type Props = OwnProps & ThemeProps
 
-const SingleInputModalComponent = ({ bridge, title, label, theme, onSubmit, value: propsValue = '', returnKeyType = 'none' }: Props) => {
+const SingleInputModalComponent = ({ bridge, title, label, theme, onSubmit, value: propsValue = '', returnKeyType = 'done' }: Props) => {
   const textInput = useRef(null)
   const [value, setValue] = useState(propsValue)
   const [isFocused, setIsFocused] = useState(false)
