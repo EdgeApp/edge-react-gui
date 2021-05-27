@@ -8,11 +8,10 @@ import { useEffect, useRef, useState } from '../../util/hooks'
 type Props = {
   visible: boolean,
   hidden?: boolean,
-  children: React.Node,
-  onFadeoutFinish?: () => any
+  children: React.Node
 }
 
-const FadeComponent = ({ visible: propsVisible, hidden, children, onFadeoutFinish = () => {} }: Props) => {
+const FadeComponent = ({ visible: propsVisible, hidden, children }: Props) => {
   const firstRender = useRef(true)
   const opacity = useSharedValue(0)
   const [visible, setVisible] = useState<boolean>(propsVisible)
@@ -23,13 +22,9 @@ const FadeComponent = ({ visible: propsVisible, hidden, children, onFadeoutFinis
   const animate = (toValue: number) => {
     if (toValue === 0.5) setVisible(true)
 
-    opacity.value = withTiming(
-      toValue,
-      {
-        duration: 500
-      },
-      onFadeoutFinish
-    )
+    opacity.value = withTiming(toValue, {
+      duration: 500
+    })
   }
 
   useEffect(() => animate(propsVisible ? 0.5 : 0), [])
