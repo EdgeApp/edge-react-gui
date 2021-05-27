@@ -5,7 +5,7 @@ import { type EdgeContext } from 'edge-core-js/types'
 import * as React from 'react'
 import { MenuProvider } from 'react-native-popup-menu'
 import { Provider } from 'react-redux'
-import { type Store, applyMiddleware, createStore } from 'redux'
+import { type Middleware, type Store, applyMiddleware, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import ENV from '../../../env.json'
@@ -13,9 +13,9 @@ import { loadDeviceReferral } from '../../actions/DeviceReferralActions.js'
 import { rootReducer } from '../../reducers/RootReducer.js'
 import { type Action } from '../../types/reduxActions.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import errorAlert from '../../util/middleware/errorAlert.js'
-import loginStatusChecker from '../../util/middleware/loginStatusChecker.js'
-import perfLogger from '../../util/middleware/perfLogger.js'
+import { errorAlert } from '../../util/middleware/errorAlert.js'
+import { loginStatusChecker } from '../../util/middleware/loginStatusChecker.js'
+import { perfLogger } from '../../util/middleware/perfLogger.js'
 import { ModalProvider } from '../common/ModalProvider.js'
 import { Main } from '../Main.ui.js'
 import { Airship } from './AirshipInstance.js'
@@ -43,7 +43,7 @@ export class Services extends React.PureComponent<Props> {
   constructor(props: Props) {
     super(props)
 
-    const middleware: Object[] = [errorAlert, loginStatusChecker, thunk]
+    const middleware: Middleware<RootState, Action>[] = [errorAlert, loginStatusChecker, thunk]
     if (ENV.ENABLE_REDUX_PERF_LOGGING) middleware.push(perfLogger)
 
     if (global.__DEV__) {
@@ -51,7 +51,7 @@ export class Services extends React.PureComponent<Props> {
       middleware.push(createDebugger())
     }
 
-    const initialState: Object = {}
+    const initialState: $Shape<RootState> = {}
     this.store = createStore(rootReducer, initialState, applyMiddleware(...middleware))
     const flowHack: any = this.store.dispatch
     this.dispatch = flowHack // Flow doesn't know about redux-thunk

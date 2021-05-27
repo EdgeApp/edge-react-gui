@@ -1,19 +1,19 @@
 // @flow
 
-import { showError } from '../../components/services/AirshipInstance.js'
-import type { Action, Store } from '../../types/reduxTypes.js'
+import { type Middleware } from 'redux'
 
-export default (store: Store) => (next: Function) => (action: Action) => {
-  let out
+import { showError } from '../../components/services/AirshipInstance.js'
+import { type Action, type RootState } from '../../types/reduxTypes.js'
+
+export const errorAlert: Middleware<RootState, Action> = store => next => action => {
   try {
-    out = next(action)
+    const out: any = next(action)
+    if (out != null && typeof out.then === 'function') {
+      out.catch(showError)
+    }
+    return out
   } catch (error) {
     showError(error)
   }
-
-  if (out && out.then && typeof out.then === 'function') {
-    out.catch(showError)
-  }
-
-  return out
+  return action
 }
