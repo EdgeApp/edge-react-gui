@@ -6,4 +6,7 @@ import { type Action } from './reduxActions.js'
 export type { Action, RootState }
 
 export type GetState = () => RootState
-export type Dispatch = <Return>(action: Action | ((Dispatch, GetState) => Return)) => Return
+export type Dispatch = {
+  (action: Action): Action,
+  <Return>(thunk: (dispatch: Dispatch, getState: GetState) => Return): Return
+}

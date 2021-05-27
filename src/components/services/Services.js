@@ -38,7 +38,6 @@ type Props = { context: EdgeContext }
  */
 export class Services extends React.PureComponent<Props> {
   store: Store<RootState, Action>
-  dispatch: Dispatch
 
   constructor(props: Props) {
     super(props)
@@ -53,8 +52,6 @@ export class Services extends React.PureComponent<Props> {
 
     const initialState: $Shape<RootState> = {}
     this.store = createStore(rootReducer, initialState, applyMiddleware(...middleware))
-    const flowHack: any = this.store.dispatch
-    this.dispatch = flowHack // Flow doesn't know about redux-thunk
 
     // Put the context into Redux:
     const { context } = props
@@ -66,7 +63,8 @@ export class Services extends React.PureComponent<Props> {
   }
 
   componentDidMount() {
-    this.dispatch(loadDeviceReferral())
+    const dispatch: Dispatch = this.store.dispatch
+    dispatch(loadDeviceReferral())
   }
 
   renderGui() {

@@ -600,17 +600,21 @@ export const SendScene = connect(
     reset() {
       dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
     },
-    sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId: string, selectedCurrencyCode: string) =>
-      dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode)),
+    async sendConfirmationUpdateTx(guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId: string, selectedCurrencyCode: string) {
+      await dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode))
+    },
     updateSpendPending(pending: boolean) {
       dispatch({
         type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
         data: { pending }
       })
     },
-    signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string): any =>
-      dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)),
-    uniqueIdentifierButtonPressed: () => dispatch(uniqueIdentifierModalActivated()),
+    signBroadcastAndSave(fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) {
+      dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode))
+    },
+    uniqueIdentifierButtonPressed() {
+      dispatch(uniqueIdentifierModalActivated())
+    },
     onChangePin(pin: string) {
       dispatch({ type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin } })
     }
