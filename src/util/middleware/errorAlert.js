@@ -1,7 +1,7 @@
 // @flow
 
-import { showError } from '../components/services/AirshipInstance.js'
-import type { Action, Store } from '../types/reduxTypes.js'
+import { showError } from '../../components/services/AirshipInstance.js'
+import type { Action, Store } from '../../types/reduxTypes.js'
 
 export default (store: Store) => (next: Function) => (action: Action) => {
   let out
