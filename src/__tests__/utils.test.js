@@ -2,7 +2,7 @@
 /* globals describe test expect */
 import { bns } from 'biggystring'
 
-import { sanitizeDecimalAmount } from '../modules/UI/components/FlipInput/FlipInput2.ui.js'
+import { sanitizeDecimalAmount } from '../components/themed/FlipInput'
 import {
   autoCorrectDate,
   convertDisplayToNative,
