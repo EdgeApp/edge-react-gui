@@ -2,18 +2,16 @@
 
 import { type Reducer } from 'redux'
 
-import type { Action } from '../../types/reduxTypes.js'
+import { type Action } from '../../types/reduxTypes.js'
+import { type GuiExchangeRates } from '../../types/types.js'
 
-export type ExchangeRatesState = {
-  [string]: number
-}
+export type ExchangeRatesState = GuiExchangeRates
 
-const initialState = {}
+const initialState: ExchangeRatesState = {}
 
 export const exchangeRates: Reducer<ExchangeRatesState, Action> = (state = initialState, action: Action) => {
   switch (action.type) {
     case 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES':
-      if (!action.data) throw new Error('Invalid action')
       return action.data.exchangeRates
     case 'LOGOUT':
       return initialState

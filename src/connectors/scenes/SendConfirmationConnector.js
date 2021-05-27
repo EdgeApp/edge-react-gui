@@ -3,26 +3,16 @@
 import { type EdgeCurrencyInfo, type EdgeSpendInfo, type EdgeTransaction, asMaybeNoAmountSpecifiedError } from 'edge-core-js'
 import { connect } from 'react-redux'
 
-import {
-  type FioSenderInfo,
-  getAuthRequiredDispatch,
-  newPin,
-  newSpendInfo,
-  reset,
-  sendConfirmationUpdateTx,
-  signBroadcastAndSave,
-  updateSpendPending,
-  updateTransaction
-} from '../../actions/SendConfirmationActions.js'
+import { type FioSenderInfo, getAuthRequiredDispatch, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions.js'
 import { activated as uniqueIdentifierModalActivated } from '../../actions/UniqueIdentifierModalActions.js'
 import type { SendConfirmationDispatchProps, SendConfirmationStateProps } from '../../components/scenes/SendConfirmationScene'
 import { SendConfirmation } from '../../components/scenes/SendConfirmationScene'
 import { getDisplayDenomination, getExchangeDenomination as settingsGetExchangeDenomination, getPlugins } from '../../modules/Settings/selectors.js'
 import { getPublicAddress, getTransaction } from '../../modules/UI/scenes/SendConfirmation/selectors'
-import type { AuthType } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { type SpendAuthType } from '../../types/types.js'
 import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils'
 
 const mapStateToProps = (state: RootState): SendConfirmationStateProps => {
@@ -109,18 +99,41 @@ const mapStateToProps = (state: RootState): SendConfirmationStateProps => {
 
 const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps => ({
   sendConfirmationUpdateTx: guiMakeSpendInfo => dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo)),
-  reset: () => dispatch(reset()),
-  updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
+  reset() {
+    dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
+  },
+  updateSpendPending(pending: boolean) {
+    dispatch({
+      type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
+      data: { pending }
+    })
+  },
   signBroadcastAndSave: (fioSender?: FioSenderInfo): any => dispatch(signBroadcastAndSave(fioSender)),
-  onChangePin: (pin: string) => dispatch(newPin(pin)),
+  onChangePin(pin: string) {
+    dispatch({
+      type: 'UI/SEND_CONFIRMATION/NEW_PIN',
+      data: { pin }
+    })
+  },
   uniqueIdentifierButtonPressed: () => {
     dispatch(uniqueIdentifierModalActivated())
   },
-  newSpendInfo: (spendInfo: EdgeSpendInfo, isLimitExceeded: AuthType) => {
-    return dispatch(newSpendInfo(spendInfo, isLimitExceeded))
+  newSpendInfo(spendInfo: EdgeSpendInfo, isLimitExceeded: SpendAuthType) {
+    dispatch({
+      type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
+      data: { spendInfo, authRequired: isLimitExceeded }
+    })
   },
-  updateTransaction: (transaction: ?EdgeTransaction, guiMakeSpendInfo: ?GuiMakeSpendInfo, forceUpdateGui: ?boolean, error: ?Error) => {
-    dispatch(updateTransaction(transaction, guiMakeSpendInfo, forceUpdateGui, error))
+  updateTransaction(transaction: EdgeTransaction | null, guiMakeSpendInfo: GuiMakeSpendInfo, forceUpdateGui: boolean, error: Error | null) {
+    dispatch({
+      type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
+      data: {
+        error,
+        forceUpdateGui,
+        guiMakeSpendInfo,
+        transaction
+      }
+    })
   },
   getAuthRequiredDispatch: (spendInfo: EdgeSpendInfo): any => dispatch(getAuthRequiredDispatch(spendInfo)) // Type casting any cause dispatch returns a function
 })

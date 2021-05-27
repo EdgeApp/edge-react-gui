@@ -20,11 +20,11 @@ import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/Exchan
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Recipient from '../../modules/UI/components/Recipient/Recipient.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
-import { type AuthType, getSpendInfoWithoutState } from '../../modules/UI/scenes/SendConfirmation/selectors'
+import { getSpendInfoWithoutState } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
+import { type GuiCurrencyInfo, type GuiDenomination, type GuiWallet, type SpendAuthType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
 import { AddressTextWithBlockExplorerModal } from '../common/AddressTextWithBlockExplorerModal'
@@ -74,8 +74,8 @@ export type SendConfirmationDispatchProps = {
   sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo) => any,
   onChangePin: (pin: string) => mixed,
   uniqueIdentifierButtonPressed: () => void,
-  newSpendInfo: (EdgeSpendInfo, AuthType) => mixed,
-  updateTransaction: (?EdgeTransaction, ?GuiMakeSpendInfo, ?boolean, ?Error) => void,
+  newSpendInfo: (spendInfo: EdgeSpendInfo, authRequired: SpendAuthType) => void,
+  updateTransaction: (transaction: EdgeTransaction | null, spendInfo: GuiMakeSpendInfo, forceUpdateGui: boolean, error: Error | null) => void,
   getAuthRequiredDispatch: EdgeSpendInfo => void
 }
 

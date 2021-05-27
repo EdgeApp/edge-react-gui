@@ -22,7 +22,7 @@ import { getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.j
 import s from '../locales/strings.js'
 import { addToFioAddressCache, recordSend } from '../modules/FioAddress/util'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
-import { type AuthType, getAuthRequired, getSpendInfo, getSpendInfoWithoutState, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
+import { getAuthRequired, getSpendInfo, getSpendInfoWithoutState, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
 import { convertCurrencyFromExchangeRates, getExchangeRate } from '../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
@@ -43,35 +43,6 @@ export type FioSenderInfo = {
   memoError: string,
   skipRecord?: boolean
 }
-
-export const newSpendInfo = (spendInfo: EdgeSpendInfo, authRequired: AuthType) => ({
-  type: 'UI/SEND_CONFIMATION/NEW_SPEND_INFO',
-  data: { spendInfo, authRequired }
-})
-
-export const reset = () => ({
-  type: 'UI/SEND_CONFIMATION/RESET'
-})
-
-export const updateTransaction = (transaction: ?EdgeTransaction, guiMakeSpendInfo: ?GuiMakeSpendInfo, forceUpdateGui: ?boolean, error: ?Error) => ({
-  type: 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION',
-  data: { transaction, guiMakeSpendInfo, forceUpdateGui, error }
-})
-
-export const updateSpendPending = (pending: boolean) => ({
-  type: 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING',
-  data: { pending }
-})
-
-export const newPin = (pin: string) => ({
-  type: 'UI/SEND_CONFIMATION/NEW_PIN',
-  data: { pin }
-})
-
-export const toggleCryptoOnTop = () => ({
-  type: 'UI/SEND_CONFIMATION/TOGGLE_CRYPTO_ON_TOP',
-  data: null
-})
 
 const updateAmount =
   (
@@ -153,12 +124,23 @@ export const sendConfirmationUpdateTx =
     const spendInfo = getSpendInfo(state, guiMakeSpendInfoClone, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode)
 
     const authRequired = getAuthRequired(state, spendInfo)
-    dispatch(newSpendInfo(spendInfo, authRequired))
+    dispatch({
+      type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
+      data: { spendInfo, authRequired }
+    })
 
     await edgeWallet
       .makeSpend(spendInfo)
       .then(edgeTransaction => {
-        return dispatch(updateTransaction(edgeTransaction, guiMakeSpendInfoClone, forceUpdateGui, null))
+        return dispatch({
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
+          data: {
+            error: null,
+            forceUpdateGui,
+            guiMakeSpendInfo: guiMakeSpendInfoClone,
+            transaction: edgeTransaction
+          }
+        })
       })
       .catch(async (error: mixed) => {
         console.log(error)
@@ -188,7 +170,15 @@ export const sendConfirmationUpdateTx =
           }
         }
         const typeHack: any = error
-        return dispatch(updateTransaction(null, guiMakeSpendInfoClone, forceUpdateGui, typeHack))
+        return dispatch({
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
+          data: {
+            error: typeHack,
+            forceUpdateGui,
+            guiMakeSpendInfo: guiMakeSpendInfoClone,
+            transaction: null
+          }
+        })
       })
   }
 
@@ -216,11 +206,12 @@ export const updateMaxSpend = (selectedWalletId?: string, selectedCurrencyCode?:
       const exchangeAmount = convertNativeToExchange(exchangeDenomination.multiplier)(nativeAmount)
       const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
 
-      dispatch(reset())
-
-      dispatch(toggleCryptoOnTop())
-
-      dispatch(newSpendInfo(spendInfo, authRequired))
+      dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
+      dispatch({ type: 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP' })
+      dispatch({
+        type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
+        data: { spendInfo, authRequired }
+      })
 
       dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true, walletId, currencyCode))
     })
@@ -252,14 +243,23 @@ export const signBroadcastAndSave =
     const guiMakeSpendInfo = state.ui.scenes.sendConfirmation.guiMakeSpendInfo
 
     if (guiMakeSpendInfo.beforeTransaction) {
-      dispatch(updateSpendPending(true))
+      dispatch({
+        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
+        data: { pending: true }
+      })
       try {
         guiMakeSpendInfo.beforeTransaction && (await guiMakeSpendInfo.beforeTransaction())
       } catch (e) {
-        dispatch(updateSpendPending(false))
+        dispatch({
+          type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
+          data: { pending: false }
+        })
         return
       }
-      dispatch(updateSpendPending(false))
+      dispatch({
+        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
+        data: { pending: false }
+      })
     }
 
     if (!spendInfo) throw new Error(s.strings.invalid_spend_request)
@@ -277,12 +277,23 @@ export const signBroadcastAndSave =
     if (feeAmountInUSD > FEE_ALERT_THRESHOLD) {
       const feeAlertResponse = await displayFeeAlert(feeAmountInWalletFiatSyntax)
       if (!feeAlertResponse) {
-        dispatch(updateTransaction(edgeUnsignedTransaction, guiMakeSpendInfo, true, new Error('transactionCancelled')))
+        dispatch({
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
+          data: {
+            error: new Error('transactionCancelled'),
+            forceUpdateGui: true,
+            guiMakeSpendInfo,
+            transaction: edgeUnsignedTransaction
+          }
+        })
         return
       }
     }
 
-    dispatch(updateSpendPending(true))
+    dispatch({
+      type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
+      data: { pending: true }
+    })
     let edgeSignedTransaction: EdgeTransaction = edgeUnsignedTransaction
     try {
       if (authRequired === 'pin') {
@@ -363,7 +374,10 @@ export const signBroadcastAndSave =
           }
         }
       }
-      dispatch(updateSpendPending(false))
+      dispatch({
+        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
+        data: { pending: false }
+      })
 
       playSendSound().catch(error => console.log(error)) // Fail quietly
       if (!guiMakeSpendInfo.dismissAlert) {
@@ -383,7 +397,10 @@ export const signBroadcastAndSave =
       }
     } catch (e) {
       console.log(e)
-      dispatch(updateSpendPending(false))
+      dispatch({
+        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
+        data: { pending: false }
+      })
       let message = sprintf(s.strings.transaction_failure_message, e.message)
       if (e.name === 'ErrorEosInsufficientCpu') {
         message = s.strings.send_confirmation_eos_error_cpu
@@ -454,11 +471,22 @@ export const updateTransactionAmount =
     const authType = getAuthRequired(state, spendInfo)
 
     // Transaction Update
-    dispatch(newSpendInfo(spendInfo, authType))
+    dispatch({
+      type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
+      data: { spendInfo, authRequired: authType }
+    })
     coreWallet
       .makeSpend(spendInfo)
       .then(edgeTransaction => {
-        dispatch(updateTransaction(edgeTransaction, guiMakeSpendInfoClone, false, null))
+        dispatch({
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
+          data: {
+            error: null,
+            forceUpdateGui: false,
+            guiMakeSpendInfo: guiMakeSpendInfoClone,
+            transaction: edgeTransaction
+          }
+        })
       })
       .catch(error => {
         let customError
@@ -468,6 +496,14 @@ export const updateTransactionAmount =
         }
 
         console.log(error)
-        dispatch(updateTransaction(null, guiMakeSpendInfoClone, false, customError != null ? customError : error))
+        dispatch({
+          type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
+          data: {
+            error: customError != null ? customError : error,
+            forceUpdateGui: false,
+            guiMakeSpendInfo: guiMakeSpendInfoClone,
+            transaction: null
+          }
+        })
       })
   }

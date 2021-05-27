@@ -17,7 +17,6 @@ const initialState: RequestTypeState = {
 export const requestType: Reducer<RequestTypeState, Action> = (state = initialState, action: Action) => {
   switch (action.type) {
     case 'NEW_RECEIVE_ADDRESS': {
-      if (!action.data) return state
       let uniqueLegacy = true
       if (action.data.receiveAddress.legacyAddress) {
         uniqueLegacy = action.data.receiveAddress.publicAddress === action.data.receiveAddress.legacyAddress

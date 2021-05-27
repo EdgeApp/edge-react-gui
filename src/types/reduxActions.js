@@ -1,11 +1,23 @@
 // @flow
 
 import { type Disklet } from 'disklet'
-import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet, type EdgeLobby, type EdgeParsedUri, type EdgeReceiveAddress } from 'edge-core-js'
+import {
+  type EdgeAccount,
+  type EdgeContext,
+  type EdgeCurrencyWallet,
+  type EdgeLobby,
+  type EdgeParsedUri,
+  type EdgeReceiveAddress,
+  type EdgeSpendInfo,
+  type EdgeTransaction
+} from 'edge-core-js'
 
+import { type SortOption } from '../components/modals/WalletListSortModal.js'
 import type { CcWalletMap } from '../reducers/FioReducer'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
+import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
+import { type AccountInitPayload, type SettingsState } from '../reducers/scenes/SettingsReducer.js'
 import { type TweakSource } from '../util/ReferralHelpers.js'
 import { type DeepLink } from './DeepLink.js'
 import { type AccountReferral, type DeviceReferral, type Promotion, type ReferralCache } from './ReferralTypes.js'
@@ -16,39 +28,14 @@ import {
   type FioObtRecord,
   type GuiContact,
   type GuiCurrencyInfo,
+  type GuiExchangeRates,
   type GuiSwapInfo,
-  type GuiWallet
+  type GuiWallet,
+  type MostRecentWallet,
+  type SpendAuthType,
+  type SpendingLimits,
+  type TransactionListTx
 } from './types.js'
-
-type LegacyActionName =
-  | 'ACCOUNT_INIT_COMPLETE'
-  | 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES'
-  | 'NEW_RECEIVE_ADDRESS'
-  | 'SET_TRANSACTION_SUBCATEGORIES'
-  | 'SPENDING_LIMITS/NEW_SPENDING_LIMITS'
-  | 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS'
-  | 'UI/SEND_CONFIMATION/NEW_PIN'
-  | 'UI/SEND_CONFIMATION/NEW_SPEND_INFO'
-  | 'UI/SEND_CONFIMATION/UPDATE_SPEND_PENDING'
-  | 'UI/SEND_CONFIMATION/UPDATE_TRANSACTION'
-  | 'UI/SEND_CONFIMATION/TOGGLE_CRYPTO_ON_TOP'
-  | 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS'
-  | 'UI/SETTINGS/LOAD_SETTINGS'
-  | 'UI/SETTINGS/SET_MOST_RECENT_WALLETS'
-  | 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY'
-  | 'UI/SETTINGS/SET_WALLETS_SORT'
-  | 'UI/SETTINGS/SET_BLUETOOTH_MODE'
-  | 'UI/SETTINGS/SET_DEFAULT_FIAT'
-  | 'UI/SETTINGS/SET_DENOMINATION_KEY'
-  | 'UI/SETTINGS/SET_MERCHANT_MODE'
-  | 'UI/SETTINGS/SET_PIN_MODE'
-  | 'UI/SETTINGS/SET_SETTINGS_LOCK'
-  | 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED'
-  | 'UI/SETTINGS/UPDATE_SETTINGS'
-  | 'UI/WALLETS/UPSERT_WALLETS'
-  | 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED'
-  | 'UPDATE_WALLET_LOADING_PROGRESS'
-  | 'RESET_WALLET_LOADING_PROGRESS'
 
 // Actions with no payload:
 type NoDataActionName =
@@ -66,6 +53,7 @@ type NoDataActionName =
   | 'EDIT_CUSTOM_TOKEN_FAILURE'
   | 'EDIT_CUSTOM_TOKEN_START'
   | 'ENABLE_SCAN'
+  | 'FIO/SET_FIO_ADDRESSES_PROGRESS'
   | 'INVALIDATE_EDGE_LOBBY'
   | 'MANAGE_TOKENS_START'
   | 'MANAGE_TOKENS_SUCCESS'
@@ -80,12 +68,13 @@ type NoDataActionName =
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_START'
   | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_SUCCESS'
   | 'PROCESS_EDGE_LOGIN'
-  | 'RECEIVED_INSUFFICENT_FUNDS_ERROR'
+  | 'RECEIVED_INSUFFICIENT_FUNDS_ERROR'
   | 'SHIFT_COMPLETE'
   | 'START_CALC_MAX'
   | 'START_SHIFT_TRANSACTION'
   | 'TOGGLE_ENABLE_TORCH'
-  | 'UI/SEND_CONFIMATION/RESET'
+  | 'UI/SEND_CONFIRMATION/RESET'
+  | 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP'
   | 'UI/WALLETS/CREATE_WALLET_FAILURE'
   | 'UI/WALLETS/CREATE_WALLET_START'
   | 'UI/WALLETS/CREATE_WALLET_SUCCESS'
@@ -94,14 +83,13 @@ type NoDataActionName =
   | 'UNIQUE_IDENTIFIER_MODAL/RESET'
   | 'USE_LEGACY_REQUEST_ADDRESS'
   | 'USE_REGULAR_REQUEST_ADDRESS'
-  | 'FIO/SET_FIO_ADDRESSES_PROGRESS'
 
 export type Action =
-  | { type: LegacyActionName, data: any }
   | { type: NoDataActionName }
   // Actions with known payloads:
   | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
   | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
+  | { type: 'ACCOUNT_INIT_COMPLETE', data: AccountInitPayload }
   | { type: 'ACCOUNT_REFERRAL_LOADED', data: { referral: AccountReferral, cache: ReferralCache } }
   | { type: 'ACCOUNT_SWAP_IGNORED', data: boolean }
   | { type: 'ACCOUNT_TWEAKS_REFRESHED', data: ReferralCache }
@@ -142,6 +130,7 @@ export type Action =
   | { type: 'DEEP_LINK_RECEIVED', data: DeepLink }
   | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
   | { type: 'DEVICE_REFERRAL_LOADED', data: DeviceReferral }
+  | { type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES', data: { exchangeRates: GuiExchangeRates } }
   | {
       type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
       data: { activeWalletIds: string[] }
@@ -178,12 +167,57 @@ export type Action =
     }
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS', data: { contacts: GuiContact[] } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
+  | { type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress: EdgeReceiveAddress } }
   | { type: 'PARSE_URI_SUCCEEDED', data: { parsedUri: EdgeParsedUri } }
+  | { type: 'RESET_WALLET_LOADING_PROGRESS', data: { walletId: string } }
   | { type: 'SAVE_EDGE_LOBBY', data: EdgeLobby }
   | { type: 'SET_LOBBY_ERROR', data: string }
   | { type: 'SET_FROM_WALLET_MAX', data: string }
+  | { type: 'SET_TRANSACTION_SUBCATEGORIES', data: { subcategories: string[] } }
+  | { type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS', data: { spendingLimits: SpendingLimits } }
+  | {
+      type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS',
+      data: {
+        numTransactions: number,
+        transactions: TransactionListTx[],
+        transactionIdMap: { [txid: string]: TransactionListTx },
+        currentCurrencyCode: string,
+        currentWalletId: string,
+        currentEndIndex: number
+      }
+    }
+  | { type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin: string } }
+  | {
+      type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
+      data: {
+        spendInfo: EdgeSpendInfo,
+        authRequired: SpendAuthType
+      }
+    }
+  | { type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING', data: { pending: boolean } }
+  | {
+      type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
+      data: {
+        error: Error | null,
+        forceUpdateGui: boolean,
+        guiMakeSpendInfo: GuiMakeSpendInfo,
+        transaction: EdgeTransaction | null
+      }
+    }
+  | { type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS', data: { isTouchEnabled: boolean } }
+  | { type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY', data: { isAccountBalanceVisible: boolean } }
   | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME', data: { autoLogoutTimeInSeconds: number } }
+  | { type: 'UI/SETTINGS/SET_BLUETOOTH_MODE', data: { bluetoothMode: boolean } }
+  | { type: 'UI/SETTINGS/SET_DEFAULT_FIAT', data: { defaultFiat: string } }
+  | { type: 'UI/SETTINGS/SET_DENOMINATION_KEY', data: { currencyCode: string, denominationKey: string } }
+  | { type: 'UI/SETTINGS/SET_MERCHANT_MODE', data: { merchantMode: boolean } }
+  | { type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS', data: { mostRecentWallets: MostRecentWallet[] } }
+  | { type: 'UI/SETTINGS/SET_PIN_MODE', data: { pinMode: boolean } }
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: string | void }
+  | { type: 'UI/SETTINGS/SET_SETTINGS_LOCK', data: boolean }
+  | { type: 'UI/SETTINGS/SET_WALLETS_SORT', data: { walletsSort: SortOption } }
+  | { type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED', data: { pinLoginEnabled: boolean } }
+  | { type: 'UI/SETTINGS/UPDATE_SETTINGS', data: { settings: SettingsState } }
   | {
       type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
       data: {
@@ -195,6 +229,8 @@ export type Action =
       type: 'UI/WALLETS/SELECT_WALLET',
       data: { currencyCode: string, walletId: string }
     }
+  | { type: 'UI/WALLETS/UPSERT_WALLETS', data: { wallets: EdgeCurrencyWallet[] } }
+  | { type: 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED', data: { uniqueIdentifier: string } }
   | {
       type: 'UPDATE_EXISTING_TOKEN_SUCCESS',
       data: { tokenObj: CustomTokenInfo }
@@ -205,6 +241,7 @@ export type Action =
       data: { walletId: string, tokens: string[] }
     }
   | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL', data: number }
+  | { type: 'UPDATE_WALLET_LOADING_PROGRESS', data: { walletId: string, addressLoadingProgress: number } }
   | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: string }
   | { type: 'NETWORK/NETWORK_STATUS', data: { isConnected: boolean } }
   | { type: 'FIO/SET_FIO_ADDRESSES', data: { fioAddresses: FioAddress[] } }

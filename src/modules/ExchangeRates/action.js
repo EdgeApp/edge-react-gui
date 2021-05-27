@@ -1,6 +1,7 @@
 // @flow
 
 import { type Dispatch, type GetState, type RootState } from '../../types/reduxTypes.js'
+import { type GuiExchangeRates } from '../../types/types.js'
 import { getYesterdayDateRoundDownHour } from '../../util/utils.js'
 import { getDefaultIsoFiat } from '../Settings/selectors.js'
 
@@ -13,13 +14,13 @@ export const updateExchangeRates = () => async (dispatch: Dispatch, getState: Ge
   })
 }
 
-async function buildExchangeRates(state: RootState) {
+async function buildExchangeRates(state: RootState): GuiExchangeRates {
   const { account } = state.core
   const { currencyWallets, rateCache } = account
   const accountIsoFiat = getDefaultIsoFiat(state)
 
   const exchangeRates: { [pair: string]: Promise<number> } = {}
-  const finalExchangeRates = {}
+  const finalExchangeRates: GuiExchangeRates = {}
   const yesterdayDate = getYesterdayDateRoundDownHour()
   if (accountIsoFiat !== 'iso:USD') {
     exchangeRates[`iso:USD_${accountIsoFiat}`] = rateCache.convertCurrency('iso:USD', accountIsoFiat)

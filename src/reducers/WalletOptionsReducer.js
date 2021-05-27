@@ -16,7 +16,6 @@ export type WalletListState = {
 const walletId = (state = '', action: Action): string => {
   switch (action.type) {
     case 'OPEN_VIEWXPUB_WALLET_MODAL': {
-      if (!action.data) throw new Error('Invalid action')
       return action.data.walletId
     }
 
