@@ -34,7 +34,13 @@ const SendLogsModalComponent = ({ bridge, isConnected, submitLogs }: Props) => {
   }
 
   return (
-    <SingleInputModal bridge={bridge} title={s.strings.settings_button_send_logs} label={s.strings.settings_modal_send_logs_label} onSubmit={handleSubmit} />
+    <SingleInputModal
+      bridge={bridge}
+      title={s.strings.settings_button_send_logs}
+      label={s.strings.settings_modal_send_logs_label}
+      onSubmit={handleSubmit}
+      returnKeyType="send"
+    />
   )
 }
 
