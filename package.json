@@ -26,7 +26,7 @@
     "android:logcat": "adb logcat *:S ReactNative:V ReactNativeJS:V",
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
     "android:release-install": "npm run android:clean && npm run android:release && adb install android/app/build/outputs/apk/release/app-release.apk",
-    "cover": "jest --coverage",
+    "cover": "jest --config jest.config.js --coverage",
     "fix": "npm run lint -- --fix",
     "flow": "flow",
     "flow-coverage": "flow-coverage-report",
@@ -39,7 +39,7 @@
     "prepare": "./prepare-assets.sh",
     "server": "node ./loggingServer.js",
     "start": "react-native start",
-    "test": "jest",
+    "test": "jest --config jest.config.js",
     "test-android": "detox build --configuration android.emu.debug && detox test --configuration android.emu.debug -l verbose",
     "test-ios": "detox build --configuration ios.sim.debug && detox test --configuration ios.sim.debug",
     "test:e2e": "detox test -c ios.sim.debug",
@@ -54,32 +54,6 @@
   },
   "lint-staged": {
     "*.{js,jsx}": "eslint"
-  },
-  "jest": {
-    "coverageDirectory": "./coverage",
-    "coverageReporters": [
-      "cobertura",
-      "html"
-    ],
-    "preset": "react-native",
-    "reporters": [
-      "default",
-      "jest-junit"
-    ],
-    "setupFiles": [
-      "./testSetup.js"
-    ],
-    "testPathIgnorePatterns": [
-      "node_modules",
-      "<rootDir>/e2e"
-    ],
-    "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js",
-      "^.+\\.(bmp|gif|jpg|jpeg|mp4|png|psd|svg|webp)$": "<rootDir>/node_modules/react-native/jest/assetFileTransformer.js"
-    },
-    "transformIgnorePatterns": [
-      "node_modules/mobx-react"
-    ]
   },
   "resolutions": {
     "axios": "0.19.0",
@@ -133,12 +107,12 @@
     "detox": "^18.10.0",
     "disklet": "^0.4.5",
     "edge-components": "^0.0.31",
-    "edge-core-js": "^0.17.33",
-    "edge-currency-accountbased": "^0.7.59",
+    "edge-core-js": "^0.18.0",
+    "edge-currency-accountbased": "^0.7.60",
     "edge-currency-bitcoin": "^4.9.14",
     "edge-currency-monero": "^0.3.1",
     "edge-exchange-plugins": "^0.11.28",
-    "edge-login-ui-rn": "^0.9.2",
+    "edge-login-ui-rn": "^0.9.4",
     "lodash": "^4.17.19",
     "qrcode-generator": "^1.4.4",
     "react": "17.0.1",
@@ -217,7 +191,7 @@
     "flow-bin": "^0.84.0",
     "husky": "^4.3.0",
     "jest": "^26.6.3",
-    "jest-junit": "^9.0.0",
+    "jest-junit": "^12.1.0",
     "jetifier": "^1.6.5",
     "lint-staged": "^10.5.3",
     "metro-react-native-babel-preset": "^0.64.0",
@@ -272,10 +246,6 @@
       "html",
       "json"
     ]
-  },
-  "jest-junit": {
-    "outputDirectory": "./coverage",
-    "outputName": "junit.xml"
   },
   "plugins": [
     "edge-plugin-simplex",

@@ -18,6 +18,8 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import type { Theme, ThemeProps } from '../services/ThemeContext'
 import { cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
+import { FormError } from '../themed/FormError'
+import { SceneHeader } from '../themed/SceneHeader'
 import { PrimaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
 
@@ -28,7 +30,8 @@ type LocalState = {
   loading: boolean,
   walletLoading: boolean,
   isAvailable: boolean | null,
-  fieldPos: number
+  fieldPos: number,
+  errorMessage: string
 }
 
 type StateProps = {
@@ -49,6 +52,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
   state = {
     selectedWallet: null,
     fioDomain: '',
+    errorMessage: '',
     isValid: true,
     isAvailable: false,
     loading: false,
@@ -118,12 +122,24 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
         return --this.fioCheckQueue
       }
       this.fioCheckQueue = 0
+
+      if (/[^\p{L}\p{N}]+/gu.test(fioDomain)) {
+        this.setState({
+          loading: false,
+          isValid: false,
+          errorMessage: s.strings.warning_alphanumeric
+        })
+        return
+      }
+
       try {
         const { fioPlugin } = this.props
         const isAvailable = fioPlugin.otherMethods ? await fioPlugin.otherMethods.validateAccount(fioDomain, true) : false
         this.setState({
           isAvailable,
-          loading: false
+          isValid: true,
+          loading: false,
+          errorMessage: ''
         })
       } catch (e) {
         this.setState({
@@ -222,7 +238,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
   render() {
     const { theme } = this.props
-    const { fioDomain, isAvailable, loading } = this.state
+    const { fioDomain, isAvailable, loading, errorMessage, isValid } = this.state
     const styles = getStyles(theme)
     let chooseHandleErrorMessage = ''
     if (fioDomain && !this.props.isConnected) {
@@ -232,11 +248,17 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
       chooseHandleErrorMessage = s.strings.fio_address_register_screen_not_available
     }
 
+    if (fioDomain && !isValid && errorMessage) {
+      chooseHandleErrorMessage = errorMessage
+    }
+
     return (
       <SceneWrapper background="theme" bodySplit={theme.rem(1.5)}>
+        <SceneHeader style={styles.header} title={s.strings.title_register_fio_domain}>
+          <IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />
+        </SceneHeader>
         {/* eslint-disable-next-line react/no-string-refs */}
         <ScrollView ref="_scrollView">
-          <IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(4)} />
           <EdgeText style={[styles.paddings, styles.instructionalText, styles.title]} numberOfLines={3}>
             {s.strings.fio_domain_reg_text}
           </EdgeText>
@@ -248,12 +270,14 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
             <Tile type="editable" title={s.strings.fio_domain_choose_label} onPress={this.onDomainPress}>
               <View style={styles.domainView}>
                 <EdgeText style={styles.domainText}>{fioDomain}</EdgeText>
-                <EdgeText style={styles.errorMessage}>{chooseHandleErrorMessage ? `(${chooseHandleErrorMessage})` : ''}</EdgeText>
                 <EdgeText style={styles.loadingText}>{loading ? `(${s.strings.loading})` : ''}</EdgeText>
               </View>
             </Tile>
           </View>
 
+          <FormError style={styles.error} isVisible={!!chooseHandleErrorMessage}>
+            {chooseHandleErrorMessage}
+          </FormError>
           {this.renderFioWallets()}
           {this.renderButton()}
           <View style={styles.bottomSpace} />
@@ -270,12 +294,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   instructionalText: {
     fontSize: theme.rem(1),
-    textAlign: 'center',
     color: theme.secondaryText
   },
-
   title: {
     paddingTop: theme.rem(1.5)
+  },
+  header: {
+    flexDirection: 'row-reverse',
+    justifyContent: 'flex-end',
+    marginRight: theme.rem(1),
+    marginTop: theme.rem(0.5)
   },
   bottomSpace: {
     paddingBottom: theme.rem(30)
@@ -287,18 +315,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText,
     marginRight: theme.rem(0.5)
   },
-  errorMessage: {
-    color: theme.dangerText
+  error: {
+    flex: 1,
+    margin: theme.rem(1)
   },
   loadingText: {
     color: theme.deactivatedText
   },
   iconIon: {
-    alignSelf: 'center',
-    marginTop: theme.rem(1.5),
-    height: theme.rem(4),
-    width: theme.rem(4),
-    textAlign: 'center'
+    marginRight: theme.rem(0.5)
   }
 }))
 
