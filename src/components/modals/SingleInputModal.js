@@ -16,7 +16,6 @@ type OwnProps = {
   title: string,
   value?: string,
   returnKeyType?: string,
-  onSubmit?: (value: string) => void,
   onSubmit?: (value: string) => void
 }
 
@@ -27,7 +26,10 @@ const SingleInputModalComponent = ({ bridge, title, label, theme, onSubmit, valu
   const [value, setValue] = useState(propsValue)
   const [isFocused, setIsFocused] = useState(false)
   const styles = getStyles(theme)
-  const handleSubmit = onSubmit || bridge.resolve
+  const onSubmitEditing = () => {
+    const handleSubmit = onSubmit || bridge.resolve
+    handleSubmit(value)
+  }
 
   useEffect(() => {
     if (textInput.current) {
@@ -54,7 +56,7 @@ const SingleInputModalComponent = ({ bridge, title, label, theme, onSubmit, valu
           keyboardType="default"
           label={label}
           onChangeText={setValue}
-          onSubmitEditing={handleSubmit}
+          onSubmitEditing={onSubmitEditing}
           value={value}
           autoCorrect={false}
           autoCapitalize="none"
