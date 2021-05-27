@@ -686,7 +686,8 @@ const buyAddressRequest = async (
       [fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_DOMAIN_IS_NOT_EXIST]: s.strings.fio_get_reg_info_domain_err_msg,
       [fioPlugin.currencyInfo.defaultSettings.errorCodes.FIO_DOMAIN_IS_NOT_PUBLIC]: s.strings.fio_address_register_domain_is_not_public,
       [fioPlugin.currencyInfo.defaultSettings.errorCodes.SERVER_ERROR]: s.strings.fio_get_reg_info_err_msg,
-      [fioPlugin.currencyInfo.defaultSettings.errorCodes.ALREADY_SENT_REGISTRATION_REQ_FOR_DOMAIN]: s.strings.fio_get_reg_info_already_sent_err_msg
+      [fioPlugin.currencyInfo.defaultSettings.errorCodes.ALREADY_SENT_REGISTRATION_REQ_FOR_DOMAIN]: s.strings.fio_get_reg_info_already_sent_err_msg,
+      [fioPlugin.currencyInfo.defaultSettings.errorCodes.ALREADY_REGISTERED]: s.strings.fio_address_register_screen_not_available
     }
     if (e.labelCode && errorMessages[e.labelCode]) {
       throw new Error(errorMessages[e.labelCode])
