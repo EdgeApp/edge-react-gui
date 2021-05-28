@@ -3,7 +3,10 @@
 
 import { type EdgeTransaction } from 'edge-core-js'
 
-import { exportTransactionsToCSVInner, exportTransactionsToQBOInner } from '../actions/TransactionExportActions.js'
+import {
+  exportTransactionsToCSVInner,
+  exportTransactionsToQBOInner
+} from '../actions/TransactionExportActions.js'
 
 const edgeTxs: EdgeTransaction[] = [
   {
@@ -50,7 +53,13 @@ test('export CSV matches reference data', function () {
 })
 
 test('export QBO matches reference data', function () {
-  const out = exportTransactionsToQBOInner(edgeTxs, 'BTC', 'USD', '100', 1524578071304)
+  const out = exportTransactionsToQBOInner(
+    edgeTxs,
+    'BTC',
+    'USD',
+    '100',
+    1524578071304
+  )
   expect(out).toEqual(
     'OFXHEADER:100\n' +
       'DATA:OFXSGML\n' +

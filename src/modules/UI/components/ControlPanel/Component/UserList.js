@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { showError } from '../../../../../components/services/AirshipInstance.js'
 import s from '../../../../../locales/strings'
-import T from '../../../components/FormattedText/FormattedText.ui.js'
+import T from '../../FormattedText/FormattedText.ui.js'
 import styles from '../style'
 
 type Props = {
@@ -38,7 +38,9 @@ export default class UserList extends React.Component<Props, State> {
 
   componentDidMount() {
     const { context } = this.props
-    this.cleanups.push(context.watch('localUsers', localUsers => this.setState({ localUsers })))
+    this.cleanups.push(
+      context.watch('localUsers', localUsers => this.setState({ localUsers }))
+    )
 
     this.getRecentLoginUsernames()
       .then(mostRecentUsernames =>
@@ -58,7 +60,9 @@ export default class UserList extends React.Component<Props, State> {
     const { localUsers, mostRecentUsernames } = this.state
 
     // Grab all usernames that aren't logged in:
-    const coreUsernames = localUsers.map(userInfo => userInfo.username).filter(username => username !== currentUsername)
+    const coreUsernames = localUsers
+      .map(userInfo => userInfo.username)
+      .filter(username => username !== currentUsername)
 
     // Move recent usernames to their own list:
     const recentUsernames = []
@@ -75,10 +79,18 @@ export default class UserList extends React.Component<Props, State> {
       <ScrollView style={styles.userList.container}>
         {usernames.map((username: string) => (
           <View key={username} style={styles.userList.row}>
-            <TouchableHighlight style={styles.userList.textContainer} underlayColor={styles.underlay.color} onPress={this.handlePressUserSelect(username)}>
+            <TouchableHighlight
+              style={styles.userList.textContainer}
+              underlayColor={styles.underlay.color}
+              onPress={this.handlePressUserSelect(username)}
+            >
               <T style={styles.userList.text}>{username}</T>
             </TouchableHighlight>
-            <TouchableHighlight style={styles.userList.icon} underlayColor={styles.underlay.color} onPress={this.handlePressDeleteLocalAccount(username)}>
+            <TouchableHighlight
+              style={styles.userList.icon}
+              underlayColor={styles.underlay.color}
+              onPress={this.handlePressDeleteLocalAccount(username)}
+            >
               <View /* Hack, do not remove */>
                 <MaterialIcon size={20} name="close" />
               </View>
@@ -98,10 +110,17 @@ export default class UserList extends React.Component<Props, State> {
   }
 
   handlePressDeleteLocalAccount = (username: string) => () => {
-    return Alert.alert(s.strings.delete_account_header, sprintf(s.strings.delete_username_account, username), [
-      { text: s.strings.no, style: 'cancel' },
-      { text: s.strings.yes, onPress: () => this.handleDeleteLocalAccount(username)() }
-    ])
+    return Alert.alert(
+      s.strings.delete_account_header,
+      sprintf(s.strings.delete_username_account, username),
+      [
+        { text: s.strings.no, style: 'cancel' },
+        {
+          text: s.strings.yes,
+          onPress: () => this.handleDeleteLocalAccount(username)()
+        }
+      ]
+    )
   }
 
   getRecentLoginUsernames = async () => {

@@ -3,10 +3,22 @@
 import { type Reducer, combineReducers } from 'redux'
 
 import { type FioState, fio } from '../../reducers/FioReducer.js'
-import { type PasswordReminderState, passwordReminder } from '../../reducers/PasswordReminderReducer.js'
-import { type ScenesState, scenes } from '../../reducers/scenes/ScenesReducer.js'
-import { type SettingsState, settings } from '../../reducers/scenes/SettingsReducer.js'
-import { type WalletsState, wallets } from '../../reducers/scenes/WalletsReducer.js'
+import {
+  type PasswordReminderState,
+  passwordReminder
+} from '../../reducers/PasswordReminderReducer.js'
+import {
+  type ScenesState,
+  scenes
+} from '../../reducers/scenes/ScenesReducer.js'
+import {
+  type SettingsState,
+  settings
+} from '../../reducers/scenes/SettingsReducer.js'
+import {
+  type WalletsState,
+  wallets
+} from '../../reducers/scenes/WalletsReducer.js'
 import { type Action } from '../../types/reduxTypes.js'
 
 export { fio, passwordReminder, scenes, wallets, settings }

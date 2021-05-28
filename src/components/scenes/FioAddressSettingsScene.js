@@ -10,7 +10,11 @@ import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
-import { getRenewalFee, getTransferFee, renewFioName } from '../../modules/FioAddress/util'
+import {
+  getRenewalFee,
+  getTransferFee,
+  renewFioName
+} from '../../modules/FioAddress/util'
 import { type Dispatch, type RootState } from '../../types/reduxTypes'
 import type { FioAddress } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -60,7 +64,8 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   afterRenewSuccess = ({ expiration }) => {
-    const { fioAddressName, refreshAllFioAddresses, refreshAfterRenew } = this.props
+    const { fioAddressName, refreshAllFioAddresses, refreshAfterRenew } =
+      this.props
     refreshAllFioAddresses()
 
     this.setState({ showRenew: false })
@@ -68,7 +73,10 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
     Actions.pop()
     if (refreshAfterRenew) {
       window.requestAnimationFrame(() => {
-        Actions.refresh({ fioAddressName, expiration: expiration ? formatDate(new Date(expiration)) : '' })
+        Actions.refresh({
+          fioAddressName,
+          expiration: expiration ? formatDate(new Date(expiration)) : ''
+        })
       })
     }
   }
@@ -110,9 +118,11 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
     this.setState({ showRenew: false, showTransfer: false })
   }
 
-  getRenewalFee = async (fioWallet: EdgeCurrencyWallet) => getRenewalFee(fioWallet)
+  getRenewalFee = async (fioWallet: EdgeCurrencyWallet) =>
+    getRenewalFee(fioWallet)
 
-  getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet)
+  getTransferFee = async (fioWallet: EdgeCurrencyWallet) =>
+    getTransferFee(fioWallet)
 
   renewAddress = async (renewalFee: number) => {
     const { fioWallet, fioAddressName, isConnected } = this.props
@@ -134,7 +144,11 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
       currencyCode: this.props.fioWallet.currencyInfo.currencyCode,
       otherParams: {
         fioAction: 'transferFioAddress',
-        fioParams: { fioAddress: this.props.fioAddressName, newOnwerKey: '', maxFee: transferFee }
+        fioParams: {
+          fioAddress: this.props.fioAddressName,
+          newOnwerKey: '',
+          maxFee: transferFee
+        }
       },
       onDone: (err, edgeTransaction) => {
         if (!err) {
@@ -154,7 +168,12 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
         amount: true,
         fioAddressSelect: true
       },
-      infoTiles: [{ label: s.strings.fio_address_to_transfer, value: this.props.fioAddressName }]
+      infoTiles: [
+        {
+          label: s.strings.fio_address_to_transfer,
+          value: this.props.fioAddressName
+        }
+      ]
     })
   }
 
@@ -169,8 +188,16 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
 
     return (
       <SceneWrapper background="header">
-        <Tile type="static" title={s.strings.fio_address_register_form_field_label} body={fioAddressName} />
-        <Tile type="static" title={s.strings.fio_address_details_screen_expires} body={expiration} />
+        <Tile
+          type="static"
+          title={s.strings.fio_address_register_form_field_label}
+          body={fioAddressName}
+        />
+        <Tile
+          type="static"
+          title={s.strings.fio_address_details_screen_expires}
+          body={expiration}
+        />
         {showRenew && (
           <FioActionSubmit
             title={s.strings.title_fio_renew_address}
@@ -183,11 +210,26 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
             addressTitles
           />
         )}
-        {showTransfer && <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} addressTitles />}
+        {showTransfer && (
+          <FioActionSubmit
+            goTo={this.goToTransfer}
+            getOperationFee={this.getTransferFee}
+            fioWallet={fioWallet}
+            addressTitles
+          />
+        )}
         {!showRenew && !showTransfer && (
           <>
-            <PrimaryButton label={s.strings.title_fio_renew_address} onPress={this.onRenewPress} marginRem={[1.5, 1, 0.25]} />
-            <PrimaryButton label={s.strings.title_fio_transfer_address} onPress={this.onTransferPress} marginRem={[0.25, 1]} />
+            <PrimaryButton
+              label={s.strings.title_fio_renew_address}
+              onPress={this.onRenewPress}
+              marginRem={[1.5, 1, 0.25]}
+            />
+            <PrimaryButton
+              label={s.strings.title_fio_transfer_address}
+              onPress={this.onTransferPress}
+              marginRem={[0.25, 1]}
+            />
           </>
         )}
       </SceneWrapper>
@@ -206,4 +248,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   }
 })
 
-export const FioAddressSettingsScene = connect(mapStateToProps, mapDispatchToProps)(withTheme(FioAddressSettingsComponent))
+export const FioAddressSettingsScene = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTheme(FioAddressSettingsComponent))

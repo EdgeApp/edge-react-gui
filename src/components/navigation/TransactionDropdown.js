@@ -25,7 +25,9 @@ export function showTransactionDropdown(tx: EdgeTransaction) {
   if (!showing) {
     showing = true
     playReceiveSound().catch(error => console.log(error)) // Fail quietly
-    Airship.show(bridge => <ConnectedTransactionDropdown bridge={bridge} tx={tx} />).then(() => {
+    Airship.show(bridge => (
+      <ConnectedTransactionDropdown bridge={bridge} tx={tx} />
+    )).then(() => {
       showing = false
     })
   }
@@ -49,7 +51,11 @@ export function TransactionDropdown(props: Props) {
         Actions.transactionDetails({ edgeTransaction: tx })
       }}
     >
-      <AntDesignIcon name="checkcircle" size={THEME.rem(2)} style={styles.icon} />
+      <AntDesignIcon
+        name="checkcircle"
+        size={THEME.rem(2)}
+        style={styles.icon}
+      />
       <Text style={styles.text}>{message}</Text>
     </AirshipDropdown>
   )
@@ -79,12 +85,18 @@ const ConnectedTransactionDropdown = connect(
     }
 
     const { nativeAmount, currencyCode } = tx
-    const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+    const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(
+      state,
+      currencyCode
+    )
     const { symbol, name, multiplier } = displayDenomination
     const displayAmount = convertNativeToDisplay(multiplier)(nativeAmount)
 
     return {
-      message: sprintf(s.strings.bitcoin_received, `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`)
+      message: sprintf(
+        s.strings.bitcoin_received,
+        `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`
+      )
     }
   },
   (dispatch: Dispatch) => ({})

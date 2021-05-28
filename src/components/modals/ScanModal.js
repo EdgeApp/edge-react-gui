@@ -1,7 +1,12 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Linking, TouchableHighlight, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Linking,
+  TouchableHighlight,
+  View
+} from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import { RNCamera } from 'react-native-camera'
 import RNPermissions from 'react-native-permissions'
@@ -14,7 +19,12 @@ import type { PermissionStatus } from '../../reducers/PermissionsReducer'
 import type { RootState } from '../../reducers/RootReducer'
 import type { Dispatch } from '../../types/reduxTypes'
 import { requestPermission } from '../services/PermissionsManager'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 
 type OwnProps = {
@@ -68,8 +78,13 @@ export class ScanModalComponent extends React.Component<Props> {
     if (this.props.cameraPermission === RNPermissions.RESULTS.BLOCKED) {
       return (
         <View style={styles.cameraArea}>
-          <T style={styles.cameraPermissionDeniedText}>{s.strings.scan_camera_permission_denied}</T>
-          <TouchableHighlight style={styles.settingsButton} onPress={this.openSettingsTapped}>
+          <T style={styles.cameraPermissionDeniedText}>
+            {s.strings.scan_camera_permission_denied}
+          </T>
+          <TouchableHighlight
+            style={styles.settingsButton}
+            onPress={this.openSettingsTapped}
+          >
             <T style={styles.settingsButtonText}>{s.strings.open_settings}</T>
           </TouchableHighlight>
         </View>
@@ -77,14 +92,32 @@ export class ScanModalComponent extends React.Component<Props> {
     }
 
     if (this.props.cameraPermission === RNPermissions.RESULTS.GRANTED) {
-      const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
+      const flashMode = this.props.torchEnabled
+        ? RNCamera.Constants.FlashMode.torch
+        : RNCamera.Constants.FlashMode.off
 
       return (
-        <RNCamera style={styles.cameraArea} captureAudio={false} flashMode={flashMode} onBarCodeRead={this.onBarCodeRead} type={RNCamera.Constants.Type.back}>
-          <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={theme.secondaryButton}>
+        <RNCamera
+          style={styles.cameraArea}
+          captureAudio={false}
+          flashMode={flashMode}
+          onBarCodeRead={this.onBarCodeRead}
+          type={RNCamera.Constants.Type.back}
+        >
+          <TouchableHighlight
+            style={styles.bottomButton}
+            onPress={this._onToggleTorch}
+            underlayColor={theme.secondaryButton}
+          >
             <View style={styles.bottomButtonTextWrap}>
-              <Ionicon style={styles.flashIcon} name="ios-flash" size={theme.rem(1.5)} />
-              <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
+              <Ionicon
+                style={styles.flashIcon}
+                name="ios-flash"
+                size={theme.rem(1.5)}
+              />
+              <T style={styles.bottomButtonText}>
+                {s.strings.fragment_send_flash}
+              </T>
             </View>
           </TouchableHighlight>
         </RNCamera>
@@ -106,7 +139,12 @@ export class ScanModalComponent extends React.Component<Props> {
     const { bridge, theme, title } = this.props
 
     return (
-      <AirshipModal bridge={bridge} onCancel={this.close} borderRadius={theme.rem(1)} backgroundColor={theme.tileBackground}>
+      <AirshipModal
+        bridge={bridge}
+        onCancel={this.close}
+        borderRadius={theme.rem(1)}
+        backgroundColor={theme.tileBackground}
+      >
         <ModalTitle>{title}</ModalTitle>
         {this.renderCameraArea()}
         <ModalCloseArrow onPress={this.close} />

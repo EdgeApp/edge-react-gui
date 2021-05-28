@@ -8,7 +8,12 @@ import { sprintf } from 'sprintf-js'
 import s from '../../locales/strings'
 import type { TransactionListTx } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText.js'
 
@@ -49,27 +54,50 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     } = this.props
     const styles = getStyles(theme)
 
-    const cryptoAmountString = `${isSentTransaction ? '-' : '+'} ${denominationSymbol ? denominationSymbol + ' ' : ''}${cryptoAmount}`
+    const cryptoAmountString = `${isSentTransaction ? '-' : '+'} ${
+      denominationSymbol ? denominationSymbol + ' ' : ''
+    }${cryptoAmount}`
     const fiatAmountString = `${fiatSymbol} ${fiatAmount}`
 
     // Transaction Text and Icon
     let transactionText, transactionIcon, transactionStyle
     if (isSentTransaction) {
       transactionText =
-        transaction.metadata && transaction.metadata.name ? transaction.metadata.name : s.strings.fragment_transaction_list_sent_prefix + selectedCurrencyName
-      transactionIcon = <Ionicons name="arrow-up" size={theme.rem(1.25)} color={theme.negativeText} style={styles.iconArrows} />
+        transaction.metadata && transaction.metadata.name
+          ? transaction.metadata.name
+          : s.strings.fragment_transaction_list_sent_prefix +
+            selectedCurrencyName
+      transactionIcon = (
+        <Ionicons
+          name="arrow-up"
+          size={theme.rem(1.25)}
+          color={theme.negativeText}
+          style={styles.iconArrows}
+        />
+      )
       transactionStyle = styles.iconSent
     } else {
       transactionText =
         transaction.metadata && transaction.metadata.name
           ? transaction.metadata.name
-          : s.strings.fragment_transaction_list_receive_prefix + selectedCurrencyName
-      transactionIcon = <Ionicons name="arrow-down" size={theme.rem(1.25)} color={theme.positiveText} style={styles.iconArrows} />
+          : s.strings.fragment_transaction_list_receive_prefix +
+            selectedCurrencyName
+      transactionIcon = (
+        <Ionicons
+          name="arrow-down"
+          size={theme.rem(1.25)}
+          color={theme.positiveText}
+          style={styles.iconArrows}
+        />
+      )
       transactionStyle = styles.iconRequest
     }
 
     // Pending Text and Style
-    const currentConfirmations = walletBlockHeight && transaction.blockHeight > 0 ? walletBlockHeight - transaction.blockHeight + 1 : 0
+    const currentConfirmations =
+      walletBlockHeight && transaction.blockHeight > 0
+        ? walletBlockHeight - transaction.blockHeight + 1
+        : 0
     let pendingText, pendingStyle
     if (walletBlockHeight === 0) {
       pendingText = s.strings.fragment_transaction_list_tx_synchronizing
@@ -82,7 +110,11 @@ class TransactionRowComponent extends React.PureComponent<Props> {
       pendingText = s.strings.fragment_wallet_unconfirmed
       pendingStyle = styles.pendingTime
     } else if (currentConfirmations < requiredConfirmations) {
-      pendingText = sprintf(s.strings.fragment_transaction_list_confirmation_progress, currentConfirmations, requiredConfirmations)
+      pendingText = sprintf(
+        s.strings.fragment_transaction_list_confirmation_progress,
+        currentConfirmations,
+        requiredConfirmations
+      )
       pendingStyle = styles.partialTime
     } else {
       pendingText = transaction.time
@@ -91,9 +123,12 @@ class TransactionRowComponent extends React.PureComponent<Props> {
 
     // Transaction Category
     let categoryText
-    const transactionCategory = transaction.metadata ? transaction.metadata.category : null
+    const transactionCategory = transaction.metadata
+      ? transaction.metadata.category
+      : null
     if (transactionCategory) {
-      const splittedFullCategory = UTILS.splitTransactionCategory(transactionCategory)
+      const splittedFullCategory =
+        UTILS.splitTransactionCategory(transactionCategory)
       const { category, subCategory } = splittedFullCategory
       if (subCategory) {
         const mainCategory = category.toLowerCase()
@@ -119,19 +154,37 @@ class TransactionRowComponent extends React.PureComponent<Props> {
     return (
       <ClickableRow onPress={onPress}>
         <View style={styles.iconContainer}>
-          <View style={[styles.iconArrowsContainer, transactionStyle, thumbnailPath ? null : styles.iconArrowsContainerBackground]}>
+          <View
+            style={[
+              styles.iconArrowsContainer,
+              transactionStyle,
+              thumbnailPath ? null : styles.iconArrowsContainerBackground
+            ]}
+          >
             {thumbnailPath ? null : transactionIcon}
           </View>
           <Image style={styles.icon} source={{ uri: thumbnailPath }} />
         </View>
         <View style={styles.transactionContainer}>
           <View style={styles.transactionRow}>
-            <EdgeText style={styles.transactionText}>{transactionText}</EdgeText>
-            <EdgeText style={isSentTransaction ? styles.negativeCryptoAmount : styles.positiveCryptoAmount}>{cryptoAmountString}</EdgeText>
+            <EdgeText style={styles.transactionText}>
+              {transactionText}
+            </EdgeText>
+            <EdgeText
+              style={
+                isSentTransaction
+                  ? styles.negativeCryptoAmount
+                  : styles.positiveCryptoAmount
+              }
+            >
+              {cryptoAmountString}
+            </EdgeText>
           </View>
           <View style={styles.transactionRow}>
             <View style={styles.categoryAndTimeContainer}>
-              {categoryText && <EdgeText style={styles.category}>{categoryText}</EdgeText>}
+              {categoryText && (
+                <EdgeText style={styles.category}>{categoryText}</EdgeText>
+              )}
               <EdgeText style={pendingStyle}>{pendingText}</EdgeText>
             </View>
             <EdgeText style={styles.fiatAmount}>{fiatAmountString}</EdgeText>

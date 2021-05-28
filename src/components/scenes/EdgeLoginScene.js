@@ -29,8 +29,15 @@ export default class EdgeLoginScene extends React.Component<EdgeLoginSceneProps>
     if (!this.props.lobby && !this.props.error) {
       throw new Error('Not normal expected behavior')
     }
-    if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.appId === '') {
-      message = sprintf(s.strings.edge_description_warning, this.props.lobby.loginRequest.displayName)
+    if (
+      this.props.lobby &&
+      this.props.lobby.loginRequest &&
+      this.props.lobby.loginRequest.appId === ''
+    ) {
+      message = sprintf(
+        s.strings.edge_description_warning,
+        this.props.lobby.loginRequest.displayName
+      )
     }
     return (
       <View style={styles.body}>
@@ -51,8 +58,13 @@ export default class EdgeLoginScene extends React.Component<EdgeLoginSceneProps>
       return (
         <View style={styles.buttonContainer}>
           <View style={styles.buttons}>
-            <SecondaryButton style={styles.cancelSolo} onPress={this.props.decline}>
-              <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
+            <SecondaryButton
+              style={styles.cancelSolo}
+              onPress={this.props.decline}
+            >
+              <SecondaryButton.Text>
+                {s.strings.string_cancel_cap}
+              </SecondaryButton.Text>
             </SecondaryButton>
           </View>
         </View>
@@ -62,10 +74,14 @@ export default class EdgeLoginScene extends React.Component<EdgeLoginSceneProps>
       <View style={styles.buttonContainer}>
         <View style={styles.buttons}>
           <SecondaryButton style={styles.cancel} onPress={this.props.decline}>
-            <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
+            <SecondaryButton.Text>
+              {s.strings.string_cancel_cap}
+            </SecondaryButton.Text>
           </SecondaryButton>
           <PrimaryButton style={styles.submit} onPress={this.props.accept}>
-            <PrimaryButton.Text>{s.strings.accept_button_text}</PrimaryButton.Text>
+            <PrimaryButton.Text>
+              {s.strings.accept_button_text}
+            </PrimaryButton.Text>
           </PrimaryButton>
         </View>
       </View>
@@ -73,8 +89,18 @@ export default class EdgeLoginScene extends React.Component<EdgeLoginSceneProps>
   }
 
   renderImage() {
-    if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.displayImageUrl) {
-      return <Image style={styles.image} resizeMode="contain" source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
+    if (
+      this.props.lobby &&
+      this.props.lobby.loginRequest &&
+      this.props.lobby.loginRequest.displayImageUrl
+    ) {
+      return (
+        <Image
+          style={styles.image}
+          resizeMode="contain"
+          source={{ uri: this.props.lobby.loginRequest.displayImageUrl }}
+        />
+      )
     }
     return null
   }
@@ -82,7 +108,9 @@ export default class EdgeLoginScene extends React.Component<EdgeLoginSceneProps>
   renderHeader() {
     let title = ''
     if (this.props.lobby && this.props.lobby.loginRequest) {
-      title = this.props.lobby.loginRequest.displayName ? this.props.lobby.loginRequest.displayName : ''
+      title = this.props.lobby.loginRequest.displayName
+        ? this.props.lobby.loginRequest.displayName
+        : ''
     }
     if (this.props.lobby) {
       return (
@@ -105,7 +133,9 @@ export default class EdgeLoginScene extends React.Component<EdgeLoginSceneProps>
       return (
         <SceneWrapper background="body">
           <View style={styles.spinnerContainer}>
-            <Text style={styles.loadingTextBody}>{s.strings.edge_login_fetching}</Text>
+            <Text style={styles.loadingTextBody}>
+              {s.strings.edge_login_fetching}
+            </Text>
             <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
           </View>
         </SceneWrapper>

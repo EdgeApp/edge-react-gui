@@ -28,7 +28,8 @@ describe('sendConfirmation reducer', () => {
     describe('updateTransaction', () => {
       test('with transaction and legacyAddress', () => {
         const guiMakeSpendInfo = {
-          publicAddress: 'bitcoincash:qpltjkre069mp80ylcj87832ju3zt2gr6gercn9j2z',
+          publicAddress:
+            'bitcoincash:qpltjkre069mp80ylcj87832ju3zt2gr6gercn9j2z',
           legacyAddress: '123412341234',
           nativeAmount: '100000',
           currencyCode: 'BCH',
@@ -62,7 +63,8 @@ describe('sendConfirmation reducer', () => {
 
       test('with transaction and name', () => {
         const guiMakeSpendInfo = {
-          publicAddress: 'bitcoincash:qpltjkre069mp80ylcj87832ju3zt2gr6gercn9j2z',
+          publicAddress:
+            'bitcoincash:qpltjkre069mp80ylcj87832ju3zt2gr6gercn9j2z',
           nativeAmount: '100000',
           currencyCode: 'BCH',
           metadata: {
@@ -148,7 +150,13 @@ describe('sendConfirmation reducer', () => {
         const spendInfo = {
           currencyCode: 'BTC',
           nativeAmount: '1000',
-          spendTargets: [{ currencyCode: 'BTC', nativeAmount: '1000', publicAddress: '123123123' }],
+          spendTargets: [
+            {
+              currencyCode: 'BTC',
+              nativeAmount: '1000',
+              publicAddress: '123123123'
+            }
+          ],
           metadata: { name: 'airbitz' }
         }
         const action = {
@@ -165,7 +173,13 @@ describe('sendConfirmation reducer', () => {
         const spendInfo = {
           currencyCode: 'BTC',
           nativeAmount: '1000',
-          spendTargets: [{ currencyCode: 'BTC', nativeAmount: '1000', publicAddress: '123123123' }],
+          spendTargets: [
+            {
+              currencyCode: 'BTC',
+              nativeAmount: '1000',
+              publicAddress: '123123123'
+            }
+          ],
           metadata: {}
         }
         const action = {

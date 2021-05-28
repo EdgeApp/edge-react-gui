@@ -14,7 +14,12 @@ export class Text extends React.Component<TextProps> {
     const { children, style, ...props } = this.props
 
     return (
-      <RNText ellipsizeMode="middle" numberOfLines={1} style={[styles.text, style]} {...props}>
+      <RNText
+        ellipsizeMode="middle"
+        numberOfLines={1}
+        style={[styles.text, style]}
+        {...props}
+      >
         {children}
       </RNText>
     )

@@ -5,7 +5,12 @@ import { View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
 import { useEffect, useRef, useState } from '../../util/hooks'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext'
 import { EdgeTextFieldOutlined } from '../themed/EdgeTextField.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -21,7 +26,15 @@ type OwnProps = {
 
 type Props = OwnProps & ThemeProps
 
-const SingleInputModalComponent = ({ bridge, title, label, theme, onSubmit, value: propsValue = '', returnKeyType = 'done' }: Props) => {
+const SingleInputModalComponent = ({
+  bridge,
+  title,
+  label,
+  theme,
+  onSubmit,
+  value: propsValue = '',
+  returnKeyType = 'done'
+}: Props) => {
   const textInput = useRef(null)
   const [value, setValue] = useState(propsValue)
   const [isFocused, setIsFocused] = useState(false)
@@ -46,7 +59,11 @@ const SingleInputModalComponent = ({ bridge, title, label, theme, onSubmit, valu
   }
 
   return (
-    <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={[1, 0]}>
+    <ThemedModal
+      bridge={bridge}
+      onCancel={() => bridge.resolve(null)}
+      paddingRem={[1, 0]}
+    >
       <ModalTitle center paddingRem={[0, 3, 1]}>
         {title}
       </ModalTitle>

@@ -10,10 +10,22 @@ import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { setEnabledTokens } from '../../modules/Core/Wallets/EnabledTokens.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import type { CreateTokenType, CreateWalletType, GuiWallet } from '../../types/types.js'
+import type {
+  CreateTokenType,
+  CreateWalletType,
+  GuiWallet
+} from '../../types/types.js'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
-import { showError, showFullScreenSpinner } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  showError,
+  showFullScreenSpinner
+} from '../services/AirshipInstance.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { WalletListRow } from './WalletListRow.js'
 
@@ -53,7 +65,8 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
   createAndSelectWallet = async () => {
     const { createWalletType, onPress, wallets } = this.props
     try {
-      if (createWalletType == null) throw new Error('Invalid Create Wallet Type')
+      if (createWalletType == null)
+        throw new Error('Invalid Create Wallet Type')
       const { currencyCode, walletType } = createWalletType
       const wallet = await this.createWallet(currencyCode, walletType)
       const checkWalletsThenSelect = () => {
@@ -70,7 +83,8 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
   }
 
   createAndSelectToken = async () => {
-    const { account, createTokenType, onPress, tokenCreated, wallets } = this.props
+    const { account, createTokenType, onPress, tokenCreated, wallets } =
+      this.props
     const { currencyWallets } = account
 
     try {
@@ -90,7 +104,10 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
       if (!wallet) {
         const walletType = getCreateWalletType(account, parentCurrencyCode)
         if (!walletType) throw new Error(s.strings.create_wallet_failed_message)
-        wallet = await this.createWallet(walletType.currencyCode, walletType.walletType)
+        wallet = await this.createWallet(
+          walletType.currencyCode,
+          walletType.walletType
+        )
       }
 
       const guiWalletEnabledTokens = wallets[wallet.id]?.enabledTokens ?? []
@@ -120,7 +137,15 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
     const styles = getStyles(this.props.theme)
     return (
       <View style={styles.iconContainer}>
-        <Image style={styles.iconSize} source={{ uri: createWalletType?.symbolImage ?? createTokenType?.symbolImage ?? '' }} />
+        <Image
+          style={styles.iconSize}
+          source={{
+            uri:
+              createWalletType?.symbolImage ??
+              createTokenType?.symbolImage ??
+              ''
+          }}
+        />
       </View>
     )
   }
@@ -130,7 +155,11 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
     const styles = getStyles(this.props.theme)
     return (
       <View style={styles.labelContainer}>
-        <EdgeText style={styles.labelText}>{createWalletType ? s.strings.fragment_create_wallet_create_wallet : s.strings.wallet_list_add_token}</EdgeText>
+        <EdgeText style={styles.labelText}>
+          {createWalletType
+            ? s.strings.fragment_create_wallet_create_wallet
+            : s.strings.wallet_list_add_token}
+        </EdgeText>
       </View>
     )
   }
@@ -140,10 +169,14 @@ class WalletListCreateRowComponent extends React.PureComponent<Props> {
 
     return (
       <WalletListRow
-        currencyCode={createWalletType?.currencyCode ?? createTokenType?.currencyCode ?? ''}
+        currencyCode={
+          createWalletType?.currencyCode ?? createTokenType?.currencyCode ?? ''
+        }
         icon={this.renderIcon()}
         onPress={this.handlePress}
-        walletName={createWalletType?.currencyName ?? createTokenType?.currencyName ?? ''}
+        walletName={
+          createWalletType?.currencyName ?? createTokenType?.currencyName ?? ''
+        }
       >
         {this.renderChildren()}
       </WalletListRow>

@@ -3,7 +3,12 @@
 import * as React from 'react'
 import { Text, TouchableHighlight, View } from 'react-native'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 
 type OwnProps = {
   bottomGap?: boolean,
@@ -21,15 +26,30 @@ type Props = OwnProps & ThemeProps
  * on the left and another optional component on the right.
  */
 function SettingsRowComponent(props: Props): React.Node {
-  const { bottomGap = true, disabled = false, icon, text, theme, right, onPress } = props
+  const {
+    bottomGap = true,
+    disabled = false,
+    icon,
+    text,
+    theme,
+    right,
+    onPress
+  } = props
   const styles = getStyles(theme)
 
   return (
-    <TouchableHighlight onPress={onPress} underlayColor={theme.settingsRowPressed}>
+    <TouchableHighlight
+      onPress={onPress}
+      underlayColor={theme.settingsRowPressed}
+    >
       <View style={bottomGap ? [styles.row, styles.bottomGap] : styles.row}>
-        {icon != null ? <View style={styles.paddingLeftIcon}>{icon}</View> : undefined}
+        {icon != null ? (
+          <View style={styles.paddingLeftIcon}>{icon}</View>
+        ) : undefined}
         <Text style={disabled ? styles.disabledText : styles.text}>{text}</Text>
-        {right != null ? <View style={styles.paddingRightIcon}>{right}</View> : undefined}
+        {right != null ? (
+          <View style={styles.paddingRightIcon}>{right}</View>
+        ) : undefined}
       </View>
     </TouchableHighlight>
   )

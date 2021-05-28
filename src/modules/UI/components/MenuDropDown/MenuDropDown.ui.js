@@ -3,7 +3,11 @@
 
 import * as React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
+import Menu, {
+  MenuOption,
+  MenuOptions,
+  MenuTrigger
+} from 'react-native-popup-menu'
 
 import { THEME } from '../../../../theme/variables/airbitz.js'
 import { scale } from '../../../../util/scaling.js'
@@ -58,7 +62,11 @@ export class MenuDropDown extends React.Component<Props, State> {
 
   renderMenuOptions(style: StyleSheet.Styles) {
     const items = this.props.data.map(item => (
-      <MenuOption style={style.menuOption} value={item.value} key={'ld' + (item.key || item.value)}>
+      <MenuOption
+        style={style.menuOption}
+        value={item.value}
+        key={'ld' + (item.key || item.value)}
+      >
         <View style={style.menuOptionItem}>
           <Text style={style.optionText}>{item.label}</Text>
         </View>
@@ -77,7 +85,9 @@ export class MenuDropDown extends React.Component<Props, State> {
               <Text style={style.icon}>&#8942;</Text>
             </View>
           </MenuTrigger>
-          <MenuOptions customStyles={style.menuOptions}>{this.renderMenuOptions(style)}</MenuOptions>
+          <MenuOptions customStyles={style.menuOptions}>
+            {this.renderMenuOptions(style)}
+          </MenuOptions>
         </Menu>
       </View>
     )

@@ -24,7 +24,10 @@ type State = {
   personName: string
 }
 
-export class TransactionDetailsPersonInput extends React.Component<Props, State> {
+export class TransactionDetailsPersonInput extends React.Component<
+  Props,
+  State
+> {
   constructor(props: Props) {
     super(props)
     this.state = { personName: props.personName }
@@ -44,12 +47,17 @@ export class TransactionDetailsPersonInput extends React.Component<Props, State>
   render() {
     const { bridge, personStatus, contacts } = this.props
     const { personName } = this.state
-    const personStatusString = sprintf(s.strings.transaction_details_person_input, personStatus)
+    const personStatusString = sprintf(
+      s.strings.transaction_details_person_input,
+      personStatus
+    )
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
         <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
           <View style={styles.airshipContainer}>
-            <FormattedText style={styles.airshipHeader}>{personStatusString}</FormattedText>
+            <FormattedText style={styles.airshipHeader}>
+              {personStatusString}
+            </FormattedText>
             <FormField
               {...MaterialInputOnWhite}
               containerStyle={{
@@ -66,7 +74,11 @@ export class TransactionDetailsPersonInput extends React.Component<Props, State>
               onSubmitEditing={() => bridge.resolve(null)}
               value={personName}
             />
-            <ContactSearchResults contacts={contacts} currentPayeeText={personName} onSelectPayee={this.onSelectPerson} />
+            <ContactSearchResults
+              contacts={contacts}
+              currentPayeeText={personName}
+              onSelectPayee={this.onSelectPerson}
+            />
           </View>
         </TouchableWithoutFeedback>
       </AirshipModal>

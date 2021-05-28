@@ -47,13 +47,23 @@ export function bestOfMessages(
   while (--i >= 0) {
     const promo = accountReferral.promotions[i]
     const source = { type: 'promotion', installerId: promo.installerId }
-    const topMessage = getTopMessage(promo.messages, source, promo.hiddenMessages, now)
+    const topMessage = getTopMessage(
+      promo.messages,
+      source,
+      promo.hiddenMessages,
+      now
+    )
     if (topMessage != null) return topMessage
   }
 
   // Fall back on the account affiliate informaton:
   const source = { type: 'account' }
-  return getTopMessage(accountMessages, source, accountReferral.hiddenAccountMessages, now)
+  return getTopMessage(
+    accountMessages,
+    source,
+    accountReferral.hiddenAccountMessages,
+    now
+  )
 }
 
 /**
@@ -77,7 +87,8 @@ export function bestOfPlugins(
 
   // Fold in the account affiliate information:
   const fromAccount = summarizePlugins(accountPlugins, now)
-  if (accountReferral.ignoreAccountSwap) fromAccount.preferredSwapPluginId = undefined
+  if (accountReferral.ignoreAccountSwap)
+    fromAccount.preferredSwapPluginId = undefined
   out = mergePluginSummaries(out, fromAccount)
   if (out.preferredSwapPluginId === fromAccount.preferredSwapPluginId) {
     swapSource = { type: 'account' }
@@ -98,7 +109,10 @@ export function bestOfPlugins(
 /**
  * Replaces default start dates with definite ones.
  */
-export function lockStartDates<T: { startDate?: Date }>(tweaks: T[], startDate: Date): T[] {
+export function lockStartDates<T: { startDate?: Date }>(
+  tweaks: T[],
+  startDate: Date
+): T[] {
   return tweaks.map(tweak => {
     return tweak.startDate == null ? { ...tweak, startDate } : tweak
   })
@@ -107,7 +121,10 @@ export function lockStartDates<T: { startDate?: Date }>(tweaks: T[], startDate: 
 /**
  * Merges two active message structures, preferring the later one.
  */
-function mergePluginSummaries(a: PluginSummary, b: PluginSummary): PluginSummary {
+function mergePluginSummaries(
+  a: PluginSummary,
+  b: PluginSummary
+): PluginSummary {
   const { preferredFiatPluginId = a.preferredFiatPluginId } = b
   const { preferredSwapPluginId = a.preferredSwapPluginId } = b
   return {
@@ -122,7 +139,12 @@ function mergePluginSummaries(a: PluginSummary, b: PluginSummary): PluginSummary
 /**
  * Finds the active message that occurs latest in the array.
  */
-function getTopMessage(messages: MessageTweak[], source: TweakSource, hidden: { [messageId: string]: boolean }, now: Date): MessageSummary | void {
+function getTopMessage(
+  messages: MessageTweak[],
+  source: TweakSource,
+  hidden: { [messageId: string]: boolean },
+  now: Date
+): MessageSummary | void {
   let i = messages.length
   while (--i >= 0) {
     const message = messages[i]
@@ -147,7 +169,14 @@ function summarizePlugins(plugins: PluginTweak[], now: Date): PluginSummary {
 
   // Search through the account creation plugin tweaks:
   for (const plugin of plugins) {
-    const { pluginId, disabled, preferredFiat = false, preferredSwap = false, promoCode, promoMessage } = plugin
+    const {
+      pluginId,
+      disabled,
+      preferredFiat = false,
+      preferredSwap = false,
+      promoCode,
+      promoMessage
+    } = plugin
     if (!isActive(plugin, now)) continue
 
     if (preferredFiat) out.preferredFiatPluginId = pluginId
@@ -166,7 +195,9 @@ function getMessageId(message: MessageTweak): string {
   const { startDate, durationDays } = message
 
   const days = durationDays.toFixed(2)
-  return startDate != null ? days + ' ' + startDate.toISOString().replace(/\.\d+Z/, 'Z') : days
+  return startDate != null
+    ? days + ' ' + startDate.toISOString().replace(/\.\d+Z/, 'Z')
+    : days
 }
 
 function isActive(tweak: MessageTweak | PluginTweak, now: Date): boolean {

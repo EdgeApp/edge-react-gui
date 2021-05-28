@@ -7,7 +7,12 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'
 import { showToast } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
@@ -29,16 +34,33 @@ class TileComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { body, title, contentPadding = true, children, theme, type, error } = this.props
+    const {
+      body,
+      title,
+      contentPadding = true,
+      children,
+      theme,
+      type,
+      error
+    } = this.props
     const styles = getStyles(theme)
     const onPress = type === 'copy' ? () => this.copy() : this.props.onPress
     if (type === 'loading') {
       return (
         <View>
           <View style={styles.container}>
-            <View style={[styles.content, contentPadding ? styles.contentPadding : null]}>
+            <View
+              style={[
+                styles.content,
+                contentPadding ? styles.contentPadding : null
+              ]}
+            >
               <EdgeText style={styles.textHeader}>{title}</EdgeText>
-              <ActivityIndicator style={styles.loader} color={theme.primaryText} size="large" />
+              <ActivityIndicator
+                style={styles.loader}
+                color={theme.primaryText}
+                size="large"
+              />
             </View>
           </View>
           <View style={styles.divider} />
@@ -49,12 +71,29 @@ class TileComponent extends React.PureComponent<Props> {
       <TouchableWithoutFeedback onPress={onPress} disabled={type === 'static'}>
         <View>
           <View style={styles.container}>
-            <View style={[styles.content, contentPadding ? styles.contentPadding : null]}>
-              {type === 'editable' && <FontAwesomeIcon name="edit" style={styles.editIcon} />}
-              {type === 'copy' && <FontAwesomeIcon name="copy" style={styles.editIcon} />}
-              <EdgeText style={error ? styles.textHeaderError : styles.textHeader}>{title}</EdgeText>
+            <View
+              style={[
+                styles.content,
+                contentPadding ? styles.contentPadding : null
+              ]}
+            >
+              {type === 'editable' && (
+                <FontAwesomeIcon name="edit" style={styles.editIcon} />
+              )}
+              {type === 'copy' && (
+                <FontAwesomeIcon name="copy" style={styles.editIcon} />
+              )}
+              <EdgeText
+                style={error ? styles.textHeaderError : styles.textHeader}
+              >
+                {title}
+              </EdgeText>
               {typeof body === 'string' && (
-                <EdgeText style={styles.textBody} numberOfLines={3} adjustsFontSizeToFit={false}>
+                <EdgeText
+                  style={styles.textBody}
+                  numberOfLines={3}
+                  adjustsFontSizeToFit={false}
+                >
                   {body}
                 </EdgeText>
               )}
@@ -62,7 +101,10 @@ class TileComponent extends React.PureComponent<Props> {
             </View>
             {type === 'touchable' && (
               <View style={styles.iconContainer}>
-                <FontAwesomeIcon name="chevron-right" style={styles.arrowIcon} />
+                <FontAwesomeIcon
+                  name="chevron-right"
+                  style={styles.arrowIcon}
+                />
               </View>
             )}
           </View>

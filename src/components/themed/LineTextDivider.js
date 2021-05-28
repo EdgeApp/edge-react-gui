@@ -3,7 +3,12 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
 type Props = {
@@ -19,7 +24,16 @@ class LineTextDividerComponent extends React.PureComponent<Props & ThemeProps> {
     return (
       <View style={styles.container}>
         <View style={styles.line} />
-        {title ? <EdgeText style={[styles.title, this.props.lowerCased ? styles.lowerCase : null]}>{title}</EdgeText> : null}
+        {title ? (
+          <EdgeText
+            style={[
+              styles.title,
+              this.props.lowerCased ? styles.lowerCase : null
+            ]}
+          >
+            {title}
+          </EdgeText>
+        ) : null}
         {children}
         <View style={styles.line} />
       </View>

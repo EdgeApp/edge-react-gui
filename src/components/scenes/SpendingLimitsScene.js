@@ -25,7 +25,10 @@ export type SpendingLimitsState = {
   transactionAmount: number,
   transactionIsEnabled: boolean
 }
-export class SpendingLimitsComponent extends React.Component<SpendingLimitsOwnProps, SpendingLimitsState> {
+export class SpendingLimitsComponent extends React.Component<
+  SpendingLimitsOwnProps,
+  SpendingLimitsState
+> {
   constructor(props: SpendingLimitsOwnProps) {
     super(props)
     this.state = {
@@ -38,7 +41,12 @@ export class SpendingLimitsComponent extends React.Component<SpendingLimitsOwnPr
   render() {
     const { currencySymbol } = this.props
     const { transactionAmount, transactionIsEnabled } = this.state
-    const { onTransactionIsEnabledChanged, onTransactionAmountChanged, onPasswordChanged, onSubmit } = this
+    const {
+      onTransactionIsEnabledChanged,
+      onTransactionAmountChanged,
+      onPasswordChanged,
+      onSubmit
+    } = this
 
     return (
       <SafeAreaView style={{}}>
@@ -61,12 +69,19 @@ export class SpendingLimitsComponent extends React.Component<SpendingLimitsOwnPr
             <Scene.Body>
               <Scene.Row>
                 <Scene.Item>
-                  <Scene.Body.Text style={styles.bodyText}>{s.strings.spending_limits_tx_title}</Scene.Body.Text>
+                  <Scene.Body.Text style={styles.bodyText}>
+                    {s.strings.spending_limits_tx_title}
+                  </Scene.Body.Text>
 
-                  <Scene.Body.Text style={styles.bodyText}>{s.strings.spending_limits_tx_description}</Scene.Body.Text>
+                  <Scene.Body.Text style={styles.bodyText}>
+                    {s.strings.spending_limits_tx_description}
+                  </Scene.Body.Text>
                 </Scene.Item>
 
-                <Switch onValueChange={onTransactionIsEnabledChanged} value={transactionIsEnabled} />
+                <Switch
+                  onValueChange={onTransactionIsEnabledChanged}
+                  value={transactionIsEnabled}
+                />
               </Scene.Row>
 
               <Scene.Row>

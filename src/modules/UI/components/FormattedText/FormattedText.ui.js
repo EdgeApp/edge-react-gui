@@ -10,7 +10,10 @@ import styles from './style'
 
 export default class FormattedText extends React.Component {
   shouldComponentUpdate(nextProps) {
-    const diffElement = getObjectDiff(this.props, nextProps, { style: true, children: true })
+    const diffElement = getObjectDiff(this.props, nextProps, {
+      style: true,
+      children: true
+    })
     return !!diffElement
   }
 
@@ -36,9 +39,16 @@ export default class FormattedText extends React.Component {
   }
 
   render() {
-    const fontSize = this.props.fontSize ? scale(this.props.fontSize) : scale(14)
+    const fontSize = this.props.fontSize
+      ? scale(this.props.fontSize)
+      : scale(14)
     return (
-      <Text {...this.props} style={[this.style, { fontSize }, this.props.style]} ref={this.handleRef} allowFontScaling={false}>
+      <Text
+        {...this.props}
+        style={[this.style, { fontSize }, this.props.style]}
+        ref={this.handleRef}
+        allowFontScaling={false}
+      >
         {this.props.children}
       </Text>
     )

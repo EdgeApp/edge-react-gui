@@ -1,7 +1,12 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeDenomination, type EdgeTransaction } from 'edge-core-js'
+import {
+  type EdgeCurrencyConfig,
+  type EdgeCurrencyWallet,
+  type EdgeDenomination,
+  type EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -18,9 +23,17 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes'
 import type { GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
-import { type WalletListResult, WalletListModal } from '../modals/WalletListModal'
+import {
+  type WalletListResult,
+  WalletListModal
+} from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { PrimaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
@@ -58,7 +71,10 @@ type LocalState = {
 
 type Props = NavigationProps & StateProps & DispatchProps & ThemeProps
 
-class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalState> {
+class FioDomainRegisterSelectWallet extends React.PureComponent<
+  Props,
+  LocalState
+> {
   state: LocalState = {
     loading: false,
     activationCost: 800,
@@ -76,13 +92,19 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
 
     if (this.props.fioPlugin) {
       try {
-        const { activationCost, feeValue, supportedCurrencies, paymentInfo } = await getDomainRegInfo(
-          this.props.fioPlugin,
-          this.props.fioDomain,
-          this.props.selectedWallet,
-          this.props.fioDisplayDenomination
-        )
-        this.setState({ activationCost, feeValue, supportedCurrencies, paymentInfo })
+        const { activationCost, feeValue, supportedCurrencies, paymentInfo } =
+          await getDomainRegInfo(
+            this.props.fioPlugin,
+            this.props.fioDomain,
+            this.props.selectedWallet,
+            this.props.fioDisplayDenomination
+          )
+        this.setState({
+          activationCost,
+          feeValue,
+          supportedCurrencies,
+          paymentInfo
+        })
       } catch (e) {
         showError(e)
         this.setState({ errorMessage: e.message })
@@ -109,9 +131,15 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         allowedCurrencyCodes.push(currency)
       }
     }
-    const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />
-    ))
+    const { walletId, currencyCode }: WalletListResult = await Airship.show(
+      bridge => (
+        <WalletListModal
+          bridge={bridge}
+          headerTitle={s.strings.select_wallet}
+          allowedCurrencyCodes={allowedCurrencyCodes}
+        />
+      )
+    )
     if (walletId && currencyCode) {
       this.setState({ paymentWallet: { id: walletId, currencyCode } })
     }
@@ -127,7 +155,9 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     if (isConnected) {
       if (paymentCurrencyCode === Constants.FIO_STR) {
         const { fioWallets } = this.props
-        const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
+        const paymentWallet = fioWallets.find(
+          fioWallet => fioWallet.id === walletId
+        )
         Actions[Constants.FIO_DOMAIN_CONFIRM]({
           fioName: fioDomain,
           paymentWallet,
@@ -137,8 +167,14 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
       } else {
         this.props.onSelectWallet(walletId, paymentCurrencyCode)
 
-        const exchangeDenomination = getExchangeDenomination(state, paymentCurrencyCode)
-        let nativeAmount = bns.mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
+        const exchangeDenomination = getExchangeDenomination(
+          state,
+          paymentCurrencyCode
+        )
+        let nativeAmount = bns.mul(
+          allPaymentInfo[paymentCurrencyCode].amount,
+          exchangeDenomination.multiplier
+        )
         nativeAmount = bns.toFixed(nativeAmount, 0, 0)
 
         const guiMakeSpendInfo = {
@@ -154,14 +190,19 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
           onDone: (error: Error | null, edgeTransaction?: EdgeTransaction) => {
             if (error) {
               setTimeout(() => {
-                showError(s.strings.create_wallet_account_error_sending_transaction)
+                showError(
+                  s.strings.create_wallet_account_error_sending_transaction
+                )
               }, 750)
             } else if (edgeTransaction) {
               Airship.show(bridge => (
                 <ButtonsModal
                   bridge={bridge}
                   title={`${s.strings.fio_domain_label} ${s.strings.fragment_wallet_unconfirmed}`}
-                  message={sprintf(s.strings.fio_address_register_pending, s.strings.fio_domain_label)}
+                  message={sprintf(
+                    s.strings.fio_address_register_pending,
+                    s.strings.fio_domain_label
+                  )}
                   buttons={{
                     ok: { label: s.strings.string_ok_cap }
                   }}
@@ -172,7 +213,11 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
           }
         }
 
-        Actions[Constants.SEND]({ guiMakeSpendInfo, selectedWalletId: walletId, selectedCurrencyCode: paymentCurrencyCode })
+        Actions[Constants.SEND]({
+          guiMakeSpendInfo,
+          selectedWalletId: walletId,
+          selectedCurrencyCode: paymentCurrencyCode
+        })
       }
     } else {
       showError(s.strings.fio_network_alert_text)
@@ -183,22 +228,42 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     const { theme, wallets, fioDomain } = this.props
     const { activationCost, loading, paymentWallet, errorMessage } = this.state
     const styles = getStyles(theme)
-    const detailsText = sprintf(s.strings.fio_domain_wallet_selection_text, loading ? '-' : activationCost)
+    const detailsText = sprintf(
+      s.strings.fio_domain_wallet_selection_text,
+      loading ? '-' : activationCost
+    )
     const paymentWalletBody =
-      paymentWallet && paymentWallet.id ? `${wallets[paymentWallet.id].name} (${wallets[paymentWallet.id].currencyCode})` : s.strings.choose_your_wallet
+      paymentWallet && paymentWallet.id
+        ? `${wallets[paymentWallet.id].name} (${
+            wallets[paymentWallet.id].currencyCode
+          })`
+        : s.strings.choose_your_wallet
 
     return (
       <SceneWrapper background="theme" bodySplit={theme.rem(1.5)}>
         <ScrollView>
-          <IonIcon name="ios-at" style={styles.iconIon} color={theme.primaryText} size={theme.rem(4)} />
+          <IonIcon
+            name="ios-at"
+            style={styles.iconIon}
+            color={theme.primaryText}
+            size={theme.rem(4)}
+          />
           <EdgeText style={styles.instructionalText} numberOfLines={7}>
             {detailsText}
           </EdgeText>
-          <Tile type="static" title={s.strings.fio_domain_label} body={fioDomain} />
+          <Tile
+            type="static"
+            title={s.strings.fio_domain_label}
+            body={fioDomain}
+          />
           <Tile
             type="static"
             title={s.strings.create_wallet_account_amount_due}
-            body={loading ? s.strings.loading : `${activationCost} ${Constants.FIO_STR}`}
+            body={
+              loading
+                ? s.strings.loading
+                : `${activationCost} ${Constants.FIO_STR}`
+            }
           />
           <Tile
             type="touchable"
@@ -208,7 +273,11 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
             disabled={!activationCost || activationCost === 0}
           />
           {!loading && paymentWallet && paymentWallet.id && (
-            <PrimaryButton onPress={this.onNextPress} label={s.strings.string_next_capitalized} marginRem={1} />
+            <PrimaryButton
+              onPress={this.onNextPress}
+              label={s.strings.string_next_capitalized}
+              marginRem={1}
+            />
           )}
           {errorMessage && (
             <EdgeText style={styles.errorMessage} numberOfLines={3}>
@@ -254,8 +323,14 @@ const FioDomainRegisterSelectWalletScene = connect(
     const wallets = state.ui.wallets.byId
     const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
     const { account } = state.core
-    const fioPlugin = account && account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
-    const fioDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, Constants.FIO_STR)
+    const fioPlugin =
+      account && account.currencyConfig
+        ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+        : null
+    const fioDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(
+      state,
+      Constants.FIO_STR
+    )
 
     return {
       state,
@@ -268,7 +343,10 @@ const FioDomainRegisterSelectWalletScene = connect(
   },
   (dispatch: Dispatch): DispatchProps => ({
     onSelectWallet: (walletId: string, currencyCode: string) => {
-      dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
+      dispatch({
+        type: 'UI/WALLETS/SELECT_WALLET',
+        data: { currencyCode: currencyCode, walletId: walletId }
+      })
     }
   })
 )(withTheme(FioDomainRegisterSelectWallet))

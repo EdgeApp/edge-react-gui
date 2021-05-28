@@ -21,7 +21,8 @@ type EdgeAccountCallbackManagerDispatchProps = {
   updateExchangeRates: () => any
 }
 
-type Props = EdgeAccountCallbackManagerStateProps & EdgeAccountCallbackManagerDispatchProps
+type Props = EdgeAccountCallbackManagerStateProps &
+  EdgeAccountCallbackManagerDispatchProps
 
 class EdgeAccountCallbackManager extends React.Component<Props> {
   cleanups: Array<() => mixed> = []
@@ -100,17 +101,24 @@ class EdgeAccountCallbackManager extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: RootState): EdgeAccountCallbackManagerStateProps => {
+const mapStateToProps = (
+  state: RootState
+): EdgeAccountCallbackManagerStateProps => {
   return {
     account: state.core.account
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): EdgeAccountCallbackManagerDispatchProps => {
+const mapDispatchToProps = (
+  dispatch: Dispatch
+): EdgeAccountCallbackManagerDispatchProps => {
   return {
     updateWalletsRequest: () => dispatch(updateWalletsRequest()),
     updateExchangeRates: () => dispatch(updateExchangeRates())
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EdgeAccountCallbackManager)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EdgeAccountCallbackManager)

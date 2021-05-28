@@ -1,6 +1,10 @@
 // @flow
 import { bns } from 'biggystring'
-import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
+import {
+  type EdgeCurrencyWallet,
+  type EdgeMetadata,
+  type EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -56,30 +60,43 @@ export const createCurrencyWallet =
   }
 
 // can move to component in the future, just account and currencyConfig, etc to component through connector
-export const fetchAccountActivationInfo = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
-  const currencyPlugin = account.currencyConfig[currencyPluginName]
-  try {
-    const supportedCurrencies = currencyPlugin.otherMethods.getActivationSupportedCurrencies()
-    const activationCost = currencyPlugin.otherMethods.getActivationCost(currencyCode)
-    const activationInfo = await Promise.all([supportedCurrencies, activationCost])
-    const modifiedSupportedCurrencies = { ...activationInfo[0].result, FTC: false }
-    dispatch({
-      type: 'ACCOUNT_ACTIVATION_INFO',
-      data: {
-        supportedCurrencies: modifiedSupportedCurrencies,
-        activationCost: activationInfo[1]
+export const fetchAccountActivationInfo =
+  (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { account } = state.core
+    const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
+    const currencyPlugin = account.currencyConfig[currencyPluginName]
+    try {
+      const supportedCurrencies =
+        currencyPlugin.otherMethods.getActivationSupportedCurrencies()
+      const activationCost =
+        currencyPlugin.otherMethods.getActivationCost(currencyCode)
+      const activationInfo = await Promise.all([
+        supportedCurrencies,
+        activationCost
+      ])
+      const modifiedSupportedCurrencies = {
+        ...activationInfo[0].result,
+        FTC: false
       }
-    })
-  } catch (error) {
-    showError(error)
+      dispatch({
+        type: 'ACCOUNT_ACTIVATION_INFO',
+        data: {
+          supportedCurrencies: modifiedSupportedCurrencies,
+          activationCost: activationInfo[1]
+        }
+      })
+    } catch (error) {
+      showError(error)
+    }
   }
-}
 
 export const fetchWalletAccountActivationPaymentInfo =
-  (paymentParams: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) => (dispatch: Dispatch, getState: GetState) => {
+  (
+    paymentParams: AccountPaymentParams,
+    createdCoreWallet: EdgeCurrencyWallet
+  ) =>
+  (dispatch: Dispatch, getState: GetState) => {
     try {
       const networkTimeout = setTimeout(() => {
         showError('Network Timeout')
@@ -106,31 +123,36 @@ export const fetchWalletAccountActivationPaymentInfo =
     }
   }
 
-export const checkHandleAvailability = (currencyCode: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
-  dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
-  const state = getState()
-  const { account } = state.core
-  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
-  const currencyPlugin = account.currencyConfig[currencyPluginName]
-  try {
-    const data = await currencyPlugin.otherMethods.validateAccount(accountName)
-    if (data.result === 'AccountAvailable') {
-      dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data: 'AVAILABLE' })
+export const checkHandleAvailability =
+  (currencyCode: string, accountName: string) =>
+  async (dispatch: Dispatch, getState: GetState) => {
+    dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
+    const state = getState()
+    const { account } = state.core
+    const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
+    const currencyPlugin = account.currencyConfig[currencyPluginName]
+    try {
+      const data = await currencyPlugin.otherMethods.validateAccount(
+        accountName
+      )
+      if (data.result === 'AccountAvailable') {
+        dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data: 'AVAILABLE' })
+      }
+    } catch (error) {
+      console.log('checkHandleAvailability error: ', error)
+      let data = 'UNKNOWN_ERROR'
+      if (error.name === 'ErrorAccountUnavailable') {
+        data = 'UNAVAILABLE'
+      } else if (error.name === 'ErrorInvalidAccountName') {
+        data = 'INVALID'
+      }
+      dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data })
     }
-  } catch (error) {
-    console.log('checkHandleAvailability error: ', error)
-    let data = 'UNKNOWN_ERROR'
-    if (error.name === 'ErrorAccountUnavailable') {
-      data = 'UNAVAILABLE'
-    } else if (error.name === 'ErrorInvalidAccountName') {
-      data = 'INVALID'
-    }
-    dispatch({ type: 'HANDLE_AVAILABLE_STATUS', data })
   }
-}
 
 export const createAccountTransaction =
-  (createdWalletId: string, accountName: string, paymentWalletId: string) => async (dispatch: Dispatch, getState: GetState) => {
+  (createdWalletId: string, accountName: string, paymentWalletId: string) =>
+  async (dispatch: Dispatch, getState: GetState) => {
     // check available funds
     const state = getState()
     const { account } = state.core
@@ -138,10 +160,13 @@ export const createAccountTransaction =
     const createdWallet = state.ui.wallets.byId[createdWalletId]
     const paymentWallet = currencyWallets[paymentWalletId]
     const createdWalletCurrencyCode = createdWallet.currencyCode
-    const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
+    const currencyPluginName =
+      Constants.CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
     const currencyPlugin = account.currencyConfig[currencyPluginName]
-    const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
-    const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
+    const { paymentAddress, amount, currencyCode } =
+      state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
+    const handleAvailability =
+      await currencyPlugin.otherMethods.validateAccount(accountName)
     const paymentDenom = getExchangeDenomination(state, currencyCode)
     let nativeAmount = bns.mul(amount, paymentDenom.multiplier)
     nativeAmount = bns.toFixed(nativeAmount, 0, 0)
@@ -161,48 +186,77 @@ export const createAccountTransaction =
           if (error) {
             console.log(error)
             setTimeout(() => {
-              Alert.alert(s.strings.create_wallet_account_error_sending_transaction)
+              Alert.alert(
+                s.strings.create_wallet_account_error_sending_transaction
+              )
             }, 750)
           } else if (edgeTransaction) {
             logEvent('ActivateWalletSuccess', {
               currencyCode: createdWalletCurrencyCode
             })
             const edgeMetadata: EdgeMetadata = {
-              name: sprintf(s.strings.create_wallet_account_metadata_name, createdWalletCurrencyCode),
-              category: 'Expense:' + sprintf(s.strings.create_wallet_account_metadata_category, createdWalletCurrencyCode),
-              notes: sprintf(s.strings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, 'support@edge.app')
+              name: sprintf(
+                s.strings.create_wallet_account_metadata_name,
+                createdWalletCurrencyCode
+              ),
+              category:
+                'Expense:' +
+                sprintf(
+                  s.strings.create_wallet_account_metadata_category,
+                  createdWalletCurrencyCode
+                ),
+              notes: sprintf(
+                s.strings.create_wallet_account_metadata_notes,
+                createdWalletCurrencyCode,
+                createdWalletCurrencyCode,
+                'support@edge.app'
+              )
             }
-            paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).then(() => {
-              Actions.popTo(Constants.WALLET_LIST_SCENE)
-              setTimeout(() => {
-                Alert.alert(s.strings.create_wallet_account_payment_sent_title, s.strings.create_wallet_account_payment_sent_message)
-              }, 750)
-            })
+            paymentWallet
+              .saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata)
+              .then(() => {
+                Actions.popTo(Constants.WALLET_LIST_SCENE)
+                setTimeout(() => {
+                  Alert.alert(
+                    s.strings.create_wallet_account_payment_sent_title,
+                    s.strings.create_wallet_account_payment_sent_message
+                  )
+                }, 750)
+              })
           }
         }
       }
-      Actions[Constants.SEND]({ guiMakeSpendInfo, selectedWalletId: paymentWalletId, selectedCurrencyCode: currencyCode })
+      Actions[Constants.SEND]({
+        guiMakeSpendInfo,
+        selectedWalletId: paymentWalletId,
+        selectedCurrencyCode: currencyCode
+      })
     } else {
       // if handle is now unavailable
       dispatch(createHandleUnavailableModal(createdWalletId, accountName))
     }
   }
 
-export const createHandleUnavailableModal = (newWalletId: string, accountName: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  account.changeWalletStates({
-    [newWalletId]: {
-      deleted: true
-    }
-  })
-  await Airship.show(bridge => (
-    <ButtonsModal
-      bridge={bridge}
-      title={s.strings.create_wallet_account_handle_unavailable_modal_title}
-      message={sprintf(s.strings.create_wallet_account_handle_unavailable_modal_message, accountName)}
-      buttons={{ ok: { label: s.strings.string_ok } }}
-    />
-  ))
-  Actions.pop()
-}
+export const createHandleUnavailableModal =
+  (newWalletId: string, accountName: string) =>
+  async (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { account } = state.core
+    account.changeWalletStates({
+      [newWalletId]: {
+        deleted: true
+      }
+    })
+    await Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.create_wallet_account_handle_unavailable_modal_title}
+        message={sprintf(
+          s.strings.create_wallet_account_handle_unavailable_modal_message,
+          accountName
+        )}
+        buttons={{ ok: { label: s.strings.string_ok } }}
+      />
+    ))
+    Actions.pop()
+  }

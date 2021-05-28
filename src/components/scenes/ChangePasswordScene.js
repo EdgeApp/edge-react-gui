@@ -24,7 +24,13 @@ class ChangePasswordComponent extends React.Component<Props> {
 
     return (
       <SceneWrapper hasTabs={false} background="body">
-        <ChangePasswordScreen account={account} context={context} onComplete={onComplete} onCancel={onComplete} showHeader={false} />
+        <ChangePasswordScreen
+          account={account}
+          context={context}
+          onComplete={onComplete}
+          onCancel={onComplete}
+          showHeader={false}
+        />
       </SceneWrapper>
     )
   }

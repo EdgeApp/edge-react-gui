@@ -1,6 +1,10 @@
 // @flow
 
-import { type EdgeAccount, type EdgeContext, type EdgeLogType } from 'edge-core-js'
+import {
+  type EdgeAccount,
+  type EdgeContext,
+  type EdgeLogType
+} from 'edge-core-js'
 import { getSupportedBiometryType } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Image, ScrollView } from 'react-native'
@@ -31,7 +35,14 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
 import { SendLogsModal } from '../modals/SendLogsModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  changeTheme,
+  getTheme,
+  withTheme
+} from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
@@ -117,19 +128,27 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   _onPressChangePasswordRouting = () => {
-    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.CHANGE_PASSWORD]()
+    return this.props.isLocked
+      ? this.unlockSettingsAlert()
+      : Actions[Constants.CHANGE_PASSWORD]()
   }
 
   _onPressChangePinRouting = () => {
-    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.CHANGE_PIN]()
+    return this.props.isLocked
+      ? this.unlockSettingsAlert()
+      : Actions[Constants.CHANGE_PIN]()
   }
 
   _onPressOtp = () => {
-    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.OTP_SETUP]()
+    return this.props.isLocked
+      ? this.unlockSettingsAlert()
+      : Actions[Constants.OTP_SETUP]()
   }
 
   _onPressRecoverPasswordRouting = () => {
-    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.RECOVER_PASSWORD]()
+    return this.props.isLocked
+      ? this.unlockSettingsAlert()
+      : Actions[Constants.RECOVER_PASSWORD]()
   }
 
   _onPressExchangeSettings = () => {
@@ -149,7 +168,10 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   _onToggleTouchIdOption = () => {
-    this.props.dispatchUpdateEnableTouchIdEnable(!this.props.touchIdEnabled, this.props.account)
+    this.props.dispatchUpdateEnableTouchIdEnable(
+      !this.props.touchIdEnabled,
+      this.props.account
+    )
   }
 
   _onPressNotifications = () => {
@@ -161,7 +183,8 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   handleVerboseLoggingPress = () => {
-    const defaultLogLevel = this.state.defaultLogLevel === 'info' ? 'warn' : 'info'
+    const defaultLogLevel =
+      this.state.defaultLogLevel === 'info' ? 'warn' : 'info'
     this.setState({ defaultLogLevel })
     this.props.context
       .changeLogSettings({
@@ -178,14 +201,20 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   showAutoLogoutModal = async () => {
-    const result = await Airship.show(bridge => <AutoLogoutModal autoLogoutTimeInSeconds={this.props.autoLogoutTimeInSeconds} bridge={bridge} />)
+    const result = await Airship.show(bridge => (
+      <AutoLogoutModal
+        autoLogoutTimeInSeconds={this.props.autoLogoutTimeInSeconds}
+        bridge={bridge}
+      />
+    ))
 
     if (typeof result === 'number') {
       this.props.setAutoLogoutTimeInSeconds(result)
     }
   }
 
-  showSendLogsModal = () => Airship.show(bridge => <SendLogsModal bridge={bridge} />)
+  showSendLogsModal = () =>
+    Airship.show(bridge => <SendLogsModal bridge={bridge} />)
 
   render() {
     const { account, theme, isLocked } = this.props
@@ -199,20 +228,41 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
       hours: s.strings.settings_hours,
       days: s.strings.settings_days
     }
-    const autoLogoutRightText = autoLogout.value === 0 ? s.strings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
+    const autoLogoutRightText =
+      autoLogout.value === 0
+        ? s.strings.string_disable
+        : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
 
-    const rightArrow = <AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />
+    const rightArrow = (
+      <AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />
+    )
 
     return (
       <SceneWrapper background="theme" hasTabs={false}>
         <ScrollView>
           <SettingsHeaderRow
-            icon={<FontAwesomeIcon name="user-o" color={theme.icon} size={iconSize} />}
+            icon={
+              <FontAwesomeIcon
+                name="user-o"
+                color={theme.icon}
+                size={iconSize}
+              />
+            }
             text={`${s.strings.settings_account_title_cap}: ${account.username}`}
           />
           <SettingsRow
-            text={isLocked ? s.strings.settings_button_unlock_settings : s.strings.settings_button_lock_settings}
-            right={<AntDesignIcon name={isLocked ? 'lock' : 'unlock'} color={theme.iconTappable} size={iconSize} />}
+            text={
+              isLocked
+                ? s.strings.settings_button_unlock_settings
+                : s.strings.settings_button_lock_settings
+            }
+            right={
+              <AntDesignIcon
+                name={isLocked ? 'lock' : 'unlock'}
+                color={theme.iconTappable}
+                size={iconSize}
+              />
+            }
             onPress={this.showConfirmPasswordModal}
           />
           <SettingsRow
@@ -221,8 +271,18 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             right={rightArrow}
             onPress={this._onPressChangePasswordRouting}
           />
-          <SettingsRow disabled={this.props.isLocked} text={s.strings.settings_button_pin} right={rightArrow} onPress={this._onPressChangePinRouting} />
-          <SettingsRow disabled={this.props.isLocked} text={s.strings.settings_button_setup_two_factor} right={rightArrow} onPress={this._onPressOtp} />
+          <SettingsRow
+            disabled={this.props.isLocked}
+            text={s.strings.settings_button_pin}
+            right={rightArrow}
+            onPress={this._onPressChangePinRouting}
+          />
+          <SettingsRow
+            disabled={this.props.isLocked}
+            text={s.strings.settings_button_setup_two_factor}
+            right={rightArrow}
+            onPress={this._onPressOtp}
+          />
           <SettingsRow
             disabled={this.props.isLocked}
             text={s.strings.settings_button_password_recovery}
@@ -231,9 +291,22 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             bottomGap={false}
           />
 
-          <SettingsHeaderRow icon={<IonIcon name="ios-options" color={theme.icon} size={iconSize} />} text={s.strings.settings_options_title_cap} />
-          <SettingsRow text={s.strings.settings_exchange_settings} right={rightArrow} onPress={this._onPressExchangeSettings} />
-          <SettingsRow text={s.strings.spending_limits} right={rightArrow} onPress={this._onPressSpendingLimits} />
+          <SettingsHeaderRow
+            icon={
+              <IonIcon name="ios-options" color={theme.icon} size={iconSize} />
+            }
+            text={s.strings.settings_options_title_cap}
+          />
+          <SettingsRow
+            text={s.strings.settings_exchange_settings}
+            right={rightArrow}
+            onPress={this._onPressExchangeSettings}
+          />
+          <SettingsRow
+            text={s.strings.spending_limits}
+            right={rightArrow}
+            onPress={this._onPressSpendingLimits}
+          />
           <SettingsLabelRow
             text={s.strings.settings_title_auto_logoff}
             right={autoLogoutRightText}
@@ -241,38 +314,96 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
               this.showAutoLogoutModal()
             }}
           />
-          <SettingsLabelRow text={s.strings.settings_title_currency} right={this.props.defaultFiat.replace('iso:', '')} onPress={Actions.defaultFiatSetting} />
+          <SettingsLabelRow
+            text={s.strings.settings_title_currency}
+            right={this.props.defaultFiat.replace('iso:', '')}
+            onPress={Actions.defaultFiatSetting}
+          />
 
-          <SettingsSwitchRow key="pinRelogin" text={s.strings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this._onTogglePinLogin} />
+          <SettingsSwitchRow
+            key="pinRelogin"
+            text={s.strings.settings_title_pin_login}
+            value={this.props.pinLoginEnabled}
+            onPress={this._onTogglePinLogin}
+          />
           {this.props.supportsTouchId && (
-            <SettingsSwitchRow key="useTouchID" text={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this._onToggleTouchIdOption} />
+            <SettingsSwitchRow
+              key="useTouchID"
+              text={this.state.touchIdText}
+              value={this.props.touchIdEnabled}
+              onPress={this._onToggleTouchIdOption}
+            />
           )}
 
-          <SettingsRow text={s.strings.settings_notifications} right={rightArrow} onPress={this._onPressNotifications} />
+          <SettingsRow
+            text={s.strings.settings_notifications}
+            right={rightArrow}
+            onPress={this._onPressNotifications}
+          />
           {CURRENCY_SETTINGS_KEYS.map(pluginId => {
             if (account.currencyConfig[pluginId] == null) return null
             const { currencyInfo } = account.currencyConfig[pluginId]
             const { displayName, symbolImage } = currencyInfo
-            const icon = symbolImage != null ? <Image style={styles.currencyLogo} source={{ uri: symbolImage }} /> : undefined
-            const onPress = () => Actions[Constants.CURRENCY_SETTINGS]({ currencyInfo })
+            const icon =
+              symbolImage != null ? (
+                <Image
+                  style={styles.currencyLogo}
+                  source={{ uri: symbolImage }}
+                />
+              ) : undefined
+            const onPress = () =>
+              Actions[Constants.CURRENCY_SETTINGS]({ currencyInfo })
 
-            return <SettingsRow key={pluginId} icon={icon} text={displayName} onPress={onPress} right={rightArrow} />
+            return (
+              <SettingsRow
+                key={pluginId}
+                icon={icon}
+                text={displayName}
+                onPress={onPress}
+                right={rightArrow}
+              />
+            )
           })}
 
-          <SettingsRow text={s.strings.title_promotion_settings} right={rightArrow} onPress={this._onPressPromotionSettings} />
-          <SettingsSwitchRow key="developerMode" text={s.strings.settings_developer_mode} value={this.props.developerModeOn} onPress={this.onDeveloperPress} />
+          <SettingsRow
+            text={s.strings.title_promotion_settings}
+            right={rightArrow}
+            onPress={this._onPressPromotionSettings}
+          />
+          <SettingsSwitchRow
+            key="developerMode"
+            text={s.strings.settings_developer_mode}
+            value={this.props.developerModeOn}
+            onPress={this.onDeveloperPress}
+          />
           {this.props.developerModeOn && (
-            <SettingsSwitchRow key="darkTheme" text={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.onDarkThemePress} />
+            <SettingsSwitchRow
+              key="darkTheme"
+              text={s.strings.settings_dark_theme}
+              value={this.state.darkTheme}
+              onPress={this.onDarkThemePress}
+            />
           )}
-          <SettingsRow onPress={this.props.showRestoreWalletsModal} text={s.strings.restore_wallets_modal_title} />
-          <SettingsRow text={s.strings.title_terms_of_service} onPress={Actions[Constants.TERMS_OF_SERVICE]} right={rightArrow} />
+          <SettingsRow
+            onPress={this.props.showRestoreWalletsModal}
+            text={s.strings.restore_wallets_modal_title}
+          />
+          <SettingsRow
+            text={s.strings.title_terms_of_service}
+            onPress={Actions[Constants.TERMS_OF_SERVICE]}
+            right={rightArrow}
+          />
           <SettingsSwitchRow
             key="verboseLogging"
             text={s.strings.settings_verbose_logging}
             value={this.state.defaultLogLevel === 'info'}
             onPress={this.handleVerboseLoggingPress}
           />
-          <PrimaryButton onPress={this.showSendLogsModal} label={s.strings.settings_button_send_logs} marginRem={2} />
+          <PrimaryButton
+            onPress={this.showSendLogsModal}
+            label={s.strings.settings_button_send_logs}
+            marginRem={2}
+          />
         </ScrollView>
       </SceneWrapper>
     )
@@ -302,7 +433,8 @@ export const SettingsScene = connect(
   (state: RootState): StateProps => ({
     account: state.core.account,
     context: state.core.context,
-    autoLogoutTimeInSeconds: SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state),
+    autoLogoutTimeInSeconds:
+      SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state),
     defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
     developerModeOn: state.ui.settings.developerModeOn,
     isLocked: SETTINGS_SELECTORS.getSettingsLock(state),

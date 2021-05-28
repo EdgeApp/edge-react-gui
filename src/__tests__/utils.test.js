@@ -115,7 +115,8 @@ describe('convertNativeToDenomination', function () {
     const nativeToDisplayRatio = '100000000'
     const nativeAmount = '100000000'
     const expected = '1'
-    const actual = convertNativeToDenomination(nativeToDisplayRatio)(nativeAmount)
+    const actual =
+      convertNativeToDenomination(nativeToDisplayRatio)(nativeAmount)
     expect(actual).toBe(expected)
   })
 })
@@ -268,7 +269,12 @@ describe('getSupportedFiats', function () {
   test('resolves to array of object {value, label}', function () {
     const supportedFiats = getSupportedFiats()
     supportedFiats.forEach(fiat => {
-      expect(fiat).toEqual(expect.objectContaining({ label: expect.any(String), value: expect.any(String) }))
+      expect(fiat).toEqual(
+        expect.objectContaining({
+          label: expect.any(String),
+          value: expect.any(String)
+        })
+      )
     })
   })
 })
@@ -370,8 +376,16 @@ describe('isCompleteExchangeData', function () {
 
 describe('mergeTokens', function () {
   test('Preferred tokens take precendence', function () {
-    const preferredTokenA = { currencyCode: 'TA', currencyName: 'TA', preferred: true }
-    const preferredTokenB = { currencyCode: 'TB', currencyName: 'TB', preferred: true }
+    const preferredTokenA = {
+      currencyCode: 'TA',
+      currencyName: 'TA',
+      preferred: true
+    }
+    const preferredTokenB = {
+      currencyCode: 'TB',
+      currencyName: 'TB',
+      preferred: true
+    }
 
     const tokenA = { currencyCode: 'TA', currencyName: 'TA' }
     const tokenD = { currencyCode: 'TD', currencyName: 'TD' }
@@ -403,8 +417,16 @@ describe('mergeTokens', function () {
   })
 
   test('Empty tokens', function () {
-    const preferredTokenA = { currencyCode: 'TA', currencyName: 'TA', preferred: true }
-    const preferredTokenB = { currencyCode: 'TB', currencyName: 'TB', preferred: true }
+    const preferredTokenA = {
+      currencyCode: 'TA',
+      currencyName: 'TA',
+      preferred: true
+    }
+    const preferredTokenB = {
+      currencyCode: 'TB',
+      currencyName: 'TB',
+      preferred: true
+    }
 
     const preferredEdgeMetaTokens = [preferredTokenA, preferredTokenB]
     const edgeMetaTokens = []
@@ -593,11 +615,15 @@ describe('isTooFarAhead', () => {
   const validFutureDateInSeconds = 1535739631.095 + 1000 // 2018-08-31T18:20:32.095Z
 
   test('if given invalid future date', () => {
-    expect(isTooFarAhead(invalidFutureDateInSeconds, currentDateInSeconds)).toBe(true)
+    expect(
+      isTooFarAhead(invalidFutureDateInSeconds, currentDateInSeconds)
+    ).toBe(true)
   })
 
   test('if given valid future date', () => {
-    expect(isTooFarAhead(validFutureDateInSeconds, currentDateInSeconds)).toBe(false)
+    expect(isTooFarAhead(validFutureDateInSeconds, currentDateInSeconds)).toBe(
+      false
+    )
   })
 })
 
@@ -624,19 +650,27 @@ describe('autoCorrectDate', () => {
   const validPastDateInSeconds = 1535739631.095 - 1000 // 2018-08-31T18:20:30.095Z
 
   test('if given invalid future date', () => {
-    expect(autoCorrectDate(invalidFutureDateInSeconds, currentDateInSeconds)).toEqual(currentDateInSeconds)
+    expect(
+      autoCorrectDate(invalidFutureDateInSeconds, currentDateInSeconds)
+    ).toEqual(currentDateInSeconds)
   })
 
   test('if given valid future date', () => {
-    expect(autoCorrectDate(validFutureDateInSeconds, currentDateInSeconds)).toEqual(validFutureDateInSeconds)
+    expect(
+      autoCorrectDate(validFutureDateInSeconds, currentDateInSeconds)
+    ).toEqual(validFutureDateInSeconds)
   })
 
   test('if given invalid past date', () => {
-    expect(autoCorrectDate(invalidPastDateInSeconds, currentDateInSeconds)).toEqual(currentDateInSeconds)
+    expect(
+      autoCorrectDate(invalidPastDateInSeconds, currentDateInSeconds)
+    ).toEqual(currentDateInSeconds)
   })
 
   test('if given valid past date', () => {
-    expect(autoCorrectDate(validPastDateInSeconds, currentDateInSeconds)).toEqual(validPastDateInSeconds)
+    expect(
+      autoCorrectDate(validPastDateInSeconds, currentDateInSeconds)
+    ).toEqual(validPastDateInSeconds)
   })
 })
 
@@ -671,14 +705,26 @@ describe('precisionAdjust', function () {
 
   for (const key in tests) {
     const { input, output } = tests[key]
-    const { displayDenominationMultiplier, primaryExchangeMultiplier, secondaryExchangeMultiplier, exchangeSecondaryToPrimaryRatio } = input
+    const {
+      displayDenominationMultiplier,
+      primaryExchangeMultiplier,
+      secondaryExchangeMultiplier,
+      exchangeSecondaryToPrimaryRatio
+    } = input
 
     test(key, function () {
-      const precisionAdjustmentValue = precisionAdjust({ primaryExchangeMultiplier, secondaryExchangeMultiplier, exchangeSecondaryToPrimaryRatio })
+      const precisionAdjustmentValue = precisionAdjust({
+        primaryExchangeMultiplier,
+        secondaryExchangeMultiplier,
+        exchangeSecondaryToPrimaryRatio
+      })
       expect(precisionAdjustmentValue).toBe(output.precisionAdjustmentValue)
-      expect(maxPrimaryCurrencyConversionDecimals(bns.log10(displayDenominationMultiplier), precisionAdjustmentValue)).toBe(
-        output.maxPrimaryCurrencyConversionDecimals
-      )
+      expect(
+        maxPrimaryCurrencyConversionDecimals(
+          bns.log10(displayDenominationMultiplier),
+          precisionAdjustmentValue
+        )
+      ).toBe(output.maxPrimaryCurrencyConversionDecimals)
     })
   }
 })
@@ -689,7 +735,9 @@ describe('getDisplayDenomination', function () {
 
   input.forEach((currency, index) => {
     test(`${title} ${currency}`, function () {
-      expect(getDenomination(currency, fixtures.settings, 'display')).toMatchObject(output[index])
+      expect(
+        getDenomination(currency, fixtures.settings, 'display')
+      ).toMatchObject(output[index])
     })
   })
 })
@@ -700,7 +748,9 @@ describe('getExchangeDenomination', function () {
 
   input.forEach((currency, index) => {
     test(`${title} ${currency}`, function () {
-      expect(getDenomination(currency, fixtures.settings, 'exchange')).toMatchObject(output[index])
+      expect(
+        getDenomination(currency, fixtures.settings, 'exchange')
+      ).toMatchObject(output[index])
     })
   })
 })

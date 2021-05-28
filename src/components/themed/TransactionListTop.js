@@ -16,10 +16,23 @@ import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { convertCurrency } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import { convertNativeToDenomination, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
-import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
+import {
+  convertNativeToDenomination,
+  getDefaultDenomination,
+  getDenomination,
+  getFiatSymbol
+} from '../../util/utils'
+import {
+  type WalletListResult,
+  WalletListModal
+} from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { EdgeTextFieldOutlined } from './EdgeTextField.js'
 import { SceneHeader } from './SceneHeader'
@@ -68,7 +81,11 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.searching === false && this.props.searching === true && this.textInput.current) {
+    if (
+      prevProps.searching === false &&
+      this.props.searching === true &&
+      this.textInput.current
+    ) {
       this.textInput.current.focus()
     }
   }
@@ -77,12 +94,26 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
     const { currencyCode, transactionsLength, theme } = this.props
     const styles = getStyles(theme)
 
-    if (transactionsLength !== 0 && getSpecialCurrencyInfo(currencyCode).showEarnInterestCard) {
+    if (
+      transactionsLength !== 0 &&
+      getSpecialCurrencyInfo(currencyCode).showEarnInterestCard
+    ) {
       return (
-        <ButtonBox onPress={() => Actions.pluginEarnInterest({ plugin: guiPlugins.cred })} paddingRem={0}>
+        <ButtonBox
+          onPress={() =>
+            Actions.pluginEarnInterest({ plugin: guiPlugins.cred })
+          }
+          paddingRem={0}
+        >
           <View style={styles.earnInterestContainer}>
-            <Image style={styles.earnInterestImage} source={credLogo} resizeMode="contain" />
-            <EdgeText style={styles.earnInterestText}>{s.strings.earn_interest}</EdgeText>
+            <Image
+              style={styles.earnInterestImage}
+              source={credLogo}
+              resizeMode="contain"
+            />
+            <EdgeText style={styles.earnInterestText}>
+              {s.strings.earn_interest}
+            </EdgeText>
           </View>
         </ButtonBox>
       )
@@ -90,7 +121,9 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   handleOpenWalletListModal = () => {
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
+    Airship.show(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />
+    )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         this.props.onSelectWallet(walletId, currencyCode)
       }
@@ -98,8 +131,18 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   renderBalanceBox = () => {
-    const { cryptoAmount, currencyCode, denominationName, fiatSymbol, fiatBalance, fiatCurrencyCode, walletId, walletName, isAccountBalanceVisible, theme } =
-      this.props
+    const {
+      cryptoAmount,
+      currencyCode,
+      denominationName,
+      fiatSymbol,
+      fiatBalance,
+      fiatCurrencyCode,
+      walletId,
+      walletName,
+      isAccountBalanceVisible,
+      theme
+    } = this.props
     const styles = getStyles(theme)
 
     return (
@@ -107,20 +150,39 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
         <View style={styles.balanceBoxRow}>
           <View style={styles.balanceBoxBalanceContainer}>
             <View style={styles.balanceBoxWalletNameCurrencyContainer}>
-              <TouchableOpacity style={styles.balanceBoxWalletNameContainer} onPress={this.handleOpenWalletListModal}>
-                <EdgeText style={styles.balanceBoxWalletName}>{walletName}</EdgeText>
-                <Ionicons name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+              <TouchableOpacity
+                style={styles.balanceBoxWalletNameContainer}
+                onPress={this.handleOpenWalletListModal}
+              >
+                <EdgeText style={styles.balanceBoxWalletName}>
+                  {walletName}
+                </EdgeText>
+                <Ionicons
+                  name="chevron-forward"
+                  size={theme.rem(1.5)}
+                  color={theme.iconTappable}
+                />
               </TouchableOpacity>
-              <WalletProgressIcon currencyCode={currencyCode} walletId={walletId} size={theme.rem(1.5)} />
+              <WalletProgressIcon
+                currencyCode={currencyCode}
+                walletId={walletId}
+                size={theme.rem(1.5)}
+              />
             </View>
             <TouchableOpacity onPress={this.props.toggleBalanceVisibility}>
               {isAccountBalanceVisible ? (
                 <>
-                  <EdgeText style={styles.balanceBoxCurrency}>{cryptoAmount + ' ' + denominationName}</EdgeText>
-                  <EdgeText style={styles.balanceFiatBalance}>{fiatSymbol + fiatBalance + ' ' + fiatCurrencyCode}</EdgeText>
+                  <EdgeText style={styles.balanceBoxCurrency}>
+                    {cryptoAmount + ' ' + denominationName}
+                  </EdgeText>
+                  <EdgeText style={styles.balanceFiatBalance}>
+                    {fiatSymbol + fiatBalance + ' ' + fiatCurrencyCode}
+                  </EdgeText>
                 </>
               ) : (
-                <EdgeText style={styles.balanceFiatShow}>{s.strings.string_show_balance}</EdgeText>
+                <EdgeText style={styles.balanceFiatShow}>
+                  {s.strings.string_show_balance}
+                </EdgeText>
               )}
             </TouchableOpacity>
           </View>
@@ -181,8 +243,13 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
                 />
               </View>
               {searching && (
-                <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
-                  <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
+                <TouchableOpacity
+                  onPress={this.handleSearchDone}
+                  style={styles.searchDoneButton}
+                >
+                  <EdgeText style={{ color: theme.textLink }}>
+                    {s.strings.string_done_cap}
+                  </EdgeText>
                 </TouchableOpacity>
               )}
             </View>
@@ -192,14 +259,29 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
             <>
               {this.renderBalanceBox()}
               <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={Actions.request} style={styles.buttons}>
-                  <Ionicons name="arrow-down" size={theme.rem(1.5)} color={theme.iconTappable} />
-                  <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
+                <TouchableOpacity
+                  onPress={Actions.request}
+                  style={styles.buttons}
+                >
+                  <Ionicons
+                    name="arrow-down"
+                    size={theme.rem(1.5)}
+                    color={theme.iconTappable}
+                  />
+                  <EdgeText style={styles.buttonsText}>
+                    {s.strings.fragment_request_subtitle}
+                  </EdgeText>
                 </TouchableOpacity>
                 <View style={styles.buttonsDivider} />
                 <TouchableOpacity onPress={Actions.send} style={styles.buttons}>
-                  <Ionicons name="arrow-up" size={theme.rem(1.5)} color={theme.iconTappable} />
-                  <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
+                  <Ionicons
+                    name="arrow-up"
+                    size={theme.rem(1.5)}
+                    color={theme.iconTappable}
+                  />
+                  <EdgeText style={styles.buttonsText}>
+                    {s.strings.fragment_send_subtitle}
+                  </EdgeText>
                 </TouchableOpacity>
               </View>
               {this.renderEarnInterestCard()}
@@ -209,7 +291,9 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
 
         {!isEmpty && !searching && (
           <SceneHeader underline>
-            <EdgeText style={styles.transactionsDividerText}>{s.strings.fragment_transaction_list_transaction}</EdgeText>
+            <EdgeText style={styles.transactionsDividerText}>
+              {s.strings.fragment_transaction_list_transaction}
+            </EdgeText>
           </SceneHeader>
         )}
       </>
@@ -323,15 +407,34 @@ export const TransactionListTop = connect(
     const balance = guiWallet.nativeBalances[selectedCurrencyCode]
 
     // Crypto Amount Formatting
-    const currencyDenomination = getDenomination(selectedCurrencyCode, state.ui.settings, 'display')
-    const cryptoAmount: string = convertNativeToDenomination(currencyDenomination.multiplier)(balance) // convert to correct denomination
+    const currencyDenomination = getDenomination(
+      selectedCurrencyCode,
+      state.ui.settings,
+      'display'
+    )
+    const cryptoAmount: string = convertNativeToDenomination(
+      currencyDenomination.multiplier
+    )(balance) // convert to correct denomination
     const cryptoAmountFormat = intl.formatNumber(bns.add(cryptoAmount, '0'))
 
     // Fiat Balance Formatting
-    const defaultDenomination = getDefaultDenomination(selectedCurrencyCode, state.ui.settings)
-    const defaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(balance)
-    const fiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, parseFloat(defaultCryptoAmount))
-    const fiatBalanceFormat = intl.formatNumber(fiatBalance && fiatBalance > 0.000001 ? fiatBalance : 0, { toFixed: 2 })
+    const defaultDenomination = getDefaultDenomination(
+      selectedCurrencyCode,
+      state.ui.settings
+    )
+    const defaultCryptoAmount = convertNativeToDenomination(
+      defaultDenomination.multiplier
+    )(balance)
+    const fiatBalance = convertCurrency(
+      state,
+      selectedCurrencyCode,
+      guiWallet.isoFiatCurrencyCode,
+      parseFloat(defaultCryptoAmount)
+    )
+    const fiatBalanceFormat = intl.formatNumber(
+      fiatBalance && fiatBalance > 0.000001 ? fiatBalance : 0,
+      { toFixed: 2 }
+    )
 
     return {
       currencyCode: selectedCurrencyCode,
@@ -349,6 +452,7 @@ export const TransactionListTop = connect(
     toggleBalanceVisibility() {
       dispatch(toggleAccountBalanceVisibility())
     },
-    onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
+    onSelectWallet: (walletId: string, currencyCode: string) =>
+      dispatch(selectWalletFromModal(walletId, currencyCode))
   })
 )(withTheme(TransactionListTopComponent))

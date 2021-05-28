@@ -6,68 +6,80 @@ import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import type { SortOption } from '../components/modals/WalletListSortModal.js'
-import { Airship, showError, showFullScreenSpinner } from '../components/services/AirshipInstance.js'
+import {
+  Airship,
+  showError,
+  showFullScreenSpinner
+} from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { getSettings } from '../modules/Settings/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 
-export const updateActiveWalletsOrder = (activeWalletIds: string[]) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
+export const updateActiveWalletsOrder =
+  (activeWalletIds: string[]) => (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { account } = state.core
 
-  const newKeyStates = activeWalletIds.reduce((keyStates, id, index) => {
-    keyStates[id] = { sortIndex: index }
-    return keyStates
-  }, {})
+    const newKeyStates = activeWalletIds.reduce((keyStates, id, index) => {
+      keyStates[id] = { sortIndex: index }
+      return keyStates
+    }, {})
 
-  return account.changeWalletStates(newKeyStates).catch(showError)
-}
-
-export const toggleAccountBalanceVisibility = () => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  const currentAccountBalanceVisibility = state.ui.settings.isAccountBalanceVisible
-  ACCOUNT_SETTINGS.setAccountBalanceVisibility(account, !currentAccountBalanceVisibility)
-    .then(() => {
-      dispatch({
-        type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
-        data: { isAccountBalanceVisible: !currentAccountBalanceVisibility }
-      })
-    })
-    .catch(showError)
-}
-
-export const updateWalletsSort = (walletsSort: SortOption) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  // For speed efficiency, dispatch is independent of persistence
-  dispatch({
-    type: 'UI/SETTINGS/SET_WALLETS_SORT',
-    data: { walletsSort }
-  })
-  ACCOUNT_SETTINGS.setWalletsSort(account, walletsSort).catch(showError)
-}
-
-export const linkReferralWithCurrencies = (uri: string) => async (dispatch: Dispatch, getState: GetState) => {
-  const currencyCodeMatches = uri.match(/%([a-zA-Z]+)%/g)
-  if (currencyCodeMatches) {
-    try {
-      for (const match of currencyCodeMatches) {
-        const currencyCode = match.toUpperCase().replace(/%/g, '')
-        const address = await getCurrencyAddress(currencyCode, getState)
-        if (!address) continue
-        uri = uri.replace(match, address)
-      }
-      Linking.openURL(uri)
-    } catch (error) {
-      showError(error)
-    }
-  } else {
-    Linking.openURL(uri)
+    return account.changeWalletStates(newKeyStates).catch(showError)
   }
-}
+
+export const toggleAccountBalanceVisibility =
+  () => (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { account } = state.core
+    const currentAccountBalanceVisibility =
+      state.ui.settings.isAccountBalanceVisible
+    ACCOUNT_SETTINGS.setAccountBalanceVisibility(
+      account,
+      !currentAccountBalanceVisibility
+    )
+      .then(() => {
+        dispatch({
+          type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
+          data: { isAccountBalanceVisible: !currentAccountBalanceVisibility }
+        })
+      })
+      .catch(showError)
+  }
+
+export const updateWalletsSort =
+  (walletsSort: SortOption) => (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { account } = state.core
+    // For speed efficiency, dispatch is independent of persistence
+    dispatch({
+      type: 'UI/SETTINGS/SET_WALLETS_SORT',
+      data: { walletsSort }
+    })
+    ACCOUNT_SETTINGS.setWalletsSort(account, walletsSort).catch(showError)
+  }
+
+export const linkReferralWithCurrencies =
+  (uri: string) => async (dispatch: Dispatch, getState: GetState) => {
+    const currencyCodeMatches = uri.match(/%([a-zA-Z]+)%/g)
+    if (currencyCodeMatches) {
+      try {
+        for (const match of currencyCodeMatches) {
+          const currencyCode = match.toUpperCase().replace(/%/g, '')
+          const address = await getCurrencyAddress(currencyCode, getState)
+          if (!address) continue
+          uri = uri.replace(match, address)
+        }
+        Linking.openURL(uri)
+      } catch (error) {
+        showError(error)
+      }
+    } else {
+      Linking.openURL(uri)
+    }
+  }
 
 const getCurrencyAddress = async (currencyCode, getState) => {
   // Wallet Check
@@ -90,26 +102,41 @@ const getCurrencyAddress = async (currencyCode, getState) => {
   const { defaultIsoFiat } = settings
 
   const createWalletTypes = getCreateWalletType(account, currencyCode)
-  if (!createWalletTypes) throw new Error(s.strings.wallet_list_referral_link_currency_invalid)
+  if (!createWalletTypes)
+    throw new Error(s.strings.wallet_list_referral_link_currency_invalid)
 
   const askUserToCreateWallet = await createWalletCheckModal(currencyCode)
-  if (!askUserToCreateWallet) throw new Error(s.strings.wallet_list_referral_link_cancelled_wallet_creation)
+  if (!askUserToCreateWallet)
+    throw new Error(
+      s.strings.wallet_list_referral_link_cancelled_wallet_creation
+    )
 
-  const createWallet = account.createCurrencyWallet(createWalletTypes.walletType, {
-    name: createWalletTypes.currencyName,
-    fiatCurrencyCode: defaultIsoFiat
-  })
-  const wallet = await showFullScreenSpinner(s.strings.wallet_list_referral_link_currency_loading, createWallet)
+  const createWallet = account.createCurrencyWallet(
+    createWalletTypes.walletType,
+    {
+      name: createWalletTypes.currencyName,
+      fiatCurrencyCode: defaultIsoFiat
+    }
+  )
+  const wallet = await showFullScreenSpinner(
+    s.strings.wallet_list_referral_link_currency_loading,
+    createWallet
+  )
   const receiveAddress = await wallet.getReceiveAddress()
   return receiveAddress.publicAddress
 }
 
-const createWalletCheckModal = async (currencyCode: string): Promise<boolean> => {
+const createWalletCheckModal = async (
+  currencyCode: string
+): Promise<boolean> => {
   const result = await Airship.show(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.fragment_create_wallet_create_wallet}
-      message={sprintf(s.strings.wallet_list_referral_link_ask_wallet_creation, currencyCode)}
+      message={sprintf(
+        s.strings.wallet_list_referral_link_ask_wallet_creation,
+        currencyCode
+      )}
       buttons={{
         ok: { label: s.strings.yes },
         cancel: { label: s.strings.no, type: 'secondary' }

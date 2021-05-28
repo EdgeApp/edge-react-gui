@@ -187,15 +187,31 @@ export class InteractiveModal extends React.Component<Props> {
     const { isActive, style, ...props } = this.props
     const children = React.Children.toArray(this.props.children)
     const icon = children.find(child => child.type === InteractiveModal.Icon)
-    const title = children.find(child => child.type === InteractiveModal.Title) || null
+    const title =
+      children.find(child => child.type === InteractiveModal.Title) || null
     const body = children.find(child => child.type === InteractiveModal.Body)
-    const footer = children.find(child => child.type === InteractiveModal.Footer)
+    const footer = children.find(
+      child => child.type === InteractiveModal.Footer
+    )
 
     const deviceWidth = Dimensions.get('window').width
-    const deviceHeight = Platform.OS === 'ios' ? Dimensions.get('window').height : require('react-native-extra-dimensions-android').get('REAL_WINDOW_HEIGHT')
+    const deviceHeight =
+      Platform.OS === 'ios'
+        ? Dimensions.get('window').height
+        : require('react-native-extra-dimensions-android').get(
+            'REAL_WINDOW_HEIGHT'
+          )
 
     return this.props.legacy ? (
-      <Modal avoidKeyboard deviceHeight={deviceHeight} deviceWidth={deviceWidth} isVisible={isActive} style={[styles.modal, style]} useNativeDriver {...props}>
+      <Modal
+        avoidKeyboard
+        deviceHeight={deviceHeight}
+        deviceWidth={deviceWidth}
+        isVisible={isActive}
+        style={[styles.modal, style]}
+        useNativeDriver
+        {...props}
+      >
         {icon}
         <Container style={style}>
           <Icon.AndroidHackSpacer />

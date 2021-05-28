@@ -16,8 +16,12 @@ async function main() {
   const [platform = 'android', project = 'edge'] = process.argv.slice(2)
 
   // Load config files:
-  const versionFile = asVersionFile(await disklet.getText('release-version.json'))
-  const configFile = asReleaseConfigFile(await disklet.getText('deploy-config.json'))
+  const versionFile = asVersionFile(
+    await disklet.getText('release-version.json')
+  )
+  const configFile = asReleaseConfigFile(
+    await disklet.getText('deploy-config.json')
+  )
   const { bugsnagApiKey } = configFile[project]
   if (bugsnagApiKey == null) {
     throw new Error('No BugSnag API key')
@@ -44,7 +48,9 @@ async function main() {
     `curl --http1.1 https://upload.bugsnag.com/react-native-source-map \
   -F apiKey=${bugsnagApiKey} \
   -F appVersion=${versionFile.version} \
-  -F ${platform === 'ios' ? 'appBundleVersion' : 'appVersionCode'}=${versionFile.build} \
+  -F ${platform === 'ios' ? 'appBundleVersion' : 'appVersionCode'}=${
+      versionFile.build
+    } \
   -F dev=false \
   -F platform=${platform} \
   -F sourceMap=@${map} \

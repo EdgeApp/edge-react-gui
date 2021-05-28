@@ -4,7 +4,12 @@ import * as React from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../components/services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 
 const isIos = Platform.OS === 'ios'
 
@@ -24,9 +29,19 @@ class BackButtonComponent extends React.PureComponent<Props & ThemeProps> {
     const styles = getStyles(theme)
     if (isEmpty) return null
     return isIos ? (
-      <IonIcon size={theme.rem(1.5)} color={this.props.theme.icon} name="chevron-back-outline" style={styles.backIconStyle} />
+      <IonIcon
+        size={theme.rem(1.5)}
+        color={this.props.theme.icon}
+        name="chevron-back-outline"
+        style={styles.backIconStyle}
+      />
     ) : (
-      <IonIcon size={theme.rem(1.25)} color={this.props.theme.icon} name="md-arrow-back" style={styles.backIconAndroid} />
+      <IonIcon
+        size={theme.rem(1.25)}
+        color={this.props.theme.icon}
+        name="md-arrow-back"
+        style={styles.backIconAndroid}
+      />
     )
   }
 

@@ -2,7 +2,13 @@
 
 import { type EdgeCurrencyConfig } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  StyleSheet,
+  View
+} from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
@@ -43,7 +49,9 @@ export type CreateWalletAccountSetupDispatchProps = {
   checkHandleAvailability: string => any
 }
 
-type Props = CreateWalletAccountSetupOwnProps & CreateWalletAccountSetupDispatchProps & CreateWalletAccountSetupStateProps
+type Props = CreateWalletAccountSetupOwnProps &
+  CreateWalletAccountSetupDispatchProps &
+  CreateWalletAccountSetupStateProps
 type State = {
   accountHandle: string
 }
@@ -60,7 +68,11 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     if (this.state.accountHandle) {
       props.checkHandleAvailability(this.state.accountHandle)
     }
-    this.debouncedCheckHandleAvailability = debounce(this.checkHandleAvailability, 400, false)
+    this.debouncedCheckHandleAvailability = debounce(
+      this.checkHandleAvailability,
+      400,
+      false
+    )
   }
 
   componentDidMount() {
@@ -94,15 +106,29 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     const { isCheckingHandleAvailability, handleAvailableStatus } = this.props
     return (
       <View style={styles.buttons}>
-        <PrimaryButton style={styles.next} onPress={this.onSetup} disabled={isCheckingHandleAvailability || handleAvailableStatus !== 'AVAILABLE'}>
-          <PrimaryButton.Text>{s.strings.string_next_capitalized}</PrimaryButton.Text>
+        <PrimaryButton
+          style={styles.next}
+          onPress={this.onSetup}
+          disabled={
+            isCheckingHandleAvailability ||
+            handleAvailableStatus !== 'AVAILABLE'
+          }
+        >
+          <PrimaryButton.Text>
+            {s.strings.string_next_capitalized}
+          </PrimaryButton.Text>
         </PrimaryButton>
       </View>
     )
   }
 
   render() {
-    const { isCheckingHandleAvailability, handleAvailableStatus, selectedWalletType, currencyConfigs } = this.props
+    const {
+      isCheckingHandleAvailability,
+      handleAvailableStatus,
+      selectedWalletType,
+      currencyConfigs
+    } = this.props
     const { accountHandle } = this.state
     const { currencyCode } = selectedWalletType
     const walletTypeValue = selectedWalletType.walletType.replace('wallet:', '')
@@ -111,28 +137,54 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     const validityIcon = isHandleAvailable ? validIcon : invalidIcon
     let chooseHandleErrorMessage = ''
     if (handleAvailableStatus === 'INVALID') {
-      chooseHandleErrorMessage = s.strings.create_wallet_account_invalid_account_name
+      chooseHandleErrorMessage =
+        s.strings.create_wallet_account_invalid_account_name
     } else if (handleAvailableStatus === 'UNAVAILABLE') {
-      chooseHandleErrorMessage = s.strings.create_wallet_account_account_name_unavailable
+      chooseHandleErrorMessage =
+        s.strings.create_wallet_account_account_name_unavailable
     } else if (handleAvailableStatus === 'UNKNOWN_ERROR') {
       chooseHandleErrorMessage = s.strings.create_wallet_account_unknown_error
     }
 
-    const showButton = !!accountHandle && isHandleAvailable && !isCheckingHandleAvailability
+    const showButton =
+      !!accountHandle && isHandleAvailable && !isCheckingHandleAvailability
     return (
       <SafeAreaView>
         <Gradient style={styles.scrollableGradient} />
         <ScrollView>
           <View style={styles.scrollableView}>
-            <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
-            <View style={[styles.createWalletPromptArea, { paddingTop: 24, paddingBottom: 8 }]}>
-              <Text style={styles.instructionalText}>{sprintf(s.strings.create_wallet_account_review_instructions, currencyCode)}</Text>
+            <Image
+              source={{ uri: symbolImage }}
+              style={styles.currencyLogo}
+              resizeMode="cover"
+            />
+            <View
+              style={[
+                styles.createWalletPromptArea,
+                { paddingTop: 24, paddingBottom: 8 }
+              ]}
+            >
+              <Text style={styles.instructionalText}>
+                {sprintf(
+                  s.strings.create_wallet_account_review_instructions,
+                  currencyCode
+                )}
+              </Text>
             </View>
-            <View style={[styles.createWalletPromptArea, { paddingTop: 8, paddingBottom: 8 }]}>
-              <Text style={styles.handleRequirementsText}>{s.strings.create_wallet_account_requirements_eos}</Text>
+            <View
+              style={[
+                styles.createWalletPromptArea,
+                { paddingTop: 8, paddingBottom: 8 }
+              ]}
+            >
+              <Text style={styles.handleRequirementsText}>
+                {s.strings.create_wallet_account_requirements_eos}
+              </Text>
             </View>
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+            >
               <FormField
                 {...MaterialInputOnWhite}
                 containerStyle={{
@@ -152,7 +204,10 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
               />
               <View style={{ width: scale(25), height: scale(25) }}>
                 {isCheckingHandleAvailability ? (
-                  <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={styles.feedbackIcon} />
+                  <ActivityIndicator
+                    color={THEME.COLORS.ACCENT_MINT}
+                    style={styles.feedbackIcon}
+                  />
                 ) : (
                   <Image source={validityIcon} style={styles.feedbackIcon} />
                 )}

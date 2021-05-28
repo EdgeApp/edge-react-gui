@@ -1,6 +1,11 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type {
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgeSpendInfo,
+  EdgeTransaction
+} from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -15,9 +20,22 @@ import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
-import { showError, showToast, showWarning } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
+import {
+  showError,
+  showToast,
+  showWarning
+} from '../services/AirshipInstance.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
+import {
+  ModalCloseArrow,
+  ModalMessage,
+  ModalTitle
+} from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { Tile } from '../themed/Tile.js'
 import { type AirshipBridge } from './modalParts'
@@ -85,7 +103,10 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
         let edgeUnsignedTransaction = await wallet.makeSpend(edgeSpendInfo)
 
         // Copy the replaced transaction's metadata to the RBF transaction
-        edgeUnsignedTransaction = { ...edgeUnsignedTransaction, metadata: edgeTransaction.metadata }
+        edgeUnsignedTransaction = {
+          ...edgeUnsignedTransaction,
+          metadata: edgeTransaction.metadata
+        }
 
         this.setState({
           edgeUnsignedTransaction
@@ -118,7 +139,10 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
         edgeSignedTransaction = await wallet.broadcastTx(edgeSignedTransaction)
 
         // Copy the replaced transaction's metadata to the RBF transaction
-        edgeSignedTransaction = { ...edgeSignedTransaction, metadata: edgeTransaction.metadata }
+        edgeSignedTransaction = {
+          ...edgeSignedTransaction,
+          metadata: edgeTransaction.metadata
+        }
 
         // Save the RBF transactoin
         await wallet.saveTx(edgeSignedTransaction)
@@ -130,7 +154,9 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
 
           showToast(s.strings.transaction_success_message)
 
-          Actions.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
+          Actions.replace(TRANSACTION_DETAILS, {
+            edgeTransaction: edgeSignedTransaction
+          })
         } else {
           showWarning(s.strings.transaction_success_message)
         }
@@ -159,12 +185,24 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
     this.closeModal()
   }
 
-  getTxFeeDisplay = (edgeTransaction: EdgeTransaction, edgeDenomination: EdgeDenomination): string => {
-    const { exchangeRates, guiWallet, settings, selectedCurrencyCode } = this.props
+  getTxFeeDisplay = (
+    edgeTransaction: EdgeTransaction,
+    edgeDenomination: EdgeDenomination
+  ): string => {
+    const { exchangeRates, guiWallet, settings, selectedCurrencyCode } =
+      this.props
 
-    const transactionFee = UTILS.convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, edgeTransaction, settings)
+    const transactionFee = UTILS.convertTransactionFeeToDisplayFee(
+      guiWallet,
+      selectedCurrencyCode,
+      exchangeRates,
+      edgeTransaction,
+      settings
+    )
 
-    const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
+    const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${
+      transactionFee.cryptoAmount
+    } (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
 
     return feeSyntax
   }
@@ -176,7 +214,10 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
     const styles = getStyles(theme)
 
     const oldFee = this.getTxFeeDisplay(edgeTransaction, edgeDenomination)
-    const newFee = edgeUnsignedTransaction != null ? this.getTxFeeDisplay(edgeUnsignedTransaction, edgeDenomination) : ''
+    const newFee =
+      edgeUnsignedTransaction != null
+        ? this.getTxFeeDisplay(edgeUnsignedTransaction, edgeDenomination)
+        : ''
 
     const isSending = status === 'sending'
 
@@ -184,11 +225,34 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
       <ThemedModal bridge={bridge} onCancel={this.closeModal}>
         {edgeUnsignedTransaction || error ? (
           <>
-            <ModalTitle>{s.strings.transaction_details_accelerate_transaction_header}</ModalTitle>
-            <ModalMessage>{s.strings.transaction_details_accelerate_transaction_instructional}</ModalMessage>
+            <ModalTitle>
+              {s.strings.transaction_details_accelerate_transaction_header}
+            </ModalTitle>
+            <ModalMessage>
+              {
+                s.strings
+                  .transaction_details_accelerate_transaction_instructional
+              }
+            </ModalMessage>
             <View style={styles.container}>
-              <Tile type="static" title={s.strings.transaction_details_accelerate_transaction_old_fee_title} body={oldFee} />
-              {!!newFee && <Tile type="static" title={s.strings.transaction_details_accelerate_transaction_new_fee_title} body={newFee} />}
+              <Tile
+                type="static"
+                title={
+                  s.strings
+                    .transaction_details_accelerate_transaction_old_fee_title
+                }
+                body={oldFee}
+              />
+              {!!newFee && (
+                <Tile
+                  type="static"
+                  title={
+                    s.strings
+                      .transaction_details_accelerate_transaction_new_fee_title
+                  }
+                  body={newFee}
+                />
+              )}
             </View>
             {error && (
               <View style={styles.error}>
@@ -202,14 +266,21 @@ class AccelerateTxModelComponent extends PureComponent<Props, State> {
                 disabled={isSending || !!error}
                 onSlidingComplete={this.handleConfirmation}
                 showSpinner={isSending}
-                disabledText={s.strings.transaction_details_accelerate_transaction_slider_disabled}
+                disabledText={
+                  s.strings
+                    .transaction_details_accelerate_transaction_slider_disabled
+                }
               />
             </View>
             <ModalCloseArrow onPress={this.closeModal} />
           </>
         ) : (
           <View style={styles.loadingContianer}>
-            <ActivityIndicator color={theme.primaryText} style={styles.loading} size="large" />
+            <ActivityIndicator
+              color={theme.primaryText}
+              style={styles.loading}
+              size="large"
+            />
           </View>
         )}
       </ThemedModal>
@@ -238,15 +309,20 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AccelerateTxModel = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const { wallet } = ownProps
+export const AccelerateTxModel = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => {
+    const { wallet } = ownProps
 
-  const edgeDenomination = getDisplayDenomination(state, wallet.currencyInfo.currencyCode)
+    const edgeDenomination = getDisplayDenomination(
+      state,
+      wallet.currencyInfo.currencyCode
+    )
 
-  return {
-    edgeDenomination,
-    selectedCurrencyCode: state.ui.wallets.selectedCurrencyCode,
-    exchangeRates: state.exchangeRates,
-    settings: state.ui.settings
+    return {
+      edgeDenomination,
+      selectedCurrencyCode: state.ui.wallets.selectedCurrencyCode,
+      exchangeRates: state.exchangeRates,
+      settings: state.ui.settings
+    }
   }
-})(withTheme(AccelerateTxModelComponent))
+)(withTheme(AccelerateTxModelComponent))

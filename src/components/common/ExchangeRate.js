@@ -28,21 +28,39 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
   }
 
   render() {
-    const { primaryInfo, primaryDisplayAmount, secondaryInfo, secondaryDisplayAmount } = this.props
+    const {
+      primaryInfo,
+      primaryDisplayAmount,
+      secondaryInfo,
+      secondaryDisplayAmount
+    } = this.props
 
     const primaryDisplayName: string = primaryInfo.displayDenomination.name
-    const secondaryDisplaySymbol: string = secondaryInfo.displayDenomination.symbol
+    const secondaryDisplaySymbol: string =
+      secondaryInfo.displayDenomination.symbol
     const getDisplayExchangeAmount = secondaryDisplayAmount => {
-      const primaryRatio = parseInt(primaryInfo.displayDenomination.multiplier) / parseInt(primaryInfo.exchangeDenomination.multiplier)
-      const secondaryRatio = parseInt(secondaryInfo.displayDenomination.multiplier) / parseInt(secondaryInfo.exchangeDenomination.multiplier)
-      return (primaryRatio / secondaryRatio) * parseFloat(secondaryDisplayAmount)
+      const primaryRatio =
+        parseInt(primaryInfo.displayDenomination.multiplier) /
+        parseInt(primaryInfo.exchangeDenomination.multiplier)
+      const secondaryRatio =
+        parseInt(secondaryInfo.displayDenomination.multiplier) /
+        parseInt(secondaryInfo.exchangeDenomination.multiplier)
+      return (
+        (primaryRatio / secondaryRatio) * parseFloat(secondaryDisplayAmount)
+      )
     }
-    let precision = secondaryInfo.displayDenomination.multiplier ? log10(secondaryInfo.displayDenomination.multiplier) : 0
-    let formattedSecondaryDisplayAmount: string = parseFloat(getDisplayExchangeAmount(secondaryDisplayAmount)).toFixed(precision)
+    let precision = secondaryInfo.displayDenomination.multiplier
+      ? log10(secondaryInfo.displayDenomination.multiplier)
+      : 0
+    let formattedSecondaryDisplayAmount: string = parseFloat(
+      getDisplayExchangeAmount(secondaryDisplayAmount)
+    ).toFixed(precision)
     // if exchange rate is too low, then add decimal places
     if (parseFloat(formattedSecondaryDisplayAmount) <= 0.1) {
       precision += 3
-      formattedSecondaryDisplayAmount = parseFloat(getDisplayExchangeAmount(secondaryDisplayAmount)).toFixed(precision)
+      formattedSecondaryDisplayAmount = parseFloat(
+        getDisplayExchangeAmount(secondaryDisplayAmount)
+      ).toFixed(precision)
     }
     const secondaryCurrencyCode: string = secondaryInfo.displayDenomination.name
 
@@ -54,7 +72,10 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
       secondaryCurrencyCode
     }
     const formattedPrimaryAmount = formatNumber(primaryDisplayAmount || '1')
-    const formattedSecondaryAmount = formatNumber(formattedSecondaryDisplayAmount, { toFixed: precision })
+    const formattedSecondaryAmount = formatNumber(
+      formattedSecondaryDisplayAmount,
+      { toFixed: precision }
+    )
 
     if (!isCompleteExchangeData(exchangeData)) {
       return <EdgeText>{s.strings.drawer_exchange_rate_loading}</EdgeText>

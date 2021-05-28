@@ -1,7 +1,12 @@
 // @flow
 
 import * as React from 'react'
-import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 
 import { useEffect, useRef, useState } from '../../util/hooks'
 
@@ -40,9 +45,15 @@ const FadeComponent = ({ visible: propsVisible, hidden, children }: Props) => {
     }
   }, [propsVisible])
 
-  const style = useAnimatedStyle(() => ({ opacity: interpolate(opacity.value, [0, 0.5, 1], [0, 1, 0]) }))
+  const style = useAnimatedStyle(() => ({
+    opacity: interpolate(opacity.value, [0, 0.5, 1], [0, 1, 0])
+  }))
 
-  return <Animated.View style={style}>{hidden || visible ? children : null}</Animated.View>
+  return (
+    <Animated.View style={style}>
+      {hidden || visible ? children : null}
+    </Animated.View>
+  )
 }
 
 export const Fade = FadeComponent

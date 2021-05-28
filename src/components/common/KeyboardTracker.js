@@ -4,7 +4,10 @@ import * as React from 'react'
 import { type KeyboardEvent, Animated, Keyboard, Platform } from 'react-native'
 
 type Props = {
-  children: (animation: Animated.Value, layout: number) => React.ChildrenArray<React.Node>,
+  children: (
+    animation: Animated.Value,
+    layout: number
+  ) => React.ChildrenArray<React.Node>,
   downValue?: number,
   upValue?: number | ((keyboardHeight: number) => number)
 }

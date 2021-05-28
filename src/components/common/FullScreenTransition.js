@@ -17,7 +17,10 @@ type FullScreenTransitionProps = {
   onDone: Function
 }
 
-export class FullScreenTransitionComponent extends React.Component<FullScreenTransitionProps, FullScreenTransitionState> {
+export class FullScreenTransitionComponent extends React.Component<
+  FullScreenTransitionProps,
+  FullScreenTransitionState
+> {
   constructor(props: FullScreenTransitionProps) {
     super(props)
     this.state = {

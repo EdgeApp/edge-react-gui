@@ -25,7 +25,12 @@ class NotifServer {
     return this.request(path, 'PUT', body)
   }
 
-  async request(path: string, method: string, body?: Object, headers: Object = {}) {
+  async request(
+    path: string,
+    method: string,
+    body?: Object,
+    headers: Object = {}
+  ) {
     const response = await fetch(`${this.uri}/v${this.version}/${path}`, {
       method,
       headers: {

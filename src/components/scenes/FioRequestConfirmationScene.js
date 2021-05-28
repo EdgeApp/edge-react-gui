@@ -1,7 +1,11 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js/src/types/types'
+import type {
+  EdgeAccount,
+  EdgeCurrencyConfig,
+  EdgeCurrencyWallet
+} from 'edge-core-js/src/types/types'
 import * as React from 'react'
 import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -10,12 +14,24 @@ import { connect } from 'react-redux'
 import * as Constants from '../../constants/indexConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { addToFioAddressCache, checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddress/util'
+import {
+  addToFioAddressCache,
+  checkExpiredFioAddress,
+  checkPubAddress
+} from '../../modules/FioAddress/util'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
-import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../modules/UI/selectors.js'
+import {
+  getExchangeDenomination,
+  getExchangeRate,
+  getSelectedWallet
+} from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes'
-import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types'
+import type {
+  GuiCurrencyInfo,
+  GuiDenomination,
+  GuiWallet
+} from '../../types/types'
 import { emptyCurrencyInfo } from '../../types/types'
 import { getDenomFromIsoCode } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -23,7 +39,12 @@ import { AddressModal } from '../modals/AddressModal.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import type { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
 import { Tile } from '../themed/Tile'
 
@@ -57,7 +78,10 @@ type State = {
   showSlider: boolean
 }
 
-export class FioRequestConfirmationConnected extends React.Component<Props, State> {
+export class FioRequestConfirmationConnected extends React.Component<
+  Props,
+  State
+> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -81,7 +105,8 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       const walletAddresses = []
       for (const fioWallet: EdgeCurrencyWallet of this.props.fioWallets) {
         try {
-          const fioAddresses: string[] = await fioWallet.otherMethods.getFioAddressNames()
+          const fioAddresses: string[] =
+            await fioWallet.otherMethods.getFioAddressNames()
           if (fioAddresses.length > 0) {
             for (const fioAddress of fioAddresses) {
               walletAddresses.push({ fioAddress, fioWallet })
@@ -100,17 +125,25 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   resetSlider = (): void => {
-    this.setState({ showSlider: false }, () => this.setState({ showSlider: true }))
+    this.setState({ showSlider: false }, () =>
+      this.setState({ showSlider: true })
+    )
   }
 
   onConfirm = async () => {
     const { fioPlugin } = this.props
     const { walletAddresses, fioAddressFrom } = this.state
-    const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
+    const walletAddress = walletAddresses.find(
+      ({ fioAddress }) => fioAddress === fioAddressFrom
+    )
 
     if (walletAddress && fioPlugin) {
       const { fioWallet } = walletAddress
-      const val = bns.div(this.props.amounts.nativeAmount, this.props.primaryCurrencyInfo.exchangeDenomination.multiplier, 18)
+      const val = bns.div(
+        this.props.amounts.nativeAmount,
+        this.props.primaryCurrencyInfo.exchangeDenomination.multiplier,
+        18
+      )
       try {
         if (!this.props.isConnected) {
           showError(s.strings.fio_network_alert_text)
@@ -119,7 +152,10 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         // checking fee
         this.setState({ loading: true })
         try {
-          const getFeeRes = await fioWallet.otherMethods.fioAction('getFee', { endPoint: 'new_funds_request', fioAddress: this.state.fioAddressFrom })
+          const getFeeRes = await fioWallet.otherMethods.fioAction('getFee', {
+            endPoint: 'new_funds_request',
+            fioAddress: this.state.fioAddressFrom
+          })
           if (getFeeRes.fee) {
             this.setState({ loading: false })
             this.resetSlider()
@@ -130,7 +166,10 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
                 message={s.strings.fio_no_bundled_renew_err_msg}
                 buttons={{
                   ok: { label: s.strings.title_fio_renew_address },
-                  cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+                  cancel: {
+                    label: s.strings.string_cancel_cap,
+                    type: 'secondary'
+                  }
                 }}
               />
             ))
@@ -152,7 +191,12 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         let payerPublicKey
         try {
           const fioCurrencyCode = fioPlugin.currencyInfo.currencyCode
-          payerPublicKey = await checkPubAddress(fioPlugin, this.state.fioAddressTo, fioCurrencyCode, fioCurrencyCode)
+          payerPublicKey = await checkPubAddress(
+            fioPlugin,
+            this.state.fioAddressTo,
+            fioCurrencyCode,
+            fioCurrencyCode
+          )
         } catch (e) {
           console.log(e)
         }
@@ -165,7 +209,9 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
           payeeTokenPublicAddress: this.props.publicAddress,
           amount: val,
           tokenCode: this.props.primaryCurrencyInfo.exchangeCurrencyCode,
-          chainCode: this.props.chainCode || this.props.primaryCurrencyInfo.exchangeCurrencyCode,
+          chainCode:
+            this.props.chainCode ||
+            this.props.primaryCurrencyInfo.exchangeCurrencyCode,
           memo: this.state.memo,
           maxFee: 0
         })
@@ -177,7 +223,11 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         this.setState({ loading: false })
         this.resetSlider()
         showError(
-          `${s.strings.fio_request_error_header}. ${error.json && error.json.fields && error.json.fields[0] ? JSON.stringify(error.json.fields[0].error) : ''}`
+          `${s.strings.fio_request_error_header}. ${
+            error.json && error.json.fields && error.json.fields[0]
+              ? JSON.stringify(error.json.fields[0].error)
+              : ''
+          }`
         )
       }
     } else {
@@ -211,10 +261,21 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
       />
     ))
     if (fioAddressFrom === null) return
-    if (fioPlugin && !(await fioPlugin.otherMethods.doesAccountExist(fioAddressFrom)))
-      return showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressFrom ? '\n' + fioAddressFrom : ''}`)
-    if (!walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)) return showError(s.strings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
-    if (fioAddressFrom === this.state.fioAddressTo) return showError(s.strings.fio_confirm_request_error_from_same)
+    if (
+      fioPlugin &&
+      !(await fioPlugin.otherMethods.doesAccountExist(fioAddressFrom))
+    )
+      return showError(
+        `${s.strings.send_fio_request_error_addr_not_exist}${
+          fioAddressFrom ? '\n' + fioAddressFrom : ''
+        }`
+      )
+    if (
+      !walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
+    )
+      return showError(s.strings.fio_wallet_missing_for_fio_address) // Check if valid owned fio address
+    if (fioAddressFrom === this.state.fioAddressTo)
+      return showError(s.strings.fio_confirm_request_error_from_same)
     this.setState({ fioAddressFrom: fioAddressFrom || '' })
   }
 
@@ -239,60 +300,118 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     ))
     if (fioAddressTo === null) {
       this.showError()
-    } else if (await checkExpiredFioAddress(this.props.fioWallets[0], fioAddressTo ?? '')) {
+    } else if (
+      await checkExpiredFioAddress(this.props.fioWallets[0], fioAddressTo ?? '')
+    ) {
       this.showError(s.strings.fio_address_expired)
-    } else if (this.props.fioPlugin && !(await this.props.fioPlugin.otherMethods.doesAccountExist(fioAddressTo))) {
-      this.showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
+    } else if (
+      this.props.fioPlugin &&
+      !(await this.props.fioPlugin.otherMethods.doesAccountExist(fioAddressTo))
+    ) {
+      this.showError(
+        `${s.strings.send_fio_request_error_addr_not_exist}${
+          fioAddressTo ? '\n' + fioAddressTo : ''
+        }`
+      )
     } else if (this.state.fioAddressFrom === fioAddressTo) {
       this.showError(s.strings.fio_confirm_request_error_to_same)
     } else {
-      this.setState({ fioAddressTo: fioAddressTo || '', settingFioAddressTo: false })
+      this.setState({
+        fioAddressTo: fioAddressTo || '',
+        settingFioAddressTo: false
+      })
     }
   }
 
   openMemoModal = async () => {
     const memo = await Airship.show(bridge => (
-      <TransactionDetailsNotesInput bridge={bridge} title={s.strings.fio_confirm_request_input_title_memo} notes={this.state.memo} />
+      <TransactionDetailsNotesInput
+        bridge={bridge}
+        title={s.strings.fio_confirm_request_input_title_memo}
+        notes={this.state.memo}
+      />
     ))
 
-    if (memo.length > 64) return showError(s.strings.send_fio_request_error_memo_inline)
-    if (memo && !/^[\x20-\x7E\x85\n]*$/.test(memo)) return showError(s.strings.send_fio_request_error_memo_invalid_character)
+    if (memo.length > 64)
+      return showError(s.strings.send_fio_request_error_memo_inline)
+    if (memo && !/^[\x20-\x7E\x85\n]*$/.test(memo))
+      return showError(s.strings.send_fio_request_error_memo_invalid_character)
     this.setState({ memo })
   }
 
   render() {
     const { primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
-    const { fioAddressFrom, fioAddressTo, loading, memo, settingFioAddressTo, showSlider } = this.state
+    const {
+      fioAddressFrom,
+      fioAddressTo,
+      loading,
+      memo,
+      settingFioAddressTo,
+      showSlider
+    } = this.state
 
     if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
     let cryptoAmount, exchangeAmount
     try {
-      cryptoAmount = bns.div(this.props.amounts.nativeAmount, primaryCurrencyInfo.displayDenomination.multiplier, 18)
-      exchangeAmount = bns.div(this.props.amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, 18)
+      cryptoAmount = bns.div(
+        this.props.amounts.nativeAmount,
+        primaryCurrencyInfo.displayDenomination.multiplier,
+        18
+      )
+      exchangeAmount = bns.div(
+        this.props.amounts.nativeAmount,
+        primaryCurrencyInfo.exchangeDenomination.multiplier,
+        18
+      )
     } catch (e) {
       return null
     }
 
     const styles = getStyles(theme)
 
-    const fiatAmount = formatNumber(this.props.exchangeSecondaryToPrimaryRatio * parseFloat(exchangeAmount), { toFixed: 2 }) || '0'
+    const fiatAmount =
+      formatNumber(
+        this.props.exchangeSecondaryToPrimaryRatio * parseFloat(exchangeAmount),
+        { toFixed: 2 }
+      ) || '0'
     const cryptoName = primaryCurrencyInfo.displayDenomination.name
     const fiatName = secondaryCurrencyInfo.displayDenomination.name
 
     return (
       <SceneWrapper background="theme">
-        <Tile type="editable" title={s.strings.fio_confirm_request_from} body={fioAddressFrom} onPress={this.onAddressFromPressed} />
+        <Tile
+          type="editable"
+          title={s.strings.fio_confirm_request_from}
+          body={fioAddressFrom}
+          onPress={this.onAddressFromPressed}
+        />
         <Tile
           type="editable"
           title={s.strings.fio_confirm_request_to}
           body={settingFioAddressTo ? s.strings.resolving : fioAddressTo}
           onPress={this.onAddressToPressed}
         />
-        <Tile type="static" title={s.strings.fio_confirm_request_amount} body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`} />
-        <Tile type="editable" title={s.strings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
+        <Tile
+          type="static"
+          title={s.strings.fio_confirm_request_amount}
+          body={`${cryptoAmount} ${cryptoName} (${fiatAmount} ${fiatName})`}
+        />
+        <Tile
+          type="editable"
+          title={s.strings.fio_confirm_request_memo}
+          body={memo}
+          onPress={this.onMemoPressed}
+        />
         <View style={styles.sliderContainer}>
-          {fioAddressFrom.length > 0 && fioAddressTo.length > 0 && showSlider ? (
-            <Slider onSlidingComplete={this.onConfirm} disabled={loading} showSpinner={loading} disabledText={s.strings.loading} />
+          {fioAddressFrom.length > 0 &&
+          fioAddressTo.length > 0 &&
+          showSlider ? (
+            <Slider
+              onSlidingComplete={this.onConfirm}
+              disabled={loading}
+              showSpinner={loading}
+              disabledText={s.strings.loading}
+            />
           ) : null}
         </View>
       </SceneWrapper>
@@ -312,7 +431,10 @@ const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
   const currencyCode: string = state.ui.wallets.selectedCurrencyCode
   const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
   const { isConnected } = state.network
-  const fioPlugin = account && account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
+  const fioPlugin =
+    account && account.currencyConfig
+      ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+      : null
 
   if (!guiWallet || !currencyCode) {
     return {
@@ -330,12 +452,20 @@ const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
     }
   }
 
-  const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
-  const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, currencyCode)
-  const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
-  const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
+  const primaryDisplayDenomination: GuiDenomination =
+    SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(
+    state,
+    currencyCode
+  )
+  const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(
+    guiWallet.fiatCurrencyCode
+  )
+  const secondaryDisplayDenomination: GuiDenomination =
+    secondaryExchangeDenomination
   const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
-  const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
+  const secondaryExchangeCurrencyCode: string =
+    secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
 
   const primaryCurrencyInfo: GuiCurrencyInfo = {
     displayCurrencyCode: currencyCode,
@@ -350,7 +480,11 @@ const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
     exchangeDenomination: secondaryExchangeDenomination
   }
   const isoFiatCurrencyCode: string = guiWallet.isoFiatCurrencyCode
-  const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+  const exchangeSecondaryToPrimaryRatio = getExchangeRate(
+    state,
+    currencyCode,
+    isoFiatCurrencyCode
+  )
 
   return {
     exchangeSecondaryToPrimaryRatio,

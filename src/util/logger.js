@@ -15,7 +15,10 @@ const getTime = () => new Date().toISOString()
 
 const isObject = (item: any) => typeof item === 'object' && item !== null
 
-const normalize = (...info: any[]) => `${getTime()} | ${info.map(item => (isObject(item) ? JSON.stringify(item) : item)).join(' ')}`
+const normalize = (...info: any[]) =>
+  `${getTime()} | ${info
+    .map(item => (isObject(item) ? JSON.stringify(item) : item))
+    .join(' ')}`
 
 const lock = new AsyncLock({ maxPending: 100000 })
 // function saveToBuffer (log: string) {

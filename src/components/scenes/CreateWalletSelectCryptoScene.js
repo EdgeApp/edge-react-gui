@@ -6,13 +6,23 @@ import { Alert, FlatList, Image, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { CREATE_WALLET_CHOICE, CREATE_WALLET_SELECT_FIAT, getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/indexConstants.js'
+import {
+  CREATE_WALLET_CHOICE,
+  CREATE_WALLET_SELECT_FIAT,
+  getSpecialCurrencyInfo,
+  SPECIAL_CURRENCY_INFO
+} from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type CreateWalletType, type FlatListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
@@ -42,7 +52,9 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
 
   getWalletType(walletType: string): CreateWalletType | void {
     const { account } = this.props
-    return getCreateWalletTypes(account).find(type => type.walletType === walletType)
+    return getCreateWalletTypes(account).find(
+      type => type.walletType === walletType
+    )
   }
 
   onNext = () => {
@@ -51,7 +63,10 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     // Find the details about the wallet type:
     const createWalletType = this.getWalletType(selectedWalletType)
     if (createWalletType == null) {
-      Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
+      Alert.alert(
+        s.strings.create_wallet_invalid_input,
+        s.strings.create_wallet_select_valid_crypto
+      )
       return
     }
 
@@ -108,7 +123,16 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     return (
       <SelectableRow
         onPress={() => this.handleSelectWalletType(data.item)}
-        icon={symbolImageDarkMono ? <Image source={{ uri: symbolImageDarkMono }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
+        icon={
+          symbolImageDarkMono ? (
+            <Image
+              source={{ uri: symbolImageDarkMono }}
+              style={styles.cryptoTypeLogo}
+            />
+          ) : (
+            <View style={styles.cryptoTypeLogo} />
+          )
+        }
         title={currencyCode}
         subTitle={currencyName}
         selected={walletType === this.state.selectedWalletType}
@@ -131,14 +155,18 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     const filteredArray = sortedArray.filter(
       entry =>
         !SPECIAL_CURRENCY_INFO[entry.currencyCode]?.keysOnlyMode &&
-        (entry.currencyName.toLowerCase().indexOf(lowerSearch) >= 0 || entry.currencyCode.toLowerCase().indexOf(lowerSearch) >= 0)
+        (entry.currencyName.toLowerCase().indexOf(lowerSearch) >= 0 ||
+          entry.currencyCode.toLowerCase().indexOf(lowerSearch) >= 0)
     )
 
     return (
       <SceneWrapper avoidKeyboard background="theme">
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-            <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
+            <SceneHeader
+              withTopMargin
+              title={s.strings.title_create_wallet_select_crypto}
+            />
             <EdgeTextFieldOutlined
               autoFocus
               onFocus={this.handleOnFocus}

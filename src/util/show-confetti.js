@@ -9,7 +9,9 @@ export type ConfettiShownTimes = {
   randomShown: boolean
 }
 
-const getConfettiShownTimes = async (disklet: Disklet): Promise<{ [string]: ConfettiShownTimes }> => {
+const getConfettiShownTimes = async (
+  disklet: Disklet
+): Promise<{ [string]: ConfettiShownTimes }> => {
   try {
     const shownTimes = JSON.parse(await disklet.getText(CONFETTI_SHOWN))
     return shownTimes
@@ -18,7 +20,10 @@ const getConfettiShownTimes = async (disklet: Disklet): Promise<{ [string]: Conf
     return {}
   }
 }
-const setConfettiShownTimes = async (data: { string: ConfettiShownTimes }, disklet: Disklet): Promise<void> => {
+const setConfettiShownTimes = async (
+  data: { string: ConfettiShownTimes },
+  disklet: Disklet
+): Promise<void> => {
   try {
     await disklet.setText(CONFETTI_SHOWN, JSON.stringify(data))
   } catch (error) {
@@ -26,7 +31,9 @@ const setConfettiShownTimes = async (data: { string: ConfettiShownTimes }, diskl
   }
 }
 
-const calculateNewShownData = (userData: ConfettiShownTimes): ConfettiShownTimes => {
+const calculateNewShownData = (
+  userData: ConfettiShownTimes
+): ConfettiShownTimes => {
   const ATTEMPTS = 8
   const BEFORE_RANDOM_ATTEMPTS = 12
   userData.showNext = false
@@ -56,9 +63,18 @@ const setNewData = (data, userData, userId, disklet) => {
   setConfettiShownTimes(data, disklet)
 }
 
-export const needToShowConfetti = async (userId: string, disklet: Disklet): Promise<boolean> => {
-  const data: { [string]: ConfettiShownTimes } = await getConfettiShownTimes(disklet)
-  const userData: ConfettiShownTimes = data[userId] || { doneAmount: 0, showNext: true, randomShown: false }
+export const needToShowConfetti = async (
+  userId: string,
+  disklet: Disklet
+): Promise<boolean> => {
+  const data: { [string]: ConfettiShownTimes } = await getConfettiShownTimes(
+    disklet
+  )
+  const userData: ConfettiShownTimes = data[userId] || {
+    doneAmount: 0,
+    showNext: true,
+    randomShown: false
+  }
 
   const needToShow = userData.showNext
   userData.doneAmount++

@@ -2,7 +2,15 @@
 /* globals describe test expect beforeEach */
 
 import { truncateDecimals } from '../util/utils'
-import { type IntlLocaleType, formatNumber, formatNumberInput, isValidInput, prettifyNumber, setIntlLocale, truncateDecimalsPeriod } from './intl'
+import {
+  type IntlLocaleType,
+  formatNumber,
+  formatNumberInput,
+  isValidInput,
+  prettifyNumber,
+  setIntlLocale,
+  truncateDecimalsPeriod
+} from './intl'
 
 const EN_US_LOCALE: IntlLocaleType = {
   localeIdentifier: 'en_US',
@@ -291,14 +299,18 @@ describe('Integration with functionality', function () {
       const precision = 1
       const expected = ''
       const allowBlank = true
-      expect(truncateDecimalsPeriod(input, precision, allowBlank)).toBe(expected)
+      expect(truncateDecimalsPeriod(input, precision, allowBlank)).toBe(
+        expected
+      )
     })
     test("allowBlank=false '' => 0", function () {
       const input = ''
       const precision = 1
       const expected = '0'
       const allowBlank = false
-      expect(truncateDecimalsPeriod(input, precision, allowBlank)).toBe(expected)
+      expect(truncateDecimalsPeriod(input, precision, allowBlank)).toBe(
+        expected
+      )
     })
   })
 })

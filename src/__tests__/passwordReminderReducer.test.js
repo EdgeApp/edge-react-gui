@@ -2,7 +2,12 @@
 
 /* globals test describe expect */
 
-import { initialState, MAX_NON_PASSWORD_DAYS_LIMIT, MAX_NON_PASSWORD_LOGINS_LIMIT, untranslatedReducer as uut } from '../reducers/PasswordReminderReducer.js'
+import {
+  initialState,
+  MAX_NON_PASSWORD_DAYS_LIMIT,
+  MAX_NON_PASSWORD_LOGINS_LIMIT,
+  untranslatedReducer as uut
+} from '../reducers/PasswordReminderReducer.js'
 import { daysBetween, MILLISECONDS_PER_DAY } from '../util/utils.js'
 
 const dummyAction: any = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
@@ -208,7 +213,11 @@ describe('PasswordReminder', () => {
           ...initialState,
           lastLoginDate: 0
         }
-        const expected = daysBetween(previousState.lastPasswordUseDate, previousState.lastLoginDate) + 2
+        const expected =
+          daysBetween(
+            previousState.lastPasswordUseDate,
+            previousState.lastLoginDate
+          ) + 2
         const actual = uut(previousState, action).nonPasswordDaysLimit
 
         expect(actual).toEqual(expected)

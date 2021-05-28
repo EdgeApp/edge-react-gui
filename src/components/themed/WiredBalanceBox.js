@@ -7,7 +7,12 @@ import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import { getFiatSymbol } from '../../util/utils.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { SceneHeader } from './SceneHeader'
 
@@ -31,8 +36,16 @@ type Props = StateProps & OwnProps & ThemeProps
 
 class BalanceBox extends React.PureComponent<Props> {
   render() {
-    const { isoFiatCurrencyCode, fiatAmount, showBalance, exchangeRates, theme } = this.props
-    const fiatSymbol = isoFiatCurrencyCode ? getFiatSymbol(isoFiatCurrencyCode) : ''
+    const {
+      isoFiatCurrencyCode,
+      fiatAmount,
+      showBalance,
+      exchangeRates,
+      theme
+    } = this.props
+    const fiatSymbol = isoFiatCurrencyCode
+      ? getFiatSymbol(isoFiatCurrencyCode)
+      : ''
     const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
     const formattedFiat = formatNumber(fiatAmount, { toFixed: 2 })
     const styles = getStyles(theme)
@@ -43,20 +56,34 @@ class BalanceBox extends React.PureComponent<Props> {
       if (isNaN(rate)) rate = 0
       return total + rate
     }
-    const noExchangeRates = !exchangeRates || !Object.keys(exchangeRates).length || !Object.values(exchangeRates).reduce(summation)
+    const noExchangeRates =
+      !exchangeRates ||
+      !Object.keys(exchangeRates).length ||
+      !Object.values(exchangeRates).reduce(summation)
 
     return (
       <SceneHeader underline>
-        <TouchableOpacity onPress={this.props.onPress} style={styles.balanceBoxContainer}>
+        <TouchableOpacity
+          onPress={this.props.onPress}
+          style={styles.balanceBoxContainer}
+        >
           {showBalance && !noExchangeRates ? (
             <>
-              <EdgeText style={styles.balanceHeader}>{s.strings.fragment_wallets_balance_text}</EdgeText>
+              <EdgeText style={styles.balanceHeader}>
+                {s.strings.fragment_wallets_balance_text}
+              </EdgeText>
               <EdgeText style={styles.balanceBody}>
-                {fiatSymbol.length !== 1 ? `${formattedFiat} ${fiatCurrencyCode}` : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`}
+                {fiatSymbol.length !== 1
+                  ? `${formattedFiat} ${fiatCurrencyCode}`
+                  : `${fiatSymbol} ${formattedFiat} ${fiatCurrencyCode}`}
               </EdgeText>
             </>
           ) : (
-            <EdgeText style={styles.showBalance}>{noExchangeRates ? s.strings.exchange_rates_loading : s.strings.string_show_balance}</EdgeText>
+            <EdgeText style={styles.showBalance}>
+              {noExchangeRates
+                ? s.strings.exchange_rates_loading
+                : s.strings.string_show_balance}
+            </EdgeText>
           )}
         </TouchableOpacity>
       </SceneHeader>
@@ -64,16 +91,28 @@ class BalanceBox extends React.PureComponent<Props> {
   }
 }
 
-export const WiredBalanceBox = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const isoFiatCurrencyCode = typeof ownProps.isoFiatCurrencyCode === 'function' ? ownProps.isoFiatCurrencyCode(state) : ownProps.isoFiatCurrencyCode
-  return {
-    showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
-    fiatAmount: typeof ownProps.fiatAmount === 'function' ? ownProps.fiatAmount(state, isoFiatCurrencyCode) : ownProps.fiatAmount,
-    onPress: ownProps.onPress,
-    isoFiatCurrencyCode,
-    exchangeRates: ownProps.exchangeRates
-  }
-}, null)(withTheme(BalanceBox))
+export const WiredBalanceBox = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => {
+    const isoFiatCurrencyCode =
+      typeof ownProps.isoFiatCurrencyCode === 'function'
+        ? ownProps.isoFiatCurrencyCode(state)
+        : ownProps.isoFiatCurrencyCode
+    return {
+      showBalance:
+        typeof ownProps.showBalance === 'function'
+          ? ownProps.showBalance(state)
+          : ownProps.showBalance,
+      fiatAmount:
+        typeof ownProps.fiatAmount === 'function'
+          ? ownProps.fiatAmount(state, isoFiatCurrencyCode)
+          : ownProps.fiatAmount,
+      onPress: ownProps.onPress,
+      isoFiatCurrencyCode,
+      exchangeRates: ownProps.exchangeRates
+    }
+  },
+  null
+)(withTheme(BalanceBox))
 
 const getStyles = cacheStyles((theme: Theme) => ({
   balanceBoxContainer: {

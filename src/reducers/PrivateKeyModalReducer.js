@@ -40,8 +40,9 @@ const error = (state = null, action: Action): Error | null => {
   }
 }
 
-export const privateKeyModal: Reducer<PrivateKeyModalState, Action> = combineReducers({
-  secondaryModal,
-  error,
-  isSweeping
-})
+export const privateKeyModal: Reducer<PrivateKeyModalState, Action> =
+  combineReducers({
+    secondaryModal,
+    error,
+    isSweeping
+  })

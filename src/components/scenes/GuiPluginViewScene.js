@@ -8,7 +8,11 @@ import { connect } from 'react-redux'
 import { Bridge, onMethod } from 'yaob'
 
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
-import { type GuiPlugin, type GuiPluginQuery, makePluginUri } from '../../types/GuiPluginTypes.js'
+import {
+  type GuiPlugin,
+  type GuiPluginQuery,
+  makePluginUri
+} from '../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
@@ -33,7 +37,10 @@ type WebViewCallbacks = {
  * May be called multiple times if the inner HTML reloads.
  * @param {*} debug Set to true to enable logging.
  */
-function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: boolean = false): WebViewCallbacks {
+function makeOuterWebViewBridge<Root>(
+  onRoot: (root: Root) => mixed,
+  debug: boolean = false
+): WebViewCallbacks {
   let bridge: Bridge | void
   let gatedRoot: Root | void
   let webview: WebView | void
@@ -52,7 +59,11 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: bool
     if (debug) console.info('plugin →', message)
 
     // This was crashing us, so send to bugsnag:
-    if (bridge != null && message.events != null && typeof message.events.find !== 'function') {
+    if (
+      bridge != null &&
+      message.events != null &&
+      typeof message.events.find !== 'function'
+    ) {
       Bugsnag.notify(new Error('Corrupted yaob events'), report => {
         report.addMetadata('yaob', {
           rawData: event.nativeEvent.data,
@@ -63,7 +74,11 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: bool
 
     // This is a terrible hack. We are using our inside knowledge
     // of YAOB's message format to determine when the client has restarted.
-    if (bridge != null && Array.isArray(message.events) && message.events.find(event => event.localId === 0)) {
+    if (
+      bridge != null &&
+      Array.isArray(message.events) &&
+      message.events.find(event => event.localId === 0)
+    ) {
       bridge.close(new Error('plugin: The WebView has been unmounted.'))
       bridge = undefined
     }
@@ -77,7 +92,9 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: bool
           if (webview == null) return
 
           const js = `if (window.bridge != null) {${
-            firstMessage ? 'window.gotFirstMessage = true;' : 'window.gotFirstMessage && '
+            firstMessage
+              ? 'window.gotFirstMessage = true;'
+              : 'window.gotFirstMessage && '
           } window.bridge.handleMessage(${JSON.stringify(message)})}`
           firstMessage = false
           webview.injectJavaScript(js)
@@ -153,7 +170,15 @@ class GuiPluginView extends React.Component<Props, State> {
 
     // Set up the EdgeProvider:
     this.updatePromoCode(plugin, state)
-    this._edgeProvider = new EdgeProvider(plugin, state, dispatch, restartPlugin, deepPath, deepQuery, this._promoCode)
+    this._edgeProvider = new EdgeProvider(
+      plugin,
+      state,
+      dispatch,
+      restartPlugin,
+      deepPath,
+      deepQuery,
+      this._promoCode
+    )
 
     // Set up the WebView bridge:
     this._canGoBack = false
@@ -190,7 +215,11 @@ class GuiPluginView extends React.Component<Props, State> {
   updatePromoCode(plugin: GuiPlugin, state: RootState) {
     const accountPlugins = state.account.referralCache.accountPlugins
     const accountReferral = state.account.accountReferral
-    const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
+    const activePlugins = bestOfPlugins(
+      accountPlugins,
+      accountReferral,
+      undefined
+    )
     this._promoCode = activePlugins.promoCodes[plugin.pluginId]
     this._promoMessage = activePlugins.promoMessages[plugin.pluginId]
   }
@@ -221,7 +250,9 @@ class GuiPluginView extends React.Component<Props, State> {
 
   render() {
     const { plugin, deepPath, deepQuery } = this.props
-    const { originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = plugin
+    const {
+      originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*']
+    } = plugin
     const uri = makePluginUri(plugin, {
       deepPath,
       deepQuery,

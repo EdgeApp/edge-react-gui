@@ -145,29 +145,37 @@ describe('parseDeepLink', function () {
       if (result.type !== 'returnAddress') return
       expect(result.currencyName).toBe('bitcoin')
       expect(result.sourceName).toBe('Bitwage')
-      expect(result.successUri).toBe('https://www.bitwage.com/bitcoinret/5321947550318592/2/add?csrf=8040b2ac-61db-4d64-8705-9df856c3998a')
+      expect(result.successUri).toBe(
+        'https://www.bitwage.com/bitcoinret/5321947550318592/2/add?csrf=8040b2ac-61db-4d64-8705-9df856c3998a'
+      )
     })
 
     it('cryptotip', function () {
-      const uri = 'bitcoin-ret://x-callback-url/request-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
+      const uri =
+        'bitcoin-ret://x-callback-url/request-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
       const result = parseDeepLink(uri)
       expect(result.type).toBe('returnAddress')
 
       if (result.type !== 'returnAddress') return
       expect(result.currencyName).toBe('bitcoin')
       expect(result.sourceName).toBe('Crypto Tip')
-      expect(result.successUri).toBe('https://cryptotip.org/edge/1234-1234-4321')
+      expect(result.successUri).toBe(
+        'https://cryptotip.org/edge/1234-1234-4321'
+      )
     })
 
     it('cryptotip invalid currency', function () {
-      const uri = 'bitcoinz-ret://x-callback-url/request-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
+      const uri =
+        'bitcoinz-ret://x-callback-url/request-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
       const result = parseDeepLink(uri)
       expect(result.type).toBe('returnAddress')
 
       if (result.type !== 'returnAddress') return
       expect(result.currencyName).toBe('bitcoinz')
       expect(result.sourceName).toBe('Crypto Tip')
-      expect(result.successUri).toBe('https://cryptotip.org/edge/1234-1234-4321')
+      expect(result.successUri).toBe(
+        'https://cryptotip.org/edge/1234-1234-4321'
+      )
     })
 
     it('bitwage bitcoin', function () {
@@ -179,44 +187,56 @@ describe('parseDeepLink', function () {
       if (result.type !== 'returnAddress') return
       expect(result.currencyName).toBe('bitcoin')
       expect(result.sourceName).toBe('Bitwage')
-      expect(result.successUri).toBe('https://www.bitwage.com/bitcoinret/5321947550318592/2/add?csrf=8040b2ac-61db-4d64-8705-9df856c3998a')
+      expect(result.successUri).toBe(
+        'https://www.bitwage.com/bitcoinret/5321947550318592/2/add?csrf=8040b2ac-61db-4d64-8705-9df856c3998a'
+      )
     })
 
     it('cryptotip dash', function () {
-      const uri = 'edge://x-callback-url/request-dash-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
+      const uri =
+        'edge://x-callback-url/request-dash-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
       const result = parseDeepLink(uri)
       expect(result.type).toBe('returnAddress')
 
       if (result.type !== 'returnAddress') return
       expect(result.currencyName).toBe('dash')
       expect(result.sourceName).toBe('Crypto Tip')
-      expect(result.successUri).toBe('https://cryptotip.org/edge/1234-1234-4321')
+      expect(result.successUri).toBe(
+        'https://cryptotip.org/edge/1234-1234-4321'
+      )
     })
 
     it('cryptotip invalid currency', function () {
-      const uri = 'edge-ret://x-callback-url/request-dashy-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
+      const uri =
+        'edge-ret://x-callback-url/request-dashy-address?x-source=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
       const result = parseDeepLink(uri)
       expect(result.type).toBe('returnAddress')
 
       if (result.type !== 'returnAddress') return
       expect(result.currencyName).toBe('dashy')
       expect(result.sourceName).toBe('Crypto Tip')
-      expect(result.successUri).toBe('https://cryptotip.org/edge/1234-1234-4321')
+      expect(result.successUri).toBe(
+        'https://cryptotip.org/edge/1234-1234-4321'
+      )
     })
 
     it('cryptotip missing source', function () {
-      const uri = 'edge-ret://x-callback-url/request-dashy-address?x-sourcey=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
+      const uri =
+        'edge-ret://x-callback-url/request-dashy-address?x-sourcey=Crypto%20Tip&x-success=https%3A%2F%2Fcryptotip.org%2Fedge%2F1234-1234-4321'
       const result = parseDeepLink(uri)
       expect(result.type).toBe('returnAddress')
 
       if (result.type !== 'returnAddress') return
       expect(result.currencyName).toBe('dashy')
       expect(result.sourceName).toBe(undefined)
-      expect(result.successUri).toBe('https://cryptotip.org/edge/1234-1234-4321')
+      expect(result.successUri).toBe(
+        'https://cryptotip.org/edge/1234-1234-4321'
+      )
     })
 
     it('cryptotip missing callback-url', function () {
-      const uri = 'edge-ret://x-callback-url/request-dashy-address?x-source=Crypto%20Tip'
+      const uri =
+        'edge-ret://x-callback-url/request-dashy-address?x-source=Crypto%20Tip'
       const result = parseDeepLink(uri)
       expect(result.type).toBe('returnAddress')
 

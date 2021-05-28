@@ -2,7 +2,12 @@
 
 import type { Disklet } from 'disklet'
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import SortableListView from 'react-native-sortable-listview'
 import { connect } from 'react-redux'
 
@@ -12,13 +17,21 @@ import s from '../../locales/strings.js'
 import { getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
-import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
+import {
+  getWalletListSlideTutorial,
+  setUserTutorialList
+} from '../../util/tutorial.js'
 import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { WalletListSlidingTutorialModal } from '../modals/WalletListSlidingTutorialModal.js'
 import { WalletListSortModal } from '../modals/WalletListSortModal.js'
 import { Airship } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { PasswordReminderModal } from '../themed/PasswordReminderModal.js'
 import { WalletList } from '../themed/WalletList.js'
@@ -66,7 +79,9 @@ class WalletListComponent extends React.PureComponent<Props, State> {
       const tutorialCount = userTutorialList.walletListSlideTutorialCount || 0
 
       if (tutorialCount < 2) {
-        Airship.show(bridge => <WalletListSlidingTutorialModal bridge={bridge} />)
+        Airship.show(bridge => (
+          <WalletListSlidingTutorialModal bridge={bridge} />
+        ))
         this.setState({ showSlidingTutorial: true })
         userTutorialList.walletListSlideTutorialCount = tutorialCount + 1
         await setUserTutorialList(userTutorialList, disklet)
@@ -77,10 +92,13 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
-    this.props.needsPasswordCheck ? Airship.show(bridge => <PasswordReminderModal bridge={bridge} />) : this.showTutorial()
+    this.props.needsPasswordCheck
+      ? Airship.show(bridge => <PasswordReminderModal bridge={bridge} />)
+      : this.showTutorial()
   }
 
-  handleChangeSearchingState = (searching: boolean) => this.setState({ searching })
+  handleChangeSearchingState = (searching: boolean) =>
+    this.setState({ searching })
 
   handleChangeSearchText = (searchText: string) => this.setState({ searchText })
 
@@ -107,15 +125,30 @@ class WalletListComponent extends React.PureComponent<Props, State> {
         <WiredProgressBar />
         {sorting && (
           <View style={styles.headerContainer}>
-            <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
-            <TouchableOpacity key="doneButton" style={styles.headerButtonsContainer} onPress={this.disableSorting}>
-              <EdgeText style={styles.doneButton}>{s.strings.string_done_cap}</EdgeText>
+            <EdgeText style={styles.headerText}>
+              {s.strings.title_wallets}
+            </EdgeText>
+            <TouchableOpacity
+              key="doneButton"
+              style={styles.headerButtonsContainer}
+              onPress={this.disableSorting}
+            >
+              <EdgeText style={styles.doneButton}>
+                {s.strings.string_done_cap}
+              </EdgeText>
             </TouchableOpacity>
           </View>
         )}
         <View style={styles.listStack}>
-          <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
-            <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
+          <CrossFade
+            activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}
+          >
+            <ActivityIndicator
+              key="spinner"
+              color={theme.primaryText}
+              style={styles.listSpinner}
+              size="large"
+            />
             {/* $FlowFixMe */}
             <WalletList
               key="fullList"
@@ -151,7 +184,12 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   }
 
   renderSortableRow = (guiWallet: GuiWallet | void) => {
-    return <WalletListSortableRow guiWallet={guiWallet} showBalance={getIsAccountBalanceVisible} />
+    return (
+      <WalletListSortableRow
+        guiWallet={guiWallet}
+        showBalance={getIsAccountBalanceVisible}
+      />
+    )
   }
 
   disableSorting = () => this.setState({ sorting: false })

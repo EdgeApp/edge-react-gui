@@ -16,7 +16,11 @@ type Props = {
 export function ModalCloseArrow(props: Props) {
   return (
     <TouchableOpacity style={{ alignItems: 'center' }} onPress={props.onPress}>
-      <EntypoIcon name="chevron-thin-down" size={THEME.rem(1.4)} color={THEME.COLORS.GRAY_1} />
+      <EntypoIcon
+        name="chevron-thin-down"
+        size={THEME.rem(1.4)}
+        color={THEME.COLORS.GRAY_1}
+      />
     </TouchableOpacity>
   )
 }

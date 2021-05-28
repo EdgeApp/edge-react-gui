@@ -5,7 +5,12 @@ import { Animated, Easing, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { type RootState } from '../../types/reduxTypes.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 
 type StateProps = {
   progress: number

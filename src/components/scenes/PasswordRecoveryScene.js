@@ -24,7 +24,13 @@ class ChangeRecoveryComponent extends React.Component<Props> {
 
     return (
       <SceneWrapper hasTabs={false} background="body">
-        <PasswordRecoveryScreen account={account} context={context} onComplete={onComplete} onCancel={onComplete} showHeader={false} />
+        <PasswordRecoveryScreen
+          account={account}
+          context={context}
+          onComplete={onComplete}
+          onCancel={onComplete}
+          showHeader={false}
+        />
       </SceneWrapper>
     )
   }

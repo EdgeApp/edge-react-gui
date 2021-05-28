@@ -26,14 +26,18 @@ export const THEME = {
     HEIGHT: 44
   },
 
-  HEADER: Platform.OS === 'ios' ? getHeaderHeight() : getHeaderHeight() + StatusBar.currentHeight,
+  HEADER:
+    Platform.OS === 'ios'
+      ? getHeaderHeight()
+      : getHeaderHeight() + StatusBar.currentHeight,
 
   FOOTER_TABS_HEIGHT: 50,
 
   FONTS: {
     DEFAULT: 'SourceSansPro-Black',
     BOLD: 'SourceSansPro-Bold',
-    SYMBOLS: Platform.OS === 'android' ? 'SF-UI-Text-Regular' : 'SourceSansPro-Black'
+    SYMBOLS:
+      Platform.OS === 'android' ? 'SF-UI-Text-Regular' : 'SourceSansPro-Black'
   },
 
   OPACITY: {

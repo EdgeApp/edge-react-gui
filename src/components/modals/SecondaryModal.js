@@ -18,12 +18,29 @@ export type Props = {
 }
 export class SecondaryModal extends React.Component<Props> {
   render() {
-    const { error, isSweeping, isActive, onBackButtonPress, onBackdropPress, onModalHide } = this.props
+    const {
+      error,
+      isSweeping,
+      isActive,
+      onBackButtonPress,
+      onBackdropPress,
+      onModalHide
+    } = this.props
 
     return (
-      <NonInteractiveModal isActive={isActive} onBackButtonPress={onBackButtonPress} onBackdropPress={onBackdropPress} onModalHide={onModalHide}>
+      <NonInteractiveModal
+        isActive={isActive}
+        onBackButtonPress={onBackButtonPress}
+        onBackdropPress={onBackdropPress}
+        onModalHide={onModalHide}
+      >
         <NonInteractiveModal.Icon>
-          <IonIcon name="ios-key" color={THEME.COLORS.WHITE} size={30} style={{ transform: [{ rotate: '270deg' }] }} />
+          <IonIcon
+            name="ios-key"
+            color={THEME.COLORS.WHITE}
+            size={30}
+            style={{ transform: [{ rotate: '270deg' }] }}
+          />
         </NonInteractiveModal.Icon>
 
         <NonInteractiveModal.Footer>
@@ -38,7 +55,11 @@ export class SecondaryModal extends React.Component<Props> {
               <NonInteractiveModal.Message>
                 <Text>{s.strings.private_key_modal_importing_private_key}</Text>
               </NonInteractiveModal.Message>
-              <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} size="large" style={{ padding: 10 }} />
+              <ActivityIndicator
+                color={THEME.COLORS.ACCENT_MINT}
+                size="large"
+                style={{ padding: 10 }}
+              />
             </View>
           ) : null}
 

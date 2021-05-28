@@ -21,17 +21,39 @@ export class WalletListModalCreateRow extends React.Component<Props> {
     const { image, currencyCode, name, type, onPress } = this.props
     return (
       <View style={styles.container}>
-        <TouchableHighlight underlayColor={THEME.COLORS.TRANSPARENT} onPress={onPress}>
-          <View style={[type === 'token' ? styles.containerToken : null, styles.rowContainerTop]}>
+        <TouchableHighlight
+          underlayColor={THEME.COLORS.TRANSPARENT}
+          onPress={onPress}
+        >
+          <View
+            style={[
+              type === 'token' ? styles.containerToken : null,
+              styles.rowContainerTop
+            ]}
+          >
             <View style={styles.containerLeft}>
-              <Image style={styles.imageContainer} source={{ uri: image }} resizeMode="contain" />
+              <Image
+                style={styles.imageContainer}
+                source={{ uri: image }}
+                resizeMode="contain"
+              />
             </View>
-            <View style={[styles.containerCenter, styles.containerCreateCenter]}>
-              <FormattedText style={styles.containerCenterCurrency}>{currencyCode}</FormattedText>
-              <FormattedText style={styles.containerCenterName}>{name}</FormattedText>
+            <View
+              style={[styles.containerCenter, styles.containerCreateCenter]}
+            >
+              <FormattedText style={styles.containerCenterCurrency}>
+                {currencyCode}
+              </FormattedText>
+              <FormattedText style={styles.containerCenterName}>
+                {name}
+              </FormattedText>
             </View>
             <View style={styles.containerRight}>
-              <Text style={styles.createText}>{type === 'wallet' ? s.strings.fragment_create_wallet_create_wallet : s.strings.wallet_list_add_token}</Text>
+              <Text style={styles.createText}>
+                {type === 'wallet'
+                  ? s.strings.fragment_create_wallet_create_wallet
+                  : s.strings.wallet_list_add_token}
+              </Text>
             </View>
           </View>
         </TouchableHighlight>

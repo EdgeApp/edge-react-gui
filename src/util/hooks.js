@@ -18,7 +18,10 @@ type UseMemo = <T>(init: () => T, deps?: any[]) => T
 
 type UseReducer = {
   // Normal version:
-  <State, Action>(reducer: (state: State | void, action: Action) => State, init: State | void): [State, (action: Action) => void],
+  <State, Action>(
+    reducer: (state: State | void, action: Action) => State,
+    init: State | void
+  ): [State, (action: Action) => void],
 
   // Initializer version:
   <State, Action, Init>(
@@ -30,7 +33,9 @@ type UseReducer = {
 
 type UseRef = {
   // Component ref:
-  <ElementType: React$ElementType>(): { current: null | React$ElementRef<ElementType> },
+  <ElementType: React$ElementType>(): {
+    current: null | React$ElementRef<ElementType>
+  },
 
   // Value container:
   <T>(init: T): { current: T }
@@ -47,7 +52,8 @@ export const useDebugValue: UseDebugValue = React.useDebugValue
 // $FlowFixMe
 export const useEffect: UseEffect = React.useEffect
 // $FlowFixMe
-export const useImperativeHandle: UseImperativeHandle = React.useImperativeHandle
+export const useImperativeHandle: UseImperativeHandle =
+  React.useImperativeHandle
 // $FlowFixMe
 export const useLayoutEffect: UseEffect = React.useLayoutEffect
 // $FlowFixMe

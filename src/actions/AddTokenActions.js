@@ -5,9 +5,16 @@ import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
-import { getSyncedSettings, setSyncedSettings } from '../modules/Core/Account/settings'
+import {
+  getSyncedSettings,
+  setSyncedSettings
+} from '../modules/Core/Account/settings'
 import { setEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
-import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
+import {
+  type Dispatch,
+  type GetState,
+  type RootState
+} from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
 import * as UTILS from '../util/utils.js'
 import * as WALLET_ACTIONS from './WalletActions.js'
@@ -23,9 +30,17 @@ export const addNewToken = (
   return (dispatch: Dispatch, getState: GetState) => {
     dispatch({ type: 'ADD_TOKEN_START' })
     const state = getState()
-    addTokenAsync(walletId, currencyName, currencyCode, contractAddress, denomination, state)
+    addTokenAsync(
+      walletId,
+      currencyName,
+      currencyCode,
+      contractAddress,
+      denomination,
+      state
+    )
       .then(addedWalletInfo => {
-        const { walletId, newTokenObj, setSettings, enabledTokensOnWallet } = addedWalletInfo
+        const { walletId, newTokenObj, setSettings, enabledTokensOnWallet } =
+          addedWalletInfo
         newTokenObj.walletType = walletType
         dispatch({
           type: 'ADD_NEW_CUSTOM_TOKEN_SUCCESS',
@@ -59,7 +74,13 @@ export const addTokenAsync = async (
 
   const uiWallet = state.ui.wallets.byId[walletId]
   // create modified object structure to match metaTokens
-  const newTokenObj: CustomTokenInfo = WALLET_ACTIONS.assembleCustomToken(currencyName, currencyCode, contractAddress, denomination, uiWallet.type)
+  const newTokenObj: CustomTokenInfo = WALLET_ACTIONS.assembleCustomToken(
+    currencyName,
+    currencyCode,
+    contractAddress,
+    denomination,
+    uiWallet.type
+  )
 
   // Check for conflicting currency codes:
   for (const pluginId of Object.keys(currencyConfig)) {
@@ -93,5 +114,10 @@ export const addTokenAsync = async (
     newEnabledTokens.push(newTokenObj.currencyCode)
   }
   await setEnabledTokens(coreWallet, newEnabledTokens)
-  return { walletId, newTokenObj, setSettings, enabledTokensOnWallet: newEnabledTokens }
+  return {
+    walletId,
+    newTokenObj,
+    setSettings,
+    enabledTokensOnWallet: newEnabledTokens
+  }
 }

@@ -10,7 +10,9 @@ import { type CreateWalletType } from '../types/types.js'
  */
 export function getCurrencyInfos(account: EdgeAccount): EdgeCurrencyInfo[] {
   const { currencyConfig = {} } = account
-  return Object.keys(currencyConfig).map(pluginId => currencyConfig[pluginId].currencyInfo)
+  return Object.keys(currencyConfig).map(
+    pluginId => currencyConfig[pluginId].currencyInfo
+  )
 }
 
 const walletOrderTable: { [walletType: string]: number } = {}
@@ -21,7 +23,9 @@ for (let i = 0; i < WALLET_TYPE_ORDER.length; ++i) {
 /**
  * Sort an array of EdgeCurrencyInfo objects for display to the user.
  */
-export function sortCurrencyInfos(infos: EdgeCurrencyInfo[]): EdgeCurrencyInfo[] {
+export function sortCurrencyInfos(
+  infos: EdgeCurrencyInfo[]
+): EdgeCurrencyInfo[] {
   return infos.sort((a, b) => {
     // Use the table first:
     const aIndex = walletOrderTable[a.walletType]
@@ -39,7 +43,9 @@ export function sortCurrencyInfos(infos: EdgeCurrencyInfo[]): EdgeCurrencyInfo[]
  * The wallet creation scenes use a truncated version of EdgeCurrencyInfo,
  * so make that.
  */
-export function makeCreateWalletType(currencyInfo: EdgeCurrencyInfo): CreateWalletType {
+export function makeCreateWalletType(
+  currencyInfo: EdgeCurrencyInfo
+): CreateWalletType {
   return {
     currencyName: currencyInfo.displayName,
     walletType: currencyInfo.walletType,
@@ -84,9 +90,14 @@ export function getCreateWalletTypes(account: EdgeAccount): CreateWalletType[] {
 /**
  * Get specific wallet type for the wallet creation scenes. BTC will always result in segwit
  */
-export function getCreateWalletType(account: EdgeAccount, currencyCode: string): CreateWalletType | null {
+export function getCreateWalletType(
+  account: EdgeAccount,
+  currencyCode: string
+): CreateWalletType | null {
   const infos = getCurrencyInfos(account)
   const currencyCodeFormatted = currencyCode.toUpperCase()
-  const currencyInfo = infos.find(info => info.currencyCode === currencyCodeFormatted)
+  const currencyInfo = infos.find(
+    info => info.currencyCode === currencyCodeFormatted
+  )
   return currencyInfo ? makeCreateWalletType(currencyInfo) : null
 }

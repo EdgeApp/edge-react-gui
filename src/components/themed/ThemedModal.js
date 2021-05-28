@@ -29,7 +29,14 @@ type Props<T> = {
  * The Airship modal, but connected to our theming system.
  */
 export function ThemedModal<T>(props: Props<T>) {
-  const { bridge, children = null, flexDirection, iconRem = 0, justifyContent, onCancel } = props
+  const {
+    bridge,
+    children = null,
+    flexDirection,
+    iconRem = 0,
+    justifyContent,
+    onCancel
+  } = props
   const paddingRem = unpackEdges(props.paddingRem ?? 1)
   const theme = useTheme()
 
@@ -45,7 +52,12 @@ export function ThemedModal<T>(props: Props<T>) {
       margin={[theme.rem(iconRem / 2), 0, 0]}
       onCancel={onCancel}
       padding={packEdges(paddingRem).map(theme.rem)}
-      underlay={<BlurView blurType={theme.modalBlurType} style={StyleSheet.absoluteFill} />}
+      underlay={
+        <BlurView
+          blurType={theme.modalBlurType}
+          style={StyleSheet.absoluteFill}
+        />
+      }
     >
       {children}
     </AirshipModal>

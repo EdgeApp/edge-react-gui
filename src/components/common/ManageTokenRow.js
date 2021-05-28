@@ -2,7 +2,12 @@
 
 import type { EdgeMetaToken } from 'edge-core-js'
 import * as React from 'react'
-import { StyleSheet, TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
+import {
+  StyleSheet,
+  TouchableHighlight,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
@@ -43,14 +48,24 @@ class ManageTokenRow extends React.Component<Props, State> {
       enabled = true
     }
     // disable editing if token is native to the app
-    const isEditable = !Object.keys(SYNCED_ACCOUNT_DEFAULTS).includes(item.currencyCode)
+    const isEditable = !Object.keys(SYNCED_ACCOUNT_DEFAULTS).includes(
+      item.currencyCode
+    )
     const onPress = isEditable ? goToEditTokenScene : UTILS.noOp
 
     return (
-      <TouchableHighlight onPress={() => onPress(item.currencyCode)} underlayColor={THEME.COLORS.PRIMARY_BUTTON_TOUCHED} style={styles.manageTokenRow}>
+      <TouchableHighlight
+        onPress={() => onPress(item.currencyCode)}
+        underlayColor={THEME.COLORS.PRIMARY_BUTTON_TOUCHED}
+        style={styles.manageTokenRow}
+      >
         <View style={styles.manageTokenRowInterior}>
           <View style={styles.rowLeftArea}>
-            <TouchableWithoutFeedback onPress={() => toggleToken(item.currencyCode)} isVisible={item.isVisible} enabled={enabled}>
+            <TouchableWithoutFeedback
+              onPress={() => toggleToken(item.currencyCode)}
+              isVisible={item.isVisible}
+              enabled={enabled}
+            >
               <View style={styles.touchableCheckboxInterior}>
                 <CheckBox style={styles.checkBox} enabled={enabled} />
               </View>
@@ -61,7 +76,15 @@ class ManageTokenRow extends React.Component<Props, State> {
               </Text>
             </View>
           </View>
-          <View>{isEditable && <AntDesignIcon style={styles.rowRightArrow} name="right" size={scale(16)} />}</View>
+          <View>
+            {isEditable && (
+              <AntDesignIcon
+                style={styles.rowRightArrow}
+                name="right"
+                size={scale(16)}
+              />
+            )}
+          </View>
         </View>
       </TouchableHighlight>
     )

@@ -9,7 +9,11 @@ import { connect } from 'react-redux'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action.js'
-import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util.js'
+import {
+  checkRecordSendFee,
+  findWalletByFioAddress,
+  FIO_NO_BUNDLED_ERR_CODE
+} from '../../modules/FioAddress/util.js'
 import { getSelectedWallet } from '../../modules/UI/selectors'
 import { type Dispatch, type RootState } from '../../types/reduxTypes'
 import type { FioAddress, FioRequest, GuiWallet } from '../../types/types'
@@ -18,14 +22,18 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from '../themed/EdgeText'
+import { EdgeText } from './EdgeText'
 import { Tile } from './Tile.js'
 
 type SelectFioAddressOwnProps = {
   selected: string,
   memo: string,
   memoError: string,
-  onSelect: (fioAddress: string, fioWallet: EdgeCurrencyWallet, error: string) => void,
+  onSelect: (
+    fioAddress: string,
+    fioWallet: EdgeCurrencyWallet,
+    error: string
+  ) => void,
   onMemoChange: (memo: string, memoError: string) => void,
   fioRequest?: FioRequest,
   isSendUsingFioAddress?: boolean
@@ -42,7 +50,10 @@ type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
 
-type Props = SelectFioAddressOwnProps & SelectFioAddressProps & DispatchProps & ThemeProps
+type Props = SelectFioAddressOwnProps &
+  SelectFioAddressProps &
+  DispatchProps &
+  ThemeProps
 
 type LocalState = {
   loading: boolean,
@@ -69,8 +80,14 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
       }
     }
     const fioAddress = fioAddresses.find(({ name }) => name === selected)
-    const prevFioAddress = prevFioAddresses.find(({ name }) => name === selected)
-    if (fioAddress && prevFioAddress && fioAddress.expiration !== prevFioAddress.expiration) {
+    const prevFioAddress = prevFioAddresses.find(
+      ({ name }) => name === selected
+    )
+    if (
+      fioAddress &&
+      prevFioAddress &&
+      fioAddress.expiration !== prevFioAddress.expiration
+    ) {
       return {
         expirationUpdated: true,
         prevFioAddresses: fioAddresses
@@ -80,7 +97,8 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
   }
 
   componentDidMount() {
-    const { fioRequest, isSendUsingFioAddress, refreshAllFioAddresses } = this.props
+    const { fioRequest, isSendUsingFioAddress, refreshAllFioAddresses } =
+      this.props
     if (fioRequest || isSendUsingFioAddress) refreshAllFioAddresses()
     if (fioRequest) {
       this.setFioAddress(fioRequest.payer_fio_address)
@@ -97,7 +115,11 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
       this.setState({ expirationUpdated: false })
       this.setFioAddress(this.props.selected)
     }
-    if (isSendUsingFioAddress !== prevProps.isSendUsingFioAddress && !fioRequest && isSendUsingFioAddress) {
+    if (
+      isSendUsingFioAddress !== prevProps.isSendUsingFioAddress &&
+      !fioRequest &&
+      isSendUsingFioAddress
+    ) {
       this.setDefaultFioAddress()
     }
   }
@@ -119,7 +141,13 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
   selectAddress = () => {
     const { currencyCode, selectedWallet } = this.props
     Airship.show(bridge => (
-      <AddressModal bridge={bridge} title={s.strings.fio_select_address} currencyCode={currencyCode} walletId={selectedWallet.id} useUserFioAddressesOnly />
+      <AddressModal
+        bridge={bridge}
+        title={s.strings.fio_select_address}
+        currencyCode={currencyCode}
+        walletId={selectedWallet.id}
+        useUserFioAddressesOnly
+      />
     )).then((response: string | null) => {
       if (response) {
         this.setFioAddress(response)
@@ -139,13 +167,20 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
     )).then(_ => {})
   }
 
-  setFioAddress = async (fioAddress: string, fioWallet?: EdgeCurrencyWallet | null) => {
+  setFioAddress = async (
+    fioAddress: string,
+    fioWallet?: EdgeCurrencyWallet | null
+  ) => {
     const { fioWallets, fioAddresses, fioRequest, currencyCode } = this.props
     if (!fioWallet) {
       if (fioAddresses && fioAddress.length) {
-        const selectedFioAddress = fioAddresses.find(({ name }) => name === fioAddress)
+        const selectedFioAddress = fioAddresses.find(
+          ({ name }) => name === fioAddress
+        )
         if (selectedFioAddress) {
-          fioWallet = fioWallets.find(({ id }) => id === selectedFioAddress.walletId)
+          fioWallet = fioWallets.find(
+            ({ id }) => id === selectedFioAddress.walletId
+          )
         }
       }
       if (!fioWallet) {
@@ -211,7 +246,9 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
 
     return (
       <Tile
-        type={loading && !selected ? 'loading' : fioRequest ? 'static' : 'touchable'}
+        type={
+          loading && !selected ? 'loading' : fioRequest ? 'static' : 'touchable'
+        }
         title={s.strings.select_fio_address_address_from}
         body={selected}
         onPress={fioRequest ? undefined : this.selectAddress}
@@ -229,7 +266,11 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
 
     if (memoError) {
       return (
-        <Tile type="touchable" title={s.strings.select_fio_address_address_memo_error} onPress={this.openMessageInput}>
+        <Tile
+          type="touchable"
+          title={s.strings.select_fio_address_address_memo_error}
+          onPress={this.openMessageInput}
+        >
           <EdgeText style={{ color: theme.dangerText }}>{memoError}</EdgeText>
         </Tile>
       )
@@ -292,4 +333,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   }
 })
 
-export const SelectFioAddress = connect(mapStateToProps, mapDispatchToProps)(withTheme(SelectFioAddressComponent))
+export const SelectFioAddress = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTheme(SelectFioAddressComponent))

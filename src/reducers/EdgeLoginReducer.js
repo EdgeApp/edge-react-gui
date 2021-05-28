@@ -17,7 +17,10 @@ const initialState = {
   isProcessing: false
 }
 
-export const edgeLogin: Reducer<EdgeLoginState, Action> = (state = initialState, action: Action) => {
+export const edgeLogin: Reducer<EdgeLoginState, Action> = (
+  state = initialState,
+  action: Action
+) => {
   switch (action.type) {
     case 'PROCESS_EDGE_LOGIN': {
       return {

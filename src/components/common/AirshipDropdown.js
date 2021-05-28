@@ -1,7 +1,13 @@
 // @flow
 
 import * as React from 'react'
-import { Animated, Dimensions, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import {
+  Animated,
+  Dimensions,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native'
 import { type AirshipBridge, type Unsubscribe } from 'react-native-airship'
 
 import { THEME } from '../../theme/variables/airbitz.js'
@@ -79,7 +85,12 @@ export class AirshipDropdown extends React.Component<Props> {
   }
 
   render() {
-    const { bridge, children, backgroundColor, onPress = () => bridge.resolve() } = this.props
+    const {
+      bridge,
+      children,
+      backgroundColor,
+      onPress = () => bridge.resolve()
+    } = this.props
 
     return (
       <LayoutContext>
@@ -99,9 +110,15 @@ export class AirshipDropdown extends React.Component<Props> {
           }
 
           return (
-            <View pointerEvents="box-none" touch style={[styles.screen, screenStyle]}>
+            <View
+              pointerEvents="box-none"
+              touch
+              style={[styles.screen, screenStyle]}
+            >
               <TouchableWithoutFeedback onPress={onPress}>
-                <Animated.View style={[styles.body, bodyStyle]}>{children}</Animated.View>
+                <Animated.View style={[styles.body, bodyStyle]}>
+                  {children}
+                </Animated.View>
               </TouchableWithoutFeedback>
             </View>
           )

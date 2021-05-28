@@ -29,7 +29,10 @@ export type SetCustomNodesModalState = {
 
 export type SetCustomNodeModalProps = SetCustomNodesModalOwnProps
 
-export class SetCustomNodesModal extends React.Component<SetCustomNodeModalProps, SetCustomNodesModalState> {
+export class SetCustomNodesModal extends React.Component<
+  SetCustomNodeModalProps,
+  SetCustomNodesModalState
+> {
   constructor(props: SetCustomNodeModalProps) {
     super(props)
     const { electrumServers } = this.props
@@ -74,13 +77,19 @@ export class SetCustomNodesModal extends React.Component<SetCustomNodeModalProps
     return (
       <InteractiveModal legacy isActive={this.props.isActive}>
         <InteractiveModal.Icon>
-          <MaterialCommunityIcon name="server" size={22} style={{ position: 'relative', top: 1 }} />
+          <MaterialCommunityIcon
+            name="server"
+            size={22}
+            style={{ position: 'relative', top: 1 }}
+          />
         </InteractiveModal.Icon>
         <InteractiveModal.Title>
           <Text>{s.strings.settings_set_custom_nodes_modal_title}</Text>
         </InteractiveModal.Title>
         <InteractiveModal.Body>
-          <InteractiveModal.Description style={{ textAlign: 'center' }}>{s.strings.settings_set_custom_nodes_modal_instructions}</InteractiveModal.Description>
+          <InteractiveModal.Description style={{ textAlign: 'center' }}>
+            {s.strings.settings_set_custom_nodes_modal_instructions}
+          </InteractiveModal.Description>
           <View style={styles.customNodesInputWrap}>
             <TextInput
               style={styles.customNodesInput}
@@ -97,11 +106,18 @@ export class SetCustomNodesModal extends React.Component<SetCustomNodeModalProps
         </InteractiveModal.Body>
         <InteractiveModal.Footer>
           <View style={styles.buttonsWrap}>
-            <PrimaryButton onPress={this.handleSave} style={styles.primaryButton}>
-              <PrimaryButton.Text style={styles.primaryButtonText}>{s.strings.string_save}</PrimaryButton.Text>
+            <PrimaryButton
+              onPress={this.handleSave}
+              style={styles.primaryButton}
+            >
+              <PrimaryButton.Text style={styles.primaryButtonText}>
+                {s.strings.string_save}
+              </PrimaryButton.Text>
             </PrimaryButton>
             <SecondaryButton onPress={this.onCancel}>
-              <SecondaryButton.Text style={styles.secondaryButtonText}>{s.strings.string_cancel_cap}</SecondaryButton.Text>
+              <SecondaryButton.Text style={styles.secondaryButtonText}>
+                {s.strings.string_cancel_cap}
+              </SecondaryButton.Text>
             </SecondaryButton>
           </View>
         </InteractiveModal.Footer>
@@ -115,11 +131,18 @@ const rawStyles = {
     borderWidth: 1,
     borderColor: '#CCCCCC',
     borderRadius: 3,
-    height: PLATFORM.deviceHeight * 0.13 - (Platform.OS === 'android' ? 23 : 0) + (isIPhoneX ? 60 : 0),
+    height:
+      PLATFORM.deviceHeight * 0.13 -
+      (Platform.OS === 'android' ? 23 : 0) +
+      (isIPhoneX ? 60 : 0),
     padding: 3
   },
   customNodesInput: {
-    height: PLATFORM.deviceHeight * 0.13 - (Platform.OS === 'android' ? 23 : 0) + (isIPhoneX ? 60 : 0) - 8,
+    height:
+      PLATFORM.deviceHeight * 0.13 -
+      (Platform.OS === 'android' ? 23 : 0) +
+      (isIPhoneX ? 60 : 0) -
+      8,
     color: THEME.COLORS.GRAY_1,
     fontSize: 15,
     fontFamily: THEME.FONTS.DEFAULT,

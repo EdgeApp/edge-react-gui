@@ -7,7 +7,12 @@ import { getCountry } from 'react-native-localize'
 import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { CountryData } from '../../types/types'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
@@ -27,7 +32,10 @@ type CountrySelectionModalState = {
 
 type Props = CountrySelectionModalProps & ThemeProps
 
-class CountrySelectionModalComponent extends React.Component<Props, CountrySelectionModalState> {
+class CountrySelectionModalComponent extends React.Component<
+  Props,
+  CountrySelectionModalState
+> {
   textInput = React.createRef()
   constructor(props: Props) {
     super(props)
@@ -45,7 +53,8 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
     })
   }
 
-  handleSelectCountry = (selected: string) => this.props.bridge.resolve(selected)
+  handleSelectCountry = (selected: string) =>
+    this.props.bridge.resolve(selected)
 
   handleClose = () => this.props.bridge.resolve(this.state.countryCode)
 
@@ -68,7 +77,9 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
     const { theme } = this.props
     const { countryCode } = this.state
     const styles = getStyles(theme)
-    const filename = data.item.filename ? data.item.filename : data.item.name.toLowerCase().replace(' ', '-')
+    const filename = data.item.filename
+      ? data.item.filename
+      : data.item.name.toLowerCase().replace(' ', '-')
     const logoUrl = `${FLAG_LOGO_URL}/${filename}.png`
 
     return (
@@ -89,19 +100,30 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
     const styles = getStyles(theme)
     const lowerCaseInput = input.toLowerCase()
     const upperCaseInput = input.toUpperCase()
-    const filteredCountryCodes: CountryData[] = COUNTRY_CODES.filter(country => {
-      return (
-        country.name.toLowerCase().includes(lowerCaseInput) ||
-        (country.filename && country.filename.includes(lowerCaseInput)) ||
-        (country['alpha-2'] && country['alpha-2'].includes(upperCaseInput))
-      )
-    })
-    const currentCountryCodeIndex = filteredCountryCodes.findIndex(country => country['alpha-2'] === countryCode)
-    const currentCountryData = filteredCountryCodes.splice(currentCountryCodeIndex, 1)
+    const filteredCountryCodes: CountryData[] = COUNTRY_CODES.filter(
+      country => {
+        return (
+          country.name.toLowerCase().includes(lowerCaseInput) ||
+          (country.filename && country.filename.includes(lowerCaseInput)) ||
+          (country['alpha-2'] && country['alpha-2'].includes(upperCaseInput))
+        )
+      }
+    )
+    const currentCountryCodeIndex = filteredCountryCodes.findIndex(
+      country => country['alpha-2'] === countryCode
+    )
+    const currentCountryData = filteredCountryCodes.splice(
+      currentCountryCodeIndex,
+      1
+    )
     const finalCountryCodes = [...currentCountryData, ...filteredCountryCodes]
 
     return (
-      <ThemedModal bridge={bridge} onCancel={this.handleClose} paddingRem={[1, 0]}>
+      <ThemedModal
+        bridge={bridge}
+        onCancel={this.handleClose}
+        paddingRem={[1, 0]}
+      >
         <ModalTitle center paddingRem={[0, 1, 0.5]}>
           {s.strings.buy_sell_crypto_select_country_button}
         </ModalTitle>
@@ -137,7 +159,10 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
     )
   }
 
-  keyExtractor = (item: { filename?: string, name: string, 'alpha-2': string }, index: number) => item.name
+  keyExtractor = (
+    item: { filename?: string, name: string, 'alpha-2': string },
+    index: number
+  ) => item.name
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

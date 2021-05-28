@@ -17,8 +17,9 @@ export const postponePasswordReminder = () => ({
 })
 
 // Saving data to account local folder
-export const setPasswordReminder = (passwordReminder: Object) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const account = state.core.account
-  setPasswordReminderRequest(account, passwordReminder).catch(showError)
-}
+export const setPasswordReminder =
+  (passwordReminder: Object) => (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const account = state.core.account
+    setPasswordReminderRequest(account, passwordReminder).catch(showError)
+  }

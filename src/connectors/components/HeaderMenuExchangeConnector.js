@@ -7,7 +7,12 @@ import { exchangeMax } from '../../actions/CryptoExchangeActions.js'
 import { showHelpModal } from '../../components/modals/HelpModal.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { type DispatchProps, type StateProps, MenuDropDown, MenuDropDownStyle } from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
+import {
+  type DispatchProps,
+  type StateProps,
+  MenuDropDown,
+  MenuDropDownStyle
+} from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
 import THEME from '../../theme/variables/airbitz'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 
@@ -48,7 +53,9 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
         dispatch(exchangeMax())
         break
       case Constants.CHANGE_MINING_FEE_VALUE:
-        Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]({ sourceWallet: value.sourceWallet })
+        Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]({
+          sourceWallet: value.sourceWallet
+        })
         break
     }
   }

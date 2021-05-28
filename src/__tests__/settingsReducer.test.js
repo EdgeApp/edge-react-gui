@@ -2,7 +2,10 @@
 
 /* globals test expect */
 
-import { initialState, settings as settingsReducer } from '../reducers/scenes/SettingsReducer.js'
+import {
+  initialState,
+  settings as settingsReducer
+} from '../reducers/scenes/SettingsReducer.js'
 
 test('initialState', () => {
   const expected = initialState

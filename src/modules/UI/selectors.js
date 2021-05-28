@@ -1,11 +1,19 @@
 // @flow
 
-import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
+import type {
+  EdgeCurrencyInfo,
+  EdgeCurrencyWallet,
+  EdgeDenomination
+} from 'edge-core-js'
 import _ from 'lodash'
 
 import { formatNumber } from '../../locales/intl.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types/types.js'
+import type {
+  GuiDenomination,
+  GuiWallet,
+  TransactionListTx
+} from '../../types/types.js'
 import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
 
@@ -52,7 +60,10 @@ export const getDenominations = (state: RootState, currencyCode: string) => {
   return denominations
 }
 
-export const getDefaultDenomination = (state: RootState, currencyCode: string): EdgeDenomination => {
+export const getDefaultDenomination = (
+  state: RootState,
+  currencyCode: string
+): EdgeDenomination => {
   const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
   const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
   const currencyInfo = getCurrencyInfo(allCurrencyInfos, currencyCode)
@@ -60,14 +71,26 @@ export const getDefaultDenomination = (state: RootState, currencyCode: string): 
   const settings = state.ui.settings
   const currencySettings = settings[currencyCode]
   const defaultMultiplier = currencySettings.denomination
-  const denomination = _.find(currencySettings.denominations, denom => denom.multiplier === defaultMultiplier)
-  if (!denomination) throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
+  const denomination = _.find(
+    currencySettings.denominations,
+    denom => denom.multiplier === defaultMultiplier
+  )
+  if (!denomination)
+    throw new Error(
+      'Edge: Denomination not found. Possible invalid currencyCode.'
+    )
   return denomination
 }
 
-export const getExchangeDenomination = (state: RootState, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
+export const getExchangeDenomination = (
+  state: RootState,
+  currencyCode: string,
+  specificWallet?: GuiWallet
+): GuiDenomination => {
   const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)
-  const walletId = specificWallet ? specificWallet.id : state.ui.wallets.selectedWalletId
+  const walletId = specificWallet
+    ? specificWallet.id
+    : state.ui.wallets.selectedWalletId
   const wallet = state.ui.wallets.byId[walletId]
   if (wallet.allDenominations[currencyCode]) {
     for (const key of Object.keys(wallet.allDenominations[currencyCode])) {
@@ -75,36 +98,64 @@ export const getExchangeDenomination = (state: RootState, currencyCode: string, 
       if (denomination.name === currencyCode) return denomination
     }
   } else {
-    const customToken = _.find(customTokens, item => item.currencyCode === currencyCode)
-    if (customToken && customToken.denomination && customToken.denomination[0]) {
+    const customToken = _.find(
+      customTokens,
+      item => item.currencyCode === currencyCode
+    )
+    if (
+      customToken &&
+      customToken.denomination &&
+      customToken.denomination[0]
+    ) {
       const denomination = customToken.denominations[0]
       return denomination
     }
   }
-  throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
+  throw new Error(
+    'Edge: Denomination not found. Possible invalid currencyCode.'
+  )
 }
 
-export const getExchangeRate = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string): number => {
+export const getExchangeRate = (
+  state: RootState,
+  fromCurrencyCode: string,
+  toCurrencyCode: string
+): number => {
   const exchangeRates = state.exchangeRates
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   const rate = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
   return rate
 }
 
-export const convertCurrency = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string, amount: number = 1) => {
+export const convertCurrency = (
+  state: RootState,
+  fromCurrencyCode: string,
+  toCurrencyCode: string,
+  amount: number = 1
+) => {
   const exchangeRate = getExchangeRate(state, fromCurrencyCode, toCurrencyCode)
   const convertedAmount = amount * exchangeRate
   return convertedAmount
 }
 
-const convertCurrencyWithoutState = (exchangeRates: { [string]: number }, fromCurrencyCode: string, toCurrencyCode: string, amount: number = 1) => {
+const convertCurrencyWithoutState = (
+  exchangeRates: { [string]: number },
+  fromCurrencyCode: string,
+  toCurrencyCode: string,
+  amount: number = 1
+) => {
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
   const convertedAmount = amount * exchangeRate
   return convertedAmount
 }
 
-export const convertCurrencyFromExchangeRates = (exchangeRates: { [string]: number }, fromCurrencyCode: string, toCurrencyCode: string, amount: number) => {
+export const convertCurrencyFromExchangeRates = (
+  exchangeRates: { [string]: number },
+  fromCurrencyCode: string,
+  toCurrencyCode: string,
+  amount: number
+) => {
   if (!exchangeRates) return 0 // handle case of exchange rates not ready yet
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   const rate = exchangeRates[rateKey]
@@ -112,16 +163,30 @@ export const convertCurrencyFromExchangeRates = (exchangeRates: { [string]: numb
   return convertedAmount
 }
 
-export const calculateWalletFiatBalanceWithoutState = (wallet: GuiWallet, currencyCode: string, settings: Object, exchangeRates: { [string]: number }) => {
+export const calculateWalletFiatBalanceWithoutState = (
+  wallet: GuiWallet,
+  currencyCode: string,
+  settings: Object,
+  exchangeRates: { [string]: number }
+) => {
   let fiatValue = 0 // default to zero if not calculable
   const nativeBalance = wallet.nativeBalances[currencyCode]
   if (!nativeBalance || nativeBalance === '0') return '0'
   const denominations = settings[currencyCode].denominations
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+  const exchangeDenomination = denominations.find(
+    denomination => denomination.name === currencyCode
+  )
   if (!exchangeDenomination) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-  fiatValue = convertCurrencyWithoutState(exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
+  const cryptoAmount: number = parseFloat(
+    convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
+  )
+  fiatValue = convertCurrencyWithoutState(
+    exchangeRates,
+    currencyCode,
+    wallet.isoFiatCurrencyCode,
+    cryptoAmount
+  )
   return formatNumber(fiatValue, { toFixed: 2 }) || '0'
 }
 
@@ -135,27 +200,48 @@ export const calculateWalletFiatBalanceUsingDefaultIsoFiat = (
   if (!settings[currencyCode]) return 0
   const denominations = settings[currencyCode].denominations
   if (!nativeBalance || nativeBalance === '0' || !denominations) return 0
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+  const exchangeDenomination = denominations.find(
+    denomination => denomination.name === currencyCode
+  )
   if (!exchangeDenomination) return 0
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-  return convertCurrencyWithoutState(exchangeRates, currencyCode, settings.defaultIsoFiat, cryptoAmount) || 0
+  const cryptoAmount: number = parseFloat(
+    convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
+  )
+  return (
+    convertCurrencyWithoutState(
+      exchangeRates,
+      currencyCode,
+      settings.defaultIsoFiat,
+      cryptoAmount
+    ) || 0
+  )
 }
 
-export const convertNativeToExchangeRateDenomination = (settings: Object, currencyCode: string, nativeAmount: string): string => {
+export const convertNativeToExchangeRateDenomination = (
+  settings: Object,
+  currencyCode: string,
+  nativeAmount: string
+): string => {
   const denominations = settings[currencyCode].denominations
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+  const exchangeDenomination = denominations.find(
+    denomination => denomination.name === currencyCode
+  )
   if (!exchangeDenomination || !nativeAmount || nativeAmount === '0') return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   return convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
 }
 
-export const findWalletByFioAddress = async (state: RootState, fioAddress: string): Promise<EdgeCurrencyWallet | null> => {
+export const findWalletByFioAddress = async (
+  state: RootState,
+  fioAddress: string
+): Promise<EdgeCurrencyWallet | null> => {
   const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
 
   if (fioWallets && fioWallets.length) {
     for (const wallet: EdgeCurrencyWallet of fioWallets) {
-      const fioAddresses: string[] = await wallet.otherMethods.getFioAddressNames()
+      const fioAddresses: string[] =
+        await wallet.otherMethods.getFioAddressNames()
       if (fioAddresses.length > 0) {
         for (const address of fioAddresses) {
           if (address.toLowerCase() === fioAddress.toLowerCase()) {

@@ -2,14 +2,19 @@
 
 import { connect } from 'react-redux'
 
-import { deactivated, reset, uniqueIdentifierChanged } from '../actions/UniqueIdentifierModalActions.js'
+import {
+  deactivated,
+  reset,
+  uniqueIdentifierChanged
+} from '../actions/UniqueIdentifierModalActions.js'
 import { UniqueIdentifierModal } from '../components/modals/UniqueIdentifierModal.js'
 import { type Dispatch, type RootState } from '../types/reduxTypes.js'
 
 export const mapStateToProps = (state: RootState) => {
   let uniqueIdentifier = state.ui.scenes.uniqueIdentifierModal.uniqueIdentifier
   if (uniqueIdentifier === undefined) {
-    uniqueIdentifier = state.ui.scenes.sendConfirmation.guiMakeSpendInfo.uniqueIdentifier
+    uniqueIdentifier =
+      state.ui.scenes.sendConfirmation.guiMakeSpendInfo.uniqueIdentifier
   }
   return {
     isActive: state.ui.scenes.uniqueIdentifierModal.isActive,
@@ -18,7 +23,8 @@ export const mapStateToProps = (state: RootState) => {
 }
 
 export const mapDispatchToProps = (dispatch: Dispatch, ownProps: Object) => ({
-  uniqueIdentifierChanged: (uniqueIdentifier: string) => dispatch(uniqueIdentifierChanged(uniqueIdentifier)),
+  uniqueIdentifierChanged: (uniqueIdentifier: string) =>
+    dispatch(uniqueIdentifierChanged(uniqueIdentifier)),
   onConfirm: (uniqueIdentifier: string) => {
     dispatch(deactivated())
     ownProps.onConfirm({ uniqueIdentifier })
@@ -29,5 +35,8 @@ export const mapDispatchToProps = (dispatch: Dispatch, ownProps: Object) => ({
   onModalHide: () => dispatch(reset())
 })
 
-export const UniqueIdentifierModalConnect = connect(mapStateToProps, mapDispatchToProps)(UniqueIdentifierModal)
+export const UniqueIdentifierModalConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UniqueIdentifierModal)
 export default UniqueIdentifierModalConnect

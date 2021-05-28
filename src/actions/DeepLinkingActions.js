@@ -6,10 +6,20 @@ import { sprintf } from 'sprintf-js'
 
 import { showError, showToast } from '../components/services/AirshipInstance.js'
 import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
-import { EDGE_LOGIN, EXCHANGE_SCENE, PLUGIN_VIEW_DEEP, SCAN, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
+import {
+  EDGE_LOGIN,
+  EXCHANGE_SCENE,
+  PLUGIN_VIEW_DEEP,
+  SCAN,
+  WALLET_LIST_SCENE
+} from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { type DeepLink } from '../types/DeepLink.js'
-import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
+import {
+  type Dispatch,
+  type GetState,
+  type RootState
+} from '../types/reduxTypes.js'
 import { activatePromotion } from './AccountReferralActions.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
 import { doRequestAddress, parseScannedUri } from './ScanActions.js'
@@ -19,39 +29,45 @@ import { selectWallet } from './WalletActions.js'
  * The app has just received some type of link,
  * so try to follow it if possible, or save it for later if not.
  */
-export const launchDeepLink = (link: DeepLink) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
+export const launchDeepLink =
+  (link: DeepLink) => (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
 
-  const handled = handleLink(dispatch, state, link)
+    const handled = handleLink(dispatch, state, link)
 
-  // If we couldn't handle the link, save it for later:
-  if (!handled) {
-    dispatch({ type: 'DEEP_LINK_RECEIVED', data: link })
+    // If we couldn't handle the link, save it for later:
+    if (!handled) {
+      dispatch({ type: 'DEEP_LINK_RECEIVED', data: link })
+    }
   }
-}
 
 /**
  * The deep linking manager calls this as the wallet list changes.
  * Maybe we were in the wrong state before, but now we are able
  * to launch the link.
  */
-export const retryPendingDeepLink = () => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { pendingDeepLink } = state
-  if (pendingDeepLink == null) return
+export const retryPendingDeepLink =
+  () => (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { pendingDeepLink } = state
+    if (pendingDeepLink == null) return
 
-  const handled = handleLink(dispatch, state, pendingDeepLink)
+    const handled = handleLink(dispatch, state, pendingDeepLink)
 
-  // If we handled the link, clear it:
-  if (handled) {
-    dispatch({ type: 'DEEP_LINK_HANDLED' })
+    // If we handled the link, clear it:
+    if (handled) {
+      dispatch({ type: 'DEEP_LINK_HANDLED' })
+    }
   }
-}
 
 /**
  * Launches a link if it app is able to do so.
  */
-function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boolean {
+function handleLink(
+  dispatch: Dispatch,
+  state: RootState,
+  link: DeepLink
+): boolean {
   const { activeWalletIds, currencyWallets, username } = state.core.account
   const { byId = {}, selectedWalletId } = state.ui.wallets
   const hasCurrentWallet = byId[selectedWalletId] != null
@@ -76,7 +92,11 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
         showError(new Error(`No plugin named ${pluginId} exists`))
         return true
       }
-      Actions.push(PLUGIN_VIEW_DEEP, { plugin, deepPath: path, deepQuery: query })
+      Actions.push(PLUGIN_VIEW_DEEP, {
+        plugin,
+        deepPath: path,
+        deepQuery: query
+      })
       return true
     }
 
@@ -141,7 +161,11 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
 
       // Show an error:
       const currency = convertCurrencyStringFromCurrencyCode(currencyCode)
-      const noWalletMessage = sprintf(s.strings.alert_deep_link_no_wallet, currency, currency)
+      const noWalletMessage = sprintf(
+        s.strings.alert_deep_link_no_wallet,
+        currency,
+        currency
+      )
       showError(noWalletMessage)
       return true
     }
@@ -150,7 +174,10 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
   return false
 }
 
-async function launchAzteco(edgeWallet: EdgeCurrencyWallet, uri: string): Promise<void> {
+async function launchAzteco(
+  edgeWallet: EdgeCurrencyWallet,
+  uri: string
+): Promise<void> {
   const address = await edgeWallet.getReceiveAddress()
   const response = await fetch(`${uri}${address.publicAddress}`)
   if (response.ok) {

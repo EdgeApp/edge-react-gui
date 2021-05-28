@@ -1,7 +1,12 @@
 // @flow
 
 import * as React from 'react'
-import { StyleSheet, Text as RNText, TouchableHighlight, View } from 'react-native'
+import {
+  StyleSheet,
+  Text as RNText,
+  TouchableHighlight,
+  View
+} from 'react-native'
 
 import styles, { rawStyles } from './styles.js'
 
@@ -116,7 +121,13 @@ export class Button extends React.Component<ButtonProps> {
   static Text = Text
 
   render() {
-    const { children, style, onPress, underlayColor = rawStyles.underlay.color, ...props } = this.props
+    const {
+      children,
+      style,
+      onPress,
+      underlayColor = rawStyles.underlay.color,
+      ...props
+    } = this.props
 
     return (
       <TouchableHighlight underlayColor={underlayColor} onPress={onPress}>

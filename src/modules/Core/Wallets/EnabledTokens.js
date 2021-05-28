@@ -4,7 +4,9 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
-export const getEnabledTokensFromFile = async (wallet: EdgeCurrencyWallet): Promise<any[]> => {
+export const getEnabledTokensFromFile = async (
+  wallet: EdgeCurrencyWallet
+): Promise<any[]> => {
   try {
     const tokensText = await wallet.disklet.getText(ENABLED_TOKENS_FILENAME)
     const tokens = JSON.parse(tokensText)
@@ -15,7 +17,11 @@ export const getEnabledTokensFromFile = async (wallet: EdgeCurrencyWallet): Prom
   }
 }
 
-export async function setEnabledTokens(wallet: EdgeCurrencyWallet, tokens: string[], tokensToDisable?: string[]) {
+export async function setEnabledTokens(
+  wallet: EdgeCurrencyWallet,
+  tokens: string[],
+  tokensToDisable?: string[]
+) {
   // initialize array for eventual setting of file
   const finalTextArray = [...tokens]
   // now stringify the new tokens
@@ -29,15 +35,25 @@ export async function setEnabledTokens(wallet: EdgeCurrencyWallet, tokens: strin
   return tokens
 }
 
-export async function updateEnabledTokens(wallet: EdgeCurrencyWallet, tokensToEnable: string[], tokensToDisable: string[]) {
+export async function updateEnabledTokens(
+  wallet: EdgeCurrencyWallet,
+  tokensToEnable: string[],
+  tokensToDisable: string[]
+) {
   try {
     const tokensText = await wallet.disklet.getText(ENABLED_TOKENS_FILENAME)
     const enabledTokens = JSON.parse(tokensText)
     const tokensWithNewTokens = _.union(tokensToEnable, enabledTokens)
-    const finalTokensToEnable = _.difference(tokensWithNewTokens, tokensToDisable)
+    const finalTokensToEnable = _.difference(
+      tokensWithNewTokens,
+      tokensToDisable
+    )
     await wallet.changeEnabledTokens(finalTokensToEnable)
     await wallet.disableTokens(tokensToDisable)
-    await wallet.disklet.setText(ENABLED_TOKENS_FILENAME, JSON.stringify(finalTokensToEnable))
+    await wallet.disklet.setText(
+      ENABLED_TOKENS_FILENAME,
+      JSON.stringify(finalTokensToEnable)
+    )
   } catch (e) {
     console.log(e)
   }

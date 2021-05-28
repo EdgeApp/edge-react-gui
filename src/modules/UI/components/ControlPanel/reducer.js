@@ -23,6 +23,8 @@ const usersView = (state = false, action: Action): boolean => {
   }
 }
 
-export const controlPanel: Reducer<ControlPanelState, Action> = combineReducers({
-  usersView
-})
+export const controlPanel: Reducer<ControlPanelState, Action> = combineReducers(
+  {
+    usersView
+  }
+)

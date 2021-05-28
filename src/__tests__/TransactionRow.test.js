@@ -7,9 +7,9 @@ import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { getTheme } from '../components/services/ThemeContext.js'
 import { TransactionListRowComponent } from '../components/themed/TransactionListRow.js'
+import { imageServerUrl } from '../constants/WalletAndCurrencyConstants.js'
 import * as intl from '../locales/intl.js'
 import * as UTILS from '../util/utils'
-import { imageServerUrl } from './../constants/WalletAndCurrencyConstants.js'
 
 describe('Transaction List Row', () => {
   it('should render props', () => {
@@ -28,7 +28,11 @@ describe('Transaction List Row', () => {
       allDenominations: { XMR: {} },
       metaTokens: [],
       enabledTokens: [],
-      receiveAddress: { metadata: {}, nativeAmount: '0', publicAddress: '432hJPUp2C...' },
+      receiveAddress: {
+        metadata: {},
+        nativeAmount: '0',
+        publicAddress: '432hJPUp2C...'
+      },
       blockHeight: 1688551,
       symbolImage: `${imageServerUrl}/monero-symbol-orange-64.png`,
       symbolImageDarkMono: `${imageServerUrl}/monero-symbol-64-87939D.png`,
@@ -46,7 +50,11 @@ describe('Transaction List Row', () => {
       currencyCode: 'XMR',
       wallet: { id: 'SXq1f3x21H…', type: 'wallet:monero' },
       otherParams: {},
-      SVGMetadataElement: { name: 'ShapeShift', category: '', notes: 'Exchanged …' },
+      SVGMetadataElement: {
+        name: 'ShapeShift',
+        category: '',
+        notes: 'Exchanged …'
+      },
       dateString: 'Oct 14, 2018',
       time: '3:16 PM',
       key: 0,
@@ -60,11 +68,17 @@ describe('Transaction List Row', () => {
       symbol: '‎ɱ'
     }
     // CryptoAmount
-    const cryptoAmount = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(bns.abs(transaction.nativeAmount || ''))
-    const cryptoAmountFormat = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(cryptoAmount, 6), 6))
+    const cryptoAmount = UTILS.convertNativeToDisplay(
+      displayDenomination.multiplier
+    )(bns.abs(transaction.nativeAmount || ''))
+    const cryptoAmountFormat = intl.formatNumber(
+      UTILS.decimalOrZero(UTILS.truncateDecimals(cryptoAmount, 6), 6)
+    )
     // FiatAmount
     const fiatAmount = bns.abs(transaction.metadata.amountFiat.toFixed(2))
-    const fiatAmountFormat = intl.formatNumber(bns.toFixed(fiatAmount, 2, 2), { toFixed: 2 })
+    const fiatAmountFormat = intl.formatNumber(bns.toFixed(fiatAmount, 2, 2), {
+      toFixed: 2
+    })
     const props = {
       cryptoAmount: cryptoAmountFormat,
       denominationSymbol: displayDenomination.symbol,

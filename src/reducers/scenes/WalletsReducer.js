@@ -1,6 +1,11 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress } from 'edge-core-js'
+import type {
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgeMetaToken,
+  EdgeReceiveAddress
+} from 'edge-core-js'
 import _ from 'lodash'
 import { type Reducer, combineReducers } from 'redux'
 
@@ -20,18 +25,25 @@ export type WalletsState = {
   fioWallets: EdgeCurrencyWallet[]
 }
 
-const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> => {
+const byId = (
+  state = {},
+  action: Action
+): $PropertyType<WalletsState, 'byId'> => {
   switch (action.type) {
     case 'CORE/WALLETS/UPDATE_WALLETS': {
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
-        const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
+        const tempWallet = schema(
+          wallets[walletId],
+          action.data.receiveAddresses[walletId]
+        )
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
           tempWallet.enabledTokens = enabledTokensOnWallet
           enabledTokensOnWallet.forEach(customToken => {
-            tempWallet.nativeBalances[customToken] = wallets[walletId].balances[customToken] ?? '0'
+            tempWallet.nativeBalances[customToken] =
+              wallets[walletId].balances[customToken] ?? '0'
           })
         }
         out[walletId] = {
@@ -134,7 +146,8 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
         const enabledTokensOnWallet = state[wallet.id].enabledTokens
         guiWallet.enabledTokens = enabledTokensOnWallet
         enabledTokensOnWallet.forEach(customToken => {
-          guiWallet.nativeBalances[customToken] = wallet.balances[customToken] ?? '0'
+          guiWallet.nativeBalances[customToken] =
+            wallet.balances[customToken] ?? '0'
         })
         out[wallet.id] = {
           ...state[wallet.id],
@@ -160,7 +173,10 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
   }
 }
 
-const walletLoadingProgress = (state = {}, action: Action): $PropertyType<WalletsState, 'walletLoadingProgress'> => {
+const walletLoadingProgress = (
+  state = {},
+  action: Action
+): $PropertyType<WalletsState, 'walletLoadingProgress'> => {
   switch (action.type) {
     case 'INSERT_WALLET_IDS_FOR_PROGRESS': {
       const activeWalletIdList = action.data.activeWalletIds
@@ -173,7 +189,8 @@ const walletLoadingProgress = (state = {}, action: Action): $PropertyType<Wallet
 
     case 'UPDATE_WALLET_LOADING_PROGRESS': {
       // prevent backwards progress
-      if (action.data.addressLoadingProgress < state[action.data.walletId]) return state
+      if (action.data.addressLoadingProgress < state[action.data.walletId])
+        return state
       return {
         ...state,
         [action.data.walletId]: action.data.addressLoadingProgress
@@ -277,7 +294,10 @@ const manageTokensPending = (state = false, action: Action): boolean => {
   }
 }
 
-function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress): GuiWallet {
+function schema(
+  wallet: EdgeCurrencyWallet,
+  receiveAddress: EdgeReceiveAddress
+): GuiWallet {
   const id: string = wallet.id
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'
@@ -329,7 +349,13 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
     // Add all token denominations to allDenominations
     const tokenDenominations: {
       [denomination: string]: EdgeDenomination
-    } = denominations.reduce((denominations, denomination) => ({ ...denominations, [denomination.multiplier]: denomination }), {})
+    } = denominations.reduce(
+      (denominations, denomination) => ({
+        ...denominations,
+        [denomination.multiplier]: denomination
+      }),
+      {}
+    )
     allDenominations[currencyCode] = tokenDenominations
   })
 
@@ -358,7 +384,10 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
   return newWallet
 }
 
-const fioWallets = (state = [], action: Action): $PropertyType<WalletsState, 'fioWallets'> => {
+const fioWallets = (
+  state = [],
+  action: Action
+): $PropertyType<WalletsState, 'fioWallets'> => {
   switch (action.type) {
     case 'CORE/WALLETS/UPDATE_WALLETS': {
       const wallets = action.data.currencyWallets

@@ -15,7 +15,12 @@ import { type GuiWallet } from '../../types/types.js'
 import { makeCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
 type StateProps = {
@@ -23,7 +28,9 @@ type StateProps = {
   wallets: { [walletId: string]: GuiWallet }
 }
 
-class WalletListFooterComponent extends React.PureComponent<StateProps & ThemeProps> {
+class WalletListFooterComponent extends React.PureComponent<
+  StateProps & ThemeProps
+> {
   renderAddButton = (title: string, onPress: () => void) => {
     const { theme } = this.props
     const styles = getStyles(theme)
@@ -31,8 +38,15 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
       <View style={styles.addButtonsContainer}>
         <TouchableOpacity onPress={onPress}>
           <View style={styles.addButtonsInnerContainer}>
-            <Ionicon name="md-add" style={styles.addItem} size={theme.rem(1.5)} color={theme.iconTappable} />
-            <EdgeText style={[styles.addItem, styles.addItemText]}>{title}</EdgeText>
+            <Ionicon
+              name="md-add"
+              style={styles.addItem}
+              size={theme.rem(1.5)}
+              color={theme.iconTappable}
+            />
+            <EdgeText style={[styles.addItem, styles.addItemText]}>
+              {title}
+            </EdgeText>
           </View>
         </TouchableOpacity>
       </View>
@@ -44,7 +58,10 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
     const styles = getStyles(theme)
     return (
       <View style={styles.container}>
-        {this.renderAddButton(s.strings.wallet_list_add_wallet, Actions[Constants.CREATE_WALLET_SELECT_CRYPTO])}
+        {this.renderAddButton(
+          s.strings.wallet_list_add_wallet,
+          Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]
+        )}
         {this.renderAddButton(s.strings.wallet_list_add_token, this.addToken)}
       </View>
     )
@@ -65,7 +82,10 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
     // if no token-enabled wallets then allow creation of token-enabled wallet
     const { ethereum } = account.currencyConfig
     if (ethereum == null) {
-      return Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
+      return Alert.alert(
+        s.strings.create_wallet_invalid_input,
+        s.strings.create_wallet_select_valid_crypto
+      )
     }
 
     Airship.show(bridge => (

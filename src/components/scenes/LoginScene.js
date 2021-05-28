@@ -4,7 +4,14 @@ import { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { Keyboard, Linking, Platform, StatusBar, StyleSheet, View } from 'react-native'
+import {
+  Keyboard,
+  Linking,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View
+} from 'react-native'
 import { checkVersion } from 'react-native-check-version'
 import { getBundleId } from 'react-native-device-info'
 import { connect } from 'react-redux'
@@ -100,14 +107,21 @@ class LoginSceneComponent extends React.Component<Props, State> {
     const { account, pendingDeepLink } = this.props
 
     // Did we get a new recovery link?
-    if (pendingDeepLink !== oldProps.pendingDeepLink && pendingDeepLink != null && pendingDeepLink.type === 'passwordRecovery') {
+    if (
+      pendingDeepLink !== oldProps.pendingDeepLink &&
+      pendingDeepLink != null &&
+      pendingDeepLink.type === 'passwordRecovery'
+    ) {
       // Log out if necessary:
       if (account.username !== null) this.props.logout()
 
       // Pass the link to our component:
       const { passwordRecoveryKey } = pendingDeepLink
       // eslint-disable-next-line react/no-did-update-set-state
-      this.setState(state => ({ passwordRecoveryKey, counter: state.counter + 1 }))
+      this.setState(state => ({
+        passwordRecoveryKey,
+        counter: state.counter + 1
+      }))
       this.props.deepLinkHandled()
     }
   }
@@ -143,7 +157,10 @@ class LoginSceneComponent extends React.Component<Props, State> {
           backgroundImage={edgeBackgroundImage}
           primaryLogo={edgeLogo}
           primaryLogoCallback={this.showSendLogsModal}
-          parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
+          parentButton={{
+            text: s.strings.string_help,
+            callback: this.onClickHelp
+          }}
           skipSecurityAlerts
         />
       </View>

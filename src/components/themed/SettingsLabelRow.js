@@ -3,7 +3,12 @@
 import * as React from 'react'
 import { Text } from 'react-native'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { SettingsRow } from './SettingsRow.js'
 
 type OwnProps = {
@@ -23,7 +28,15 @@ export function SettingsLabelRowComponent(props: Props): React.Node {
   const { disabled, icon, text, theme, right, onPress } = props
   const styles = getStyles(theme)
 
-  return <SettingsRow disabled={disabled} icon={icon} text={text} right={<Text style={styles.labelText}>{right}</Text>} onPress={onPress} />
+  return (
+    <SettingsRow
+      disabled={disabled}
+      icon={icon}
+      text={text}
+      right={<Text style={styles.labelText}>{right}</Text>}
+      onPress={onPress}
+    />
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

@@ -4,14 +4,20 @@ import { connect } from 'react-redux'
 
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { getDisplayDenominationFull } from '../../../Settings/selectors.js'
-import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../../UI/selectors.js'
+import {
+  getExchangeDenomination,
+  getExchangeRate,
+  getSelectedWallet
+} from '../../selectors.js'
 import ControlPanel from './ControlPanel.ui'
 
 const mapStateToProps = (state: RootState) => {
   let secondaryToPrimaryRatio = 0
   const guiWallet = getSelectedWallet(state)
   const currencyCode = state.ui.wallets.selectedCurrencyCode
-  const exchangeRate = guiWallet ? getExchangeRate(state, currencyCode, guiWallet.isoFiatCurrencyCode) : 0
+  const exchangeRate = guiWallet
+    ? getExchangeRate(state, currencyCode, guiWallet.isoFiatCurrencyCode)
+    : 0
   let primaryDisplayDenomination = null
   let primaryExchangeDenomination = null
   let secondaryDisplayAmount = '0'
@@ -27,7 +33,9 @@ const mapStateToProps = (state: RootState) => {
         currencyLogo = guiWallet.symbolImage
       } else {
         // otherwise it is likely a token, so find the metaToken object and get symbolImage
-        const metaToken = guiWallet.metaTokens.find(metaToken => currencyCode === metaToken.currencyCode)
+        const metaToken = guiWallet.metaTokens.find(
+          metaToken => currencyCode === metaToken.currencyCode
+        )
         if (metaToken && metaToken.symbolImage) {
           currencyLogo = metaToken.symbolImage
         } else {
@@ -35,11 +43,20 @@ const mapStateToProps = (state: RootState) => {
         }
       }
       secondaryDisplayCurrencyCode = guiWallet.fiatCurrencyCode
-      secondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-      primaryDisplayDenomination = getDisplayDenominationFull(state, currencyCode)
+      secondaryToPrimaryRatio = getExchangeRate(
+        state,
+        currencyCode,
+        isoFiatCurrencyCode
+      )
+      primaryDisplayDenomination = getDisplayDenominationFull(
+        state,
+        currencyCode
+      )
       primaryExchangeDenomination = getExchangeDenomination(state, currencyCode)
       secondaryDisplayAmount =
-        (parseFloat(1) * parseFloat(secondaryToPrimaryRatio) * parseFloat(primaryDisplayDenomination.multiplier)) /
+        (parseFloat(1) *
+          parseFloat(secondaryToPrimaryRatio) *
+          parseFloat(primaryDisplayDenomination.multiplier)) /
         parseFloat(primaryExchangeDenomination.multiplier)
     }
   } catch (error) {

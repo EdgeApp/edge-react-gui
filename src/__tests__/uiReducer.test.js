@@ -2,7 +2,14 @@
 
 /* globals test expect */
 
-import { fio, passwordReminder, scenes, settings, ui, wallets } from '../modules/UI/reducer.js'
+import {
+  fio,
+  passwordReminder,
+  scenes,
+  settings,
+  ui,
+  wallets
+} from '../modules/UI/reducer.js'
 
 const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 

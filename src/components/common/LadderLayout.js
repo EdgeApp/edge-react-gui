@@ -44,7 +44,12 @@ export function LadderLayout(props: Props) {
       // This child accepts a stylesheet, so use that for spacing:
       newChildren.push(
         React.cloneElement(child, {
-          style: child.props.style == null ? style : Array.isArray(child.props.style) ? [...child.props.style, style] : [child.props.style, style]
+          style:
+            child.props.style == null
+              ? style
+              : Array.isArray(child.props.style)
+              ? [...child.props.style, style]
+              : [child.props.style, style]
         })
       )
       needsSpaceBefore = false
@@ -67,5 +72,11 @@ export function LadderLayout(props: Props) {
 }
 
 function isStyled(element) {
-  return React.isValidElement(element) && (element.type === Image || element.type === Text || element.type === View || element.props.style != null)
+  return (
+    React.isValidElement(element) &&
+    (element.type === Image ||
+      element.type === Text ||
+      element.type === View ||
+      element.props.style != null)
+  )
 }

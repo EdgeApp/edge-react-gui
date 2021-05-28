@@ -4,7 +4,12 @@ import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext'
 import { EdgeText } from './EdgeText'
 
 type OwnProps = {
@@ -13,14 +18,24 @@ type OwnProps = {
   style?: StyleSheet.Styles
 }
 
-const FormErrorComponent = ({ children, theme, style, isVisible, ...props }: OwnProps & ThemeProps) => {
+const FormErrorComponent = ({
+  children,
+  theme,
+  style,
+  isVisible,
+  ...props
+}: OwnProps & ThemeProps) => {
   const { container, text } = getStyles(theme)
 
   if (!isVisible) return null
 
   return (
     <View style={[container, style]}>
-      <SimpleLineIcons name="info" size={theme.rem(1.1)} color={theme.dangerText} />
+      <SimpleLineIcons
+        name="info"
+        size={theme.rem(1.1)}
+        color={theme.dangerText}
+      />
       <EdgeText style={text} {...props}>
         {children}
       </EdgeText>

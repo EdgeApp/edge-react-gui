@@ -4,7 +4,12 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { unpackEdges } from '../../util/edges'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { DataRow } from './DataRow'
 import { EdgeText } from './EdgeText.js'
 
@@ -21,7 +26,8 @@ class CardContentComponent extends React.PureComponent<Props & ThemeProps> {
   renderTitle() {
     const { title, theme } = this.props
     const styles = getStyles(theme)
-    if (typeof title === 'string') return <EdgeText style={styles.contentTitle}>{title}</EdgeText>
+    if (typeof title === 'string')
+      return <EdgeText style={styles.contentTitle}>{title}</EdgeText>
 
     return title
   }
@@ -30,7 +36,8 @@ class CardContentComponent extends React.PureComponent<Props & ThemeProps> {
     const { value, theme } = this.props
     const styles = getStyles(theme)
 
-    if (typeof value === 'string') return <EdgeText style={styles.contentValue}>{value}</EdgeText>
+    if (typeof value === 'string')
+      return <EdgeText style={styles.contentValue}>{value}</EdgeText>
 
     return value
   }
@@ -45,8 +52,12 @@ class CardContentComponent extends React.PureComponent<Props & ThemeProps> {
         <View style={styles.contentContainer}>
           <DataRow label={this.renderTitle()} value={this.renderValue()} />
           <DataRow
-            label={<EdgeText style={styles.contentSubTitle}>{subTitle}</EdgeText>}
-            value={<EdgeText style={styles.contentSubValue}>{subValue}</EdgeText>}
+            label={
+              <EdgeText style={styles.contentSubTitle}>{subTitle}</EdgeText>
+            }
+            value={
+              <EdgeText style={styles.contentSubValue}>{subValue}</EdgeText>
+            }
           />
         </View>
       </View>

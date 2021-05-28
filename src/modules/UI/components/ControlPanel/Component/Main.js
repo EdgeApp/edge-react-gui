@@ -19,7 +19,10 @@ import shareIcon from '../../../../../assets/images/sidenav/share.png'
 import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
-import { type WalletListResult, WalletListModal } from '../../../../../components/modals/WalletListModal.js'
+import {
+  type WalletListResult,
+  WalletListModal
+} from '../../../../../components/modals/WalletListModal.js'
 import { SWEEP_PRIVATE_KEY } from '../../../../../components/scenes/ScanScene'
 import { Airship } from '../../../../../components/services/AirshipInstance.js'
 import * as Constants from '../../../../../constants/indexConstants.js'
@@ -191,7 +194,12 @@ const SweepPrivateKeyButton = (props: SweepPrivateKeyButtonProps) => {
   const { onSelectWallet } = props
   const handlePress = () => {
     Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={getPrivateKeySweepableCurrencies()} showCreateWallet />
+      <WalletListModal
+        bridge={bridge}
+        headerTitle={s.strings.select_wallet}
+        allowedCurrencyCodes={getPrivateKeySweepableCurrencies()}
+        showCreateWallet
+      />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         onSelectWallet(walletId, currencyCode)
@@ -276,7 +284,9 @@ const TermsOfServiceButton = () => {
 
 const shareApp = () => {
   const url = THEME.websiteUrl
-  const message = `${sprintf(s.strings.share_subject, s.strings.app_name)}\n\n${s.strings.share_message}\n\n`
+  const message = `${sprintf(s.strings.share_subject, s.strings.app_name)}\n\n${
+    s.strings.share_message
+  }\n\n`
   const shareOptions = {
     message: Platform.OS === 'ios' ? message : message + url,
     url: Platform.OS === 'ios' ? url : ''
@@ -307,7 +317,10 @@ const SettingsButton = () => {
     <Button onPress={popToSettingsScene}>
       <Button.Row>
         <Button.Left>
-          <Image style={[styles.iconImage, { height: scale(20), width: scale(20) }]} source={settings} />
+          <Image
+            style={[styles.iconImage, { height: scale(20), width: scale(20) }]}
+            source={settings}
+          />
         </Button.Left>
 
         <Button.Center>
@@ -330,7 +343,10 @@ const LogoutButton = (props: LogoutButtonProps) => {
     <Button onPress={onPress}>
       <Button.Row>
         <Button.Left>
-          <Image style={[styles.iconImage, { height: scale(20), width: scale(20) }]} source={logoutImage} />
+          <Image
+            style={[styles.iconImage, { height: scale(20), width: scale(20) }]}
+            source={logoutImage}
+          />
         </Button.Left>
 
         <Button.Center>

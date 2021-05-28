@@ -4,7 +4,12 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { unpackEdges } from '../../util/edges'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 
 type Props = {
   label: React.Node,

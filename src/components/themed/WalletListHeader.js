@@ -10,14 +10,22 @@ import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.
 import { Fontello } from '../../assets/vector/index.js'
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
+import {
+  getDefaultIsoFiat,
+  getIsAccountBalanceVisible
+} from '../../modules/Settings/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeText } from '../themed/EdgeText.js'
-import { PromoCard } from '../themed/PromoCard.js'
-import { WiredBalanceBox } from '../themed/WiredBalanceBox.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
+import { EdgeText } from './EdgeText.js'
 import { EdgeTextFieldOutlined } from './EdgeTextField.js'
+import { PromoCard } from './PromoCard.js'
+import { WiredBalanceBox } from './WiredBalanceBox.js'
 
 type OwnProps = {
   sorting: boolean,
@@ -42,7 +50,11 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
   textInput = React.createRef()
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.searching === false && this.props.searching === true && this.textInput.current) {
+    if (
+      prevProps.searching === false &&
+      this.props.searching === true &&
+      this.textInput.current
+    ) {
       this.textInput.current.focus()
     }
   }
@@ -89,8 +101,13 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
             />
           </View>
           {searching && (
-            <TouchableOpacity onPress={this.handleSearchDone} style={styles.searchDoneButton}>
-              <EdgeText style={{ color: theme.textLink }}>{s.strings.string_done_cap}</EdgeText>
+            <TouchableOpacity
+              onPress={this.handleSearchDone}
+              style={styles.searchDoneButton}
+            >
+              <EdgeText style={{ color: theme.textLink }}>
+                {s.strings.string_done_cap}
+              </EdgeText>
             </TouchableOpacity>
           )}
         </View>
@@ -105,13 +122,26 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
         )}
         {!sorting && !searching && (
           <View style={styles.headerContainer}>
-            <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
+            <EdgeText style={styles.headerText}>
+              {s.strings.title_wallets}
+            </EdgeText>
             <View key="defaultButtons" style={styles.headerButtonsContainer}>
-              <TouchableOpacity style={styles.addButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
-                <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}
+              >
+                <Ionicon
+                  name="md-add"
+                  size={theme.rem(1.5)}
+                  color={theme.iconTappable}
+                />
               </TouchableOpacity>
               <TouchableOpacity onPress={this.props.openSortModal}>
-                <Fontello name="sort" size={theme.rem(1.5)} color={theme.iconTappable} />
+                <Fontello
+                  name="sort"
+                  size={theme.rem(1.5)}
+                  color={theme.iconTappable}
+                />
               </TouchableOpacity>
             </View>
           </View>

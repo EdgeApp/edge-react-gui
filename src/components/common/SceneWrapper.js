@@ -51,7 +51,11 @@ type Props = {
  */
 export class SceneWrapper extends React.Component<Props> {
   render() {
-    const { avoidKeyboard = false, hasHeader = true, hasTabs = true } = this.props
+    const {
+      avoidKeyboard = false,
+      hasHeader = true,
+      hasTabs = true
+    } = this.props
 
     return (
       <LayoutContext>
@@ -67,7 +71,13 @@ export class SceneWrapper extends React.Component<Props> {
 
           return avoidKeyboard ? (
             <KeyboardTracker downValue={downValue} upValue={upValue}>
-              {(keyboardAnimation, keyboardLayout) => this.renderScene(gap, keyboardAnimation, downValue - keyboardLayout)}
+              {(keyboardAnimation, keyboardLayout) =>
+                this.renderScene(
+                  gap,
+                  keyboardAnimation,
+                  downValue - keyboardLayout
+                )
+              }
             </KeyboardTracker>
           ) : (
             this.renderScene(gap, null, 0)
@@ -80,16 +90,39 @@ export class SceneWrapper extends React.Component<Props> {
   /**
    * Render the scene wrapper component, given various items from the context.
    */
-  renderScene(gap: SafeAreaGap, keyboardAnimation: Animated.Value | null, keyboardHeight: number) {
-    const { children, background = 'theme', bodySplit = 0, padding = 0, scroll = false } = this.props
+  renderScene(
+    gap: SafeAreaGap,
+    keyboardAnimation: Animated.Value | null,
+    keyboardHeight: number
+  ) {
+    const {
+      children,
+      background = 'theme',
+      bodySplit = 0,
+      padding = 0,
+      scroll = false
+    } = this.props
 
     // Render the scene container:
-    const finalChildren = typeof children === 'function' ? children({ ...gap, bottom: keyboardHeight }) : children
+    const finalChildren =
+      typeof children === 'function'
+        ? children({ ...gap, bottom: keyboardHeight })
+        : children
     const scene =
       keyboardAnimation != null ? (
-        <Animated.View style={[styles.scene, { ...gap, maxHeight: keyboardAnimation, padding }]}>{finalChildren}</Animated.View>
+        <Animated.View
+          style={[
+            styles.scene,
+            { ...gap, maxHeight: keyboardAnimation, padding }
+          ]}
+        >
+          {finalChildren}
+        </Animated.View>
       ) : scroll ? (
-        <ScrollView style={{ position: 'absolute', ...gap }} contentContainerStyle={{ padding }}>
+        <ScrollView
+          style={{ position: 'absolute', ...gap }}
+          contentContainerStyle={{ padding }}
+        >
           {finalChildren}
         </ScrollView>
       ) : (
@@ -103,7 +136,9 @@ export class SceneWrapper extends React.Component<Props> {
     }
     return (
       <Gradient style={styles.gradient}>
-        {background === 'body' && <View style={[styles.body, { top: gap.top + bodySplit }]} />}
+        {background === 'body' && (
+          <View style={[styles.body, { top: gap.top + bodySplit }]} />
+        )}
         {scene}
       </Gradient>
     )

@@ -26,9 +26,14 @@ type XPubModalDispatchProps = {
 
 type XPubModalState = {}
 
-type XPubModalComponentProps = XPubModalOwnProps & XPubModalStateProps & XPubModalDispatchProps
+type XPubModalComponentProps = XPubModalOwnProps &
+  XPubModalStateProps &
+  XPubModalDispatchProps
 
-export default class XPubModal extends React.Component<XPubModalComponentProps, XPubModalState> {
+export default class XPubModal extends React.Component<
+  XPubModalComponentProps,
+  XPubModalState
+> {
   _onPressCopy = () => {
     try {
       this.props.onExit()
@@ -50,7 +55,12 @@ export default class XPubModal extends React.Component<XPubModalComponentProps, 
   }
 
   render() {
-    const icon = Platform.OS === 'ios' ? <IonIcon name="ios-eye" size={scale(30)} /> : <IonIcon name="md-eye" size={scale(30)} />
+    const icon =
+      Platform.OS === 'ios' ? (
+        <IonIcon name="ios-eye" size={scale(30)} />
+      ) : (
+        <IonIcon name="md-eye" size={scale(30)} />
+      )
     let hasXpubExplorerValue = false
     if (this.props.xPubExplorer) {
       hasXpubExplorerValue = true
@@ -70,14 +80,18 @@ export default class XPubModal extends React.Component<XPubModalComponentProps, 
         </InteractiveModal.Title>
 
         <InteractiveModal.Body>
-          <InteractiveModal.Description style={{ textAlign: 'center' }}>{this.props.xPubSyntax}</InteractiveModal.Description>
+          <InteractiveModal.Description style={{ textAlign: 'center' }}>
+            {this.props.xPubSyntax}
+          </InteractiveModal.Description>
         </InteractiveModal.Body>
 
         <InteractiveModal.Footer>
           <InteractiveModal.Row>
             <InteractiveModal.Item>
               <PrimaryButton onPress={this._onPressCopy}>
-                <PrimaryButton.Text>{s.strings.fragment_request_copy_title}</PrimaryButton.Text>
+                <PrimaryButton.Text>
+                  {s.strings.fragment_request_copy_title}
+                </PrimaryButton.Text>
               </PrimaryButton>
             </InteractiveModal.Item>
           </InteractiveModal.Row>
@@ -85,7 +99,9 @@ export default class XPubModal extends React.Component<XPubModalComponentProps, 
             <InteractiveModal.Row>
               <InteractiveModal.Item>
                 <SecondaryButton onPress={this._loadXpubExplorer}>
-                  <SecondaryButton.Text>{s.strings.transaction_details_show_advanced_block_explorer}</SecondaryButton.Text>
+                  <SecondaryButton.Text>
+                    {s.strings.transaction_details_show_advanced_block_explorer}
+                  </SecondaryButton.Text>
                 </SecondaryButton>
               </InteractiveModal.Item>
             </InteractiveModal.Row>

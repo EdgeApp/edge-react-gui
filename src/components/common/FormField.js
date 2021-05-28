@@ -19,7 +19,8 @@ export class FormField extends React.Component<Props> {
     keyboardType: 'default'
   }
 
-  inputRef: { current: null | React$ElementRef<typeof TextField> } = React.createRef()
+  inputRef: { current: null | React$ElementRef<typeof TextField> } =
+    React.createRef()
 
   componentDidMount() {
     if (this.props.autoFocus && this.inputRef.current != null) {

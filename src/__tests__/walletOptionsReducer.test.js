@@ -18,7 +18,11 @@ describe('reducer', () => {
   it('open viewxpub wallet modal', () => {
     const action = {
       type: 'OPEN_VIEWXPUB_WALLET_MODAL',
-      data: { walletId: 'VIEWXPUB WALLET ID', xPub: 'VIEWXPUB xpub1892736451987263r', xPubExplorer: '' }
+      data: {
+        walletId: 'VIEWXPUB WALLET ID',
+        xPub: 'VIEWXPUB xpub1892736451987263r',
+        xPubExplorer: ''
+      }
     }
     const actual = reducer(initialState, action)
 

@@ -8,18 +8,40 @@ import { type AirshipBridge } from 'react-native-airship'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
-import { updateMaxSpend, updateTransactionAmount } from '../../actions/SendConfirmationActions.js'
+import {
+  updateMaxSpend,
+  updateTransactionAmount
+} from '../../actions/SendConfirmationActions.js'
 import s from '../../locales/strings.js'
-import { getDisplayDenomination, getExchangeDenomination } from '../../modules/Settings/selectors.js'
-import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getExchangeRate } from '../../modules/UI/selectors.js'
+import {
+  getDisplayDenomination,
+  getExchangeDenomination
+} from '../../modules/Settings/selectors.js'
+import {
+  convertCurrencyFromExchangeRates,
+  convertNativeToExchangeRateDenomination,
+  getExchangeRate
+} from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
-import { convertTransactionFeeToDisplayFee, DIVIDE_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
+import {
+  convertTransactionFeeToDisplayFee,
+  DIVIDE_PRECISION,
+  getDenomFromIsoCode
+} from '../../util/utils.js'
 import { ExchangeRate } from '../common/ExchangeRate.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { Card } from '../themed/Card'
 import { EdgeText } from '../themed/EdgeText.js'
-import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput'
+import {
+  type ExchangedFlipInputAmounts,
+  ExchangedFlipInput
+} from '../themed/ExchangedFlipInput'
 import { ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
@@ -53,7 +75,12 @@ type StateProps = {
 
 type DispatchProps = {
   updateMaxSpend: (walletId: string, currencyCode: string) => void,
-  updateTransactionAmount: (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) => void
+  updateTransactionAmount: (
+    nativeAmount: string,
+    exchangeAmount: string,
+    walletId: string,
+    currencyCode: string
+  ) => void
 }
 
 type State = {
@@ -74,9 +101,17 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
 
   handleCloseModal = () => this.props.bridge.resolve()
 
-  handleExchangeAmountChange = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
+  handleExchangeAmountChange = ({
+    nativeAmount,
+    exchangeAmount
+  }: ExchangedFlipInputAmounts) => {
     const { walletId, currencyCode, updateTransactionAmount } = this.props
-    updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode)
+    updateTransactionAmount(
+      nativeAmount,
+      exchangeAmount,
+      walletId,
+      currencyCode
+    )
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -89,7 +124,8 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     }
   }
 
-  handleSendMaxAmount = () => this.props.updateMaxSpend(this.props.walletId, this.props.currencyCode)
+  handleSendMaxAmount = () =>
+    this.props.updateMaxSpend(this.props.walletId, this.props.currencyCode)
 
   renderTitle = () => {
     const styles = getStyles(this.props.theme)
@@ -97,21 +133,30 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
       <View style={styles.headerContainer}>
         <ModalTitle>{s.strings.string_enter_amount}</ModalTitle>
         <TouchableOpacity onPress={this.handleSendMaxAmount}>
-          <EdgeText style={styles.headerMaxAmountText}>{s.strings.send_confirmation_max_button_title}</EdgeText>
+          <EdgeText style={styles.headerMaxAmountText}>
+            {s.strings.send_confirmation_max_button_title}
+          </EdgeText>
         </TouchableOpacity>
       </View>
     )
   }
 
   renderExchangeRates = () => {
-    const { primaryInfo, secondaryInfo, fiatPerCrypto, errorMessage, theme } = this.props
+    const { primaryInfo, secondaryInfo, fiatPerCrypto, errorMessage, theme } =
+      this.props
     const styles = getStyles(theme)
     return (
       <View style={styles.exchangeRateContainer}>
         {errorMessage ? (
-          <EdgeText style={styles.exchangeRateErrorText}>{errorMessage}</EdgeText>
+          <EdgeText style={styles.exchangeRateErrorText}>
+            {errorMessage}
+          </EdgeText>
         ) : (
-          <ExchangeRate primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} secondaryDisplayAmount={fiatPerCrypto} />
+          <ExchangeRate
+            primaryInfo={primaryInfo}
+            secondaryInfo={secondaryInfo}
+            secondaryDisplayAmount={fiatPerCrypto}
+          />
         )}
       </View>
     )
@@ -123,14 +168,23 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     const balance = `${balanceCrypto} (${balanceFiat})`
     return (
       <View style={styles.balanceContainer}>
-        <EdgeText style={styles.balanceString}>{s.strings.send_confirmation_balance}</EdgeText>
+        <EdgeText style={styles.balanceString}>
+          {s.strings.send_confirmation_balance}
+        </EdgeText>
         <EdgeText style={styles.balanceValue}>{balance}</EdgeText>
       </View>
     )
   }
 
   renderFlipInput = () => {
-    const { flipInputHeaderText, flipInputHeaderLogo, primaryInfo, secondaryInfo, fiatPerCrypto, theme } = this.props
+    const {
+      flipInputHeaderText,
+      flipInputHeaderLogo,
+      primaryInfo,
+      secondaryInfo,
+      fiatPerCrypto,
+      theme
+    } = this.props
     const { overridePrimaryExchangeAmount } = this.state
     const styles = getStyles(theme)
     return (
@@ -160,7 +214,11 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     const styles = getStyles(theme)
     const feeText = `+ ${s.strings.string_fee}`
     const feeStyle =
-      feeSyntaxStyle === 'dangerText' ? styles.feesSyntaxDanger : feeSyntaxStyle === 'warningText' ? styles.feesSyntaxWarning : styles.feesSyntaxDefault
+      feeSyntaxStyle === 'dangerText'
+        ? styles.feesSyntaxDanger
+        : feeSyntaxStyle === 'warningText'
+        ? styles.feesSyntaxWarning
+        : styles.feesSyntaxDefault
     return (
       <View style={styles.feesContainer}>
         <EdgeText style={styles.feesContainerText}>{feeText}</EdgeText>
@@ -239,16 +297,32 @@ export const FlipInputModal = connect(
 
     // Denominations
     const cryptoDenomination = getDisplayDenomination(state, currencyCode)
-    const cryptoExchangeDenomination = getExchangeDenomination(state, currencyCode)
+    const cryptoExchangeDenomination = getExchangeDenomination(
+      state,
+      currencyCode
+    )
     const fiatDenomination = getDenomFromIsoCode(fiatCurrencyCode)
 
     // Balances
     const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
-    const balanceCrypto = convertNativeToExchangeRateDenomination(state.ui.settings, currencyCode, balanceInCrypto)
-    const balanceFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(balanceCrypto))
+    const balanceCrypto = convertNativeToExchangeRateDenomination(
+      state.ui.settings,
+      currencyCode,
+      balanceInCrypto
+    )
+    const balanceFiat = convertCurrencyFromExchangeRates(
+      state.exchangeRates,
+      currencyCode,
+      isoFiatCurrencyCode,
+      parseFloat(balanceCrypto)
+    )
 
     // FlipInput
-    const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    const fiatPerCrypto = getExchangeRate(
+      state,
+      currencyCode,
+      isoFiatCurrencyCode
+    )
 
     const primaryInfo = {
       displayCurrencyCode: currencyCode,
@@ -264,8 +338,13 @@ export const FlipInputModal = connect(
       exchangeDenomination: fiatDenomination
     }
 
-    const { forceUpdateGuiCounter, nativeAmount } = state.ui.scenes.sendConfirmation
-    const overridePrimaryExchangeAmount = bns.div(nativeAmount, primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
+    const { forceUpdateGuiCounter, nativeAmount } =
+      state.ui.scenes.sendConfirmation
+    const overridePrimaryExchangeAmount = bns.div(
+      nativeAmount,
+      primaryInfo.exchangeDenomination.multiplier,
+      DIVIDE_PRECISION
+    )
 
     // Fees
     const transactionFee = convertTransactionFeeToDisplayFee(
@@ -275,20 +354,29 @@ export const FlipInputModal = connect(
       state.ui.scenes.sendConfirmation.transaction,
       state.ui.settings
     )
-    const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
+    const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${
+      transactionFee.cryptoAmount
+    } (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
     const feeSyntaxStyle = transactionFee.fiatStyle
 
     // Error
     const error = state.ui.scenes.sendConfirmation.error
     let errorMessage
-    if (error && error.message !== 'broadcastError' && error.message !== 'transactionCancelled' && asMaybeNoAmountSpecifiedError(error) == null) {
+    if (
+      error &&
+      error.message !== 'broadcastError' &&
+      error.message !== 'transactionCancelled' &&
+      asMaybeNoAmountSpecifiedError(error) == null
+    ) {
       errorMessage = error.message
     }
 
     return {
       // Balances
       balanceCrypto: `${balanceCrypto} ${currencyCode}`,
-      balanceFiat: `${fiatDenomination.symbol ? fiatDenomination.symbol + ' ' : ''} ${balanceFiat.toFixed(2)}`,
+      balanceFiat: `${
+        fiatDenomination.symbol ? fiatDenomination.symbol + ' ' : ''
+      } ${balanceFiat.toFixed(2)}`,
 
       // FlipInput
       flipInputHeaderText: sprintf(s.strings.send_from_wallet, guiWallet.name),
@@ -308,8 +396,21 @@ export const FlipInputModal = connect(
     }
   },
   (dispatch: Dispatch) => ({
-    updateMaxSpend: (walletId: string, currencyCode: string) => dispatch(updateMaxSpend(walletId, currencyCode)),
-    updateTransactionAmount: (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) =>
-      dispatch(updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode))
+    updateMaxSpend: (walletId: string, currencyCode: string) =>
+      dispatch(updateMaxSpend(walletId, currencyCode)),
+    updateTransactionAmount: (
+      nativeAmount: string,
+      exchangeAmount: string,
+      walletId: string,
+      currencyCode: string
+    ) =>
+      dispatch(
+        updateTransactionAmount(
+          nativeAmount,
+          exchangeAmount,
+          walletId,
+          currencyCode
+        )
+      )
   })
 )(withTheme(FlipInputModalComponent))

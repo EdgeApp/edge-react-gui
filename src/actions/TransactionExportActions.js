@@ -2,24 +2,48 @@
 
 import { abs, div, lt } from 'biggystring'
 import csvStringify from 'csv-stringify/lib/browser/sync'
-import { type EdgeCurrencyWallet, type EdgeGetTransactionsOptions, type EdgeTransaction } from 'edge-core-js'
+import {
+  type EdgeCurrencyWallet,
+  type EdgeGetTransactionsOptions,
+  type EdgeTransaction
+} from 'edge-core-js'
 
-export async function exportTransactionsToQBO(wallet: EdgeCurrencyWallet, opts: EdgeGetTransactionsOptions): Promise<string> {
+export async function exportTransactionsToQBO(
+  wallet: EdgeCurrencyWallet,
+  opts: EdgeGetTransactionsOptions
+): Promise<string> {
   const txs: EdgeTransaction[] = await wallet.getTransactions(opts)
   const { currencyCode = wallet.currencyInfo.currencyCode, denomination } = opts
-  return exportTransactionsToQBOInner(txs, currencyCode, wallet.fiatCurrencyCode, denomination, Date.now())
+  return exportTransactionsToQBOInner(
+    txs,
+    currencyCode,
+    wallet.fiatCurrencyCode,
+    denomination,
+    Date.now()
+  )
 }
 
-export async function exportTransactionsToCSV(wallet: EdgeCurrencyWallet, opts: EdgeGetTransactionsOptions = {}): Promise<string> {
+export async function exportTransactionsToCSV(
+  wallet: EdgeCurrencyWallet,
+  opts: EdgeGetTransactionsOptions = {}
+): Promise<string> {
   const txs: EdgeTransaction[] = await wallet.getTransactions(opts)
   const { currencyCode = wallet.currencyInfo.currencyCode, denomination } = opts
 
   let denomName = ''
   if (denomination != null) {
-    const denomObj = wallet.currencyInfo.denominations.find(edgeDenom => edgeDenom.multiplier === denomination)
+    const denomObj = wallet.currencyInfo.denominations.find(
+      edgeDenom => edgeDenom.multiplier === denomination
+    )
     if (denomObj != null) denomName = denomObj.name
   }
-  return exportTransactionsToCSVInner(txs, currencyCode, wallet.fiatCurrencyCode, denomination, denomName)
+  return exportTransactionsToCSVInner(
+    txs,
+    currencyCode,
+    wallet.fiatCurrencyCode,
+    denomination,
+    denomName
+  )
 }
 
 function padZero(val: string): string {
@@ -117,7 +141,9 @@ export function exportTransactionsToQBOInner(
   const now = makeOfxDate(dateNow / 1000)
 
   for (const edgeTx of edgeTransactions) {
-    const TRNAMT: string = denom ? div(edgeTx.nativeAmount, denom, 18) : edgeTx.nativeAmount
+    const TRNAMT: string = denom
+      ? div(edgeTx.nativeAmount, denom, 18)
+      : edgeTx.nativeAmount
     const TRNTYPE = lt(edgeTx.nativeAmount, '0') ? 'DEBIT' : 'CREDIT'
     const DTPOSTED = makeOfxDate(edgeTx.date)
     let NAME: string = ''
@@ -234,8 +260,12 @@ export function exportTransactionsToCSVInner(
   const items: any[] = []
 
   for (const edgeTx of edgeTransactions) {
-    const amount: string = denom ? div(edgeTx.nativeAmount, denom, 18) : edgeTx.nativeAmount
-    const networkFeeField: string = denom ? div(edgeTx.networkFee, denom, 18) : edgeTx.networkFee
+    const amount: string = denom
+      ? div(edgeTx.nativeAmount, denom, 18)
+      : edgeTx.nativeAmount
+    const networkFeeField: string = denom
+      ? div(edgeTx.networkFee, denom, 18)
+      : edgeTx.networkFee
     const { date, time } = makeCsvDateTime(edgeTx.date)
     let name: string = ''
     let amountFiat: number = 0

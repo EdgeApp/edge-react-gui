@@ -29,7 +29,10 @@ const transactions = (state = [], action: Action): TransactionListTx[] => {
   }
 }
 
-const transactionIdMap = (state = {}, action: Action): { [txid: string]: TransactionListTx } => {
+const transactionIdMap = (
+  state = {},
+  action: Action
+): { [txid: string]: TransactionListTx } => {
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
       return action.data.transactionIdMap
@@ -88,11 +91,12 @@ const currentEndIndex = (state = 0, action: Action): number => {
   }
 }
 
-export const transactionList: Reducer<TransactionListState, Action> = combineReducers({
-  currentCurrencyCode,
-  currentEndIndex,
-  currentWalletId,
-  numTransactions,
-  transactionIdMap,
-  transactions
-})
+export const transactionList: Reducer<TransactionListState, Action> =
+  combineReducers({
+    currentCurrencyCode,
+    currentEndIndex,
+    currentWalletId,
+    numTransactions,
+    transactionIdMap,
+    transactions
+  })

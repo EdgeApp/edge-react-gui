@@ -5,14 +5,25 @@ import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as Constants from '../constants/indexConstants'
 import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
 import { refreshAllFioAddresses } from '../modules/FioAddress/action'
-import { addToFioAddressCache, needToCheckExpired, refreshConnectedWalletsForFioAddress } from '../modules/FioAddress/util'
+import {
+  addToFioAddressCache,
+  needToCheckExpired,
+  refreshConnectedWalletsForFioAddress
+} from '../modules/FioAddress/util'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 
-export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetState, currencyWallets: { [walletId: string]: EdgeCurrencyWallet }) => {
+export const refreshConnectedWallets = async (
+  dispatch: Dispatch,
+  getState: GetState,
+  currencyWallets: { [walletId: string]: EdgeCurrencyWallet }
+) => {
   const wallets: EdgeCurrencyWallet[] = []
   const fioWallets: EdgeCurrencyWallet[] = []
   for (const walletId of Object.keys(currencyWallets)) {
-    if (currencyWallets[walletId] && currencyWallets[walletId].type === FIO_WALLET_TYPE) {
+    if (
+      currencyWallets[walletId] &&
+      currencyWallets[walletId].type === FIO_WALLET_TYPE
+    ) {
       fioWallets.push(currencyWallets[walletId])
     }
     wallets.push(currencyWallets[walletId])
@@ -23,7 +34,12 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetS
     const fioAddresses = await fioWallet.otherMethods.getFioAddressNames()
     for (const fioAddress: string of fioAddresses) {
       if (!getState().core.account.id) break
-      connectedWalletsByFioAddress[fioAddress] = await refreshConnectedWalletsForFioAddress(fioAddress, fioWallet, wallets)
+      connectedWalletsByFioAddress[fioAddress] =
+        await refreshConnectedWalletsForFioAddress(
+          fioAddress,
+          fioWallet,
+          wallets
+        )
       dispatch({
         type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
         data: {
@@ -35,40 +51,45 @@ export const refreshConnectedWallets = async (dispatch: Dispatch, getState: GetS
   }
 }
 
-export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[]) => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  if (!account || !account.currencyConfig) {
-    setTimeout(() => {
-      dispatch(checkFioObtData(walletId, transactions))
-    }, 400)
-  }
-  try {
-    const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+export const checkFioObtData =
+  (walletId: string, transactions: EdgeTransaction[]) =>
+  async (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { account } = state.core
+    if (!account || !account.currencyConfig) {
+      setTimeout(() => {
+        dispatch(checkFioObtData(walletId, transactions))
+      }, 400)
+    }
+    try {
+      const fioPlugin =
+        account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
 
-    for (const transaction: EdgeTransaction of transactions) {
-      if (transaction.metadata) {
-        const { name } = transaction.metadata
-        if (name && (await fioPlugin.otherMethods.isFioAddressValid(name))) {
-          addToFioAddressCache(state.core.account, [name])
+      for (const transaction: EdgeTransaction of transactions) {
+        if (transaction.metadata) {
+          const { name } = transaction.metadata
+          if (name && (await fioPlugin.otherMethods.isFioAddressValid(name))) {
+            addToFioAddressCache(state.core.account, [name])
+          }
         }
       }
+    } catch (e) {
+      console.log(e)
     }
-  } catch (e) {
-    console.log(e)
   }
-}
 
-export const needToCheckExpiredFioNames = () => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const data = await needToCheckExpired(state.core.disklet)
-  dispatch({ type: 'FIO/NEED_TO_CHECK_EXPIRED', data })
-}
-
-export const checkExpiredFioNames = () => async (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  if (state.ui.fio.needToCheckExpired) {
-    dispatch(refreshAllFioAddresses(true))
-    dispatch({ type: 'FIO/NEED_TO_CHECK_EXPIRED', data: false })
+export const needToCheckExpiredFioNames =
+  () => async (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const data = await needToCheckExpired(state.core.disklet)
+    dispatch({ type: 'FIO/NEED_TO_CHECK_EXPIRED', data })
   }
-}
+
+export const checkExpiredFioNames =
+  () => async (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    if (state.ui.fio.needToCheckExpired) {
+      dispatch(refreshAllFioAddresses(true))
+      dispatch({ type: 'FIO/NEED_TO_CHECK_EXPIRED', data: false })
+    }
+  }

@@ -5,7 +5,12 @@ import { matchJson } from '../util/matchJson.js'
 
 describe('matchJson', function () {
   it('matches similar JSON structures', function () {
-    expect(matchJson({ object: { a: 1, b: 'string' }, array: [false, null] }, { array: [false, null], object: { b: 'string', a: 1 } })).toEqual(true)
+    expect(
+      matchJson(
+        { object: { a: 1, b: 'string' }, array: [false, null] },
+        { array: [false, null], object: { b: 'string', a: 1 } }
+      )
+    ).toEqual(true)
   })
   it('rejects unequal JSON arrays', function () {
     expect(matchJson([1, 2], [1, 2, 3])).toEqual(false)

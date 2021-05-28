@@ -32,7 +32,10 @@ type State = {
   subCategory: string
 }
 
-export class TransactionDetailsCategoryInput extends React.Component<Props, State> {
+export class TransactionDetailsCategoryInput extends React.Component<
+  Props,
+  State
+> {
   constructor(props: Props) {
     super(props)
     const { category, subCategory } = props
@@ -79,16 +82,28 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
         <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
           <View style={styles.airshipContainer}>
-            <FormattedText style={styles.airshipHeader}>{s.strings.transaction_details_category_title}</FormattedText>
+            <FormattedText style={styles.airshipHeader}>
+              {s.strings.transaction_details_category_title}
+            </FormattedText>
             <View style={styles.inputCategoryMainContainter}>
-              <FormattedText style={styles.inputCategoryListHeader}>{s.strings.tx_detail_picker_title}</FormattedText>
+              <FormattedText style={styles.inputCategoryListHeader}>
+                {s.strings.tx_detail_picker_title}
+              </FormattedText>
               <View style={styles.inputCategoryRow}>
                 {categories.map(item => {
-                  const containterStyle = category === item.key ? styles.inputCategoryContainterSelected : styles.inputCategoryContainter
+                  const containterStyle =
+                    category === item.key
+                      ? styles.inputCategoryContainterSelected
+                      : styles.inputCategoryContainter
                   return (
-                    <TouchableWithoutFeedback onPress={() => this.onChangeCategory(item.key)} key={item.key}>
+                    <TouchableWithoutFeedback
+                      onPress={() => this.onChangeCategory(item.key)}
+                      key={item.key}
+                    >
                       <View style={containterStyle}>
-                        <FormattedText style={styles.inputCategoryText}>{item.syntax}</FormattedText>
+                        <FormattedText style={styles.inputCategoryText}>
+                          {item.syntax}
+                        </FormattedText>
                       </View>
                     </TouchableWithoutFeedback>
                   )
@@ -141,11 +156,17 @@ export class TransactionDetailsCategoryInput extends React.Component<Props, Stat
 
     const selectedSubcategories = subCategories.filter(subCategory => {
       const splittedSubCategory = subCategory.split(':')
-      return splittedSubCategory[0].toLowerCase() === categories[category].syntax.toLowerCase()
+      return (
+        splittedSubCategory[0].toLowerCase() ===
+        categories[category].syntax.toLowerCase()
+      )
     })
     const filteredSubcategories = subCategories.filter(subCategory => {
       const splittedSubCategory = subCategory.split(':')
-      return splittedSubCategory[0].toLowerCase() !== categories[category].syntax.toLowerCase()
+      return (
+        splittedSubCategory[0].toLowerCase() !==
+        categories[category].syntax.toLowerCase()
+      )
     })
     return [...selectedSubcategories, ...filteredSubcategories]
   }

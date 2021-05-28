@@ -22,7 +22,15 @@ type Props = OwnProps & ThemeProps
 function SettingsRadioRowComponent(props: Props): React.Node {
   const { disabled = false, icon, text, value, onPress } = props
 
-  return <SettingsRow disabled={disabled} icon={icon} text={text} right={<RadioIcon value={value} />} onPress={onPress} />
+  return (
+    <SettingsRow
+      disabled={disabled}
+      icon={icon}
+      text={text}
+      right={<RadioIcon value={value} />}
+      onPress={onPress}
+    />
+  )
 }
 
 export const SettingsRadioRow = withTheme(SettingsRadioRowComponent)

@@ -5,7 +5,12 @@ import * as React from 'react'
 import { ScrollView, Text } from 'react-native'
 import { connect } from 'react-redux'
 
-import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenominationKeyRequest } from '../../actions/SettingsActions.js'
+import {
+  disableCustomNodes,
+  enableCustomNodes,
+  saveCustomNodesList,
+  setDenominationKeyRequest
+} from '../../actions/SettingsActions.js'
 import s from '../../locales/strings.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
@@ -113,14 +118,32 @@ export class CurrencySettingsComponent extends React.Component<Props, State> {
           {this.props.denominations.map(denomination => {
             const key = denomination.multiplier
             const left = (
-              <Text style={{ fontFamily: theme.fontFaceDefault, fontSize: theme.rem(1), textAlign: 'left', flexShrink: 1, color: theme.primaryText }}>
-                <Text style={{ fontFamily: theme.fontFaceSymbols }}>{denomination.symbol}</Text>
+              <Text
+                style={{
+                  fontFamily: theme.fontFaceDefault,
+                  fontSize: theme.rem(1),
+                  textAlign: 'left',
+                  flexShrink: 1,
+                  color: theme.primaryText
+                }}
+              >
+                <Text style={{ fontFamily: theme.fontFaceSymbols }}>
+                  {denomination.symbol}
+                </Text>
                 {' - ' + denomination.name}
               </Text>
             )
             const isSelected = key === this.props.selectedDenominationKey
             const onPress = this.selectDenomination(key)
-            return <SettingsRadioRow key={denomination.multiplier} icon={left} text="" value={isSelected} onPress={onPress} />
+            return (
+              <SettingsRadioRow
+                key={denomination.multiplier}
+                icon={left}
+                text=""
+                value={isSelected}
+                onPress={onPress}
+              />
+            )
           })}
           {this.props.defaultElectrumServer.length !== 0 && (
             <>
@@ -149,13 +172,20 @@ export const CurrencySettingsScene = connect(
     const { currencyCode, defaultSettings, pluginId } = currencyInfo
 
     const { account } = state.core
-    const defaultElectrumServer = defaultSettings.electrumServers ? defaultSettings.electrumServers[0] : ''
+    const defaultElectrumServer = defaultSettings.electrumServers
+      ? defaultSettings.electrumServers[0]
+      : ''
     const userSettings = account.currencyConfig[pluginId].userSettings
     const electrumServers = userSettings ? userSettings.electrumServers : []
-    const disableFetchingServers = userSettings ? userSettings.disableFetchingServers : false
+    const disableFetchingServers = userSettings
+      ? userSettings.disableFetchingServers
+      : false
     return {
       denominations: SETTINGS_SELECTORS.getDenominations(state, currencyCode),
-      selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(state, currencyCode),
+      selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(
+        state,
+        currencyCode
+      ),
       electrumServers,
       disableFetchingServers,
       defaultElectrumServer
@@ -169,10 +199,17 @@ export const CurrencySettingsScene = connect(
       dispatch(enableCustomNodes(ownProps.currencyInfo.currencyCode))
     },
     selectDenomination(denominationKey) {
-      dispatch(setDenominationKeyRequest(ownProps.currencyInfo.currencyCode, denominationKey))
+      dispatch(
+        setDenominationKeyRequest(
+          ownProps.currencyInfo.currencyCode,
+          denominationKey
+        )
+      )
     },
     saveCustomNodesList(nodesList: string[]) {
-      dispatch(saveCustomNodesList(ownProps.currencyInfo.currencyCode, nodesList))
+      dispatch(
+        saveCustomNodesList(ownProps.currencyInfo.currencyCode, nodesList)
+      )
     }
   })
 )(withTheme(CurrencySettingsComponent))

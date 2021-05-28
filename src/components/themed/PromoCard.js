@@ -11,7 +11,12 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
 import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox } from './ThemedButtons.js'
 
@@ -29,7 +34,8 @@ type Props = StateProps & DispatchProps & ThemeProps
 
 class PromoCardComponent extends React.PureComponent<Props> {
   handlePress = () => {
-    const { accountMessages, accountReferral, linkReferralWithCurrencies } = this.props
+    const { accountMessages, accountReferral, linkReferralWithCurrencies } =
+      this.props
     const messageSummary = bestOfMessages(accountMessages, accountReferral)
     const uri = messageSummary ? messageSummary.message.uri : null
     if (uri != null) linkReferralWithCurrencies(uri)
@@ -52,12 +58,23 @@ class PromoCardComponent extends React.PureComponent<Props> {
     return (
       <ButtonBox marginRem={1} onPress={this.handlePress}>
         <View style={styles.container}>
-          {message.iconUri != null ? <Image resizeMode="contain" source={{ uri: message.iconUri }} style={styles.icon} /> : null}
+          {message.iconUri != null ? (
+            <Image
+              resizeMode="contain"
+              source={{ uri: message.iconUri }}
+              style={styles.icon}
+            />
+          ) : null}
           <EdgeText numberOfLines={0} style={styles.text}>
             {message.message}
           </EdgeText>
           <TouchableOpacity onPress={this.handleClose}>
-            <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} style={styles.close} />
+            <AntDesignIcon
+              name="close"
+              color={theme.iconTappable}
+              size={theme.rem(1)}
+              style={styles.close}
+            />
           </TouchableOpacity>
         </View>
       </ButtonBox>

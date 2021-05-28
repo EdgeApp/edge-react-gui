@@ -112,7 +112,10 @@ export class CrossFade extends React.Component<Props, State> {
       // Render the child:
       if (this.state[key]) {
         out.push(
-          <Animated.View key={key} style={[StyleSheet.absoluteFill, { opacity: opacities[key].value }]}>
+          <Animated.View
+            key={key}
+            style={[StyleSheet.absoluteFill, { opacity: opacities[key].value }]}
+          >
             {child}
           </Animated.View>
         )
@@ -126,7 +129,10 @@ export class CrossFade extends React.Component<Props, State> {
 /**
  * Iterates over all the React children with `key` properties.
  */
-function forEachKey<Child>(children: React.ChildrenArray<Child>, callback: (key: string, child: Child) => void): void {
+function forEachKey<Child>(
+  children: React.ChildrenArray<Child>,
+  callback: (key: string, child: Child) => void
+): void {
   React.Children.forEach(children, (child: Child) => {
     if (child != null && child.key != null) {
       callback(String(child.key), child)

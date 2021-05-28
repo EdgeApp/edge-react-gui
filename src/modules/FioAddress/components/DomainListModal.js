@@ -8,10 +8,18 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { Fontello } from '../../../assets/vector'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { EdgeTextFieldOutlined } from '../../../components/themed/EdgeTextField'
-import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
+import {
+  ModalCloseArrow,
+  ModalTitle
+} from '../../../components/themed/ModalParts.js'
 import { ClickableText } from '../../../components/themed/ThemedButtons'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import * as Constants from '../../../constants/indexConstants'
@@ -48,7 +56,10 @@ type Props = OwnProps & ThemeProps & StateProps
 
 const newDomainItem = {
   createNew: true,
-  value: { ...Constants.FIO_DOMAIN_DEFAULT, name: s.strings.fio_address_list_register_domain },
+  value: {
+    ...Constants.FIO_DOMAIN_DEFAULT,
+    name: s.strings.fio_address_list_register_domain
+  },
   label: s.strings.fio_address_list_register_domain
 }
 
@@ -78,9 +89,14 @@ class DomainListModalComponent extends React.Component<Props, State> {
     }))
     const userDomainsConverted = []
     for (const fioDomain of userDomains) {
-      userDomainsConverted.push({ value: fioDomain, label: `${Constants.FIO_ADDRESS_DELIMITER}${fioDomain.name}` })
+      userDomainsConverted.push({
+        value: fioDomain,
+        label: `${Constants.FIO_ADDRESS_DELIMITER}${fioDomain.name}`
+      })
     }
-    userDomainsConverted.sort((userDomainA: Item, userDomainB: Item) => (userDomainA.value.name < userDomainB.value.name ? -1 : 1))
+    userDomainsConverted.sort((userDomainA: Item, userDomainB: Item) =>
+      userDomainA.value.name < userDomainB.value.name ? -1 : 1
+    )
 
     return { domains: [...domains, ...userDomainsConverted], prevDomainsJson }
   }
@@ -150,8 +166,15 @@ class DomainListModalComponent extends React.Component<Props, State> {
       return (
         <ClickableText onPress={this.registerNewDomain} paddingRem={0}>
           <View style={[styles.rowContainerTop, styles.registerDomainRow]}>
-            <Fontello name="register-custom-fio" style={styles.domainRegisterIcon} color={theme.iconTappable} size={theme.rem(1)} />
-            <EdgeText style={styles.domainRegisterText}>{s.strings.fio_address_list_domain_register}</EdgeText>
+            <Fontello
+              name="register-custom-fio"
+              style={styles.domainRegisterIcon}
+              color={theme.iconTappable}
+              size={theme.rem(1)}
+            />
+            <EdgeText style={styles.domainRegisterText}>
+              {s.strings.fio_address_list_domain_register}
+            </EdgeText>
           </View>
         </ClickableText>
       )
@@ -161,7 +184,9 @@ class DomainListModalComponent extends React.Component<Props, State> {
         <ClickableText onPress={() => this.selectItem(value)} paddingRem={0}>
           <View style={styles.rowContainerTop}>
             <EdgeText style={styles.domainListRowName}>{label}</EdgeText>
-            <EdgeText style={styles.domainListRowFree}>{value.isFree ? s.strings.fio_domain_free : ''}</EdgeText>
+            <EdgeText style={styles.domainListRowFree}>
+              {value.isFree ? s.strings.fio_domain_free : ''}
+            </EdgeText>
           </View>
         </ClickableText>
       )
@@ -176,7 +201,11 @@ class DomainListModalComponent extends React.Component<Props, State> {
     const { input, isFocused } = this.state
     const items = this.getItems()
     return (
-      <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={[1, 0]}>
+      <ThemedModal
+        bridge={bridge}
+        onCancel={() => bridge.resolve(null)}
+        paddingRem={[1, 0]}
+      >
         <ModalTitle center paddingRem={[0, 3, 1]}>
           {s.strings.fio_address_choose_domain_label}
         </ModalTitle>
@@ -200,7 +229,13 @@ class DomainListModalComponent extends React.Component<Props, State> {
             blurOnSubmit
           />
         </View>
-        <FlatList data={items} initialNumToRender={24} keyboardShouldPersistTaps="handled" keyExtractor={this.keyExtractor} renderItem={this.renderItem} />
+        <FlatList
+          data={items}
+          initialNumToRender={24}
+          keyboardShouldPersistTaps="handled"
+          keyExtractor={this.keyExtractor}
+          renderItem={this.renderItem}
+        />
         <ModalCloseArrow onPress={() => bridge.resolve(null)} />
       </ThemedModal>
     )
@@ -247,7 +282,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const DomainListModal = connect((state: RootState): StateProps => {
   const { account } = state.core
   const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-  const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
+  const fioPlugin = account.currencyConfig
+    ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+    : null
   return {
     userDomains: state.ui.scenes.fioAddress.fioDomains,
     fioWallets,

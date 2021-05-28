@@ -15,12 +15,24 @@ import {
 import { type SortOption } from '../components/modals/WalletListSortModal.js'
 import type { CcWalletMap } from '../reducers/FioReducer'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
-import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
+import type {
+  AccountActivationPaymentInfo,
+  HandleActivationInfo,
+  HandleAvailableStatus
+} from '../reducers/scenes/CreateWalletReducer.js'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
-import { type AccountInitPayload, type SettingsState } from '../reducers/scenes/SettingsReducer.js'
+import {
+  type AccountInitPayload,
+  type SettingsState
+} from '../reducers/scenes/SettingsReducer.js'
 import { type TweakSource } from '../util/ReferralHelpers.js'
 import { type DeepLink } from './DeepLink.js'
-import { type AccountReferral, type DeviceReferral, type Promotion, type ReferralCache } from './ReferralTypes.js'
+import {
+  type AccountReferral,
+  type DeviceReferral,
+  type Promotion,
+  type ReferralCache
+} from './ReferralTypes.js'
 import {
   type CustomTokenInfo,
   type FioAddress,
@@ -88,9 +100,15 @@ export type Action =
   | { type: NoDataActionName }
   // Actions with known payloads:
   | { type: 'ACCOUNT_ACTIVATION_INFO', data: HandleActivationInfo }
-  | { type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO', data: AccountActivationPaymentInfo }
+  | {
+      type: 'ACCOUNT_ACTIVATION_PAYMENT_INFO',
+      data: AccountActivationPaymentInfo
+    }
   | { type: 'ACCOUNT_INIT_COMPLETE', data: AccountInitPayload }
-  | { type: 'ACCOUNT_REFERRAL_LOADED', data: { referral: AccountReferral, cache: ReferralCache } }
+  | {
+      type: 'ACCOUNT_REFERRAL_LOADED',
+      data: { referral: AccountReferral, cache: ReferralCache }
+    }
   | { type: 'ACCOUNT_SWAP_IGNORED', data: boolean }
   | { type: 'ACCOUNT_TWEAKS_REFRESHED', data: ReferralCache }
   | {
@@ -130,7 +148,10 @@ export type Action =
   | { type: 'DEEP_LINK_RECEIVED', data: DeepLink }
   | { type: 'DELETE_CUSTOM_TOKEN_SUCCESS', data: { currencyCode: string } }
   | { type: 'DEVICE_REFERRAL_LOADED', data: DeviceReferral }
-  | { type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES', data: { exchangeRates: GuiExchangeRates } }
+  | {
+      type: 'EXCHANGE_RATES/UPDATE_EXCHANGE_RATES',
+      data: { exchangeRates: GuiExchangeRates }
+    }
   | {
       type: 'INSERT_WALLET_IDS_FOR_PROGRESS',
       data: { activeWalletIds: string[] }
@@ -138,7 +159,10 @@ export type Action =
   | { type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: boolean }
   | { type: 'LOGIN', data: EdgeAccount }
   | { type: 'LOGOUT', data: { username?: string } }
-  | { type: 'MESSAGE_TWEAK_HIDDEN', data: { messageId: string, source: TweakSource } }
+  | {
+      type: 'MESSAGE_TWEAK_HIDDEN',
+      data: { messageId: string, source: TweakSource }
+    }
   | {
       type: 'OPEN_VIEWXPUB_WALLET_MODAL',
       data: { walletId: string, xPub: string | null, xPubExplorer: string }
@@ -157,7 +181,9 @@ export type Action =
   | { type: 'PROMOTION_REMOVED', data: string /* installerId */ }
   | { type: 'HANDLE_AVAILABLE_STATUS', data: HandleAvailableStatus }
   | {
-      type: 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE' | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',
+      type:
+        | 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE'
+        | 'SELECT_TO_WALLET_CRYPTO_EXCHANGE',
       data: {
         balanceMessage: string,
         currencyCode: string,
@@ -167,14 +193,20 @@ export type Action =
     }
   | { type: 'CONTACTS/LOAD_CONTACTS_SUCCESS', data: { contacts: GuiContact[] } }
   | { type: 'GENERIC_SHAPE_SHIFT_ERROR', data: string }
-  | { type: 'NEW_RECEIVE_ADDRESS', data: { receiveAddress: EdgeReceiveAddress } }
+  | {
+      type: 'NEW_RECEIVE_ADDRESS',
+      data: { receiveAddress: EdgeReceiveAddress }
+    }
   | { type: 'PARSE_URI_SUCCEEDED', data: { parsedUri: EdgeParsedUri } }
   | { type: 'RESET_WALLET_LOADING_PROGRESS', data: { walletId: string } }
   | { type: 'SAVE_EDGE_LOBBY', data: EdgeLobby }
   | { type: 'SET_LOBBY_ERROR', data: string }
   | { type: 'SET_FROM_WALLET_MAX', data: string }
   | { type: 'SET_TRANSACTION_SUBCATEGORIES', data: { subcategories: string[] } }
-  | { type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS', data: { spendingLimits: SpendingLimits } }
+  | {
+      type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
+      data: { spendingLimits: SpendingLimits }
+    }
   | {
       type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS',
       data: {
@@ -194,7 +226,10 @@ export type Action =
         authRequired: SpendAuthType
       }
     }
-  | { type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING', data: { pending: boolean } }
+  | {
+      type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
+      data: { pending: boolean }
+    }
   | {
       type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
       data: {
@@ -204,19 +239,37 @@ export type Action =
         transaction: EdgeTransaction | null
       }
     }
-  | { type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS', data: { isTouchEnabled: boolean } }
-  | { type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY', data: { isAccountBalanceVisible: boolean } }
-  | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME', data: { autoLogoutTimeInSeconds: number } }
+  | {
+      type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS',
+      data: { isTouchEnabled: boolean }
+    }
+  | {
+      type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY',
+      data: { isAccountBalanceVisible: boolean }
+    }
+  | {
+      type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME',
+      data: { autoLogoutTimeInSeconds: number }
+    }
   | { type: 'UI/SETTINGS/SET_BLUETOOTH_MODE', data: { bluetoothMode: boolean } }
   | { type: 'UI/SETTINGS/SET_DEFAULT_FIAT', data: { defaultFiat: string } }
-  | { type: 'UI/SETTINGS/SET_DENOMINATION_KEY', data: { currencyCode: string, denominationKey: string } }
+  | {
+      type: 'UI/SETTINGS/SET_DENOMINATION_KEY',
+      data: { currencyCode: string, denominationKey: string }
+    }
   | { type: 'UI/SETTINGS/SET_MERCHANT_MODE', data: { merchantMode: boolean } }
-  | { type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS', data: { mostRecentWallets: MostRecentWallet[] } }
+  | {
+      type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS',
+      data: { mostRecentWallets: MostRecentWallet[] }
+    }
   | { type: 'UI/SETTINGS/SET_PIN_MODE', data: { pinMode: boolean } }
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: string | void }
   | { type: 'UI/SETTINGS/SET_SETTINGS_LOCK', data: boolean }
   | { type: 'UI/SETTINGS/SET_WALLETS_SORT', data: { walletsSort: SortOption } }
-  | { type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED', data: { pinLoginEnabled: boolean } }
+  | {
+      type: 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED',
+      data: { pinLoginEnabled: boolean }
+    }
   | { type: 'UI/SETTINGS/UPDATE_SETTINGS', data: { settings: SettingsState } }
   | {
       type: 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS',
@@ -229,8 +282,14 @@ export type Action =
       type: 'UI/WALLETS/SELECT_WALLET',
       data: { currencyCode: string, walletId: string }
     }
-  | { type: 'UI/WALLETS/UPSERT_WALLETS', data: { wallets: EdgeCurrencyWallet[] } }
-  | { type: 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED', data: { uniqueIdentifier: string } }
+  | {
+      type: 'UI/WALLETS/UPSERT_WALLETS',
+      data: { wallets: EdgeCurrencyWallet[] }
+    }
+  | {
+      type: 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED',
+      data: { uniqueIdentifier: string }
+    }
   | {
       type: 'UPDATE_EXISTING_TOKEN_SUCCESS',
       data: { tokenObj: CustomTokenInfo }
@@ -241,12 +300,23 @@ export type Action =
       data: { walletId: string, tokens: string[] }
     }
   | { type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL', data: number }
-  | { type: 'UPDATE_WALLET_LOADING_PROGRESS', data: { walletId: string, addressLoadingProgress: number } }
+  | {
+      type: 'UPDATE_WALLET_LOADING_PROGRESS',
+      data: { walletId: string, addressLoadingProgress: number }
+    }
   | { type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: string }
   | { type: 'NETWORK/NETWORK_STATUS', data: { isConnected: boolean } }
   | { type: 'FIO/SET_FIO_ADDRESSES', data: { fioAddresses: FioAddress[] } }
-  | { type: 'FIO/UPDATE_CONNECTED_WALLETS', data: { connectedWalletsByFioAddress: { [fioAddress: string]: CcWalletMap } } }
-  | { type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS', data: { fioAddress: string, ccWalletMap: CcWalletMap } }
+  | {
+      type: 'FIO/UPDATE_CONNECTED_WALLETS',
+      data: {
+        connectedWalletsByFioAddress: { [fioAddress: string]: CcWalletMap }
+      }
+    }
+  | {
+      type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
+      data: { fioAddress: string, ccWalletMap: CcWalletMap }
+    }
   | { type: 'FIO/SET_OBT_DATA', data: FioObtRecord[] }
   | { type: 'FIO/SET_FIO_DOMAINS', data: { fioDomains: FioDomain[] } }
   | { type: 'FIO/NEED_TO_CHECK_EXPIRED', data: boolean }

@@ -23,7 +23,13 @@ const options = [
   { key: 'lowest', title: s.strings.wallet_list_sort_lowest }
 ]
 
-export type SortOption = 'default' | 'name' | 'currencyCode' | 'currencyName' | 'highest' | 'lowest'
+export type SortOption =
+  | 'default'
+  | 'name'
+  | 'currencyCode'
+  | 'currencyName'
+  | 'highest'
+  | 'lowest'
 
 type OwnProps = {
   bridge: AirshipBridge<'manual' | void>
@@ -61,7 +67,10 @@ class WalletListSortModalComponent extends React.PureComponent<Props, State> {
     this.props.bridge.resolve('manual')
   }
 
-  handleOptionKey = (option: SortOption) => (this.state.option === option ? this.setState({ option: 'default' }) : this.setState({ option }))
+  handleOptionKey = (option: SortOption) =>
+    this.state.option === option
+      ? this.setState({ option: 'default' })
+      : this.setState({ option })
 
   render() {
     const { bridge, theme } = this.props
@@ -70,8 +79,21 @@ class WalletListSortModalComponent extends React.PureComponent<Props, State> {
         <ModalTitle>{s.strings.wallet_list_sort_title}</ModalTitle>
         {options.map(option => {
           if (option.key === 'manual') {
-            const icon = <FontAwesomeIcon name="chevron-right" color={theme.iconTappable} size={theme.rem(1)} />
-            return <SettingsRow key={option.key} text={option.title} right={icon} onPress={this.handleManualOption} />
+            const icon = (
+              <FontAwesomeIcon
+                name="chevron-right"
+                color={theme.iconTappable}
+                size={theme.rem(1)}
+              />
+            )
+            return (
+              <SettingsRow
+                key={option.key}
+                text={option.title}
+                right={icon}
+                onPress={this.handleManualOption}
+              />
+            )
           } else {
             return (
               <SettingsRadioRow

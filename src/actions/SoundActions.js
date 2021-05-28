@@ -6,7 +6,8 @@ let receiveSoundPromise, sendSoundPromise
 Sound.setCategory('Ambient')
 
 export function playReceiveSound(): Promise<void> {
-  if (!receiveSoundPromise) receiveSoundPromise = loadSound('audio_received.mp3')
+  if (!receiveSoundPromise)
+    receiveSoundPromise = loadSound('audio_received.mp3')
   return receiveSoundPromise.then(playSound)
 }
 
@@ -20,7 +21,9 @@ export function playSendSound(): Promise<void> {
  */
 function loadSound(name): Promise<Sound> {
   return new Promise((resolve, reject) => {
-    const sound = new Sound(name, Sound.MAIN_BUNDLE, error => (error ? reject(error) : resolve(sound)))
+    const sound = new Sound(name, Sound.MAIN_BUNDLE, error =>
+      error ? reject(error) : resolve(sound)
+    )
   })
 }
 
@@ -29,6 +32,8 @@ function loadSound(name): Promise<Sound> {
  */
 function playSound(sound: Sound): Promise<void> {
   return new Promise((resolve, reject) => {
-    sound.play(success => (success ? resolve() : new Error('Could not play sound')))
+    sound.play(success =>
+      success ? resolve() : new Error('Could not play sound')
+    )
   })
 }

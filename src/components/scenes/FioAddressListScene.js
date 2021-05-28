@@ -18,7 +18,12 @@ import type { Dispatch } from '../../types/reduxTypes'
 import type { FioAddress, FioDomain } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ClickableText } from '../themed/ThemedButtons'
@@ -53,16 +58,23 @@ class FioAddressList extends React.Component<Props> {
   }
 
   componentDidMount(): void {
-    this.willFocusSubscription = this.props.navigation.addListener('didFocus', () => {
-      this.fetchData()
-    })
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'didFocus',
+      () => {
+        this.fetchData()
+      }
+    )
   }
 
   componentDidUpdate(prevProps: Props): void {
     const { fioAddresses, fioDomains, loading } = this.props
 
     if (!loading && prevProps.loading) {
-      if (fioAddresses.length === 0 && fioDomains.length === 0 && Actions.currentScene === Constants.FIO_ADDRESS_LIST) {
+      if (
+        fioAddresses.length === 0 &&
+        fioDomains.length === 0 &&
+        Actions.currentScene === Constants.FIO_ADDRESS_LIST
+      ) {
         Actions[Constants.FIO_ADDRESS_REGISTER]({ noAddresses: true })
       }
     }
@@ -80,8 +92,15 @@ class FioAddressList extends React.Component<Props> {
   onDomainPress = (fioDomain: FioDomain) => {
     const { fioWallets } = this.props
     const { name, expiration, walletId, isPublic } = fioDomain
-    const fioWallet = fioWallets.find((fioWallet: EdgeCurrencyWallet) => fioWallet.id === walletId)
-    Actions[Constants.FIO_DOMAIN_SETTINGS]({ fioWallet, fioDomainName: name, expiration, isPublic })
+    const fioWallet = fioWallets.find(
+      (fioWallet: EdgeCurrencyWallet) => fioWallet.id === walletId
+    )
+    Actions[Constants.FIO_DOMAIN_SETTINGS]({
+      fioWallet,
+      fioDomainName: name,
+      expiration,
+      isPublic
+    })
   }
 
   render() {
@@ -91,7 +110,11 @@ class FioAddressList extends React.Component<Props> {
     if (!fioAddresses.length && !fioDomains.length) {
       return (
         <SceneWrapper background="theme">
-          <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />
+          <ActivityIndicator
+            color={theme.iconTappable}
+            style={styles.loading}
+            size="large"
+          />
         </SceneWrapper>
       )
     }
@@ -103,7 +126,9 @@ class FioAddressList extends React.Component<Props> {
         <ScrollView style={styles.row}>
           <SceneHeader title={s.strings.title_fio_address} underline />
           <View style={styles.list}>
-            {!fioAddresses.length && <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>}
+            {!fioAddresses.length && (
+              <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>
+            )}
             {fioAddresses.map((address: FioAddress) => (
               <FioNameRow
                 key={`${address.name}`}
@@ -115,34 +140,73 @@ class FioAddressList extends React.Component<Props> {
               />
             ))}
           </View>
-          <SceneHeader title={s.strings.title_fio_domains} withTopMargin underline />
+          <SceneHeader
+            title={s.strings.title_fio_domains}
+            withTopMargin
+            underline
+          />
           <View style={styles.list}>
-            {!fioDomains.length && <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>}
+            {!fioDomains.length && (
+              <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>
+            )}
             {fioDomains.map((domain: FioDomain) => (
               <FioNameRow
                 key={`${domain.name}`}
                 name={domain.name}
                 expiration={domain.expiration}
-                icon={<IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />}
+                icon={
+                  <IonIcon
+                    name="ios-at"
+                    style={styles.iconIon}
+                    color={theme.icon}
+                    size={theme.rem(1.5)}
+                  />
+                }
                 theme={theme}
                 onPress={() => this.onDomainPress(domain)}
               />
             ))}
           </View>
-          {loading && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />}
+          {loading && (
+            <ActivityIndicator
+              color={theme.iconTappable}
+              style={styles.loading}
+              size="large"
+            />
+          )}
         </ScrollView>
 
         <View>
-          <ClickableText marginRem={[1, 1, 0]} onPress={Actions[Constants.FIO_ADDRESS_REGISTER]}>
+          <ClickableText
+            marginRem={[1, 1, 0]}
+            onPress={Actions[Constants.FIO_ADDRESS_REGISTER]}
+          >
             <View style={styles.actionButton}>
-              <Fontello name="register-new-fio-icon" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
-              <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_screen_button_register}</EdgeText>
+              <Fontello
+                name="register-new-fio-icon"
+                style={styles.actionIcon}
+                color={theme.iconTappable}
+                size={theme.rem(1)}
+              />
+              <EdgeText style={styles.buttonText}>
+                {s.strings.fio_address_list_screen_button_register}
+              </EdgeText>
             </View>
           </ClickableText>
-          <ClickableText marginRem={[0, 1, 2, 1]} onPress={Actions[Constants.FIO_DOMAIN_REGISTER]}>
+          <ClickableText
+            marginRem={[0, 1, 2, 1]}
+            onPress={Actions[Constants.FIO_DOMAIN_REGISTER]}
+          >
             <View style={styles.actionButton}>
-              <Fontello name="register-custom-fio" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
-              <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_domain_register}</EdgeText>
+              <Fontello
+                name="register-custom-fio"
+                style={styles.actionIcon}
+                color={theme.iconTappable}
+                size={theme.rem(1)}
+              />
+              <EdgeText style={styles.buttonText}>
+                {s.strings.fio_address_list_domain_register}
+              </EdgeText>
             </View>
           </ClickableText>
         </View>
@@ -201,7 +265,9 @@ const FioAddressListScene = connect(
     const fioDomains: FioDomain[] = state.ui.scenes.fioAddress.fioDomains
     const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
     const loading: boolean = state.ui.scenes.fioAddress.fioAddressesLoading
-    const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
+    const fioPlugin = account.currencyConfig
+      ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+      : null
 
     return {
       fioAddresses,

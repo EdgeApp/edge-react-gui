@@ -43,7 +43,9 @@ const loginscene = () => ({
   confirmation4: element(by.type('RCTImageView')).atIndex(3),
   confirmFinishButton: element(by.text('Confirm & Finish')),
   usernameTooShortError: element(by.text('Minimum 3 characters')),
-  usernameInvalidCharactersError: element(by.text('Must only be ascii characters')),
+  usernameInvalidCharactersError: element(
+    by.text('Must only be ascii characters')
+  ),
   walletListScene: element(by.text('Slide wallets to show more options'))
 })
 
@@ -60,7 +62,9 @@ describe('Edge GUI: ', () => {
     const loginScene = loginscene()
 
     // NAVIGATE TO CREATE ACCOUNT
-    await waitFor(loginScene.createAccountButton).toBeVisible().withTimeout(5000)
+    await waitFor(loginScene.createAccountButton)
+      .toBeVisible()
+      .withTimeout(5000)
     await expect(loginScene.createAccountButton).toExist()
     await loginScene.createAccountButton.tap()
     await expect(loginScene.getStartedButton).toBeVisible()
@@ -97,7 +101,11 @@ describe('Edge GUI: ', () => {
     await loginScene.nextButton.tap()
 
     // WAIT FOR LOADING SCREEN
-    await waitFor(findByText("Almost done! Let's write down your account information")).toBeVisible().withTimeout(5000)
+    await waitFor(
+      findByText("Almost done! Let's write down your account information")
+    )
+      .toBeVisible()
+      .withTimeout(5000)
 
     // NAVIGATE TO REVIEW
     await loginScene.nextButton.tap()
@@ -119,7 +127,9 @@ describe('Edge GUI: ', () => {
     await loginScene.confirmFinishButton.tap()
 
     // ASSERT DASHBOARD SHOWN
-    await waitFor(findByText('Slide wallets to show more options')).toBeVisible().withTimeout(10000)
+    await waitFor(findByText('Slide wallets to show more options'))
+      .toBeVisible()
+      .withTimeout(10000)
     await expect(findByText('Slide wallets to show more options')).toBeVisible()
   })
 
@@ -127,7 +137,9 @@ describe('Edge GUI: ', () => {
     const loginScene = loginscene()
 
     // NAVIGATE TO CREATE ACCOUNT
-    await waitFor(loginScene.createAccountButton).toBeVisible().withTimeout(5000)
+    await waitFor(loginScene.createAccountButton)
+      .toBeVisible()
+      .withTimeout(5000)
     await expect(loginScene.createAccountButton).toExist()
     await loginScene.createAccountButton.tap()
     await expect(loginScene.getStartedButton).toBeVisible()
@@ -187,7 +199,11 @@ describe('Edge GUI: ', () => {
     await loginScene.nextButton.tap()
 
     // WAIT FOR LOADING SCREEN
-    await waitFor(findByText("Almost done! Let's write down your account information")).toBeVisible().withTimeout(5000)
+    await waitFor(
+      findByText("Almost done! Let's write down your account information")
+    )
+      .toBeVisible()
+      .withTimeout(5000)
 
     // NAVIGATE TO REVIEW
     await loginScene.nextButton.tap()
@@ -209,7 +225,9 @@ describe('Edge GUI: ', () => {
     await loginScene.confirmFinishButton.tap()
 
     // ASSERT DASHBOARD SHOWN
-    await waitFor(findByText('Slide wallets to show more options')).toBeVisible().withTimeout(10000)
+    await waitFor(findByText('Slide wallets to show more options'))
+      .toBeVisible()
+      .withTimeout(10000)
     await expect(findByText('Slide wallets to show more options')).toBeVisible()
   })
 })

@@ -170,7 +170,13 @@ type SpecialCurrencyInfo = {|
   uniqueIdentifier?: {
     addButtonText: string,
     identifierName: string,
-    identifierKeyboardType: 'default' | 'email-address' | 'numeric' | 'phone-pad' | 'number-pad' | 'decimal-pad'
+    identifierKeyboardType:
+      | 'default'
+      | 'email-address'
+      | 'numeric'
+      | 'phone-pad'
+      | 'number-pad'
+      | 'decimal-pad'
   },
   isImportKeySupported?:
     | false
@@ -193,7 +199,9 @@ type SpecialCurrencyInfo = {|
   isPrivateKeySweepable?: boolean
 |}
 
-export const getSpecialCurrencyInfo = (currencyCode: string): SpecialCurrencyInfo => {
+export const getSpecialCurrencyInfo = (
+  currencyCode: string
+): SpecialCurrencyInfo => {
   if (SPECIAL_CURRENCY_INFO[currencyCode]) {
     return SPECIAL_CURRENCY_INFO[currencyCode]
   } else {
@@ -254,7 +262,8 @@ export const SPECIAL_CURRENCY_INFO: {
     isTokensSupported: true
   },
   XLM: {
-    dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
+    dummyPublicAddress:
+      'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
     uniqueIdentifier: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo_id,
       identifierName: s.strings.unique_identifier_memo_id,
@@ -273,7 +282,8 @@ export const SPECIAL_CURRENCY_INFO: {
   XRP: {
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
     uniqueIdentifier: {
-      addButtonText: s.strings.unique_identifier_dropdown_option_destination_tag,
+      addButtonText:
+        s.strings.unique_identifier_dropdown_option_destination_tag,
       identifierName: s.strings.unique_identifier_destination_tag,
       identifierKeyboardType: 'numeric'
     },
@@ -288,7 +298,8 @@ export const SPECIAL_CURRENCY_INFO: {
     }
   },
   XMR: {
-    dummyPublicAddress: '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
+    dummyPublicAddress:
+      '46qxvuS78CNBoiiKmDjvjd5pMAZrTBbDNNHDoP52jKj9j5mk6m4R5nU6BDrWQURiWV9a2n5Sy8Qo4aJskKa92FX1GpZFiYA',
     noMaxSpend: true,
     isImportKeySupported: false
   },
@@ -304,7 +315,8 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
+      privateKeyInstructions:
+        s.strings.create_wallet_import_active_key_instructions
     },
     isCustomTokensSupported: true,
     isTokensSupported: true
@@ -321,7 +333,8 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
+      privateKeyInstructions:
+        s.strings.create_wallet_import_active_key_instructions
     },
     isCustomTokensSupported: true,
     isTokensSupported: true
@@ -338,7 +351,8 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
+      privateKeyInstructions:
+        s.strings.create_wallet_import_active_key_instructions
     },
     isCustomTokensSupported: true,
     isTokensSupported: true,
@@ -411,7 +425,8 @@ export const SPECIAL_CURRENCY_INFO: {
     noChangeMiningFee: true,
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
+      privateKeyInstructions:
+        s.strings.create_wallet_import_input_key_or_seed_instructions
     }
   },
   DASH: {

@@ -93,7 +93,10 @@ export const initialState = {
   passwordUseCount: 0
 }
 
-export const untranslatedReducer: Reducer<PasswordReminderState, PasswordReminderReducerAction> = (state = initialState, action) => {
+export const untranslatedReducer: Reducer<
+  PasswordReminderState,
+  PasswordReminderReducerAction
+> = (state = initialState, action) => {
   switch (action.type) {
     case 'NEW_ACCOUNT_LOGIN': {
       const lastPasswordUseDate = action.data.lastLoginDate
@@ -111,8 +114,14 @@ export const untranslatedReducer: Reducer<PasswordReminderState, PasswordReminde
       const needsPasswordCheck = false
       const nonPasswordLoginsCount = 0
 
-      const nonPasswordDaysLimit = Math.min(Math.pow(NON_PASSWORD_DAYS_GROWTH_RATE, passwordUseCount), MAX_NON_PASSWORD_DAYS_LIMIT)
-      const nonPasswordLoginsLimit = Math.min(Math.pow(NON_PASSWORD_LOGINS_GROWTH_RATE, passwordUseCount), MAX_NON_PASSWORD_LOGINS_LIMIT)
+      const nonPasswordDaysLimit = Math.min(
+        Math.pow(NON_PASSWORD_DAYS_GROWTH_RATE, passwordUseCount),
+        MAX_NON_PASSWORD_DAYS_LIMIT
+      )
+      const nonPasswordLoginsLimit = Math.min(
+        Math.pow(NON_PASSWORD_LOGINS_GROWTH_RATE, passwordUseCount),
+        MAX_NON_PASSWORD_LOGINS_LIMIT
+      )
 
       return {
         ...state,
@@ -130,7 +139,10 @@ export const untranslatedReducer: Reducer<PasswordReminderState, PasswordReminde
       const nonPasswordLoginsCount = action.data.nonPasswordLoginsCount + 1
       const needsPasswordCheck =
         nonPasswordLoginsCount >= action.data.nonPasswordLoginsLimit ||
-        daysBetween(action.data.lastPasswordUseDate, action.data.lastLoginDate) >= action.data.nonPasswordDaysLimit
+        daysBetween(
+          action.data.lastPasswordUseDate,
+          action.data.lastLoginDate
+        ) >= action.data.nonPasswordDaysLimit
 
       return {
         ...state,
@@ -145,8 +157,14 @@ export const untranslatedReducer: Reducer<PasswordReminderState, PasswordReminde
       const lastPasswordUseDate = action.data.lastPasswordUseDate
       const needsPasswordCheck = false
       const nonPasswordLoginsCount = 0
-      const nonPasswordDaysLimit = Math.min(Math.pow(NON_PASSWORD_DAYS_GROWTH_RATE, passwordUseCount), MAX_NON_PASSWORD_DAYS_LIMIT)
-      const nonPasswordLoginsLimit = Math.min(Math.pow(NON_PASSWORD_LOGINS_GROWTH_RATE, passwordUseCount), MAX_NON_PASSWORD_LOGINS_LIMIT)
+      const nonPasswordDaysLimit = Math.min(
+        Math.pow(NON_PASSWORD_DAYS_GROWTH_RATE, passwordUseCount),
+        MAX_NON_PASSWORD_DAYS_LIMIT
+      )
+      const nonPasswordLoginsLimit = Math.min(
+        Math.pow(NON_PASSWORD_LOGINS_GROWTH_RATE, passwordUseCount),
+        MAX_NON_PASSWORD_LOGINS_LIMIT
+      )
 
       return {
         ...state,
@@ -160,7 +178,10 @@ export const untranslatedReducer: Reducer<PasswordReminderState, PasswordReminde
     }
 
     case 'PASSWORD_REMINDER_POSTPONED': {
-      const nonPasswordDaysLimit = state.lastLoginDate / MILLISECONDS_PER_DAY - state.lastPasswordUseDate / MILLISECONDS_PER_DAY + 2
+      const nonPasswordDaysLimit =
+        state.lastLoginDate / MILLISECONDS_PER_DAY -
+        state.lastPasswordUseDate / MILLISECONDS_PER_DAY +
+        2
       const nonPasswordLoginsLimit = state.nonPasswordLoginsCount + 2
       const needsPasswordCheck = false
 
@@ -185,7 +206,10 @@ export const untranslatedReducer: Reducer<PasswordReminderState, PasswordReminde
 }
 
 function translateAction(action: Action): PasswordReminderReducerAction {
-  if (action.type === 'ACCOUNT_INIT_COMPLETE' && action.data.account.newAccount) {
+  if (
+    action.type === 'ACCOUNT_INIT_COMPLETE' &&
+    action.data.account.newAccount
+  ) {
     const now = Date.now()
     return {
       type: 'NEW_ACCOUNT_LOGIN',
@@ -196,7 +220,10 @@ function translateAction(action: Action): PasswordReminderReducerAction {
     }
   }
 
-  if (action.type === 'ACCOUNT_INIT_COMPLETE' && action.data.account.passwordLogin) {
+  if (
+    action.type === 'ACCOUNT_INIT_COMPLETE' &&
+    action.data.account.passwordLogin
+  ) {
     const now = Date.now()
     return {
       type: 'PASSWORD_LOGIN',
@@ -208,7 +235,10 @@ function translateAction(action: Action): PasswordReminderReducerAction {
     }
   }
 
-  if (action.type === 'ACCOUNT_INIT_COMPLETE' && !(action.data.account.passwordLogin || action.data.account.newAccount)) {
+  if (
+    action.type === 'ACCOUNT_INIT_COMPLETE' &&
+    !(action.data.account.passwordLogin || action.data.account.newAccount)
+  ) {
     return {
       type: 'NON_PASSWORD_LOGIN',
       data: {
@@ -226,7 +256,10 @@ function translateAction(action: Action): PasswordReminderReducerAction {
       }
     }
   }
-  if (action.type === 'UI/SETTINGS/SET_SETTINGS_LOCK' && action.data === false) {
+  if (
+    action.type === 'UI/SETTINGS/SET_SETTINGS_LOCK' &&
+    action.data === false
+  ) {
     return {
       type: 'PASSWORD_USED',
       data: {
@@ -263,4 +296,7 @@ function translateAction(action: Action): PasswordReminderReducerAction {
   }
 }
 
-export const passwordReminder: Reducer<PasswordReminderState, Action> = (state, action) => untranslatedReducer(state, translateAction(action))
+export const passwordReminder: Reducer<PasswordReminderState, Action> = (
+  state,
+  action
+) => untranslatedReducer(state, translateAction(action))

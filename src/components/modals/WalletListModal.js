@@ -38,7 +38,8 @@ export class WalletListModal extends React.PureComponent<Props, State> {
     this.state = { search: '', searching: false }
   }
 
-  handleOnPress = (walletId: string, currencyCode: string) => this.props.bridge.resolve({ walletId, currencyCode })
+  handleOnPress = (walletId: string, currencyCode: string) =>
+    this.props.bridge.resolve({ walletId, currencyCode })
 
   handleChangeSearchInput = (search: string) => this.setState({ search })
 
@@ -49,7 +50,14 @@ export class WalletListModal extends React.PureComponent<Props, State> {
   handleClearText = () => this.setState({ search: '' })
 
   render() {
-    const { bridge, excludeWalletIds, allowedCurrencyCodes, excludeCurrencyCodes, showCreateWallet, headerTitle } = this.props
+    const {
+      bridge,
+      excludeWalletIds,
+      allowedCurrencyCodes,
+      excludeCurrencyCodes,
+      showCreateWallet,
+      headerTitle
+    } = this.props
     const { search, searching } = this.state
     return (
       <ThemedModal bridge={bridge} onCancel={() => bridge.resolve({})}>

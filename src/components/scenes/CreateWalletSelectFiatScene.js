@@ -10,10 +10,19 @@ import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { getDefaultFiat } from '../../modules/Settings/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import type { CreateWalletType, FlatListItem, GuiFiatType } from '../../types/types.js'
+import type {
+  CreateWalletType,
+  FlatListItem,
+  GuiFiatType
+} from '../../types/types.js'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
@@ -47,13 +56,17 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
 
   isValidFiatType = () => {
     const { selectedFiat } = this.state
-    const fiatTypeIndex = this.props.supportedFiats.findIndex(fiatType => fiatType.value === selectedFiat)
+    const fiatTypeIndex = this.props.supportedFiats.findIndex(
+      fiatType => fiatType.value === selectedFiat
+    )
     const isValid = fiatTypeIndex >= 0
     return isValid
   }
 
   getFiatType = (fiatKey: string) => {
-    const fiatTypeIndex = this.props.supportedFiats.findIndex(fiatType => fiatType.value === fiatKey)
+    const fiatTypeIndex = this.props.supportedFiats.findIndex(
+      fiatType => fiatType.value === fiatKey
+    )
 
     return this.props.supportedFiats[fiatTypeIndex]
   }
@@ -62,7 +75,9 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     const { cleanedPrivateKey, selectedWalletType } = this.props
     if (this.isValidFiatType()) {
       // check if account-based or not
-      const specialCurrencyInfo = Constants.getSpecialCurrencyInfo(selectedWalletType.currencyCode)
+      const specialCurrencyInfo = Constants.getSpecialCurrencyInfo(
+        selectedWalletType.currencyCode
+      )
       // check if eos-like
       let nextSceneKey = Constants.CREATE_WALLET_NAME
       if (!specialCurrencyInfo.needsAccountNameSetup || cleanedPrivateKey) {
@@ -76,7 +91,10 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
         cleanedPrivateKey
       })
     } else {
-      Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_fiat)
+      Alert.alert(
+        s.strings.create_wallet_invalid_input,
+        s.strings.create_wallet_select_valid_fiat
+      )
     }
   }
 
@@ -87,7 +105,9 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
   }
 
   handleSelectFiatType = (item: GuiFiatType) => {
-    const selectedFiat = this.props.supportedFiats.find(type => type.value === item.value)
+    const selectedFiat = this.props.supportedFiats.find(
+      type => type.value === item.value
+    )
 
     if (selectedFiat) {
       this.setState(
@@ -124,7 +144,16 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     return (
       <SelectableRow
         onPress={() => this.handleSelectFiatType(data.item)}
-        icon={fiatCountry.logoUrl ? <Image source={{ uri: fiatCountry.logoUrl }} style={styles.cryptoTypeLogo} /> : <View style={styles.cryptoTypeLogo} />}
+        icon={
+          fiatCountry.logoUrl ? (
+            <Image
+              source={{ uri: fiatCountry.logoUrl }}
+              style={styles.cryptoTypeLogo}
+            />
+          ) : (
+            <View style={styles.cryptoTypeLogo} />
+          )
+        }
         title={data.item.value}
         subTitle={s.strings[`currency_label_${data.item.value}`]}
         selected={data.item.value === this.state.selectedFiat}
@@ -140,14 +169,21 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     const { isFocused } = this.state
     const styles = getStyles(this.props.theme)
     const filteredArray = this.props.supportedFiats.filter(entry => {
-      return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
+      return (
+        entry.label
+          .toLowerCase()
+          .indexOf(this.state.searchTerm.toLowerCase()) >= 0
+      )
     })
 
     return (
       <SceneWrapper avoidKeyboard background="theme">
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
-            <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_fiat} />
+            <SceneHeader
+              withTopMargin
+              title={s.strings.title_create_wallet_select_fiat}
+            />
             <EdgeTextFieldOutlined
               autoFocus
               onFocus={this.handleOnFocus}

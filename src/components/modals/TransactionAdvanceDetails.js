@@ -5,7 +5,12 @@ import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
 import s from '../../locales/strings.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { ModalCloseArrow } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -84,9 +89,19 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
     const { networkFeeOption, requestedCustomFee } = this.props
 
     if (networkFeeOption === 'custom') {
-      return this.renderFees(styles, s.strings.mining_fee_custom_label_choice, requestedCustomFee)
+      return this.renderFees(
+        styles,
+        s.strings.mining_fee_custom_label_choice,
+        requestedCustomFee
+      )
     }
-    return <EdgeText style={styles.text}>{networkFeeOption ? feeString[networkFeeOption] : s.strings.mining_fee_standard_label_choice}</EdgeText>
+    return (
+      <EdgeText style={styles.text}>
+        {networkFeeOption
+          ? feeString[networkFeeOption]
+          : s.strings.mining_fee_standard_label_choice}
+      </EdgeText>
+    )
   }
 
   renderFees(styles: StyleSheet, title: string, fees: Object = {}) {
@@ -109,41 +124,86 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
   }
 
   render() {
-    const { bridge, feeRateUsed, networkFeeOption, signedTx, theme, txid, txSecret, recipientAddress, url } = this.props
+    const {
+      bridge,
+      feeRateUsed,
+      networkFeeOption,
+      signedTx,
+      theme,
+      txid,
+      txSecret,
+      recipientAddress,
+      url
+    } = this.props
     const styles = getStyles(theme)
 
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCancel} paddingRem={0}>
         <View style={styles.headerContainer}>
-          <EdgeText style={styles.headerText}>{s.strings.transaction_details_advance_details_header}</EdgeText>
+          <EdgeText style={styles.headerText}>
+            {s.strings.transaction_details_advance_details_header}
+          </EdgeText>
         </View>
         <View style={styles.body}>
           <ScrollView>
-            <Tile type="copy" title={s.strings.transaction_details_tx_id_modal_title} body={txid} />
+            <Tile
+              type="copy"
+              title={s.strings.transaction_details_tx_id_modal_title}
+              body={txid}
+            />
             {url && (
               <Tile
                 type="touchable"
                 title={s.strings.transaction_details_tx_id_modal_title}
-                body={s.strings.transaction_details_advance_details_show_explorer}
+                body={
+                  s.strings.transaction_details_advance_details_show_explorer
+                }
                 onPress={this.openUrl}
               />
             )}
             {(networkFeeOption || feeRateUsed) && (
-              <Tile type="static" title={s.strings.transaction_details_advance_details_fee_info}>
+              <Tile
+                type="static"
+                title={s.strings.transaction_details_advance_details_fee_info}
+              >
                 {networkFeeOption ? this.renderFeeOptions(styles) : null}
-                {feeRateUsed ? this.renderFees(styles, s.strings.transaction_details_advance_details_fee_used, feeRateUsed) : null}
+                {feeRateUsed
+                  ? this.renderFees(
+                      styles,
+                      s.strings.transaction_details_advance_details_fee_used,
+                      feeRateUsed
+                    )
+                  : null}
               </Tile>
             )}
-            {txSecret && <Tile type="copy" title={s.strings.transaction_details_advance_details_txSecret} body={txSecret} />}
+            {txSecret && (
+              <Tile
+                type="copy"
+                title={s.strings.transaction_details_advance_details_txSecret}
+                body={txSecret}
+              />
+            )}
             {txSecret && recipientAddress && txid && (
               <Tile
                 type="touchable"
-                title={s.strings.transaction_details_advance_details_payment_proof}
-                body={s.strings.transaction_details_advance_details_show_explorer}
+                title={
+                  s.strings.transaction_details_advance_details_payment_proof
+                }
+                body={
+                  s.strings.transaction_details_advance_details_show_explorer
+                }
                 onPress={this.openProveUrl}
               />
             )}
-            {signedTx && signedTx !== '' ? <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} /> : null}
+            {signedTx && signedTx !== '' ? (
+              <Tile
+                type="copy"
+                title={
+                  s.strings.transaction_details_advance_details_raw_txbytes
+                }
+                body={signedTx}
+              />
+            ) : null}
           </ScrollView>
         </View>
         <ModalCloseArrow onPress={this.handleCancel} />
@@ -191,4 +251,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionAdvanceDetails = withTheme(TransactionAdvanceDetailsComponent)
+export const TransactionAdvanceDetails = withTheme(
+  TransactionAdvanceDetailsComponent
+)

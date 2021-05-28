@@ -6,7 +6,10 @@ import * as React from 'react'
 import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
+import {
+  getSpecialCurrencyInfo,
+  PREFERRED_TOKENS
+} from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
@@ -32,14 +35,19 @@ export type ManageTokensStateProps = {
   settingsCustomTokens: CustomTokenInfo[]
 }
 
-type ManageTokensProps = ManageTokensOwnProps & ManageTokensDispatchProps & ManageTokensStateProps
+type ManageTokensProps = ManageTokensOwnProps &
+  ManageTokensDispatchProps &
+  ManageTokensStateProps
 
 type State = {
   enabledList: string[],
   combinedCurrencyInfos: EdgeMetaToken[]
 }
 
-export default class ManageTokens extends React.Component<ManageTokensProps, State> {
+export default class ManageTokens extends React.Component<
+  ManageTokensProps,
+  State
+> {
   constructor(props: ManageTokensProps) {
     super(props)
     this.state = {
@@ -66,7 +74,8 @@ export default class ManageTokens extends React.Component<ManageTokensProps, Sta
     const disabledList: string[] = []
     // get disabled list
     for (const val of this.state.combinedCurrencyInfos) {
-      if (this.state.enabledList.indexOf(val.currencyCode) === -1) disabledList.push(val.currencyCode)
+      if (this.state.enabledList.indexOf(val.currencyCode) === -1)
+        disabledList.push(val.currencyCode)
     }
     this.props.setEnabledTokensList(id, this.state.enabledList, disabledList)
     Actions.pop()
@@ -82,9 +91,15 @@ export default class ManageTokens extends React.Component<ManageTokensProps, Sta
       accountMetaTokenInfo = [...this.props.settingsCustomTokens]
     }
     const filteredTokenInfo = accountMetaTokenInfo.filter(token => {
-      return token.walletType === this.props.guiWallet.type || token.walletType === undefined
+      return (
+        token.walletType === this.props.guiWallet.type ||
+        token.walletType === undefined
+      )
     })
-    const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
+    const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(
+      metaTokens,
+      filteredTokenInfo
+    )
 
     const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
       if (a.currencyCode < b.currencyCode) return -1
@@ -107,7 +122,9 @@ export default class ManageTokens extends React.Component<ManageTokensProps, Sta
         <SettingsHeaderRow text={name} />
         <View style={styles.container}>
           <View style={styles.instructionalArea}>
-            <Text style={styles.instructionalText}>{s.strings.managetokens_top_instructions}</Text>
+            <Text style={styles.instructionalText}>
+              {s.strings.managetokens_top_instructions}
+            </Text>
           </View>
           <View style={styles.metaTokenListArea}>
             <View style={styles.metaTokenListWrap}>
@@ -129,24 +146,39 @@ export default class ManageTokens extends React.Component<ManageTokensProps, Sta
             </View>
             {specialCurrencyInfo.isCustomTokensSupported ? (
               <View style={styles.buttonsArea}>
-                <PrimaryButton style={styles.saveButton} onPress={this.saveEnabledTokenList}>
+                <PrimaryButton
+                  style={styles.saveButton}
+                  onPress={this.saveEnabledTokenList}
+                >
                   {manageTokensPending ? (
                     <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
                   ) : (
-                    <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_save}</PrimaryButton.Text>
+                    <PrimaryButton.Text style={styles.buttonText}>
+                      {s.strings.string_save}
+                    </PrimaryButton.Text>
                   )}
                 </PrimaryButton>
-                <SecondaryButton style={styles.addButton} onPress={this.goToAddTokenScene}>
-                  <SecondaryButton.Text style={styles.buttonText}>{s.strings.addtoken_add}</SecondaryButton.Text>
+                <SecondaryButton
+                  style={styles.addButton}
+                  onPress={this.goToAddTokenScene}
+                >
+                  <SecondaryButton.Text style={styles.buttonText}>
+                    {s.strings.addtoken_add}
+                  </SecondaryButton.Text>
                 </SecondaryButton>
               </View>
             ) : (
               <View style={styles.buttonsArea}>
-                <PrimaryButton style={styles.oneButton} onPress={this.saveEnabledTokenList}>
+                <PrimaryButton
+                  style={styles.oneButton}
+                  onPress={this.saveEnabledTokenList}
+                >
                   {manageTokensPending ? (
                     <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
                   ) : (
-                    <PrimaryButton.Text style={styles.buttonText}>{s.strings.string_save}</PrimaryButton.Text>
+                    <PrimaryButton.Text style={styles.buttonText}>
+                      {s.strings.string_save}
+                    </PrimaryButton.Text>
                   )}
                 </PrimaryButton>
               </View>
@@ -158,7 +190,9 @@ export default class ManageTokens extends React.Component<ManageTokensProps, Sta
   }
 
   _onDeleteToken = (currencyCode: string) => {
-    const enabledListAfterDelete = _.difference(this.state.enabledList, [currencyCode])
+    const enabledListAfterDelete = _.difference(this.state.enabledList, [
+      currencyCode
+    ])
     this.setState({
       enabledList: enabledListAfterDelete
     })
@@ -178,7 +212,12 @@ export default class ManageTokens extends React.Component<ManageTokensProps, Sta
 
   goToEditTokenScene = (currencyCode: string) => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions.editToken({ walletId: id, currencyCode, metaTokens, onDeleteToken: this._onDeleteToken })
+    Actions.editToken({
+      walletId: id,
+      currencyCode,
+      metaTokens,
+      onDeleteToken: this._onDeleteToken
+    })
   }
 }
 

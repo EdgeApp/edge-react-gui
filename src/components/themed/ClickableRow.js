@@ -5,7 +5,12 @@ import { TouchableHighlight, TouchableOpacity, View } from 'react-native'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { unpackEdges } from '../../util/edges'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 
 type Props = {
   onPress: () => void | (() => Promise<void>),
@@ -26,7 +31,12 @@ class ClickableRowComponent extends React.PureComponent<Props & ThemeProps> {
   renderContent() {
     const { gradient, children, underline, autoHeight, theme } = this.props
     const styles = getStyles(theme)
-    const containerStyles = [styles.rowContainer, spacingStyles(this.props, theme), underline ? styles.underline : null, autoHeight ? styles.autoHeight : null]
+    const containerStyles = [
+      styles.rowContainer,
+      spacingStyles(this.props, theme),
+      underline ? styles.underline : null,
+      autoHeight ? styles.autoHeight : null
+    ]
     if (gradient) {
       return <Gradient style={containerStyles}>{children}</Gradient>
     }
@@ -39,7 +49,11 @@ class ClickableRowComponent extends React.PureComponent<Props & ThemeProps> {
 
     if (highlight) {
       return (
-        <TouchableHighlight onPress={onPress} onLongPress={onLongPress} underlayColor={theme.backgroundGradientLeft}>
+        <TouchableHighlight
+          onPress={onPress}
+          onLongPress={onLongPress}
+          underlayColor={theme.backgroundGradientLeft}
+        >
           {this.renderContent()}
         </TouchableHighlight>
       )

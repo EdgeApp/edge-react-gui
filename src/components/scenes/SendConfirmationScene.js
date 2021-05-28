@@ -2,7 +2,14 @@
 
 import { bns } from 'biggystring'
 import { Scene } from 'edge-components'
-import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type {
+  EdgeCurrencyInfo,
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgeMetadata,
+  EdgeSpendInfo,
+  EdgeTransaction
+} from 'edge-core-js'
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { TextField } from 'react-native-material-textfield'
@@ -10,21 +17,42 @@ import { sprintf } from 'sprintf-js'
 
 import { type FioSenderInfo } from '../../actions/SendConfirmationActions'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
-import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIO_STR, getSpecialCurrencyInfo } from '../../constants/indexConstants'
+import {
+  FEE_ALERT_THRESHOLD,
+  FEE_COLOR_THRESHOLD,
+  FIO_STR,
+  getSpecialCurrencyInfo
+} from '../../constants/indexConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { SelectFioAddressConnector as SelectFioAddress } from '../../modules/FioAddress/components/SelectFioAddress'
-import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
+import {
+  checkRecordSendFee,
+  FIO_NO_BUNDLED_ERR_CODE
+} from '../../modules/FioAddress/util'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Recipient from '../../modules/UI/components/Recipient/Recipient.ui.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getSpendInfoWithoutState } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
-import { type GuiMakeSpendInfo, type SendConfirmationState } from '../../reducers/scenes/SendConfirmationReducer.js'
+import {
+  type GuiMakeSpendInfo,
+  type SendConfirmationState
+} from '../../reducers/scenes/SendConfirmationReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type GuiCurrencyInfo, type GuiDenomination, type GuiWallet, type SpendAuthType } from '../../types/types.js'
+import {
+  type GuiCurrencyInfo,
+  type GuiDenomination,
+  type GuiWallet,
+  type SpendAuthType
+} from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
-import { convertNativeToDisplay, convertNativeToExchange, decimalOrZero, getDenomFromIsoCode } from '../../util/utils.js'
+import {
+  convertNativeToDisplay,
+  convertNativeToExchange,
+  decimalOrZero,
+  getDenomFromIsoCode
+} from '../../util/utils.js'
 import { AddressTextWithBlockExplorerModal } from '../common/AddressTextWithBlockExplorerModal'
 import { ExchangeRate } from '../common/ExchangeRate.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -76,7 +104,12 @@ export type SendConfirmationDispatchProps = {
   onChangePin: (pin: string) => mixed,
   uniqueIdentifierButtonPressed: () => void,
   newSpendInfo: (spendInfo: EdgeSpendInfo, authRequired: SpendAuthType) => void,
-  updateTransaction: (transaction: EdgeTransaction | null, spendInfo: GuiMakeSpendInfo, forceUpdateGui: boolean, error: Error | null) => void,
+  updateTransaction: (
+    transaction: EdgeTransaction | null,
+    spendInfo: GuiMakeSpendInfo,
+    forceUpdateGui: boolean,
+    error: Error | null
+  ) => void,
   getAuthRequiredDispatch: EdgeSpendInfo => void
 }
 
@@ -84,7 +117,9 @@ type SendConfirmationRouterParams = {
   guiMakeSpendInfo: GuiMakeSpendInfo
 }
 
-type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & SendConfirmationRouterParams
+type Props = SendConfirmationStateProps &
+  SendConfirmationDispatchProps &
+  SendConfirmationRouterParams
 
 type State = {|
   nativeAmount: string,
@@ -110,20 +145,38 @@ export class SendConfirmation extends React.Component<Props, State> {
       nativeAmount: props.nativeAmount,
       showSpinner: false,
       fioSender: {
-        fioAddress: props.guiMakeSpendInfo && props.guiMakeSpendInfo.fioPendingRequest ? props.guiMakeSpendInfo.fioPendingRequest.payer_fio_address : '',
+        fioAddress:
+          props.guiMakeSpendInfo && props.guiMakeSpendInfo.fioPendingRequest
+            ? props.guiMakeSpendInfo.fioPendingRequest.payer_fio_address
+            : '',
         fioWallet: null,
         fioError: '',
-        memo: props.guiMakeSpendInfo && props.guiMakeSpendInfo.fioPendingRequest ? props.guiMakeSpendInfo.fioPendingRequest.content.memo : '',
+        memo:
+          props.guiMakeSpendInfo && props.guiMakeSpendInfo.fioPendingRequest
+            ? props.guiMakeSpendInfo.fioPendingRequest.content.memo
+            : '',
         memoError: ''
       },
-      isFiatOnTop: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0')),
-      isFocus: !!(props.guiMakeSpendInfo && props.guiMakeSpendInfo.nativeAmount && bns.eq(props.guiMakeSpendInfo.nativeAmount, '0'))
+      isFiatOnTop: !!(
+        props.guiMakeSpendInfo &&
+        props.guiMakeSpendInfo.nativeAmount &&
+        bns.eq(props.guiMakeSpendInfo.nativeAmount, '0')
+      ),
+      isFocus: !!(
+        props.guiMakeSpendInfo &&
+        props.guiMakeSpendInfo.nativeAmount &&
+        bns.eq(props.guiMakeSpendInfo.nativeAmount, '0')
+      )
     }
     this.flipInput = React.createRef()
   }
 
   componentDidMount() {
-    const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
+    const overridePrimaryExchangeAmount = bns.div(
+      this.props.nativeAmount,
+      this.props.primaryExchangeDenomination.multiplier,
+      DIVIDE_PRECISION
+    )
     const guiMakeSpendInfo = this.props.guiMakeSpendInfo
     let keyboardVisible = true
     // Do not show the keyboard if the caller passed in an amount
@@ -131,7 +184,10 @@ export class SendConfirmation extends React.Component<Props, State> {
       if (!bns.eq(guiMakeSpendInfo.nativeAmount, '0')) {
         keyboardVisible = false
       }
-    } else if (guiMakeSpendInfo.spendTargets && guiMakeSpendInfo.spendTargets.length) {
+    } else if (
+      guiMakeSpendInfo.spendTargets &&
+      guiMakeSpendInfo.spendTargets.length
+    ) {
       keyboardVisible = false
     }
 
@@ -140,7 +196,12 @@ export class SendConfirmation extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (!prevProps.transactionMetadata && this.props.transactionMetadata && this.props.authRequired !== 'none' && this.props.nativeAmount !== '0') {
+    if (
+      !prevProps.transactionMetadata &&
+      this.props.transactionMetadata &&
+      this.props.authRequired !== 'none' &&
+      this.props.nativeAmount !== '0'
+    ) {
       this.pinInput.focus()
     }
     if (prevProps.toggleCryptoOnTop !== this.props.toggleCryptoOnTop) {
@@ -150,7 +211,11 @@ export class SendConfirmation extends React.Component<Props, State> {
     if (this.props.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
       // eslint-disable-next-line react/no-did-update-set-state
       this.setState({
-        overridePrimaryExchangeAmount: bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION),
+        overridePrimaryExchangeAmount: bns.div(
+          this.props.nativeAmount,
+          this.props.primaryExchangeDenomination.multiplier,
+          DIVIDE_PRECISION
+        ),
         forceUpdateGuiCounter: this.props.forceUpdateGuiCounter
       })
     }
@@ -164,9 +229,12 @@ export class SendConfirmation extends React.Component<Props, State> {
   }
 
   render() {
-    const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
+    const secondaryDisplayDenomination = getDenomFromIsoCode(
+      this.props.fiatCurrencyCode
+    )
 
-    const { networkFee, parentNetworkFee, guiWallet, nativeAmount, errorMsg } = this.props
+    const { networkFee, parentNetworkFee, guiWallet, nativeAmount, errorMsg } =
+      this.props
     const primaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.currencyCode,
       displayDenomination: this.props.primaryDisplayDenomination,
@@ -191,32 +259,58 @@ export class SendConfirmation extends React.Component<Props, State> {
       exchangeDenomination: secondaryDisplayDenomination
     }
 
-    const cryptoBalanceAmount: string = convertNativeToDisplay(primaryInfo.displayDenomination.multiplier)(this.props.balanceInCrypto) // convert to correct denomination
-    const cryptoBalanceAmountString = cryptoBalanceAmount ? formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
-    const balanceInFiatString = formatNumber(this.props.balanceInFiat || 0, { toFixed: 2 })
+    const cryptoBalanceAmount: string = convertNativeToDisplay(
+      primaryInfo.displayDenomination.multiplier
+    )(this.props.balanceInCrypto) // convert to correct denomination
+    const cryptoBalanceAmountString = cryptoBalanceAmount
+      ? formatNumber(decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6))
+      : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
+    const balanceInFiatString = formatNumber(this.props.balanceInFiat || 0, {
+      toFixed: 2
+    })
 
-    const { address, authRequired, currencyCode, transactionMetadata, uniqueIdentifier, currencyInfo } = this.props
+    const {
+      address,
+      authRequired,
+      currencyCode,
+      transactionMetadata,
+      uniqueIdentifier,
+      currencyInfo
+    } = this.props
     const addressExplorer = currencyInfo ? currencyInfo.addressExplorer : null
     const destination = transactionMetadata ? transactionMetadata.name : ''
-    const DESTINATION_TEXT = sprintf(s.strings.send_confirmation_to, destination)
+    const DESTINATION_TEXT = sprintf(
+      s.strings.send_confirmation_to,
+      destination
+    )
     const ADDRESS_TEXT = sprintf(s.strings.send_confirmation_address, address)
-    const fioAddress = this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.fioAddress ? this.props.guiMakeSpendInfo.fioAddress : ''
+    const fioAddress =
+      this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.fioAddress
+        ? this.props.guiMakeSpendInfo.fioAddress
+        : ''
     const fioSender = this.state.fioSender
     const displayAddress = fioAddress ? '' : address
 
     const feeCalculated = !!networkFee || !!parentNetworkFee
-    const showSpinner = (!feeCalculated && !errorMsg && nativeAmount !== '0') || this.state.showSpinner || this.props.pending
+    const showSpinner =
+      (!feeCalculated && !errorMsg && nativeAmount !== '0') ||
+      this.state.showSpinner ||
+      this.props.pending
     const sliderDisabled =
       this.props.sliderDisabled ||
       !feeCalculated ||
-      (!getSpecialCurrencyInfo(this.props.currencyCode).allowZeroTx && this.props.nativeAmount === '0') ||
+      (!getSpecialCurrencyInfo(this.props.currencyCode).allowZeroTx &&
+        this.props.nativeAmount === '0') ||
       !!fioSender.fioError ||
       !!fioSender.memoError
 
-    const uniqueIdentifierInfo = getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
+    const uniqueIdentifierInfo =
+      getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
     const networkFeeData = this.getNetworkFeeData()
 
-    const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_from_wallet, guiWallet.name) : ''
+    const flipInputHeaderText = guiWallet
+      ? sprintf(s.strings.send_from_wallet, guiWallet.name)
+      : ''
     const flipInputHeaderLogo = guiWallet.symbolImageDarkMono
     return (
       <>
@@ -224,21 +318,34 @@ export class SendConfirmation extends React.Component<Props, State> {
           <View style={styles.mainScrollView}>
             <View style={[styles.balanceContainer, styles.error]}>
               <Text style={styles.balanceText}>
-                {s.strings.send_confirmation_balance} {cryptoBalanceAmountString} {primaryInfo.displayDenomination.name} (
-                {secondaryInfo.displayDenomination.symbol} {balanceInFiatString})
+                {s.strings.send_confirmation_balance}{' '}
+                {cryptoBalanceAmountString}{' '}
+                {primaryInfo.displayDenomination.name} (
+                {secondaryInfo.displayDenomination.symbol} {balanceInFiatString}
+                )
               </Text>
             </View>
 
             <View style={[styles.exchangeRateContainer, styles.error]}>
               {this.props.errorMsg ? (
-                <Text style={[styles.error, styles.errorText]} numberOfLines={3}>
+                <Text
+                  style={[styles.error, styles.errorText]}
+                  numberOfLines={3}
+                >
                   {this.props.errorMsg}
                 </Text>
               ) : (
-                <ExchangeRate secondaryDisplayAmount={this.props.fiatPerCrypto} primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} />
+                <ExchangeRate
+                  secondaryDisplayAmount={this.props.fiatPerCrypto}
+                  primaryInfo={primaryInfo}
+                  secondaryInfo={secondaryInfo}
+                />
               )}
               {fioSender.fioError ? (
-                <Text style={[styles.error, styles.errorText]} numberOfLines={2}>
+                <Text
+                  style={[styles.error, styles.errorText]}
+                  numberOfLines={2}
+                >
                   {fioSender.fioError}
                 </Text>
               ) : null}
@@ -252,7 +359,9 @@ export class SendConfirmation extends React.Component<Props, State> {
                   primaryCurrencyInfo={{ ...primaryInfo }}
                   secondaryCurrencyInfo={{ ...secondaryInfo }}
                   exchangeSecondaryToPrimaryRatio={this.props.fiatPerCrypto}
-                  overridePrimaryExchangeAmount={this.state.overridePrimaryExchangeAmount}
+                  overridePrimaryExchangeAmount={
+                    this.state.overridePrimaryExchangeAmount
+                  }
                   forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
                   onExchangeAmountChanged={this.onExchangeAmountChanged}
                   keyboardVisible={this.state.keyboardVisible}
@@ -266,7 +375,14 @@ export class SendConfirmation extends React.Component<Props, State> {
               <Scene.Padding style={{ paddingHorizontal: 54 }}>
                 <Scene.Item style={{ alignItems: 'center', flex: -1 }}>
                   <Scene.Row style={{ paddingVertical: 4 }}>
-                    <Text style={[styles.feeAreaText, { color: networkFeeData.feeColor }]}>{networkFeeData.feeSyntax}</Text>
+                    <Text
+                      style={[
+                        styles.feeAreaText,
+                        { color: networkFeeData.feeColor }
+                      ]}
+                    >
+                      {networkFeeData.feeSyntax}
+                    </Text>
                   </Scene.Row>
 
                   {!!destination && (
@@ -278,7 +394,10 @@ export class SendConfirmation extends React.Component<Props, State> {
                   )}
 
                   {!!displayAddress && (
-                    <AddressTextWithBlockExplorerModal address={address} addressExplorer={addressExplorer}>
+                    <AddressTextWithBlockExplorerModal
+                      address={address}
+                      addressExplorer={addressExplorer}
+                    >
                       <Scene.Row style={{ paddingVertical: 4 }}>
                         <Recipient.Text style={{}}>
                           <Text>{ADDRESS_TEXT}</Text>
@@ -294,16 +413,33 @@ export class SendConfirmation extends React.Component<Props, State> {
                         style={styles.addUniqueIDButton}
                         onPress={this.props.uniqueIdentifierButtonPressed}
                       >
-                        <Text style={styles.addUniqueIDButtonText} ellipsizeMode="tail">
-                          {!uniqueIdentifier ? uniqueIdentifierInfo.addButtonText : sprintf(`${uniqueIdentifierInfo.identifierName}: %s`, uniqueIdentifier)}
+                        <Text
+                          style={styles.addUniqueIDButtonText}
+                          ellipsizeMode="tail"
+                        >
+                          {!uniqueIdentifier
+                            ? uniqueIdentifierInfo.addButtonText
+                            : sprintf(
+                                `${uniqueIdentifierInfo.identifierName}: %s`,
+                                uniqueIdentifier
+                              )}
                         </Text>
                       </TouchableOpacity>
                     </Scene.Row>
                   )}
 
                   {authRequired === 'pin' && (
-                    <Scene.Row style={{ paddingBottom: 10, width: '100%', justifyContent: 'flex-start', alignItems: 'center' }}>
-                      <Text style={styles.rowText}>{s.strings.four_digit_pin}</Text>
+                    <Scene.Row
+                      style={{
+                        paddingBottom: 10,
+                        width: '100%',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Text style={styles.rowText}>
+                        {s.strings.four_digit_pin}
+                      </Text>
 
                       <View style={styles.pinInputSpacer} />
 
@@ -337,7 +473,9 @@ export class SendConfirmation extends React.Component<Props, State> {
                   {!!fioAddress && (
                     <Scene.Row style={{ paddingTop: 10, paddingBottom: 0 }}>
                       <Recipient.Text style={{}}>
-                        <Text>{sprintf(s.strings.send_to_title, fioAddress)}</Text>
+                        <Text>
+                          {sprintf(s.strings.send_to_title, fioAddress)}
+                        </Text>
                       </Recipient.Text>
                     </Scene.Row>
                   )}
@@ -348,33 +486,68 @@ export class SendConfirmation extends React.Component<Props, State> {
                 selected={fioSender.fioAddress}
                 memo={fioSender.memo}
                 memoError={fioSender.memoError}
-                fioRequest={this.props.guiMakeSpendInfo ? this.props.guiMakeSpendInfo.fioPendingRequest : null}
-                isSendUsingFioAddress={this.props.guiMakeSpendInfo ? this.props.guiMakeSpendInfo.isSendUsingFioAddress : null}
+                fioRequest={
+                  this.props.guiMakeSpendInfo
+                    ? this.props.guiMakeSpendInfo.fioPendingRequest
+                    : null
+                }
+                isSendUsingFioAddress={
+                  this.props.guiMakeSpendInfo
+                    ? this.props.guiMakeSpendInfo.isSendUsingFioAddress
+                    : null
+                }
                 onSelect={this.onFioAddressSelect}
                 onMemoChange={this.onMemoChange}
               />
             </View>
-            <Scene.Footer style={[styles.footer, uniqueIdentifierInfo != null && styles.footerWithPaymentId]}>
-              <Slider reset={this.props.resetSlider} onSlidingComplete={this.signBroadcastAndSave} disabled={sliderDisabled} showSpinner={showSpinner} />
+            <Scene.Footer
+              style={[
+                styles.footer,
+                uniqueIdentifierInfo != null && styles.footerWithPaymentId
+              ]}
+            >
+              <Slider
+                reset={this.props.resetSlider}
+                onSlidingComplete={this.signBroadcastAndSave}
+                disabled={sliderDisabled}
+                showSpinner={showSpinner}
+              />
             </Scene.Footer>
           </View>
         </SceneWrapper>
-        {uniqueIdentifierInfo != null && <UniqueIdentifierModal onConfirm={this.props.sendConfirmationUpdateTx} currencyCode={currencyCode} />}
+        {uniqueIdentifierInfo != null && (
+          <UniqueIdentifierModal
+            onConfirm={this.props.sendConfirmationUpdateTx}
+            currencyCode={currencyCode}
+          />
+        )}
       </>
     )
   }
 
   signBroadcastAndSave = async () => {
     const { guiMakeSpendInfo, currencyCode, updateSpendPending } = this.props
-    if (guiMakeSpendInfo && (guiMakeSpendInfo.isSendUsingFioAddress || guiMakeSpendInfo.fioPendingRequest)) {
+    if (
+      guiMakeSpendInfo &&
+      (guiMakeSpendInfo.isSendUsingFioAddress ||
+        guiMakeSpendInfo.fioPendingRequest)
+    ) {
       const { fioSender } = this.state
-      if (fioSender.fioWallet && fioSender.fioAddress && !guiMakeSpendInfo.fioPendingRequest) {
+      if (
+        fioSender.fioWallet &&
+        fioSender.fioAddress &&
+        !guiMakeSpendInfo.fioPendingRequest
+      ) {
         updateSpendPending(true)
         try {
           await checkRecordSendFee(fioSender.fioWallet, fioSender.fioAddress)
         } catch (e) {
           updateSpendPending(false)
-          if (e.code && e.code === FIO_NO_BUNDLED_ERR_CODE && currencyCode !== FIO_STR) {
+          if (
+            e.code &&
+            e.code === FIO_NO_BUNDLED_ERR_CODE &&
+            currencyCode !== FIO_STR
+          ) {
             const answer = await Airship.show(bridge => (
               <ButtonsModal
                 bridge={bridge}
@@ -382,7 +555,10 @@ export class SendConfirmation extends React.Component<Props, State> {
                 message={`${s.strings.fio_no_bundled_non_fio_err_msg} ${s.strings.fio_no_bundled_renew_err_msg}`}
                 buttons={{
                   ok: { label: s.strings.legacy_address_modal_continue },
-                  cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+                  cancel: {
+                    label: s.strings.string_cancel_cap,
+                    type: 'secondary'
+                  }
                 }}
               />
             ))
@@ -411,16 +587,34 @@ export class SendConfirmation extends React.Component<Props, State> {
     }
   }
 
-  onExchangeAmountChanged = async ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
-    const { fiatPerCrypto, coreWallet, sceneState, currencyCode, newSpendInfo, updateTransaction, getAuthRequiredDispatch } = this.props
+  onExchangeAmountChanged = async ({
+    nativeAmount,
+    exchangeAmount
+  }: ExchangedFlipInputAmounts) => {
+    const {
+      fiatPerCrypto,
+      coreWallet,
+      sceneState,
+      currencyCode,
+      newSpendInfo,
+      updateTransaction,
+      getAuthRequiredDispatch
+    } = this.props
     this.setState({ showSpinner: true })
-    const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto.toString())
+    const amountFiatString: string = bns.mul(
+      exchangeAmount,
+      fiatPerCrypto.toString()
+    )
     const amountFiat: number = parseFloat(amountFiatString)
     const metadata: EdgeMetadata = { amountFiat }
     const guiMakeSpendInfo = { nativeAmount, metadata }
 
     const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
-    const spendInfo = getSpendInfoWithoutState(guiMakeSpendInfoClone, sceneState, currencyCode)
+    const spendInfo = getSpendInfoWithoutState(
+      guiMakeSpendInfoClone,
+      sceneState,
+      currencyCode
+    )
     const authType: any = getAuthRequiredDispatch(spendInfo) // Type casting any cause dispatch returns a function
     try {
       newSpendInfo(spendInfo, authType)
@@ -434,8 +628,15 @@ export class SendConfirmation extends React.Component<Props, State> {
   }
 
   getNetworkFeeData = (): { feeSyntax: string, feeColor: string } => {
-    const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
-    const { networkFee, parentNetworkFee, parentDisplayDenomination, exchangeRates } = this.props
+    const secondaryDisplayDenomination = getDenomFromIsoCode(
+      this.props.fiatCurrencyCode
+    )
+    const {
+      networkFee,
+      parentNetworkFee,
+      parentDisplayDenomination,
+      exchangeRates
+    } = this.props
     let feeColor = THEME.COLORS.WHITE
 
     const primaryInfo: GuiCurrencyInfo = {
@@ -465,16 +666,26 @@ export class SendConfirmation extends React.Component<Props, State> {
     let denomination, exchangeDenomination, usedNetworkFee, currencyCode
     if (!networkFee && !parentNetworkFee) {
       // if no fee
-      const cryptoFeeSymbolParent = parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : null
-      const cryptoFeeSymbolPrimary = primaryInfo.displayDenomination.symbol ? primaryInfo.displayDenomination.symbol : null
+      const cryptoFeeSymbolParent = parentDisplayDenomination.symbol
+        ? parentDisplayDenomination.symbol
+        : null
+      const cryptoFeeSymbolPrimary = primaryInfo.displayDenomination.symbol
+        ? primaryInfo.displayDenomination.symbol
+        : null
       const cryptoFeeSymbol = () => {
         if (cryptoFeeSymbolParent) return cryptoFeeSymbolParent
         if (cryptoFeeSymbolPrimary) return cryptoFeeSymbolPrimary
         return ''
       }
-      const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
+      const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
+        ? secondaryInfo.displayDenomination.symbol
+        : ''
       return {
-        feeSyntax: sprintf(s.strings.send_confirmation_fee_line, `${cryptoFeeSymbol()} 0`, `${fiatFeeSymbol} 0`),
+        feeSyntax: sprintf(
+          s.strings.send_confirmation_fee_line,
+          `${cryptoFeeSymbol()} 0`,
+          `${fiatFeeSymbol} 0`
+        ),
         feeColor
       }
       // if parentNetworkFee greater than zero
@@ -500,19 +711,42 @@ export class SendConfirmation extends React.Component<Props, State> {
     const cryptoFeeSymbol = denomination.symbol ? denomination.symbol : ''
     const displayDenomMultiplier = denomination.multiplier
     const cryptoFeeMultiplier = exchangeDenomination.multiplier
-    const cryptoFeeExchangeDenomAmount = usedNetworkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(usedNetworkFee) : ''
+    const cryptoFeeExchangeDenomAmount = usedNetworkFee
+      ? convertNativeToDisplay(cryptoFeeMultiplier)(usedNetworkFee)
+      : ''
 
-    const exchangeToDisplayMultiplierRatio = bns.div(cryptoFeeMultiplier, displayDenomMultiplier, DIVIDE_PRECISION)
-    const cryptoFeeDisplayDenomAmount = bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
+    const exchangeToDisplayMultiplierRatio = bns.div(
+      cryptoFeeMultiplier,
+      displayDenomMultiplier,
+      DIVIDE_PRECISION
+    )
+    const cryptoFeeDisplayDenomAmount = bns.mul(
+      cryptoFeeExchangeDenomAmount,
+      exchangeToDisplayMultiplierRatio
+    )
     const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeDisplayDenomAmount}`
-    const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol ? secondaryInfo.displayDenomination.symbol : ''
-    const exchangeConvertor = convertNativeToExchange(exchangeDenomination.multiplier)
+    const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
+      ? secondaryInfo.displayDenomination.symbol
+      : ''
+    const exchangeConvertor = convertNativeToExchange(
+      exchangeDenomination.multiplier
+    )
     const cryptoFeeExchangeAmount = exchangeConvertor(usedNetworkFee)
-    const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, secondaryInfo.exchangeCurrencyCode, parseFloat(cryptoFeeExchangeAmount))
+    const fiatFeeAmount = convertCurrencyFromExchangeRates(
+      exchangeRates,
+      currencyCode,
+      secondaryInfo.exchangeCurrencyCode,
+      parseFloat(cryptoFeeExchangeAmount)
+    )
     const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
     const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
     const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
-    const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
+    const feeAmountInUSD = convertCurrencyFromExchangeRates(
+      exchangeRates,
+      currencyCode,
+      'iso:USD',
+      parseFloat(cryptoFeeExchangeAmount)
+    )
     // check if fee is high enough to signal a warning to user (via font color)
     if (feeAmountInUSD > FEE_ALERT_THRESHOLD) {
       feeColor = THEME.COLORS.ACCENT_RED
@@ -520,12 +754,20 @@ export class SendConfirmation extends React.Component<Props, State> {
       feeColor = THEME.COLORS.ACCENT_ORANGE
     }
     return {
-      feeSyntax: sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString),
+      feeSyntax: sprintf(
+        s.strings.send_confirmation_fee_line,
+        cryptoFeeString,
+        fiatFeeString
+      ),
       feeColor
     }
   }
 
-  onFioAddressSelect = (fioAddress: string, fioWallet: EdgeCurrencyWallet, error: string) => {
+  onFioAddressSelect = (
+    fioAddress: string,
+    fioWallet: EdgeCurrencyWallet,
+    error: string
+  ) => {
     const { fioSender } = this.state
     fioSender.fioAddress = fioAddress
     fioSender.fioWallet = fioWallet

@@ -6,9 +6,18 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import { showError, showToast } from '../../../components/services/AirshipInstance'
-import type { Theme, ThemeProps } from '../../../components/services/ThemeContext'
-import { cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import {
+  showError,
+  showToast
+} from '../../../components/services/AirshipInstance'
+import type {
+  Theme,
+  ThemeProps
+} from '../../../components/services/ThemeContext'
+import {
+  cacheStyles,
+  withTheme
+} from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { SecondaryButton } from '../../../components/themed/ThemedButtons'
 import { Tile } from '../../../components/themed/Tile'
@@ -69,14 +78,19 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   }
 
   resetSlider = () => {
-    this.setState({ showSlider: false }, () => this.setState({ showSlider: true }))
+    this.setState({ showSlider: false }, () =>
+      this.setState({ showSlider: true })
+    )
   }
 
   onConfirm = async () => {
-    const { fioWallet, onSubmit, onSuccess, successMessage, addressTitles } = this.props
+    const { fioWallet, onSubmit, onSuccess, successMessage, addressTitles } =
+      this.props
     const { fee } = this.state
     if (!fioWallet) {
-      const msg = addressTitles ? s.strings.fio_wallet_missing_for_fio_address : s.strings.fio_wallet_missing_for_fio_domain
+      const msg = addressTitles
+        ? s.strings.fio_wallet_missing_for_fio_address
+        : s.strings.fio_wallet_missing_for_fio_domain
       showError(msg)
       this.setState({ error: msg })
       return
@@ -132,15 +146,25 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   setBalance = (): void => {
     const { fioWallet, addressTitles } = this.props
     if (fioWallet) {
-      const balance = fioWallet.balances[fioWallet.currencyInfo.currencyCode] ?? '0'
+      const balance =
+        fioWallet.balances[fioWallet.currencyInfo.currencyCode] ?? '0'
       this.setState({ balance: this.formatFio(balance) })
     } else {
-      showError(addressTitles ? s.strings.fio_wallet_missing_for_fio_address : s.strings.fio_wallet_missing_for_fio_domain)
+      showError(
+        addressTitles
+          ? s.strings.fio_wallet_missing_for_fio_address
+          : s.strings.fio_wallet_missing_for_fio_domain
+      )
     }
   }
 
   formatFio(val: string): number {
-    return parseFloat(truncateDecimals(bns.div(val, this.props.denominationMultiplier, DIVIDE_PRECISION), 6))
+    return parseFloat(
+      truncateDecimals(
+        bns.div(val, this.props.denominationMultiplier, DIVIDE_PRECISION),
+        6
+      )
+    )
   }
 
   renderFeeAndBalance() {
@@ -154,17 +178,34 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
     if (feeLoading || !showSlider) return null
 
-    const balanceText = `${balance ? balance.toFixed(2) : '0'} ${balance ? s.strings.fio_address_confirm_screen_fio_label : ''}`
+    const balanceText = `${balance ? balance.toFixed(2) : '0'} ${
+      balance ? s.strings.fio_address_confirm_screen_fio_label : ''
+    }`
     return (
       <>
         <Tile
           type="static"
           title={s.strings.fio_action_fee_label}
-          body={displayFee ? `${displayFee} ${s.strings.fio_address_confirm_screen_fio_label}` : s.strings.fio_address_confirm_screen_free_label}
+          body={
+            displayFee
+              ? `${displayFee} ${s.strings.fio_address_confirm_screen_fio_label}`
+              : s.strings.fio_address_confirm_screen_free_label
+          }
         />
         {displayFee ? (
-          <Tile type="static" title={s.strings.fio_address_confirm_screen_balance_label}>
-            <EdgeText style={displayFee > balance ? styles.balanceTitleDisabled : styles.balanceTitle}>{balanceText}</EdgeText>
+          <Tile
+            type="static"
+            title={s.strings.fio_address_confirm_screen_balance_label}
+          >
+            <EdgeText
+              style={
+                displayFee > balance
+                  ? styles.balanceTitleDisabled
+                  : styles.balanceTitle
+              }
+            >
+              {balanceText}
+            </EdgeText>
           </Tile>
         ) : null}
       </>
@@ -178,7 +219,13 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
 
     return (
       <View>
-        {feeLoading && <ActivityIndicator color={theme.iconTappable} style={styles.loader} size="small" />}
+        {feeLoading && (
+          <ActivityIndicator
+            color={theme.iconTappable}
+            style={styles.loader}
+            size="small"
+          />
+        )}
         {title ? <EdgeText style={styles.actionTitle}>{title}</EdgeText> : null}
         {this.renderFeeAndBalance()}
         <View style={styles.spacer} />
@@ -188,13 +235,21 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
               onSlidingComplete={this.onConfirm}
               disabled={displayFee > balance || loading}
               showSpinner={loading}
-              disabledText={s.strings.fio_address_confirm_screen_disabled_slider_label}
+              disabledText={
+                s.strings.fio_address_confirm_screen_disabled_slider_label
+              }
             />
           </View>
         )}
         <View style={styles.spacer} />
         <View style={styles.blockPadding}>
-          {!feeLoading && <SecondaryButton onPress={this.props.cancelOperation} disabled={loading || feeLoading} label={s.strings.string_cancel_cap} />}
+          {!feeLoading && (
+            <SecondaryButton
+              onPress={this.props.cancelOperation}
+              disabled={loading || feeLoading}
+              label={s.strings.string_cancel_cap}
+            />
+          )}
         </View>
       </View>
     )

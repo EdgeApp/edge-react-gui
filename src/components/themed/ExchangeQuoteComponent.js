@@ -4,7 +4,12 @@ import * as React from 'react'
 import { Image } from 'react-native'
 
 import s from '../../locales/strings.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { Card } from './Card'
 import { CardContent } from './CardContent'
 import { DataRow } from './DataRow'
@@ -24,20 +29,37 @@ type Props = {
 }
 type State = {}
 
-export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemeProps, State> {
+export class ExchangeQuoteComponent extends React.PureComponent<
+  Props & ThemeProps,
+  State
+> {
   renderBottom = () => {
     if (this.props.isTop) {
       const styles = getStyles(this.props.theme)
-      const totalText = `${this.props.total || this.props.fiatCurrencyAmount} ${this.props.fiatCurrencyCode}`
+      const totalText = `${this.props.total || this.props.fiatCurrencyAmount} ${
+        this.props.fiatCurrencyCode
+      }`
       return (
         <>
           <DataRow
             marginRem={[1, 0, 0]}
-            label={<EdgeText style={styles.bottomText}>{s.strings.mining_fee}</EdgeText>}
-            value={<EdgeText style={styles.bottomText}>{this.props.miningFee || '0'}</EdgeText>}
+            label={
+              <EdgeText style={styles.bottomText}>
+                {s.strings.mining_fee}
+              </EdgeText>
+            }
+            value={
+              <EdgeText style={styles.bottomText}>
+                {this.props.miningFee || '0'}
+              </EdgeText>
+            }
           />
           <DataRow
-            label={<EdgeText style={styles.bottomText}>{s.strings.string_total_amount}</EdgeText>}
+            label={
+              <EdgeText style={styles.bottomText}>
+                {s.strings.string_total_amount}
+              </EdgeText>
+            }
             value={<EdgeText style={styles.bottomText}>{totalText}</EdgeText>}
           />
         </>
@@ -51,7 +73,12 @@ export class ExchangeQuoteComponent extends React.PureComponent<Props & ThemePro
     return (
       <Card>
         <CardContent
-          image={<Image style={styles.currencyIcon} source={{ uri: this.props.walletIcon }} />}
+          image={
+            <Image
+              style={styles.currencyIcon}
+              source={{ uri: this.props.walletIcon }}
+            />
+          }
           title={this.props.currency}
           subTitle={this.props.walletName}
           value={`${this.props.cryptoAmount} ${this.props.currencyCode}`}

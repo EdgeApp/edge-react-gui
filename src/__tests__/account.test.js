@@ -1,7 +1,14 @@
 // @flow
 /* globals describe expect it */
 
-import { type EdgeAccount, type EdgeContext, type EdgeFakeWorld, addEdgeCorePlugins, lockEdgeCorePlugins, makeFakeEdgeWorld } from 'edge-core-js'
+import {
+  type EdgeAccount,
+  type EdgeContext,
+  type EdgeFakeWorld,
+  addEdgeCorePlugins,
+  lockEdgeCorePlugins,
+  makeFakeEdgeWorld
+} from 'edge-core-js'
 import accountbased from 'edge-currency-accountbased'
 import bitcoin from 'edge-currency-bitcoin'
 import monero from 'edge-currency-monero'
@@ -24,10 +31,14 @@ describe.skip('Account', () => {
   it('has denominations that match the app default denomination settings', async () => {
     const world: EdgeFakeWorld = await makeFakeEdgeWorld([fakeUser])
     const context: EdgeContext = await world.makeEdgeContext(contextOptions)
-    const account: EdgeAccount = await context.loginWithPIN(fakeUser.username, fakeUser.pin)
+    const account: EdgeAccount = await context.loginWithPIN(
+      fakeUser.username,
+      fakeUser.pin
+    )
     for (const key of Object.keys(SYNCED_ACCOUNT_DEFAULTS)) {
       // $FlowFixMe
-      const defaultDenom: string | void = SYNCED_ACCOUNT_DEFAULTS[key].denomination
+      const defaultDenom: string | void =
+        SYNCED_ACCOUNT_DEFAULTS[key].denomination
       if (defaultDenom) {
         // if it's in synced settings defaults
         // $FlowFixMe
@@ -38,7 +49,9 @@ describe.skip('Account', () => {
           const plugin = account.currencyConfig[pluginId]
           const currencyInfo = plugin.currencyInfo
           const denoms = currencyInfo.denominations
-          const defaultDenomIndex = denoms.findIndex(item => item.multiplier === defaultDenom)
+          const defaultDenomIndex = denoms.findIndex(
+            item => item.multiplier === defaultDenom
+          )
           expect(defaultDenomIndex).toBeGreaterThan(-1)
         }
       }

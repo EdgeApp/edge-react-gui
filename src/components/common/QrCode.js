@@ -19,7 +19,13 @@ type Props = {
  */
 export function QrCode(props: Props) {
   const theme = useTheme()
-  const { data, size, padding = 1, backgroundColor = theme.qrBackgroundColor, foregroundColor = theme.qrForegroundColor } = props
+  const {
+    data,
+    size,
+    padding = 1,
+    backgroundColor = theme.qrBackgroundColor,
+    foregroundColor = theme.qrForegroundColor
+  } = props
 
   // Generate an SVG path:
   const code = qrcodeGenerator(0, 'H')

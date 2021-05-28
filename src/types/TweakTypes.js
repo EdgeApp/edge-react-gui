@@ -1,11 +1,20 @@
 // @flow
 
-import { type Cleaner, asBoolean, asDate, asNumber, asObject, asOptional, asString } from 'cleaners'
+import {
+  type Cleaner,
+  asBoolean,
+  asDate,
+  asNumber,
+  asObject,
+  asOptional,
+  asString
+} from 'cleaners'
 
 /**
  * A currency code to create a wallet for, normalized to uppercase.
  */
-export const asCurrencyCode: Cleaner<string> = raw => asString(raw).toUpperCase()
+export const asCurrencyCode: Cleaner<string> = raw =>
+  asString(raw).toUpperCase()
 
 /**
  * An message card to show the user.

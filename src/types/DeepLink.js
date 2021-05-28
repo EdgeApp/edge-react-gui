@@ -106,7 +106,10 @@ export function parseDeepLink(uri: string): DeepLink {
   const url = new URL(uri, true)
 
   // Handle dl.edge.app links:
-  if ((url.protocol === 'https:' || url.protocol === 'http:') && url.host === 'dl.edge.app') {
+  if (
+    (url.protocol === 'https:' || url.protocol === 'http:') &&
+    url.host === 'dl.edge.app'
+  ) {
     return parseDownloadLink(url)
   }
 
@@ -124,11 +127,17 @@ export function parseDeepLink(uri: string): DeepLink {
 
   // Handle Azte.co URLs
   if (url.hostname === 'azte.co') {
-    if (ENV.AZTECO_API_KEY == null) throw new Error('Azteco partner ID not provided')
+    if (ENV.AZTECO_API_KEY == null)
+      throw new Error('Azteco partner ID not provided')
     const queryMap = { c1: 'CODE_1', c2: 'CODE_2', c3: 'CODE_3', c4: 'CODE_4' }
     const partnerId = ENV.AZTECO_API_KEY
     const query = Object.keys(url.query)
-      .map(key => `${encodeURIComponent(queryMap[key] ? queryMap[key] : key)}=${encodeURIComponent(url.query[key])}`)
+      .map(
+        key =>
+          `${encodeURIComponent(
+            queryMap[key] ? queryMap[key] : key
+          )}=${encodeURIComponent(url.query[key])}`
+      )
       .join('&')
     const aztecoLink = `${url.protocol}//${url.hostname}/partners/${partnerId}?${query}&ADDRESS=`
     return {
@@ -158,7 +167,10 @@ function parseEdgeProtocol(url: URL): DeepLink {
       const [protocol = '', ...deepPath] = pathParts
       const path = deepPath.join('/')
       const queryString = Object.keys(url.query)
-        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(url.query[key])}`)
+        .map(
+          key =>
+            `${encodeURIComponent(key)}=${encodeURIComponent(url.query[key])}`
+        )
         .join('&')
 
       let uri = `${protocol}:${path}`

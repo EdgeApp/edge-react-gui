@@ -10,8 +10,16 @@ import { ArrowDownTextIconButton } from '../../../components/common/ArrowDownTex
 import { AddressModal } from '../../../components/modals/AddressModal'
 import { ButtonsModal } from '../../../components/modals/ButtonsModal'
 import { TransactionDetailsNotesInput } from '../../../components/modals/TransactionDetailsNotesInput'
-import { Airship, showError } from '../../../components/services/AirshipInstance'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext.js'
+import {
+  Airship,
+  showError
+} from '../../../components/services/AirshipInstance'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../../../components/services/ThemeContext.js'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings.js'
@@ -20,13 +28,21 @@ import type { FioAddress, FioRequest, GuiWallet } from '../../../types/types'
 import Text from '../../UI/components/FormattedText/FormattedText.ui.js'
 import { getSelectedWallet } from '../../UI/selectors.js'
 import { refreshAllFioAddresses } from '../action'
-import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../util'
+import {
+  checkRecordSendFee,
+  findWalletByFioAddress,
+  FIO_NO_BUNDLED_ERR_CODE
+} from '../util'
 
 type SelectFioAddressOwnProps = {
   selected: string,
   memo: string,
   memoError: string,
-  onSelect: (fioAddress: string, fioWallet: EdgeCurrencyWallet, error: string) => void,
+  onSelect: (
+    fioAddress: string,
+    fioWallet: EdgeCurrencyWallet,
+    error: string
+  ) => void,
   onMemoChange: (memo: string, memoError: string) => void,
   fioRequest: FioRequest | null,
   isSendUsingFioAddress: boolean | null
@@ -44,7 +60,10 @@ type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
 
-type Props = SelectFioAddressOwnProps & SelectFioAddressProps & DispatchProps & ThemeProps
+type Props = SelectFioAddressOwnProps &
+  SelectFioAddressProps &
+  DispatchProps &
+  ThemeProps
 
 type LocalState = {
   loading: boolean,
@@ -71,8 +90,14 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
       }
     }
     const fioAddress = fioAddresses.find(({ name }) => name === selected)
-    const prevFioAddress = prevFioAddresses.find(({ name }) => name === selected)
-    if (fioAddress && prevFioAddress && fioAddress.expiration !== prevFioAddress.expiration) {
+    const prevFioAddress = prevFioAddresses.find(
+      ({ name }) => name === selected
+    )
+    if (
+      fioAddress &&
+      prevFioAddress &&
+      fioAddress.expiration !== prevFioAddress.expiration
+    ) {
       return {
         expirationUpdated: true,
         prevFioAddresses: fioAddresses
@@ -82,7 +107,8 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
   }
 
   componentDidMount() {
-    const { fioRequest, isSendUsingFioAddress, refreshAllFioAddresses } = this.props
+    const { fioRequest, isSendUsingFioAddress, refreshAllFioAddresses } =
+      this.props
     if (fioRequest || isSendUsingFioAddress) refreshAllFioAddresses()
     if (fioRequest) {
       this.setFioAddress(fioRequest.payer_fio_address)
@@ -117,7 +143,13 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
   selectAddress = () => {
     const { currencyCode, selectedWallet } = this.props
     Airship.show(bridge => (
-      <AddressModal bridge={bridge} title={s.strings.fio_select_address} currencyCode={currencyCode} walletId={selectedWallet.id} useUserFioAddressesOnly />
+      <AddressModal
+        bridge={bridge}
+        title={s.strings.fio_select_address}
+        currencyCode={currencyCode}
+        walletId={selectedWallet.id}
+        useUserFioAddressesOnly
+      />
     )).then((response: string | null) => {
       if (response) {
         this.setFioAddress(response)
@@ -137,13 +169,20 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
     )).then(_ => {})
   }
 
-  setFioAddress = async (fioAddress: string, fioWallet?: EdgeCurrencyWallet | null) => {
+  setFioAddress = async (
+    fioAddress: string,
+    fioWallet?: EdgeCurrencyWallet | null
+  ) => {
     const { fioWallets, fioAddresses, fioRequest, currencyCode } = this.props
     if (!fioWallet) {
       if (fioAddresses && fioAddress.length) {
-        const selectedFioAddress = fioAddresses.find(({ name }) => name === fioAddress)
+        const selectedFioAddress = fioAddresses.find(
+          ({ name }) => name === fioAddress
+        )
         if (selectedFioAddress) {
-          fioWallet = fioWallets.find(({ id }) => id === selectedFioAddress.walletId)
+          fioWallet = fioWallets.find(
+            ({ id }) => id === selectedFioAddress.walletId
+          )
         }
       }
       if (!fioWallet) {
@@ -208,7 +247,14 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
     const { loading } = this.state
     const styles = getStyles(theme)
 
-    if (loading) return <ActivityIndicator color={theme.icon} style={styles.loading} size="small" />
+    if (loading)
+      return (
+        <ActivityIndicator
+          color={theme.icon}
+          style={styles.loading}
+          size="small"
+        />
+      )
 
     if (fioRequest) {
       return (
@@ -224,14 +270,28 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
       <View style={styles.textIconContainer}>
         <ArrowDownTextIconButton
           onPress={this.selectAddress}
-          title={<Text style={styles.selectAddressText} ellipsizeMode="middle" numberOfLines={1}>{`${s.strings.fragment_send_from_label}: ${selected}`}</Text>}
+          title={
+            <Text
+              style={styles.selectAddressText}
+              ellipsizeMode="middle"
+              numberOfLines={1}
+            >{`${s.strings.fragment_send_from_label}: ${selected}`}</Text>
+          }
         />
       </View>
     )
   }
 
   render() {
-    const { fioRequest, selected, memo, memoError, loading: walletLoading, isSendUsingFioAddress, theme } = this.props
+    const {
+      fioRequest,
+      selected,
+      memo,
+      memoError,
+      loading: walletLoading,
+      isSendUsingFioAddress,
+      theme
+    } = this.props
     const { loading } = this.state
     const styles = getStyles(theme)
 
@@ -240,7 +300,11 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
     if (walletLoading) {
       return (
         <View style={styles.selectContainer}>
-          <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />
+          <ActivityIndicator
+            color={theme.iconTappable}
+            style={styles.loading}
+            size="small"
+          />
         </View>
       )
     }
@@ -251,12 +315,18 @@ class SelectFioAddress extends React.Component<Props, LocalState> {
         {!loading && (
           <TouchableWithoutFeedback onPress={this.openMessageInput}>
             <View style={styles.memoContainer}>
-              <Text style={styles.selectAddressText}>{s.strings.fio_sender_memo_label}:</Text>
-              <Text style={styles.selectAddressTextPressed}>{memo || s.strings.fio_sender_memo_placeholder}</Text>
+              <Text style={styles.selectAddressText}>
+                {s.strings.fio_sender_memo_label}:
+              </Text>
+              <Text style={styles.selectAddressTextPressed}>
+                {memo || s.strings.fio_sender_memo_placeholder}
+              </Text>
             </View>
           </TouchableWithoutFeedback>
         )}
-        {memoError ? <EdgeText style={styles.error}>{memoError}</EdgeText> : null}
+        {memoError ? (
+          <EdgeText style={styles.error}>{memoError}</EdgeText>
+        ) : null}
       </View>
     )
   }
@@ -329,4 +399,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   }
 })
 
-export const SelectFioAddressConnector = connect(mapStateToProps, mapDispatchToProps)(withTheme(SelectFioAddress))
+export const SelectFioAddressConnector = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withTheme(SelectFioAddress))

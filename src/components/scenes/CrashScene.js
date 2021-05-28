@@ -6,7 +6,12 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import s from '../../locales/strings.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 
 /**
  * This component will be displayed when an error boundary catches an error

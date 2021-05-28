@@ -19,7 +19,9 @@ describe('Change Mining Fees', () => {
 
   it('should render with standard props', () => {
     const renderer = new ShallowRenderer()
-    const element = <ChangeMiningFee {...commonProps} networkFeeOption="standard" />
+    const element = (
+      <ChangeMiningFee {...commonProps} networkFeeOption="standard" />
+    )
     expect(renderer.render(element)).toMatchSnapshot()
   })
 
@@ -37,7 +39,9 @@ describe('Change Mining Fees', () => {
 
   it('should render with custom props', () => {
     const renderer = new ShallowRenderer()
-    const element = <ChangeMiningFee {...commonProps} networkFeeOption="custom" />
+    const element = (
+      <ChangeMiningFee {...commonProps} networkFeeOption="custom" />
+    )
     expect(renderer.render(element)).toMatchSnapshot()
   })
 })

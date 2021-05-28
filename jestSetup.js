@@ -9,7 +9,10 @@ jest.mock('react-native-gesture-handler', () => ({
 }))
 
 // force timezone to UTC
-jest.mock('dateformat', () => (number, format) => require('dateformat')(number, format, true))
+jest.mock(
+  'dateformat',
+  () => (number, format) => require('dateformat')(number, format, true)
+)
 
 jest.mock('@react-native-firebase/analytics', () => () => ({
   logEvent() {},
@@ -132,8 +135,18 @@ jest.mock('react-native-localize', () => {
     },
     getLocales() {
       return [
-        { countryCode: 'US', languageTag: 'en-US', languageCode: 'en', isRTL: false },
-        { countryCode: 'FR', languageTag: 'fr-FR', languageCode: 'fr', isRTL: false }
+        {
+          countryCode: 'US',
+          languageTag: 'en-US',
+          languageCode: 'en',
+          isRTL: false
+        },
+        {
+          countryCode: 'FR',
+          languageTag: 'fr-FR',
+          languageCode: 'fr',
+          isRTL: false
+        }
       ]
     },
     getNumberFormatSettings() {
@@ -145,7 +158,9 @@ jest.mock('react-native-localize', () => {
   }
 })
 
-jest.mock('react-native-permissions', () => require('react-native-permissions/mock'))
+jest.mock('react-native-permissions', () =>
+  require('react-native-permissions/mock')
+)
 
 global.__reanimatedWorkletInit = jest.fn()
 jest.mock('react-native-reanimated', () => {

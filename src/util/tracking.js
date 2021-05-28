@@ -42,15 +42,22 @@ if (ENV.USE_FIREBASE) {
 /**
  * Send a raw event to all backends.
  */
-export async function logEvent(event: TrackingEvent, values: TrackingValues = {}) {
-  return Promise.all([logToFirebase(event, values), logToUtilServer(event, values)]).catch(error => console.warn(error))
+export async function logEvent(
+  event: TrackingEvent,
+  values: TrackingValues = {}
+) {
+  return Promise.all([
+    logToFirebase(event, values),
+    logToUtilServer(event, values)
+  ]).catch(error => console.warn(error))
 }
 
 /**
  * Send a raw event to Firebase.
  */
 async function logToFirebase(event: TrackingEvent, values: TrackingValues) {
-  const { accountDate, currencyCode, dollarValue, installerId, pluginId } = values
+  const { accountDate, currencyCode, dollarValue, installerId, pluginId } =
+    values
 
   if (!global.firebase) return
 

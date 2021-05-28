@@ -1,19 +1,41 @@
 // @flow
 
 import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
-import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
+import type {
+  EdgeCurrencyInfo,
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgeMetaToken,
+  EdgeReceiveAddress,
+  EdgeTransaction
+} from 'edge-core-js'
 import _ from 'lodash'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
 
-import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
-import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD } from '../constants/WalletAndCurrencyConstants'
+import {
+  FIAT_CODES_SYMBOLS,
+  getSymbolFromCurrency
+} from '../constants/indexConstants.js'
+import {
+  FEE_ALERT_THRESHOLD,
+  FEE_COLOR_THRESHOLD
+} from '../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../locales/intl.js'
 import type { ExchangeRatesState } from '../modules/ExchangeRates/reducer'
 import { emptyEdgeDenomination } from '../modules/Settings/selectors.js'
-import { convertCurrency, convertCurrencyFromExchangeRates } from '../modules/UI/selectors.js'
+import {
+  convertCurrency,
+  convertCurrencyFromExchangeRates
+} from '../modules/UI/selectors.js'
 import { type RootState } from '../types/reduxTypes.js'
-import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet, TransactionListTx } from '../types/types.js'
+import type {
+  CustomTokenInfo,
+  ExchangeData,
+  GuiDenomination,
+  GuiWallet,
+  TransactionListTx
+} from '../types/types.js'
 
 export const DIVIDE_PRECISION = 18
 
@@ -32,7 +54,10 @@ export const cutOffText = (str: string, lng: number) => {
   }
 }
 
-export const findDenominationSymbol = (denoms: EdgeDenomination[], value: string) => {
+export const findDenominationSymbol = (
+  denoms: EdgeDenomination[],
+  value: string
+) => {
   for (const v of denoms) {
     if (v.name === value) {
       return v.symbol
@@ -40,7 +65,11 @@ export const findDenominationSymbol = (denoms: EdgeDenomination[], value: string
   }
 }
 
-export const getSettingsCurrencyMultiplier = (currencyCode: string, settings: Object, denominations: Object) => {
+export const getSettingsCurrencyMultiplier = (
+  currencyCode: string,
+  settings: Object,
+  denominations: Object
+) => {
   const setCurrencyDenomination = settings[currencyCode].denomination
   const denominationsInfo = denominations[setCurrencyDenomination]
   const multiplier = denominationsInfo.multiplier
@@ -48,13 +77,24 @@ export const getSettingsCurrencyMultiplier = (currencyCode: string, settings: Ob
 }
 
 // tokens can only have one denomination / multiplier from what I understand
-export const getSettingsTokenMultiplier = (currencyCode: string, settings: Object, denomination: Object): string => {
+export const getSettingsTokenMultiplier = (
+  currencyCode: string,
+  settings: Object,
+  denomination: Object
+): string => {
   let multiplier
   if (denomination) {
     multiplier = denomination[settings[currencyCode].denomination].multiplier
   } else {
-    const customDenom = _.find(settings.customTokens, item => item.currencyCode === currencyCode)
-    if (customDenom && customDenom.denominations && customDenom.denominations[0]) {
+    const customDenom = _.find(
+      settings.customTokens,
+      item => item.currencyCode === currencyCode
+    )
+    if (
+      customDenom &&
+      customDenom.denominations &&
+      customDenom.denominations[0]
+    ) {
       multiplier = customDenom.denominations[0].multiplier
     } else {
       return '1'
@@ -88,12 +128,21 @@ export const mergeTokens = (
   return tokensEnabled
 }
 
-export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: EdgeMetaToken[], edgeMetaTokens: CustomTokenInfo[]): EdgeMetaToken[] => {
+export const mergeTokensRemoveInvisible = (
+  preferredEdgeMetaTokens: EdgeMetaToken[],
+  edgeMetaTokens: CustomTokenInfo[]
+): EdgeMetaToken[] => {
   const tokensEnabled: EdgeMetaToken[] = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   const tokensToAdd = []
   for (const x of edgeMetaTokens) {
     // loops through the account-level array
-    if (x.isVisible !== false && _.findIndex(tokensEnabled, walletToken => walletToken.currencyCode === x.currencyCode) === -1) {
+    if (
+      x.isVisible !== false &&
+      _.findIndex(
+        tokensEnabled,
+        walletToken => walletToken.currencyCode === x.currencyCode
+      ) === -1
+    ) {
       tokensToAdd.push(x)
     }
   }
@@ -109,7 +158,11 @@ export const isValidInput = (input: string): boolean =>
 
 // Used to limit the decimals of a displayAmount
 // TODO every function that calls this function needs to be flowed
-export const truncateDecimals = (input: string, precision: number, allowBlank: boolean = false): string => {
+export const truncateDecimals = (
+  input: string,
+  precision: number,
+  allowBlank: boolean = false
+): string => {
   if (input === '') {
     if (allowBlank) {
       input = ''
@@ -121,7 +174,9 @@ export const truncateDecimals = (input: string, precision: number, allowBlank: b
     return input
   }
   const [integers, decimals] = input.split('.')
-  return precision > 0 ? `${integers}.${decimals.slice(0, precision)}` : integers
+  return precision > 0
+    ? `${integers}.${decimals.slice(0, precision)}`
+    : integers
 }
 
 export const decimalOrZero = (input: string, decimalPlaces: number): string => {
@@ -159,13 +214,17 @@ export const convertDisplayToNative =
   (displayAmount: string): string =>
     !displayAmount ? '' : mul(displayAmount, nativeToDisplayRatio)
 
-export const isCryptoParentCurrency = (wallet: GuiWallet, currencyCode: string) => currencyCode === wallet.currencyCode
+export const isCryptoParentCurrency = (
+  wallet: GuiWallet,
+  currencyCode: string
+) => currencyCode === wallet.currencyCode
 
 export function getNewArrayWithoutItem<T>(array: T[], targetItem: T): T[] {
   return array.filter(item => item !== targetItem)
 }
 
-export const getNewArrayWithItem = (array: any[], item: any) => (!array.includes(item) ? [...array, item] : array)
+export const getNewArrayWithItem = (array: any[], item: any) =>
+  !array.includes(item) ? [...array, item] : array
 
 const restrictedCurrencyCodes = ['BTC']
 
@@ -199,7 +258,9 @@ export function getAllDenomsOfIsoCurrencies(): GuiDenomination[] {
   return denomArray
 }
 
-export const getSupportedFiats = (defaultCurrencyCode?: string): Array<{ label: string, value: string }> => {
+export const getSupportedFiats = (
+  defaultCurrencyCode?: string
+): Array<{ label: string, value: string }> => {
   const out = []
   if (defaultCurrencyCode && FIAT_CODES_SYMBOLS[defaultCurrencyCode]) {
     out.push({
@@ -243,7 +304,10 @@ export const unspacedLowercase = (input: string) => {
   return newInput
 }
 
-export const getCurrencyInfo = (allCurrencyInfos: EdgeCurrencyInfo[], currencyCode: string): EdgeCurrencyInfo | void => {
+export const getCurrencyInfo = (
+  allCurrencyInfos: EdgeCurrencyInfo[],
+  currencyCode: string
+): EdgeCurrencyInfo | void => {
   for (const info of allCurrencyInfos) {
     for (const denomination of info.denominations) {
       if (denomination.name === currencyCode) {
@@ -279,12 +343,19 @@ export const decimalPlacesToDenomination = (decimalPlaces: string): string => {
   return denomination
 }
 
-export const isReceivedTransaction = (edgeTransaction: EdgeTransaction): boolean => {
+export const isReceivedTransaction = (
+  edgeTransaction: EdgeTransaction
+): boolean => {
   return !isSentTransaction(edgeTransaction)
 }
 
-export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTransaction): boolean => {
-  return !!edgeTransaction.nativeAmount && edgeTransaction.nativeAmount.charAt(0) === '-'
+export const isSentTransaction = (
+  edgeTransaction: TransactionListTx | EdgeTransaction
+): boolean => {
+  return (
+    !!edgeTransaction.nativeAmount &&
+    edgeTransaction.nativeAmount.charAt(0) === '-'
+  )
 }
 
 export type PrecisionAdjustParams = {
@@ -294,17 +365,27 @@ export type PrecisionAdjustParams = {
 }
 
 export function precisionAdjust(params: PrecisionAdjustParams): number {
-  const order = Math.floor(Math.log(params.exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
+  const order = Math.floor(
+    Math.log(params.exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001
+  ) // because float math sucks like that
   const exchangeRateOrderOfMagnitude = Math.pow(10, order)
 
   // Get the exchange rate in tenth of pennies
-  const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), bns.mul(params.secondaryExchangeMultiplier, '10'))
+  const exchangeRateString = bns.mul(
+    exchangeRateOrderOfMagnitude.toString(),
+    bns.mul(params.secondaryExchangeMultiplier, '10')
+  )
 
-  const precisionAdjust = bns.div(exchangeRateString, params.primaryExchangeMultiplier, DIVIDE_PRECISION)
+  const precisionAdjust = bns.div(
+    exchangeRateString,
+    params.primaryExchangeMultiplier,
+    DIVIDE_PRECISION
+  )
 
   if (bns.lt(precisionAdjust, '1')) {
     const fPrecisionAdject = parseFloat(precisionAdjust)
-    let order = 2 + Math.floor(Math.log(fPrecisionAdject) / Math.LN10 - 0.000000001) // because float math sucks like that
+    let order =
+      2 + Math.floor(Math.log(fPrecisionAdject) / Math.LN10 - 0.000000001) // because float math sucks like that
     order = Math.abs(order)
     if (order > 0) {
       return order
@@ -317,7 +398,9 @@ export const noOp = (optionalArgument: any = null) => {
   return optionalArgument
 }
 
-export const getReceiveAddresses = (currencyWallets: { [id: string]: EdgeCurrencyWallet }): Promise<{ [id: string]: EdgeReceiveAddress }> => {
+export const getReceiveAddresses = (currencyWallets: {
+  [id: string]: EdgeCurrencyWallet
+}): Promise<{ [id: string]: EdgeReceiveAddress }> => {
   const ids = Object.keys(currencyWallets)
   const promises = ids.map(id => {
     return currencyWallets[id].getReceiveAddress()
@@ -342,7 +425,12 @@ export const daysBetween = (DateInMsA: number, dateInMsB: number) => {
 // Does a shallow compare of obj1 to obj2 and returns the element name of the element which differs
 // between the two. Will recursively deep compare any unequal elements specified in traverseObjects.
 // Returns the element name of the unequal element or '' if objects are equal
-export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Object, ignoreObjects?: Object): string {
+export function getObjectDiff(
+  obj1: Object,
+  obj2: Object,
+  traverseObjects?: Object,
+  ignoreObjects?: Object
+): string {
   const comparedElements = {}
   for (const e of Object.keys(obj1)) {
     if (ignoreObjects && ignoreObjects[e]) {
@@ -352,8 +440,17 @@ export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Obje
     // eslint-disable-next-line no-prototype-builtins
     if (obj2.hasOwnProperty(e)) {
       if (obj1[e] !== obj2[e]) {
-        if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
-          const deepDiff = getObjectDiff(obj1[e], obj2[e], traverseObjects, ignoreObjects)
+        if (
+          traverseObjects &&
+          traverseObjects[e] &&
+          typeof obj1[e] === 'object'
+        ) {
+          const deepDiff = getObjectDiff(
+            obj1[e],
+            obj2[e],
+            traverseObjects,
+            ignoreObjects
+          )
           if (deepDiff) {
             // console.log(`getObjectDiff:${e}`)
             return e
@@ -369,13 +466,20 @@ export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Obje
     }
   }
   for (const e of Object.keys(obj2)) {
-    if ((comparedElements && comparedElements[e]) || (ignoreObjects && ignoreObjects[e])) {
+    if (
+      (comparedElements && comparedElements[e]) ||
+      (ignoreObjects && ignoreObjects[e])
+    ) {
       continue
     }
     // eslint-disable-next-line no-prototype-builtins
     if (obj1.hasOwnProperty(e)) {
       if (obj1[e] !== obj2[e]) {
-        if (traverseObjects && traverseObjects[e] && typeof obj1[e] === 'object') {
+        if (
+          traverseObjects &&
+          traverseObjects[e] &&
+          typeof obj1[e] === 'object'
+        ) {
           const deepDiff = getObjectDiff(obj2[e], obj1[e], traverseObjects)
           if (deepDiff) {
             return e
@@ -391,7 +495,11 @@ export function getObjectDiff(obj1: Object, obj2: Object, traverseObjects?: Obje
   return ''
 }
 
-export function runWithTimeout<T>(promise: Promise<T>, ms: number, error: Error = new Error(`Timeout of ${ms}ms exceeded`)): Promise<T> {
+export function runWithTimeout<T>(
+  promise: Promise<T>,
+  ms: number,
+  error: Error = new Error(`Timeout of ${ms}ms exceeded`)
+): Promise<T> {
   const timeout = new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(error), ms)
     const onDone = () => clearTimeout(timer)
@@ -404,7 +512,10 @@ export function snooze(ms: number): Promise<void> {
   return new Promise((resolve: any) => setTimeout(resolve, ms))
 }
 
-export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCurrencyCode: string): number => {
+export const getTotalFiatAmountFromExchangeRates = (
+  state: RootState,
+  isoFiatCurrencyCode: string
+): number => {
   const temporaryTotalCrypto: { [string]: number } = {}
   const wallets = state.ui.wallets.byId
   const settings = state.ui.settings
@@ -422,7 +533,9 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
       // get the native balance for this currency
       const nativeBalance = wallet.nativeBalances[currencyCode]
       // if it's a token and not enabled
-      const isDisabledToken = currencyCode !== wallet.currencyCode && !wallet.enabledTokens.includes(currencyCode)
+      const isDisabledToken =
+        currencyCode !== wallet.currencyCode &&
+        !wallet.enabledTokens.includes(currencyCode)
       if (isDisabledToken) continue
       // if it is a non-zero amount then we will process it
       if (nativeBalance && nativeBalance !== '0') {
@@ -433,31 +546,46 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
           denominations = settings[currencyCode].denominations
         } else {
           // otherwise find the token whose currencyCode matches the one that we are working with
-          const tokenInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
+          const tokenInfo = settings.customTokens.find(
+            token => token.currencyCode === currencyCode
+          )
           // grab the denominations array (which is equivalent of the denominations from the previous (true) clause)
           if (!tokenInfo) continue
           denominations = tokenInfo.denominations
         }
         // now go through that array of denominations and find the one whose name matches the currency
-        const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+        const exchangeDenomination = denominations.find(
+          denomination => denomination.name === currencyCode
+        )
         if (!exchangeDenomination) continue
         // grab the multiplier, which is the ratio that we can multiply and divide by
         const nativeToExchangeRatio: string = exchangeDenomination.multiplier
         // divide the native amount (eg satoshis) by the ratio to end up with standard crypto amount (which exchanges use)
-        const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-        temporaryTotalCrypto[currencyCode] = temporaryTotalCrypto[currencyCode] + cryptoAmount
+        const cryptoAmount: number = parseFloat(
+          convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
+        )
+        temporaryTotalCrypto[currencyCode] =
+          temporaryTotalCrypto[currencyCode] + cryptoAmount
       }
     }
   }
 
   let total = 0
   for (const currency of Object.keys(temporaryTotalCrypto)) {
-    total += convertCurrency(state, currency, isoFiatCurrencyCode, temporaryTotalCrypto[currency])
+    total += convertCurrency(
+      state,
+      currency,
+      isoFiatCurrencyCode,
+      temporaryTotalCrypto[currency]
+    )
   }
   return total
 }
 
-export const isTooFarAhead = (dateInSeconds: number, currentDateInSeconds: number) => {
+export const isTooFarAhead = (
+  dateInSeconds: number,
+  currentDateInSeconds: number
+) => {
   const secondsPerDay = 86400
   const daysPerMonth = 30
   const monthInFuture = currentDateInSeconds + secondsPerDay * daysPerMonth
@@ -469,8 +597,12 @@ export const isTooFarBehind = (dateInSeconds: number) => {
   return dateInSeconds < dateOfBitcoinGenesisInSeconds
 }
 
-export const autoCorrectDate = (dateInSeconds: number, currentDateInSeconds: number = Date.now() / 1000) => {
-  if (isTooFarAhead(dateInSeconds, currentDateInSeconds)) return dateInSeconds / 1000
+export const autoCorrectDate = (
+  dateInSeconds: number,
+  currentDateInSeconds: number = Date.now() / 1000
+) => {
+  if (isTooFarAhead(dateInSeconds, currentDateInSeconds))
+    return dateInSeconds / 1000
   if (isTooFarBehind(dateInSeconds)) return dateInSeconds * 1000
   return dateInSeconds
 }
@@ -489,7 +621,9 @@ export const getFeeDisplayed = (number: number): string => {
   const dec = number % 10
 
   if (dec) {
-    return dec.toString().length > 2 ? number.toString() : number.toFixed(defaultAmount)
+    return dec.toString().length > 2
+      ? number.toString()
+      : number.toFixed(defaultAmount)
   }
 
   return number.toFixed(defaultAmount)
@@ -509,7 +643,10 @@ export function splitTransactionCategory(fullCategory: string): {
 
 type AsyncFunction = void => Promise<any>
 
-export async function asyncWaterfall(asyncFuncs: AsyncFunction[], timeoutMs: number = 5000): Promise<any> {
+export async function asyncWaterfall(
+  asyncFuncs: AsyncFunction[],
+  timeoutMs: number = 5000
+): Promise<any> {
   let pending = asyncFuncs.length
   const promises: Promise<any>[] = []
   for (const func of asyncFuncs) {
@@ -566,7 +703,11 @@ export async function openLink(url: string): Promise<void> {
   }
 }
 
-export function debounce(func: Function, wait: number, immediate: boolean): any {
+export function debounce(
+  func: Function,
+  wait: number,
+  immediate: boolean
+): any {
   let timeout
 
   return function executedFunction() {
@@ -588,12 +729,23 @@ export function debounce(func: Function, wait: number, immediate: boolean): any 
   }
 }
 
-export function getCustomTokenDenomination(currencyCode: string, settings: Object) {
-  const customTokenCurrencyInfo = settings.customTokens.find(token => token.currencyCode === currencyCode)
-  return customTokenCurrencyInfo ? customTokenCurrencyInfo.denominations[0] : emptyEdgeDenomination
+export function getCustomTokenDenomination(
+  currencyCode: string,
+  settings: Object
+) {
+  const customTokenCurrencyInfo = settings.customTokens.find(
+    token => token.currencyCode === currencyCode
+  )
+  return customTokenCurrencyInfo
+    ? customTokenCurrencyInfo.denominations[0]
+    : emptyEdgeDenomination
 }
 
-export function getDenomination(currencyCode: string, settings: Object, type: 'display' | 'exchange') {
+export function getDenomination(
+  currencyCode: string,
+  settings: Object,
+  type: 'display' | 'exchange'
+) {
   const currencyInfo = settings[currencyCode]
   if (currencyInfo) {
     const denomination = currencyInfo.denominations.find(denomination => {
@@ -609,31 +761,65 @@ export function getDenomination(currencyCode: string, settings: Object, type: 'd
   return getCustomTokenDenomination(currencyCode, settings)
 }
 
-export function getDefaultDenomination(currencyCode: string, settings: Object): EdgeDenomination {
-  return settings[currencyCode].denominations.find(denomination => denomination.name === currencyCode)
+export function getDefaultDenomination(
+  currencyCode: string,
+  settings: Object
+): EdgeDenomination {
+  return settings[currencyCode].denominations.find(
+    denomination => denomination.name === currencyCode
+  )
 }
 
-export function checkCurrencyCodes(fullCurrencyCode: string, currencyCode: string): boolean {
+export function checkCurrencyCodes(
+  fullCurrencyCode: string,
+  currencyCode: string
+): boolean {
   const [parent, token] = fullCurrencyCode.split('-')
-  const checkToken = token ? currencyCode.toLowerCase() === token.toLowerCase() : false
-  const checkParent = !token ? currencyCode.toLowerCase() === parent.toLowerCase() : false
+  const checkToken = token
+    ? currencyCode.toLowerCase() === token.toLowerCase()
+    : false
+  const checkParent = !token
+    ? currencyCode.toLowerCase() === parent.toLowerCase()
+    : false
   return checkToken || checkParent
 }
 
-export function checkCurrencyCodesArray(currencyCode: string, currencyCodesArray: string[]): boolean {
-  return !!currencyCodesArray.find(item => checkCurrencyCodes(item, currencyCode))
+export function checkCurrencyCodesArray(
+  currencyCode: string,
+  currencyCodesArray: string[]
+): boolean {
+  return !!currencyCodesArray.find(item =>
+    checkCurrencyCodes(item, currencyCode)
+  )
 }
 
-export type FilterDetailsType = { name: string, currencyCode: string, currencyName: string }
+export type FilterDetailsType = {
+  name: string,
+  currencyCode: string,
+  currencyName: string
+}
 
-export function checkFilterWallet(details: FilterDetailsType, filterText: string, allowedCurrencyCodes?: string[], excludeCurrencyCodes?: string[]): boolean {
+export function checkFilterWallet(
+  details: FilterDetailsType,
+  filterText: string,
+  allowedCurrencyCodes?: string[],
+  excludeCurrencyCodes?: string[]
+): boolean {
   const currencyCode = details.currencyCode.toLowerCase()
 
-  if (allowedCurrencyCodes && allowedCurrencyCodes.length > 0 && !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes)) {
+  if (
+    allowedCurrencyCodes &&
+    allowedCurrencyCodes.length > 0 &&
+    !checkCurrencyCodesArray(currencyCode, allowedCurrencyCodes)
+  ) {
     return false
   }
 
-  if (excludeCurrencyCodes && excludeCurrencyCodes.length > 0 && checkCurrencyCodesArray(currencyCode, excludeCurrencyCodes)) {
+  if (
+    excludeCurrencyCodes &&
+    excludeCurrencyCodes.length > 0 &&
+    checkCurrencyCodesArray(currencyCode, excludeCurrencyCodes)
+  ) {
     return false
   }
 
@@ -644,7 +830,11 @@ export function checkFilterWallet(details: FilterDetailsType, filterText: string
   const walletName = details.name.replace(' ', '').toLowerCase()
   const currencyName = details.currencyName.toLowerCase()
   const filterString = filterText.toLowerCase()
-  return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
+  return (
+    walletName.includes(filterString) ||
+    currencyCode.includes(filterString) ||
+    currencyName.includes(filterString)
+  )
 }
 
 export function alphabeticalSort(itemA: string, itemB: string): number {
@@ -657,7 +847,10 @@ export function alphabeticalSort(itemA: string, itemB: string): number {
   }
 }
 
-export function maxPrimaryCurrencyConversionDecimals(primaryPrecision: number, precisionAdjustValue: number): number {
+export function maxPrimaryCurrencyConversionDecimals(
+  primaryPrecision: number,
+  precisionAdjustValue: number
+): number {
   const newPrimaryPrecision = primaryPrecision - precisionAdjustValue
   return newPrimaryPrecision >= 0 ? newPrimaryPrecision : 0
 }
@@ -667,9 +860,19 @@ export function maxPrimaryCurrencyConversionDecimals(primaryPrecision: number, p
 // returns fiatSymbol, fiatAmount, fiatStyle, cryptoSymbol and cryptoAmount when transaction fee is present
 // return cryptoAmount and fiatAmount when fee is not present
 
-export const convertToCryptoFee = (networkFee: string, displayMultiplier: string, exchangeMultiplier: string): string => {
-  const cryptoFeeExchangeDenomAmount = networkFee ? convertNativeToDisplay(exchangeMultiplier)(networkFee) : ''
-  const exchangeToDisplayMultiplierRatio = bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
+export const convertToCryptoFee = (
+  networkFee: string,
+  displayMultiplier: string,
+  exchangeMultiplier: string
+): string => {
+  const cryptoFeeExchangeDenomAmount = networkFee
+    ? convertNativeToDisplay(exchangeMultiplier)(networkFee)
+    : ''
+  const exchangeToDisplayMultiplierRatio = bns.div(
+    exchangeMultiplier,
+    displayMultiplier,
+    DIVIDE_PRECISION
+  )
   return bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
 }
 
@@ -685,12 +888,28 @@ export const convertToFiatFee = (
   exchangeRates: ExchangeRatesState,
   isoFiatCurrencyCode: string
 ): { amount: string, style?: string } => {
-  const cryptoFeeExchangeAmount = convertNativeToExchange(exchangeMultiplier)(networkFee)
-  const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(cryptoFeeExchangeAmount))
-  const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
+  const cryptoFeeExchangeAmount =
+    convertNativeToExchange(exchangeMultiplier)(networkFee)
+  const fiatFeeAmount = convertCurrencyFromExchangeRates(
+    exchangeRates,
+    currencyCode,
+    isoFiatCurrencyCode,
+    parseFloat(cryptoFeeExchangeAmount)
+  )
+  const feeAmountInUSD = convertCurrencyFromExchangeRates(
+    exchangeRates,
+    currencyCode,
+    'iso:USD',
+    parseFloat(cryptoFeeExchangeAmount)
+  )
   return {
     amount: bns.toFixed(fiatFeeAmount.toString(), 2, 2),
-    style: feeAmountInUSD > FEE_ALERT_THRESHOLD ? feeStyle.danger : feeAmountInUSD > FEE_COLOR_THRESHOLD ? feeStyle.warning : undefined
+    style:
+      feeAmountInUSD > FEE_ALERT_THRESHOLD
+        ? feeStyle.danger
+        : feeAmountInUSD > FEE_COLOR_THRESHOLD
+        ? feeStyle.warning
+        : undefined
   }
 }
 
@@ -700,12 +919,21 @@ export const convertTransactionFeeToDisplayFee = (
   exchangeRates: ExchangeRatesState,
   transaction: EdgeTransaction | null,
   settings: any
-): { fiatSymbol?: string, fiatAmount: string, fiatStyle?: string, cryptoSymbol?: string, cryptoAmount: string } => {
+): {
+  fiatSymbol?: string,
+  fiatAmount: string,
+  fiatStyle?: string,
+  cryptoSymbol?: string,
+  cryptoAmount: string
+} => {
   const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
   const secondaryDisplayDenomination = getDenomFromIsoCode(fiatCurrencyCode)
 
   const networkFee = transaction ? transaction.networkFee : undefined
-  const parentNetworkFee = transaction && transaction.parentNetworkFee ? transaction.parentNetworkFee : undefined
+  const parentNetworkFee =
+    transaction && transaction.parentNetworkFee
+      ? transaction.parentNetworkFee
+      : undefined
 
   if (!networkFee && !parentNetworkFee) {
     // if no fee
@@ -715,13 +943,38 @@ export const convertTransactionFeeToDisplayFee = (
     }
   } else if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
     // if parentNetworkFee greater than zero
-    const parentDisplayDenomination = getDenomination(guiWallet.currencyCode, settings, 'display')
-    const parentExchangeDenomination = getDenomination(guiWallet.currencyCode, settings, 'exchange')
-    const cryptoFeeSymbol = parentDisplayDenomination && parentDisplayDenomination.symbol ? parentDisplayDenomination.symbol : ''
-    const displayMultiplier = parentDisplayDenomination ? parentDisplayDenomination.multiplier : ''
-    const exchangeMultiplier = parentExchangeDenomination ? parentExchangeDenomination.multiplier : ''
-    const cryptoAmount = convertToCryptoFee(parentNetworkFee, displayMultiplier, exchangeMultiplier)
-    const fiatAmount = convertToFiatFee(parentNetworkFee, exchangeMultiplier, parentExchangeDenomination.name, exchangeRates, isoFiatCurrencyCode)
+    const parentDisplayDenomination = getDenomination(
+      guiWallet.currencyCode,
+      settings,
+      'display'
+    )
+    const parentExchangeDenomination = getDenomination(
+      guiWallet.currencyCode,
+      settings,
+      'exchange'
+    )
+    const cryptoFeeSymbol =
+      parentDisplayDenomination && parentDisplayDenomination.symbol
+        ? parentDisplayDenomination.symbol
+        : ''
+    const displayMultiplier = parentDisplayDenomination
+      ? parentDisplayDenomination.multiplier
+      : ''
+    const exchangeMultiplier = parentExchangeDenomination
+      ? parentExchangeDenomination.multiplier
+      : ''
+    const cryptoAmount = convertToCryptoFee(
+      parentNetworkFee,
+      displayMultiplier,
+      exchangeMultiplier
+    )
+    const fiatAmount = convertToFiatFee(
+      parentNetworkFee,
+      exchangeMultiplier,
+      parentExchangeDenomination.name,
+      exchangeRates,
+      isoFiatCurrencyCode
+    )
     return {
       fiatSymbol: secondaryDisplayDenomination.symbol,
       fiatAmount: fiatAmount.amount,
@@ -731,13 +984,38 @@ export const convertTransactionFeeToDisplayFee = (
     }
   } else if (networkFee && bns.gt(networkFee, '0')) {
     // if networkFee greater than zero
-    const primaryDisplayDenomination = getDenomination(currencyCode, settings, 'display')
-    const primaryExchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
-    const cryptoFeeSymbol = primaryDisplayDenomination && primaryDisplayDenomination.symbol ? primaryDisplayDenomination.symbol : ''
-    const displayMultiplier = primaryDisplayDenomination ? primaryDisplayDenomination.multiplier : ''
-    const exchangeMultiplier = primaryExchangeDenomination ? primaryExchangeDenomination.multiplier : ''
-    const cryptoAmount = convertToCryptoFee(networkFee, displayMultiplier, exchangeMultiplier)
-    const fiatAmount = convertToFiatFee(networkFee, exchangeMultiplier, currencyCode, exchangeRates, isoFiatCurrencyCode)
+    const primaryDisplayDenomination = getDenomination(
+      currencyCode,
+      settings,
+      'display'
+    )
+    const primaryExchangeDenomination = getDenomination(
+      currencyCode,
+      settings,
+      'exchange'
+    )
+    const cryptoFeeSymbol =
+      primaryDisplayDenomination && primaryDisplayDenomination.symbol
+        ? primaryDisplayDenomination.symbol
+        : ''
+    const displayMultiplier = primaryDisplayDenomination
+      ? primaryDisplayDenomination.multiplier
+      : ''
+    const exchangeMultiplier = primaryExchangeDenomination
+      ? primaryExchangeDenomination.multiplier
+      : ''
+    const cryptoAmount = convertToCryptoFee(
+      networkFee,
+      displayMultiplier,
+      exchangeMultiplier
+    )
+    const fiatAmount = convertToFiatFee(
+      networkFee,
+      exchangeMultiplier,
+      currencyCode,
+      exchangeRates,
+      isoFiatCurrencyCode
+    )
     return {
       fiatSymbol: secondaryDisplayDenomination.symbol,
       fiatAmount: fiatAmount.amount,
@@ -768,12 +1046,22 @@ export function getCryptoAmount(
       secondaryExchangeMultiplier: fiatDenomination.multiplier,
       exchangeSecondaryToPrimaryRatio: exchangeRate
     })
-    maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(denomination.multiplier), precisionAdjustValue)
+    maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(
+      bns.log10(denomination.multiplier),
+      precisionAdjustValue
+    )
   }
   try {
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), maxConversionDecimals)
-    const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
-    return `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}`
+    const preliminaryCryptoAmount = truncateDecimals(
+      bns.div(balance, denomination.multiplier, DIVIDE_PRECISION),
+      maxConversionDecimals
+    )
+    const finalCryptoAmount = formatNumber(
+      decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)
+    ) // check if infinitesimal (would display as zero), cut off trailing zeroes
+    return `${
+      denomination.symbol ? denomination.symbol + ' ' : ''
+    }${finalCryptoAmount}`
   } catch (error) {
     if (error.message === 'Cannot operate on base16 float values') {
       const errorMessage = `${error.message}: GuiWallet currency code - ${guiWallet.currencyCode}, balance - ${balance}, demonination multiplier: ${denomination.multiplier}`

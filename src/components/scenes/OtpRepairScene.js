@@ -28,7 +28,12 @@ class OtpRepairComponent extends React.Component<Props> {
 
     return (
       <View style={styles.container}>
-        <OtpRepairScreen account={account} context={context} onComplete={onComplete} otpError={otpError} />
+        <OtpRepairScreen
+          account={account}
+          context={context}
+          onComplete={onComplete}
+          otpError={otpError}
+        />
       </View>
     )
   }

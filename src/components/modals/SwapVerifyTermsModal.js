@@ -9,14 +9,30 @@ import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import { Airship } from '../services/AirshipInstance.js'
-import { type AirshipBridge, AirshipModal, ContentArea, dayText, IconCircle, THEME } from './modalParts.js'
+import {
+  type AirshipBridge,
+  AirshipModal,
+  ContentArea,
+  dayText,
+  IconCircle,
+  THEME
+} from './modalParts.js'
 
-export async function swapVerifyTerms(swapConfig: EdgeSwapConfig, links: Array<{ text: string, uri: string }>): Promise<boolean> {
+export async function swapVerifyTerms(
+  swapConfig: EdgeSwapConfig,
+  links: Array<{ text: string, uri: string }>
+): Promise<boolean> {
   if (swapConfig.userSettings && swapConfig.userSettings.agreedToTerms) {
     return true
   }
 
-  const result = await Airship.show(bridge => <SwapVerifyTermsModal bridge={bridge} swapInfo={swapConfig.swapInfo} links={links} />)
+  const result = await Airship.show(bridge => (
+    <SwapVerifyTermsModal
+      bridge={bridge}
+      swapInfo={swapConfig.swapInfo}
+      links={links}
+    />
+  ))
 
   if (result) {
     await swapConfig.changeUserSettings({ agreedToTerms: true })
@@ -42,21 +58,33 @@ function SwapVerifyTermsModal(props: Props) {
   return (
     <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(false)}>
       <IconCircle>
-        <Image source={swapPluginIcons[pluginId]} resizeMode="contain" style={{ height: iconSize, width: iconSize }} />
+        <Image
+          source={swapPluginIcons[pluginId]}
+          resizeMode="contain"
+          style={{ height: iconSize, width: iconSize }}
+        />
       </IconCircle>
 
       <ContentArea padding="wide">
         <Text style={dayText('title')}>{displayName}</Text>
         <Text style={dayText()}>{s.strings.swap_terms_statement}</Text>
         <PrimaryButton onPress={() => bridge.resolve(true)}>
-          <PrimaryButton.Text>{s.strings.swap_terms_accept_button}</PrimaryButton.Text>
+          <PrimaryButton.Text>
+            {s.strings.swap_terms_accept_button}
+          </PrimaryButton.Text>
         </PrimaryButton>
         <SecondaryButton onPress={() => bridge.resolve(false)}>
-          <SecondaryButton.Text>{s.strings.swap_terms_reject_button}</SecondaryButton.Text>
+          <SecondaryButton.Text>
+            {s.strings.swap_terms_reject_button}
+          </SecondaryButton.Text>
         </SecondaryButton>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           {links.map(({ text, uri }) => (
-            <Text style={linkStyle} key={text} onPress={() => Linking.openURL(uri)}>
+            <Text
+              style={linkStyle}
+              key={text}
+              onPress={() => Linking.openURL(uri)}
+            >
               {text}
             </Text>
           ))}

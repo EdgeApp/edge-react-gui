@@ -12,11 +12,19 @@ import * as Constants from '../../constants/indexConstants'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
-import { expiredSoon, findWalletByFioAddress } from '../../modules/FioAddress/util'
+import {
+  expiredSoon,
+  findWalletByFioAddress
+} from '../../modules/FioAddress/util'
 import type { RootState } from '../../reducers/RootReducer'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsRow } from '../themed/SettingsRow.js'
@@ -47,9 +55,11 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   componentDidMount() {
     const { fioAddressName } = this.props
     if (!fioAddressName) {
-      Alert.alert(s.strings.fio_address_details_screen_alert_title, s.strings.fio_address_details_screen_alert_message, [
-        { text: s.strings.fio_address_details_screen_alert_button }
-      ])
+      Alert.alert(
+        s.strings.fio_address_details_screen_alert_title,
+        s.strings.fio_address_details_screen_alert_message,
+        [{ text: s.strings.fio_address_details_screen_alert_button }]
+      )
     }
     this.props.navigation.setParams({
       renderTitle: this.renderTitle(fioAddressName)
@@ -68,7 +78,12 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
     const { fioAddressName, expiration } = this.props
     const { fioWallet } = this.state
     if (fioWallet) {
-      Actions[Constants.FIO_ADDRESS_SETTINGS]({ fioWallet, fioAddressName, expiration: formatDate(new Date(expiration)), refreshAfterRenew: true })
+      Actions[Constants.FIO_ADDRESS_SETTINGS]({
+        fioWallet,
+        fioAddressName,
+        expiration: formatDate(new Date(expiration)),
+        refreshAfterRenew: true
+      })
     } else {
       showError(s.strings.fio_wallet_missing_for_fio_address)
     }
@@ -90,11 +105,27 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
     const styles = getStyles(theme)
     let icon, displayName
     if (this.checkExpiredSoon()) {
-      icon = <IonIcon name="ios-warning" color={theme.warningIcon} size={theme.rem(1.5)} />
-      displayName = <EdgeText style={styles.warning}>{s.strings.fio_address_details_expired_soon}</EdgeText>
+      icon = (
+        <IonIcon
+          name="ios-warning"
+          color={theme.warningIcon}
+          size={theme.rem(1.5)}
+        />
+      )
+      displayName = (
+        <EdgeText style={styles.warning}>
+          {s.strings.fio_address_details_expired_soon}
+        </EdgeText>
+      )
     } else {
-      icon = <IonIcon name="ios-settings" color={theme.icon} size={theme.rem(1.5)} />
-      displayName = <EdgeText style={styles.settingsText}>{s.strings.fio_address_details_screen_manage_account_settings}</EdgeText>
+      icon = (
+        <IonIcon name="ios-settings" color={theme.icon} size={theme.rem(1.5)} />
+      )
+      displayName = (
+        <EdgeText style={styles.settingsText}>
+          {s.strings.fio_address_details_screen_manage_account_settings}
+        </EdgeText>
+      )
     }
 
     return (
@@ -102,7 +133,9 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
         icon={icon}
         text={displayName}
         onPress={this._onPressAccountSettings}
-        right={<AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />}
+        right={
+          <AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />
+        }
       />
     )
   }
@@ -110,18 +143,30 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   render() {
     const { fioAddressName, expiration, theme } = this.props
     const styles = getStyles(theme)
-    const expirationLabel = `${s.strings.fio_address_details_screen_expires} ${formatDate(new Date(expiration))}`
+    const expirationLabel = `${
+      s.strings.fio_address_details_screen_expires
+    } ${formatDate(new Date(expiration))}`
 
     return (
       <SceneWrapper background="header">
         <EdgeText style={styles.expiration}>{expirationLabel}</EdgeText>
         {this.renderAccountSettings()}
         <SettingsHeaderRow
-          icon={<IonIcon name="ios-link" color={theme.primaryText} size={theme.rem(1.5)} />}
+          icon={
+            <IonIcon
+              name="ios-link"
+              color={theme.primaryText}
+              size={theme.rem(1.5)}
+            />
+          }
           numberOfLines={2}
           text={s.strings.fio_address_details_connect_to_wallets}
         />
-        <ConnectWallets fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} disabled={this.state.fioWalletLoading} />
+        <ConnectWallets
+          fioAddressName={fioAddressName}
+          fioWallet={this.state.fioWallet}
+          disabled={this.state.fioWalletLoading}
+        />
       </SceneWrapper>
     )
   }

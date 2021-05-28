@@ -2,10 +2,20 @@
 /* globals describe it expect */
 
 import { guiPlugins } from '../constants/plugins/GuiPlugins.js'
-import { type GuiPlugin, type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson, makePluginUri } from '../types/GuiPluginTypes.js'
+import {
+  type GuiPlugin,
+  type GuiPluginRow,
+  asGuiPluginJson,
+  filterGuiPluginJson,
+  makePluginUri
+} from '../types/GuiPluginTypes.js'
 
-const buyPluginJson = asGuiPluginJson(require('../constants/plugins/buyPluginList.json'))
-const sellPluginJson = asGuiPluginJson(require('../constants/plugins/sellPluginList.json'))
+const buyPluginJson = asGuiPluginJson(
+  require('../constants/plugins/buyPluginList.json')
+)
+const sellPluginJson = asGuiPluginJson(
+  require('../constants/plugins/sellPluginList.json')
+)
 
 describe('Production plugin data', () => {
   it('Has accurate pluginId fields', () => {
@@ -32,7 +42,9 @@ describe('Production plugin data', () => {
   })
 
   it('Buy plugins match snapshot on android + IL', () => {
-    expect(filterGuiPluginJson(buyPluginJson, 'android', 'IL')).toMatchSnapshot()
+    expect(
+      filterGuiPluginJson(buyPluginJson, 'android', 'IL')
+    ).toMatchSnapshot()
   })
 })
 
@@ -81,9 +93,15 @@ describe('GuiPlugins tools', () => {
       promoCode: 'deals'
     }
 
-    expect(makePluginUri(testPlugin, opts)).toEqual('file://test/sell?api_key=edge&kickback')
-    expect(makePluginUri({ ...testPlugin, lockUriPath: true }, opts)).toEqual('file://test/?api_key=edge&kickback')
-    expect(makePluginUri({ ...testPlugin, queryPromoCode: 'cheat' }, opts)).toEqual('file://test/sell?api_key=edge&kickback&cheat=deals')
+    expect(makePluginUri(testPlugin, opts)).toEqual(
+      'file://test/sell?api_key=edge&kickback'
+    )
+    expect(makePluginUri({ ...testPlugin, lockUriPath: true }, opts)).toEqual(
+      'file://test/?api_key=edge&kickback'
+    )
+    expect(
+      makePluginUri({ ...testPlugin, queryPromoCode: 'cheat' }, opts)
+    ).toEqual('file://test/sell?api_key=edge&kickback&cheat=deals')
   })
 })
 

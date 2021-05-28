@@ -8,7 +8,10 @@ import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
-import { enableNotifications, fetchSettings } from '../../modules/Notifications/action'
+import {
+  enableNotifications,
+  fetchSettings
+} from '../../modules/Notifications/action'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance'
@@ -21,7 +24,11 @@ type StateProps = {
   userId: string
 }
 type DispatchProps = {
-  enableNotifications(currencyCode: string, hours: string, enabled: boolean): Promise<void>
+  enableNotifications(
+    currencyCode: string,
+    hours: string,
+    enabled: boolean
+  ): Promise<void>
 }
 type Props = NavigationProps & StateProps & DispatchProps
 
@@ -29,7 +36,10 @@ type State = {
   hours: { [hours: string]: boolean }
 }
 
-export class CurrencyNotificationComponent extends React.Component<Props, State> {
+export class CurrencyNotificationComponent extends React.Component<
+  Props,
+  State
+> {
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -56,8 +66,15 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
       const percent = num === 1 ? 3 : 10
       const text =
         num === 1
-          ? sprintf(s.strings.settings_currency_notifications_percent_change_hour, percent)
-          : sprintf(s.strings.settings_currency_notifications_percent_change_hours, percent, hours)
+          ? sprintf(
+              s.strings.settings_currency_notifications_percent_change_hour,
+              percent
+            )
+          : sprintf(
+              s.strings.settings_currency_notifications_percent_change_hours,
+              percent,
+              hours
+            )
 
       rows.push(
         <SettingsSwitchRow
@@ -65,8 +82,14 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
           text={text}
           value={enabled}
           onPress={() => {
-            this.setState(state => ({ hours: { ...state.hours, [hours]: !enabled } }))
-            this.props.enableNotifications(this.props.currencyInfo.currencyCode, hours, !enabled)
+            this.setState(state => ({
+              hours: { ...state.hours, [hours]: !enabled }
+            }))
+            this.props.enableNotifications(
+              this.props.currencyInfo.currencyCode,
+              hours,
+              !enabled
+            )
           }}
         />
       )
@@ -89,6 +112,7 @@ export const CurrencyNotificationScene = connect(
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    enableNotifications: (currencyCode, hours, enabled) => dispatch(enableNotifications(currencyCode, hours, enabled))
+    enableNotifications: (currencyCode, hours, enabled) =>
+      dispatch(enableNotifications(currencyCode, hours, enabled))
   })
 )(CurrencyNotificationComponent)

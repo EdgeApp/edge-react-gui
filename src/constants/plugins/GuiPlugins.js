@@ -3,9 +3,15 @@
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 
-import { type GuiPlugin, type GuiPluginRow } from '../../types/GuiPluginTypes.js'
+import {
+  type GuiPlugin,
+  type GuiPluginRow
+} from '../../types/GuiPluginTypes.js'
 
-const hostedUri = Platform.OS === 'android' ? 'file:///android_asset/plugins/' : `file:///${RNFS.MainBundlePath}/plugins/`
+const hostedUri =
+  Platform.OS === 'android'
+    ? 'file:///android_asset/plugins/'
+    : `file:///${RNFS.MainBundlePath}/plugins/`
 
 export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   libertyx: {
@@ -30,14 +36,22 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     storeId: 'com.safello',
     baseUri: 'https://safello.com/edge',
     displayName: 'Safello',
-    originWhitelist: ['https://safello.com', 'https://app.safello.com', 'http://safello.com']
+    originWhitelist: [
+      'https://safello.com',
+      'https://app.safello.com',
+      'http://safello.com'
+    ]
   },
   'safello-sell': {
     pluginId: 'safello-sell',
     storeId: 'com.safello',
     baseUri: 'https://app.safello.com',
     displayName: 'Safello',
-    originWhitelist: ['https://safello.com', 'https://app.safello.com', 'http://safello.com']
+    originWhitelist: [
+      'https://safello.com',
+      'https://app.safello.com',
+      'http://safello.com'
+    ]
   },
   bitsofgold: {
     pluginId: 'bitsofgold',
@@ -83,7 +97,8 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
   bitrefill: {
     pluginId: 'bitrefill',
     storeId: 'co.edgesecure.bitrefill',
-    baseUri: 'https://embed.bitrefill.com/?ref=nUqaI7Qe&theme=dark&paymentMethods=bitcoin,ethereum,dogecoin,litecoin,dash',
+    baseUri:
+      'https://embed.bitrefill.com/?ref=nUqaI7Qe&theme=dark&paymentMethods=bitcoin,ethereum,dogecoin,litecoin,dash',
     lockUriPath: true,
     displayName: 'Bitrefill'
   },
@@ -98,7 +113,11 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     pluginId: 'transak',
     storeId: 'transak',
     baseUri: 'https://global.transak.com',
-    baseQuery: { apiKey: '07c66ef7-33e4-47dd-b036-c8d28a50d962', themeColor: '0D2145', disableWalletAddressForm: 'true' },
+    baseQuery: {
+      apiKey: '07c66ef7-33e4-47dd-b036-c8d28a50d962',
+      themeColor: '0D2145',
+      disableWalletAddressForm: 'true'
+    },
     displayName: 'Transak',
     permissions: ['camera']
   },

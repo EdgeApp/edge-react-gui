@@ -16,7 +16,10 @@ type Props = {
 
 class PasswordReminderComponent extends React.PureComponent<Props> {
   componentDidUpdate(prevProps: Props) {
-    if (this.props.loginStatus && !matchJson(prevProps.passwordReminder, this.props.passwordReminder)) {
+    if (
+      this.props.loginStatus &&
+      !matchJson(prevProps.passwordReminder, this.props.passwordReminder)
+    ) {
       this.props.setPasswordReminder(this.props.passwordReminder)
     }
   }
@@ -32,6 +35,7 @@ export const PasswordReminderService = connect(
     passwordReminder: state.ui.passwordReminder
   }),
   (dispatch: Dispatch) => ({
-    setPasswordReminder: (passwordReminder: PasswordReminder) => dispatch(setPasswordReminder(passwordReminder))
+    setPasswordReminder: (passwordReminder: PasswordReminder) =>
+      dispatch(setPasswordReminder(passwordReminder))
   })
 )(PasswordReminderComponent)

@@ -1,6 +1,12 @@
 // @flow
 import * as React from 'react'
-import { Platform, StyleSheet, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import {
+  Platform,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native'
 
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
@@ -22,7 +28,10 @@ type State = {
   notes: string
 }
 
-export class TransactionDetailsNotesInput extends React.Component<Props, State> {
+export class TransactionDetailsNotesInput extends React.Component<
+  Props,
+  State
+> {
   notesInput: TextInput
 
   constructor(props: Props) {
@@ -63,7 +72,10 @@ export class TransactionDetailsNotesInput extends React.Component<Props, State> 
               </View>
             </TouchableWithoutFeedback>
             <View style={styles.spacer} />
-            <PrimaryButton style={styles.saveButton} onPress={() => bridge.resolve(notes)}>
+            <PrimaryButton
+              style={styles.saveButton}
+              onPress={() => bridge.resolve(notes)}
+            >
               <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>
             </PrimaryButton>
           </View>

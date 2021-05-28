@@ -75,7 +75,10 @@ const initialState: CryptoExchangeState = {
   creatingWallet: false
 }
 
-function cryptoExchangeInner(state = initialState, action: Action): CryptoExchangeState {
+function cryptoExchangeInner(
+  state = initialState,
+  action: Action
+): CryptoExchangeState {
   let forceUpdateGuiCounter
   switch (action.type) {
     case 'UI/WALLETS/CREATE_WALLET_START': {
@@ -95,7 +98,10 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromCurrencyCode: action.data.currencyCode,
         fromCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        fromCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        fromCurrencyIconDark: getLogoDark(
+          action.data.wallet,
+          action.data.currencyCode
+        ),
         fromBalanceMessage: action.data.balanceMessage,
         fromNativeAmount: '0',
         toNativeAmount: '0',
@@ -114,7 +120,10 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
         toCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        toCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        toCurrencyIconDark: getLogoDark(
+          action.data.wallet,
+          action.data.currencyCode
+        ),
         toBalanceMessage: action.data.balanceMessage,
         fromNativeAmount: '0',
         toNativeAmount: '0',
@@ -216,9 +225,14 @@ function getLogoDark(wallet, currencyCode) {
 }
 
 // Nuke the state on logout:
-export const cryptoExchange: Reducer<CryptoExchangeState, Action> = (state, action: Action) => {
+export const cryptoExchange: Reducer<CryptoExchangeState, Action> = (
+  state,
+  action: Action
+) => {
   if (action.type === 'LOGOUT') {
-    return cryptoExchangeInner(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
+    return cryptoExchangeInner(undefined, {
+      type: 'DUMMY_ACTION_PLEASE_IGNORE'
+    })
   }
 
   return cryptoExchangeInner(state, action)

@@ -10,7 +10,12 @@ import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { Airship } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
@@ -30,21 +35,29 @@ export function showHelpModal(): Promise<mixed> {
   return Airship.show(bridge => <HelpModal bridge={bridge} />)
 }
 function showWebViewModal(uri: string, title: string): void {
-  Airship.show(bridge => <HelpWebViewModal bridge={bridge} uri={uri} title={title} />)
+  Airship.show(bridge => (
+    <HelpWebViewModal bridge={bridge} uri={uri} title={title} />
+  ))
 }
 
 type Props = {
   bridge: AirshipBridge<void>
 }
 
-class HelpWebViewModal extends React.Component<Props & { uri: string, title: string }> {
+class HelpWebViewModal extends React.Component<
+  Props & { uri: string, title: string }
+> {
   webview: WebView | void
   handleClose = () => this.props.bridge.resolve()
 
   render() {
     const { bridge, uri, title } = this.props
     return (
-      <ThemedModal bridge={bridge} onCancel={this.handleClose} paddingRem={[1, 0]}>
+      <ThemedModal
+        bridge={bridge}
+        onCancel={this.handleClose}
+        paddingRem={[1, 0]}
+      >
         <ModalTitle center paddingRem={[0, 1, 1]}>
           {title}
         </ModalTitle>
@@ -68,7 +81,11 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
     const optionPaddingRem = [0, 1, 1, 0]
 
     return (
-      <ThemedModal bridge={bridge} onCancel={this.handleClose} paddingRem={[1, 0]}>
+      <ThemedModal
+        bridge={bridge}
+        onCancel={this.handleClose}
+        paddingRem={[1, 0]}
+      >
         <View style={styles.titleContainer}>
           <Image source={edgeLogo} style={styles.logo} resizeMode="contain" />
           <ModalTitle center paddingRem={[0, 1, 1]}>
@@ -77,10 +94,21 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
         </View>
 
         <SelectableRow
-          icon={<Fontello name="help_idea" color={theme.iconTappable} size={theme.rem(1.5)} />}
+          icon={
+            <Fontello
+              name="help_idea"
+              color={theme.iconTappable}
+              size={theme.rem(1.5)}
+            />
+          }
           title={s.strings.help_knowledge_base}
           subTitle={s.strings.help_knowledge_base_text}
-          onPress={() => showWebViewModal(HELP_URIS.knowledgeBase, s.strings.help_knowledge_base)}
+          onPress={() =>
+            showWebViewModal(
+              HELP_URIS.knowledgeBase,
+              s.strings.help_knowledge_base
+            )
+          }
           underline
           arrowTappable
           marginRem={optionMarginRem}
@@ -88,10 +116,18 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
         />
 
         <SelectableRow
-          icon={<Fontello name="help_headset" color={theme.iconTappable} size={theme.rem(1.5)} />}
+          icon={
+            <Fontello
+              name="help_headset"
+              color={theme.iconTappable}
+              size={theme.rem(1.5)}
+            />
+          }
           title={s.strings.help_support}
           subTitle={s.strings.help_support_text}
-          onPress={() => showWebViewModal(HELP_URIS.support, s.strings.help_support)}
+          onPress={() =>
+            showWebViewModal(HELP_URIS.support, s.strings.help_support)
+          }
           underline
           arrowTappable
           marginRem={optionMarginRem}
@@ -99,7 +135,13 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
         />
 
         <SelectableRow
-          icon={<Fontello name="help_call" color={theme.iconTappable} size={theme.rem(1.5)} />}
+          icon={
+            <Fontello
+              name="help_call"
+              color={theme.iconTappable}
+              size={theme.rem(1.5)}
+            />
+          }
           title={s.strings.help_call}
           subTitle={s.strings.help_call_text}
           onPress={() => Linking.openURL(`tel:${HELP_URIS.call}`)}
@@ -110,10 +152,18 @@ class HelpModalComponent extends React.Component<Props & ThemeProps> {
         />
 
         <SelectableRow
-          icon={<Fontello name="globe" color={theme.iconTappable} size={theme.rem(1.5)} />}
+          icon={
+            <Fontello
+              name="globe"
+              color={theme.iconTappable}
+              size={theme.rem(1.5)}
+            />
+          }
           title={s.strings.help_site}
           subTitle={s.strings.help_site_text}
-          onPress={() => showWebViewModal(HELP_URIS.site, s.strings.help_site_text)}
+          onPress={() =>
+            showWebViewModal(HELP_URIS.site, s.strings.help_site_text)
+          }
           arrowTappable
           marginRem={optionMarginRem}
           paddingRem={optionPaddingRem}
@@ -141,7 +191,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   footer: {
     marginTop: PLATFORM.deviceHeight < theme.rem(42) ? 0 : theme.rem(1.5),
-    paddingVertical: PLATFORM.deviceHeight < theme.rem(42) ? theme.rem(0.25) : theme.rem(0.5),
+    paddingVertical:
+      PLATFORM.deviceHeight < theme.rem(42) ? theme.rem(0.25) : theme.rem(0.5),
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'

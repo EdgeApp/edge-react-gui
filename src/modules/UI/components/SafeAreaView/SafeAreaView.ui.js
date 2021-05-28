@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native'
 import SafeAreaView from 'react-native-safe-area-view'
 
 import THEME from '../../../../theme/variables/airbitz.js'
-import Gradient from '../../components/Gradient/Gradient.ui'
+import Gradient from '../Gradient/Gradient.ui'
 
 type props = {
   style?: StyleSheet.Styles,

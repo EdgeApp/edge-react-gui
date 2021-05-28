@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiContact } from '../../types/types.js'
-import { showError } from '../services/AirshipInstance.js'
+import { showError } from './AirshipInstance.js'
 
 type Props = {
   contactsPermission: PermissionStatus,
@@ -202,7 +202,10 @@ class ContactsLoaderComponent extends React.Component<Props> {
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const { contactsPermission } = nextProps
 
-    if (this.props.contactsPermission !== RNPermissions.RESULTS.GRANTED && contactsPermission === RNPermissions.RESULTS.GRANTED) {
+    if (
+      this.props.contactsPermission !== RNPermissions.RESULTS.GRANTED &&
+      contactsPermission === RNPermissions.RESULTS.GRANTED
+    ) {
       this.loadContacts()
     }
   }
@@ -213,7 +216,9 @@ class ContactsLoaderComponent extends React.Component<Props> {
         const cleanContacts = contacts
           .filter(item => item.givenName)
           .concat(merchantPartners)
-          .sort((a, b) => a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase()))
+          .sort((a, b) =>
+            a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase())
+          )
 
         this.props.loadContactsSuccess(cleanContacts)
       })

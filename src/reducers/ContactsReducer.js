@@ -7,7 +7,10 @@ export type ContactsState = GuiContact[]
 
 export const initialState = []
 
-export const contacts = (state: ContactsState = initialState, action: Action): ContactsState => {
+export const contacts = (
+  state: ContactsState = initialState,
+  action: Action
+): ContactsState => {
   switch (action.type) {
     case 'CONTACTS/LOAD_CONTACTS_SUCCESS': {
       return action.data.contacts

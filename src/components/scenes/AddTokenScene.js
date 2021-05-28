@@ -2,7 +2,13 @@
 
 import _ from 'lodash'
 import * as React from 'react'
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  View
+} from 'react-native'
 
 import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
@@ -30,7 +36,14 @@ export type AddTokenOwnProps = {
 }
 
 export type AddTokenDispatchProps = {
-  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, type: string) => void
+  addNewToken: (
+    walletId: string,
+    currencyName: string,
+    currencyCode: string,
+    contractAddress: string,
+    denomination: string,
+    type: string
+  ) => void
 }
 
 export type AddTokenStateProps = {
@@ -47,7 +60,9 @@ type State = {
   enabled?: boolean
 }
 
-type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
+type AddTokenProps = AddTokenOwnProps &
+  AddTokenStateProps &
+  AddTokenDispatchProps
 
 export class AddToken extends React.Component<AddTokenProps, State> {
   constructor(props: AddTokenProps) {
@@ -68,7 +83,9 @@ export class AddToken extends React.Component<AddTokenProps, State> {
       <SceneWrapper background="body">
         <ScrollView style={styles.container}>
           <View style={styles.instructionalArea}>
-            <Text style={styles.instructionalText}>{s.strings.addtoken_top_instructions}</Text>
+            <Text style={styles.instructionalText}>
+              {s.strings.addtoken_top_instructions}
+            </Text>
           </View>
           <View style={styles.nameArea}>
             <FormField
@@ -113,7 +130,11 @@ export class AddToken extends React.Component<AddTokenProps, State> {
           </View>
           <View style={styles.buttonsArea}>
             <PrimaryButton style={styles.saveButton} onPress={this._onSave}>
-              {addTokenPending ? <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} /> : <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>}
+              {addTokenPending ? (
+                <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
+              ) : (
+                <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>
+              )}
             </PrimaryButton>
           </View>
           <View style={styles.bottomPaddingForKeyboard} />
@@ -154,18 +175,46 @@ export class AddToken extends React.Component<AddTokenProps, State> {
       },
       () => {
         const { currencyName, decimalPlaces, contractAddress } = this.state
-        const { currentCustomTokens, wallet, walletId, addNewToken, onAddToken } = this.props
-        const currentCustomTokenIndex = _.findIndex(currentCustomTokens, item => item.currencyCode === currencyCode)
-        const metaTokensIndex = _.findIndex(wallet.metaTokens, item => item.currencyCode === currencyCode)
+        const {
+          currentCustomTokens,
+          wallet,
+          walletId,
+          addNewToken,
+          onAddToken
+        } = this.props
+        const currentCustomTokenIndex = _.findIndex(
+          currentCustomTokens,
+          item => item.currencyCode === currencyCode
+        )
+        const metaTokensIndex = _.findIndex(
+          wallet.metaTokens,
+          item => item.currencyCode === currencyCode
+        )
         // if token is hard-coded into wallets of this type
-        if (metaTokensIndex >= 0) Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
+        if (metaTokensIndex >= 0)
+          Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
         // if that token already exists and is visible (ie not deleted)
-        if (currentCustomTokenIndex >= 0 && currentCustomTokens[currentCustomTokenIndex].isVisible !== false) {
+        if (
+          currentCustomTokenIndex >= 0 &&
+          currentCustomTokens[currentCustomTokenIndex].isVisible !== false
+        ) {
           Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
         } else {
-          if (currencyName && currencyCode && decimalPlaces && contractAddress) {
+          if (
+            currencyName &&
+            currencyCode &&
+            decimalPlaces &&
+            contractAddress
+          ) {
             const denomination = decimalPlacesToDenomination(decimalPlaces)
-            addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination, wallet.type)
+            addNewToken(
+              walletId,
+              currencyName,
+              currencyCode,
+              contractAddress,
+              denomination,
+              wallet.type
+            )
             onAddToken(currencyCode)
           } else {
             Alert.alert(s.strings.addtoken_invalid_information)

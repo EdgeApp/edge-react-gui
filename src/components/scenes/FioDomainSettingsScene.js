@@ -11,13 +11,24 @@ import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
-import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioName, setDomainVisibility } from '../../modules/FioAddress/util'
+import {
+  getDomainSetVisibilityFee,
+  getRenewalFee,
+  getTransferFee,
+  renewFioName,
+  setDomainVisibility
+} from '../../modules/FioAddress/util'
 import type { RootState } from '../../reducers/RootReducer'
 import type { Dispatch } from '../../types/reduxTypes'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { ClickableText, PrimaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
@@ -100,12 +111,18 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   cancelOperation = () => {
-    this.setState({ showRenew: false, showVisibility: false, showTransfer: false })
+    this.setState({
+      showRenew: false,
+      showVisibility: false,
+      showTransfer: false
+    })
   }
 
-  getRenewalFee = async (fioWallet: EdgeCurrencyWallet) => getRenewalFee(fioWallet, true)
+  getRenewalFee = async (fioWallet: EdgeCurrencyWallet) =>
+    getRenewalFee(fioWallet, true)
 
-  getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet, true)
+  getTransferFee = async (fioWallet: EdgeCurrencyWallet) =>
+    getTransferFee(fioWallet, true)
 
   setDomainVisibility = async (fee: number) => {
     const { fioWallet, fioDomainName, isPublic, isConnected } = this.props
@@ -135,7 +152,11 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
       currencyCode: this.props.fioWallet.currencyInfo.currencyCode,
       otherParams: {
         fioAction: 'transferFioDomain',
-        fioParams: { fioDomain: this.props.fioDomainName, newOwnerKey: '', maxFee: transferFee }
+        fioParams: {
+          fioDomain: this.props.fioDomainName,
+          newOwnerKey: '',
+          maxFee: transferFee
+        }
       },
       onDone: (err, edgeTransaction) => {
         if (!err) {
@@ -155,7 +176,12 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         amount: true,
         fioAddressSelect: true
       },
-      infoTiles: [{ label: s.strings.fio_domain_to_transfer, value: `@${this.props.fioDomainName}` }]
+      infoTiles: [
+        {
+          label: s.strings.fio_domain_to_transfer,
+          value: `@${this.props.fioDomainName}`
+        }
+      ]
     })
   }
 
@@ -166,16 +192,32 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
 
     return (
       <SceneWrapper background="header">
-        <Tile type="static" title={s.strings.fio_domain_label} body={`${Constants.FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
-        <Tile type="static" title={s.strings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
+        <Tile
+          type="static"
+          title={s.strings.fio_domain_label}
+          body={`${Constants.FIO_ADDRESS_DELIMITER} ${fioDomainName}`}
+        />
+        <Tile
+          type="static"
+          title={s.strings.fio_address_details_screen_expires}
+          body={formatDate(new Date(expiration))}
+        />
         {showVisibility && (
           <FioActionSubmit
-            title={isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}
+            title={
+              isPublic
+                ? s.strings.title_fio_make_private_domain
+                : s.strings.title_fio_make_public_domain
+            }
             onSubmit={this.setDomainVisibility}
             onSuccess={this.afterSuccess}
             cancelOperation={this.cancelOperation}
             getOperationFee={getDomainSetVisibilityFee}
-            successMessage={isPublic ? s.strings.fio_domain_is_private_label : s.strings.fio_domain_is_public_label}
+            successMessage={
+              isPublic
+                ? s.strings.fio_domain_is_private_label
+                : s.strings.fio_domain_is_public_label
+            }
             fioWallet={fioWallet}
           />
         )}
@@ -190,13 +232,34 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
             fioWallet={fioWallet}
           />
         )}
-        {showTransfer && <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} />}
+        {showTransfer && (
+          <FioActionSubmit
+            goTo={this.goToTransfer}
+            getOperationFee={this.getTransferFee}
+            fioWallet={fioWallet}
+          />
+        )}
         {!showRenew && !showVisibility && !showTransfer && (
           <>
-            <PrimaryButton label={s.strings.title_fio_renew_domain} onPress={this.onRenewPress} marginRem={[1.5, 1, 0.25]} />
-            <PrimaryButton label={s.strings.title_fio_transfer_domain} onPress={this.onTransferPress} marginRem={[0.25, 1]} />
-            <ClickableText onPress={this.onVisibilityPress} marginRem={[0.25, 1]}>
-              <EdgeText style={styles.visibilityText}>{isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}</EdgeText>
+            <PrimaryButton
+              label={s.strings.title_fio_renew_domain}
+              onPress={this.onRenewPress}
+              marginRem={[1.5, 1, 0.25]}
+            />
+            <PrimaryButton
+              label={s.strings.title_fio_transfer_domain}
+              onPress={this.onTransferPress}
+              marginRem={[0.25, 1]}
+            />
+            <ClickableText
+              onPress={this.onVisibilityPress}
+              marginRem={[0.25, 1]}
+            >
+              <EdgeText style={styles.visibilityText}>
+                {isPublic
+                  ? s.strings.title_fio_make_private_domain
+                  : s.strings.title_fio_make_public_domain}
+              </EdgeText>
             </ClickableText>
           </>
         )}

@@ -2,21 +2,34 @@
 
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Image,
+  ScrollView,
+  StyleSheet,
+  View
+} from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import type { CreateWalletType, GuiFiatType, GuiWallet } from '../../types/types.js'
+import type {
+  CreateWalletType,
+  GuiFiatType,
+  GuiWallet
+} from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
 import { fixFiatCurrencyCode } from '../../util/utils.js'
+import {
+  type WalletListResult,
+  WalletListModal
+} from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 
 export type AccountPaymentParams = {
@@ -51,11 +64,16 @@ export type CreateWalletAccountSelectDispatchProps = {
   createAccountBasedWallet: (string, string, string, boolean, boolean) => any,
   fetchAccountActivationInfo: string => any,
   createAccountTransaction: (string, string, string) => any,
-  fetchWalletAccountActivationPaymentInfo: (AccountPaymentParams, EdgeCurrencyWallet) => any,
+  fetchWalletAccountActivationPaymentInfo: (
+    AccountPaymentParams,
+    EdgeCurrencyWallet
+  ) => any,
   setWalletAccountActivationQuoteError: string => any
 }
 
-type Props = CreateWalletAccountSelectOwnProps & CreateWalletAccountSelectDispatchProps & CreateWalletAccountSelectStateProps
+type Props = CreateWalletAccountSelectOwnProps &
+  CreateWalletAccountSelectDispatchProps &
+  CreateWalletAccountSelectStateProps
 
 type State = {
   walletName: string,
@@ -67,12 +85,23 @@ type State = {
 export class CreateWalletAccountSelect extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    const { selectedFiat, selectedWalletType, createAccountBasedWallet, accountName } = props
+    const {
+      selectedFiat,
+      selectedWalletType,
+      createAccountBasedWallet,
+      accountName
+    } = props
     let createdWallet
     if (props.existingWalletId) {
       createdWallet = this.renameAndReturnWallet(props.existingCoreWallet)
     } else {
-      createdWallet = createAccountBasedWallet(accountName, selectedWalletType.walletType, fixFiatCurrencyCode(selectedFiat.value), false, false)
+      createdWallet = createAccountBasedWallet(
+        accountName,
+        selectedWalletType.walletType,
+        fixFiatCurrencyCode(selectedFiat.value),
+        false,
+        false
+      )
     }
     this.state = {
       error: '',
@@ -106,13 +135,17 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
         allowedCurrencyCodes.push(currency)
       }
     }
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={allowedCurrencyCodes} />).then(
-      ({ walletId, currencyCode }: WalletListResult) => {
-        if (walletId && currencyCode) {
-          this.onSelectWallet(walletId, currencyCode)
-        }
+    Airship.show(bridge => (
+      <WalletListModal
+        bridge={bridge}
+        headerTitle={s.strings.select_wallet}
+        allowedCurrencyCodes={allowedCurrencyCodes}
+      />
+    )).then(({ walletId, currencyCode }: WalletListResult) => {
+      if (walletId && currencyCode) {
+        this.onSelectWallet(walletId, currencyCode)
       }
-    )
+    })
   }
 
   onPressSubmit = async () => {
@@ -125,7 +158,13 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
-    const { wallets, accountName, fetchWalletAccountActivationPaymentInfo, setWalletAccountActivationQuoteError, selectedWalletType } = this.props
+    const {
+      wallets,
+      accountName,
+      fetchWalletAccountActivationPaymentInfo,
+      setWalletAccountActivationQuoteError,
+      selectedWalletType
+    } = this.props
     setWalletAccountActivationQuoteError('') // reset fetching quote error to falsy
     const paymentWallet = wallets[walletId]
     const walletName = paymentWallet.name
@@ -152,16 +191,24 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
     return (
       <View style={styles.selectPaymentLower}>
         <View style={styles.buttons}>
-          <PrimaryButton disabled={isSelectWalletDisabled} style={styles.next} onPress={this.onPressSelect}>
+          <PrimaryButton
+            disabled={isSelectWalletDisabled}
+            style={styles.next}
+            onPress={this.onPressSelect}
+          >
             {isSelectWalletDisabled ? (
               <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
             ) : (
-              <PrimaryButton.Text>{s.strings.create_wallet_account_select_wallet}</PrimaryButton.Text>
+              <PrimaryButton.Text>
+                {s.strings.create_wallet_account_select_wallet}
+              </PrimaryButton.Text>
             )}
           </PrimaryButton>
         </View>
         <View style={styles.paymentArea}>
-          <Text style={styles.paymentLeft}>{s.strings.create_wallet_account_amount_due}</Text>
+          <Text style={styles.paymentLeft}>
+            {s.strings.create_wallet_account_amount_due}
+          </Text>
           <Text style={styles.paymentRight}>
             {activationCost} {currencyCode}
           </Text>
@@ -171,14 +218,24 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   renderPaymentReview = () => {
-    const { wallets, paymentCurrencyCode, accountName, isCreatingWallet, amount, selectedWalletType, selectedFiat, activationCost, paymentDenominationSymbol } =
-      this.props
+    const {
+      wallets,
+      paymentCurrencyCode,
+      accountName,
+      isCreatingWallet,
+      amount,
+      selectedWalletType,
+      selectedFiat,
+      activationCost,
+      paymentDenominationSymbol
+    } = this.props
     const { walletId, createdWallet } = this.state
     const wallet = wallets[walletId]
     if (!wallet) return null
     const { name, symbolImageDarkMono } = wallet
 
-    const isContinueButtonDisabled = isCreatingWallet || (createdWallet && !amount)
+    const isContinueButtonDisabled =
+      isCreatingWallet || (createdWallet && !amount)
 
     return (
       <View>
@@ -190,7 +247,13 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
           </View>
           <View style={styles.paymentAndIconArea}>
             <View style={styles.paymentLeftIconWrap}>
-              {symbolImageDarkMono && <Image style={styles.paymentLeftIcon} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
+              {symbolImageDarkMono && (
+                <Image
+                  style={styles.paymentLeftIcon}
+                  source={{ uri: symbolImageDarkMono }}
+                  resizeMode="cover"
+                />
+              )}
             </View>
             <View style={styles.paymentArea}>
               <Text style={styles.paymentLeft}>
@@ -204,7 +267,8 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
         </View>
         <View style={styles.accountReviewInfoArea}>
           <Text style={styles.accountReviewInfoText}>
-            {s.strings.create_wallet_crypto_type_label} {selectedWalletType.currencyCode}
+            {s.strings.create_wallet_crypto_type_label}{' '}
+            {selectedWalletType.currencyCode}
           </Text>
           <Text style={styles.accountReviewInfoText}>
             {s.strings.create_wallet_fiat_type_label} {selectedFiat.label}
@@ -214,15 +278,23 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
           </Text>
         </View>
         <View style={styles.accountReviewConfirmArea}>
-          <Text style={styles.accountReviewConfirmText}>{s.strings.create_wallet_account_confirm}</Text>
+          <Text style={styles.accountReviewConfirmText}>
+            {s.strings.create_wallet_account_confirm}
+          </Text>
         </View>
         <View style={styles.confirmButtonArea}>
-          <PrimaryButton disabled={isContinueButtonDisabled} style={styles.confirmButton} onPress={this.onPressSubmit}>
+          <PrimaryButton
+            disabled={isContinueButtonDisabled}
+            style={styles.confirmButton}
+            onPress={this.onPressSubmit}
+          >
             {/* we want it disabled with activity indicator if creating wallet, or wallet is created and pending quote */}
             {isContinueButtonDisabled ? (
               <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
             ) : (
-              <PrimaryButton.Text>{s.strings.legacy_address_modal_continue}</PrimaryButton.Text>
+              <PrimaryButton.Text>
+                {s.strings.legacy_address_modal_continue}
+              </PrimaryButton.Text>
             )}
           </PrimaryButton>
         </View>
@@ -231,7 +303,14 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   render() {
-    const { currencyConfigs, supportedCurrencies, selectedWalletType, activationCost, wallets, walletAccountActivationQuoteError } = this.props
+    const {
+      currencyConfigs,
+      supportedCurrencies,
+      selectedWalletType,
+      activationCost,
+      wallets,
+      walletAccountActivationQuoteError
+    } = this.props
     const { walletId } = this.state
     const walletTypeValue = selectedWalletType.walletType.replace('wallet:', '')
     const { symbolImage } = currencyConfigs[walletTypeValue].currencyInfo
@@ -242,7 +321,10 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
       'Edge',
       `${activationCost} ${selectedWalletType.currencyCode}`
     )
-    const confirmMessageSyntax = sprintf(s.strings.create_wallet_account_make_payment, selectedWalletType.currencyCode)
+    const confirmMessageSyntax = sprintf(
+      s.strings.create_wallet_account_make_payment,
+      selectedWalletType.currencyCode
+    )
     // only included supported types of payment in WalletListModal
     const supportedCurrenciesList = []
     for (const currency of Object.keys(supportedCurrencies)) {
@@ -264,11 +346,21 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
           <Gradient style={styles.scrollableGradient} />
           <ScrollView>
             <View style={styles.scrollableView}>
-              <Image source={{ uri: symbolImage }} style={styles.currencyLogo} resizeMode="cover" />
+              <Image
+                source={{ uri: symbolImage }}
+                style={styles.currencyLogo}
+                resizeMode="cover"
+              />
               <View style={styles.createWalletPromptArea}>
-                <Text style={styles.instructionalText}>{!walletId || walletAccountActivationQuoteError ? instructionSyntax : confirmMessageSyntax}</Text>
+                <Text style={styles.instructionalText}>
+                  {!walletId || walletAccountActivationQuoteError
+                    ? instructionSyntax
+                    : confirmMessageSyntax}
+                </Text>
               </View>
-              {!walletId || walletAccountActivationQuoteError ? this.renderSelectWallet() : this.renderPaymentReview()}
+              {!walletId || walletAccountActivationQuoteError
+                ? this.renderSelectWallet()
+                : this.renderPaymentReview()}
             </View>
             <View style={{ paddingBottom: 200 }} />
           </ScrollView>

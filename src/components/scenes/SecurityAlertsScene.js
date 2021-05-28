@@ -25,7 +25,11 @@ class SecurityAlertsComponent extends React.Component<Props> {
 
     return (
       <View style={styles.container}>
-        <SecurityAlertsScreen account={account} context={context} onComplete={onComplete} />
+        <SecurityAlertsScreen
+          account={account}
+          context={context}
+          onComplete={onComplete}
+        />
       </View>
     )
   }

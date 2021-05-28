@@ -36,7 +36,11 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
   }
 
   onFocus = () => {
-    this.changeAmount(this.state.amount !== '0.00' && this.state.amount !== '0,00' ? this.state.amount : '')
+    this.changeAmount(
+      this.state.amount !== '0.00' && this.state.amount !== '0,00'
+        ? this.state.amount
+        : ''
+    )
   }
 
   onBlur = () => {
@@ -52,7 +56,9 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
 
   onChange = (value: string) => {
     const input = this.filter(value)
-    const check = (isNaN(input.replace(',', '.')) && input !== ',' && input !== '.') || input === ''
+    const check =
+      (isNaN(input.replace(',', '.')) && input !== ',' && input !== '.') ||
+      input === ''
     this.changeAmount(check ? '' : input)
   }
 
@@ -63,7 +69,12 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve(null)}>
         <TouchableWithoutFeedback onPress={() => bridge.resolve(null)}>
           <View style={styles.airshipContainer}>
-            <FormattedText style={styles.airshipHeader}>{sprintf(s.strings.transaction_details_fiat_modal_header, currency)}</FormattedText>
+            <FormattedText style={styles.airshipHeader}>
+              {sprintf(
+                s.strings.transaction_details_fiat_modal_header,
+                currency
+              )}
+            </FormattedText>
             <FormField
               {...MaterialInputOnWhite}
               containerStyle={{
@@ -79,7 +90,11 @@ export class TransactionDetailsFiatInput extends React.Component<Props, State> {
               onBlur={this.onBlur}
               onChangeText={this.onChange}
               onSubmitEditing={() => bridge.resolve(null)}
-              value={truncateDecimals(amount.toString().replace('-', ''), 2, true)}
+              value={truncateDecimals(
+                amount.toString().replace('-', ''),
+                2,
+                true
+              )}
             />
           </View>
         </TouchableWithoutFeedback>

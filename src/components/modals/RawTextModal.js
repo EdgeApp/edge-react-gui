@@ -9,8 +9,18 @@ import EntypoIcon from 'react-native-vector-icons/Entypo'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { showToast } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { type AirshipBridge, AirshipModal, ContentArea, IconCircle } from './modalParts.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
+import {
+  type AirshipBridge,
+  AirshipModal,
+  ContentArea,
+  IconCircle
+} from './modalParts.js'
 
 type OwnProps = {
   bridge: AirshipBridge<void>,
@@ -33,7 +43,15 @@ export class RawTextModalComponent extends React.Component<Props> {
     const styles = getStyles(theme)
     return (
       <AirshipModal bridge={bridge} onCancel={() => bridge.resolve()}>
-        <IconCircle>{icon || <EntypoIcon name="info" size={theme.rem(2)} color={theme.tileBackground} />}</IconCircle>
+        <IconCircle>
+          {icon || (
+            <EntypoIcon
+              name="info"
+              size={theme.rem(2)}
+              color={theme.tileBackground}
+            />
+          )}
+        </IconCircle>
         <Text style={styles.header}>{title}</Text>
         <ContentArea grow>
           <ScrollView style={styles.textContainer}>
@@ -42,11 +60,19 @@ export class RawTextModalComponent extends React.Component<Props> {
         </ContentArea>
         <View style={styles.buttonContainer}>
           {!disableCopy && (
-            <PrimaryButton style={styles.buttonLeft} onPress={this.copyToClipboard}>
-              <PrimaryButton.Text>{s.strings.fragment_request_copy_title}</PrimaryButton.Text>
+            <PrimaryButton
+              style={styles.buttonLeft}
+              onPress={this.copyToClipboard}
+            >
+              <PrimaryButton.Text>
+                {s.strings.fragment_request_copy_title}
+              </PrimaryButton.Text>
             </PrimaryButton>
           )}
-          <PrimaryButton style={styles.buttonRight} onPress={() => bridge.resolve()}>
+          <PrimaryButton
+            style={styles.buttonRight}
+            onPress={() => bridge.resolve()}
+          >
             <PrimaryButton.Text>{s.strings.string_ok_cap}</PrimaryButton.Text>
           </PrimaryButton>
         </View>

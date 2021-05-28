@@ -32,34 +32,54 @@ export const getLoginStatus = (state: RootState): boolean | null => {
   return loginStatus
 }
 
-export const getCurrencySettings = (state: RootState, currencyCode: string): CurrencySetting => {
+export const getCurrencySettings = (
+  state: RootState,
+  currencyCode: string
+): CurrencySetting => {
   const settings = getSettings(state)
-  const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
+  const currencySettings =
+    settings[currencyCode] || isoFiatDenominations[currencyCode]
   return currencySettings
 }
 
-export const getCryptocurrencySettings = (state: RootState, currencyCode: string) => {
+export const getCryptocurrencySettings = (
+  state: RootState,
+  currencyCode: string
+) => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode]
   return currencySettings
 }
 
-export const getDenominations = (state: RootState, currencyCode: string): EdgeDenomination[] => {
+export const getDenominations = (
+  state: RootState,
+  currencyCode: string
+): EdgeDenomination[] => {
   const currencySettings = getCurrencySettings(state, currencyCode)
-  if (currencySettings == null || currencySettings.denominations == null) return [emptyEdgeDenomination]
+  if (currencySettings == null || currencySettings.denominations == null)
+    return [emptyEdgeDenomination]
   const denominations = currencySettings.denominations
   return denominations
 }
 
-export const getDisplayDenominationKey = (state: RootState, currencyCode: string) => {
+export const getDisplayDenominationKey = (
+  state: RootState,
+  currencyCode: string
+) => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode]
-  const selectedDenominationKey = currencySettings ? currencySettings.denomination : '1'
+  const selectedDenominationKey = currencySettings
+    ? currencySettings.denomination
+    : '1'
   return selectedDenominationKey
 }
 
-export const getDisplayDenominationFromSettings = (settings: any, currencyCode: string): EdgeDenomination => {
-  const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
+export const getDisplayDenominationFromSettings = (
+  settings: any,
+  currencyCode: string
+): EdgeDenomination => {
+  const currencySettings =
+    settings[currencyCode] || isoFiatDenominations[currencyCode]
   const selectedDenominationKey = currencySettings.denomination
   const denominations = currencySettings.denominations
   let selectedDenomination: EdgeDenomination = emptyEdgeDenomination
@@ -71,7 +91,10 @@ export const getDisplayDenominationFromSettings = (settings: any, currencyCode: 
   return selectedDenomination
 }
 
-export const getDisplayDenominationFull = (state: RootState, currencyCode: string): EdgeDenomination => {
+export const getDisplayDenominationFull = (
+  state: RootState,
+  currencyCode: string
+): EdgeDenomination => {
   const settings = state.ui.settings
   const currencySettings = settings[currencyCode]
   const selectedDenominationKey = currencySettings.denomination
@@ -85,7 +108,10 @@ export const getDisplayDenominationFull = (state: RootState, currencyCode: strin
   return selectedDenomination
 }
 
-export const getDisplayDenomination = (state: RootState, currencyCode: string): EdgeDenomination => {
+export const getDisplayDenomination = (
+  state: RootState,
+  currencyCode: string
+): EdgeDenomination => {
   const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
   const denominations = getDenominations(state, currencyCode)
   let selectedDenomination: EdgeDenomination = emptyEdgeDenomination
@@ -97,7 +123,10 @@ export const getDisplayDenomination = (state: RootState, currencyCode: string): 
   return selectedDenomination
 }
 
-export const getExchangeDenomination = (state: RootState, currencyCode: string) => {
+export const getExchangeDenomination = (
+  state: RootState,
+  currencyCode: string
+) => {
   const denominations = getDenominations(state, currencyCode)
   let exchangeDenomination: EdgeDenomination = emptyEdgeDenomination
   for (const d of denominations) {
@@ -119,7 +148,10 @@ export const getPlugins = (state: RootState) => {
   return plugins
 }
 
-export const getPluginInfo = (state: RootState, type: string): EdgeCurrencyInfo => {
+export const getPluginInfo = (
+  state: RootState,
+  type: string
+): EdgeCurrencyInfo => {
   const plugins = getPlugins(state)
   const currencyInfo: EdgeCurrencyInfo = plugins[type.toLowerCase()]
   return currencyInfo

@@ -11,4 +11,6 @@ export type Store = ReduxStore<RootState, Action>
 export type Next = $PropertyType<Store, 'dispatch'>
 
 export type GetState = () => RootState
-export type Dispatch = <Return>(action: Action | ((Dispatch, GetState) => Return)) => Return
+export type Dispatch = <Return>(
+  action: Action | ((Dispatch, GetState) => Return)
+) => Return

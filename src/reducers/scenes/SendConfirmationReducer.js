@@ -1,7 +1,12 @@
 // @flow
 
 import { add } from 'biggystring'
-import type { EdgeMetadata, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import type {
+  EdgeMetadata,
+  EdgeSpendInfo,
+  EdgeSpendTarget,
+  EdgeTransaction
+} from 'edge-core-js'
 import { isEqual } from 'lodash'
 import { type Reducer } from 'redux'
 
@@ -53,7 +58,10 @@ export type SendConfirmationState = {
   toggleCryptoOnTop: number
 }
 
-export const sendConfirmationLegacy = (state: SendConfirmationState = initialState, action: Action) => {
+export const sendConfirmationLegacy = (
+  state: SendConfirmationState = initialState,
+  action: Action
+) => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
       const { guiMakeSpendInfo, forceUpdateGui } = action.data
@@ -65,10 +73,16 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
 
       const { metadata = {}, customNetworkFee, ...others } = guiMakeSpendInfo
       if (!isEqual(state.guiMakeSpendInfo.metadata, metadata)) {
-        state.guiMakeSpendInfo.metadata = { ...state.guiMakeSpendInfo.metadata, ...metadata }
+        state.guiMakeSpendInfo.metadata = {
+          ...state.guiMakeSpendInfo.metadata,
+          ...metadata
+        }
       }
 
-      if (customNetworkFee && !isEqual(state.guiMakeSpendInfo.customNetworkFee, customNetworkFee)) {
+      if (
+        customNetworkFee &&
+        !isEqual(state.guiMakeSpendInfo.customNetworkFee, customNetworkFee)
+      ) {
         state.guiMakeSpendInfo.customNetworkFee = customNetworkFee
       }
 
@@ -87,12 +101,21 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
       const firstSpendTarget = spendInfo.spendTargets[0]
       const guiMakeSpendInfo = {
         ...state.guiMakeSpendInfo,
-        networkFeeOption: spendInfo.networkFeeOption || state.guiMakeSpendInfo.networkFeeOption,
-        customNetworkFee: spendInfo.customNetworkFee || state.guiMakeSpendInfo.customNetworkFee,
-        spendTargets: spendInfo.spendTargets || state.guiMakeSpendInfo.spendTargets,
-        publicAddress: firstSpendTarget.publicAddress || state.guiMakeSpendInfo.publicAddress,
-        nativeAmount: firstSpendTarget.nativeAmount || state.guiMakeSpendInfo.nativeAmount,
-        uniqueIdentifier: (firstSpendTarget.otherParams && firstSpendTarget.otherParams.uniqueIdentifier) || state.guiMakeSpendInfo.uniqueIdentifier,
+        networkFeeOption:
+          spendInfo.networkFeeOption || state.guiMakeSpendInfo.networkFeeOption,
+        customNetworkFee:
+          spendInfo.customNetworkFee || state.guiMakeSpendInfo.customNetworkFee,
+        spendTargets:
+          spendInfo.spendTargets || state.guiMakeSpendInfo.spendTargets,
+        publicAddress:
+          firstSpendTarget.publicAddress ||
+          state.guiMakeSpendInfo.publicAddress,
+        nativeAmount:
+          firstSpendTarget.nativeAmount || state.guiMakeSpendInfo.nativeAmount,
+        uniqueIdentifier:
+          (firstSpendTarget.otherParams &&
+            firstSpendTarget.otherParams.uniqueIdentifier) ||
+          state.guiMakeSpendInfo.uniqueIdentifier,
         metadata: { ...state.guiMakeSpendInfo.metadata, ...spendInfo.metadata }
       }
 
@@ -107,10 +130,16 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
   }
 }
 
-export const nativeAmount: Reducer<string, Action> = (state = '0', action): string => {
+export const nativeAmount: Reducer<string, Action> = (
+  state = '0',
+  action
+): string => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO': {
-      return action.data.spendInfo.spendTargets.reduce((sum, target) => add(sum, target.nativeAmount ?? '0'), '0')
+      return action.data.spendInfo.spendTargets.reduce(
+        (sum, target) => add(sum, target.nativeAmount ?? '0'),
+        '0'
+      )
     }
 
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
@@ -122,7 +151,10 @@ export const nativeAmount: Reducer<string, Action> = (state = '0', action): stri
   }
 }
 
-export const spendInfo = (state: EdgeSpendInfo | null = null, action: Action): EdgeSpendInfo | null => {
+export const spendInfo = (
+  state: EdgeSpendInfo | null = null,
+  action: Action
+): EdgeSpendInfo | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO': {
       return action.data.spendInfo
@@ -144,7 +176,10 @@ export const address = (state: string = '', action: Action): string => {
   }
 }
 
-export const authRequired = (state: 'none' | 'pin' = 'none', action: Action): 'none' | 'pin' => {
+export const authRequired = (
+  state: 'none' | 'pin' = 'none',
+  action: Action
+): 'none' | 'pin' => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO': {
       return action.data.authRequired || 'none'
@@ -155,10 +190,18 @@ export const authRequired = (state: 'none' | 'pin' = 'none', action: Action): 'n
   }
 }
 
-export const transactionMetadata = (state: EdgeMetadata | null = null, action: Action): EdgeMetadata | null => {
+export const transactionMetadata = (
+  state: EdgeMetadata | null = null,
+  action: Action
+): EdgeMetadata | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
-      if (!action.data.guiMakeSpendInfo || !action.data.guiMakeSpendInfo.metadata || !action.data.guiMakeSpendInfo.metadata.name) return state
+      if (
+        !action.data.guiMakeSpendInfo ||
+        !action.data.guiMakeSpendInfo.metadata ||
+        !action.data.guiMakeSpendInfo.metadata.name
+      )
+        return state
 
       return action.data.guiMakeSpendInfo.metadata || null
     }
@@ -172,7 +215,10 @@ export const transactionMetadata = (state: EdgeMetadata | null = null, action: A
   }
 }
 
-export const error = (state: Error | null = null, action: Action): Error | null => {
+export const error = (
+  state: Error | null = null,
+  action: Action
+): Error | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
       return action.data.error
@@ -223,7 +269,10 @@ export const pending = (state: boolean = false, action: Action): boolean => {
   }
 }
 
-export const transaction = (state: EdgeTransaction | null = null, action: Action): EdgeTransaction | null => {
+export const transaction = (
+  state: EdgeTransaction | null = null,
+  action: Action
+): EdgeTransaction | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
       return action.data.transaction
@@ -238,7 +287,10 @@ export const transaction = (state: EdgeTransaction | null = null, action: Action
   }
 }
 
-export const toggleCryptoOnTop = (state: number = 0, action: Action): number => {
+export const toggleCryptoOnTop = (
+  state: number = 0,
+  action: Action
+): number => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP': {
       return state + 1
@@ -249,7 +301,10 @@ export const toggleCryptoOnTop = (state: number = 0, action: Action): number => 
   }
 }
 
-export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state = initialState, action) => {
+export const sendConfirmation: Reducer<SendConfirmationState, Action> = (
+  state = initialState,
+  action
+) => {
   if (action.type === 'UI/SEND_CONFIRMATION/RESET') return initialState
 
   // make easier to debug legacySendConfirmation return value with breakpoint

@@ -1,8 +1,17 @@
 // @flow
 
-import { type EdgeCurrencyWallet, type EdgeSpendTarget } from 'edge-core-js/types'
+import {
+  type EdgeCurrencyWallet,
+  type EdgeSpendTarget
+} from 'edge-core-js/types'
 import * as React from 'react'
-import { ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 import { connect } from 'react-redux'
@@ -32,7 +41,12 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  onSubmit(networkFeeOption: string, customNetworkFee: Object, walletId: string, currencyCode?: string): mixed
+  onSubmit(
+    networkFeeOption: string,
+    customNetworkFee: Object,
+    walletId: string,
+    currencyCode?: string
+  ): mixed
 }
 
 type Props = OwnProps & StateProps & DispatchProps
@@ -48,7 +62,10 @@ export class ChangeMiningFee extends React.Component<Props, State> {
     const { networkFeeOption = 'standard', customNetworkFee = {} } = props
     const customFormat = this.getCustomFormat()
 
-    if (customFormat != null && Object.keys(customNetworkFee).length !== customFormat.length) {
+    if (
+      customFormat != null &&
+      Object.keys(customNetworkFee).length !== customFormat.length
+    ) {
       // Reset the custom fees if they don't match the format:
       const defaultCustomFee = {}
       for (const key of customFormat) defaultCustomFee[key] = ''
@@ -70,16 +87,27 @@ export class ChangeMiningFee extends React.Component<Props, State> {
   onSubmit = () => {
     const { networkFeeOption, customNetworkFee } = this.state
     const { currencyCode, wallet, spendTargets = [] } = this.props
-    const testSpendInfo = { spendTargets, networkFeeOption, customNetworkFee, currencyCode }
+    const testSpendInfo = {
+      spendTargets,
+      networkFeeOption,
+      customNetworkFee,
+      currencyCode
+    }
     wallet
       .makeSpend(testSpendInfo)
       .then(() => {
-        this.props.onSubmit(networkFeeOption, customNetworkFee, wallet.id, currencyCode)
+        this.props.onSubmit(
+          networkFeeOption,
+          customNetworkFee,
+          wallet.id,
+          currencyCode
+        )
         Actions.pop()
       })
       .catch(e => {
         let message = e.message
-        if (e.name === 'ErrorBelowMinimumFee') message = `${s.strings.invalid_custom_fee} ${e.message}`
+        if (e.name === 'ErrorBelowMinimumFee')
+          message = `${s.strings.invalid_custom_fee} ${e.message}`
         showError(message)
       })
   }
@@ -91,9 +119,17 @@ export class ChangeMiningFee extends React.Component<Props, State> {
       <SceneWrapper background="body" hasTabs={false} avoidKeyboard>
         <ScrollView style={styles.content}>
           {this.renderRadioRow('high', s.strings.mining_fee_high_label_choice)}
-          {this.renderRadioRow('standard', s.strings.mining_fee_standard_label_choice)}
+          {this.renderRadioRow(
+            'standard',
+            s.strings.mining_fee_standard_label_choice
+          )}
           {this.renderRadioRow('low', s.strings.mining_fee_low_label_choice)}
-          {customFormat != null ? this.renderRadioRow('custom', s.strings.mining_fee_custom_label_choice) : null}
+          {customFormat != null
+            ? this.renderRadioRow(
+                'custom',
+                s.strings.mining_fee_custom_label_choice
+              )
+            : null}
           {customFormat != null ? this.renderCustomFee(customFormat) : null}
           {this.renderFeeWarning()}
           <PrimaryButton onPress={this.onSubmit} style={styles.saveButton}>
@@ -108,9 +144,16 @@ export class ChangeMiningFee extends React.Component<Props, State> {
     const { networkFeeOption } = this.state
 
     return (
-      <TouchableWithoutFeedback onPress={() => this.setState({ networkFeeOption: value })}>
+      <TouchableWithoutFeedback
+        onPress={() => this.setState({ networkFeeOption: value })}
+      >
         <View style={styles.radioRow}>
-          <View style={[styles.radio, networkFeeOption === value ? styles.selected : null]} />
+          <View
+            style={[
+              styles.radio,
+              networkFeeOption === value ? styles.selected : null
+            ]}
+          />
           <Text style={dayText('row-left')}>{label}</Text>
         </View>
       </TouchableWithoutFeedback>
@@ -146,8 +189,14 @@ export class ChangeMiningFee extends React.Component<Props, State> {
 
     return (
       <View style={styles.warningBox}>
-        <EntypoIcon name="warning" color={THEME.COLORS.WHITE} size={THEME.rem(1.4)} />
-        <Text style={nightText('small')}>{s.strings.warning_low_or_custom_fee}</Text>
+        <EntypoIcon
+          name="warning"
+          color={THEME.COLORS.WHITE}
+          size={THEME.rem(1.4)}
+        />
+        <Text style={nightText('small')}>
+          {s.strings.warning_low_or_custom_fee}
+        </Text>
       </View>
     )
   }
@@ -209,8 +258,20 @@ export const ChangeMiningFeeScene = connect(
     spendTargets: getGuiMakeSpendInfo(state).spendTargets
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    onSubmit(networkFeeOption: string, customNetworkFee: Object, walletId: string, currencyCode?: string) {
-      dispatch(sendConfirmationUpdateTx({ networkFeeOption, customNetworkFee }, true, walletId, currencyCode))
+    onSubmit(
+      networkFeeOption: string,
+      customNetworkFee: Object,
+      walletId: string,
+      currencyCode?: string
+    ) {
+      dispatch(
+        sendConfirmationUpdateTx(
+          { networkFeeOption, customNetworkFee },
+          true,
+          walletId,
+          currencyCode
+        )
+      )
     }
   })
 )(ChangeMiningFee)

@@ -4,7 +4,10 @@ import { type Disklet } from 'disklet'
 import { type EdgeContext } from 'edge-core-js'
 import { connect } from 'react-redux'
 
-import { type Dispatch, type RootState } from '../../../../../types/reduxTypes.js'
+import {
+  type Dispatch,
+  type RootState
+} from '../../../../../types/reduxTypes.js'
 import { logoutRequest } from '../../../../Login/action'
 import { deleteLocalAccount } from '../action'
 import UserList from './UserList'

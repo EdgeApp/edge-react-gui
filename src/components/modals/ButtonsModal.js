@@ -3,7 +3,11 @@
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
-import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
+import {
+  ModalCloseArrow,
+  ModalMessage,
+  ModalTitle
+} from '../themed/ModalParts.js'
 import { PrimaryButton, SecondaryButton } from '../themed/ThemedButtons.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
@@ -34,7 +38,11 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {
   const { bridge, closeButton, title, message, children, buttons } = props
 
   return (
-    <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(undefined)} paddingRem={1}>
+    <ThemedModal
+      bridge={bridge}
+      onCancel={() => bridge.resolve(undefined)}
+      paddingRem={1}
+    >
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {message != null ? <ModalMessage>{message}</ModalMessage> : null}
       {children}
@@ -43,13 +51,29 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {
 
         switch (type) {
           case 'primary':
-            return <PrimaryButton key={key} label={label} onPress={() => bridge.resolve(key)} marginRem={0.5} />
+            return (
+              <PrimaryButton
+                key={key}
+                label={label}
+                onPress={() => bridge.resolve(key)}
+                marginRem={0.5}
+              />
+            )
           case 'secondary':
-            return <SecondaryButton key={key} label={label} onPress={() => bridge.resolve(key)} marginRem={0.5} />
+            return (
+              <SecondaryButton
+                key={key}
+                label={label}
+                onPress={() => bridge.resolve(key)}
+                marginRem={0.5}
+              />
+            )
         }
         return null
       })}
-      {closeButton ? <ModalCloseArrow onPress={() => bridge.resolve(undefined)} /> : undefined}
+      {closeButton ? (
+        <ModalCloseArrow onPress={() => bridge.resolve(undefined)} />
+      ) : undefined}
     </ThemedModal>
   )
 }

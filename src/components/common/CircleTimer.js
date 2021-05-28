@@ -32,7 +32,10 @@ export class CircleTimer extends React.Component<Props> {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.expiration !== null && nextProps.expiration !== this.props.expiration) {
+    if (
+      nextProps.expiration !== null &&
+      nextProps.expiration !== this.props.expiration
+    ) {
       setTimeout(this.timerTick, 1000)
     }
   }

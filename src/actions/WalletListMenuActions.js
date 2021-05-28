@@ -23,9 +23,22 @@ import { showResyncWalletModal } from './ResyncWalletModalActions.js'
 import { showSplitWalletModal } from './SplitWalletModalActions.js'
 import { refreshWallet } from './WalletActions.js'
 
-export type WalletListMenuKey = 'rename' | 'delete' | 'resync' | 'exportWalletTransactions' | 'getSeed' | 'split' | 'manageTokens' | 'viewXPub' | 'getRawKeys'
+export type WalletListMenuKey =
+  | 'rename'
+  | 'delete'
+  | 'resync'
+  | 'exportWalletTransactions'
+  | 'getSeed'
+  | 'split'
+  | 'manageTokens'
+  | 'viewXPub'
+  | 'getRawKeys'
 
-export function walletListMenuAction(walletId: string, option: WalletListMenuKey, currencyCode?: string) {
+export function walletListMenuAction(
+  walletId: string,
+  option: WalletListMenuKey,
+  currencyCode?: string
+) {
   switch (option) {
     case 'manageTokens': {
       return (dispatch: Dispatch, getState: GetState) => {
@@ -56,7 +69,8 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
           const engine = state.core.account.currencyWallets[walletId]
           if (engine != null) {
             try {
-              const fioAddresses = await engine.otherMethods.getFioAddressNames()
+              const fioAddresses =
+                await engine.otherMethods.getFioAddressNames()
               fioAddress = fioAddresses.length ? fioAddresses[0] : ''
             } catch (e) {
               fioAddress = ''
@@ -64,7 +78,12 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
           }
         }
         if (fioAddress) {
-          dispatch(showDeleteWalletModal(walletId, s.strings.fragmet_wallets_delete_fio_extra_message_mobile))
+          dispatch(
+            showDeleteWalletModal(
+              walletId,
+              s.strings.fragmet_wallets_delete_fio_extra_message_mobile
+            )
+          )
         } else {
           dispatch(showDeleteWalletModal(walletId))
         }
@@ -89,8 +108,14 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
         const xPub = wallet.displayPublicSeed
-        const xPubExplorer = wallet.currencyInfo.xpubExplorer && xPub ? sprintf(wallet.currencyInfo.xpubExplorer, xPub) : ''
-        dispatch({ type: 'OPEN_VIEWXPUB_WALLET_MODAL', data: { xPub, walletId, xPubExplorer } })
+        const xPubExplorer =
+          wallet.currencyInfo.xpubExplorer && xPub
+            ? sprintf(wallet.currencyInfo.xpubExplorer, xPub)
+            : ''
+        dispatch({
+          type: 'OPEN_VIEWXPUB_WALLET_MODAL',
+          data: { xPub, walletId, xPubExplorer }
+        })
       }
     }
 
@@ -99,7 +124,10 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const state = getState()
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
-        Actions[Constants.TRANSACTIONS_EXPORT]({ sourceWallet: wallet, currencyCode })
+        Actions[Constants.TRANSACTIONS_EXPORT]({
+          sourceWallet: wallet,
+          currencyCode
+        })
       }
     }
 
@@ -109,7 +137,10 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const { account } = state.core
         const { currencyWallets } = account
         const wallet = currencyWallets[walletId]
-        const message = `${s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}\n${getWalletName(wallet)}`
+        const message = `${
+          s.strings
+            .fragment_wallets_get_seed_wallet_first_confirm_message_mobile
+        }\n${getWalletName(wallet)}`
 
         const passwordValid = await Airship.show(bridge => (
           <CheckPasswordModal
@@ -137,7 +168,14 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return async (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const theme = getTheme()
-        const icon = <FontAwesomeIcon style={{ left: theme.rem(0.125) }} name="user-secret" color={theme.tileBackground} size={theme.rem(2)} />
+        const icon = (
+          <FontAwesomeIcon
+            style={{ left: theme.rem(0.125) }}
+            name="user-secret"
+            color={theme.tileBackground}
+            size={theme.rem(2)}
+          />
+        )
 
         const { account } = state.core
 
@@ -175,7 +213,11 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
           const getSeedModal = createSecureTextModal({
             icon,
             title: s.strings.string_get_raw_keys,
-            message: <Text>{s.strings.fragment_wallets_get_raw_key_wallet_confirm_message}</Text>,
+            message: (
+              <Text>
+                {s.strings.fragment_wallets_get_raw_key_wallet_confirm_message}
+              </Text>
+            ),
             input,
             yesButton,
             noButton,
@@ -186,7 +228,15 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
           if (resolveValue) {
             const keys = account.allKeys.find(key => key.id === walletId)
             const seed = keys ? JSON.stringify(keys.keys, null, 2) : ''
-            Airship.show(bridge => <RawTextModal bridge={bridge} body={seed} title={s.strings.string_raw_keys} icon={icon} disableCopy />)
+            Airship.show(bridge => (
+              <RawTextModal
+                bridge={bridge}
+                body={seed}
+                title={s.strings.string_raw_keys}
+                icon={icon}
+                disableCopy
+              />
+            ))
           }
         } catch (error) {
           showError(error)

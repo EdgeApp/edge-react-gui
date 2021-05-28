@@ -59,7 +59,9 @@ class EdgeContextCallbackManager extends React.Component<Props> {
     // TODO: Run the errors through our translation infrastructure:
     const message = error instanceof Error ? error.message : String(error)
 
-    return Airship.show(bridge => <AlertDropdown bridge={bridge} message={message} warning />)
+    return Airship.show(bridge => (
+      <AlertDropdown bridge={bridge} message={message} warning />
+    ))
   }
 
   render() {

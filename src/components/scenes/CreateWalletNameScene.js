@@ -34,7 +34,10 @@ export class CreateWalletName extends React.Component<Props, State> {
     if (this.props.selectedWalletType.currencyCode.toLowerCase() === 'xrp') {
       walletName = sprintf(s.strings.my_crypto_wallet_name, 'XRP')
     } else {
-      walletName = sprintf(s.strings.my_crypto_wallet_name, this.props.selectedWalletType.currencyName)
+      walletName = sprintf(
+        s.strings.my_crypto_wallet_name,
+        this.props.selectedWalletType.currencyName
+      )
     }
     this.state = { walletName, isFocused: true }
   }
@@ -71,7 +74,10 @@ export class CreateWalletName extends React.Component<Props, State> {
         cleanedPrivateKey
       })
     } else {
-      Alert.alert(s.strings.create_wallet_invalid_name, s.strings.create_wallet_enter_valid_name)
+      Alert.alert(
+        s.strings.create_wallet_invalid_name,
+        s.strings.create_wallet_enter_valid_name
+      )
     }
   }
 
@@ -102,7 +108,11 @@ export class CreateWalletName extends React.Component<Props, State> {
           blurOnSubmit
           hideSearchIcon
         />
-        <SecondaryButton onPress={this.onNext} label={s.strings.string_next_capitalized} marginRem={[3, 6]} />
+        <SecondaryButton
+          onPress={this.onNext}
+          label={s.strings.string_next_capitalized}
+          marginRem={[3, 6]}
+        />
       </SceneWrapper>
     )
   }

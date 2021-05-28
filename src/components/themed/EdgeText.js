@@ -3,7 +3,12 @@
 import * as React from 'react'
 import { StyleSheet, Text } from 'react-native'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 
 type OwnProps = {
   children: React.Node,
@@ -21,7 +26,14 @@ class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps> {
       numberOfLines = numberOfLines + (children.match(/\n/g) || []).length
     }
     return (
-      <Text style={[text, style]} numberOfLines={numberOfLines} allowFontScaling adjustsFontSizeToFit minimumFontScale={0.65} {...props}>
+      <Text
+        style={[text, style]}
+        numberOfLines={numberOfLines}
+        allowFontScaling
+        adjustsFontSizeToFit
+        minimumFontScale={0.65}
+        {...props}
+      >
         {children}
       </Text>
     )

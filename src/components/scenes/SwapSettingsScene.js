@@ -6,7 +6,10 @@ import { Image, ScrollView, Text, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
 
-import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferralActions.js'
+import {
+  ignoreAccountSwap,
+  removePromotion
+} from '../../actions/AccountReferralActions.js'
 import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
@@ -17,7 +20,12 @@ import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SwapPreferredModal } from '../modals/SwapPreferredModal.js'
 import { Airship } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
@@ -66,14 +74,21 @@ export class SwapSettings extends React.Component<Props, State> {
       this.cleanups.push(
         exchange.watch('needsActivation', needsActivation =>
           this.setState(state => ({
-            needsActivation: { ...state.needsActivation, [pluginId]: needsActivation }
+            needsActivation: {
+              ...state.needsActivation,
+              [pluginId]: needsActivation
+            }
           }))
         )
       )
     }
 
     const exchangeIds = Object.keys(exchanges).filter(id => id !== 'transfer')
-    this.sortedIds = exchangeIds.sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
+    this.sortedIds = exchangeIds.sort((a, b) =>
+      exchanges[a].swapInfo.displayName.localeCompare(
+        exchanges[b].swapInfo.displayName
+      )
+    )
   }
 
   componentWillUnmount() {
@@ -81,13 +96,30 @@ export class SwapSettings extends React.Component<Props, State> {
   }
 
   handlePreferredModal = () => {
-    const { accountPlugins, changePreferredSwapPlugin, exchanges, ignoreAccountSwap, accountReferral, settingsPreferredSwap } = this.props
+    const {
+      accountPlugins,
+      changePreferredSwapPlugin,
+      exchanges,
+      ignoreAccountSwap,
+      accountReferral,
+      settingsPreferredSwap
+    } = this.props
 
     // Pick plugin:
-    const activePlugins = bestOfPlugins(accountPlugins, accountReferral, settingsPreferredSwap)
+    const activePlugins = bestOfPlugins(
+      accountPlugins,
+      accountReferral,
+      settingsPreferredSwap
+    )
     const pluginId = activePlugins.preferredSwapPluginId
 
-    Airship.show(bridge => <SwapPreferredModal bridge={bridge} exchanges={exchanges} selected={pluginId} />).then(result => {
+    Airship.show(bridge => (
+      <SwapPreferredModal
+        bridge={bridge}
+        exchanges={exchanges}
+        selected={pluginId}
+      />
+    )).then(result => {
       if (result.type === 'cancel') return
       if (activePlugins.swapSource.type === 'account') ignoreAccountSwap()
       changePreferredSwapPlugin(result.pluginId)
@@ -98,9 +130,13 @@ export class SwapSettings extends React.Component<Props, State> {
     const styles = getStyles(this.props.theme)
     return (
       <SceneWrapper background="theme" hasTabs={false}>
-        <ScrollView contentContainerStyle={{ paddingBottom: this.props.theme.rem(4) }}>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: this.props.theme.rem(4) }}
+        >
           <View style={styles.instructionArea}>
-            <Text style={styles.instructionText}>{s.strings.settings_exchange_instruction}</Text>
+            <Text style={styles.instructionText}>
+              {s.strings.settings_exchange_instruction}
+            </Text>
           </View>
           {this.sortedIds.map(pluginId => this.renderPlugin(pluginId))}
           <SettingsHeaderRow text={s.strings.swap_preferred_header} />
@@ -120,23 +156,43 @@ export class SwapSettings extends React.Component<Props, State> {
       exchanges[pluginId].changeEnabled(newValue)
     }
 
-    return <SettingsSwitchRow key={pluginId} icon={logo} text={displayName} value={this.state.enabled[pluginId]} onPress={handlePress} />
+    return (
+      <SettingsSwitchRow
+        key={pluginId}
+        icon={logo}
+        text={displayName}
+        value={this.state.enabled[pluginId]}
+        onPress={handlePress}
+      />
+    )
   }
 
   renderPluginIcon(pluginId: string): React.Node {
     const { theme } = this.props
     const logoSource = getSwapPluginIcon(pluginId, theme)
     const styles = getStyles(theme)
-    return <Image resizeMode="contain" style={styles.swapIcon} source={logoSource} />
+    return (
+      <Image resizeMode="contain" style={styles.swapIcon} source={logoSource} />
+    )
   }
 
   renderPreferredArea() {
-    const { accountPlugins, exchanges, accountReferral, settingsPreferredSwap, theme } = this.props
+    const {
+      accountPlugins,
+      exchanges,
+      accountReferral,
+      settingsPreferredSwap,
+      theme
+    } = this.props
     const iconSize = theme.rem(1.25)
     const styles = getStyles(theme)
 
     // Pick plugin:
-    const activePlugins = bestOfPlugins(accountPlugins, accountReferral, settingsPreferredSwap)
+    const activePlugins = bestOfPlugins(
+      accountPlugins,
+      accountReferral,
+      settingsPreferredSwap
+    )
     const pluginId = activePlugins.preferredSwapPluginId
     const { swapSource } = activePlugins
 
@@ -145,8 +201,16 @@ export class SwapSettings extends React.Component<Props, State> {
       swapSource.type === 'promotion'
         ? {
             instructions: s.strings.swap_preferred_promo_instructions,
-            handlePress: () => this.props.removePromotion(swapSource.installerId),
-            right: <AntDesignIcon name="close" color={theme.icon} size={iconSize} style={styles.swapIcon} />
+            handlePress: () =>
+              this.props.removePromotion(swapSource.installerId),
+            right: (
+              <AntDesignIcon
+                name="close"
+                color={theme.icon}
+                size={iconSize}
+                style={styles.swapIcon}
+              />
+            )
           }
         : {
             instructions: s.strings.swap_preferred_instructions,
@@ -163,7 +227,14 @@ export class SwapSettings extends React.Component<Props, State> {
           }
         : {
             text: s.strings.swap_preferred_cheapest,
-            icon: <AntDesignIcon name="barschart" color={theme.icon} size={iconSize} style={styles.swapIcon} />
+            icon: (
+              <AntDesignIcon
+                name="barschart"
+                color={theme.icon}
+                size={iconSize}
+                style={styles.swapIcon}
+              />
+            )
           }
 
     return (
@@ -172,7 +243,12 @@ export class SwapSettings extends React.Component<Props, State> {
           <Text style={styles.instructionText}>{instructions}</Text>
         </View>
 
-        <SettingsRow icon={icon} text={text} onPress={handlePress} right={right} />
+        <SettingsRow
+          icon={icon}
+          text={text}
+          onPress={handlePress}
+          right={right}
+        />
       </>
     )
   }

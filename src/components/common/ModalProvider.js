@@ -42,7 +42,12 @@ export class ModalProvider extends React.Component<{}, State> {
     if (this.state.queue.length === 0) return null
 
     const deviceWidth = Dimensions.get('window').width
-    const deviceHeight = Platform.OS === 'ios' ? Dimensions.get('window').height : require('react-native-extra-dimensions-android').get('REAL_WINDOW_HEIGHT')
+    const deviceHeight =
+      Platform.OS === 'ios'
+        ? Dimensions.get('window').height
+        : require('react-native-extra-dimensions-android').get(
+            'REAL_WINDOW_HEIGHT'
+          )
 
     const { Component, onDone, modalProps } = this.state.queue[0]
     return (
@@ -67,7 +72,10 @@ export class ModalProvider extends React.Component<{}, State> {
     this.setState({ isHiding: false, queue: this.state.queue.slice(1) })
   }
 
-  launchModal<Result>(Component: React.ComponentType<ModalProps<Result>>, modalProps: Object): Promise<Result> {
+  launchModal<Result>(
+    Component: React.ComponentType<ModalProps<Result>>,
+    modalProps: Object
+  ): Promise<Result> {
     return new Promise(resolve =>
       // Push the component onto the end of the queue:
       this.setState({
@@ -106,6 +114,9 @@ function getInstance() {
  * Receives a single prop, `onDone`, which it should call to hide itself.
  * The value passed to `onDone` becomes the returned promise result.
  */
-export async function launchModal<Result>(Component: React.ComponentType<ModalProps<Result>>, modalProps: Object = {}): Promise<Result> {
+export async function launchModal<Result>(
+  Component: React.ComponentType<ModalProps<Result>>,
+  modalProps: Object = {}
+): Promise<Result> {
   return getInstance().launchModal(Component, modalProps)
 }

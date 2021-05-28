@@ -3,7 +3,10 @@
 import { BlurView } from '@react-native-community/blur'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
-import { type AirshipBridge, AirshipModal as RealAirshipModal } from 'react-native-airship'
+import {
+  type AirshipBridge,
+  AirshipModal as RealAirshipModal
+} from 'react-native-airship'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
@@ -37,7 +40,9 @@ export function AirshipModal<T>(props: Props<T>) {
       onCancel={onCancel}
       underlay={<BlurView blurType="dark" style={StyleSheet.absoluteFill} />}
     >
-      {typeof children === 'function' ? children({ bottom: 50, left: 0, right: 0, top: 0 }) : children}
+      {typeof children === 'function'
+        ? children({ bottom: 50, left: 0, right: 0, top: 0 })
+        : children}
     </RealAirshipModal>
   )
 }

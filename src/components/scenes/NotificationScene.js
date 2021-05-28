@@ -14,7 +14,12 @@ import { getActiveWalletCurrencyInfos } from '../../modules/UI/selectors'
 import { type RootState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
@@ -71,7 +76,9 @@ export class NotificationComponent extends React.Component<Props, State> {
   setNotificationState() {
     const encodedUserId = encodeURIComponent(this.props.userId)
     try {
-      notif1.post(`user/notifications/toggle?userId=${encodedUserId}`, { enabled: this.state.enabled })
+      notif1.post(`user/notifications/toggle?userId=${encodedUserId}`, {
+        enabled: this.state.enabled
+      })
     } catch (error) {
       showError(error)
       console.log(error)
@@ -86,21 +93,52 @@ export class NotificationComponent extends React.Component<Props, State> {
     const { theme } = this.props
     const { enabled } = this.state
     const styles = getStyles(theme)
-    const rightArrow = <AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />
+    const rightArrow = (
+      <AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />
+    )
 
     return (
       <SceneWrapper background="theme" hasTabs={false}>
         {this.state.loading ? (
-          <ActivityIndicator color={theme.primaryText} style={styles.loader} size="large" />
+          <ActivityIndicator
+            color={theme.primaryText}
+            style={styles.loader}
+            size="large"
+          />
         ) : (
           <ScrollView>
-            <SettingsSwitchRow key="notifications" text={s.strings.settings_notifications_switch} value={enabled} onPress={this.toggleNotifications} />
+            <SettingsSwitchRow
+              key="notifications"
+              text={s.strings.settings_notifications_switch}
+              value={enabled}
+              onPress={this.toggleNotifications}
+            />
             {this.props.currencyInfos.map((currencyInfo: EdgeCurrencyInfo) => {
               const { displayName, symbolImage, currencyCode } = currencyInfo
-              const icon = symbolImage != null ? <Image style={styles.currencyLogo} source={{ uri: symbolImage }} /> : undefined
-              const onPress = () => (enabled ? Actions[Constants.CURRENCY_NOTIFICATION_SETTINGS]({ currencyInfo }) : undefined)
+              const icon =
+                symbolImage != null ? (
+                  <Image
+                    style={styles.currencyLogo}
+                    source={{ uri: symbolImage }}
+                  />
+                ) : undefined
+              const onPress = () =>
+                enabled
+                  ? Actions[Constants.CURRENCY_NOTIFICATION_SETTINGS]({
+                      currencyInfo
+                    })
+                  : undefined
 
-              return <SettingsRow disabled={!enabled} key={currencyCode} icon={icon} text={displayName} right={rightArrow} onPress={onPress} />
+              return (
+                <SettingsRow
+                  disabled={!enabled}
+                  key={currencyCode}
+                  icon={icon}
+                  text={displayName}
+                  right={rightArrow}
+                  onPress={onPress}
+                />
+              )
             })}
           </ScrollView>
         )}

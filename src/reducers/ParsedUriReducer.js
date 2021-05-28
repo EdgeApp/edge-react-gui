@@ -7,7 +7,10 @@ import type { Action } from '../types/reduxTypes.js'
 
 export const initialState = null
 
-export const parsedUri: Reducer<EdgeParsedUri | null, Action> = (state = initialState, action: Action) => {
+export const parsedUri: Reducer<EdgeParsedUri | null, Action> = (
+  state = initialState,
+  action: Action
+) => {
   switch (action.type) {
     case 'PARSE_URI_SUCCEEDED': {
       return action.data.parsedUri

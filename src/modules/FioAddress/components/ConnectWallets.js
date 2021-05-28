@@ -7,7 +7,12 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { showError } from '../../../components/services/AirshipInstance'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { PrimaryButton } from '../../../components/themed/ThemedButtons.js'
 import * as Constants from '../../../constants/indexConstants'
@@ -33,7 +38,10 @@ export type OwnProps = {
   disabled: boolean
 }
 
-class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnProps & ThemeProps, LocalState> {
+class ConnectWallets extends React.Component<
+  FioConnectWalletStateProps & OwnProps & ThemeProps,
+  LocalState
+> {
   state = {
     connectWalletsMap: {},
     disconnectWalletsMap: {},
@@ -44,7 +52,9 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
     const { walletItems } = props
     const { prevItemsConnected } = state
     for (const walletKey of Object.keys(prevItemsConnected)) {
-      if (prevItemsConnected[walletKey] !== walletItems[walletKey].isConnected) {
+      if (
+        prevItemsConnected[walletKey] !== walletItems[walletKey].isConnected
+      ) {
         return {
           connectWalletsMap: {},
           disconnectWalletsMap: {},
@@ -69,7 +79,9 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
     for (const walletKey of Object.keys(disconnectWalletsMap)) {
       if (
         !Object.keys(connectWalletsMap).find(
-          (cWalletKey: string) => connectWalletsMap[cWalletKey].fullCurrencyCode === disconnectWalletsMap[walletKey].fullCurrencyCode
+          (cWalletKey: string) =>
+            connectWalletsMap[cWalletKey].fullCurrencyCode ===
+            disconnectWalletsMap[walletKey].fullCurrencyCode
         )
       ) {
         walletsToDisconnect.push(disconnectWalletsMap[walletKey])
@@ -78,10 +90,13 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
 
     if (fioWallet) {
       this.setState({
-        prevItemsConnected: Object.keys(walletItems).reduce((acc, walletKey: string) => {
-          acc[walletKey] = walletItems[walletKey].isConnected
-          return acc
-        }, {})
+        prevItemsConnected: Object.keys(walletItems).reduce(
+          (acc, walletKey: string) => {
+            acc[walletKey] = walletItems[walletKey].isConnected
+            return acc
+          },
+          {}
+        )
       })
       Actions[Constants.FIO_CONNECT_TO_WALLETS_CONFIRM]({
         fioAddressName,
@@ -115,19 +130,30 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
 
   keyExtractor = (item: {}, index: number): string => index.toString()
 
-  renderFioConnectionWalletItem = ({ item: wallet }: { item: FioConnectionWalletItem }) => {
+  renderFioConnectionWalletItem = ({
+    item: wallet
+  }: {
+    item: FioConnectionWalletItem
+  }) => {
     const { walletItems, theme } = this.props
     const { connectWalletsMap, disconnectWalletsMap } = this.state
     const styles = getStyles(theme)
 
     if (wallet) {
-      const value = wallet.isConnected ? !disconnectWalletsMap[wallet.key] : !!connectWalletsMap[wallet.key]
+      const value = wallet.isConnected
+        ? !disconnectWalletsMap[wallet.key]
+        : !!connectWalletsMap[wallet.key]
       const disabled =
         !value &&
-        (!!Object.keys(connectWalletsMap).find((walletItemKey: string) => connectWalletsMap[walletItemKey].fullCurrencyCode === wallet.fullCurrencyCode) ||
+        (!!Object.keys(connectWalletsMap).find(
+          (walletItemKey: string) =>
+            connectWalletsMap[walletItemKey].fullCurrencyCode ===
+            wallet.fullCurrencyCode
+        ) ||
           !!Object.keys(walletItems).find(
             (walletKey: string) =>
-              walletItems[walletKey].fullCurrencyCode === wallet.fullCurrencyCode &&
+              walletItems[walletKey].fullCurrencyCode ===
+                wallet.fullCurrencyCode &&
               walletItems[walletKey].isConnected &&
               walletItems[walletKey].id !== wallet.id &&
               !disconnectWalletsMap[walletKey]
@@ -135,23 +161,38 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
       const noWalletSymbol = '-'
 
       return (
-        <View style={[styles.wallet, disabled ? styles.walletDisabled : null]} underlayColor={theme.secondaryButton}>
+        <View
+          style={[styles.wallet, disabled ? styles.walletDisabled : null]}
+          underlayColor={theme.secondaryButton}
+        >
           <View style={styles.rowContainerTop}>
             <View style={styles.containerLeft}>
               {wallet.symbolImage ? (
-                <Image style={styles.imageContainer} source={{ uri: wallet.symbolImage }} resizeMode="contain" />
+                <Image
+                  style={styles.imageContainer}
+                  source={{ uri: wallet.symbolImage }}
+                  resizeMode="contain"
+                />
               ) : (
                 <EdgeText>{noWalletSymbol}</EdgeText>
               )}
             </View>
             <View style={styles.walletDetailsContainer}>
               <View style={styles.walletDetailsCol}>
-                <EdgeText style={styles.walletDetailsRowCurrency}>{wallet.currencyCode}</EdgeText>
-                <EdgeText style={styles.walletDetailsRowName}>{wallet.name}</EdgeText>
+                <EdgeText style={styles.walletDetailsRowCurrency}>
+                  {wallet.currencyCode}
+                </EdgeText>
+                <EdgeText style={styles.walletDetailsRowName}>
+                  {wallet.name}
+                </EdgeText>
               </View>
               <View style={styles.walletDetailsCol}>
                 <View style={styles.switchContainer}>
-                  <Switch disabled={disabled} onChange={() => this.selectWallet(!value, wallet)} value={value} />
+                  <Switch
+                    disabled={disabled}
+                    onChange={() => this.selectWallet(!value, wallet)}
+                    value={value}
+                  />
                 </View>
               </View>
             </View>
@@ -165,14 +206,20 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
   renderNoWallets() {
     const { loading, theme } = this.props
     const styles = getStyles(theme)
-    return <EdgeText style={styles.no_wallets_text}>{loading ? s.strings.loading : s.strings.fio_connect_no_wallets}</EdgeText>
+    return (
+      <EdgeText style={styles.no_wallets_text}>
+        {loading ? s.strings.loading : s.strings.fio_connect_no_wallets}
+      </EdgeText>
+    )
   }
 
   render() {
     const { walletItems, disabled, theme } = this.props
     const { connectWalletsMap, disconnectWalletsMap } = this.state
     const styles = getStyles(theme)
-    const continueDisabled = !Object.keys(connectWalletsMap).length && !Object.keys(disconnectWalletsMap).length
+    const continueDisabled =
+      !Object.keys(connectWalletsMap).length &&
+      !Object.keys(disconnectWalletsMap).length
 
     return (
       <View style={styles.view}>
@@ -192,7 +239,11 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
           </ScrollView>
         </View>
         <View style={styles.bottomSection}>
-          <PrimaryButton onPress={this._onContinuePress} label={s.strings.string_next_capitalized} disabled={continueDisabled || disabled} />
+          <PrimaryButton
+            onPress={this._onContinuePress}
+            label={s.strings.string_next_capitalized}
+            disabled={continueDisabled || disabled}
+          />
         </View>
       </View>
     )
@@ -270,9 +321,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const mapStateToProps = (state: RootState, ownProps): FioConnectWalletStateProps => {
+const mapStateToProps = (
+  state: RootState,
+  ownProps
+): FioConnectWalletStateProps => {
   const wallets = state.ui.wallets.byId
-  const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
+  const ccWalletMap =
+    state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
 
   if (!ccWalletMap) return { walletItems: {}, loading: true }
 
@@ -285,4 +340,7 @@ const mapStateToProps = (state: RootState, ownProps): FioConnectWalletStateProps
   return out
 }
 
-export const ConnectWalletsConnector = connect(mapStateToProps, {})(withTheme(ConnectWallets))
+export const ConnectWalletsConnector = connect(
+  mapStateToProps,
+  {}
+)(withTheme(ConnectWallets))

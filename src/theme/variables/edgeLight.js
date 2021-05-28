@@ -184,7 +184,8 @@ export const edgeLight: Theme = {
   confirmationSliderThumb: palette.edgeBlue,
   confirmationSliderTextDeactivated: palette.gray,
   confirmationThumbDeactivated: palette.gray,
-  confirmationSliderWidth: PLATFORM.deviceWidth >= 340 ? 295 : PLATFORM.deviceWidth - 45,
+  confirmationSliderWidth:
+    PLATFORM.deviceWidth >= 340 ? 295 : PLATFORM.deviceWidth - 45,
   confirmationSliderThumbWidth: 55,
 
   // Lines
@@ -237,7 +238,10 @@ export const edgeLight: Theme = {
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
   fontFaceBold: palette.QuicksandMedium,
-  fontFaceSymbols: Platform.OS === 'android' ? palette.SFUITextRegular : palette.QuicksandRegular,
+  fontFaceSymbols:
+    Platform.OS === 'android'
+      ? palette.SFUITextRegular
+      : palette.QuicksandRegular,
 
   // TouchableHighlights underlay
   underlayColor: palette.white,

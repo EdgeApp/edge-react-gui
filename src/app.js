@@ -40,7 +40,11 @@ console.log('***********************')
 global.clog = console.log
 
 // TODO: Remove isMounted from IGNORED_WARNINGS once we upgrade to RN 0.57
-const IGNORED_WARNINGS = ['slowlog', 'Setting a timer for a long period of time', 'Warning: isMounted(...) is deprecated']
+const IGNORED_WARNINGS = [
+  'slowlog',
+  'Setting a timer for a long period of time',
+  'Warning: isMounted(...) is deprecated'
+]
 // $FlowExpectedError
 console.ignoredYellowBox = IGNORED_WARNINGS
 
@@ -134,7 +138,9 @@ if (ENABLE_PERF_LOGGING) {
       const elapsed = global.nativePerformanceNow() - perfTimers[label]
       perfTotals[label] += elapsed
       perfCounters[label]++
-      clog(`${d}: PTIMER ${label}:${elapsed}ms total:${perfTotals[label]}ms count:${perfCounters[label]}`)
+      clog(
+        `${d}: PTIMER ${label}:${elapsed}ms total:${perfTotals[label]}ms count:${perfCounters[label]}`
+      )
       perfTimers[label] = undefined
     } else {
       clog(`${d}: PTIMER Error: PTimer not started: ${label}`)

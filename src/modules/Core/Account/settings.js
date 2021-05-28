@@ -5,7 +5,10 @@ import type { EdgeAccount } from 'edge-core-js'
 
 import type { SortOption } from '../../../components/modals/WalletListSortModal.js'
 import { showError } from '../../../components/services/AirshipInstance.js'
-import type { MostRecentWallet, PasswordReminder } from '../../../types/types.js'
+import type {
+  MostRecentWallet,
+  PasswordReminder
+} from '../../../types/types.js'
 import { categories } from './subcategories.js'
 
 // prettier-ignore
@@ -584,32 +587,54 @@ export const setPINModeRequest = (account: EdgeAccount, pinMode: boolean) =>
     : account.disablePIN()
 
 // Account Settings
-export const setAutoLogoutTimeInSecondsRequest = (account: EdgeAccount, autoLogoutTimeInSeconds: number) =>
+export const setAutoLogoutTimeInSecondsRequest = (
+  account: EdgeAccount,
+  autoLogoutTimeInSeconds: number
+) =>
   getSyncedSettings(account).then(settings => {
-    const updatedSettings = updateSettings(settings, { autoLogoutTimeInSeconds })
+    const updatedSettings = updateSettings(settings, {
+      autoLogoutTimeInSeconds
+    })
     return setSyncedSettings(account, updatedSettings)
   })
 
-export const setDefaultFiatRequest = (account: EdgeAccount, defaultFiat: string) =>
+export const setDefaultFiatRequest = (
+  account: EdgeAccount,
+  defaultFiat: string
+) =>
   getSyncedSettings(account).then(settings => {
-    const updatedSettings = updateSettings(settings, { defaultFiat, defaultIsoFiat: `iso:${defaultFiat}` })
+    const updatedSettings = updateSettings(settings, {
+      defaultFiat,
+      defaultIsoFiat: `iso:${defaultFiat}`
+    })
     return setSyncedSettings(account, updatedSettings)
   })
 
-export const setMerchantModeRequest = (account: EdgeAccount, merchantMode: boolean) =>
+export const setMerchantModeRequest = (
+  account: EdgeAccount,
+  merchantMode: boolean
+) =>
   getSyncedSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { merchantMode })
     return setSyncedSettings(account, updatedSettings)
   })
 
-export const setPreferredSwapPluginId = (account: EdgeAccount, pluginId: string | void) => {
+export const setPreferredSwapPluginId = (
+  account: EdgeAccount,
+  pluginId: string | void
+) => {
   return getSyncedSettings(account).then(settings => {
-    const updatedSettings = updateSettings(settings, { preferredSwapPluginId: pluginId == null ? '' : pluginId })
+    const updatedSettings = updateSettings(settings, {
+      preferredSwapPluginId: pluginId == null ? '' : pluginId
+    })
     return setSyncedSettings(account, updatedSettings)
   })
 }
 
-export const setMostRecentWalletsSelected = (account: EdgeAccount, mostRecentWallets: MostRecentWallet[]) =>
+export const setMostRecentWalletsSelected = (
+  account: EdgeAccount,
+  mostRecentWallets: MostRecentWallet[]
+) =>
   getSyncedSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { mostRecentWallets })
     return setSyncedSettings(account, updatedSettings)
@@ -622,26 +647,40 @@ export const setWalletsSort = (account: EdgeAccount, walletsSort: SortOption) =>
   })
 
 // Local Settings
-export const setBluetoothModeRequest = (account: EdgeAccount, bluetoothMode: boolean) =>
+export const setBluetoothModeRequest = (
+  account: EdgeAccount,
+  bluetoothMode: boolean
+) =>
   getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { bluetoothMode })
     return setLocalSettings(account, updatedSettings)
   })
 
-export const setPasswordReminderRequest = (account: EdgeAccount, passwordReminder: PasswordReminder) =>
+export const setPasswordReminderRequest = (
+  account: EdgeAccount,
+  passwordReminder: PasswordReminder
+) =>
   getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { passwordReminder })
     return setLocalSettings(account, updatedSettings)
   })
 
-export const setAccountBalanceVisibility = (account: EdgeAccount, isAccountBalanceVisible: boolean) => {
+export const setAccountBalanceVisibility = (
+  account: EdgeAccount,
+  isAccountBalanceVisible: boolean
+) => {
   return getLocalSettings(account).then(settings => {
-    const updatedSettings = updateSettings(settings, { isAccountBalanceVisible })
+    const updatedSettings = updateSettings(settings, {
+      isAccountBalanceVisible
+    })
     return setLocalSettings(account, updatedSettings)
   })
 }
 
-export const setDeveloperModeOn = (account: EdgeAccount, developerModeOn: boolean) => {
+export const setDeveloperModeOn = (
+  account: EdgeAccount,
+  developerModeOn: boolean
+) => {
   return getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { developerModeOn })
     return setLocalSettings(account, updatedSettings)
@@ -655,24 +694,40 @@ export type SpendingLimits = {
   }
 }
 
-export const setSpendingLimits = (account: EdgeAccount, spendingLimits: SpendingLimits) => {
+export const setSpendingLimits = (
+  account: EdgeAccount,
+  spendingLimits: SpendingLimits
+) => {
   return getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { spendingLimits })
     return setLocalSettings(account, updatedSettings)
   })
 }
-export async function setPasswordRecoveryRemindersAsync(account: EdgeAccount, level: number) {
+export async function setPasswordRecoveryRemindersAsync(
+  account: EdgeAccount,
+  level: number
+) {
   const settings = await getSyncedSettings(account)
-  const passwordRecoveryRemindersShown = { ...settings.passwordRecoveryRemindersShown }
+  const passwordRecoveryRemindersShown = {
+    ...settings.passwordRecoveryRemindersShown
+  }
   passwordRecoveryRemindersShown[level] = true
-  const updatedSettings = updateSettings(settings, { passwordRecoveryRemindersShown })
+  const updatedSettings = updateSettings(settings, {
+    passwordRecoveryRemindersShown
+  })
   return setSyncedSettings(account, updatedSettings)
 }
 
 // Currency Settings
-export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: string, denomination: string) =>
+export const setDenominationKeyRequest = (
+  account: EdgeAccount,
+  currencyCode: string,
+  denomination: string
+) =>
   getSyncedSettings(account).then(settings => {
-    const updatedSettings = updateCurrencySettings(settings, currencyCode, { denomination })
+    const updatedSettings = updateCurrencySettings(settings, currencyCode, {
+      denomination
+    })
     return setSyncedSettings(account, updatedSettings)
   })
 
@@ -689,19 +744,28 @@ export async function getSyncedSettings(account: EdgeAccount): Promise<any> {
   }
 }
 
-export async function setSyncedSettings(account: EdgeAccount, settings: Object): Promise<void> {
+export async function setSyncedSettings(
+  account: EdgeAccount,
+  settings: Object
+): Promise<void> {
   const text = JSON.stringify(settings)
   await account.disklet.setText(SYNCED_SETTINGS_FILENAME, text)
 }
 
 export type CategoriesFile = { categories: string[] }
 
-export async function setSubcategoriesRequest(account: EdgeAccount, subcategories: CategoriesFile) {
+export async function setSubcategoriesRequest(
+  account: EdgeAccount,
+  subcategories: CategoriesFile
+) {
   // const subcats = await getSyncedSubcategories(account)
   return setSyncedSubcategories(account, subcategories)
 }
 
-export async function setSyncedSubcategories(account: EdgeAccount, subcategories: CategoriesFile) {
+export async function setSyncedSubcategories(
+  account: EdgeAccount,
+  subcategories: CategoriesFile
+) {
   let finalText = {}
   if (!subcategories.categories) {
     finalText.categories = subcategories
@@ -725,7 +789,9 @@ export const getSyncedSubcategories = (account: EdgeAccount) =>
     })
     .catch(() =>
       // If Categories.json doesn't exist yet, create it, and return it
-      setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS).then(() => SYNCED_SUBCATEGORIES_DEFAULTS.categories)
+      setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS).then(
+        () => SYNCED_SUBCATEGORIES_DEFAULTS.categories
+      )
     )
 
 export const getLocalSettings = (account: EdgeAccount) => {
@@ -734,7 +800,9 @@ export const getLocalSettings = (account: EdgeAccount) => {
     .then(JSON.parse)
     .catch(() => {
       // If Settings.json doesn't exist yet, create it, and return it
-      return setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS).then(() => LOCAL_ACCOUNT_DEFAULTS)
+      return setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS).then(
+        () => LOCAL_ACCOUNT_DEFAULTS
+      )
     })
     .then(settings => {
       return {
@@ -749,7 +817,11 @@ export const setLocalSettings = (account: EdgeAccount, settings: Object) => {
   return account.localDisklet.setText(LOCAL_SETTINGS_FILENAME, text)
 }
 
-export const updateCurrencySettings = (currentSettings: Object, currencyCode: string, newSettings: Object) => {
+export const updateCurrencySettings = (
+  currentSettings: Object,
+  currencyCode: string,
+  newSettings: Object
+) => {
   const currencySettings = currentSettings[currencyCode]
   // update with new settings
   const updatedSettings = {
@@ -762,7 +834,10 @@ export const updateCurrencySettings = (currentSettings: Object, currencyCode: st
   return updatedSettings
 }
 
-export const updateSettings = (currentSettings: Object, newSettings: Object) => {
+export const updateSettings = (
+  currentSettings: Object,
+  newSettings: Object
+) => {
   // update with new settings
   const updatedSettings = {
     ...currentSettings,

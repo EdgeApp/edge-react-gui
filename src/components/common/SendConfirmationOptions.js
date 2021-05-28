@@ -3,7 +3,11 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Keyboard, StyleSheet, View } from 'react-native'
-import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
+import Menu, {
+  MenuOption,
+  MenuOptions,
+  MenuTrigger
+} from 'react-native-popup-menu'
 
 import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
@@ -17,7 +21,11 @@ const SEND_MAX = 'SEND_MAX'
 const HELP = 'HELP'
 const ADD_UNIQUE_IDENTIFIER = 'ADD_UNIQUE_IDENTIFIER'
 
-type Option = 'CHANGE_MINING_FEE' | 'SEND_MAX' | 'HELP' | 'ADD_UNIQUE_IDENTIFIER'
+type Option =
+  | 'CHANGE_MINING_FEE'
+  | 'SEND_MAX'
+  | 'HELP'
+  | 'ADD_UNIQUE_IDENTIFIER'
 type Props = {
   changeMiningFee: EdgeCurrencyWallet => void,
   sendMaxSpend: () => void,
@@ -45,11 +53,15 @@ export default class SendConfirmationOptions extends React.Component<Props> {
 
   render() {
     const { currencyCode, isEditable } = this.props
-    const uniqueIdentifierInfo = getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
+    const uniqueIdentifierInfo =
+      getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
 
     return (
       <View>
-        <Menu onSelect={value => this.handleMenuOptions(value)} onOpen={() => Keyboard.dismiss()}>
+        <Menu
+          onSelect={value => this.handleMenuOptions(value)}
+          onOpen={() => Keyboard.dismiss()}
+        >
           <MenuTrigger style={styles.menuTrigger}>
             <Text style={styles.trigger}>&#8942;</Text>
           </MenuTrigger>
@@ -58,7 +70,9 @@ export default class SendConfirmationOptions extends React.Component<Props> {
             {!getSpecialCurrencyInfo(currencyCode).noChangeMiningFee && (
               <MenuOption value={CHANGE_MINING_FEE} style={styles.menuOption}>
                 <View style={styles.menuOptionItem}>
-                  <Text style={styles.optionText}>{s.strings.title_change_mining_fee}</Text>
+                  <Text style={styles.optionText}>
+                    {s.strings.title_change_mining_fee}
+                  </Text>
                 </View>
               </MenuOption>
             )}
@@ -66,15 +80,22 @@ export default class SendConfirmationOptions extends React.Component<Props> {
             {isEditable && !getSpecialCurrencyInfo(currencyCode).noMaxSpend && (
               <MenuOption value={SEND_MAX} style={styles.menuOption}>
                 <View style={styles.menuOptionItem}>
-                  <Text style={[styles.optionText, styles.maxSpend]}>{s.strings.send_confirmation_max_button_title}</Text>
+                  <Text style={[styles.optionText, styles.maxSpend]}>
+                    {s.strings.send_confirmation_max_button_title}
+                  </Text>
                 </View>
               </MenuOption>
             )}
 
             {uniqueIdentifierInfo != null && (
-              <MenuOption value={ADD_UNIQUE_IDENTIFIER} style={styles.menuOption}>
+              <MenuOption
+                value={ADD_UNIQUE_IDENTIFIER}
+                style={styles.menuOption}
+              >
                 <View style={styles.menuOptionItem}>
-                  <Text style={styles.optionText}>{uniqueIdentifierInfo.addButtonText}</Text>
+                  <Text style={styles.optionText}>
+                    {uniqueIdentifierInfo.addButtonText}
+                  </Text>
                 </View>
               </MenuOption>
             )}

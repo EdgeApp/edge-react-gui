@@ -2,7 +2,11 @@
 
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { type AccountReferral } from '../types/ReferralTypes.js'
-import { type TrackingEvent, type TrackingValues, logEvent } from '../util/tracking.js'
+import {
+  type TrackingEvent,
+  type TrackingValues,
+  logEvent
+} from '../util/tracking.js'
 
 /**
  * Tracks a conversion, which involves some type of revenue.
@@ -23,7 +27,11 @@ export const trackConversion =
 
     // Look up the dollar value:
     const { account } = state.core
-    const dollarValue: number = await account.rateCache.convertCurrency(currencyCode, 'iso:USD', exchangeAmount)
+    const dollarValue: number = await account.rateCache.convertCurrency(
+      currencyCode,
+      'iso:USD',
+      exchangeAmount
+    )
 
     // Record the event:
     const { accountReferral } = state.account

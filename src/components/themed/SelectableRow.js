@@ -4,7 +4,12 @@ import * as React from 'react'
 import { View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { ClickableRow } from './ClickableRow'
 import { EdgeText } from './EdgeText'
 
@@ -23,15 +28,41 @@ type Props = {
 
 class SelectableRowComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
-    const { icon, title, subTitle, arrowTappable, underline, autoWidth, marginRem, paddingRem, onPress, theme } = this.props
+    const {
+      icon,
+      title,
+      subTitle,
+      arrowTappable,
+      underline,
+      autoWidth,
+      marginRem,
+      paddingRem,
+      onPress,
+      theme
+    } = this.props
     const styles = getStyles(theme)
 
     return (
-      <ClickableRow onPress={onPress} underline={underline} marginRem={marginRem} paddingRem={paddingRem}>
-        <View style={[styles.rowContainer, autoWidth ? styles.autoWidth : null]}>
-          <View style={autoWidth ? styles.iconTitleContainerAutoWidth : styles.iconTitleContainer}>
+      <ClickableRow
+        onPress={onPress}
+        underline={underline}
+        marginRem={marginRem}
+        paddingRem={paddingRem}
+      >
+        <View
+          style={[styles.rowContainer, autoWidth ? styles.autoWidth : null]}
+        >
+          <View
+            style={
+              autoWidth
+                ? styles.iconTitleContainerAutoWidth
+                : styles.iconTitleContainer
+            }
+          >
             {icon}
-            <View style={[styles.title, autoWidth ? styles.titleAutoWidth : null]}>
+            <View
+              style={[styles.title, autoWidth ? styles.titleAutoWidth : null]}
+            >
               <EdgeText>{title}</EdgeText>
               {subTitle ? (
                 <EdgeText style={styles.subTitle} numberOfLines={2}>
@@ -40,7 +71,12 @@ class SelectableRowComponent extends React.PureComponent<Props & ThemeProps> {
               ) : null}
             </View>
           </View>
-          <IonIcon size={theme.rem(1.5)} color={arrowTappable ? theme.iconTappable : theme.icon} name="chevron-forward-outline" style={styles.iconStyle} />
+          <IonIcon
+            size={theme.rem(1.5)}
+            color={arrowTappable ? theme.iconTappable : theme.icon}
+            name="chevron-forward-outline"
+            style={styles.iconStyle}
+          />
         </View>
       </ClickableRow>
     )

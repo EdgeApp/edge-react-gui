@@ -6,7 +6,12 @@ import { Actions } from 'react-native-router-flux'
 
 import s from '../../locales/strings.js'
 import { showHelpModal } from '../modals/HelpModal.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 
 type Props = {
@@ -19,7 +24,9 @@ const title = {
   help: s.strings.string_help
 }
 
-class HeaderTextButtonComponent extends React.PureComponent<Props & ThemeProps> {
+class HeaderTextButtonComponent extends React.PureComponent<
+  Props & ThemeProps
+> {
   handlePress = () => {
     const { type } = this.props
     if (type === 'exit') {
@@ -32,7 +39,13 @@ class HeaderTextButtonComponent extends React.PureComponent<Props & ThemeProps> 
   render() {
     const styles = getStyles(this.props.theme)
     return (
-      <TouchableOpacity style={[styles.container, this.props.placement === 'left' ? styles.left : styles.right]} onPress={this.handlePress}>
+      <TouchableOpacity
+        style={[
+          styles.container,
+          this.props.placement === 'left' ? styles.left : styles.right
+        ]}
+        onPress={this.handlePress}
+      >
         <EdgeText>{title[this.props.type]}</EdgeText>
       </TouchableOpacity>
     )

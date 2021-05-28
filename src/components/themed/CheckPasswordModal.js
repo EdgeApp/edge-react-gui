@@ -8,7 +8,12 @@ import { connect } from 'react-redux'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import { type AirshipBridge } from '../modals/modalParts.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { EdgeTextField } from './EdgeTextField.js'
 import { PrimaryButton, SecondaryButton } from './ThemedButtons.js'
@@ -50,7 +55,9 @@ class CheckPasswordModalComponent extends React.Component<Props, State> {
     account
       .checkPassword(this.state.input)
       .then(resolve => {
-        resolve ? bridge.resolve(true) : this.setState({ error: s.strings.fragmet_invalid_password })
+        resolve
+          ? bridge.resolve(true)
+          : this.setState({ error: s.strings.fragmet_invalid_password })
       })
       .catch(error => {
         console.log(error)
@@ -78,8 +85,16 @@ class CheckPasswordModalComponent extends React.Component<Props, State> {
             secureTextEntry
           />
         </View>
-        <PrimaryButton label={buttonLabel} onPress={this.onSubmit} marginRem={[0.05, 0, 0.5, 0]} />
-        <SecondaryButton label={s.strings.string_cancel_cap} onPress={() => bridge.resolve(false)} marginRem={[0.05, 0, 0.5, 0]} />
+        <PrimaryButton
+          label={buttonLabel}
+          onPress={this.onSubmit}
+          marginRem={[0.05, 0, 0.5, 0]}
+        />
+        <SecondaryButton
+          label={s.strings.string_cancel_cap}
+          onPress={() => bridge.resolve(false)}
+          marginRem={[0.05, 0, 0.5, 0]}
+        />
       </ThemedModal>
     )
   }

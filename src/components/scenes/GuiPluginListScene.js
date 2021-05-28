@@ -12,11 +12,25 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
-import { COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW } from '../../constants/indexConstants.js'
-import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
+import {
+  COUNTRY_CODES,
+  FLAG_LOGO_URL,
+  PLUGIN_VIEW
+} from '../../constants/indexConstants.js'
+import {
+  customPluginRow,
+  guiPlugins
+} from '../../constants/plugins/GuiPlugins.js'
 import s from '../../locales/strings.js'
-import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
-import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
+import {
+  getSyncedSettings,
+  setSyncedSettings
+} from '../../modules/Core/Account/settings.js'
+import {
+  type GuiPluginRow,
+  asGuiPluginJson,
+  filterGuiPluginJson
+} from '../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
@@ -26,11 +40,20 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 
-const buyPluginJson = asGuiPluginJson(require('../../constants/plugins/buyPluginList.json'))
-const sellPluginJson = asGuiPluginJson(require('../../constants/plugins/sellPluginList.json'))
+const buyPluginJson = asGuiPluginJson(
+  require('../../constants/plugins/buyPluginList.json')
+)
+const sellPluginJson = asGuiPluginJson(
+  require('../../constants/plugins/sellPluginList.json')
+)
 
 const paymentTypeLogosById = {
   credit: 'paymentTypeLogoCreditCard',
@@ -171,7 +194,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     if (pluginId === 'custom') {
       const { developerUri } = this.state
       const modal = createInputModal({
-        icon: <IonIcon name="md-globe" size={theme.rem(2.75)} color={theme.buySellCustomPluginModalIcon} />,
+        icon: (
+          <IonIcon
+            name="md-globe"
+            size={theme.rem(2.75)}
+            color={theme.buySellCustomPluginModalIcon}
+          />
+        ),
         title: s.strings.load_plugin,
         input: {
           label: s.strings.plugin_url,
@@ -190,7 +219,10 @@ class GuiPluginList extends React.PureComponent<Props, State> {
         this.setState({ developerUri: deepPath })
 
         // Write to disk lazily:
-        AsyncStorage.setItem(DEVELOPER_PLUGIN_KEY, JSON.stringify({ uri: deepPath })).catch(showError)
+        AsyncStorage.setItem(
+          DEVELOPER_PLUGIN_KEY,
+          JSON.stringify({ uri: deepPath })
+        ).catch(showError)
       }
     }
 
@@ -201,7 +233,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   async showCountrySelectionModal() {
     const { account, updateCountryCode, countryCode } = this.props
 
-    const selectedCountryCode: string = await Airship.show(bridge => <CountrySelectionModal bridge={bridge} countryCode={countryCode} />)
+    const selectedCountryCode: string = await Airship.show(bridge => (
+      <CountrySelectionModal bridge={bridge} countryCode={countryCode} />
+    ))
     if (selectedCountryCode) {
       try {
         const syncedSettings = await getSyncedSettings(account)
@@ -226,25 +260,39 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     const { pluginId } = item
     const plugin = guiPlugins[pluginId]
     const styles = getStyles(this.props.theme)
-    const pluginPartnerLogo = pluginPartnerLogos[pluginId] ? theme[pluginPartnerLogos[pluginId]] : { uri: item.partnerIconPath }
+    const pluginPartnerLogo = pluginPartnerLogos[pluginId]
+      ? theme[pluginPartnerLogos[pluginId]]
+      : { uri: item.partnerIconPath }
 
     return (
       <View style={styles.pluginRowContainer}>
-        <TouchableOpacity onPress={() => this.openPlugin(item).catch(showError)}>
+        <TouchableOpacity
+          onPress={() => this.openPlugin(item).catch(showError)}
+        >
           <View style={styles.pluginRowLogoAndInfo}>
-            <Image style={styles.logo} source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]} />
+            <Image
+              style={styles.logo}
+              source={theme[paymentTypeLogosById[item.paymentTypeLogoKey]]}
+            />
             <View style={styles.pluginTextContainer}>
               <EdgeText style={styles.titleText}>{item.title}</EdgeText>
               <EdgeText style={styles.subtitleText} numberOfLines={0}>
-                {item.cryptoCodes.length > 0 && `Currencies: ${item.cryptoCodes.join(', ')}`}
+                {item.cryptoCodes.length > 0 &&
+                  `Currencies: ${item.cryptoCodes.join(', ')}`}
               </EdgeText>
-              <EdgeText style={styles.subtitleText}>{item.description}</EdgeText>
+              <EdgeText style={styles.subtitleText}>
+                {item.description}
+              </EdgeText>
             </View>
           </View>
           <View style={styles.pluginRowPoweredByRow}>
-            <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
+            <EdgeText style={styles.footerText}>
+              {s.strings.plugin_powered_by + ' '}
+            </EdgeText>
             <Image style={styles.partnerIconImage} source={pluginPartnerLogo} />
-            <EdgeText style={styles.footerText}>{' ' + plugin.displayName}</EdgeText>
+            <EdgeText style={styles.footerText}>
+              {' ' + plugin.displayName}
+            </EdgeText>
           </View>
         </TouchableOpacity>
       </View>
@@ -252,15 +300,32 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, developerModeOn, direction, theme } = this.props
+    const {
+      accountPlugins,
+      accountReferral,
+      countryCode,
+      developerModeOn,
+      direction,
+      theme
+    } = this.props
     const styles = getStyles(theme)
-    const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
+    const countryData = COUNTRY_CODES.find(
+      country => country['alpha-2'] === countryCode
+    )
 
     // Pick a filter based on our direction:
-    let plugins = filterGuiPluginJson(direction === 'buy' ? buyPluginJson : sellPluginJson, Platform.OS, countryCode)
+    let plugins = filterGuiPluginJson(
+      direction === 'buy' ? buyPluginJson : sellPluginJson,
+      Platform.OS,
+      countryCode
+    )
 
     // Filter disabled plugins:
-    const activePlugins = bestOfPlugins(accountPlugins, accountReferral, undefined)
+    const activePlugins = bestOfPlugins(
+      accountPlugins,
+      accountReferral,
+      undefined
+    )
     plugins = plugins.filter(plugin => !activePlugins.disabled[plugin.pluginId])
 
     // Add the dev mode plugin if enabled:
@@ -270,15 +335,31 @@ class GuiPluginList extends React.PureComponent<Props, State> {
 
     return (
       <SceneWrapper background="header">
-        <EdgeText style={styles.header}>{direction === 'buy' ? s.strings.title_plugin_buy : s.strings.title_plugin_sell}</EdgeText>
-        <TouchableOpacity style={styles.selectedCountryRow} onPress={this._handleCountryPress}>
+        <EdgeText style={styles.header}>
+          {direction === 'buy'
+            ? s.strings.title_plugin_buy
+            : s.strings.title_plugin_sell}
+        </EdgeText>
+        <TouchableOpacity
+          style={styles.selectedCountryRow}
+          onPress={this._handleCountryPress}
+        >
           {countryData && (
             <Image
-              source={{ uri: `${FLAG_LOGO_URL}/${countryData.filename || countryData.name.toLowerCase().replace(' ', '-')}.png` }}
+              source={{
+                uri: `${FLAG_LOGO_URL}/${
+                  countryData.filename ||
+                  countryData.name.toLowerCase().replace(' ', '-')
+                }.png`
+              }}
               style={styles.selectedCountryFlag}
             />
           )}
-          <EdgeText style={styles.selectedCountryText}>{countryData ? countryData.name : s.strings.buy_sell_crypto_select_country_button}</EdgeText>
+          <EdgeText style={styles.selectedCountryText}>
+            {countryData
+              ? countryData.name
+              : s.strings.buy_sell_crypto_select_country_button}
+          </EdgeText>
           <AntDesignIcon name="right" size={theme.rem(1)} color={theme.icon} />
         </TouchableOpacity>
         {plugins.length === 0 ? (
@@ -288,7 +369,11 @@ class GuiPluginList extends React.PureComponent<Props, State> {
             </EdgeText>
           </View>
         ) : (
-          <FlatList data={plugins} renderItem={this.renderPlugin} keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title} />
+          <FlatList
+            data={plugins}
+            renderItem={this.renderPlugin}
+            keyExtractor={(item: GuiPluginRow) => item.pluginId + item.title}
+          />
         )}
       </SceneWrapper>
     )

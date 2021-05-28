@@ -1,7 +1,12 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, StyleSheet, View, ViewPropTypes } from 'react-native'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  ViewPropTypes
+} from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
@@ -16,7 +21,11 @@ class FullScreenLoader extends React.Component<Props> {
     const { size, indicatorStyles } = this.props
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} style={[styles.indicator, indicatorStyles]} size={size || 'large'} />
+        <ActivityIndicator
+          color={THEME.COLORS.ACCENT_MINT}
+          style={[styles.indicator, indicatorStyles]}
+          size={size || 'large'}
+        />
       </View>
     )
   }

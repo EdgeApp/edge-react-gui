@@ -9,7 +9,12 @@ import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { PrimaryButton } from '../themed/ThemedButtons'
 
 export type NavProps = {
@@ -48,14 +53,20 @@ class FioAddressRegistered extends React.Component<Props> {
             <View style={styles.image}>
               <Image source={theme.fioAddressLogo} />
             </View>
-            <T style={styles.text}>{s.strings.fio_address_details_screen_registered}</T>
+            <T style={styles.text}>
+              {s.strings.fio_address_details_screen_registered}
+            </T>
             <T style={styles.title}>{fioName}</T>
             <T style={styles.text}>
               {`${s.strings.fio_address_details_screen_expires} `}
               {formatDate(new Date(expiration))}
             </T>
           </View>
-          <PrimaryButton marginRem={2} onPress={Actions[Constants.FIO_ADDRESS_LIST]} label={s.strings.title_fio_names} />
+          <PrimaryButton
+            marginRem={2}
+            onPress={Actions[Constants.FIO_ADDRESS_LIST]}
+            label={s.strings.title_fio_names}
+          />
         </View>
       </SceneWrapper>
     )

@@ -1,7 +1,14 @@
 // @flow
 
 import * as React from 'react'
-import { Alert, FlatList, Keyboard, StyleSheet, TouchableHighlight, View } from 'react-native'
+import {
+  Alert,
+  FlatList,
+  Keyboard,
+  StyleSheet,
+  TouchableHighlight,
+  View
+} from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -49,7 +56,11 @@ class DefaultFiatSettingComponent extends React.Component<Props, State> {
 
   render() {
     const filteredArray = this.props.supportedFiats.filter(entry => {
-      return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
+      return (
+        entry.label
+          .toLowerCase()
+          .indexOf(this.state.searchTerm.toLowerCase()) >= 0
+      )
     })
 
     return (
@@ -100,8 +111,17 @@ class DefaultFiatSettingComponent extends React.Component<Props, State> {
 
   renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
     return (
-      <View style={[styles.singleFiatTypeWrap, data.item.value === this.state.selectedFiat && styles.selectedItem]}>
-        <TouchableHighlight style={styles.singleFiatType} onPress={() => this.onSelectFiat(data.item)} underlayColor={stylesRaw.underlayColor.color}>
+      <View
+        style={[
+          styles.singleFiatTypeWrap,
+          data.item.value === this.state.selectedFiat && styles.selectedItem
+        ]}
+      >
+        <TouchableHighlight
+          style={styles.singleFiatType}
+          onPress={() => this.onSelectFiat(data.item)}
+          underlayColor={stylesRaw.underlayColor.color}
+        >
           <View style={styles.fiatTypeInfoWrap}>
             <View style={styles.fiatTypeLeft}>
               <View style={styles.fiatTypeLeftTextWrap}>

@@ -9,7 +9,12 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { Fontello } from '../../assets/vector/index.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
@@ -41,17 +46,38 @@ class MenuTabComponent extends React.PureComponent<Props> {
     return (
       <View style={styles.container}>
         {state.routes.map((element, index) => {
-          const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
+          const color =
+            activeTabIndex === index
+              ? theme.tabBarIconHighlighted
+              : theme.tabBarIcon
           const icon = {
-            [Constants.WALLET_LIST]: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
-            [Constants.PLUGIN_BUY]: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
-            [Constants.PLUGIN_SELL]: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
-            [Constants.EXCHANGE]: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />
+            [Constants.WALLET_LIST]: (
+              <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />
+            ),
+            [Constants.PLUGIN_BUY]: (
+              <Fontello name="buy" size={theme.rem(1.25)} color={color} />
+            ),
+            [Constants.PLUGIN_SELL]: (
+              <Fontello name="sell" size={theme.rem(1.25)} color={color} />
+            ),
+            [Constants.EXCHANGE]: (
+              <Ionicon
+                name="swap-horizontal"
+                size={theme.rem(1.25)}
+                color={color}
+              />
+            )
           }
           return (
-            <TouchableOpacity style={styles.content} key={element.key} onPress={() => this.handleOnPress(element.key)}>
+            <TouchableOpacity
+              style={styles.content}
+              key={element.key}
+              onPress={() => this.handleOnPress(element.key)}
+            >
               {icon[element.key]}
-              <EdgeText style={{ ...styles.text, color: color }}>{title[element.key]}</EdgeText>
+              <EdgeText style={{ ...styles.text, color: color }}>
+                {title[element.key]}
+              </EdgeText>
             </TouchableOpacity>
           )
         })}

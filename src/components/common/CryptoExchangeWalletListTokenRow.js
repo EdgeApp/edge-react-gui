@@ -40,7 +40,10 @@ type Props = OwnProps & StateProps
 
 type LocalState = {}
 
-class CryptoExchangeWalletListTokenRowConnected extends React.Component<Props, LocalState> {
+class CryptoExchangeWalletListTokenRowConnected extends React.Component<
+  Props,
+  LocalState
+> {
   onPress = () => {
     if (this.props.disabled) return
     this.props.onPress({
@@ -50,22 +53,42 @@ class CryptoExchangeWalletListTokenRowConnected extends React.Component<Props, L
   }
 
   render() {
-    const multiplier = this.props.displayDenomination ? this.props.displayDenomination.multiplier : '0'
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(this.props.nativeAmount, multiplier, DIVIDE_PRECISION), 6)
-    const cryptoBalance = formatNumber(decimalOrZero(preliminaryCryptoAmount, 6))
+    const multiplier = this.props.displayDenomination
+      ? this.props.displayDenomination.multiplier
+      : '0'
+    const preliminaryCryptoAmount = truncateDecimals(
+      bns.div(this.props.nativeAmount, multiplier, DIVIDE_PRECISION),
+      6
+    )
+    const cryptoBalance = formatNumber(
+      decimalOrZero(preliminaryCryptoAmount, 6)
+    )
     return (
-      <TouchableHighlight underlayColor={THEME.COLORS.TRANSPARENT} onPress={this.onPress}>
+      <TouchableHighlight
+        underlayColor={THEME.COLORS.TRANSPARENT}
+        onPress={this.onPress}
+      >
         <View style={[styles.containerToken, styles.rowContainerTop]}>
           <View style={styles.containerLeft}>
-            <Image style={styles.imageContainer} source={{ uri: this.props.image }} resizeMode="contain" />
+            <Image
+              style={styles.imageContainer}
+              source={{ uri: this.props.image }}
+              resizeMode="contain"
+            />
           </View>
           <View style={styles.walletDetailsContainer}>
             <View style={styles.walletDetailsRow}>
-              <FormattedText style={styles.walletDetailsRowCurrency}>{this.props.currencyCode}</FormattedText>
-              <FormattedText style={styles.walletDetailsRowValue}>{cryptoBalance}</FormattedText>
+              <FormattedText style={styles.walletDetailsRowCurrency}>
+                {this.props.currencyCode}
+              </FormattedText>
+              <FormattedText style={styles.walletDetailsRowValue}>
+                {cryptoBalance}
+              </FormattedText>
             </View>
             <View style={styles.walletDetailsRow}>
-              <FormattedText style={styles.walletDetailsRowName}>{this.props.name}</FormattedText>
+              <FormattedText style={styles.walletDetailsRowName}>
+                {this.props.name}
+              </FormattedText>
               <FormattedText style={styles.walletDetailsRowFiat}>
                 {this.props.fiatSymbol} {this.props.fiatBalance}
               </FormattedText>
@@ -79,7 +102,8 @@ class CryptoExchangeWalletListTokenRowConnected extends React.Component<Props, L
 
 const mapStateToProps = (state: RootState, ownProps): StateProps => {
   const currencyCode: string = ownProps.currencyCode
-  const displayDenomination: EdgeDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
+  const displayDenomination: EdgeDenomination =
+    SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
 
   return {
     displayDenomination
@@ -147,4 +171,7 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const CryptoExchangeWalletListTokenRow = connect(mapStateToProps, null)(CryptoExchangeWalletListTokenRowConnected)
+export const CryptoExchangeWalletListTokenRow = connect(
+  mapStateToProps,
+  null
+)(CryptoExchangeWalletListTokenRowConnected)

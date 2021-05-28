@@ -14,7 +14,9 @@ type AddressTextWithBlockExplorerModalProps = {
   children: React.Node
 }
 
-const AddressTextWithBlockExplorerModal = (props: AddressTextWithBlockExplorerModalProps) => {
+const AddressTextWithBlockExplorerModal = (
+  props: AddressTextWithBlockExplorerModalProps
+) => {
   const { address, addressExplorer, children } = props
   const addressModal = async () => {
     if (addressExplorer) {
@@ -29,7 +31,9 @@ const AddressTextWithBlockExplorerModal = (props: AddressTextWithBlockExplorerMo
           }}
         />
       ))
-      return modal === 'confirm' ? Linking.openURL(sprintf(addressExplorer, address)) : null
+      return modal === 'confirm'
+        ? Linking.openURL(sprintf(addressExplorer, address))
+        : null
     }
     return Alert.alert(s.strings.modal_addressexplorer_null)
   }

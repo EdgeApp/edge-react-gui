@@ -26,14 +26,26 @@ export const ResolutionErrorCode = {
  * Internal Mapping object from ResolutionErrorCode to a ResolutionErrorHandler
  */
 const HandlersByCode = {
-  [ResolutionErrorCode.UnregisteredDomain]: (params: { domain: string }) => `Domain ${params.domain} is not registered`,
-  [ResolutionErrorCode.UnspecifiedResolver]: (params: { domain: string }) => `Domain ${params.domain} is not configured`,
-  [ResolutionErrorCode.UnsupportedDomain]: (params: { domain: string }) => `Domain ${params.domain} is not supported`,
-  [ResolutionErrorCode.UnspecifiedCurrency]: (params: { domain: string, currencyTicker: string }) =>
+  [ResolutionErrorCode.UnregisteredDomain]: (params: { domain: string }) =>
+    `Domain ${params.domain} is not registered`,
+  [ResolutionErrorCode.UnspecifiedResolver]: (params: { domain: string }) =>
+    `Domain ${params.domain} is not configured`,
+  [ResolutionErrorCode.UnsupportedDomain]: (params: { domain: string }) =>
+    `Domain ${params.domain} is not supported`,
+  [ResolutionErrorCode.UnspecifiedCurrency]: (params: {
+    domain: string,
+    currencyTicker: string
+  }) =>
     `Domain ${params.domain} has no ${params.currencyTicker} attached to it`,
-  [ResolutionErrorCode.NamingServiceDown]: (params: { method: string }) => `${params.method} naming service is down at the moment`,
-  [ResolutionErrorCode.UnsupportedCurrency]: (params: { currencyTicker: string }) => `${params.currencyTicker} is not supported`,
-  [ResolutionErrorCode.RecordNotFound]: (params: { recordName: string, domain: string }) => `No ${params.recordName} record found for ${params.domain}`
+  [ResolutionErrorCode.NamingServiceDown]: (params: { method: string }) =>
+    `${params.method} naming service is down at the moment`,
+  [ResolutionErrorCode.UnsupportedCurrency]: (params: {
+    currencyTicker: string
+  }) => `${params.currencyTicker} is not supported`,
+  [ResolutionErrorCode.RecordNotFound]: (params: {
+    recordName: string,
+    domain: string
+  }) => `No ${params.recordName} record found for ${params.domain}`
 }
 
 /**
@@ -60,7 +72,9 @@ export class ResolutionError extends Error {
   constructor(code: string, options: ResolutionErrorOptions = { domain: '' }) {
     const resolutionErrorHandler: ResolutionErrorHandler = HandlersByCode[code]
     const { domain, method, currencyTicker, recordName } = options
-    super(resolutionErrorHandler({ domain, method, currencyTicker, recordName }))
+    super(
+      resolutionErrorHandler({ domain, method, currencyTicker, recordName })
+    )
     this.code = code
     this.domain = domain
     this.method = method || ''

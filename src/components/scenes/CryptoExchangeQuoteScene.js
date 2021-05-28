@@ -6,7 +6,10 @@ import { Image, Platform, ScrollView, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
-import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
+import {
+  exchangeTimerExpired,
+  shiftCryptoCurrency
+} from '../../actions/CryptoExchangeActions'
 import { swapPluginLogos } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
@@ -19,7 +22,12 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { Card } from '../themed/Card'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent.js'
@@ -47,7 +55,10 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type State = {}
 
-export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
+export class CryptoExchangeQuoteScreenComponent extends React.Component<
+  Props,
+  State
+> {
   calledApprove: true
 
   componentDidMount = () => {
@@ -59,7 +70,8 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
       switchain: this.checkSwitchainKYC
     }
     try {
-      if (check[this.props.swapInfo.quote.pluginId]) check[this.props.swapInfo.quote.pluginId]()
+      if (check[this.props.swapInfo.quote.pluginId])
+        check[this.props.swapInfo.quote.pluginId]()
     } catch (e) {
       showError(e)
     }
@@ -82,7 +94,12 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
     const { expirationDate } = swapInfo.quote
 
     if (!expirationDate) return null
-    return <CircleTimer timeExpired={() => timeExpired(swapInfo)} expiration={expirationDate} />
+    return (
+      <CircleTimer
+        timeExpired={() => timeExpired(swapInfo)}
+        expiration={expirationDate}
+      />
+    )
   }
 
   async checkChangellyKYC() {
@@ -176,9 +193,25 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
   }
 
   render() {
-    const { fromCurrencyIcon, fromDenomination, fromWalletCurrencyName, swapInfo, toCurrencyIcon, toDenomination, toWalletCurrencyName, pending, theme } =
-      this.props
-    const { fee, fromDisplayAmount, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
+    const {
+      fromCurrencyIcon,
+      fromDenomination,
+      fromWalletCurrencyName,
+      swapInfo,
+      toCurrencyIcon,
+      toDenomination,
+      toWalletCurrencyName,
+      pending,
+      theme
+    } = this.props
+    const {
+      fee,
+      fromDisplayAmount,
+      fromFiat,
+      fromTotalFiat,
+      toDisplayAmount,
+      toFiat
+    } = swapInfo
     const { isEstimate, pluginId } = swapInfo.quote
     const { fromWallet, toWallet } = swapInfo.request
     const styles = getStyles(theme)
@@ -187,9 +220,16 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
       <SceneWrapper background="theme">
         <ScrollView>
           <View style={styles.topLogoRow}>
-            <Image source={swapPluginLogos[pluginId]} resizeMode="contain" style={styles.logoImage} />
+            <Image
+              source={swapPluginLogos[pluginId]}
+              resizeMode="contain"
+              style={styles.logoImage}
+            />
           </View>
-          <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
+          <LineTextDivider
+            title={s.strings.fragment_send_from_label}
+            lowerCased
+          />
           <ExchangeQuote
             cryptoAmount={fromDisplayAmount}
             currency={fromWalletCurrencyName}
@@ -214,14 +254,23 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
           />
           {isEstimate && (
             <Card warning marginRem={[1.5, 1, 0]}>
-              <ClickableText paddingRem={0} onPress={this.showExplanationForEstimate}>
+              <ClickableText
+                paddingRem={0}
+                onPress={this.showExplanationForEstimate}
+              >
                 <View style={styles.estimatedContainer}>
                   <IonIcon
-                    name={Platform.OS === 'ios' ? 'ios-information-circle-outline' : 'md-information-circle-outline'}
+                    name={
+                      Platform.OS === 'ios'
+                        ? 'ios-information-circle-outline'
+                        : 'md-information-circle-outline'
+                    }
                     color={theme.warningIcon}
                     size={theme.rem(1.25)}
                   />
-                  <EdgeText style={styles.estimatedTitle}>{s.strings.estimated_quote}</EdgeText>
+                  <EdgeText style={styles.estimatedTitle}>
+                    {s.strings.estimated_quote}
+                  </EdgeText>
                 </View>
                 <EdgeText style={styles.estimatedText} numberOfLines={2}>
                   {s.strings.estimated_exchange_message}
@@ -229,7 +278,12 @@ export class CryptoExchangeQuoteScreenComponent extends React.Component<Props, S
               </ClickableText>
             </Card>
           )}
-          <Slider parentStyle={styles.slider} onSlidingComplete={this.doShift} disabled={pending} showSpinner={pending} />
+          <Slider
+            parentStyle={styles.slider}
+            onSlidingComplete={this.doShift}
+            disabled={pending}
+            showSpinner={pending}
+          />
           {this.renderTimer()}
           <View style={styles.spacer} />
         </ScrollView>
@@ -282,17 +336,23 @@ export const CryptoExchangeQuote = connect(
     const fromWallet = state.cryptoExchange.fromWallet
     const toWallet = state.cryptoExchange.toWallet
 
-    const toWalletCurrencyName = toWallet != null ? toWallet.currencyNames[request.toCurrencyCode] : ''
-    const fromWalletCurrencyName = fromWallet != null ? fromWallet.currencyNames[request.fromCurrencyCode] : ''
+    const toWalletCurrencyName =
+      toWallet != null ? toWallet.currencyNames[request.toCurrencyCode] : ''
+    const fromWalletCurrencyName =
+      fromWallet != null
+        ? fromWallet.currencyNames[request.fromCurrencyCode]
+        : ''
 
     return {
       account,
       fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon || '',
-      fromDenomination: state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
+      fromDenomination:
+        state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
       fromWalletCurrencyName,
       pending: state.cryptoExchange.shiftPendingTransaction,
       toCurrencyIcon: state.cryptoExchange.toCurrencyIcon || '',
-      toDenomination: state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
+      toDenomination:
+        state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
       toWalletCurrencyName
     }
   },

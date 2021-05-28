@@ -1,8 +1,18 @@
 // @flow
 
-import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
+import type {
+  EdgeAccount,
+  EdgeCurrencyConfig,
+  EdgeCurrencyWallet
+} from 'edge-core-js'
 import * as React from 'react'
-import { ActivityIndicator, FlatList, Image, TouchableWithoutFeedback, View } from 'react-native'
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
@@ -11,12 +21,24 @@ import FIO_LOGO from '../../assets/images/fio/fio_logo.png'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
-import { type FioAddresses, checkExpiredFioAddress, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
+import {
+  type FioAddresses,
+  checkExpiredFioAddress,
+  checkPubAddress,
+  getFioAddressCache
+} from '../../modules/FioAddress/util.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
-import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import ResolutionError, {
+  ResolutionErrorCode
+} from '../common/ResolutionError.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { SecondaryButton } from '../themed/ThemedButtons.js'
@@ -86,13 +108,17 @@ class AddressModalConnected extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.useUserFioAddressesOnly && prevProps.userFioAddresses !== this.props.userFioAddresses) {
+    if (
+      this.props.useUserFioAddressesOnly &&
+      prevProps.userFioAddresses !== this.props.userFioAddresses
+    ) {
       this.filterFioAddresses(this.state.uri)
     }
   }
 
   getFioAddresses = async () => {
-    const { useUserFioAddressesOnly, refreshAllFioAddresses, account } = this.props
+    const { useUserFioAddressesOnly, refreshAllFioAddresses, account } =
+      this.props
     if (useUserFioAddressesOnly) {
       refreshAllFioAddresses()
     } else {
@@ -117,7 +143,8 @@ class AddressModalConnected extends React.Component<Props, State> {
     if (useUserFioAddressesOnly) {
       for (const address of userFioAddresses) {
         const addressLowerCase = address.name.toLowerCase()
-        if (uri !== '' && !addressLowerCase.includes(uri.toLowerCase())) continue // Autocomplete/Filter Check
+        if (uri !== '' && !addressLowerCase.includes(uri.toLowerCase()))
+          continue // Autocomplete/Filter Check
         fioAddressesArray.push(address.name)
       }
     }
@@ -126,8 +153,13 @@ class AddressModalConnected extends React.Component<Props, State> {
       for (const address of Object.keys(fioAddresses.addresses)) {
         if (!fioAddresses.addresses[address]) continue // Ignore when address is not active (boolean false)
         const addressLowerCase = address.toLowerCase()
-        if (uri !== '' && !addressLowerCase.includes(uri.toLowerCase())) continue // Autocomplete/Filter check
-        if (isFioOnly && (this.checkIfDomain(address) || !address.includes('@'))) continue // if isFioOnly is true. Ignore address if not a valid FIO address
+        if (uri !== '' && !addressLowerCase.includes(uri.toLowerCase()))
+          continue // Autocomplete/Filter check
+        if (
+          isFioOnly &&
+          (this.checkIfDomain(address) || !address.includes('@'))
+        )
+          continue // if isFioOnly is true. Ignore address if not a valid FIO address
         fioAddressesArray.push(address)
       }
     }
@@ -160,7 +192,9 @@ class AddressModalConnected extends React.Component<Props, State> {
   }
 
   checkIfDomain = (domain: string): boolean => {
-    return this.checkIfUnstoppableDomain(domain) || this.checkIfEnsDomain(domain)
+    return (
+      this.checkIfUnstoppableDomain(domain) || this.checkIfEnsDomain(domain)
+    )
   }
 
   checkIfUnstoppableDomain = (domain: string): boolean => {
@@ -168,24 +202,41 @@ class AddressModalConnected extends React.Component<Props, State> {
   }
 
   checkIfEnsDomain = (domain: string): boolean => {
-    return domain.endsWith('.eth') || domain.endsWith('.luxe') || domain.endsWith('.kred') || domain.endsWith('.xyz')
+    return (
+      domain.endsWith('.eth') ||
+      domain.endsWith('.luxe') ||
+      domain.endsWith('.kred') ||
+      domain.endsWith('.xyz')
+    )
   }
 
-  fetchDomain = async (domain: string, currencyTicker: string): Promise<string> => {
+  fetchDomain = async (
+    domain: string,
+    currencyTicker: string
+  ): Promise<string> => {
     domain = domain.trim().toLowerCase()
     if (!this.checkIfDomain(domain)) {
-      throw new ResolutionError(ResolutionErrorCode.UnsupportedDomain, { domain })
+      throw new ResolutionError(ResolutionErrorCode.UnsupportedDomain, {
+        domain
+      })
     }
     const baseurl = `https://unstoppabledomains.com/api/v1`
-    const url = this.checkIfEnsDomain(domain) ? `${baseurl}/${domain}/${currencyTicker}` : `${baseurl}/${domain}`
+    const url = this.checkIfEnsDomain(domain)
+      ? `${baseurl}/${domain}/${currencyTicker}`
+      : `${baseurl}/${domain}`
     const response = await global.fetch(url).then(res => res.json())
     const { addresses, meta } = response
     if (!meta || !meta.owner) {
-      throw new ResolutionError(ResolutionErrorCode.UnregisteredDomain, { domain })
+      throw new ResolutionError(ResolutionErrorCode.UnregisteredDomain, {
+        domain
+      })
     }
     const ticker = currencyTicker.toUpperCase()
     if (!addresses || !addresses[ticker]) {
-      throw new ResolutionError(ResolutionErrorCode.UnspecifiedCurrency, { domain, currencyTicker })
+      throw new ResolutionError(ResolutionErrorCode.UnspecifiedCurrency, {
+        domain,
+        currencyTicker
+      })
     }
     return addresses[ticker]
   }
@@ -220,7 +271,12 @@ class AddressModalConnected extends React.Component<Props, State> {
       this.fioCheckQueue = 0
       try {
         const { currencyCode, coreWallet, fioPlugin } = this.props
-        await checkPubAddress(fioPlugin, uri.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
+        await checkPubAddress(
+          fioPlugin,
+          uri.toLowerCase(),
+          coreWallet.currencyInfo.currencyCode,
+          currencyCode
+        )
         this.setStatusLabel(s.strings.fragment_send_address)
       } catch (e) {
         this.setStatusLabel(s.strings.fragment_send_address)
@@ -243,7 +299,9 @@ class AddressModalConnected extends React.Component<Props, State> {
         if (await checkExpiredFioAddress(fioWallets[0], fioAddress)) {
           return this.setState({ fieldError: s.strings.fio_address_expired })
         }
-        const doesAccountExist = await fioPlugin.otherMethods.doesAccountExist(fioAddress)
+        const doesAccountExist = await fioPlugin.otherMethods.doesAccountExist(
+          fioAddress
+        )
         this.setStatusLabel(s.strings.fragment_send_address)
         if (!doesAccountExist) {
           return this.setState({ fieldError: s.strings.err_no_address_title })
@@ -300,7 +358,11 @@ class AddressModalConnected extends React.Component<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={() => this.onPressFioAddress(item)}>
         <View style={styles.rowContainer}>
-          <Image source={addressType} style={styles.fioAddressAvatarContainer} resizeMode="cover" />
+          <Image
+            source={addressType}
+            style={styles.fioAddressAvatarContainer}
+            resizeMode="cover"
+          />
           <Text style={styles.fioAddressText}>{item}</Text>
         </View>
       </TouchableWithoutFeedback>
@@ -318,12 +380,17 @@ class AddressModalConnected extends React.Component<Props, State> {
   keyExtractor = (item: string, index: number) => index.toString()
 
   render() {
-    const { uri, statusLabel, fieldError, filteredFioAddresses, isFocused } = this.state
+    const { uri, statusLabel, fieldError, filteredFioAddresses, isFocused } =
+      this.state
     const { title, userFioAddressesLoading } = this.props
     const styles = getStyles(this.props.theme)
 
     return (
-      <ThemedModal bridge={this.props.bridge} onCancel={this.handleClose} paddingRem={1}>
+      <ThemedModal
+        bridge={this.props.bridge}
+        onCancel={this.handleClose}
+        paddingRem={1}
+      >
         <ModalTitle center paddingRem={[0, 2, 1]}>
           {title || s.strings.address_modal_default_header}
         </ModalTitle>
@@ -360,7 +427,11 @@ class AddressModalConnected extends React.Component<Props, State> {
               <ActivityIndicator color={this.props.theme.iconTappable} />
             </View>
           )}
-          <SecondaryButton label={s.strings.submit} onPress={this.handleSubmit} marginRem={[0, 4]} />
+          <SecondaryButton
+            label={s.strings.submit}
+            onPress={this.handleSubmit}
+            marginRem={[0, 4]}
+          />
         </View>
         <ModalCloseArrow onPress={this.handleClose} />
       </ThemedModal>
@@ -381,7 +452,9 @@ const AddressModal = connect(
       fioWallets: state.ui.wallets.fioWallets
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({ refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses()) })
+  (dispatch: Dispatch): DispatchProps => ({
+    refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses())
+  })
 )(withTheme(AddressModalConnected))
 export { AddressModal }
 

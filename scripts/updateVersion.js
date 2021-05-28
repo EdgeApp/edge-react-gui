@@ -24,7 +24,11 @@ import childProcess from 'child_process'
 import { type Disklet, makeNodeDisklet } from 'disklet'
 import path from 'path'
 
-import { type VersionFile, asLegacyBuildNumFile, asVersionFile } from './cleaners.js'
+import {
+  type VersionFile,
+  asLegacyBuildNumFile,
+  asVersionFile
+} from './cleaners.js'
 
 const specialBranches: { [branch: string]: string } = {
   develop: '-d',
@@ -60,10 +64,16 @@ async function main() {
     version
   }
   console.log(versionFile)
-  await disklet.setText('release-version.json', JSON.stringify(versionFile, null, 2))
+  await disklet.setText(
+    'release-version.json',
+    JSON.stringify(versionFile, null, 2)
+  )
 
   // Update the native project files:
-  await Promise.all([updateAndroid(disklet, versionFile), updateIos(cwd, versionFile)])
+  await Promise.all([
+    updateAndroid(disklet, versionFile),
+    updateIos(cwd, versionFile)
+  ])
 }
 
 /**
@@ -106,7 +116,10 @@ async function readLastBuildNumber(disklet: Disklet): Promise<number> {
 /**
  * Read the legacy buildnum file.
  */
-async function readLegacyBuildNumber(disklet: Disklet, platform: 'ios' | 'android'): Promise<number> {
+async function readLegacyBuildNumber(
+  disklet: Disklet,
+  platform: 'ios' | 'android'
+): Promise<number> {
   try {
     const text = await disklet.getText(`buildnum/${platform}.json`)
     const { buildNum } = asLegacyBuildNumFile(text)
@@ -119,11 +132,20 @@ async function readLegacyBuildNumber(disklet: Disklet, platform: 'ios' | 'androi
 /**
  * Inserts the build information into the Android project files.
  */
-async function updateAndroid(disklet: Disklet, versionFile: VersionFile): Promise<void> {
+async function updateAndroid(
+  disklet: Disklet,
+  versionFile: VersionFile
+): Promise<void> {
   let gradle = await disklet.getText('android/app/build.gradle')
 
-  gradle = gradle.replace(/versionName "[0-9.]+"/g, `versionName "${versionFile.version}"`)
-  gradle = gradle.replace(/versionCode [0-9]+/g, `versionCode ${versionFile.build}`)
+  gradle = gradle.replace(
+    /versionName "[0-9.]+"/g,
+    `versionName "${versionFile.version}"`
+  )
+  gradle = gradle.replace(
+    /versionCode [0-9]+/g,
+    `versionCode ${versionFile.build}`
+  )
 
   await disklet.setText('android/app/build.gradle', gradle)
 }
@@ -136,7 +158,10 @@ function updateIos(cwd: string, versionFile: VersionFile): void {
     cwd: path.join(cwd, 'ios'),
     stdio: 'inherit'
   }
-  childProcess.execSync(`agvtool new-marketing-version ${versionFile.version}`, opts)
+  childProcess.execSync(
+    `agvtool new-marketing-version ${versionFile.version}`,
+    opts
+  )
   childProcess.execSync(`agvtool new-version -all ${versionFile.build}`, opts)
 }
 

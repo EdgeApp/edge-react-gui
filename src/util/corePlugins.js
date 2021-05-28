@@ -3,7 +3,10 @@
 import ENV from '../../env.json'
 
 // Shim old-format env.json files:
-if (ENV.ETHEREUM_INIT == null && (ENV.ETHERSCAN_API_KEY || ENV.INFURA_PROJECT_ID)) {
+if (
+  ENV.ETHEREUM_INIT == null &&
+  (ENV.ETHERSCAN_API_KEY || ENV.INFURA_PROJECT_ID)
+) {
   ENV.ETHEREUM_INIT = {
     // blockcypherApiKey: '...',
     etherscanApiKey: ENV.ETHERSCAN_API_KEY,
@@ -11,7 +14,12 @@ if (ENV.ETHEREUM_INIT == null && (ENV.ETHERSCAN_API_KEY || ENV.INFURA_PROJECT_ID
   }
 }
 
-if (ENV.SHAPESHIFT_INIT == null && ENV.SHAPESHIFT_API_KEY && ENV.SHAPESHIFT_CLIENT_ID && ENV.SHAPESHIFT_SECRET) {
+if (
+  ENV.SHAPESHIFT_INIT == null &&
+  ENV.SHAPESHIFT_API_KEY &&
+  ENV.SHAPESHIFT_CLIENT_ID &&
+  ENV.SHAPESHIFT_SECRET
+) {
   ENV.SHAPESHIFT_INIT = {
     apiKey: ENV.SHAPESHIFT_API_KEY,
     clientId: ENV.SHAPESHIFT_CLIENT_ID,

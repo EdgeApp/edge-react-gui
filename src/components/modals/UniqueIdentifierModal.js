@@ -26,18 +26,34 @@ export type Props = {
 }
 export class UniqueIdentifierModal extends React.Component<Props> {
   render() {
-    const { currencyCode, isActive, onBackButtonPress, onBackdropPress, onCancel, onModalHide, uniqueIdentifier, uniqueIdentifierChanged } = this.props
+    const {
+      currencyCode,
+      isActive,
+      onBackButtonPress,
+      onBackdropPress,
+      onCancel,
+      onModalHide,
+      uniqueIdentifier,
+      uniqueIdentifierChanged
+    } = this.props
 
     let title = ''
     let keyboardType = 'default'
-    const uniqueIdentifierInfo = getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
+    const uniqueIdentifierInfo =
+      getSpecialCurrencyInfo(currencyCode).uniqueIdentifier
     if (uniqueIdentifierInfo != null) {
       title = uniqueIdentifierInfo.identifierName
       keyboardType = uniqueIdentifierInfo.identifierKeyboardType
     }
 
     return (
-      <InteractiveModal legacy isActive={isActive} onBackdropPress={onBackdropPress} onBackButtonPress={onBackButtonPress} onModalHide={onModalHide}>
+      <InteractiveModal
+        legacy
+        isActive={isActive}
+        onBackdropPress={onBackdropPress}
+        onBackButtonPress={onBackButtonPress}
+        onModalHide={onModalHide}
+      >
         <InteractiveModal.Icon>
           <IonIcon name="ios-key" size={30} />
         </InteractiveModal.Icon>
@@ -50,7 +66,12 @@ export class UniqueIdentifierModal extends React.Component<Props> {
           <InteractiveModal.Row>
             <InteractiveModal.Item>
               <InteractiveModal.Description>
-                <Text>{sprintf(s.strings.unique_identifier_modal_description, title)}</Text>
+                <Text>
+                  {sprintf(
+                    s.strings.unique_identifier_modal_description,
+                    title
+                  )}
+                </Text>
               </InteractiveModal.Description>
             </InteractiveModal.Item>
           </InteractiveModal.Row>
@@ -80,7 +101,10 @@ export class UniqueIdentifierModal extends React.Component<Props> {
               </SecondaryButton>
             </InteractiveModal.Item>
             <InteractiveModal.Item>
-              <PrimaryButton onPress={() => this.onConfirm()} style={{ flex: -1 }}>
+              <PrimaryButton
+                onPress={() => this.onConfirm()}
+                style={{ flex: -1 }}
+              >
                 <PrimaryButton.Text>
                   <Text>{s.strings.unique_identifier_modal_confirm}</Text>
                 </PrimaryButton.Text>

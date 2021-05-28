@@ -4,7 +4,12 @@
 // @flow
 export function matchJson(a: any, b: any): boolean {
   // Use simple equality, unless a and b are proper objects:
-  if (typeof a !== 'object' || typeof b !== 'object' || a == null || b == null) {
+  if (
+    typeof a !== 'object' ||
+    typeof b !== 'object' ||
+    a == null ||
+    b == null
+  ) {
     return a === b
   }
   // These must either be both arrays or both objects:

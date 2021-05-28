@@ -2,10 +2,20 @@
 
 import * as React from 'react'
 import { AppState, Platform } from 'react-native'
-import { check, checkMultiple, PERMISSIONS, request, RESULTS } from 'react-native-permissions'
+import {
+  check,
+  checkMultiple,
+  PERMISSIONS,
+  request,
+  RESULTS
+} from 'react-native-permissions'
 import { connect } from 'react-redux'
 
-import { type Permission, type PermissionsState, type PermissionStatus } from '../../reducers/PermissionsReducer.js'
+import {
+  type Permission,
+  type PermissionsState,
+  type PermissionStatus
+} from '../../reducers/PermissionsReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { ContactsPermissionModal } from '../modals/ContactsPermissionModal.js'
 import { Airship, showError } from './AirshipInstance.js'
@@ -65,7 +75,9 @@ class PermissionsManagerComponent extends React.Component<Props> {
   async checkPermissions() {
     const statePermissions = this.props.permissions
     const names = Object.keys(statePermissions)
-    const permissions = names.map(name => PERMISSIONS[OS][PERMISSIONS_ITEM[name]])
+    const permissions = names.map(
+      name => PERMISSIONS[OS][PERMISSIONS_ITEM[name]]
+    )
     const response: PermissionsState = await checkMultiple(permissions)
 
     // Figure out which ones have changed to avoid a pointless dispatch:
@@ -86,8 +98,12 @@ class PermissionsManagerComponent extends React.Component<Props> {
   }
 }
 
-export async function requestPermission(data: Permission): Promise<PermissionStatus> {
-  const status: PermissionStatus = await check(PERMISSIONS[OS][PERMISSIONS_ITEM[data]])
+export async function requestPermission(
+  data: Permission
+): Promise<PermissionStatus> {
+  const status: PermissionStatus = await check(
+    PERMISSIONS[OS][PERMISSIONS_ITEM[data]]
+  )
   if (status === RESULTS.DENIED) {
     if (data === 'contacts') {
       await Airship.show(bridge => <ContactsPermissionModal bridge={bridge} />)

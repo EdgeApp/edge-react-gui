@@ -7,9 +7,19 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import s from '../../locales/strings.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type DisplayTime, displayToSeconds, secondsToDisplay } from '../../util/displayTime.js'
+import {
+  type DisplayTime,
+  displayToSeconds,
+  secondsToDisplay
+} from '../../util/displayTime.js'
 import { LadderLayout } from '../common/LadderLayout.js'
-import { type AirshipBridge, AirshipModal, ContentArea, dayText, IconCircle } from './modalParts.js'
+import {
+  type AirshipBridge,
+  AirshipModal,
+  ContentArea,
+  dayText,
+  IconCircle
+} from './modalParts.js'
 
 type Props = {
   bridge: AirshipBridge<number | null>,
@@ -40,20 +50,32 @@ export class AutoLogoutModal extends React.Component<Props, State> {
   render() {
     const { bridge } = this.props
 
-    const numberPickerOptions = [<Picker.Item key="disable" label={s.strings.string_disable} value={0} />]
+    const numberPickerOptions = [
+      <Picker.Item key="disable" label={s.strings.string_disable} value={0} />
+    ]
     for (let i = 1; i < 60; i++) {
       const text = String(i)
-      numberPickerOptions.push(<Picker.Item key={text} label={text} value={i} />)
+      numberPickerOptions.push(
+        <Picker.Item key={text} label={text} value={i} />
+      )
     }
 
     const numberPicker = (
-      <Picker style={{ flex: 1 }} selectedValue={this.state.value} onValueChange={value => this.setState({ value })}>
+      <Picker
+        style={{ flex: 1 }}
+        selectedValue={this.state.value}
+        onValueChange={value => this.setState({ value })}
+      >
         {numberPickerOptions}
       </Picker>
     )
 
     const measurementPicker = (
-      <Picker style={{ flex: 1 }} selectedValue={this.state.measurement} onValueChange={measurement => this.setState({ measurement })}>
+      <Picker
+        style={{ flex: 1 }}
+        selectedValue={this.state.measurement}
+        onValueChange={measurement => this.setState({ measurement })}
+      >
         <Picker.Item label={s.strings.settings_seconds} value="seconds" />
         <Picker.Item label={s.strings.settings_minutes} value="minutes" />
         <Picker.Item label={s.strings.settings_hours} value="hours" />
@@ -64,7 +86,11 @@ export class AutoLogoutModal extends React.Component<Props, State> {
     return (
       <AirshipModal bridge={bridge} onCancel={this.handleCancel}>
         <IconCircle>
-          <IonIcon name="ios-time" size={THEME.rem(2)} color={THEME.COLORS.SECONDARY} />
+          <IonIcon
+            name="ios-time"
+            size={THEME.rem(2)}
+            color={THEME.COLORS.SECONDARY}
+          />
         </IconCircle>
         <ContentArea>
           <Text style={dayText('title')}>{s.strings.dialog_title}</Text>
@@ -77,7 +103,9 @@ export class AutoLogoutModal extends React.Component<Props, State> {
           <View style={{ flexDirection: 'row' }}>
             <LadderLayout horizontal padding={THEME.rem(1)}>
               <SecondaryButton onPress={this.handleCancel} style={{ flex: 1 }}>
-                <SecondaryButton.Text>{s.strings.string_cancel_cap}</SecondaryButton.Text>
+                <SecondaryButton.Text>
+                  {s.strings.string_cancel_cap}
+                </SecondaryButton.Text>
               </SecondaryButton>
               <PrimaryButton onPress={this.handleDone} style={{ flex: 1 }}>
                 <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>

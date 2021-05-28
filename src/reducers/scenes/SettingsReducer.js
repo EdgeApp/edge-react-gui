@@ -1,12 +1,24 @@
 // @flow
 
-import { type EdgeAccount, type EdgeCurrencyInfo, type EdgeDenomination } from 'edge-core-js'
+import {
+  type EdgeAccount,
+  type EdgeCurrencyInfo,
+  type EdgeDenomination
+} from 'edge-core-js'
 import _ from 'lodash'
 
 import type { SortOption } from '../../components/modals/WalletListSortModal.js'
-import { LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
+import {
+  LOCAL_ACCOUNT_DEFAULTS,
+  SYNCED_ACCOUNT_DEFAULTS
+} from '../../modules/Core/Account/settings.js'
 import type { Action } from '../../types/reduxTypes.js'
-import { type CustomTokenInfo, type GuiTouchIdInfo, type MostRecentWallet, type SpendingLimits } from '../../types/types.js'
+import {
+  type CustomTokenInfo,
+  type GuiTouchIdInfo,
+  type MostRecentWallet,
+  type SpendingLimits
+} from '../../types/types.js'
 import { type PasswordReminderState } from '../PasswordReminderReducer.js'
 import { spendingLimits } from '../SpendingLimitsReducer.js'
 
@@ -141,7 +153,10 @@ export type SettingsState = {
   passwordRecoveryRemindersShown: PasswordReminderLevels
 }
 
-function currencyPLuginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo): SettingsState {
+function currencyPLuginUtil(
+  state: SettingsState,
+  currencyInfo: EdgeCurrencyInfo
+): SettingsState {
   const { plugins } = state
   const { allCurrencyInfos, supportedWalletTypes } = plugins
   const { pluginId, walletType } = currencyInfo
@@ -160,21 +175,24 @@ function currencyPLuginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo
   }
 
   // Build up object with all the information for each metatoken, accessible by the token currencyCode
-  const metatokenCurrencyInfos = currencyInfo.metaTokens.reduce((acc, metatoken) => {
-    const defaultMetatokenInfo = state[metatoken.currencyCode]
-    return {
-      ...acc,
-      [metatoken.currencyCode]: {
-        ...defaultMetatokenInfo,
-        displayName: metatoken.currencyName,
-        currencyCode: metatoken.currencyCode,
-        denominations: metatoken.denominations,
-        symbolImage: metatoken.symbolImage,
-        // $FlowFixMe
-        symbolImageDarkMono: metatoken.symbolImageDarkMono
+  const metatokenCurrencyInfos = currencyInfo.metaTokens.reduce(
+    (acc, metatoken) => {
+      const defaultMetatokenInfo = state[metatoken.currencyCode]
+      return {
+        ...acc,
+        [metatoken.currencyCode]: {
+          ...defaultMetatokenInfo,
+          displayName: metatoken.currencyName,
+          currencyCode: metatoken.currencyCode,
+          denominations: metatoken.denominations,
+          symbolImage: metatoken.symbolImage,
+          // $FlowFixMe
+          symbolImageDarkMono: metatoken.symbolImageDarkMono
+        }
       }
-    }
-  }, {})
+    },
+    {}
+  )
 
   // Build up object with all the currency information for each currency supported by the plugin, accessible by the currencyCode
   const currencyInfos = {
@@ -194,7 +212,10 @@ function currencyPLuginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo
   }
 }
 
-export const settingsLegacy = (state: SettingsState = initialState, action: Action) => {
+export const settingsLegacy = (
+  state: SettingsState = initialState,
+  action: Action
+) => {
   switch (action.type) {
     case 'LOGIN': {
       const account = action.data
@@ -206,7 +227,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         const { currencyCode } = currencyInfo
         if (!newState[currencyCode]) newState[currencyCode] = {}
         if (!newState[currencyCode].denomination) {
-          newState[currencyCode].denomination = currencyInfo.denominations[0].multiplier
+          newState[currencyCode].denomination =
+            currencyInfo.denominations[0].multiplier
         }
         if (!newState[currencyCode].denominations) {
           newState[currencyCode].denominations = currencyInfo.denominations
@@ -253,7 +275,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         defaultFiat,
         defaultIsoFiat,
         merchantMode,
-        preferredSwapPluginId: preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
+        preferredSwapPluginId:
+          preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
         customTokens,
         countryCode,
         bluetoothMode,
@@ -278,7 +301,10 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         }
       })
       for (const pluginId of Object.keys(account.currencyConfig)) {
-        newState = currencyPLuginUtil(newState, account.currencyConfig[pluginId].currencyInfo)
+        newState = currencyPLuginUtil(
+          newState,
+          account.currencyConfig[pluginId].currencyInfo
+        )
       }
       customTokensSettings.forEach(key => {
         const { currencyCode } = key
@@ -309,7 +335,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       const { tokenObj } = action.data
       const customTokenSettings = state.customTokens
       const newCustomTokenSettings = customTokenSettings.map(item => {
-        if (item.currencyCode === tokenObj.currencyCode) return { ...item, ...tokenObj }
+        if (item.currencyCode === tokenObj.currencyCode)
+          return { ...item, ...tokenObj }
         return item
       })
       const updatedSettings = {
@@ -331,14 +358,17 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       const customTokenSettings = state.customTokens
       const tokenSettingsWithUpdatedToken = customTokenSettings.map(item => {
         // overwrite receiver token
-        if (item.currencyCode === receiverCode) return { ...item, ...tokenObj, isVisible: true }
+        if (item.currencyCode === receiverCode)
+          return { ...item, ...tokenObj, isVisible: true }
         return item
       })
-      const tokenSettingsWithUpdatedAndDeleted = tokenSettingsWithUpdatedToken.map(item => {
-        // make sender token invisible
-        if (item.currencyCode === senderCode) return { ...item, isVisible: false }
-        return item
-      })
+      const tokenSettingsWithUpdatedAndDeleted =
+        tokenSettingsWithUpdatedToken.map(item => {
+          // make sender token invisible
+          if (item.currencyCode === senderCode)
+            return { ...item, isVisible: false }
+          return item
+        })
       const updatedSettings = {
         ...state,
         [receiverCode]: {
@@ -359,7 +389,8 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       const { currencyCode } = action.data
       const customTokenSettings = state.customTokens
       const newCustomTokenSettings = customTokenSettings.map(item => {
-        if (item.currencyCode === currencyCode) return { ...item, isVisible: false }
+        if (item.currencyCode === currencyCode)
+          return { ...item, isVisible: false }
         return item
       })
       return {
@@ -386,7 +417,10 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     case 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS': {
       const { tokenObj, code, setSettings, oldCurrencyCode } = action.data
       const customTokens = setSettings.customTokens
-      const oldCurrencyCodeIndex = _.findIndex(customTokens, item => item.currencyCode === oldCurrencyCode)
+      const oldCurrencyCodeIndex = _.findIndex(
+        customTokens,
+        item => item.currencyCode === oldCurrencyCode
+      )
       customTokens[oldCurrencyCodeIndex] = {
         ...state.customTokens[oldCurrencyCodeIndex],
         isVisible: false
@@ -503,7 +537,9 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
 
     case 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL': {
       const level = action.data
-      const passwordRecoveryRemindersShown = { ...state.passwordRecoveryRemindersShown }
+      const passwordRecoveryRemindersShown = {
+        ...state.passwordRecoveryRemindersShown
+      }
       passwordRecoveryRemindersShown[level] = true
       return { ...state, passwordRecoveryRemindersShown }
     }
@@ -512,7 +548,10 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
   }
 }
 
-export const settings = (state: SettingsState = initialState, action: Action) => {
+export const settings = (
+  state: SettingsState = initialState,
+  action: Action
+) => {
   let result = state
   const legacy = settingsLegacy(state, action)
 

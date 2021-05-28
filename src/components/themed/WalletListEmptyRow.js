@@ -5,7 +5,12 @@ import { TouchableOpacity, View } from 'react-native'
 import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { WalletListRow } from './WalletListRow.js'
 
@@ -35,7 +40,14 @@ class WalletListEmptyRowComponent extends React.PureComponent<Props> {
   }
 
   renderRow = () => {
-    return <WalletListRow {...this.props} onLongPress={this.handleOpenWalletListMenuModal} currencyCode="" walletName="" />
+    return (
+      <WalletListRow
+        {...this.props}
+        onLongPress={this.handleOpenWalletListMenuModal}
+        currencyCode=""
+        walletName=""
+      />
+    )
   }
 
   render() {
@@ -45,10 +57,21 @@ class WalletListEmptyRowComponent extends React.PureComponent<Props> {
     if (!onLongPress) return this.renderRow()
 
     return (
-      <SwipeRow {...this.props} rightOpenValue={theme.rem(-2.5)} disableRightSwipe ref={this.props.swipeRef} useNativeDriver>
+      <SwipeRow
+        {...this.props}
+        rightOpenValue={theme.rem(-2.5)}
+        disableRightSwipe
+        ref={this.props.swipeRef}
+        useNativeDriver
+      >
         <View style={styles.swipeContainer}>
-          <TouchableOpacity style={styles.swipeButton} onPress={this.handleOpenWalletListMenuModal}>
-            <EdgeText style={styles.swipeIcon}>{WALLET_LIST_OPTIONS_ICON}</EdgeText>
+          <TouchableOpacity
+            style={styles.swipeButton}
+            onPress={this.handleOpenWalletListMenuModal}
+          >
+            <EdgeText style={styles.swipeIcon}>
+              {WALLET_LIST_OPTIONS_ICON}
+            </EdgeText>
           </TouchableOpacity>
         </View>
         {this.renderRow()}
@@ -83,7 +106,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const WalletListEmptyRowInner = withTheme(WalletListEmptyRowComponent)
 // $FlowFixMe - forwardRef is not recognize by flow?
-const WalletListEmptyRow = React.forwardRef((props, ref) => <WalletListEmptyRowInner {...props} swipeRef={ref} />)
+const WalletListEmptyRow = React.forwardRef((props, ref) => (
+  <WalletListEmptyRowInner {...props} swipeRef={ref} />
+))
 // Lint error about component not having a displayName
 WalletListEmptyRow.displayName = 'WalletListEmptyRow'
 export { WalletListEmptyRow }

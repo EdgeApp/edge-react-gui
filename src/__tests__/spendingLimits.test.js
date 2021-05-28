@@ -1,7 +1,10 @@
 // @flow
 /* globals describe it expect */
 
-import { initialState, spendingLimits } from '../reducers/SpendingLimitsReducer.js'
+import {
+  initialState,
+  spendingLimits
+} from '../reducers/SpendingLimitsReducer.js'
 
 const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 

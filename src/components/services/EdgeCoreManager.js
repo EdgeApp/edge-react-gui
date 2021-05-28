@@ -2,7 +2,14 @@
 
 import Bugsnag from '@bugsnag/react-native'
 import detectBundler from 'detect-bundler'
-import { type EdgeContext, type EdgeContextOptions, type EdgeCrashReporter, type EdgeFakeWorld, MakeEdgeContext, MakeFakeEdgeWorld } from 'edge-core-js'
+import {
+  type EdgeContext,
+  type EdgeContextOptions,
+  type EdgeCrashReporter,
+  type EdgeFakeWorld,
+  MakeEdgeContext,
+  MakeFakeEdgeWorld
+} from 'edge-core-js'
 import makeAccountbasedIo from 'edge-currency-accountbased/lib/react-native-io.js'
 import makeBitcoinIo from 'edge-currency-bitcoin/lib/react-native-io.js'
 import makeMoneroIo from 'edge-currency-monero/lib/react-native-io.js'
@@ -89,7 +96,9 @@ export class EdgeCoreManager extends React.PureComponent<Props, State> {
       const { context } = this.state
       if (context != null) {
         // TODO: Display a popdown error alert once we get that redux-free:
-        context.changePaused(paused, { secondsDelay: paused ? 20 : 0 }).catch(e => console.log(e))
+        context
+          .changePaused(paused, { secondsDelay: paused ? 20 : 0 })
+          .catch(e => console.log(e))
       }
     }
   }
@@ -124,7 +133,9 @@ export class EdgeCoreManager extends React.PureComponent<Props, State> {
   }
 
   onFakeEdgeWorld = (world: EdgeFakeWorld) => {
-    world.makeEdgeContext({ ...contextOptions }).then(this.onContext, this.onError)
+    world
+      .makeEdgeContext({ ...contextOptions })
+      .then(this.onContext, this.onError)
   }
 
   renderCore() {
@@ -155,7 +166,11 @@ export class EdgeCoreManager extends React.PureComponent<Props, State> {
 
     return (
       <>
-        {context == null ? <LoadingScene /> : <Services key={key} context={context} />}
+        {context == null ? (
+          <LoadingScene />
+        ) : (
+          <Services key={key} context={context} />
+        )}
         {this.renderCore()}
       </>
     )

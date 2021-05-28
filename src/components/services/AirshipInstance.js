@@ -14,7 +14,10 @@ export const Airship = makeAirship()
 /**
  * Shows a message & activity spinner tied to the lifetime of a promise.
  */
-export function showActivity<T>(message: string, promise: Promise<T>): Promise<T> {
+export function showActivity<T>(
+  message: string,
+  promise: Promise<T>
+): Promise<T> {
   Airship.show(bridge => {
     // Hide the toast when the activity completes:
     promise.then(
@@ -23,7 +26,10 @@ export function showActivity<T>(message: string, promise: Promise<T>): Promise<T
     )
     return (
       <AirshipToast bridge={bridge} message={message}>
-        <ActivityIndicator color={THEME.COLORS.BLACK} style={{ marginLeft: toastUnit }} />
+        <ActivityIndicator
+          color={THEME.COLORS.BLACK}
+          style={{ marginLeft: toastUnit }}
+        />
       </AirshipToast>
     )
   })
@@ -34,8 +40,17 @@ export function showActivity<T>(message: string, promise: Promise<T>): Promise<T
  * Shows a message & activity spinner on a fullscreen backdrop, tied to the lifetime of a promise.
  * No touches will be registed at it's lifetime.
  */
-export function showFullScreenSpinner<T>(message: string, promise: Promise<T>): Promise<T> {
-  Airship.show(bridge => <AirshipFullScreenSpinner bridge={bridge} message={message} activity={promise} />)
+export function showFullScreenSpinner<T>(
+  message: string,
+  promise: Promise<T>
+): Promise<T> {
+  Airship.show(bridge => (
+    <AirshipFullScreenSpinner
+      bridge={bridge}
+      message={message}
+      activity={promise}
+    />
+  ))
   return promise
 }
 
@@ -62,7 +77,9 @@ export function showWarning(error: mixed): void {
   // TODO: Run the errors through our translation infrastructure:
   const message = error instanceof Error ? error.message : String(error)
 
-  Airship.show(bridge => <AlertDropdown bridge={bridge} message={message} warning />)
+  Airship.show(bridge => (
+    <AlertDropdown bridge={bridge} message={message} warning />
+  ))
 }
 
 /**

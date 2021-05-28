@@ -4,7 +4,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { EdgeText } from '../themed/EdgeText.js'
+import { EdgeText } from './EdgeText.js'
 
 export function WalletListSectionHeader(props: { title: string }) {
   const styles = getStyles(useTheme())

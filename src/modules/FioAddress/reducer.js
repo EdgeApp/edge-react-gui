@@ -17,7 +17,10 @@ const initialState: FioAddressSceneState = {
   fioAddressesLoading: false
 }
 
-export const fioAddress: Reducer<FioAddressSceneState, Action> = (state = initialState, action: Action) => {
+export const fioAddress: Reducer<FioAddressSceneState, Action> = (
+  state = initialState,
+  action: Action
+) => {
   switch (action.type) {
     case 'FIO/SET_FIO_ADDRESSES_PROGRESS':
       return {

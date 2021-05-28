@@ -34,7 +34,15 @@ function SettingsSwitchRowComponent(props: Props): React.Node {
       }}
     />
   )
-  return <SettingsRow disabled={disabled} icon={icon} text={text} right={right} onPress={onPress} />
+  return (
+    <SettingsRow
+      disabled={disabled}
+      icon={icon}
+      text={text}
+      right={right}
+      onPress={onPress}
+    />
+  )
 }
 
 export const SettingsSwitchRow = withTheme(SettingsSwitchRowComponent)

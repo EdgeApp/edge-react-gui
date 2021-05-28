@@ -8,9 +8,17 @@ import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import s from '../../locales/strings.js'
 import type { Dispatch, RootState } from '../../types/reduxTypes.js'
 import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
-import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
+import {
+  type WalletListResult,
+  WalletListModal
+} from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 
 type OwnProps = {
@@ -31,7 +39,9 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class HeaderTitleComponent extends React.PureComponent<Props> {
   handlePress = () => {
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />).then(({ walletId, currencyCode }: WalletListResult) => {
+    Airship.show(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} />
+    )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         this.props.onSelectWallet(walletId, currencyCode)
       }
@@ -44,7 +54,9 @@ class HeaderTitleComponent extends React.PureComponent<Props> {
       return (
         <EdgeText>
           {this.props.selectedWalletName + ': '}
-          <EdgeText style={styles.boldText}>{this.props.selectedWalletCurrencyCode}</EdgeText>
+          <EdgeText style={styles.boldText}>
+            {this.props.selectedWalletCurrencyCode}
+          </EdgeText>
         </EdgeText>
       )
     } else {
@@ -53,13 +65,24 @@ class HeaderTitleComponent extends React.PureComponent<Props> {
   }
 
   renderWalletNameSection = () => {
-    return this.props.showWalletNameOnly ? this.renderWalletName() : <ArrowDownTextIconButton onPress={this.handlePress} title={this.renderWalletName()} />
+    return this.props.showWalletNameOnly ? (
+      this.renderWalletName()
+    ) : (
+      <ArrowDownTextIconButton
+        onPress={this.handlePress}
+        title={this.renderWalletName()}
+      />
+    )
   }
 
   render() {
     const { title, theme } = this.props
     const styles = getStyles(theme)
-    return <View style={styles.container}>{title ? <EdgeText>{title}</EdgeText> : this.renderWalletNameSection()}</View>
+    return (
+      <View style={styles.container}>
+        {title ? <EdgeText>{title}</EdgeText> : this.renderWalletNameSection()}
+      </View>
+    )
   }
 }
 
@@ -87,6 +110,7 @@ export const HeaderTitle = connect(
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
+    onSelectWallet: (walletId: string, currencyCode: string) =>
+      dispatch(selectWalletFromModal(walletId, currencyCode))
   })
 )(withTheme(HeaderTitleComponent))

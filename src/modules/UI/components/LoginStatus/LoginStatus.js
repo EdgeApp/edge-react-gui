@@ -7,7 +7,10 @@ import { LoadingScene } from '../../../../components/scenes/LoadingScene.js'
 import { getLoginStatus } from '../../../Settings/selectors.js'
 
 export function ifLoggedIn<Klass>(LoggedIn: Klass): Klass {
-  class IfLoggedIn extends React.Component<{ loginStatus: boolean, outerProps: any }> {
+  class IfLoggedIn extends React.Component<{
+    loginStatus: boolean,
+    outerProps: any
+  }> {
     render() {
       const { loginStatus, outerProps } = this.props
       // $FlowFixMe
@@ -16,7 +19,10 @@ export function ifLoggedIn<Klass>(LoggedIn: Klass): Klass {
   }
   IfLoggedIn.displayName = 'IfLoggedIn'
 
-  const mapStateToProps = (state, ownProps: any): { loginStatus: boolean, outerProps: any } => ({
+  const mapStateToProps = (
+    state,
+    ownProps: any
+  ): { loginStatus: boolean, outerProps: any } => ({
     loginStatus: !!getLoginStatus(state),
     outerProps: ownProps
   })

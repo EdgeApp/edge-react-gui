@@ -8,7 +8,13 @@ import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import type { RootState } from '../../types/reduxTypes.js'
 import { getCurrencyInfo } from '../../util/utils'
-import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  useTheme,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
@@ -73,10 +79,18 @@ class WalletListRowComponent extends React.PureComponent<Props> {
               <View style={styles.iconContainer}>{icon}</View>
               <View style={styles.detailsContainer}>
                 <View style={styles.detailsRow}>
-                  <EdgeText style={[styles.detailsCurrency, { width: theme.rem(2.75) }]}>{currencyCode}</EdgeText>
-                  <EdgeText style={styles[`percentage${exchangeRateType}`]}>{exchangeRateString}</EdgeText>
+                  <EdgeText
+                    style={[styles.detailsCurrency, { width: theme.rem(2.75) }]}
+                  >
+                    {currencyCode}
+                  </EdgeText>
+                  <EdgeText style={styles[`percentage${exchangeRateType}`]}>
+                    {exchangeRateString}
+                  </EdgeText>
                 </View>
-                <EdgeText style={styles.detailsName}>{walletNameString}</EdgeText>
+                <EdgeText style={styles.detailsName}>
+                  {walletNameString}
+                </EdgeText>
               </View>
               {children}
             </View>
@@ -150,23 +164,28 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListRow = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const { currencyCode, walletId, walletName } = ownProps
-  const guiWallet = walletId ? state.ui.wallets.byId[walletId] : null
-  let walletNameString = walletName
-  if (walletNameString == null) {
-    if (guiWallet != null) {
-      walletNameString = guiWallet.name
-    } else {
-      const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
-      const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
-      const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
-      walletNameString = `My ${currencyInfo?.displayName ?? ''}`
+export const WalletListRow = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => {
+    const { currencyCode, walletId, walletName } = ownProps
+    const guiWallet = walletId ? state.ui.wallets.byId[walletId] : null
+    let walletNameString = walletName
+    if (walletNameString == null) {
+      if (guiWallet != null) {
+        walletNameString = guiWallet.name
+      } else {
+        const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
+        const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
+        const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(
+          allCurrencyInfos,
+          currencyCode
+        )
+        walletNameString = `My ${currencyInfo?.displayName ?? ''}`
+      }
+    }
+
+    return {
+      loading: walletId != null && guiWallet == null,
+      walletNameString
     }
   }
-
-  return {
-    loading: walletId != null && guiWallet == null,
-    walletNameString
-  }
-})(withTheme(WalletListRowComponent))
+)(withTheme(WalletListRowComponent))

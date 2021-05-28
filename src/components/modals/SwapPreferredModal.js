@@ -13,7 +13,9 @@ import { EdgeText } from '../themed/EdgeText.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
-type ModalResult = { type: 'cancel' } | { type: 'select', pluginId: string | void }
+type ModalResult =
+  | { type: 'cancel' }
+  | { type: 'select', pluginId: string | void }
 
 type Props = {
   bridge: AirshipBridge<ModalResult>,
@@ -31,28 +33,54 @@ export function SwapPreferredModal(props: Props) {
   const styles = getStyles(theme)
 
   const sortedIds = Object.keys(exchanges)
-    .sort((a, b) => exchanges[a].swapInfo.displayName.localeCompare(exchanges[b].swapInfo.displayName))
+    .sort((a, b) =>
+      exchanges[a].swapInfo.displayName.localeCompare(
+        exchanges[b].swapInfo.displayName
+      )
+    )
     .filter(pluginId => exchanges[pluginId].enabled)
 
   function renderRow(pluginId: string | void): React.Node {
     let check: React.Node | void
     if (selected === pluginId) {
-      check = <AntDesignIcon name="check" color={theme.positiveText} size={theme.rem(1.25)} style={styles.icon} />
+      check = (
+        <AntDesignIcon
+          name="check"
+          color={theme.positiveText}
+          size={theme.rem(1.25)}
+          style={styles.icon}
+        />
+      )
     }
 
     const { text, icon } =
       pluginId != null
         ? {
             text: exchanges[pluginId].swapInfo.displayName,
-            icon: <Image resizeMode="contain" style={styles.icon} source={getSwapPluginIcon(pluginId)} />
+            icon: (
+              <Image
+                resizeMode="contain"
+                style={styles.icon}
+                source={getSwapPluginIcon(pluginId)}
+              />
+            )
           }
         : {
             text: s.strings.swap_preferred_cheapest,
-            icon: <AntDesignIcon name="barschart" color={theme.icon} size={theme.rem(1.25)} style={styles.icon} />
+            icon: (
+              <AntDesignIcon
+                name="barschart"
+                color={theme.icon}
+                size={theme.rem(1.25)}
+                style={styles.icon}
+              />
+            )
           }
 
     return (
-      <TouchableOpacity onPress={() => bridge.resolve({ type: 'select', pluginId })}>
+      <TouchableOpacity
+        onPress={() => bridge.resolve({ type: 'select', pluginId })}
+      >
         <View style={styles.row}>
           {icon}
           <EdgeText style={styles.rowText}>{text}</EdgeText>
@@ -68,7 +96,9 @@ export function SwapPreferredModal(props: Props) {
   return (
     <ThemedModal bridge={bridge} onCancel={handleCancel}>
       <ModalTitle>{s.strings.swap_preferred_header}</ModalTitle>
-      <ScrollView style={{ maxHeight: (sortedIds.length + 1) * theme.rem(2.25) }}>
+      <ScrollView
+        style={{ maxHeight: (sortedIds.length + 1) * theme.rem(2.25) }}
+      >
         {renderRow(undefined)}
         {sortedIds.map(pluginId => renderRow(pluginId))}
       </ScrollView>

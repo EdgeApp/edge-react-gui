@@ -12,7 +12,12 @@ import s from '../../locales/strings.js'
 import type { RootState } from '../../reducers/RootReducer'
 import { needToShowConfetti } from '../../util/show-confetti'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { SecondaryButton } from '../themed/ThemedButtons'
@@ -35,7 +40,10 @@ const confettiProps = {
   fallSpeed: 4000
 }
 
-class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalState> {
+class CryptoExchangeSuccessComponent extends React.PureComponent<
+  Props,
+  LocalState
+> {
   constructor() {
     super()
     this.state = { showButton: false, showConfetti: false }
@@ -85,7 +93,10 @@ class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalSta
             {s.strings.exchange_congratulations_msg_info}
           </EdgeText>
           <Fade visible={showButton} hidden>
-            <SecondaryButton label={s.strings.string_done_cap} onPress={this.done} />
+            <SecondaryButton
+              label={s.strings.string_done_cap}
+              onPress={this.done}
+            />
           </Fade>
           {this.renderConfetti()}
         </View>
@@ -119,7 +130,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeSuccessScene = connect((state: RootState): StateProps => ({
-  userId: state.core.account.id,
-  disklet: state.core.disklet
-}))(withTheme(CryptoExchangeSuccessComponent))
+export const CryptoExchangeSuccessScene = connect(
+  (state: RootState): StateProps => ({
+    userId: state.core.account.id,
+    disklet: state.core.disklet
+  })
+)(withTheme(CryptoExchangeSuccessComponent))

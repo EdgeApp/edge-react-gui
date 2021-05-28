@@ -45,7 +45,9 @@ export function ContentArea(props: Props) {
     justifyContent: 'flex-start'
   }
 
-  return <View style={style}>{LadderLayout({ children, horizontal, padding })}</View>
+  return (
+    <View style={style}>{LadderLayout({ children, horizontal, padding })}</View>
+  )
 }
 
 function parsePadding(padding?: number | 'wide'): number {

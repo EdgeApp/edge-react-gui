@@ -6,7 +6,12 @@ import { View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import { connect } from 'react-redux'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../../../components/services/ThemeContext'
 import { ClickableRow } from '../../../components/themed/ClickableRow'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { formatNumber, formatTime } from '../../../locales/intl.js'
@@ -60,7 +65,8 @@ class FioRequestRow extends React.PureComponent<Props> {
   requestedField = () => {
     const { displayDenomination, fioRequest, theme } = this.props
     const styles = getStyles(theme)
-    const name = displayDenomination.name || fioRequest.content.token_code.toUpperCase()
+    const name =
+      displayDenomination.name || fioRequest.content.token_code.toUpperCase()
     const value = `${s.strings.title_fio_requested} ${name}`
 
     return <EdgeText style={styles.requestPendingTime}>{value}</EdgeText>
@@ -79,7 +85,11 @@ class FioRequestRow extends React.PureComponent<Props> {
       statusStyle = styles.requestPending
       label = s.strings.fio_reject_status
     }
-    return <EdgeText style={[styles.requestPendingTime, statusStyle]}>{label}</EdgeText>
+    return (
+      <EdgeText style={[styles.requestPendingTime, statusStyle]}>
+        {label}
+      </EdgeText>
+    )
   }
 
   render() {
@@ -88,24 +98,43 @@ class FioRequestRow extends React.PureComponent<Props> {
     if (!displayDenomination) return null
 
     const fiatValue = `${this.props.fiatSymbol} ${this.props.fiatAmount}`
-    const currencyValue = `${this.props.displayDenomination.symbol || ''} ${fioRequest.content.amount}`
-    const dateValue = `${formatTime(new Date(fioRequest.time_stamp))} ${fioRequest.content.memo ? `- ${fioRequest.content.memo}` : ''}`
+    const currencyValue = `${this.props.displayDenomination.symbol || ''} ${
+      fioRequest.content.amount
+    }`
+    const dateValue = `${formatTime(new Date(fioRequest.time_stamp))} ${
+      fioRequest.content.memo ? `- ${fioRequest.content.memo}` : ''
+    }`
     return (
       <ClickableRow onPress={this.onSelect} highlight gradient>
-        <FontAwesome name={isSent ? 'paper-plane' : 'history'} style={styles.icon} />
+        <FontAwesome
+          name={isSent ? 'paper-plane' : 'history'}
+          style={styles.icon}
+        />
 
         <View style={styles.requestRight}>
           <View style={styles.requestDetailsRow}>
-            <EdgeText style={styles.name}>{isSent ? fioRequest.payer_fio_address : fioRequest.payee_fio_address}</EdgeText>
+            <EdgeText style={styles.name}>
+              {isSent
+                ? fioRequest.payer_fio_address
+                : fioRequest.payee_fio_address}
+            </EdgeText>
             <EdgeText style={styles.requestAmount}>{currencyValue}</EdgeText>
           </View>
           <View style={styles.requestDetailsRow}>
-            <EdgeText ellipsizeMode="tail" numberOfLines={1} style={[styles.requestPendingTime, styles.requestTime]}>
+            <EdgeText
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={[styles.requestPendingTime, styles.requestTime]}
+            >
               {dateValue}
             </EdgeText>
             <EdgeText style={styles.requestFiat}>{fiatValue}</EdgeText>
           </View>
-          <View style={styles.requestDetailsRow}>{isSent ? this.showStatus(fioRequest.status) : this.requestedField()}</View>
+          <View style={styles.requestDetailsRow}>
+            {isSent
+              ? this.showStatus(fioRequest.status)
+              : this.requestedField()}
+          </View>
         </View>
       </ClickableRow>
     )
@@ -186,7 +215,8 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   const rateKey = `${tokenCode}_${isoFiatCurrencyCode}`
   const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
   const amountToMultiply = parseFloat(fioRequest.content.amount)
-  const fiatAmount = formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
+  const fiatAmount =
+    formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
 
   const out: StateProps = {
     displayDenomination,
@@ -196,4 +226,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
   return out
 }
 
-export const FioRequestRowConnector = connect(mapStateToProps, {})(withTheme(FioRequestRow))
+export const FioRequestRowConnector = connect(
+  mapStateToProps,
+  {}
+)(withTheme(FioRequestRow))

@@ -74,7 +74,8 @@ describe('TransactionDetails.ui', () => {
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
       currentFiatAmount: 120,
-      walletDefaultDenomProps: settings[fakeGuiWallet.currencyCode].denominations,
+      walletDefaultDenomProps:
+        settings[fakeGuiWallet.currencyCode].denominations,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
@@ -107,7 +108,8 @@ describe('TransactionDetails.ui', () => {
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
       currentFiatAmount: 120,
-      walletDefaultDenomProps: settings[fakeGuiWallet.currencyCode].denominations,
+      walletDefaultDenomProps:
+        settings[fakeGuiWallet.currencyCode].denominations,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
@@ -140,7 +142,8 @@ describe('TransactionDetails.ui', () => {
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
       currentFiatAmount: 120,
-      walletDefaultDenomProps: settings[fakeGuiWallet.currencyCode].denominations,
+      walletDefaultDenomProps:
+        settings[fakeGuiWallet.currencyCode].denominations,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),
@@ -176,7 +179,8 @@ describe('TransactionDetails.ui', () => {
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
       currentFiatAmount: 120,
-      walletDefaultDenomProps: settings[fakeGuiWallet.currencyCode].denominations,
+      walletDefaultDenomProps:
+        settings[fakeGuiWallet.currencyCode].denominations,
       setNewSubcategory: jest.fn(),
       setTransactionDetails: jest.fn(),
       getSubcategories: jest.fn(),

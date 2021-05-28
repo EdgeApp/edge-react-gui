@@ -26,7 +26,10 @@ type State = {
   isDone: boolean
 }
 
-export class WalletProgressIconComponent extends React.PureComponent<Props, State> {
+export class WalletProgressIconComponent extends React.PureComponent<
+  Props,
+  State
+> {
   constructor(props: Props) {
     super(props)
     this.state = { isDone: false }
@@ -75,35 +78,49 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
         size={size ? size + theme.rem(0.25) : theme.rem(2.25)}
         width={theme.rem(3 / 16)}
         fill={formattedProgress}
-        tintColor={isDone ? theme.walletProgressIconFillDone : theme.walletProgressIconFill}
+        tintColor={
+          isDone
+            ? theme.walletProgressIconFillDone
+            : theme.walletProgressIconFill
+        }
         backgroundColor={theme.walletProgressIconBackground}
         rotation={0}
       >
-        {() => (icon != null ? <Image style={iconSize} source={{ uri: icon }} /> : <View style={iconSize} />)}
+        {() =>
+          icon != null ? (
+            <Image style={iconSize} source={{ uri: icon }} />
+          ) : (
+            <View style={iconSize} />
+          )
+        }
       </AnimatedCircularProgress>
     )
   }
 }
 
-export const WalletProgressIcon = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const { walletId, currencyCode } = ownProps
-  let icon
-  let progress = 100
+export const WalletProgressIcon = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => {
+    const { walletId, currencyCode } = ownProps
+    let icon
+    let progress = 100
 
-  if (walletId) {
-    const guiWallet = state.ui.wallets.byId[walletId]
-    const walletsProgress = state.ui.wallets.walletLoadingProgress
-    if (guiWallet.currencyCode === currencyCode) {
-      icon = guiWallet.symbolImage
-    } else {
-      const meta = guiWallet.metaTokens.find(token => token.currencyCode === ownProps.currencyCode)
-      icon = meta ? meta.symbolImage : undefined
+    if (walletId) {
+      const guiWallet = state.ui.wallets.byId[walletId]
+      const walletsProgress = state.ui.wallets.walletLoadingProgress
+      if (guiWallet.currencyCode === currencyCode) {
+        icon = guiWallet.symbolImage
+      } else {
+        const meta = guiWallet.metaTokens.find(
+          token => token.currencyCode === ownProps.currencyCode
+        )
+        icon = meta ? meta.symbolImage : undefined
+      }
+      progress = walletsProgress[walletId] ? walletsProgress[walletId] * 100 : 0
     }
-    progress = walletsProgress[walletId] ? walletsProgress[walletId] * 100 : 0
-  }
 
-  return {
-    icon,
-    progress
+    return {
+      icon,
+      progress
+    }
   }
-})(withTheme(WalletProgressIconComponent))
+)(withTheme(WalletProgressIconComponent))

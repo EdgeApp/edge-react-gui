@@ -17,4 +17,11 @@ export type ThemeProps = {
 
 // Provide the theme context methods:
 const themeContext = makeThemeContext(edgeDark)
-export const { ThemeProvider, useTheme, withTheme, changeTheme, getTheme, watchTheme } = themeContext
+export const {
+  ThemeProvider,
+  useTheme,
+  withTheme,
+  changeTheme,
+  getTheme,
+  watchTheme
+} = themeContext

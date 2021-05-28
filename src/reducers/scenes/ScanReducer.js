@@ -5,7 +5,10 @@ import { type Reducer, combineReducers } from 'redux'
 
 import { type Action } from '../../types/reduxTypes.js'
 import { parsedUri } from '../ParsedUriReducer.js'
-import { type PrivateKeyModalState, privateKeyModal } from '../PrivateKeyModalReducer.js'
+import {
+  type PrivateKeyModalState,
+  privateKeyModal
+} from '../PrivateKeyModalReducer.js'
 import { scanEnabled } from '../ScanEnabledReducer.js'
 import { torchEnabled } from '../TorchEnabledReducer.js'
 

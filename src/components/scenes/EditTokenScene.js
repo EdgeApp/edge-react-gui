@@ -3,10 +3,19 @@
 import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import * as React from 'react'
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  View
+} from 'react-native'
 import { connect } from 'react-redux'
 
-import { deleteCustomToken, editCustomToken } from '../../actions/WalletActions.js'
+import {
+  deleteCustomToken,
+  editCustomToken
+} from '../../actions/WalletActions.js'
 import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
@@ -34,7 +43,14 @@ type StateProps = {
 }
 type DispatchProps = {
   deleteCustomToken(walletId: string, currencyCode: string): Promise<void>,
-  editCustomToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string): void
+  editCustomToken(
+    walletId: string,
+    currencyName: string,
+    currencyCode: string,
+    contractAddress: string,
+    denomination: string,
+    oldCurrencyCode: string
+  ): void
 }
 type Props = OwnProps & StateProps & DispatchProps
 
@@ -51,7 +67,10 @@ type State = {
 class EditTokenComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    const tokenInfoIndex = _.findIndex(props.customTokens, item => item.currencyCode === props.currencyCode)
+    const tokenInfoIndex = _.findIndex(
+      props.customTokens,
+      item => item.currencyCode === props.currencyCode
+    )
     if (tokenInfoIndex >= 0) {
       const tokenInfo = props.customTokens[tokenInfoIndex]
       const { currencyName, contractAddress, denomination } = tokenInfo
@@ -65,7 +84,10 @@ class EditTokenComponent extends React.Component<Props, State> {
         errorMessage: ''
       }
     } else {
-      Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_improper_token_load)
+      Alert.alert(
+        s.strings.edittoken_delete_title,
+        s.strings.edittoken_improper_token_load
+      )
     }
   }
 
@@ -74,9 +96,14 @@ class EditTokenComponent extends React.Component<Props, State> {
     return (
       <SceneWrapper avoidKeyboard background="body">
         {gap => (
-          <ScrollView style={[styles.container, { marginBottom: -gap.bottom }]} contentContainerStyle={{ paddingBottom: gap.bottom }}>
+          <ScrollView
+            style={[styles.container, { marginBottom: -gap.bottom }]}
+            contentContainerStyle={{ paddingBottom: gap.bottom }}
+          >
             <View style={styles.instructionalArea}>
-              <Text style={styles.instructionalText}>{s.strings.edittoken_top_instructions}</Text>
+              <Text style={styles.instructionalText}>
+                {s.strings.edittoken_top_instructions}
+              </Text>
             </View>
             <View style={styles.nameArea}>
               <FormField
@@ -118,17 +145,26 @@ class EditTokenComponent extends React.Component<Props, State> {
               />
             </View>
             <View style={styles.errorMessageArea}>
-              <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
+              <Text style={styles.errorMessageText}>
+                {this.state.errorMessage}
+              </Text>
             </View>
             <View style={styles.buttonsArea}>
-              <TertiaryButton onPress={this.deleteToken} style={styles.deleteButton}>
-                <TertiaryButton.Text>{s.strings.edittoken_delete_token}</TertiaryButton.Text>
+              <TertiaryButton
+                onPress={this.deleteToken}
+                style={styles.deleteButton}
+              >
+                <TertiaryButton.Text>
+                  {s.strings.edittoken_delete_token}
+                </TertiaryButton.Text>
               </TertiaryButton>
               <PrimaryButton style={styles.saveButton} onPress={this._onSave}>
                 {editCustomTokenProcessing ? (
                   <ActivityIndicator color={THEME.COLORS.ACCENT_MINT} />
                 ) : (
-                  <PrimaryButton.Text>{s.strings.string_save}</PrimaryButton.Text>
+                  <PrimaryButton.Text>
+                    {s.strings.string_save}
+                  </PrimaryButton.Text>
                 )}
               </PrimaryButton>
             </View>
@@ -152,7 +188,10 @@ class EditTokenComponent extends React.Component<Props, State> {
       />
     ))
     if (result === 'ok') {
-      showActivity(s.strings.string_delete, this.props.deleteCustomToken(walletId, currencyCode))
+      showActivity(
+        s.strings.string_delete,
+        this.props.deleteCustomToken(walletId, currencyCode)
+      )
       this.props.onDeleteToken(currencyCode)
     }
   }
@@ -191,32 +230,66 @@ class EditTokenComponent extends React.Component<Props, State> {
         const { currencyName, decimalPlaces, contractAddress } = this.state
         if (currencyName && currencyCode && decimalPlaces && contractAddress) {
           const { walletId } = this.props
-          const visibleTokens = UTILS.mergeTokensRemoveInvisible(this.props.metaTokens, this.props.customTokens)
-          const indexInVisibleTokens = _.findIndex(visibleTokens, token => token.currencyCode === currencyCode)
+          const visibleTokens = UTILS.mergeTokensRemoveInvisible(
+            this.props.metaTokens,
+            this.props.customTokens
+          )
+          const indexInVisibleTokens = _.findIndex(
+            visibleTokens,
+            token => token.currencyCode === currencyCode
+          )
           if (currencyCode !== this.props.currencyCode) {
             // if the currencyCode will change
             if (indexInVisibleTokens >= 0) {
               // if the new currency code is already taken / visible
-              Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_duplicate_currency_code)
+              Alert.alert(
+                s.strings.edittoken_delete_title,
+                s.strings.edittoken_duplicate_currency_code
+              )
             } else {
               // not in the array of visible tokens, CASE 3
               if (parseInt(decimalPlaces) !== 'NaN') {
-                const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
-                this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)
+                const denomination =
+                  UTILS.decimalPlacesToDenomination(decimalPlaces)
+                this.props.editCustomToken(
+                  walletId,
+                  currencyName,
+                  currencyCode,
+                  contractAddress,
+                  denomination,
+                  this.props.currencyCode
+                )
               } else {
-                Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)
+                Alert.alert(
+                  s.strings.edittoken_delete_title,
+                  s.strings.edittoken_invalid_decimal_places
+                )
               }
             }
           } else {
             if (parseInt(decimalPlaces) !== 'NaN') {
-              const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
-              this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)
+              const denomination =
+                UTILS.decimalPlacesToDenomination(decimalPlaces)
+              this.props.editCustomToken(
+                walletId,
+                currencyName,
+                currencyCode,
+                contractAddress,
+                denomination,
+                this.props.currencyCode
+              )
             } else {
-              Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)
+              Alert.alert(
+                s.strings.edittoken_delete_title,
+                s.strings.edittoken_invalid_decimal_places
+              )
             }
           }
         } else {
-          Alert.alert(s.strings.edittoken_delete_title, s.strings.addtoken_default_error_message)
+          Alert.alert(
+            s.strings.edittoken_delete_title,
+            s.strings.addtoken_default_error_message
+          )
         }
       }
     )
@@ -281,14 +354,31 @@ const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 export const EditTokenScene = connect(
   (state: RootState): StateProps => ({
     customTokens: state.ui.settings.customTokens,
-    editCustomTokenProcessing: state.ui.scenes.editToken.editCustomTokenProcessing
+    editCustomTokenProcessing:
+      state.ui.scenes.editToken.editCustomTokenProcessing
   }),
   (dispatch: Dispatch): DispatchProps => ({
     async deleteCustomToken(walletId: string, currencyCode: string) {
       await dispatch(deleteCustomToken(walletId, currencyCode))
     },
-    editCustomToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string) {
-      dispatch(editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, oldCurrencyCode))
+    editCustomToken(
+      walletId: string,
+      currencyName: string,
+      currencyCode: string,
+      contractAddress: string,
+      denomination: string,
+      oldCurrencyCode: string
+    ) {
+      dispatch(
+        editCustomToken(
+          walletId,
+          currencyName,
+          currencyCode,
+          contractAddress,
+          denomination,
+          oldCurrencyCode
+        )
+      )
     }
   })
 )(EditTokenComponent)

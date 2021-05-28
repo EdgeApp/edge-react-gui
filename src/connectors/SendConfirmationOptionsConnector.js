@@ -23,9 +23,13 @@ const mapStateToProps = (state: RootState) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  changeMiningFee: wallet => Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({ wallet }),
+  changeMiningFee: wallet =>
+    Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({ wallet }),
   sendMaxSpend: () => dispatch(updateMaxSpend()),
   uniqueIdentifierModalActivated: () => dispatch(activated())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmationOptions)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SendConfirmationOptions)

@@ -23,14 +23,27 @@ export function AlertDropdown(props: Props) {
   const { bridge, message, warning } = props
 
   return (
-    <AirshipDropdown bridge={bridge} backgroundColor={warning ? THEME.COLORS.ACCENT_ORANGE : THEME.COLORS.ACCENT_RED}>
+    <AirshipDropdown
+      bridge={bridge}
+      backgroundColor={
+        warning ? THEME.COLORS.ACCENT_ORANGE : THEME.COLORS.ACCENT_RED
+      }
+    >
       <View style={styles.container}>
         <EntypoIcon name="warning" size={THEME.rem(1.4)} style={styles.icon} />
         <Text style={styles.text}>
-          <B>{warning ? s.strings.alert_dropdown_warning : s.strings.alert_dropdown_alert}</B>
+          <B>
+            {warning
+              ? s.strings.alert_dropdown_warning
+              : s.strings.alert_dropdown_alert}
+          </B>
           {message}
         </Text>
-        <AntDesignIcon name="closecircle" size={THEME.rem(1)} style={styles.icon} />
+        <AntDesignIcon
+          name="closecircle"
+          size={THEME.rem(1)}
+          style={styles.icon}
+        />
       </View>
     </AirshipDropdown>
   )

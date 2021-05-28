@@ -6,7 +6,10 @@ import { Linking } from 'react-native'
 import { connect } from 'react-redux'
 
 import ENV from '../../../env.json'
-import { launchDeepLink, retryPendingDeepLink } from '../../actions/DeepLinkingActions.js'
+import {
+  launchDeepLink,
+  retryPendingDeepLink
+} from '../../actions/DeepLinkingActions.js'
 import { type WalletsState } from '../../reducers/scenes/WalletsReducer.js'
 import { type DeepLink, parseDeepLink } from '../../types/DeepLink.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'

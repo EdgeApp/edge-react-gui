@@ -2,7 +2,10 @@
 
 import { type Reducer, combineReducers } from 'redux'
 
-import { type ExchangeRatesState, exchangeRates } from '../modules/ExchangeRates/reducer.js'
+import {
+  type ExchangeRatesState,
+  exchangeRates
+} from '../modules/ExchangeRates/reducer.js'
 import { type UiState, ui } from '../modules/UI/reducer.js'
 import { type DeepLink } from '../types/DeepLink.js'
 import { type Action } from '../types/reduxTypes.js'
@@ -10,7 +13,10 @@ import { type DeviceReferral } from '../types/ReferralTypes.js'
 import { type AccountState, account } from './AccountReducer.js'
 import { type ContactsState, contacts } from './ContactsReducer.js'
 import { type CoreState, core } from './CoreReducer.js'
-import { type CryptoExchangeState, cryptoExchange } from './CryptoExchangeReducer.js'
+import {
+  type CryptoExchangeState,
+  cryptoExchange
+} from './CryptoExchangeReducer.js'
 import { type NetworkState, network } from './NetworkReducer.js'
 import { type PermissionsState, permissions } from './PermissionsReducer.js'
 
@@ -37,7 +43,10 @@ export type RootState = {
 }
 
 export const rootReducer: Reducer<RootState, Action> = combineReducers({
-  deviceReferral(state: DeviceReferral = defaultDeviceReferral, action: Action): DeviceReferral {
+  deviceReferral(
+    state: DeviceReferral = defaultDeviceReferral,
+    action: Action
+  ): DeviceReferral {
     return action.type === 'DEVICE_REFERRAL_LOADED' ? action.data : state
   },
 
@@ -51,7 +60,10 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
     return state
   },
 
-  pendingDeepLink(state: DeepLink | null = null, action: Action): DeepLink | null {
+  pendingDeepLink(
+    state: DeepLink | null = null,
+    action: Action
+  ): DeepLink | null {
     switch (action.type) {
       case 'DEEP_LINK_RECEIVED':
         return action.data

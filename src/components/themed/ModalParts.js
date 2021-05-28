@@ -8,11 +8,25 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { unpackEdges } from '../../util/edges'
 import { type Theme, useTheme } from '../services/ThemeContext.js'
 
-export function ModalTitle(props: { children: React.Node, center?: boolean, paddingRem?: number[] | number }) {
+export function ModalTitle(props: {
+  children: React.Node,
+  center?: boolean,
+  paddingRem?: number[] | number
+}) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  return <Text style={[styles.titleText, props.center ? styles.titleCenter : null, paddingStyles(props.paddingRem, theme)]}>{props.children}</Text>
+  return (
+    <Text
+      style={[
+        styles.titleText,
+        props.center ? styles.titleCenter : null,
+        paddingStyles(props.paddingRem, theme)
+      ]}
+    >
+      {props.children}
+    </Text>
+  )
 }
 
 export function ModalMessage(props: { children: React.Node }) {
@@ -28,7 +42,11 @@ export function ModalCloseArrow(props: { onPress: () => void }) {
 
   return (
     <TouchableOpacity onPress={props.onPress} style={styles.closeArrow}>
-      <FontAwesome5 name="chevron-down" size={theme.rem(1.25)} color={theme.iconTappable} />
+      <FontAwesome5
+        name="chevron-down"
+        size={theme.rem(1.25)}
+        color={theme.iconTappable}
+      />
     </TouchableOpacity>
   )
 }

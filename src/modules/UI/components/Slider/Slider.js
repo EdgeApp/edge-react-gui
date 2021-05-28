@@ -3,10 +3,22 @@
 import * as React from 'react'
 import { ActivityIndicator, Image, StyleSheet, View } from 'react-native'
 import { PanGestureHandler } from 'react-native-gesture-handler'
-import Animated, { Easing, runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  Easing,
+  runOnJS,
+  useAnimatedGestureHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated'
 
 import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../../../../components/services/ThemeContext.js'
 import { EdgeText } from '../../../../components/themed/EdgeText'
 import s from '../../../../locales/strings.js'
 import { useEffect, useState } from '../../../../util/hooks.js'
@@ -53,7 +65,9 @@ export const SliderComponent = (props: Props) => {
   const upperBound = width - theme.confirmationSliderThumbWidth
   const widthStyle = { width }
   const sliderDisabled = disabled || showSpinner
-  const sliderText = !sliderDisabled ? s.strings.send_confirmation_slide_to_confirm : disabledText || s.strings.select_exchange_amount_short
+  const sliderText = !sliderDisabled
+    ? s.strings.send_confirmation_slide_to_confirm
+    : disabledText || s.strings.select_exchange_amount_short
 
   const translateX = useSharedValue(upperBound)
   const isSliding = useSharedValue(false)
@@ -79,7 +93,11 @@ export const SliderComponent = (props: Props) => {
     onActive: (event, ctx) => {
       if (!sliderDisabled) {
         isSliding.value = true
-        translateX.value = clamp(event.translationX + ctx.offsetX, 0, upperBound)
+        translateX.value = clamp(
+          event.translationX + ctx.offsetX,
+          0,
+          upperBound
+        )
       }
     },
     onEnd: () => {
@@ -116,18 +134,41 @@ export const SliderComponent = (props: Props) => {
 
   return (
     <View style={[parentStyle, styles.sliderContainer]}>
-      <View style={[styles.slider, sliderDisabled ? styles.disabledSlider : null, widthStyle]}>
+      <View
+        style={[
+          styles.slider,
+          sliderDisabled ? styles.disabledSlider : null,
+          widthStyle
+        ]}
+      >
         <Animated.View style={[styles.progress, progressStyle]} />
 
         <PanGestureHandler onGestureEvent={onGestureEvent}>
-          <Animated.View style={[styles.thumb, sliderDisabled ? styles.disabledThumb : null, scrollTranslationStyle]}>
+          <Animated.View
+            style={[
+              styles.thumb,
+              sliderDisabled ? styles.disabledThumb : null,
+              scrollTranslationStyle
+            ]}
+          >
             <Image source={leftArrowImg} />
           </Animated.View>
         </PanGestureHandler>
         {showSpinner ? (
-          <ActivityIndicator color={theme.iconTappable} style={styles.activityIndicator} />
+          <ActivityIndicator
+            color={theme.iconTappable}
+            style={styles.activityIndicator}
+          />
         ) : (
-          <EdgeText style={sliderDisabled ? [styles.textOverlay, styles.textOverlayDisabled] : styles.textOverlay}>{sliderText}</EdgeText>
+          <EdgeText
+            style={
+              sliderDisabled
+                ? [styles.textOverlay, styles.textOverlayDisabled]
+                : styles.textOverlay
+            }
+          >
+            {sliderText}
+          </EdgeText>
         )}
       </View>
     </View>

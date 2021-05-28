@@ -44,7 +44,14 @@ class FioNameConfirm extends React.PureComponent<Props> {
   }
 
   saveFioName = async () => {
-    const { isConnected, fioName, paymentWallet, fioPlugin, ownerPublicKey, fee } = this.props
+    const {
+      isConnected,
+      fioName,
+      paymentWallet,
+      fioPlugin,
+      ownerPublicKey,
+      fee
+    } = this.props
     if (!isConnected) {
       throw new Error(s.strings.fio_network_alert_text)
     }
@@ -63,9 +70,19 @@ class FioNameConfirm extends React.PureComponent<Props> {
           true
         )
         if (response.error) {
-          if (response.errorCode && response.errorCode === ONE_FREE_ADDRESS_PER_DOMAIN_ERROR && response.code === 400) {
-            const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.fallbackRef)
-            const domainExists = publicDomains.find(domain => domain.domain === fioName.split(Constants.FIO_ADDRESS_DELIMITER)[1])
+          if (
+            response.errorCode &&
+            response.errorCode === ONE_FREE_ADDRESS_PER_DOMAIN_ERROR &&
+            response.code === 400
+          ) {
+            const publicDomains = await fioPlugin.otherMethods.getDomains(
+              fioPlugin.currencyInfo.defaultSettings.fallbackRef
+            )
+            const domainExists = publicDomains.find(
+              domain =>
+                domain.domain ===
+                fioName.split(Constants.FIO_ADDRESS_DELIMITER)[1]
+            )
             if (domainExists && !domainExists.free) {
               await Airship.show(bridge => (
                 <ButtonsModal
@@ -112,15 +129,32 @@ class FioNameConfirm extends React.PureComponent<Props> {
     } else {
       try {
         if (this.isFioAddress()) {
-          const { expiration, feeCollected } = await paymentWallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioName, ownerPublicKey })
-          window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ fioName, expiration, feeCollected }))
+          const { expiration, feeCollected } =
+            await paymentWallet.otherMethods.fioAction('registerFioAddress', {
+              fioAddress: fioName,
+              ownerPublicKey
+            })
+          window.requestAnimationFrame(() =>
+            Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({
+              fioName,
+              expiration,
+              feeCollected
+            })
+          )
         } else {
-          const { expiration, feeCollected } = await paymentWallet.otherMethods.fioAction('registerFioDomain', {
-            fio_domain: fioName,
-            max_fee: fee,
-            owner_fio_public_key: ownerPublicKey
-          })
-          window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ fioName, expiration, feeCollected }))
+          const { expiration, feeCollected } =
+            await paymentWallet.otherMethods.fioAction('registerFioDomain', {
+              fio_domain: fioName,
+              max_fee: fee,
+              owner_fio_public_key: ownerPublicKey
+            })
+          window.requestAnimationFrame(() =>
+            Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({
+              fioName,
+              expiration,
+              feeCollected
+            })
+          )
         }
       } catch (e) {
         showError(s.strings.fio_register_address_err_msg)
@@ -135,13 +169,32 @@ class FioNameConfirm extends React.PureComponent<Props> {
     return (
       <SceneWrapper background="theme">
         <View style={styles.scene}>
-          <SceneHeader title={this.isFioAddress() ? s.strings.title_fio_address_confirmation : s.strings.title_register_fio_domain} underline />
+          <SceneHeader
+            title={
+              this.isFioAddress()
+                ? s.strings.title_fio_address_confirmation
+                : s.strings.title_register_fio_domain
+            }
+            underline
+          />
           <Tile
             type="static"
-            title={this.isFioAddress() ? s.strings.fio_address_confirm_screen_label : s.strings.fio_domain_label}
-            body={this.isFioAddress() ? fioName : `${Constants.FIO_ADDRESS_DELIMITER}${fioName}`}
+            title={
+              this.isFioAddress()
+                ? s.strings.fio_address_confirm_screen_label
+                : s.strings.fio_domain_label
+            }
+            body={
+              this.isFioAddress()
+                ? fioName
+                : `${Constants.FIO_ADDRESS_DELIMITER}${fioName}`
+            }
           />
-          <FioActionSubmit onSubmit={this.saveFioName} getOperationFee={this.getFee} fioWallet={paymentWallet} />
+          <FioActionSubmit
+            onSubmit={this.saveFioName}
+            getOperationFee={this.getFee}
+            fioWallet={paymentWallet}
+          />
         </View>
       </SceneWrapper>
     )
@@ -159,7 +212,9 @@ const getStyles = cacheStyles(() => ({
 
 const FioNameConfirmScene = connect((state: RootState) => {
   const { account } = state.core
-  const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
+  const fioPlugin = account.currencyConfig
+    ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+    : null
 
   return {
     fioPlugin,

@@ -52,7 +52,9 @@ export default class ControlPanel extends React.Component<Props> {
       secondaryToPrimaryRatio
     } = this.props
 
-    const secondaryExchangeDenomination = secondaryDisplayCurrencyCode ? getDenomFromIsoCode(secondaryDisplayCurrencyCode) : ''
+    const secondaryExchangeDenomination = secondaryDisplayCurrencyCode
+      ? getDenomFromIsoCode(secondaryDisplayCurrencyCode)
+      : ''
 
     const primaryCurrencyInfo = {
       displayCurrencyCode: primaryDisplayCurrencyCode,
@@ -62,31 +64,51 @@ export default class ControlPanel extends React.Component<Props> {
     }
     const secondaryCurrencyInfo = {
       displayCurrencyCode: secondaryDisplayCurrencyCode,
-      displayDenomination: secondaryExchangeDenomination || emptyGuiDenomination,
-      exchangeDenomination: secondaryExchangeDenomination || emptyGuiDenomination,
+      displayDenomination:
+        secondaryExchangeDenomination || emptyGuiDenomination,
+      exchangeDenomination:
+        secondaryExchangeDenomination || emptyGuiDenomination,
       exchangeCurrencyCode: secondaryDisplayCurrencyCode
     }
 
-    const arrowIcon = this.props.usersView ? 'keyboard-arrow-up' : 'keyboard-arrow-down'
+    const arrowIcon = this.props.usersView
+      ? 'keyboard-arrow-up'
+      : 'keyboard-arrow-down'
     const currencyLogoIcon = { uri: currencyLogo }
 
     return (
       <SceneWrapper hasHeader={false} hasTabs={false}>
         <View style={styles.header}>
-          {!!currencyLogo && <Image style={styles.iconImage} source={currencyLogoIcon} />}
+          {!!currencyLogo && (
+            <Image style={styles.iconImage} source={currencyLogoIcon} />
+          )}
           <View style={styles.exchangeContainer}>
             {exchangeRate ? (
-              <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
+              <ExchangeRate
+                primaryInfo={primaryCurrencyInfo}
+                secondaryInfo={secondaryCurrencyInfo}
+                secondaryDisplayAmount={secondaryToPrimaryRatio}
+              />
             ) : (
-              <FormattedText style={styles.exchangeRateText}>{s.strings.exchange_rate_loading_singular}</FormattedText>
+              <FormattedText style={styles.exchangeRateText}>
+                {s.strings.exchange_rate_loading_singular}
+              </FormattedText>
             )}
           </View>
         </View>
 
-        <Button onPress={this.toggleUserList} style={styles.toggleButton} underlayColor={styles.underlay.color}>
+        <Button
+          onPress={this.toggleUserList}
+          style={styles.toggleButton}
+          underlayColor={styles.underlay.color}
+        >
           <Button.Row>
             <Button.Left>
-              <Image style={styles.iconImage} resizeMode="contain" source={accountIcon} />
+              <Image
+                style={styles.iconImage}
+                resizeMode="contain"
+                source={accountIcon}
+              />
             </Button.Left>
 
             <Button.Center>
@@ -106,6 +128,8 @@ export default class ControlPanel extends React.Component<Props> {
   }
 
   toggleUserList = () => {
-    return this.props.usersView ? this.props.closeSelectUser() : this.props.openSelectUser()
+    return this.props.usersView
+      ? this.props.closeSelectUser()
+      : this.props.openSelectUser()
   }
 }

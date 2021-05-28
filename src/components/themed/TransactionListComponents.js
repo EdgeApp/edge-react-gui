@@ -7,8 +7,8 @@ import { connect } from 'react-redux'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-import { EdgeText } from '../themed/EdgeText.js'
-import { TransactionListTop } from '../themed/TransactionListTop.js'
+import { EdgeText } from './EdgeText.js'
+import { TransactionListTop } from './TransactionListTop.js'
 
 type TopProps = {
   walletId: string,
@@ -52,12 +52,19 @@ export function SectionHeader(props: { title?: string }) {
   )
 }
 
-export function SectionHeaderCentered(props: { title?: string, loading: boolean }) {
+export function SectionHeaderCentered(props: {
+  title?: string,
+  loading: boolean
+}) {
   const theme = useTheme()
   const styles = getStyles(theme)
   return (
     <Gradient style={styles.headerLoaderContainer}>
-      {props.loading ? <ActivityIndicator color={theme.icon} size="large" /> : <EdgeText style={styles.headerLoaderText}>{props.title || ''}</EdgeText>}
+      {props.loading ? (
+        <ActivityIndicator color={theme.icon} size="large" />
+      ) : (
+        <EdgeText style={styles.headerLoaderText}>{props.title || ''}</EdgeText>
+      )}
     </Gradient>
   )
 }
@@ -89,6 +96,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const Top = connect((state: RootState, ownProps: { walletId: string }): { loading: boolean } => ({
+export const Top = connect((state: RootState, ownProps: { walletId: string }): {
+  loading: boolean
+} => ({
   loading: !state.ui.wallets.byId[ownProps.walletId]
 }))(TopComponent)

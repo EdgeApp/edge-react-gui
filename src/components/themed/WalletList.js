@@ -12,9 +12,24 @@ import s from '../../locales/strings'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import { calculateWalletFiatBalanceUsingDefaultIsoFiat } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import type { CreateTokenType, CreateWalletType, CustomTokenInfo, FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
-import { getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
-import { type FilterDetailsType, alphabeticalSort, checkCurrencyCodes, checkFilterWallet } from '../../util/utils'
+import type {
+  CreateTokenType,
+  CreateWalletType,
+  CustomTokenInfo,
+  FlatListItem,
+  GuiWallet,
+  MostRecentWallet
+} from '../../types/types.js'
+import {
+  getCreateWalletTypes,
+  getCurrencyInfos
+} from '../../util/CurrencyInfoHelpers.js'
+import {
+  type FilterDetailsType,
+  alphabeticalSort,
+  checkCurrencyCodes,
+  checkFilterWallet
+} from '../../util/utils'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { type SortOption } from '../modals/WalletListSortModal.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -82,13 +97,24 @@ class WalletListComponent extends React.PureComponent<Props> {
     const getFiatBalance = (wallet: GuiWallet, fullCurrencyCode: string) => {
       const { settings, exchangeRates } = this.props
       const currencyCode = getSortOptionsCurrencyCode(fullCurrencyCode)
-      return calculateWalletFiatBalanceUsingDefaultIsoFiat(wallet, currencyCode, settings, exchangeRates)
+      return calculateWalletFiatBalanceUsingDefaultIsoFiat(
+        wallet,
+        currencyCode,
+        settings,
+        exchangeRates
+      )
     }
 
     if (this.props.walletsSort === 'name') {
       const { wallets } = this.props
       walletList.sort((itemA, itemB) => {
-        if (itemA.id == null || itemB.id == null || wallets[itemA.id] === undefined || wallets[itemB.id] === undefined) return 0
+        if (
+          itemA.id == null ||
+          itemB.id == null ||
+          wallets[itemA.id] === undefined ||
+          wallets[itemB.id] === undefined
+        )
+          return 0
         return alphabeticalSort(wallets[itemA.id].name, wallets[itemB.id].name)
       })
     }
@@ -96,16 +122,31 @@ class WalletListComponent extends React.PureComponent<Props> {
     if (this.props.walletsSort === 'currencyCode') {
       walletList.sort((itemA, itemB) => {
         if (itemA.id == null || itemB.id == null) return 0
-        return alphabeticalSort(getSortOptionsCurrencyCode(itemA.fullCurrencyCode || ''), getSortOptionsCurrencyCode(itemB.fullCurrencyCode || ''))
+        return alphabeticalSort(
+          getSortOptionsCurrencyCode(itemA.fullCurrencyCode || ''),
+          getSortOptionsCurrencyCode(itemB.fullCurrencyCode || '')
+        )
       })
     }
 
     if (this.props.walletsSort === 'currencyName') {
       const { wallets } = this.props
       walletList.sort((itemA, itemB) => {
-        if (itemA.id == null || itemB.id == null || wallets[itemA.id] === undefined || wallets[itemB.id] === undefined) return 0
-        const currencyNameA = wallets[itemA.id || ''].currencyNames[getSortOptionsCurrencyCode(itemA.fullCurrencyCode || '')]
-        const currencyNameB = wallets[itemB.id || ''].currencyNames[getSortOptionsCurrencyCode(itemB.fullCurrencyCode || '')]
+        if (
+          itemA.id == null ||
+          itemB.id == null ||
+          wallets[itemA.id] === undefined ||
+          wallets[itemB.id] === undefined
+        )
+          return 0
+        const currencyNameA =
+          wallets[itemA.id || ''].currencyNames[
+            getSortOptionsCurrencyCode(itemA.fullCurrencyCode || '')
+          ]
+        const currencyNameB =
+          wallets[itemB.id || ''].currencyNames[
+            getSortOptionsCurrencyCode(itemB.fullCurrencyCode || '')
+          ]
         return alphabeticalSort(currencyNameA, currencyNameB)
       })
     }
@@ -113,38 +154,88 @@ class WalletListComponent extends React.PureComponent<Props> {
     if (this.props.walletsSort === 'highest') {
       const { wallets } = this.props
       walletList.sort((itemA, itemB) => {
-        if (itemA.id == null || itemB.id == null || wallets[itemA.id] === undefined || wallets[itemB.id] === undefined) return 0
-        return getFiatBalance(wallets[itemB.id ?? ''], itemB.fullCurrencyCode || '') - getFiatBalance(wallets[itemA.id ?? ''], itemA.fullCurrencyCode || '')
+        if (
+          itemA.id == null ||
+          itemB.id == null ||
+          wallets[itemA.id] === undefined ||
+          wallets[itemB.id] === undefined
+        )
+          return 0
+        return (
+          getFiatBalance(
+            wallets[itemB.id ?? ''],
+            itemB.fullCurrencyCode || ''
+          ) -
+          getFiatBalance(wallets[itemA.id ?? ''], itemA.fullCurrencyCode || '')
+        )
       })
     }
 
     if (this.props.walletsSort === 'lowest') {
       const { wallets } = this.props
       walletList.sort((itemA, itemB) => {
-        if (itemA.id == null || itemB.id == null || wallets[itemA.id] === undefined || wallets[itemB.id] === undefined) return 0
-        return getFiatBalance(wallets[itemA.id ?? ''], itemA.fullCurrencyCode || '') - getFiatBalance(wallets[itemB.id ?? ''], itemB.fullCurrencyCode || '')
+        if (
+          itemA.id == null ||
+          itemB.id == null ||
+          wallets[itemA.id] === undefined ||
+          wallets[itemB.id] === undefined
+        )
+          return 0
+        return (
+          getFiatBalance(
+            wallets[itemA.id ?? ''],
+            itemA.fullCurrencyCode || ''
+          ) -
+          getFiatBalance(wallets[itemB.id ?? ''], itemB.fullCurrencyCode || '')
+        )
       })
     }
     return walletList
   }
 
-  checkFromExistingWallets(walletList: WalletListItem[], currencyCode: string): boolean {
-    return !!walletList.find((item: WalletListItem) => (item.fullCurrencyCode ? checkCurrencyCodes(item.fullCurrencyCode, currencyCode) : false))
+  checkFromExistingWallets(
+    walletList: WalletListItem[],
+    currencyCode: string
+  ): boolean {
+    return !!walletList.find((item: WalletListItem) =>
+      item.fullCurrencyCode
+        ? checkCurrencyCodes(item.fullCurrencyCode, currencyCode)
+        : false
+    )
   }
 
   checkFilterWallet(details: FilterDetailsType): boolean {
-    const { allowedCurrencyCodes, excludeCurrencyCodes, searchText } = this.props
-    return checkFilterWallet(details, searchText, allowedCurrencyCodes, excludeCurrencyCodes)
+    const { allowedCurrencyCodes, excludeCurrencyCodes, searchText } =
+      this.props
+    return checkFilterWallet(
+      details,
+      searchText,
+      allowedCurrencyCodes,
+      excludeCurrencyCodes
+    )
   }
 
   getWalletList(): WalletListItem[] {
-    const { activeWalletIds, account, excludeWalletIds, isModal, searching, showCreateWallet, wallets } = this.props
+    const {
+      activeWalletIds,
+      account,
+      excludeWalletIds,
+      isModal,
+      searching,
+      showCreateWallet,
+      wallets
+    } = this.props
     const walletList = []
 
     for (const walletId of activeWalletIds) {
       const wallet = wallets[walletId]
 
-      if (excludeWalletIds && excludeWalletIds.length > 0 && excludeWalletIds.find(excludeWalletId => excludeWalletId === walletId)) continue // Skip if excluded
+      if (
+        excludeWalletIds &&
+        excludeWalletIds.length > 0 &&
+        excludeWalletIds.find(excludeWalletId => excludeWalletId === walletId)
+      )
+        continue // Skip if excluded
 
       if (wallet == null && !searching) {
         // Initialize wallets that is still loading
@@ -153,7 +244,9 @@ class WalletListComponent extends React.PureComponent<Props> {
           key: walletId,
           onLongPress: !isModal
             ? () => {
-                Airship.show(bridge => <WalletListMenuModal bridge={bridge} walletId={walletId} />)
+                Airship.show(bridge => (
+                  <WalletListMenuModal bridge={bridge} walletId={walletId} />
+                ))
               }
             : () => {}
         })
@@ -162,22 +255,33 @@ class WalletListComponent extends React.PureComponent<Props> {
         const { customTokens } = this.props
 
         // Initialize wallets
-        if (this.checkFilterWallet({ name: wallet.name, currencyCode: wallet.currencyCode, currencyName: wallet.currencyNames[wallet.currencyCode] })) {
+        if (
+          this.checkFilterWallet({
+            name: wallet.name,
+            currencyCode: wallet.currencyCode,
+            currencyName: wallet.currencyNames[wallet.currencyCode]
+          })
+        ) {
           walletList.push({
             id: walletId,
             fullCurrencyCode: wallet.currencyCode,
             key: `${walletId}-${wallet.currencyCode}`,
             onPress: () =>
-              this.props.onPress != null ? this.props.onPress(walletId, wallet.currencyCode) : this.props.selectWallet(walletId, wallet.currencyCode)
+              this.props.onPress != null
+                ? this.props.onPress(walletId, wallet.currencyCode)
+                : this.props.selectWallet(walletId, wallet.currencyCode)
           })
         }
 
         // Old logic on getting tokens
         const enabledNotHiddenTokens = enabledTokens.filter(token => {
           let isVisible = true // assume we will enable token
-          const tokenIndex = customTokens.findIndex(item => item.currencyCode === token)
+          const tokenIndex = customTokens.findIndex(
+            item => item.currencyCode === token
+          )
           // if token is not supposed to be visible, not point in enabling it
-          if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
+          if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false)
+            isVisible = false
           if (SYNCED_ACCOUNT_DEFAULTS[token] && enabledTokens.includes(token)) {
             // if hardcoded token
             isVisible = true // and enabled then make visible (overwrite customToken isVisible flag)
@@ -188,16 +292,28 @@ class WalletListComponent extends React.PureComponent<Props> {
         // Initialize tokens
         for (const currencyCode of enabledNotHiddenTokens) {
           const fullCurrencyCode = `${wallet.currencyCode}-${currencyCode}`
-          const customTokenInfo = wallet.currencyNames[currencyCode] ? undefined : customTokens.find(token => token.currencyCode === currencyCode)
+          const customTokenInfo = wallet.currencyNames[currencyCode]
+            ? undefined
+            : customTokens.find(token => token.currencyCode === currencyCode)
 
           if (
-            this.checkFilterWallet({ name: wallet.name, currencyCode, currencyName: customTokenInfo?.currencyName ?? wallet.currencyNames[currencyCode] ?? '' })
+            this.checkFilterWallet({
+              name: wallet.name,
+              currencyCode,
+              currencyName:
+                customTokenInfo?.currencyName ??
+                wallet.currencyNames[currencyCode] ??
+                ''
+            })
           ) {
             walletList.push({
               id: walletId,
               fullCurrencyCode: fullCurrencyCode,
               key: `${walletId}-${fullCurrencyCode}`,
-              onPress: () => (this.props.onPress != null ? this.props.onPress(walletId, currencyCode) : this.props.selectWallet(walletId, currencyCode))
+              onPress: () =>
+                this.props.onPress != null
+                  ? this.props.onPress(walletId, currencyCode)
+                  : this.props.selectWallet(walletId, currencyCode)
             })
           }
         }
@@ -212,7 +328,10 @@ class WalletListComponent extends React.PureComponent<Props> {
       for (const createWalletCurrency of createWalletCurrencies) {
         const { currencyCode, currencyName } = createWalletCurrency
 
-        if (this.checkFilterWallet({ name: '', currencyCode, currencyName }) && !this.checkFromExistingWallets(walletList, currencyCode)) {
+        if (
+          this.checkFilterWallet({ name: '', currencyCode, currencyName }) &&
+          !this.checkFromExistingWallets(walletList, currencyCode)
+        ) {
           sortedWalletlist.push({
             id: null,
             fullCurrencyCode: currencyCode,
@@ -228,7 +347,10 @@ class WalletListComponent extends React.PureComponent<Props> {
         for (const metaToken of currencyInfo.metaTokens) {
           const { currencyCode, currencyName } = metaToken
 
-          if (this.checkFilterWallet({ name: '', currencyCode, currencyName }) && !this.checkFromExistingWallets(walletList, currencyCode)) {
+          if (
+            this.checkFilterWallet({ name: '', currencyCode, currencyName }) &&
+            !this.checkFromExistingWallets(walletList, currencyCode)
+          ) {
             const fullCurrencyCode = `${currencyInfo.currencyCode}-${currencyCode}`
             sortedWalletlist.push({
               id: null,
@@ -249,13 +371,22 @@ class WalletListComponent extends React.PureComponent<Props> {
     return sortedWalletlist
   }
 
-  renderRow = (data: FlatListItem<WalletListItem>, rowMap: { [string]: SwipeRow }) => {
+  renderRow = (
+    data: FlatListItem<WalletListItem>,
+    rowMap: { [string]: SwipeRow }
+  ) => {
     const { isModal, onPress, showSlidingTutorial, wallets } = this.props
 
     // Create Wallet/Token
     if (data.item.id == null) {
       const { createWalletType, createTokenType } = data.item
-      return <WalletListCreateRow createWalletType={createWalletType} createTokenType={createTokenType} onPress={onPress ?? selectWallet} />
+      return (
+        <WalletListCreateRow
+          createWalletType={createWalletType}
+          createTokenType={createTokenType}
+          onPress={onPress ?? selectWallet}
+        />
+      )
     }
 
     const walletId = data.item.id.replace(/:.*/, '')
@@ -263,14 +394,31 @@ class WalletListComponent extends React.PureComponent<Props> {
 
     if (guiWallet == null) {
       const { key, onLongPress } = data.item
-      return <WalletListEmptyRow gradient={!isModal} onLongPress={onLongPress} walletId={walletId} swipeRow={rowMap[key]} />
+      return (
+        <WalletListEmptyRow
+          gradient={!isModal}
+          onLongPress={onLongPress}
+          walletId={walletId}
+          swipeRow={rowMap[key]}
+        />
+      )
     } else {
       const isToken = guiWallet.currencyCode !== data.item.fullCurrencyCode
-      const walletCodesArray = data.item.fullCurrencyCode != null ? data.item.fullCurrencyCode.split('-') : []
+      const walletCodesArray =
+        data.item.fullCurrencyCode != null
+          ? data.item.fullCurrencyCode.split('-')
+          : []
       const currencyCode = isToken ? walletCodesArray[1] : walletCodesArray[0]
 
       if (isModal) {
-        return <WalletListCurrencyRow currencyCode={currencyCode} onPress={data.item.onPress} walletId={walletId} paddingRem={0} />
+        return (
+          <WalletListCurrencyRow
+            currencyCode={currencyCode}
+            onPress={data.item.onPress}
+            walletId={walletId}
+            paddingRem={0}
+          />
+        )
       }
 
       return (
@@ -287,12 +435,21 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   renderRefreshControl = () => (
-    <RefreshControl refreshing={false} onRefresh={this.props.activateSearch} tintColor={this.props.theme.searchListRefreshControlIndicator} />
+    <RefreshControl
+      refreshing={false}
+      onRefresh={this.props.activateSearch}
+      tintColor={this.props.theme.searchListRefreshControlIndicator}
+    />
   )
 
-  renderSectionHeader = (section: { section: Section }) => <WalletListSectionHeader title={section.section.title} />
+  renderSectionHeader = (section: { section: Section }) => (
+    <WalletListSectionHeader title={section.section.title} />
+  )
 
-  getMostRecentlyUsedWallets(size: number, walletListItem: WalletListItem[]): WalletListItem[] {
+  getMostRecentlyUsedWallets(
+    size: number,
+    walletListItem: WalletListItem[]
+  ): WalletListItem[] {
     const { mostRecentWallets } = this.props
     const recentWallets = []
 
@@ -300,8 +457,15 @@ class WalletListComponent extends React.PureComponent<Props> {
       const recentUsed = mostRecentWallets[i]
       if (!recentUsed) break
       const wallet = walletListItem.find(item => {
-        const fullCurrencyCodeLowerCase = item.fullCurrencyCode ? item.fullCurrencyCode.toLowerCase() : ''
-        return item.id === recentUsed.id && fullCurrencyCodeLowerCase.includes(recentUsed.currencyCode.toLowerCase())
+        const fullCurrencyCodeLowerCase = item.fullCurrencyCode
+          ? item.fullCurrencyCode.toLowerCase()
+          : ''
+        return (
+          item.id === recentUsed.id &&
+          fullCurrencyCodeLowerCase.includes(
+            recentUsed.currencyCode.toLowerCase()
+          )
+        )
       })
       if (wallet) {
         recentWallets.push(wallet)
@@ -335,13 +499,25 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { footer, header, isModal, mostRecentWallets, searchText, searching } = this.props
+    const {
+      footer,
+      header,
+      isModal,
+      mostRecentWallets,
+      searchText,
+      searching
+    } = this.props
     const walletList = this.getWalletList()
     console.log('render isModal', isModal)
 
     let isSectionList = false
     let walletOnlyList = []
-    if (isModal && !searching && searchText.length === 0 && mostRecentWallets.length > 1) {
+    if (
+      isModal &&
+      !searching &&
+      searchText.length === 0 &&
+      mostRecentWallets.length > 1
+    ) {
       walletOnlyList = walletList.filter(item => item.id)
       if (walletOnlyList.length > 4) {
         isSectionList = true
@@ -355,11 +531,24 @@ class WalletListComponent extends React.PureComponent<Props> {
         ListFooterComponent={footer}
         ListHeaderComponent={header}
         data={!isSectionList ? walletList : undefined}
-        sections={isSectionList ? this.getSection(walletList, walletOnlyList.length) : undefined}
-        renderSectionHeader={isSectionList ? this.renderSectionHeader : undefined}
+        sections={
+          isSectionList
+            ? this.getSection(walletList, walletOnlyList.length)
+            : undefined
+        }
+        renderSectionHeader={
+          isSectionList ? this.renderSectionHeader : undefined
+        }
         renderItem={this.renderRow}
-        refreshControl={!isModal && !isSectionList ? this.renderRefreshControl() : undefined}
-        contentOffset={{ y: !searching && !isModal && !isSectionList ? this.props.theme.rem(4.5) : 0 }}
+        refreshControl={
+          !isModal && !isSectionList ? this.renderRefreshControl() : undefined
+        }
+        contentOffset={{
+          y:
+            !searching && !isModal && !isSectionList
+              ? this.props.theme.rem(4.5)
+              : 0
+        }}
         keyboardShouldPersistTaps="handled"
         useSectionList={isSectionList === true}
         useFlatList={isSectionList === false}

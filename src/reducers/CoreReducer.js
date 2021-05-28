@@ -39,11 +39,15 @@ export const core: Reducer<CoreState, Action> = combineReducers({
   },
 
   context(state: EdgeContext = defaultContext, action: Action): EdgeContext {
-    return action.type === 'CORE/CONTEXT/ADD_CONTEXT' ? action.data.context : state
+    return action.type === 'CORE/CONTEXT/ADD_CONTEXT'
+      ? action.data.context
+      : state
   },
 
   disklet(state: Disklet = defaultDisklet, action: Action): Disklet {
-    return action.type === 'CORE/CONTEXT/ADD_CONTEXT' ? action.data.disklet : state
+    return action.type === 'CORE/CONTEXT/ADD_CONTEXT'
+      ? action.data.disklet
+      : state
   },
 
   otpErrorShown(state: boolean = false, action: Action): boolean {

@@ -1,7 +1,10 @@
 // @flow
 
 import * as React from 'react'
-import { type AirshipBridge, AirshipToast as RawToast } from 'react-native-airship'
+import {
+  type AirshipBridge,
+  AirshipToast as RawToast
+} from 'react-native-airship'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'

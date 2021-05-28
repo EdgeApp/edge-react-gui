@@ -7,8 +7,13 @@ import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts'
 import { ThemedModal } from '../themed/ThemedModal'
 import { type AirshipBridge } from './modalParts'
 
-export function showInfoModal(title: string, message: string | string[]): Promise<mixed> {
-  return Airship.show(bridge => <InfoModal bridge={bridge} title={title} message={message} />)
+export function showInfoModal(
+  title: string,
+  message: string | string[]
+): Promise<mixed> {
+  return Airship.show(bridge => (
+    <InfoModal bridge={bridge} title={title} message={message} />
+  ))
 }
 
 type Props = {

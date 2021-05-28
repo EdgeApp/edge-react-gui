@@ -6,14 +6,21 @@ import { connect } from 'react-redux'
 
 import s from '../../locales/strings'
 import type { RootState } from '../../reducers/RootReducer'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText'
 
 export type Props = {
   message: string
 }
 
-export class CryptoExchangeMessageBoxComponent extends React.PureComponent<Props & ThemeProps> {
+export class CryptoExchangeMessageBoxComponent extends React.PureComponent<
+  Props & ThemeProps
+> {
   render() {
     if (!this.props.message) return null
     const styles = getStyles(this.props.theme)
@@ -62,4 +69,7 @@ const mapStateToProps = (state: RootState): Props => {
   }
 }
 
-export const CryptoExchangeMessageBox = connect(mapStateToProps, null)(withTheme(CryptoExchangeMessageBoxComponent))
+export const CryptoExchangeMessageBox = connect(
+  mapStateToProps,
+  null
+)(withTheme(CryptoExchangeMessageBoxComponent))

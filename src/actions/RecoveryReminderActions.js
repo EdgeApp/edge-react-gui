@@ -34,7 +34,10 @@ export const checkPasswordRecovery =
       if (totalDollars < level) return
 
       // Mark this level as shown:
-      dispatch({ type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL', data: level })
+      dispatch({
+        type: 'UPDATE_SHOW_PASSWORD_RECOVERY_REMINDER_MODAL',
+        data: level
+      })
       setPasswordRecoveryRemindersAsync(account, level).catch(showError)
       showReminderModal(level, account).catch(showError)
       return
@@ -52,7 +55,10 @@ async function showReminderModal(level: number, account: EdgeAccount) {
       message={s.strings.password_recovery_reminder_modal_message}
       buttons={{
         ok: { label: s.strings.password_recovery_reminder_modal_set_up },
-        cancel: { label: s.strings.password_check_check_later, type: 'secondary' }
+        cancel: {
+          label: s.strings.password_check_check_later,
+          type: 'secondary'
+        }
       }}
     />
   ))

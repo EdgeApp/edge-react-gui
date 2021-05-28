@@ -35,7 +35,10 @@ setIntlLocale({ localeIdentifier: firstLocale.languageTag, ...numberFormat })
  * @param options
  * @returns {string}
  */
-export function formatNumberInput(input: string, options?: IntlNumberFormatOptionsType): string {
+export function formatNumberInput(
+  input: string,
+  options?: IntlNumberFormatOptionsType
+): string {
   const _options = {}
 
   if (input.endsWith('.') || input.endsWith(',')) {
@@ -57,7 +60,10 @@ export function formatNumberInput(input: string, options?: IntlNumberFormatOptio
  * @param options
  * @return {string}
  */
-export function formatNumber(number: number | string, options?: IntlNumberFormatOptionsType): string {
+export function formatNumber(
+  number: number | string,
+  options?: IntlNumberFormatOptionsType
+): string {
   let i
   let intPart
   let stringify = String(number)
@@ -70,7 +76,8 @@ export function formatNumber(number: number | string, options?: IntlNumberFormat
     i = len % NUMBER_GROUP_SIZE || NUMBER_GROUP_SIZE
     intPart = integers.substr(0, i)
     for (; i < len; i += NUMBER_GROUP_SIZE) {
-      intPart += locale.groupingSeparator + integers.substr(i, NUMBER_GROUP_SIZE)
+      intPart +=
+        locale.groupingSeparator + integers.substr(i, NUMBER_GROUP_SIZE)
     }
   } else {
     intPart = integers
@@ -94,7 +101,9 @@ export function isValidInput(value: string): boolean {
   }
 
   // if (value === groupingSeparator || value.slice(-1) === groupingSeparator) return false
-  const standardized = value.replace(groupingSeparatorRegExp, '').replace(decimalSeparator, '.')
+  const standardized = value
+    .replace(groupingSeparatorRegExp, '')
+    .replace(decimalSeparator, '.')
 
   return !isNaN(+standardized)
 }
@@ -121,7 +130,11 @@ export function prettifyNumber(input: string): string {
  * @param allowBlank
  * @returns {string}
  */
-export function truncateDecimalsPeriod(input: string, precision?: number, allowBlank?: boolean = false): string {
+export function truncateDecimalsPeriod(
+  input: string,
+  precision?: number,
+  allowBlank?: boolean = false
+): string {
   if (input === '') {
     if (allowBlank) {
       input = ''
@@ -144,7 +157,11 @@ export function truncateDecimalsPeriod(input: string, precision?: number, allowB
  * @param allowBlank
  * @returns {string}
  */
-export function truncateDecimals(input: string, precision?: number, allowBlank?: boolean = false): string {
+export function truncateDecimals(
+  input: string,
+  precision?: number,
+  allowBlank?: boolean = false
+): string {
   const { decimalSeparator } = locale
 
   if (input === '') {
@@ -168,13 +185,18 @@ export function truncateDecimals(input: string, precision?: number, allowBlank?:
  * @param options
  * @returns {string}
  */
-export function formatToNativeNumber(value: string, options?: IntlNumberFormatOptionsType): string {
+export function formatToNativeNumber(
+  value: string,
+  options?: IntlNumberFormatOptionsType
+): string {
   const { decimalSeparator, groupingSeparator } = locale
   if (value.endsWith('.') || value.endsWith(',')) {
     value = value.slice(0, -1) + locale.decimalSeparator
   }
   const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g')
-  const standardized = value.replace(groupingSeparatorRegExp, '').replace(decimalSeparator, '.')
+  const standardized = value
+    .replace(groupingSeparatorRegExp, '')
+    .replace(decimalSeparator, '.')
 
   return standardized
 }
@@ -204,7 +226,9 @@ export function setIntlLocale(l: IntlLocaleType): void {
   if (!l) throw new Error('Please select locale for internationalization')
 
   if (!l.decimalSeparator || !l.groupingSeparator || !l.localeIdentifier) {
-    console.warn('Cannot recognize user locale preferences. Default will be used.')
+    console.warn(
+      'Cannot recognize user locale preferences. Default will be used.'
+    )
     locale = EN_US_LOCALE
   } else {
     locale = l

@@ -27,7 +27,9 @@ type Props = {
 
 export const HIDDEN_MENU_BUTTONS_WIDTH = 6.25
 
-class HiddenMenuButtonsComponent extends React.PureComponent<Props & ThemeProps> {
+class HiddenMenuButtonsComponent extends React.PureComponent<
+  Props & ThemeProps
+> {
   renderButton(button?: ButtonProps, fullWidth?: boolean) {
     if (!button || (!button.label && !button.children)) return null
 
@@ -43,22 +45,46 @@ class HiddenMenuButtonsComponent extends React.PureComponent<Props & ThemeProps>
   }
 
   render() {
-    const { rightSwipable, leftSwipable, left, right, isSwipingRight, isSwipingLeft, swipeDirection = null, theme } = this.props
+    const {
+      rightSwipable,
+      leftSwipable,
+      left,
+      right,
+      isSwipingRight,
+      isSwipingLeft,
+      swipeDirection = null,
+      theme
+    } = this.props
     const styles = getStyles(theme)
-    const leftBgColorStyle = leftSwipable && leftSwipable.color ? `${leftSwipable.color}Bg` : null
-    const rightBgColorStyle = rightSwipable && rightSwipable.color ? `${rightSwipable.color}Bg` : null
+    const leftBgColorStyle =
+      leftSwipable && leftSwipable.color ? `${leftSwipable.color}Bg` : null
+    const rightBgColorStyle =
+      rightSwipable && rightSwipable.color ? `${rightSwipable.color}Bg` : null
 
     return (
       <View style={styles.swipeContainer}>
         {(isSwipingRight || swipeDirection === null) && (
           <View style={styles.swipeRowContainer}>
             {this.renderButton(left)}
-            <View style={[styles.swipeButton, leftBgColorStyle && styles[leftBgColorStyle]]}>{this.renderButton(leftSwipable, !left)}</View>
+            <View
+              style={[
+                styles.swipeButton,
+                leftBgColorStyle && styles[leftBgColorStyle]
+              ]}
+            >
+              {this.renderButton(leftSwipable, !left)}
+            </View>
           </View>
         )}
         {(isSwipingLeft || swipeDirection === null) && (
           <View style={styles.swipeRowContainer}>
-            <View style={[styles.swipeButton, styles.swipeButtonRight, rightBgColorStyle && styles[rightBgColorStyle]]}>
+            <View
+              style={[
+                styles.swipeButton,
+                styles.swipeButtonRight,
+                rightBgColorStyle && styles[rightBgColorStyle]
+              ]}
+            >
               {this.renderButton(rightSwipable, !right)}
             </View>
             {this.renderButton(right)}

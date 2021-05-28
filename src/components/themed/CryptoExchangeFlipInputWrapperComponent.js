@@ -4,7 +4,12 @@ import * as React from 'react'
 import { ActivityIndicator, Image, View } from 'react-native'
 
 import type { GuiCurrencyInfo, GuiWallet } from '../../types/types.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { Card } from './Card'
 import { EdgeText } from './EdgeText'
 import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput'
@@ -32,7 +37,9 @@ export type Props = {
   onBlur?: () => void
 }
 
-class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & ThemeProps> {
+class CryptoExchangeFlipInputWrapperComponent extends React.Component<
+  Props & ThemeProps
+> {
   launchSelector = () => {
     this.props.launchWalletSelector()
   }
@@ -51,12 +58,26 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & Th
   }
 
   render() {
-    const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, overridePrimaryExchangeAmount, theme } = this.props
+    const {
+      onNext,
+      primaryCurrencyInfo,
+      secondaryCurrencyInfo,
+      fiatPerCrypto,
+      forceUpdateGuiCounter,
+      overridePrimaryExchangeAmount,
+      theme
+    } = this.props
     const styles = getStyles(theme)
 
     if (this.props.isThinking) {
       return (
-        <View style={[styles.container, styles.containerNoFee, styles.containerNoWalletSelected]}>
+        <View
+          style={[
+            styles.container,
+            styles.containerNoFee,
+            styles.containerNoWalletSelected
+          ]}
+        >
           <View style={styles.topRow}>
             <ActivityIndicator color={theme.iconTappable} />
           </View>
@@ -64,11 +85,22 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & Th
       )
     }
 
-    if (!this.props.guiWallet || this.props.guiWallet.id === '' || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
-      return <SecondaryButton onPress={this.launchSelector} label={this.props.buttonText} />
+    if (
+      !this.props.guiWallet ||
+      this.props.guiWallet.id === '' ||
+      !primaryCurrencyInfo ||
+      !secondaryCurrencyInfo
+    ) {
+      return (
+        <SecondaryButton
+          onPress={this.launchSelector}
+          label={this.props.buttonText}
+        />
+      )
     }
     const guiWalletName = this.props.guiWallet.name
-    const displayDenomination = this.props.primaryCurrencyInfo.displayCurrencyCode
+    const displayDenomination =
+      this.props.primaryCurrencyInfo.displayCurrencyCode
 
     if (!this.props.isFocused) {
       return (
@@ -165,4 +197,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeFlipInputWrapper = withTheme(CryptoExchangeFlipInputWrapperComponent)
+export const CryptoExchangeFlipInputWrapper = withTheme(
+  CryptoExchangeFlipInputWrapperComponent
+)

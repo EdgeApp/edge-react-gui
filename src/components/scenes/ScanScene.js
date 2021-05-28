@@ -1,7 +1,14 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View
+} from 'react-native'
 import { RNCamera } from 'react-native-camera'
 import RNPermissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
@@ -32,7 +39,11 @@ type StateProps = {
 
 type DispatchProps = {
   qrCodeScanned: (data: string) => void,
-  parseScannedUri: (data: string, customErrorTitle: string, customErrorDescription: string) => Promise<void>,
+  parseScannedUri: (
+    data: string,
+    customErrorTitle: string,
+    customErrorDescription: string
+  ) => Promise<void>,
   toggleEnableTorch: () => void,
   selectFromWalletForExchange: (walletId: string, currencyCode: string) => void,
   data?: string
@@ -44,7 +55,10 @@ export const SWEEP_PRIVATE_KEY = 'sweepPrivateKey'
 
 export class Scan extends React.Component<Props> {
   componentDidUpdate(prevProps: Props) {
-    if (this.props.data !== prevProps.data && Actions.currentScene !== 'DrawerOpen') {
+    if (
+      this.props.data !== prevProps.data &&
+      Actions.currentScene !== 'DrawerOpen'
+    ) {
       Actions.drawerClose()
     }
   }
@@ -56,17 +70,33 @@ export class Scan extends React.Component<Props> {
           {this.renderCameraArea()}
           <View style={styles.overlayButtonAreaWrap}>
             {this.props.data === SWEEP_PRIVATE_KEY && (
-              <TouchableHighlight style={styles.bottomButton} onPress={this._onTogglePrivateKeyModal} underlayColor={THEME.COLORS.SECONDARY}>
+              <TouchableHighlight
+                style={styles.bottomButton}
+                onPress={this._onTogglePrivateKeyModal}
+                underlayColor={THEME.COLORS.SECONDARY}
+              >
                 <View style={styles.bottomButtonTextWrap}>
                   <FontAwesome name="edit" style={styles.privateKeyIcon} />
-                  <T style={styles.bottomButtonText}>{s.strings.scan_private_key_button_title}</T>
+                  <T style={styles.bottomButtonText}>
+                    {s.strings.scan_private_key_button_title}
+                  </T>
                 </View>
               </TouchableHighlight>
             )}
-            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={THEME.COLORS.SECONDARY}>
+            <TouchableHighlight
+              style={styles.bottomButton}
+              onPress={this._onToggleTorch}
+              underlayColor={THEME.COLORS.SECONDARY}
+            >
               <View style={styles.bottomButtonTextWrap}>
-                <IonIcon style={styles.flashIcon} name="ios-flash" size={scale(24)} />
-                <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
+                <IonIcon
+                  style={styles.flashIcon}
+                  name="ios-flash"
+                  size={scale(24)}
+                />
+                <T style={styles.bottomButtonText}>
+                  {s.strings.fragment_send_flash}
+                </T>
               </View>
             </TouchableHighlight>
           </View>
@@ -77,7 +107,11 @@ export class Scan extends React.Component<Props> {
   }
 
   _onPressTransfer = () => {
-    const { selectFromWalletForExchange, currentWalletId, currentCurrencyCode } = this.props
+    const {
+      selectFromWalletForExchange,
+      currentWalletId,
+      currentCurrencyCode
+    } = this.props
     selectFromWalletForExchange(currentWalletId, currentCurrencyCode)
     Actions.exchangeScene()
   }
@@ -88,11 +122,19 @@ export class Scan extends React.Component<Props> {
 
   _onTogglePrivateKeyModal = async () => {
     const uri = await Airship.show(bridge => (
-      <SingleInputModal bridge={bridge} title={s.strings.scan_private_key_modal_title} label={s.strings.scan_private_key_modal_label} />
+      <SingleInputModal
+        bridge={bridge}
+        title={s.strings.scan_private_key_modal_title}
+        label={s.strings.scan_private_key_modal_label}
+      />
     ))
 
     if (uri) {
-      this.props.parseScannedUri(uri, s.strings.scan_private_key_error_title, s.strings.scan_private_key_error_description)
+      this.props.parseScannedUri(
+        uri,
+        s.strings.scan_private_key_error_title,
+        s.strings.scan_private_key_error_description
+      )
     }
   }
 
@@ -112,21 +154,38 @@ export class Scan extends React.Component<Props> {
     if (this.props.cameraPermission === RNPermissions.RESULTS.BLOCKED) {
       return (
         <View style={styles.cameraArea}>
-          <Text style={styles.cameraPermissionDeniedText}>{s.strings.scan_camera_permission_denied}</Text>
-          <TouchableHighlight style={styles.settingsButton} onPress={this.openSettingsTapped}>
-            <Text style={styles.settingsButtonText}>{s.strings.open_settings}</Text>
+          <Text style={styles.cameraPermissionDeniedText}>
+            {s.strings.scan_camera_permission_denied}
+          </Text>
+          <TouchableHighlight
+            style={styles.settingsButton}
+            onPress={this.openSettingsTapped}
+          >
+            <Text style={styles.settingsButtonText}>
+              {s.strings.open_settings}
+            </Text>
           </TouchableHighlight>
         </View>
       )
     }
 
     if (this.props.cameraPermission === RNPermissions.RESULTS.GRANTED) {
-      const flashMode = this.props.torchEnabled ? RNCamera.Constants.FlashMode.torch : RNCamera.Constants.FlashMode.off
+      const flashMode = this.props.torchEnabled
+        ? RNCamera.Constants.FlashMode.torch
+        : RNCamera.Constants.FlashMode.off
 
       return (
-        <RNCamera style={styles.cameraArea} captureAudio={false} flashMode={flashMode} onBarCodeRead={this.onBarCodeRead} type={RNCamera.Constants.Type.back}>
+        <RNCamera
+          style={styles.cameraArea}
+          captureAudio={false}
+          flashMode={flashMode}
+          onBarCodeRead={this.onBarCodeRead}
+          type={RNCamera.Constants.Type.back}
+        >
           <View style={styles.overlayTop}>
-            <T style={styles.overlayTopText}>{s.strings.send_scan_edge_login_or_sweep_private_key}</T>
+            <T style={styles.overlayTopText}>
+              {s.strings.send_scan_edge_login_or_sweep_private_key}
+            </T>
           </View>
         </RNCamera>
       )
@@ -242,7 +301,9 @@ export const ScanScene = connect(
       dispatch(qrCodeScanned(data))
     },
     async parseScannedUri(data, customErrorTitle, customErrorDescription) {
-      await dispatch(parseScannedUri(data, customErrorTitle, customErrorDescription))
+      await dispatch(
+        parseScannedUri(data, customErrorTitle, customErrorDescription)
+      )
     },
     toggleEnableTorch() {
       dispatch({ type: 'TOGGLE_ENABLE_TORCH' })

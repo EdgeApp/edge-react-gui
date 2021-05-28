@@ -5,9 +5,9 @@ import { View } from 'react-native'
 
 import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings.js'
-import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
+import { ButtonsModal } from './ButtonsModal.js'
 import { type AirshipBridge } from './modalParts.js'
 
 export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
@@ -25,9 +25,15 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
     >
       <View style={styles.heanderContainer}>
         <View style={styles.iconCircle}>
-          <Fontello name="edge.addresbook" size={theme.rem(1.5)} color={theme.icon} />
+          <Fontello
+            name="edge.addresbook"
+            size={theme.rem(1.5)}
+            color={theme.icon}
+          />
         </View>
-        <EdgeText style={styles.header}>{s.strings.contacts_permission_modal_title}</EdgeText>
+        <EdgeText style={styles.header}>
+          {s.strings.contacts_permission_modal_title}
+        </EdgeText>
       </View>
       <EdgeText numberOfLines={0} style={styles.message}>
         {s.strings.contacts_permission_modal_text_1}

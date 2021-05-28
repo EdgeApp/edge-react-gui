@@ -39,7 +39,11 @@ class AutoLogoutComponent extends React.Component<Props, State> {
     const newTimestamp = new Date()
     const oldTimeStamp = this.state.timestamp
     const durationInSeconds = this.props.autoLogoutTimeInSeconds || Infinity
-    if (this.foregrounded(nextAppState) && this.props.loginStatus && this.isTimeExpired(durationInSeconds, newTimestamp, oldTimeStamp)) {
+    if (
+      this.foregrounded(nextAppState) &&
+      this.props.loginStatus &&
+      this.isTimeExpired(durationInSeconds, newTimestamp, oldTimeStamp)
+    ) {
       this.props.logout()
     }
 
@@ -58,7 +62,11 @@ class AutoLogoutComponent extends React.Component<Props, State> {
     return this.state.appState === 'background' && nextAppState !== 'active'
   }
 
-  isTimeExpired(durationInSeconds: number, newTimestamp: Date, oldTimeStamp: Date): boolean {
+  isTimeExpired(
+    durationInSeconds: number,
+    newTimestamp: Date,
+    oldTimeStamp: Date
+  ): boolean {
     const differenceInMilliseconds: number = newTimestamp - oldTimeStamp
     const differenceInSeconds: number = differenceInMilliseconds / 1000
     return differenceInSeconds > durationInSeconds

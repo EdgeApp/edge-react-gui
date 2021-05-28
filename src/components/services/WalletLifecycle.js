@@ -1,6 +1,10 @@
 // @flow
 
-import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet } from 'edge-core-js'
+import {
+  type EdgeAccount,
+  type EdgeContext,
+  type EdgeCurrencyWallet
+} from 'edge-core-js'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
@@ -65,7 +69,10 @@ export class WalletLifecycleComponent extends React.Component<Props> {
       this.unsubscribe()
 
       // Only subscribe if we are logged in:
-      if (typeof account.watch === 'function' && typeof context.watch === 'function') {
+      if (
+        typeof account.watch === 'function' &&
+        typeof context.watch === 'function'
+      ) {
         this.cleanups = [
           account.watch('activeWalletIds', this.handleChange),
           account.watch('currencyWallets', this.handleChange),
@@ -83,7 +90,11 @@ export class WalletLifecycleComponent extends React.Component<Props> {
     // If we have become paused, shut down all wallets:
     if (paused && !this.paused) {
       this.cancelBoot()
-      Promise.all(Object.keys(currencyWallets).map(walletId => currencyWallets[walletId].changePaused(true))).catch(showError)
+      Promise.all(
+        Object.keys(currencyWallets).map(walletId =>
+          currencyWallets[walletId].changePaused(true)
+        )
+      ).catch(showError)
     }
     this.paused = paused
 
@@ -112,7 +123,8 @@ export class WalletLifecycleComponent extends React.Component<Props> {
       const wallet = currencyWallets[walletId]
       if (wallet == null || guiWallets[walletId] == null) continue
       if (!wallet.paused) continue
-      if (this.booting.find(boot => boot.walletId === walletId) != null) continue
+      if (this.booting.find(boot => boot.walletId === walletId) != null)
+        continue
 
       this.booting.push(bootWallet(wallet, this.handleChange))
     }
@@ -141,7 +153,10 @@ export class WalletLifecycleComponent extends React.Component<Props> {
  * Returns an object that can be used to monitor the status
  * or cancel the callback.
  */
-function bootWallet(wallet: EdgeCurrencyWallet, onBoot: () => void): WalletBoot {
+function bootWallet(
+  wallet: EdgeCurrencyWallet,
+  onBoot: () => void
+): WalletBoot {
   let cleanup: void | (() => void)
   let timeoutId: void | TimeoutID
 

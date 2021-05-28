@@ -7,11 +7,19 @@ import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { Fontello } from '../../assets/vector/index.js'
 import * as Constants from '../../constants/indexConstants'
-import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
+import {
+  getSpecialCurrencyInfo,
+  WALLET_LIST_OPTIONS_ICON
+} from '../../constants/indexConstants.js'
 import type { GuiWallet } from '../../types/types.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { HiddenMenuButtons } from './HiddenMenuButtons'
 import { WalletListCurrencyRow } from './WalletListCurrencyRow.js'
@@ -35,7 +43,10 @@ type State = {
   leftRowOpened: boolean
 }
 
-class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps, State> {
+class WalletListSwipeRowComponent extends React.PureComponent<
+  Props & ThemeProps,
+  State
+> {
   constructor(props) {
     super(props)
     this.state = {
@@ -72,8 +83,12 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
     if (!isToken) {
       // if it's EOS then we need to see if activated, if not then it will get routed somewhere else
       // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
-      const { isAccountActivationRequired } = getSpecialCurrencyInfo(currencyCode)
-      if (!isAccountActivationRequired || (isAccountActivationRequired && publicAddress)) {
+      const { isAccountActivationRequired } =
+        getSpecialCurrencyInfo(currencyCode)
+      if (
+        !isAccountActivationRequired ||
+        (isAccountActivationRequired && publicAddress)
+      ) {
         Actions.transactionList({ params: 'walletList' })
       }
     } else {
@@ -85,7 +100,9 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
     const { currencyCode, guiWallet, isToken } = this.props
     let symbolImage
     if (isToken) {
-      const meta = guiWallet.metaTokens.find(token => token.currencyCode === currencyCode)
+      const meta = guiWallet.metaTokens.find(
+        token => token.currencyCode === currencyCode
+      )
       symbolImage = meta ? meta.symbolImage : undefined
     } else {
       symbolImage = guiWallet.symbolImageDarkMono
@@ -109,7 +126,11 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
     const walletId = guiWallet.id
     this.closeRow()
     this.props.selectWallet(walletId, currencyCode)
-    Actions.jump(key, { selectedWalletId: walletId, selectedCurrencyCode: currencyCode, isCameraOpen: true })
+    Actions.jump(key, {
+      selectedWalletId: walletId,
+      selectedCurrencyCode: currencyCode,
+      isCameraOpen: true
+    })
   }
 
   handleOpenRequest = () => {
@@ -121,7 +142,10 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
   }
 
   handleSwipeValueChange = ({ value }) => {
-    if ((value < WIDTH_DIMENSION_SHOW && value >= 0) || (value > -WIDTH_DIMENSION_SHOW && value <= 0)) {
+    if (
+      (value < WIDTH_DIMENSION_SHOW && value >= 0) ||
+      (value > -WIDTH_DIMENSION_SHOW && value <= 0)
+    ) {
       this.setState({ swipeDirection: null })
     } else if (value > WIDTH_DIMENSION_HIDE) {
       this.setState({ swipeDirection: 'right' })
@@ -158,7 +182,10 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
           left={{
             children: (
               <View style={styles.swipeOptionsContainer}>
-                <EdgeText style={styles.swipeOptionsIcon} adjustsFontSizeToFit={false}>
+                <EdgeText
+                  style={styles.swipeOptionsIcon}
+                  adjustsFontSizeToFit={false}
+                >
                   {WALLET_LIST_OPTIONS_ICON}
                 </EdgeText>
               </View>
@@ -167,19 +194,34 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
             onPress: this.handleOpenWalletListMenuModal
           }}
           leftSwipable={{
-            children: <Fontello name="request" color={theme.icon} size={theme.rem(isSwipingRight ? 1.5 : 1)} />,
+            children: (
+              <Fontello
+                name="request"
+                color={theme.icon}
+                size={theme.rem(isSwipingRight ? 1.5 : 1)}
+              />
+            ),
             color: 'success',
             onPress: this.handleOpenRequest
           }}
           rightSwipable={{
-            children: <Fontello name="send" color={theme.icon} size={theme.rem(isSwipingLeft ? 1.5 : 1)} />,
+            children: (
+              <Fontello
+                name="send"
+                color={theme.icon}
+                size={theme.rem(isSwipingLeft ? 1.5 : 1)}
+              />
+            ),
             color: 'danger',
             onPress: this.handleOpenSend
           }}
           right={{
             children: (
               <View style={styles.swipeOptionsContainer}>
-                <EdgeText style={styles.swipeOptionsIcon} adjustsFontSizeToFit={false}>
+                <EdgeText
+                  style={styles.swipeOptionsIcon}
+                  adjustsFontSizeToFit={false}
+                >
                   {WALLET_LIST_OPTIONS_ICON}
                 </EdgeText>
               </View>
@@ -220,7 +262,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const WalletListSwipeRowInner = withTheme(WalletListSwipeRowComponent)
 // $FlowFixMe - forwardRef is not recognize by flow?
-const WalletListSwipeRow = React.forwardRef((props, ref) => <WalletListSwipeRowInner {...props} swipeRef={ref} />)
+const WalletListSwipeRow = React.forwardRef((props, ref) => (
+  <WalletListSwipeRowInner {...props} swipeRef={ref} />
+))
 // Lint error about component not having a displayName
 WalletListSwipeRow.displayName = 'WalletListRow'
 export { WalletListSwipeRow }

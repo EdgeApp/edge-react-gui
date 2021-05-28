@@ -26,7 +26,9 @@ export const errorModal = (title: string, error: Error) =>
           </InteractiveModal.Title>
 
           <InteractiveModal.Body>
-            <InteractiveModal.Description style={{ textAlign: 'center' }}>{error.message}</InteractiveModal.Description>
+            <InteractiveModal.Description style={{ textAlign: 'center' }}>
+              {error.message}
+            </InteractiveModal.Description>
           </InteractiveModal.Body>
 
           <InteractiveModal.Footer>

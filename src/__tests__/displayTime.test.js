@@ -5,16 +5,22 @@ import { displayToSeconds, secondsToDisplay } from '../util/displayTime.js'
 
 describe('displayToSeconds', function () {
   test('2.1 seconds', function () {
-    expect(displayToSeconds({ measurement: 'seconds', value: 2.1 })).toEqual(2.1)
+    expect(displayToSeconds({ measurement: 'seconds', value: 2.1 })).toEqual(
+      2.1
+    )
   })
   test('2.1 minutes', function () {
-    expect(displayToSeconds({ measurement: 'minutes', value: 2.1 })).toEqual(126)
+    expect(displayToSeconds({ measurement: 'minutes', value: 2.1 })).toEqual(
+      126
+    )
   })
   test('2.1 hours', function () {
     expect(displayToSeconds({ measurement: 'hours', value: 2.1 })).toEqual(7560)
   })
   test('2.1 days', function () {
-    expect(displayToSeconds({ measurement: 'days', value: 2.1 })).toEqual(181440)
+    expect(displayToSeconds({ measurement: 'days', value: 2.1 })).toEqual(
+      181440
+    )
   })
 })
 

@@ -6,7 +6,8 @@ const strings = {
   bitcoin_received: '%1$s Received',
   dialog_title: 'Set Auto Logoff time',
   share_subject: 'Hey, I think you should try %s',
-  share_message: 'You can buy, store, and trade dozens of cryptocurrencies all in one app.',
+  share_message:
+    'You can buy, store, and trade dozens of cryptocurrencies all in one app.',
 
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
   drawer_exchange: 'Exchange',
@@ -30,7 +31,8 @@ const strings = {
   error_token_exists: 'A currency named %s already exists',
 
   // Warning messages:
-  warning_low_or_custom_fee: 'Using a low fee may increase the amount of time it takes for your transaction to confirm.',
+  warning_low_or_custom_fee:
+    'Using a low fee may increase the amount of time it takes for your transaction to confirm.',
   warning_alphanumeric: 'Only letters and numbers can be used',
 
   // Alert component:
@@ -39,41 +41,54 @@ const strings = {
 
   azteco_success: `You've redeemed an Azteco bitcoin card. Funds should arrive shortly.`,
   azteco_invalid_code: 'Invalid Azteco code.',
-  azteco_service_unavailable: 'Error contacting Azteco server. Please try again later.',
+  azteco_service_unavailable:
+    'Error contacting Azteco server. Please try again later.',
   azteco_btc_only: 'Please choose a BTC wallet and scan again.',
   dropdown_exchange_max_amount: 'Exchange Max Amount',
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
-  max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
-  edge_description: 'This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.',
+  max_spend_unavailable_modal_message:
+    'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
+  edge_description:
+    'This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.',
   edge_description_warning:
     'WARNING: The "%1$s" application is requesting full access to your account and all wallets. \n\nOnly accept this login request if you trust this application and where it was downloaded from.',
   exchange_failed: 'Exchange Failed',
   exchange_succeeded: 'Exchange Succeeded',
   exchange_congratulations: 'Congratulations!',
-  exchange_congratulations_msg: 'Your exchange has been successfully completed!',
-  exchange_congratulations_msg_info: 'Exchanges may take a few minutes and up to 24 hours to process.',
+  exchange_congratulations_msg:
+    'Your exchange has been successfully completed!',
+  exchange_congratulations_msg_info:
+    'Exchanges may take a few minutes and up to 24 hours to process.',
   no_exchange_amount: 'No Amount Selected',
   select_exchange_amount: 'Please enter an amount to exchange',
   select_exchange_amount_short: 'Enter an Amount',
-  exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes',
+  exchanges_may_take_minutes:
+    'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes',
   fragment_wallets_addwallet_fiat_hint: 'Choose a fiat currency',
-  managetokens_top_instructions: 'Please select which tokens you would like displayed within the wallet:',
-  manage_tokens_duplicate_currency_code: 'A token with that currency code already exists.',
-  addtoken_top_instructions: 'To add a token, please fill out the following form and press "Save" ',
+  managetokens_top_instructions:
+    'Please select which tokens you would like displayed within the wallet:',
+  manage_tokens_duplicate_currency_code:
+    'A token with that currency code already exists.',
+  addtoken_top_instructions:
+    'To add a token, please fill out the following form and press "Save" ',
   accept_button_text: 'Accept',
   addtoken_contract_address_input_text: 'Contract Address',
   addtoken_currency_code_input_text: 'Token Code',
   addtoken_default_error_message: 'Unable to edit token',
-  addtoken_invalid_information: 'Please enter valid token information and try again',
+  addtoken_invalid_information:
+    'Please enter valid token information and try again',
   addtoken_denomination_input_text: 'Number of Decimal Places',
   addtoken_name_input_text: 'Token Name',
   addtoken_add: 'Add Custom',
-  edittoken_top_instructions: 'Fill out token info and tap "Save" to edit token:',
+  edittoken_top_instructions:
+    'Fill out token info and tap "Save" to edit token:',
   edittoken_delete_token: 'Delete Token',
   edittoken_delete_prompt: 'Are you sure you want to delete this token?',
   edittoken_delete_title: 'Unable to Edit Token',
-  edittoken_duplicate_currency_code: 'A token with that token code already exists.',
-  edittoken_invalid_decimal_places: 'Please enter a valid number of decimal places.',
+  edittoken_duplicate_currency_code:
+    'A token with that token code already exists.',
+  edittoken_invalid_decimal_places:
+    'Please enter a valid number of decimal places.',
   edittoken_improper_token_load: 'Unable to load initial data.',
   fragment_create_wallet_create_wallet: 'Create Wallet',
   fragment_create_wallet_select_valid: 'Please select valid data',
@@ -81,7 +96,8 @@ const strings = {
   fragmet_invalid_password: 'Invalid Password',
   fragment_request_copy_title: 'Copy',
   fragment_request_subtitle: 'Request',
-  fragment_request_address_copied: 'Request address successfully copied to clipboard',
+  fragment_request_address_copied:
+    'Request address successfully copied to clipboard',
   fragment_copied: 'Successfully copied to clipboard',
   request_minimum_notification_title: 'Minimum Balance Required',
   request_xrp_minimum_notification_body:
@@ -122,33 +138,47 @@ const strings = {
   fragment_wallets_export_transactions: 'Export Transactions',
   fragment_wallets_header: 'My Wallets',
   fragment_wallets_rename_wallet: 'Rename Wallet',
-  fragment_wallets_resync_wallet_first_confirm_message_mobile: 'Are you sure you want to resync \n',
+  fragment_wallets_resync_wallet_first_confirm_message_mobile:
+    'Are you sure you want to resync \n',
   fragment_wallets_split_wallet_bch_to_bsv:
     'You are about to split this BCH wallet and create a new BSV wallet from your BCH private keys. This requires a BCH transaction to protect your funds from unintentionally being spent on the wrong chain. This will incur a small network transaction fee on the BCH wallet. Please make sure this transaction confirms before making any further BCH transactions. Are you sure you want to split \n',
-  fragment_wallets_split_wallet_first_confirm_message_mobile: 'Are you sure you want to split \n',
-  fragment_wallets_get_seed_wallet_first_confirm_message_mobile: 'Are you sure you want to reveal the private seed for the following wallet?\n',
-  fragment_wallets_get_raw_key_wallet_confirm_message: 'Are you sure you want to reveal the private keys for this wallet?',
-  fragmet_wallets_delete_wallet_first_confirm_message_mobile: 'Are you sure you want to delete ',
-  fragmet_wallets_delete_fio_extra_message_mobile: 'Deleting this FIO wallet will remove access to any FIO addresses you have linked to this wallet.',
+  fragment_wallets_split_wallet_first_confirm_message_mobile:
+    'Are you sure you want to split \n',
+  fragment_wallets_get_seed_wallet_first_confirm_message_mobile:
+    'Are you sure you want to reveal the private seed for the following wallet?\n',
+  fragment_wallets_get_raw_key_wallet_confirm_message:
+    'Are you sure you want to reveal the private keys for this wallet?',
+  fragmet_wallets_delete_wallet_first_confirm_message_mobile:
+    'Are you sure you want to delete ',
+  fragmet_wallets_delete_fio_extra_message_mobile:
+    'Deleting this FIO wallet will remove access to any FIO addresses you have linked to this wallet.',
   wallet_list_add_wallet: 'Add Wallet',
   wallet_list_add_token: 'Add Token',
   wallet_list_add_token_modal_title: 'Ethereum or RSK Wallet Needed',
-  wallet_list_add_token_modal_message: 'Please create an Ethereum or RSK wallet first to hold your tokens',
+  wallet_list_add_token_modal_message:
+    'Please create an Ethereum or RSK wallet first to hold your tokens',
   wallet_list_referral_link_currency_invalid: 'Currency to create is invalid',
-  wallet_list_referral_link_currency_loading: 'Hang tight. Creating wallet necessary for this promotion',
-  wallet_list_referral_link_ask_wallet_creation: 'You need %s wallet for this promotion, do you want to create one?',
-  wallet_list_referral_link_cancelled_wallet_creation: 'User did not approve creating wallet for the promotion',
+  wallet_list_referral_link_currency_loading:
+    'Hang tight. Creating wallet necessary for this promotion',
+  wallet_list_referral_link_ask_wallet_creation:
+    'You need %s wallet for this promotion, do you want to create one?',
+  wallet_list_referral_link_cancelled_wallet_creation:
+    'User did not approve creating wallet for the promotion',
   wallet_list_swipe_tutorial_title: 'Slide wallets to show more options',
   wallet_list_wallet_search: 'Search Wallets',
-  create_wallet_choice_instructions: 'Create a new wallet, or restore an existing wallet using the private seed?',
+  create_wallet_choice_instructions:
+    'Create a new wallet, or restore an existing wallet using the private seed?',
   create_wallet_choice_new_button: 'Create New Wallet',
   create_wallet_import_title: 'Import Wallet',
-  create_wallet_import_instructions: 'Enter your private seed to verify and restore the associated wallet:',
+  create_wallet_import_instructions:
+    'Enter your private seed to verify and restore the associated wallet:',
   create_wallet_import_input_prompt: 'Private Seed',
-  create_wallet_import_input_key_or_seed_instructions: 'Enter the private key or mnemonic seed to import the associated wallet',
+  create_wallet_import_input_key_or_seed_instructions:
+    'Enter the private key or mnemonic seed to import the associated wallet',
   create_wallet_import_input_key_or_seed_prompt: 'Private Key or Mnemonic Seed',
   create_wallet_import_active_key_input_prompt: 'Active Private Key',
-  create_wallet_import_active_key_instructions: 'Enter your active private key to verify and restore the associated wallet:',
+  create_wallet_import_active_key_instructions:
+    'Enter your active private key to verify and restore the associated wallet:',
   create_wallet_import_successful: 'Import Successful!',
   create_wallet_select_valid_crypto: 'Please select a valid wallet type',
   create_wallet_invalid_input: 'Invalid input',
@@ -156,31 +186,43 @@ const strings = {
   create_wallet_choose_crypto: 'Choose a wallet type',
   create_wallet_invalid_name: 'Invalid wallet name',
   create_wallet_enter_valid_name: 'Please enter a valid wallet name',
-  create_wallet_top_instructions: 'Please double-check wallet information and submit:',
+  create_wallet_top_instructions:
+    'Please double-check wallet information and submit:',
   create_wallet_name_label: 'Wallet Name:',
   create_wallet_crypto_type_label: 'Wallet Type:',
   create_wallet_fiat_type_label: 'Wallet Fiat:',
   create_wallet_failed_import_header: 'Import Key Failed',
-  create_wallet_failed_message: 'Wallet creation failed due to timeout. Please check your internet connection and try again later.',
+  create_wallet_failed_message:
+    'Wallet creation failed due to timeout. Please check your internet connection and try again later.',
   create_wallet_create_account: 'Create Account',
   create_wallet_account_activate: 'Activate Account',
   create_wallet_account_handle: 'Account Handle',
   create_wallet_account_select_instructions_with_cost:
     'All new %1$s wallets requires a one time payment to activate the account and name. This payment is required by the %2$s network and not a requirement of %3$s. The current cost is equivalent to %4$s but may fluctuate in the future. Select a wallet to pay from:',
-  create_wallet_account_make_payment: 'You are about to make the following payment to activate your %s account:',
+  create_wallet_account_make_payment:
+    'You are about to make the following payment to activate your %s account:',
   create_wallet_account_select_wallet: 'Select Wallet',
-  create_wallet_account_review_instructions: 'Create a unique account handle, this will also be the name of your %s wallet:',
-  create_wallet_account_requirements_eos: '• Must be exactly 12 characters\n• Must include only lowercase letters a-z or numbers 1-5\n',
-  create_wallet_account_invalid_account_name: 'Invalid account name. Does not fit requirements',
-  create_wallet_account_account_name_unavailable: 'Account name unavailable. Please choose another',
-  create_wallet_account_unknown_error: 'Unknown error checking account name. Please try again later',
-  create_wallet_account_confirm: 'Double-check your wallet and payment info before submitting.',
+  create_wallet_account_review_instructions:
+    'Create a unique account handle, this will also be the name of your %s wallet:',
+  create_wallet_account_requirements_eos:
+    '• Must be exactly 12 characters\n• Must include only lowercase letters a-z or numbers 1-5\n',
+  create_wallet_account_invalid_account_name:
+    'Invalid account name. Does not fit requirements',
+  create_wallet_account_account_name_unavailable:
+    'Account name unavailable. Please choose another',
+  create_wallet_account_unknown_error:
+    'Unknown error checking account name. Please try again later',
+  create_wallet_account_confirm:
+    'Double-check your wallet and payment info before submitting.',
   create_wallet_account_amount_due: 'Amount due:',
   create_wallet_account_error_sending_transaction: 'Error sending transaction',
   create_wallet_account_payment_sent_title: 'Payment Sent',
-  create_wallet_account_payment_sent_message: 'Activation payment sent. Please wait for a confirmation on your transaction before using your new wallet.',
-  create_wallet_account_handle_unavailable_modal_title: 'Account Handle Unavailable',
-  create_wallet_account_handle_unavailable_modal_message: 'Your chosen account handle, %s, is unavailable now. Please use a different one to continue.',
+  create_wallet_account_payment_sent_message:
+    'Activation payment sent. Please wait for a confirmation on your transaction before using your new wallet.',
+  create_wallet_account_handle_unavailable_modal_title:
+    'Account Handle Unavailable',
+  create_wallet_account_handle_unavailable_modal_message:
+    'Your chosen account handle, %s, is unavailable now. Please use a different one to continue.',
   create_wallet_account_metadata_name: '%s Network',
   create_wallet_account_metadata_category: '%s Activation',
   create_wallet_account_metadata_notes:
@@ -220,7 +262,8 @@ const strings = {
   request_review_question_subtitle: 'Please give us a review',
   request_review_answer_no: 'No Thanks',
   request_review_answer_yes: 'Review Now',
-  request_review_android_page_link: 'https://play.google.com/store/apps/details?id=co.edgesecure.app&hl=en_US',
+  request_review_android_page_link:
+    'https://play.google.com/store/apps/details?id=co.edgesecure.app&hl=en_US',
   search_wallets: 'Search Wallets',
   select_wallet: 'Select Wallet',
   select_recv_wallet: 'Select Receiving Wallet',
@@ -229,17 +272,22 @@ const strings = {
   send_confirmation_max_button_title: 'Send Max Amount',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
   send_confirmation_balance: 'Balance:',
-  send_confirmation_eos_error_cpu: 'Insufficient CPU available to send EOS transaction. Please wait 1-3 days for CPU to recharge.',
-  send_confirmation_eos_error_net: 'Insufficient NET available to send EOS transaction. Please wait 1-3 days for NET to recharge.',
-  send_confirmation_eos_error_ram: 'Insufficient RAM available to send EOS transaction. Please see edge.app/eos for details on how to resolve.',
+  send_confirmation_eos_error_cpu:
+    'Insufficient CPU available to send EOS transaction. Please wait 1-3 days for CPU to recharge.',
+  send_confirmation_eos_error_net:
+    'Insufficient NET available to send EOS transaction. Please wait 1-3 days for NET to recharge.',
+  send_confirmation_eos_error_ram:
+    'Insufficient RAM available to send EOS transaction. Please see edge.app/eos for details on how to resolve.',
   send_scan_edge_login_or_sweep_private_key: 'Edge Login or Sweep Private Key',
   send_scan_edge_login_success_title: 'Edge Login Successful',
-  send_scan_edge_login_success_message: 'To continue, please return to the browser or application that requested the Edge Login.',
+  send_scan_edge_login_success_message:
+    'To continue, please return to the browser or application that requested the Edge Login.',
   send_to_title: 'To: %s',
   send_confirmation_to: 'To: %s',
   send_confirmation_address: 'Address: %s',
   send_confirmation_fee_modal_alert_title: 'High Fee Warning',
-  send_confirmation_fee_modal_alert_message_fragment_1: 'You are about to send a transaction with a relatively high fee of ',
+  send_confirmation_fee_modal_alert_message_fragment_1:
+    'You are about to send a transaction with a relatively high fee of ',
   send_confirmation_fee_modal_alert_message_fragment_2:
     '. If you would like to change your fee settings, you can do so by tapping on the three dots in the top-right of this screen.',
   transaction_failure: 'Transaction Failure',
@@ -259,12 +307,15 @@ const strings = {
   settings_button_logout: 'Logout',
   settings_button_pin: 'Change PIN',
   settings_exchange_settings: 'Exchange Settings',
-  settings_exchange_instruction: 'Enable or disable the exchange providers available to you',
+  settings_exchange_instruction:
+    'Enable or disable the exchange providers available to you',
   settings_notifications_switch: 'Enable Price Alerts',
   swap_preferred_header: 'Preferred Exchange',
   swap_preferred_cheapest: 'Pick best price',
-  swap_preferred_instructions: 'When multiple exchanges can fill an order, prefer:',
-  swap_preferred_promo_instructions: 'When multiple exchanges can fill an order, the current promotion always prefers:',
+  swap_preferred_instructions:
+    'When multiple exchanges can fill an order, prefer:',
+  swap_preferred_promo_instructions:
+    'When multiple exchanges can fill an order, the current promotion always prefers:',
   settings_button_send_logs: 'Send Logs',
   settings_button_setup_two_factor: 'Set Up 2-Factor Security',
   settings_button_unlock_settings: 'Tap to Unlock Account Settings',
@@ -291,19 +342,23 @@ const strings = {
   settings_alert_unlock: 'Please unlock your account settings',
   settings_enable_custom_nodes: 'Enable Custom Nodes',
   settings_set_custom_nodes_modal_title: 'Set Custom Nodes',
-  settings_set_custom_nodes_modal_instructions: 'Please enter the custom nodes you wish to use below (one per row):',
+  settings_set_custom_nodes_modal_instructions:
+    'Please enter the custom nodes you wish to use below (one per row):',
   settings_promotion_affiliation_header: 'Affiliation Program',
   settings_promotion_header: 'Promotion Codes',
   settings_promotion_add: 'Add promotion code',
   settings_promotion_adding: 'Adding promotion code %s...',
   settings_promotion_device_normal: 'This application was installed normally.',
   settings_promotion_device_installer: 'This application was installed via %s.',
-  settings_promotion_device_currencies: 'New accounts will have wallets for: %s',
+  settings_promotion_device_currencies:
+    'New accounts will have wallets for: %s',
   settings_promotion_account_normal: 'This account was created normally.',
   settings_promotion_account_installer: 'This account was created via %s.',
   settings_notifications: 'Notifications',
-  settings_currency_notifications_percent_change_hour: '%1$s%% change within 1 hour',
-  settings_currency_notifications_percent_change_hours: '%1$s%% change within %2$s hours',
+  settings_currency_notifications_percent_change_hour:
+    '%1$s%% change within 1 hour',
+  settings_currency_notifications_percent_change_hours:
+    '%1$s%% change within %2$s hours',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_ok_cap: 'OK',
@@ -415,8 +470,10 @@ const strings = {
   title_use_regular_address: 'Use Regular Address',
   no_exchanges_available: 'No Exchanges Enabled',
   check_exchange_settings: 'Please enable them in your Exchange Settings.',
-  amount_above_limit: 'Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions',
-  amount_below_limit: 'Amount is below the min limit of %1$s %2$s. This min limit is subject to change based on market conditions',
+  amount_above_limit:
+    'Amount is above the max limit of %1$s %2$s. This max limit is subject to change based on market conditions',
+  amount_below_limit:
+    'Amount is below the min limit of %1$s %2$s. This min limit is subject to change based on market conditions',
   transaction_details_category_title: 'Category',
   transaction_details_payee: 'Payee',
   transaction_details_payer: 'Payer',
@@ -430,7 +487,8 @@ const strings = {
   transaction_details_view_advanced_data: 'View Advanced Transaction Data',
   transaction_details_tx_id_modal_title: 'Transaction ID',
   transaction_details_show_advanced_block_explorer: 'Show in Block Explorer',
-  transaction_history_permission: 'Would you like to share the entire transaction history of %s with this partner?',
+  transaction_history_permission:
+    'Would you like to share the entire transaction history of %s with this partner?',
   transaction_details_fiat_modal_header: '%s Amount',
   transaction_details_fiat_label: 'Choose an amount',
   transaction_details_error_invalid: 'Invalid Transaction',
@@ -452,7 +510,8 @@ const strings = {
     'This will resend your transaction with its fee doubled to help prioritize it for network confirmation. Please review new fee amount before confirming.',
   transaction_details_accelerate_transaction_old_fee_title: 'Old Fee',
   transaction_details_accelerate_transaction_new_fee_title: 'New Fee',
-  transaction_details_accelerate_transaction_slider_disabled: 'Unable to Accelerate Transaction',
+  transaction_details_accelerate_transaction_slider_disabled:
+    'Unable to Accelerate Transaction',
   transaction_details_exchange_details: 'Exchange Details',
   transaction_details_exchange_service: 'Exchange Service',
   transaction_details_exchange_order_id: 'Order ID',
@@ -475,16 +534,20 @@ const strings = {
   // OTP settings scene:
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
-  otp_description: 'Two factor authentication (2FA) prevents unauthorized access from other devices, even if your username and password are compromised.',
-  otp_description_2: 'If you download Edge on a new device, you can allow or deny the login from your current device, or you can enter the backup code below.',
-  otp_enabled_message: 'If you lose your phone or uninstall the app, it will take 7 days to access your account without the backup code.',
+  otp_description:
+    'Two factor authentication (2FA) prevents unauthorized access from other devices, even if your username and password are compromised.',
+  otp_description_2:
+    'If you download Edge on a new device, you can allow or deny the login from your current device, or you can enter the backup code below.',
+  otp_enabled_message:
+    'If you lose your phone or uninstall the app, it will take 7 days to access your account without the backup code.',
   otp_disable: 'Disable 2FA',
   otp_enable: 'Enable 2FA',
   otp_show_code: 'Show backup code',
   otp_hide_code: 'Hide backup code',
   otp_copied_msg: '2FA code successfully copied to clipboard',
   otp_modal_headline: 'Are you sure you want to disable 2FA?',
-  otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.',
+  otp_modal_body:
+    '2FA is recommended to keep your device secure from unauthorized access from other devices.',
 
   // 2fa reset warning modal:
   title_otp_keep_modal: 'Two-Factor Authentication (2FA)',
@@ -501,7 +564,8 @@ const strings = {
   legacy_address_modal_cancel: 'Cancel',
 
   password_reminder_remember_your_password: 'Remember your password?',
-  password_reminder_you_will_need_your_password: 'You will need your password if your device gets lost or stolen, or if you uninstall the app.',
+  password_reminder_you_will_need_your_password:
+    'You will need your password if your device gets lost or stolen, or if you uninstall the app.',
   password_reminder_enter_password_below: 'Enter it below to make sure:',
   password_reminder_check_password: 'Check Password',
   password_reminder_forgot_password: 'I forgot, change password',
@@ -510,7 +574,8 @@ const strings = {
   password_reminder_invalid: 'Invalid Password',
 
   password_recovery_reminder_modal_title: 'Password Recovery Setup',
-  password_recovery_reminder_modal_message: "You've been accumulating quite a bit of crypto. Would you like to set up your password recovery?",
+  password_recovery_reminder_modal_message:
+    "You've been accumulating quite a bit of crypto. Would you like to set up your password recovery?",
   password_recovery_reminder_modal_set_up: 'Set Up Now',
   password_check_check_later: 'Later',
   password_check_incorrect_password_title: 'Incorrect Password.',
@@ -518,12 +583,15 @@ const strings = {
   password: 'Password',
 
   buy_crypto_modal_title: 'Wallet Empty',
-  buy_crypto_modal_message: 'Your %s wallet is empty. Would you like to buy %s or exchange another crypto into %s?',
-  buy_parent_crypto_modal_message: '%1$s is required to send this transaction. Would you like to buy %1$s or exchange another crypto into %1$s?',
+  buy_crypto_modal_message:
+    'Your %s wallet is empty. Would you like to buy %s or exchange another crypto into %s?',
+  buy_parent_crypto_modal_message:
+    '%1$s is required to send this transaction. Would you like to buy %1$s or exchange another crypto into %1$s?',
   buy_crypto_decline: 'Not at this time',
   buy_crypto_modal_buy_action: 'Buy %s',
   buy_crypto_modal_exchange: 'Exchange',
-  exchange_crypto_modal_message: 'Your %s wallet is empty. Would you like to exchange another crypto into %s?',
+  exchange_crypto_modal_message:
+    'Your %s wallet is empty. Would you like to exchange another crypto into %s?',
   private_key_modal_sweep_from_private_address: 'Sweep Funds From Private Key',
   private_key_modal_sweep_from_private_address_message:
     'This process needs an on-chain transaction from the original wallet to Edge. Mining fees are applied and depend on the network status.',
@@ -533,7 +601,8 @@ const strings = {
   private_key_modal_importing_private_key: 'Importing Private Key',
 
   restore_wallets_modal_title: 'Restore Wallets',
-  restore_wallets_modal_description: 'This will restore all deleted and archived wallets',
+  restore_wallets_modal_description:
+    'This will restore all deleted and archived wallets',
   restore_wallets_modal_confirm: 'Confirm',
   restore_wallets_modal_cancel: 'Cancel',
 
@@ -544,13 +613,16 @@ const strings = {
   unique_identifier_dropdown_option_memo: 'Add Memo',
   unique_identifier_dropdown_option_memo_id: 'Add Memo ID',
   unique_identifier_dropdown_option_destination_tag: 'Add Destination Tag',
-  unique_identifier_modal_description: 'Please enter the %s value to be sent to the recipient of this transaction',
+  unique_identifier_modal_description:
+    'Please enter the %s value to be sent to the recipient of this transaction',
   unique_identifier_modal_confirm: 'Confirm',
   unique_identifier_modal_cancel: 'Cancel',
 
   cannot_delete_last_wallet_modal_title: 'Cannot Delete Wallet',
-  cannot_delete_last_wallet_modal_message_part_1: 'Edge requires at least one wallet in this account.',
-  cannot_delete_last_wallet_modal_message_part_2: 'If you’d like to delete this wallet, you’ll need to add an additional wallet to this account.',
+  cannot_delete_last_wallet_modal_message_part_1:
+    'Edge requires at least one wallet in this account.',
+  cannot_delete_last_wallet_modal_message_part_2:
+    'If you’d like to delete this wallet, you’ll need to add an additional wallet to this account.',
 
   enter_your_password: 'Enter your password',
   spending_limits: 'Spending Limits',
@@ -567,10 +639,12 @@ const strings = {
   exchange_will_be_received: '%1$s %2$s will be received',
   mining_fee: 'Max network fee',
   confirm_to_complete_exchange: 'Confirm to complete your exchange.',
-  scan_camera_permission_denied: 'To scan a QR Code, please enable Camera access in Settings',
+  scan_camera_permission_denied:
+    'To scan a QR Code, please enable Camera access in Settings',
   open_settings: 'Open Settings',
   currency_mismatch_popup_title: 'Currency Mismatch',
-  currency_mismatch_popup_body: 'You scanned a QR code requesting an address for %s. Please switch to a %s wallet first and re-scan the QR code.',
+  currency_mismatch_popup_body:
+    'You scanned a QR code requesting an address for %s. Please switch to a %s wallet first and re-scan the QR code.',
   request_crypto_address_modal_title: 'Request Address',
   request_crypto_address_modal_body:
     'The service "%s" is requesting an address from your %s wallet to send you money. The address will be sent to the following URL:',
@@ -590,7 +664,8 @@ const strings = {
   swap_terms_terms_link: 'Terms of Use',
   swap_terms_statement:
     'This exchange may require you to verify your identity to complete this trade. Please review the terms below and tap Accept to continue or Reject to stop receiving quotes from this exchange.',
-  alert_deep_link_no_wallet: 'No wallets exist that support %1$s. You can create a wallet for %2$s by tapping + on the Wallet List screen.',
+  alert_deep_link_no_wallet:
+    'No wallets exist that support %1$s. You can create a wallet for %2$s by tapping + on the Wallet List screen.',
   load_plugin: 'Load Plugin',
   plugin_url: 'Plugin URL',
   create_wallet_failed: 'Failed to create wallet',
@@ -598,7 +673,8 @@ const strings = {
   error_creating_wallets:
     'Network timeout occurred trying to create and backup wallets. Please check your network connection and restart app to retry wallet creation.',
   edge_login_failed: 'Failed to Login',
-  edge_login_fail_message: 'Could not connect to network. Please check your network connection and try again.',
+  edge_login_fail_message:
+    'Could not connect to network. Please check your network connection and try again.',
   edge_login_fetching: 'Fetching Edge Login info...',
   modal_addressexplorer_message: 'Show Address in Block Explorer?',
   modal_addressexplorer_null: 'This currency has no explorer site as of now',
@@ -608,11 +684,14 @@ const strings = {
   estimated_exchange_rate: 'Estimated Exchange Rate',
   estimated_exchange_rate_body:
     'No exchange providers are able to provide a fixed quote for the exchange requested. This exchange may result in less funds received than quoted.',
-  estimated_exchange_message: 'The amount above is an estimate. This exchange may result in less funds received than quoted.',
+  estimated_exchange_message:
+    'The amount above is an estimate. This exchange may result in less funds received than quoted.',
   buy_sell_crypto_select_country_button: 'Select your region',
-  buy_sell_crypto_no_plugin_region: "We're sorry but there are no available plugins for your region.",
+  buy_sell_crypto_no_plugin_region:
+    "We're sorry but there are no available plugins for your region.",
   user_closed_modal_no_wallet: 'User closed modal. No wallet was selected',
-  plugin_provider_disclaimer: 'The following services are not provided by Edge. \n\nFor issues and feedback please contact the respective service providers.',
+  plugin_provider_disclaimer:
+    'The following services are not provided by Edge. \n\nFor issues and feedback please contact the respective service providers.',
   plugin_powered_by: 'Powered by',
   no_exchange_rate: 'No Exchange Rate',
   send_from_wallet: 'Send from %s',
@@ -625,11 +704,14 @@ const strings = {
   wallet_list_modal_enabling_token: 'Enabling Token. Please Wait',
   earn_interest: 'Earn Interest',
   earn_interest_on: 'Earn Interest on %s',
-  fio_address_first_screen_title: 'Send and Receive with an easy to remember FIO Address!',
-  fio_address_features: '• Works across all tokens and coins\n• Secured from your wallet\n• Completely decentralized',
+  fio_address_first_screen_title:
+    'Send and Receive with an easy to remember FIO Address!',
+  fio_address_features:
+    '• Works across all tokens and coins\n• Secured from your wallet\n• Completely decentralized',
   fio_address_first_screen_end:
     'Similar to website names, your FIO Address can be used to send you tokens/coins without ever having to see or send your public key.',
-  fio_domain_reg_text: 'Note that you need to use FIO to register an address on a custom domain.',
+  fio_domain_reg_text:
+    'Note that you need to use FIO to register an address on a custom domain.',
   fio_domain_reg_descr:
     'FIO Addresses consist of a username and a domain. If you purchase your custom domain, only you will able to register FIO Addresses on it. FIO Address registrations will have to be paid for with FIO tokens from the same wallet which owns the domain.',
   fio_address_reg_free: 'Register Free FIO Address',
@@ -647,10 +729,13 @@ const strings = {
   fio_address_register_screen_cant_check: "No internet connection, can't check",
   fio_address_register_default_fio_wallet_name: 'FIO Wallet',
   fio_address_register_no_wallet_name: 'No wallet name',
-  fio_address_register_pending: 'Your %s will be registered as soon as payment is received. Tap FIO Names in few minutes.',
-  fio_address_register_pending_free: 'Your free FIO Address will be registered in a few seconds. Tap FIO Names to see your address.',
+  fio_address_register_pending:
+    'Your %s will be registered as soon as payment is received. Tap FIO Names in few minutes.',
+  fio_address_register_pending_free:
+    'Your free FIO Address will be registered in a few seconds. Tap FIO Names to see your address.',
   fio_address_register_metadata_name: 'FIO Registration',
-  fio_address_register_pay_title: 'You have already registered a free address for that domain.',
+  fio_address_register_pay_title:
+    'You have already registered a free address for that domain.',
   fio_address_register_pay: 'Payment required to register this address.',
   fio_address_confirm_screen_label: 'FIO Address',
   fio_address_confirm_screen_registration_label: 'Registration Fee',
@@ -659,34 +744,47 @@ const strings = {
   fio_address_confirm_screen_balance_label: 'Remaining FIO Balance',
   fio_address_confirm_screen_disabled_slider_label: 'Not enough FIO',
   fio_address_details_screen_alert_title: 'FIO Address Created',
-  fio_address_details_screen_alert_message: 'Your FIO Address is now registered and ready for use.',
+  fio_address_details_screen_alert_message:
+    'Your FIO Address is now registered and ready for use.',
   fio_address_details_screen_alert_button: 'View Details',
   fio_address_details_screen_registered: 'Registered',
   fio_address_details_screen_expires: 'Expires',
   fio_address_details_screen_manage_account_settings: 'Address Settings',
-  fio_address_details_expired_soon: 'Your FIO address is about to expire.\nWould you like to renew it?',
-  fio_address_details_connect_to_wallets: 'Choose wallets to connect to your FIO address',
+  fio_address_details_expired_soon:
+    'Your FIO address is about to expire.\nWould you like to renew it?',
+  fio_address_details_connect_to_wallets:
+    'Choose wallets to connect to your FIO address',
   fio_address_list_screen_button_register: 'Register New FIO Address',
   fio_address_list_domain_register: 'Register Custom FIO Domain',
   fio_address_list_register_domain: 'Register New Domain',
-  fio_get_fee_err_msg: 'There was an issue getting the FIO fee. Please try again later.',
-  fio_get_reg_info_err_msg: 'There was an issue getting registration information.',
+  fio_get_fee_err_msg:
+    'There was an issue getting the FIO fee. Please try again later.',
+  fio_get_reg_info_err_msg:
+    'There was an issue getting registration information.',
   fio_get_reg_info_domain_err_msg: 'Domain does not exist',
   fio_get_reg_info_already_sent_err_msg: 'Registration request is already sent',
-  fio_register_address_err_msg: 'There was an issue registering an address. Please try later.',
+  fio_register_address_err_msg:
+    'There was an issue registering an address. Please try later.',
   fio_error_invalid_address: 'Invalid FIO address',
-  fio_renew_err_msg: 'There was an issue renewing your %s. Please try again later.',
+  fio_renew_err_msg:
+    'There was an issue renewing your %s. Please try again later.',
   fio_renew_fee_label: 'Renewal Fee',
   fio_action_fee_label: 'Operation Fee',
   fio_domain_is_public_label: 'Your FIO Domain is public now',
   fio_domain_is_private_label: 'Your FIO Domain is private now',
-  fio_domain_details_expired_soon: 'Your FIO Domain is about to expire.\nWould you like to renew it?',
-  fio_domain_set_visibility_err: 'There was an issue changing visibility of your domain. Please try again later.',
-  fio_transfer_err_msg: 'There was an issue transferring your %s. Please try again later.',
-  transfer_fio_address_exception: 'FIO Addresses with existing FIO Requests or FIO memos can not be transferred now.',
+  fio_domain_details_expired_soon:
+    'Your FIO Domain is about to expire.\nWould you like to renew it?',
+  fio_domain_set_visibility_err:
+    'There was an issue changing visibility of your domain. Please try again later.',
+  fio_transfer_err_msg:
+    'There was an issue transferring your %s. Please try again later.',
+  transfer_fio_address_exception:
+    'FIO Addresses with existing FIO Requests or FIO memos can not be transferred now.',
   fio_no_bundled_err_msg: 'Your FIO Address ran out of bundled transactions.',
-  fio_no_bundled_non_fio_err_msg: 'If you continue, metadata for this transaction will not be recorded.',
-  fio_no_bundled_renew_err_msg: 'Please renew your FIO Address to receive additional bundled transactions.',
+  fio_no_bundled_non_fio_err_msg:
+    'If you continue, metadata for this transaction will not be recorded.',
+  fio_no_bundled_renew_err_msg:
+    'Please renew your FIO Address to receive additional bundled transactions.',
   fio_no_requests_label: 'No requests',
   fio_reject_request_title: 'FIO Request',
   fio_reject_request_message: 'Reject Request?',
@@ -694,13 +792,16 @@ const strings = {
   fio_reject_status: 'Rejected',
   fio_cancel_status: 'Cancelled',
   fio_date_label: 'Date',
-  send_fio_request_error_addr_not_exist: 'The provided FIO address does not exist',
+  send_fio_request_error_addr_not_exist:
+    'The provided FIO address does not exist',
   send_fio_request_error_memo_inline: 'Memo must be less than 64 characters',
   send_fio_request_error_memo_invalid_character: 'Invalid character in memo',
-  fio_request_by_fio_address_error_no_address: 'Before you can request funds using FIO, you must first register your own FIO Address. See side menu.',
+  fio_request_by_fio_address_error_no_address:
+    'Before you can request funds using FIO, you must first register your own FIO Address. See side menu.',
   fio_request_amount: 'Amount:',
   fio_request_by_fio_address_error_invalid_amount_header: 'Invalid Amount',
-  fio_request_by_fio_address_error_invalid_amount: 'Please enter an amount before requesting with FIO',
+  fio_request_by_fio_address_error_invalid_amount:
+    'Please enter an amount before requesting with FIO',
   fio_request_error_header: 'Request Failed',
   fio_request_ok_body: 'Your request has been successfully sent',
   fio_request_renew_ok_text: 'Your address has been successfully renewed',
@@ -719,26 +820,37 @@ const strings = {
   fio_confirm_request_amount: 'Amount',
   fio_confirm_request_memo: 'Memo',
   fio_confirm_request_input_title_memo: 'Enter Request Memo',
-  fio_confirm_request_error_from_same: 'Select a FIO address that is different from your "Send Request To" address',
-  fio_confirm_request_error_to_same: 'Select a FIO address that is different from your "Send Request From" address',
+  fio_confirm_request_error_from_same:
+    'Select a FIO address that is different from your "Send Request To" address',
+  fio_confirm_request_error_to_same:
+    'Select a FIO address that is different from your "Send Request From" address',
   fio_cancel_request_message: 'Do you want to cancel the fio request?',
   fio_cancel_request_error: 'Cancel Request Failed',
   err_token_not_in_wallet_title: 'No %s Wallet',
-  err_token_not_in_wallet_msg: 'Your account does not have a %s wallet to pay this request',
+  err_token_not_in_wallet_msg:
+    'Your account does not have a %s wallet to pay this request',
   err_no_address_title: 'No FIO Address found.',
-  err_address_not_linked_title: 'Recipient address does not have a linked %s wallet',
+  err_address_not_linked_title:
+    'Recipient address does not have a linked %s wallet',
   fio_connect_no_wallets: 'There are no wallets',
   fio_connect_checkbox_text:
     'I acknowledge that one address from each wallet will become public. These addresses will remain public even after wallets are disconnected.',
-  fio_connect_wallets_err: 'There was an issue during operation execution. Please try later.',
-  fio_wallet_missing_for_fio_address: 'Sys error. Cannot find FIO Wallet for FIO Address',
-  fio_wallet_missing_for_fio_domain: 'Sys error. Cannot find FIO Wallet for FIO Domain',
-  fio_wallet_missing_for_fio_request: 'Sys error. Cannot find FIO Wallet for FIO Request',
-  fio_connect_wallets_success: 'Wallets connected. Your FIO Address is now connected to your wallets and ready to use.',
+  fio_connect_wallets_err:
+    'There was an issue during operation execution. Please try later.',
+  fio_wallet_missing_for_fio_address:
+    'Sys error. Cannot find FIO Wallet for FIO Address',
+  fio_wallet_missing_for_fio_domain:
+    'Sys error. Cannot find FIO Wallet for FIO Domain',
+  fio_wallet_missing_for_fio_request:
+    'Sys error. Cannot find FIO Wallet for FIO Request',
+  fio_connect_wallets_success:
+    'Wallets connected. Your FIO Address is now connected to your wallets and ready to use.',
   fio_disconnect_wallets_success: 'Wallets disconnected.',
-  address_modal_body: 'Please enter a public address, private key or FIO address',
+  address_modal_body:
+    'Please enter a public address, private key or FIO address',
   fio_select_address: 'Select FIO Address',
-  fio_select_address_no_wallet_err: 'There is no FIO wallet found for selected fio address',
+  fio_select_address_no_wallet_err:
+    'There is no FIO wallet found for selected fio address',
   fio_sender_memo_label: 'FIO Memo',
   fio_sender_memo_placeholder: 'Your message.',
   fio_address_to_transfer: 'Address to Transfer',
@@ -763,7 +875,8 @@ const strings = {
   RecordNotFound: 'No %2%s record found for %1$s',
 
   update_header: 'Update Available',
-  update_fresh: 'A fresh new version of Edge is now available. Please update to get our hot new features and fixes.',
+  update_fresh:
+    'A fresh new version of Edge is now available. Please update to get our hot new features and fixes.',
   update_now: 'Update Now',
   update_later: "I'll do it later",
 
@@ -798,9 +911,12 @@ const strings = {
 
   // Contacts Permission Modal
   contacts_permission_modal_title: 'Access to Contacts',
-  contacts_permission_modal_text_1: 'Edge would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
-  contacts_permission_modal_text_2: 'No contact information is shared with Edge or any other entities. All information is encrypted and only seen by YOU.',
-  contacts_permission_modal_text_3: 'If you deny access, Edge can still function to buy, sell, trade, and transact cryptocurrency.',
+  contacts_permission_modal_text_1:
+    'Edge would like access to your contacts to provide easy tagging of your transactions with people from your address book.',
+  contacts_permission_modal_text_2:
+    'No contact information is shared with Edge or any other entities. All information is encrypted and only seen by YOU.',
+  contacts_permission_modal_text_3:
+    'If you deny access, Edge can still function to buy, sell, trade, and transact cryptocurrency.',
 
   // Wallet List Sort
   wallet_list_sort_title: 'Sort Wallets',
@@ -821,9 +937,12 @@ const strings = {
   send_scene_send_to_address: 'Send to Address',
   send_scene_error_title: 'Error',
   send_scene_metadata_name_title: 'Payee',
-  send_make_spend_xrp_dest_tag_length_error: 'XRP Destination Tag must be 10 characters or less',
-  send_make_spend_xrp_dest_tag_limit_error: 'XRP Destination Tag is above its maximum limit',
-  send_make_spend_xrp_dest_tag_format_error: 'Please enter a valid Destination Tag',
+  send_make_spend_xrp_dest_tag_length_error:
+    'XRP Destination Tag must be 10 characters or less',
+  send_make_spend_xrp_dest_tag_limit_error:
+    'XRP Destination Tag is above its maximum limit',
+  send_make_spend_xrp_dest_tag_format_error:
+    'Please enter a valid Destination Tag',
 
   // Request Scene
   request_balance: 'You have %s',

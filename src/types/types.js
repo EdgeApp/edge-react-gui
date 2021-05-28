@@ -23,7 +23,9 @@ export type GuiWallet = {
   isoFiatCurrencyCode: string,
   fiatCurrencyCode: string,
   denominations: EdgeDenomination[],
-  allDenominations: { [currencyCode: string]: { [denomination: string]: EdgeDenomination } },
+  allDenominations: {
+    [currencyCode: string]: { [denomination: string]: EdgeDenomination }
+  },
   symbolImage: string | void,
   symbolImageDarkMono: string | void,
   metaTokens: EdgeMetaToken[],
@@ -158,7 +160,12 @@ export type SubcategorySearchResultData = {
 }
 
 export type CurrencyConverter = {
-  convertCurrency: (state: RootState, currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
+  convertCurrency: (
+    state: RootState,
+    currencyCode: string,
+    isoFiatCurrencyCode: string,
+    balanceInCryptoDisplay: string
+  ) => number
 }
 
 export const emptyGuiWallet: GuiWallet = {

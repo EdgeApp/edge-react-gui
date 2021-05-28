@@ -3,11 +3,20 @@
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 // $FlowFixMe = OutlinedTextField is not recognize by flow
-import { type TextFieldProps, OutlinedTextField, TextField } from 'react-native-material-textfield'
+import {
+  type TextFieldProps,
+  OutlinedTextField,
+  TextField
+} from 'react-native-material-textfield'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { unpackEdges } from '../../util/edges.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 
 type EdgeTextFieldProps = {
   marginRem?: number | number[]
@@ -22,7 +31,9 @@ type EdgeOutlinedTextFieldProps = {
   onClear: () => void
 }
 
-class EdgeTextFieldComponent extends React.PureComponent<EdgeTextFieldProps & ThemeProps & TextFieldProps> {
+class EdgeTextFieldComponent extends React.PureComponent<
+  EdgeTextFieldProps & ThemeProps & TextFieldProps
+> {
   render() {
     const { theme, marginRem = 0.5, ...rest } = this.props
     const margin = unpackEdges(marginRem)
@@ -44,7 +55,9 @@ class EdgeTextFieldComponent extends React.PureComponent<EdgeTextFieldProps & Th
   }
 }
 
-class EdgeTextFieldOutlinedComponent extends React.PureComponent<EdgeOutlinedTextFieldProps & ThemeProps & TextFieldProps> {
+class EdgeTextFieldOutlinedComponent extends React.PureComponent<
+  EdgeOutlinedTextFieldProps & ThemeProps & TextFieldProps
+> {
   clearText = () => {
     const { fieldRef, onClear } = this.props
     if (fieldRef && fieldRef.current) {
@@ -54,7 +67,14 @@ class EdgeTextFieldOutlinedComponent extends React.PureComponent<EdgeOutlinedTex
   }
 
   render() {
-    const { isClearable, marginRem = 0.5, small, theme, hideSearchIcon, ...rest } = this.props
+    const {
+      isClearable,
+      marginRem = 0.5,
+      small,
+      theme,
+      hideSearchIcon,
+      ...rest
+    } = this.props
     const spacings = spacingStyles(marginRem, theme)
     const styles = getStyles(theme)
     const contentInset = small ? { input: theme.rem(0.75), label: 0 } : null
@@ -69,11 +89,26 @@ class EdgeTextFieldOutlinedComponent extends React.PureComponent<EdgeOutlinedTex
           textColor={theme.primaryText}
           tintColor={theme.textLink}
           ref={this.props.fieldRef}
-          prefix={hideSearchIcon ? null : <AntDesignIcon name="search1" color={theme.iconDeactivated} size={theme.rem(1)} />}
+          prefix={
+            hideSearchIcon ? null : (
+              <AntDesignIcon
+                name="search1"
+                color={theme.iconDeactivated}
+                size={theme.rem(1)}
+              />
+            )
+          }
           suffix={
             isClearable && (
-              <TouchableOpacity onPress={this.clearText} style={styles.outlinedTextFieldClearContainer}>
-                <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
+              <TouchableOpacity
+                onPress={this.clearText}
+                style={styles.outlinedTextFieldClearContainer}
+              >
+                <AntDesignIcon
+                  name="close"
+                  color={theme.icon}
+                  size={theme.rem(1)}
+                />
               </TouchableOpacity>
             )
           }

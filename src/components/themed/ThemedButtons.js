@@ -1,7 +1,13 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View
+} from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -48,9 +54,22 @@ export function PrimaryButton(props: Props) {
   const styles = getStyles(theme)
 
   return (
-    <TouchableOpacity style={[styles.primaryButton, spacingStyles(props, theme), disabled ? styles.disabled : null]} onPress={onPress} disabled={disabled}>
+    <TouchableOpacity
+      style={[
+        styles.primaryButton,
+        spacingStyles(props, theme),
+        disabled ? styles.disabled : null
+      ]}
+      onPress={onPress}
+      disabled={disabled}
+    >
       {label != null ? <Text style={styles.primaryText}>{label}</Text> : null}
-      {spinner != null ? <ActivityIndicator color={theme.primaryButtonText} style={styles.spinner} /> : null}
+      {spinner != null ? (
+        <ActivityIndicator
+          color={theme.primaryButtonText}
+          style={styles.spinner}
+        />
+      ) : null}
       {children}
     </TouchableOpacity>
   )
@@ -62,9 +81,22 @@ export function SecondaryButton(props: Props) {
   const styles = getStyles(theme)
 
   return (
-    <TouchableOpacity style={[styles.secondaryButton, spacingStyles(props, theme), disabled ? styles.disabled : null]} onPress={onPress} disabled={disabled}>
+    <TouchableOpacity
+      style={[
+        styles.secondaryButton,
+        spacingStyles(props, theme),
+        disabled ? styles.disabled : null
+      ]}
+      onPress={onPress}
+      disabled={disabled}
+    >
       {label != null ? <Text style={styles.secondaryText}>{label}</Text> : null}
-      {spinner != null ? <ActivityIndicator color={theme.primaryButtonText} style={styles.spinner} /> : null}
+      {spinner != null ? (
+        <ActivityIndicator
+          color={theme.primaryButtonText}
+          style={styles.spinner}
+        />
+      ) : null}
       {children}
     </TouchableOpacity>
   )
@@ -76,7 +108,11 @@ export function ClickableText(props: Props) {
   const styles = getStyles(theme)
 
   return (
-    <TouchableHighlight style={spacingStyles(props, theme)} onPress={onPress} underlayColor={theme.secondaryButton}>
+    <TouchableHighlight
+      style={spacingStyles(props, theme)}
+      onPress={onPress}
+      underlayColor={theme.secondaryButton}
+    >
       <View>
         {label != null ? <Text style={styles.primaryText}>{label}</Text> : null}
         {children}
@@ -92,7 +128,14 @@ export function SquareButton(props: SquareButtonProps) {
   const colorStyleName = `${color}Button`
 
   return (
-    <TouchableOpacity style={[styles.squareButton, spacingStyles(props, theme), styles[colorStyleName]]} onPress={onPress}>
+    <TouchableOpacity
+      style={[
+        styles.squareButton,
+        spacingStyles(props, theme),
+        styles[colorStyleName]
+      ]}
+      onPress={onPress}
+    >
       {label != null ? <Text style={styles.squareText}>{label}</Text> : null}
       {children}
     </TouchableOpacity>
@@ -117,7 +160,11 @@ export function Radio(props: RadioButtonProps) {
 
   return (
     <View style={spacingStyles(props, theme)}>
-      <TouchableHighlight activeOpacity={theme.underlayOpacity} underlayColor={theme.secondaryButton} onPress={onPress}>
+      <TouchableHighlight
+        activeOpacity={theme.underlayOpacity}
+        underlayColor={theme.secondaryButton}
+        onPress={onPress}
+      >
         <View style={[styles.radio, right && styles.radioRight]}>
           <RadioIcon value={value} />
           {children}
@@ -132,24 +179,45 @@ export function RadioIcon(props: { value: boolean }) {
   const theme = useTheme()
 
   const icon = value ? (
-    <IonIcon size={theme.rem(1.25)} color={theme.iconTappable} name="ios-radio-button-on" />
+    <IonIcon
+      size={theme.rem(1.25)}
+      color={theme.iconTappable}
+      name="ios-radio-button-on"
+    />
   ) : (
-    <IonIcon size={theme.rem(1.25)} color={theme.icon} name="ios-radio-button-off" />
+    <IonIcon
+      size={theme.rem(1.25)}
+      color={theme.icon}
+      name="ios-radio-button-off"
+    />
   )
 
   return icon
 }
 
-export function RightChevronButton(props: { text: string, onPress: () => void, paddingRem?: number[] | number }) {
+export function RightChevronButton(props: {
+  text: string,
+  onPress: () => void,
+  paddingRem?: number[] | number
+}) {
   const { text, onPress, paddingRem = 0 } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={[spacingStyles({ marginRem: [0, 1.25, 0, 0], paddingRem }, theme), styles.rightChevronContainer]}>
+      <View
+        style={[
+          spacingStyles({ marginRem: [0, 1.25, 0, 0], paddingRem }, theme),
+          styles.rightChevronContainer
+        ]}
+      >
         <EdgeText style={styles.rightChevronText}>{text}</EdgeText>
-        <IonIcon name="chevron-forward" size={theme.rem(1.5)} color={theme.iconTappable} />
+        <IonIcon
+          name="chevron-forward"
+          size={theme.rem(1.5)}
+          color={theme.iconTappable}
+        />
       </View>
     </TouchableOpacity>
   )

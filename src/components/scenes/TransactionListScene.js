@@ -12,7 +12,12 @@ import type { TransactionListTx } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { BuyCrypto } from '../themed/BuyCrypto.js'
-import { EmptyLoader, SectionHeader, SectionHeaderCentered, Top } from '../themed/TransactionListComponents.js'
+import {
+  EmptyLoader,
+  SectionHeader,
+  SectionHeaderCentered,
+  Top
+} from '../themed/TransactionListComponents.js'
 import { TransactionListRow } from '../themed/TransactionListRow.js'
 
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
@@ -24,7 +29,9 @@ type Section = {
 }
 
 export type StateProps = {
-  getTransactions(opts?: EdgeGetTransactionsOptions): Promise<EdgeTransaction[]>,
+  getTransactions(
+    opts?: EdgeGetTransactionsOptions
+  ): Promise<EdgeTransaction[]>,
   numTransactions: number,
   selectedWalletId: string,
   selectedCurrencyCode: string,
@@ -32,7 +39,11 @@ export type StateProps = {
 }
 
 export type DispatchProps = {
-  fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => any
+  fetchMoreTransactions: (
+    walletId: string,
+    currencyCode: string,
+    reset: boolean
+  ) => any
 }
 
 type Props = StateProps & DispatchProps & ThemeProps
@@ -56,18 +67,28 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount = () => {
-    this.props.fetchMoreTransactions(this.props.selectedWalletId, this.props.selectedCurrencyCode, this.state.reset)
+    this.props.fetchMoreTransactions(
+      this.props.selectedWalletId,
+      this.props.selectedCurrencyCode,
+      this.state.reset
+    )
     if (this.state.reset) {
       this.setState({ reset: false })
     }
   }
 
   componentDidUpdate(prevProps: Props) {
-    const walletIdChanged = prevProps.selectedWalletId !== this.props.selectedWalletId
-    const currencyCodeChanged = prevProps.selectedCurrencyCode !== this.props.selectedCurrencyCode
+    const walletIdChanged =
+      prevProps.selectedWalletId !== this.props.selectedWalletId
+    const currencyCodeChanged =
+      prevProps.selectedCurrencyCode !== this.props.selectedCurrencyCode
 
     if (walletIdChanged || currencyCodeChanged) {
-      this.props.fetchMoreTransactions(this.props.selectedWalletId, this.props.selectedCurrencyCode, this.state.reset)
+      this.props.fetchMoreTransactions(
+        this.props.selectedWalletId,
+        this.props.selectedCurrencyCode,
+        this.state.reset
+      )
       if (this.state.reset) {
         // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ reset: false })
@@ -76,7 +97,11 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 
   handleScrollEnd = () => {
-    this.props.fetchMoreTransactions(this.props.selectedWalletId, this.props.selectedCurrencyCode, this.state.reset)
+    this.props.fetchMoreTransactions(
+      this.props.selectedWalletId,
+      this.props.selectedCurrencyCode,
+      this.state.reset
+    )
     if (this.state.reset) {
       this.setState({ reset: false })
     }
@@ -84,7 +109,9 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
 
   handleOnRefresh = () => {
     if (!this.state.searching) {
-      this.setState({ filteredTransactions: this.props.transactions }, () => this.setState({ searching: true }))
+      this.setState({ filteredTransactions: this.props.transactions }, () =>
+        this.setState({ searching: true })
+      )
     }
   }
 
@@ -96,7 +123,9 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
       searchString
     })
       .then(filteredEdgeTransactions => {
-        const filteredTransactions = transactions.filter(transaction => filteredEdgeTransactions.find(item => item.txid === transaction.txid))
+        const filteredTransactions = transactions.filter(transaction =>
+          filteredEdgeTransactions.find(item => item.txid === transaction.txid)
+        )
         this.setState({ filteredTransactions, loading: false })
       })
       .catch(error => {
@@ -105,12 +134,14 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
       })
   }
 
-  handleChangeSortingState = (isSearching: boolean) => (isSearching ? this.handleOnRefresh() : this.setState({ searching: false }))
+  handleChangeSortingState = (isSearching: boolean) =>
+    isSearching ? this.handleOnRefresh() : this.setState({ searching: false })
 
   section = (transactions: TransactionListTx[]) => {
     const sections: Section[] = []
     for (const transaction of transactions) {
-      const dateString = transaction.dateString || s.strings.fragment_transaction_list_no_date
+      const dateString =
+        transaction.dateString || s.strings.fragment_transaction_list_no_date
       const checkTitle = sections.find(section => section.title === dateString)
       if (!checkTitle) {
         sections.push({
@@ -129,23 +160,44 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
     return sections
   }
 
-  emptySection = () => [{ title: s.strings.transaction_list_search_no_result, data: [] }]
+  emptySection = () => [
+    { title: s.strings.transaction_list_search_no_result, data: [] }
+  ]
 
   renderEmptyComponent = () =>
-    this.props.numTransactions ? <EmptyLoader /> : <BuyCrypto walletId={this.props.selectedWalletId} currencyCode={this.props.selectedCurrencyCode} />
+    this.props.numTransactions ? (
+      <EmptyLoader />
+    ) : (
+      <BuyCrypto
+        walletId={this.props.selectedWalletId}
+        currencyCode={this.props.selectedCurrencyCode}
+      />
+    )
 
   renderSectionHeader = (section: { section: Section }) => {
     const { filteredTransactions, loading, searching } = this.state
-    const checkFilteredTransactions = searching && filteredTransactions.length === 0
+    const checkFilteredTransactions =
+      searching && filteredTransactions.length === 0
     if (checkFilteredTransactions || loading) {
-      return <SectionHeaderCentered title={section.section.title} loading={loading} />
+      return (
+        <SectionHeaderCentered
+          title={section.section.title}
+          loading={loading}
+        />
+      )
     }
     return <SectionHeader title={section.section.title} />
   }
 
   renderTransaction = (transaction: SectionList<TransactionListTx>) => {
     const { selectedWalletId, selectedCurrencyCode } = this.props
-    return <TransactionListRow walletId={selectedWalletId} currencyCode={selectedCurrencyCode} transaction={transaction.item} />
+    return (
+      <TransactionListRow
+        walletId={selectedWalletId}
+        currencyCode={selectedCurrencyCode}
+        transaction={transaction.item}
+      />
+    )
   }
 
   renderTop = () => (
@@ -161,12 +213,21 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   keyExtractor = (item: TransactionListTx) => String(item.key)
   render() {
     const { filteredTransactions, loading, reset, searching } = this.state
-    const transactions = reset ? [] : searching ? filteredTransactions : this.props.transactions
-    const checkFilteredTransactions = searching && filteredTransactions.length === 0
+    const transactions = reset
+      ? []
+      : searching
+      ? filteredTransactions
+      : this.props.transactions
+    const checkFilteredTransactions =
+      searching && filteredTransactions.length === 0
     return (
       <SceneWrapper>
         <SectionList
-          sections={checkFilteredTransactions || loading ? this.emptySection() : this.section(transactions)}
+          sections={
+            checkFilteredTransactions || loading
+              ? this.emptySection()
+              : this.section(transactions)
+          }
           renderItem={this.renderTransaction}
           renderSectionHeader={this.renderSectionHeader}
           initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
@@ -175,10 +236,19 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
           keyExtractor={this.keyExtractor}
           ListEmptyComponent={this.renderEmptyComponent}
           ListHeaderComponent={this.renderTop}
-          contentOffset={{ y: !searching && transactions.length > 0 ? this.props.theme.rem(4.5) : 0 }}
+          contentOffset={{
+            y:
+              !searching && transactions.length > 0
+                ? this.props.theme.rem(4.5)
+                : 0
+          }}
           refreshControl={
             transactions.length !== 0 ? (
-              <RefreshControl refreshing={false} onRefresh={this.handleOnRefresh} tintColor={this.props.theme.searchListRefreshControlIndicator} />
+              <RefreshControl
+                refreshing={false}
+                onRefresh={this.handleOnRefresh}
+                tintColor={this.props.theme.searchListRefreshControlIndicator}
+              />
             ) : undefined
           }
           keyboardShouldPersistTaps="handled"
@@ -207,6 +277,10 @@ export const TransactionList = connect(
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
+    fetchMoreTransactions: (
+      walletId: string,
+      currencyCode: string,
+      reset: boolean
+    ) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
   })
 )(withTheme(TransactionListComponent))

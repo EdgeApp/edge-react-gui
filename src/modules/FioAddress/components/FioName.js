@@ -4,7 +4,12 @@ import * as React from 'react'
 import { View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../../../components/services/ThemeContext.js'
 import { ClickableRow } from '../../../components/themed/ClickableRow'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { formatDate } from '../../../locales/intl.js'
@@ -21,7 +26,9 @@ const FioName = (props: FioNameProps & ThemeProps) => {
   const { name, expiration, onPress, icon, theme } = props
   const styles = getStyles(theme)
 
-  const subTitle = `${s.strings.fio_address_details_screen_expires} ${formatDate(new Date(expiration))}`
+  const subTitle = `${
+    s.strings.fio_address_details_screen_expires
+  } ${formatDate(new Date(expiration))}`
 
   return (
     <ClickableRow onPress={() => onPress()}>
@@ -31,7 +38,11 @@ const FioName = (props: FioNameProps & ThemeProps) => {
         <EdgeText style={styles.infoSubtitle}>{subTitle}</EdgeText>
       </View>
       <View style={styles.arrow}>
-        <FontAwesomeIcon name="angle-right" size={theme.rem(1.5)} color={theme.icon} />
+        <FontAwesomeIcon
+          name="angle-right"
+          size={theme.rem(1.5)}
+          color={theme.icon}
+        />
       </View>
     </ClickableRow>
   )

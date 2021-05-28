@@ -3,7 +3,12 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
 type Props = {
@@ -16,10 +21,18 @@ type Props = {
 
 class SceneHeaderComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
-    const { title, underline, withTopMargin, children, theme, style } = this.props
+    const { title, underline, withTopMargin, children, theme, style } =
+      this.props
     const styles = getStyles(theme)
     return (
-      <View style={[styles.container, withTopMargin ? styles.topMargin : null, underline ? styles.underline : null, style]}>
+      <View
+        style={[
+          styles.container,
+          withTopMargin ? styles.topMargin : null,
+          underline ? styles.underline : null,
+          style
+        ]}
+      >
         {title ? <EdgeText style={styles.title}>{title}</EdgeText> : null}
         {children}
       </View>

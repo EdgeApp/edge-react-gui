@@ -2,7 +2,10 @@
 
 import { connect } from 'react-redux'
 
-import type { OwnProps, StateProps } from '../../components/common/CryptoExchangeWalletListRow.js'
+import type {
+  OwnProps,
+  StateProps
+} from '../../components/common/CryptoExchangeWalletListRow.js'
 import { CryptoExchangeWalletListRow } from '../../components/common/CryptoExchangeWalletListRow.js'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
@@ -16,6 +19,8 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps): StateProps => {
   }
 }
 
-const CryptoExchangeWalletListTokenRowConnected = connect(mapStateToProps)(CryptoExchangeWalletListRow)
+const CryptoExchangeWalletListTokenRowConnected = connect(mapStateToProps)(
+  CryptoExchangeWalletListRow
+)
 
 export { CryptoExchangeWalletListTokenRowConnected }

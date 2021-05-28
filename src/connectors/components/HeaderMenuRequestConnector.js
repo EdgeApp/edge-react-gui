@@ -5,7 +5,10 @@ import { connect } from 'react-redux'
 import { showHelpModal } from '../../components/modals/HelpModal.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { MenuDropDown, MenuDropDownStyle } from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
+import {
+  MenuDropDown,
+  MenuDropDownStyle
+} from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
 import THEME from '../../theme/variables/airbitz'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 
@@ -30,14 +33,24 @@ const mapStateToProps = (state: RootState) => {
   const uniqueLegacyAddress = state.ui.scenes.requestType.uniqueLegacyAddress
 
   const addressToggle = {
-    label: useLegacyAddress ? s.strings.title_use_regular_address : s.strings.title_use_legacy_address, // tie into,
-    key: useLegacyAddress ? s.strings.title_use_regular_address : s.strings.title_use_legacy_address,
+    label: useLegacyAddress
+      ? s.strings.title_use_regular_address
+      : s.strings.title_use_legacy_address, // tie into,
+    key: useLegacyAddress
+      ? s.strings.title_use_regular_address
+      : s.strings.title_use_legacy_address,
     value: {
-      title: useLegacyAddress ? s.strings.title_use_regular_address : s.strings.title_use_legacy_address,
-      value: useLegacyAddress ? 'useRegularRequestAddress' : 'useLegacyRequestAddress'
+      title: useLegacyAddress
+        ? s.strings.title_use_regular_address
+        : s.strings.title_use_legacy_address,
+      value: useLegacyAddress
+        ? 'useRegularRequestAddress'
+        : 'useLegacyRequestAddress'
     }
   }
-  const dropDownButtons = uniqueLegacyAddress ? [addressToggle, help] : helpArray
+  const dropDownButtons = uniqueLegacyAddress
+    ? [addressToggle, help]
+    : helpArray
   return {
     style: dropDownStyle,
     data: dropDownButtons,

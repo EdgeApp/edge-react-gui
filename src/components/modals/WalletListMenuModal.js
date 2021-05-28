@@ -6,12 +6,20 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
-import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
+import {
+  type WalletListMenuKey,
+  walletListMenuAction
+} from '../../actions/WalletListMenuActions.js'
 import { WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import {
+  type Theme,
+  type ThemeProps,
+  cacheStyles,
+  withTheme
+} from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { type AirshipBridge } from './modalParts'
@@ -35,7 +43,11 @@ type OwnProps = {
 }
 
 type DispatchProps = {
-  walletListMenuAction(walletId: string, option: WalletListMenuKey, currencyCode?: string): void
+  walletListMenuAction(
+    walletId: string,
+    option: WalletListMenuKey,
+    currencyCode?: string
+  ): void
 }
 
 type Props = StateProps & OwnProps & DispatchProps & ThemeProps
@@ -81,12 +93,14 @@ class WalletListMenuModalComponent extends PureComponent<Props> {
     // Main wallet options
     for (const option of WALLET_LIST_MENU) {
       const { currencyCodes, label, value } = option
-      if (currencyCodes != null && !currencyCodes.includes(currencyCode)) continue
+      if (currencyCodes != null && !currencyCodes.includes(currencyCode))
+        continue
 
       const temp = { label, value }
       if (option.value === 'split') {
         const splitString = s.strings.string_split_wallet
-        const currencyName = currencyCode === 'BTC' ? 'Bitcoin Cash' : 'Bitcoin SV'
+        const currencyName =
+          currencyCode === 'BTC' ? 'Bitcoin Cash' : 'Bitcoin SV'
         temp.label = sprintf(splitString, currencyName)
       }
       this.options.push(temp)
@@ -96,7 +110,11 @@ class WalletListMenuModalComponent extends PureComponent<Props> {
   optionAction = (option: WalletListMenuKey) => {
     const { bridge, currencyCode, walletId } = this.props
     if (currencyCode == null && this.props.wallets[walletId] != null) {
-      this.props.walletListMenuAction(walletId, option, this.props.wallets[walletId].currencyCode)
+      this.props.walletListMenuAction(
+        walletId,
+        option,
+        this.props.wallets[walletId].currencyCode
+      )
     } else {
       this.props.walletListMenuAction(walletId, option, currencyCode)
     }
@@ -111,17 +129,41 @@ class WalletListMenuModalComponent extends PureComponent<Props> {
       <ThemedModal bridge={bridge} onCancel={this.handleCancel}>
         {walletName == null ? null : <ModalTitle>{walletName}</ModalTitle>}
         <View style={styles.headerRow}>
-          {image == null ? null : <Image resizeMode="cover" source={{ uri: image }} style={styles.currencyImage} />}
-          {currencyCode == null ? null : <ModalTitle>{currencyCode}</ModalTitle>}
+          {image == null ? null : (
+            <Image
+              resizeMode="cover"
+              source={{ uri: image }}
+              style={styles.currencyImage}
+            />
+          )}
+          {currencyCode == null ? null : (
+            <ModalTitle>{currencyCode}</ModalTitle>
+          )}
         </View>
         {this.options.map((option: Option) => (
-          <TouchableOpacity key={option.value} onPress={() => this.optionAction(option.value)} style={styles.optionRow}>
+          <TouchableOpacity
+            key={option.value}
+            onPress={() => this.optionAction(option.value)}
+            style={styles.optionRow}
+          >
             <AntDesignIcon
               name={icons[option.value]}
               size={theme.rem(1)}
-              style={option.value === 'delete' ? [styles.optionIcon, styles.warningColor] : styles.optionIcon}
+              style={
+                option.value === 'delete'
+                  ? [styles.optionIcon, styles.warningColor]
+                  : styles.optionIcon
+              }
             />
-            <Text style={option.value === 'delete' ? [styles.optionText, styles.warningColor] : styles.optionText}>{option.label}</Text>
+            <Text
+              style={
+                option.value === 'delete'
+                  ? [styles.optionText, styles.warningColor]
+                  : styles.optionText
+              }
+            >
+              {option.label}
+            </Text>
           </TouchableOpacity>
         ))}
         <ModalCloseArrow onPress={this.handleCancel} />
