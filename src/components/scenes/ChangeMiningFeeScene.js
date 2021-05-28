@@ -1,6 +1,5 @@
 // @flow
 
-import type { JsonObject } from 'edge-core-js'
 import type { EdgeCurrencyWallet, EdgeSpendTarget } from 'edge-core-js/types'
 import * as React from 'react'
 import { ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
@@ -28,6 +27,17 @@ type OwnProps = {
   currencyCode?: string
 }
 
+type DefaultFeeSettings = {
+  currentDefault: DefaultFeeOption,
+  isDefault: boolean
+}
+
+type FeeSettings = {
+  defaultFeeSettings: DefaultFeeSettings,
+  networkFeeOption: FeeOption,
+  customNetworkFee: Object
+}
+
 type StateProps = {
   networkFeeOption?: FeeOption,
   customNetworkFee?: Object,
@@ -36,14 +46,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  onSubmit(
-    networkFeeOption: FeeOption,
-    isDefault: boolean,
-    currentDefault: DefaultFeeOption,
-    customNetworkFee: Object,
-    walletId: string,
-    currencyCode?: string
-  ): mixed
+  onSubmit(feeSettings: FeeSettings, walletId: string, currencyCode?: string): mixed
 }
 
 type Props = OwnProps & StateProps & DispatchProps
@@ -98,7 +101,15 @@ export class ChangeMiningFee extends React.Component<Props, State> {
     wallet
       .makeSpend(testSpendInfo)
       .then(() => {
-        this.props.onSubmit(networkFeeOption, isDefault, currentDefault, customNetworkFee, wallet.id, currencyCode)
+        const feeSettings: FeeSettings = {
+          defaultFeeSettings: {
+            currentDefault: currentDefault,
+            isDefault: isDefault
+          },
+          networkFeeOption: networkFeeOption,
+          customNetworkFee: customNetworkFee
+        }
+        this.props.onSubmit(feeSettings, wallet.id, currencyCode)
         Actions.pop()
       })
       .catch(e => {
@@ -250,6 +261,22 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
+const updateDefaultFee = (feeSettings, currencyCode, dispatch) => {
+  const outDated =
+    feeSettings.defaultFeeSettings.currentDefault !== feeSettings.networkFeeOption || feeSettings.defaultFeeSettings.currentDefault === 'standard'
+  const currentlyOff = feeSettings.defaultFeeSettings.currentDefault === 'none'
+  if (currencyCode) {
+    if (outDated && feeSettings.defaultFeeSettings.isDefault) {
+      // Set default fee
+      dispatch(setDefaultFeeSetting(currencyCode, feeSettings.networkFeeOption, feeSettings.customNetworkFee))
+    }
+    if (!currentlyOff && !feeSettings.defaultFeeSettings.isDefault) {
+      // Turn off default fee
+      dispatch(setDefaultFeeSetting(currencyCode, 'none', feeSettings.customNetworkFee))
+    }
+  }
+}
+
 export const ChangeMiningFeeScene = connect(
   (state: RootState): StateProps => {
     return {
@@ -260,26 +287,12 @@ export const ChangeMiningFeeScene = connect(
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    onSubmit(
-      networkFeeOption: FeeOption,
-      isDefault: boolean,
-      currentDefault: DefaultFeeOption,
-      customFee: JsonObject,
-      walletId: string,
-      currencyCode?: string
-    ) {
-      const outDated = currentDefault !== networkFeeOption || currentDefault === 'standard'
-      const currentlyOff = currentDefault === 'none'
-      if (currencyCode) {
-        if (outDated && isDefault) {
-          // Set default fee
-          dispatch(setDefaultFeeSetting(currencyCode, networkFeeOption, customFee))
-        }
-        if (!currentlyOff && !isDefault) {
-          // Turn off default fee
-          dispatch(setDefaultFeeSetting(currencyCode, 'none', customFee))
-        }
-      }
+    onSubmit(feeSettings: FeeSettings, walletId: string, currencyCode?: string) {
+      const networkFeeOption: FeeOption = feeSettings.networkFeeOption
+      const customFee: Object = feeSettings.customNetworkFee
+
+      updateDefaultFee(feeSettings, currencyCode, dispatch)
+
       dispatch(sendConfirmationUpdateTx({ networkFeeOption, customFee }))
     }
   })
