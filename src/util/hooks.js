@@ -51,8 +51,8 @@ export const useContext: UseContext = React.useContext
 export const useDebugValue: UseDebugValue = React.useDebugValue
 // $FlowFixMe
 export const useEffect: UseEffect = React.useEffect
-// $FlowFixMe
 export const useImperativeHandle: UseImperativeHandle =
+  // $FlowFixMe
   React.useImperativeHandle
 // $FlowFixMe
 export const useLayoutEffect: UseEffect = React.useLayoutEffect

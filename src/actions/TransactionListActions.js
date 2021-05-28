@@ -138,8 +138,8 @@ const getAndMergeTransactions = async (
     const transactionCount = transactionsWithKeys.length
     let lastUnfilteredIndex = 0
     if (transactionCount) {
-      // $FlowFixMe
       lastUnfilteredIndex =
+        // $FlowFixMe
         transactionsWithKeys[transactionCount - 1].otherParams.unfilteredIndex
     }
     dispatch({

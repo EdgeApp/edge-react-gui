@@ -36,8 +36,8 @@ describe.skip('Account', () => {
       fakeUser.pin
     )
     for (const key of Object.keys(SYNCED_ACCOUNT_DEFAULTS)) {
-      // $FlowFixMe
       const defaultDenom: string | void =
+        // $FlowFixMe
         SYNCED_ACCOUNT_DEFAULTS[key].denomination
       if (defaultDenom) {
         // if it's in synced settings defaults

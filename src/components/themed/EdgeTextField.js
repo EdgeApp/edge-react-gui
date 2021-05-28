@@ -2,9 +2,9 @@
 
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
-// $FlowFixMe = OutlinedTextField is not recognize by flow
 import {
   type TextFieldProps,
+  // $FlowFixMe = OutlinedTextField is not recognize by flow
   OutlinedTextField,
   TextField
 } from 'react-native-material-textfield'
