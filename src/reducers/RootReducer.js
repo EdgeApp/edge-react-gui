@@ -7,8 +7,8 @@ import { type UiState, ui } from '../modules/UI/reducer.js'
 import { type DeepLink } from '../types/DeepLink.js'
 import { type Action } from '../types/reduxTypes.js'
 import { type DeviceReferral } from '../types/ReferralTypes.js'
+import { type GuiContact } from '../types/types.js'
 import { type AccountState, account } from './AccountReducer.js'
-import { type ContactsState, contacts } from './ContactsReducer.js'
 import { type CoreState, core } from './CoreReducer.js'
 import { type CryptoExchangeState, cryptoExchange } from './CryptoExchangeReducer.js'
 import { type NetworkState, network } from './NetworkReducer.js'
@@ -17,6 +17,7 @@ import { type PermissionsState, permissions } from './PermissionsReducer.js'
 const defaultDeviceReferral: DeviceReferral = { messages: [], plugins: [] }
 
 export type RootState = {
+  +contacts: GuiContact[],
   +deviceReferral: DeviceReferral,
 
   // Next username to auto-fill at the login screen, or blank if none:
@@ -27,7 +28,6 @@ export type RootState = {
 
   // Nested reducers:
   +account: AccountState,
-  +contacts: ContactsState,
   +core: CoreState,
   +cryptoExchange: CryptoExchangeState,
   +exchangeRates: ExchangeRatesState,
@@ -37,6 +37,10 @@ export type RootState = {
 }
 
 export const rootReducer: Reducer<RootState, Action> = combineReducers({
+  contacts(state: GuiContact[] = [], action: Action): GuiContact[] {
+    return action.type === 'CONTACTS/LOAD_CONTACTS_SUCCESS' ? action.data.contacts : state
+  },
+
   deviceReferral(state: DeviceReferral = defaultDeviceReferral, action: Action): DeviceReferral {
     return action.type === 'DEVICE_REFERRAL_LOADED' ? action.data : state
   },
@@ -63,7 +67,6 @@ export const rootReducer: Reducer<RootState, Action> = combineReducers({
 
   // Nested reducers:
   account,
-  contacts,
   core,
   cryptoExchange,
   exchangeRates,
