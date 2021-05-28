@@ -1,7 +1,7 @@
 // @flow
 
 import type { EdgeMetaToken } from 'edge-core-js'
-import _ from 'lodash'
+import { difference, keys, union } from 'lodash'
 import * as React from 'react'
 import { FlatList, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -9,14 +9,17 @@ import { connect } from 'react-redux'
 
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
 import * as Constants from '../../constants/indexConstants'
+import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
-import { getFilteredTokens, getTokens, getWalletIdsIfNotTokens, TokenRow, TokensHeader, getAllowedWalletCurrencyCodes } from '../common/ManageTokens'
+import * as UTILS from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
+import ManageTokensHeader from '../themed/ManageTokensHeader'
+import ManageTokensRow from '../themed/ManageTokensRow'
 import SceneFooter from '../themed/SceneFooter'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SecondaryButton } from '../themed/ThemedButtons'
@@ -49,26 +52,72 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
   constructor(props: ManageTokensProps) {
     super(props)
 
-    const { metaTokens, currencyCode, enabledTokens } = this.props.guiWallet
+    const { enabledTokens } = this.props.guiWallet
 
     this.state = {
       enabledList: [...enabledTokens],
       combinedCurrencyInfos: [],
-      tokens: getTokens({
-        metaTokens,
-        customTokens: this.props.settingsCustomTokens,
-        currencyCode,
-        guiWalletType: this.props.guiWallet.type
-      }),
+      tokens: this.getTokens(),
       searchValue: ''
     }
+  }
+
+  getTokens(): EdgeMetaToken[] {
+    const { metaTokens, currencyCode } = this.props.guiWallet
+
+    const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
+
+    const accountMetaTokenInfo: CustomTokenInfo[] = specialCurrencyInfo.isCustomTokensSupported ? [...this.props.settingsCustomTokens] : []
+
+    const filteredTokenInfo = accountMetaTokenInfo.filter(token => {
+      return token.walletType === this.props.guiWallet.type || token.walletType === undefined
+    })
+
+    const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
+
+    const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
+      if (a.currencyCode < b.currencyCode) return -1
+      if (a === b) return 0
+      return 1
+    })
+
+    // put preferred tokens at the top
+    for (const cc of PREFERRED_TOKENS) {
+      const idx = sortedTokenInfo.findIndex(e => e.currencyCode === cc)
+      if (idx > -1) {
+        const tokenInfo = sortedTokenInfo[idx]
+        sortedTokenInfo.splice(idx, 1)
+        sortedTokenInfo.unshift(tokenInfo)
+      }
+    }
+
+    return sortedTokenInfo
+  }
+
+  getAllowedWalletCurrencyCodes(): string[] {
+    const { wallets } = this.props
+    return keys(wallets).reduce((acc, key: string) => {
+      const wallet = wallets[key]
+      const isKey = acc.length > 0 && acc.includes(wallet.currencyCode)
+
+      if (wallet.metaTokens.length > 0 && !isKey) {
+        acc.push(wallet.currencyCode)
+      }
+
+      return acc
+    }, [])
+  }
+
+  getWalletIdsIfNotTokens(): string[] {
+    const { wallets } = this.props
+    return keys(wallets).filter((key: string) => wallets[key].metaTokens.length === 0)
   }
 
   onSelectWallet = async () => {
     const { walletId, currencyCode } = await Airship.show(bridge => (
       <WalletListModal
-        allowedCurrencyCodes={getAllowedWalletCurrencyCodes(this.props.wallets)}
-        excludeWalletIds={getWalletIdsIfNotTokens(this.props.wallets)}
+        allowedCurrencyCodes={this.getAllowedWalletCurrencyCodes()}
+        excludeWalletIds={this.getWalletIdsIfNotTokens()}
         bridge={bridge}
         headerTitle={s.strings.select_wallet}
       />
@@ -76,21 +125,6 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
 
     if (walletId && currencyCode) {
       Actions.refresh({ guiWallet: this.props.wallets[walletId] })
-    }
-  }
-
-  getFilteredTokensHandler() {
-    return getFilteredTokens(this.state.searchValue, this.state.tokens)
-  }
-
-  changeSearchValue = value => {
-    this.setState({ searchValue: value })
-  }
-
-  onSearchClear = () => {
-    this.setState({ searchValue: '' })
-    if (this.textInput.current) {
-      this.textInput.current.blur()
     }
   }
 
@@ -107,6 +141,24 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
     })
   }
 
+  getFilteredTokens = (): EdgeMetaToken[] => {
+    const { searchValue, tokens } = this.state
+
+    const RegexObj = new RegExp(searchValue, 'i')
+    return tokens.filter(({ currencyCode, currencyName }) => RegexObj.test(currencyCode) || RegexObj.test(currencyName))
+  }
+
+  changeSearchValue = value => {
+    this.setState({ searchValue: value })
+  }
+
+  onSearchClear = () => {
+    this.setState({ searchValue: '' })
+    if (this.textInput.current) {
+      this.textInput.current.blur()
+    }
+  }
+
   saveEnabledTokenList = () => {
     const { id } = this.props.guiWallet
     const disabledList: string[] = []
@@ -118,15 +170,15 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
     Actions.pop()
   }
 
-  _onDeleteToken = (currencyCode: string) => {
-    const enabledListAfterDelete = _.difference(this.state.enabledList, [currencyCode])
+  onDeleteToken = (currencyCode: string) => {
+    const enabledListAfterDelete = difference(this.state.enabledList, [currencyCode])
     this.setState({
       enabledList: enabledListAfterDelete
     })
   }
 
-  _onAddToken = (currencyCode: string) => {
-    const newEnabledList = _.union(this.state.enabledList, [currencyCode])
+  onAddToken = (currencyCode: string) => {
+    const newEnabledList = union(this.state.enabledList, [currencyCode])
     this.setState({
       enabledList: newEnabledList
     })
@@ -134,12 +186,12 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
 
   goToAddTokenScene = () => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions[Constants.ADD_TOKEN]({ walletId: id, metaTokens, onAddToken: this._onAddToken })
+    Actions[Constants.ADD_TOKEN]({ walletId: id, metaTokens, onAddToken: this.onAddToken })
   }
 
   goToEditTokenScene = (currencyCode: string) => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions[Constants.EDIT_TOKEN]({ walletId: id, currencyCode, metaTokens, onDeleteToken: this._onDeleteToken })
+    Actions[Constants.EDIT_TOKEN]({ walletId: id, currencyCode, metaTokens, onDeleteToken: this.onDeleteToken })
   }
 
   render() {
@@ -154,7 +206,7 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
       <SceneWrapper>
         <View style={styles.container}>
           <SceneHeader underline>
-            <TokensHeader
+            <ManageTokensHeader
               textInput={this.textInput}
               walletName={name}
               walletId={this.props.guiWallet.id}
@@ -169,9 +221,9 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
             <View style={styles.tokensArea}>
               <FlatList
                 keyExtractor={item => item.currencyCode}
-                data={this.getFilteredTokensHandler()}
+                data={this.getFilteredTokens()}
                 renderItem={metaToken => (
-                  <TokenRow
+                  <ManageTokensRow
                     goToEditTokenScene={this.goToEditTokenScene}
                     metaToken={metaToken}
                     walletId={this.props.guiWallet.id}

@@ -5,27 +5,21 @@ import * as React from 'react'
 import { Image, Switch, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
-import { SYNCED_ACCOUNT_DEFAULTS } from '../../../modules/Core/Account/settings.js'
-import * as UTILS from '../../../util/utils.js'
-import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
-import { WalletListRow } from '../../themed/WalletListRow'
-
-export type State = {
-  enabled?: boolean
-}
+import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
+import * as UTILS from '../../util/utils.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { WalletListRow } from './WalletListRow'
 
 export type Props = {
   toggleToken: string => void,
-  // this is an stange case that needs to be looked at later
   metaToken: EdgeMetaToken & {
     item: any
   },
-  enabled?: boolean,
   enabledList: string[],
   goToEditTokenScene: string => void
 }
 
-function TokenRow(props: Props) {
+function ManageTokensRow(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -83,4 +77,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export default TokenRow
+export default ManageTokensRow

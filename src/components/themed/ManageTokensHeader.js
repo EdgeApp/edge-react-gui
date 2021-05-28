@@ -4,16 +4,14 @@ import * as React from 'react'
 import { Pressable, View } from 'react-native'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
-import s from '../../../locales/strings.js'
-import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext.js'
-import { EdgeText } from '../../themed/EdgeText.js'
-import { EdgeTextFieldOutlined } from '../../themed/EdgeTextField'
-import Title from '../../themed/Title'
-import { WalletProgressIcon } from '../../themed/WalletProgressIcon.js'
+import s from '../../locales/strings.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { EdgeText } from './EdgeText.js'
+import { EdgeTextFieldOutlined } from './EdgeTextField'
+import Title from './Title'
+import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 type Props = {
-  sorting?: boolean,
-  searching?: boolean,
   walletId: string,
   walletName: string,
   currencyCode: string,
@@ -24,7 +22,7 @@ type Props = {
   textInput: any
 }
 
-function TokensHeader(props: Props) {
+function ManageTokensHeader(props: Props) {
   const { currencyCode, walletName, walletId, changeSearchValue, onSearchClear, onSelectWallet, searchValue, textInput } = props
 
   const theme = useTheme()
@@ -81,4 +79,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export default TokensHeader
+export default ManageTokensHeader
