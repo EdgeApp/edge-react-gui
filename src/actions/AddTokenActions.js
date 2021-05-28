@@ -81,7 +81,9 @@ export const addTokenAsync = async (
     // if customTokens array is empty
     newCustomTokens = [newTokenObj]
   } else {
-    newCustomTokens = UTILS.mergeTokens([newTokenObj], customTokens) // otherwise merge metaTokens and customTokens
+    // otherwise merge metaTokens and customTokens
+    const newList: CustomTokenInfo[] = [newTokenObj]
+    newCustomTokens = UTILS.mergeTokens(newList, customTokens)
   }
   settingsOnFile.customTokens = newCustomTokens
   settingsOnFile[currencyCode] = newTokenObj
