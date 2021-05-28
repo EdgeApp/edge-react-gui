@@ -22,13 +22,12 @@ import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../con
 import { CHANGE_MINING_FEE_SEND_CONFIRMATION, getSpecialCurrencyInfo } from '../../constants/indexConstants'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
-import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import type { GuiWallet } from '../../types/types.js'
+import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -51,7 +50,7 @@ type StateProps = {
   defaultSelectedWalletId: string,
   defaultSelectedWalletCurrencyCode: string,
   error: Error | null,
-  exchangeRates: ExchangeRatesState,
+  exchangeRates: GuiExchangeRates,
   lockInputs?: boolean,
   nativeAmount: string | null,
   pending: boolean,

@@ -9,11 +9,11 @@ import SafariView from 'react-native-safari-view'
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD } from '../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../locales/intl.js'
-import type { ExchangeRatesState } from '../modules/ExchangeRates/reducer'
 import { emptyEdgeDenomination } from '../modules/Settings/selectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../modules/UI/selectors.js'
 import { type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet, TransactionListTx } from '../types/types.js'
+import { type GuiExchangeRates } from '../types/types.js'
 
 export const DIVIDE_PRECISION = 18
 
@@ -680,7 +680,7 @@ export const convertToFiatFee = (
   networkFee: string,
   exchangeMultiplier: string,
   currencyCode: string,
-  exchangeRates: ExchangeRatesState,
+  exchangeRates: GuiExchangeRates,
   isoFiatCurrencyCode: string
 ): { amount: string, style?: string } => {
   const cryptoFeeExchangeAmount = convertNativeToExchange(exchangeMultiplier)(networkFee)
@@ -695,7 +695,7 @@ export const convertToFiatFee = (
 export const convertTransactionFeeToDisplayFee = (
   guiWallet: GuiWallet,
   currencyCode: string,
-  exchangeRates: ExchangeRatesState,
+  exchangeRates: GuiExchangeRates,
   transaction: EdgeTransaction | null,
   settings: any
 ): { fiatSymbol?: string, fiatAmount: string, fiatStyle?: string, cryptoSymbol?: string, cryptoAmount: string } => {
