@@ -1,6 +1,5 @@
 // @flow
 
-import type { JsonObject } from 'edge-core-js'
 import type { EdgeCurrencyWallet, EdgeSpendTarget } from 'edge-core-js/types'
 import * as React from 'react'
 import { ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
@@ -28,6 +27,18 @@ type OwnProps = {
   currencyCode?: string
 }
 
+type DefaultFeeSettings = {
+  currentDefault: DefaultFeeOption,
+  isDefault: boolean,
+  currentDefaultCustomFee: Object
+}
+
+type FeeSettings = {
+  defaultFeeSettings: DefaultFeeSettings,
+  networkFeeOption: FeeOption,
+  customNetworkFee: Object
+}
+
 type StateProps = {
   networkFeeOption?: FeeOption,
   customNetworkFee?: Object,
@@ -36,39 +47,27 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  onSubmit(
-    networkFeeOption: FeeOption,
-    isDefault: boolean,
-    currentDefault: DefaultFeeOption,
-    customNetworkFee: Object,
-    walletId: string,
-    currencyCode?: string
-  ): mixed
+  onSubmit(feeSettings: FeeSettings, walletId: string, currencyCode?: string): mixed
 }
 
 type Props = OwnProps & StateProps & DispatchProps
 
 type State = {
   networkFeeOption: FeeOption,
-  isDefault: boolean,
-  currentDefault: DefaultFeeOption,
-  customNetworkFee: Object
+  customNetworkFee: Object,
+  defaultFeeSetting: DefaultFeeSettings
 }
 
 export class ChangeMiningFee extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const defaultNetworkFee = 'standard'
-    let isDefault = false
 
+    // Get Default Fee Settings
     const { customNetworkFee = {} } = props // Initially standard
-    let { networkFeeOption = defaultNetworkFee } = props // Initially standard
+    const { networkFeeOption = defaultNetworkFee } = props // Initially standard
 
-    const currentDefault = props.currencySettings?.defaultFee ?? 'none'
-    if (currentDefault !== 'none') {
-      networkFeeOption = (currentDefault: any)
-      isDefault = true
-    }
+    const defaultFeeSetting: DefaultFeeSettings = this.getDefaultFeeSettings(networkFeeOption)
 
     const customFormat = this.getCustomFormat()
 
@@ -76,10 +75,27 @@ export class ChangeMiningFee extends React.Component<Props, State> {
       // Reset the custom fees if they don't match the format:
       const defaultCustomFee = {}
       for (const key of customFormat) defaultCustomFee[key] = ''
-      this.state = { networkFeeOption, isDefault, currentDefault, customNetworkFee: defaultCustomFee }
+      this.state = { networkFeeOption, defaultFeeSetting, customNetworkFee: defaultCustomFee }
     } else {
       // Otherwise, use the custom fees from before:
-      this.state = { networkFeeOption, isDefault, currentDefault, customNetworkFee }
+      this.state = { networkFeeOption, defaultFeeSetting, customNetworkFee }
+    }
+  }
+
+  getDefaultFeeSettings(networkFeeOption: FeeOption): DefaultFeeSettings {
+    const currentDefault = this.props.currencySettings?.defaultFee ?? 'none'
+    const currentDefaultCustomFee = this.props.currencySettings?.customFee ?? {}
+    let isDefault = false
+
+    if (currentDefault !== 'none') {
+      networkFeeOption = currentDefault
+      isDefault = true
+    }
+
+    return {
+      currentDefault,
+      isDefault,
+      currentDefaultCustomFee
     }
   }
 
@@ -92,20 +108,33 @@ export class ChangeMiningFee extends React.Component<Props, State> {
   }
 
   onSubmit = () => {
-    const { networkFeeOption, isDefault, currentDefault, customNetworkFee } = this.state
+    const { networkFeeOption, customNetworkFee, defaultFeeSetting } = this.state
     const { currencyCode, wallet, spendTargets = [] } = this.props
     const testSpendInfo = { spendTargets, networkFeeOption, customNetworkFee, currencyCode }
     wallet
       .makeSpend(testSpendInfo)
       .then(() => {
-        this.props.onSubmit(networkFeeOption, isDefault, currentDefault, customNetworkFee, wallet.id, currencyCode)
-        Actions.pop()
+        const feeSettings: FeeSettings = {
+          defaultFeeSettings: {
+            currentDefault: defaultFeeSetting.currentDefault,
+            isDefault: defaultFeeSetting.isDefault,
+            currentDefaultCustomFee: defaultFeeSetting.currentDefaultCustomFee
+          },
+          networkFeeOption: networkFeeOption,
+          customNetworkFee: customNetworkFee
+        }
+        if (currencyCode != null) this.submit(feeSettings, wallet.id, currencyCode)
       })
       .catch(e => {
         let message = e.message
         if (e.name === 'ErrorBelowMinimumFee') message = `${s.strings.invalid_custom_fee} ${e.message}`
         showError(message)
       })
+  }
+
+  submit(feeSettings: FeeSettings, walletId: any, currencyCode: string) {
+    this.props.onSubmit(feeSettings, walletId, currencyCode)
+    Actions.pop()
   }
 
   render() {
@@ -121,7 +150,7 @@ export class ChangeMiningFee extends React.Component<Props, State> {
           {customFormat != null ? this.renderCustomFee(customFormat) : null}
           {this.renderFeeWarning()}
 
-          <SwitchButton label={s.strings.settings_toggle_default_fee} value={this.state.isDefault} onChange={() => this.toggleDefaultFee()} />
+          <SwitchButton label={s.strings.settings_toggle_default_fee} value={this.state.defaultFeeSetting.isDefault} onChange={() => this.toggleDefaultFee()} />
 
           <PrimaryButton onPress={this.onSubmit} style={styles.saveButton}>
             <PrimaryButton.Text>{s.strings.save}</PrimaryButton.Text>
@@ -132,15 +161,14 @@ export class ChangeMiningFee extends React.Component<Props, State> {
   }
 
   toggleDefaultFee = () => {
-    this.setState(prevState => ({
-      isDefault: !prevState.isDefault
-    }))
+    const isNowDefault = !this.state.defaultFeeSetting.isDefault
 
-    if (this.state.isDefault)
-      // If saving default,
-      this.setState(prevState => ({
-        currentDefault: prevState.networkFeeOption // Set state's current default
-      }))
+    this.setState(prevState => ({
+      defaultFeeSetting: {
+        ...prevState.defaultFeeSetting,
+        isDefault: isNowDefault
+      }
+    }))
   }
 
   renderRadioRow(value: FeeOption, label: string) {
@@ -250,6 +278,30 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
+const updateDefaultFee = (feeSettings, currencyCode, dispatch) => {
+  const currentDefault = feeSettings.defaultFeeSettings.currentDefault
+
+  // Compare value of custom fee field to see if we need to update the custom default fee value
+  let customFeeOutdated = false
+  if (feeSettings.networkFeeOption === 'custom') {
+    if (feeSettings.defaultFeeSettings.currentDefaultCustomFee.satPerByte !== feeSettings.customNetworkFee.satPerByte) customFeeOutdated = true
+  }
+
+  const outDated = currentDefault !== feeSettings.networkFeeOption || currentDefault === 'standard' || customFeeOutdated
+  const currentlyOff = currentDefault === 'none'
+
+  if (currencyCode) {
+    if (outDated && feeSettings.defaultFeeSettings.isDefault) {
+      // Set default fee
+      dispatch(setDefaultFeeSetting(currencyCode, feeSettings.networkFeeOption, feeSettings.customNetworkFee))
+    }
+    if (!currentlyOff && !feeSettings.defaultFeeSettings.isDefault) {
+      // Turn off default fee
+      dispatch(setDefaultFeeSetting(currencyCode, 'none', feeSettings.customNetworkFee))
+    }
+  }
+}
+
 export const ChangeMiningFeeScene = connect(
   (state: RootState): StateProps => {
     return {
@@ -260,26 +312,12 @@ export const ChangeMiningFeeScene = connect(
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    onSubmit(
-      networkFeeOption: FeeOption,
-      isDefault: boolean,
-      currentDefault: DefaultFeeOption,
-      customFee: JsonObject,
-      walletId: string,
-      currencyCode?: string
-    ) {
-      const outDated = currentDefault !== networkFeeOption || currentDefault === 'standard'
-      const currentlyOff = currentDefault === 'none'
-      if (currencyCode) {
-        if (outDated && isDefault) {
-          // Set default fee
-          dispatch(setDefaultFeeSetting(currencyCode, networkFeeOption, customFee))
-        }
-        if (!currentlyOff && !isDefault) {
-          // Turn off default fee
-          dispatch(setDefaultFeeSetting(currencyCode, 'none', customFee))
-        }
-      }
+    onSubmit(feeSettings: FeeSettings, walletId: string, currencyCode?: string) {
+      const networkFeeOption: FeeOption = feeSettings.networkFeeOption
+      const customFee: Object = feeSettings.customNetworkFee
+
+      updateDefaultFee(feeSettings, currencyCode, dispatch)
+
       dispatch(sendConfirmationUpdateTx({ networkFeeOption, customFee }))
     }
   })

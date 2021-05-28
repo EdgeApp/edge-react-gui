@@ -1,7 +1,7 @@
 /* eslint-disable quote-props */
 // @flow
 
-import type { EdgeAccount, JsonObject } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
 import type { SortOption } from '../../../components/modals/WalletListSortModal.js'
 import { showError } from '../../../components/services/AirshipInstance.js'
@@ -691,8 +691,10 @@ export const setDenominationKeyRequest = (account: EdgeAccount, currencyCode: st
     return setSyncedSettings(account, updatedSettings)
   })
 // Save default fee setting to disk
-export const saveDefaultFeeSetting = (account: EdgeAccount, currencyCode: string, defaultFee: DefaultFeeOption, customFee?: JsonObject) =>
+export const saveDefaultFeeSetting = (account: EdgeAccount, currencyCode: string, feeSettings: Object) =>
   getSyncedSettings(account).then(settings => {
+    const defaultFee = feeSettings.defaultFee
+    const customFee = feeSettings.customFee
     const updatedSettings = updateCurrencySettings(settings, currencyCode, { defaultFee, customFee })
     return setSyncedSettings(account, updatedSettings)
   })

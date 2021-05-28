@@ -171,8 +171,10 @@ export const setDefaultFeeSetting = (currencyCode: string, defaultFee: DefaultFe
   const state = getState()
   const { account } = state.core
 
+  const feeSettings = { defaultFee, customFee }
+
   // Save to disk
-  ACCOUNT_SETTINGS.saveDefaultFeeSetting(account, currencyCode, defaultFee, customFee).catch(showError)
+  ACCOUNT_SETTINGS.saveDefaultFeeSetting(account, currencyCode, feeSettings).catch(showError)
 
   // Update Redux
   return dispatch(setDefaultFee(currencyCode, defaultFee, customFee))
