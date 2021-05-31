@@ -491,7 +491,7 @@ export const updateTransactionAmount =
       .catch(error => {
         let customError
 
-        if (coreWallet.currencyInfo.defaultSettings.errorCodes[error.labelCode] != null) {
+        if (error.labelCode && coreWallet.currencyInfo?.defaultSettings?.errorCodes[error.labelCode] != null) {
           customError = new Error(XRP_DESTINATION_TAG_ERRORS[error.labelCode])
         }
 
