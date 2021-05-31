@@ -18,6 +18,7 @@ import type { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletRe
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
 import { debounce } from '../../util/utils'
@@ -106,7 +107,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
     const { accountHandle } = this.state
     const { currencyCode } = selectedWalletType
     const walletTypeValue = selectedWalletType.walletType.replace('wallet:', '')
-    const { symbolImage } = currencyConfigs[walletTypeValue].currencyInfo
+    const { symbolImage } = getCurrencyIcon(currencyConfigs[walletTypeValue].currencyInfo.currencyCode)
     const isHandleAvailable: boolean = handleAvailableStatus === 'AVAILABLE'
     const validityIcon = isHandleAvailable ? validIcon : invalidIcon
     let chooseHandleErrorMessage = ''

@@ -8,13 +8,13 @@ export const MAX_TOKEN_CODE_CHARACTERS = 7
 export const FEE_COLOR_THRESHOLD = 2.0 // this is denominated in dollars
 export const FEE_ALERT_THRESHOLD = 5.0 // this is denominated in dollars
 
-export const imageServerUrl = 'https://content.edge.app'
+export const IMAGE_SERVER_URL = 'https://content.edge.app'
 
 export const CURRENCY_SYMBOL_IMAGES = {
-  BCH: `${imageServerUrl}/bitcoincash-logo-solo-64.png`,
-  BTC: `${imageServerUrl}/bitcoin-logo-solo-64.png`,
-  ETH: `${imageServerUrl}/ethereum-logo-solo-64.png`,
-  ETC: `${imageServerUrl}/ethereum-classic-logo-solo-64.png`
+  BCH: `${IMAGE_SERVER_URL}/bitcoincash-logo-solo-64.png`,
+  BTC: `${IMAGE_SERVER_URL}/bitcoin-logo-solo-64.png`,
+  ETH: `${IMAGE_SERVER_URL}/ethereum-logo-solo-64.png`,
+  ETC: `${IMAGE_SERVER_URL}/ethereum-classic-logo-solo-64.png`
 }
 
 // Translations for custom fee keys:

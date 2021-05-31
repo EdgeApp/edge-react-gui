@@ -1,9 +1,9 @@
 // @flow
 
 import { type CountryData } from '../types/types.js'
-import { imageServerUrl } from './WalletAndCurrencyConstants.js'
+import { IMAGE_SERVER_URL } from './WalletAndCurrencyConstants.js'
 
-export const FLAG_LOGO_URL = `${imageServerUrl}/country-logos`
+export const FLAG_LOGO_URL = `${IMAGE_SERVER_URL}/country-logos`
 
 export const COUNTRY_CODES: CountryData[] = [
   { name: 'Afghanistan', 'alpha-2': 'AF', fiat: '' },

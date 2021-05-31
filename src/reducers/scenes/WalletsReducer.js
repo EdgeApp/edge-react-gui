@@ -7,6 +7,7 @@ import { type Reducer, combineReducers } from 'redux'
 import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import type { Action } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 
 export type WalletsState = {
   byId: { [walletId: string]: GuiWallet },
@@ -285,8 +286,6 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
   const currencyCode: string = wallet.currencyInfo.currencyCode
   const fiatCurrencyCode: string = wallet.fiatCurrencyCode.replace('iso:', '')
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
-  const symbolImage = wallet.currencyInfo.symbolImage
-  const symbolImageDarkMono = wallet.currencyInfo.symbolImageDarkMono
   const metaTokens: EdgeMetaToken[] = wallet.currencyInfo.metaTokens
   const denominations: EdgeDenomination[] = wallet.currencyInfo.denominations
   const blockHeight: number = wallet.blockHeight
@@ -351,8 +350,7 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
     enabledTokens,
     receiveAddress,
     blockHeight,
-    symbolImage,
-    symbolImageDarkMono
+    ...getCurrencyIcon(currencyCode)
   }
 
   return newWallet
