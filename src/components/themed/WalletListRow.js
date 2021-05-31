@@ -17,6 +17,7 @@ type OwnProps = {
   exchangeRateString?: string,
   exchangeRateType?: 'Neutral' | 'Positive' | 'Negative',
   icon?: React.Node,
+  editIcon?: React.Node,
   gradient?: boolean,
   onPress?: () => void,
   onLongPress?: () => void,
@@ -53,6 +54,7 @@ class WalletListRowComponent extends React.PureComponent<Props> {
       exchangeRateType = 'Neutral',
       gradient = false,
       icon,
+      editIcon,
       loading = false,
       onPress,
       onLongPress,
@@ -75,6 +77,7 @@ class WalletListRowComponent extends React.PureComponent<Props> {
                 <View style={styles.detailsRow}>
                   <EdgeText style={[styles.detailsCurrency, { width: theme.rem(2.75) }]}>{currencyCode}</EdgeText>
                   <EdgeText style={styles[`percentage${exchangeRateType}`]}>{exchangeRateString}</EdgeText>
+                  {editIcon ? <View style={styles.editIcon}>{editIcon}</View> : null}
                 </View>
                 <EdgeText style={styles.detailsName}>{walletNameString}</EdgeText>
               </View>
@@ -117,6 +120,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: theme.rem(1)
+  },
+  editIcon: {
+    marginLeft: theme.rem(0.75)
   },
 
   // Details
