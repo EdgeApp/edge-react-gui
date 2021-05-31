@@ -27,21 +27,25 @@ type State = {
 }
 
 export class WalletProgressIconComponent extends React.PureComponent<Props, State> {
+  updateIsDoneState: TimeoutID
+
   constructor(props: Props) {
     super(props)
     this.state = { isDone: false }
   }
 
+  updateIsDone(isDone: boolean) {
+    this.updateIsDoneState = setTimeout(() => {
+      this.setState({ isDone })
+    }, 500)
+  }
+
   componentDidUpdate() {
     if (this.props.progress === 100) {
-      setTimeout(() => {
-        this.setState({ isDone: true })
-      }, 500)
+      this.updateIsDone(true)
     }
     if (this.props.progress <= 5) {
-      setTimeout(() => {
-        this.setState({ isDone: false })
-      }, 500)
+      this.updateIsDone(false)
     }
   }
 
@@ -49,6 +53,10 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
     if (this.props.progress === 100) {
       this.setState({ isDone: true })
     }
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.updateIsDoneState)
   }
 
   render() {
