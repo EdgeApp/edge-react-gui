@@ -40,6 +40,7 @@ export type ManageTokensStateProps = {
 type ManageTokensProps = ManageTokensOwnProps & ManageTokensDispatchProps & ManageTokensStateProps & ThemeProps
 
 type State = {
+  walletId: string,
   enabledList: string[],
   combinedCurrencyInfos: EdgeMetaToken[],
   tokens: EdgeMetaToken[],
@@ -52,9 +53,10 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
   constructor(props: ManageTokensProps) {
     super(props)
 
-    const { enabledTokens } = this.props.guiWallet
+    const { enabledTokens, id } = this.props.guiWallet
 
     this.state = {
+      walletId: id,
       enabledList: [...enabledTokens],
       combinedCurrencyInfos: [],
       tokens: this.getTokens(),
@@ -62,12 +64,24 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.guiWallet.id !== prevProps.guiWallet.id) {
+      this.updateTokens()
+    }
+  }
+
+  updateTokens() {
+    this.setState({ tokens: this.getTokens(), enabledList: [...this.props.guiWallet.enabledTokens] })
+  }
+
   getTokens(): EdgeMetaToken[] {
     const { metaTokens, currencyCode } = this.props.guiWallet
 
     const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
 
-    const accountMetaTokenInfo: CustomTokenInfo[] = specialCurrencyInfo.isCustomTokensSupported ? [...this.props.settingsCustomTokens] : []
+    const customTokens = this.props.settingsCustomTokens
+
+    const accountMetaTokenInfo: CustomTokenInfo[] = specialCurrencyInfo.isCustomTokensSupported ? [...customTokens] : []
 
     const filteredTokenInfo = accountMetaTokenInfo.filter(token => {
       return token.walletType === this.props.guiWallet.type || token.walletType === undefined
