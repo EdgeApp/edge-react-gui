@@ -58,7 +58,7 @@ export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: G
         logOutput.loggedInUser.wallets.push({
           currencyCode,
           repoId: getRepoId(wallet.keys.syncKey),
-          pluginDump: await wallet.dumpData()
+          pluginDump: global.__DEV__ ? await wallet.dumpData() : undefined
         })
       }
     }
