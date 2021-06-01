@@ -1,5 +1,35 @@
 # edge-react-gui
 
+## 2.0.12 (2021-06-01)
+
+- Upgrade to React Native v0.64.1
+- Add more currency icons
+- iOS: Fix transaction timestamp accuracy
+- Add additional context modal for Contacts permission
+- Fix missing currency codes in Sweep Private Key wallet picker
+- Add side menu hamburger button to Settings and ToS scenes
+- Text and layout fixes
+- Upgrade edge-currency-accountbased to v0.7.60
+  - Fix a possible race condition where the last queried block height is saved but the actual transactions are not
+  - Always set this.walletLocalDataDirty = true if any transactions have changed
+  - ETH: Use the default token gas limit if getCode reveals the destination is a contract and estimateGas fails to return a gas value
+  - ETH: Allow ethgasstation safeLow estimate less than 1
+  - Update logging
+  - XRP: Remove bogus length checks from the XRP key import
+  - FIO: Refactor SDK initialization so it's only started once per wallet
+- Upgrade edge-currency-monero to v0.3.1
+  - Fix float amount precision
+  - Fix recorded native amount and fee
+  - Import native code directly from react-native-mymonero-core. Before, this plugin relied on "magic" methods passed in via the global object
+- Upgrade edge-exchange-plugins to v0.11.28
+  - Godex: Add the mainnet currency codes to the transaction request
+  - Fox: Check mainnet matches user's wallet
+- Upgrade edge-login-ui-rn to v0.9.4
+  - Prevent user from selecting duplicate recovery questions
+  - Show error on Change Password Recovery Screen when user selecting the same question
+  - Fix spacing issue on create account welcome screen
+  - Prepare for future edge-core-js breaking changes
+
 ## 2.0.11 (2021-05-17)
 
 - Add Fantom (FTM) support with fUSDT
