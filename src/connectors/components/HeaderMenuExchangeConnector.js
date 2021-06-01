@@ -15,23 +15,30 @@ export const dropDownStyle = {
   ...MenuDropDownStyle,
   icon: { ...MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
 }
+
 const mapStateToProps = (state: RootState): StateProps => {
-  const data = [
-    {
+  const currencyCode = state.cryptoExchange?.fromWallet?.currencyCode ?? ''
+
+  const data = []
+
+  if (Constants.getSpecialCurrencyInfo(currencyCode).noMaxSpend !== true) {
+    data.push({
       label: s.strings.dropdown_exchange_max_amount,
       key: s.strings.dropdown_exchange_max_amount,
       value: {
         title: Constants.EXCHANGE_MAX_AMOUNT_VALUE
       }
-    },
-    {
-      label: s.strings.string_help,
-      key: s.strings.string_help,
-      value: {
-        title: Constants.HELP_VALUE
-      }
+    })
+  }
+
+  data.push({
+    label: s.strings.string_help,
+    key: s.strings.string_help,
+    value: {
+      title: Constants.HELP_VALUE
     }
-  ]
+  })
+
   return {
     style: dropDownStyle,
     data
