@@ -102,6 +102,7 @@
     "cleaners": "^0.3.7",
     "core-js": "^2.5.2",
     "csv-stringify": "^5.6.2",
+    "date-fns": "^2.22.1",
     "dateformat": "^3.0.3",
     "detect-bundler": "^1.0.0",
     "detox": "^18.10.0",
