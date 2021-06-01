@@ -368,7 +368,7 @@ export const FIAT_COUNTRY: { [string]: { countryName: string, logoUrl: string } 
   RON: { countryName: 'ROMANIA', logoUrl: `${FLAG_LOGO_URL}/romania.png` },
   RUB: { countryName: 'RUSSIA', logoUrl: `${FLAG_LOGO_URL}/russia.png` },
   RWF: { countryName: 'RWANDA', logoUrl: `${FLAG_LOGO_URL}/rwanda.png` },
-  SHP: { countryName: '-', logoUrl: '' },
+  SHP: { countryName: 'SAINT HELENA', logoUrl: `${FLAG_LOGO_URL}/saint-helena-pound.png` },
   WST: { countryName: 'SAMOA', logoUrl: `${FLAG_LOGO_URL}/samoa.png` },
   STN: { countryName: 'SAO TOME AND PRINCIPE', logoUrl: `${FLAG_LOGO_URL}/sao-tome-and-principe.png` },
   SAR: { countryName: 'SAUDI ARABIA', logoUrl: `${FLAG_LOGO_URL}/saudi-arabia.png` },
