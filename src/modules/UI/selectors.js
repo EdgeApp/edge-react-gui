@@ -9,41 +9,8 @@ import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types/
 import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
 
-export const getWallets = (state: RootState) => {
-  // returns an object with GUI Wallets as Keys Not sure how to tpye that
-  const wallets = state.ui.wallets.byId
-  return wallets
-}
-
-export const getFioWallets = (state: RootState) => {
-  return state.ui.wallets.fioWallets
-}
-
-export const getWallet = (state: RootState, walletId: string) => {
-  const wallets = getWallets(state)
-  const wallet = wallets[walletId]
-  return wallet
-}
-
-export const getSelectedWalletId = (state: RootState): string => {
-  const selectedWalletId = state.ui.wallets.selectedWalletId
-  return selectedWalletId
-}
-
-export const getSelectedCurrencyCode = (state: RootState): string => {
-  const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
-  return selectedCurrencyCode
-}
-
-export const getSelectedWallet = (state: RootState) => {
-  const walletId = getSelectedWalletId(state)
-  const selectedWallet = getWallet(state, walletId)
-  return selectedWallet
-}
-
-export const getActiveWalletIds = (state: RootState): string[] => {
-  const activeWalletIds = state.ui.wallets.activeWalletIds
-  return activeWalletIds
+export function getSelectedWallet(state: RootState): GuiWallet {
+  return state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
 }
 
 export const getActiveWalletCurrencyCodes = (state: RootState) => {
@@ -74,32 +41,6 @@ export const getActiveWalletCurrencyInfos = (state: RootState) => {
   return currencyInfos
 }
 
-export const getWalletLoadingPercent = (state: RootState) => {
-  const walletsForProgress = state.ui.wallets.walletLoadingProgress
-  const walletIds = Object.keys(walletsForProgress)
-  const numberOfWallets = walletIds.length
-  let progressBeforeDivision = 0
-  for (const walletId of Object.keys(walletsForProgress)) {
-    progressBeforeDivision += walletsForProgress[walletId]
-  }
-  const progressAfterDivision = progressBeforeDivision / numberOfWallets
-  let progressPercentage = 0
-  if (numberOfWallets > 0) {
-    if (progressAfterDivision > 0.99999) {
-      progressPercentage = 100
-    } else {
-      progressPercentage = parseInt(progressAfterDivision * 100)
-    }
-  }
-  return progressPercentage
-}
-
-export const getSelectedWalletLoadingPercent = (state: RootState) => {
-  const wallet = getSelectedWallet(state)
-  const walletsProgress = state.ui.wallets.walletLoadingProgress
-  return walletsProgress[wallet.id] ? walletsProgress[wallet.id] * 100 : 0
-}
-
 export const getTransactions = (state: RootState): TransactionListTx[] => {
   const transactions = state.ui.scenes.transactionList.transactions
   return transactions
@@ -125,11 +66,9 @@ export const getDefaultDenomination = (state: RootState, currencyCode: string): 
 }
 
 export const getExchangeDenomination = (state: RootState, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
-  let wallet = getSelectedWallet(state)
   const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)
-  if (specificWallet) {
-    wallet = getWallet(state, specificWallet.id)
-  }
+  const walletId = specificWallet ? specificWallet.id : state.ui.wallets.selectedWalletId
+  const wallet = state.ui.wallets.byId[walletId]
   if (wallet.allDenominations[currencyCode]) {
     for (const key of Object.keys(wallet.allDenominations[currencyCode])) {
       const denomination = wallet.allDenominations[currencyCode][key]
@@ -145,22 +84,6 @@ export const getExchangeDenomination = (state: RootState, currencyCode: string, 
   throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
 }
 
-export const getUIState = (state: RootState) => {
-  const uiState = state.ui
-  return uiState
-}
-
-export const getScenesState = (state: RootState) => {
-  const uiState = getUIState(state)
-  const scenesState = uiState.scenes
-  return scenesState
-}
-
-export const getSceneState = (state: RootState, sceneKey: string) => {
-  const sceneState = getScenesState(state)[sceneKey]
-  return sceneState
-}
-
 export const getExchangeRate = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string): number => {
   const exchangeRates = state.exchangeRates
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
@@ -174,7 +97,7 @@ export const convertCurrency = (state: RootState, fromCurrencyCode: string, toCu
   return convertedAmount
 }
 
-export const convertCurrencyWithoutState = (exchangeRates: { [string]: number }, fromCurrencyCode: string, toCurrencyCode: string, amount: number = 1) => {
+const convertCurrencyWithoutState = (exchangeRates: { [string]: number }, fromCurrencyCode: string, toCurrencyCode: string, amount: number = 1) => {
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
   const convertedAmount = amount * exchangeRate
@@ -228,7 +151,7 @@ export const convertNativeToExchangeRateDenomination = (settings: Object, curren
 }
 
 export const findWalletByFioAddress = async (state: RootState, fioAddress: string): Promise<EdgeCurrencyWallet | null> => {
-  const fioWallets: EdgeCurrencyWallet[] = getFioWallets(state)
+  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
 
   if (fioWallets && fioWallets.length) {
     for (const wallet: EdgeCurrencyWallet of fioWallets) {

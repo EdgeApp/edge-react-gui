@@ -54,7 +54,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
       throw new Error('No currency selected') // Should never happen
     }
 
-    const { currencyWallets = {} } = state.core.account
+    const { currencyWallets } = state.core.account
     const fromCoreWallet: EdgeCurrencyWallet = currencyWallets[fromWallet.id]
     const toCoreWallet: EdgeCurrencyWallet = currencyWallets[toWallet.id]
     const request: EdgeSwapRequest = {
@@ -123,7 +123,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   if (!fromWallet) {
     return
   }
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const wallet: EdgeCurrencyWallet = currencyWallets[fromWallet.id]
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
@@ -174,7 +174,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
 
   // Currency conversion tools:
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = request
-  const currencyConverter = account.exchangeCache
+  const currencyConverter = account.rateCache
 
   // Format from amount:
   const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
@@ -414,7 +414,7 @@ export const checkEnabledExchanges = () => (dispatch: Dispatch, getState: GetSta
 
 async function getBalanceMessage(state: RootState, wallet: GuiWallet, currencyCode: string) {
   const { account } = state.core
-  const currencyConverter = account.exchangeCache
+  const currencyConverter = account.rateCache
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)

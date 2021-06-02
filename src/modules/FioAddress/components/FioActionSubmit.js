@@ -129,10 +129,10 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     }
   }
 
-  setBalance = async (): Promise<void> => {
+  setBalance = (): void => {
     const { fioWallet, addressTitles } = this.props
     if (fioWallet) {
-      const balance = await fioWallet.getBalance()
+      const balance = fioWallet.balances[fioWallet.currencyInfo.currencyCode] ?? '0'
       this.setState({ balance: this.formatFio(balance) })
     } else {
       showError(addressTitles ? s.strings.fio_wallet_missing_for_fio_address : s.strings.fio_wallet_missing_for_fio_domain)
@@ -185,8 +185,6 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         {showSlider && (
           <View style={styles.blockPadding}>
             <Slider
-              parentStyle={styles.slider}
-              reset={false}
               onSlidingComplete={this.onConfirm}
               disabled={displayFee > balance || loading}
               showSpinner={loading}

@@ -30,9 +30,7 @@ export type AccountPaymentParams = {
 export type CreateWalletAccountSelectStateProps = {
   wallets: { [string]: GuiWallet },
   paymentCurrencyCode: string,
-  paymentAddress: string,
   amount: string,
-  expireTime: string,
   supportedCurrencies: { [currencyCode: string]: boolean },
   activationCost: string,
   isCreatingWallet: boolean,
@@ -46,7 +44,6 @@ export type CreateWalletAccountSelectOwnProps = {
   selectedFiat: GuiFiatType,
   selectedWalletType: CreateWalletType,
   accountName: string,
-  isReactivation?: boolean,
   existingWalletId?: string
 }
 
@@ -174,17 +171,8 @@ export class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   renderPaymentReview = () => {
-    const {
-      wallets,
-      paymentCurrencyCode,
-      accountName,
-      isCreatingWallet,
-      amount,
-      selectedWalletType,
-      selectedFiat,
-      activationCost,
-      paymentDenominationSymbol
-    } = this.props
+    const { wallets, paymentCurrencyCode, accountName, isCreatingWallet, amount, selectedWalletType, selectedFiat, activationCost, paymentDenominationSymbol } =
+      this.props
     const { walletId, createdWallet } = this.state
     const wallet = wallets[walletId]
     if (!wallet) return null

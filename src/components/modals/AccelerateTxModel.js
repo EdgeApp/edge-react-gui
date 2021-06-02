@@ -1,6 +1,5 @@
 // @flow
 
-import { bns } from 'biggystring'
 import type { EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
@@ -10,9 +9,11 @@ import { connect } from 'react-redux'
 import { playSendSound } from '../../actions/SoundActions.js'
 import { TRANSACTION_DETAILS } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
+import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
-import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
+import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { type RootState } from '../../types/reduxTypes.js'
+import type { GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { showError, showToast, showWarning } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -26,10 +27,14 @@ type Status = 'confirming' | 'sending' | 'sent'
 type OwnProps = {
   bridge: AirshipBridge<Status>,
   edgeTransaction: EdgeTransaction,
-  wallet: EdgeCurrencyWallet
+  wallet: EdgeCurrencyWallet,
+  guiWallet: GuiWallet
 }
 type StateProps = {
-  edgeDenomination: EdgeDenomination
+  edgeDenomination: EdgeDenomination,
+  selectedCurrencyCode: string,
+  exchangeRates: ExchangeRatesState,
+  settings: any
 }
 type Props = OwnProps & StateProps & ThemeProps
 
@@ -40,7 +45,7 @@ type State = {
   mounted: boolean
 }
 
-class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
+class AccelerateTxModelComponent extends PureComponent<Props, State> {
   constructor() {
     super()
 
@@ -77,7 +82,10 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
       }
 
       try {
-        const edgeUnsignedTransaction = await wallet.makeSpend(edgeSpendInfo)
+        let edgeUnsignedTransaction = await wallet.makeSpend(edgeSpendInfo)
+
+        // Copy the replaced transaction's metadata to the RBF transaction
+        edgeUnsignedTransaction = { ...edgeUnsignedTransaction, metadata: edgeTransaction.metadata }
 
         this.setState({
           edgeUnsignedTransaction
@@ -152,16 +160,13 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
   }
 
   getTxFeeDisplay = (edgeTransaction: EdgeTransaction, edgeDenomination: EdgeDenomination): string => {
-    const txFee = bns.gt(edgeTransaction.networkFee, '0')
-      ? edgeTransaction.networkFee
-      : edgeTransaction.parentNetworkFee && bns.gt(edgeTransaction.parentNetworkFee, '0')
-      ? edgeTransaction.parentNetworkFee
-      : ''
+    const { exchangeRates, guiWallet, settings, selectedCurrencyCode } = this.props
 
-    const feeAmount = txFee ? UTILS.convertNativeToDisplay(edgeDenomination.multiplier)(txFee) : ''
-    const symbolString = edgeDenomination.symbol ? edgeDenomination.symbol : ''
+    const transactionFee = UTILS.convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, edgeTransaction, settings)
 
-    return feeAmount !== '' ? `${symbolString} ${feeAmount}` : ''
+    const feeSyntax = `${transactionFee.cryptoSymbol || ''} ${transactionFee.cryptoAmount} (${transactionFee.fiatSymbol || ''} ${transactionFee.fiatAmount})`
+
+    return feeSyntax
   }
 
   render() {
@@ -194,7 +199,7 @@ class TransactionAccelerateModalComponent extends PureComponent<Props, State> {
             )}
             <View style={styles.container}>
               <Slider
-                sliderDisabled={isSending || !!error}
+                disabled={isSending || !!error}
                 onSlidingComplete={this.handleConfirmation}
                 showSpinner={isSending}
                 disabledText={s.strings.transaction_details_accelerate_transaction_slider_disabled}
@@ -229,16 +234,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   container: {
     maxHeight: theme.rem(20),
-    margin: theme.rem(0.5)
+    marginVertical: theme.rem(0.5)
   }
 }))
 
-export const TransactionAccelerateModal = connect((state: RootState, ownProps: OwnProps): StateProps => {
+export const AccelerateTxModel = connect((state: RootState, ownProps: OwnProps): StateProps => {
   const { wallet } = ownProps
 
   const edgeDenomination = getDisplayDenomination(state, wallet.currencyInfo.currencyCode)
 
   return {
-    edgeDenomination
+    edgeDenomination,
+    selectedCurrencyCode: state.ui.wallets.selectedCurrencyCode,
+    exchangeRates: state.exchangeRates,
+    settings: state.ui.settings
   }
-})(withTheme(TransactionAccelerateModalComponent))
+})(withTheme(AccelerateTxModelComponent))

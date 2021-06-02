@@ -1,86 +1,48 @@
 // @flow
 
 import * as React from 'react'
-import { type AnimatedValue, Animated } from 'react-native'
+import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-type OwnProps = {
-  timing?: 'ease' | 'linear',
+import { useEffect, useRef, useState } from '../../util/hooks'
+
+type Props = {
   visible: boolean,
   hidden?: boolean,
-  children: React.Node,
-  onFadeoutFinish?: () => any
-}
-type Props = OwnProps
-
-type LocalState = {
-  visible: boolean,
-  prevVisibleProp: boolean
+  children: React.Node
 }
 
-class FadeComponent extends React.PureComponent<Props, LocalState> {
-  animatedValue: AnimatedValue = new Animated.Value(0)
-  constructor(props: Props) {
-    super()
-    this.animatedValue = new Animated.Value(0)
-    this.state = {
-      visible: props.visible,
-      prevVisibleProp: false
-    }
-  }
+const FadeComponent = ({ visible: propsVisible, hidden, children }: Props) => {
+  const firstRender = useRef(true)
+  const opacity = useSharedValue(0)
+  const [visible, setVisible] = useState<boolean>(propsVisible)
+  const [prevVisible, setPrevVisible] = useState<boolean>(propsVisible)
 
-  static getDerivedStateFromProps(props: Props, state: LocalState) {
-    if (props.visible !== state.prevVisibleProp) return { prevVisibleProp: props.visible }
+  if (visible !== prevVisible) setPrevVisible(visible)
 
-    return null
-  }
+  const animate = (toValue: number) => {
+    if (toValue === 0.5) setVisible(true)
 
-  componentDidUpdate(prevProps: Props): * {
-    if (this.state.prevVisibleProp !== prevProps.visible) {
-      this.animate(this.state.prevVisibleProp ? 0.5 : 1)
-    }
-  }
-
-  componentDidMount(): * {
-    this.animate(this.props.visible ? 0.5 : 0)
-  }
-
-  animate = (toValue: number) => {
-    if (toValue === 0.5) {
-      this.setState({ visible: true })
-    }
-    Animated.timing(this.animatedValue, {
-      toValue,
-      duration: 500,
-      useNativeDriver: true
-    }).start(() => {
-      this.setState({ visible: toValue === 0.5 })
-      if (toValue === 1 && this.props.onFadeoutFinish) this.props.onFadeoutFinish()
+    opacity.value = withTiming(toValue, {
+      duration: 500
     })
   }
 
-  renderContent() {
-    const { children, hidden } = this.props
-    if (hidden) return children
-    return this.state.visible ? children : null
-  }
+  useEffect(() => animate(propsVisible ? 0.5 : 0), [])
 
-  render() {
-    const inputRange = [0, 0.5, 1]
-    const opacityAnimation = this.animatedValue.interpolate({
-      inputRange,
-      outputRange: [0, 1, 0]
-    })
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
 
-    return (
-      <Animated.View
-        style={{
-          opacity: opacityAnimation
-        }}
-      >
-        {this.renderContent()}
-      </Animated.View>
-    )
-  }
+    if (propsVisible !== prevVisible) {
+      animate(propsVisible ? 0.5 : 1)
+    }
+  }, [propsVisible])
+
+  const style = useAnimatedStyle(() => ({ opacity: interpolate(opacity.value, [0, 0.5, 1], [0, 1, 0]) }))
+
+  return <Animated.View style={style}>{hidden || visible ? children : null}</Animated.View>
 }
 
 export const Fade = FadeComponent

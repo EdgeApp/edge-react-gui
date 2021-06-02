@@ -16,7 +16,10 @@ Object {
   },
   "contacts": Array [],
   "core": Object {
-    "account": Object {},
+    "account": Object {
+      "activeWalletIds": Array [],
+      "currencyWallets": Object {},
+    },
     "context": Object {},
     "disklet": Object {},
     "edgeLogin": Object {
@@ -90,6 +93,7 @@ Object {
   "ui": Object {
     "fio": Object {
       "connectedWalletsByFioAddress": Object {},
+      "needToCheckExpired": false,
     },
     "passwordReminder": Object {
       "lastLoginDate": -Infinity,
@@ -156,7 +160,6 @@ Object {
             "amountFiat": 0,
             "bizId": 0,
             "category": "",
-            "miscJson": "",
             "name": "",
             "notes": "",
           },
@@ -165,7 +168,6 @@ Object {
           "publicAddress": "",
         },
         "isEditable": true,
-        "isKeyboardVisible": false,
         "nativeAmount": "0",
         "pending": false,
         "pin": "",

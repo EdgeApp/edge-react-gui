@@ -1,14 +1,11 @@
 // @flow
+
 import * as React from 'react'
 import { Animated, Easing, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import type { RootState } from '../../types/reduxTypes.js'
+import { type RootState } from '../../types/reduxTypes.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-
-type OwnProps = {
-  progress: number | Function
-}
 
 type StateProps = {
   progress: number
@@ -18,9 +15,9 @@ type State = {
   isWalletProgressVisible: boolean
 }
 
-type Props = OwnProps & StateProps & ThemeProps
+type Props = StateProps & ThemeProps
 
-export class ProgressBar extends React.PureComponent<Props, State> {
+export class ProgressBarComponent extends React.PureComponent<Props, State> {
   animation: Animated.Value
 
   constructor(props: Props) {
@@ -65,13 +62,6 @@ export class ProgressBar extends React.PureComponent<Props, State> {
   }
 }
 
-export const WiredProgressBar = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => ({
-    progress: typeof ownProps.progress === 'function' ? ownProps.progress(state) : ownProps.progress
-  }),
-  null
-)(withTheme(ProgressBar))
-
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flexDirection: 'row'
@@ -85,3 +75,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
     zIndex: 100
   }
 }))
+
+export const WiredProgressBar = connect((state: RootState): StateProps => {
+  const walletsForProgress = state.ui.wallets.walletLoadingProgress
+  const walletIds = Object.keys(walletsForProgress)
+  if (walletIds.length === 0) return { progress: 0 }
+
+  let sum = 0
+  for (const walletId of walletIds) {
+    sum += walletsForProgress[walletId]
+  }
+  let ratio = sum / walletIds.length
+  if (ratio > 0.99999) ratio = 1
+  return { progress: ratio * 100 }
+}, null)(withTheme(ProgressBarComponent))

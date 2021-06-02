@@ -20,6 +20,7 @@ import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import { type WalletListResult, WalletListModal } from '../../../../../components/modals/WalletListModal.js'
+import { SWEEP_PRIVATE_KEY } from '../../../../../components/scenes/ScanScene'
 import { Airship } from '../../../../../components/services/AirshipInstance.js'
 import * as Constants from '../../../../../constants/indexConstants.js'
 import { getPrivateKeySweepableCurrencies } from '../../../../../constants/WalletAndCurrencyConstants.js'
@@ -88,13 +89,16 @@ export default class Main extends React.Component<Props> {
   }
 }
 
-const goToScene = (scene: string) => {
+const goToScene = (scene: string, sceneProps?: any) => {
   const { currentScene, drawerClose } = Actions
-  if (currentScene === scene) {
-    drawerClose()
-  } else {
-    Actions.jump(scene)
+
+  if (currentScene !== scene) {
+    Actions.jump(scene, sceneProps)
+  } else if (sceneProps) {
+    Actions.refresh(sceneProps)
   }
+
+  drawerClose()
 }
 
 const popToPluginBuyScene = () => goToScene(Constants.PLUGIN_BUY)
@@ -160,7 +164,7 @@ const WalletsButton = () => {
   )
 }
 
-const popToSendScan = () => goToScene(Constants.SCAN)
+const popToSendScan = () => goToScene(Constants.SCAN, { data: '' })
 const ScanButton = () => {
   return (
     <Button onPress={popToSendScan}>
@@ -179,14 +183,19 @@ const ScanButton = () => {
   )
 }
 
-const SweepPrivateKeyButton = ({ onSelectWallet }) => {
+type SweepPrivateKeyButtonProps = {
+  onSelectWallet: (walletId: string, currencyCode: string) => void
+}
+
+const SweepPrivateKeyButton = (props: SweepPrivateKeyButtonProps) => {
+  const { onSelectWallet } = props
   const handlePress = () => {
     Airship.show(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={getPrivateKeySweepableCurrencies()} showCreateWallet />
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         onSelectWallet(walletId, currencyCode)
-        Actions.jump(Constants.SCAN, { data: 'sweepPrivateKey' })
+        Actions.jump(Constants.SCAN, { data: SWEEP_PRIVATE_KEY })
       }
     })
   }
@@ -311,7 +320,12 @@ const SettingsButton = () => {
   )
 }
 
-const LogoutButton = ({ onPress }) => {
+type LogoutButtonProps = {
+  onPress: () => void
+}
+
+const LogoutButton = (props: LogoutButtonProps) => {
+  const { onPress } = props
   return (
     <Button onPress={onPress}>
       <Button.Row>

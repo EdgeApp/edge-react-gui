@@ -37,9 +37,7 @@ type OwnProps = {
 
 export type StateProps = {
   cryptoAmount: string,
-  currencyDenominationSymbol: string,
   currencyCode: string,
-  currencyName: string,
   denominationName: string,
   fiatCurrencyCode: string,
   fiatBalance: number,
@@ -100,18 +98,8 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   renderBalanceBox = () => {
-    const {
-      cryptoAmount,
-      currencyCode,
-      denominationName,
-      fiatSymbol,
-      fiatBalance,
-      fiatCurrencyCode,
-      walletId,
-      walletName,
-      isAccountBalanceVisible,
-      theme
-    } = this.props
+    const { cryptoAmount, currencyCode, denominationName, fiatSymbol, fiatBalance, fiatCurrencyCode, walletId, walletName, isAccountBalanceVisible, theme } =
+      this.props
     const styles = getStyles(theme)
 
     return (
@@ -347,8 +335,6 @@ export const TransactionListTop = connect(
 
     return {
       currencyCode: selectedCurrencyCode,
-      currencyName: guiWallet.currencyNames[selectedCurrencyCode],
-      currencyDenominationSymbol: currencyDenomination.symbol,
       cryptoAmount: cryptoAmountFormat,
       denominationName: currencyDenomination.name,
       fiatCurrencyCode: guiWallet.fiatCurrencyCode,

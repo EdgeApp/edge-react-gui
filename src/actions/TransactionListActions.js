@@ -1,11 +1,11 @@
 // @flow
 
+import { format } from 'date-fns'
 import type { EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 
 import { showTransactionDropdown } from '../components/navigation/TransactionDropdown.js'
 import { showError } from '../components/services/AirshipInstance.js'
-import * as UI_SELECTORS from '../modules/UI/selectors.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import type { TransactionListTx } from '../types/types.js'
 import * as UTILS from '../util/utils'
@@ -82,7 +82,7 @@ export const fetchMoreTransactions = (walletId: string, currencyCode: string, re
 }
 
 const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, walletId: string, currencyCode: string, options: Object) => {
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const wallet = currencyWallets[walletId]
   if (!wallet) return
   // initialize the master array of transactions that will eventually go into Redux
@@ -104,8 +104,8 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
     for (const tx of transactions) {
       // for each transaction, add some meta info
       const txDate = new Date(tx.date * 1000)
-      const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
-      const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
+      const dateString = format(txDate, 'MMM d, yyyy')
+      const time = format(txDate, 'h:mm bb')
       if (!transactionIdMap[tx.txid]) {
         // if the transaction is not already in the list
         transactionIdMap[tx.txid] = key
@@ -144,8 +144,8 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
 
 export const refreshTransactionsRequest = (walletId: string, transactions: EdgeTransaction[]) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-  const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const selectedWalletId = state.ui.wallets.selectedWalletId
+  const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
   let shouldFetch = false
   for (const transaction of transactions) {
     if (transaction.currencyCode === selectedCurrencyCode) {
@@ -163,8 +163,8 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeT
   const edgeTransaction: EdgeTransaction = edgeTransactions[0]
   const state = getState()
   const currentViewableTransactions = state.ui.scenes.transactionList.transactions
-  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-  const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const selectedWalletId = state.ui.wallets.selectedWalletId
+  const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
   let numberOfRelevantTransactions = 0
   let isTransactionForSelectedWallet = false
   const receivedTxs = []

@@ -10,7 +10,7 @@ import { CHANGE_MINING_FEE_SEND_CONFIRMATION } from '../constants/indexConstants
 import { type Dispatch, type RootState } from '../types/reduxTypes.js'
 
 const mapStateToProps = (state: RootState) => {
-  const { currencyWallets = {} } = state.core.account
+  const { currencyWallets } = state.core.account
   const sourceWalletId = state.ui.wallets.selectedWalletId
   const currencyCode = state.ui.wallets.selectedCurrencyCode
   const isEditable = state.ui.scenes.sendConfirmation.isEditable

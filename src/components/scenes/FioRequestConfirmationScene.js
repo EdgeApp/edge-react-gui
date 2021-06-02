@@ -13,8 +13,8 @@ import s from '../../locales/strings.js'
 import { addToFioAddressCache, checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddress/util'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2'
-import { Slider } from '../../modules/UI/components/Slider/Slider.ui'
-import * as UI_SELECTORS from '../../modules/UI/selectors.js'
+import { Slider } from '../../modules/UI/components/Slider/Slider'
+import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types'
 import { emptyCurrencyInfo } from '../../types/types'
@@ -292,14 +292,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         <Tile type="editable" title={s.strings.fio_confirm_request_memo} body={memo} onPress={this.onMemoPressed} />
         <View style={styles.sliderContainer}>
           {fioAddressFrom.length > 0 && fioAddressTo.length > 0 && showSlider ? (
-            <Slider
-              resetSlider={false}
-              parentStyle={styles.sliderStyle}
-              onSlidingComplete={this.onConfirm}
-              sliderDisabled={loading}
-              showSpinner={loading}
-              disabledText={s.strings.loading}
-            />
+            <Slider onSlidingComplete={this.onConfirm} disabled={loading} showSpinner={loading} disabledText={s.strings.loading} />
           ) : null}
         </View>
       </SceneWrapper>
@@ -309,21 +302,15 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
 const getStyles = cacheStyles((theme: Theme) => ({
   sliderContainer: {
-    alignItems: 'center'
-  },
-  sliderStyle: {
-    marginTop: theme.rem(2),
-    width: theme.rem(15),
-    backgroundColor: theme.secondaryButton,
-    borderRadius: theme.rem(2)
+    marginTop: theme.rem(2)
   }
 }))
 
 const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
-  const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
+  const guiWallet: GuiWallet = getSelectedWallet(state)
   const { account } = state.core
-  const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const fioWallets: EdgeCurrencyWallet[] = UI_SELECTORS.getFioWallets(state)
+  const currencyCode: string = state.ui.wallets.selectedCurrencyCode
+  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
   const { isConnected } = state.network
   const fioPlugin = account && account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
 
@@ -344,7 +331,7 @@ const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
   }
 
   const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
-  const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
+  const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, currencyCode)
   const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
   const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
   const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
@@ -363,7 +350,7 @@ const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
     exchangeDenomination: secondaryExchangeDenomination
   }
   const isoFiatCurrencyCode: string = guiWallet.isoFiatCurrencyCode
-  const exchangeSecondaryToPrimaryRatio = UI_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+  const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
 
   return {
     exchangeSecondaryToPrimaryRatio,

@@ -10,7 +10,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action.js'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util.js'
-import * as UI_SELECTORS from '../../modules/UI/selectors.js'
+import { getSelectedWallet } from '../../modules/UI/selectors'
 import { type Dispatch, type RootState } from '../../types/reduxTypes'
 import type { FioAddress, FioRequest, GuiWallet } from '../../types/types'
 import { AddressModal } from '../modals/AddressModal'
@@ -32,7 +32,6 @@ type SelectFioAddressOwnProps = {
 }
 
 type SelectFioAddressProps = {
-  loading: boolean,
   fioAddresses: FioAddress[],
   fioWallets: EdgeCurrencyWallet[],
   selectedWallet: GuiWallet,
@@ -94,6 +93,7 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
     const { fioRequest, isSendUsingFioAddress } = this.props
     const { expirationUpdated } = this.state
     if (expirationUpdated) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ expirationUpdated: false })
       this.setFioAddress(this.props.selected)
     }
@@ -262,9 +262,9 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
 }
 
 const mapStateToProps = (state: RootState): SelectFioAddressProps => {
-  const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
-  const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const fioWallets: EdgeCurrencyWallet[] = UI_SELECTORS.getFioWallets(state)
+  const guiWallet: GuiWallet = getSelectedWallet(state)
+  const currencyCode: string = state.ui.wallets.selectedCurrencyCode
+  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
   const fioAddresses = state.ui.scenes.fioAddress.fioAddresses
 
   if (!guiWallet || !currencyCode) {

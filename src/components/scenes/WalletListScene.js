@@ -10,7 +10,6 @@ import { updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import s from '../../locales/strings.js'
 import { getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
-import { getActiveWalletIds, getWalletLoadingPercent } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
@@ -32,7 +31,6 @@ type StateProps = {
   activeWalletIds: string[],
   userId: string,
   wallets: { [walletId: string]: GuiWallet },
-  accountDisklet: Disklet,
   disklet: Disklet,
   needsPasswordCheck: boolean
 }
@@ -88,19 +86,6 @@ class WalletListComponent extends React.PureComponent<Props, State> {
 
   handleActivateSearch = () => this.setState({ searching: true })
 
-  renderHeader = () => (
-    <WalletListHeader
-      sorting={this.state.sorting}
-      searching={this.state.searching}
-      searchText={this.state.searchText}
-      openSortModal={this.handleSort}
-      onChangeSearchText={this.handleChangeSearchText}
-      onChangeSearchingState={this.handleChangeSearchingState}
-    />
-  )
-
-  renderFooter = () => (this.state.searching ? null : <WalletListFooter />)
-
   handleSort = () => {
     Airship.show(bridge => <WalletListSortModal bridge={bridge} />)
       .then(sort => {
@@ -119,7 +104,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
 
     return (
       <SceneWrapper>
-        <WiredProgressBar progress={getWalletLoadingPercent} />
+        <WiredProgressBar />
         {sorting && (
           <View style={styles.headerContainer}>
             <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
@@ -131,10 +116,20 @@ class WalletListComponent extends React.PureComponent<Props, State> {
         <View style={styles.listStack}>
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
             <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
+            {/* $FlowFixMe */}
             <WalletList
               key="fullList"
-              header={this.renderHeader}
-              footer={this.renderFooter}
+              header={
+                <WalletListHeader
+                  sorting={this.state.sorting}
+                  searching={this.state.searching}
+                  searchText={this.state.searchText}
+                  openSortModal={this.handleSort}
+                  onChangeSearchText={this.handleChangeSearchText}
+                  onChangeSearchingState={this.handleChangeSearchingState}
+                />
+              }
+              footer={this.state.searching ? null : <WalletListFooter />}
               searching={searching}
               searchText={searchText}
               activateSearch={this.handleActivateSearch}
@@ -199,11 +194,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 export const WalletListScene = connect(
   (state: RootState): StateProps => {
-    let activeWalletIds = getActiveWalletIds(state)
+    let { activeWalletIds } = state.ui.wallets
 
     // FIO disable changes below
     if (global.isFioDisabled) {
-      const { currencyWallets = {} } = state.core.account
+      const { currencyWallets } = state.core.account
       activeWalletIds = activeWalletIds.filter(id => {
         const wallet = currencyWallets[id]
         return wallet == null || wallet.type !== 'wallet:fio'
@@ -214,7 +209,6 @@ export const WalletListScene = connect(
       activeWalletIds,
       userId: state.core.account.id,
       wallets: state.ui.wallets.byId,
-      accountDisklet: state.core.account.disklet,
       disklet: state.core.disklet,
       needsPasswordCheck: state.ui.passwordReminder.needsPasswordCheck
     }

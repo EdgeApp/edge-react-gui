@@ -16,13 +16,13 @@ import * as Constants from '../../constants/indexConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/Settings/selectors.js'
-import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getSelectedWallet, getWallet } from '../../modules/UI/selectors.js'
+import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { AccelerateTxModel } from '../modals/AccelerateTxModel.js'
 import { RawTextModal } from '../modals/RawTextModal.js'
-import { TransactionAccelerateModal } from '../modals/TransactionAccelerateModal.js'
 import { TransactionAdvanceDetails } from '../modals/TransactionAdvanceDetails.js'
 import { TransactionDetailsCategoryInput } from '../modals/TransactionDetailsCategoryInput.js'
 import { TransactionDetailsFiatInput } from '../modals/TransactionDetailsFiatInput.js'
@@ -63,7 +63,6 @@ type State = {
   amountFiat: string,
   direction: string,
   bizId: number,
-  miscJson: any, // core receives this as a string
   category: string,
   subCategory: string
 }
@@ -120,8 +119,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       subCategory: category.subCategory,
       thumbnailPath,
       direction,
-      bizId: 0,
-      miscJson: edgeTransaction.metadata ? edgeTransaction.metadata.miscJson : ''
+      bizId: 0
     }
   }
 
@@ -215,11 +213,11 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   openAccelerateModel = () => {
-    const { edgeTransaction } = this.props
+    const { edgeTransaction, guiWallet } = this.props
     const { wallet } = edgeTransaction
 
     if (wallet) {
-      Airship.show(bridge => <TransactionAccelerateModal bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} />)
+      Airship.show(bridge => <AccelerateTxModel bridge={bridge} edgeTransaction={edgeTransaction} wallet={wallet} guiWallet={guiWallet} />)
     } else {
       showError(new Error('Transaction is missing wallet data.'))
     }
@@ -335,7 +333,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   }
 
   onSaveTxDetails = () => {
-    const { payeeName, notes, bizId, miscJson, category, subCategory, amountFiat } = this.state
+    const { payeeName, notes, bizId, category, subCategory, amountFiat } = this.state
     const { edgeTransaction } = this.props
     let finalAmountFiat
     const fullCategory = category ? `${UTILS.capitalize(category)}:${subCategory}` : undefined
@@ -347,7 +345,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
       // if a valid number or empty string then set to zero (empty) or actual number
       finalAmountFiat = !amountFiat ? 0.0 : decimalAmountFiat
     }
-    edgeTransaction.metadata = { name: payeeName, category: fullCategory, notes, amountFiat: finalAmountFiat, bizId, miscJson }
+    edgeTransaction.metadata = { name: payeeName, category: fullCategory, notes, amountFiat: finalAmountFiat, bizId }
     this.props.setTransactionDetails(edgeTransaction, edgeTransaction.metadata)
   }
 
@@ -584,7 +582,7 @@ export const TransactionDetailsScene = connect(
   (state: RootState, ownProps: OwnProps): StateProps => {
     const { edgeTransaction } = ownProps
     const walletId = edgeTransaction.wallet ? edgeTransaction.wallet.id : null
-    const wallet = walletId ? getWallet(state, walletId) : getSelectedWallet(state)
+    const wallet = state.ui.wallets.byId[walletId || state.ui.wallets.selectedWalletId]
     const contacts = state.contacts
     const subcategoriesList = state.ui.scenes.transactionDetails.subcategories.sort()
     const settings = getSettings(state)
@@ -606,7 +604,7 @@ export const TransactionDetailsScene = connect(
     }
 
     const destinationDenomination = swapData ? getDisplayDenomination(state, swapData.payoutCurrencyCode) : undefined
-    const destinationWallet = swapData ? getWallet(state, swapData.payoutWalletId) : undefined
+    const destinationWallet = swapData ? state.ui.wallets.byId[swapData.payoutWalletId] : undefined
 
     return {
       contacts,

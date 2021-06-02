@@ -10,7 +10,7 @@ import { selectWallet } from '../../actions/WalletActions.js'
 import { WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
 import s from '../../locales/strings'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
-import { calculateWalletFiatBalanceUsingDefaultIsoFiat, getActiveWalletIds } from '../../modules/UI/selectors.js'
+import { calculateWalletFiatBalanceUsingDefaultIsoFiat } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CreateTokenType, CreateWalletType, CustomTokenInfo, FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
@@ -368,13 +368,13 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 }
 
-export const WalletList = connect(
+export const WalletList: React.ComponentType<OwnProps> = connect(
   (state: RootState): StateProps => {
-    let activeWalletIds = getActiveWalletIds(state)
+    let { activeWalletIds } = state.ui.wallets
 
     // FIO disable changes below
     if (global.isFioDisabled) {
-      const { currencyWallets = {} } = state.core.account
+      const { currencyWallets } = state.core.account
       activeWalletIds = activeWalletIds.filter(id => {
         const wallet = currencyWallets[id]
         return wallet == null || wallet.type !== 'wallet:fio'

@@ -10,7 +10,6 @@ import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui'
-import { getSelectedCurrencyCode, getSelectedWalletId } from '../../modules/UI/selectors'
 import type { PermissionStatus } from '../../reducers/PermissionsReducer'
 import type { RootState } from '../../reducers/RootReducer'
 import type { Dispatch } from '../../types/reduxTypes'
@@ -20,17 +19,21 @@ import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 
 type OwnProps = {
   bridge: AirshipBridge<string | void>,
-  title: string,
+  title: string
+}
+
+type StateProps = {
   cameraPermission: PermissionStatus,
   torchEnabled: boolean,
-  scanEnabled: boolean,
-  walletId: string,
-  currencyCode: string,
+  scanEnabled: boolean
+}
+
+type DispatchProps = {
   toggleEnableTorch: () => void,
   enableScan: () => void,
   disableScan: () => void
 }
-type Props = OwnProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 export class ScanModalComponent extends React.Component<Props> {
   componentDidMount(): void {
@@ -168,14 +171,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const ScanModal = connect(
-  (state: RootState) => ({
+  (state: RootState): StateProps => ({
     cameraPermission: state.permissions.camera,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
-    scanEnabled: state.ui.scenes.scan.scanEnabled,
-    walletId: getSelectedWalletId(state),
-    currencyCode: getSelectedCurrencyCode(state)
+    scanEnabled: state.ui.scenes.scan.scanEnabled
   }),
-  (dispatch: Dispatch) => ({
+  (dispatch: Dispatch): DispatchProps => ({
     toggleEnableTorch: () => dispatch({ type: 'TOGGLE_ENABLE_TORCH' }),
     disableScan: () => {
       dispatch({ type: 'DISABLE_SCAN' })

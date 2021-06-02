@@ -25,6 +25,7 @@ import { type AirshipBridge } from './modalParts.js'
 
 type OwnProps = {
   bridge: AirshipBridge<string | null>,
+  // eslint-disable-next-line react/no-unused-prop-types
   walletId: string,
   currencyCode: string,
   title?: string,
@@ -370,7 +371,7 @@ class AddressModalConnected extends React.Component<Props, State> {
 const AddressModal = connect(
   (state: RootState, ownProps: OwnProps): StateProps => {
     const { account } = state.core
-    const { currencyWallets = {} } = account
+    const { currencyWallets } = account
     return {
       account,
       coreWallet: currencyWallets[ownProps.walletId],

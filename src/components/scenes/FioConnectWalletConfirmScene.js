@@ -2,14 +2,14 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
-import { Slider } from '../../modules/UI/components/Slider/Slider.ui.js'
+import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import type { RootState } from '../../reducers/RootReducer'
 import type { Dispatch } from '../../types/reduxTypes'
@@ -210,15 +210,13 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
             </EdgeText>
           </Radio>
           {showSlider && (
-            <View style={styles.slider}>
-              <Slider
-                resetSlider
-                onSlidingComplete={this.confirm}
-                sliderDisabled={!acknowledge || connectWalletsLoading}
-                disabledText={s.strings.send_confirmation_slide_to_confirm}
-                showSpinner={connectWalletsLoading}
-              />
-            </View>
+            <Slider
+              parentStyle={styles.slider}
+              onSlidingComplete={this.confirm}
+              disabled={!acknowledge || connectWalletsLoading}
+              disabledText={s.strings.send_confirmation_slide_to_confirm}
+              showSpinner={connectWalletsLoading}
+            />
           )}
         </ScrollView>
       </SceneWrapper>
@@ -239,7 +237,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(1)
   },
   slider: {
-    padding: theme.rem(2)
+    paddingVertical: theme.rem(2)
   }
 }))
 

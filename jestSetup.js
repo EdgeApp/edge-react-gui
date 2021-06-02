@@ -1,10 +1,15 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-
-import dateformat from 'dateformat'
-import RNPermissionsMock from 'react-native-permissions/mock'
-
 /* globals jest */
-jest.mock('dateformat', () => (number, format) => dateformat(number, format, true)) // force timezone to UTC
+
+jest.useFakeTimers()
+
+jest.mock('usb', () => {})
+jest.mock('react-native-gesture-handler', () => ({
+  PanGestureHandler() {}
+}))
+
+// force timezone to UTC
+jest.mock('dateformat', () => (number, format) => require('dateformat')(number, format, true))
 
 jest.mock('@react-native-firebase/analytics', () => () => ({
   logEvent() {},
@@ -140,6 +145,22 @@ jest.mock('react-native-localize', () => {
   }
 })
 
-jest.mock('react-native-permissions', () => {
-  return RNPermissionsMock
+jest.mock('react-native-permissions', () => require('react-native-permissions/mock'))
+
+global.__reanimatedWorkletInit = jest.fn()
+jest.mock('react-native-reanimated', () => {
+  return {
+    ...jest.requireActual('react-native-reanimated/mock'),
+    useSharedValue: jest.fn,
+    useAnimatedStyle: jest.fn,
+    withTiming: jest.fn,
+    withSpring: jest.fn,
+    withRepeat: jest.fn,
+    withSequence: jest.fn,
+    useAnimatedProps: jest.fn,
+    Easing: {
+      linear: jest.fn,
+      elastic: jest.fn
+    }
+  }
 })

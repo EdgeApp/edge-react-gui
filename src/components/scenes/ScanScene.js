@@ -5,40 +5,64 @@ import { ActivityIndicator, Linking, StyleSheet, Text, TouchableHighlight, View 
 import { RNCamera } from 'react-native-camera'
 import RNPermissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
 
+import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
+import { parseScannedUri, qrCodeScanned } from '../../actions/ScanActions'
 import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { AddressModal } from '../modals/AddressModal.js'
+import { SingleInputModal } from '../modals/SingleInputModal.js'
 import { Airship } from '../services/AirshipInstance'
 
-type Props = {
+type StateProps = {
   cameraPermission: PermissionStatus,
   torchEnabled: boolean,
   scanEnabled: boolean,
   currentWalletId: string,
-  currentCurrencyCode: string,
-  walletId: string,
-  currencyCode: string,
-  qrCodeScanned: (data: string) => void,
-  parseScannedUri: (data: string) => Promise<void>,
-  toggleEnableTorch: () => void,
-  toggleScanToWalletListModal: () => void,
-  selectFromWalletForExchange: (walletId: string, currencyCode: string) => void
+  currentCurrencyCode: string
 }
 
+type DispatchProps = {
+  qrCodeScanned: (data: string) => void,
+  parseScannedUri: (data: string, customErrorTitle: string, customErrorDescription: string) => Promise<void>,
+  toggleEnableTorch: () => void,
+  selectFromWalletForExchange: (walletId: string, currencyCode: string) => void,
+  data?: string
+}
+
+type Props = StateProps & DispatchProps
+
+export const SWEEP_PRIVATE_KEY = 'sweepPrivateKey'
+
 export class Scan extends React.Component<Props> {
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.data !== prevProps.data && Actions.currentScene !== 'DrawerOpen') {
+      Actions.drawerClose()
+    }
+  }
+
   render() {
     return (
       <>
         <SceneWrapper background="header" hasTabs={false}>
           {this.renderCameraArea()}
           <View style={styles.overlayButtonAreaWrap}>
+            {this.props.data === SWEEP_PRIVATE_KEY && (
+              <TouchableHighlight style={styles.bottomButton} onPress={this._onTogglePrivateKeyModal} underlayColor={THEME.COLORS.SECONDARY}>
+                <View style={styles.bottomButtonTextWrap}>
+                  <FontAwesome name="edit" style={styles.privateKeyIcon} />
+                  <T style={styles.bottomButtonText}>{s.strings.scan_private_key_button_title}</T>
+                </View>
+              </TouchableHighlight>
+            )}
             <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
                 <IonIcon style={styles.flashIcon} name="ios-flash" size={scale(24)} />
@@ -62,13 +86,13 @@ export class Scan extends React.Component<Props> {
     this.props.toggleEnableTorch()
   }
 
-  _onToggleAddressModal = async () => {
-    const { walletId, currencyCode } = this.props
+  _onTogglePrivateKeyModal = async () => {
     const uri = await Airship.show(bridge => (
-      <AddressModal bridge={bridge} walletId={walletId} currencyCode={currencyCode} title={s.strings.scan_address_modal_title} checkAddressConnected />
+      <SingleInputModal bridge={bridge} title={s.strings.scan_private_key_modal_title} label={s.strings.scan_private_key_modal_label} />
     ))
+
     if (uri) {
-      this.props.parseScannedUri(uri)
+      this.props.parseScannedUri(uri, s.strings.scan_private_key_error_title, s.strings.scan_private_key_error_description)
     }
   }
 
@@ -166,13 +190,14 @@ const rawStyles = {
   },
   bottomButton: {
     flex: 1,
+    flexBasis: '48%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
     borderRadius: scale(3),
     height: scale(50),
-    marginLeft: scale(1),
-    marginRight: scale(1)
+    marginHorizontal: scale(1),
+    marginBottom: scale(10)
   },
   bottomButtonTextWrap: {
     flexDirection: 'column',
@@ -184,7 +209,7 @@ const rawStyles = {
     fontSize: scale(16),
     height: scale(16)
   },
-  addressBookIcon: {
+  privateKeyIcon: {
     color: THEME.COLORS.WHITE,
     fontSize: scale(16),
     height: scale(16),
@@ -204,4 +229,26 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export default Scan
+export const ScanScene = connect(
+  (state: RootState): StateProps => ({
+    cameraPermission: state.permissions.camera,
+    torchEnabled: state.ui.scenes.scan.torchEnabled,
+    scanEnabled: state.ui.scenes.scan.scanEnabled,
+    currentWalletId: state.ui.scenes.transactionList.currentWalletId,
+    currentCurrencyCode: state.ui.scenes.transactionList.currentCurrencyCode
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    qrCodeScanned(data) {
+      dispatch(qrCodeScanned(data))
+    },
+    async parseScannedUri(data, customErrorTitle, customErrorDescription) {
+      await dispatch(parseScannedUri(data, customErrorTitle, customErrorDescription))
+    },
+    toggleEnableTorch() {
+      dispatch({ type: 'TOGGLE_ENABLE_TORCH' })
+    },
+    selectFromWalletForExchange(walletId, currencyCode) {
+      dispatch(selectWalletForExchange(walletId, currencyCode, 'from'))
+    }
+  })
+)(Scan)

@@ -1,5 +1,6 @@
 // @flow
 
+import { format } from 'date-fns'
 import { type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -12,13 +13,13 @@ type Props = {
 }
 
 export function TransactionDetailsTitle(props: Props) {
-  if (props.edgeTransaction == null) return null // Should never happen!?
-
   const styles = getStyles(useTheme())
+
+  if (props.edgeTransaction == null) return null // Should never happen!?
   const { date } = props.edgeTransaction
   const txDate = new Date(date * 1000)
-  const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
-  const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
+  const dateString = format(txDate, 'MMM d, yyyy')
+  const time = format(txDate, 'h:mm bb')
 
   return (
     <View style={styles.container}>

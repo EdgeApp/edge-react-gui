@@ -8,7 +8,9 @@ import type { RootState } from '../../types/reduxTypes.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 
 type OwnProps = {
+  // eslint-disable-next-line react/no-unused-prop-types
   walletId: string,
+  // eslint-disable-next-line react/no-unused-prop-types
   currencyCode: string,
   size?: number
 }

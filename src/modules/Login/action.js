@@ -7,6 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { loadAccountReferral, refreshAccountReferral } from '../../actions/AccountReferralActions.js'
+import { needToCheckExpiredFioNames } from '../../actions/FioActions.js'
 import { trackAccountEvent } from '../../actions/TrackingActions.js'
 import { checkEnabledTokensArray, getEnabledTokens, setWalletEnabledTokens } from '../../actions/WalletActions.js'
 import { showError } from '../../components/services/AirshipInstance.js'
@@ -176,6 +177,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
       dispatch(loadAccountReferral(account)).then(() => dispatch(refreshAccountReferral()))
     }
 
+    dispatch(needToCheckExpiredFioNames())
     await updateWalletsRequest()(dispatch, getState)
     for (const wId of activeWalletIds) {
       await getEnabledTokens(wId)(dispatch, getState)

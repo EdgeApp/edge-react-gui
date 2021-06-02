@@ -18,13 +18,7 @@ type Props<T> = {
   center?: boolean,
 
   // Called when the user taps outside the modal or clicks the back button:
-  onCancel: () => void,
-
-  // This is to have marginTop when there is an icon on the modal
-  icon?: boolean,
-
-  // Content padding:
-  padding?: number
+  onCancel: () => void
 }
 
 /**

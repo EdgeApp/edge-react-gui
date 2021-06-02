@@ -15,33 +15,33 @@ export const updateExchangeRates = () => async (dispatch: Dispatch, getState: Ge
 
 async function buildExchangeRates(state: RootState) {
   const { account } = state.core
-  const { currencyWallets = {}, exchangeCache } = account
+  const { currencyWallets, rateCache } = account
   const accountIsoFiat = getDefaultIsoFiat(state)
 
   const exchangeRates: { [pair: string]: Promise<number> } = {}
   const finalExchangeRates = {}
   const yesterdayDate = getYesterdayDateRoundDownHour()
   if (accountIsoFiat !== 'iso:USD') {
-    exchangeRates[`iso:USD_${accountIsoFiat}`] = exchangeCache.convertCurrency('iso:USD', accountIsoFiat)
+    exchangeRates[`iso:USD_${accountIsoFiat}`] = rateCache.convertCurrency('iso:USD', accountIsoFiat)
   }
   for (const id of Object.keys(currencyWallets)) {
     const wallet = currencyWallets[id]
     const walletIsoFiat = wallet.fiatCurrencyCode
     const currencyCode = wallet.currencyInfo.currencyCode // should get GUI or core versions?
     // need to get both forward and backwards exchange rates for wallets & account fiats, for each parent currency AND each token
-    exchangeRates[`${currencyCode}_${walletIsoFiat}`] = exchangeCache.convertCurrency(currencyCode, walletIsoFiat)
-    exchangeRates[`${currencyCode}_${accountIsoFiat}`] = exchangeCache.convertCurrency(currencyCode, accountIsoFiat)
+    exchangeRates[`${currencyCode}_${walletIsoFiat}`] = rateCache.convertCurrency(currencyCode, walletIsoFiat)
+    exchangeRates[`${currencyCode}_${accountIsoFiat}`] = rateCache.convertCurrency(currencyCode, accountIsoFiat)
     exchangeRates[`${currencyCode}_iso:USD_${yesterdayDate}`] = fetchExchangeRateHistory(currencyCode, yesterdayDate)
     // add them to the list of promises to resolve
     // keep track of the exchange rates
     // now add tokens, if they exist
     if (walletIsoFiat !== 'iso:USD') {
-      exchangeRates[`iso:USD_${walletIsoFiat}`] = exchangeCache.convertCurrency('iso:USD', walletIsoFiat)
+      exchangeRates[`iso:USD_${walletIsoFiat}`] = rateCache.convertCurrency('iso:USD', walletIsoFiat)
     }
     for (const tokenCode of Object.keys(wallet.balances)) {
       if (tokenCode !== currencyCode) {
-        exchangeRates[`${tokenCode}_${walletIsoFiat}`] = exchangeCache.convertCurrency(tokenCode, walletIsoFiat)
-        exchangeRates[`${tokenCode}_${accountIsoFiat}`] = exchangeCache.convertCurrency(tokenCode, accountIsoFiat)
+        exchangeRates[`${tokenCode}_${walletIsoFiat}`] = rateCache.convertCurrency(tokenCode, walletIsoFiat)
+        exchangeRates[`${tokenCode}_${accountIsoFiat}`] = rateCache.convertCurrency(tokenCode, accountIsoFiat)
         exchangeRates[`${tokenCode}_iso:USD_${yesterdayDate}`] = fetchExchangeRateHistory(tokenCode, yesterdayDate)
       }
     }
