@@ -9,7 +9,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SecondaryButton } from '../themed/ThemedButtons'
 

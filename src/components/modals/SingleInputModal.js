@@ -6,7 +6,7 @@ import { type AirshipBridge } from 'react-native-airship'
 
 import { useEffect, useRef, useState } from '../../util/hooks'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
-import { EdgeTextFieldOutlined } from '../themed/EdgeTextField.js'
+import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
@@ -68,6 +68,7 @@ const SingleInputModalComponent = ({ bridge, title, label, theme, onSubmit, valu
           marginRem={[0, 1]}
           ref={textInput}
           blurOnSubmit
+          hideSearchIcon={returnKeyType !== 'search'}
         />
       </View>
       <ModalCloseArrow onPress={() => bridge.resolve(null)} />
