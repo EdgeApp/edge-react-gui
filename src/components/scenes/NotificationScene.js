@@ -12,6 +12,7 @@ import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../../modules/UI/selectors'
 import { type RootState } from '../../types/reduxTypes.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -96,7 +97,8 @@ export class NotificationComponent extends React.Component<Props, State> {
           <ScrollView>
             <SettingsSwitchRow key="notifications" text={s.strings.settings_notifications_switch} value={enabled} onPress={this.toggleNotifications} />
             {this.props.currencyInfos.map((currencyInfo: EdgeCurrencyInfo) => {
-              const { displayName, symbolImage, currencyCode } = currencyInfo
+              const { displayName, currencyCode } = currencyInfo
+              const { symbolImage } = getCurrencyIcon(currencyCode)
               const icon = symbolImage != null ? <Image style={styles.currencyLogo} source={{ uri: symbolImage }} /> : undefined
               const onPress = () => (enabled ? Actions[Constants.CURRENCY_NOTIFICATION_SETTINGS]({ currencyInfo }) : undefined)
 

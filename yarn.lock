@@ -3432,16 +3432,16 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-chai@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/chai/-/chai-4.2.0.tgz#760aa72cf20e3795e84b12877ce0e83737aa29e5"
-  integrity sha512-XQU3bhBukrOsQCuwZndwGcCVQHyZi53fQ6Ys1Fym7E4olpIqqZZhhoFJoaKVvV17lWQoXYwgWN2nF5crA8J2jw==
+chai@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/chai/-/chai-4.3.4.tgz#b55e655b31e1eac7099be4c08c21964fce2e6c49"
+  integrity sha512-yS5H68VYOCtN1cjfwumDSuzn/9c+yza4f3reKXlE5rUg7SFcCEy90gJvydNgOYtblyf4Zi6jIWRnXOgErta0KA==
   dependencies:
     assertion-error "^1.1.0"
     check-error "^1.0.2"
     deep-eql "^3.0.1"
     get-func-name "^2.0.0"
-    pathval "^1.1.0"
+    pathval "^1.1.1"
     type-detect "^4.0.5"
 
 chainsaw@~0.1.0:
@@ -4710,10 +4710,10 @@ edge-core-js@^0.18.0:
     yaob "^0.3.7"
     yavent "^0.1.1"
 
-edge-currency-accountbased@^0.7.60:
-  version "0.7.60"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.60.tgz#3c158c97ead370edaab3163e218e849a2225b71a"
-  integrity sha512-X+t8TckCML9TQYsiatFQzUmTKvfsNtrqh8O8heNM7/5UbcCMKvoqBHlLwz46m+Tw1QIkpWW1tAw92pjc7Xw9LQ==
+edge-currency-accountbased@^0.7.61:
+  version "0.7.61"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.61.tgz#e804a0bf4785925d9504e4bd991569ad317bfd89"
+  integrity sha512-GUT1jBcnU6umZDPIhzBMrLqLVi9cpFgyRdE0/6kUAWaR13+riK3Frinrp5R3oqPH17kMA6I8hWa5YVK03QazZA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.2.1"
@@ -4739,10 +4739,10 @@ edge-currency-accountbased@^0.7.60:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.9.14:
-  version "4.9.14"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.14.tgz#26f1dc3bede5765057976d3e593e2825c623d5fd"
-  integrity sha512-yx8j8DkiNEz7kQZ4E94ysUF2MFALfb5UuWs1Cnz6hOP51CTxK+R6Ugzqo0dP+eX+8X8FRLuk71L8Xz1cU67+Yw==
+edge-currency-bitcoin@^4.9.15:
+  version "4.9.15"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.15.tgz#888d833d99993663a240f8fbfdf646c401dcb86c"
+  integrity sha512-mCWrYpIQIyrYBmH16RdMdkTB3FKG9lDT4cA3W6KMaYf+iuM3KA9+pnwU91ccw/QxOgKHBExT9wmLN5SdjfOE9g==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -4750,21 +4750,21 @@ edge-currency-bitcoin@^4.9.14:
     bs58grscheck "https://github.com/Groestlcoin/bs58grscheck"
     bs58smartcheck "^2.0.4"
     buffer "^5.2.1"
-    chai "^4.2.0"
-    cleaners "^0.2.0"
-    esm "^3.2.4"
+    chai "^4.3.4"
+    cleaners "^0.3.9"
+    esm "^3.2.25"
     eventemitter3 "^3.1.0"
-    jsonschema "^1.2.4"
+    jsonschema "^1.4.0"
     secp256k1 "^3.7.1"
     stable "^0.1.8"
-    unorm "^1.4.1"
-    uri-js "^4.2.2"
-    url-parse "^1.4.3"
+    unorm "^1.6.0"
+    uri-js "^4.4.1"
+    url-parse "^1.5.1"
 
-edge-currency-monero@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.3.1.tgz#4ee0eef8320cd413afeb18e8362bfbb16bf20450"
-  integrity sha512-c+zoSE1j4+ymIQCIRaqJ5vvct2uVRDBuwRv4IVyF9Hte0tWLd0fXweNXJ1LL0jOJMQICYl5KVkhEhcpwdcfyIA==
+edge-currency-monero@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-monero/-/edge-currency-monero-0.3.2.tgz#3f4ea28044420231d32fecfeaabd9a6aef7c435a"
+  integrity sha512-tTn3xG7x6DN5qOfiAfhaROs/zQI2+pI9KYIPWPAiqeT49hTOIcXUaG4zE9IBZxatFKSjIMX5RDp7d/F1JV9+Fw==
   dependencies:
     biggystring "^3.0.0"
     buffer "^5.0.6"
@@ -5278,6 +5278,11 @@ eslint@^7.14.0:
     table "^6.0.4"
     text-table "^0.2.0"
     v8-compile-cache "^2.0.3"
+
+esm@^3.2.25:
+  version "3.2.25"
+  resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.25.tgz#342c18c29d56157688ba5ce31f8431fbb795cc10"
+  integrity sha512-U1suiZ2oDVWv4zPO56S0NcR5QriEahGtdN2OR6FiOG4WJvcjBVFB0qI4+eKoWFH483PKGuLuu6V8Z4T5g63UVA==
 
 esm@^3.2.4:
   version "3.2.4"
@@ -7833,10 +7838,15 @@ jsonschema@1.2.2:
   resolved "https://registry.yarnpkg.com/jsonschema/-/jsonschema-1.2.2.tgz#83ab9c63d65bf4d596f91d81195e78772f6452bc"
   integrity sha512-iX5OFQ6yx9NgbHCwse51ohhKgLuLL7Z5cNOeZOPIlDUtAMrxlruHLzVZxbltdHE5mEDXN+75oFOwq6Gn0MZwsA==
 
-jsonschema@^1.1.1, jsonschema@^1.2.4:
+jsonschema@^1.1.1:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/jsonschema/-/jsonschema-1.2.4.tgz#a46bac5d3506a254465bc548876e267c6d0d6464"
   integrity sha512-lz1nOH69GbsVHeVgEdvyavc/33oymY1AZwtePMiMj4HZPMbP5OIKK3zT9INMWjwua/V4Z4yq7wSlBbSG+g4AEw==
+
+jsonschema@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/jsonschema/-/jsonschema-1.4.0.tgz#1afa34c4bc22190d8e42271ec17ac8b3404f87b2"
+  integrity sha512-/YgW6pRMr6M7C+4o8kS+B/2myEpHCrxO4PEWnqJNBFMjn7EWXqlQ4tGwL6xTHeRplwuZmcAncdvfOad1nT2yMw==
 
 jsonwebtoken@8.5.1:
   version "8.5.1"
@@ -9712,10 +9722,10 @@ path-type@^4.0.0:
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
 
-pathval@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/pathval/-/pathval-1.1.0.tgz#b942e6d4bde653005ef6b71361def8727d0645e0"
-  integrity sha1-uULm1L3mUwBe9rcTYd74cn0GReA=
+pathval@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/pathval/-/pathval-1.1.1.tgz#8534e77a77ce7ac5a2512ea21e0fdb8fcf6c3d8d"
+  integrity sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==
 
 pbkdf2@^3.0.14, pbkdf2@^3.0.3, pbkdf2@^3.0.9:
   version "3.0.17"
@@ -12788,10 +12798,10 @@ universalify@^0.1.0, universalify@^0.1.2:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
-unorm@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/unorm/-/unorm-1.4.1.tgz#364200d5f13646ca8bcd44490271335614792300"
-  integrity sha1-NkIA1fE2RsqLzURJAnEzVhR5IwA=
+unorm@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/unorm/-/unorm-1.6.0.tgz#029b289661fba714f1a9af439eb51d9b16c205af"
+  integrity sha512-b2/KCUlYZUeA7JFUuRJZPUtr4gZvBh7tavtv4fvk4+KV9pfGiR6CQAQAWl49ZpR3ts2dk4FYkP7EIgDJoiOLDA==
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
@@ -12873,6 +12883,13 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
+uri-js@^4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/uri-js/-/uri-js-4.4.1.tgz#9b1a52595225859e55f669d928f88c6c57f2a77e"
+  integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
+  dependencies:
+    punycode "^2.1.0"
+
 urijs@1.19.1:
   version "1.19.1"
   resolved "https://registry.yarnpkg.com/urijs/-/urijs-1.19.1.tgz#5b0ff530c0cbde8386f6342235ba5ca6e995d25a"
@@ -12890,7 +12907,7 @@ url-parse-lax@^3.0.0:
   dependencies:
     prepend-http "^2.0.0"
 
-url-parse@^1.4.1, url-parse@^1.4.3, url-parse@^1.4.4, url-parse@^1.4.7:
+url-parse@^1.4.1, url-parse@^1.4.3, url-parse@^1.4.4, url-parse@^1.4.7, url-parse@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.1.tgz#d5fa9890af8a5e1f274a2c98376510f6425f6e3b"
   integrity sha512-HOfCOUJt7iSYzEx/UqgtwKRMC6EU91NFhsCHMv9oM03VJcVo2Qrp8T8kI9D7amFf1cu+/3CEhgb3rF9zL7k85Q==

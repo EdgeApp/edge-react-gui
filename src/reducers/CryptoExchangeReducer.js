@@ -94,8 +94,8 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         fromWallet: action.data.wallet,
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromCurrencyCode: action.data.currencyCode,
-        fromCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        fromCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        fromCurrencyIcon: action.data.wallet.symbolImage,
+        fromCurrencyIconDark: action.data.wallet.symbolImageDarkMono,
         fromBalanceMessage: action.data.balanceMessage,
         fromNativeAmount: '0',
         toNativeAmount: '0',
@@ -113,8 +113,8 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
         toWallet: action.data.wallet,
         toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
-        toCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        toCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        toCurrencyIcon: action.data.wallet.symbolImage,
+        toCurrencyIconDark: action.data.wallet.symbolImageDarkMono,
         toBalanceMessage: action.data.balanceMessage,
         fromNativeAmount: '0',
         toNativeAmount: '0',
@@ -191,28 +191,6 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
     default:
       return state
   }
-}
-
-function getLogo(wallet, currencyCode) {
-  if (currencyCode === wallet.currencyCode) return wallet.symbolImage
-  for (let i = 0; i < wallet.metaTokens.length; i++) {
-    const obj = wallet.metaTokens[i]
-    if (obj.symbolImage && obj.currencyCode === currencyCode) {
-      return obj.symbolImage
-    }
-  }
-  return null
-}
-
-function getLogoDark(wallet, currencyCode) {
-  if (currencyCode === wallet.currencyCode) return wallet.symbolImageDarkMono
-  for (let i = 0; i < wallet.metaTokens.length; i++) {
-    const obj = wallet.metaTokens[i]
-    if (obj.symbolImage && obj.currencyCode === currencyCode) {
-      return obj.symbolImage
-    }
-  }
-  return null
 }
 
 // Nuke the state on logout:

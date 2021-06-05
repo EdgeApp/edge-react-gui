@@ -7,6 +7,7 @@ import type { SortOption } from '../../components/modals/WalletListSortModal.js'
 import { LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import type { Action } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo, type GuiTouchIdInfo, type MostRecentWallet, type SpendingLimits } from '../../types/types.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { type PasswordReminderState } from '../PasswordReminderReducer.js'
 import { spendingLimits } from '../SpendingLimitsReducer.js'
 
@@ -144,34 +145,30 @@ export type SettingsState = {
 function currencyPLuginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo): SettingsState {
   const { plugins } = state
   const { allCurrencyInfos, supportedWalletTypes } = plugins
-  const { pluginId, walletType } = currencyInfo
+  const { pluginId, walletType, displayName, currencyCode, denominations } = currencyInfo
 
   // Build up object with all the information for the parent currency, accesible by the currencyCode
   const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
   const parentCurrencyInfo = {
     [currencyInfo.currencyCode]: {
       ...defaultParentCurrencyInfo,
-      displayName: currencyInfo.displayName,
-      currencyCode: currencyInfo.currencyCode,
-      denominations: currencyInfo.denominations,
-      symbolImage: currencyInfo.symbolImage,
-      symbolImageDarkMono: currencyInfo.symbolImageDarkMono
+      displayName,
+      currencyCode,
+      denominations,
+      ...getCurrencyIcon(currencyCode)
     }
   }
 
   // Build up object with all the information for each metatoken, accessible by the token currencyCode
   const metatokenCurrencyInfos = currencyInfo.metaTokens.reduce((acc, metatoken) => {
-    const defaultMetatokenInfo = state[metatoken.currencyCode]
+    const { currencyCode } = metatoken
+    const defaultMetatokenInfo = state[currencyCode]
     return {
       ...acc,
       [metatoken.currencyCode]: {
         ...defaultMetatokenInfo,
-        displayName: metatoken.currencyName,
-        currencyCode: metatoken.currencyCode,
-        denominations: metatoken.denominations,
-        symbolImage: metatoken.symbolImage,
-        // $FlowFixMe
-        symbolImageDarkMono: metatoken.symbolImageDarkMono
+        ...metatoken,
+        ...getCurrencyIcon(currencyInfo.currencyCode, currencyCode)
       }
     }
   }, {})
