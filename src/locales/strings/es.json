@@ -180,8 +180,6 @@
   "send_confirmation_to": "Para: %s",
   "send_confirmation_address": "Dirección %s",
   "send_confirmation_fee_modal_alert_title": "Aviso de comisiones altas",
-  "send_confirmation_fee_modal_alert_message_fragment_1": "Estas a punto de enviar una transacción con una comisión relativamente alta de ",
-  "send_confirmation_fee_modal_alert_message_fragment_2": ". Si te gustaría cambiar los ajustes de comisiones, lo puedes hacer haciendo click en los tres puntos que aparecen en la esquina superior derecha.",
   "transaction_failure": "Fallo en la transacción",
   "transaction_failure_message": "%s.",
   "transaction_success": "Transacción correcta",
