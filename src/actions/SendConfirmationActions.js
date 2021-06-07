@@ -18,7 +18,6 @@ import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { EXCHANGE_SCENE, FEE_ALERT_THRESHOLD, FIO_STR, PLUGIN_BUY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
-import { getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { addToFioAddressCache, recordSend } from '../modules/FioAddress/util'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
@@ -270,12 +269,8 @@ export const signBroadcastAndSave =
     const exchangeConverter = convertNativeToExchange(exchangeDenomination.multiplier)
     const cryptoFeeExchangeAmount = exchangeConverter(edgeUnsignedTransaction.networkFee)
     const feeAmountInUSD = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
-    const feeAmountInWalletFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(cryptoFeeExchangeAmount))
-    const feeAmountInWalletFiatShortened = feeAmountInWalletFiat.toFixed(2)
-    const walletFiatSymbol = getSymbolFromCurrency(isoFiatCurrencyCode)
-    const feeAmountInWalletFiatSyntax = `${walletFiatSymbol}${feeAmountInWalletFiatShortened}`
     if (feeAmountInUSD > FEE_ALERT_THRESHOLD) {
-      const feeAlertResponse = await displayFeeAlert(feeAmountInWalletFiatSyntax)
+      const feeAlertResponse = await displayFeeAlert(guiWallet.currencyCode)
       if (!feeAlertResponse) {
         dispatch({
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
@@ -430,12 +425,15 @@ export const signBroadcastAndSave =
     }
   }
 
-export const displayFeeAlert = async (feeAmountInFiatSyntax: string) => {
+export const displayFeeAlert = async (currency: string) => {
+  let additionalMessage = ''
+  if (currency === 'ETH') additionalMessage = s.strings.send_confirmation_fee_modal_alert_message_fragment_eth
+  const message = `${s.strings.send_confirmation_fee_modal_alert_message_fragment} ${additionalMessage}`
   const resolveValue = await Airship.show(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.send_confirmation_fee_modal_alert_title}
-      message={`${s.strings.send_confirmation_fee_modal_alert_message_fragment_1} ${feeAmountInFiatSyntax} ${s.strings.send_confirmation_fee_modal_alert_message_fragment_2}`}
+      message={message}
       buttons={{
         confirm: { label: s.strings.title_send },
         cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
