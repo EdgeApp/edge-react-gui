@@ -145,8 +145,6 @@
   "send_confirmation_to": "A : %s",
   "send_confirmation_address": "Adresse : (%s)",
   "send_confirmation_fee_modal_alert_title": "L'alerte de frais élevés",
-  "send_confirmation_fee_modal_alert_message_fragment_1": "Vous êtes sur le point d'envoyer une transaction des frais relativement élevés ",
-  "send_confirmation_fee_modal_alert_message_fragment_2": ". Si vous souhaitez modifier vos paramètres de frais, vous pouvez le faire en appuyant sur les trois points en haut à droite de cet écran.",
   "transaction_failure": "Échec de transaction",
   "transaction_failure_message": "%s.",
   "transaction_success": "Transaction réussie",
