@@ -145,8 +145,6 @@
   "send_confirmation_to": "至: %s",
   "send_confirmation_address": "地址 ︰%s",
   "send_confirmation_fee_modal_alert_title": "高收费警告",
-  "send_confirmation_fee_modal_alert_message_fragment_1": "您即将发送一个费用较高的交易, 费用为： ",
-  "send_confirmation_fee_modal_alert_message_fragment_2": "。如果您想改变您的收费设置，您可以通过点击屏幕右上方的三点来这样做。",
   "transaction_failure": "交易失败",
   "transaction_failure_message": "%s。",
   "transaction_success": "交易成功",
