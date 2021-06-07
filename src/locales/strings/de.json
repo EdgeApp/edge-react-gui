@@ -219,8 +219,6 @@
   "send_confirmation_to": "An: %s",
   "send_confirmation_address": "Adresse: %s",
   "send_confirmation_fee_modal_alert_title": "Warnung bei zu großer Gebühr",
-  "send_confirmation_fee_modal_alert_message_fragment_1": "Sie sind dabei, eine Transaktion mit einer relativ hohen Gebühr zu senden ",
-  "send_confirmation_fee_modal_alert_message_fragment_2": ". Wenn Sie Ihre Gebühreneinstellungen ändern möchten, können Sie dies durch Tippen auf die drei Punkte in der oberen rechten Ecke des Bildschirms tun.",
   "transaction_failure": "Transaktion fehlgeschlagen",
   "transaction_failure_message": "%s.",
   "transaction_success": "Transaktion erfolgreich",
