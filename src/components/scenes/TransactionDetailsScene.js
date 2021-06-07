@@ -99,6 +99,9 @@ type FiatCurrentAmountUI = {
   percentage: string
 }
 
+const getAbsoluteAmount = (edgeTransaction: EdgeTransaction): string =>
+  edgeTransaction && edgeTransaction.nativeAmount ? abs(edgeTransaction.nativeAmount) : ''
+
 // Only exported for unit-testing purposes
 export class TransactionDetailsComponent extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -353,7 +356,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   getReceivedCryptoAmount(): FiatCryptoAmountUI {
     const { edgeTransaction, walletDefaultDenomProps, guiWallet } = this.props
 
-    const absoluteAmount = abs(edgeTransaction.nativeAmount)
+    const absoluteAmount = getAbsoluteAmount(edgeTransaction)
     const convertedAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(absoluteAmount)
     const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode]
     const symbolString =
@@ -370,7 +373,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
   getSentCryptoAmount(): FiatCryptoAmountUI {
     const { edgeTransaction, walletDefaultDenomProps, guiWallet } = this.props
 
-    const absoluteAmount = abs(edgeTransaction.nativeAmount)
+    const absoluteAmount = getAbsoluteAmount(edgeTransaction)
     const symbolString =
       UTILS.isCryptoParentCurrency(guiWallet, edgeTransaction.currencyCode) && walletDefaultDenomProps.symbol ? walletDefaultDenomProps.symbol : ''
     const currencyName = guiWallet.currencyNames[edgeTransaction.currencyCode]
@@ -594,7 +597,7 @@ export const TransactionDetailsScene = connect(
       ? UTILS.getDenomination(wallet.currencyCode, settings, 'exchange')
       : UTILS.getDenomination(edgeTransaction.currencyCode, settings, 'exchange')
 
-    const nativeAmount = edgeTransaction && edgeTransaction.nativeAmount ? bns.abs(edgeTransaction.nativeAmount) : ''
+    const nativeAmount = getAbsoluteAmount(edgeTransaction)
     const cryptoAmount = convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
     const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, parseFloat(cryptoAmount))
 
