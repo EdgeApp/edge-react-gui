@@ -145,8 +145,6 @@
   "send_confirmation_to": "宛先：%s",
   "send_confirmation_address": "アドレス：%s",
   "send_confirmation_fee_modal_alert_title": "高額警告",
-  "send_confirmation_fee_modal_alert_message_fragment_1": "トランザクション手数料が高いです ",
-  "send_confirmation_fee_modal_alert_message_fragment_2": "手数料の設定を変更する場合は、画面右上の 3 つのドットをタップしてください。",
   "transaction_failure": "トランザクションが失敗しました",
   "transaction_failure_message": "%s",
   "transaction_success": "トランザクションが成功しました",
