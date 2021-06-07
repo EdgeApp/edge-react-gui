@@ -397,9 +397,8 @@ class SendComponent extends React.PureComponent<Props, State> {
     return null
   }
 
-  renderFees() {
-    const { error, exchangeRates, settings, transaction, theme } = this.props
-    const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
+  renderError() {
+    const { error, theme } = this.props
 
     if (error && asMaybeNoAmountSpecifiedError(error) == null) {
       return (
@@ -408,6 +407,12 @@ class SendComponent extends React.PureComponent<Props, State> {
         </Tile>
       )
     }
+    return null
+  }
+
+  renderFees() {
+    const { exchangeRates, settings, transaction, theme } = this.props
+    const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
 
     if (recipientAddress) {
       const transactionFee = UTILS.convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, transaction, settings)
@@ -527,6 +532,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           {this.renderSelectedWallet()}
           {this.renderAddressTile()}
           {this.renderAmount()}
+          {this.renderError()}
           {this.renderFees()}
           {this.renderMetadata()}
           {this.renderSelectFioAddress()}
