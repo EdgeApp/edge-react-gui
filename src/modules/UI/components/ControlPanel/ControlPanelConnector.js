@@ -3,6 +3,7 @@
 import { connect } from 'react-redux'
 
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
+import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
 import { getDisplayDenominationFull } from '../../../Settings/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../../UI/selectors.js'
 import ControlPanel from './ControlPanel.ui'
@@ -28,8 +29,9 @@ const mapStateToProps = (state: RootState) => {
       } else {
         // otherwise it is likely a token, so find the metaToken object and get symbolImage
         const metaToken = guiWallet.metaTokens.find(metaToken => currencyCode === metaToken.currencyCode)
-        if (metaToken && metaToken.symbolImage) {
-          currencyLogo = metaToken.symbolImage
+        if (metaToken && metaToken.currencyCode) {
+          currencyLogo = getCurrencyIcon(guiWallet.currencyCode, metaToken.currencyCode).symbolImage
+          console.log('34. currencyLogo', currencyLogo)
         } else {
           currencyLogo = guiWallet.symbolImage
         }

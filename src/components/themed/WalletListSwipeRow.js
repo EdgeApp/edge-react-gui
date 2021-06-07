@@ -9,6 +9,7 @@ import { Fontello } from '../../assets/vector/index.js'
 import * as Constants from '../../constants/indexConstants'
 import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
 import type { GuiWallet } from '../../types/types.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -86,7 +87,7 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
     let symbolImage
     if (isToken) {
       const meta = guiWallet.metaTokens.find(token => token.currencyCode === currencyCode)
-      symbolImage = meta ? meta.symbolImage : undefined
+      symbolImage = meta ? getCurrencyIcon(guiWallet.currencyCode, meta.currencyCode).symbolImage : undefined
     } else {
       symbolImage = guiWallet.symbolImageDarkMono
     }

@@ -5,6 +5,7 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import { connect } from 'react-redux'
 
 import type { RootState } from '../../types/reduxTypes.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 
 type OwnProps = {
@@ -105,7 +106,7 @@ export const WalletProgressIcon = connect((state: RootState, ownProps: OwnProps)
       icon = guiWallet.symbolImage
     } else {
       const meta = guiWallet.metaTokens.find(token => token.currencyCode === ownProps.currencyCode)
-      icon = meta ? meta.symbolImage : undefined
+      icon = meta ? getCurrencyIcon(guiWallet.currencyCode, meta.currencyCode).symbolImage : undefined
     }
     progress = walletsProgress[walletId] ? walletsProgress[walletId] * 100 : 0
   }

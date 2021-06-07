@@ -21,6 +21,7 @@ import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { decimalOrZero, DIVIDE_PRECISION, getCurrencyInfo, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
 import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -617,7 +618,7 @@ export const Request = connect(
       currencyIcon = guiWallet.symbolImage
     } else {
       const meta = guiWallet.metaTokens.find(token => token.currencyCode === currencyCode)
-      currencyIcon = meta ? meta.symbolImage : undefined
+      currencyIcon = meta ? getCurrencyIcon(guiWallet.currencyCode, meta.symbolImage).symbolImage : undefined
     }
 
     return {
