@@ -194,7 +194,9 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         )}
         <View style={styles.spacer} />
         <View style={styles.blockPadding}>
-          {!feeLoading && <SecondaryButton onPress={this.props.cancelOperation} disabled={loading || feeLoading} label={s.strings.string_cancel_cap} />}
+          {!feeLoading && this.props.cancelOperation && (
+            <SecondaryButton onPress={this.props.cancelOperation} disabled={loading || feeLoading} label={s.strings.string_cancel_cap} />
+          )}
         </View>
       </View>
     )
