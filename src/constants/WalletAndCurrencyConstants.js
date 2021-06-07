@@ -184,7 +184,6 @@ type SpecialCurrencyInfo = {|
   isAccountActivationRequired?: boolean,
   isCustomTokensSupported?: boolean,
   isRbfSupported?: boolean,
-  isTokensSupported?: boolean,
   isUriEncodedStructure?: boolean,
   needsAccountNameSetup?: boolean,
   noChangeMiningFee?: boolean,
@@ -250,8 +249,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_instructions
     },
-    isCustomTokensSupported: true,
-    isTokensSupported: true
+    isCustomTokensSupported: true
   },
   XLM: {
     dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
@@ -306,8 +304,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
     },
-    isCustomTokensSupported: true,
-    isTokensSupported: true
+    isCustomTokensSupported: true
   },
   TLOS: {
     isAccountActivationRequired: true,
@@ -323,8 +320,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
     },
-    isCustomTokensSupported: true,
-    isTokensSupported: true
+    isCustomTokensSupported: true
   },
   WAX: {
     isAccountActivationRequired: false,
@@ -341,7 +337,6 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
     },
     isCustomTokensSupported: true,
-    isTokensSupported: true,
     keysOnlyMode: true
   },
   ETH: {
@@ -353,7 +348,6 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_instructions
     },
     isCustomTokensSupported: true,
-    isTokensSupported: true,
     showEarnInterestCard: false,
     isRbfSupported: true
   },
