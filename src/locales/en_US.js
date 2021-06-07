@@ -215,6 +215,7 @@ const strings = {
   request_deprecated_currency_code:
     'Support for %1$s has been deprecated. To continue using this wallet, extract the private keys and import into a %1$s supporting wallet.',
   request_qr_email_title: 'Pay with %1$s:',
+  request_qr_email_subject: 'Edge %s Request',
   request_qr_your_receiving_wallet_address: 'Your Receiving Wallet Address',
   request_review_question_title: 'Enjoying %1$s?',
   request_review_question_subtitle: 'Please give us a review',

@@ -416,7 +416,7 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   shareMessage = async () => {
-    const { currencyCode, publicAddress, edgeWallet } = this.props
+    const { currencyCode, publicAddress, edgeWallet, currencyInfo } = this.props
     const { legacyAddress } = this.state
     if (!currencyCode || !edgeWallet) {
       throw new Error('Wallet still loading. Please wait and try again.')
@@ -441,11 +441,15 @@ export class RequestComponent extends React.Component<Props, State> {
       addOnMessage = `\n\n${sprintf(s.strings.request_qr_email_title, s.strings.app_name_short)}\n\n`
     }
 
+    const subject = currencyInfo ? sprintf(s.strings.request_qr_email_subject, currencyInfo.displayName) : ''
     const message = `${sharedAddress}${addOnMessage}`
+
     const shareOptions = {
+      subject,
       message: Platform.OS === 'ios' ? message : message + edgePayUri,
       url: Platform.OS === 'ios' ? edgePayUri : ''
     }
+
     Share.open(shareOptions).catch(e => console.log(e))
   }
 
