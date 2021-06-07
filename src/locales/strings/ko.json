@@ -146,8 +146,6 @@
   "send_confirmation_to": "받는 곳: %s",
   "send_confirmation_address": "주소: %s",
   "send_confirmation_fee_modal_alert_title": "고액 수수료 경고",
-  "send_confirmation_fee_modal_alert_message_fragment_1": "고액 수수료로 송신합니다: ",
-  "send_confirmation_fee_modal_alert_message_fragment_2": ". 수수료 설정을 변경할 경우, 우측 상단에 있는 더보기 (점세개)를 클릭합니다.",
   "transaction_failure": "거래 실패",
   "transaction_failure_message": "%s",
   "transaction_success": "거래 성공",
