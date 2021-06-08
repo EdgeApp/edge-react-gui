@@ -19,7 +19,6 @@
   "select_exchange_amount_short": "Saisissez un montant",
   "exchanges_may_take_minutes": "Faires des echanges pourraient vous prendre quelques temps. Veuillez vérifier votre destination de Wallet dans quelques minutes \n",
   "fragment_wallets_addwallet_fiat_hint": "Sélectionnez la monnaie fidcuiaire ",
-  "managetokens_top_instructions": "Veuillez sélectionner les Tokens que vous souhaitez afficher dans votre portefeuille :",
   "manage_tokens_duplicate_currency_code": "Un Token avec les codes de devise déjà existe.",
   "addtoken_top_instructions": "Pour ajouter une Token, veuillez remplir la forme suivante et cliquez \"Sauvegarder\" ",
   "accept_button_text": "J'accepte",
