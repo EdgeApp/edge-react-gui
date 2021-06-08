@@ -44,7 +44,6 @@
   "select_exchange_amount_short": "Betrag eingeben",
   "exchanges_may_take_minutes": "Der Tausch könnte einige Minuten in Anspruch nehmen. Prüfen Sie bitte nach ein paar Minuten die Ziel-Wallet",
   "fragment_wallets_addwallet_fiat_hint": "Wählen Sie eine Fiat-Währung",
-  "managetokens_top_instructions": "Bitte wählen Sie welche Token Sie innerhalb der Wallet angezeigt haben möchten:",
   "manage_tokens_duplicate_currency_code": "Ein Token mit diesem Namen existiert bereits.",
   "addtoken_top_instructions": "Um ein Token hinzuzufügen, füllen sie das folgende Formular aus und drücken \"Speichern\" ",
   "accept_button_text": "Akzeptieren",
