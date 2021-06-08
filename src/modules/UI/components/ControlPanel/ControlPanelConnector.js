@@ -3,6 +3,7 @@
 import { connect } from 'react-redux'
 
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
+import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
 import { getDisplayDenominationFull } from '../../../Settings/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../../UI/selectors.js'
 import ControlPanel from './ControlPanel.ui'
@@ -23,17 +24,7 @@ const mapStateToProps = (state: RootState) => {
     if (guiWallet && currencyCode) {
       const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
       // if selected currencyCode is parent wallet currencyCode
-      if (guiWallet.currencyCode === currencyCode) {
-        currencyLogo = guiWallet.symbolImage
-      } else {
-        // otherwise it is likely a token, so find the metaToken object and get symbolImage
-        const metaToken = guiWallet.metaTokens.find(metaToken => currencyCode === metaToken.currencyCode)
-        if (metaToken && metaToken.symbolImage) {
-          currencyLogo = metaToken.symbolImage
-        } else {
-          currencyLogo = guiWallet.symbolImage
-        }
-      }
+      currencyLogo = getCurrencyIcon(guiWallet.currencyCode, currencyCode).symbolImage
       secondaryDisplayCurrencyCode = guiWallet.fiatCurrencyCode
       secondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
       primaryDisplayDenomination = getDisplayDenominationFull(state, currencyCode)

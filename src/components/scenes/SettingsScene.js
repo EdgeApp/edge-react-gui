@@ -255,7 +255,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             const { currencyInfo } = account.currencyConfig[pluginId]
             const { displayName, currencyCode } = currencyInfo
             const { symbolImage } = getCurrencyIcon(currencyCode)
-            const icon = symbolImage != null ? <Image style={styles.currencyLogo} source={{ uri: symbolImage }} /> : undefined
+            const icon = <Image style={styles.currencyLogo} source={{ uri: symbolImage }} />
             const onPress = () => Actions[Constants.CURRENCY_SETTINGS]({ currencyInfo })
 
             return <SettingsRow key={pluginId} icon={icon} text={displayName} onPress={onPress} right={rightArrow} />

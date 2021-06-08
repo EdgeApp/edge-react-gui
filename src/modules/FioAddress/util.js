@@ -9,6 +9,7 @@ import { FIO_STR, FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConst
 import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import type { FioAddress, FioConnectionWalletItem, FioDomain, GuiWallet } from '../../types/types'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers'
 import { truncateDecimals } from '../../util/utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
@@ -392,7 +393,7 @@ export const makeConnectWallets = (wallets: { [walletId: string]: GuiWallet }, c
           key: `${wallets[walletKey].id}-${tokenData.currencyCode}`,
           id: wallets[walletKey].id,
           publicAddress,
-          symbolImage: tokenData.symbolImage,
+          ...getCurrencyIcon(wallets[walletKey].currencyCode, tokenData.currencyCode),
           name: wallets[walletKey].name,
           currencyCode: tokenData.currencyCode,
           chainCode: wallets[walletKey].currencyCode,

@@ -99,7 +99,7 @@ export class NotificationComponent extends React.Component<Props, State> {
             {this.props.currencyInfos.map((currencyInfo: EdgeCurrencyInfo) => {
               const { displayName, currencyCode } = currencyInfo
               const { symbolImage } = getCurrencyIcon(currencyCode)
-              const icon = symbolImage != null ? <Image style={styles.currencyLogo} source={{ uri: symbolImage }} /> : undefined
+              const icon = <Image style={styles.currencyLogo} source={{ uri: symbolImage }} />
               const onPress = () => (enabled ? Actions[Constants.CURRENCY_NOTIFICATION_SETTINGS]({ currencyInfo }) : undefined)
 
               return <SettingsRow disabled={!enabled} key={currencyCode} icon={icon} text={displayName} right={rightArrow} onPress={onPress} />
