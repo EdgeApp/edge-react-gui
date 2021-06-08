@@ -84,13 +84,7 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
 
   handleOpenWalletListMenuModal = (): void => {
     const { currencyCode, guiWallet, isToken } = this.props
-    let symbolImage
-    if (isToken) {
-      const meta = guiWallet.metaTokens.find(token => token.currencyCode === currencyCode)
-      symbolImage = meta ? getCurrencyIcon(guiWallet.currencyCode, meta.currencyCode).symbolImage : undefined
-    } else {
-      symbolImage = guiWallet.symbolImageDarkMono
-    }
+    const { symbolImage } = getCurrencyIcon(guiWallet.currencyCode, currencyCode)
 
     this.closeRow()
     Airship.show(bridge => (

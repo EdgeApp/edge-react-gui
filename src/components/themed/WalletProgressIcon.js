@@ -101,13 +101,8 @@ export const WalletProgressIcon = connect((state: RootState, ownProps: OwnProps)
 
   if (walletId) {
     const guiWallet = state.ui.wallets.byId[walletId]
+    icon = getCurrencyIcon(guiWallet.currencyCode, currencyCode).symbolImage
     const walletsProgress = state.ui.wallets.walletLoadingProgress
-    if (guiWallet.currencyCode === currencyCode) {
-      icon = guiWallet.symbolImage
-    } else {
-      const meta = guiWallet.metaTokens.find(token => token.currencyCode === ownProps.currencyCode)
-      icon = meta ? getCurrencyIcon(guiWallet.currencyCode, meta.currencyCode).symbolImage : undefined
-    }
     progress = walletsProgress[walletId] ? walletsProgress[walletId] * 100 : 0
   }
 

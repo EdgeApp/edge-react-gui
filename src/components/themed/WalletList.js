@@ -230,7 +230,6 @@ class WalletListComponent extends React.PureComponent<Props> {
 
           if (this.checkFilterWallet({ name: '', currencyCode, currencyName }) && !this.checkFromExistingWallets(walletList, currencyCode)) {
             const fullCurrencyCode = `${currencyInfo.currencyCode}-${currencyCode}`
-            const { symbolImage } = getCurrencyIcon(fullCurrencyCode, currencyCode)
             sortedWalletlist.push({
               id: null,
               fullCurrencyCode,
@@ -238,7 +237,7 @@ class WalletListComponent extends React.PureComponent<Props> {
               createTokenType: {
                 currencyCode,
                 currencyName,
-                symbolImage,
+                ...getCurrencyIcon(fullCurrencyCode, currencyCode),
                 parentCurrencyCode: currencyInfo.currencyCode
               }
             })

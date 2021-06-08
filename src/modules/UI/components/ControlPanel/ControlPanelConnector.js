@@ -24,18 +24,7 @@ const mapStateToProps = (state: RootState) => {
     if (guiWallet && currencyCode) {
       const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
       // if selected currencyCode is parent wallet currencyCode
-      if (guiWallet.currencyCode === currencyCode) {
-        currencyLogo = guiWallet.symbolImage
-      } else {
-        // otherwise it is likely a token, so find the metaToken object and get symbolImage
-        const metaToken = guiWallet.metaTokens.find(metaToken => currencyCode === metaToken.currencyCode)
-        if (metaToken && metaToken.currencyCode) {
-          currencyLogo = getCurrencyIcon(guiWallet.currencyCode, metaToken.currencyCode).symbolImage
-          console.log('34. currencyLogo', currencyLogo)
-        } else {
-          currencyLogo = guiWallet.symbolImage
-        }
-      }
+      currencyLogo = getCurrencyIcon(guiWallet.currencyCode, currencyCode).symbolImage
       secondaryDisplayCurrencyCode = guiWallet.fiatCurrencyCode
       secondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
       primaryDisplayDenomination = getDisplayDenominationFull(state, currencyCode)

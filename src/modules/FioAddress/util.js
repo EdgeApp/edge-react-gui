@@ -393,7 +393,7 @@ export const makeConnectWallets = (wallets: { [walletId: string]: GuiWallet }, c
           key: `${wallets[walletKey].id}-${tokenData.currencyCode}`,
           id: wallets[walletKey].id,
           publicAddress,
-          symbolImage: getCurrencyIcon(wallets[walletKey].currencyCode, tokenData.currencyCode).symbolImage,
+          ...getCurrencyIcon(wallets[walletKey].currencyCode, tokenData.currencyCode),
           name: wallets[walletKey].name,
           currencyCode: tokenData.currencyCode,
           chainCode: wallets[walletKey].currencyCode,

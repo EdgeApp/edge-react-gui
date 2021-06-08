@@ -613,13 +613,7 @@ export const Request = connect(
     const balance = formatNumber(decimalOrZero(displayBalance, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
 
     // Icon
-    let currencyIcon
-    if (guiWallet.currencyCode === currencyCode) {
-      currencyIcon = guiWallet.symbolImage
-    } else {
-      const meta = guiWallet.metaTokens.find(token => token.currencyCode === currencyCode)
-      currencyIcon = meta ? getCurrencyIcon(guiWallet.currencyCode, meta.symbolImage).symbolImage : undefined
-    }
+    const currencyIcon = getCurrencyIcon(guiWallet.currencyCode, currencyCode).symbolImage
 
     return {
       currencyCode,
