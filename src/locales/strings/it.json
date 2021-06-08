@@ -44,7 +44,6 @@
   "select_exchange_amount_short": "Inserisci un importo",
   "exchanges_may_take_minutes": "I cambi possono impiegare diversi minuti per essere processati. Controlla il tuo portafoglio di destinazione dopo qualche minuto",
   "fragment_wallets_addwallet_fiat_hint": "Scegli una valuta fiat",
-  "managetokens_top_instructions": "Seleziona quali token vuoi visualizzare all'interno del portafoglio:",
   "manage_tokens_duplicate_currency_code": "Un token con quel codice esiste già.",
   "addtoken_top_instructions": "Per aggiungere un token, completa il form e premi \"Salva\" ",
   "accept_button_text": "Accetta",
