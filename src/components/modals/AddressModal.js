@@ -372,13 +372,21 @@ const AddressModal = connect(
   (state: RootState, ownProps: OwnProps): StateProps => {
     const { account } = state.core
     const { currencyWallets } = account
-    return {
-      account,
-      coreWallet: currencyWallets[ownProps.walletId],
-      userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
-      userFioAddressesLoading: state.ui.scenes.fioAddress.fioAddressesLoading,
-      fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
-      fioWallets: state.ui.wallets.fioWallets
+
+    // Try catch block to check specific details why the account.currencyConfig Fio Plugin becomes undefined
+    try {
+      return {
+        account,
+        coreWallet: currencyWallets[ownProps.walletId],
+        userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+        userFioAddressesLoading: state.ui.scenes.fioAddress.fioAddressesLoading,
+        fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+        fioWallets: state.ui.wallets.fioWallets
+      }
+    } catch (error) {
+      console.log('AddressModalCurrencyConfig - ', account.currencyConfig)
+      console.log('AddressModalCurrencyPluginNames - ', CURRENCY_PLUGIN_NAMES.FIO)
+      throw new Error(error)
     }
   },
   (dispatch: Dispatch): DispatchProps => ({ refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses()) })
