@@ -29,7 +29,8 @@ type OwnProps = {
 
 type DefaultFeeSettings = {
   currentDefault: DefaultFeeOption,
-  isDefault: boolean
+  isDefault: boolean,
+  currentDefaultCustomFee: Object
 }
 
 type FeeSettings = {
@@ -55,7 +56,8 @@ type State = {
   networkFeeOption: FeeOption,
   isDefault: boolean,
   currentDefault: DefaultFeeOption,
-  customNetworkFee: Object
+  customNetworkFee: Object,
+  currentDefaultCustomFee: Object
 }
 
 export class ChangeMiningFee extends React.Component<Props, State> {
@@ -68,8 +70,9 @@ export class ChangeMiningFee extends React.Component<Props, State> {
     let { networkFeeOption = defaultNetworkFee } = props // Initially standard
 
     const currentDefault = props.currencySettings?.defaultFee ?? 'none'
+    const currentDefaultCustomFee = props.currencySettings?.customFee ?? {}
     if (currentDefault !== 'none') {
-      networkFeeOption = (currentDefault: any)
+      networkFeeOption = currentDefault
       isDefault = true
     }
 
@@ -79,10 +82,10 @@ export class ChangeMiningFee extends React.Component<Props, State> {
       // Reset the custom fees if they don't match the format:
       const defaultCustomFee = {}
       for (const key of customFormat) defaultCustomFee[key] = ''
-      this.state = { networkFeeOption, isDefault, currentDefault, customNetworkFee: defaultCustomFee }
+      this.state = { networkFeeOption, isDefault, currentDefault, customNetworkFee: defaultCustomFee, currentDefaultCustomFee }
     } else {
       // Otherwise, use the custom fees from before:
-      this.state = { networkFeeOption, isDefault, currentDefault, customNetworkFee }
+      this.state = { networkFeeOption, isDefault, currentDefault, customNetworkFee, currentDefaultCustomFee }
     }
   }
 
@@ -95,7 +98,7 @@ export class ChangeMiningFee extends React.Component<Props, State> {
   }
 
   onSubmit = () => {
-    const { networkFeeOption, isDefault, currentDefault, customNetworkFee } = this.state
+    const { networkFeeOption, isDefault, currentDefault, customNetworkFee, currentDefaultCustomFee } = this.state
     const { currencyCode, wallet, spendTargets = [] } = this.props
     const testSpendInfo = { spendTargets, networkFeeOption, customNetworkFee, currencyCode }
     wallet
@@ -104,7 +107,8 @@ export class ChangeMiningFee extends React.Component<Props, State> {
         const feeSettings: FeeSettings = {
           defaultFeeSettings: {
             currentDefault: currentDefault,
-            isDefault: isDefault
+            isDefault: isDefault,
+            currentDefaultCustomFee: currentDefaultCustomFee
           },
           networkFeeOption: networkFeeOption,
           customNetworkFee: customNetworkFee
@@ -262,9 +266,17 @@ const rawStyles = {
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 const updateDefaultFee = (feeSettings, currencyCode, dispatch) => {
-  const outDated =
-    feeSettings.defaultFeeSettings.currentDefault !== feeSettings.networkFeeOption || feeSettings.defaultFeeSettings.currentDefault === 'standard'
-  const currentlyOff = feeSettings.defaultFeeSettings.currentDefault === 'none'
+  const currentDefault = feeSettings.defaultFeeSettings.currentDefault
+
+  // Compare value of custom fee field to see if we need to update the custom default fee value
+  let customFeeOutdated = false
+  if (feeSettings.networkFeeOption === 'custom') {
+    if (feeSettings.defaultFeeSettings.currentDefaultCustomFee.satPerByte !== feeSettings.customNetworkFee.satPerByte) customFeeOutdated = true
+  }
+
+  const outDated = currentDefault !== feeSettings.networkFeeOption || currentDefault === 'standard' || customFeeOutdated
+  const currentlyOff = currentDefault === 'none'
+
   if (currencyCode) {
     if (outDated && feeSettings.defaultFeeSettings.isDefault) {
       // Set default fee
