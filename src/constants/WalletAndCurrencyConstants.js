@@ -520,6 +520,8 @@ export const WALLET_LIST_MENU: Array<{
   }
 ]
 
+export const EXCLUDE_SPLIT_WALLETS = ['segwit']
+
 export const USD_FIAT = 'iso:USD'
 export const getSymbolFromCurrency = (currencyCode: string) => {
   if (typeof currencyCode !== 'string') return ''
