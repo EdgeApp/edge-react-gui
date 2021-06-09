@@ -9,17 +9,18 @@ import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { updateMaxSpend, updateTransactionAmount } from '../../actions/SendConfirmationActions.js'
+import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../modules/Settings/selectors.js'
-import type { ExchangedFlipInputAmounts } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
-import { ExchangedFlipInput } from '../../modules/UI/components/FlipInput/ExchangedFlipInput2.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getExchangeRate } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { convertTransactionFeeToDisplayFee, DIVIDE_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
 import { ExchangeRate } from '../common/ExchangeRate.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { Card } from '../themed/Card'
 import { EdgeText } from '../themed/EdgeText.js'
+import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput'
 import { ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
@@ -96,9 +97,11 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     return (
       <View style={styles.headerContainer}>
         <ModalTitle>{s.strings.string_enter_amount}</ModalTitle>
-        <TouchableOpacity onPress={this.handleSendMaxAmount}>
-          <EdgeText style={styles.headerMaxAmountText}>{s.strings.send_confirmation_max_button_title}</EdgeText>
-        </TouchableOpacity>
+        {Constants.getSpecialCurrencyInfo(this.props.currencyCode).noMaxSpend !== true ? (
+          <TouchableOpacity onPress={this.handleSendMaxAmount}>
+            <EdgeText style={styles.headerMaxAmountText}>{s.strings.send_confirmation_max_button_title}</EdgeText>
+          </TouchableOpacity>
+        ) : null}
       </View>
     )
   }
@@ -135,20 +138,22 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     const styles = getStyles(theme)
     return (
       <View style={styles.flipInputContainer}>
-        <ExchangedFlipInput
-          headerText={flipInputHeaderText}
-          headerLogo={flipInputHeaderLogo}
-          primaryCurrencyInfo={{ ...primaryInfo }}
-          secondaryCurrencyInfo={{ ...secondaryInfo }}
-          exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
-          overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
-          forceUpdateGuiCounter={0}
-          onExchangeAmountChanged={this.handleExchangeAmountChange}
-          onNext={this.handleCloseModal}
-          keyboardVisible={false}
-          isFocus
-          isFiatOnTop={bns.eq(overridePrimaryExchangeAmount, '0')}
-        />
+        <Card marginRem={[0, 0.75]}>
+          <ExchangedFlipInput
+            headerText={flipInputHeaderText}
+            headerLogo={flipInputHeaderLogo}
+            primaryCurrencyInfo={{ ...primaryInfo }}
+            secondaryCurrencyInfo={{ ...secondaryInfo }}
+            exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
+            overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
+            forceUpdateGuiCounter={0}
+            onExchangeAmountChanged={this.handleExchangeAmountChange}
+            onNext={this.handleCloseModal}
+            keyboardVisible={false}
+            isFocus
+            isFiatOnTop={bns.eq(overridePrimaryExchangeAmount, '0')}
+          />
+        </Card>
       </View>
     )
   }

@@ -12,6 +12,7 @@ import FormattedText from '../../modules/UI/components/FormattedText/FormattedTe
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils.js'
 import { type TokenSelectObject, CryptoExchangeWalletListTokenRow } from './CryptoExchangeWalletListTokenRow.js'
@@ -152,7 +153,7 @@ export class CryptoExchangeWalletListRow extends React.Component<Props, LocalSta
             if (!this.props.denomination || !this.props.denomination.multiplier) {
               return []
             }
-            const tokenImage = token && token.symbolImage ? token.symbolImage : ''
+            const tokenImage = token ? getCurrencyIcon(wallet.currencyCode, token.currencyCode).symbolImage : ''
             const nativeAmount = metaTokenBalances[property]
             const disabled = this.props.excludedCurrencyCode.includes(property) || this.props.disableZeroBalance
             tokens.push(

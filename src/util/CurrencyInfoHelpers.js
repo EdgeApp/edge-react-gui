@@ -2,8 +2,25 @@
 
 import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js'
 
-import { WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
+import { IMAGE_SERVER_URL, WALLET_TYPE_ORDER } from '../constants/WalletAndCurrencyConstants.js'
 import { type CreateWalletType } from '../types/types.js'
+
+/**
+ * Get currency icon URL
+ */
+
+type CurrencyIcons = {
+  symbolImage: string,
+  symbolImageDarkMono: string
+}
+
+export function getCurrencyIcon(chainCode: string, currencyCode: string = chainCode): CurrencyIcons {
+  const url = `${IMAGE_SERVER_URL}/${chainCode}/${currencyCode}`
+  return {
+    symbolImage: `${url}.png`,
+    symbolImageDarkMono: `${url}_dark.png`
+  }
+}
 
 /**
  * Grab all the EdgeCurrencyInfo objects in an account.
@@ -40,12 +57,12 @@ export function sortCurrencyInfos(infos: EdgeCurrencyInfo[]): EdgeCurrencyInfo[]
  * so make that.
  */
 export function makeCreateWalletType(currencyInfo: EdgeCurrencyInfo): CreateWalletType {
+  const { currencyCode, walletType, displayName: currencyName } = currencyInfo
   return {
-    currencyName: currencyInfo.displayName,
-    walletType: currencyInfo.walletType,
-    symbolImage: currencyInfo.symbolImage,
-    symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
-    currencyCode: currencyInfo.currencyCode
+    currencyName,
+    walletType,
+    currencyCode,
+    ...getCurrencyIcon(currencyCode)
   }
 }
 
@@ -57,21 +74,20 @@ export function getCreateWalletTypes(account: EdgeAccount): CreateWalletType[] {
 
   const out: CreateWalletType[] = []
   for (const currencyInfo of infos) {
+    const { currencyCode } = currencyInfo
     if (currencyInfo.pluginId === 'fio' && global.isFioDisabled) continue // FIO disable changes
     if (currencyInfo.pluginId === 'bitcoin') {
       out.push({
         currencyName: 'Bitcoin (Segwit)',
         walletType: 'wallet:bitcoin-bip49',
-        symbolImage: currencyInfo.symbolImage,
-        symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
-        currencyCode: currencyInfo.currencyCode
+        currencyCode,
+        ...getCurrencyIcon(currencyCode)
       })
       out.push({
         currencyName: 'Bitcoin (no Segwit)',
         walletType: 'wallet:bitcoin-bip44',
-        symbolImage: currencyInfo.symbolImage,
-        symbolImageDarkMono: currencyInfo.symbolImageDarkMono,
-        currencyCode: currencyInfo.currencyCode
+        currencyCode,
+        ...getCurrencyIcon(currencyCode)
       })
     } else {
       out.push(makeCreateWalletType(currencyInfo))

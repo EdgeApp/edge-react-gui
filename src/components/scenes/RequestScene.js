@@ -21,6 +21,7 @@ import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { decimalOrZero, DIVIDE_PRECISION, getCurrencyInfo, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
 import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -416,7 +417,7 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   shareMessage = async () => {
-    const { currencyCode, publicAddress, edgeWallet } = this.props
+    const { currencyCode, publicAddress, edgeWallet, currencyInfo } = this.props
     const { legacyAddress } = this.state
     if (!currencyCode || !edgeWallet) {
       throw new Error('Wallet still loading. Please wait and try again.')
@@ -441,11 +442,15 @@ export class RequestComponent extends React.Component<Props, State> {
       addOnMessage = `\n\n${sprintf(s.strings.request_qr_email_title, s.strings.app_name_short)}\n\n`
     }
 
+    const subject = currencyInfo ? sprintf(s.strings.request_qr_email_subject, currencyInfo.displayName) : ''
     const message = `${sharedAddress}${addOnMessage}`
+
     const shareOptions = {
+      subject,
       message: Platform.OS === 'ios' ? message : message + edgePayUri,
       url: Platform.OS === 'ios' ? edgePayUri : ''
     }
+
     Share.open(shareOptions).catch(e => console.log(e))
   }
 
@@ -612,13 +617,7 @@ export const Request = connect(
     const balance = formatNumber(decimalOrZero(displayBalance, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
 
     // Icon
-    let currencyIcon
-    if (guiWallet.currencyCode === currencyCode) {
-      currencyIcon = guiWallet.symbolImage
-    } else {
-      const meta = guiWallet.metaTokens.find(token => token.currencyCode === currencyCode)
-      currencyIcon = meta ? meta.symbolImage : undefined
-    }
+    const currencyIcon = getCurrencyIcon(guiWallet.currencyCode, currencyCode).symbolImage
 
     return {
       currencyCode,

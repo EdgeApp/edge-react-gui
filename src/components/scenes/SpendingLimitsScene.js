@@ -9,8 +9,8 @@ import { TextField } from 'react-native-material-textfield'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
-import type { SpendingLimits as SpendingLimitsType } from '../../reducers/SpendingLimitsReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { type SpendingLimits as SpendingLimitsType } from '../../types/types.js'
 
 export type SpendingLimitsOwnProps = {
   transactionSpendingLimit: {

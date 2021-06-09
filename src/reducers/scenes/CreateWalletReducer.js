@@ -63,7 +63,6 @@ const isCheckingHandleAvailability: Reducer<boolean, Action> = (state = false, a
 const handleAvailableStatus: Reducer<HandleAvailableStatus, Action> = (state = '', action: Action): HandleAvailableStatus => {
   switch (action.type) {
     case 'HANDLE_AVAILABLE_STATUS': {
-      if (!action.data) return state
       return action.data
     }
     default:

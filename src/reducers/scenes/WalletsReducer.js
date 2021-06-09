@@ -7,6 +7,7 @@ import { type Reducer, combineReducers } from 'redux'
 import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants'
 import type { Action } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 
 export type WalletsState = {
   byId: { [walletId: string]: GuiWallet },
@@ -23,7 +24,6 @@ export type WalletsState = {
 const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> => {
   switch (action.type) {
     case 'CORE/WALLETS/UPDATE_WALLETS': {
-      if (!action.data) return state
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
@@ -125,7 +125,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
     }
 
     case 'UI/WALLETS/UPSERT_WALLETS': {
-      if (!action.data) return state
       const { wallets } = action.data
       const out = { ...state }
       for (const wallet of wallets) {
@@ -147,7 +146,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
     }
 
     case 'UI/WALLETS/REFRESH_RECEIVE_ADDRESS': {
-      if (!action.data) return state
       const { walletId, receiveAddress } = action.data
       return {
         ...state,
@@ -166,7 +164,6 @@ const byId = (state = {}, action: Action): $PropertyType<WalletsState, 'byId'> =
 const walletLoadingProgress = (state = {}, action: Action): $PropertyType<WalletsState, 'walletLoadingProgress'> => {
   switch (action.type) {
     case 'INSERT_WALLET_IDS_FOR_PROGRESS': {
-      if (!action.data) throw new Error('Invalid action')
       const activeWalletIdList = action.data.activeWalletIds
       const activeWalletIdProgress = {}
       activeWalletIdList.forEach(item => {
@@ -176,7 +173,6 @@ const walletLoadingProgress = (state = {}, action: Action): $PropertyType<Wallet
     }
 
     case 'UPDATE_WALLET_LOADING_PROGRESS': {
-      if (!action.data) throw new Error('Invalid action')
       // prevent backwards progress
       if (action.data.addressLoadingProgress < state[action.data.walletId]) return state
       return {
@@ -186,7 +182,6 @@ const walletLoadingProgress = (state = {}, action: Action): $PropertyType<Wallet
     }
 
     case 'RESET_WALLET_LOADING_PROGRESS': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         [action.data.walletId]: 0.05
@@ -200,11 +195,9 @@ const walletLoadingProgress = (state = {}, action: Action): $PropertyType<Wallet
 
 const activeWalletIds = (state = [], action: Action): string[] => {
   if (action.type === 'ACCOUNT_INIT_COMPLETE') {
-    if (!action.data) return state
     return action.data.activeWalletIds
   }
   if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
-    if (!action.data) return state
     return action.data.activeWalletIds
   }
 
@@ -213,11 +206,9 @@ const activeWalletIds = (state = [], action: Action): string[] => {
 
 const archivedWalletIds = (state = [], action: Action): string[] => {
   if (action.type === 'ACCOUNT_INIT_COMPLETE') {
-    if (!action.data) return state
     return action.data.archivedWalletIds
   }
   if (action.type === 'CORE/WALLETS/UPDATE_WALLETS') {
-    if (!action.data) return state
     return action.data.archivedWalletIds
   }
 
@@ -295,8 +286,6 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
   const currencyCode: string = wallet.currencyInfo.currencyCode
   const fiatCurrencyCode: string = wallet.fiatCurrencyCode.replace('iso:', '')
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
-  const symbolImage = wallet.currencyInfo.symbolImage
-  const symbolImageDarkMono = wallet.currencyInfo.symbolImageDarkMono
   const metaTokens: EdgeMetaToken[] = wallet.currencyInfo.metaTokens
   const denominations: EdgeDenomination[] = wallet.currencyInfo.denominations
   const blockHeight: number = wallet.blockHeight
@@ -361,8 +350,7 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
     enabledTokens,
     receiveAddress,
     blockHeight,
-    symbolImage,
-    symbolImageDarkMono
+    ...getCurrencyIcon(currencyCode)
   }
 
   return newWallet
@@ -371,7 +359,6 @@ function schema(wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress):
 const fioWallets = (state = [], action: Action): $PropertyType<WalletsState, 'fioWallets'> => {
   switch (action.type) {
     case 'CORE/WALLETS/UPDATE_WALLETS': {
-      if (!action.data) return state
       const wallets = action.data.currencyWallets
       const fioWallets = []
       for (const walletId of Object.keys(wallets)) {

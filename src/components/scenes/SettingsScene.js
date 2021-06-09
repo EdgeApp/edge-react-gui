@@ -26,6 +26,7 @@ import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import { edgeDark } from '../../theme/variables/edgeDark.js'
 import { edgeLight } from '../../theme/variables/edgeLight.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
@@ -252,8 +253,9 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           {CURRENCY_SETTINGS_KEYS.map(pluginId => {
             if (account.currencyConfig[pluginId] == null) return null
             const { currencyInfo } = account.currencyConfig[pluginId]
-            const { displayName, symbolImage } = currencyInfo
-            const icon = symbolImage != null ? <Image style={styles.currencyLogo} source={{ uri: symbolImage }} /> : undefined
+            const { displayName, currencyCode } = currencyInfo
+            const { symbolImage } = getCurrencyIcon(currencyCode)
+            const icon = <Image style={styles.currencyLogo} source={{ uri: symbolImage }} />
             const onPress = () => Actions[Constants.CURRENCY_SETTINGS]({ currencyInfo })
 
             return <SettingsRow key={pluginId} icon={icon} text={displayName} onPress={onPress} right={rightArrow} />

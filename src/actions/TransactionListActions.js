@@ -7,21 +7,9 @@ import _ from 'lodash'
 import { showTransactionDropdown } from '../components/navigation/TransactionDropdown.js'
 import { showError } from '../components/services/AirshipInstance.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
-import type { TransactionListTx } from '../types/types.js'
+import { type TransactionListTx } from '../types/types.js'
 import * as UTILS from '../util/utils'
 import { checkFioObtData } from './FioActions'
-
-export const updateTransactions = (transactionUpdate: {
-  numTransactions: number,
-  transactions: TransactionListTx[],
-  transactionIdMap: { [txid: string]: TransactionListTx },
-  currentCurrencyCode: string,
-  currentWalletId: string,
-  currentEndIndex: number
-}) => ({
-  type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS',
-  data: transactionUpdate
-})
 
 export const updateBalance = () => ({
   type: 'noop'
@@ -86,7 +74,7 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
   const wallet = currencyWallets[walletId]
   if (!wallet) return
   // initialize the master array of transactions that will eventually go into Redux
-  let transactionsWithKeys = [] // array of transactions as objects with key included for sorting?
+  let transactionsWithKeys: TransactionListTx[] = [] // array of transactions as objects with key included for sorting?
   let transactionIdMap = {} // maps id to sort order(?)
   // assume counter starts at zero (eg this is the first fetch)
   let key = 0
@@ -126,17 +114,17 @@ const getAndMergeTransactions = async (state: RootState, dispatch: Dispatch, wal
       // $FlowFixMe
       lastUnfilteredIndex = transactionsWithKeys[transactionCount - 1].otherParams.unfilteredIndex
     }
-    dispatch(
-      // $FlowFixMe
-      updateTransactions({
+    dispatch({
+      type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS',
+      data: {
         numTransactions,
         transactionIdMap,
         transactions: transactionsWithKeys,
         currentCurrencyCode: currencyCode,
         currentWalletId: walletId,
         currentEndIndex: lastUnfilteredIndex
-      })
-    )
+      }
+    })
   } catch (error) {
     showError(error)
   }

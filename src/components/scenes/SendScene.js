@@ -16,7 +16,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { type FioSenderInfo, newPin, reset, sendConfirmationUpdateTx, signBroadcastAndSave, updateSpendPending } from '../../actions/SendConfirmationActions.js'
+import { type FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions.js'
 import { activated as uniqueIdentifierModalActivated } from '../../actions/UniqueIdentifierModalActions.js'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
 import { CHANGE_MINING_FEE_SEND_CONFIRMATION, getSpecialCurrencyInfo } from '../../constants/indexConstants'
@@ -397,9 +397,8 @@ class SendComponent extends React.PureComponent<Props, State> {
     return null
   }
 
-  renderFees() {
-    const { error, exchangeRates, settings, transaction, theme } = this.props
-    const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
+  renderError() {
+    const { error, theme } = this.props
 
     if (error && asMaybeNoAmountSpecifiedError(error) == null) {
       return (
@@ -408,6 +407,12 @@ class SendComponent extends React.PureComponent<Props, State> {
         </Tile>
       )
     }
+    return null
+  }
+
+  renderFees() {
+    const { exchangeRates, settings, transaction, theme } = this.props
+    const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
 
     if (recipientAddress) {
       const transactionFee = UTILS.convertTransactionFeeToDisplayFee(guiWallet, selectedCurrencyCode, exchangeRates, transaction, settings)
@@ -527,6 +532,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           {this.renderSelectedWallet()}
           {this.renderAddressTile()}
           {this.renderAmount()}
+          {this.renderError()}
           {this.renderFees()}
           {this.renderMetadata()}
           {this.renderSelectFioAddress()}
@@ -591,13 +597,22 @@ export const SendScene = connect(
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    reset: () => dispatch(reset()),
+    reset() {
+      dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
+    },
     sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId: string, selectedCurrencyCode: string) =>
       dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode)),
-    updateSpendPending: (pending: boolean) => dispatch(updateSpendPending(pending)),
+    updateSpendPending(pending: boolean) {
+      dispatch({
+        type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
+        data: { pending }
+      })
+    },
     signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string): any =>
       dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)),
     uniqueIdentifierButtonPressed: () => dispatch(uniqueIdentifierModalActivated()),
-    onChangePin: (pin: string) => dispatch(newPin(pin))
+    onChangePin(pin: string) {
+      dispatch({ type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin } })
+    }
   })
 )(withTheme(SendComponent))

@@ -1,11 +1,13 @@
+// @flow
 /* globals describe it expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
 
-import { initialState, newSpendingLimits, spendingLimits } from '../reducers/SpendingLimitsReducer.js'
+import { initialState, spendingLimits } from '../reducers/SpendingLimitsReducer.js'
+
+const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 describe('spendingLimits', () => {
   it('should render initialState', () => {
-    const actual = spendingLimits(undefined, {})
+    const actual = spendingLimits(undefined, dummyAction)
 
     expect(actual).toMatchSnapshot()
   })
@@ -23,6 +25,7 @@ describe('spendingLimits', () => {
           }
         }
       }
+      // $FlowFixMe: The action should have many other properties
       const actual = spendingLimits(initialState, loginAction)
 
       expect(actual).toMatchSnapshot()
@@ -37,12 +40,17 @@ describe('spendingLimits', () => {
           amount: 0
         }
       }
-      const updateAction = newSpendingLimits({
-        transaction: {
-          isEnabled: false,
-          amount: 234
+      const updateAction = {
+        type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
+        data: {
+          spendingLimits: {
+            transaction: {
+              isEnabled: false,
+              amount: 234
+            }
+          }
         }
-      })
+      }
       const actual = spendingLimits(initialState, updateAction)
 
       expect(actual).toMatchSnapshot()
@@ -55,12 +63,17 @@ describe('spendingLimits', () => {
           amount: 0
         }
       }
-      const updateAction = newSpendingLimits({
-        transaction: {
-          isEnabled: true,
-          amount: 234
+      const updateAction = {
+        type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
+        data: {
+          spendingLimits: {
+            transaction: {
+              isEnabled: true,
+              amount: 234
+            }
+          }
         }
-      })
+      }
       const actual = spendingLimits(initialState, updateAction)
 
       expect(actual).toMatchSnapshot()

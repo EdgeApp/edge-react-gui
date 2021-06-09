@@ -5,6 +5,7 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import { connect } from 'react-redux'
 
 import type { RootState } from '../../types/reduxTypes.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 
 type OwnProps = {
@@ -27,21 +28,25 @@ type State = {
 }
 
 export class WalletProgressIconComponent extends React.PureComponent<Props, State> {
+  updateIsDoneState: TimeoutID
+
   constructor(props: Props) {
     super(props)
     this.state = { isDone: false }
   }
 
+  updateIsDone(isDone: boolean) {
+    this.updateIsDoneState = setTimeout(() => {
+      this.setState({ isDone })
+    }, 500)
+  }
+
   componentDidUpdate() {
     if (this.props.progress === 100) {
-      setTimeout(() => {
-        this.setState({ isDone: true })
-      }, 500)
+      this.updateIsDone(true)
     }
     if (this.props.progress <= 5) {
-      setTimeout(() => {
-        this.setState({ isDone: false })
-      }, 500)
+      this.updateIsDone(false)
     }
   }
 
@@ -49,6 +54,10 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
     if (this.props.progress === 100) {
       this.setState({ isDone: true })
     }
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.updateIsDoneState)
   }
 
   render() {
@@ -92,13 +101,8 @@ export const WalletProgressIcon = connect((state: RootState, ownProps: OwnProps)
 
   if (walletId) {
     const guiWallet = state.ui.wallets.byId[walletId]
+    icon = getCurrencyIcon(guiWallet.currencyCode, currencyCode).symbolImage
     const walletsProgress = state.ui.wallets.walletLoadingProgress
-    if (guiWallet.currencyCode === currencyCode) {
-      icon = guiWallet.symbolImage
-    } else {
-      const meta = guiWallet.metaTokens.find(token => token.currencyCode === ownProps.currencyCode)
-      icon = meta ? meta.symbolImage : undefined
-    }
     progress = walletsProgress[walletId] ? walletsProgress[walletId] * 100 : 0
   }
 

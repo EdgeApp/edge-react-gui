@@ -89,14 +89,13 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
     }
 
     case 'SELECT_FROM_WALLET_CRYPTO_EXCHANGE': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         fromWallet: action.data.wallet,
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromCurrencyCode: action.data.currencyCode,
-        fromCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        fromCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        fromCurrencyIcon: action.data.wallet.symbolImage,
+        fromCurrencyIconDark: action.data.wallet.symbolImageDarkMono,
         fromBalanceMessage: action.data.balanceMessage,
         fromNativeAmount: '0',
         toNativeAmount: '0',
@@ -109,14 +108,13 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
     }
 
     case 'SELECT_TO_WALLET_CRYPTO_EXCHANGE': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         toWallet: action.data.wallet,
         toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
-        toCurrencyIcon: getLogo(action.data.wallet, action.data.currencyCode),
-        toCurrencyIconDark: getLogoDark(action.data.wallet, action.data.currencyCode),
+        toCurrencyIcon: action.data.wallet.symbolImage,
+        toCurrencyIconDark: action.data.wallet.symbolImageDarkMono,
         toBalanceMessage: action.data.balanceMessage,
         fromNativeAmount: '0',
         toNativeAmount: '0',
@@ -139,7 +137,7 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
       }
     }
 
-    case 'RECEIVED_INSUFFICENT_FUNDS_ERROR': {
+    case 'RECEIVED_INSUFFICIENT_FUNDS_ERROR': {
       return {
         ...state,
         insufficientError: true,
@@ -193,28 +191,6 @@ function cryptoExchangeInner(state = initialState, action: Action): CryptoExchan
     default:
       return state
   }
-}
-
-function getLogo(wallet, currencyCode) {
-  if (currencyCode === wallet.currencyCode) return wallet.symbolImage
-  for (let i = 0; i < wallet.metaTokens.length; i++) {
-    const obj = wallet.metaTokens[i]
-    if (obj.symbolImage && obj.currencyCode === currencyCode) {
-      return obj.symbolImage
-    }
-  }
-  return null
-}
-
-function getLogoDark(wallet, currencyCode) {
-  if (currencyCode === wallet.currencyCode) return wallet.symbolImageDarkMono
-  for (let i = 0; i < wallet.metaTokens.length; i++) {
-    const obj = wallet.metaTokens[i]
-    if (obj.symbolImage && obj.currencyCode === currencyCode) {
-      return obj.symbolImage
-    }
-  }
-  return null
 }
 
 // Nuke the state on logout:

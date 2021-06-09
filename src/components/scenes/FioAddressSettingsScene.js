@@ -68,7 +68,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
     Actions.pop()
     if (refreshAfterRenew) {
       window.requestAnimationFrame(() => {
-        Actions.refresh({ fioAddressName, expiration: expiration ? formatDate(new Date(expiration)) : '' })
+        Actions.refresh({ fioAddressName, expiration: expiration ? new Date(expiration) : '' })
       })
     }
   }
@@ -94,7 +94,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   getExpiration = (): string => {
     const { fioAddresses, fioAddressName } = this.props
     const fioAddress = fioAddresses.find(({ name }) => fioAddressName === name)
-    if (fioAddress) return formatDate(new Date(fioAddress.expiration))
+    if (fioAddress) return fioAddress.expiration
     return ''
   }
 
@@ -170,7 +170,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
     return (
       <SceneWrapper background="header">
         <Tile type="static" title={s.strings.fio_address_register_form_field_label} body={fioAddressName} />
-        <Tile type="static" title={s.strings.fio_address_details_screen_expires} body={expiration} />
+        <Tile type="static" title={s.strings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
         {showRenew && (
           <FioActionSubmit
             title={s.strings.title_fio_renew_address}

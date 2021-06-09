@@ -15,10 +15,8 @@ export type TransactionListState = {
 }
 
 const transactions = (state = [], action: Action): TransactionListTx[] => {
-  if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
-      // $FlowFixMe
       return action.data.transactions
     }
 
@@ -32,10 +30,8 @@ const transactions = (state = [], action: Action): TransactionListTx[] => {
 }
 
 const transactionIdMap = (state = {}, action: Action): { [txid: string]: TransactionListTx } => {
-  if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
-      // $FlowFixMe
       return action.data.transactionIdMap
     }
 
@@ -49,10 +45,8 @@ const transactionIdMap = (state = {}, action: Action): { [txid: string]: Transac
 }
 
 const currentCurrencyCode = (state = '', action: Action): string => {
-  if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
-      // $FlowFixMe
       return action.data.currentCurrencyCode
     }
 
@@ -62,10 +56,8 @@ const currentCurrencyCode = (state = '', action: Action): string => {
 }
 
 const numTransactions = (state = 0, action: Action): number => {
-  if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
-      // $FlowFixMe
       return action.data.numTransactions
     }
 
@@ -75,10 +67,8 @@ const numTransactions = (state = 0, action: Action): number => {
 }
 
 const currentWalletId = (state = '', action: Action): string => {
-  if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
-      // $FlowFixMe
       return action.data.currentWalletId
     }
 
@@ -88,10 +78,8 @@ const currentWalletId = (state = '', action: Action): string => {
 }
 
 const currentEndIndex = (state = 0, action: Action): number => {
-  if (!action.data) return state
   switch (action.type) {
     case 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS': {
-      // $FlowFixMe
       return action.data.currentEndIndex
     }
 
