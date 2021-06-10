@@ -1,5 +1,7 @@
 # Edge Wallet
 
+![Travis Status](https://travis-ci.com/EdgeApp/edge-react-gui.svg?branch=develop)
+
 ## A multicurrency mobile wallet for Bitcoin, Bitcoin Cash, Ethereum, Dash, Litecoin, Ripple/XRP and Monero
 
 ![Edge Wallet Screenshots](https://cdn-images-1.medium.com/max/1600/1*xMZMuK0_jGNZNzduvggsdw.png)
