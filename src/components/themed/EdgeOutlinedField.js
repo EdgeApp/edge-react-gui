@@ -1,14 +1,20 @@
 // @flow
 
 // $FlowFixMe = forwardRef is not recognize by flow?
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useRef } from 'react'
 import { Text, TextInput, TextInputProps, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import Animated, { Extrapolate, interpolate, interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, { Extrapolate, interpolate, interpolateColor, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { unpackEdges } from '../../util/edges'
-import { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from '../../util/hooks'
+import { useCallback, useEffect, useImperativeHandle, useMemo, useState } from '../../util/hooks'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
+
+const ANIMATION_STATES = {
+  INIT: 0,
+  FOCUSED: 1,
+  ERROR: 2
+}
 
 type InputOutlineProps = {
   label?: string,
@@ -16,8 +22,8 @@ type InputOutlineProps = {
 
   marginRem?: number | number[],
   isClearable: boolean,
-  small?: boolean,
-  hideSearchIcon?: boolean,
+  size?: 'big' | 'small',
+  showSearchIcon?: boolean,
   onClear: () => void,
 
   ...TextInputProps
@@ -30,32 +36,58 @@ type InputOutline = {
   clear: () => void
 }
 
+type CornerBorderProps = {
+  theme: Theme,
+  corner: 'left' | 'right',
+  cornerHeight: { height: number },
+  placeholderSize: SharedValue,
+  colorMap: SharedValue
+}
+
+const CornerBorder = ({ theme, corner, cornerHeight, placeholderSize, colorMap }: CornerBorderProps) => {
+  const styles = getStyles(theme)
+  const { inactiveColor, activeColor, errorColor } = getSizeStyles(theme)
+
+  const animatedContainerStyles = useAnimatedStyle(() => {
+    const color =
+      placeholderSize.value > 0
+        ? interpolateColor(colorMap.value, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED, ANIMATION_STATES.ERROR], [inactiveColor, activeColor, errorColor])
+        : inactiveColor
+    return {
+      borderTopColor: color,
+      borderBottomColor: color,
+      borderLeftColor: color,
+      borderRightColor: color
+    }
+  })
+  return <Animated.View style={[corner === 'left' ? styles.cornerLeft : styles.cornerRight, cornerHeight, animatedContainerStyles]} />
+}
+
 const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref) => {
   const {
     error,
     label: placeholder = '',
     isClearable,
     marginRem = 0.5,
-    small,
-    hideSearchIcon,
+    size = 'big',
+    showSearchIcon = true,
     onClear,
     onFocus,
     onBlur,
 
-    value: _providedValue = '',
+    value = '',
     onChangeText,
     ...inputProps
   } = props
 
-  const [value, setValue] = useState(_providedValue)
   const [containerHeight, setContainerHeight] = useState(0)
 
   // animation
   const inputRef: { current: InputOutline } = useRef<TextInput>(null)
-  const placeholderMap = useSharedValue(_providedValue ? 1 : 0)
-  const placeholderSize = useSharedValue(0)
-  const containerWidth = useSharedValue(0)
-  const colorMap = useSharedValue(0)
+  const placeholderMap = useSharedValue(value ? ANIMATION_STATES.FOCUSED : ANIMATION_STATES.INIT)
+  const placeholderSize = useSharedValue(ANIMATION_STATES.INIT)
+  const containerWidth = useSharedValue(ANIMATION_STATES.INIT)
+  const colorMap = useSharedValue(ANIMATION_STATES.INIT)
 
   // input methods
   const focus = () => inputRef.current && inputRef.current.focus()
@@ -63,7 +95,7 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
   const isFocused = () => Boolean(inputRef.current && inputRef.current.isFocused())
   const clear = () => {
     Boolean(inputRef.current && inputRef.current.clear())
-    setValue('')
+    onChangeText('')
   }
 
   // styles
@@ -86,27 +118,26 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
     prefixStyles,
     suffixStyles,
     hintLeftMargin
-  } = getSizeStyles(theme, small, hideSearchIcon)
+  } = getSizeStyles(theme, size, showSearchIcon)
 
   const errorState = useCallback(() => error !== null && error !== undefined, [error])
 
   const handleFocus = () => {
-    placeholderMap.value = withTiming(1) // focused
-    if (!errorState()) colorMap.value = withTiming(1) // active
+    placeholderMap.value = withTiming(ANIMATION_STATES.FOCUSED)
+    if (!errorState()) colorMap.value = withTiming(ANIMATION_STATES.FOCUSED)
     focus()
     if (onFocus) onFocus()
   }
 
   const handleBlur = () => {
-    if (!value) placeholderMap.value = withTiming(0) // blur
-    if (!errorState()) colorMap.value = withTiming(0) // inactive
+    if (!value) placeholderMap.value = withTiming(ANIMATION_STATES.INIT) // blur
+    if (!errorState()) colorMap.value = withTiming(ANIMATION_STATES.INIT) // inactive
     blur()
     if (onBlur) onBlur()
   }
 
   const handleChangeText = (text: string) => {
-    onChangeText && onChangeText(text)
-    setValue(text)
+    onChangeText(text)
   }
 
   const clearText = () => {
@@ -128,68 +159,58 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
     setContainerHeight(height)
   }
 
-  // handle value update
-  useEffect(() => {
-    if (_providedValue.length) placeholderMap.value = withTiming(1) // focused;
-    setValue(_providedValue)
-  }, [_providedValue, placeholderMap])
   // error handling
   useEffect(() => {
     if (errorState()) {
-      colorMap.value = 2 // error -- no animation here, snap to color immediately
+      colorMap.value = ANIMATION_STATES.ERROR
     } else {
-      colorMap.value = isFocused() ? 1 : 0 // to active or inactive color if focused
+      colorMap.value = isFocused() ? ANIMATION_STATES.FOCUSED : ANIMATION_STATES.INIT
     }
   }, [error, colorMap, errorState])
 
   const animatedPlaceholderStyles = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: interpolate(placeholderMap.value, [0, 1], [0, -(paddingVertical + fontSize * placeholderScale)])
+        translateY: interpolate(placeholderMap.value, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED], [0, -(paddingVertical + fontSize * placeholderScale)])
       },
       {
-        scale: interpolate(placeholderMap.value, [0, 1], [1, placeholderScale])
+        scale: interpolate(placeholderMap.value, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED], [1, placeholderScale])
       },
       {
-        translateX: interpolate(placeholderMap.value, [0, 1], [0, -placeholderSize.value * placeholderSizeScale - hintLeftMargin])
+        translateX: interpolate(
+          placeholderMap.value,
+          [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED],
+          [0, -placeholderSize.value * placeholderSizeScale - hintLeftMargin]
+        )
       }
     ]
   }))
 
   const animatedPlaceholderTextStyles = useAnimatedStyle(() => ({
-    color: interpolateColor(colorMap.value, [0, 1, 2], [inactiveColor, activeColor, errorColor])
+    color: interpolateColor(colorMap.value, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED, ANIMATION_STATES.ERROR], [inactiveColor, activeColor, errorColor])
   }))
 
   const animatedPlaceholderSpacerStyles = useAnimatedStyle(() => ({
     width: interpolate(
       placeholderMap.value,
-      [0, 1],
+      [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED],
       [containerWidth.value - placeholderSpacerWidthAdjust, containerWidth.value - placeholderSize.value * placeholderScale - placeholderSpacerAdjust],
       Extrapolate.CLAMP
     ),
-    backgroundColor: placeholderSize.value > 0 ? interpolateColor(colorMap.value, [0, 1, 2], [inactiveColor, activeColor, errorColor]) : inactiveColor
+    backgroundColor:
+      placeholderSize.value > 0
+        ? interpolateColor(colorMap.value, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED, ANIMATION_STATES.ERROR], [inactiveColor, activeColor, errorColor])
+        : inactiveColor
   }))
   const cornerHeight = { height: containerHeight }
-
   const animatedContainerStyle = useAnimatedStyle(() => {
-    const color = placeholderSize.value > 0 ? interpolateColor(colorMap.value, [0, 1, 2], [inactiveColor, activeColor, errorColor]) : inactiveColor
+    const color =
+      placeholderSize.value > 0
+        ? interpolateColor(colorMap.value, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED, ANIMATION_STATES.ERROR], [inactiveColor, activeColor, errorColor])
+        : inactiveColor
     return {
       borderBottomColor: color,
       borderLeftColor: color,
-      borderRightColor: color
-    }
-  })
-  const animatedLeftCornerStyle = useAnimatedStyle(() => {
-    const color = placeholderSize.value > 0 ? interpolateColor(colorMap.value, [0, 1, 2], [inactiveColor, activeColor, errorColor]) : inactiveColor
-    return {
-      borderTopColor: color,
-      borderLeftColor: color
-    }
-  })
-  const animatedRightCornerStyle = useAnimatedStyle(() => {
-    const color = placeholderSize.value > 0 ? interpolateColor(colorMap.value, [0, 1, 2], [inactiveColor, activeColor, errorColor]) : inactiveColor
-    return {
-      borderTopColor: color,
       borderRightColor: color
     }
   })
@@ -207,15 +228,15 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
 
   return (
     <Animated.View style={[styles.container, animatedContainerStyle, spacings]} onLayout={handleContainerLayout}>
-      <Animated.View style={[styles.cornerLeft, cornerHeight, animatedLeftCornerStyle]} />
-      <Animated.View style={[styles.cornerRight, cornerHeight, animatedRightCornerStyle]} />
+      <CornerBorder theme={theme} corner="left" cornerHeight={cornerHeight} placeholderSize={placeholderSize} colorMap={colorMap} />
+      <CornerBorder theme={theme} corner="right" cornerHeight={cornerHeight} placeholderSize={placeholderSize} colorMap={colorMap} />
       <TouchableWithoutFeedback onPress={handleFocus}>
         <View style={inputContainerStyles}>
-          {hideSearchIcon ? null : (
+          {showSearchIcon ? (
             <View style={prefixStyles}>
               <AntDesignIcon name="search1" color={theme.iconDeactivated} size={theme.rem(1)} />
             </View>
-          )}
+          ) : null}
           <TextInput
             {...inputProps}
             ref={inputRef}
@@ -259,7 +280,7 @@ function spacingStyles(margin: number | number[], theme: Theme) {
 }
 
 // return depended on size styles and values
-const getSizeStyles = (theme: Theme, small: boolean = false, hideSearchIcon: boolean = false) => {
+const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', showSearchIcon: boolean = true) => {
   const styles = getStyles(theme)
   const inactiveColor = theme.secondaryText
   const activeColor = theme.iconTappable
@@ -275,11 +296,11 @@ const getSizeStyles = (theme: Theme, small: boolean = false, hideSearchIcon: boo
   const inputContainerStyles = [styles.inputContainer]
   const prefixStyles = [styles.prefix]
   const suffixStyles = [styles.suffix]
-  if (!hideSearchIcon) {
+  if (showSearchIcon) {
     placeholderPaddingStyles.push(styles.placeholderWithPrefix)
     hintLeftMargin = theme.rem(2.25)
   }
-  if (small) {
+  if (size === 'small') {
     paddingVertical = theme.rem(0.5)
     placeholderSpacerAdjust = theme.rem(2)
     placeholderPaddingStyles.push(styles.placeholderSmall)
@@ -289,7 +310,7 @@ const getSizeStyles = (theme: Theme, small: boolean = false, hideSearchIcon: boo
     suffixStyles.push(styles.suffixSmall)
     hintLeftMargin = -theme.rem(0.5) + 1
 
-    if (!hideSearchIcon) {
+    if (showSearchIcon) {
       placeholderPaddingStyles.push(styles.placeholderSmallWithPrefix)
       hintLeftMargin = theme.rem(1.75) - 1
     }
@@ -326,22 +347,26 @@ const getStyles = cacheStyles((theme: Theme) => ({
   cornerLeft: {
     borderTopWidth: theme.thinLineWidth,
     borderLeftWidth: theme.thinLineWidth,
+    borderBottomWidth: 0,
+    borderRightWidth: 0,
     borderTopLeftRadius: theme.rem(0.5),
     borderBottomLeftRadius: theme.rem(0.5),
     position: 'absolute',
-    left: -1,
-    top: -1,
+    left: -theme.thinLineWidth,
+    top: -theme.thinLineWidth,
     width: theme.rem(1),
     height: '100%'
   },
   cornerRight: {
     borderTopWidth: theme.thinLineWidth,
     borderRightWidth: theme.thinLineWidth,
+    borderBottomWidth: 0,
+    borderLeftWidth: 0,
     borderTopRightRadius: theme.rem(0.5),
     borderBottomRightRadius: theme.rem(0.5),
     position: 'absolute',
-    right: -1,
-    top: -1,
+    right: -theme.thinLineWidth,
+    top: -theme.thinLineWidth,
     width: theme.rem(1),
     height: '100%'
   },
@@ -402,9 +427,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   placeholderSpacer: {
     position: 'absolute',
-    top: -1,
+    top: -theme.thinLineWidth,
     right: theme.rem(0.5),
-    backgroundColor: 'red',
     height: theme.thinLineWidth,
     width: '85%'
   },

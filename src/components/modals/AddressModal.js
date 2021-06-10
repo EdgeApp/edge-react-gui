@@ -329,7 +329,7 @@ class AddressModalConnected extends React.Component<Props, State> {
         </ModalTitle>
         <View style={styles.container}>
           <EdgeTextFieldOutlined
-            small
+            size="small"
             autoFocus
             autoCorrect={false}
             returnKeyType="search"

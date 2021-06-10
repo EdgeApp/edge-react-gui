@@ -117,7 +117,7 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
           autoCorrect={false}
           autoCapitalize="words"
           returnKeyType="search"
-          small
+          size="small"
           onClear={this.clearText}
           isClearable={isFocused}
           marginRem={[0, 1.75]}

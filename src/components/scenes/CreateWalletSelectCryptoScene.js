@@ -149,7 +149,7 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
               value={this.state.searchTerm}
               label={s.strings.create_wallet_choose_crypto}
               returnKeyType="search"
-              small
+              size="small"
               onClear={this.clearText}
               isClearable={isFocused}
               marginRem={[0, 1.75]}

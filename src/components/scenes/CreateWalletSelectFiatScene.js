@@ -158,7 +158,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
               value={this.state.searchTerm}
               label={s.strings.fragment_wallets_addwallet_fiat_hint}
               returnKeyType="search"
-              small
+              size="small"
               onClear={this.clearText}
               isClearable={isFocused}
               marginRem={[0, 1.75]}

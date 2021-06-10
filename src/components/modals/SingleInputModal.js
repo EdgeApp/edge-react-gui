@@ -68,7 +68,7 @@ const SingleInputModalComponent = ({ bridge, title, label, theme, onSubmit, valu
           marginRem={[0, 1]}
           ref={textInput}
           blurOnSubmit
-          hideSearchIcon={returnKeyType !== 'search'}
+          showSearchIcon={returnKeyType === 'search'}
         />
       </View>
       <ModalCloseArrow onPress={() => bridge.resolve(null)} />
