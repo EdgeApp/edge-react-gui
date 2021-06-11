@@ -112,6 +112,7 @@ export const SliderComponent = (props: Props) => {
     if (completed && !props.showSpinner) {
       resetSlider()
     }
+    // eslint-disable-next-line
   }, [props.showSpinner])
 
   return (
