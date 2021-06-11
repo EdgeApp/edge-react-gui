@@ -17,7 +17,7 @@ import { sprintf } from 'sprintf-js'
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { EXCHANGE_SCENE, FEE_ALERT_THRESHOLD, FIO_STR, PLUGIN_BUY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
+import { EXCHANGE_SCENE, FEE_ALERT_THRESHOLD, FIO_STR, PLUGIN_BUY, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import { addToFioAddressCache, recordSend } from '../modules/FioAddress/util'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
@@ -57,58 +57,6 @@ const updateAmount =
     const amountFiat: number = parseFloat(amountFiatString)
     const metadata: EdgeMetadata = { amountFiat }
     dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode))
-  }
-
-type EdgePaymentProtocolUri = EdgeParsedUri & { paymentProtocolURL: string }
-
-const BITPAY = {
-  domain: 'bitpay.com',
-  merchantName: (memo: string) => {
-    // Example BitPay memo
-    // "Payment request for BitPay invoice DKffym7WxX6kzJ73yfYS7s for merchant Electronic Frontier Foundation"
-    // eslint-disable-next-line no-unused-vars
-    const [_, merchantName] = memo.split(' for merchant ')
-    return merchantName
-  }
-}
-
-export const paymentProtocolUriReceived =
-  ({ paymentProtocolURL }: EdgePaymentProtocolUri) =>
-  (dispatch: Dispatch, getState: GetState) => {
-    const state = getState()
-    const { currencyWallets } = state.core.account
-
-    const walletId = state.ui.wallets.selectedWalletId
-    const edgeWallet = currencyWallets[walletId]
-
-    Promise.resolve(paymentProtocolURL)
-      .then(paymentProtocolURL => edgeWallet.getPaymentProtocolInfo(paymentProtocolURL))
-      .then(paymentProtocolInfo => {
-        const { domain, memo, nativeAmount, spendTargets } = paymentProtocolInfo
-
-        const name = domain === BITPAY.domain ? BITPAY.merchantName(memo) : domain
-        const notes = memo
-
-        const guiMakeSpendInfo: GuiMakeSpendInfo = {
-          networkFeeOption: 'standard',
-          metadata: {
-            name,
-            notes
-          },
-          nativeAmount,
-          spendTargets,
-          otherParams: { paymentProtocolInfo }
-        }
-        guiMakeSpendInfo.lockInputs = true
-        Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
-      })
-      .catch((error: Error) => {
-        console.log(error)
-        setTimeout(
-          () => Alert.alert(s.strings.scan_invalid_address_error_title, s.strings.scan_invalid_address_error_description, [{ text: s.strings.string_ok }]),
-          500
-        )
-      })
   }
 
 export const sendConfirmationUpdateTx =
