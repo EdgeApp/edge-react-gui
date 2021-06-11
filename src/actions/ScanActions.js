@@ -127,8 +127,6 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
     const parsedUri: EdgeParsedUri = await edgeWallet.parseUri(data, currencyCode)
     dispatch({ type: 'PARSE_URI_SUCCEEDED', data: { parsedUri } })
 
-    console.log('parsedUri parsedUri parsedUri parsedUri parsedUri', parsedUri)
-
     if (parsedUri.token) {
       // TOKEN URI
       const { contractAddress, currencyName } = parsedUri.token
