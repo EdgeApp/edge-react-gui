@@ -16,15 +16,16 @@ export type Props = {
     item: any
   },
   enabledList: string[],
-  goToEditTokenScene: string => void
+  goToEditTokenScene: string => void,
+  symbolImage: string
 }
 
 function ManageTokensRow(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { symbolImage, currencyCode, currencyName } = props.metaToken.item
-  const { enabledList, toggleToken, goToEditTokenScene } = props
+  const { currencyCode, currencyName } = props.metaToken.item
+  const { enabledList, toggleToken, goToEditTokenScene, symbolImage } = props
 
   const Icon = () => (
     <View style={styles.iconContainer}>
