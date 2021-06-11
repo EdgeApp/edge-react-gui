@@ -44,15 +44,25 @@ type CornerBorderProps = {
   colorMap: SharedValue
 }
 
+const getColor = (
+  placeholderSizeValue: number,
+  colorMapValue: number,
+  colors: { inactiveColor: string, activeColor: string, errorColor: string },
+  doNotCheckPlaceholder: boolean = false
+) => {
+  'worklet'
+  const { inactiveColor, activeColor, errorColor } = colors
+  return doNotCheckPlaceholder || placeholderSizeValue > 0
+    ? interpolateColor(colorMapValue, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED, ANIMATION_STATES.ERROR], [inactiveColor, activeColor, errorColor])
+    : inactiveColor
+}
+
 const CornerBorder = ({ theme, corner, cornerHeight, placeholderSize, colorMap }: CornerBorderProps) => {
   const styles = getStyles(theme)
   const { inactiveColor, activeColor, errorColor } = getSizeStyles(theme)
 
   const animatedContainerStyles = useAnimatedStyle(() => {
-    const color =
-      placeholderSize.value > 0
-        ? interpolateColor(colorMap.value, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED, ANIMATION_STATES.ERROR], [inactiveColor, activeColor, errorColor])
-        : inactiveColor
+    const color = getColor(placeholderSize.value, colorMap.value, { inactiveColor, activeColor, errorColor })
     return {
       borderTopColor: color,
       borderBottomColor: color,
@@ -187,7 +197,7 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
   }))
 
   const animatedPlaceholderTextStyles = useAnimatedStyle(() => ({
-    color: interpolateColor(colorMap.value, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED, ANIMATION_STATES.ERROR], [inactiveColor, activeColor, errorColor])
+    color: getColor(placeholderSize.value, colorMap.value, { inactiveColor, activeColor, errorColor }, true)
   }))
 
   const animatedPlaceholderSpacerStyles = useAnimatedStyle(() => ({
@@ -197,17 +207,11 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
       [containerWidth.value - placeholderSpacerWidthAdjust, containerWidth.value - placeholderSize.value * placeholderScale - placeholderSpacerAdjust],
       Extrapolate.CLAMP
     ),
-    backgroundColor:
-      placeholderSize.value > 0
-        ? interpolateColor(colorMap.value, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED, ANIMATION_STATES.ERROR], [inactiveColor, activeColor, errorColor])
-        : inactiveColor
+    backgroundColor: getColor(placeholderSize.value, colorMap.value, { inactiveColor, activeColor, errorColor })
   }))
   const cornerHeight = { height: containerHeight }
   const animatedContainerStyle = useAnimatedStyle(() => {
-    const color =
-      placeholderSize.value > 0
-        ? interpolateColor(colorMap.value, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED, ANIMATION_STATES.ERROR], [inactiveColor, activeColor, errorColor])
-        : inactiveColor
+    const color = getColor(placeholderSize.value, colorMap.value, { inactiveColor, activeColor, errorColor })
     return {
       borderBottomColor: color,
       borderLeftColor: color,
