@@ -270,7 +270,7 @@ export const signBroadcastAndSave =
     const cryptoFeeExchangeAmount = exchangeConverter(edgeUnsignedTransaction.networkFee)
     const feeAmountInUSD = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
     if (feeAmountInUSD > FEE_ALERT_THRESHOLD) {
-      const feeAlertResponse = await displayFeeAlert(guiWallet.currencyCode)
+      const feeAlertResponse = await displayFeeAlert(guiWallet.currencyCode, feeAmountInUSD)
       if (!feeAlertResponse) {
         dispatch({
           type: 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION',
@@ -425,10 +425,11 @@ export const signBroadcastAndSave =
     }
   }
 
-export const displayFeeAlert = async (currency: string) => {
+export const displayFeeAlert = async (currency: string, feeAmountInUSD: number) => {
   let additionalMessage = ''
   if (currency === 'ETH') additionalMessage = s.strings.send_confirmation_fee_modal_alert_message_fragment_eth
-  const message = `${s.strings.send_confirmation_fee_modal_alert_message_fragment} ${additionalMessage}`
+  const fee = bns.toFixed(feeAmountInUSD.toString(), 2, 2)
+  const message = `${sprintf(s.strings.send_confirmation_fee_modal_alert_message_fragment, fee)} ${additionalMessage}`
   const resolveValue = await Airship.show(bridge => (
     <ButtonsModal
       bridge={bridge}

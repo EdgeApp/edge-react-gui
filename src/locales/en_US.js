@@ -242,7 +242,7 @@ const strings = {
   send_confirmation_address: 'Address: %s',
   send_confirmation_fee_modal_alert_title: 'High Fee Warning',
   send_confirmation_fee_modal_alert_message_fragment:
-    'The network is currently congested. Transactions fees may be more expensive (consider keeping the amount here) and may take longer than usual to confirm.',
+    'The network is currently congested. Transactions fees may be more expensive (%s) and may take longer than usual to confirm.',
   send_confirmation_fee_modal_alert_message_fragment_eth: 'Using too low of a fee can result in a failed transaction and loss of the fee spent.',
   transaction_failure: 'Transaction Failure',
   transaction_failure_message: '%s.',
