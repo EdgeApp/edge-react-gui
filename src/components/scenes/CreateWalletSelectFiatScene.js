@@ -14,7 +14,7 @@ import type { CreateWalletType, FlatListItem, GuiFiatType } from '../../types/ty
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
@@ -158,7 +158,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
               value={this.state.searchTerm}
               label={s.strings.fragment_wallets_addwallet_fiat_hint}
               returnKeyType="search"
-              small
+              size="small"
               onClear={this.clearText}
               isClearable={isFocused}
               marginRem={[0, 1.75]}

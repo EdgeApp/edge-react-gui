@@ -17,7 +17,7 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
 import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { SecondaryButton } from '../themed/ThemedButtons.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -329,7 +329,7 @@ class AddressModalConnected extends React.Component<Props, State> {
         </ModalTitle>
         <View style={styles.container}>
           <EdgeTextFieldOutlined
-            small
+            size="small"
             autoFocus
             autoCorrect={false}
             returnKeyType="search"

@@ -17,7 +17,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from '../themed/EdgeText.js'
 import { PromoCard } from '../themed/PromoCard.js'
 import { WiredBalanceBox } from '../themed/WiredBalanceBox.js'
-import { EdgeTextFieldOutlined } from './EdgeTextField.js'
+import { EdgeTextFieldOutlined } from './EdgeOutlinedField.js'
 
 type OwnProps = {
   sorting: boolean,
@@ -85,7 +85,7 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
               ref={this.textInput}
               isClearable={searching}
               onClear={this.clearText}
-              marginRem={0}
+              marginRem={[0, 0, 1]}
             />
           </View>
           {searching && (
@@ -142,14 +142,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   searchContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     marginTop: theme.rem(0.5),
     marginHorizontal: theme.rem(1)
   },
   searchDoneButton: {
     justifyContent: 'center',
-    height: theme.rem(4.5),
     paddingLeft: theme.rem(0.75),
-    paddingBottom: theme.rem(0.25)
+    paddingBottom: theme.rem(1)
   }
 }))
 
