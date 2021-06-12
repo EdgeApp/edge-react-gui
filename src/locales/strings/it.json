@@ -221,6 +221,7 @@
   "send_confirmation_to": "A: %s",
   "send_confirmation_address": "Indirizzo: %s",
   "send_confirmation_fee_modal_alert_title": "Avviso commissione alta",
+  "send_confirmation_fee_modal_alert_message_fragment": "La rete è attualmente congestionata. Le commissioni di transazione possono essere più costose (%s) e le transazioni possono richiedere più tempo del solito per essere confermate.",
   "send_confirmation_fee_modal_alert_message_fragment_eth": "L'utilizzo di una commissione troppo bassa può causare una transazione fallita e la perdita della commissione spesa.",
   "transaction_failure": "Transazione fallita",
   "transaction_failure_message": "%s.",
