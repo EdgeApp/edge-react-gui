@@ -23,6 +23,7 @@ import ManageTokensRow from '../themed/ManageTokensRow'
 import SceneFooter from '../themed/SceneFooter'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SecondaryButton } from '../themed/ThemedButtons'
+import { getCurrencyIcon } from './../../util/CurrencyInfoHelpers'
 export type ManageTokensOwnProps = {
   guiWallet: GuiWallet
 }
@@ -241,7 +242,7 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
                     goToEditTokenScene={this.goToEditTokenScene}
                     metaToken={metaToken}
                     walletId={this.props.guiWallet.id}
-                    symbolImage={this.props.guiWallet.symbolImage}
+                    symbolImage={getCurrencyIcon(currencyCode, metaToken.item.currencyCode ?? undefined).symbolImage}
                     toggleToken={this.toggleToken}
                     enabledList={this.state.enabledList}
                     metaTokens={this.props.guiWallet.metaTokens}
