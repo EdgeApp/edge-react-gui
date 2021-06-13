@@ -1,8 +1,20 @@
-/* globals test expect */
+/* globals test expect beforeAll afterAll */
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 import { LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES } from '../modules/Core/Account/settings.js'
 import { mergeSettings } from '../modules/Login/action.js'
+
+// Mute dependency warnings
+const originalWarn = console.warn.bind(console.warn)
+const originalError = console.error.bind(console.error)
+beforeAll(() => {
+  console.warn = msg => !msg.toString().includes('Settings overwrite') && originalWarn(msg)
+  console.error = msg => !msg.toString().includes('MismatchedDefaultSettingType') && originalError(msg)
+})
+afterAll(() => {
+  console.warn = originalWarn
+  console.error = originalError
+})
 
 test('synced settings missing properties are replaced', () => {
   const loadedSyncedSettings = {}
