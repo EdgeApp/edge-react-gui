@@ -246,4 +246,5 @@ export type Action =
   | { type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS', data: { fioAddress: string, ccWalletMap: CcWalletMap } }
   | { type: 'FIO/SET_OBT_DATA', data: FioObtRecord[] }
   | { type: 'FIO/SET_FIO_DOMAINS', data: { fioDomains: FioDomain[] } }
-  | { type: 'FIO/NEED_TO_CHECK_EXPIRED', data: boolean }
+  | { type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: { [walletId: string]: Date } }
+  | { type: 'FIO/CHECKING_EXPIRED', data: { [walletId: string]: boolean } }
