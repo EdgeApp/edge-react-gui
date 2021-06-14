@@ -1,14 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import {
-  type EdgeCurrencyWallet,
-  type EdgeMetadata,
-  type EdgeParsedUri,
-  type EdgeSpendInfo,
-  type EdgeTransaction,
-  asMaybeInsufficientFundsError
-} from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeParsedUri, type EdgeTransaction, asMaybeInsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -17,7 +10,7 @@ import { sprintf } from 'sprintf-js'
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { EXCHANGE_SCENE, FEE_ALERT_THRESHOLD, FIO_STR, PLUGIN_BUY, SEND_CONFIRMATION, TRANSACTION_DETAILS } from '../constants/indexConstants'
+import { EXCHANGE_SCENE, FEE_ALERT_THRESHOLD, FIO_STR, PLUGIN_BUY, TRANSACTION_DETAILS } from '../constants/indexConstants'
 import s from '../locales/strings.js'
 import { addToFioAddressCache, recordSend } from '../modules/FioAddress/util'
 import { getExchangeDenomination as settingsGetExchangeDenomination } from '../modules/Settings/selectors.js'
@@ -57,58 +50,6 @@ const updateAmount =
     const amountFiat: number = parseFloat(amountFiatString)
     const metadata: EdgeMetadata = { amountFiat }
     dispatch(sendConfirmationUpdateTx({ nativeAmount, metadata }, forceUpdateGui, selectedWalletId, selectedCurrencyCode))
-  }
-
-type EdgePaymentProtocolUri = EdgeParsedUri & { paymentProtocolURL: string }
-
-const BITPAY = {
-  domain: 'bitpay.com',
-  merchantName: (memo: string) => {
-    // Example BitPay memo
-    // "Payment request for BitPay invoice DKffym7WxX6kzJ73yfYS7s for merchant Electronic Frontier Foundation"
-    // eslint-disable-next-line no-unused-vars
-    const [_, merchantName] = memo.split(' for merchant ')
-    return merchantName
-  }
-}
-
-export const paymentProtocolUriReceived =
-  ({ paymentProtocolURL }: EdgePaymentProtocolUri) =>
-  (dispatch: Dispatch, getState: GetState) => {
-    const state = getState()
-    const { currencyWallets } = state.core.account
-
-    const walletId = state.ui.wallets.selectedWalletId
-    const edgeWallet = currencyWallets[walletId]
-
-    Promise.resolve(paymentProtocolURL)
-      .then(paymentProtocolURL => edgeWallet.getPaymentProtocolInfo(paymentProtocolURL))
-      .then(paymentProtocolInfo => {
-        const { domain, memo, nativeAmount, spendTargets } = paymentProtocolInfo
-
-        const name = domain === BITPAY.domain ? BITPAY.merchantName(memo) : domain
-        const notes = memo
-
-        const guiMakeSpendInfo: GuiMakeSpendInfo = {
-          networkFeeOption: 'standard',
-          metadata: {
-            name,
-            notes
-          },
-          nativeAmount,
-          spendTargets,
-          otherParams: { paymentProtocolInfo }
-        }
-        guiMakeSpendInfo.lockInputs = true
-        Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo })
-      })
-      .catch((error: Error) => {
-        console.log(error)
-        setTimeout(
-          () => Alert.alert(s.strings.scan_invalid_address_error_title, s.strings.scan_invalid_address_error_description, [{ text: s.strings.string_ok }]),
-          500
-        )
-      })
   }
 
 export const sendConfirmationUpdateTx =
@@ -444,11 +385,6 @@ export const displayFeeAlert = async (currency: string, feeAmountInUSD: number) 
 
   console.log('resolveValue is: ', resolveValue)
   return resolveValue === 'confirm'
-}
-
-// Should be removed when Send Confirmation Scene is removed
-export const getAuthRequiredDispatch = (spendInfo: EdgeSpendInfo) => (dispatch: Dispatch, getState: GetState) => {
-  return getAuthRequired(getState(), spendInfo)
 }
 
 export const updateTransactionAmount =

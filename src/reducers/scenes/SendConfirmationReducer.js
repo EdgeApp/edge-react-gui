@@ -41,8 +41,6 @@ export type SendConfirmationState = {
   guiMakeSpendInfo: GuiMakeSpendInfo,
   spendInfo: EdgeSpendInfo | null,
 
-  isEditable: boolean,
-
   pending: boolean,
   transaction: EdgeTransaction | null,
   error: Error | null,
@@ -53,7 +51,7 @@ export type SendConfirmationState = {
   toggleCryptoOnTop: number
 }
 
-export const sendConfirmationLegacy = (state: SendConfirmationState = initialState, action: Action) => {
+const sendConfirmationLegacy = (state: SendConfirmationState = initialState, action: Action) => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
       const { guiMakeSpendInfo, forceUpdateGui } = action.data
@@ -107,7 +105,7 @@ export const sendConfirmationLegacy = (state: SendConfirmationState = initialSta
   }
 }
 
-export const nativeAmount: Reducer<string, Action> = (state = '0', action): string => {
+const nativeAmount: Reducer<string, Action> = (state = '0', action): string => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO': {
       return action.data.spendInfo.spendTargets.reduce((sum, target) => add(sum, target.nativeAmount ?? '0'), '0')
@@ -122,7 +120,7 @@ export const nativeAmount: Reducer<string, Action> = (state = '0', action): stri
   }
 }
 
-export const spendInfo = (state: EdgeSpendInfo | null = null, action: Action): EdgeSpendInfo | null => {
+const spendInfo = (state: EdgeSpendInfo | null = null, action: Action): EdgeSpendInfo | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO': {
       return action.data.spendInfo
@@ -133,7 +131,7 @@ export const spendInfo = (state: EdgeSpendInfo | null = null, action: Action): E
   }
 }
 
-export const address = (state: string = '', action: Action): string => {
+const address = (state: string = '', action: Action): string => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO': {
       return action.data.spendInfo.spendTargets[0].publicAddress ?? ''
@@ -144,7 +142,7 @@ export const address = (state: string = '', action: Action): string => {
   }
 }
 
-export const authRequired = (state: 'none' | 'pin' = 'none', action: Action): 'none' | 'pin' => {
+const authRequired = (state: 'none' | 'pin' = 'none', action: Action): 'none' | 'pin' => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO': {
       return action.data.authRequired || 'none'
@@ -155,7 +153,7 @@ export const authRequired = (state: 'none' | 'pin' = 'none', action: Action): 'n
   }
 }
 
-export const transactionMetadata = (state: EdgeMetadata | null = null, action: Action): EdgeMetadata | null => {
+const transactionMetadata = (state: EdgeMetadata | null = null, action: Action): EdgeMetadata | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
       if (!action.data.guiMakeSpendInfo || !action.data.guiMakeSpendInfo.metadata || !action.data.guiMakeSpendInfo.metadata.name) return state
@@ -172,7 +170,7 @@ export const transactionMetadata = (state: EdgeMetadata | null = null, action: A
   }
 }
 
-export const error = (state: Error | null = null, action: Action): Error | null => {
+const error = (state: Error | null = null, action: Action): Error | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
       return action.data.error
@@ -187,21 +185,7 @@ export const error = (state: Error | null = null, action: Action): Error | null 
   }
 }
 
-export const isEditable = (state: boolean = true, action: Action): boolean => {
-  switch (action.type) {
-    case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
-      const { guiMakeSpendInfo } = action.data
-      if (!guiMakeSpendInfo || guiMakeSpendInfo.lockInputs) {
-        return false
-      }
-      return state
-    }
-    default:
-      return state
-  }
-}
-
-export const pin = (state: string = '', action: Action): string => {
+const pin = (state: string = '', action: Action): string => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/NEW_PIN': {
       return action.data.pin
@@ -212,7 +196,7 @@ export const pin = (state: string = '', action: Action): string => {
   }
 }
 
-export const pending = (state: boolean = false, action: Action): boolean => {
+const pending = (state: boolean = false, action: Action): boolean => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING': {
       return action.data.pending
@@ -223,7 +207,7 @@ export const pending = (state: boolean = false, action: Action): boolean => {
   }
 }
 
-export const transaction = (state: EdgeTransaction | null = null, action: Action): EdgeTransaction | null => {
+const transaction = (state: EdgeTransaction | null = null, action: Action): EdgeTransaction | null => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
       return action.data.transaction
@@ -238,7 +222,7 @@ export const transaction = (state: EdgeTransaction | null = null, action: Action
   }
 }
 
-export const toggleCryptoOnTop = (state: number = 0, action: Action): number => {
+const toggleCryptoOnTop = (state: number = 0, action: Action): number => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP': {
       return state + 1
@@ -256,7 +240,6 @@ export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state =
   const legacySendConfirmation = sendConfirmationLegacy(state, action)
   return {
     ...legacySendConfirmation,
-    isEditable: isEditable(state.isEditable, action),
     error: error(state.error, action),
     pin: pin(state.pin, action),
     pending: pending(state.pending, action),
@@ -269,4 +252,3 @@ export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state =
     toggleCryptoOnTop: toggleCryptoOnTop(state.toggleCryptoOnTop, action)
   }
 }
-export default sendConfirmation
