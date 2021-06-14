@@ -425,10 +425,9 @@ export const signBroadcastAndSave =
     }
   }
 
-export const displayFeeAlert = async (currency: string, feeAmountInUSD: number) => {
+export const displayFeeAlert = async (currency: string, fee: string) => {
   let additionalMessage = ''
   if (currency === 'ETH') additionalMessage = s.strings.send_confirmation_fee_modal_alert_message_fragment_eth
-  const fee = bns.toFixed(feeAmountInUSD.toString(), 2, 2)
   const message = `${sprintf(s.strings.send_confirmation_fee_modal_alert_message_fragment, fee)} ${additionalMessage}`
   const resolveValue = await Airship.show(bridge => (
     <ButtonsModal
