@@ -1,12 +1,11 @@
 // @flow
-/* global window */
 
 import { makeReactNativeDisklet } from 'disklet'
 import { type EdgeContext } from 'edge-core-js/types'
 import * as React from 'react'
 import { MenuProvider } from 'react-native-popup-menu'
 import { Provider } from 'react-redux'
-import { type Store, applyMiddleware, compose, createStore } from 'redux'
+import { type Store, applyMiddleware, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import ENV from '../../../env.json'
@@ -52,13 +51,8 @@ export class Services extends React.PureComponent<Props> {
       middleware.push(createDebugger())
     }
 
-    const composeEnhancers =
-      typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ && ENV.ENABLE_REDUX_DEBUG
-        ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ name: 'ui', maxAge: 50 })
-        : compose
-
     const initialState: Object = {}
-    this.store = createStore(rootReducer, initialState, composeEnhancers(applyMiddleware(...middleware)))
+    this.store = createStore(rootReducer, initialState, applyMiddleware(...middleware))
     const flowHack: any = this.store.dispatch
     this.dispatch = flowHack // Flow doesn't know about redux-thunk
 
