@@ -10,7 +10,6 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import {
-  lockSettings,
   setAutoLogoutTimeInSecondsRequest,
   setDeveloperModeOn,
   showRestoreWalletsModal,
@@ -328,7 +327,10 @@ export const SettingsScene = connect<StateProps, DispatchProps, {}>(
       dispatch(updateTouchIdEnabled(arg, account))
     },
     lockSettings() {
-      dispatch(lockSettings())
+      dispatch({
+        type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
+        data: true
+      })
     },
     onTogglePinLoginEnabled(enableLogin: boolean) {
       dispatch(togglePinLoginEnabled(enableLogin))
