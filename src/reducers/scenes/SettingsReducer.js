@@ -40,7 +40,6 @@ export type AccountInitPayload = {|
   passwordRecoveryRemindersShown: PasswordReminderLevels,
   passwordReminder: PasswordReminderState,
   pinLoginEnabled: boolean,
-  pinMode: boolean,
   preferredSwapPluginId: string | void,
   spendingLimits: SpendingLimits,
   touchIdInfo: GuiTouchIdInfo,
@@ -51,7 +50,6 @@ export type AccountInitPayload = {|
 export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
   ...LOCAL_ACCOUNT_DEFAULTS,
-  pinMode: false,
   changesLocked: true,
   plugins: {
     allCurrencyInfos: [],
@@ -122,7 +120,6 @@ export type SettingsState = {
   loginStatus: boolean | null,
   merchantMode: boolean,
   preferredSwapPluginId: string | void,
-  pinMode: boolean,
   pinLoginEnabled: boolean,
   plugins: {
     [pluginId: string]: EdgeCurrencyInfo,
@@ -231,7 +228,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         countryCode,
         customTokens,
         bluetoothMode,
-        pinMode,
         pinLoginEnabled,
         denominationKeys,
         customTokensSettings,
@@ -254,7 +250,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         customTokens,
         countryCode,
         bluetoothMode,
-        pinMode,
         pinLoginEnabled,
         isAccountBalanceVisible,
         walletsSort,
@@ -415,14 +410,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     case 'UI/SETTINGS/UPDATE_SETTINGS': {
       const { settings } = action.data
       return settings
-    }
-
-    case 'UI/SETTINGS/SET_PIN_MODE': {
-      const { pinMode } = action.data
-      return {
-        ...state,
-        pinMode
-      }
     }
 
     case 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME': {

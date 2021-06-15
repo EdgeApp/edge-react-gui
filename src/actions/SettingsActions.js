@@ -32,19 +32,6 @@ export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getSta
   })
 }
 
-export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  ACCOUNT_SETTINGS.setPINModeRequest(account, pinMode)
-    .then(() =>
-      dispatch({
-        type: 'UI/SETTINGS/SET_PIN_MODE',
-        data: { pinMode }
-      })
-    )
-    .catch(showError)
-}
-
 export const setAutoLogoutTimeInSecondsRequest = (autoLogoutTimeInSeconds: number) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core

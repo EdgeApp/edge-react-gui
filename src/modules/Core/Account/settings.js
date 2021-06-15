@@ -578,11 +578,6 @@ const CATEGORIES_FILENAME = 'Categories.json'
 //  Settings
 // Core Settings
 
-export const setPINModeRequest = (account: EdgeAccount, pinMode: boolean) =>
-  pinMode // $FlowFixMe enablePIN not found on EdgeAccount type
-    ? account.enablePIN() // $FlowFixMe isablePIN not found on EdgeAccount type
-    : account.disablePIN()
-
 // Account Settings
 export const setAutoLogoutTimeInSecondsRequest = (account: EdgeAccount, autoLogoutTimeInSeconds: number) =>
   getSyncedSettings(account).then(settings => {
