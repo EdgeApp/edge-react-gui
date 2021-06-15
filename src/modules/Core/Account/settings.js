@@ -398,6 +398,54 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   FUSDT: {
     denomination: '1000000'
   },
+  'ETH2X-FLI': {
+    denomination: '1000000000000000000'
+  },
+  'BTC2X-FLI': {
+    denomination: '1000000000000000000'
+  },
+  MVI: {
+    denomination: '1000000000000000000'
+  },
+  PLAY: {
+    denomination: '1000000000000000000'
+  },
+  'DEFI+L': {
+    denomination: '1000000000000000000'
+  },
+  YPIE: {
+    denomination: '1000000000000000000'
+  },
+  BCP: {
+    denomination: '1000000000000000000'
+  },
+  'DEFI++': {
+    denomination: '1000000000000000000'
+  },
+  'DEFI+S': {
+    denomination: '1000000000000000000'
+  },
+  ASSY: {
+    denomination: '1000000000000000000'
+  },
+  TCAP: {
+    denomination: '1000000000000000000'
+  },
+  STETH: {
+    denomination: '1000000000000000000'
+  },
+  RUNE: {
+    denomination: '1000000000000000000'
+  },
+  RENFIL: {
+    denomination: '1000000000000000000'
+  },
+  RENDOGE: {
+    denomination: '1000000000000000000'
+  },
+  BDI: {
+    denomination: '1000000000000000000'
+  },
   customTokens: [],
   mostRecentWallets: [],
   passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
@@ -535,6 +583,22 @@ export const SYNCED_ACCOUNT_TYPES = {
   UNI: 'object',
   FTM: 'object',
   FUSDT: 'object',
+  'ETH2X-FLI': 'object',
+  'BTC2X-FLI': 'object',
+  MVI: 'object',
+  PLAY: 'object',
+  'DEFI+L': 'object',
+  YPIE: 'object',
+  BCP: 'object',
+  'DEFI++': 'object',
+  'DEFI+S': 'object',
+  ASSY: 'object',
+  TCAP: 'object',
+  STETH: 'object',
+  RUNE: 'object',
+  RENFIL: 'object',
+  RENDOGE: 'object',
+  BDI: 'object',
   customTokens: 'object', // arrays return 'object' to typeof
   mostRecentWallets: 'object',
   passwordRecoveryRemindersShown: 'object',
