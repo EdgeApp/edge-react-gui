@@ -32,15 +32,6 @@ export const rawStyles = {
     color: THEME.COLORS.WHITE
   },
 
-  // PRIMARY BUTTON 2
-  primaryButton2: {
-    backgroundColor: THEME.COLORS.ACCENT_MINT
-  },
-  primaryButton2Underlay: { color: THEME.COLORS.PRIMARY_BUTTON_2_TOUCHED },
-  primaryButton2Text: {
-    color: THEME.COLORS.PRIMARY
-  },
-
   // SECONDARY BUTTON
   secondaryButton: {
     backgroundColor: THEME.COLORS.GRAY_2
