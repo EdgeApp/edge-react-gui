@@ -74,7 +74,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     activeWalletIds: [],
     archivedWalletIds: [],
     autoLogoutTimeInSeconds: 3600,
-    bluetoothMode: false,
     countryCode: '',
     currencyCode: '',
     customTokens: [],

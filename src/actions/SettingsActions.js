@@ -103,19 +103,6 @@ export const setPreferredSwapPluginId = (pluginId: string | void) => (dispatch: 
     .catch(showError)
 }
 
-export const setBluetoothModeRequest = (bluetoothMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  ACCOUNT_SETTINGS.setBluetoothModeRequest(account, bluetoothMode)
-    .then(() =>
-      dispatch({
-        type: 'UI/SETTINGS/SET_BLUETOOTH_MODE',
-        data: { bluetoothMode }
-      })
-    )
-    .catch(showError)
-}
-
 export const lockSettings = () => async (dispatch: Dispatch) => {
   dispatch({
     type: 'UI/SETTINGS/SET_SETTINGS_LOCK',

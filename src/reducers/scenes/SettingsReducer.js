@@ -25,7 +25,6 @@ export type AccountInitPayload = {|
   activeWalletIds: string[],
   archivedWalletIds: string[],
   autoLogoutTimeInSeconds: number,
-  bluetoothMode: boolean,
   countryCode: string,
   currencyCode: string,
   customTokens: CustomTokenInfo[],
@@ -108,7 +107,7 @@ export type SettingsState = {
 
   account: ?Object,
   autoLogoutTimeInSeconds: number,
-  bluetoothMode: boolean,
+  bluetoothMode: boolean, // Never read or updated, but on disk
   changesLocked: any,
   customTokens: CustomTokenInfo[],
   defaultFiat: string,
@@ -225,7 +224,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         preferredSwapPluginId,
         countryCode,
         customTokens,
-        bluetoothMode,
         pinLoginEnabled,
         denominationKeys,
         customTokensSettings,
@@ -246,7 +244,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         preferredSwapPluginId: preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
         customTokens,
         countryCode,
-        bluetoothMode,
         pinLoginEnabled,
         isAccountBalanceVisible,
         walletsSort,
@@ -429,14 +426,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     case 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN': {
       const pluginId = action.data
       return { ...state, preferredSwapPluginId: pluginId }
-    }
-
-    case 'UI/SETTINGS/SET_BLUETOOTH_MODE': {
-      const { bluetoothMode } = action.data
-      return {
-        ...state,
-        bluetoothMode
-      }
     }
 
     case 'UI/SETTINGS/SET_SETTINGS_LOCK': {

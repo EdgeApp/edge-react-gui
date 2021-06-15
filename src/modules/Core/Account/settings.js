@@ -611,12 +611,6 @@ export const setWalletsSort = (account: EdgeAccount, walletsSort: SortOption) =>
   })
 
 // Local Settings
-export const setBluetoothModeRequest = (account: EdgeAccount, bluetoothMode: boolean) =>
-  getLocalSettings(account).then(settings => {
-    const updatedSettings = updateSettings(settings, { bluetoothMode })
-    return setLocalSettings(account, updatedSettings)
-  })
-
 export const setPasswordReminderRequest = (account: EdgeAccount, passwordReminder: PasswordReminder) =>
   getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { passwordReminder })
