@@ -35,7 +35,6 @@ export type AccountInitPayload = {|
   denominationKeys: Array<{ currencyCode: string, denominationKey: string }>,
   developerModeOn: boolean,
   isAccountBalanceVisible: boolean,
-  merchantMode: boolean,
   mostRecentWallets: MostRecentWallet[],
   passwordRecoveryRemindersShown: PasswordReminderLevels,
   passwordReminder: PasswordReminderState,
@@ -118,7 +117,7 @@ export type SettingsState = {
   countryCode: string,
   isTouchSupported: boolean,
   loginStatus: boolean | null,
-  merchantMode: boolean,
+  merchantMode: boolean, // Never read or updated, but on disk
   preferredSwapPluginId: string | void,
   pinLoginEnabled: boolean,
   plugins: {
@@ -223,7 +222,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         autoLogoutTimeInSeconds,
         defaultFiat,
         defaultIsoFiat,
-        merchantMode,
         preferredSwapPluginId,
         countryCode,
         customTokens,
@@ -245,7 +243,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         isTouchSupported: touchIdInfo ? touchIdInfo.isTouchSupported : false,
         defaultFiat,
         defaultIsoFiat,
-        merchantMode,
         preferredSwapPluginId: preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
         customTokens,
         countryCode,
@@ -426,14 +423,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         ...state,
         defaultFiat,
         defaultIsoFiat: `iso:${defaultFiat}`
-      }
-    }
-
-    case 'UI/SETTINGS/SET_MERCHANT_MODE': {
-      const { merchantMode } = action.data
-      return {
-        ...state,
-        merchantMode
       }
     }
 

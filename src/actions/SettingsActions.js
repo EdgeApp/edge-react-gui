@@ -90,19 +90,6 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
     .catch(showError)
 }
 
-export const setMerchantModeRequest = (merchantMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  ACCOUNT_SETTINGS.setMerchantModeRequest(account, merchantMode)
-    .then(() =>
-      dispatch({
-        type: 'UI/SETTINGS/SET_MERCHANT_MODE',
-        data: { merchantMode }
-      })
-    )
-    .catch(showError)
-}
-
 export const setPreferredSwapPluginId = (pluginId: string | void) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core

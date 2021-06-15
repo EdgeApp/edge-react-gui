@@ -591,12 +591,6 @@ export const setDefaultFiatRequest = (account: EdgeAccount, defaultFiat: string)
     return setSyncedSettings(account, updatedSettings)
   })
 
-export const setMerchantModeRequest = (account: EdgeAccount, merchantMode: boolean) =>
-  getSyncedSettings(account).then(settings => {
-    const updatedSettings = updateSettings(settings, { merchantMode })
-    return setSyncedSettings(account, updatedSettings)
-  })
-
 export const setPreferredSwapPluginId = (account: EdgeAccount, pluginId: string | void) => {
   return getSyncedSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { preferredSwapPluginId: pluginId == null ? '' : pluginId })
