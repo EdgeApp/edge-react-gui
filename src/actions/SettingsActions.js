@@ -104,13 +104,6 @@ export const setPreferredSwapPluginId = (pluginId: string | void) => (dispatch: 
     .catch(showError)
 }
 
-export const lockSettings = () => async (dispatch: Dispatch) => {
-  dispatch({
-    type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
-    data: true
-  })
-}
-
 // Denominations
 export const setDenominationKeyRequest = (currencyCode: string, denominationKey: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
