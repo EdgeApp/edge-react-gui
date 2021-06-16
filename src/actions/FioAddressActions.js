@@ -1,11 +1,11 @@
 // @flow
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 
-import { createCurrencyWallet } from '../../actions/CreateWalletActions'
-import { FIO_WALLET_TYPE } from '../../constants/WalletAndCurrencyConstants.js'
-import s from '../../locales/strings'
-import type { Dispatch, GetState } from '../../types/reduxTypes'
-import { refreshConnectedWalletsForFioAddress, refreshFioNames } from './util'
+import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants.js'
+import s from '../locales/strings.js'
+import { refreshConnectedWalletsForFioAddress, refreshFioNames } from '../modules/FioAddress/util.js'
+import { type Dispatch, type GetState } from '../types/reduxTypes.js'
+import { createCurrencyWallet } from './CreateWalletActions.js'
 
 export const createFioWallet =
   () =>
