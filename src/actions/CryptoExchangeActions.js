@@ -26,7 +26,7 @@ import * as Constants from '../constants/indexConstants'
 import { formatNumber } from '../locales/intl.js'
 import s from '../locales/strings.js'
 import { getDisplayDenomination, getDisplayDenominationFromSettings, getExchangeDenomination } from '../modules/Settings/selectors.js'
-import * as UI_SELECTORS from '../modules/UI/selectors'
+import { getPrimaryExchangeDenomination } from '../modules/UI/selectors'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
 import { bestOfPlugins } from '../util/ReferralHelpers.js'
@@ -375,7 +375,7 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string, 
   const cc = currencyCode || wallet.currencyCode
 
   const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, cc)
-  const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, cc, wallet)
+  const primaryExchangeDenomination: GuiDenomination = getPrimaryExchangeDenomination(state, cc, wallet)
   const primaryInfo: GuiCurrencyInfo = {
     displayCurrencyCode: cc,
     exchangeCurrencyCode: cc,

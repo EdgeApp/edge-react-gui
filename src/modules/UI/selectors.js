@@ -52,7 +52,7 @@ export const getDefaultDenomination = (state: RootState, currencyCode: string): 
   return denomination
 }
 
-export const getExchangeDenomination = (state: RootState, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
+export const getPrimaryExchangeDenomination = (state: RootState, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
   const { customTokens } = state.ui.settings
   const walletId = specificWallet ? specificWallet.id : state.ui.wallets.selectedWalletId
   const wallet = state.ui.wallets.byId[walletId]
