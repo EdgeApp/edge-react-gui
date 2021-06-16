@@ -114,8 +114,8 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
 
   getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet)
 
-  renewAddress = async (renewalFee: number) => {
-    const { fioWallet, fioAddressName, isConnected } = this.props
+  renewAddress = async (fioWallet: EdgeCurrencyWallet, renewalFee: number) => {
+    const { fioAddressName, isConnected } = this.props
 
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
@@ -181,6 +181,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
             cancelOperation={this.cancelOperation}
             fioWallet={fioWallet}
             addressTitles
+            showPaymentWalletPicker
           />
         )}
         {showTransfer && <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} addressTitles />}

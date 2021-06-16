@@ -107,8 +107,8 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
 
   getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet, true)
 
-  setDomainVisibility = async (fee: number) => {
-    const { fioWallet, fioDomainName, isPublic, isConnected } = this.props
+  setDomainVisibility = async (fioWallet: EdgeCurrencyWallet, fee: number) => {
+    const { fioDomainName, isPublic, isConnected } = this.props
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
@@ -116,8 +116,8 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     await setDomainVisibility(fioWallet, fioDomainName, !isPublic, fee)
   }
 
-  renewDomain = async (renewalFee: number) => {
-    const { fioWallet, fioDomainName, isConnected } = this.props
+  renewDomain = async (fioWallet: EdgeCurrencyWallet, renewalFee: number) => {
+    const { fioDomainName, isConnected } = this.props
     if (!isConnected) {
       throw new Error(s.strings.fio_network_alert_text)
     }
@@ -177,6 +177,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
             getOperationFee={getDomainSetVisibilityFee}
             successMessage={isPublic ? s.strings.fio_domain_is_private_label : s.strings.fio_domain_is_public_label}
             fioWallet={fioWallet}
+            showPaymentWalletPicker
           />
         )}
         {showRenew && (
@@ -188,6 +189,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
             getOperationFee={this.getRenewalFee}
             successMessage={s.strings.fio_request_renew_domain_ok_text}
             fioWallet={fioWallet}
+            showPaymentWalletPicker
           />
         )}
         {showTransfer && <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} />}
