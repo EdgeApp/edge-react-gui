@@ -1,5 +1,32 @@
 # edge-react-gui
 
+## 2.0.13 (2021-06-14)
+
+- Queue wallet loading to improve GUI performance
+- New themed Manage Tokens scene
+- Add custom token support to FTM and RSK
+- Replace all instances of old flip input to use a new one
+- New mainnet/token icon URL format
+- Fix memory leak in WalletProgressIconComponent
+- Various navigation and text fixes
+- Upgrade edge-currency-accountbased to v0.7.62
+  - FIO: Randomize apiUrl when sending a new request
+  - FIO: Add ALREADY_REGISTERED error rype
+  - Prevent unnecessary fetch calls when amberdata server lists are empty
+  - Remove icon URLs
+- Upgrade edge-currency-bitcoin to v4.9.15
+  - Remove icon URLs
+  - Upgrade edge-core-js to v0.17.33
+  - Upgrade to Webpack 5
+  - Upgrade cleaners to v0.3.9
+- Upgrade edge-currency-monero to v0.3.2
+  - Remove icon URLs
+- Upgrade edge-login-ui-rn to v0.9.7
+  - rn: New themed Create Account scene
+  - rn: Reorganize layers and decreased tappable area to prevent text entry in PIN field
+  - rn: Allow direct entry of recovery token
+  - rn: Update translations
+
 ## 2.0.12 (2021-06-01)
 
 - Upgrade to React Native v0.64.1

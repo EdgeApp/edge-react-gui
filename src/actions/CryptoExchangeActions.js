@@ -241,7 +241,7 @@ const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: G
   // Check for known error types:
   const insufficientFunds = asMaybeInsufficientFundsError(error)
   if (insufficientFunds != null) {
-    return dispatch({ type: 'RECEIVED_INSUFFICENT_FUNDS_ERROR' })
+    return dispatch({ type: 'RECEIVED_INSUFFICIENT_FUNDS_ERROR' })
   }
 
   const aboveLimit = asMaybeSwapAboveLimitError(error)
@@ -298,7 +298,7 @@ const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: G
 
   // Some plugins get this error wrong:
   if (error.message === 'InsufficientFundsError') {
-    return dispatch({ type: 'RECEIVED_INSUFFICENT_FUNDS_ERROR' })
+    return dispatch({ type: 'RECEIVED_INSUFFICIENT_FUNDS_ERROR' })
   }
 
   // Anything else:

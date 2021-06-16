@@ -4,6 +4,7 @@ import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
 
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 
@@ -12,7 +13,8 @@ type Props = {
 }
 
 export function CurrencySettingsTitle(props: Props) {
-  const { displayName, symbolImage = '' } = props.currencyInfo
+  const { displayName } = props.currencyInfo
+  const { symbolImage } = getCurrencyIcon(props.currencyInfo.currencyCode)
   const styles = getStyles(useTheme())
   return (
     <View style={styles.container}>

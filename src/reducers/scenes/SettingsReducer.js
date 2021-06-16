@@ -6,8 +6,47 @@ import _ from 'lodash'
 import type { SortOption } from '../../components/modals/WalletListSortModal.js'
 import { LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import type { Action } from '../../types/reduxTypes.js'
-import type { CustomTokenInfo, MostRecentWallet } from '../../types/types.js'
+import { type CustomTokenInfo, type GuiTouchIdInfo, type MostRecentWallet, type SpendingLimits } from '../../types/types.js'
+import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
+import { type PasswordReminderState } from '../PasswordReminderReducer.js'
 import { spendingLimits } from '../SpendingLimitsReducer.js'
+
+// prettier-ignore
+export type PasswordReminderLevels = {
+  '20': false,
+  '200': false,
+  '2000': false,
+  '20000': false,
+  '200000': false
+}
+
+export type AccountInitPayload = {|
+  account: EdgeAccount,
+  activeWalletIds: string[],
+  archivedWalletIds: string[],
+  autoLogoutTimeInSeconds: number,
+  bluetoothMode: boolean,
+  countryCode: string,
+  currencyCode: string,
+  customTokens: CustomTokenInfo[],
+  customTokensSettings: Array<{ currencyCode: string }>,
+  defaultFiat: string,
+  defaultIsoFiat: string,
+  denominationKeys: Array<{ currencyCode: string, denominationKey: string }>,
+  developerModeOn: boolean,
+  isAccountBalanceVisible: boolean,
+  merchantMode: boolean,
+  mostRecentWallets: MostRecentWallet[],
+  passwordRecoveryRemindersShown: PasswordReminderLevels,
+  passwordReminder: PasswordReminderState,
+  pinLoginEnabled: boolean,
+  pinMode: boolean,
+  preferredSwapPluginId: string | void,
+  spendingLimits: SpendingLimits,
+  touchIdInfo: GuiTouchIdInfo,
+  walletId: string,
+  walletsSort: SortOption
+|}
 
 export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
@@ -100,47 +139,36 @@ export type SettingsState = {
     }
   },
   developerModeOn: boolean,
-  // prettier-ignore
-  passwordRecoveryRemindersShown: {
-    '20': boolean,
-    '200': boolean,
-    '2000': boolean,
-    '20000': boolean,
-    '200000': boolean
-  }
+  passwordRecoveryRemindersShown: PasswordReminderLevels
 }
 
 function currencyPLuginUtil(state: SettingsState, currencyInfo: EdgeCurrencyInfo): SettingsState {
   const { plugins } = state
   const { allCurrencyInfos, supportedWalletTypes } = plugins
-  const { pluginId, walletType } = currencyInfo
+  const { pluginId, walletType, displayName, currencyCode, denominations } = currencyInfo
 
   // Build up object with all the information for the parent currency, accesible by the currencyCode
   const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
   const parentCurrencyInfo = {
     [currencyInfo.currencyCode]: {
       ...defaultParentCurrencyInfo,
-      displayName: currencyInfo.displayName,
-      currencyCode: currencyInfo.currencyCode,
-      denominations: currencyInfo.denominations,
-      symbolImage: currencyInfo.symbolImage,
-      symbolImageDarkMono: currencyInfo.symbolImageDarkMono
+      displayName,
+      currencyCode,
+      denominations,
+      ...getCurrencyIcon(currencyCode)
     }
   }
 
   // Build up object with all the information for each metatoken, accessible by the token currencyCode
   const metatokenCurrencyInfos = currencyInfo.metaTokens.reduce((acc, metatoken) => {
-    const defaultMetatokenInfo = state[metatoken.currencyCode]
+    const { currencyCode } = metatoken
+    const defaultMetatokenInfo = state[currencyCode]
     return {
       ...acc,
       [metatoken.currencyCode]: {
         ...defaultMetatokenInfo,
-        displayName: metatoken.currencyName,
-        currencyCode: metatoken.currencyCode,
-        denominations: metatoken.denominations,
-        symbolImage: metatoken.symbolImage,
-        // $FlowFixMe
-        symbolImageDarkMono: metatoken.symbolImageDarkMono
+        ...metatoken,
+        ...getCurrencyIcon(currencyInfo.currencyCode, currencyCode)
       }
     }
   }, {})
@@ -192,7 +220,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'ACCOUNT_INIT_COMPLETE': {
-      if (!action.data) throw new Error('Invalid action')
       const account: EdgeAccount = action.data.account
       const {
         touchIdInfo,
@@ -214,7 +241,7 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         passwordRecoveryRemindersShown,
         developerModeOn
       } = action.data
-      let newState = {
+      let newState: SettingsState = {
         ...state,
         loginStatus: true,
         autoLogoutTimeInSeconds,
@@ -268,7 +295,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/TOGGLE_PIN_LOGIN_ENABLED': {
-      if (!action.data) throw new Error('Invalid action')
       const { pinLoginEnabled } = action.data
       return {
         ...state,
@@ -296,8 +322,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
 
     case 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS': {
       // where oldCurrencyCode is the sender, and tokenObj.currencyCode is the receiver (new code)
-
-      if (!action.data) throw new Error('Invalid action')
       const receiverCode = action.data.tokenObj.currencyCode
       const senderCode = action.data.oldCurrencyCode
       const { tokenObj } = action.data
@@ -346,7 +370,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'ADD_NEW_CUSTOM_TOKEN_SUCCESS': {
-      if (!action.data) throw new Error('Invalid action')
       const { tokenObj, settings } = action.data
       const newCurrencyCode = tokenObj.currencyCode
       const customTokens = settings.customTokens
@@ -377,7 +400,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_DENOMINATION_KEY': {
-      if (!action.data) throw new Error('Invalid action')
       const currencyCode = action.data.currencyCode
       const denomination = action.data.denominationKey
       const currencyState = state[currencyCode]
@@ -391,19 +413,11 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/UPDATE_SETTINGS': {
-      if (!action.data) throw new Error('Invalid action')
-      const { settings } = action.data
-      return settings
-    }
-
-    case 'UI/SETTINGS/LOAD_SETTINGS': {
-      if (!action.data) throw new Error('Invalid action')
       const { settings } = action.data
       return settings
     }
 
     case 'UI/SETTINGS/SET_PIN_MODE': {
-      if (!action.data) throw new Error('Invalid action')
       const { pinMode } = action.data
       return {
         ...state,
@@ -420,7 +434,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_DEFAULT_FIAT': {
-      if (!action.data) throw new Error('Invalid action')
       const { defaultFiat } = action.data
       return {
         ...state,
@@ -430,7 +443,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_MERCHANT_MODE': {
-      if (!action.data) throw new Error('Invalid action')
       const { merchantMode } = action.data
       return {
         ...state,
@@ -444,7 +456,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_BLUETOOTH_MODE': {
-      if (!action.data) throw new Error('Invalid action')
       const { bluetoothMode } = action.data
       return {
         ...state,
@@ -460,7 +471,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         isTouchEnabled: action.data.isTouchEnabled
@@ -468,7 +478,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_MOST_RECENT_WALLETS': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         mostRecentWallets: action.data.mostRecentWallets
@@ -476,7 +485,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         isAccountBalanceVisible: action.data.isAccountBalanceVisible
@@ -484,7 +492,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
     }
 
     case 'UI/SETTINGS/SET_WALLETS_SORT': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         walletsSort: action.data.walletsSort

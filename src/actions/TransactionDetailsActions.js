@@ -8,11 +8,6 @@ import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { refreshTransactionsRequest } from './TransactionListActions.js'
 
-export const setSubcategories = (subcategories: string[]) => ({
-  type: 'SET_TRANSACTION_SUBCATEGORIES',
-  data: { subcategories }
-})
-
 export const setTransactionDetails = (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = getSelectedWallet(state)
@@ -28,7 +23,10 @@ export const setTransactionDetails = (transaction: EdgeTransaction, edgeMetadata
 export const getSubcategories = () => (dispatch: Dispatch, getState: GetState) => {
   const { account } = getState().core
   ACCOUNT_SETTINGS.getSyncedSubcategories(account).then(s => {
-    return dispatch(setSubcategories(s))
+    return dispatch({
+      type: 'SET_TRANSACTION_SUBCATEGORIES',
+      data: { subcategories: s }
+    })
   })
 }
 
@@ -39,7 +37,10 @@ export const setNewSubcategory = (newSubcategory: string) => (dispatch: Dispatch
   const newSubcategories = [...oldSubcats, newSubcategory]
   return ACCOUNT_SETTINGS.setSubcategoriesRequest(account, { categories: newSubcategories.sort() })
     .then(() => {
-      dispatch(setSubcategories(newSubcategories.sort()))
+      dispatch({
+        type: 'SET_TRANSACTION_SUBCATEGORIES',
+        data: { subcategories: newSubcategories.sort() }
+      })
     })
     .catch(showError)
 }

@@ -106,49 +106,51 @@ exports[`SendConfirmation should render with destination 1`] = `
           }
         }
       >
-        <ExchangedFlipInput
-          exchangeSecondaryToPrimaryRatio={8000}
-          forceUpdateGuiCounter={0}
-          headerText="Send from undefined"
-          isEditable={true}
-          isFiatOnTop={false}
-          isFocus={false}
-          keyboardVisible={false}
-          onExchangeAmountChanged={[Function]}
-          overridePrimaryExchangeAmount=""
-          primaryCurrencyInfo={
-            Object {
-              "displayCurrencyCode": "BTC",
-              "displayDenomination": Object {
-                "multiplier": "100000000",
-                "name": "BTC",
-                "symbol": "₿",
-              },
-              "exchangeCurrencyCode": "BTC",
-              "exchangeDenomination": Object {
-                "multiplier": "100000000",
-                "name": "BTC",
-                "symbol": "₿",
-              },
+        <WithTheme(CardComponent)>
+          <ExchangedFlipInput
+            exchangeSecondaryToPrimaryRatio={8000}
+            forceUpdateGuiCounter={0}
+            headerText="Send from undefined"
+            isEditable={true}
+            isFiatOnTop={false}
+            isFocus={false}
+            keyboardVisible={false}
+            onExchangeAmountChanged={[Function]}
+            overridePrimaryExchangeAmount=""
+            primaryCurrencyInfo={
+              Object {
+                "displayCurrencyCode": "BTC",
+                "displayDenomination": Object {
+                  "multiplier": "100000000",
+                  "name": "BTC",
+                  "symbol": "₿",
+                },
+                "exchangeCurrencyCode": "BTC",
+                "exchangeDenomination": Object {
+                  "multiplier": "100000000",
+                  "name": "BTC",
+                  "symbol": "₿",
+                },
+              }
             }
-          }
-          secondaryCurrencyInfo={
-            Object {
-              "displayCurrencyCode": "USD",
-              "displayDenomination": Object {
-                "multiplier": "100",
-                "name": "USD",
-                "symbol": "$",
-              },
-              "exchangeCurrencyCode": "iso:USD",
-              "exchangeDenomination": Object {
-                "multiplier": "100",
-                "name": "USD",
-                "symbol": "$",
-              },
+            secondaryCurrencyInfo={
+              Object {
+                "displayCurrencyCode": "USD",
+                "displayDenomination": Object {
+                  "multiplier": "100",
+                  "name": "USD",
+                  "symbol": "$",
+                },
+                "exchangeCurrencyCode": "iso:USD",
+                "exchangeDenomination": Object {
+                  "multiplier": "100",
+                  "name": "USD",
+                  "symbol": "$",
+                },
+              }
             }
-          }
-        />
+          />
+        </WithTheme(CardComponent)>
         <Padding
           style={
             Object {
@@ -379,49 +381,51 @@ exports[`SendConfirmation should render with standard props 1`] = `
           }
         }
       >
-        <ExchangedFlipInput
-          exchangeSecondaryToPrimaryRatio={8000}
-          forceUpdateGuiCounter={0}
-          headerText="Send from undefined"
-          isEditable={true}
-          isFiatOnTop={false}
-          isFocus={false}
-          keyboardVisible={false}
-          onExchangeAmountChanged={[Function]}
-          overridePrimaryExchangeAmount=""
-          primaryCurrencyInfo={
-            Object {
-              "displayCurrencyCode": "BTC",
-              "displayDenomination": Object {
-                "multiplier": "100000000",
-                "name": "BTC",
-                "symbol": "₿",
-              },
-              "exchangeCurrencyCode": "BTC",
-              "exchangeDenomination": Object {
-                "multiplier": "100000000",
-                "name": "BTC",
-                "symbol": "₿",
-              },
+        <WithTheme(CardComponent)>
+          <ExchangedFlipInput
+            exchangeSecondaryToPrimaryRatio={8000}
+            forceUpdateGuiCounter={0}
+            headerText="Send from undefined"
+            isEditable={true}
+            isFiatOnTop={false}
+            isFocus={false}
+            keyboardVisible={false}
+            onExchangeAmountChanged={[Function]}
+            overridePrimaryExchangeAmount=""
+            primaryCurrencyInfo={
+              Object {
+                "displayCurrencyCode": "BTC",
+                "displayDenomination": Object {
+                  "multiplier": "100000000",
+                  "name": "BTC",
+                  "symbol": "₿",
+                },
+                "exchangeCurrencyCode": "BTC",
+                "exchangeDenomination": Object {
+                  "multiplier": "100000000",
+                  "name": "BTC",
+                  "symbol": "₿",
+                },
+              }
             }
-          }
-          secondaryCurrencyInfo={
-            Object {
-              "displayCurrencyCode": "USD",
-              "displayDenomination": Object {
-                "multiplier": "100",
-                "name": "USD",
-                "symbol": "$",
-              },
-              "exchangeCurrencyCode": "iso:USD",
-              "exchangeDenomination": Object {
-                "multiplier": "100",
-                "name": "USD",
-                "symbol": "$",
-              },
+            secondaryCurrencyInfo={
+              Object {
+                "displayCurrencyCode": "USD",
+                "displayDenomination": Object {
+                  "multiplier": "100",
+                  "name": "USD",
+                  "symbol": "$",
+                },
+                "exchangeCurrencyCode": "iso:USD",
+                "exchangeDenomination": Object {
+                  "multiplier": "100",
+                  "name": "USD",
+                  "symbol": "$",
+                },
+              }
             }
-          }
-        />
+          />
+        </WithTheme(CardComponent)>
         <Padding
           style={
             Object {
@@ -637,49 +641,51 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           }
         }
       >
-        <ExchangedFlipInput
-          exchangeSecondaryToPrimaryRatio={8000}
-          forceUpdateGuiCounter={0}
-          headerText="Send from undefined"
-          isEditable={true}
-          isFiatOnTop={false}
-          isFocus={false}
-          keyboardVisible={false}
-          onExchangeAmountChanged={[Function]}
-          overridePrimaryExchangeAmount=""
-          primaryCurrencyInfo={
-            Object {
-              "displayCurrencyCode": "XMR",
-              "displayDenomination": Object {
-                "multiplier": "1000000000000",
-                "name": "XMR",
-                "symbol": "ɱ",
-              },
-              "exchangeCurrencyCode": "XMR",
-              "exchangeDenomination": Object {
-                "multiplier": "1000000000000",
-                "name": "XMR",
-                "symbol": "ɱ",
-              },
+        <WithTheme(CardComponent)>
+          <ExchangedFlipInput
+            exchangeSecondaryToPrimaryRatio={8000}
+            forceUpdateGuiCounter={0}
+            headerText="Send from undefined"
+            isEditable={true}
+            isFiatOnTop={false}
+            isFocus={false}
+            keyboardVisible={false}
+            onExchangeAmountChanged={[Function]}
+            overridePrimaryExchangeAmount=""
+            primaryCurrencyInfo={
+              Object {
+                "displayCurrencyCode": "XMR",
+                "displayDenomination": Object {
+                  "multiplier": "1000000000000",
+                  "name": "XMR",
+                  "symbol": "ɱ",
+                },
+                "exchangeCurrencyCode": "XMR",
+                "exchangeDenomination": Object {
+                  "multiplier": "1000000000000",
+                  "name": "XMR",
+                  "symbol": "ɱ",
+                },
+              }
             }
-          }
-          secondaryCurrencyInfo={
-            Object {
-              "displayCurrencyCode": "USD",
-              "displayDenomination": Object {
-                "multiplier": "100",
-                "name": "USD",
-                "symbol": "$",
-              },
-              "exchangeCurrencyCode": "iso:USD",
-              "exchangeDenomination": Object {
-                "multiplier": "100",
-                "name": "USD",
-                "symbol": "$",
-              },
+            secondaryCurrencyInfo={
+              Object {
+                "displayCurrencyCode": "USD",
+                "displayDenomination": Object {
+                  "multiplier": "100",
+                  "name": "USD",
+                  "symbol": "$",
+                },
+                "exchangeCurrencyCode": "iso:USD",
+                "exchangeDenomination": Object {
+                  "multiplier": "100",
+                  "name": "USD",
+                  "symbol": "$",
+                },
+              }
             }
-          }
-        />
+          />
+        </WithTheme(CardComponent)>
         <Padding
           style={
             Object {
@@ -875,49 +881,51 @@ exports[`SendConfirmation should render with unique identifier button with "ADD"
           }
         }
       >
-        <ExchangedFlipInput
-          exchangeSecondaryToPrimaryRatio={8000}
-          forceUpdateGuiCounter={0}
-          headerText="Send from undefined"
-          isEditable={true}
-          isFiatOnTop={false}
-          isFocus={false}
-          keyboardVisible={false}
-          onExchangeAmountChanged={[Function]}
-          overridePrimaryExchangeAmount=""
-          primaryCurrencyInfo={
-            Object {
-              "displayCurrencyCode": "XRP",
-              "displayDenomination": Object {
-                "multiplier": "1000000",
-                "name": "XRP",
-                "symbol": "X",
-              },
-              "exchangeCurrencyCode": "XRP",
-              "exchangeDenomination": Object {
-                "multiplier": "1000000",
-                "name": "XRP",
-                "symbol": "X",
-              },
+        <WithTheme(CardComponent)>
+          <ExchangedFlipInput
+            exchangeSecondaryToPrimaryRatio={8000}
+            forceUpdateGuiCounter={0}
+            headerText="Send from undefined"
+            isEditable={true}
+            isFiatOnTop={false}
+            isFocus={false}
+            keyboardVisible={false}
+            onExchangeAmountChanged={[Function]}
+            overridePrimaryExchangeAmount=""
+            primaryCurrencyInfo={
+              Object {
+                "displayCurrencyCode": "XRP",
+                "displayDenomination": Object {
+                  "multiplier": "1000000",
+                  "name": "XRP",
+                  "symbol": "X",
+                },
+                "exchangeCurrencyCode": "XRP",
+                "exchangeDenomination": Object {
+                  "multiplier": "1000000",
+                  "name": "XRP",
+                  "symbol": "X",
+                },
+              }
             }
-          }
-          secondaryCurrencyInfo={
-            Object {
-              "displayCurrencyCode": "USD",
-              "displayDenomination": Object {
-                "multiplier": "100",
-                "name": "USD",
-                "symbol": "$",
-              },
-              "exchangeCurrencyCode": "iso:USD",
-              "exchangeDenomination": Object {
-                "multiplier": "100",
-                "name": "USD",
-                "symbol": "$",
-              },
+            secondaryCurrencyInfo={
+              Object {
+                "displayCurrencyCode": "USD",
+                "displayDenomination": Object {
+                  "multiplier": "100",
+                  "name": "USD",
+                  "symbol": "$",
+                },
+                "exchangeCurrencyCode": "iso:USD",
+                "exchangeDenomination": Object {
+                  "multiplier": "100",
+                  "name": "USD",
+                  "symbol": "$",
+                },
+              }
             }
-          }
-        />
+          />
+        </WithTheme(CardComponent)>
         <Padding
           style={
             Object {

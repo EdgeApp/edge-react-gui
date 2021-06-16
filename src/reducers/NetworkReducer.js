@@ -12,7 +12,6 @@ export type NetworkState = {
 export const network = (state: NetworkState = initialState, action: Action) => {
   switch (action.type) {
     case 'NETWORK/NETWORK_STATUS': {
-      if (!action.data) throw new Error('Invalid action')
       return {
         ...state,
         isConnected: action.data.isConnected

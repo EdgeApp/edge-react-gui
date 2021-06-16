@@ -8,13 +8,13 @@ export const MAX_TOKEN_CODE_CHARACTERS = 7
 export const FEE_COLOR_THRESHOLD = 2.0 // this is denominated in dollars
 export const FEE_ALERT_THRESHOLD = 5.0 // this is denominated in dollars
 
-export const imageServerUrl = 'https://content.edge.app'
+export const IMAGE_SERVER_URL = 'https://content.edge.app'
 
 export const CURRENCY_SYMBOL_IMAGES = {
-  BCH: `${imageServerUrl}/bitcoincash-logo-solo-64.png`,
-  BTC: `${imageServerUrl}/bitcoin-logo-solo-64.png`,
-  ETH: `${imageServerUrl}/ethereum-logo-solo-64.png`,
-  ETC: `${imageServerUrl}/ethereum-classic-logo-solo-64.png`
+  BCH: `${IMAGE_SERVER_URL}/bitcoincash-logo-solo-64.png`,
+  BTC: `${IMAGE_SERVER_URL}/bitcoin-logo-solo-64.png`,
+  ETH: `${IMAGE_SERVER_URL}/ethereum-logo-solo-64.png`,
+  ETC: `${IMAGE_SERVER_URL}/ethereum-classic-logo-solo-64.png`
 }
 
 // Translations for custom fee keys:
@@ -184,7 +184,6 @@ type SpecialCurrencyInfo = {|
   isAccountActivationRequired?: boolean,
   isCustomTokensSupported?: boolean,
   isRbfSupported?: boolean,
-  isTokensSupported?: boolean,
   isUriEncodedStructure?: boolean,
   needsAccountNameSetup?: boolean,
   noChangeMiningFee?: boolean,
@@ -250,8 +249,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_instructions
     },
-    isCustomTokensSupported: false,
-    isTokensSupported: true
+    isCustomTokensSupported: true
   },
   XLM: {
     dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
@@ -306,8 +304,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
     },
-    isCustomTokensSupported: true,
-    isTokensSupported: true
+    isCustomTokensSupported: true
   },
   TLOS: {
     isAccountActivationRequired: true,
@@ -323,8 +320,7 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
       privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
     },
-    isCustomTokensSupported: true,
-    isTokensSupported: true
+    isCustomTokensSupported: true
   },
   WAX: {
     isAccountActivationRequired: false,
@@ -341,7 +337,6 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_active_key_instructions
     },
     isCustomTokensSupported: true,
-    isTokensSupported: true,
     keysOnlyMode: true
   },
   ETH: {
@@ -353,7 +348,6 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_instructions
     },
     isCustomTokensSupported: true,
-    isTokensSupported: true,
     showEarnInterestCard: false,
     isRbfSupported: true
   },
@@ -443,6 +437,14 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   QTUM: {
     isPrivateKeySweepable: true
+  },
+  FTM: {
+    dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
+    isImportKeySupported: {
+      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_instructions
+    },
+    isCustomTokensSupported: true
   }
 }
 
