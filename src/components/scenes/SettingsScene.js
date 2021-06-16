@@ -22,7 +22,7 @@ import {
 import * as Constants from '../../constants/indexConstants'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
-import { getDefaultFiat } from '../../modules/Settings/selectors.js'
+import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { edgeDark } from '../../theme/variables/edgeDark.js'
 import { edgeLight } from '../../theme/variables/edgeLight.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
