@@ -7,6 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { loadAccountReferral, refreshAccountReferral } from '../../actions/AccountReferralActions.js'
+import { attachToUser } from '../../actions/DeviceIdActions.js'
 import { expiredFioNamesCheckDates } from '../../actions/FioActions.js'
 import { trackAccountEvent } from '../../actions/TrackingActions.js'
 import { checkEnabledTokensArray, getEnabledTokens, setWalletEnabledTokens } from '../../actions/WalletActions.js'
@@ -31,7 +32,6 @@ import {
   SYNCED_ACCOUNT_TYPES
 } from '../Core/Account/settings.js'
 import { updateWalletsEnabledTokens, updateWalletsRequest } from '../Core/Wallets/action.js'
-import { attachToUser } from '../Device/action'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, currencyCode: string } {
   // Find the first wallet:
