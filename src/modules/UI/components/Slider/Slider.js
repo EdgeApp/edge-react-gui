@@ -70,7 +70,7 @@ export const SliderComponent = (props: Props) => {
     setCompleted(true)
   }
 
-  if (reset) resetSlider()
+  if (reset && translateX.value === 0) resetSlider()
 
   const onGestureEvent = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
