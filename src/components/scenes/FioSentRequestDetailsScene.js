@@ -6,11 +6,10 @@ import { connect } from 'react-redux'
 import { FIAT_CODES_SYMBOLS } from '../../constants/indexConstants'
 import { formatDate, formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { getSelectedWallet } from '../../modules/UI/selectors'
 import type { RootState } from '../../reducers/RootReducer'
-import { type FioRequest, type GuiWallet } from '../../types/types'
+import { type FioRequest, type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
@@ -24,7 +23,7 @@ type NavigationProps = {
 type FioSentRequestDetailsProps = {
   fiatSymbol: string,
   isoFiatCurrencyCode: string,
-  exchangeRates: ExchangeRatesState
+  exchangeRates: GuiExchangeRates
 }
 
 type FioSentRequestDetailsDispatchProps = {}

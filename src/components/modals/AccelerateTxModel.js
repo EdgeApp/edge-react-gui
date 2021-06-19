@@ -9,11 +9,11 @@ import { connect } from 'react-redux'
 import { playSendSound } from '../../actions/SoundActions.js'
 import { TRANSACTION_DETAILS } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
 import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { GuiWallet } from '../../types/types.js'
+import { type GuiExchangeRates } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { showError, showToast, showWarning } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -33,7 +33,7 @@ type OwnProps = {
 type StateProps = {
   edgeDenomination: EdgeDenomination,
   selectedCurrencyCode: string,
-  exchangeRates: ExchangeRatesState,
+  exchangeRates: GuiExchangeRates,
   settings: any
 }
 type Props = OwnProps & StateProps & ThemeProps
