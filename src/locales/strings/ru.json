@@ -17,7 +17,6 @@
   "select_exchange_amount_short": "Введите сумму",
   "exchanges_may_take_minutes": "Обмен может занять несколько минут. Пожалуйста, проверьте ваш кошелек получения монет через несколько минут",
   "fragment_wallets_addwallet_fiat_hint": "Выберите официальную валюту",
-  "managetokens_top_instructions": "Пожайлуста, укажите, какие токены должны быть отображены в кошельке:",
   "manage_tokens_duplicate_currency_code": "Токен с данным валютным кодом уже существует.",
   "addtoken_top_instructions": "Для добавление токена, пожайлуста, заполните следующую форму и нажмите «Сохранить» ",
   "accept_button_text": "Принять",
