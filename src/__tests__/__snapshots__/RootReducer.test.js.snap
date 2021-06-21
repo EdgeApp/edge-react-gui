@@ -616,7 +616,6 @@ Object {
         "passwordUseCount": 0,
       },
       "pinLoginEnabled": false,
-      "pinMode": false,
       "plugins": Object {
         "allCurrencyInfos": Array [],
         "supportedWalletTypes": Array [],

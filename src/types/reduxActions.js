@@ -207,12 +207,9 @@ export type Action =
   | { type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS', data: { isTouchEnabled: boolean } }
   | { type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY', data: { isAccountBalanceVisible: boolean } }
   | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME', data: { autoLogoutTimeInSeconds: number } }
-  | { type: 'UI/SETTINGS/SET_BLUETOOTH_MODE', data: { bluetoothMode: boolean } }
   | { type: 'UI/SETTINGS/SET_DEFAULT_FIAT', data: { defaultFiat: string } }
   | { type: 'UI/SETTINGS/SET_DENOMINATION_KEY', data: { currencyCode: string, denominationKey: string } }
-  | { type: 'UI/SETTINGS/SET_MERCHANT_MODE', data: { merchantMode: boolean } }
   | { type: 'UI/SETTINGS/SET_MOST_RECENT_WALLETS', data: { mostRecentWallets: MostRecentWallet[] } }
-  | { type: 'UI/SETTINGS/SET_PIN_MODE', data: { pinMode: boolean } }
   | { type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN', data: string | void }
   | { type: 'UI/SETTINGS/SET_SETTINGS_LOCK', data: boolean }
   | { type: 'UI/SETTINGS/SET_WALLETS_SORT', data: { walletsSort: SortOption } }

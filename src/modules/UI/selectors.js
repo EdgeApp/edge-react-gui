@@ -5,7 +5,7 @@ import _ from 'lodash'
 
 import { formatNumber } from '../../locales/intl.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types/types.js'
+import type { GuiDenomination, GuiWallet } from '../../types/types.js'
 import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
 
@@ -39,17 +39,6 @@ export const getActiveWalletCurrencyInfos = (state: RootState) => {
     }
   }
   return currencyInfos
-}
-
-export const getTransactions = (state: RootState): TransactionListTx[] => {
-  const transactions = state.ui.scenes.transactionList.transactions
-  return transactions
-}
-
-export const getDenominations = (state: RootState, currencyCode: string) => {
-  const wallet = getSelectedWallet(state)
-  const denominations = Object.values(wallet.allDenominations[currencyCode])
-  return denominations
 }
 
 export const getDefaultDenomination = (state: RootState, currencyCode: string): EdgeDenomination => {

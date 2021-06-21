@@ -25,7 +25,6 @@ export type AccountInitPayload = {|
   activeWalletIds: string[],
   archivedWalletIds: string[],
   autoLogoutTimeInSeconds: number,
-  bluetoothMode: boolean,
   countryCode: string,
   currencyCode: string,
   customTokens: CustomTokenInfo[],
@@ -35,12 +34,10 @@ export type AccountInitPayload = {|
   denominationKeys: Array<{ currencyCode: string, denominationKey: string }>,
   developerModeOn: boolean,
   isAccountBalanceVisible: boolean,
-  merchantMode: boolean,
   mostRecentWallets: MostRecentWallet[],
   passwordRecoveryRemindersShown: PasswordReminderLevels,
   passwordReminder: PasswordReminderState,
   pinLoginEnabled: boolean,
-  pinMode: boolean,
   preferredSwapPluginId: string | void,
   spendingLimits: SpendingLimits,
   touchIdInfo: GuiTouchIdInfo,
@@ -51,7 +48,6 @@ export type AccountInitPayload = {|
 export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
   ...LOCAL_ACCOUNT_DEFAULTS,
-  pinMode: false,
   changesLocked: true,
   plugins: {
     allCurrencyInfos: [],
@@ -111,7 +107,7 @@ export type SettingsState = {
 
   account: ?Object,
   autoLogoutTimeInSeconds: number,
-  bluetoothMode: boolean,
+  bluetoothMode: boolean, // Never read or updated, but on disk
   changesLocked: any,
   customTokens: CustomTokenInfo[],
   defaultFiat: string,
@@ -120,9 +116,8 @@ export type SettingsState = {
   countryCode: string,
   isTouchSupported: boolean,
   loginStatus: boolean | null,
-  merchantMode: boolean,
+  merchantMode: boolean, // Never read or updated, but on disk
   preferredSwapPluginId: string | void,
-  pinMode: boolean,
   pinLoginEnabled: boolean,
   plugins: {
     [pluginId: string]: EdgeCurrencyInfo,
@@ -226,12 +221,9 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         autoLogoutTimeInSeconds,
         defaultFiat,
         defaultIsoFiat,
-        merchantMode,
         preferredSwapPluginId,
         countryCode,
         customTokens,
-        bluetoothMode,
-        pinMode,
         pinLoginEnabled,
         denominationKeys,
         customTokensSettings,
@@ -249,12 +241,9 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
         isTouchSupported: touchIdInfo ? touchIdInfo.isTouchSupported : false,
         defaultFiat,
         defaultIsoFiat,
-        merchantMode,
         preferredSwapPluginId: preferredSwapPluginId === '' ? undefined : preferredSwapPluginId,
         customTokens,
         countryCode,
-        bluetoothMode,
-        pinMode,
         pinLoginEnabled,
         isAccountBalanceVisible,
         walletsSort,
@@ -417,14 +406,6 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       return settings
     }
 
-    case 'UI/SETTINGS/SET_PIN_MODE': {
-      const { pinMode } = action.data
-      return {
-        ...state,
-        pinMode
-      }
-    }
-
     case 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME': {
       const { autoLogoutTimeInSeconds } = action.data
       return {
@@ -442,25 +423,9 @@ export const settingsLegacy = (state: SettingsState = initialState, action: Acti
       }
     }
 
-    case 'UI/SETTINGS/SET_MERCHANT_MODE': {
-      const { merchantMode } = action.data
-      return {
-        ...state,
-        merchantMode
-      }
-    }
-
     case 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN': {
       const pluginId = action.data
       return { ...state, preferredSwapPluginId: pluginId }
-    }
-
-    case 'UI/SETTINGS/SET_BLUETOOTH_MODE': {
-      const { bluetoothMode } = action.data
-      return {
-        ...state,
-        bluetoothMode
-      }
     }
 
     case 'UI/SETTINGS/SET_SETTINGS_LOCK': {
