@@ -1,9 +1,10 @@
 // @flow
 
-import isArray from 'lodash/isArray'
+import { type EdgeAccount } from 'edge-core-js'
 import React from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
+import { sprintf } from 'sprintf-js'
 
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import { WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
@@ -20,7 +21,8 @@ type Option = {
 }
 
 type StateProps = {
-  wallets: { [walletId: string]: GuiWallet }
+  wallets: { [walletId: string]: GuiWallet },
+  account: EdgeAccount
 }
 
 type Props = {
@@ -44,8 +46,14 @@ const icons = {
   viewXPub: 'eye'
 }
 
-const getWalletOptions = async (params: { walletId: string, walletName?: string, currencyCode?: string, isToken?: boolean }): Promise<Option[]> => {
-  const { currencyCode, isToken } = params
+const getWalletOptions = async (params: {
+  walletId: string,
+  walletName?: string,
+  currencyCode?: string,
+  isToken?: boolean,
+  account: EdgeAccount
+}): Promise<Option[]> => {
+  const { walletId, walletName, currencyCode, isToken, account } = params
 
   if (!currencyCode) {
     return [{ label: s.strings.string_get_raw_keys, value: 'getRawKeys' }]
@@ -57,10 +65,17 @@ const getWalletOptions = async (params: { walletId: string, walletName?: string,
 
   const result = []
 
+  const splittable = await account.listSplittableWalletTypes(walletId)
+
+  if (splittable.length > 0) {
+    const splitString = s.strings.string_split_wallet
+    result.push({ label: sprintf(splitString, walletName), value: 'split' })
+  }
+
   for (const option of WALLET_LIST_MENU) {
     const { currencyCodes, label, value } = option
 
-    if (isArray(currencyCodes) && !currencyCodes.includes(currencyCode)) continue
+    if (Array.isArray(currencyCodes) && !currencyCodes.includes(currencyCode)) continue
 
     result.push({ label, value })
   }
@@ -74,7 +89,7 @@ export function WalletListMenuModal(props: Props) {
 
   const dispatch = useDispatch()
 
-  const { wallets }: StateProps = useSelector(({ ui, core }) => ({ wallets: ui.wallets.byId }))
+  const { account, wallets }: StateProps = useSelector(({ ui, core }) => ({ account: core.account, wallets: ui.wallets.byId }))
 
   const theme = useTheme()
 
@@ -92,7 +107,7 @@ export function WalletListMenuModal(props: Props) {
   }
 
   useEffect(() => {
-    getWalletOptions({ walletId, walletName, currencyCode, isToken }).then(options => setOptions(options))
+    getWalletOptions({ walletId, walletName, currencyCode, isToken, account }).then(options => setOptions(options))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
