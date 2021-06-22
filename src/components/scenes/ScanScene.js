@@ -10,7 +10,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
-import { parseScannedUri, qrCodeScanned } from '../../actions/ScanActions'
+import { loginQrCodeScanned, parseScannedUri, qrCodeScanned } from '../../actions/ScanActions'
 import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -32,15 +32,17 @@ type StateProps = {
 
 type DispatchProps = {
   qrCodeScanned: (data: string) => void,
+  loginQrCodeScanned: (data: string) => void,
   parseScannedUri: (data: string, customErrorTitle: string, customErrorDescription: string) => Promise<void>,
   toggleEnableTorch: () => void,
   selectFromWalletForExchange: (walletId: string, currencyCode: string) => void,
-  data?: string
+  data?: 'sweepPrivateKey' | 'loginQR'
 }
 
 type Props = StateProps & DispatchProps
 
 export const SWEEP_PRIVATE_KEY = 'sweepPrivateKey'
+export const LOGIN_QR = 'loginQR'
 
 export class Scan extends React.Component<Props> {
   componentDidUpdate(prevProps: Props) {
@@ -100,8 +102,9 @@ export class Scan extends React.Component<Props> {
     Linking.openSettings()
   }
 
-  onBarCodeRead = (result: { data: string }) => {
-    return this.props.qrCodeScanned(result.data)
+  onBarCodeRead = ({ data: scannedData }: { data: string }) => {
+    const { data, loginQrCodeScanned, qrCodeScanned } = this.props
+    return data === LOGIN_QR ? loginQrCodeScanned(scannedData) : qrCodeScanned(scannedData)
   }
 
   renderCameraArea = () => {
@@ -240,6 +243,9 @@ export const ScanScene = connect(
   (dispatch: Dispatch): DispatchProps => ({
     qrCodeScanned(data) {
       dispatch(qrCodeScanned(data))
+    },
+    loginQrCodeScanned(data) {
+      dispatch(loginQrCodeScanned(data))
     },
     async parseScannedUri(data, customErrorTitle, customErrorDescription) {
       await dispatch(parseScannedUri(data, customErrorTitle, customErrorDescription))
