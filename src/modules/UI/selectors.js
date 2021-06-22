@@ -2,7 +2,6 @@
 
 import { bns } from 'biggystring'
 import { type EdgeCurrencyWallet, type EdgeDenomination } from 'edge-core-js'
-import _ from 'lodash'
 
 import { formatNumber } from '../../locales/intl.js'
 import { type RootState } from '../../types/reduxTypes.js'
@@ -48,7 +47,7 @@ export const getDefaultDenomination = (state: RootState, currencyCode: string): 
   const settings = state.ui.settings
   const currencySettings = settings[currencyCode]
   const defaultMultiplier = currencySettings.denomination
-  const denomination = _.find(currencySettings.denominations, denom => denom.multiplier === defaultMultiplier)
+  const denomination = currencySettings.denominations.find(denom => denom.multiplier === defaultMultiplier)
   if (!denomination) throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
   return denomination
 }
@@ -63,7 +62,7 @@ export const getExchangeDenomination = (state: RootState, currencyCode: string, 
       if (denomination.name === currencyCode) return denomination
     }
   } else {
-    const customToken = _.find(customTokens, item => item.currencyCode === currencyCode)
+    const customToken = customTokens.find(item => item.currencyCode === currencyCode)
     if (customToken && customToken.denomination && customToken.denomination[0]) {
       const denomination = customToken.denominations[0]
       return denomination
