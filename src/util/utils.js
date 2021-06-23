@@ -719,7 +719,7 @@ export const convertToFiatFee = (
   const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(cryptoFeeExchangeAmount))
   const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
   return {
-    amount: bns.toFixed(fiatFeeAmount.toString(), 2, 2),
+    amount: fiatFeeAmount ? fiatFeeAmount.toFixed(2).toString() : '',
     style: feeAmountInUSD > FEE_ALERT_THRESHOLD ? feeStyle.danger : feeAmountInUSD > FEE_COLOR_THRESHOLD ? feeStyle.warning : undefined
   }
 }
