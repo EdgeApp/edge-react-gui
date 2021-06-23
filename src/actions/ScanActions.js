@@ -100,7 +100,6 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       }
     }
   }
-
   // Check for things other than coins:
   try {
     const deepLink = parseDeepLink(data)
@@ -219,6 +218,20 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
         ),
       500
     )
+  }
+}
+
+export const loginQrCodeScanned = (data: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const isScanEnabled = state.ui.scenes.scan.scanEnabled
+
+  if (!isScanEnabled || !data) return
+
+  const deepLink = parseDeepLink(data)
+
+  if (deepLink.type === 'edgeLogin') {
+    dispatch({ type: 'DISABLE_SCAN' })
+    dispatch(launchDeepLink(deepLink))
   }
 }
 
