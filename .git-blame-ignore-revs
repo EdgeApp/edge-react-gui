@@ -1,0 +1,114 @@
+##
+# This file lists commits that perform bulk code-formatting operations.
+# This allows `git blame` to skip over these commits and give better results.
+#
+# To use this file, set the following configuation:
+#    git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# Running `yarn fix` should always happen in its own commit,
+# separate from any other changes, so git can skip those cleanly.
+# Tooling changes, such as upgrading prettier or changing options,
+# should happen in the commit right before running `yarn fix`.
+#
+# When adding commits to this file, always mention the date and
+# any tooling changes from the previous commit.
+# 
+# Verify all "yarn fix" commits are present in this file:
+#   git log --all -i --grep='yarn\sfix' --pretty=%H
+##
+
+# 2021-05-24
+8b0bc2bc945073f89b05f9b064b84f11af6299c3
+
+# 2020-12-17 (Upgrade all linting devDependencies)
+17372b17e0b91ee827e339f889a3ac19253a3c73
+
+# 2020-10-09 (Auto-format README.md)
+1739e9a175ee7d3c098316220c9740c9b425477b
+
+# 2020-09-17 (Prefer simpler array syntax)
+13b995842ad952740304372d174a733d65c03640
+
+# 2020-06-17
+99c56fb565b1886ad756aa296f3c0170602529fc
+
+# 2020-06-16
+a7ba8d46e6f2fc3041af03c0f30b4d09ace46f44
+
+# 2020-05-22 (Fix CHANGELOG formatting)
+53c3eecebe98d4919b7fc6533463eb5d528114c3
+
+# 2020-05-12 (Upgrade linting & formatting setup)
+da8a3a1eb5cb5aff987867631b47a36055aaae5a
+
+# 2020-04-23
+7bbc8c715947383a6240a5d17512b52dc42cb958
+
+# 2020-03-19
+d4f1aa426788a4eeda72ade28c7051b306dbd22b
+
+# 2019-09-24
+cabb8a16a40712a628d679fef12c974fa0038e31
+
+# 2019-08-16
+979a3718a91e41480a94fa36d16c9d0c1708b848
+
+# 2019-06-05
+1408efaeb3b0f614e0e0e4530c1f58a821114c64
+
+# 2018-12-10
+866e07155b8d29e024af90e9be3e3f8067e9eadd
+
+# 2018-12-10 (Fix formatting and linting errors)
+0d4419a53ea18d0269c8ee818adbebdf07820d5d
+
+# 2018-09-01
+793cb6ace86dcca1bf0d5017b9e2d6e8a25c65ed
+
+# 2018-08-24
+4f9e36ce1724641210f46693c06af12de888592d
+
+# 2018-08-13 (Add formatting precommit)
+60e8c02abe5f5622fd504e05faed020577be9a25
+
+# 2018-07-04
+ed4bb12518288942fb64a49f128333e8b6520b74
+
+# 2018-07-04
+e565e45f11ab845d90909e3729249079cf371cb4
+
+# 2018-06-06
+b463717de9bc6a89932801e49d8afda5c4122899
+
+# 2018-04-25
+e7f227315de65ce0cd91dbca5f08bebf19b8fc48
+
+# 2018-04-25 (Format flow annotations)
+2b878db46d2cbd584f3aa2b01bee586cccd6cb6c
+
+# 2018-04-23
+a97c67679989455aeb27275d3a4b81155485bc81
+
+# 2018-02-15
+5a6c8dff7cbedf3cc67d64b681ec43b0dadd08cf
+
+# 2018-02-14
+8f57918ec20765618baf933bc496d58180baa597
+
+# 2018-02-13 (Add the prettier tool to package.json)
+c990e091589dddfbf56c3bdbe166f25b22d53d00
+
+# 2018-02-06
+7f8d818cd77ff83f6ddfc05fd7a5d9f1dd63fad6
+
+# 2018-02-02 (Fix import formatting)
+c75b8d398c8d1a49735513db82436b05b92839d3
+
+# 2017-10-04
+a98cefcee7efba99c894f712aa89532b72c86471
+
+# 2017-09-21 (changed for format request from kevin)
+4709fb4c14aa2f1befbccbdb3036f9255e79348a
+
+# 2017-09-14
+6b42832f1198c661b7021b9807d28dbfea01d49c
