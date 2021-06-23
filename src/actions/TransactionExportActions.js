@@ -261,7 +261,8 @@ export function exportTransactionsToCSVInner(
       AMT_NETWORK_FEES_ASSET: networkFeeField,
       TXID: edgeTx.txid,
       OUR_RECEIVE_ADDRESSES: edgeTx.ourReceiveAddresses.join(','),
-      VER: 1
+      VER: 1,
+      DEVICE_DESCRIPTION: edgeTx.deviceDescription ?? ''
     })
   }
 
