@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
-import { WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
+import { EXCLUDE_SPLIT_WALLETS, WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
@@ -83,14 +83,26 @@ class WalletListMenuModalComponent extends PureComponent<Props> {
       const { currencyCodes, label, value } = option
       if (currencyCodes != null && !currencyCodes.includes(currencyCode)) continue
 
+      if (option.value === 'split' && this.checkSplitExclude()) continue
+
       const temp = { label, value }
+
       if (option.value === 'split') {
         const splitString = s.strings.string_split_wallet
         const currencyName = currencyCode === 'BTC' ? 'Bitcoin Cash' : 'Bitcoin SV'
         temp.label = sprintf(splitString, currencyName)
       }
+
       this.options.push(temp)
     }
+  }
+
+  checkSplitExclude() {
+    const { walletName } = this.props
+
+    if (!walletName) return false
+
+    return EXCLUDE_SPLIT_WALLETS.findIndex((item: string) => walletName.toLocaleLowerCase().indexOf(item.toLocaleLowerCase()) > -1) > -1
   }
 
   optionAction = (option: WalletListMenuKey) => {

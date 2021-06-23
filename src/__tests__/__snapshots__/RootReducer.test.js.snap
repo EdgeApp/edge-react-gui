@@ -93,7 +93,8 @@ Object {
   "ui": Object {
     "fio": Object {
       "connectedWalletsByFioAddress": Object {},
-      "needToCheckExpired": false,
+      "expiredChecking": Object {},
+      "expiredLastChecks": Object {},
     },
     "passwordReminder": Object {
       "lastLoginDate": -Infinity,
@@ -616,7 +617,6 @@ Object {
         "passwordUseCount": 0,
       },
       "pinLoginEnabled": false,
-      "pinMode": false,
       "plugins": Object {
         "allCurrencyInfos": Array [],
         "supportedWalletTypes": Array [],

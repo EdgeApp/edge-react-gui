@@ -9,7 +9,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SecondaryButton } from '../themed/ThemedButtons'
 
@@ -94,13 +94,13 @@ export class CreateWalletName extends React.Component<Props, State> {
           onFocus={this.handleOnFocus}
           onBlur={this.handleOnBlur}
           label={s.strings.fragment_wallets_addwallet_name_hint}
-          small
+          size="small"
           onClear={this.clearText}
           isClearable={this.state.isFocused}
           marginRem={[0, 1.75]}
           ref={this.textInput}
           blurOnSubmit
-          hideSearchIcon
+          showSearchIcon={false}
         />
         <SecondaryButton onPress={this.onNext} label={s.strings.string_next_capitalized} marginRem={[3, 6]} />
       </SceneWrapper>

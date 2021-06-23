@@ -4685,10 +4685,10 @@ edge-components@^0.0.31:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.18.0:
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.0.tgz#d61e9f2dfd3c44c116aee4db5082b64276747f22"
-  integrity sha512-CQeuKhrOGVemhRokZ/ZNjK1uHt0BgOAb49su/j3ymMBbB6jDf+bNSKSYJPmICA+ZZw8BpVapRw6SeuxxI9WB1A==
+edge-core-js@^0.18.2:
+  version "0.18.2"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.2.tgz#665c5aef040e21167db767663af162f2e9123df0"
+  integrity sha512-gQ6YZMCgpCNrEsiSWNY9su2w9rst5b9g/YqtfS8GfKGIHPkItcCyQsYbyOSwetU5SNjwfwLA1Buriab3f5PZ8w==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -4710,10 +4710,10 @@ edge-core-js@^0.18.0:
     yaob "^0.3.7"
     yavent "^0.1.1"
 
-edge-currency-accountbased@^0.7.62:
-  version "0.7.62"
-  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.62.tgz#7441c1950e660365c45b82e87925884aad0d8520"
-  integrity sha512-cUMhzXqZ9LCclwXAGZt2I7K2p0zcBXXxWDG/X9Ul+fulLVCA2R5wCA9Rb7Da38OcheB0V/pNExXSH0MCCrFjVg==
+edge-currency-accountbased@^0.7.63:
+  version "0.7.63"
+  resolved "https://registry.yarnpkg.com/edge-currency-accountbased/-/edge-currency-accountbased-0.7.63.tgz#13a766225f46f697cf4faae1abec4c0a66e0f927"
+  integrity sha512-jjRPxQvIvUo0JnrOt06akChYZ6hFKlk73CtEAk10zaUE1g5pLnPuTYx1vfw8PnrsmvQwRWSjssnVVw+Ibz7iKA==
   dependencies:
     "@binance-chain/javascript-sdk" "^2.14.4"
     "@fioprotocol/fiosdk" "^1.2.1"
@@ -4784,10 +4784,10 @@ edge-exchange-plugins@^0.11.28:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.9.7:
-  version "0.9.7"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.7.tgz#afea75840f124ca068c28258d1e1862f1fca2190"
-  integrity sha512-ZvKGeG5R7EVcg82i4U0GlHiUNS1RNGeZ6IRJyUekRcfxC7djTb3oXkc6b8XQe3FbwAve4G/IqhWa4fvmVcVHqg==
+edge-login-ui-rn@^0.9.8:
+  version "0.9.8"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.8.tgz#68931f2ca22438a45127eed943b55c845c8332b7"
+  integrity sha512-ioxTHaBW7VXk1viiS/pZ1sFfc6Wjwxe06E8eoBXT0ADwULCZJWCD9VA+bDaa59wlBK9DLLzFkXX5F+j8vmkqxQ==
   dependencies:
     cleaners "^0.3.1"
     qrcode-generator "^1.4.4"
@@ -9944,7 +9944,7 @@ prompts@^2.0.1, prompts@^2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.5.10, prop-types@^15.5.6, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -10441,13 +10441,6 @@ react-native-share@^5.1.4:
   version "5.1.4"
   resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-5.1.4.tgz#0b9d51f6ca724728cb0c5b3ed3a883ee54d7a11b"
   integrity sha512-/eNBTuimOmzeeBbnZkwW6hbzSZvJnhfkx5cSdQkFS45KRHekD9twP6F8QHn+zJxeJGAP+EgpVCXoA7yCrgKrhQ==
-
-react-native-slider@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/react-native-slider/-/react-native-slider-0.11.0.tgz#b68a0bc43c8422b24cd57947cc5ac2bcdb58fadc"
-  integrity sha512-jV9K87eu9uWr0uJIyrSpBLnCKvVlOySC2wynq9TFCdV9oGgjt7Niq8Q1A8R8v+5GHsuBw/s8vEj1AAkkUi+u+w==
-  dependencies:
-    prop-types "^15.5.6"
 
 "react-native-smart-splash-screen@git://github.com/swansontec/react-native-smart-splash-screen#fix-rn59":
   version "2.3.5"

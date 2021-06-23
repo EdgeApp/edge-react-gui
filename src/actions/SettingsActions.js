@@ -32,19 +32,6 @@ export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getSta
   })
 }
 
-export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  ACCOUNT_SETTINGS.setPINModeRequest(account, pinMode)
-    .then(() =>
-      dispatch({
-        type: 'UI/SETTINGS/SET_PIN_MODE',
-        data: { pinMode }
-      })
-    )
-    .catch(showError)
-}
-
 export const setAutoLogoutTimeInSecondsRequest = (autoLogoutTimeInSeconds: number) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
@@ -103,19 +90,6 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
     .catch(showError)
 }
 
-export const setMerchantModeRequest = (merchantMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  ACCOUNT_SETTINGS.setMerchantModeRequest(account, merchantMode)
-    .then(() =>
-      dispatch({
-        type: 'UI/SETTINGS/SET_MERCHANT_MODE',
-        data: { merchantMode }
-      })
-    )
-    .catch(showError)
-}
-
 export const setPreferredSwapPluginId = (pluginId: string | void) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
@@ -124,19 +98,6 @@ export const setPreferredSwapPluginId = (pluginId: string | void) => (dispatch: 
       dispatch({
         type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN',
         data: pluginId
-      })
-    )
-    .catch(showError)
-}
-
-export const setBluetoothModeRequest = (bluetoothMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  ACCOUNT_SETTINGS.setBluetoothModeRequest(account, bluetoothMode)
-    .then(() =>
-      dispatch({
-        type: 'UI/SETTINGS/SET_BLUETOOTH_MODE',
-        data: { bluetoothMode }
       })
     )
     .catch(showError)

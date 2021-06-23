@@ -1,18 +1,14 @@
 // @flow
 import type { EdgeCurrencyWallet } from 'edge-core-js'
-import React from 'react'
-import { Actions } from 'react-native-router-flux'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions'
-import { FioExpiredModal } from '../../components/modals/FioExpiredModal'
-import { Airship } from '../../components/services/AirshipInstance'
+import { checkExpiredFioNames } from '../../actions/FioActions'
 import * as Constants from '../../constants/indexConstants'
-import { FIO_ADDRESS_DELIMITER } from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import type { Dispatch, GetState } from '../../types/reduxTypes'
 import type { FioAddress, FioDomain } from '../../types/types'
 import { getDefaultIsoFiat } from '../Settings/selectors'
-import { findWalletByFioAddress, getExpiredSoonFioNames, refreshConnectedWalletsForFioAddress } from './util'
+import { findWalletByFioAddress, refreshConnectedWalletsForFioAddress } from './util'
 
 export const createFioWallet =
   () =>
@@ -22,14 +18,15 @@ export const createFioWallet =
   }
 
 export const refreshAllFioAddresses =
-  (checkExpired: boolean = false) =>
+  (checkExpiredWallets: EdgeCurrencyWallet[] = []) =>
   async (dispatch: Dispatch, getState: GetState) => {
     dispatch({
       type: 'FIO/SET_FIO_ADDRESSES_PROGRESS'
     })
     const state = getState()
     const { currencyWallets } = state.core.account
-    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
+    const fioWallets: EdgeCurrencyWallet[] = checkExpiredWallets.length !== 0 ? checkExpiredWallets : state.ui.wallets.fioWallets
+    const fioWalletsById: { [string]: EdgeCurrencyWallet } = {}
     let fioAddresses: FioAddress[] = []
     let fioDomains: FioDomain[] = []
 
@@ -40,6 +37,7 @@ export const refreshAllFioAddresses =
         fioAddresses = [...fioAddresses, ...walletFioAddresses.map(({ name, expiration }) => ({ name, expiration, walletId }))]
         const walletFioDomains = await wallet.otherMethods.getFioDomains()
         fioDomains = [...fioDomains, ...walletFioDomains.map(({ name, expiration, isPublic }) => ({ name, expiration, isPublic, walletId }))]
+        fioWalletsById[walletId] = wallet
       }
     }
 
@@ -53,6 +51,8 @@ export const refreshAllFioAddresses =
         data: { fioDomains }
       })
     })
+
+    if (checkExpiredWallets.length !== 0) return dispatch(checkExpiredFioNames([...fioAddresses, ...fioDomains], fioWalletsById))
 
     const { connectedWalletsByFioAddress } = state.ui.fio
     const wallets = Object.keys(currencyWallets).map(walletKey => currencyWallets[walletKey])
@@ -68,39 +68,6 @@ export const refreshAllFioAddresses =
             ccWalletMap
           }
         })
-      }
-    }
-
-    if (checkExpired) {
-      const expired: Array<FioAddress | FioDomain> = getExpiredSoonFioNames(fioAddresses, fioDomains)
-
-      for (const item: FioAddress | FioDomain of expired) {
-        const fioWallet: EdgeCurrencyWallet | void = fioWallets.find((walletItem: EdgeCurrencyWallet) => walletItem.id === item.walletId)
-        if (!fioWallet) continue
-
-        const isAddress = item.name.indexOf(FIO_ADDRESS_DELIMITER) > 0
-
-        const answer = await Airship.show(bridge => <FioExpiredModal bridge={bridge} fioName={item.name} isAddress={isAddress} />)
-
-        if (answer) {
-          if (isAddress) {
-            Actions[Constants.FIO_ADDRESS_SETTINGS]({
-              showRenew: true,
-              fioWallet,
-              fioAddressName: item.name,
-              expiration: item.expiration
-            })
-            continue
-          }
-
-          Actions[Constants.FIO_DOMAIN_SETTINGS]({
-            showRenew: true,
-            fioWallet,
-            fioDomainName: item.name,
-            isPublic: item.isPublic || false,
-            expiration: item.expiration
-          })
-        }
       }
     }
   }

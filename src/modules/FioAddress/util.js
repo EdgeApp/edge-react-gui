@@ -103,19 +103,17 @@ const setConnectedWalletsFromFile = async (fioWallet: EdgeCurrencyWallet, fioAdd
   }
 }
 
-const getFioExpiredCheckFromDislket = async (disklet: Disklet): Promise<Date> => {
+export const getFioExpiredCheckFromDisklet = async (disklet: Disklet): Promise<{ [walletId: string]: Date }> => {
   try {
-    const { lastCheck } = JSON.parse(await disklet.getText(FIO_EXPIRED_CHECK))
-    return new Date(lastCheck)
+    const lastChecks = JSON.parse(await disklet.getText(FIO_EXPIRED_CHECK))
+    return Object.keys(lastChecks).reduce((checkDates, walletId) => ({ ...checkDates, [walletId]: new Date(lastChecks[walletId]) }), {})
   } catch (error) {
-    const defaultDate = new Date()
-    defaultDate.setMonth(new Date().getMonth() - 1)
-    return defaultDate
+    return {}
   }
 }
-const setFioExpiredCheckToDislket = async (lastCheck: Date, disklet: Disklet): Promise<void> => {
+export const setFioExpiredCheckToDisklet = async (lastChecks: { [walletId: string]: Date }, disklet: Disklet): Promise<void> => {
   try {
-    await disklet.setText(FIO_EXPIRED_CHECK, JSON.stringify({ lastCheck }))
+    await disklet.setText(FIO_EXPIRED_CHECK, JSON.stringify(lastChecks))
   } catch (error) {
     console.log(error)
   }
@@ -832,22 +830,23 @@ export const expiredSoon = (expDate: string): boolean => {
   return new Date(expDate).getTime() - new Date().getTime() < MONTH
 }
 
-export const needToCheckExpired = async (disklet: Disklet): Promise<boolean> => {
+export const needToCheckExpired = (lastChecks: { [walletId: string]: Date }, walletId: string): boolean => {
   try {
-    const lastCheck = await getFioExpiredCheckFromDislket(disklet)
-    const now = new Date()
-    if (now.getMonth() !== lastCheck.getMonth() || now.getFullYear() !== lastCheck.getFullYear()) {
-      setFioExpiredCheckToDislket(new Date(), disklet)
-      return true
+    let lastCheck = lastChecks[walletId]
+    if (!lastCheck) {
+      lastCheck = new Date()
+      lastCheck.setMonth(new Date().getMonth() - 1)
     }
+    const now = new Date()
+    return now.getMonth() !== lastCheck.getMonth() || now.getFullYear() !== lastCheck.getFullYear()
   } catch (e) {
     //
   }
   return false
 }
-export const getExpiredSoonFioNames = (fioAddresses: FioAddress[], fioDomains: FioDomain[]): Array<FioAddress | FioDomain> => {
+export const getExpiredSoonFioNames = (fioNames: Array<FioAddress | FioDomain>): Array<FioAddress | FioDomain> => {
   const expiredFioNames: Array<FioAddress | FioDomain> = []
-  for (const fioName of [...fioAddresses, ...fioDomains]) {
+  for (const fioName of fioNames) {
     if (expiredSoon(fioName.expiration)) {
       expiredFioNames.push(fioName)
     }

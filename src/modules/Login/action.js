@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { loadAccountReferral, refreshAccountReferral } from '../../actions/AccountReferralActions.js'
-import { needToCheckExpiredFioNames } from '../../actions/FioActions.js'
+import { expiredFioNamesCheckDates } from '../../actions/FioActions.js'
 import { trackAccountEvent } from '../../actions/TrackingActions.js'
 import { checkEnabledTokensArray, getEnabledTokens, setWalletEnabledTokens } from '../../actions/WalletActions.js'
 import { showError } from '../../components/services/AirshipInstance.js'
@@ -74,7 +74,6 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     activeWalletIds: [],
     archivedWalletIds: [],
     autoLogoutTimeInSeconds: 3600,
-    bluetoothMode: false,
     countryCode: '',
     currencyCode: '',
     customTokens: [],
@@ -84,12 +83,10 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     denominationKeys: [],
     developerModeOn: false,
     isAccountBalanceVisible: false,
-    merchantMode: false,
     mostRecentWallets: [],
     passwordRecoveryRemindersShown: PASSWORD_RECOVERY_REMINDERS_SHOWN,
     passwordReminder: passwordReminderInitialState,
     pinLoginEnabled: false,
-    pinMode: false,
     preferredSwapPluginId: undefined,
     spendingLimits: { transaction: { isEnabled: false, amount: 0 } },
     touchIdInfo,
@@ -178,7 +175,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
       dispatch(loadAccountReferral(account)).then(() => dispatch(refreshAccountReferral()))
     }
 
-    dispatch(needToCheckExpiredFioNames())
+    dispatch(expiredFioNamesCheckDates())
     await updateWalletsRequest()(dispatch, getState)
     for (const wId of activeWalletIds) {
       await getEnabledTokens(wId)(dispatch, getState)

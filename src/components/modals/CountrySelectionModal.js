@@ -8,7 +8,7 @@ import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { CountryData } from '../../types/types'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ThemedModal } from '../themed/ThemedModal'
@@ -117,7 +117,7 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
           autoCorrect={false}
           autoCapitalize="words"
           returnKeyType="search"
-          small
+          size="small"
           onClear={this.clearText}
           isClearable={isFocused}
           marginRem={[0, 1.75]}

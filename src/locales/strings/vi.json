@@ -19,7 +19,6 @@
   "select_exchange_amount_short": "Nhập một số tiền",
   "exchanges_may_take_minutes": "Trao đổi có thể mất vài phút để xử lý. Vui lòng kiểm tra địa chỉ bạn gửi tiền của sau một vài phút",
   "fragment_wallets_addwallet_fiat_hint": "Chọn một loại tiền tệ fiat",
-  "managetokens_top_instructions": "Hãy lựa chọn thẻ mà bạn muốn hiển thị trong ví:",
   "manage_tokens_duplicate_currency_code": "Một thẻ với mã tiền tệ đã tồn tại.",
   "addtoken_top_instructions": "Để thêm một mã thông báo, xin vui lòng điền vào mẫu dưới đây và bấm \"Lưu\" ",
   "accept_button_text": "Đồng ý",

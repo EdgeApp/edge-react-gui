@@ -114,5 +114,37 @@
       "multiplier": "10000000000000000000000000000000000000000000000000",
       "walletType": "wallet:ethereum"
     }]
+  },
+  "zerosAfterDecimal": {
+    "title": "Zeros after decimal place of",
+    "input": ["0.00036270", "128372", "12392.0123", "123.456"],
+    "output": [3, 0, 1, 0]
+  },
+  "roundUpToLeastSignificant": {
+    "title": "Rounded up to least significant digit of",
+    "input": ["123.4567", "0.0001239", "123"],
+    "output": ["123.4568", "0.000124", "123"]
+  },
+  "roundedFee": {
+    "title": "Truncate and rounded up to least significant digit of",
+    "input": [{
+      "amount": "1234567",
+      "decimalPlacesBeyondLeadingZeros": 2,
+      "multiplier": "1000000000000"
+    },
+    {
+      "amount": "548735948753",
+      "decimalPlacesBeyondLeadingZeros": 4,
+      "multiplier": "1000"
+    }, {
+      "amount": "92837289000037373",
+      "decimalPlacesBeyondLeadingZeros": 1,
+      "multiplier": "1000000000000000000"
+    }, {
+      "amount": "",
+      "decimalPlacesBeyondLeadingZeros": 12,
+      "multiplier": "1000000000"
+    }],
+    "output": ["0.0000013 ", "548735948.753 ", "0.1 ", ""]
   }
 }

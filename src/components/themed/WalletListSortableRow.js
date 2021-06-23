@@ -8,12 +8,11 @@ import { connect } from 'react-redux'
 
 import { formatNumberInput } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { type ExchangeRatesState } from '../../modules/ExchangeRates/reducer.js'
 import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
 import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import { type GuiWallet } from '../../types/types.js'
+import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
@@ -26,7 +25,7 @@ type OwnProps = {
 }
 
 type StateProps = {
-  exchangeRates: ExchangeRatesState,
+  exchangeRates: GuiExchangeRates,
   showBalance: boolean,
   settings: SettingsState,
   walletFiatSymbol: string | null

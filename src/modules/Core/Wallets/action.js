@@ -3,7 +3,8 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 
-import { checkExpiredFioNames, refreshConnectedWallets } from '../../../actions/FioActions'
+import { refreshConnectedWallets } from '../../../actions/FioActions'
+import { getEnabledTokens } from '../../../actions/WalletActions.js'
 import type { Dispatch, GetState } from '../../../types/reduxTypes.js'
 import { getReceiveAddresses } from '../../../util/utils.js'
 import { registerNotifications } from '../../Notifications/action'
@@ -17,20 +18,25 @@ export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: G
     dispatch(registerNotifications())
   }
 
-  return getReceiveAddresses(currencyWallets).then(receiveAddresses => {
-    dispatch({
-      type: 'CORE/WALLETS/UPDATE_WALLETS',
-      data: {
-        activeWalletIds,
-        archivedWalletIds,
-        currencyWallets,
-        receiveAddresses
-      }
-    })
-    refreshConnectedWallets(dispatch, getState, currencyWallets)
-    dispatch(checkExpiredFioNames())
-    return updateWalletsEnabledTokens(getState)
+  const incomingWalletIds = activeWalletIds.filter(id => state.ui.wallets.byId[id] == null)
+  const receiveAddresses = await getReceiveAddresses(currencyWallets)
+
+  dispatch({
+    type: 'CORE/WALLETS/UPDATE_WALLETS',
+    data: {
+      activeWalletIds,
+      archivedWalletIds,
+      currencyWallets,
+      receiveAddresses
+    }
   })
+  const newState = getState()
+  for (const walletId of incomingWalletIds) {
+    if (newState.ui.wallets.byId[walletId] == null) continue
+    await getEnabledTokens(walletId)(dispatch, getState)
+  }
+  refreshConnectedWallets(dispatch, getState, currencyWallets)
+  updateWalletsEnabledTokens(getState)
 }
 
 export const updateWalletsEnabledTokens = (getState: GetState) => {
