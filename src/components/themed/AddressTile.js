@@ -123,7 +123,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
       // Missing isPrivateKeyUri Modal
 
       if (isPaymentProtocolUri(parsedUri)) {
-        const guiMakeSpendInfo: GuiMakeSpendInfo = paymentProtocolUriReceived(parsedUri, coreWallet)
+        const guiMakeSpendInfo: ?GuiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, coreWallet)
 
         if (guiMakeSpendInfo) {
           onChangeAddress(guiMakeSpendInfo)
