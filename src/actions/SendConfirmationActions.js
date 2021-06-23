@@ -87,12 +87,14 @@ export const sendConfirmationUpdateTx =
         console.log(error)
         const insufficientFunds = asMaybeInsufficientFundsError(error)
         if (insufficientFunds != null && insufficientFunds.currencyCode != null && spendInfo.currencyCode !== insufficientFunds.currencyCode) {
-          const { currencyCode } = insufficientFunds
+          const { currencyCode, networkFee = '' } = insufficientFunds
+          const multiplier = settingsGetExchangeDenomination(state, currencyCode).multiplier
+          const amountString = UTILS.roundedFee(networkFee, 2, multiplier)
           const result = await Airship.show(bridge => (
             <ButtonsModal
               bridge={bridge}
               title={s.strings.buy_crypto_modal_title}
-              message={sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}
+              message={`${amountString}${sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}`}
               buttons={{
                 buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
                 exchange: { label: s.strings.buy_crypto_modal_exchange },
