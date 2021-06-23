@@ -20,7 +20,7 @@ export const showDeleteWalletModal = (walletId: string, additionalMsg?: string) 
       bridge={bridge}
       title={s.strings.fragment_wallets_delete_wallet}
       buttons={{
-        confirm: { label: s.strings.string_delete },
+        confirm: { label: s.strings.string_archive },
         cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
       }}
     >

@@ -517,7 +517,7 @@ export const WALLET_LIST_MENU: Array<{
     value: 'getRawKeys'
   },
   {
-    label: s.strings.string_delete_wallet,
+    label: s.strings.string_archive_wallet,
     value: 'delete'
   }
 ]
