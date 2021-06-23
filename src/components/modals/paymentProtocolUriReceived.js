@@ -19,11 +19,14 @@ const BITPAY = {
   }
 }
 
-export const paymentProtocolUriReceived = async ({ paymentProtocolUrl }: EdgeParsedUri, coreWallet: EdgeCurrencyWallet): Promise<GuiMakeSpendInfo | void> => {
+export const paymentProtocolUriReceived = async (
+  { paymentProtocolURL }: EdgeParsedUri & { paymentProtocolURL?: string },
+  coreWallet: EdgeCurrencyWallet
+): Promise<GuiMakeSpendInfo | void> => {
   try {
-    if (!paymentProtocolUrl) throw new Error('no paymentProtocolUrl prop')
+    if (!paymentProtocolURL) throw new Error('no paymentProtocolUrl prop')
 
-    const paymentProtocolInfo = await coreWallet.getPaymentProtocolInfo(paymentProtocolUrl)
+    const paymentProtocolInfo = await coreWallet.getPaymentProtocolInfo(paymentProtocolURL)
     const { domain, memo, nativeAmount, spendTargets } = paymentProtocolInfo
     const name = domain === BITPAY.domain ? BITPAY.merchantName(memo) : domain
 
@@ -39,6 +42,7 @@ export const paymentProtocolUriReceived = async ({ paymentProtocolUrl }: EdgePar
       otherParams: { paymentProtocolInfo }
     }
   } catch (error) {
+    console.log('error', error)
     await Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
