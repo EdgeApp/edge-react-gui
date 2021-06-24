@@ -15,7 +15,7 @@ export type FioState = {
   connectedWalletsByFioAddress: {
     [fioAddress: string]: CcWalletMap
   },
-  expiredLastChecks: { [walletId: string]: Date }
+  expiredLastChecks: { [fioName: string]: Date }
 }
 
 const initialState: FioState = {
