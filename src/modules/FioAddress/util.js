@@ -854,3 +854,24 @@ export const getExpiredSoonFioNames = (fioNames: Array<FioAddress | FioDomain>):
 
   return expiredFioNames
 }
+
+export const refreshFioNames = async (
+  fioWallets: EdgeCurrencyWallet[]
+): Promise<{ fioAddresses: FioAddress[], fioDomains: FioDomain[], fioWalletsById: { string: EdgeCurrencyWallet } }> => {
+  const fioWalletsById: { [string]: EdgeCurrencyWallet } = {}
+  let fioAddresses: FioAddress[] = []
+  let fioDomains: FioDomain[] = []
+
+  if (fioWallets != null) {
+    for (const wallet of fioWallets) {
+      const walletId = wallet.id
+      const walletFioAddresses = await wallet.otherMethods.getFioAddresses()
+      fioAddresses = [...fioAddresses, ...walletFioAddresses.map(({ name, expiration }) => ({ name, expiration, walletId }))]
+      const walletFioDomains = await wallet.otherMethods.getFioDomains()
+      fioDomains = [...fioDomains, ...walletFioDomains.map(({ name, expiration, isPublic }) => ({ name, expiration, isPublic, walletId }))]
+      fioWalletsById[walletId] = wallet
+    }
+  }
+
+  return { fioAddresses, fioDomains, fioWalletsById }
+}
