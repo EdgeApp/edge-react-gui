@@ -130,7 +130,7 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
     hintLeftMargin
   } = getSizeStyles(theme, size, showSearchIcon)
 
-  const errorState = useCallback(() => error !== null && error !== undefined, [error])
+  const errorState = useCallback(() => error !== null && error !== undefined && error !== '', [error])
 
   const handleFocus = () => {
     placeholderMap.value = withTiming(ANIMATION_STATES.FOCUSED)
