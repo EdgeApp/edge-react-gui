@@ -163,3 +163,29 @@ export const checkExpiredFioNames = (fioWallets: EdgeCurrencyWallet[]) => async 
     setFioExpiredCheckToDisklet(expiredLastChecks, state.core.disklet)
   }
 }
+
+/* eslint-disable */
+const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioName: FioAddress | FioDomain) => {
+  const isAddress = fioName.name.indexOf(FIO_ADDRESS_DELIMITER) > 0
+  const answer = await Airship.show(bridge => <FioExpiredModal bridge={bridge} fioName={fioName.name} isAddress={isAddress} />)
+
+  if (answer) {
+    if (isAddress) {
+      Actions[Constants.FIO_ADDRESS_SETTINGS]({
+        showRenew: true,
+        fioWallet,
+        fioAddressName: fioName.name,
+        expiration: fioName.expiration
+      })
+      return
+    }
+
+    Actions[Constants.FIO_DOMAIN_SETTINGS]({
+      showRenew: true,
+      fioWallet,
+      fioDomainName: fioName.name,
+      isPublic: fioName.isPublic || false,
+      expiration: fioName.expiration
+    })
+  }
+}
