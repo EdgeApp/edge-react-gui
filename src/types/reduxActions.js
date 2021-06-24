@@ -83,6 +83,7 @@ type NoDataActionName =
   | 'UNIQUE_IDENTIFIER_MODAL/RESET'
   | 'USE_LEGACY_REQUEST_ADDRESS'
   | 'USE_REGULAR_REQUEST_ADDRESS'
+  | 'FIO/EXPIRED_REMINDER_SHOWN'
 
 export type Action =
   | { type: NoDataActionName }
@@ -246,4 +247,6 @@ export type Action =
   | { type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS', data: { fioAddress: string, ccWalletMap: CcWalletMap } }
   | { type: 'FIO/SET_OBT_DATA', data: FioObtRecord[] }
   | { type: 'FIO/SET_FIO_DOMAINS', data: { fioDomains: FioDomain[] } }
-  | { type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: { [walletId: string]: Date } }
+  | { type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: { [fioName: string]: Date } }
+  | { type: 'FIO/CHECKING_EXPIRED', data: boolean }
+  | { type: 'FIO/WALLETS_CHECKED_FOR_EXPIRED', data: { [walletId: string]: boolean } }
