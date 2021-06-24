@@ -15,14 +15,12 @@ export type FioState = {
   connectedWalletsByFioAddress: {
     [fioAddress: string]: CcWalletMap
   },
-  expiredLastChecks: { [walletId: string]: Date },
-  expiredChecking: { [walletId: string]: boolean }
+  expiredLastChecks: { [walletId: string]: Date }
 }
 
 const initialState: FioState = {
   connectedWalletsByFioAddress: {},
-  expiredLastChecks: {},
-  expiredChecking: {}
+  expiredLastChecks: {}
 }
 
 export const fio: Reducer<FioState, Action> = (state = initialState, action: Action) => {
@@ -44,12 +42,6 @@ export const fio: Reducer<FioState, Action> = (state = initialState, action: Act
       return {
         ...state,
         expiredLastChecks: action.data
-      }
-    }
-    case 'FIO/CHECKING_EXPIRED': {
-      return {
-        ...state,
-        expiredChecking: { ...state.expiredChecking, ...action.data }
       }
     }
     default:
