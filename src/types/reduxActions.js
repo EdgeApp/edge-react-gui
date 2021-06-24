@@ -247,4 +247,3 @@ export type Action =
   | { type: 'FIO/SET_OBT_DATA', data: FioObtRecord[] }
   | { type: 'FIO/SET_FIO_DOMAINS', data: { fioDomains: FioDomain[] } }
   | { type: 'FIO/SET_LAST_EXPIRED_CHECKS', data: { [walletId: string]: Date } }
-  | { type: 'FIO/CHECKING_EXPIRED', data: { [walletId: string]: boolean } }
