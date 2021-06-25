@@ -103,15 +103,15 @@ const setConnectedWalletsFromFile = async (fioWallet: EdgeCurrencyWallet, fioAdd
   }
 }
 
-export const getFioExpiredCheckFromDisklet = async (disklet: Disklet): Promise<{ [walletId: string]: Date }> => {
+export const getFioExpiredCheckFromDisklet = async (disklet: Disklet): Promise<{ [fioName: string]: Date }> => {
   try {
     const lastChecks = JSON.parse(await disklet.getText(FIO_EXPIRED_CHECK))
-    return Object.keys(lastChecks).reduce((checkDates, walletId) => ({ ...checkDates, [walletId]: new Date(lastChecks[walletId]) }), {})
+    return Object.keys(lastChecks).reduce((checkDates, fioName) => ({ ...checkDates, [fioName]: new Date(lastChecks[fioName]) }), {})
   } catch (error) {
     return {}
   }
 }
-export const setFioExpiredCheckToDisklet = async (lastChecks: { [walletId: string]: Date }, disklet: Disklet): Promise<void> => {
+export const setFioExpiredCheckToDisklet = async (lastChecks: { [fioName: string]: Date }, disklet: Disklet): Promise<void> => {
   try {
     await disklet.setText(FIO_EXPIRED_CHECK, JSON.stringify(lastChecks))
   } catch (error) {
@@ -830,9 +830,9 @@ export const expiredSoon = (expDate: string): boolean => {
   return new Date(expDate).getTime() - new Date().getTime() < MONTH
 }
 
-export const needToCheckExpired = (lastChecks: { [walletId: string]: Date }, walletId: string): boolean => {
+export const needToCheckExpired = (lastChecks: { [fioName: string]: Date }, fioName: string): boolean => {
   try {
-    let lastCheck = lastChecks[walletId]
+    let lastCheck = lastChecks[fioName]
     if (!lastCheck) {
       lastCheck = new Date()
       lastCheck.setMonth(new Date().getMonth() - 1)
