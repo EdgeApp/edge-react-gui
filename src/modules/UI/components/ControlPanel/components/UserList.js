@@ -9,7 +9,7 @@ import { sprintf } from 'sprintf-js'
 
 import { showError } from '../../../../../components/services/AirshipInstance.js'
 import s from '../../../../../locales/strings'
-import T from '../../../components/FormattedText/FormattedText.ui.js'
+import T from '../../FormattedText/FormattedText.ui.js'
 import styles from '../style'
 
 type Props = {

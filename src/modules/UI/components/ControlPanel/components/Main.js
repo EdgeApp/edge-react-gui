@@ -6,19 +6,14 @@ import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import { sprintf } from 'sprintf-js'
 
-import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
-import exchangeIcon from '../../../../../assets/images/sidenav/exchange.png'
 import fioAddressIcon from '../../../../../assets/images/sidenav/fioaddress.png'
 import fioRequestsIcon from '../../../../../assets/images/sidenav/fiorequests.png'
 import logoutImage from '../../../../../assets/images/sidenav/logout.png'
-import receiveIcon from '../../../../../assets/images/sidenav/receive.png'
 import scanIcon from '../../../../../assets/images/sidenav/scan.png'
-import sellIcon from '../../../../../assets/images/sidenav/sell.png'
 import settings from '../../../../../assets/images/sidenav/settings.png'
 import shareIcon from '../../../../../assets/images/sidenav/share.png'
 import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
-import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import { type WalletListResult, WalletListModal } from '../../../../../components/modals/WalletListModal.js'
 import { SWEEP_PRIVATE_KEY } from '../../../../../components/scenes/ScanScene'
 import { Airship } from '../../../../../components/services/AirshipInstance.js'
@@ -48,38 +43,17 @@ export default class Main extends React.Component<Props> {
         <ScrollView>
           <View>
             <View>
-              <Separator />
-              <BuyButton />
-              <Separator />
-              <SellButton />
-              <Separator />
-              <ExchangeButton />
-              <Separator />
               <FioAddressButton />
-              <Separator />
               <FioRequestsButton />
-              <Separator />
-              <WalletsButton />
-              <Separator />
               <ScanButton />
-              <Separator />
               <SweepPrivateKeyButton onSelectWallet={onSelectWallet} />
-              <Separator />
-              <RequestButton />
-              <Separator />
               <TermsOfServiceButton />
-              <Separator />
               <ShareButton />
-              <Separator />
             </View>
           </View>
-        </ScrollView>
-        <View>
-          <Separator />
           <LogoutButton onPress={this.handleLogout} />
-          <Separator />
           <SettingsButton />
-        </View>
+        </ScrollView>
       </View>
     )
   }
@@ -99,69 +73,6 @@ const goToScene = (scene: string, sceneProps?: any) => {
   }
 
   drawerClose()
-}
-
-const popToPluginBuyScene = () => goToScene(Constants.PLUGIN_BUY)
-const BuyButton = () => {
-  return (
-    <Button onPress={popToPluginBuyScene}>
-      <Button.Row>
-        <Button.Row>
-          <Button.Left>
-            <Image source={buysellIcon} style={styles.iconImage} />
-          </Button.Left>
-
-          <Button.Center>
-            <Button.Text>
-              <Text>{s.strings.title_plugin_buy}</Text>
-            </Button.Text>
-          </Button.Center>
-        </Button.Row>
-      </Button.Row>
-    </Button>
-  )
-}
-
-const popToPluginSellScene = () => goToScene(Constants.PLUGIN_SELL)
-const SellButton = () => {
-  return (
-    <Button onPress={popToPluginSellScene}>
-      <Button.Row>
-        <Button.Row>
-          <Button.Left>
-            <Image source={sellIcon} style={styles.iconImage} />
-          </Button.Left>
-
-          <Button.Center>
-            <Button.Text>
-              <Text>{s.strings.title_plugin_sell}</Text>
-            </Button.Text>
-          </Button.Center>
-        </Button.Row>
-      </Button.Row>
-    </Button>
-  )
-}
-
-const popToWalletListScene = () => goToScene(Constants.WALLET_LIST_SCENE)
-const WalletsButton = () => {
-  return (
-    <Button onPress={popToWalletListScene}>
-      <Button.Row>
-        <Button.Row>
-          <Button.Left>
-            <Image source={walletIcon} style={styles.iconImage} />
-          </Button.Left>
-
-          <Button.Center>
-            <Button.Text>
-              <Text>{s.strings.drawer_wallets}</Text>
-            </Button.Text>
-          </Button.Center>
-        </Button.Row>
-      </Button.Row>
-    </Button>
-  )
 }
 
 const popToSendScan = () => goToScene(Constants.SCAN, { data: '' })
@@ -189,6 +100,7 @@ type SweepPrivateKeyButtonProps = {
 
 const SweepPrivateKeyButton = (props: SweepPrivateKeyButtonProps) => {
   const { onSelectWallet } = props
+
   const handlePress = () => {
     Airship.show(bridge => (
       <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={getPrivateKeySweepableCurrencies()} showCreateWallet />
@@ -210,44 +122,6 @@ const SweepPrivateKeyButton = (props: SweepPrivateKeyButtonProps) => {
         <Button.Center>
           <Button.Text>
             <Text>{s.strings.drawer_sweep_private_key}</Text>
-          </Button.Text>
-        </Button.Center>
-      </Button.Row>
-    </Button>
-  )
-}
-
-const popToRequestScene = () => goToScene(Constants.REQUEST)
-const RequestButton = () => {
-  return (
-    <Button onPress={popToRequestScene}>
-      <Button.Row>
-        <Button.Left>
-          <Image source={receiveIcon} style={styles.iconImage} />
-        </Button.Left>
-
-        <Button.Center>
-          <Button.Text>
-            <Text>{s.strings.drawer_request}</Text>
-          </Button.Text>
-        </Button.Center>
-      </Button.Row>
-    </Button>
-  )
-}
-
-const popToExchangeScene = () => goToScene(Constants.EXCHANGE_SCENE)
-const ExchangeButton = () => {
-  return (
-    <Button onPress={popToExchangeScene}>
-      <Button.Row>
-        <Button.Left>
-          <Image source={exchangeIcon} style={styles.iconImage} />
-        </Button.Left>
-
-        <Button.Center>
-          <Button.Text>
-            <Text>{s.strings.drawer_exchange}</Text>
           </Button.Text>
         </Button.Center>
       </Button.Row>

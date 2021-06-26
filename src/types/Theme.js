@@ -9,6 +9,7 @@ export type Theme = {
   icon: string,
   iconTappable: string,
   iconDeactivated: string,
+  iconPanel: string,
   warningIcon: string,
   iconLoadingOverlay: string,
   transactionListIconBackground: string,

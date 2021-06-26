@@ -1,111 +1,81 @@
 // @flow
 
 import * as React from 'react'
-import { Image, Text, View } from 'react-native'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
-import accountIcon from '../../../../assets/images/sidenav/accounts.png'
-import { ExchangeRate } from '../../../../components/common/ExchangeRate.js'
+import { selectWalletFromModal } from '../../../../actions/WalletActions.js'
 import { SceneWrapper } from '../../../../components/common/SceneWrapper.js'
-import s from '../../../../locales/strings'
-import type { GuiDenomination } from '../../../../types/types.js'
+import type { GuiExchangeRates, GuiWallet } from '../../../../types/types.js'
 import { emptyGuiDenomination } from '../../../../types/types.js'
+import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
+import { useDispatch, useSelector, useState } from '../../../../util/hooks'
 import { getDenomFromIsoCode, getObjectDiff } from '../../../../util/utils.js'
-import FormattedText from '../FormattedText/FormattedText.ui.js'
-import { Button } from './Component/Button/Button.ui'
-import Main from './Component/MainConnector'
-import styles from './style'
+import { logoutRequest } from '../../../Login/action'
+import { getDisplayDenominationFull } from '../../../Settings/selectors.js'
+import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../../UI/selectors.js'
+import AccountList from './components/AccountList'
+import PanelBody from './components/PanelBody'
+import PanelHeader from './components/PanelHeader'
+import UserList from './components/UserListConnector'
 
-export type Props = {
-  currencyLogo: string,
-  primaryDisplayCurrencyCode: string,
-  primaryDisplayDenomination: GuiDenomination,
-  primaryExchangeDenomination: GuiDenomination,
-  secondaryDisplayCurrencyCode: string,
-  secondaryToPrimaryRatio: number,
+export type StateProps = {
+  selectedCurrencyCode: string,
+  selectedWalletId: string,
   username: string,
-  openSelectUser: () => void,
-  closeSelectUser: () => void,
-  usersView: boolean,
-  exchangeRate: number
+  exchangeRates: GuiExchangeRates,
+  guiWallet: GuiWallet,
+  exchangeRate: any,
+  primaryDisplayDenomination: any,
+  primaryExchangeDenomination: any
 }
 
-export default class ControlPanel extends React.Component<Props> {
-  shouldComponentUpdate(nextProps: Props) {
-    const diffElement = getObjectDiff(this.props, nextProps, {
-      primaryDisplayDenomination: true,
-      primaryExchangeDenomination: true,
-      styles: true
+export default function ControlPanel() {
+  const [isViewUserList, setIsViewUserList] = useState(false)
+
+  const toggleUserList = () => setIsViewUserList(!isViewUserList)
+
+  const dispatch = useDispatch()
+
+  // Get props from redux state
+  const { selectedCurrencyCode, selectedWalletId, username, guiWallet, exchangeRate, primaryDisplayDenomination, primaryExchangeDenomination }: StateProps =
+    useSelector(state => {
+      const result = {
+        username: state.core.account.username,
+        selectedCurrencyCode: state.ui.wallets.selectedCurrencyCode,
+        selectedWalletId: state.ui.wallets.selectedWalletId,
+        guiWallet: getSelectedWallet(state)
+      }
+
+      return {
+        ...result,
+        exchangeRate: state => getExchangeRate(state, result.selectedCurrencyCode, result.guiWallet.isoFiatCurrencyCode),
+        primaryDisplayDenomination: state => getDisplayDenominationFull(state, selectedCurrencyCode),
+        primaryExchangeDenomination: state => getExchangeDenomination(state, selectedCurrencyCode)
+      }
     })
 
-    return !!diffElement
-  }
+  if (!guiWallet) return null
 
-  render() {
-    const {
-      exchangeRate,
-      currencyLogo,
-      primaryDisplayCurrencyCode,
-      primaryDisplayDenomination,
-      primaryExchangeDenomination,
-      secondaryDisplayCurrencyCode,
-      secondaryToPrimaryRatio
-    } = this.props
+  // Create redux actions
+  const onLogout = () => dispatch(logoutRequest())
+  const onSelectWallet = (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(selectedWalletId, selectedCurrencyCode))
 
-    const secondaryExchangeDenomination = secondaryDisplayCurrencyCode ? getDenomFromIsoCode(secondaryDisplayCurrencyCode) : ''
+  // Create variables
+  const currencyLogo = getCurrencyIcon(guiWallet.currencyCode, selectedCurrencyCode).symbolImage
+  const secondaryExchangeDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
 
-    const primaryCurrencyInfo = {
-      displayCurrencyCode: primaryDisplayCurrencyCode,
-      displayDenomination: primaryDisplayDenomination || emptyGuiDenomination,
-      exchangeDenomination: primaryExchangeDenomination || emptyGuiDenomination,
-      exchangeCurrencyCode: primaryDisplayCurrencyCode
-    }
-    const secondaryCurrencyInfo = {
-      displayCurrencyCode: secondaryDisplayCurrencyCode,
-      displayDenomination: secondaryExchangeDenomination || emptyGuiDenomination,
-      exchangeDenomination: secondaryExchangeDenomination || emptyGuiDenomination,
-      exchangeCurrencyCode: secondaryDisplayCurrencyCode
-    }
-
-    const arrowIcon = this.props.usersView ? 'keyboard-arrow-up' : 'keyboard-arrow-down'
-    const currencyLogoIcon = { uri: currencyLogo }
-
-    return (
-      <SceneWrapper hasHeader={false} hasTabs={false}>
-        <View style={styles.header}>
-          {!!currencyLogo && <Image style={styles.iconImage} source={currencyLogoIcon} />}
-          <View style={styles.exchangeContainer}>
-            {exchangeRate ? (
-              <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
-            ) : (
-              <FormattedText style={styles.exchangeRateText}>{s.strings.exchange_rate_loading_singular}</FormattedText>
-            )}
-          </View>
-        </View>
-
-        <Button onPress={this.toggleUserList} style={styles.toggleButton} underlayColor={styles.underlay.color}>
-          <Button.Row>
-            <Button.Left>
-              <Image style={styles.iconImage} resizeMode="contain" source={accountIcon} />
-            </Button.Left>
-
-            <Button.Center>
-              <Button.Text>
-                <Text>{this.props.username}</Text>
-              </Button.Text>
-            </Button.Center>
-
-            <Button.Right>
-              <MaterialIcon style={styles.toggleIcon} name={arrowIcon} />
-            </Button.Right>
-          </Button.Row>
-        </Button>
-        <Main />
-      </SceneWrapper>
-    )
-  }
-
-  toggleUserList = () => {
-    return this.props.usersView ? this.props.closeSelectUser() : this.props.openSelectUser()
-  }
+  return (
+    <SceneWrapper hasHeader={false} hasTabs={false}>
+      <PanelHeader
+        currencyLogo={currencyLogo}
+        exchangeRate={exchangeRate}
+        selectedCurrencyCode={selectedCurrencyCode}
+        primaryDisplayDenomination={primaryDisplayDenomination}
+        primaryExchangeDenomination={primaryExchangeDenomination}
+        fiatCurrencyCode={guiWallet.fiatCurrencyCode}
+        secondaryExchangeDenomination={secondaryExchangeDenomination}
+      />
+      <AccountList onPress={toggleUserList} username={username} usersView={isViewUserList} />
+      {isViewUserList ? <UserList /> : <PanelBody onSelectWallet={onSelectWallet} onLogout={onLogout} />}
+    </SceneWrapper>
+  )
 }
