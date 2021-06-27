@@ -24,8 +24,8 @@ export type Props = {
 export default function PanelBody(props: Props) {
   const { onSelectWallet, onLogout } = props
 
-  const theme = useTheme()
-  const styles = getStyles(theme)
+  // const theme = useTheme()
+  // const styles = getStyles(theme)
 
   const onSweep = () => {
     Airship.show(bridge => (
@@ -51,25 +51,15 @@ export default function PanelBody(props: Props) {
   }
 
   return (
-    <View style={styles.panelBody}>
-      <ScrollView>
-        <PanelRow title={s.strings.drawer_fio_names} route={Constants.FIO_ADDRESS_LIST} iconName="sort" />
-        <PanelRow title={s.strings.drawer_fio_requests} route={Constants.FIO_REQUEST_LIST} iconName="sort" />
-        <PanelRow title={s.strings.drawer_scan_qr_send} route={Constants.SCAN} iconName="sort" />
-        <PanelRow title={s.strings.drawer_sweep_private_key} onPress={onSweep} iconName="sort" />
-        <PanelRow title={s.strings.title_terms_of_service} route={Constants.TERMS_OF_SERVICE} iconName="sort" />
-        <PanelRow title={s.strings.string_share + ' ' + s.strings.app_name} onPress={onShareApp} iconName="sort" />
-        <PanelRow title={s.strings.settings_title} route={Constants.SETTINGS_OVERVIEW_TAB} iconName="sort" />
-        <PanelRow title={s.strings.settings_button_logout} onPress={onLogout} iconName="sort" />
-      </ScrollView>
-    </View>
+    <ScrollView>
+      <PanelRow title={s.strings.drawer_fio_names} route={Constants.FIO_ADDRESS_LIST} iconName="sort" />
+      <PanelRow title={s.strings.drawer_fio_requests} route={Constants.FIO_REQUEST_LIST} iconName="sort" />
+      <PanelRow title={s.strings.drawer_scan_qr_send} route={Constants.SCAN} iconName="sort" />
+      <PanelRow title={s.strings.drawer_sweep_private_key} onPress={onSweep} iconName="sort" />
+      <PanelRow title={s.strings.title_terms_of_service} route={Constants.TERMS_OF_SERVICE} iconName="sort" />
+      <PanelRow title={s.strings.string_share + ' ' + s.strings.app_name} onPress={onShareApp} iconName="sort" />
+      <PanelRow title={s.strings.settings_title} route={Constants.SETTINGS_OVERVIEW_TAB} iconName="sort" />
+      <PanelRow title={s.strings.settings_button_logout} onPress={onLogout} iconName="sort" />
+    </ScrollView>
   )
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  panelBody: {
-    paddingLeft: theme.rem(1),
-    flex: 1,
-    justifyContent: 'space-between'
-  }
-}))

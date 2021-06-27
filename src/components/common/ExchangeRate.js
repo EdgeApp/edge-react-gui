@@ -13,7 +13,8 @@ type Props = {
   primaryInfo: Object,
   primaryDisplayAmount?: string, // defaults to '1'
   secondaryInfo: Object,
-  secondaryDisplayAmount: string | number
+  secondaryDisplayAmount: string | number,
+  style?: string
 }
 
 class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
@@ -61,7 +62,7 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
     }
 
     const exchangeRate = `${formattedPrimaryAmount} ${primaryDisplayName} = ${secondaryDisplaySymbol} ${formattedSecondaryAmount} ${secondaryCurrencyCode}`
-    return <EdgeText>{exchangeRate}</EdgeText>
+    return <EdgeText style={this.props.style}>{exchangeRate}</EdgeText>
   }
 }
 
