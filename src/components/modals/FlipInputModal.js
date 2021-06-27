@@ -291,7 +291,7 @@ export const FlipInputModal = connect(
     return {
       // Balances
       balanceCrypto: `${balanceCrypto} ${currencyCode}`,
-      balanceFiat: `${fiatDenomination.symbol ? fiatDenomination.symbol + ' ' : ''} ${balanceFiat.toFixed(2)}`,
+      balanceFiat: `${fiatDenomination.symbol ? fiatDenomination.symbol + ' ' : ''} ${bns.toFixed(balanceFiat, 2, 2)}`,
 
       // FlipInput
       flipInputHeaderText: sprintf(s.strings.send_from_wallet, guiWallet.name),
