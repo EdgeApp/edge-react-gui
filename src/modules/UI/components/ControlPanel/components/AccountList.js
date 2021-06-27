@@ -1,13 +1,12 @@
 // @flow
 
 import * as React from 'react'
-import { Image } from 'react-native'
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import { TouchableOpacity, View } from 'react-native'
+import Feather from 'react-native-vector-icons/Feather'
 
-import accountIcon from '../../../../../assets/images/sidenav/accounts.png'
+import { Fontello } from '../../../../../assets/vector'
 import { type Theme, cacheStyles, useTheme } from '../../../../../components/services/ThemeContext'
 import { EdgeText } from '../../../../../components/themed/EdgeText'
-import { Button } from './Button/Button.ui'
 
 export type Props = {
   username: string,
@@ -21,45 +20,38 @@ function AccountList(props: Props) {
 
   const { onPress, usersView, username } = props
 
-  const arrowIcon = usersView ? 'keyboard-arrow-up' : 'keyboard-arrow-down'
+  const arrowIconName = usersView ? 'chevron-up' : 'chevron-down'
 
   return (
-    <Button onPress={onPress} style={styles.toggleButton} underlayColor={styles.underlay.color}>
-      <Button.Row>
-        <Button.Left>
-          <Image style={styles.iconImage} resizeMode="contain" source={accountIcon} />
-        </Button.Left>
-
-        <Button.Center>
-          <Button.Text>
-            <EdgeText>{username}</EdgeText>
-          </Button.Text>
-        </Button.Center>
-
-        <Button.Right>
-          <MaterialIcon style={styles.toggleIcon} name={arrowIcon} />
-        </Button.Right>
-      </Button.Row>
-    </Button>
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.list}>
+        <View style={styles.iconUser}>
+          <Fontello name="fioNames" size={theme.rem(1.5)} color={theme.iconPanel} />
+        </View>
+        <View style={styles.textContainer}>
+          <EdgeText style={styles.text}>{username}</EdgeText>
+        </View>
+        <Feather name={arrowIconName} color={theme.iconPanel} size={theme.rem(1.5)} />
+      </View>
+    </TouchableOpacity>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  iconImage: {
-    width: theme.rem(1.5),
-    height: theme.rem(1.5)
+  list: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
-  toggleButton: {
-    backgroundColor: theme.primaryButton,
-    height: theme.rem(2.5),
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+  iconUser: {
+    marginRight: theme.rem(1.5)
   },
-  toggleIcon: {
-    fontSize: theme.rem(1)
+  textContainer: {
+    marginRight: 'auto'
   },
-  underlay: {
-    color: theme.underlayColor
+  text: {
+    fontFamily: theme.fontFaceBold
   }
 }))
 

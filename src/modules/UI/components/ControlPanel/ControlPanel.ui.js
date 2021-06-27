@@ -80,7 +80,7 @@ export default function ControlPanel() {
           secondaryExchangeDenomination={secondaryExchangeDenomination}
         />
         <AccountList onPress={toggleUserList} username={username} usersView={isViewUserList} />
-        <Separator />
+        <Separator style={styles.topSeparator} />
         {isViewUserList ? <UserList /> : <PanelBody onSelectWallet={onSelectWallet} onLogout={onLogout} />}
         <Separator style={styles.bottomSeparator} />
       </View>
@@ -95,7 +95,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.panelBackground
   },
   bottomSeparator: {
-    marginBottom: theme.rem(2.5),
+    marginBottom: theme.rem(1.5),
+    marginTop: theme.rem(1)
+  },
+  topSeparator: {
+    marginBottom: theme.rem(0.5),
     marginTop: theme.rem(1)
   }
 }))

@@ -9,7 +9,6 @@ import { sprintf } from 'sprintf-js'
 import { type WalletListResult, WalletListModal } from '../../../../../components/modals/WalletListModal.js'
 import { SWEEP_PRIVATE_KEY } from '../../../../../components/scenes/ScanScene'
 import { Airship } from '../../../../../components/services/AirshipInstance.js'
-import { type Theme, cacheStyles, useTheme } from '../../../../../components/services/ThemeContext'
 import * as Constants from '../../../../../constants/indexConstants.js'
 import { getPrivateKeySweepableCurrencies } from '../../../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../../../locales/strings.js'
@@ -23,9 +22,6 @@ export type Props = {
 
 export default function PanelBody(props: Props) {
   const { onSelectWallet, onLogout } = props
-
-  // const theme = useTheme()
-  // const styles = getStyles(theme)
 
   const onSweep = () => {
     Airship.show(bridge => (

@@ -61,7 +61,7 @@ function PanelHeader(props: Props) {
       </View>
       <View style={styles.currency}>
         {!!currencyLogo && <Image style={styles.currencyImage} source={currencyLogoIcon} />}
-        <View style={styles.exchangeContainer}>
+        <View>
           {exchangeRate ? (
             <ExchangeRate
               style={styles.currencyText}
@@ -79,9 +79,6 @@ function PanelHeader(props: Props) {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  header: {
-    paddingHorizontal: theme.rem(1)
-  },
   logo: {
     display: 'flex',
     justifyContent: 'center',
@@ -103,7 +100,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   currency: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center',
     display: 'flex',
     alignSelf: 'stretch',
     marginTop: theme.rem(1.5),
@@ -111,14 +107,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   currencyImage: {
     width: theme.rem(1.5),
-    height: theme.rem(1.5)
+    height: theme.rem(1.5),
+    marginRight: theme.rem(1.5)
   },
   currencyText: {
     fontFamily: theme.fontFaceBold,
     textTransform: 'uppercase'
-  },
-  exchangeContainer: {
-    paddingHorizontal: theme.rem(1.5)
   },
   exchangeRateText: {
     fontSize: theme.rem(1)

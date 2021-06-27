@@ -41,7 +41,7 @@ function PanelRow(props: Props) {
     <TouchableOpacity onPress={onPressHandler}>
       <View style={styles.row}>
         <View style={styles.iconContainer}>
-          <Fontello name={iconName} size={theme.rem(1.5)} color={styles.icon.color} />
+          <Fontello name={iconName} size={theme.rem(1.5)} color={theme.iconPanel} />
         </View>
         <View>
           <EdgeText style={styles.text}>{title}</EdgeText>
@@ -56,9 +56,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: theme.rem(1.5)
-  },
-  icon: {
-    color: theme.iconPanel
   },
   row: {
     color: 'white',
