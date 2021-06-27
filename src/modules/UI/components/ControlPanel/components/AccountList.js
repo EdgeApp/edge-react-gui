@@ -20,7 +20,7 @@ function AccountList(props: Props) {
 
   const { onPress, usersView, username } = props
 
-  const arrowIconName = usersView ? 'chevron-up' : 'chevron-down'
+  const arrowIconName = usersView ? 'chevron-down' : 'chevron-right'
 
   return (
     <TouchableOpacity onPress={onPress}>

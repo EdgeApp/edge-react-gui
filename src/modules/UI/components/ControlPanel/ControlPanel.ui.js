@@ -14,10 +14,8 @@ import { getDenomFromIsoCode } from '../../../../util/utils.js'
 import { logoutRequest } from '../../../Login/action'
 import { getDisplayDenominationFull } from '../../../Settings/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../../UI/selectors.js'
-import AccountList from './components/AccountList'
 import PanelBody from './components/PanelBody'
 import PanelHeader from './components/PanelHeader'
-import UserList from './components/UserListConnector'
 
 export type StateProps = {
   selectedCurrencyCode: string,
@@ -70,6 +68,7 @@ export default function ControlPanel() {
   return (
     <SceneWrapper hasHeader={false} hasTabs={false} isGapTop={false} background="none">
       <View style={styles.panel}>
+        {isViewUserList ? <View style={styles.disable} /> : null}
         <PanelHeader
           currencyLogo={currencyLogo}
           exchangeRate={exchangeRate}
@@ -78,11 +77,12 @@ export default function ControlPanel() {
           primaryExchangeDenomination={primaryExchangeDenomination}
           fiatCurrencyCode={guiWallet.fiatCurrencyCode}
           secondaryExchangeDenomination={secondaryExchangeDenomination}
+          toggleUserList={toggleUserList}
+          username={username}
+          isViewUserList={isViewUserList}
         />
-        <AccountList onPress={toggleUserList} username={username} usersView={isViewUserList} />
-        <Separator style={styles.topSeparator} />
-        {isViewUserList ? <UserList /> : <PanelBody onSelectWallet={onSelectWallet} onLogout={onLogout} />}
-        <Separator style={styles.bottomSeparator} />
+        <PanelBody onSelectWallet={onSelectWallet} onLogout={onLogout} />
+        <Separator style={styles.separator} />
       </View>
     </SceneWrapper>
   )
@@ -90,16 +90,22 @@ export default function ControlPanel() {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   panel: {
-    paddingLeft: theme.rem(1),
     flex: 1,
-    backgroundColor: theme.panelBackground
+    backgroundColor: theme.panelBackground,
+    position: 'relative'
   },
-  bottomSeparator: {
+  separator: {
     marginBottom: theme.rem(1.5),
     marginTop: theme.rem(1)
   },
-  topSeparator: {
-    marginBottom: theme.rem(0.5),
-    marginTop: theme.rem(1)
+  disable: {
+    backgroundColor: '#87939E',
+    opacity: 0.8,
+    position: 'absolute',
+    zIndex: 1,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0
   }
 }))

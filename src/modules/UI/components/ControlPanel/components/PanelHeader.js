@@ -7,11 +7,16 @@ import edgeLogo from '../../../../../assets/images/edgeLogo/Edge_logo_Icon.png'
 import { ExchangeRate } from '../../../../../components/common/ExchangeRate.js'
 import { type Theme, cacheStyles, useTheme } from '../../../../../components/services/ThemeContext'
 import { EdgeText } from '../../../../../components/themed/EdgeText'
+import Separator from '../../../../../components/themed/Separator'
 import s from '../../../../../locales/strings'
 import type { GuiDenomination } from '../../../../types/types.js'
 import FormattedText from '../../FormattedText/FormattedText.ui.js'
+import AccountList from './AccountList'
+import UserList from './UserListConnector'
 
 export type Props = {
+  username: string,
+  isViewUserList: boolean,
   currencyLogo: string,
   exchangeRate: number,
   currencyLogo: string,
@@ -20,7 +25,8 @@ export type Props = {
   primaryDisplayDenomination: string,
   primaryExchangeDenomination: GuiDenomination,
   fiatCurrencyCode: string,
-  secondaryExchangeDenomination: GuiDenomination
+  secondaryExchangeDenomination: GuiDenomination,
+  toggleUserList: () => void
 }
 
 function PanelHeader(props: Props) {
@@ -28,13 +34,16 @@ function PanelHeader(props: Props) {
   const styles = getStyles(theme)
 
   const {
+    username,
+    isViewUserList,
     currencyLogo,
     exchangeRate,
     selectedCurrencyCode,
     primaryDisplayDenomination,
     primaryExchangeDenomination,
     fiatCurrencyCode,
-    secondaryExchangeDenomination
+    secondaryExchangeDenomination,
+    toggleUserList
   } = props
 
   const currencyLogoIcon = { uri: currencyLogo }
@@ -74,11 +83,31 @@ function PanelHeader(props: Props) {
           )}
         </View>
       </View>
+      <AccountList onPress={toggleUserList} username={username} usersView={isViewUserList} />
+      <Separator style={styles.separator} />
+      <UserList />
+      {isViewUserList ? (
+        <View style={styles.accountContainer}>
+          <EdgeText>User 1</EdgeText>
+          <EdgeText>User 2</EdgeText>
+          <EdgeText>User 3</EdgeText>
+        </View>
+      ) : null}
     </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  header: {
+    borderBottomRightRadius: theme.rem(2),
+    borderBottomLeftRadius: theme.rem(2),
+    paddingHorizontal: theme.rem(1),
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    backgroundColor: theme.panelBackground,
+    zIndex: 2
+  },
   logo: {
     display: 'flex',
     justifyContent: 'center',
@@ -116,6 +145,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   exchangeRateText: {
     fontSize: theme.rem(1)
+  },
+  accountContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingBottom: theme.rem(1)
+  },
+  separator: {
+    marginBottom: theme.rem(0.5),
+    marginTop: theme.rem(1),
+    marginRight: theme.rem(-1)
   }
 }))
 
