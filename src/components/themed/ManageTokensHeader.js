@@ -65,10 +65,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   searchContainer: {
     flexDirection: 'row',
-    marginTop: theme.rem(0.5),
+    marginTop: theme.rem(1),
     marginRight: theme.rem(2),
-    marginLeft: theme.rem(1),
-    marginBottom: theme.rem(-1)
+    marginLeft: theme.rem(1)
   },
   searchView: {
     flex: 1,
