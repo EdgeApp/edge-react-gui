@@ -14,7 +14,7 @@ type Props = {
   primaryDisplayAmount?: string, // defaults to '1'
   secondaryInfo: Object,
   secondaryDisplayAmount: string | number,
-  style?: string
+  style?: any
 }
 
 class ExchangeRateComponent extends React.Component<Props & ThemeProps> {

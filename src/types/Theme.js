@@ -9,7 +9,6 @@ export type Theme = {
   icon: string,
   iconTappable: string,
   iconDeactivated: string,
-  iconPanel: string,
   warningIcon: string,
   iconLoadingOverlay: string,
   transactionListIconBackground: string,
@@ -25,6 +24,10 @@ export type Theme = {
   modalCloseIcon: string,
   // modalFullGradientLeft: string,
   // modalFullGradientRight: string,
+
+  // Control panel
+  iconPanel: string,
+  panelBackground: string,
 
   // Tile
   // listHeaderBackground: string,

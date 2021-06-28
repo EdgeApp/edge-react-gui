@@ -5,7 +5,7 @@ import { View } from 'react-native'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 
 export type Props = {
-  style?: string
+  style?: any
 }
 
 function Separator(props: Props) {

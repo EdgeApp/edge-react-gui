@@ -3,7 +3,7 @@
 import * as React from 'react'
 import * as ReactRedux from 'react-redux'
 
-import { type Dispatch, type RootState } from '../types/reduxTypes'
+import { type Dispatch, type RootState, type ShallowEqual } from '../types/reduxTypes'
 
 type SetState<S> = (value: S | ((state: S) => S)) => void
 
@@ -21,7 +21,7 @@ type UseMemo = <T>(init: () => T, deps?: any[]) => T
 
 type UseDispatch = () => Dispatch
 
-type UseSelector = ((state: RootState) => any) => any
+type UseSelector = ((state: RootState) => any, shallowEqual?: ShallowEqual) => any
 
 type UseReducer = {
   // Normal version:

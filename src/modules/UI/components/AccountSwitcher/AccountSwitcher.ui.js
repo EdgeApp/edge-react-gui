@@ -3,7 +3,7 @@
 import { type Disklet } from 'disklet'
 import { type EdgeContext } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, View } from 'react-native'
+import { Alert, Text, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../../../../components/services/AirshipInstance.js'
@@ -76,22 +76,36 @@ export default function AccountSwitcher(props: Props) {
       { text: s.strings.yes, onPress: () => context.deleteLocalAccount(username).catch(showError) }
     ])
 
-  const coreUserNames = getCoreUserNames(localUsers, username)
+  // const coreUserNames = getCoreUserNames(localUsers, username)
 
-  const usernames = [...getRecentUserNames(username, mostRecentUsernames, coreUserNames), ...sortUserNames(coreUserNames, username)]
+  // const usernames = [...getRecentUserNames(username, mostRecentUsernames, coreUserNames), ...sortUserNames(coreUserNames, username)]
 
   return (
     <View>
       <SwitcherHeader onPress={onPress} username={username} arrowIconName={arrowIconName} />
       <Separator style={styles.separator} />
-      <View style={styles.list}>
+      {/* <View style={styles.list}>
         {isViewUserList ? <SwitcherList usernames={usernames} logout={onLogout} deleteLocalAccount={deleteLocalAccount} /> : null}
-      </View>
+      </View> */}
+      {isViewUserList ? (
+        <View style={styles.list}>
+          <Text style={styles.text}>User1</Text>
+          <Text style={styles.text}>User1</Text>
+          <Text style={styles.text}>User1</Text>
+          <Text style={styles.text}>User1</Text>
+          <Text style={styles.text}>User1</Text>
+        </View>
+      ) : null}
     </View>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
+  list: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingBottom: theme.rem(1)
+  },
   header: {
     display: 'flex',
     flexDirection: 'row',
@@ -105,6 +119,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginRight: 'auto'
   },
   text: {
+    color: 'white',
     fontFamily: theme.fontFaceBold
   },
   separator: {
