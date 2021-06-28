@@ -7,16 +7,12 @@ import edgeLogo from '../../../../../assets/images/edgeLogo/Edge_logo_Icon.png'
 import { ExchangeRate } from '../../../../../components/common/ExchangeRate.js'
 import { type Theme, cacheStyles, useTheme } from '../../../../../components/services/ThemeContext'
 import { EdgeText } from '../../../../../components/themed/EdgeText'
-import Separator from '../../../../../components/themed/Separator'
 import s from '../../../../../locales/strings'
 import type { GuiDenomination } from '../../../../types/types.js'
+import AccountSwitcher from '../../AccountSwitcher/AccountSwitcher.ui'
 import FormattedText from '../../FormattedText/FormattedText.ui.js'
-import AccountList from './AccountList'
-import UserList from './UserListConnector'
 
 export type Props = {
-  username: string,
-  isViewUserList: boolean,
   currencyLogo: string,
   exchangeRate: number,
   currencyLogo: string,
@@ -34,8 +30,6 @@ function PanelHeader(props: Props) {
   const styles = getStyles(theme)
 
   const {
-    username,
-    isViewUserList,
     currencyLogo,
     exchangeRate,
     selectedCurrencyCode,
@@ -83,16 +77,7 @@ function PanelHeader(props: Props) {
           )}
         </View>
       </View>
-      <AccountList onPress={toggleUserList} username={username} usersView={isViewUserList} />
-      <Separator style={styles.separator} />
-      <UserList />
-      {isViewUserList ? (
-        <View style={styles.accountContainer}>
-          <EdgeText>User 1</EdgeText>
-          <EdgeText>User 2</EdgeText>
-          <EdgeText>User 3</EdgeText>
-        </View>
-      ) : null}
+      {/* <AccountSwitcher onSwitch={toggleUserList} /> */}
     </View>
   )
 }
@@ -150,11 +135,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     paddingBottom: theme.rem(1)
-  },
-  separator: {
-    marginBottom: theme.rem(0.5),
-    marginTop: theme.rem(1),
-    marginRight: theme.rem(-1)
   }
 }))
 

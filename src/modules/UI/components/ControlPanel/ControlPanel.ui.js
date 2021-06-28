@@ -2,14 +2,16 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
+import { shallowEqual } from 'react-redux'
 
 import { selectWalletFromModal } from '../../../../actions/WalletActions.js'
 import { SceneWrapper } from '../../../../components/common/SceneWrapper.js'
 import { type Theme, cacheStyles, useTheme } from '../../../../components/services/ThemeContext'
 import Separator from '../../../../components/themed/Separator'
+import { RootState } from '../../../../types/reduxTypes.js'
 import type { GuiDenomination, GuiExchangeRates, GuiWallet } from '../../../../types/types.js'
 import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
-import { useDispatch, useSelector, useState } from '../../../../util/hooks'
+import { useDispatch, useMemo, useSelector, useState } from '../../../../util/hooks'
 import { getDenomFromIsoCode } from '../../../../util/utils.js'
 import { logoutRequest } from '../../../Login/action'
 import { getDisplayDenominationFull } from '../../../Settings/selectors.js'
@@ -20,7 +22,6 @@ import PanelHeader from './components/PanelHeader'
 export type StateProps = {
   selectedCurrencyCode: string,
   selectedWalletId: string,
-  username: string,
   exchangeRates: GuiExchangeRates,
   guiWallet: GuiWallet,
   exchangeRate?: number,
@@ -28,7 +29,23 @@ export type StateProps = {
   primaryExchangeDenomination: GuiDenomination
 }
 
+const selector = (state: RootState) => {
+  const guiWallet = getSelectedWallet(state)
+  const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
+
+  return {
+    selectedWalletId: state.ui.wallets.selectedWalletId,
+    guiWallet,
+    selectedCurrencyCode,
+    exchangeRate: guiWallet ? getExchangeRate(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode) : null,
+    primaryDisplayDenomination: guiWallet ? getDisplayDenominationFull(state, selectedCurrencyCode) : null,
+    primaryExchangeDenomination: guiWallet ? getExchangeDenomination(state, selectedCurrencyCode) : null
+  }
+}
+
 export default function ControlPanel() {
+  console.debug('RENDER CONTROL PANEL')
+
   const [isViewUserList, setIsViewUserList] = useState(false)
 
   const toggleUserList = () => setIsViewUserList(!isViewUserList)
@@ -39,29 +56,16 @@ export default function ControlPanel() {
   const styles = getStyles(theme)
 
   // Get props from redux state
-  const { selectedCurrencyCode, selectedWalletId, username, guiWallet, exchangeRate, primaryDisplayDenomination, primaryExchangeDenomination }: StateProps =
-    useSelector(state => {
-      const guiWallet = getSelectedWallet(state)
-      const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
-
-      return {
-        username: state.core.account.username,
-        selectedWalletId: state.ui.wallets.selectedWalletId,
-        guiWallet,
-        selectedCurrencyCode,
-        exchangeRate: guiWallet ? getExchangeRate(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode) : null,
-        primaryDisplayDenomination: guiWallet ? getDisplayDenominationFull(state, selectedCurrencyCode) : null,
-        primaryExchangeDenomination: guiWallet ? getExchangeDenomination(state, selectedCurrencyCode) : null
-      }
-    })
+  const { selectedCurrencyCode, selectedWalletId, guiWallet, exchangeRate, primaryDisplayDenomination, primaryExchangeDenomination }: StateProps =
+    useSelector(selector)
 
   if (!guiWallet) return null
 
-  // Create redux actions
+  // // Create redux actions
   const onLogout = () => dispatch(logoutRequest())
   const onSelectWallet = (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(selectedWalletId, selectedCurrencyCode))
 
-  // Create variables
+  // // Create variables
   const currencyLogo = getCurrencyIcon(guiWallet.currencyCode, selectedCurrencyCode).symbolImage
   const secondaryExchangeDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
 
@@ -78,8 +82,6 @@ export default function ControlPanel() {
           fiatCurrencyCode={guiWallet.fiatCurrencyCode}
           secondaryExchangeDenomination={secondaryExchangeDenomination}
           toggleUserList={toggleUserList}
-          username={username}
-          isViewUserList={isViewUserList}
         />
         <PanelBody onSelectWallet={onSelectWallet} onLogout={onLogout} />
         <Separator style={styles.separator} />
