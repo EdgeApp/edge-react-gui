@@ -27,7 +27,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: theme.rem(2),
-    marginRight: theme.rem(1)
+    marginLeft: theme.rem(0.5)
   },
   logoText: {
     fontSize: theme.rem(2),

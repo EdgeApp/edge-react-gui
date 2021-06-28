@@ -5,8 +5,7 @@ import { ScrollView, TouchableHighlight, View } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import { type Theme, cacheStyles, useTheme } from '../../../../../components/services/ThemeContext'
-import T from '../../FormattedText/FormattedText.ui'
-
+import { EdgeText } from '../../../../../components/themed/EdgeText'
 export type Props = {
   onLogout: (username?: string) => void,
   deleteLocalAccount: () => void,
@@ -23,12 +22,12 @@ export default function SwitcherList(props: Props) {
     <ScrollView style={styles.container}>
       {usernames.map((username: string) => (
         <View key={username} style={styles.row}>
-          <TouchableHighlight style={styles.textContainer} underlayColor={styles.underlay.color} onPress={onLogout}>
-            <T style={styles.text}>{username}</T>
+          <TouchableHighlight style={styles.textContainer} onPress={onLogout}>
+            <EdgeText style={styles.text}>{username}</EdgeText>
           </TouchableHighlight>
-          <TouchableHighlight style={styles.icon} underlayColor={styles.underlay.color} onPress={deleteLocalAccount}>
+          <TouchableHighlight style={styles.icon} onPress={deleteLocalAccount}>
             <View /* Hack, do not remove */>
-              <MaterialIcon size={20} name="close" />
+              <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.iconPanel} />
             </View>
           </TouchableHighlight>
         </View>
@@ -39,25 +38,26 @@ export default function SwitcherList(props: Props) {
 
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
-    // backgroundColor: THEME.COLORS.WHITE,
-    flex: 1
+    alignSelf: 'stretch'
   },
   row: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    borderStyle: 'solid',
-    // borderColor: THEME.COLORS.GRAY_4,
-    borderBottomWidth: 0.5
+    height: theme.rem(2.5),
+    paddingLeft: theme.rem(3)
   },
   textContainer: {
-    flex: 1
-    // paddingVertical: scale(13),
-    // marginLeft: scale(20)
+    marginRight: theme.rem(0.5)
   },
   text: {
-    // fontSize: scale(16)
+    fontFamily: theme.fontFaceBold
   },
   icon: {
     // padding: scale(13)
+    color: 'white'
+  },
+  underlay: {
+    color: 'red'
   }
 }))

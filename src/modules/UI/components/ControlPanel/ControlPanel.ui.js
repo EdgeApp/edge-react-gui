@@ -28,8 +28,6 @@ const selector = (state: RootState) => ({
 })
 
 export default function ControlPanel() {
-  console.debug('RENDER CONTROL PANEL')
-
   const [isViewUserList, setIsViewUserList] = useState(false)
 
   const toggleUserList = (value: boolean) => setIsViewUserList(value)
@@ -70,7 +68,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.panelBackground,
     position: 'relative',
     paddingHorizontal: theme.rem(1),
-    paddingTop: theme.rem(9.5)
+    paddingTop: theme.rem(13.5)
   },
   separator: {
     marginBottom: theme.rem(1.5),
@@ -79,7 +77,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   header: {
     borderBottomRightRadius: theme.rem(2),
     borderBottomLeftRadius: theme.rem(2),
-    paddingHorizontal: theme.rem(1),
+    paddingLeft: theme.rem(1),
+    paddingRight: theme.rem(1.5),
     position: 'absolute',
     left: 0,
     right: 0,

@@ -10,14 +10,13 @@ import { EdgeText } from '../../../../../components/themed/EdgeText'
 
 export type Props = {
   username: string,
-  arrowIconName: string,
   onPress: () => void
 }
 
 export default function SwitcherHeader(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { onPress, username, arrowIconName } = props
+  const { onPress, username } = props
 
   return (
     <TouchableOpacity onPress={onPress}>
@@ -28,7 +27,7 @@ export default function SwitcherHeader(props: Props) {
         <View style={styles.textContainer}>
           <EdgeText style={styles.text}>{username}</EdgeText>
         </View>
-        <Feather name={arrowIconName} color={theme.iconPanel} size={theme.rem(1.5)} />
+        <Feather name="chevron-down" color={theme.iconPanel} size={theme.rem(1.5)} />
       </View>
     </TouchableOpacity>
   )

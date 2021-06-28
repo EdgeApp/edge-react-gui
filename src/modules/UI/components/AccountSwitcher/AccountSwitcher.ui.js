@@ -3,15 +3,16 @@
 import { type Disklet } from 'disklet'
 import { type EdgeContext } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, Text, View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../../../../components/services/AirshipInstance.js'
 import { type Theme, cacheStyles, useTheme } from '../../../../components/services/ThemeContext'
 import Separator from '../../../../components/themed/Separator'
 import s from '../../../../locales/strings'
-import { RootState } from '../../../../reducers/RootReducer.js'
+import { type RootState } from '../../../../reducers/RootReducer.js'
 import { useDispatch, useEffect, useSelector, useState } from '../../../../util/hooks.js'
+import { reduxShallowEqual } from '../../../../util/utils.js'
 import { logoutRequest } from '../../../Login/action'
 import SwitcherHeader from './components/SwitcherHeader'
 import SwitcherList from './components/SwitcherList'
@@ -47,10 +48,13 @@ export default function AccountSwitcher(props: Props) {
 
   const dispatch = useDispatch()
 
-  const { username, context, disklet }: StateProps = useSelector(selector)
+  const { username, context, disklet }: StateProps = useSelector(selector, reduxShallowEqual)
+
+  const coreUserNames = getCoreUserNames(localUsers, username)
+  const usernames = [...getRecentUserNames(username, mostRecentUsernames, coreUserNames), ...sortUserNames(coreUserNames, username)]
 
   useEffect(() => {
-    cleanups.push(context.watch('localUsers', localUsers => setLocalUsers({ localUsers })))
+    cleanups.push(context.watch('localUsers', localUsers => setLocalUsers(localUsers)))
 
     getRecentLoginUsernames(disklet)
       .then(mostRecentUsernames => setMostRecentUsernames(mostRecentUsernames))
@@ -58,8 +62,6 @@ export default function AccountSwitcher(props: Props) {
 
     return () => cleanups.forEach(cleanup => cleanup())
   }, [context, context.localUsers, disklet])
-
-  const arrowIconName = isViewUserList ? 'chevron-down' : 'chevron-right'
 
   const onPress = () => {
     setIsViewUserList(!isViewUserList)
@@ -76,26 +78,13 @@ export default function AccountSwitcher(props: Props) {
       { text: s.strings.yes, onPress: () => context.deleteLocalAccount(username).catch(showError) }
     ])
 
-  // const coreUserNames = getCoreUserNames(localUsers, username)
-
-  // const usernames = [...getRecentUserNames(username, mostRecentUsernames, coreUserNames), ...sortUserNames(coreUserNames, username)]
-
   return (
     <View>
-      <SwitcherHeader onPress={onPress} username={username} arrowIconName={arrowIconName} />
+      <SwitcherHeader onPress={onPress} username={username} />
       <Separator style={styles.separator} />
-      {/* <View style={styles.list}>
-        {isViewUserList ? <SwitcherList usernames={usernames} logout={onLogout} deleteLocalAccount={deleteLocalAccount} /> : null}
-      </View> */}
-      {isViewUserList ? (
-        <View style={styles.list}>
-          <Text style={styles.text}>User1</Text>
-          <Text style={styles.text}>User1</Text>
-          <Text style={styles.text}>User1</Text>
-          <Text style={styles.text}>User1</Text>
-          <Text style={styles.text}>User1</Text>
-        </View>
-      ) : null}
+      <View style={styles.list}>
+        {isViewUserList ? <SwitcherList usernames={usernames} onLogout={onLogout} deleteLocalAccount={deleteLocalAccount} /> : null}
+      </View>
     </View>
   )
 }
@@ -123,8 +112,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceBold
   },
   separator: {
-    marginBottom: theme.rem(0.5),
-    marginTop: theme.rem(1),
+    marginBottom: theme.rem(1),
+    marginTop: theme.rem(1.5),
     marginRight: theme.rem(-1)
   }
 }))
