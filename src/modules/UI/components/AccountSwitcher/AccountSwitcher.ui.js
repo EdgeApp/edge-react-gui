@@ -34,8 +34,6 @@ export const selector = (state: RootState): StateProps => ({
   disklet: state.core.disklet
 })
 
-const cleanups = []
-
 export default function AccountSwitcher(props: Props) {
   const [isViewUserList, setIsViewUserList] = useState(false)
   const [localUsers, setLocalUsers] = useState([])
@@ -54,13 +52,13 @@ export default function AccountSwitcher(props: Props) {
   const usernames = [...getRecentUserNames(username, mostRecentUsernames, coreUserNames), ...sortUserNames(coreUserNames, username)]
 
   useEffect(() => {
-    cleanups.push(context.watch('localUsers', localUsers => setLocalUsers(localUsers)))
+    const cleanup = context.watch('localUsers', localUsers => setLocalUsers(localUsers))
 
     getRecentLoginUsernames(disklet)
       .then(mostRecentUsernames => setMostRecentUsernames(mostRecentUsernames))
       .catch(showError)
 
-    return () => cleanups.forEach(cleanup => cleanup())
+    return () => cleanup()
   }, [context, context.localUsers, disklet])
 
   const onPress = () => {
@@ -68,11 +66,11 @@ export default function AccountSwitcher(props: Props) {
     onSwitch(!isViewUserList)
   }
 
-  const onLogout = () => {
+  const onSwitchAccount = (username: string) => {
     dispatch(logoutRequest(username))
   }
 
-  const deleteLocalAccount = () =>
+  const deleteLocalAccount = (username: string) =>
     Alert.alert(s.strings.delete_account_header, sprintf(s.strings.delete_username_account, username), [
       { text: s.strings.no, style: 'cancel' },
       { text: s.strings.yes, onPress: () => context.deleteLocalAccount(username).catch(showError) }
@@ -83,7 +81,7 @@ export default function AccountSwitcher(props: Props) {
       <SwitcherHeader onPress={onPress} username={username} />
       <Separator style={styles.separator} />
       <View style={styles.list}>
-        {isViewUserList ? <SwitcherList usernames={usernames} onLogout={onLogout} deleteLocalAccount={deleteLocalAccount} /> : null}
+        {isViewUserList ? <SwitcherList usernames={usernames} onSwitchAccount={onSwitchAccount} deleteLocalAccount={deleteLocalAccount} /> : null}
       </View>
     </View>
   )

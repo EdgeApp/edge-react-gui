@@ -7,13 +7,13 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import { type Theme, cacheStyles, useTheme } from '../../../../../components/services/ThemeContext'
 import { EdgeText } from '../../../../../components/themed/EdgeText'
 export type Props = {
-  onLogout: (username?: string) => void,
-  deleteLocalAccount: () => void,
+  onSwitchAccount: (username: string) => void,
+  deleteLocalAccount: (username: string) => void,
   usernames: any
 }
 
 export default function SwitcherList(props: Props) {
-  const { onLogout, deleteLocalAccount, usernames } = props
+  const { onSwitchAccount, deleteLocalAccount, usernames } = props
 
   const theme = useTheme()
   const styles = getStyles(theme)
@@ -22,10 +22,10 @@ export default function SwitcherList(props: Props) {
     <ScrollView style={styles.container}>
       {usernames.map((username: string) => (
         <View key={username} style={styles.row}>
-          <TouchableHighlight style={styles.textContainer} onPress={onLogout}>
+          <TouchableHighlight style={styles.textContainer} onPress={() => onSwitchAccount(username)}>
             <EdgeText style={styles.text}>{username}</EdgeText>
           </TouchableHighlight>
-          <TouchableHighlight style={styles.icon} onPress={deleteLocalAccount}>
+          <TouchableHighlight style={styles.icon} onPress={() => deleteLocalAccount(username)}>
             <View /* Hack, do not remove */>
               <MaterialIcon size={theme.rem(1.5)} name="close" color={theme.iconPanel} />
             </View>
