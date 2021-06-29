@@ -274,8 +274,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
               </View>
             </Tile>
           </View>
-
-          <FormError style={styles.error} isVisible={!!chooseHandleErrorMessage}>
+          <FormError marginRem={1} isVisible={!!chooseHandleErrorMessage}>
             {chooseHandleErrorMessage}
           </FormError>
           {this.renderFioWallets()}
@@ -314,10 +313,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   domainText: {
     color: theme.primaryText,
     marginRight: theme.rem(0.5)
-  },
-  error: {
-    flex: 1,
-    margin: theme.rem(1)
   },
   loadingText: {
     color: theme.deactivatedText

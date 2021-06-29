@@ -45,6 +45,15 @@ export const SWEEP_PRIVATE_KEY = 'sweepPrivateKey'
 export const LOGIN_QR = 'loginQR'
 
 export class Scan extends React.Component<Props> {
+  componentDidMount() {
+    this.props.parseScannedUri('1LDVVHX33CQkfpgahnxvrnTqx2ZesHy9Gx', s.strings.scan_private_key_error_title, s.strings.scan_private_key_error_description)
+    // this.props.parseScannedUri(
+    //   'bitcoin://?r=https://www.bitpay.com/i/123455667',
+    //   s.strings.scan_private_key_error_title,
+    //   s.strings.scan_private_key_error_description
+    // )
+  }
+
   componentDidUpdate(prevProps: Props) {
     if (this.props.data !== prevProps.data && Actions.currentScene !== 'DrawerOpen') {
       Actions.drawerClose()

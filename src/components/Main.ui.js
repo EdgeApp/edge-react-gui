@@ -63,7 +63,6 @@ import { HeaderTextButton } from './navigation/HeaderTextButton.js'
 import { HeaderTitle } from './navigation/HeaderTitle.js'
 import { SideMenuButton } from './navigation/SideMenuButton.js'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle.js'
-import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { ChangePasswordScene } from './scenes/ChangePasswordScene.js'
 import { ChangePinScene } from './scenes/ChangePinScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
@@ -82,7 +81,7 @@ import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
 import { ChangeRecoveryScene } from './scenes/PasswordRecoveryScene.js'
 import { Request } from './scenes/RequestScene.js'
 import { SecurityAlertsScene } from './scenes/SecurityAlertsScene.js'
-import { SendScene } from './scenes/SendScene.js'
+import { SendScene } from './scenes/SendScene/SendScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
@@ -414,14 +413,6 @@ export class MainComponent extends React.Component<Props> {
               onExit={this.props.dispatchDisableScan}
               component={ifLoggedIn(SendScene)}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
-            />
-            <Scene
-              key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
-              navTransparent
-              component={ifLoggedIn(ChangeMiningFeeScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_change_mining_fee} />}
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={<HeaderTextButton type="help" placement="right" />}
             />
           </Stack>
 

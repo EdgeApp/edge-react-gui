@@ -34,8 +34,6 @@ type State = {
 }
 
 class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
-  textInput = React.createRef()
-
   constructor(props: Props) {
     super(props)
     this.state = {
@@ -101,9 +99,6 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
 
   clearText = () => {
     this.setState({ searchTerm: '' })
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
   }
 
   handleOnFocus = () => {
@@ -162,7 +157,6 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
               onClear={this.clearText}
               isClearable={isFocused}
               marginRem={[0, 1.75]}
-              ref={this.textInput}
               blurOnSubmit
             />
             <FlatList

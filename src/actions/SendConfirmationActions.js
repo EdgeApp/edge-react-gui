@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeParsedUri, type EdgeTransaction, asMaybeInsufficientFundsError } from 'edge-core-js'
+import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeParsedUri, type EdgeTransaction, type EdgeSpendInfo, asMaybeInsufficientFundsError } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -453,3 +453,6 @@ export const updateTransactionAmount =
         })
       })
   }
+
+// This action doesn't dispatch anything, it's only needed to receive data using the state of the local component.
+export const getAuthRequiredType = (spendInfo: EdgeSpendInfo) => (dispatch: Dispatch, getState: GetState) => getAuthRequired(getState(), spendInfo)

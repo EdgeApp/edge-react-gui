@@ -25,8 +25,6 @@ type State = {
 }
 
 export class CreateWalletName extends React.Component<Props, State> {
-  textInput = React.createRef()
-
   constructor(props: Props) {
     super(props)
     let walletName = ''
@@ -48,9 +46,6 @@ export class CreateWalletName extends React.Component<Props, State> {
 
   clearText = () => {
     this.setState({ walletName: '' })
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
   }
 
   handleOnFocus = () => {
@@ -98,7 +93,6 @@ export class CreateWalletName extends React.Component<Props, State> {
           onClear={this.clearText}
           isClearable={this.state.isFocused}
           marginRem={[0, 1.75]}
-          ref={this.textInput}
           blurOnSubmit
           showSearchIcon={false}
         />

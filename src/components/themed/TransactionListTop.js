@@ -152,9 +152,6 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   clearText = () => {
     this.setState({ input: '' })
     this.props.onSearchTransaction('')
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
   }
 
   render() {

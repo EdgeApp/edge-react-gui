@@ -93,9 +93,6 @@ class DomainListModalComponent extends React.Component<Props, State> {
 
   clearText = () => {
     this.setState({ input: '' })
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
   }
 
   fieldOnFocus = () => {

@@ -63,9 +63,6 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
 
   clearText = () => {
     this.props.onChangeSearchText('')
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
   }
 
   render() {

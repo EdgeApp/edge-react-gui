@@ -28,7 +28,6 @@ type CountrySelectionModalState = {
 type Props = CountrySelectionModalProps & ThemeProps
 
 class CountrySelectionModalComponent extends React.Component<Props, CountrySelectionModalState> {
-  textInput = React.createRef()
   constructor(props: Props) {
     super(props)
     const deviceCountry = getCountry() // "US"
@@ -51,9 +50,6 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
 
   clearText = () => {
     this.setState({ input: '' })
-    if (this.textInput.current) {
-      this.textInput.current.blur()
-    }
   }
 
   handleOnFocus = () => {
@@ -121,7 +117,6 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
           onClear={this.clearText}
           isClearable={isFocused}
           marginRem={[0, 1.75]}
-          ref={this.textInput}
           blurOnSubmit
         />
         <FlatList

@@ -379,7 +379,7 @@ class FioAddressRegister extends React.Component<Props, State> {
     }
 
     return (
-      <FormError style={styles.error} isVisible={!!chooseHandleErrorMessage}>
+      <FormError marginRem={1} isVisible={!!chooseHandleErrorMessage}>
         {chooseHandleErrorMessage}
       </FormError>
     )
@@ -474,10 +474,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   next: {
     flex: 1
-  },
-  error: {
-    flex: 1,
-    margin: theme.rem(1)
   },
   addressTileBody: {
     flexDirection: 'row'

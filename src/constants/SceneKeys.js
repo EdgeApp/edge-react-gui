@@ -8,7 +8,6 @@ export const EDGE = 'edge'
 // Logged-in scenes:
 export const ADD_TOKEN = 'addToken'
 export const CHANGE_MINING_FEE_EXCHANGE = 'changeMiningFeeExchange'
-export const CHANGE_MINING_FEE_SEND_CONFIRMATION = 'changeMiningFeeSendConfirmation'
 export const CHANGE_PASSWORD = 'changePassword'
 export const CHANGE_PIN = 'changePin'
 export const CREATE_WALLET = 'createWallet'

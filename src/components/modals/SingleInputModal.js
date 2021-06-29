@@ -39,10 +39,6 @@ const SingleInputModalComponent = ({ bridge, title, label, theme, onSubmit, valu
 
   const clearText = () => {
     setValue('')
-
-    if (textInput.current) {
-      textInput.current.blur()
-    }
   }
 
   return (
