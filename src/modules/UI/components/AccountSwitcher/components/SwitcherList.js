@@ -17,7 +17,6 @@ export default function SwitcherList(props: Props) {
 
   const theme = useTheme()
   const styles = getStyles(theme)
-
   return (
     <ScrollView style={styles.container}>
       {usernames.map((username: string) => (

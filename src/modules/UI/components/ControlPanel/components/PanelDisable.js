@@ -1,25 +1,53 @@
 // @flow
 
 import * as React from 'react'
-import { View } from 'react-native'
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import { type Theme, cacheStyles, useTheme } from '../../../../../components/services/ThemeContext'
+import { useEffect, useState } from '../../../../../util/hooks'
 
 type Props = {
   isDisable: boolean
 }
 
-export default function PanelLogo(props: Props) {
+export default function PanelDisable(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  return props.isDisable ? <View style={styles.disable} /> : null
+  const { isDisable } = props
+
+  const [isRender, setIsRender] = useState(isDisable)
+
+  const opacity = useSharedValue(0)
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (isDisable) {
+      setIsRender(isDisable)
+      opacity.value = 0.8
+    } else {
+      opacity.value = 0
+      setTimeout(() => {
+        setIsRender(isDisable)
+      }, 500)
+    }
+  })
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(opacity.value, {
+        duration: 500,
+        easing: Easing.linear
+      })
+    }
+  })
+
+  return isRender ? <Animated.View style={[styles.disable, animatedStyle]} /> : null
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
   disable: {
     backgroundColor: '#87939E',
-    opacity: 0.8,
     position: 'absolute',
     zIndex: 1,
     top: 0,

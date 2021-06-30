@@ -39,7 +39,6 @@ const selector = (state: RootState): StateProps => {
 }
 
 function PanelCurrency() {
-  console.debug('RENDER PANEL CURRENCY')
   const theme = useTheme()
   const styles = getStyles(theme)
 

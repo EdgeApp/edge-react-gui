@@ -14,6 +14,7 @@ import { type RootState } from '../../../../reducers/RootReducer.js'
 import { useDispatch, useEffect, useSelector, useState } from '../../../../util/hooks.js'
 import { reduxShallowEqual } from '../../../../util/utils.js'
 import { logoutRequest } from '../../../Login/action'
+import DropDownList from '../DropDownList/DropDownList.ui'
 import SwitcherHeader from './components/SwitcherHeader'
 import SwitcherList from './components/SwitcherList'
 import { getCoreUserNames, getRecentLoginUsernames, getRecentUserNames, sortUserNames } from './helpers'
@@ -35,7 +36,6 @@ export const selector = (state: RootState): StateProps => ({
 })
 
 export default function AccountSwitcher(props: Props) {
-  const [isViewUserList, setIsViewUserList] = useState(false)
   const [localUsers, setLocalUsers] = useState([])
   const [mostRecentUsernames, setMostRecentUsernames] = useState([])
 
@@ -61,11 +61,6 @@ export default function AccountSwitcher(props: Props) {
     return () => cleanup()
   }, [context, context.localUsers, disklet])
 
-  const onPress = () => {
-    setIsViewUserList(!isViewUserList)
-    onSwitch(!isViewUserList)
-  }
-
   const onSwitchAccount = (username: string) => {
     dispatch(logoutRequest(username))
   }
@@ -78,11 +73,17 @@ export default function AccountSwitcher(props: Props) {
 
   return (
     <View>
-      <SwitcherHeader onPress={onPress} username={username} />
-      <Separator style={styles.separator} />
-      <View style={styles.list}>
-        {isViewUserList ? <SwitcherList usernames={usernames} onSwitchAccount={onSwitchAccount} deleteLocalAccount={deleteLocalAccount} /> : null}
-      </View>
+      <DropDownList
+        onIsOpen={onSwitch}
+        header={<SwitcherHeader username={username} />}
+        separator={<Separator style={styles.separator} />}
+        isFetching={usernames.length === 0}
+        list={
+          <View style={styles.list}>
+            <SwitcherList usernames={usernames} onSwitchAccount={onSwitchAccount} deleteLocalAccount={deleteLocalAccount} />
+          </View>
+        }
+      />
     </View>
   )
 }
@@ -91,27 +92,24 @@ const getStyles = cacheStyles((theme: Theme) => ({
   list: {
     display: 'flex',
     alignItems: 'center',
-    paddingBottom: theme.rem(1)
+    paddingBottom: theme.rem(1),
+    width: '100%'
   },
-  header: {
+  listItem: {
+    height: 40,
+    borderBottomWidth: 1,
     display: 'flex',
-    flexDirection: 'row',
+    alignSelf: 'stretch',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'center'
   },
-  iconUser: {
-    marginRight: theme.rem(1.5)
-  },
-  textContainer: {
-    marginRight: 'auto'
-  },
-  text: {
-    color: 'white',
-    fontFamily: theme.fontFaceBold
+  listItemText: {
+    textAlign: 'center',
+    color: 'white'
   },
   separator: {
     marginBottom: theme.rem(1),
-    marginTop: theme.rem(1.5),
+    marginTop: theme.rem(1.2),
     marginRight: theme.rem(-1)
   }
 }))

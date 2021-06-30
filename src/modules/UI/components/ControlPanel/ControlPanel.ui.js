@@ -8,7 +8,7 @@ import { SceneWrapper } from '../../../../components/common/SceneWrapper.js'
 import { type Theme, cacheStyles, useTheme } from '../../../../components/services/ThemeContext'
 import Separator from '../../../../components/themed/Separator'
 import { type RootState } from '../../../../reducers/RootReducer.js'
-import { useDispatch, useSelector, useState } from '../../../../util/hooks'
+import { useDispatch, useEffect, useSelector, useState } from '../../../../util/hooks'
 import { reduxShallowEqual } from '../../../../util/utils.js'
 import { logoutRequest } from '../../../Login/action'
 import AccountSwitcher from '../AccountSwitcher/AccountSwitcher.ui'
@@ -27,10 +27,22 @@ const selector = (state: RootState) => ({
   selectedCurrencyCode: state.ui.wallets.selectedCurrencyCode
 })
 
-export default function ControlPanel() {
+type Props = { navigation: { state: { openId: string } } }
+
+export default function ControlPanel({
+  navigation: {
+    state: { openId }
+  }
+}: Props) {
   const [isViewUserList, setIsViewUserList] = useState(false)
 
-  const toggleUserList = (value: boolean) => setIsViewUserList(value)
+  // useEffect(() => {
+  //   setIsViewUserList(false)
+  // }, [openId])
+
+  const toggleUserList = (value: boolean) => {
+    setIsViewUserList(value)
+  }
 
   const dispatch = useDispatch()
 
@@ -42,7 +54,7 @@ export default function ControlPanel() {
 
   if (!selectedWalletId) return null
 
-  // // Create redux actions
+  // Create redux actions
   const onLogout = () => dispatch(logoutRequest())
   const onSelectWallet = (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(selectedWalletId, selectedCurrencyCode))
 
@@ -68,10 +80,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.panelBackground,
     position: 'relative',
     paddingHorizontal: theme.rem(1),
-    paddingTop: theme.rem(13.5)
+    paddingTop: theme.rem(13)
   },
   separator: {
-    marginBottom: theme.rem(1.5),
+    marginBottom: theme.rem(2),
     marginTop: theme.rem(1)
   },
   header: {
