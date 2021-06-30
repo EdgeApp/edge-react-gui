@@ -795,6 +795,7 @@ const strings = {
   export_transaction_export_error: 'No transactions in the date range chosen',
   export_transaction_loading: 'Exporting Transactions…',
   string_allow: 'Allow',
+  string_deny: 'Deny',
 
   step: 'Step',
   scan_as_in_scan_barcode: 'Scan',
