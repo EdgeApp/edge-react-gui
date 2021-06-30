@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 
 import { setDefaultFiatRequest } from '../../actions/SettingsActions'
 import s from '../../locales/strings.js'
-import { getDefaultFiat } from '../../modules/Settings/selectors'
+import { getDefaultFiat } from '../../modules/Settings/selectors.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'

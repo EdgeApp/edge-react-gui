@@ -11,7 +11,7 @@ import { sprintf } from 'sprintf-js'
 
 import { playReceiveSound } from '../../actions/SoundActions.js'
 import s from '../../locales/strings.js'
-import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
+import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
@@ -79,7 +79,7 @@ const ConnectedTransactionDropdown = connect(
     }
 
     const { nativeAmount, currencyCode } = tx
-    const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+    const displayDenomination = getDisplayDenomination(state, currencyCode)
     const { symbol, name, multiplier } = displayDenomination
     const displayAmount = convertNativeToDisplay(multiplier)(nativeAmount)
 

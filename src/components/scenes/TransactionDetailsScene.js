@@ -15,7 +15,7 @@ import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../.
 import * as Constants from '../../constants/indexConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/Settings/selectors.js'
+import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
@@ -588,10 +588,9 @@ export const TransactionDetailsScene = connect(
     const wallet = state.ui.wallets.byId[walletId || state.ui.wallets.selectedWalletId]
     const contacts = state.contacts
     const subcategoriesList = state.ui.scenes.transactionDetails.subcategories.sort()
-    const settings = getSettings(state)
+    const { settings } = state.ui
     const currencyCode = edgeTransaction.currencyCode
-    const plugins = getPlugins(state)
-    const allCurrencyInfos = plugins.allCurrencyInfos
+    const { allCurrencyInfos } = state.ui.settings.plugins
     const currencyInfo = UTILS.getCurrencyInfo(allCurrencyInfos, currencyCode)
     const walletDefaultDenomProps: EdgeDenomination = UTILS.isCryptoParentCurrency(wallet, edgeTransaction.currencyCode)
       ? UTILS.getDenomination(wallet.currencyCode, settings, 'exchange')

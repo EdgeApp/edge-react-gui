@@ -14,7 +14,7 @@ import s from '../../../locales/strings'
 import { type RootState } from '../../../types/reduxTypes'
 import { type FioRequest, type GuiWallet } from '../../../types/types'
 import { getFiatSymbol } from '../../../util/utils'
-import { getDisplayDenomination } from '../../Settings/selectors'
+import { getDisplayDenomination } from '../../Settings/selectors.js'
 import { getSelectedWallet } from '../../UI/selectors'
 import { isRejectedFioRequest, isSentFioRequest } from '../util'
 

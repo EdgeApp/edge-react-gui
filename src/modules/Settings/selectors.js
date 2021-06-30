@@ -1,10 +1,23 @@
 // @flow
 
-import type { EdgeCurrencyInfo, EdgeDenomination } from 'edge-core-js'
+import { type EdgeDenomination } from 'edge-core-js'
 
-import { type CurrencySetting } from '../../reducers/scenes/SettingsReducer.js'
+import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import isoFiatDenominations from './ISOFiatDenominations'
+
+const isoFiatDenominations = {
+  'iso:USD': {
+    multiplier: '100',
+    denominations: [
+      {
+        name: 'USD',
+        symbol: '$',
+        multiplier: '100',
+        precision: 2
+      }
+    ]
+  }
+}
 
 export const emptyEdgeDenomination: EdgeDenomination = {
   name: '',
@@ -12,53 +25,20 @@ export const emptyEdgeDenomination: EdgeDenomination = {
   symbol: ''
 }
 
-export const getSettings = (state: RootState) => {
-  const settings = state.ui.settings
-  return settings
-}
-
-export const getIsTouchIdSupported = (state: RootState) => {
-  const settings = getSettings(state)
-  return settings.isTouchSupported
-}
-export const getIsTouchIdEnabled = (state: RootState) => {
-  const settings = getSettings(state)
-  return settings.isTouchEnabled
-}
-
-export const getLoginStatus = (state: RootState): boolean | null => {
-  const settings = getSettings(state)
-  const loginStatus = settings.loginStatus
-  return loginStatus
-}
-
-export const getCurrencySettings = (state: RootState, currencyCode: string): CurrencySetting => {
-  const settings = getSettings(state)
-  const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
-  return currencySettings
-}
-
-export const getCryptocurrencySettings = (state: RootState, currencyCode: string) => {
-  const settings = getSettings(state)
-  const currencySettings = settings[currencyCode]
-  return currencySettings
-}
-
 export const getDenominations = (state: RootState, currencyCode: string): EdgeDenomination[] => {
-  const currencySettings = getCurrencySettings(state, currencyCode)
-  if (currencySettings == null || currencySettings.denominations == null) return [emptyEdgeDenomination]
-  const denominations = currencySettings.denominations
-  return denominations
+  const currencySettings = state.ui.settings[currencyCode] || isoFiatDenominations[currencyCode]
+  if (currencySettings == null || currencySettings.denominations == null) {
+    return [emptyEdgeDenomination]
+  }
+  return currencySettings.denominations
 }
 
 export const getDisplayDenominationKey = (state: RootState, currencyCode: string) => {
-  const settings = getSettings(state)
-  const currencySettings = settings[currencyCode]
-  const selectedDenominationKey = currencySettings ? currencySettings.denomination : '1'
-  return selectedDenominationKey
+  const currencySettings = state.ui.settings[currencyCode]
+  return currencySettings ? currencySettings.denomination : '1'
 }
 
-export const getDisplayDenominationFromSettings = (settings: any, currencyCode: string): EdgeDenomination => {
+export const getDisplayDenominationFromSettings = (settings: SettingsState, currencyCode: string): EdgeDenomination => {
   const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
   const selectedDenominationKey = currencySettings.denomination
   const denominations = currencySettings.denominations
@@ -108,52 +88,7 @@ export const getExchangeDenomination = (state: RootState, currencyCode: string) 
   return exchangeDenomination
 }
 
-export const getCustomTokens = (state: RootState) => {
-  const settings = getSettings(state)
-  return settings.customTokens
-}
-
-export const getPlugins = (state: RootState) => {
-  const settings = getSettings(state)
-  const plugins = settings.plugins
-  return plugins
-}
-
-export const getPluginInfo = (state: RootState, type: string): EdgeCurrencyInfo => {
-  const plugins = getPlugins(state)
-  const currencyInfo: EdgeCurrencyInfo = plugins[type.toLowerCase()]
-  return currencyInfo
-}
-
-export const getSettingsLock = (state: RootState) => {
-  const settings = getSettings(state)
-  return settings.changesLocked
-}
-export const getAutoLogoutTimeInSeconds = (state: RootState): number => {
-  const settings = getSettings(state)
-  return settings.autoLogoutTimeInSeconds
-}
-
 export const getDefaultFiat = (state: RootState) => {
-  const settings = getSettings(state)
-  const defaultIsoFiat: string = settings.defaultIsoFiat
-  const defaultFiat = defaultIsoFiat.replace('iso:', '')
-  return defaultFiat
-}
-
-export const getDefaultIsoFiat = (state: RootState) => {
-  const settings = getSettings(state)
-  const defaultIsoFiat: string = settings.defaultIsoFiat
-  return defaultIsoFiat
-}
-
-export const getPinLoginEnabled = (state: RootState) => {
-  const settings = getSettings(state)
-  const pinLoginEnabled = settings.pinLoginEnabled
-  return pinLoginEnabled
-}
-
-export const getIsAccountBalanceVisible = (state: RootState) => {
-  const settings = getSettings(state)
-  return settings.isAccountBalanceVisible
+  const defaultIsoFiat: string = state.ui.settings.defaultIsoFiat
+  return defaultIsoFiat.replace('iso:', '')
 }

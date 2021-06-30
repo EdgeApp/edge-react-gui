@@ -22,7 +22,7 @@ import {
 import * as Constants from '../../constants/indexConstants'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
-import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
+import { getDefaultFiat } from '../../modules/Settings/selectors.js'
 import { edgeDark } from '../../theme/variables/edgeDark.js'
 import { edgeLight } from '../../theme/variables/edgeLight.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
@@ -304,11 +304,11 @@ export const SettingsScene = connect(
   (state: RootState): StateProps => ({
     account: state.core.account,
     context: state.core.context,
-    autoLogoutTimeInSeconds: SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state),
-    defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
+    autoLogoutTimeInSeconds: state.ui.settings.autoLogoutTimeInSeconds,
+    defaultFiat: getDefaultFiat(state),
     developerModeOn: state.ui.settings.developerModeOn,
-    isLocked: SETTINGS_SELECTORS.getSettingsLock(state),
-    pinLoginEnabled: SETTINGS_SELECTORS.getPinLoginEnabled(state),
+    isLocked: state.ui.settings.changesLocked,
+    pinLoginEnabled: state.ui.settings.pinLoginEnabled,
     supportsTouchId: state.ui.settings.isTouchSupported,
     touchIdEnabled: state.ui.settings.isTouchEnabled
   }),

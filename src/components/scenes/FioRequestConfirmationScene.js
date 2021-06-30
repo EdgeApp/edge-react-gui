@@ -11,7 +11,7 @@ import * as Constants from '../../constants/indexConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache, checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddress/util'
-import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
+import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { type RootState } from '../../types/reduxTypes'
@@ -330,7 +330,7 @@ const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
     }
   }
 
-  const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, currencyCode)
   const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, currencyCode)
   const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
   const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination

@@ -9,7 +9,6 @@ import type { SortOption } from '../components/modals/WalletListSortModal.js'
 import { Airship, showError, showFullScreenSpinner } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
-import { getSettings } from '../modules/Settings/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { getCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 
@@ -86,8 +85,7 @@ const getCurrencyAddress = async (currencyCode, getState) => {
   }
 
   // Wallet Creation
-  const settings = getSettings(state)
-  const { defaultIsoFiat } = settings
+  const { defaultIsoFiat } = state.ui.settings
 
   const createWalletTypes = getCreateWalletType(account, currencyCode)
   if (!createWalletTypes) throw new Error(s.strings.wallet_list_referral_link_currency_invalid)

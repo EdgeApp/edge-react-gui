@@ -17,7 +17,7 @@ import * as Constants from '../../constants/indexConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
-import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
+import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
 import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../modules/UI/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
@@ -564,8 +564,7 @@ export const Request = connect(
     const guiWallet: GuiWallet = getSelectedWallet(state)
     const currencyCode: string = state.ui.wallets.selectedCurrencyCode
 
-    const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
-    const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
+    const { allCurrencyInfos } = state.ui.settings.plugins
     const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
 
     if (!guiWallet || !currencyCode) {
@@ -587,7 +586,7 @@ export const Request = connect(
     }
 
     const edgeWallet: EdgeCurrencyWallet = currencyWallets[guiWallet.id]
-    const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, currencyCode)
     const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, currencyCode)
     const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
     const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
