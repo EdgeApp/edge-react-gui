@@ -171,6 +171,7 @@ Object {
           "publicAddress": "",
         },
         "isEditable": true,
+        "maxSpendSet": false,
         "nativeAmount": "0",
         "pending": false,
         "pin": "",

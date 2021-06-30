@@ -205,6 +205,10 @@ export type Action =
         transaction: EdgeTransaction | null
       }
     }
+  | {
+      type: 'UI/SEND_CONFIRMATION/SET_MAX_SPEND',
+      data: boolean
+    }
   | { type: 'UI/SETTINGS/CHANGE_TOUCH_ID_SETTINGS', data: { isTouchEnabled: boolean } }
   | { type: 'UI/SETTINGS/SET_ACCOUNT_BALANCE_VISIBILITY', data: { isAccountBalanceVisible: boolean } }
   | { type: 'UI/SETTINGS/SET_AUTO_LOGOUT_TIME', data: { autoLogoutTimeInSeconds: number } }
