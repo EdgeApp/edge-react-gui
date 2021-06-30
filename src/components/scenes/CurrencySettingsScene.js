@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 
 import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenominationKeyRequest } from '../../actions/SettingsActions.js'
 import s from '../../locales/strings.js'
-import { getDenominations, getDisplayDenominationKey } from '../../modules/Settings/selectors.js'
+import { getDenominations, getDisplayDenominationKey } from '../../selectors/DenominationSelectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiDenomination } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'

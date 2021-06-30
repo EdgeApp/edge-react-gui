@@ -11,7 +11,7 @@ import { sprintf } from 'sprintf-js'
 
 import { playReceiveSound } from '../../actions/SoundActions.js'
 import s from '../../locales/strings.js'
-import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
+import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'

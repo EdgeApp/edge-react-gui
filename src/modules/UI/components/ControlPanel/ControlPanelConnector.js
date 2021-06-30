@@ -2,10 +2,10 @@
 
 import { connect } from 'react-redux'
 
+import { getDisplayDenominationFull, getPrimaryExchangeDenomination } from '../../../../selectors/DenominationSelectors.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
-import { getDisplayDenominationFull } from '../../../Settings/selectors.js'
-import { getExchangeRate, getPrimaryExchangeDenomination, getSelectedWallet } from '../../../UI/selectors.js'
+import { getExchangeRate, getSelectedWallet } from '../../../UI/selectors.js'
 import ControlPanel from './ControlPanel.ui'
 
 const mapStateToProps = (state: RootState) => {

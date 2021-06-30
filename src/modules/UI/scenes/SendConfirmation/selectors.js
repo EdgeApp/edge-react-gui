@@ -3,10 +3,10 @@
 import type { EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
+import { getExchangeDenomination } from '../../../../selectors/DenominationSelectors.js'
 import { type RootState } from '../../../../types/reduxTypes.js'
 import { type SpendAuthType } from '../../../../types/types.js'
 import { convertNativeToExchange } from '../../../../util/utils.js'
-import { getExchangeDenomination } from '../../../Settings/selectors.js'
 import { convertCurrency } from '../../selectors.js'
 
 export const initialState = {

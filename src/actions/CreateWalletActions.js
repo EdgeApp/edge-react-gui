@@ -11,7 +11,7 @@ import { type AccountPaymentParams } from '../components/scenes/CreateWalletAcco
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
-import { getExchangeDenomination } from '../modules/Settings/selectors.js'
+import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { logEvent } from '../util/tracking.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'

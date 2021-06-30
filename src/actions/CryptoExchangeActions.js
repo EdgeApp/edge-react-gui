@@ -25,8 +25,12 @@ import { Airship, showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import { formatNumber } from '../locales/intl.js'
 import s from '../locales/strings.js'
-import { getDisplayDenomination, getDisplayDenominationFromSettings, getExchangeDenomination } from '../modules/Settings/selectors.js'
-import { getPrimaryExchangeDenomination } from '../modules/UI/selectors'
+import {
+  getDisplayDenomination,
+  getDisplayDenominationFromSettings,
+  getExchangeDenomination,
+  getPrimaryExchangeDenomination
+} from '../selectors/DenominationSelectors.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
 import { bestOfPlugins } from '../util/ReferralHelpers.js'

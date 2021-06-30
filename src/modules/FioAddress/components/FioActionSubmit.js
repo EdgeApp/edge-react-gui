@@ -17,8 +17,8 @@ import { Tile } from '../../../components/themed/Tile'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings'
 import type { RootState } from '../../../reducers/RootReducer'
+import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { truncateDecimals } from '../../../util/utils'
-import { getDisplayDenomination } from '../../Settings/selectors.js'
 import { Slider } from '../../UI/components/Slider/Slider'
 
 const DIVIDE_PRECISION = 18
