@@ -11,7 +11,7 @@ import { type SetNativeAmountInfo, getQuoteForTransaction, selectWalletForExchan
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { getExchangeRate } from '../../modules/UI/selectors.js'
+import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiCurrencyInfo, type GuiWallet, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
 import { getDenomFromIsoCode } from '../../util/utils.js'

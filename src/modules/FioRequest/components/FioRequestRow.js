@@ -12,10 +12,10 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { formatNumber, formatTime } from '../../../locales/intl.js'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
+import { getSelectedWallet } from '../../../selectors/WalletSelectors.js'
 import { type RootState } from '../../../types/reduxTypes'
 import { type FioRequest, type GuiWallet } from '../../../types/types'
 import { getFiatSymbol } from '../../../util/utils'
-import { getSelectedWallet } from '../../UI/selectors'
 import { isRejectedFioRequest, isSentFioRequest } from '../util'
 
 type OwnProps = {

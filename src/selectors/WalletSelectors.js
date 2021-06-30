@@ -3,10 +3,10 @@
 import { bns } from 'biggystring'
 import { type EdgeCurrencyWallet } from 'edge-core-js'
 
-import { formatNumber } from '../../locales/intl.js'
-import { type RootState } from '../../types/reduxTypes.js'
-import { type GuiWallet } from '../../types/types.js'
-import { convertNativeToExchange } from '../../util/utils.js'
+import { formatNumber } from '../locales/intl.js'
+import { type RootState } from '../types/reduxTypes.js'
+import { type GuiWallet } from '../types/types.js'
+import { convertNativeToExchange } from '../util/utils.js'
 
 export function getSelectedWallet(state: RootState): GuiWallet {
   return state.ui.wallets.byId[state.ui.wallets.selectedWalletId]

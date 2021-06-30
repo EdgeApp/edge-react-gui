@@ -2,8 +2,8 @@
 
 import { getUniqueId } from 'react-native-device-info'
 
+import { getActiveWalletCurrencyCodes } from '../../selectors/WalletSelectors.js'
 import type { Dispatch, GetState } from '../../types/reduxTypes'
-import { getActiveWalletCurrencyCodes } from '../UI/selectors'
 
 const { notif1 } = require('../notifServer')
 

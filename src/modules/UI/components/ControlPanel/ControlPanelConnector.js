@@ -3,9 +3,9 @@
 import { connect } from 'react-redux'
 
 import { getDisplayDenominationFull, getPrimaryExchangeDenomination } from '../../../../selectors/DenominationSelectors.js'
+import { getExchangeRate, getSelectedWallet } from '../../../../selectors/WalletSelectors.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
-import { getExchangeRate, getSelectedWallet } from '../../../UI/selectors.js'
 import ControlPanel from './ControlPanel.ui'
 
 const mapStateToProps = (state: RootState) => {

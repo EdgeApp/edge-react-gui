@@ -4,7 +4,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import { formatNumber } from '../../locales/intl.js'
-import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
+import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
 import type { RootState } from '../../types/reduxTypes.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import { getCryptoAmount, getCurrencyInfo, getDenomFromIsoCode, getDenomination, getFiatSymbol, getYesterdayDateRoundDownHour } from '../../util/utils'
