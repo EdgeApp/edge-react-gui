@@ -28,7 +28,8 @@ type OwnProps = {
 type StateProps = {
   networkFeeOption?: FeeOption,
   customNetworkFee?: Object,
-  spendTargets?: EdgeSpendTarget[]
+  spendTargets?: EdgeSpendTarget[],
+  maxSpendSet: boolean
 }
 
 type DispatchProps = {
@@ -69,8 +70,13 @@ export class ChangeMiningFee extends React.Component<Props, State> {
 
   onSubmit = () => {
     const { networkFeeOption, customNetworkFee } = this.state
-    const { currencyCode, wallet, spendTargets = [] } = this.props
-    const testSpendInfo = { spendTargets, networkFeeOption, customNetworkFee, currencyCode }
+    const { currencyCode, wallet, spendTargets = [], maxSpendSet } = this.props
+    const testSpendInfo = {
+      spendTargets: maxSpendSet ? spendTargets.map(spendTarget => ({ ...spendTarget, nativeAmount: '0' })) : spendTargets,
+      networkFeeOption,
+      customNetworkFee,
+      currencyCode
+    }
     wallet
       .makeSpend(testSpendInfo)
       .then(() => {
@@ -206,11 +212,12 @@ export const ChangeMiningFeeScene = connect(
   (state: RootState): StateProps => ({
     networkFeeOption: getGuiMakeSpendInfo(state).networkFeeOption,
     customNetworkFee: getGuiMakeSpendInfo(state).customNetworkFee,
-    spendTargets: getGuiMakeSpendInfo(state).spendTargets
+    spendTargets: getGuiMakeSpendInfo(state).spendTargets,
+    maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet
   }),
   (dispatch: Dispatch): DispatchProps => ({
     onSubmit(networkFeeOption: string, customNetworkFee: Object, walletId: string, currencyCode?: string) {
-      dispatch(sendConfirmationUpdateTx({ networkFeeOption, customNetworkFee }, true, walletId, currencyCode))
+      dispatch(sendConfirmationUpdateTx({ networkFeeOption, customNetworkFee }, true, walletId, currencyCode, true))
     }
   })
 )(ChangeMiningFee)

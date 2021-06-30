@@ -51,7 +51,9 @@ export const initialState = {
   authRequired: 'none',
   address: '',
 
-  toggleCryptoOnTop: 0
+  toggleCryptoOnTop: 0,
+
+  maxSpendSet: false
 }
 
 export const getTransaction = (state: RootState): EdgeTransaction => state.ui.scenes.sendConfirmation.transaction || initialState.transaction

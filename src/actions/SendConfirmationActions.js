@@ -54,14 +54,22 @@ const updateAmount =
   }
 
 export const sendConfirmationUpdateTx =
-  (guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true, selectedWalletId?: string, selectedCurrencyCode?: string) =>
+  (
+    guiMakeSpendInfo: GuiMakeSpendInfo | EdgeParsedUri,
+    forceUpdateGui?: boolean = true,
+    selectedWalletId?: string,
+    selectedCurrencyCode?: string,
+    isFeeChanged: boolean = false
+  ) =>
   async (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const { currencyWallets } = state.core.account
 
     const walletId = selectedWalletId || state.ui.wallets.selectedWalletId
     const edgeWallet = currencyWallets[walletId]
+    const maxSpendSet = state.ui.scenes.sendConfirmation.maxSpendSet
     const guiMakeSpendInfoClone = { ...guiMakeSpendInfo }
+    if (maxSpendSet && isFeeChanged) guiMakeSpendInfoClone.nativeAmount = '0'
     const spendInfo = getSpendInfo(state, guiMakeSpendInfoClone, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode)
 
     const authRequired = getAuthRequired(state, spendInfo)
@@ -70,6 +78,9 @@ export const sendConfirmationUpdateTx =
       data: { spendInfo, authRequired }
     })
 
+    if (maxSpendSet && isFeeChanged) {
+      return dispatch(updateMaxSpend(walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone))
+    }
     await edgeWallet
       .makeSpend(spendInfo)
       .then(edgeTransaction => {
@@ -125,41 +136,46 @@ export const sendConfirmationUpdateTx =
       })
   }
 
-export const updateMaxSpend = (selectedWalletId?: string, selectedCurrencyCode?: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { currencyWallets } = state.core.account
+export const updateMaxSpend =
+  (selectedWalletId?: string, selectedCurrencyCode?: string, guiMakeSpendInfo?: GuiMakeSpendInfo) => (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const { currencyWallets } = state.core.account
 
-  const walletId = selectedWalletId || state.ui.wallets.selectedWalletId
-  const edgeWallet = currencyWallets[walletId]
-  const spendInfo = getSpendInfo(state, undefined, selectedCurrencyCode)
+    const walletId = selectedWalletId || state.ui.wallets.selectedWalletId
+    const edgeWallet = currencyWallets[walletId]
+    const spendInfo = getSpendInfo(state, guiMakeSpendInfo, selectedCurrencyCode)
 
-  edgeWallet
-    .getMaxSpendable(spendInfo)
-    .then(nativeAmount => {
-      const state = getState()
-      const spendInfo = getSpendInfo(state, { nativeAmount }, selectedCurrencyCode)
-      const authRequired = getAuthRequired(state, spendInfo)
+    edgeWallet
+      .getMaxSpendable(spendInfo)
+      .then(nativeAmount => {
+        const state = getState()
+        const spendInfo = getSpendInfo(state, { nativeAmount }, selectedCurrencyCode)
+        const authRequired = getAuthRequired(state, spendInfo)
 
-      const wallets = state.ui.wallets.byId
-      const guiWallet = wallets[walletId]
-      const currencyCode = selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode
-      const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
-      const exchangeDenomination = settingsGetExchangeDenomination(state, currencyCode)
+        const wallets = state.ui.wallets.byId
+        const guiWallet = wallets[walletId]
+        const currencyCode = selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode
+        const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
+        const exchangeDenomination = settingsGetExchangeDenomination(state, currencyCode)
 
-      const exchangeAmount = convertNativeToExchange(exchangeDenomination.multiplier)(nativeAmount)
-      const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+        const exchangeAmount = convertNativeToExchange(exchangeDenomination.multiplier)(nativeAmount)
+        const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
 
-      dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
-      dispatch({ type: 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP' })
-      dispatch({
-        type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
-        data: { spendInfo, authRequired }
+        dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
+        dispatch({ type: 'UI/SEND_CONFIRMATION/TOGGLE_CRYPTO_ON_TOP' })
+        dispatch({
+          type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
+          data: { spendInfo, authRequired }
+        })
+        dispatch({
+          type: 'UI/SEND_CONFIRMATION/SET_MAX_SPEND',
+          data: true
+        })
+
+        dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true, walletId, currencyCode))
       })
-
-      dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto.toString(), true, walletId, currencyCode))
-    })
-    .catch(showError)
-}
+      .catch(showError)
+  }
 
 export const signBroadcastAndSave =
   (fioSender?: FioSenderInfo, walletId?: string, selectedCurrencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {
@@ -420,6 +436,10 @@ export const updateTransactionAmount =
     dispatch({
       type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
       data: { spendInfo, authRequired: authType }
+    })
+    dispatch({
+      type: 'UI/SEND_CONFIRMATION/SET_MAX_SPEND',
+      data: false
     })
     coreWallet
       .makeSpend(spendInfo)
