@@ -19,25 +19,27 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
     <ButtonsModal
       bridge={bridge}
       buttons={{
-        ok: { label: s.strings.string_allow }
+        allow: { label: s.strings.string_allow },
+        deny: { label: s.strings.string_deny, type: 'secondary' }
       }}
-      closeButton
     >
-      <View style={styles.heanderContainer}>
-        <View style={styles.iconCircle}>
-          <Fontello name="edge.addresbook" size={theme.rem(1.5)} color={theme.icon} />
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <View style={styles.iconCircle}>
+            <Fontello name="edge.addresbook" size={theme.rem(1.5)} color={theme.icon} />
+          </View>
+          <EdgeText style={styles.header}>{s.strings.contacts_permission_modal_title}</EdgeText>
         </View>
-        <EdgeText style={styles.header}>{s.strings.contacts_permission_modal_title}</EdgeText>
+        <EdgeText numberOfLines={0} style={styles.message}>
+          {s.strings.contacts_permission_modal_text_1}
+        </EdgeText>
+        <EdgeText numberOfLines={0} style={styles.message}>
+          {s.strings.contacts_permission_modal_text_2}
+        </EdgeText>
+        <EdgeText numberOfLines={0} style={styles.messageLast}>
+          {s.strings.contacts_permission_modal_text_3}
+        </EdgeText>
       </View>
-      <EdgeText numberOfLines={0} style={styles.message}>
-        {s.strings.contacts_permission_modal_text_1}
-      </EdgeText>
-      <EdgeText numberOfLines={0} style={styles.message}>
-        {s.strings.contacts_permission_modal_text_2}
-      </EdgeText>
-      <EdgeText numberOfLines={0} style={styles.messageLast}>
-        {s.strings.contacts_permission_modal_text_3}
-      </EdgeText>
     </ButtonsModal>
   )
 }
@@ -46,7 +48,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1
   },
-  heanderContainer: {
+  headerContainer: {
     marginTop: theme.rem(1),
     justifyContent: 'center',
     alignItems: 'center'
@@ -71,10 +73,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   messageLast: {
     marginBottom: theme.rem(4)
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: theme.rem(0.5)
   }
 }))
