@@ -212,7 +212,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     const recipientAddress = parsedUri ? parsedUri.publicAddress : spendTargets && spendTargets[0].publicAddress ? spendTargets[0].publicAddress : ''
 
     if (parsedUri) {
-      const nativeAmount = parsedUri.nativeAmount || '0'
+      const nativeAmount = parsedUri.nativeAmount || ''
       const spendTargets: EdgeSpendTarget[] = [
         {
           publicAddress: parsedUri.publicAddress,
@@ -369,7 +369,9 @@ class SendComponent extends React.PureComponent<Props, State> {
       const cryptoExchangeDenomination = UTILS.getDenomination(selectedCurrencyCode, settings, 'exchange')
       const fiatDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
-      if (nativeAmount && !bns.eq(nativeAmount, '0')) {
+      if (nativeAmount == null || nativeAmount === '') {
+        cryptoAmountSyntax = s.strings.string_amount
+      } else if (!bns.eq(nativeAmount, '0')) {
         const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, UTILS.DIVIDE_PRECISION)
         const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, UTILS.DIVIDE_PRECISION)
         const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, parseFloat(exchangeAmount))

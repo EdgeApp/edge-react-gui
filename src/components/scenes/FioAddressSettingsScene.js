@@ -130,7 +130,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
     this.cancelOperation()
 
     const guiMakeSpendInfo = {
-      nativeAmount: '0',
+      nativeAmount: '',
       currencyCode: this.props.fioWallet.currencyInfo.currencyCode,
       otherParams: {
         fioAction: 'transferFioAddress',

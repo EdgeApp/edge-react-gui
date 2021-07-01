@@ -107,14 +107,17 @@ const sendConfirmationLegacy = (state: SendConfirmationState = initialState, act
   }
 }
 
-const nativeAmount: Reducer<string, Action> = (state = '0', action): string => {
+const nativeAmount: Reducer<string, Action> = (state = '', action): string => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO': {
-      return action.data.spendInfo.spendTargets.reduce((sum, target) => add(sum, target.nativeAmount ?? '0'), '0')
+      if (action.data.spendInfo.spendTargets[0].nativeAmount != null && action.data.spendInfo.spendTargets[0].nativeAmount !== '') {
+        return action.data.spendInfo.spendTargets.reduce((sum, target) => add(sum, target.nativeAmount ?? '0'), '0')
+      }
+      return state
     }
 
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
-      return action.data.guiMakeSpendInfo.nativeAmount || state || '0'
+      return action.data.guiMakeSpendInfo.nativeAmount || state || ''
     }
 
     default:
@@ -251,6 +254,7 @@ export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state =
 
   // make easier to debug legacySendConfirmation return value with breakpoint
   const legacySendConfirmation = sendConfirmationLegacy(state, action)
+
   return {
     ...legacySendConfirmation,
     error: error(state.error, action),
