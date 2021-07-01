@@ -5,7 +5,7 @@ import { Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import WalletIcon from '../../assets/images/createWallet/wallet_icon_lg.png'
-import * as Constants from '../../constants/indexConstants'
+import { CREATE_WALLET_IMPORT, CREATE_WALLET_SELECT_FIAT } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
@@ -24,12 +24,16 @@ type CreateWalletChoiceProps = {
 export class CreateWalletChoiceComponent extends React.PureComponent<CreateWalletChoiceProps> {
   onSelectNew = () => {
     const { selectedWalletType } = this.props
-    Actions[Constants.CREATE_WALLET_SELECT_FIAT]({ selectedWalletType })
+    Actions[CREATE_WALLET_SELECT_FIAT]({
+      selectedWalletType
+    })
   }
 
   onSelectRestore = () => {
     const { selectedWalletType } = this.props
-    Actions[Constants.CREATE_WALLET_IMPORT]({ selectedWalletType })
+    Actions[CREATE_WALLET_IMPORT]({
+      selectedWalletType
+    })
   }
 
   render() {

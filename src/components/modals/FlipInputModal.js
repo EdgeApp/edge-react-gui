@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { updateMaxSpend, updateTransactionAmount } from '../../actions/SendConfirmationActions.js'
-import * as Constants from '../../constants/indexConstants'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getExchangeRate } from '../../selectors/WalletSelectors.js'
@@ -97,7 +97,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     return (
       <View style={styles.headerContainer}>
         <ModalTitle>{s.strings.string_enter_amount}</ModalTitle>
-        {Constants.getSpecialCurrencyInfo(this.props.currencyCode).noMaxSpend !== true ? (
+        {getSpecialCurrencyInfo(this.props.currencyCode).noMaxSpend !== true ? (
           <TouchableOpacity onPress={this.handleSendMaxAmount}>
             <EdgeText style={styles.headerMaxAmountText}>{s.strings.send_confirmation_max_button_title}</EdgeText>
           </TouchableOpacity>

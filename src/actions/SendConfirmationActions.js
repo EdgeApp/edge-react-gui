@@ -10,7 +10,8 @@ import { sprintf } from 'sprintf-js'
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { EXCHANGE_SCENE, FEE_ALERT_THRESHOLD, FIO_STR, PLUGIN_BUY, TRANSACTION_DETAILS } from '../constants/indexConstants'
+import { EXCHANGE_SCENE, PLUGIN_BUY, TRANSACTION_DETAILS } from '../constants/SceneKeys.js'
+import { FEE_ALERT_THRESHOLD, FIO_STR } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { addToFioAddressCache, recordSend } from '../modules/FioAddress/util'
 import { getAuthRequired, getSpendInfo, getSpendInfoWithoutState, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
@@ -365,7 +366,9 @@ export const signBroadcastAndSave =
       if (guiMakeSpendInfo.onDone) {
         guiMakeSpendInfo.onDone(null, edgeSignedTransaction)
       } else {
-        Actions.replace(TRANSACTION_DETAILS, { edgeTransaction: edgeSignedTransaction })
+        Actions.replace(TRANSACTION_DETAILS, {
+          edgeTransaction: edgeSignedTransaction
+        })
       }
     } catch (e) {
       console.log(e)

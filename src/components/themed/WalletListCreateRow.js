@@ -6,7 +6,7 @@ import { Image, View } from 'react-native'
 import { connect } from 'react-redux'
 
 import { refreshWallet } from '../../actions/WalletActions.js'
-import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/indexConstants.js'
+import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { setEnabledTokens } from '../../modules/Core/Wallets/EnabledTokens.js'
 import { type RootState } from '../../types/reduxTypes.js'

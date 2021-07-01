@@ -6,7 +6,8 @@ import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import * as Constants from '../../constants/indexConstants'
+import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
+import { FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action.js'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util.js'
@@ -161,7 +162,7 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
     }
 
     try {
-      if (fioRequest || currencyCode === Constants.FIO_STR) {
+      if (fioRequest || currencyCode === FIO_STR) {
         await checkRecordSendFee(fioWallet, fioAddress)
       }
     } catch (e) {
@@ -179,7 +180,7 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
           />
         ))
         if (answer === 'ok') {
-          return Actions[Constants.FIO_ADDRESS_SETTINGS]({
+          return Actions[FIO_ADDRESS_SETTINGS]({
             showRenew: true,
             fioWallet,
             fioAddressName: fioAddress

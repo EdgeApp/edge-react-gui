@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import * as Constants from '../../constants/indexConstants'
+import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
@@ -146,7 +146,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
             />
           ))
           if (answer === 'ok') {
-            Actions[Constants.FIO_ADDRESS_SETTINGS]({
+            Actions[FIO_ADDRESS_SETTINGS]({
               showRenew: true,
               fioWallet,
               fioAddressName: fioAddressName

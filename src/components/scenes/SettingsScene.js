@@ -19,7 +19,18 @@ import {
   togglePinLoginEnabled,
   updateTouchIdEnabled
 } from '../../actions/SettingsActions'
-import * as Constants from '../../constants/indexConstants'
+import {
+  CHANGE_PASSWORD,
+  CHANGE_PIN,
+  CURRENCY_SETTINGS,
+  EXCHANGE_SETTINGS,
+  NOTIFICATION_SETTINGS,
+  OTP_SETUP,
+  PROMOTION_SETTINGS,
+  RECOVER_PASSWORD,
+  SPENDING_LIMITS,
+  TERMS_OF_SERVICE
+} from '../../constants/SceneKeys.js'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
@@ -118,31 +129,31 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   _onPressChangePasswordRouting = () => {
-    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.CHANGE_PASSWORD]()
+    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[CHANGE_PASSWORD]()
   }
 
   _onPressChangePinRouting = () => {
-    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.CHANGE_PIN]()
+    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[CHANGE_PIN]()
   }
 
   _onPressOtp = () => {
-    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.OTP_SETUP]()
+    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[OTP_SETUP]()
   }
 
   _onPressRecoverPasswordRouting = () => {
-    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.RECOVER_PASSWORD]()
+    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[RECOVER_PASSWORD]()
   }
 
   _onPressExchangeSettings = () => {
-    Actions[Constants.EXCHANGE_SETTINGS]()
+    Actions[EXCHANGE_SETTINGS]()
   }
 
   _onPressSpendingLimits = () => {
-    return Actions[Constants.SPENDING_LIMITS]()
+    return Actions[SPENDING_LIMITS]()
   }
 
   _onPressPromotionSettings = () => {
-    Actions.push(Constants.PROMOTION_SETTINGS)
+    Actions.push(PROMOTION_SETTINGS)
   }
 
   _onTogglePinLogin = () => {
@@ -154,7 +165,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   _onPressNotifications = () => {
-    Actions[Constants.NOTIFICATION_SETTINGS]()
+    Actions[NOTIFICATION_SETTINGS]()
   }
 
   onDeveloperPress = () => {
@@ -256,7 +267,10 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             const { displayName, currencyCode } = currencyInfo
             const { symbolImage } = getCurrencyIcon(currencyCode)
             const icon = <Image style={styles.currencyLogo} source={{ uri: symbolImage }} />
-            const onPress = () => Actions[Constants.CURRENCY_SETTINGS]({ currencyInfo })
+            const onPress = () =>
+              Actions[CURRENCY_SETTINGS]({
+                currencyInfo
+              })
 
             return <SettingsRow key={pluginId} icon={icon} text={displayName} onPress={onPress} right={rightArrow} />
           })}
@@ -267,7 +281,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             <SettingsSwitchRow key="darkTheme" text={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.onDarkThemePress} />
           )}
           <SettingsRow onPress={this.props.showRestoreWalletsModal} text={s.strings.restore_wallets_modal_title} />
-          <SettingsRow text={s.strings.title_terms_of_service} onPress={Actions[Constants.TERMS_OF_SERVICE]} right={rightArrow} />
+          <SettingsRow text={s.strings.title_terms_of_service} onPress={Actions[TERMS_OF_SERVICE]} right={rightArrow} />
           <SettingsSwitchRow
             key="verboseLogging"
             text={s.strings.settings_verbose_logging}

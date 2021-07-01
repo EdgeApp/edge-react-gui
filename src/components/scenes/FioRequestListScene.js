@@ -9,7 +9,7 @@ import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
-import * as Constants from '../../constants/indexConstants'
+import { FIO_ADDRESS_SETTINGS, FIO_SENT_REQUEST_DETAILS, SEND, TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache, cancelFioRequest, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
@@ -192,7 +192,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       />
     ))
     if (answer === 'ok') {
-      return Actions[Constants.FIO_ADDRESS_SETTINGS]({
+      return Actions[FIO_ADDRESS_SETTINGS]({
         showRenew: true,
         fioWallet,
         fioAddressName
@@ -421,12 +421,16 @@ class FioRequestList extends React.Component<Props, LocalState> {
       onDone: (err, edgeTransaction) => {
         if (!err) {
           this.getFioRequestsPending()
-          Actions.replace(Constants.TRANSACTION_DETAILS, { edgeTransaction })
+          Actions.replace(TRANSACTION_DETAILS, { edgeTransaction })
         }
       }
     }
 
-    Actions[Constants.SEND]({ guiMakeSpendInfo, selectedWalletId: walletId, selectedCurrencyCode })
+    Actions[SEND]({
+      guiMakeSpendInfo,
+      selectedWalletId: walletId,
+      selectedCurrencyCode
+    })
   }
 
   selectSentRequest = (fioRequest: FioRequest) => {
@@ -434,7 +438,9 @@ class FioRequestList extends React.Component<Props, LocalState> {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    Actions[Constants.FIO_SENT_REQUEST_DETAILS]({ selectedFioSentRequest: fioRequest })
+    Actions[FIO_SENT_REQUEST_DETAILS]({
+      selectedFioSentRequest: fioRequest
+    })
   }
 
   pendingRequestHeaders = () => {

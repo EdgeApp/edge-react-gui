@@ -6,8 +6,8 @@ import { Actions } from 'react-native-router-flux'
 import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { Fontello } from '../../assets/vector/index.js'
-import * as Constants from '../../constants/indexConstants'
-import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/indexConstants.js'
+import { REQUEST, SEND } from '../../constants/SceneKeys.js'
+import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
 import type { GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
@@ -108,11 +108,11 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
   }
 
   handleOpenRequest = () => {
-    this.openScene(Constants.REQUEST)
+    this.openScene(REQUEST)
   }
 
   handleOpenSend = () => {
-    this.openScene(Constants.SEND)
+    this.openScene(SEND)
   }
 
   handleSwipeValueChange = ({ value }) => {
