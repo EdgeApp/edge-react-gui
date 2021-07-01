@@ -38,7 +38,6 @@ import { TransactionsExportScene } from '../components/scenes/TransactionsExport
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
-import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import AddToken from '../connectors/scenes/AddTokenConnector.js'
 import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
@@ -746,10 +745,6 @@ export class MainComponent extends React.Component<Props> {
 
   renderExchangeButton = () => {
     return <ExchangeDropMenu />
-  }
-
-  renderRequestMenuButton = () => {
-    return <RequestDropMenu />
   }
 
   renderEmptyButton = () => {
