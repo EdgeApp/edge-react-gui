@@ -1,18 +1,18 @@
 // @flow
 
 import * as React from 'react'
-import { Platform, ScrollView, View } from 'react-native'
+import { Platform, ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import { sprintf } from 'sprintf-js'
 
-import { type WalletListResult, WalletListModal } from '../../../../../components/modals/WalletListModal.js'
-import { SWEEP_PRIVATE_KEY } from '../../../../../components/scenes/ScanScene'
-import { Airship } from '../../../../../components/services/AirshipInstance.js'
-import * as Constants from '../../../../../constants/indexConstants.js'
-import { getPrivateKeySweepableCurrencies } from '../../../../../constants/WalletAndCurrencyConstants.js'
-import s from '../../../../../locales/strings.js'
-import { THEME } from '../../../../../theme/variables/airbitz.js'
+import { Airship } from '../../../components/services/AirshipInstance.js'
+import * as Constants from '../../../constants/indexConstants.js'
+import { getPrivateKeySweepableCurrencies } from '../../../constants/WalletAndCurrencyConstants.js'
+import s from '../../../locales/strings.js'
+import { THEME } from '../../../theme/variables/airbitz.js'
+import { type WalletListResult, WalletListModal } from '../../modals/WalletListModal.js'
+import { SWEEP_PRIVATE_KEY } from '../../scenes/ScanScene'
 import PanelRow from './PanelRow'
 
 export type Props = {

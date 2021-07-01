@@ -3,10 +3,10 @@
 import * as React from 'react'
 import { Image, View } from 'react-native'
 
-import edgeLogo from '../../../../../assets/images/edgeLogo/Edge_logo_Icon.png'
-import { type Theme, cacheStyles, useTheme } from '../../../../../components/services/ThemeContext'
-import { EdgeText } from '../../../../../components/themed/EdgeText'
-import s from '../../../../../locales/strings'
+import edgeLogo from '../../../assets/images/edgeLogo/Edge_logo_Icon.png'
+import { type Theme, cacheStyles, useTheme } from '../../../components/services/ThemeContext'
+import { EdgeText } from '../../../components/themed/EdgeText'
+import s from '../../../locales/strings'
 
 export default function PanelLogo() {
   const theme = useTheme()

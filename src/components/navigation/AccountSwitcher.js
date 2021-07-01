@@ -6,28 +6,26 @@ import * as React from 'react'
 import { Alert, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { showError } from '../../../../components/services/AirshipInstance.js'
-import { type Theme, cacheStyles, useTheme } from '../../../../components/services/ThemeContext'
-import Separator from '../../../../components/themed/Separator'
-import s from '../../../../locales/strings'
-import { type RootState } from '../../../../reducers/RootReducer.js'
-import { useDispatch, useEffect, useSelector, useState } from '../../../../util/hooks.js'
-import { reduxShallowEqual } from '../../../../util/utils.js'
-import { logoutRequest } from '../../../Login/action'
-import DropDownList from '../DropDownList/DropDownList.ui'
-import SwitcherHeader from './components/SwitcherHeader'
-import SwitcherList from './components/SwitcherList'
-import { getCoreUserNames, getRecentLoginUsernames, getRecentUserNames, sortUserNames } from './helpers'
+import s from '../../locales/strings'
+import { logoutRequest } from '../../modules/Login/action'
+import { type RootState } from '../../reducers/RootReducer.js'
+import { useDispatch, useEffect, useSelector, useState } from '../../util/hooks.js'
+import { reduxShallowEqual } from '../../util/utils.js'
+import { showError } from '../services/AirshipInstance.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
+import { getCoreUserNames, getRecentLoginUsernames, getRecentUserNames, sortUserNames, SwitcherHeader, SwitcherList } from '../themed/AccountSwitcher'
+import DropDownList from '../themed/DropDownList'
+import Separator from '../themed/Separator'
 
 export type Props = {
-  onSwitch: (value: boolean) => void
+  onSwitch: (value: boolean) => void,
+  forceClose?: boolean
 }
 
 export type StateProps = {
   username: string,
   context: EdgeContext,
-  disklet: Disklet,
-  forceClose?: boolean
+  disklet: Disklet
 }
 
 export const selector = (state: RootState): StateProps => ({
@@ -71,7 +69,7 @@ export default function AccountSwitcher(props: Props) {
       { text: s.strings.no, style: 'cancel' },
       { text: s.strings.yes, onPress: () => context.deleteLocalAccount(username).catch(showError) }
     ])
-
+  console.debug(usernames)
   return (
     <View>
       <DropDownList

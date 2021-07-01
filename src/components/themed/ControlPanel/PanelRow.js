@@ -3,9 +3,9 @@ import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import { Fontello } from '../../../../../assets/vector'
-import { type Theme, cacheStyles, useTheme } from '../../../../../components/services/ThemeContext'
-import { EdgeText } from '../../../../../components/themed/EdgeText'
+import { Fontello } from '../../../assets/vector'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext'
+import { EdgeText } from '../EdgeText'
 
 export type Props = {
   title: string,

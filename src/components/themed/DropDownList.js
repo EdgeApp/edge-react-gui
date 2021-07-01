@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-import { useEffect, useState } from '../../../../util/hooks'
+import { useEffect, useState } from '../../util/hooks'
 
 type Props = {
   list: React.Node,
@@ -14,7 +14,7 @@ type Props = {
   onIsOpen?: (value: boolean) => void,
   durantionDown?: number,
   durantionOpacity?: number,
-  forceClose: boolean
+  forceClose?: boolean
 }
 
 export default function DropDownList({
@@ -33,10 +33,10 @@ export default function DropDownList({
 
   const height = useSharedValue()
   const opacity = useSharedValue(0)
+  console.debug('FORCE CLOCE', forceClose)
 
   useEffect(() => {
-    if (forceClose) {
-      console.debug('FORCE CLOSED', forceClose)
+    if (forceClose && listHeight !== -1) {
       toggleState(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

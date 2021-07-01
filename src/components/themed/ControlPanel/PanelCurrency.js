@@ -3,17 +3,17 @@
 import * as React from 'react'
 import { Image, View } from 'react-native'
 
-import { ExchangeRate } from '../../../../../components/common/ExchangeRate.js'
-import { type Theme, cacheStyles, useTheme } from '../../../../../components/services/ThemeContext'
-import s from '../../../../../locales/strings'
-import { type RootState } from '../../../../../reducers/RootReducer.js'
-import { type GuiDenomination, emptyGuiDenomination } from '../../../../../types/types.js'
-import { getCurrencyIcon } from '../../../../../util/CurrencyInfoHelpers.js'
-import { useSelector } from '../../../../../util/hooks'
-import { getDenomFromIsoCode, reduxShallowEqual } from '../../../../../util/utils.js'
-import { getDisplayDenominationFull } from '../../../../Settings/selectors.js'
-import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../../../UI/selectors.js'
-import FormattedText from '../../FormattedText/FormattedText.ui.js'
+import s from '../../../locales/strings'
+import { getDisplayDenominationFull } from '../../../modules/Settings/selectors.js'
+import FormattedText from '../../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../../modules/UI/selectors.js'
+import { type RootState } from '../../../reducers/RootReducer.js'
+import { type GuiDenomination, emptyGuiDenomination } from '../../../types/types.js'
+import { getCurrencyIcon } from '../../../util/CurrencyInfoHelpers.js'
+import { useSelector } from '../../../util/hooks'
+import { getDenomFromIsoCode, reduxShallowEqual } from '../../../util/utils.js'
+import { ExchangeRate } from '../../common/ExchangeRate.js'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext'
 
 export type StateProps = {
   currencyCode: string,

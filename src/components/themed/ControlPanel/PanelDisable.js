@@ -3,8 +3,8 @@
 import * as React from 'react'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-import { type Theme, cacheStyles, useTheme } from '../../../../../components/services/ThemeContext'
-import { useEffect, useState } from '../../../../../util/hooks'
+import { useEffect, useState } from '../../../util/hooks'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext'
 
 type Props = {
   isDisable: boolean

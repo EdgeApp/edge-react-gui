@@ -4,9 +4,9 @@ import * as React from 'react'
 import { View } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 
-import { Fontello } from '../../../../../assets/vector'
-import { type Theme, cacheStyles, useTheme } from '../../../../../components/services/ThemeContext'
-import { EdgeText } from '../../../../../components/themed/EdgeText'
+import { Fontello } from '../../../assets/vector'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext'
+import { EdgeText } from '../EdgeText'
 
 export type Props = {
   username: string

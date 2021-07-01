@@ -4,8 +4,8 @@ import * as React from 'react'
 import { ScrollView, TouchableHighlight, View } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
-import { type Theme, cacheStyles, useTheme } from '../../../../../components/services/ThemeContext'
-import { EdgeText } from '../../../../../components/themed/EdgeText'
+import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext'
+import { EdgeText } from '../EdgeText'
 export type Props = {
   onSwitchAccount: (username: string) => void,
   deleteLocalAccount: (username: string) => void,

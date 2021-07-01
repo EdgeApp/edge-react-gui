@@ -3,19 +3,16 @@
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { selectWalletFromModal } from '../../../../actions/WalletActions.js'
-import { SceneWrapper } from '../../../../components/common/SceneWrapper.js'
-import { type Theme, cacheStyles, useTheme } from '../../../../components/services/ThemeContext'
-import Separator from '../../../../components/themed/Separator'
-import { type RootState } from '../../../../reducers/RootReducer.js'
-import { useDispatch, useEffect, useSelector, useState } from '../../../../util/hooks'
-import { reduxShallowEqual } from '../../../../util/utils.js'
-import { logoutRequest } from '../../../Login/action'
-import AccountSwitcher from '../AccountSwitcher/AccountSwitcher.ui'
-import PanelCurrency from './components/PanelCurrency'
-import PanelDisable from './components/PanelDisable'
-import PanelList from './components/PanelList'
-import PanelLogo from './components/PanelLogo'
+import { selectWalletFromModal } from '../../actions/WalletActions.js'
+import { logoutRequest } from '../../modules/Login/action'
+import { type RootState } from '../../reducers/RootReducer.js'
+import { useDispatch, useSelector, useState } from '../../util/hooks'
+import { reduxShallowEqual } from '../../util/utils.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
+import { PanelCurrency, PanelDisable, PanelList, PanelLogo } from '../themed/ControlPanel'
+import Separator from '../themed/Separator'
+import AccountSwitcher from './AccountSwitcher'
 
 export type StateProps = {
   selectedCurrencyCode: string,
@@ -35,6 +32,7 @@ export default function ControlPanel({
   }
 }: Props) {
   const [isViewUserList, setIsViewUserList] = useState(false)
+  console.debug('IS_DRAWER_OPEN', isDrawerOpen)
 
   const toggleUserList = (value: boolean) => {
     setIsViewUserList(value)
@@ -45,12 +43,10 @@ export default function ControlPanel({
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  // Get props from redux state
   const { selectedCurrencyCode, selectedWalletId }: StateProps = useSelector(selector, reduxShallowEqual)
 
   if (!selectedWalletId) return null
 
-  // Create redux actions
   const onLogout = () => dispatch(logoutRequest())
   const onSelectWallet = (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(selectedWalletId, selectedCurrencyCode))
 
