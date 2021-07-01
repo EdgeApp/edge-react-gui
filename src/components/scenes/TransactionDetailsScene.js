@@ -42,7 +42,7 @@ type StateProps = {
   contacts: GuiContact[],
   currencyCode: string,
   currencyInfo?: EdgeCurrencyInfo,
-  currentFiatAmount: number,
+  currentFiatAmount: string,
   destinationDenomination?: EdgeDenomination,
   destinationWallet?: GuiWallet,
   guiWallet: GuiWallet,
@@ -408,7 +408,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { currentFiatAmount } = this.props
     const { amountFiat } = this.state
 
-    const amount = currentFiatAmount ? parseFloat(currentFiatAmount).toFixed(2).toString() : '0'
+    const amount = currentFiatAmount ? bns.toFixed(currentFiatAmount, 2, 2) : '0'
     const fiatAmount = amountFiat.replace(',', '.')
     const difference = amount ? parseFloat(amount) - parseFloat(fiatAmount) : 0
     const percentageFloat = amount && parseFloat(fiatAmount) > 0 ? (difference / parseFloat(fiatAmount)) * 100 : 0

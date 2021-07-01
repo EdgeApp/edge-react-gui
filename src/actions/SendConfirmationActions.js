@@ -229,7 +229,7 @@ export const signBroadcastAndSave =
     const exchangeConverter = convertNativeToExchange(exchangeDenomination.multiplier)
     const cryptoFeeExchangeAmount = exchangeConverter(edgeUnsignedTransaction.networkFee)
     const feeAmountInUSD = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
-    if (feeAmountInUSD > FEE_ALERT_THRESHOLD) {
+    if (parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD) {
       const feeAmountInWalletFiat = convertCurrencyFromExchangeRates(
         state.exchangeRates,
         currencyCode,

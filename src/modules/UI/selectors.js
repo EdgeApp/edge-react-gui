@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
 import _ from 'lodash'
 
@@ -93,11 +94,16 @@ const convertCurrencyWithoutState = (exchangeRates: { [string]: number }, fromCu
   return convertedAmount
 }
 
-export const convertCurrencyFromExchangeRates = (exchangeRates: { [string]: number }, fromCurrencyCode: string, toCurrencyCode: string, amount: number) => {
-  if (!exchangeRates) return 0 // handle case of exchange rates not ready yet
+export const convertCurrencyFromExchangeRates = (
+  exchangeRates: { [string]: number },
+  fromCurrencyCode: string,
+  toCurrencyCode: string,
+  amount: number
+): string => {
+  if (!exchangeRates) return '0' // handle case of exchange rates not ready yet
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   const rate = exchangeRates[rateKey]
-  const convertedAmount = amount * rate
+  const convertedAmount = bns.mul(amount.toString(), rate.toString())
   return convertedAmount
 }
 
