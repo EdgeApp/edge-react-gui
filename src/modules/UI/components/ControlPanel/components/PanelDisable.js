@@ -29,14 +29,14 @@ export default function PanelDisable(props: Props) {
       opacity.value = 0
       setTimeout(() => {
         setIsRender(isDisable)
-      }, 500)
+      }, 200)
     }
   })
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       opacity: withTiming(opacity.value, {
-        duration: 500,
+        duration: 200,
         easing: Easing.linear
       })
     }
@@ -53,6 +53,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0
+    bottom: 0,
+    borderTopLeftRadius: theme.rem(2),
+    borderBottomLeftRadius: theme.rem(2)
   }
 }))

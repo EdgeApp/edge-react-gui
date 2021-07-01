@@ -170,7 +170,16 @@ export class MainComponent extends React.Component<Props> {
 
   renderTabView = () => {
     return (
-      <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton drawerPosition="right" drawerWidth={scale(280)}>
+      <Drawer
+        hideTabBar
+        drawerBackgroundColor="none"
+        key={Constants.EDGE}
+        hideNavBar
+        contentComponent={ControlPanel}
+        hideDrawerButton
+        drawerPosition="right"
+        drawerWidth={scale(260)}
+      >
         {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
         <Scene key="AllMyTabs" hideNavBar>
           <Tabs key={Constants.EDGE} swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>

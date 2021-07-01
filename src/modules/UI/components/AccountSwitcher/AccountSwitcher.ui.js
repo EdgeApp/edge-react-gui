@@ -26,7 +26,8 @@ export type Props = {
 export type StateProps = {
   username: string,
   context: EdgeContext,
-  disklet: Disklet
+  disklet: Disklet,
+  forceClose?: boolean
 }
 
 export const selector = (state: RootState): StateProps => ({
@@ -42,7 +43,7 @@ export default function AccountSwitcher(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  const { onSwitch } = props
+  const { onSwitch, forceClose } = props
 
   const dispatch = useDispatch()
 
@@ -75,6 +76,7 @@ export default function AccountSwitcher(props: Props) {
     <View>
       <DropDownList
         onIsOpen={onSwitch}
+        forceClose={forceClose}
         header={<SwitcherHeader username={username} />}
         separator={<Separator style={styles.separator} />}
         isFetching={usernames.length === 0}
@@ -110,6 +112,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   separator: {
     marginBottom: theme.rem(1),
     marginTop: theme.rem(1.2),
-    marginRight: theme.rem(-1)
+    marginRight: theme.rem(-2)
   }
 }))

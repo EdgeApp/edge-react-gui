@@ -77,6 +77,7 @@ export class Services extends React.PureComponent<Props> {
   }
 
   render() {
+    global.st = this.store.getState
     return (
       <Provider store={this.store}>
         <>

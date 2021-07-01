@@ -27,18 +27,14 @@ const selector = (state: RootState) => ({
   selectedCurrencyCode: state.ui.wallets.selectedCurrencyCode
 })
 
-type Props = { navigation: { state: { openId: string } } }
+type Props = { navigation: { state: { isDrawerOpen: Boolean } } }
 
 export default function ControlPanel({
   navigation: {
-    state: { openId }
+    state: { isDrawerOpen }
   }
 }: Props) {
   const [isViewUserList, setIsViewUserList] = useState(false)
-
-  // useEffect(() => {
-  //   setIsViewUserList(false)
-  // }, [openId])
 
   const toggleUserList = (value: boolean) => {
     setIsViewUserList(value)
@@ -65,7 +61,7 @@ export default function ControlPanel({
         <View style={styles.header}>
           <PanelLogo />
           <PanelCurrency />
-          <AccountSwitcher onSwitch={toggleUserList} />
+          <AccountSwitcher onSwitch={toggleUserList} forceClose={!isDrawerOpen} />
         </View>
         <PanelList onSelectWallet={onSelectWallet} onLogout={onLogout} />
         <Separator style={styles.separator} />
@@ -80,17 +76,21 @@ const getStyles = cacheStyles((theme: Theme) => ({
     backgroundColor: theme.panelBackground,
     position: 'relative',
     paddingHorizontal: theme.rem(1),
-    paddingTop: theme.rem(13)
+    paddingTop: theme.rem(13),
+    borderBottomLeftRadius: theme.rem(2),
+    borderTopLeftRadius: theme.rem(2)
   },
   separator: {
     marginBottom: theme.rem(2),
-    marginTop: theme.rem(1)
+    marginTop: theme.rem(1),
+    marginRight: theme.rem(-1)
   },
   header: {
     borderBottomRightRadius: theme.rem(2),
     borderBottomLeftRadius: theme.rem(2),
     paddingLeft: theme.rem(1),
     paddingRight: theme.rem(1.5),
+    borderTopLeftRadius: theme.rem(2),
     position: 'absolute',
     left: 0,
     right: 0,

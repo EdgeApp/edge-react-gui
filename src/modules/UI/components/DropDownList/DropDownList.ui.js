@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-import { useState } from '../../../../util/hooks'
+import { useEffect, useState } from '../../../../util/hooks'
 
 type Props = {
   list: React.Node,
@@ -13,16 +13,34 @@ type Props = {
   isFetching?: boolean,
   onIsOpen?: (value: boolean) => void,
   durantionDown?: number,
-  durantionOpacity?: number
+  durantionOpacity?: number,
+  forceClose: boolean
 }
 
-export default function DropDownList({ list, header, separator, isFetching = false, onIsOpen, durantionDown = 300, durantionOpacity = 500 }: Props) {
+export default function DropDownList({
+  list,
+  header,
+  separator,
+  isFetching = false,
+  onIsOpen,
+  durantionDown = 300,
+  durantionOpacity = 100,
+  forceClose = false
+}: Props) {
   const [isOpen, setIsOpen] = useState(false)
   const [isShadowRender, setIsShadowRender] = useState(true)
   const [listHeight, setListHeight] = useState(-1)
 
   const height = useSharedValue()
   const opacity = useSharedValue(0)
+
+  useEffect(() => {
+    if (forceClose) {
+      console.debug('FORCE CLOSED', forceClose)
+      toggleState(true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [forceClose])
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -37,17 +55,19 @@ export default function DropDownList({ list, header, separator, isFetching = fal
     }
   })
 
-  const onPress = e => {
+  const toggleState = (isOpenValue: boolean) => {
+    isOpenValue ? (height.value = 0) : (height.value = listHeight)
+    isOpenValue ? (opacity.value = 0) : (opacity.value = 1)
+
+    setIsOpen(!isOpenValue)
+
+    if (onIsOpen) onIsOpen(!isOpenValue)
+  }
+
+  const onPress = () => {
     if (isFetching) return null
 
-    isOpen ? (height.value = 0) : (height.value = listHeight)
-    isOpen ? (opacity.value = 0) : (opacity.value = 1)
-
-    setIsOpen(!isOpen)
-
-    if (onIsOpen) {
-      onIsOpen(!isOpen)
-    }
+    toggleState(isOpen)
   }
 
   const onLayout = e => {
