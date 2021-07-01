@@ -16,7 +16,7 @@ export const initialState = {
     networkFeeOption: 'standard',
     customNetworkFee: {},
     publicAddress: '',
-    nativeAmount: '0',
+    nativeAmount: '',
     metadata: {
       name: '',
       category: '',
@@ -27,7 +27,7 @@ export const initialState = {
   },
   spendInfo: null,
   transactionMetadata: null,
-  nativeAmount: '0',
+  nativeAmount: '',
 
   isEditable: true,
 
@@ -36,7 +36,7 @@ export const initialState = {
     date: 0,
     currencyCode: '',
     blockHeight: -1,
-    nativeAmount: '0',
+    nativeAmount: '',
     networkFee: '',
     parentNetworkFee: '',
     ourReceiveAddresses: [],
