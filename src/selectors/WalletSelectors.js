@@ -1,14 +1,12 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination } from 'edge-core-js'
-import _ from 'lodash'
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 
-import { formatNumber } from '../../locales/intl.js'
-import { type RootState } from '../../types/reduxTypes.js'
-import type { GuiDenomination, GuiWallet } from '../../types/types.js'
-import { convertNativeToExchange, getCurrencyInfo } from '../../util/utils.js'
-import * as SETTINGS_SELECTORS from '../Settings/selectors'
+import { formatNumber } from '../locales/intl.js'
+import { type RootState } from '../types/reduxTypes.js'
+import { type GuiWallet } from '../types/types.js'
+import { convertNativeToExchange } from '../util/utils.js'
 
 export function getSelectedWallet(state: RootState): GuiWallet {
   return state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
@@ -40,38 +38,6 @@ export const getActiveWalletCurrencyInfos = (state: RootState) => {
     }
   }
   return currencyInfos
-}
-
-export const getDefaultDenomination = (state: RootState, currencyCode: string): EdgeDenomination => {
-  const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
-  const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
-  const currencyInfo = getCurrencyInfo(allCurrencyInfos, currencyCode)
-  if (currencyInfo) return currencyInfo[0]
-  const settings = state.ui.settings
-  const currencySettings = settings[currencyCode]
-  const defaultMultiplier = currencySettings.denomination
-  const denomination = _.find(currencySettings.denominations, denom => denom.multiplier === defaultMultiplier)
-  if (!denomination) throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
-  return denomination
-}
-
-export const getExchangeDenomination = (state: RootState, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
-  const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)
-  const walletId = specificWallet ? specificWallet.id : state.ui.wallets.selectedWalletId
-  const wallet = state.ui.wallets.byId[walletId]
-  if (wallet.allDenominations[currencyCode]) {
-    for (const key of Object.keys(wallet.allDenominations[currencyCode])) {
-      const denomination = wallet.allDenominations[currencyCode][key]
-      if (denomination.name === currencyCode) return denomination
-    }
-  } else {
-    const customToken = _.find(customTokens, item => item.currencyCode === currencyCode)
-    if (customToken && customToken.denomination && customToken.denomination[0]) {
-      const denomination = customToken.denominations[0]
-      return denomination
-    }
-  }
-  throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
 }
 
 export const getExchangeRate = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string): number => {

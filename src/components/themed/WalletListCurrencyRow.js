@@ -4,8 +4,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import { formatNumber } from '../../locales/intl.js'
-import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
-import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
+import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
 import type { RootState } from '../../types/reduxTypes.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import { getCryptoAmount, getCurrencyInfo, getDenomFromIsoCode, getDenomination, getFiatSymbol, getYesterdayDateRoundDownHour } from '../../util/utils'
@@ -193,8 +192,7 @@ export const WalletListCurrencyRow = connect((state: RootState, ownProps: OwnPro
     if (guiWallet != null) {
       walletNameString = guiWallet.name
     } else {
-      const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
-      const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
+      const { allCurrencyInfos } = state.ui.settings.plugins
       const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
       walletNameString = `My ${currencyInfo?.displayName ?? ''}`
     }

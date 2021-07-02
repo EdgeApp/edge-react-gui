@@ -2,10 +2,10 @@
 
 import { connect } from 'react-redux'
 
+import { getDisplayDenominationFull, getPrimaryExchangeDenomination } from '../../../../selectors/DenominationSelectors.js'
+import { getExchangeRate, getSelectedWallet } from '../../../../selectors/WalletSelectors.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
-import { getDisplayDenominationFull } from '../../../Settings/selectors.js'
-import { getExchangeDenomination, getExchangeRate, getSelectedWallet } from '../../../UI/selectors.js'
 import ControlPanel from './ControlPanel.ui'
 
 const mapStateToProps = (state: RootState) => {
@@ -28,7 +28,7 @@ const mapStateToProps = (state: RootState) => {
       secondaryDisplayCurrencyCode = guiWallet.fiatCurrencyCode
       secondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
       primaryDisplayDenomination = getDisplayDenominationFull(state, currencyCode)
-      primaryExchangeDenomination = getExchangeDenomination(state, currencyCode)
+      primaryExchangeDenomination = getPrimaryExchangeDenomination(state, currencyCode)
       secondaryDisplayAmount =
         (parseFloat(1) * parseFloat(secondaryToPrimaryRatio) * parseFloat(primaryDisplayDenomination.multiplier)) /
         parseFloat(primaryExchangeDenomination.multiplier)

@@ -4,7 +4,6 @@ import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
 import type { RootState } from '../../types/reduxTypes.js'
 import { getCurrencyInfo } from '../../util/utils'
@@ -164,8 +163,7 @@ export const WalletListRow = connect((state: RootState, ownProps: OwnProps): Sta
     if (guiWallet != null) {
       walletNameString = guiWallet.name
     } else {
-      const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
-      const allCurrencyInfos: EdgeCurrencyInfo[] = plugins.allCurrencyInfos
+      const { allCurrencyInfos } = state.ui.settings.plugins
       const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
       walletNameString = `My ${currencyInfo?.displayName ?? ''}`
     }

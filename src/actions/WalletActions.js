@@ -14,7 +14,6 @@ import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } fr
 import { updateWalletsRequest } from '../modules/Core/Wallets/action.js'
 import { getEnabledTokensFromFile, setEnabledTokens, updateEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
-import { getCustomTokens, getSettings } from '../modules/Settings/selectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
@@ -212,7 +211,7 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
   const guiWallet = state.ui.wallets.byId[walletId]
 
   // get token information from settings
-  const customTokens: CustomTokenInfo[] = getCustomTokens(state)
+  const { customTokens } = state.ui.settings
   try {
     const enabledTokens = await getEnabledTokensFromFile(wallet)
     const promiseArray = []
@@ -283,8 +282,7 @@ export const editCustomToken = (
   return (dispatch: Dispatch, getState: GetState) => {
     dispatch({ type: 'EDIT_CUSTOM_TOKEN_START' })
     const state = getState()
-    const settings = getSettings(state)
-    const customTokens = settings.customTokens
+    const { customTokens } = state.ui.settings
     const guiWallet = state.ui.wallets.byId[walletId]
     const allTokens = UTILS.mergeTokens(guiWallet.metaTokens, customTokens)
     const indexInAllTokens = _.findIndex(allTokens, token => token.currencyCode === currencyCode)
@@ -388,7 +386,7 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
   const { currencyWallets } = account
   const guiWallets = state.ui.wallets.byId
   const localSettings = {
-    ...getSettings(state)
+    ...state.ui.settings
   }
   const coreWalletsToUpdate = []
   getSyncedSettings(account)

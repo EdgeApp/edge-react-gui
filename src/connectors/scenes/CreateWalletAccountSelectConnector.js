@@ -15,7 +15,7 @@ import {
   type CreateWalletAccountSelectOwnProps,
   CreateWalletAccountSelect
 } from '../../components/scenes/CreateWalletAccountSelectScene'
-import { getDefaultDenomination } from '../../modules/UI/selectors.js'
+import { getDefaultDenomination } from '../../selectors/DenominationSelectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 
 const mapStateToProps = (state: RootState, ownProps: CreateWalletAccountSelectOwnProps) => {
