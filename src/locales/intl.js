@@ -1,7 +1,10 @@
 // @flow
 
 import { toFixed } from 'biggystring'
+import { format } from 'date-fns'
 import { getLocales, getNumberFormatSettings } from 'react-native-localize'
+
+import { locales } from './dateLocales'
 
 export type IntlLocaleType = {
   localeIdentifier: string, // Like en_US or en-US
@@ -183,21 +186,24 @@ export function formatToNativeNumber(value: string, options?: IntlNumberFormatOp
  * Returns date string depending on locale
  */
 export function formatDate(date: Date, monthShort: boolean = false): string {
-  return date.toLocaleDateString(locale.localeIdentifier.replace('_', '-'), {
-    year: 'numeric',
-    month: monthShort ? 'short' : 'long',
-    day: 'numeric'
-  })
+  try {
+    return format(date, monthShort ? 'PP' : 'PPP', { locale: locales[locale.localeIdentifier.replace('_', '-')] })
+  } catch (e) {
+    //
+  }
+  return format(date, 'MMM d, yyyy')
 }
 
 /**
  * Returns time string depending on locale
  */
 export function formatTime(date: Date): string {
-  return date.toLocaleTimeString(locale.localeIdentifier.replace('_', '-'), {
-    hour: '2-digit',
-    minute: '2-digit'
-  })
+  try {
+    return format(date, 'p', { locale: locales[locale.localeIdentifier.replace('_', '-')] })
+  } catch (e) {
+    //
+  }
+  return format(date, 'h:mm bb')
 }
 
 export function setIntlLocale(l: IntlLocaleType): void {
