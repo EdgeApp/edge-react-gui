@@ -81,7 +81,9 @@ export const CURRENCY_SETTINGS_KEYS = [
   'smartcash',
   'groestlcoin',
   'eboost',
-  'ufo'
+  'ufo',
+  'bitcoinvault',
+  'bitcoinvaulttestnet'
 ]
 
 /**
@@ -115,7 +117,9 @@ export const WALLET_TYPE_ORDER = [
   'wallet:ufo',
   'wallet:telos',
   'wallet:wax',
-  'wallet:fantom'
+  'wallet:fantom',
+  'wallet:bitcoinvault',
+  'wallet:bitcoinvaulttestnet'
 ]
 
 // Put these in reverse order of preference
@@ -153,7 +157,9 @@ export const CURRENCY_PLUGIN_NAMES = {
   XMR: 'monero',
   XRP: 'ripple',
   XTZ: 'tezos',
-  FIRO: 'zcoin'
+  FIRO: 'zcoin',
+  BTCV: 'bitcoinvault',
+  TBTCV: 'bitcoinvaulttestnet'
 }
 
 type SpecialCurrencyInfo = {|
@@ -445,6 +451,9 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_instructions
     },
     isCustomTokensSupported: true
+  },
+  BTCV: {
+    isPrivateKeySweepable: true
   }
 }
 
@@ -502,7 +511,9 @@ export const WALLET_LIST_MENU: Array<{
       'RVN',
       'RBTC',
       'TESTBTC',
-      'XMR'
+      'XMR',
+      'BTCV',
+      'TBTCV'
     ],
     label: s.strings.fragment_wallets_view_xpub,
     value: 'viewXPub'
