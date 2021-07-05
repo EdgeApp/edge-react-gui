@@ -23,6 +23,7 @@ import {
   CHANGE_PASSWORD,
   CHANGE_PIN,
   CURRENCY_SETTINGS,
+  DEFAULT_FIAT_SETTING,
   EXCHANGE_SETTINGS,
   NOTIFICATION_SETTINGS,
   OTP_SETUP,
@@ -105,22 +106,19 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     for (const cleanup of this.cleanups) cleanup()
   }
 
-  async loadBiometryType() {
+  async loadBiometryType(): Promise<void> {
     if (!this.props.supportsTouchId) return
 
     const biometryType = await getSupportedBiometryType()
     switch (biometryType) {
       case 'FaceID':
         this.setState({ touchIdText: s.strings.settings_button_use_faceID })
-        return null
+        break
       case 'TouchID':
         this.setState({ touchIdText: s.strings.settings_button_use_touchID })
-        return null
+        break
       case 'Fingerprint':
         this.setState({ touchIdText: s.strings.settings_button_use_biometric })
-        return null
-      default:
-        return null
     }
   }
 
@@ -128,51 +126,81 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     showToast(s.strings.settings_alert_unlock)
   }
 
-  _onPressChangePasswordRouting = () => {
-    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[CHANGE_PASSWORD]()
+  handleUnlock = (): void => {
+    if (!this.props.isLocked) {
+      this.props.lockSettings()
+    } else {
+      this.props.showUnlockSettingsModal()
+    }
   }
 
-  _onPressChangePinRouting = () => {
-    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[CHANGE_PIN]()
+  handleChangePassword = (): void => {
+    this.props.isLocked ? this.unlockSettingsAlert() : Actions.push(CHANGE_PASSWORD)
   }
 
-  _onPressOtp = () => {
-    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[OTP_SETUP]()
+  handleChangePin = (): void => {
+    this.props.isLocked ? this.unlockSettingsAlert() : Actions.push(CHANGE_PIN)
   }
 
-  _onPressRecoverPasswordRouting = () => {
-    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[RECOVER_PASSWORD]()
+  handleChangeOtp = (): void => {
+    this.props.isLocked ? this.unlockSettingsAlert() : Actions.push(OTP_SETUP)
   }
 
-  _onPressExchangeSettings = () => {
-    Actions[EXCHANGE_SETTINGS]()
+  handleChangeRecovery = (): void => {
+    this.props.isLocked ? this.unlockSettingsAlert() : Actions.push(RECOVER_PASSWORD)
   }
 
-  _onPressSpendingLimits = () => {
-    return Actions[SPENDING_LIMITS]()
+  handleExchangeSettings = (): void => {
+    Actions.push(EXCHANGE_SETTINGS)
   }
 
-  _onPressPromotionSettings = () => {
+  handleSpendingLimits = (): void => {
+    Actions.push(SPENDING_LIMITS)
+  }
+
+  handleAutoLogout = (): void => {
+    Airship.show(bridge => <AutoLogoutModal autoLogoutTimeInSeconds={this.props.autoLogoutTimeInSeconds} bridge={bridge} />).then(result => {
+      if (typeof result === 'number') {
+        this.props.setAutoLogoutTimeInSeconds(result)
+      }
+    })
+  }
+
+  handleDefaultFiat = (): void => {
+    Actions.push(DEFAULT_FIAT_SETTING)
+  }
+
+  handlePromotionSettings = (): void => {
     Actions.push(PROMOTION_SETTINGS)
   }
 
-  _onTogglePinLogin = () => {
+  handlePinToggle = (): void => {
     this.props.onTogglePinLoginEnabled(!this.props.pinLoginEnabled)
   }
 
-  _onToggleTouchIdOption = () => {
+  handleTouchIdToggle = (): void => {
     this.props.dispatchUpdateEnableTouchIdEnable(!this.props.touchIdEnabled, this.props.account)
   }
 
-  _onPressNotifications = () => {
-    Actions[NOTIFICATION_SETTINGS]()
+  handleNotificationSettings = (): void => {
+    Actions.push(NOTIFICATION_SETTINGS)
   }
 
-  onDeveloperPress = () => {
+  handleDeveloperToggle = (): void => {
     this.props.toggleDeveloperMode(!this.props.developerModeOn)
   }
 
-  handleVerboseLoggingPress = () => {
+  handleDarkThemeToggle = (): void => {
+    this.setState({ darkTheme: !this.state.darkTheme }, () => {
+      this.state.darkTheme ? changeTheme(edgeDark) : changeTheme(edgeLight)
+    })
+  }
+
+  handleTermsOfService = (): void => {
+    Actions.push(TERMS_OF_SERVICE)
+  }
+
+  handleVerboseLoggingToggle = (): void => {
     const defaultLogLevel = this.state.defaultLogLevel === 'info' ? 'warn' : 'info'
     this.setState({ defaultLogLevel })
     this.props.context
@@ -183,21 +211,9 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
       .catch(showError)
   }
 
-  onDarkThemePress = () => {
-    this.setState({ darkTheme: !this.state.darkTheme }, () => {
-      this.state.darkTheme ? changeTheme(edgeDark) : changeTheme(edgeLight)
-    })
+  handleSendLogs = (): void => {
+    Airship.show(bridge => <SendLogsModal bridge={bridge} />)
   }
-
-  showAutoLogoutModal = async () => {
-    const result = await Airship.show(bridge => <AutoLogoutModal autoLogoutTimeInSeconds={this.props.autoLogoutTimeInSeconds} bridge={bridge} />)
-
-    if (typeof result === 'number') {
-      this.props.setAutoLogoutTimeInSeconds(result)
-    }
-  }
-
-  showSendLogsModal = () => Airship.show(bridge => <SendLogsModal bridge={bridge} />)
 
   render() {
     const { account, theme, isLocked } = this.props
@@ -213,93 +229,79 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     }
     const autoLogoutRightText = autoLogout.value === 0 ? s.strings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
 
-    const rightArrow = <AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />
+    const rightArrow = <AntDesignIcon color={theme.icon} name="right" size={theme.rem(1)} />
 
     return (
       <SceneWrapper background="theme" hasTabs={false}>
         <ScrollView>
           <SettingsHeaderRow
-            icon={<FontAwesomeIcon name="user-o" color={theme.icon} size={iconSize} />}
+            icon={<FontAwesomeIcon color={theme.icon} name="user-o" size={iconSize} />}
             text={`${s.strings.settings_account_title_cap}: ${account.username}`}
           />
           <SettingsRow
+            right={<AntDesignIcon color={theme.iconTappable} name={isLocked ? 'lock' : 'unlock'} size={iconSize} />}
             text={isLocked ? s.strings.settings_button_unlock_settings : s.strings.settings_button_lock_settings}
-            right={<AntDesignIcon name={isLocked ? 'lock' : 'unlock'} color={theme.iconTappable} size={iconSize} />}
-            onPress={this.showConfirmPasswordModal}
+            onPress={this.handleUnlock}
           />
+          <SettingsRow disabled={this.props.isLocked} right={rightArrow} text={s.strings.settings_button_change_password} onPress={this.handleChangePassword} />
+          <SettingsRow disabled={this.props.isLocked} right={rightArrow} text={s.strings.settings_button_pin} onPress={this.handleChangePin} />
+          <SettingsRow disabled={this.props.isLocked} right={rightArrow} text={s.strings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
           <SettingsRow
-            disabled={this.props.isLocked}
-            text={s.strings.settings_button_change_password}
-            right={rightArrow}
-            onPress={this._onPressChangePasswordRouting}
-          />
-          <SettingsRow disabled={this.props.isLocked} text={s.strings.settings_button_pin} right={rightArrow} onPress={this._onPressChangePinRouting} />
-          <SettingsRow disabled={this.props.isLocked} text={s.strings.settings_button_setup_two_factor} right={rightArrow} onPress={this._onPressOtp} />
-          <SettingsRow
-            disabled={this.props.isLocked}
-            text={s.strings.settings_button_password_recovery}
-            right={rightArrow}
-            onPress={this._onPressRecoverPasswordRouting}
             bottomGap={false}
+            disabled={this.props.isLocked}
+            right={rightArrow}
+            text={s.strings.settings_button_password_recovery}
+            onPress={this.handleChangeRecovery}
           />
 
-          <SettingsHeaderRow icon={<IonIcon name="ios-options" color={theme.icon} size={iconSize} />} text={s.strings.settings_options_title_cap} />
-          <SettingsRow text={s.strings.settings_exchange_settings} right={rightArrow} onPress={this._onPressExchangeSettings} />
-          <SettingsRow text={s.strings.spending_limits} right={rightArrow} onPress={this._onPressSpendingLimits} />
-          <SettingsLabelRow
-            text={s.strings.settings_title_auto_logoff}
-            right={autoLogoutRightText}
-            onPress={() => {
-              this.showAutoLogoutModal()
-            }}
-          />
-          <SettingsLabelRow text={s.strings.settings_title_currency} right={this.props.defaultFiat.replace('iso:', '')} onPress={Actions.defaultFiatSetting} />
+          <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} text={s.strings.settings_options_title_cap} />
+          <SettingsRow right={rightArrow} text={s.strings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
+          <SettingsRow right={rightArrow} text={s.strings.spending_limits} onPress={this.handleSpendingLimits} />
+          <SettingsLabelRow right={autoLogoutRightText} text={s.strings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
+          <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} text={s.strings.settings_title_currency} onPress={this.handleDefaultFiat} />
 
-          <SettingsSwitchRow key="pinRelogin" text={s.strings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this._onTogglePinLogin} />
+          <SettingsSwitchRow key="pinRelogin" text={s.strings.settings_title_pin_login} value={this.props.pinLoginEnabled} onPress={this.handlePinToggle} />
           {this.props.supportsTouchId && (
-            <SettingsSwitchRow key="useTouchID" text={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this._onToggleTouchIdOption} />
+            <SettingsSwitchRow key="useTouchID" text={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this.handleTouchIdToggle} />
           )}
 
-          <SettingsRow text={s.strings.settings_notifications} right={rightArrow} onPress={this._onPressNotifications} />
+          <SettingsRow right={rightArrow} text={s.strings.settings_notifications} onPress={this.handleNotificationSettings} />
           {CURRENCY_SETTINGS_KEYS.map(pluginId => {
             if (account.currencyConfig[pluginId] == null) return null
             const { currencyInfo } = account.currencyConfig[pluginId]
             const { displayName, currencyCode } = currencyInfo
             const { symbolImage } = getCurrencyIcon(currencyCode)
-            const icon = <Image style={styles.currencyLogo} source={{ uri: symbolImage }} />
+            const icon = <Image source={{ uri: symbolImage }} style={styles.currencyLogo} />
             const onPress = () =>
               Actions[CURRENCY_SETTINGS]({
                 currencyInfo
               })
 
-            return <SettingsRow key={pluginId} icon={icon} text={displayName} onPress={onPress} right={rightArrow} />
+            return <SettingsRow key={pluginId} icon={icon} right={rightArrow} text={displayName} onPress={onPress} />
           })}
 
-          <SettingsRow text={s.strings.title_promotion_settings} right={rightArrow} onPress={this._onPressPromotionSettings} />
-          <SettingsSwitchRow key="developerMode" text={s.strings.settings_developer_mode} value={this.props.developerModeOn} onPress={this.onDeveloperPress} />
+          <SettingsRow right={rightArrow} text={s.strings.title_promotion_settings} onPress={this.handlePromotionSettings} />
+          <SettingsSwitchRow
+            key="developerMode"
+            text={s.strings.settings_developer_mode}
+            value={this.props.developerModeOn}
+            onPress={this.handleDeveloperToggle}
+          />
           {this.props.developerModeOn && (
-            <SettingsSwitchRow key="darkTheme" text={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.onDarkThemePress} />
+            <SettingsSwitchRow key="darkTheme" text={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
           )}
-          <SettingsRow onPress={this.props.showRestoreWalletsModal} text={s.strings.restore_wallets_modal_title} />
-          <SettingsRow text={s.strings.title_terms_of_service} onPress={Actions[TERMS_OF_SERVICE]} right={rightArrow} />
+          <SettingsRow text={s.strings.restore_wallets_modal_title} onPress={this.props.showRestoreWalletsModal} />
+          <SettingsRow right={rightArrow} text={s.strings.title_terms_of_service} onPress={this.handleTermsOfService} />
           <SettingsSwitchRow
             key="verboseLogging"
             text={s.strings.settings_verbose_logging}
             value={this.state.defaultLogLevel === 'info'}
-            onPress={this.handleVerboseLoggingPress}
+            onPress={this.handleVerboseLoggingToggle}
           />
-          <PrimaryButton onPress={this.showSendLogsModal} label={s.strings.settings_button_send_logs} marginRem={2} />
+          <PrimaryButton label={s.strings.settings_button_send_logs} marginRem={2} onPress={this.handleSendLogs} />
         </ScrollView>
       </SceneWrapper>
     )
-  }
-
-  showConfirmPasswordModal = () => {
-    if (!this.props.isLocked) {
-      this.props.lockSettings()
-    } else {
-      this.props.showUnlockSettingsModal()
-    }
   }
 }
 
