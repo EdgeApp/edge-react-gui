@@ -77,7 +77,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
                   }}
                 />
               ))
-              return Actions[FIO_ADDRESS_REGISTER_SELECT_WALLET]({
+              return Actions.push(FIO_ADDRESS_REGISTER_SELECT_WALLET, {
                 fioAddress: fioName,
                 selectedWallet: paymentWallet,
                 selectedDomain: {
@@ -104,7 +104,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             }}
           />
         ))
-        Actions[WALLET_LIST]()
+        Actions.jump(WALLET_LIST)
       } else {
         // no free domains
         showError(s.strings.fio_get_fee_err_msg)
@@ -114,7 +114,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
         if (this.isFioAddress()) {
           const { expiration, feeCollected } = await paymentWallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioName, ownerPublicKey })
           window.requestAnimationFrame(() =>
-            Actions[FIO_ADDRESS_REGISTER_SUCCESS]({
+            Actions.push(FIO_ADDRESS_REGISTER_SUCCESS, {
               fioName,
               expiration,
               feeCollected
@@ -127,7 +127,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             owner_fio_public_key: ownerPublicKey
           })
           window.requestAnimationFrame(() =>
-            Actions[FIO_ADDRESS_REGISTER_SUCCESS]({
+            Actions.push(FIO_ADDRESS_REGISTER_SUCCESS, {
               fioName,
               expiration,
               feeCollected

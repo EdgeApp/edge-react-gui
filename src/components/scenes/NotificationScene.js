@@ -101,7 +101,7 @@ class NotificationComponent extends React.Component<Props, State> {
               const icon = <Image style={styles.currencyLogo} source={{ uri: symbolImage }} />
               const onPress = () =>
                 enabled
-                  ? Actions[CURRENCY_NOTIFICATION_SETTINGS]({
+                  ? Actions.push(CURRENCY_NOTIFICATION_SETTINGS, {
                       currencyInfo
                     })
                   : undefined

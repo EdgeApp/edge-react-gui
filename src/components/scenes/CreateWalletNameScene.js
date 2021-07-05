@@ -64,7 +64,7 @@ export class CreateWalletName extends React.Component<Props, State> {
   onNext = () => {
     const { cleanedPrivateKey, selectedFiat, selectedWalletType } = this.props
     if (this.isValidWalletName()) {
-      Actions[CREATE_WALLET_REVIEW]({
+      Actions.push(CREATE_WALLET_REVIEW, {
         walletName: this.state.walletName,
         selectedFiat: selectedFiat,
         selectedWalletType: selectedWalletType,

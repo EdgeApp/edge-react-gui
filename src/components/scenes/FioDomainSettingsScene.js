@@ -142,7 +142,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
       }
     }
 
-    Actions[SEND]({
+    Actions.push(SEND, {
       guiMakeSpendInfo,
       selectedWalletId: this.props.fioWallet.id,
       selectedCurrencyCode: this.props.fioWallet.currencyInfo.currencyCode,

@@ -179,7 +179,7 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
           />
         ))
         if (answer === 'ok') {
-          return Actions[FIO_ADDRESS_SETTINGS]({
+          return Actions.push(FIO_ADDRESS_SETTINGS, {
             showRenew: true,
             fioWallet,
             fioAddressName: fioAddress

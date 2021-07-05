@@ -148,13 +148,13 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
         onAddToken: noOp
       }
 
-      return Actions[ADD_TOKEN](parameters)
+      return Actions.push(ADD_TOKEN, parameters)
     }
 
     if (isLegacyAddressUri(parsedUri)) {
       // LEGACY ADDRESS URI
       if (await shouldContinueLegacy()) {
-        Actions[SEND]({
+        Actions.push(SEND, {
           guiMakeSpendInfo: parsedUri,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
@@ -176,7 +176,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, coreWallet)
 
       if (guiMakeSpendInfo != null) {
-        Actions[SEND]({
+        Actions.push(SEND, {
           guiMakeSpendInfo,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
@@ -207,7 +207,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       guiMakeSpendInfo.fioAddress = fioAddress
       guiMakeSpendInfo.isSendUsingFioAddress = true
     }
-    Actions[SEND]({
+    Actions.push(SEND, {
       guiMakeSpendInfo,
       selectedWalletId,
       selectedCurrencyCode: currencyCode

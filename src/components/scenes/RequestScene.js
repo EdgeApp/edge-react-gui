@@ -477,7 +477,7 @@ export class RequestComponent extends React.Component<Props, State> {
         return
       }
     }
-    Actions[FIO_REQUEST_CONFIRMATION]({
+    Actions.push(FIO_REQUEST_CONFIRMATION, {
       amounts: this.amounts
     })
   }

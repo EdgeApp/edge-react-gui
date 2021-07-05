@@ -153,7 +153,7 @@ const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioName: FioAd
 
   if (answer) {
     if (isAddress) {
-      Actions[FIO_ADDRESS_SETTINGS]({
+      Actions.push(FIO_ADDRESS_SETTINGS, {
         showRenew: true,
         fioWallet,
         fioAddressName: fioName.name,
@@ -162,7 +162,7 @@ const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioName: FioAd
       return
     }
 
-    Actions[FIO_DOMAIN_SETTINGS]({
+    Actions.push(FIO_DOMAIN_SETTINGS, {
       showRenew: true,
       fioWallet,
       fioDomainName: fioName.name,

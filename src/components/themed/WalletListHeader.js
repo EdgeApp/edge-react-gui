@@ -86,7 +86,7 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
           <View style={styles.headerContainer}>
             <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
             <View key="defaultButtons" style={styles.headerButtonsContainer}>
-              <TouchableOpacity style={styles.addButton} onPress={Actions[CREATE_WALLET_SELECT_CRYPTO]}>
+              <TouchableOpacity style={styles.addButton} onPress={() => Actions.push(CREATE_WALLET_SELECT_CRYPTO)}>
                 <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
               <TouchableOpacity onPress={this.props.openSortModal}>

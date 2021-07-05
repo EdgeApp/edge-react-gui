@@ -191,7 +191,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       />
     ))
     if (answer === 'ok') {
-      return Actions[FIO_ADDRESS_SETTINGS]({
+      return Actions.push(FIO_ADDRESS_SETTINGS, {
         showRenew: true,
         fioWallet,
         fioAddressName
@@ -425,7 +425,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       }
     }
 
-    Actions[SEND]({
+    Actions.push(SEND, {
       guiMakeSpendInfo,
       selectedWalletId: walletId,
       selectedCurrencyCode
@@ -437,7 +437,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
       showError(s.strings.fio_network_alert_text)
       return
     }
-    Actions[FIO_SENT_REQUEST_DETAILS]({
+    Actions.push(FIO_SENT_REQUEST_DETAILS, {
       selectedFioSentRequest: fioRequest
     })
   }

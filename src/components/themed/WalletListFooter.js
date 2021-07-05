@@ -43,7 +43,7 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
     const styles = getStyles(theme)
     return (
       <View style={styles.container}>
-        {this.renderAddButton(s.strings.wallet_list_add_wallet, Actions[CREATE_WALLET_SELECT_CRYPTO])}
+        {this.renderAddButton(s.strings.wallet_list_add_wallet, () => Actions.push(CREATE_WALLET_SELECT_CRYPTO))}
         {this.renderAddButton(s.strings.wallet_list_add_token, this.addToken)}
       </View>
     )
@@ -82,7 +82,7 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
     ))
       .then(answer => {
         if (answer === 'confirm') {
-          Actions[CREATE_WALLET_SELECT_FIAT]({
+          Actions.push(CREATE_WALLET_SELECT_FIAT, {
             selectedWalletType: makeCreateWalletType(ethereum.currencyInfo)
           })
         }

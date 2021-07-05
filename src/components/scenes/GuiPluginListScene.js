@@ -195,7 +195,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     // Launch!
-    return Actions[PLUGIN_VIEW]({
+    return Actions.push(PLUGIN_VIEW, {
       plugin,
       deepPath,
       deepQuery

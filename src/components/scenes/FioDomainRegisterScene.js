@@ -94,7 +94,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     if (isValid && isAvailable && !loading && !walletLoading) {
       if (isConnected) {
         if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
-        Actions[FIO_DOMAIN_REGISTER_SELECT_WALLET]({
+        Actions.push(FIO_DOMAIN_REGISTER_SELECT_WALLET, {
           fioDomain,
           selectedWallet
         })

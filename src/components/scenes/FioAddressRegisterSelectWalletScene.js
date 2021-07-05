@@ -141,7 +141,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
       if (paymentCurrencyCode === FIO_STR) {
         const { fioWallets } = this.props
         const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
-        Actions[FIO_NAME_CONFIRM]({
+        Actions.push(FIO_NAME_CONFIRM, {
           fioName: fioAddress,
           paymentWallet,
           fee: feeValue,
@@ -175,12 +175,12 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
                 sprintf(s.strings.fio_address_register_pending, s.strings.fio_address_register_form_field_label),
                 [{ text: s.strings.string_ok_cap }]
               )
-              Actions[WALLET_LIST]()
+              Actions.jump(WALLET_LIST)
             }
           }
         }
 
-        Actions[SEND]({
+        Actions.push(SEND, {
           guiMakeSpendInfo,
           selectedWalletId: walletId,
           selectedCurrencyCode: paymentCurrencyCode

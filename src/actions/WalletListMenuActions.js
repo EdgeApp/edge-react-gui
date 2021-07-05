@@ -103,7 +103,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const state = getState()
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
-        Actions[TRANSACTIONS_EXPORT]({
+        Actions.push(TRANSACTIONS_EXPORT, {
           sourceWallet: wallet,
           currencyCode
         })

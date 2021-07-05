@@ -144,7 +144,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
             />
           ))
           if (answer === 'ok') {
-            Actions[FIO_ADDRESS_SETTINGS]({
+            Actions.push(FIO_ADDRESS_SETTINGS, {
               showRenew: true,
               fioWallet,
               fioAddressName: fioAddressName

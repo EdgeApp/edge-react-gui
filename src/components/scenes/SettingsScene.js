@@ -267,7 +267,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             const { symbolImage } = getCurrencyIcon(currencyCode)
             const icon = <Image source={{ uri: symbolImage }} style={styles.currencyLogo} />
             const onPress = () =>
-              Actions[CURRENCY_SETTINGS]({
+              Actions.push(CURRENCY_SETTINGS, {
                 currencyInfo
               })
 
