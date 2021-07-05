@@ -3,11 +3,10 @@
 import { bns } from 'biggystring'
 import type { EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
-import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import { getExchangeDenomination } from '../../../../selectors/DenominationSelectors.js'
 import { convertCurrency } from '../../../../selectors/WalletSelectors.js'
 import { type RootState } from '../../../../types/reduxTypes.js'
-import { type SpendAuthType } from '../../../../types/types.js'
+import { type GuiMakeSpendInfo, type SpendAuthType } from '../../../../types/types.js'
 import { convertNativeToExchange } from '../../../../util/utils.js'
 
 export const initialState = {
