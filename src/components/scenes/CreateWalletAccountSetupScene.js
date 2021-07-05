@@ -86,7 +86,7 @@ class CreateWalletAccountSetup extends React.Component<Props, State> {
 
   onSetup = () => {
     if (this.props.handleAvailableStatus === 'AVAILABLE') {
-      Actions[CREATE_WALLET_ACCOUNT_SELECT]({
+      Actions.push(CREATE_WALLET_ACCOUNT_SELECT, {
         ...this.props,
         accountName: this.state.accountHandle
       })

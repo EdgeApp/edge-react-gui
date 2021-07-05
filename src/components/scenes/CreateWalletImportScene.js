@@ -58,7 +58,7 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
     currencyPlugin
       .importKey(input)
       .then(() => {
-        Actions[CREATE_WALLET_SELECT_FIAT]({
+        Actions.push(CREATE_WALLET_SELECT_FIAT, {
           selectedWalletType,
           cleanedPrivateKey: input
         })

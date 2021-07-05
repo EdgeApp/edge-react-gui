@@ -67,7 +67,7 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
     const { fioAddressName, expiration } = this.props
     const { fioWallet } = this.state
     if (fioWallet) {
-      Actions[FIO_ADDRESS_SETTINGS]({
+      Actions.push(FIO_ADDRESS_SETTINGS, {
         fioWallet,
         fioAddressName,
         expiration,

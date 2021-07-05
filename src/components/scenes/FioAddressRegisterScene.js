@@ -165,14 +165,14 @@ class FioAddressRegister extends React.Component<Props, State> {
         if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
         const fullAddress = `${fioAddress}${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`
         if (selectedDomain.isFree) {
-          Actions[FIO_NAME_CONFIRM]({
+          Actions.push(FIO_NAME_CONFIRM, {
             fioName: fullAddress,
             paymentWallet: selectedWallet,
             fee: 0,
             ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
           })
         } else {
-          Actions[FIO_ADDRESS_REGISTER_SELECT_WALLET]({
+          Actions.push(FIO_ADDRESS_REGISTER_SELECT_WALLET, {
             fioAddress: fullAddress,
             selectedWallet,
             selectedDomain

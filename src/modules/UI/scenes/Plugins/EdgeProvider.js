@@ -359,7 +359,7 @@ export class EdgeProvider extends Bridgeable {
       guiMakeSpendInfo.onBack = () => {
         resolve()
       }
-      Actions[SEND]({
+      Actions.push(SEND, {
         guiMakeSpendInfo,
         selectedWalletId: coreWallet.id,
         selectedCurrencyCode

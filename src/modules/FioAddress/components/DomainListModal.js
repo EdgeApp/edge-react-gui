@@ -138,7 +138,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
 
   registerNewDomain = () => {
     this.props.bridge.resolve(null)
-    Actions[FIO_DOMAIN_REGISTER]()
+    Actions.push(FIO_DOMAIN_REGISTER)
   }
 
   selectItem = (value: any) => this.props.bridge.resolve(value)

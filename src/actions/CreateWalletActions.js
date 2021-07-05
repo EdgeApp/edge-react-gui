@@ -182,7 +182,7 @@ export const createAccountTransaction =
           }
         }
       }
-      Actions[SEND]({
+      Actions.push(SEND, {
         guiMakeSpendInfo,
         selectedWalletId: paymentWalletId,
         selectedCurrencyCode: currencyCode

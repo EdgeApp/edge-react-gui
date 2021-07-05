@@ -61,11 +61,11 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
 
     // Go to the next screen:
     if (isImportKeySupported) {
-      Actions[CREATE_WALLET_CHOICE]({
+      Actions.push(CREATE_WALLET_CHOICE, {
         selectedWalletType: createWalletType
       })
     } else {
-      Actions[CREATE_WALLET_SELECT_FIAT]({
+      Actions.push(CREATE_WALLET_SELECT_FIAT, {
         selectedWalletType: createWalletType
       })
     }

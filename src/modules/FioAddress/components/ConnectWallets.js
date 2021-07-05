@@ -84,7 +84,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
           return acc
         }, {})
       })
-      Actions[FIO_CONNECT_TO_WALLETS_CONFIRM]({
+      Actions.push(FIO_CONNECT_TO_WALLETS_CONFIRM, {
         fioAddressName,
         fioWallet,
         walletsToConnect: Object.values(connectWalletsMap),

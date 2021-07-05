@@ -70,7 +70,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
       } else {
         nextSceneKey = CREATE_WALLET_ACCOUNT_SETUP
       }
-      Actions[nextSceneKey]({
+      Actions.push(nextSceneKey, {
         selectedWalletType: selectedWalletType,
         selectedFiat: this.getFiatType(this.state.selectedFiat),
         cleanedPrivateKey

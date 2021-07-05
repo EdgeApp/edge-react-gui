@@ -55,7 +55,7 @@ class FioAddressRegistered extends React.Component<Props> {
               {formatDate(new Date(expiration))}
             </T>
           </View>
-          <MainButton marginRem={2} onPress={Actions[FIO_ADDRESS_LIST]} label={s.strings.title_fio_names} />
+          <MainButton marginRem={2} onPress={() => Actions.push(FIO_ADDRESS_LIST)} label={s.strings.title_fio_names} />
         </View>
       </SceneWrapper>
     )

@@ -106,7 +106,7 @@ const selectEOSWallet = (walletId: string, currencyCode: string) => (dispatch: D
       isReactivation: true,
       existingWalletId: walletId
     }
-    Actions[CREATE_WALLET_ACCOUNT_SETUP](createWalletAccountSetupSceneProps)
+    Actions.push(CREATE_WALLET_ACCOUNT_SETUP, createWalletAccountSetupSceneProps)
     Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}

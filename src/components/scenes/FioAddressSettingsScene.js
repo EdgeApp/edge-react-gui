@@ -142,7 +142,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
       }
     }
 
-    Actions[SEND]({
+    Actions.push(SEND, {
       guiMakeSpendInfo,
       selectedWalletId: this.props.fioWallet.id,
       selectedCurrencyCode: this.props.fioWallet.currencyInfo.currencyCode,

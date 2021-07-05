@@ -295,7 +295,7 @@ export const showRestoreWalletsModal = () => async (dispatch: Dispatch, getState
           })
         )
     )
-    Actions[WALLET_LIST]()
+    Actions.jump(WALLET_LIST)
   }
 }
 
