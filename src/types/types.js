@@ -5,6 +5,7 @@ import {
   type EdgeMetadata,
   type EdgeMetaToken,
   type EdgeReceiveAddress,
+  type EdgeSpendTarget,
   type EdgeSwapQuote,
   type EdgeSwapRequest,
   type EdgeTransaction
@@ -294,4 +295,26 @@ export type FioObtRecord = {
   fio_request_id: number,
   status: string,
   time_stamp: string
+}
+
+export type FeeOption = 'custom' | 'high' | 'low' | 'standard'
+
+export type GuiMakeSpendInfo = {
+  currencyCode?: string,
+  metadata?: any,
+  nativeAmount?: string,
+  networkFeeOption?: FeeOption,
+  customNetworkFee?: Object,
+  publicAddress?: string,
+  spendTargets?: EdgeSpendTarget[],
+  lockInputs?: boolean,
+  uniqueIdentifier?: string,
+  otherParams?: Object,
+  dismissAlert?: boolean,
+  fioAddress?: string,
+  fioPendingRequest?: FioRequest,
+  isSendUsingFioAddress?: boolean,
+  onBack?: () => void,
+  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
+  beforeTransaction?: () => Promise<void>
 }

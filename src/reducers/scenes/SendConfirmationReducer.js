@@ -1,35 +1,13 @@
 // @flow
 
 import { add } from 'biggystring'
-import type { EdgeMetadata, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import { type EdgeMetadata, type EdgeSpendInfo, type EdgeTransaction } from 'edge-core-js'
 import { isEqual } from 'lodash'
 import { type Reducer } from 'redux'
 
-import { initialState } from '../../modules/UI/scenes/SendConfirmation/selectors'
-import type { Action } from '../../types/reduxTypes.js'
-import type { FioRequest } from '../../types/types'
-
-export type FeeOption = 'custom' | 'high' | 'low' | 'standard'
-
-export type GuiMakeSpendInfo = {
-  currencyCode?: string,
-  metadata?: any,
-  nativeAmount?: string,
-  networkFeeOption?: FeeOption,
-  customNetworkFee?: Object,
-  publicAddress?: string,
-  spendTargets?: EdgeSpendTarget[],
-  lockInputs?: boolean,
-  uniqueIdentifier?: string,
-  otherParams?: Object,
-  dismissAlert?: boolean,
-  fioAddress?: string,
-  fioPendingRequest?: FioRequest,
-  isSendUsingFioAddress?: boolean,
-  onBack?: () => void,
-  onDone?: (error: Error | null, edgeTransaction?: EdgeTransaction) => void,
-  beforeTransaction?: () => Promise<void>
-}
+import { initialState } from '../../modules/UI/scenes/SendConfirmation/selectors.js'
+import { type Action } from '../../types/reduxTypes.js'
+import { type GuiMakeSpendInfo } from '../../types/types.js'
 
 export type SendConfirmationState = {
   forceUpdateGuiCounter: number,

@@ -16,7 +16,6 @@ import { type SortOption } from '../components/modals/WalletListSortModal.js'
 import type { CcWalletMap } from '../reducers/FioReducer'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
-import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { type AccountInitPayload, type SettingsState } from '../reducers/scenes/SettingsReducer.js'
 import { type TweakSource } from '../util/ReferralHelpers.js'
 import { type DeepLink } from './DeepLink.js'
@@ -29,6 +28,7 @@ import {
   type GuiContact,
   type GuiCurrencyInfo,
   type GuiExchangeRates,
+  type GuiMakeSpendInfo,
   type GuiSwapInfo,
   type GuiWallet,
   type MostRecentWallet,

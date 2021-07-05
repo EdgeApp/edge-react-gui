@@ -16,10 +16,9 @@ import { ADD_TOKEN, EXCHANGE_SCENE, PLUGIN_BUY, SEND } from '../constants/SceneK
 import { CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
-import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { type ReturnAddressLink, parseDeepLink } from '../types/DeepLink.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import type { GuiWallet } from '../types/types.js'
+import { type GuiMakeSpendInfo, type GuiWallet } from '../types/types.js'
 import { denominationToDecimalPlaces, noOp } from '../util/utils.js'
 import { launchDeepLink } from './DeepLinkingActions.js'
 

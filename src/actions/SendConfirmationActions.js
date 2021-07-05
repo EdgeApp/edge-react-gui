@@ -15,10 +15,10 @@ import { FEE_ALERT_THRESHOLD, FIO_STR } from '../constants/WalletAndCurrencyCons
 import s from '../locales/strings.js'
 import { addToFioAddressCache, recordSend } from '../modules/FioAddress/util'
 import { getAuthRequired, getSpendInfo, getSpendInfoWithoutState, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
-import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/WalletSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import { type GuiMakeSpendInfo } from '../types/types.js'
 import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode, roundedFee } from '../util/utils'
 import { playSendSound } from './SoundActions.js'
 
