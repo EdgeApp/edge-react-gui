@@ -64,7 +64,6 @@
   "transaction_list_no_tx_yet": "没有交易记录！",
   "fragment_wallets_addwallet_name_hint": "新钱包名字",
   "fragment_wallets_balance_text": "总余额",
-  "fragment_wallets_delete_wallet": "删除钱包",
   "fragment_wallets_resync_wallet": "钱包重新同步",
   "fragment_wallets_split_wallet": "分拆钱包",
   "fragment_wallets_get_seed_wallet": "获取种子",

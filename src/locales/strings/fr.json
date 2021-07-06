@@ -64,7 +64,6 @@
   "transaction_list_no_tx_yet": "Aucune transaction a été éffectuée ",
   "fragment_wallets_addwallet_name_hint": "Nouveau nom de Wallet ",
   "fragment_wallets_balance_text": "Solde total",
-  "fragment_wallets_delete_wallet": "Supprimer le portefeuille",
   "fragment_wallets_resync_wallet": "Resynchroniser Wallet ",
   "fragment_wallets_split_wallet": "Se séparer le portefueille",
   "fragment_wallets_get_seed_wallet": "Obtenir Seed",

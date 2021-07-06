@@ -58,7 +58,6 @@
   "transaction_list_no_tx_yet": "Nenhuma transação ainda!",
   "fragment_wallets_addwallet_name_hint": "Novo Nome da Carteira",
   "fragment_wallets_balance_text": "Saldo Total",
-  "fragment_wallets_delete_wallet": "Excluir Carteira",
   "fragment_wallets_resync_wallet": "Re-sincronizar carteira",
   "fragment_wallets_split_wallet": "Dividir Carteira",
   "fragment_wallets_get_seed_wallet": "Obter seed",
