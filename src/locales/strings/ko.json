@@ -65,7 +65,6 @@
   "transaction_list_no_tx_yet": "아직 거래 내역이 없습니다.",
   "fragment_wallets_addwallet_name_hint": "새로운 월렛 이름",
   "fragment_wallets_balance_text": "총 잔고",
-  "fragment_wallets_delete_wallet": "월렛 삭제",
   "fragment_wallets_resync_wallet": "월렛을 재동기화",
   "fragment_wallets_split_wallet": "분할 월렛",
   "fragment_wallets_get_seed_wallet": "시드를 취득",
