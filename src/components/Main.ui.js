@@ -463,18 +463,6 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={Constants.PLUGIN_EARN_INTEREST}>
-            <Scene
-              key={Constants.PLUGIN_EARN_INTEREST}
-              navTransparent
-              component={ifLoggedIn(GuiPluginViewScene)}
-              renderTitle={props => <HeaderTitle title={props.plugin.displayName} />}
-              renderLeftButton={renderPluginBackButton()}
-              renderRightButton={<HeaderTextButton type="exit" placement="right" />}
-              hideTabBar
-            />
-          </Stack>
-
           <Stack key={Constants.SETTINGS_OVERVIEW_TAB} hideDrawerButton>
             <Scene
               key={Constants.SETTINGS_OVERVIEW}
