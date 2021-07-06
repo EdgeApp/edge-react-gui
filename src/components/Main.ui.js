@@ -37,7 +37,6 @@ import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
-import AddToken from '../connectors/scenes/AddTokenConnector.js'
 import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
@@ -128,6 +127,7 @@ import { HeaderTextButton } from './navigation/HeaderTextButton.js'
 import { HeaderTitle } from './navigation/HeaderTitle.js'
 import { SideMenuButton } from './navigation/SideMenuButton.js'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle.js'
+import { AddTokenScene } from './scenes/AddTokenScene.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { ChangePasswordScene } from './scenes/ChangePasswordScene.js'
 import { ChangePinScene } from './scenes/ChangePinScene.js'
@@ -373,7 +373,7 @@ export class MainComponent extends React.Component<Props> {
               />
               <Scene
                 key={ADD_TOKEN}
-                component={ifLoggedIn(AddToken)}
+                component={ifLoggedIn(AddTokenScene)}
                 navTransparent
                 onLeft={Actions.pop}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -521,7 +521,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={ADD_TOKEN}
               navTransparent
-              component={ifLoggedIn(AddToken)}
+              component={ifLoggedIn(AddTokenScene)}
               renderTitle={<HeaderTitle title={s.strings.title_add_token} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
