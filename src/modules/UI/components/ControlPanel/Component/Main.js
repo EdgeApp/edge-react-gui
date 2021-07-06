@@ -21,7 +21,6 @@ import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import { type WalletListResult, WalletListModal } from '../../../../../components/modals/WalletListModal.js'
-import { LOGIN_QR, SWEEP_PRIVATE_KEY } from '../../../../../components/scenes/ScanScene'
 import { Airship } from '../../../../../components/services/AirshipInstance.js'
 import {
   EXCHANGE_SCENE,
@@ -184,7 +183,7 @@ const WalletsButton = () => {
 
 const popToSendScan = () =>
   goToScene(SCAN, {
-    data: LOGIN_QR
+    mode: 'loginQR'
   })
 const ScanButton = () => {
   return (
@@ -217,7 +216,7 @@ const SweepPrivateKeyButton = (props: SweepPrivateKeyButtonProps) => {
       if (walletId && currencyCode) {
         onSelectWallet(walletId, currencyCode)
         Actions.jump(SCAN, {
-          data: SWEEP_PRIVATE_KEY
+          mode: 'sweepPrivateKey'
         })
       }
     })

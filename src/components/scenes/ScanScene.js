@@ -43,26 +43,23 @@ type DispatchProps = {
 
 type Props = OwnProps & StateProps & DispatchProps
 
-export const SWEEP_PRIVATE_KEY = 'sweepPrivateKey'
-export const LOGIN_QR = 'loginQR'
-
 export class Scan extends React.Component<Props> {
   componentDidUpdate(prevProps: Props) {
     const { route } = this.props
-    const { data } = route.params
-    if (data !== prevProps.route.params.data && Actions.currentScene !== 'DrawerOpen') {
+    const { mode } = route.params
+    if (mode !== prevProps.route.params.mode && Actions.currentScene !== 'DrawerOpen') {
       Actions.drawerClose()
     }
   }
 
   render() {
     const { route } = this.props
-    const { data } = route.params
+    const { mode } = route.params
     return (
       <SceneWrapper background="header" hasTabs={false}>
         {this.renderCameraArea()}
         <View style={styles.overlayButtonAreaWrap}>
-          {data === SWEEP_PRIVATE_KEY && (
+          {mode === 'sweepPrivateKey' && (
             <TouchableHighlight style={styles.bottomButton} onPress={this._onTogglePrivateKeyModal} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
                 <FontAwesome name="edit" style={styles.privateKeyIcon} />
@@ -107,8 +104,8 @@ export class Scan extends React.Component<Props> {
 
   onBarCodeRead = ({ data: scannedData }: { data: string }) => {
     const { loginQrCodeScanned, qrCodeScanned, route } = this.props
-    const { data } = route.params
-    return data === LOGIN_QR ? loginQrCodeScanned(scannedData) : qrCodeScanned(scannedData)
+    const { mode } = route.params
+    return mode === 'loginQR' ? loginQrCodeScanned(scannedData) : qrCodeScanned(scannedData)
   }
 
   renderCameraArea = () => {

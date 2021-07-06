@@ -14,7 +14,7 @@ describe('Scan component', () => {
       route: {
         name: 'scan',
         params: {
-          data: 'loginQR'
+          mode: 'loginQR'
         }
       },
       cameraPermission: RNPermissions.BLOCKED,
@@ -44,7 +44,7 @@ describe('Scan component', () => {
       route: {
         name: 'scan',
         params: {
-          data: 'loginQR'
+          mode: 'loginQR'
         }
       },
       cameraPermission: RNPermissions.GRANTED,

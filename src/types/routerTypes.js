@@ -179,8 +179,8 @@ export type ParamList = {
   promotionSettings: void,
   request: void,
   scan: {|
-    data?: 'sweepPrivateKey' | 'loginQR'
-  |}, // TODO
+    mode?: 'sweepPrivateKey' | 'loginQR'
+  |},
   securityAlerts: void,
   send: {|
     allowedCurrencyCodes?: string[],
