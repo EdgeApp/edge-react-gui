@@ -5,6 +5,7 @@ import { Image, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
+import { PLUGIN_BUY } from '../../constants/SceneKeys.js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
@@ -28,6 +29,10 @@ type StateProps = {
 type Props = OwnProps & StateProps & ThemeProps
 
 class BuyCryptoComponent extends React.PureComponent<Props> {
+  handlePress = (): void => {
+    Actions.push(PLUGIN_BUY)
+  }
+
   render() {
     const { currencyCode, currencyImage, currencyName, theme } = this.props
     const styles = getStyles(theme)
@@ -35,7 +40,7 @@ class BuyCryptoComponent extends React.PureComponent<Props> {
     return (
       <>
         {allowedCurrencies.includes(currencyCode) && (
-          <ButtonBox onPress={Actions.pluginBuy} paddingRem={1}>
+          <ButtonBox onPress={this.handlePress} paddingRem={1}>
             <View style={styles.container}>
               <View style={styles.buyCrypto}>
                 <Image style={styles.buyCryptoImage} source={{ uri: currencyImage }} resizeMode="cover" />

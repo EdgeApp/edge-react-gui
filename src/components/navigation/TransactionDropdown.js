@@ -9,10 +9,12 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { playReceiveSound } from '../../actions/SoundActions.js'
+import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { useCallback } from '../../types/reactHooks.js'
 import { connect } from '../../types/reactRedux.js'
 import { convertNativeToDisplay } from '../../util/utils.js'
 import { AirshipDropdown } from '../common/AirshipDropdown.js'
@@ -44,15 +46,15 @@ type Props = OwnProps & StateProps
 export function TransactionDropdown(props: Props) {
   const { bridge, message, tx } = props
 
+  const handlePress = useCallback((): void => {
+    bridge.resolve()
+    Actions.push(TRANSACTION_DETAILS, {
+      edgeTransaction: tx
+    })
+  }, [bridge, tx])
+
   return (
-    <AirshipDropdown
-      bridge={bridge}
-      backgroundColor={THEME.COLORS.PRIMARY}
-      onPress={() => {
-        bridge.resolve()
-        Actions.transactionDetails({ edgeTransaction: tx })
-      }}
-    >
+    <AirshipDropdown bridge={bridge} backgroundColor={THEME.COLORS.PRIMARY} onPress={handlePress}>
       <AntDesignIcon name="checkcircle" size={THEME.rem(2)} style={styles.icon} />
       <Text style={styles.text}>{message}</Text>
     </AirshipDropdown>

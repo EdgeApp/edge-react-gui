@@ -5,6 +5,7 @@ import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
 
+import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux.js'
@@ -44,13 +45,15 @@ type OwnProps = {
 type Props = OwnProps & StateProps
 
 export class TransactionListRowComponent extends React.PureComponent<Props> {
-  onPress = () => {
+  handlePress = () => {
     const { transaction, thumbnailPath } = this.props
-    if (transaction) {
-      Actions.transactionDetails({ edgeTransaction: transaction, thumbnailPath })
-    } else {
-      showError(s.strings.transaction_details_error_invalid)
+    if (transaction == null) {
+      return showError(s.strings.transaction_details_error_invalid)
     }
+    Actions.push(TRANSACTION_DETAILS, {
+      edgeTransaction: transaction,
+      thumbnailPath
+    })
   }
 
   render() {
@@ -60,7 +63,7 @@ export class TransactionListRowComponent extends React.PureComponent<Props> {
         denominationSymbol={this.props.denominationSymbol}
         fiatAmount={this.props.fiatAmount}
         fiatSymbol={this.props.fiatSymbol}
-        onPress={this.onPress}
+        onPress={this.handlePress}
         isSentTransaction={this.props.isSentTransaction}
         requiredConfirmations={this.props.requiredConfirmations}
         selectedCurrencyName={this.props.selectedCurrencyName}

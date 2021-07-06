@@ -13,7 +13,7 @@ import { RawTextModal } from '../components/modals/RawTextModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { getTheme } from '../components/services/ThemeContext.js'
 import { CheckPasswordModal } from '../components/themed/CheckPasswordModal.js'
-import { TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
+import { MANAGE_TOKENS, TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
@@ -31,7 +31,9 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const wallet = state.ui.wallets.byId[walletId]
-        Actions.manageTokens({ guiWallet: wallet })
+        Actions.push(MANAGE_TOKENS, {
+          guiWallet: wallet
+        })
       }
     }
 
