@@ -19,12 +19,27 @@ type DispatchProps = {
 type Props = StateProps & DispatchProps
 
 class ChangeRecoveryComponent extends React.Component<Props> {
+  onChangeRecoveryModal = status => {
+    if (status) {
+      Actions.refresh({ hideNavBar: true })
+    } else {
+      Actions.refresh({ hideNavBar: false })
+    }
+  }
+
   render() {
     const { context, account, onComplete } = this.props
 
     return (
       <SceneWrapper hasTabs={false} background="body">
-        <PasswordRecoveryScreen account={account} context={context} onComplete={onComplete} onCancel={onComplete} showHeader={false} />
+        <PasswordRecoveryScreen
+          onChangeRecoveryModal={this.onChangeRecoveryModal}
+          account={account}
+          context={context}
+          onComplete={onComplete}
+          onCancel={onComplete}
+          showHeader={false}
+        />
       </SceneWrapper>
     )
   }
