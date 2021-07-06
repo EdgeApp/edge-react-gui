@@ -10,6 +10,7 @@ import { sprintf } from 'sprintf-js'
 
 import { playReceiveSound } from '../../actions/SoundActions.js'
 import { selectWallet } from '../../actions/WalletActions'
+import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { nightText } from '../../styles/common/textStyles.js'
@@ -57,7 +58,9 @@ export function TransactionDropdown(props: Props) {
       onPress={() => {
         bridge.resolve()
         walletId && selectWallet(walletId, tx.currencyCode)
-        Actions.transactionDetails({ edgeTransaction: tx })
+        Actions.push(TRANSACTION_DETAILS, {
+          edgeTransaction: tx
+        })
       }}
     >
       <AntDesignIcon name="checkcircle" size={THEME.rem(2)} style={styles.icon} />

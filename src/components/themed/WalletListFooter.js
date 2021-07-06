@@ -6,7 +6,7 @@ import { Alert, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-import { CREATE_WALLET_SELECT_CRYPTO, CREATE_WALLET_SELECT_FIAT } from '../../constants/SceneKeys.js'
+import { CREATE_WALLET_SELECT_CRYPTO, CREATE_WALLET_SELECT_FIAT, MANAGE_TOKENS } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
@@ -57,7 +57,9 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
       const wallet = wallets[key]
       const specialCurrencyInfo = getSpecialCurrencyInfo(wallet.currencyCode)
       if (specialCurrencyInfo.isCustomTokensSupported) {
-        return Actions.manageTokens({ guiWallet: wallet })
+        return Actions.push(MANAGE_TOKENS, {
+          guiWallet: wallet
+        })
       }
     }
 

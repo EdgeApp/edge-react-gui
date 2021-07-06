@@ -8,6 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
+import { REQUEST, SEND } from '../../constants/SceneKeys.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
@@ -119,6 +120,14 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
     this.props.onSearchTransaction(this.state.input)
   }
 
+  handleRequest = (): void => {
+    Actions.push(REQUEST)
+  }
+
+  handleSend = (): void => {
+    Actions.push(SEND)
+  }
+
   handleSearchDone = () => {
     this.clearText()
     this.props.onChangeSortingState(false)
@@ -170,12 +179,12 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
             <>
               {this.renderBalanceBox()}
               <View style={styles.buttonsContainer}>
-                <TouchableOpacity onPress={Actions.request} style={styles.buttons}>
+                <TouchableOpacity onPress={this.handleRequest} style={styles.buttons}>
                   <Ionicons name="arrow-down" size={theme.rem(1.5)} color={theme.iconTappable} />
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_request_subtitle}</EdgeText>
                 </TouchableOpacity>
                 <View style={styles.buttonsDivider} />
-                <TouchableOpacity onPress={Actions.send} style={styles.buttons}>
+                <TouchableOpacity onPress={this.handleSend} style={styles.buttons}>
                   <Ionicons name="arrow-up" size={theme.rem(1.5)} color={theme.iconTappable} />
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
                 </TouchableOpacity>

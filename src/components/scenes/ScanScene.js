@@ -10,6 +10,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { loginQrCodeScanned, parseScannedUri, qrCodeScanned } from '../../actions/ScanActions'
+import { EXCHANGE_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
@@ -83,7 +84,7 @@ export class Scan extends React.Component<Props> {
   _onPressTransfer = () => {
     const { selectFromWalletForExchange, currentWalletId, currentCurrencyCode } = this.props
     selectFromWalletForExchange(currentWalletId, currentCurrencyCode)
-    Actions.exchangeScene()
+    Actions.push(EXCHANGE_SCENE)
   }
 
   _onToggleTorch = () => {
