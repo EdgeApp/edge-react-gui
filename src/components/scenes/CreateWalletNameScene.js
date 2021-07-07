@@ -94,7 +94,6 @@ export class CreateWalletName extends React.Component<Props, State> {
           onFocus={this.handleOnFocus}
           onBlur={this.handleOnBlur}
           label={s.strings.fragment_wallets_addwallet_name_hint}
-          size="small"
           onClear={this.clearText}
           isClearable={this.state.isFocused}
           marginRem={[0, 1.75]}

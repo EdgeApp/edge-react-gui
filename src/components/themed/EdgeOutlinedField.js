@@ -11,6 +11,10 @@ import { useCallback, useEffect, useImperativeHandle, useMemo, useState } from '
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 
 const HINT_Y_PLATFORM_ADJUST = Platform.OS === 'android' ? -2 : 0
+const PADDING_VERTICAL = 1
+const PADDING_VERTICAL_SMALL = 0.65
+const FONT_SIZE = 1
+const FONT_SIZE_SMALL = 0.875
 
 const ANIMATION_STATES = {
   INIT: 0,
@@ -124,6 +128,8 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
     placeholderScale,
     placeholderSizeScale,
     paddingVertical,
+    inputStyles,
+    placeholderTextStyles,
     placeholderPaddingStyles,
     placeholderSpacerPaddingStyles,
     inputContainerStyles,
@@ -250,7 +256,7 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
           <TextInput
             {...inputProps}
             ref={inputRef}
-            style={styles.input}
+            style={inputStyles}
             pointerEvents="none"
             onFocus={handleFocus}
             onBlur={handleBlur}
@@ -271,7 +277,7 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
 
       <Animated.View style={[...placeholderSpacerPaddingStyles, animatedPlaceholderSpacerStyles]} />
       <Animated.View style={placeholderStyle} onLayout={handlePlaceholderLayout} pointerEvents="none">
-        <Animated.Text style={[styles.placeholderText, animatedPlaceholderTextStyles]}>{placeholder}</Animated.Text>
+        <Animated.Text style={[...placeholderTextStyles, animatedPlaceholderTextStyles]}>{placeholder}</Animated.Text>
       </Animated.View>
       {errorState() ? <Text style={styles.errorText}>{error}</Text> : null}
     </Animated.View>
@@ -295,12 +301,14 @@ const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', showSearchIc
   const inactiveColor = theme.secondaryText
   const activeColor = theme.iconTappable
   const errorColor = theme.dangerText
-  const fontSize = theme.rem(1)
+  let fontSize = theme.rem(FONT_SIZE)
   let placeholderSpacerAdjust = theme.rem(2.25) - 1
   const placeholderScale = 0.7
   const placeholderSizeScale = 0.2
-  let paddingVertical = theme.rem(1)
+  let paddingVertical = theme.rem(PADDING_VERTICAL)
   let hintLeftMargin = -theme.rem(0.25)
+  const inputStyles = [styles.input]
+  const placeholderTextStyles = [styles.placeholderText]
   const placeholderPaddingStyles = [styles.placeholder]
   const placeholderSpacerPaddingStyles = [styles.placeholderSpacer]
   const inputContainerStyles = [styles.inputContainer]
@@ -311,8 +319,11 @@ const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', showSearchIc
     hintLeftMargin = theme.rem(2.25)
   }
   if (size === 'small') {
-    paddingVertical = theme.rem(0.5)
+    fontSize = theme.rem(FONT_SIZE_SMALL)
+    paddingVertical = theme.rem(PADDING_VERTICAL_SMALL)
     placeholderSpacerAdjust = theme.rem(2)
+    inputStyles.push(styles.inputSmall)
+    placeholderTextStyles.push(styles.placeholderTextSmall)
     placeholderPaddingStyles.push(styles.placeholderSmall)
     placeholderSpacerPaddingStyles.push(styles.placeholderSpacerSmall)
     inputContainerStyles.push(styles.inputContainerSmall)
@@ -335,6 +346,8 @@ const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', showSearchIc
     placeholderScale,
     placeholderSizeScale,
     paddingVertical,
+    inputStyles,
+    placeholderTextStyles,
     placeholderPaddingStyles,
     placeholderSpacerPaddingStyles,
     inputContainerStyles,
@@ -382,14 +395,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   inputContainer: {
     flex: 1,
-    paddingVertical: theme.rem(1),
+    paddingVertical: theme.rem(PADDING_VERTICAL),
     paddingHorizontal: theme.rem(1),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center'
   },
   inputContainerSmall: {
-    paddingVertical: theme.rem(0.5),
+    paddingVertical: theme.rem(PADDING_VERTICAL_SMALL),
     paddingHorizontal: theme.rem(0.75)
   },
   prefixPadding: {
@@ -400,10 +413,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   input: {
     flex: 1,
-    fontSize: theme.rem(1),
+    fontSize: theme.rem(FONT_SIZE),
     fontFamily: theme.fontFaceDefault,
     paddingVertical: 0,
     color: theme.primaryText
+  },
+  inputSmall: {
+    fontSize: theme.rem(FONT_SIZE_SMALL)
   },
   prefixSmall: {
     marginRight: theme.rem(0.5)
@@ -419,22 +435,25 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   placeholder: {
     position: 'absolute',
-    top: theme.rem(1),
+    top: theme.rem(PADDING_VERTICAL),
     left: theme.rem(1)
   },
   placeholderWithPrefix: {
     left: theme.rem(2.75)
   },
   placeholderSmall: {
-    top: theme.rem(0.5),
+    top: theme.rem(PADDING_VERTICAL_SMALL),
     left: theme.rem(0.75)
   },
   placeholderSmallWithPrefix: {
     left: theme.rem(2.25)
   },
   placeholderText: {
-    fontSize: theme.rem(1),
+    fontSize: theme.rem(FONT_SIZE),
     fontFamily: theme.fontFaceDefault
+  },
+  placeholderTextSmall: {
+    fontSize: theme.rem(FONT_SIZE_SMALL)
   },
   placeholderSpacer: {
     position: 'absolute',
@@ -444,7 +463,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: '85%'
   },
   placeholderSpacerSmall: {
-    right: theme.rem(0.5)
+    right: theme.rem(0.625)
   },
   errorText: {
     position: 'absolute',
