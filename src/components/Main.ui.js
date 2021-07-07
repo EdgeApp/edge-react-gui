@@ -39,7 +39,6 @@ import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
 import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
-import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import {
   ADD_TOKEN,
@@ -134,6 +133,7 @@ import { ChangePinScene } from './scenes/ChangePinScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreen } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { CurrencyNotificationScene } from './scenes/CurrencyNotificationScene'
+import { EdgeLoginScene } from './scenes/EdgeLoginScene.js'
 import { EditTokenScene } from './scenes/EditTokenScene.js'
 import { FioDomainRegisterScene } from './scenes/FioDomainRegisterScene'
 import { FioDomainRegisterSelectWalletScene } from './scenes/FioDomainRegisterSelectWalletScene'
@@ -205,7 +205,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={EDGE_LOGIN}
               navTransparent
-              component={ifLoggedIn(EdgeLoginSceneConnector)}
+              component={ifLoggedIn(EdgeLoginScene)}
               renderTitle={<HeaderTitle title={s.strings.title_edge_login} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<HeaderTextButton type="help" placement="right" />}
