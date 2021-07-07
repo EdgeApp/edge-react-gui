@@ -64,7 +64,6 @@
   "transaction_list_no_tx_yet": "Không có giao dịch nào!",
   "fragment_wallets_addwallet_name_hint": "Tên ví mới",
   "fragment_wallets_balance_text": "Tổng số dư",
-  "fragment_wallets_delete_wallet": "Xóa Ví",
   "fragment_wallets_resync_wallet": "Đồng bộ hoá ví",
   "fragment_wallets_split_wallet": "Chia ví",
   "fragment_wallets_get_seed_wallet": "Lấy chuỗi giá trị",

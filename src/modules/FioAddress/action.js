@@ -5,13 +5,13 @@ import { createCurrencyWallet } from '../../actions/CreateWalletActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings'
 import type { Dispatch, GetState } from '../../types/reduxTypes'
-import { getDefaultIsoFiat } from '../Settings/selectors'
 import { refreshConnectedWalletsForFioAddress, refreshFioNames } from './util'
 
 export const createFioWallet =
   () =>
   (dispatch: Dispatch, getState: GetState): Promise<EdgeCurrencyWallet | any> => {
-    const fiatCurrencyCode = getDefaultIsoFiat(getState())
+    const state = getState()
+    const fiatCurrencyCode = state.ui.settings.defaultIsoFiat
     return dispatch(createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, Constants.FIO_WALLET_TYPE, fiatCurrencyCode, false, false))
   }
 

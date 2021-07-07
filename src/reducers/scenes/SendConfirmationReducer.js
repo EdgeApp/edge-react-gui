@@ -48,7 +48,9 @@ export type SendConfirmationState = {
   pin: string,
   authRequired: 'pin' | 'none',
 
-  toggleCryptoOnTop: number
+  toggleCryptoOnTop: number,
+
+  maxSpendSet: boolean
 }
 
 const sendConfirmationLegacy = (state: SendConfirmationState = initialState, action: Action) => {
@@ -105,14 +107,17 @@ const sendConfirmationLegacy = (state: SendConfirmationState = initialState, act
   }
 }
 
-const nativeAmount: Reducer<string, Action> = (state = '0', action): string => {
+const nativeAmount: Reducer<string, Action> = (state = '', action): string => {
   switch (action.type) {
     case 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO': {
-      return action.data.spendInfo.spendTargets.reduce((sum, target) => add(sum, target.nativeAmount ?? '0'), '0')
+      if (action.data.spendInfo.spendTargets[0].nativeAmount != null && action.data.spendInfo.spendTargets[0].nativeAmount !== '') {
+        return action.data.spendInfo.spendTargets.reduce((sum, target) => add(sum, target.nativeAmount ?? '0'), '0')
+      }
+      return state
     }
 
     case 'UI/SEND_CONFIRMATION/UPDATE_TRANSACTION': {
-      return action.data.guiMakeSpendInfo.nativeAmount || state || '0'
+      return action.data.guiMakeSpendInfo.nativeAmount || state || ''
     }
 
     default:
@@ -233,11 +238,23 @@ const toggleCryptoOnTop = (state: number = 0, action: Action): number => {
   }
 }
 
+const maxSpendSet = (state: boolean = false, action: Action): boolean => {
+  switch (action.type) {
+    case 'UI/SEND_CONFIRMATION/SET_MAX_SPEND': {
+      return action.data
+    }
+
+    default:
+      return state
+  }
+}
+
 export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state = initialState, action) => {
   if (action.type === 'UI/SEND_CONFIRMATION/RESET') return initialState
 
   // make easier to debug legacySendConfirmation return value with breakpoint
   const legacySendConfirmation = sendConfirmationLegacy(state, action)
+
   return {
     ...legacySendConfirmation,
     error: error(state.error, action),
@@ -249,6 +266,7 @@ export const sendConfirmation: Reducer<SendConfirmationState, Action> = (state =
     nativeAmount: nativeAmount(state.nativeAmount, action),
     address: address(state.address, action),
     authRequired: authRequired(state.authRequired, action),
-    toggleCryptoOnTop: toggleCryptoOnTop(state.toggleCryptoOnTop, action)
+    toggleCryptoOnTop: toggleCryptoOnTop(state.toggleCryptoOnTop, action),
+    maxSpendSet: maxSpendSet(state.maxSpendSet, action)
   }
 }

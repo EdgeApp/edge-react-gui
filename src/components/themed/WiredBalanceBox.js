@@ -1,39 +1,37 @@
 // @flow
+
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 
+import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import { getFiatSymbol } from '../../util/utils.js'
+import { type GuiExchangeRates } from '../../types/types.js'
+import { getFiatSymbol, getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
-import { SceneHeader } from './SceneHeader'
+import { SceneHeader } from './SceneHeader.js'
 
 type StateProps = {
   showBalance: boolean,
   fiatAmount: number,
-  isoFiatCurrencyCode: string,
-  onPress: Function,
-  exchangeRates?: { [string]: number }
+  defaultIsoFiat: string,
+  exchangeRates: GuiExchangeRates
 }
 
-type OwnProps = {
-  showBalance: boolean | Function,
-  fiatAmount: number | Function,
-  isoFiatCurrencyCode: string | Function,
-  onPress: Function,
-  exchangeRates?: { [string]: number }
+type DispatchProps = {
+  toggleAccountBalanceVisibility: () => void
 }
 
-type Props = StateProps & OwnProps & ThemeProps
+type Props = StateProps & DispatchProps & ThemeProps
 
 class BalanceBox extends React.PureComponent<Props> {
   render() {
-    const { isoFiatCurrencyCode, fiatAmount, showBalance, exchangeRates, theme } = this.props
-    const fiatSymbol = isoFiatCurrencyCode ? getFiatSymbol(isoFiatCurrencyCode) : ''
-    const fiatCurrencyCode = isoFiatCurrencyCode.replace('iso:', '')
+    const { defaultIsoFiat, fiatAmount, showBalance, exchangeRates, theme } = this.props
+    const fiatSymbol = defaultIsoFiat ? getFiatSymbol(defaultIsoFiat) : ''
+    const fiatCurrencyCode = defaultIsoFiat.replace('iso:', '')
     const formattedFiat = formatNumber(fiatAmount, { toFixed: 2 })
     const styles = getStyles(theme)
 
@@ -43,11 +41,11 @@ class BalanceBox extends React.PureComponent<Props> {
       if (isNaN(rate)) rate = 0
       return total + rate
     }
-    const noExchangeRates = !exchangeRates || !Object.keys(exchangeRates).length || !Object.values(exchangeRates).reduce(summation)
+    const noExchangeRates = !Object.keys(exchangeRates).length || !Object.values(exchangeRates).reduce(summation)
 
     return (
       <SceneHeader underline>
-        <TouchableOpacity onPress={this.props.onPress} style={styles.balanceBoxContainer}>
+        <TouchableOpacity onPress={this.props.toggleAccountBalanceVisibility} style={styles.balanceBoxContainer}>
           {showBalance && !noExchangeRates ? (
             <>
               <EdgeText style={styles.balanceHeader}>{s.strings.fragment_wallets_balance_text}</EdgeText>
@@ -63,17 +61,6 @@ class BalanceBox extends React.PureComponent<Props> {
     )
   }
 }
-
-export const WiredBalanceBox = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const isoFiatCurrencyCode = typeof ownProps.isoFiatCurrencyCode === 'function' ? ownProps.isoFiatCurrencyCode(state) : ownProps.isoFiatCurrencyCode
-  return {
-    showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
-    fiatAmount: typeof ownProps.fiatAmount === 'function' ? ownProps.fiatAmount(state, isoFiatCurrencyCode) : ownProps.fiatAmount,
-    onPress: ownProps.onPress,
-    isoFiatCurrencyCode,
-    exchangeRates: ownProps.exchangeRates
-  }
-}, null)(withTheme(BalanceBox))
 
 const getStyles = cacheStyles((theme: Theme) => ({
   balanceBoxContainer: {
@@ -92,3 +79,20 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceBold
   }
 }))
+
+export const WiredBalanceBox = connect(
+  (state: RootState): StateProps => {
+    const { defaultIsoFiat } = state.ui.settings
+    return {
+      showBalance: state.ui.settings.isAccountBalanceVisible,
+      fiatAmount: getTotalFiatAmountFromExchangeRates(state, defaultIsoFiat),
+      defaultIsoFiat,
+      exchangeRates: state.exchangeRates
+    }
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    toggleAccountBalanceVisibility() {
+      dispatch(toggleAccountBalanceVisibility())
+    }
+  })
+)(withTheme(BalanceBox))

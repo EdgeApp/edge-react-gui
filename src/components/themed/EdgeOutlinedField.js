@@ -2,13 +2,15 @@
 
 // $FlowFixMe = forwardRef is not recognize by flow?
 import React, { forwardRef, useRef } from 'react'
-import { Text, TextInput, TextInputProps, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Platform, Text, TextInput, TextInputProps, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, { Extrapolate, interpolate, interpolateColor, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { unpackEdges } from '../../util/edges'
 import { useCallback, useEffect, useImperativeHandle, useMemo, useState } from '../../util/hooks'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
+
+const HINT_Y_PLATFORM_ADJUST = Platform.OS === 'android' ? -2 : 0
 
 const ANIMATION_STATES = {
   INIT: 0,
@@ -181,7 +183,11 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
   const animatedPlaceholderStyles = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: interpolate(placeholderMap.value, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED], [0, -(paddingVertical + fontSize * placeholderScale)])
+        translateY: interpolate(
+          placeholderMap.value,
+          [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED],
+          [0, -(paddingVertical + fontSize * placeholderScale) + HINT_Y_PLATFORM_ADJUST]
+        )
       },
       {
         scale: interpolate(placeholderMap.value, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED], [1, placeholderScale])
@@ -396,6 +402,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1,
     fontSize: theme.rem(1),
     fontFamily: theme.fontFaceDefault,
+    paddingVertical: 0,
     color: theme.primaryText
   },
   prefixSmall: {

@@ -179,7 +179,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
     }
 
     // PUBLIC ADDRESS URI
-    const nativeAmount = parsedUri.nativeAmount || '0'
+    const nativeAmount = parsedUri.nativeAmount || ''
     const spendTargets: EdgeSpendTarget[] = [
       {
         publicAddress: parsedUri.publicAddress,

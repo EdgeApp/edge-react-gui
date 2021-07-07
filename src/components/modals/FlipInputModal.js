@@ -11,8 +11,8 @@ import { sprintf } from 'sprintf-js'
 import { updateMaxSpend, updateTransactionAmount } from '../../actions/SendConfirmationActions.js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import { getDisplayDenomination, getExchangeDenomination } from '../../modules/Settings/selectors.js'
-import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getExchangeRate } from '../../modules/UI/selectors.js'
+import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
+import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { convertTransactionFeeToDisplayFee, DIVIDE_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
@@ -291,7 +291,7 @@ export const FlipInputModal = connect(
     return {
       // Balances
       balanceCrypto: `${balanceCrypto} ${currencyCode}`,
-      balanceFiat: `${fiatDenomination.symbol ? fiatDenomination.symbol + ' ' : ''} ${balanceFiat.toFixed(2)}`,
+      balanceFiat: `${fiatDenomination.symbol ? fiatDenomination.symbol + ' ' : ''} ${bns.toFixed(balanceFiat, 2, 2)}`,
 
       // FlipInput
       flipInputHeaderText: sprintf(s.strings.send_from_wallet, guiWallet.name),
