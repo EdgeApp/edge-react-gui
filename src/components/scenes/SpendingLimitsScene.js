@@ -5,28 +5,37 @@ import * as React from 'react'
 import { StyleSheet, Switch } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { TextField } from 'react-native-material-textfield'
+import { connect } from 'react-redux'
 
+import { setSpendingLimits } from '../../actions/SpendingLimitsActions.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type SpendingLimits as SpendingLimitsType } from '../../types/types.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { type SpendingLimits } from '../../types/types.js'
+import { getFiatSymbol } from '../../util/utils.js'
 
-export type SpendingLimitsOwnProps = {
+type StateProps = {
   transactionSpendingLimit: {
     amount: number,
     isEnabled: boolean
   },
-  currencySymbol: string,
-  onSubmit: (SpendingLimitsType, password: string) => mixed
+  currencySymbol: string
 }
-export type SpendingLimitsState = {
+type DispatchProps = {
+  onSubmit: (SpendingLimits, password: string) => mixed
+}
+type Props = StateProps & DispatchProps
+
+type State = {
   password: string,
   transactionAmount: number,
   transactionIsEnabled: boolean
 }
-export class SpendingLimitsComponent extends React.Component<SpendingLimitsOwnProps, SpendingLimitsState> {
-  constructor(props: SpendingLimitsOwnProps) {
+
+class SpendingLimitsComponent extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props)
     this.state = {
       password: '',
@@ -143,3 +152,15 @@ const rawStyles = {
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+
+export const SpendingLimitsScene = connect(
+  (state: RootState): StateProps => ({
+    currencySymbol: getFiatSymbol(state.ui.settings.defaultFiat),
+    transactionSpendingLimit: state.ui.settings.spendingLimits.transaction
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    onSubmit(spendingLimits: SpendingLimits, password: string) {
+      dispatch(setSpendingLimits(spendingLimits, password))
+    }
+  })
+)(SpendingLimitsComponent)

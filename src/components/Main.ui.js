@@ -37,7 +37,6 @@ import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
-import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import {
   ADD_TOKEN,
   CHANGE_MINING_FEE_SEND_CONFIRMATION,
@@ -149,6 +148,7 @@ import { Request } from './scenes/RequestScene.js'
 import { SecurityAlertsScene } from './scenes/SecurityAlertsScene.js'
 import { SendScene } from './scenes/SendScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
+import { SpendingLimitsScene } from './scenes/SpendingLimitsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
 import { TransactionList } from './scenes/TransactionListScene.js'
@@ -573,7 +573,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={SPENDING_LIMITS}
               navTransparent
-              component={ifLoggedIn(SpendingLimitsConnector)}
+              component={ifLoggedIn(SpendingLimitsScene)}
               renderTitle={<HeaderTitle title={s.strings.spending_limits} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
