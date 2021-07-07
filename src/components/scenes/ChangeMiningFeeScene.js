@@ -72,7 +72,10 @@ export class ChangeMiningFee extends React.Component<Props, State> {
     const { networkFeeOption, customNetworkFee } = this.state
     const { currencyCode, wallet, spendTargets = [], maxSpendSet } = this.props
     const testSpendInfo = {
-      spendTargets: maxSpendSet ? spendTargets.map(spendTarget => ({ ...spendTarget, nativeAmount: '0' })) : spendTargets,
+      spendTargets: spendTargets.map(spendTarget => ({
+        ...spendTarget,
+        nativeAmount: maxSpendSet || spendTarget.nativeAmount === '' ? '0' : spendTarget.nativeAmount
+      })),
       networkFeeOption,
       customNetworkFee,
       currencyCode
