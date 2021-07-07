@@ -78,9 +78,7 @@ export const sendConfirmationUpdateTx =
       data: { spendInfo, authRequired }
     })
 
-    if (guiMakeSpendInfo.nativeAmount == null || guiMakeSpendInfo.nativeAmount === '') {
-      return
-    }
+    if (guiMakeSpendInfo.nativeAmount === '') return
 
     if (maxSpendSet && isFeeChanged) {
       return dispatch(updateMaxSpend(walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone))
@@ -446,7 +444,7 @@ export const updateTransactionAmount =
       data: false
     })
 
-    if (guiMakeSpendInfo.nativeAmount == null || guiMakeSpendInfo.nativeAmount === '') {
+    if (guiMakeSpendInfo.nativeAmount === '') {
       return
     }
 
