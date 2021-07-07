@@ -4,15 +4,24 @@ import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
+import {
+  createAccountTransaction,
+  createCurrencyWallet,
+  fetchAccountActivationInfo,
+  fetchWalletAccountActivationPaymentInfo
+} from '../../actions/CreateWalletActions.js'
 import { type WalletListResult, WalletListModal } from '../../components/modals/WalletListModal.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
+import { getDefaultDenomination } from '../../selectors/DenominationSelectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { CreateWalletType, GuiFiatType, GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
@@ -28,7 +37,7 @@ export type AccountPaymentParams = {
   requestedAccountCurrencyCode: string
 }
 
-export type CreateWalletAccountSelectStateProps = {
+type StateProps = {
   wallets: { [string]: GuiWallet },
   paymentCurrencyCode: string,
   amount: string,
@@ -36,19 +45,20 @@ export type CreateWalletAccountSelectStateProps = {
   activationCost: string,
   isCreatingWallet: boolean,
   paymentDenominationSymbol: string,
-  existingCoreWallet: EdgeCurrencyWallet,
+  existingCoreWallet?: EdgeCurrencyWallet,
   walletAccountActivationQuoteError: string,
   currencyConfigs: { [key: string]: EdgeCurrencyConfig }
 }
 
-export type CreateWalletAccountSelectOwnProps = {
+type OwnProps = {
   selectedFiat: GuiFiatType,
   selectedWalletType: CreateWalletType,
   accountName: string,
+  // eslint-disable-next-line react/no-unused-prop-types
   existingWalletId?: string
 }
 
-export type CreateWalletAccountSelectDispatchProps = {
+type DispatchProps = {
   createAccountBasedWallet: (string, string, string, boolean, boolean) => any,
   fetchAccountActivationInfo: string => any,
   createAccountTransaction: (string, string, string) => any,
@@ -56,7 +66,7 @@ export type CreateWalletAccountSelectDispatchProps = {
   setWalletAccountActivationQuoteError: string => any
 }
 
-type Props = CreateWalletAccountSelectOwnProps & CreateWalletAccountSelectDispatchProps & CreateWalletAccountSelectStateProps
+type Props = OwnProps & DispatchProps & StateProps
 
 type State = {
   walletName: string,
@@ -65,12 +75,12 @@ type State = {
   createdWallet: Promise<EdgeCurrencyWallet>
 }
 
-export class CreateWalletAccountSelect extends React.Component<Props, State> {
+class CreateWalletAccountSelect extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { selectedFiat, selectedWalletType, createAccountBasedWallet, accountName } = props
     let createdWallet
-    if (props.existingWalletId) {
+    if (props.existingCoreWallet != null) {
       createdWallet = this.renameAndReturnWallet(props.existingCoreWallet)
     } else {
       createdWallet = createAccountBasedWallet(accountName, selectedWalletType.walletType, fixFiatCurrencyCode(selectedFiat.value), false, false)
@@ -382,3 +392,54 @@ const rawStyles = {
   confirmButton: {}
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+
+export const CreateWalletAccountSelectScene = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => {
+    const { currencyWallets } = state.core.account
+    const wallets = state.ui.wallets.byId
+    const handleActivationInfo = state.ui.scenes.createWallet.handleActivationInfo
+    const walletAccountActivationPaymentInfo = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
+    const { supportedCurrencies, activationCost } = handleActivationInfo
+    const { currencyCode, amount } = walletAccountActivationPaymentInfo
+    const isCreatingWallet = state.ui.scenes.createWallet.isCreatingWallet
+    const existingCoreWallet = ownProps.existingWalletId ? currencyWallets[ownProps.existingWalletId] : undefined
+    const paymentDenomination = currencyCode ? getDefaultDenomination(state, currencyCode) : {}
+
+    let paymentDenominationSymbol
+    if (paymentDenomination) {
+      paymentDenominationSymbol = paymentDenomination.symbol ? paymentDenomination.symbol : ''
+    } else {
+      paymentDenominationSymbol = ''
+    }
+    const walletAccountActivationQuoteError = state.ui.scenes.createWallet.walletAccountActivationQuoteError
+    return {
+      paymentCurrencyCode: currencyCode,
+      amount,
+      supportedCurrencies,
+      activationCost,
+      wallets,
+      isCreatingWallet,
+      paymentDenominationSymbol,
+      existingCoreWallet,
+      walletAccountActivationQuoteError,
+      currencyConfigs: state.core.account.currencyConfig
+    }
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    createAccountTransaction(createdWalletId: string, accountName: string, paymentWalletId: string) {
+      dispatch(createAccountTransaction(createdWalletId, accountName, paymentWalletId))
+    },
+    fetchAccountActivationInfo(currencyCode: string) {
+      dispatch(fetchAccountActivationInfo(currencyCode))
+    },
+    fetchWalletAccountActivationPaymentInfo(paymentInfo: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) {
+      dispatch(fetchWalletAccountActivationPaymentInfo(paymentInfo, createdCoreWallet))
+    },
+    createAccountBasedWallet(walletName: string, walletType: string, fiatCurrencyCode: string, popScene: boolean, selectWallet: boolean) {
+      dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, popScene, selectWallet))
+    },
+    setWalletAccountActivationQuoteError(message) {
+      dispatch({ type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: message })
+    }
+  })
+)(CreateWalletAccountSelect)

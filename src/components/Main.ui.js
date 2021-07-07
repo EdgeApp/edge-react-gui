@@ -37,8 +37,6 @@ import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
-import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
-import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import {
   ADD_TOKEN,
@@ -130,6 +128,8 @@ import { AddTokenScene } from './scenes/AddTokenScene.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { ChangePasswordScene } from './scenes/ChangePasswordScene.js'
 import { ChangePinScene } from './scenes/ChangePinScene.js'
+import { CreateWalletAccountSelectScene } from './scenes/CreateWalletAccountSelectScene.js'
+import { CreateWalletAccountSetupScene } from './scenes/CreateWalletAccountSetupScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreen } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { CurrencyNotificationScene } from './scenes/CurrencyNotificationScene'
@@ -302,7 +302,7 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key={CREATE_WALLET_ACCOUNT_SETUP}
                 navTransparent
-                component={ifLoggedIn(CreateWalletAccountSetupConnector)}
+                component={ifLoggedIn(CreateWalletAccountSetupScene)}
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_create_account} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={<HeaderTextButton type="help" placement="right" />}
@@ -311,7 +311,7 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key={CREATE_WALLET_ACCOUNT_SELECT}
                 navTransparent
-                component={ifLoggedIn(CreateWalletAccountSelectConnector)}
+                component={ifLoggedIn(CreateWalletAccountSelectScene)}
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_account_activate} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={<HeaderTextButton type="help" placement="right" />}
