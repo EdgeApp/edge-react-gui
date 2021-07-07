@@ -10,6 +10,8 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { type AirshipBridge } from './modalParts.js'
 
+export type ContactsPermissionResult = 'allow' | 'deny'
+
 export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
   const { bridge } = props
   const theme = useTheme()
@@ -18,36 +20,32 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
   return (
     <ButtonsModal
       bridge={bridge}
+      disableHideOnTapUnderlay
       buttons={{
         allow: { label: s.strings.string_allow },
         deny: { label: s.strings.string_deny, type: 'secondary' }
       }}
     >
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <View style={styles.iconCircle}>
-            <Fontello name="edge.addresbook" size={theme.rem(1.5)} color={theme.icon} />
-          </View>
-          <EdgeText style={styles.header}>{s.strings.contacts_permission_modal_title}</EdgeText>
+      <View style={styles.headerContainer}>
+        <View style={styles.iconCircle}>
+          <Fontello name="edge.addresbook" size={theme.rem(1.5)} color={theme.icon} />
         </View>
-        <EdgeText numberOfLines={0} style={styles.message}>
-          {s.strings.contacts_permission_modal_text_1}
-        </EdgeText>
-        <EdgeText numberOfLines={0} style={styles.message}>
-          {s.strings.contacts_permission_modal_text_2}
-        </EdgeText>
-        <EdgeText numberOfLines={0} style={styles.messageLast}>
-          {s.strings.contacts_permission_modal_text_3}
-        </EdgeText>
+        <EdgeText style={styles.header}>{s.strings.contacts_permission_modal_title}</EdgeText>
       </View>
+      <EdgeText numberOfLines={0} style={styles.message}>
+        {s.strings.contacts_permission_modal_text_1}
+      </EdgeText>
+      <EdgeText numberOfLines={0} style={styles.message}>
+        {s.strings.contacts_permission_modal_text_2}
+      </EdgeText>
+      <EdgeText numberOfLines={0} style={styles.messageLast}>
+        {s.strings.contacts_permission_modal_text_3}
+      </EdgeText>
     </ButtonsModal>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1
-  },
   headerContainer: {
     marginTop: theme.rem(1),
     justifyContent: 'center',
