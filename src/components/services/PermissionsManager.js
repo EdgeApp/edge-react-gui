@@ -1,5 +1,6 @@
 // @flow
 
+import AsyncStorage from '@react-native-community/async-storage'
 import * as React from 'react'
 import { AppState, Platform } from 'react-native'
 import { check, checkMultiple, PERMISSIONS, request, RESULTS } from 'react-native-permissions'
@@ -7,8 +8,10 @@ import { connect } from 'react-redux'
 
 import { type Permission, type PermissionsState, type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import { ContactsPermissionModal } from '../modals/ContactsPermissionModal.js'
+import { type ContactsPermissionResult, ContactsPermissionModal } from '../modals/ContactsPermissionModal.js'
 import { Airship, showError } from './AirshipInstance.js'
+
+const IS_CONTACTS_PERMISSION_SHOWN_BEFORE = 'IS_CONTACTS_PERMISSION_SHOWN_BEFORE'
 
 const PLATFORM = {
   ios: 'IOS',
@@ -88,9 +91,17 @@ class PermissionsManagerComponent extends React.Component<Props> {
 
 export async function requestPermission(data: Permission): Promise<PermissionStatus> {
   const status: PermissionStatus = await check(PERMISSIONS[OS][PERMISSIONS_ITEM[data]])
+
   if (status === RESULTS.DENIED) {
     if (data === 'contacts') {
-      await Airship.show(bridge => <ContactsPermissionModal bridge={bridge} />)
+      const isContactsPermissionShownBefore: string = await AsyncStorage.getItem(IS_CONTACTS_PERMISSION_SHOWN_BEFORE).catch(showError)
+
+      if (isContactsPermissionShownBefore === 'true') return
+
+      const result: ContactsPermissionResult = await Airship.show(bridge => <ContactsPermissionModal bridge={bridge} />)
+      AsyncStorage.setItem(IS_CONTACTS_PERMISSION_SHOWN_BEFORE, 'true').catch(showError)
+
+      if (result === 'deny') return
     }
     return request(PERMISSIONS[OS][PERMISSIONS_ITEM[data]])
   }
