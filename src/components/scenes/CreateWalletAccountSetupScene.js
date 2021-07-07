@@ -4,8 +4,10 @@ import { type EdgeCurrencyConfig } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
+import { checkHandleAvailability } from '../../actions/CreateWalletActions.js'
 import invalidIcon from '../../assets/images/createWallet/invalid_icon.png'
 import validIcon from '../../assets/images/createWallet/valid_icon.png'
 import { CREATE_WALLET_ACCOUNT_SELECT } from '../../constants/SceneKeys.js'
@@ -17,6 +19,7 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.
 import type { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
@@ -26,7 +29,7 @@ import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 
 const deviceWidth = PLATFORM.deviceWidth
 
-export type CreateWalletAccountSetupOwnProps = {
+type OwnProps = {
   selectedFiat: GuiFiatType,
   selectedWalletType: CreateWalletType,
   accountHandle?: string,
@@ -34,22 +37,22 @@ export type CreateWalletAccountSetupOwnProps = {
   existingWalletId?: string
 }
 
-export type CreateWalletAccountSetupStateProps = {
+type StateProps = {
   handleAvailableStatus: HandleAvailableStatus,
   isCheckingHandleAvailability: boolean,
   currencyConfigs: { [key: string]: EdgeCurrencyConfig }
 }
 
-export type CreateWalletAccountSetupDispatchProps = {
+type DispatchProps = {
   checkHandleAvailability: string => any
 }
 
-type Props = CreateWalletAccountSetupOwnProps & CreateWalletAccountSetupDispatchProps & CreateWalletAccountSetupStateProps
+type Props = OwnProps & DispatchProps & StateProps
 type State = {
   accountHandle: string
 }
 
-export class CreateWalletAccountSetup extends React.Component<Props, State> {
+class CreateWalletAccountSetup extends React.Component<Props, State> {
   debouncedCheckHandleAvailability: () => void
 
   constructor(props: Props) {
@@ -212,3 +215,16 @@ const rawStyles = {
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+
+export const CreateWalletAccountSetupScene = connect(
+  (state: RootState): StateProps => ({
+    isCheckingHandleAvailability: state.ui.scenes.createWallet.isCheckingHandleAvailability,
+    handleAvailableStatus: state.ui.scenes.createWallet.handleAvailableStatus,
+    currencyConfigs: state.core.account.currencyConfig
+  }),
+  (dispatch: Dispatch, ownProps: OwnProps): DispatchProps => ({
+    checkHandleAvailability(handle: string) {
+      dispatch(checkHandleAvailability(ownProps.selectedWalletType.currencyCode, handle))
+    }
+  })
+)(CreateWalletAccountSetup)
