@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import Animated, { interpolate, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, { interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 import { useEffect, useRef, useState } from '../../util/hooks'
 
@@ -17,14 +17,20 @@ const FadeComponent = ({ visible: propsVisible, hidden, children }: Props) => {
   const [visible, setVisible] = useState<boolean>(propsVisible)
   const [prevVisible, setPrevVisible] = useState<boolean>(propsVisible)
 
-  if (visible !== prevVisible) setPrevVisible(visible)
-
   const animate = (toValue: number) => {
     if (toValue === 0.5) setVisible(true)
 
-    opacity.value = withTiming(toValue, {
-      duration: 500
-    })
+    opacity.value = withTiming(
+      toValue,
+      {
+        duration: 500
+      },
+      (isComplete: boolean) => {
+        if (!isComplete) return
+
+        runOnJS(setVisible)(toValue === 0.5)
+      }
+    )
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -38,6 +44,7 @@ const FadeComponent = ({ visible: propsVisible, hidden, children }: Props) => {
 
     if (propsVisible !== prevVisible) {
       animate(propsVisible ? 0.5 : 1)
+      setPrevVisible(propsVisible)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [propsVisible])
