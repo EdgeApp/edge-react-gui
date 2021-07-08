@@ -328,21 +328,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioDomainRegisterScene = connect((state: RootState) => {
-  const { account } = state.core
-  if (!account || !account.currencyConfig) {
-    return {
-      fioWallets: [],
-      fioPlugin: {},
-      isConnected: state.network.isConnected
-    }
-  }
-  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-  const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+const typeHack: any = {}
 
+const FioDomainRegisterScene = connect((state: RootState) => {
   return {
-    fioWallets,
-    fioPlugin,
+    fioWallets: state.ui.wallets.fioWallets,
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] ?? typeHack,
     isConnected: state.network.isConnected
   }
 }, {})(withTheme(FioDomainRegister))

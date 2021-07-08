@@ -19,7 +19,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../themed/Tile'
 
 export type StateProps = {
-  fioPlugin: EdgeCurrencyConfig | null,
+  fioPlugin?: EdgeCurrencyConfig,
   isConnected: boolean
 }
 
@@ -171,11 +171,8 @@ const getStyles = cacheStyles(() => ({
 }))
 
 const FioNameConfirmScene = connect((state: RootState) => {
-  const { account } = state.core
-  const fioPlugin = account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
-
   return {
-    fioPlugin,
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
     isConnected: state.network.isConnected
   }
 }, {})(FioNameConfirm)

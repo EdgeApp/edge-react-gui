@@ -39,7 +39,7 @@ type StateProps = {
   userFioAddresses: FioAddress[],
   userFioAddressesLoading: boolean,
   coreWallet: EdgeCurrencyWallet,
-  fioPlugin: EdgeCurrencyConfig | null,
+  fioPlugin?: EdgeCurrencyConfig,
   fioWallets: EdgeCurrencyWallet[]
 }
 
@@ -382,7 +382,7 @@ const AddressModal = connect(
       coreWallet: currencyWallets[ownProps.walletId],
       userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
       userFioAddressesLoading: state.ui.scenes.fioAddress.fioAddressesLoading,
-      fioPlugin: account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null,
+      fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
       fioWallets: state.ui.wallets.fioWallets
     }
   },

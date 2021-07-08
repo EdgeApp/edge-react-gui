@@ -30,7 +30,7 @@ type Item = {
 type StateProps = {
   userDomains: FioDomain[],
   fioWallets: EdgeCurrencyWallet[],
-  fioPlugin: EdgeCurrencyConfig | null
+  fioPlugin?: EdgeCurrencyConfig
 }
 
 type OwnProps = {
@@ -247,12 +247,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const DomainListModal = connect((state: RootState): StateProps => {
-  const { account } = state.core
   const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-  const fioPlugin = account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
   return {
     userDomains: state.ui.scenes.fioAddress.fioDomains,
     fioWallets,
-    fioPlugin
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
   }
 })(withTheme(DomainListModalComponent))
