@@ -35,7 +35,7 @@ type OwnProps = {
   fioToAddress?: string
 }
 type StateProps = {
-  fioPlugin: EdgeCurrencyConfig | null,
+  fioPlugin?: EdgeCurrencyConfig,
   fioWallets: EdgeCurrencyWallet[]
 }
 type State = {
@@ -259,11 +259,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 const AddressTileConnector = connect((state: RootState): StateProps => {
-  const { account } = state.core
   const { guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
   return {
     fioToAddress: guiMakeSpendInfo && guiMakeSpendInfo.fioAddress ? guiMakeSpendInfo.fioAddress : undefined,
-    fioPlugin: account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null,
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
     fioWallets: state.ui.wallets.fioWallets
   }
 })(withTheme(AddressTileComponent))

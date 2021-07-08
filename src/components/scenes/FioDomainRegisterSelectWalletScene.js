@@ -28,7 +28,7 @@ import { Tile } from '../themed/Tile'
 type StateProps = {
   state: RootState,
   wallets: { [string]: GuiWallet },
-  fioPlugin: EdgeCurrencyConfig | null,
+  fioPlugin?: EdgeCurrencyConfig,
   fioWallets: EdgeCurrencyWallet[],
   fioDisplayDenomination: EdgeDenomination,
   isConnected: boolean
@@ -253,14 +253,12 @@ const FioDomainRegisterSelectWalletScene = connect(
   (state: RootState) => {
     const wallets = state.ui.wallets.byId
     const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-    const { account } = state.core
-    const fioPlugin = account && account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
     const fioDisplayDenomination = getDisplayDenomination(state, FIO_STR)
 
     return {
       state,
       fioWallets,
-      fioPlugin,
+      fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
       fioDisplayDenomination,
       wallets,
       isConnected: state.network.isConnected

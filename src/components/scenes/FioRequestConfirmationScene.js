@@ -37,7 +37,7 @@ type StateProps = {
   fioWallets: EdgeCurrencyWallet[],
   account: EdgeAccount,
   isConnected: boolean,
-  fioPlugin: EdgeCurrencyConfig | null,
+  fioPlugin?: EdgeCurrencyConfig,
   walletId: string,
   currencyCode: string
 }
@@ -313,7 +313,6 @@ const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
   const currencyCode: string = state.ui.wallets.selectedCurrencyCode
   const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
   const { isConnected } = state.network
-  const fioPlugin = account && account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
 
   if (!guiWallet || !currencyCode) {
     return {
@@ -327,7 +326,7 @@ const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
       isConnected,
       walletId: '',
       currencyCode: '',
-      fioPlugin
+      fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
     }
   }
 
@@ -364,7 +363,7 @@ const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
     isConnected,
     walletId: state.ui.wallets.selectedWalletId,
     currencyCode: state.ui.wallets.selectedCurrencyCode,
-    fioPlugin
+    fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
   }
 })(withTheme(FioRequestConfirmationConnected))
 export { FioRequestConfirmationScene }

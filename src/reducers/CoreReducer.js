@@ -23,6 +23,7 @@ const defaultDisklet: Disklet = flowHack
 
 const accountHack: any = {
   activeWalletIds: [],
+  currencyConfig: {},
   currencyWallets: {}
 }
 const defaultAccount: EdgeAccount = accountHack

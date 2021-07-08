@@ -10,7 +10,6 @@ import { connect } from 'react-redux'
 import fioAddressLogo from '../../assets/images/fio/fio_logo.png'
 import { Fontello } from '../../assets/vector'
 import { FIO_ADDRESS_DETAILS, FIO_ADDRESS_REGISTER, FIO_DOMAIN_REGISTER, FIO_DOMAIN_SETTINGS } from '../../constants/SceneKeys.js'
-import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { FioNameRow } from '../../modules/FioAddress/components/FioName'
@@ -238,18 +237,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const FioAddressListScene = connect(
   (state: RootState) => {
-    const { account } = state.core
     const fioAddresses: FioAddress[] = state.ui.scenes.fioAddress.fioAddresses
     const fioDomains: FioDomain[] = state.ui.scenes.fioAddress.fioDomains
     const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
     const loading: boolean = state.ui.scenes.fioAddress.fioAddressesLoading
-    const fioPlugin = account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
 
     return {
       fioAddresses,
       fioDomains,
       fioWallets,
-      fioPlugin,
       loading,
       isConnected: state.network.isConnected
     }

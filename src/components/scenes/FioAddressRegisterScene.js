@@ -564,22 +564,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
+const typeHack: any = {}
+
 const FioAddressRegisterScene = connect(
   (state: RootState) => {
-    const { account } = state.core
-    if (!account || !account.currencyConfig) {
-      return {
-        fioWallets: [],
-        fioPlugin: {},
-        isConnected: state.network.isConnected
-      }
-    }
-    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-    const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
-
     const out: StateProps = {
-      fioWallets,
-      fioPlugin,
+      fioWallets: state.ui.wallets.fioWallets,
+      fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] ?? typeHack,
       isConnected: state.network.isConnected
     }
     return out
