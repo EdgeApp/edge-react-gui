@@ -72,15 +72,19 @@ export const sendConfirmationUpdateTx =
     if (maxSpendSet && isFeeChanged) guiMakeSpendInfoClone.nativeAmount = '0'
     const spendInfo = getSpendInfo(state, guiMakeSpendInfoClone, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode)
 
+    if (isFeeChanged) {
+      spendInfo.spendTargets = spendInfo.spendTargets.map(spendTarget => ({
+        ...spendTarget,
+        nativeAmount: spendTarget.nativeAmount === '' ? '0' : spendTarget.nativeAmount
+      }))
+    }
     const authRequired = getAuthRequired(state, spendInfo)
     dispatch({
       type: 'UI/SEND_CONFIRMATION/NEW_SPEND_INFO',
       data: { spendInfo, authRequired }
     })
 
-    if (guiMakeSpendInfo.nativeAmount == null || guiMakeSpendInfo.nativeAmount === '') {
-      return
-    }
+    if (guiMakeSpendInfo.nativeAmount === '') return
 
     if (maxSpendSet && isFeeChanged) {
       return dispatch(updateMaxSpend(walletId, selectedCurrencyCode || state.ui.wallets.selectedCurrencyCode, guiMakeSpendInfoClone))
@@ -446,7 +450,7 @@ export const updateTransactionAmount =
       data: false
     })
 
-    if (guiMakeSpendInfo.nativeAmount == null || guiMakeSpendInfo.nativeAmount === '') {
+    if (guiMakeSpendInfo.nativeAmount === '') {
       return
     }
 
