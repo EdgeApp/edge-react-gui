@@ -63,6 +63,7 @@ const getWalletOptions = async (params: {
   const splittable = await account.listSplittableWalletTypes(walletId)
 
   for (const splitWalletType of splittable) {
+    if (splitWalletType === 'wallet:bitcoingold') continue // TODO: Remove after fixing BTG splitting
     const info = getCurrencyInfos(account).find(({ walletType }) => walletType === splitWalletType)
 
     result.push({ label: sprintf(s.strings.string_split_wallet, info?.displayName), value: 'split' })
