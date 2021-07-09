@@ -165,7 +165,7 @@ class FioAddressList extends React.Component<Props, LocalState> {
           </View>
         </SceneWrapper>
 
-        <Fade visible={initLoading}>
+        <Fade visible={initLoading} noFadeIn>
           <Gradient style={styles.initLoadingContainer}>
             <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />
           </Gradient>

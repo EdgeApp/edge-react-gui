@@ -7,13 +7,14 @@ import { useEffect, useRef, useState } from '../../util/hooks'
 
 type Props = {
   visible: boolean,
+  noFadeIn?: boolean,
   hidden?: boolean,
   children: React.Node
 }
 
-const FadeComponent = ({ visible: propsVisible, hidden, children }: Props) => {
+const FadeComponent = ({ visible: propsVisible, noFadeIn, hidden, children }: Props) => {
   const firstRender = useRef(true)
-  const opacity = useSharedValue(0)
+  const opacity = useSharedValue(noFadeIn ? 0.5 : 0)
   const [visible, setVisible] = useState<boolean>(propsVisible)
   const [prevVisible, setPrevVisible] = useState<boolean>(propsVisible)
 
