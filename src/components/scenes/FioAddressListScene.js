@@ -13,15 +13,23 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { FioNameRow } from '../../modules/FioAddress/components/FioName'
+import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import type { RootState } from '../../reducers/RootReducer'
+import { PLATFORM } from '../../theme/variables/platform'
 import type { Dispatch } from '../../types/reduxTypes'
 import type { FioAddress, FioDomain } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
+import { Fade } from '../themed/Fade'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ClickableText } from '../themed/ThemedButtons'
+
+export type LocalState = {
+  initLoading: boolean,
+  prevLoading: boolean
+}
 
 export type StateProps = {
   fioAddresses: FioAddress[],
@@ -41,8 +49,31 @@ type NavigationProps = {
 
 type Props = StateProps & DispatchProps & NavigationProps & ThemeProps
 
-class FioAddressList extends React.Component<Props> {
+class FioAddressList extends React.Component<Props, LocalState> {
   willFocusSubscription: { remove: () => void } | null = null
+  state: LocalState = {
+    initLoading: true,
+    prevLoading: false
+  }
+
+  static getDerivedStateFromProps(props: Props, state: LocalState): LocalState | null {
+    const { loading } = props
+    const { prevLoading, initLoading } = state
+    if (!loading && prevLoading && initLoading) {
+      return {
+        prevLoading: loading,
+        initLoading: false
+      }
+    }
+    if (loading !== prevLoading) {
+      return {
+        initLoading,
+        prevLoading: loading
+      }
+    }
+
+    return null
+  }
 
   fetchData() {
     const { refreshAllFioAddresses, isConnected } = this.props
@@ -76,59 +107,70 @@ class FioAddressList extends React.Component<Props> {
 
   render() {
     const { fioAddresses, fioDomains, loading, theme } = this.props
+    const { initLoading } = this.state
     const styles = getStyles(theme)
 
     const noFioDomainsText = `${s.strings.no} ${s.strings.title_fio_domains}`
     const noFioAddressesText = `${s.strings.no} ${s.strings.title_fio_address}`
     return (
-      <SceneWrapper background="theme">
-        <ScrollView style={styles.row}>
-          <SceneHeader title={s.strings.title_fio_address} underline />
-          <View style={styles.list}>
-            {!fioAddresses.length && <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>}
-            {fioAddresses.map((address: FioAddress) => (
-              <FioNameRow
-                key={`${address.name}`}
-                name={address.name}
-                expiration={address.expiration}
-                icon={<Image source={fioAddressLogo} style={styles.iconImg} />}
-                theme={theme}
-                onPress={() => this.onAddressPress(address)}
-              />
-            ))}
-          </View>
-          <SceneHeader title={s.strings.title_fio_domains} withTopMargin underline />
-          <View style={styles.list}>
-            {!fioDomains.length && <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>}
-            {fioDomains.map((domain: FioDomain) => (
-              <FioNameRow
-                key={`${domain.name}`}
-                name={domain.name}
-                expiration={domain.expiration}
-                icon={<IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />}
-                theme={theme}
-                onPress={() => this.onDomainPress(domain)}
-              />
-            ))}
-          </View>
-          {loading && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />}
-        </ScrollView>
+      <>
+        <SceneWrapper background="theme">
+          <ScrollView style={styles.row}>
+            <SceneHeader title={s.strings.title_fio_address} underline />
+            <View style={styles.list}>
+              {!fioAddresses.length && <EdgeText style={styles.noNames}>{noFioAddressesText}</EdgeText>}
+              {fioAddresses.map((address: FioAddress) => (
+                <FioNameRow
+                  key={`${address.name}`}
+                  name={address.name}
+                  expiration={address.expiration}
+                  icon={<Image source={fioAddressLogo} style={styles.iconImg} />}
+                  theme={theme}
+                  onPress={() => this.onAddressPress(address)}
+                />
+              ))}
+            </View>
+            <SceneHeader title={s.strings.title_fio_domains} withTopMargin underline />
+            <View style={styles.list}>
+              {!fioDomains.length && <EdgeText style={styles.noNames}>{noFioDomainsText}</EdgeText>}
+              {fioDomains.map((domain: FioDomain) => (
+                <FioNameRow
+                  key={`${domain.name}`}
+                  name={domain.name}
+                  expiration={domain.expiration}
+                  icon={<IonIcon name="ios-at" style={styles.iconIon} color={theme.icon} size={theme.rem(1.5)} />}
+                  theme={theme}
+                  onPress={() => this.onDomainPress(domain)}
+                />
+              ))}
+            </View>
+            <Fade visible={loading && !initLoading}>
+              <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />
+            </Fade>
+          </ScrollView>
 
-        <View>
-          <ClickableText marginRem={[1, 1, 0]} onPress={Actions[Constants.FIO_ADDRESS_REGISTER]}>
-            <View style={styles.actionButton}>
-              <Fontello name="register-new-fio-icon" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
-              <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_screen_button_register}</EdgeText>
-            </View>
-          </ClickableText>
-          <ClickableText marginRem={[0, 1, 2, 1]} onPress={Actions[Constants.FIO_DOMAIN_REGISTER]}>
-            <View style={styles.actionButton}>
-              <Fontello name="register-custom-fio" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
-              <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_domain_register}</EdgeText>
-            </View>
-          </ClickableText>
-        </View>
-      </SceneWrapper>
+          <View>
+            <ClickableText marginRem={[1, 1, 0]} onPress={Actions[Constants.FIO_ADDRESS_REGISTER]}>
+              <View style={styles.actionButton}>
+                <Fontello name="register-new-fio-icon" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
+                <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_screen_button_register}</EdgeText>
+              </View>
+            </ClickableText>
+            <ClickableText marginRem={[0, 1, 2, 1]} onPress={Actions[Constants.FIO_DOMAIN_REGISTER]}>
+              <View style={styles.actionButton}>
+                <Fontello name="register-custom-fio" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
+                <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_domain_register}</EdgeText>
+              </View>
+            </ClickableText>
+          </View>
+        </SceneWrapper>
+
+        <Fade visible={initLoading}>
+          <Gradient style={styles.initLoadingContainer}>
+            <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />
+          </Gradient>
+        </Fade>
+      </>
     )
   }
 }
@@ -142,6 +184,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flex: 1,
     marginTop: theme.rem(2.5),
     alignSelf: 'center'
+  },
+  initLoadingContainer: {
+    flex: 1,
+    top: 0,
+    left: 0,
+    position: 'absolute',
+    backgroundColor: theme.backgroundGradientRight,
+    width: '100%',
+    height: PLATFORM.deviceHeight
   },
   row: {
     flex: 1
