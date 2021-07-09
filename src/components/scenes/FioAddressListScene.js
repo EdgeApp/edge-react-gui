@@ -58,16 +58,6 @@ class FioAddressList extends React.Component<Props> {
     })
   }
 
-  componentDidUpdate(prevProps: Props): void {
-    const { fioAddresses, fioDomains, loading } = this.props
-
-    if (!loading && prevProps.loading) {
-      if (fioAddresses.length === 0 && fioDomains.length === 0 && Actions.currentScene === Constants.FIO_ADDRESS_LIST) {
-        Actions[Constants.FIO_ADDRESS_REGISTER]({ noAddresses: true })
-      }
-    }
-  }
-
   componentWillUnmount(): void {
     this.willFocusSubscription && this.willFocusSubscription.remove()
   }
@@ -87,14 +77,6 @@ class FioAddressList extends React.Component<Props> {
   render() {
     const { fioAddresses, fioDomains, loading, theme } = this.props
     const styles = getStyles(theme)
-
-    if (!fioAddresses.length && !fioDomains.length) {
-      return (
-        <SceneWrapper background="theme">
-          <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="large" />
-        </SceneWrapper>
-      )
-    }
 
     const noFioDomainsText = `${s.strings.no} ${s.strings.title_fio_domains}`
     const noFioAddressesText = `${s.strings.no} ${s.strings.title_fio_address}`
