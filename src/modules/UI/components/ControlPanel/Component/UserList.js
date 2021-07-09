@@ -5,27 +5,34 @@ import { type EdgeContext, type EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../../../../../components/services/AirshipInstance.js'
 import s from '../../../../../locales/strings'
+import { type Dispatch, type RootState } from '../../../../../types/reduxTypes.js'
+import { logoutRequest } from '../../../../Login/action.js'
 import T from '../../../components/FormattedText/FormattedText.ui.js'
+import { deleteLocalAccount } from '../action.js'
 import styles from '../style'
 
-type Props = {
-  logout: (username?: string) => void,
-  deleteLocalAccount: string => void,
+type StateProps = {
   context: EdgeContext,
   disklet: Disklet,
   currentUsername: string
 }
+type DispatchProps = {
+  logout: (username?: string) => void,
+  deleteLocalAccount: (username: string) => void
+}
+type Props = StateProps & DispatchProps
 
 type State = {
   localUsers: EdgeUserInfo[],
   mostRecentUsernames: string[]
 }
 
-export default class UserList extends React.Component<Props, State> {
+class UserListComponent extends React.Component<Props, State> {
   cleanups: Array<() => mixed> = []
 
   constructor(props: Props) {
@@ -127,3 +134,19 @@ export default class UserList extends React.Component<Props, State> {
     })
   }
 }
+
+export const UserList = connect(
+  (state: RootState): StateProps => ({
+    context: state.core.context,
+    disklet: state.core.disklet,
+    currentUsername: state.core.account.username
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    logout(username) {
+      dispatch(logoutRequest(username))
+    },
+    deleteLocalAccount(username) {
+      dispatch(deleteLocalAccount(username))
+    }
+  })
+)(UserListComponent)

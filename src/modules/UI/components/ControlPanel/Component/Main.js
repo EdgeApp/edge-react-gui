@@ -4,8 +4,10 @@ import * as React from 'react'
 import { Image, Platform, ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
+import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
+import { selectWalletFromModal } from '../../../../../actions/WalletActions.js'
 import buysellIcon from '../../../../../assets/images/sidenav/buysell.png'
 import exchangeIcon from '../../../../../assets/images/sidenav/exchange.png'
 import fioAddressIcon from '../../../../../assets/images/sidenav/fioaddress.png'
@@ -37,18 +39,24 @@ import {
 import { getPrivateKeySweepableCurrencies } from '../../../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../../../locales/strings.js'
 import { THEME } from '../../../../../theme/variables/airbitz.js'
+import { type Dispatch, type RootState } from '../../../../../types/reduxTypes.js'
 import { scale } from '../../../../../util/scaling.js'
+import { logoutRequest } from '../../../../Login/action.js'
 import styles from '../style'
 import { Button } from './Button/Button.ui.js'
 import { Separator } from './Separator/Separator.ui.js'
-import UserList from './UserListConnector'
+import { UserList } from './UserList.js'
 
-export type Props = {
+type StateProps = {
+  usersView: boolean
+}
+type DispatchProps = {
   logout: (username?: string) => void,
-  usersView: boolean,
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
-export default class Main extends React.Component<Props> {
+type Props = StateProps & DispatchProps
+
+class MainComponent extends React.Component<Props> {
   render() {
     const { onSelectWallet, usersView } = this.props
 
@@ -398,3 +406,17 @@ const FioRequestsButton = () => {
     </Button>
   )
 }
+
+export const Main = connect(
+  (state: RootState): StateProps => ({
+    usersView: state.ui.scenes.controlPanel.usersView
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    logout(username?: string) {
+      dispatch(logoutRequest(username))
+    },
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch(selectWalletFromModal(walletId, currencyCode))
+    }
+  })
+)(MainComponent)
