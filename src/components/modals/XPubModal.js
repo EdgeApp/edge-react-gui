@@ -4,31 +4,29 @@ import Clipboard from '@react-native-community/clipboard'
 import * as React from 'react'
 import { Linking, Platform, Text } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
+import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { scale } from '../../util/scaling.js'
 import { showError, showToast } from '../services/AirshipInstance.js'
 
-type XPubModalOwnProps = {}
-
-type XPubModalStateProps = {
+type StateProps = {
   xPubSyntax: string,
   xPubExplorer: string,
   visibilityBoolean: boolean
 }
 
-type XPubModalDispatchProps = {
+type DispatchProps = {
   onExit: () => void
 }
 
-type XPubModalState = {}
+type XPubModalComponentProps = StateProps & DispatchProps
 
-type XPubModalComponentProps = XPubModalOwnProps & XPubModalStateProps & XPubModalDispatchProps
-
-export default class XPubModal extends React.Component<XPubModalComponentProps, XPubModalState> {
+class XPubModalComponent extends React.Component<XPubModalComponentProps> {
   _onPressCopy = () => {
     try {
       this.props.onExit()
@@ -95,3 +93,16 @@ export default class XPubModal extends React.Component<XPubModalComponentProps, 
     )
   }
 }
+
+export const XPubModal = connect(
+  (state: RootState): StateProps => ({
+    visibilityBoolean: state.ui.scenes.walletList.viewXPubWalletModalVisible,
+    xPubSyntax: state.ui.scenes.walletList.xPubSyntax,
+    xPubExplorer: state.ui.scenes.walletList.xPubExplorer
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    onExit() {
+      dispatch({ type: 'CLOSE_VIEWXPUB_WALLET_MODAL' })
+    }
+  })
+)(XPubModalComponent)

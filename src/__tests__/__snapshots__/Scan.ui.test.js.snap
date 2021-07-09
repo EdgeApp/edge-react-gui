@@ -80,7 +80,7 @@ exports[`Scan component should render with BLOCKED props 1`] = `
       </ForwardRef>
     </View>
   </SceneWrapper>
-  <Memo(Connect(SecondaryModal)) />
+  <Memo(Connect(SecondaryModalComponent)) />
 </React.Fragment>
 `;
 
@@ -164,6 +164,6 @@ exports[`Scan component should render with GRANTED props 1`] = `
       </ForwardRef>
     </View>
   </SceneWrapper>
-  <Memo(Connect(SecondaryModal)) />
+  <Memo(Connect(SecondaryModalComponent)) />
 </React.Fragment>
 `;
