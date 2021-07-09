@@ -3,20 +3,25 @@
 import * as React from 'react'
 import { Image, Text, View } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import { connect } from 'react-redux'
 
 import accountIcon from '../../../../assets/images/sidenav/accounts.png'
 import { ExchangeRate } from '../../../../components/common/ExchangeRate.js'
 import { SceneWrapper } from '../../../../components/common/SceneWrapper.js'
 import s from '../../../../locales/strings'
+import { getDisplayDenominationFull, getPrimaryExchangeDenomination } from '../../../../selectors/DenominationSelectors.js'
+import { getExchangeRate, getSelectedWallet } from '../../../../selectors/WalletSelectors.js'
+import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
 import type { GuiDenomination } from '../../../../types/types.js'
 import { emptyGuiDenomination } from '../../../../types/types.js'
+import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
 import { getDenomFromIsoCode, getObjectDiff } from '../../../../util/utils.js'
 import FormattedText from '../FormattedText/FormattedText.ui.js'
 import { Button } from './Component/Button/Button.ui'
-import Main from './Component/MainConnector'
+import { Main } from './Component/Main.js'
 import styles from './style'
 
-export type Props = {
+type StateProps = {
   currencyLogo: string,
   primaryDisplayCurrencyCode: string,
   primaryDisplayDenomination: GuiDenomination,
@@ -24,13 +29,16 @@ export type Props = {
   secondaryDisplayCurrencyCode: string,
   secondaryToPrimaryRatio: number,
   username: string,
-  openSelectUser: () => void,
-  closeSelectUser: () => void,
   usersView: boolean,
   exchangeRate: number
 }
+type DispatchProps = {
+  openSelectUser: () => void,
+  closeSelectUser: () => void
+}
+type Props = StateProps & DispatchProps
 
-export default class ControlPanel extends React.Component<Props> {
+class ControlPanelComponent extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, {
       primaryDisplayDenomination: true,
@@ -109,3 +117,45 @@ export default class ControlPanel extends React.Component<Props> {
     return this.props.usersView ? this.props.closeSelectUser() : this.props.openSelectUser()
   }
 }
+
+export const ControlPanel = connect(
+  (state: RootState): StateProps => {
+    const guiWallet = getSelectedWallet(state)
+    const currencyCode = state.ui.wallets.selectedCurrencyCode
+    const exchangeRate = guiWallet ? getExchangeRate(state, currencyCode, guiWallet.isoFiatCurrencyCode) : 0
+
+    // Try catch block to check specific details why the guiWallet.metaTokens becomes undefined
+    const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
+    // if selected currencyCode is parent wallet currencyCode
+    const currencyLogo = getCurrencyIcon(guiWallet.currencyCode, currencyCode).symbolImage
+    const secondaryDisplayCurrencyCode = guiWallet.fiatCurrencyCode
+    const secondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    const primaryDisplayDenomination = getDisplayDenominationFull(state, currencyCode)
+    const primaryExchangeDenomination = getPrimaryExchangeDenomination(state, currencyCode)
+    const secondaryDisplayAmount =
+      (parseFloat(1) * parseFloat(secondaryToPrimaryRatio) * parseFloat(primaryDisplayDenomination.multiplier)) /
+      parseFloat(primaryExchangeDenomination.multiplier)
+
+    return {
+      currencyCode,
+      currencyLogo,
+      primaryDisplayCurrencyCode: currencyCode,
+      primaryDisplayDenomination,
+      primaryExchangeDenomination,
+      exchangeRate,
+      secondaryDisplayCurrencyCode,
+      secondaryDisplayAmount,
+      secondaryToPrimaryRatio,
+      usersView: state.ui.scenes.controlPanel.usersView,
+      username: state.core.account.username
+    }
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    openSelectUser() {
+      dispatch({ type: 'OPEN_SELECT_USER' })
+    },
+    closeSelectUser() {
+      dispatch({ type: 'CLOSE_SELECT_USER' })
+    }
+  })
+)(ControlPanelComponent)

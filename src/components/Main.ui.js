@@ -107,7 +107,7 @@ import {
 import s from '../locales/strings.js'
 import { registerDevice } from '../modules/Device/action'
 import { logoutRequest } from '../modules/Login/action.js'
-import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConnector'
+import { ControlPanel } from '../modules/UI/components/ControlPanel/ControlPanel.ui.js'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { type Dispatch, type RootState } from '../types/reduxTypes.js'
