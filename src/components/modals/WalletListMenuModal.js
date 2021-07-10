@@ -9,6 +9,7 @@ import { sprintf } from 'sprintf-js'
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import { WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
+import { getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { useDispatch, useEffect, useSelector, useState } from '../../util/hooks.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
@@ -47,7 +48,7 @@ const getWalletOptions = async (params: {
   isToken?: boolean,
   account: EdgeAccount
 }): Promise<Option[]> => {
-  const { walletId, walletName, currencyCode, isToken, account } = params
+  const { walletId, currencyCode, isToken, account } = params
 
   if (!currencyCode) {
     return [{ label: s.strings.string_get_raw_keys, value: 'getRawKeys' }]
@@ -61,9 +62,11 @@ const getWalletOptions = async (params: {
 
   const splittable = await account.listSplittableWalletTypes(walletId)
 
-  if (splittable.length > 0) {
-    const splitString = s.strings.string_split_wallet
-    result.push({ label: sprintf(splitString, walletName), value: 'split' })
+  for (const splitWalletType of splittable) {
+    if (splitWalletType === 'wallet:bitcoingold') continue // TODO: Remove after fixing BTG splitting
+    const info = getCurrencyInfos(account).find(({ walletType }) => walletType === splitWalletType)
+
+    result.push({ label: sprintf(s.strings.string_split_wallet, info?.displayName), value: 'split' })
   }
 
   for (const option of WALLET_LIST_MENU) {
