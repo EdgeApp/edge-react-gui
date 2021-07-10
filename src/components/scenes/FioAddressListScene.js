@@ -26,12 +26,12 @@ import { Fade } from '../themed/Fade'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ClickableText } from '../themed/ThemedButtons'
 
-export type LocalState = {
+type LocalState = {
   initLoading: boolean,
   prevLoading: boolean
 }
 
-export type StateProps = {
+type StateProps = {
   fioAddresses: FioAddress[],
   fioDomains: FioDomain[],
   fioWallets: EdgeCurrencyWallet[],
@@ -39,8 +39,8 @@ export type StateProps = {
   isConnected: boolean
 }
 
-export type DispatchProps = {
-  refreshAllFioAddresses: () => Promise<void>
+type DispatchProps = {
+  refreshAllFioAddresses: () => void
 }
 
 type NavigationProps = {
@@ -235,23 +235,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioAddressListScene = connect(
-  (state: RootState) => {
-    const fioAddresses: FioAddress[] = state.ui.scenes.fioAddress.fioAddresses
-    const fioDomains: FioDomain[] = state.ui.scenes.fioAddress.fioDomains
-    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-    const loading: boolean = state.ui.scenes.fioAddress.fioAddressesLoading
-
-    return {
-      fioAddresses,
-      fioDomains,
-      fioWallets,
-      loading,
-      isConnected: state.network.isConnected
-    }
-  },
+export const FioAddressListScene = connect(
+  (state: RootState): StateProps => ({
+    fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+    fioDomains: state.ui.scenes.fioAddress.fioDomains,
+    fioWallets: state.ui.wallets.fioWallets,
+    loading: state.ui.scenes.fioAddress.fioAddressesLoading,
+    isConnected: state.network.isConnected
+  }),
   (dispatch: Dispatch): DispatchProps => ({
-    refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses())
+    refreshAllFioAddresses() {
+      dispatch(refreshAllFioAddresses())
+    }
   })
 )(withTheme(FioAddressList))
-export { FioAddressListScene }

@@ -30,7 +30,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  tokenCreated(string, string[]): void
+  tokenCreated: (walletId: string, tokens: string[]) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -172,13 +172,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const WalletListCreateRow = connect(
-  (state: RootState): StateProps => {
-    return {
-      wallets: state.ui.wallets.byId,
-      account: state.core.account,
-      defaultIsoFiat: state.ui.settings.defaultIsoFiat
-    }
-  },
+  (state: RootState): StateProps => ({
+    wallets: state.ui.wallets.byId,
+    account: state.core.account,
+    defaultIsoFiat: state.ui.settings.defaultIsoFiat
+  }),
   (dispatch: Dispatch): DispatchProps => ({
     tokenCreated(walletId: string, tokens: string[]) {
       dispatch({

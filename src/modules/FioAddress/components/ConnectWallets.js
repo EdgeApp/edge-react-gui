@@ -12,28 +12,30 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { PrimaryButton } from '../../../components/themed/ThemedButtons.js'
 import { FIO_CONNECT_TO_WALLETS_CONFIRM } from '../../../constants/SceneKeys.js'
 import s from '../../../locales/strings.js'
-import { type RootState } from '../../../types/reduxTypes'
+import { type Dispatch, type RootState } from '../../../types/reduxTypes'
 import type { FioConnectionWalletItem } from '../../../types/types'
 import { makeConnectWallets } from '../util'
 
-export type LocalState = {
+type LocalState = {
   connectWalletsMap: { [walletId: string]: FioConnectionWalletItem },
   disconnectWalletsMap: { [walletId: string]: FioConnectionWalletItem },
   prevItemsConnected: { [string]: boolean }
 }
 
-export type FioConnectWalletStateProps = {
+type StateProps = {
   walletItems: { [key: string]: FioConnectionWalletItem },
   loading: boolean
 }
 
-export type OwnProps = {
+type OwnProps = {
   fioAddressName: string,
   fioWallet: EdgeCurrencyWallet | null,
   disabled: boolean
 }
 
-class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnProps & ThemeProps, LocalState> {
+type Props = StateProps & OwnProps & ThemeProps
+
+class ConnectWallets extends React.Component<Props, LocalState> {
   state = {
     connectWalletsMap: {},
     disconnectWalletsMap: {},
@@ -270,19 +272,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const mapStateToProps = (state: RootState, ownProps): FioConnectWalletStateProps => {
-  const wallets = state.ui.wallets.byId
-  const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
+export const ConnectWalletsConnector = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => {
+    const wallets = state.ui.wallets.byId
+    const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
 
-  if (!ccWalletMap) return { walletItems: {}, loading: true }
+    if (!ccWalletMap) return { walletItems: {}, loading: true }
 
-  const walletItems = makeConnectWallets(wallets, ccWalletMap)
+    const walletItems = makeConnectWallets(wallets, ccWalletMap)
 
-  const out: FioConnectWalletStateProps = {
-    walletItems,
-    loading: false
-  }
-  return out
-}
-
-export const ConnectWalletsConnector = connect(mapStateToProps, {})(withTheme(ConnectWallets))
+    return {
+      walletItems,
+      loading: false
+    }
+  },
+  (dispatch: Dispatch) => ({})
+)(withTheme(ConnectWallets))

@@ -24,8 +24,8 @@ type StateProps = {
   deviceReferral: DeviceReferral
 }
 type DispatchProps = {
-  activatePromotion(installerId: string): Promise<void>,
-  removePromotion(installerId: string): Promise<void>
+  activatePromotion: (installerId: string) => Promise<void>,
+  removePromotion: (installerId: string) => Promise<void>
 }
 type Props = StateProps & DispatchProps & ThemeProps
 
@@ -113,11 +113,11 @@ export const PromotionSettingsScene = connect(
     deviceReferral: state.deviceReferral
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    activatePromotion(installerId: string): Promise<void> {
-      return dispatch(activatePromotion(installerId))
+    async activatePromotion(installerId: string): Promise<void> {
+      await dispatch(activatePromotion(installerId))
     },
-    removePromotion(installerId: string): Promise<void> {
-      return dispatch(removePromotion(installerId))
+    async removePromotion(installerId: string): Promise<void> {
+      await dispatch(removePromotion(installerId))
     }
   })
 )(withTheme(PromotionSettingsComponent))

@@ -70,7 +70,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  updateCountryCode(string): void
+  updateCountryCode: (countryCode: string) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps

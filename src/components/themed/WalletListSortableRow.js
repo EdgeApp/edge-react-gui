@@ -11,7 +11,7 @@ import s from '../../locales/strings.js'
 import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
 import { getDisplayDenominationFromSettings } from '../../selectors/DenominationSelectors.js'
 import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -160,9 +160,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListSortableRow = connect((state: RootState, ownProps: OwnProps): StateProps => ({
-  showBalance: state.ui.settings.isAccountBalanceVisible,
-  settings: state.ui.settings,
-  exchangeRates: state.exchangeRates,
-  walletFiatSymbol: ownProps.guiWallet ? getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode) : null
-}))(withTheme(WalletListSortableRowComponent))
+export const WalletListSortableRow = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => ({
+    showBalance: state.ui.settings.isAccountBalanceVisible,
+    settings: state.ui.settings,
+    exchangeRates: state.exchangeRates,
+    walletFiatSymbol: ownProps.guiWallet ? getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode) : null
+  }),
+  (dispatch: Dispatch) => ({})
+)(withTheme(WalletListSortableRowComponent))

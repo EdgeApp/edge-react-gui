@@ -241,26 +241,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioConnectWalletConfirmScene = connect(
-  (state: RootState, ownProps: RouteProps) => {
-    const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
-    const out: StateProps = {
-      ccWalletMap,
-      isConnected: state.network.isConnected
-    }
-    return out
-  },
+export const FioConnectWalletConfirmScene = connect(
+  (state: RootState, ownProps: RouteProps): StateProps => ({
+    ccWalletMap: state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName],
+    isConnected: state.network.isConnected
+  }),
   (dispatch: Dispatch): DispatchProps => ({
-    updateConnectedWallets: (fioAddress: string, ccWalletMap: CcWalletMap) => {
+    updateConnectedWallets(fioAddress: string, ccWalletMap: CcWalletMap) {
       dispatch({
         type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
-        data: {
-          fioAddress,
-          ccWalletMap
-        }
+        data: { fioAddress, ccWalletMap }
       })
     }
   })
 )(withTheme(FioConnectWalletConfirm))
-
-export { FioConnectWalletConfirmScene }

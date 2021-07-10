@@ -36,6 +36,8 @@ export const ChangeRecoveryScene = connect(
     account: state.core.account
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    onComplete: Actions.pop
+    onComplete() {
+      Actions.pop()
+    }
   })
 )(ChangeRecoveryComponent)

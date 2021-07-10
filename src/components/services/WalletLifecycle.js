@@ -4,7 +4,7 @@ import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet } from 'edg
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import { type RootState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { showError } from './AirshipInstance.js'
 
@@ -191,5 +191,5 @@ export const WalletLifecycle = connect(
     context: state.core.context,
     guiWallets: state.ui.wallets.byId
   }),
-  null
+  (dispatch: Dispatch) => ({})
 )(WalletLifecycleComponent)

@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 
 import { EXCHANGE_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
-import type { RootState } from '../../reducers/RootReducer'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { needToShowConfetti } from '../../util/show-confetti'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -119,7 +119,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeSuccessScene = connect((state: RootState): StateProps => ({
-  userId: state.core.account.id,
-  disklet: state.core.disklet
-}))(withTheme(CryptoExchangeSuccessComponent))
+export const CryptoExchangeSuccessScene = connect(
+  (state: RootState): StateProps => ({
+    userId: state.core.account.id,
+    disklet: state.core.disklet
+  }),
+  (dispatch: Dispatch) => ({})
+)(withTheme(CryptoExchangeSuccessComponent))

@@ -18,7 +18,7 @@ type DispatchProps = {
 
 type Props = StateProps & DispatchProps
 
-class EdgeContextCallbackManager extends React.Component<Props> {
+class EdgeContextCallbackManagerComponent extends React.Component<Props> {
   cleanups: Array<() => mixed> = []
 
   constructor(props: Props) {
@@ -67,7 +67,7 @@ class EdgeContextCallbackManager extends React.Component<Props> {
   }
 }
 
-export default connect(
+export const EdgeContextCallbackManager = connect(
   (state: RootState): StateProps => ({
     account: state.core.account,
     context: state.core.context
@@ -77,4 +77,4 @@ export default connect(
       dispatch(handleOtpError(otpError))
     }
   })
-)(EdgeContextCallbackManager)
+)(EdgeContextCallbackManagerComponent)

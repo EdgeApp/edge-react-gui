@@ -8,11 +8,14 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { PasswordReminder } from '../../types/types.js'
 import { matchJson } from '../../util/matchJson.js'
 
-type Props = {
-  setPasswordReminder: (passwordReminder: PasswordReminder) => void,
-  passwordReminder: PasswordReminder,
-  loginStatus: boolean | null
+type StateProps = {
+  loginStatus: boolean | null,
+  passwordReminder: PasswordReminder
 }
+type DispatchProps = {
+  setPasswordReminder: (passwordReminder: PasswordReminder) => void
+}
+type Props = StateProps & DispatchProps
 
 class PasswordReminderComponent extends React.PureComponent<Props> {
   componentDidUpdate(prevProps: Props) {
@@ -27,11 +30,13 @@ class PasswordReminderComponent extends React.PureComponent<Props> {
 }
 
 export const PasswordReminderService = connect(
-  (state: RootState) => ({
+  (state: RootState): StateProps => ({
     loginStatus: state.ui.settings.loginStatus,
     passwordReminder: state.ui.passwordReminder
   }),
-  (dispatch: Dispatch) => ({
-    setPasswordReminder: (passwordReminder: PasswordReminder) => dispatch(setPasswordReminder(passwordReminder))
+  (dispatch: Dispatch): DispatchProps => ({
+    setPasswordReminder(passwordReminder: PasswordReminder) {
+      dispatch(setPasswordReminder(passwordReminder))
+    }
   })
 )(PasswordReminderComponent)

@@ -72,7 +72,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  selectWallet(walletId: string, currencyCode: string): void
+  selectWallet: (walletId: string, currencyCode: string) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -250,7 +250,7 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 
   renderRow = (data: FlatListItem<WalletListItem>, rowMap: { [string]: SwipeRow }) => {
-    const { isModal, onPress, showSlidingTutorial, wallets } = this.props
+    const { isModal, onPress, selectWallet, showSlidingTutorial, wallets } = this.props
 
     // Create Wallet/Token
     if (data.item.id == null) {

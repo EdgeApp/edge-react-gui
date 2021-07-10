@@ -23,8 +23,8 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  launchDeepLink(link: DeepLink): void,
-  retryPendingDeepLink(): void
+  launchDeepLink: (link: DeepLink) => void,
+  retryPendingDeepLink: () => void
 }
 
 type Props = StateProps & DispatchProps
@@ -72,7 +72,6 @@ export const DeepLinkingManager = connect(
     accountReferralLoaded: state.account.accountReferralLoaded,
     wallets: state.ui.wallets
   }),
-
   (dispatch: Dispatch): DispatchProps => ({
     launchDeepLink(link) {
       dispatch(launchDeepLink(link))

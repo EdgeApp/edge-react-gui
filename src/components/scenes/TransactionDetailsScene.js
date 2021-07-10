@@ -50,9 +50,9 @@ type StateProps = {
   walletDefaultDenomProps: EdgeDenomination
 }
 type DispatchProps = {
-  getSubcategories(): void,
-  setNewSubcategory(newSubcategory: string): void,
-  setTransactionDetails(transaction: EdgeTransaction, edgeMetadata: EdgeMetadata): void
+  getSubcategories: () => void,
+  setNewSubcategory: (newSubcategory: string) => void,
+  setTransactionDetails: (transaction: EdgeTransaction, edgeMetadata: EdgeMetadata) => void
 }
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 

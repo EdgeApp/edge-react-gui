@@ -16,7 +16,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  submitLogs: string => Promise<void>
+  submitLogs: (notes: string) => void
 }
 
 type OwnProps = {
@@ -49,6 +49,8 @@ export const SendLogsModal = connect(
     isConnected: state.network.isConnected
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    submitLogs: notes => dispatch(submitLogs(notes))
+    submitLogs(notes) {
+      dispatch(submitLogs(notes))
+    }
   })
 )(SendLogsModalComponent)

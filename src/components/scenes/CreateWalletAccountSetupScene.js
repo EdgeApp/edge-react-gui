@@ -44,7 +44,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  checkHandleAvailability: string => any
+  checkHandleAvailability: (handle: string) => void
 }
 
 type Props = OwnProps & DispatchProps & StateProps

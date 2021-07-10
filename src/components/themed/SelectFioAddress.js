@@ -22,7 +22,7 @@ import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile.js'
 
-type SelectFioAddressOwnProps = {
+type OwnProps = {
   selected: string,
   memo: string,
   memoError: string,
@@ -32,7 +32,7 @@ type SelectFioAddressOwnProps = {
   isSendUsingFioAddress?: boolean
 }
 
-type SelectFioAddressProps = {
+type StateProps = {
   fioAddresses: FioAddress[],
   fioWallets: EdgeCurrencyWallet[],
   selectedWallet: GuiWallet,
@@ -43,7 +43,7 @@ type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
 
-type Props = SelectFioAddressOwnProps & SelectFioAddressProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type LocalState = {
   loading: boolean,
@@ -262,35 +262,22 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
   }
 }
 
-const mapStateToProps = (state: RootState): SelectFioAddressProps => {
-  const guiWallet: GuiWallet = getSelectedWallet(state)
-  const currencyCode: string = state.ui.wallets.selectedCurrencyCode
-  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-  const fioAddresses = state.ui.scenes.fioAddress.fioAddresses
+export const SelectFioAddress = connect(
+  (state: RootState): StateProps => {
+    const guiWallet: GuiWallet = getSelectedWallet(state)
+    const currencyCode: string = state.ui.wallets.selectedCurrencyCode
 
-  if (!guiWallet || !currencyCode) {
     return {
-      loading: true,
-      fioAddresses,
-      fioWallets,
+      loading: !guiWallet || !currencyCode,
+      fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+      fioWallets: state.ui.wallets.fioWallets,
       currencyCode,
       selectedWallet: guiWallet
     }
-  }
-
-  return {
-    loading: false,
-    fioAddresses,
-    fioWallets,
-    currencyCode,
-    selectedWallet: guiWallet
-  }
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  refreshAllFioAddresses: () => {
-    dispatch(refreshAllFioAddresses())
-  }
-})
-
-export const SelectFioAddress = connect(mapStateToProps, mapDispatchToProps)(withTheme(SelectFioAddressComponent))
+  },
+  (dispatch: Dispatch): DispatchProps => ({
+    refreshAllFioAddresses() {
+      dispatch(refreshAllFioAddresses())
+    }
+  })
+)(withTheme(SelectFioAddressComponent))

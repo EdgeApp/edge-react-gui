@@ -13,7 +13,7 @@ import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
 import { expiredSoon, findWalletByFioAddress } from '../../modules/FioAddress/util'
-import type { RootState } from '../../reducers/RootReducer'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
@@ -21,17 +21,17 @@ import { EdgeText } from '../themed/EdgeText.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsRow } from '../themed/SettingsRow.js'
 
-export type StateProps = {
+type StateProps = {
   fioWallets: EdgeCurrencyWallet[]
 }
 
-export type NavProps = {
+type NavProps = {
   fioAddressName: string,
   expiration: string,
   navigation: any
 }
 
-export type LocalState = {
+type LocalState = {
   fioWalletLoading: boolean,
   fioWallet: EdgeCurrencyWallet | null
 }
@@ -175,5 +175,5 @@ export const FioAddressDetailsScene = connect(
   (state: RootState): StateProps => ({
     fioWallets: state.ui.wallets.fioWallets
   }),
-  {}
+  (dispatch: Dispatch) => ({})
 )(withTheme(FioAddressDetails))

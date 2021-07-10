@@ -42,7 +42,7 @@ type LocalState = {
   fioRequestsSent: FioRequest[]
 }
 
-export type StateProps = {
+type StateProps = {
   state: RootState,
   account: EdgeAccount,
   wallets: { [walletId: string]: GuiWallet },
@@ -51,7 +51,7 @@ export type StateProps = {
   isConnected: boolean
 }
 
-export type DispatchProps = {
+type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 
@@ -626,7 +626,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioRequestListScene = connect(
+export const FioRequestListScene = connect(
   (state: RootState): StateProps => ({
     state,
     account: state.core.account,
@@ -636,9 +636,11 @@ const FioRequestListScene = connect(
     isConnected: state.network.isConnected
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    onSelectWallet: (walletId: string, currencyCode: string) => {
-      dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch({
+        type: 'UI/WALLETS/SELECT_WALLET',
+        data: { currencyCode, walletId }
+      })
     }
   })
 )(withTheme(FioRequestList))
-export { FioRequestListScene }

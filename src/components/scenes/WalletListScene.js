@@ -35,7 +35,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  updateActiveWalletsOrder(walletIds: string[]): void
+  updateActiveWalletsOrder: (walletIds: string[]) => void
 }
 
 type Props = StateProps & DispatchProps & ThemeProps

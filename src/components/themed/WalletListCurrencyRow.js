@@ -1,11 +1,12 @@
 // @flow
+
 import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
 import { formatNumber } from '../../locales/intl.js'
 import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
-import type { RootState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import { getCryptoAmount, getCurrencyInfo, getDenomFromIsoCode, getDenomination, getFiatSymbol, getYesterdayDateRoundDownHour } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -156,59 +157,62 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListCurrencyRow = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const { currencyCode, walletName, walletId } = ownProps
-  const guiWallet = state.ui.wallets.byId[walletId]
+export const WalletListCurrencyRow = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => {
+    const { currencyCode, walletName, walletId } = ownProps
+    const guiWallet = state.ui.wallets.byId[walletId]
 
-  const exchangeRates = state.exchangeRates
-  const showBalance = state.ui.settings.isAccountBalanceVisible
-  const settings = state.ui.settings
-  const isToken = guiWallet.currencyCode !== currencyCode
+    const exchangeRates = state.exchangeRates
+    const showBalance = state.ui.settings.isAccountBalanceVisible
+    const settings = state.ui.settings
+    const isToken = guiWallet.currencyCode !== currencyCode
 
-  // Crypto Amount And Exchange Rate
-  const balance = isToken ? guiWallet.nativeBalances[currencyCode] : guiWallet.primaryNativeBalance
-  const denomination = getDenomination(currencyCode, settings, 'display')
-  const exchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
-  const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
-  const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
-  const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : undefined
-  const cryptoAmount = showBalance
-    ? balance && balance !== '0'
-      ? getCryptoAmount(balance, denomination, exchangeDenomination, fiatDenomination, exchangeRate, guiWallet)
-      : '0'
-    : ''
+    // Crypto Amount And Exchange Rate
+    const balance = isToken ? guiWallet.nativeBalances[currencyCode] : guiWallet.primaryNativeBalance
+    const denomination = getDenomination(currencyCode, settings, 'display')
+    const exchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
+    const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+    const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
+    const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : undefined
+    const cryptoAmount = showBalance
+      ? balance && balance !== '0'
+        ? getCryptoAmount(balance, denomination, exchangeDenomination, fiatDenomination, exchangeRate, guiWallet)
+        : '0'
+      : ''
 
-  // Fiat Balance
-  const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
-  const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)
-  const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : '0'
-  const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
-  const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
+    // Fiat Balance
+    const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
+    const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)
+    const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : '0'
+    const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
+    const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
 
-  const fiatExchangeRate = guiWallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${guiWallet.isoFiatCurrencyCode}`] : 1
+    const fiatExchangeRate = guiWallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${guiWallet.isoFiatCurrencyCode}`] : 1
 
-  let walletNameString = walletName
-  if (walletNameString == null) {
-    if (guiWallet != null) {
-      walletNameString = guiWallet.name
-    } else {
-      const { allCurrencyInfos } = state.ui.settings.plugins
-      const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
-      walletNameString = `My ${currencyInfo?.displayName ?? ''}`
+    let walletNameString = walletName
+    if (walletNameString == null) {
+      if (guiWallet != null) {
+        walletNameString = guiWallet.name
+      } else {
+        const { allCurrencyInfos } = state.ui.settings.plugins
+        const currencyInfo: EdgeCurrencyInfo | void = getCurrencyInfo(allCurrencyInfos, currencyCode)
+        walletNameString = `My ${currencyInfo?.displayName ?? ''}`
+      }
     }
-  }
 
-  return {
-    // Render Children
-    cryptoAmount,
-    fiatBalanceSymbol,
-    fiatBalanceString,
-    walletNameString,
+    return {
+      // Render Children
+      cryptoAmount,
+      fiatBalanceSymbol,
+      fiatBalanceString,
+      walletNameString,
 
-    // Exchange rate with style
-    exchangeRate,
-    exchangeRates,
-    fiatExchangeRate,
-    walletFiatSymbol
-  }
-})(withTheme(WalletListRowComponent))
+      // Exchange rate with style
+      exchangeRate,
+      exchangeRates,
+      fiatExchangeRate,
+      walletFiatSymbol
+    }
+  },
+  (dispatch: Dispatch) => ({})
+)(withTheme(WalletListRowComponent))

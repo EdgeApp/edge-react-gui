@@ -24,7 +24,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  onSelectWallet(string, string): void
+  onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -87,6 +87,8 @@ export const HeaderTitle = connect(
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch(selectWalletFromModal(walletId, currencyCode))
+    }
   })
 )(withTheme(HeaderTitleComponent))

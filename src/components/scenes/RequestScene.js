@@ -38,7 +38,7 @@ import { ShareButtons } from '../themed/ShareButtons.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
-export type RequestStateProps = {
+type StateProps = {
   currencyCode: string,
   currencyInfo: EdgeCurrencyInfo | null,
   edgeWallet: EdgeCurrencyWallet,
@@ -55,7 +55,7 @@ export type RequestStateProps = {
   isConnected: boolean,
   balance?: string
 }
-export type RequestLoadingProps = {
+type LoadingStateProps = {
   edgeWallet: null,
   currencyCode: null,
   currencyInfo: null,
@@ -72,16 +72,16 @@ export type RequestLoadingProps = {
   isConnected: boolean
 }
 
-export type RequestDispatchProps = {
-  refreshReceiveAddressRequest(string): void,
-  refreshAllFioAddresses: () => Promise<void>,
+type DispatchProps = {
+  refreshReceiveAddressRequest: (walletId: string) => void,
+  refreshAllFioAddresses: () => void,
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 type CurrencyMinimumPopupState = { [currencyCode: string]: ModalState }
 
-type LoadingProps = RequestLoadingProps & RequestDispatchProps & ThemeProps
-type LoadedProps = RequestStateProps & RequestDispatchProps & ThemeProps
+type LoadingProps = LoadingStateProps & DispatchProps & ThemeProps
+type LoadedProps = StateProps & DispatchProps & ThemeProps
 type Props = LoadingProps | LoadedProps
 
 type State = {
@@ -561,7 +561,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const Request = connect(
-  (state: RootState): RequestStateProps | RequestLoadingProps => {
+  (state: RootState): StateProps | LoadingStateProps => {
     const { account } = state.core
     const { currencyWallets } = account
     const guiWallet: GuiWallet = getSelectedWallet(state)
@@ -639,11 +639,15 @@ export const Request = connect(
       balance
     }
   },
-  (dispatch: Dispatch): RequestDispatchProps => ({
-    refreshReceiveAddressRequest: (walletId: string) => {
+  (dispatch: Dispatch): DispatchProps => ({
+    refreshReceiveAddressRequest(walletId: string) {
       dispatch(refreshReceiveAddressRequest(walletId))
     },
-    refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses()),
-    onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
+    refreshAllFioAddresses() {
+      dispatch(refreshAllFioAddresses())
+    },
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch(selectWalletFromModal(walletId, currencyCode))
+    }
   })
 )(withTheme(RequestComponent))

@@ -28,8 +28,7 @@ type OwnProps = {
 type StateProps = {
   account: EdgeAccount
 }
-type DispatchProps = {}
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps
 
 type State = {
   input: string,
@@ -156,5 +155,5 @@ export const CreateWalletImportScene = connect(
   (state: RootState): StateProps => ({
     account: state.core.account
   }),
-  (dispatch: Dispatch): DispatchProps => ({})
+  (dispatch: Dispatch) => ({})
 )(CreateWalletImportComponent)

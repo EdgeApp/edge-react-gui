@@ -7,8 +7,8 @@ import { FIAT_CODES_SYMBOLS } from '../../constants/WalletAndCurrencyConstants.j
 import { formatDate, formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
-import type { RootState } from '../../reducers/RootReducer'
 import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type FioRequest, type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -20,15 +20,13 @@ type NavigationProps = {
   selectedFioSentRequest: FioRequest
 }
 
-type FioSentRequestDetailsProps = {
+type StateProps = {
   fiatSymbol: string,
   isoFiatCurrencyCode: string,
   exchangeRates: GuiExchangeRates
 }
 
-type FioSentRequestDetailsDispatchProps = {}
-
-type Props = FioSentRequestDetailsProps & FioSentRequestDetailsDispatchProps & NavigationProps & ThemeProps
+type Props = StateProps & NavigationProps & ThemeProps
 
 class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
   fiatAmount = (currencyCode: string, amount: string) => {
@@ -96,17 +94,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioSentRequestDetailsScene = connect((state: RootState) => {
-  const wallet: GuiWallet = getSelectedWallet(state)
-  const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-  const exchangeRates = state.exchangeRates
-  const fiatSymbol = FIAT_CODES_SYMBOLS[wallet.fiatCurrencyCode]
-
-  const out: FioSentRequestDetailsProps = {
-    exchangeRates,
-    fiatSymbol,
-    isoFiatCurrencyCode
-  }
-  return out
-}, {})(withTheme(FioSentRequestDetailsComponent))
-export { FioSentRequestDetailsScene }
+export const FioSentRequestDetailsScene = connect(
+  (state: RootState): StateProps => {
+    const wallet: GuiWallet = getSelectedWallet(state)
+    return {
+      exchangeRates: state.exchangeRates,
+      fiatSymbol: FIAT_CODES_SYMBOLS[wallet.fiatCurrencyCode],
+      isoFiatCurrencyCode: wallet.isoFiatCurrencyCode
+    }
+  },
+  (dispatch: Dispatch) => ({})
+)(withTheme(FioSentRequestDetailsComponent))

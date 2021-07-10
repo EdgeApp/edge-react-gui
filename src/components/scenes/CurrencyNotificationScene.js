@@ -21,7 +21,7 @@ type StateProps = {
   userId: string
 }
 type DispatchProps = {
-  enableNotifications(currencyCode: string, hours: string, enabled: boolean): Promise<void>
+  enableNotifications: (currencyCode: string, hours: string, enabled: boolean) => void
 }
 type Props = NavigationProps & StateProps & DispatchProps
 
@@ -81,14 +81,12 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
 }
 
 export const CurrencyNotificationScene = connect(
-  (state: RootState): StateProps => {
-    const { account } = state.core
-
-    return {
-      userId: account.rootLoginId
-    }
-  },
+  (state: RootState): StateProps => ({
+    userId: state.core.account.rootLoginId
+  }),
   (dispatch: Dispatch): DispatchProps => ({
-    enableNotifications: (currencyCode, hours, enabled) => dispatch(enableNotifications(currencyCode, hours, enabled))
+    enableNotifications(currencyCode, hours, enabled) {
+      dispatch(enableNotifications(currencyCode, hours, enabled))
+    }
   })
 )(CurrencyNotificationComponent)

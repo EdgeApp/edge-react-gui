@@ -12,7 +12,7 @@ import { exportTransactionsToCSV, exportTransactionsToQBO } from '../../actions/
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { DateModal } from '../modals/DateModal.js'
 import { Airship, showActivity, showError } from '../services/AirshipInstance.js'
@@ -276,9 +276,9 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 }
 
-export const TransactionsExportScene = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const denominationObject = getDisplayDenomination(state, ownProps.currencyCode)
-  return {
-    multiplier: denominationObject.multiplier
-  }
-})(withTheme(TransactionsExportSceneComponent))
+export const TransactionsExportScene = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => ({
+    multiplier: getDisplayDenomination(state, ownProps.currencyCode).multiplier
+  }),
+  (dispatch: Dispatch) => ({})
+)(withTheme(TransactionsExportSceneComponent))

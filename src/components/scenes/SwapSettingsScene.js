@@ -23,9 +23,9 @@ import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
 type DispatchProps = {
-  changePreferredSwapPlugin(pluginId: string | void): void,
-  ignoreAccountSwap(): void,
-  removePromotion(installerId: string): void
+  changePreferredSwapPlugin: (pluginId: string | void) => void,
+  ignoreAccountSwap: () => void,
+  removePromotion: (installerId: string) => void
 }
 
 type StateProps = {

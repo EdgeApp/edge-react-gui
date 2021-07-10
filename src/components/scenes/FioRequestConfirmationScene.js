@@ -15,7 +15,7 @@ import { addToFioAddressCache, checkExpiredFioAddress, checkPubAddress } from '.
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
-import { type RootState } from '../../types/reduxTypes'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types'
 import { emptyCurrencyInfo } from '../../types/types'
 import { getDenomFromIsoCode } from '../../util/utils'
@@ -307,63 +307,65 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
-  const guiWallet: GuiWallet = getSelectedWallet(state)
-  const { account } = state.core
-  const currencyCode: string = state.ui.wallets.selectedCurrencyCode
-  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-  const { isConnected } = state.network
+export const FioRequestConfirmationScene = connect(
+  (state: RootState): StateProps => {
+    const guiWallet: GuiWallet = getSelectedWallet(state)
+    const { account } = state.core
+    const currencyCode: string = state.ui.wallets.selectedCurrencyCode
+    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
+    const { isConnected } = state.network
 
-  if (!guiWallet || !currencyCode) {
+    if (!guiWallet || !currencyCode) {
+      return {
+        exchangeSecondaryToPrimaryRatio: 0,
+        chainCode: '',
+        primaryCurrencyInfo: emptyCurrencyInfo,
+        secondaryCurrencyInfo: emptyCurrencyInfo,
+        publicAddress: '',
+        fioWallets,
+        account,
+        isConnected,
+        walletId: '',
+        currencyCode: '',
+        fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+      }
+    }
+
+    const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, currencyCode)
+    const primaryExchangeDenomination: GuiDenomination = getPrimaryExchangeDenomination(state, currencyCode)
+    const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+    const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
+    const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
+    const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
+
+    const primaryCurrencyInfo: GuiCurrencyInfo = {
+      displayCurrencyCode: currencyCode,
+      displayDenomination: primaryDisplayDenomination,
+      exchangeCurrencyCode: primaryExchangeCurrencyCode,
+      exchangeDenomination: primaryExchangeDenomination
+    }
+    const secondaryCurrencyInfo: GuiCurrencyInfo = {
+      displayCurrencyCode: guiWallet.fiatCurrencyCode,
+      displayDenomination: secondaryDisplayDenomination,
+      exchangeCurrencyCode: secondaryExchangeCurrencyCode,
+      exchangeDenomination: secondaryExchangeDenomination
+    }
+    const isoFiatCurrencyCode: string = guiWallet.isoFiatCurrencyCode
+    const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+
     return {
-      exchangeSecondaryToPrimaryRatio: 0,
-      chainCode: '',
-      primaryCurrencyInfo: emptyCurrencyInfo,
-      secondaryCurrencyInfo: emptyCurrencyInfo,
-      publicAddress: '',
+      exchangeSecondaryToPrimaryRatio,
+      publicAddress: guiWallet.receiveAddress.publicAddress || '',
+      chainCode: guiWallet.currencyCode,
+      primaryCurrencyInfo,
+      secondaryCurrencyInfo,
       fioWallets,
       account,
       isConnected,
-      walletId: '',
-      currencyCode: '',
+      walletId: state.ui.wallets.selectedWalletId,
+      currencyCode: state.ui.wallets.selectedCurrencyCode,
       fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
     }
-  }
-
-  const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, currencyCode)
-  const primaryExchangeDenomination: GuiDenomination = getPrimaryExchangeDenomination(state, currencyCode)
-  const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
-  const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
-  const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
-  const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.name ? secondaryExchangeDenomination.name : ''
-
-  const primaryCurrencyInfo: GuiCurrencyInfo = {
-    displayCurrencyCode: currencyCode,
-    displayDenomination: primaryDisplayDenomination,
-    exchangeCurrencyCode: primaryExchangeCurrencyCode,
-    exchangeDenomination: primaryExchangeDenomination
-  }
-  const secondaryCurrencyInfo: GuiCurrencyInfo = {
-    displayCurrencyCode: guiWallet.fiatCurrencyCode,
-    displayDenomination: secondaryDisplayDenomination,
-    exchangeCurrencyCode: secondaryExchangeCurrencyCode,
-    exchangeDenomination: secondaryExchangeDenomination
-  }
-  const isoFiatCurrencyCode: string = guiWallet.isoFiatCurrencyCode
-  const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-
-  return {
-    exchangeSecondaryToPrimaryRatio,
-    publicAddress: guiWallet.receiveAddress.publicAddress || '',
-    chainCode: guiWallet.currencyCode,
-    primaryCurrencyInfo,
-    secondaryCurrencyInfo,
-    fioWallets,
-    account,
-    isConnected,
-    walletId: state.ui.wallets.selectedWalletId,
-    currencyCode: state.ui.wallets.selectedCurrencyCode,
-    fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
-  }
-})(withTheme(FioRequestConfirmationConnected))
-export { FioRequestConfirmationScene }
+  },
+  (dispatch: Dispatch) => ({})
+)(withTheme(FioRequestConfirmationConnected))

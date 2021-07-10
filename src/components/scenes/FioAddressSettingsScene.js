@@ -196,15 +196,14 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => ({
-  fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
-  isConnected: state.network.isConnected
-})
-
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  refreshAllFioAddresses: () => {
-    dispatch(refreshAllFioAddresses())
-  }
-})
-
-export const FioAddressSettingsScene = connect(mapStateToProps, mapDispatchToProps)(withTheme(FioAddressSettingsComponent))
+export const FioAddressSettingsScene = connect(
+  (state: RootState): StateProps => ({
+    fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+    isConnected: state.network.isConnected
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    refreshAllFioAddresses() {
+      dispatch(refreshAllFioAddresses())
+    }
+  })
+)(withTheme(FioAddressSettingsComponent))

@@ -3,12 +3,13 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import { type RootState } from '../../types/reduxTypes.js'
-import EdgeWalletCallbackManager from './EdgeWalletCallbackManager'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { EdgeWalletCallbackManager } from './EdgeWalletCallbackManager.js'
 
-type Props = {
+type StateProps = {
   ids: string[]
 }
+type Props = StateProps
 
 class EdgeWalletsManager extends React.Component<Props> {
   render() {
@@ -16,11 +17,9 @@ class EdgeWalletsManager extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: RootState): Props => {
-  const { currencyWallets } = state.core.account
-  return {
-    ids: Object.keys(currencyWallets)
-  }
-}
-
-export default connect(mapStateToProps)(EdgeWalletsManager)
+export const EdgeWalletsCallbackManager = connect(
+  (state: RootState): StateProps => ({
+    ids: Object.keys(state.core.account.currencyWallets)
+  }),
+  (dispatch: Dispatch) => ({})
+)(EdgeWalletsManager)

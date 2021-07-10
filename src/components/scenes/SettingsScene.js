@@ -63,13 +63,13 @@ type StateProps = {
   touchIdEnabled: boolean
 }
 type DispatchProps = {
-  dispatchUpdateEnableTouchIdEnable(arg: boolean, account: EdgeAccount): void,
-  lockSettings(): void,
-  onTogglePinLoginEnabled(enableLogin: boolean): void,
-  setAutoLogoutTimeInSeconds(number): void,
+  dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: EdgeAccount) => void,
+  lockSettings: () => void,
+  onTogglePinLoginEnabled: (enableLogin: boolean) => void,
+  setAutoLogoutTimeInSeconds: (autoLogoutTimeInSeconds: number) => void,
   showRestoreWalletsModal: () => void,
   showUnlockSettingsModal: () => void,
-  toggleDeveloperMode(developerModeOn: boolean): void
+  toggleDeveloperMode: (developerModeOn: boolean) => void
 }
 type Props = StateProps & DispatchProps & ThemeProps
 

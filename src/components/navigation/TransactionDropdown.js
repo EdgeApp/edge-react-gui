@@ -31,11 +31,16 @@ export function showTransactionDropdown(tx: EdgeTransaction) {
   }
 }
 
-type Props = {
+type OwnProps = {
   bridge: AirshipBridge<void>,
-  message: string,
   tx: EdgeTransaction
 }
+
+type StateProps = {
+  message: string
+}
+
+type Props = OwnProps & StateProps
 
 export function TransactionDropdown(props: Props) {
   const { bridge, message, tx } = props
@@ -71,7 +76,7 @@ const styles = StyleSheet.create({
 })
 
 const ConnectedTransactionDropdown = connect(
-  (state: RootState, ownProps: { tx: EdgeTransaction }) => {
+  (state: RootState, ownProps: OwnProps): StateProps => {
     const { tx } = ownProps
 
     if (!state.ui.settings.loginStatus) {

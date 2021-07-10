@@ -51,8 +51,8 @@ type StateProps = {
   creatingWallet: boolean
 }
 type DispatchProps = {
-  onSelectWallet(walletId: string, currencyCode: string, direction: 'from' | 'to'): void,
-  getQuoteForTransaction(SetNativeAmountInfo): void
+  onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => void,
+  getQuoteForTransaction: SetNativeAmountInfo => void
 }
 type Props = StateProps & DispatchProps & ThemeProps
 

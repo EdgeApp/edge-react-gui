@@ -22,6 +22,10 @@ import { SecondaryModal } from '../modals/SecondaryModal.js'
 import { SingleInputModal } from '../modals/SingleInputModal.js'
 import { Airship } from '../services/AirshipInstance'
 
+type OwnProps = {
+  data?: 'sweepPrivateKey' | 'loginQR'
+}
+
 type StateProps = {
   cameraPermission: PermissionStatus,
   torchEnabled: boolean,
@@ -33,13 +37,12 @@ type StateProps = {
 type DispatchProps = {
   qrCodeScanned: (data: string) => void,
   loginQrCodeScanned: (data: string) => void,
-  parseScannedUri: (data: string, customErrorTitle: string, customErrorDescription: string) => Promise<void>,
+  parseScannedUri: (data: string, customErrorTitle: string, customErrorDescription: string) => void,
   toggleEnableTorch: () => void,
-  selectFromWalletForExchange: (walletId: string, currencyCode: string) => void,
-  data?: 'sweepPrivateKey' | 'loginQR'
+  selectFromWalletForExchange: (walletId: string, currencyCode: string) => void
 }
 
-type Props = StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps
 
 export const SWEEP_PRIVATE_KEY = 'sweepPrivateKey'
 export const LOGIN_QR = 'loginQR'
@@ -247,8 +250,8 @@ export const ScanScene = connect(
     loginQrCodeScanned(data) {
       dispatch(loginQrCodeScanned(data))
     },
-    async parseScannedUri(data, customErrorTitle, customErrorDescription) {
-      await dispatch(parseScannedUri(data, customErrorTitle, customErrorDescription))
+    parseScannedUri(data, customErrorTitle, customErrorDescription) {
+      dispatch(parseScannedUri(data, customErrorTitle, customErrorDescription))
     },
     toggleEnableTorch() {
       dispatch({ type: 'TOGGLE_ENABLE_TORCH' })

@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { CREATE_WALLET_SELECT_CRYPTO, CREATE_WALLET_SELECT_FIAT } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { makeCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
@@ -142,7 +142,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListFooter = connect((state: RootState): StateProps => ({
-  account: state.core.account,
-  wallets: state.ui.wallets.byId
-}))(withTheme(WalletListFooterComponent))
+export const WalletListFooter = connect(
+  (state: RootState): StateProps => ({
+    account: state.core.account,
+    wallets: state.ui.wallets.byId
+  }),
+  (dispatch: Dispatch) => ({})
+)(withTheme(WalletListFooterComponent))

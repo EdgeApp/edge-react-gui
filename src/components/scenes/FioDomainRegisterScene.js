@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 import { FIO_DOMAIN_REGISTER_SELECT_WALLET } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
+import { createFioWallet } from '../../modules/FioAddress/action.js'
 import { type RootState } from '../../types/reduxTypes'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SingleInputModal } from '../modals/SingleInputModal'
@@ -330,11 +331,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const typeHack: any = {}
 
-const FioDomainRegisterScene = connect((state: RootState) => {
-  return {
+export const FioDomainRegisterScene = connect(
+  (state: RootState): StateProps => ({
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] ?? typeHack,
     isConnected: state.network.isConnected
-  }
-}, {})(withTheme(FioDomainRegister))
-export { FioDomainRegisterScene }
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    async createFioWallet() {
+      return await dispatch(createFioWallet())
+    }
+  })
+)(withTheme(FioDomainRegister))

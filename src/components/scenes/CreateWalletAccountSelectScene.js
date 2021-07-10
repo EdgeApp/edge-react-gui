@@ -59,11 +59,17 @@ type OwnProps = {
 }
 
 type DispatchProps = {
-  createAccountBasedWallet: (string, string, string, boolean, boolean) => any,
-  fetchAccountActivationInfo: string => any,
-  createAccountTransaction: (string, string, string) => any,
-  fetchWalletAccountActivationPaymentInfo: (AccountPaymentParams, EdgeCurrencyWallet) => any,
-  setWalletAccountActivationQuoteError: string => any
+  createAccountBasedWallet: (
+    walletName: string,
+    walletType: string,
+    fiatCurrencyCode: string,
+    popScene: boolean,
+    selectWallet: boolean
+  ) => Promise<EdgeCurrencyWallet>,
+  fetchAccountActivationInfo: (currencyCode: string) => void,
+  createAccountTransaction: (createdWalletId: string, accountName: string, paymentWalletId: string) => void,
+  fetchWalletAccountActivationPaymentInfo: (paymentInfo: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) => void,
+  setWalletAccountActivationQuoteError: (message: string) => void
 }
 
 type Props = OwnProps & DispatchProps & StateProps
@@ -435,8 +441,8 @@ export const CreateWalletAccountSelectScene = connect(
     fetchWalletAccountActivationPaymentInfo(paymentInfo: AccountPaymentParams, createdCoreWallet: EdgeCurrencyWallet) {
       dispatch(fetchWalletAccountActivationPaymentInfo(paymentInfo, createdCoreWallet))
     },
-    createAccountBasedWallet(walletName: string, walletType: string, fiatCurrencyCode: string, popScene: boolean, selectWallet: boolean) {
-      dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, popScene, selectWallet))
+    async createAccountBasedWallet(walletName: string, walletType: string, fiatCurrencyCode: string, popScene: boolean, selectWallet: boolean) {
+      return await dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, popScene, selectWallet))
     },
     setWalletAccountActivationQuoteError(message) {
       dispatch({ type: 'WALLET_ACCOUNT_ACTIVATION_ESTIMATE_ERROR', data: message })

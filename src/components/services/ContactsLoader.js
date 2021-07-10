@@ -10,10 +10,13 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiContact } from '../../types/types.js'
 import { showError } from '../services/AirshipInstance.js'
 
-type Props = {
-  contactsPermission: PermissionStatus,
+type StateProps = {
+  contactsPermission: PermissionStatus
+}
+type DispatchProps = {
   loadContactsSuccess: (contacts: GuiContact[]) => void
 }
+type Props = StateProps & DispatchProps
 
 const merchantPartners = [
   {
@@ -229,14 +232,15 @@ class ContactsLoaderComponent extends React.Component<Props> {
 }
 
 export const ContactsLoader = connect(
-  (state: RootState) => ({
+  (state: RootState): StateProps => ({
     contactsPermission: state.permissions.contacts
   }),
-  (dispatch: Dispatch) => ({
-    loadContactsSuccess: (contacts: GuiContact[]) =>
+  (dispatch: Dispatch): DispatchProps => ({
+    loadContactsSuccess(contacts: GuiContact[]) {
       dispatch({
         type: 'CONTACTS/LOAD_CONTACTS_SUCCESS',
         data: { contacts }
       })
+    }
   })
 )(ContactsLoaderComponent)

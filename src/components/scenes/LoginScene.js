@@ -32,9 +32,9 @@ type StateProps = {
   username: string
 }
 type DispatchProps = {
-  deepLinkHandled(): void,
-  initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdInfo): void,
-  logout(): void
+  deepLinkHandled: () => void,
+  initializeAccount: (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => void,
+  logout: () => void
 }
 type Props = StateProps & DispatchProps
 
@@ -176,7 +176,6 @@ export const LoginScene = connect(
     pendingDeepLink: state.pendingDeepLink,
     username: state.nextUsername == null ? '' : state.nextUsername
   }),
-
   (dispatch: Dispatch): DispatchProps => ({
     deepLinkHandled() {
       dispatch({ type: 'DEEP_LINK_HANDLED' })

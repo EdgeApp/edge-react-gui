@@ -17,7 +17,7 @@ import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import { FIO_DOMAIN_REGISTER } from '../../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings.js'
-import { type RootState } from '../../../types/reduxTypes'
+import { type Dispatch, type RootState } from '../../../types/reduxTypes.js'
 import type { FioDomain, FlatListItem } from '../../../types/types.js'
 
 type Item = {
@@ -246,11 +246,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const DomainListModal = connect((state: RootState): StateProps => {
-  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-  return {
+export const DomainListModal = connect(
+  (state: RootState): StateProps => ({
     userDomains: state.ui.scenes.fioAddress.fioDomains,
-    fioWallets,
+    fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
-  }
-})(withTheme(DomainListModalComponent))
+  }),
+  (dispatch: Dispatch) => ({})
+)(withTheme(DomainListModalComponent))

@@ -33,7 +33,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  onSubmit(networkFeeOption: string, customNetworkFee: Object, walletId: string, currencyCode?: string): mixed
+  onSubmit: (networkFeeOption: string, customNetworkFee: Object, walletId: string, currencyCode?: string) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps
