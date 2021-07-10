@@ -209,7 +209,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   )
   const feeFiatAmount = formatNumber(feeFiatAmountRaw || 0, { toFixed: 2 })
   const fee = `${feeDisplayAmount} ${feeDenomination.name} (${feeFiatAmount} ${fromWallet.fiatCurrencyCode.replace('iso:', '')})`
-  const fromTotalFiat = formatNumber(fromBalanceInFiatRaw + feeFiatAmountRaw, { toFixed: 2 })
+  const fromTotalFiat = formatNumber(bns.add(fromBalanceInFiatRaw.toString(), feeFiatAmountRaw.toString()), { toFixed: 2 })
 
   // Format to amount:
   const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
