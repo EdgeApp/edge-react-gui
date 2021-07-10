@@ -289,8 +289,8 @@ export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
     // Fiat Balance Formatting
     const defaultDenomination = getDefaultDenomination(selectedCurrencyCode, state.ui.settings)
     const defaultCryptoAmount = convertNativeToDenomination(defaultDenomination.multiplier)(balance)
-    const fiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, parseFloat(defaultCryptoAmount))
-    const fiatBalanceFormat = intl.formatNumber(fiatBalance && fiatBalance > 0.000001 ? fiatBalance : 0, { toFixed: 2 })
+    const fiatBalance = convertCurrency(state, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, defaultCryptoAmount)
+    const fiatBalanceFormat = intl.formatNumber(fiatBalance && bns.gt(fiatBalance, '0.000001') ? fiatBalance : 0, { toFixed: 2 })
 
     return {
       currencyCode: selectedCurrencyCode,

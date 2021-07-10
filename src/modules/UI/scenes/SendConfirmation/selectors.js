@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import type { EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
@@ -153,8 +154,8 @@ export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo): Spe
   const isoFiatCurrencyCode = state.ui.settings.defaultIsoFiat
   const nativeToExchangeRatio = getExchangeDenomination(state, currencyCode).multiplier
   const exchangeAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
-  const fiatAmount = convertCurrency(state, currencyCode, isoFiatCurrencyCode, parseFloat(exchangeAmount))
-  const exceedsLimit = fiatAmount >= spendingLimits.transaction.amount
+  const fiatAmount = convertCurrency(state, currencyCode, isoFiatCurrencyCode, exchangeAmount)
+  const exceedsLimit = bns.gte(fiatAmount, spendingLimits.transaction.amount.toFixed(18))
 
   return exceedsLimit ? 'pin' : 'none'
 }
