@@ -41,7 +41,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  updatePermissions(permissions: PermissionsState): void
+  updatePermissions: (permissions: PermissionsState) => void
 }
 
 type Props = StateProps & DispatchProps

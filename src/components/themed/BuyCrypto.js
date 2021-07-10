@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox } from './ThemedButtons.js'
@@ -85,11 +85,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const BuyCrypto = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const guiWallet = state.ui.wallets.byId[ownProps.walletId]
+export const BuyCrypto = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => {
+    const guiWallet = state.ui.wallets.byId[ownProps.walletId]
 
-  return {
-    currencyName: guiWallet.currencyNames[ownProps.currencyCode],
-    currencyImage: guiWallet.symbolImage
-  }
-})(withTheme(BuyCryptoComponent))
+    return {
+      currencyName: guiWallet.currencyNames[ownProps.currencyCode],
+      currencyImage: guiWallet.symbolImage
+    }
+  },
+  (dispatch: Dispatch) => ({})
+)(withTheme(BuyCryptoComponent))

@@ -30,10 +30,10 @@ type StateProps = {
   defaultElectrumServer: string
 }
 type DispatchProps = {
-  disableCustomNodes(): void,
-  enableCustomNodes(): void,
-  saveCustomNodesList(nodes: string[]): void,
-  selectDenomination(string): void
+  disableCustomNodes: () => void,
+  enableCustomNodes: () => void,
+  saveCustomNodesList: (nodes: string[]) => void,
+  selectDenomination: (denominationKey: string) => void
 }
 type Props = NavigationProps & StateProps & DispatchProps & ThemeProps
 

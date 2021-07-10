@@ -566,17 +566,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const typeHack: any = {}
 
-const FioAddressRegisterScene = connect(
-  (state: RootState) => {
-    const out: StateProps = {
-      fioWallets: state.ui.wallets.fioWallets,
-      fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] ?? typeHack,
-      isConnected: state.network.isConnected
-    }
-    return out
-  },
+export const FioAddressRegisterScene = connect(
+  (state: RootState): StateProps => ({
+    fioWallets: state.ui.wallets.fioWallets,
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] ?? typeHack,
+    isConnected: state.network.isConnected
+  }),
   (dispatch: Dispatch): DispatchProps => ({
-    createFioWallet: () => dispatch(createFioWallet())
+    async createFioWallet() {
+      return await dispatch(createFioWallet())
+    }
   })
 )(withTheme(FioAddressRegister))
-export { FioAddressRegisterScene }

@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings'
-import { type RootState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import {
@@ -73,63 +73,66 @@ export class TransactionListRowComponent extends React.PureComponent<Props> {
   }
 }
 
-export const TransactionListRow = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const { currencyCode, walletId, transaction } = ownProps
-  const { metadata } = transaction
-  const guiWallet = state.ui.wallets.byId[walletId]
-  const { fiatCurrencyCode } = guiWallet
-  const { settings } = state.ui
-  const displayDenomination = getDenomination(currencyCode, settings, 'display')
-  const exchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
-  const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+export const TransactionListRow = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => {
+    const { currencyCode, walletId, transaction } = ownProps
+    const { metadata } = transaction
+    const guiWallet = state.ui.wallets.byId[walletId]
+    const { fiatCurrencyCode } = guiWallet
+    const { settings } = state.ui
+    const displayDenomination = getDenomination(currencyCode, settings, 'display')
+    const exchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
+    const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
 
-  // Required Confirmations
-  const { currencyWallets } = state.core.account
-  const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
-  const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
-  const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
+    // Required Confirmations
+    const { currencyWallets } = state.core.account
+    const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
+    const currencyInfo: EdgeCurrencyInfo = coreWallet.currencyInfo
+    const requiredConfirmations = currencyInfo.requiredConfirmations || 1 // set default requiredConfirmations to 1, so once the transaction is in a block consider fully confirmed
 
-  // Thumbnail
-  let thumbnailPath
-  const contacts = state.contacts || []
-  const transactionContactName = metadata && metadata.name ? UTILS.unspacedLowercase(metadata.name) : null
-  for (const contact of contacts) {
-    const { givenName, familyName } = contact
-    const fullName = UTILS.unspacedLowercase(givenName + (familyName || ''))
-    if (contact.thumbnailPath && fullName === transactionContactName) {
-      thumbnailPath = contact.thumbnailPath
-      break
+    // Thumbnail
+    let thumbnailPath
+    const contacts = state.contacts || []
+    const transactionContactName = metadata && metadata.name ? UTILS.unspacedLowercase(metadata.name) : null
+    for (const contact of contacts) {
+      const { givenName, familyName } = contact
+      const fullName = UTILS.unspacedLowercase(givenName + (familyName || ''))
+      if (contact.thumbnailPath && fullName === transactionContactName) {
+        thumbnailPath = contact.thumbnailPath
+        break
+      }
     }
-  }
 
-  // CryptoAmount
-  const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
-  const exchangeRate = state.exchangeRates[rateKey] ? state.exchangeRates[rateKey] : undefined
-  let maxConversionDecimals = 6
-  if (exchangeRate) {
-    const precisionAdjustValue = precisionAdjust({
-      primaryExchangeMultiplier: exchangeDenomination.multiplier,
-      secondaryExchangeMultiplier: fiatDenomination.multiplier,
-      exchangeSecondaryToPrimaryRatio: exchangeRate
-    })
-    maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(displayDenomination.multiplier), precisionAdjustValue)
-  }
-  const cryptoAmount = bns.div(bns.abs(transaction.nativeAmount || '0'), displayDenomination.multiplier, DIVIDE_PRECISION)
-  const cryptoAmountFormat = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
+    // CryptoAmount
+    const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
+    const exchangeRate = state.exchangeRates[rateKey] ? state.exchangeRates[rateKey] : undefined
+    let maxConversionDecimals = 6
+    if (exchangeRate) {
+      const precisionAdjustValue = precisionAdjust({
+        primaryExchangeMultiplier: exchangeDenomination.multiplier,
+        secondaryExchangeMultiplier: fiatDenomination.multiplier,
+        exchangeSecondaryToPrimaryRatio: exchangeRate
+      })
+      maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(displayDenomination.multiplier), precisionAdjustValue)
+    }
+    const cryptoAmount = bns.div(bns.abs(transaction.nativeAmount || '0'), displayDenomination.multiplier, DIVIDE_PRECISION)
+    const cryptoAmountFormat = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
 
-  // FiatAmount
-  const fiatAmount = metadata && metadata.amountFiat ? bns.abs(metadata.amountFiat.toFixed(2)) : '0.00'
-  const fiatAmountFormat = intl.formatNumber(bns.toFixed(fiatAmount, 2, 2), { toFixed: 2 })
+    // FiatAmount
+    const fiatAmount = metadata && metadata.amountFiat ? bns.abs(metadata.amountFiat.toFixed(2)) : '0.00'
+    const fiatAmountFormat = intl.formatNumber(bns.toFixed(fiatAmount, 2, 2), { toFixed: 2 })
 
-  return {
-    isSentTransaction: UTILS.isSentTransaction(transaction),
-    cryptoAmount: cryptoAmountFormat,
-    fiatAmount: fiatAmountFormat,
-    fiatSymbol: getFiatSymbol(fiatCurrencyCode),
-    walletBlockHeight: guiWallet.blockHeight || 0,
-    denominationSymbol: displayDenomination.symbol,
-    requiredConfirmations,
-    selectedCurrencyName: guiWallet.currencyNames[currencyCode] || currencyCode,
-    thumbnailPath
-  }
-})(TransactionListRowComponent)
+    return {
+      isSentTransaction: UTILS.isSentTransaction(transaction),
+      cryptoAmount: cryptoAmountFormat,
+      fiatAmount: fiatAmountFormat,
+      fiatSymbol: getFiatSymbol(fiatCurrencyCode),
+      walletBlockHeight: guiWallet.blockHeight || 0,
+      denominationSymbol: displayDenomination.symbol,
+      requiredConfirmations,
+      selectedCurrencyName: guiWallet.currencyNames[currencyCode] || currencyCode,
+      thumbnailPath
+    }
+  },
+  (dispatch: Dispatch) => ({})
+)(TransactionListRowComponent)

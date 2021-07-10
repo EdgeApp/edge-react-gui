@@ -27,22 +27,22 @@ type OwnProps = {
   isEmpty: boolean,
   searching: boolean,
   onChangeSortingState: (isSearching: boolean) => void,
-  onSearchTransaction: (searchString: string) => void,
-  onSelectWallet: (walletId: string, currencyCode: string) => void
+  onSearchTransaction: (searchString: string) => void
 }
 
-export type StateProps = {
+type StateProps = {
   cryptoAmount: string,
   currencyCode: string,
   denominationName: string,
   fiatCurrencyCode: string,
-  fiatBalance: number,
+  fiatBalance: string,
   fiatSymbol: string,
   walletName: string,
   isAccountBalanceVisible: boolean
 }
 
-export type DispatchProps = {
+type DispatchProps = {
+  onSelectWallet: (walletId: string, currencyCode: string) => void,
   toggleBalanceVisibility: () => void
 }
 
@@ -276,7 +276,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const TransactionListTop = connect(
-  (state: RootState) => {
+  (state: RootState): StateProps => {
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
     const guiWallet = state.ui.wallets.byId[selectedWalletId]
@@ -308,6 +308,8 @@ export const TransactionListTop = connect(
     toggleBalanceVisibility() {
       dispatch(toggleAccountBalanceVisibility())
     },
-    onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch(selectWalletFromModal(walletId, currencyCode))
+    }
   })
 )(withTheme(TransactionListTopComponent))

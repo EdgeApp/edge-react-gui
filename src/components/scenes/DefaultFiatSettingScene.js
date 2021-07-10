@@ -21,7 +21,7 @@ type StateProps = {
   supportedFiats: GuiFiatType[]
 }
 type DispatchProps = {
-  onSelectFiat: string => void
+  onSelectFiat: (selectedDefaultFiat: string) => void
 }
 type Props = StateProps & DispatchProps
 

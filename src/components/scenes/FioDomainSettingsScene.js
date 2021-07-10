@@ -230,7 +230,7 @@ export const FioDomainSettingsScene = connect(
     isConnected: state.network.isConnected
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    refreshAllFioAddresses: () => {
+    refreshAllFioAddresses() {
       dispatch(refreshAllFioAddresses())
     }
   })

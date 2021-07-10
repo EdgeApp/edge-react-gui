@@ -30,7 +30,6 @@ import { FioDomainSettingsScene } from '../components/scenes/FioDomainSettingsSc
 import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConfirmationScene.js'
 import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
-import ManageTokensScene from '../components/scenes/ManageTokensScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
 import { ScanScene } from '../components/scenes/ScanScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
@@ -140,6 +139,7 @@ import { FioNameConfirmScene } from './scenes/FioNameConfirmScene'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
+import { ManageTokensScene } from './scenes/ManageTokensScene.js'
 import { NotificationScene } from './scenes/NotificationScene'
 import { OtpRepairScene } from './scenes/OtpRepairScene.js'
 import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
@@ -158,23 +158,21 @@ import { MenuTab } from './themed/MenuTab.js'
 const RouterWithRedux = connect()(Router)
 
 type DispatchProps = {
-  registerDevice(): void,
+  registerDevice: () => void,
 
   // Navigation actions:
-  logout(username?: string): void,
+  logout: (username?: string) => void,
 
   // Things to do when we enter certain scenes:
-  checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCurrencyCode?: string): void,
-  checkEnabledExchanges(): void,
-  dispatchDisableScan(): void,
-  dispatchEnableScan(): void,
-  requestPermission(permission: Permission): void,
-  showReEnableOtpModal(): void
+  checkAndShowGetCryptoModal: (selectedWalletId?: string, selectedCurrencyCode?: string) => void,
+  checkEnabledExchanges: () => void,
+  dispatchDisableScan: () => void,
+  dispatchEnableScan: () => void,
+  requestPermission: (permission: Permission) => void,
+  showReEnableOtpModal: () => void
 }
 
-type StateProps = {}
-
-type Props = DispatchProps & StateProps
+type Props = DispatchProps
 
 export class MainComponent extends React.Component<Props> {
   backPressedOnce: boolean
@@ -864,7 +862,7 @@ export class MainComponent extends React.Component<Props> {
 }
 
 export const Main = connect(
-  (state: RootState): StateProps => ({}),
+  (state: RootState) => ({}),
   (dispatch: Dispatch): DispatchProps => ({
     registerDevice() {
       dispatch(registerDevice())

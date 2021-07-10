@@ -109,5 +109,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioAddressRegisteredScene = withTheme(FioAddressRegistered)
-export { FioAddressRegisteredScene }
+export const FioAddressRegisteredScene = withTheme(FioAddressRegistered)

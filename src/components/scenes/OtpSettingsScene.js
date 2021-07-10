@@ -17,12 +17,10 @@ import { Airship, showActivity, showError, showToast } from '../services/Airship
 import { type Theme, type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { PrimaryButton, SecondaryButton } from '../themed/ThemedButtons.js'
 
-type OwnProps = {}
 type StateProps = {
   account: EdgeAccount
 }
-type DispatchProps = {}
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = StateProps & ThemeProps
 
 type State = {
   otpKey?: string,
@@ -191,11 +189,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const OtpSettingsScene = withTheme(
-  connect(
-    (state: RootState): StateProps => ({
-      account: state.core.account
-    }),
-    (dispatch: Dispatch): DispatchProps => ({})
-  )(OtpSettingsSceneComponent)
-)
+export const OtpSettingsScene = connect(
+  (state: RootState): StateProps => ({
+    account: state.core.account
+  }),
+  (dispatch: Dispatch) => ({})
+)(withTheme(OtpSettingsSceneComponent))

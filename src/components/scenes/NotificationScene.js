@@ -11,7 +11,7 @@ import { CURRENCY_NOTIFICATION_SETTINGS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../../selectors/WalletSelectors.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
@@ -31,7 +31,7 @@ type State = {
 
 type Props = StateProps & ThemeProps
 
-export class NotificationComponent extends React.Component<Props, State> {
+class NotificationComponent extends React.Component<Props, State> {
   mounted: boolean
 
   constructor(props: Props) {
@@ -128,9 +128,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const NotificationScene = connect((state: RootState): StateProps => {
-  return {
+export const NotificationScene = connect(
+  (state: RootState): StateProps => ({
     currencyInfos: getActiveWalletCurrencyInfos(state),
     userId: state.core.account.rootLoginId
-  }
-})(withTheme(NotificationComponent))
+  }),
+  (dispatch: Dispatch) => ({})
+)(withTheme(NotificationComponent))

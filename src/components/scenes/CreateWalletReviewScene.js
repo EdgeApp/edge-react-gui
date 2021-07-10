@@ -30,7 +30,7 @@ type StateProps = {
   isCreatingWallet: boolean
 }
 type DispatchProps = {
-  createCurrencyWallet(walletName: string, walletType: string, fiatCurrencyCode: string, cleanedPrivateKey?: string): void
+  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string, cleanedPrivateKey?: string) => void
 }
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 

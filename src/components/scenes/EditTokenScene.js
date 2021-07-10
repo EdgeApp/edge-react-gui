@@ -33,8 +33,15 @@ type StateProps = {
   editCustomTokenProcessing: boolean
 }
 type DispatchProps = {
-  deleteCustomToken(walletId: string, currencyCode: string): Promise<void>,
-  editCustomToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string): void
+  deleteCustomToken: (walletId: string, currencyCode: string) => Promise<void>,
+  editCustomToken: (
+    walletId: string,
+    currencyName: string,
+    currencyCode: string,
+    contractAddress: string,
+    denomination: string,
+    oldCurrencyCode: string
+  ) => void
 }
 type Props = OwnProps & StateProps & DispatchProps
 

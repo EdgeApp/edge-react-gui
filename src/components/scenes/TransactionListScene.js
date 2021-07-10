@@ -23,7 +23,7 @@ type Section = {
   data: TransactionListTx[]
 }
 
-export type StateProps = {
+type StateProps = {
   getTransactions(opts?: EdgeGetTransactionsOptions): Promise<EdgeTransaction[]>,
   numTransactions: number,
   selectedWalletId: string,
@@ -31,8 +31,8 @@ export type StateProps = {
   transactions: TransactionListTx[]
 }
 
-export type DispatchProps = {
-  fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => any
+type DispatchProps = {
+  fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => void
 }
 
 type Props = StateProps & DispatchProps & ThemeProps
@@ -207,6 +207,8 @@ export const TransactionList = connect(
     }
   },
   (dispatch: Dispatch): DispatchProps => ({
-    fetchMoreTransactions: (walletId: string, currencyCode: string, reset: boolean) => dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
+    fetchMoreTransactions(walletId: string, currencyCode: string, reset: boolean) {
+      dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
+    }
   })
 )(withTheme(TransactionListComponent))

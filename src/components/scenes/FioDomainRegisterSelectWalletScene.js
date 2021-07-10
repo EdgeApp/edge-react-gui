@@ -249,25 +249,21 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioDomainRegisterSelectWalletScene = connect(
-  (state: RootState) => {
-    const wallets = state.ui.wallets.byId
-    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-    const fioDisplayDenomination = getDisplayDenomination(state, FIO_STR)
-
-    return {
-      state,
-      fioWallets,
-      fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
-      fioDisplayDenomination,
-      wallets,
-      isConnected: state.network.isConnected
-    }
-  },
+export const FioDomainRegisterSelectWalletScene = connect(
+  (state: RootState): StateProps => ({
+    state,
+    fioWallets: state.ui.wallets.fioWallets,
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+    fioDisplayDenomination: getDisplayDenomination(state, FIO_STR),
+    wallets: state.ui.wallets.byId,
+    isConnected: state.network.isConnected
+  }),
   (dispatch: Dispatch): DispatchProps => ({
-    onSelectWallet: (walletId: string, currencyCode: string) => {
-      dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch({
+        type: 'UI/WALLETS/SELECT_WALLET',
+        data: { currencyCode, walletId }
+      })
     }
   })
 )(withTheme(FioDomainRegisterSelectWallet))
-export { FioDomainRegisterSelectWalletScene }

@@ -12,18 +12,18 @@ import { updateExchangeRates } from '../../modules/ExchangeRates/action.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { Airship } from './AirshipInstance.js'
 
-type EdgeAccountCallbackManagerStateProps = {
+type StateProps = {
   account: EdgeAccount
 }
 
-type EdgeAccountCallbackManagerDispatchProps = {
-  updateWalletsRequest: () => any,
-  updateExchangeRates: () => any
+type DispatchProps = {
+  updateWalletsRequest: () => void,
+  updateExchangeRates: () => void
 }
 
-type Props = EdgeAccountCallbackManagerStateProps & EdgeAccountCallbackManagerDispatchProps
+type Props = StateProps & DispatchProps
 
-class EdgeAccountCallbackManager extends React.Component<Props> {
+class EdgeAccountCallbackManagerComponent extends React.Component<Props> {
   cleanups: Array<() => mixed> = []
   lastAccount: EdgeAccount | void
 
@@ -100,17 +100,16 @@ class EdgeAccountCallbackManager extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: RootState): EdgeAccountCallbackManagerStateProps => {
-  return {
+export const EdgeAccountCallbackManager = connect(
+  (state: RootState): StateProps => ({
     account: state.core.account
-  }
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): EdgeAccountCallbackManagerDispatchProps => {
-  return {
-    updateWalletsRequest: () => dispatch(updateWalletsRequest()),
-    updateExchangeRates: () => dispatch(updateExchangeRates())
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(EdgeAccountCallbackManager)
+  }),
+  (dispatch: Dispatch): DispatchProps => ({
+    updateWalletsRequest() {
+      dispatch(updateWalletsRequest())
+    },
+    updateExchangeRates() {
+      dispatch(updateExchangeRates())
+    }
+  })
+)(EdgeAccountCallbackManagerComponent)

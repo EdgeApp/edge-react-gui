@@ -15,6 +15,7 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { type AirshipBridge } from './modalParts'
+
 type Option = {
   value: WalletListMenuKey,
   label: string

@@ -13,7 +13,7 @@ import { formatNumber, formatTime } from '../../../locales/intl.js'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { getSelectedWallet } from '../../../selectors/WalletSelectors.js'
-import { type RootState } from '../../../types/reduxTypes'
+import { type Dispatch, type RootState } from '../../../types/reduxTypes.js'
 import { type FioRequest, type GuiWallet } from '../../../types/types'
 import { getFiatSymbol } from '../../../util/utils'
 import { isRejectedFioRequest, isSentFioRequest } from '../util'
@@ -162,38 +162,38 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
-  const { fioRequest } = ownProps
-  const wallet: GuiWallet = getSelectedWallet(state)
-  if (!wallet) {
-    return {
-      displayDenomination: {},
-      fiatSymbol: '',
-      fiatAmount: ''
+export const FioRequestRowConnector = connect(
+  (state: RootState, ownProps: OwnProps): StateProps => {
+    const { fioRequest } = ownProps
+    let displayDenomination = emptyDisplayDenomination
+    const wallet: GuiWallet = getSelectedWallet(state)
+    if (!wallet) {
+      return {
+        displayDenomination,
+        fiatSymbol: '',
+        fiatAmount: ''
+      }
     }
-  }
-  let displayDenomination = emptyDisplayDenomination
-  const tokenCode = fioRequest.content.token_code.toUpperCase()
-  try {
-    displayDenomination = getDisplayDenomination(state, tokenCode)
-  } catch (e) {
-    console.log('No denomination for this Token Code -', tokenCode)
-  }
-  const fiatSymbol = getFiatSymbol(wallet.fiatCurrencyCode)
-  const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-  const exchangeRates = state.exchangeRates
+    const tokenCode = fioRequest.content.token_code.toUpperCase()
+    try {
+      displayDenomination = getDisplayDenomination(state, tokenCode)
+    } catch (e) {
+      console.log('No denomination for this Token Code -', tokenCode)
+    }
+    const fiatSymbol = getFiatSymbol(wallet.fiatCurrencyCode)
+    const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+    const exchangeRates = state.exchangeRates
 
-  const rateKey = `${tokenCode}_${isoFiatCurrencyCode}`
-  const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
-  const amountToMultiply = parseFloat(fioRequest.content.amount)
-  const fiatAmount = formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
+    const rateKey = `${tokenCode}_${isoFiatCurrencyCode}`
+    const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
+    const amountToMultiply = parseFloat(fioRequest.content.amount)
+    const fiatAmount = formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
 
-  const out: StateProps = {
-    displayDenomination,
-    fiatSymbol,
-    fiatAmount
-  }
-  return out
-}
-
-export const FioRequestRowConnector = connect(mapStateToProps, {})(withTheme(FioRequestRow))
+    return {
+      displayDenomination,
+      fiatSymbol,
+      fiatAmount
+    }
+  },
+  (dispatch: Dispatch) => ({})
+)(withTheme(FioRequestRow))

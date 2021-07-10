@@ -14,11 +14,14 @@ type State = {
   appState: AppStateType
 }
 
-type Props = {
+type StateProps = {
   autoLogoutTimeInSeconds: ?number,
-  loginStatus: boolean,
+  loginStatus: boolean
+}
+type DispatchProps = {
   logout: () => void
 }
+type Props = StateProps & DispatchProps
 
 class AutoLogoutComponent extends React.Component<Props, State> {
   state = {
@@ -70,13 +73,13 @@ class AutoLogoutComponent extends React.Component<Props, State> {
 }
 
 export const AutoLogout = connect(
-  (state: RootState) => ({
-    loginStatus: state.ui.settings.loginStatus,
+  (state: RootState): StateProps => ({
+    loginStatus: state.ui.settings.loginStatus ?? false,
     autoLogoutTimeInSeconds: state.ui.settings.autoLogoutTimeInSeconds
   }),
-  (dispatch: Dispatch) => ({
+  (dispatch: Dispatch): DispatchProps => ({
     logout() {
-      return dispatch(logoutRequest())
+      dispatch(logoutRequest())
     }
   })
 )(AutoLogoutComponent)

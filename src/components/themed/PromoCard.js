@@ -21,8 +21,8 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  hideMessageTweak(messageId: string, source: TweakSource): void,
-  linkReferralWithCurrencies(string): void
+  hideMessageTweak: (messageId: string, source: TweakSource) => void,
+  linkReferralWithCurrencies: (uri: string) => void
 }
 
 type Props = StateProps & DispatchProps & ThemeProps

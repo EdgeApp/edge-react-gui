@@ -11,8 +11,8 @@ import { connect } from 'react-redux'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddress/util'
-import type { RootState } from '../../reducers/RootReducer'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
+import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { AddressModal } from '../modals/AddressModal'
 import { paymentProtocolUriReceived } from '../modals/paymentProtocolUriReceived.js'
 import { ScanModal } from '../modals/ScanModal.js'
@@ -258,14 +258,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const AddressTileConnector = connect((state: RootState): StateProps => {
-  const { guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
-  return {
-    fioToAddress: guiMakeSpendInfo && guiMakeSpendInfo.fioAddress ? guiMakeSpendInfo.fioAddress : undefined,
+const AddressTileConnector = connect(
+  (state: RootState): StateProps => ({
+    fioToAddress: state.ui.scenes.sendConfirmation.guiMakeSpendInfo?.fioAddress,
     fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
     fioWallets: state.ui.wallets.fioWallets
-  }
-})(withTheme(AddressTileComponent))
+  }),
+  (dispatch: Dispatch) => ({})
+)(withTheme(AddressTileComponent))
 
 // $FlowFixMe - forwardRef is not recognize by flow?
 export const AddressTile = React.forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />) // eslint-disable-line

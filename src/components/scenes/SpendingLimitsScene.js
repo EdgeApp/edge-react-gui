@@ -24,7 +24,7 @@ type StateProps = {
   currencySymbol: string
 }
 type DispatchProps = {
-  onSubmit: (SpendingLimits, password: string) => mixed
+  onSubmit: (spendingLimits: SpendingLimits, password: string) => mixed
 }
 type Props = StateProps & DispatchProps
 
