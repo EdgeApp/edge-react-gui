@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { AppState } from 'react-native'
 
-import { logoutRequest } from '../../modules/Login/action.js'
+import { logoutRequest } from '../../actions/LoginActions.js'
 import { connect } from '../../types/reactRedux.js'
 
 type AppStateType = 'active' | 'background' | 'inactive'
