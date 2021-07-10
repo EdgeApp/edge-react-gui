@@ -21,7 +21,6 @@ import {
   SYNCED_ACCOUNT_DEFAULTS,
   SYNCED_ACCOUNT_TYPES
 } from '../modules/Core/Account/settings.js'
-import { updateWalletsEnabledTokens, updateWalletsRequest } from '../modules/Core/Wallets/action.js'
 import { initialState as passwordReminderInitialState } from '../reducers/PasswordReminderReducer.js'
 import { type AccountInitPayload } from '../reducers/scenes/SettingsReducer.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
@@ -31,7 +30,7 @@ import { loadAccountReferral, refreshAccountReferral } from './AccountReferralAc
 import { attachToUser } from './DeviceIdActions.js'
 import { expiredFioNamesCheckDates } from './FioActions.js'
 import { trackAccountEvent } from './TrackingActions.js'
-import { checkEnabledTokensArray, getEnabledTokens, setWalletEnabledTokens } from './WalletActions.js'
+import { checkEnabledTokensArray, getEnabledTokens, setWalletEnabledTokens, updateWalletsEnabledTokens, updateWalletsRequest } from './WalletActions.js'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, currencyCode: string } {
   // Find the first wallet:
