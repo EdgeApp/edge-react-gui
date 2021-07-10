@@ -6,8 +6,8 @@ import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
 
 import { updateExchangeRates } from '../../actions/ExchangeRateActions.js'
+import { updateWalletsRequest } from '../../actions/WalletActions.js'
 import { SECURITY_ALERTS_SCENE } from '../../constants/SceneKeys.js'
-import { updateWalletsRequest } from '../../modules/Core/Wallets/action.js'
 import { connect } from '../../types/reactRedux.js'
 import { Airship } from './AirshipInstance.js'
 
