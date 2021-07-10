@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
-import { submitLogs } from '../../actions/SettingsActions'
+import { submitLogs } from '../../actions/LogActions.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { showError } from '../services/AirshipInstance'

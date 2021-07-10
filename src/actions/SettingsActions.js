@@ -9,12 +9,11 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { launchModal } from '../components/common/ModalProvider.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
-import { Airship, showActivity, showError, showToast } from '../components/services/AirshipInstance.js'
+import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { WALLET_LIST } from '../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
-import { sendLogs } from '../modules/Logs/action.js'
 import { convertCurrency } from '../selectors/WalletSelectors.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
@@ -264,15 +263,6 @@ export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState
         data: false
       })
     }
-  } catch (error) {
-    showError(error)
-  }
-}
-
-export const submitLogs = (notes: string) => async (dispatch: Dispatch) => {
-  try {
-    await showActivity(s.strings.settings_modal_send_logs_loading, dispatch(sendLogs(notes)))
-    showToast(s.strings.settings_modal_send_logs_success)
   } catch (error) {
     showError(error)
   }
