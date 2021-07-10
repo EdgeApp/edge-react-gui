@@ -14,12 +14,12 @@ import s from '../locales/strings.js'
 import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } from '../modules/Core/Account/settings.js'
 import { updateWalletsRequest } from '../modules/Core/Wallets/action.js'
 import { getEnabledTokensFromFile, setEnabledTokens, updateEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
-import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo } from '../types/types.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
 import * as UTILS from '../util/utils'
 import { addTokenAsync } from './AddTokenActions.js'
+import { updateExchangeRates } from './ExchangeRateActions.js'
 
 export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()

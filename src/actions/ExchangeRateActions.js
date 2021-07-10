@@ -1,8 +1,8 @@
 // @flow
 
-import { type Dispatch, type GetState, type RootState } from '../../types/reduxTypes.js'
-import { type GuiExchangeRates } from '../../types/types.js'
-import { getYesterdayDateRoundDownHour } from '../../util/utils.js'
+import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
+import { type GuiExchangeRates } from '../types/types.js'
+import { getYesterdayDateRoundDownHour } from '../util/utils.js'
 
 export const updateExchangeRates = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()

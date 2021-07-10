@@ -5,9 +5,9 @@ import { watchSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
 
+import { updateExchangeRates } from '../../actions/ExchangeRateActions.js'
 import { SECURITY_ALERTS_SCENE } from '../../constants/SceneKeys.js'
 import { updateWalletsRequest } from '../../modules/Core/Wallets/action.js'
-import { updateExchangeRates } from '../../modules/ExchangeRates/action.js'
 import { connect } from '../../types/reactRedux.js'
 import { Airship } from './AirshipInstance.js'
 
