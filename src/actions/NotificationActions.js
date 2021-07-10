@@ -2,10 +2,9 @@
 
 import { getUniqueId } from 'react-native-device-info'
 
-import { getActiveWalletCurrencyCodes } from '../../selectors/WalletSelectors.js'
-import type { Dispatch, GetState } from '../../types/reduxTypes'
-
-const { notif1 } = require('../notifServer')
+import { notif1 } from '../modules/notifServer.js'
+import { getActiveWalletCurrencyCodes } from '../selectors/WalletSelectors.js'
+import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 
 export const fetchSettings = async (userId: string, currencyCode: string) => {
   const deviceId = getUniqueId()
