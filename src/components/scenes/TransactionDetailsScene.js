@@ -8,7 +8,6 @@ import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../../actions/TransactionDetailsActions.js'
@@ -17,7 +16,7 @@ import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../selectors/WalletSelectors.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -581,8 +580,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionDetailsScene = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => {
+export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnProps>(
+  (state, ownProps) => {
     const { edgeTransaction } = ownProps
     const walletId = edgeTransaction.wallet ? edgeTransaction.wallet.id : null
     const wallet = state.ui.wallets.byId[walletId || state.ui.wallets.selectedWalletId]
@@ -620,7 +619,7 @@ export const TransactionDetailsScene = connect(
       walletDefaultDenomProps
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     getSubcategories() {
       dispatch(getSubcategories())
     },

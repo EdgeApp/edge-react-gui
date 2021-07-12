@@ -5,7 +5,6 @@ import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-c
 import * as React from 'react'
 import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { FIO_ADDRESS_SETTINGS, REQUEST } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
@@ -15,7 +14,7 @@ import { addToFioAddressCache, checkExpiredFioAddress, checkPubAddress } from '.
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types'
 import { emptyCurrencyInfo } from '../../types/types'
 import { getDenomFromIsoCode } from '../../util/utils'
@@ -307,8 +306,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioRequestConfirmationScene = connect(
-  (state: RootState): StateProps => {
+export const FioRequestConfirmationScene = connect<StateProps, {}, NavigationProps>(
+  state => {
     const guiWallet: GuiWallet = getSelectedWallet(state)
     const { account } = state.core
     const currencyCode: string = state.ui.wallets.selectedCurrencyCode
@@ -367,5 +366,5 @@ export const FioRequestConfirmationScene = connect(
       fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
     }
   },
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(withTheme(FioRequestConfirmationConnected))

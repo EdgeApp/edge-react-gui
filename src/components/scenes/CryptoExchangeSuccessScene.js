@@ -5,11 +5,10 @@ import * as React from 'react'
 import { View } from 'react-native'
 import ConfettiCannon from 'react-native-confetti-cannon'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { EXCHANGE_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { needToShowConfetti } from '../../util/show-confetti'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -119,10 +118,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeSuccessScene = connect(
-  (state: RootState): StateProps => ({
+export const CryptoExchangeSuccessScene = connect<StateProps, {}, {}>(
+  state => ({
     userId: state.core.account.id,
     disklet: state.core.disklet
   }),
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(withTheme(CryptoExchangeSuccessComponent))

@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { TextField } from 'react-native-material-textfield'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
@@ -14,7 +13,7 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 
 type OwnProps = {
   currencyCode: string,
@@ -107,12 +106,12 @@ class UniqueIdentifierModalComponent extends React.Component<Props> {
   }
 }
 
-export const UniqueIdentifierModal = connect(
-  (state: RootState): StateProps => ({
+export const UniqueIdentifierModal = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     isActive: state.ui.scenes.uniqueIdentifierModal.isActive,
     uniqueIdentifier: state.ui.scenes.uniqueIdentifierModal.uniqueIdentifier ?? state.ui.scenes.sendConfirmation.guiMakeSpendInfo.uniqueIdentifier ?? ''
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     onDeactivated() {
       dispatch({ type: 'UNIQUE_IDENTIFIER_MODAL/DEACTIVATED' })
     },

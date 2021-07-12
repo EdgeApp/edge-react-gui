@@ -6,13 +6,12 @@ import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import { connect } from 'react-redux'
 
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddress/util'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { AddressModal } from '../modals/AddressModal'
 import { paymentProtocolUriReceived } from '../modals/paymentProtocolUriReceived.js'
 import { ScanModal } from '../modals/ScanModal.js'
@@ -171,7 +170,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 
   handleScan = () => {
     Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
-      .then((result: string) => {
+      .then((result: string | void) => {
         if (result) {
           this.onChangeAddress(result)
         }
@@ -258,13 +257,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const AddressTileConnector = connect(
-  (state: RootState): StateProps => ({
+const AddressTileConnector = connect<StateProps, {}, OwnProps>(
+  state => ({
     fioToAddress: state.ui.scenes.sendConfirmation.guiMakeSpendInfo?.fioAddress,
     fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
     fioWallets: state.ui.wallets.fioWallets
   }),
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(withTheme(AddressTileComponent))
 
 // $FlowFixMe - forwardRef is not recognize by flow?

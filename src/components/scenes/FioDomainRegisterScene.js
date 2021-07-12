@@ -5,13 +5,12 @@ import * as React from 'react'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
 import { FIO_DOMAIN_REGISTER_SELECT_WALLET } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { createFioWallet } from '../../modules/FioAddress/action.js'
-import { type RootState } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SingleInputModal } from '../modals/SingleInputModal'
 import type { WalletListResult } from '../modals/WalletListModal'
@@ -331,13 +330,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const typeHack: any = {}
 
-export const FioDomainRegisterScene = connect(
-  (state: RootState): StateProps => ({
+export const FioDomainRegisterScene = connect<StateProps, DispatchProps, {}>(
+  state => ({
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] ?? typeHack,
     isConnected: state.network.isConnected
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     async createFioWallet() {
       return await dispatch(createFioWallet())
     }

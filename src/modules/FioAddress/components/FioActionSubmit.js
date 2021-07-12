@@ -4,7 +4,6 @@ import { bns } from 'biggystring'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
-import { connect } from 'react-redux'
 
 import type { WalletListResult } from '../../../components/modals/WalletListModal'
 import { WalletListModal } from '../../../components/modals/WalletListModal'
@@ -17,7 +16,7 @@ import { Tile } from '../../../components/themed/Tile'
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
-import { type Dispatch, type RootState } from '../../../types/reduxTypes.js'
+import { connect } from '../../../types/reactRedux.js'
 import { truncateDecimals } from '../../../util/utils'
 import { Slider } from '../../UI/components/Slider/Slider'
 
@@ -262,11 +261,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioActionSubmit = connect(
-  (state: RootState): StateProps => ({
+export const FioActionSubmit = connect<StateProps, {}, OwnProps>(
+  state => ({
     denominationMultiplier: getDisplayDenomination(state, FIO_STR).multiplier,
     currencyWallets: state.core.account.currencyWallets,
     fioWallets: state.ui.wallets.fioWallets
   }),
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(withTheme(FioActionSubmitComponent))

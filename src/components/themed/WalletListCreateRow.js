@@ -3,13 +3,12 @@
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Image, View } from 'react-native'
-import { connect } from 'react-redux'
 
 import { refreshWallet } from '../../actions/WalletActions.js'
 import { DEFAULT_STARTER_WALLET_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { setEnabledTokens } from '../../modules/Core/Wallets/EnabledTokens.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, GuiWallet } from '../../types/types.js'
 import { getCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { showError, showFullScreenSpinner } from '../services/AirshipInstance.js'
@@ -171,13 +170,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListCreateRow = connect(
-  (state: RootState): StateProps => ({
+export const WalletListCreateRow = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     wallets: state.ui.wallets.byId,
     account: state.core.account,
     defaultIsoFiat: state.ui.settings.defaultIsoFiat
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     tokenCreated(walletId: string, tokens: string[]) {
       dispatch({
         type: 'UPDATE_WALLET_ENABLED_TOKENS',

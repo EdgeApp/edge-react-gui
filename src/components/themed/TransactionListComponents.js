@@ -2,10 +2,9 @@
 
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
-import { connect } from 'react-redux'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { TransactionListTop } from '../themed/TransactionListTop.js'
@@ -92,9 +91,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const Top = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => ({
+export const Top = connect<StateProps, {}, OwnProps>(
+  (state, ownProps) => ({
     loading: !state.ui.wallets.byId[ownProps.walletId]
   }),
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(TopComponent)

@@ -3,11 +3,10 @@
 import type { EdgeGetTransactionsOptions, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl, SectionList } from 'react-native'
-import { connect } from 'react-redux'
 
 import { fetchMoreTransactions } from '../../actions/TransactionListActions'
 import s from '../../locales/strings'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { TransactionListTx } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
@@ -188,8 +187,8 @@ class TransactionListComponent extends React.PureComponent<Props, State> {
   }
 }
 
-export const TransactionList = connect(
-  (state: RootState) => {
+export const TransactionList = connect<StateProps, DispatchProps, {}>(
+  state => {
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
 
@@ -206,7 +205,7 @@ export const TransactionList = connect(
       transactions: state.ui.scenes.transactionList.transactions
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     fetchMoreTransactions(walletId: string, currencyCode: string, reset: boolean) {
       dispatch(fetchMoreTransactions(walletId, currencyCode, reset))
     }

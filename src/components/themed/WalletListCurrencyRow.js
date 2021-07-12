@@ -2,11 +2,10 @@
 
 import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
-import { connect } from 'react-redux'
 
 import { formatNumber } from '../../locales/intl.js'
 import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import { getCryptoAmount, getCurrencyInfo, getDenomFromIsoCode, getDenomination, getFiatSymbol, getYesterdayDateRoundDownHour } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -157,8 +156,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListCurrencyRow = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => {
+export const WalletListCurrencyRow = connect<StateProps, {}, OwnProps>(
+  (state, ownProps) => {
     const { currencyCode, walletName, walletId } = ownProps
     const guiWallet = state.ui.wallets.byId[walletId]
 
@@ -214,5 +213,5 @@ export const WalletListCurrencyRow = connect(
       walletFiatSymbol
     }
   },
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(withTheme(WalletListRowComponent))

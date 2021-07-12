@@ -4,15 +4,13 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import type { RootState } from '../../reducers/RootReducer'
-import type { Dispatch } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import type { FioConnectionWalletItem } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -241,12 +239,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioConnectWalletConfirmScene = connect(
-  (state: RootState, ownProps: RouteProps): StateProps => ({
+export const FioConnectWalletConfirmScene = connect<StateProps, DispatchProps, RouteProps>(
+  (state, ownProps) => ({
     ccWalletMap: state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName],
     isConnected: state.network.isConnected
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     updateConnectedWallets(fioAddress: string, ccWalletMap: CcWalletMap) {
       dispatch({
         type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',

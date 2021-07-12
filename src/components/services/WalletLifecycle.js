@@ -2,9 +2,8 @@
 
 import { type EdgeAccount, type EdgeContext, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { connect } from 'react-redux'
 
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type GuiWallet } from '../../types/types.js'
 import { showError } from './AirshipInstance.js'
 
@@ -185,11 +184,11 @@ function bootWallet(wallet: EdgeCurrencyWallet, onBoot: () => void): WalletBoot 
   return out
 }
 
-export const WalletLifecycle = connect(
-  (state: RootState): StateProps => ({
+export const WalletLifecycle = connect<StateProps, {}, {}>(
+  state => ({
     account: state.core.account,
     context: state.core.context,
     guiWallets: state.ui.wallets.byId
   }),
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(WalletLifecycleComponent)

@@ -9,7 +9,6 @@ import { FlatList, Image, Platform, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
 import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/CountryConstants.js'
@@ -18,7 +17,7 @@ import { PLUGIN_VIEW } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
 import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
@@ -379,15 +378,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const GuiPluginListScene = connect(
-  (state: RootState): StateProps => ({
+export const GuiPluginListScene = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     account: state.core.account,
     accountPlugins: state.account.referralCache.accountPlugins,
     accountReferral: state.account.accountReferral,
     countryCode: state.ui.settings.countryCode,
     developerModeOn: state.ui.settings.developerModeOn
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     updateCountryCode(countryCode: string) {
       dispatch(updateOneSetting({ countryCode }))
     }

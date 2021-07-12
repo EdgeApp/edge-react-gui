@@ -2,12 +2,10 @@
 
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
-import { connect } from 'react-redux'
 
 import { submitLogs } from '../../actions/SettingsActions'
 import s from '../../locales/strings.js'
-import type { Dispatch } from '../../types/reduxTypes'
-import { type RootState } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import { showError } from '../services/AirshipInstance'
 import { SingleInputModal } from './SingleInputModal'
 
@@ -44,11 +42,11 @@ const SendLogsModalComponent = ({ bridge, isConnected, submitLogs }: Props) => {
   )
 }
 
-export const SendLogsModal = connect(
-  (state: RootState): StateProps => ({
+export const SendLogsModal = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     isConnected: state.network.isConnected
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     submitLogs(notes) {
       dispatch(submitLogs(notes))
     }

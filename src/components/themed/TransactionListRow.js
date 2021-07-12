@@ -4,11 +4,10 @@ import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { TransactionListTx } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import {
@@ -73,8 +72,8 @@ export class TransactionListRowComponent extends React.PureComponent<Props> {
   }
 }
 
-export const TransactionListRow = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => {
+export const TransactionListRow = connect<StateProps, {}, OwnProps>(
+  (state, ownProps) => {
     const { currencyCode, walletId, transaction } = ownProps
     const { metadata } = transaction
     const guiWallet = state.ui.wallets.byId[walletId]
@@ -134,5 +133,5 @@ export const TransactionListRow = connect(
       thumbnailPath
     }
   },
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(TransactionListRowComponent)

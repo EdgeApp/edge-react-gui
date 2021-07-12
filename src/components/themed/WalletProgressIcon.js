@@ -3,9 +3,8 @@
 import * as React from 'react'
 import { Image, View } from 'react-native'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
-import { connect } from 'react-redux'
 
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 
@@ -95,8 +94,8 @@ export class WalletProgressIconComponent extends React.PureComponent<Props, Stat
   }
 }
 
-export const WalletProgressIcon = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => {
+export const WalletProgressIcon = connect<StateProps, {}, OwnProps>(
+  (state, ownProps) => {
     const { walletId, currencyCode } = ownProps
     let icon
     let progress = 100
@@ -113,5 +112,5 @@ export const WalletProgressIcon = connect(
       progress
     }
   },
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(withTheme(WalletProgressIconComponent))

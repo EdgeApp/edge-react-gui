@@ -4,7 +4,6 @@ import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -21,7 +20,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { getDefaultDenomination } from '../../selectors/DenominationSelectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { CreateWalletType, GuiFiatType, GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
@@ -399,8 +398,8 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const CreateWalletAccountSelectScene = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => {
+export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps, OwnProps>(
+  (state, ownProps) => {
     const { currencyWallets } = state.core.account
     const wallets = state.ui.wallets.byId
     const handleActivationInfo = state.ui.scenes.createWallet.handleActivationInfo
@@ -431,7 +430,7 @@ export const CreateWalletAccountSelectScene = connect(
       currencyConfigs: state.core.account.currencyConfig
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     createAccountTransaction(createdWalletId: string, accountName: string, paymentWalletId: string) {
       dispatch(createAccountTransaction(createdWalletId, accountName, paymentWalletId))
     },

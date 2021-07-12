@@ -4,7 +4,6 @@ import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../assets/vector'
@@ -14,8 +13,7 @@ import s from '../../locales/strings.js'
 import { createFioWallet } from '../../modules/FioAddress/action'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
 import { checkIsDomainPublic } from '../../modules/FioAddress/util'
-import type { RootState } from '../../reducers/RootReducer'
-import type { Dispatch } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { openLink } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -566,13 +564,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const typeHack: any = {}
 
-export const FioAddressRegisterScene = connect(
-  (state: RootState): StateProps => ({
+export const FioAddressRegisterScene = connect<StateProps, DispatchProps, {}>(
+  state => ({
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] ?? typeHack,
     isConnected: state.network.isConnected
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     async createFioWallet() {
       return await dispatch(createFioWallet())
     }

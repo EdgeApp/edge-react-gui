@@ -2,10 +2,9 @@
 
 import NetInfo, { type NetInfoState } from '@react-native-community/netinfo'
 import * as React from 'react'
-import { connect } from 'react-redux'
 
 import s from '../../locales/strings'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { showError } from './AirshipInstance'
 
 type DispatchProps = {
@@ -38,9 +37,9 @@ class NetworkActivityComponent extends React.Component<Props> {
   }
 }
 
-export const NetworkActivity = connect(
-  (state: RootState) => ({}),
-  (dispatch: Dispatch): DispatchProps => ({
+export const NetworkActivity = connect<{}, DispatchProps, {}>(
+  state => ({}),
+  dispatch => ({
     changeConnectivity(isConnected: boolean) {
       dispatch({
         type: 'NETWORK/NETWORK_STATUS',

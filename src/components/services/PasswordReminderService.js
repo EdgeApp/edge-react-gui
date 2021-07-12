@@ -1,10 +1,9 @@
 // @flow
 
 import * as React from 'react'
-import { connect } from 'react-redux'
 
 import { setPasswordReminder } from '../../actions/PasswordReminderActions.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { PasswordReminder } from '../../types/types.js'
 import { matchJson } from '../../util/matchJson.js'
 
@@ -29,12 +28,12 @@ class PasswordReminderComponent extends React.PureComponent<Props> {
   }
 }
 
-export const PasswordReminderService = connect(
-  (state: RootState): StateProps => ({
+export const PasswordReminderService = connect<StateProps, DispatchProps, {}>(
+  state => ({
     loginStatus: state.ui.settings.loginStatus,
     passwordReminder: state.ui.passwordReminder
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     setPasswordReminder(passwordReminder: PasswordReminder) {
       dispatch(setPasswordReminder(passwordReminder))
     }

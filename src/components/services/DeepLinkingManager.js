@@ -3,13 +3,12 @@
 
 import * as React from 'react'
 import { Linking } from 'react-native'
-import { connect } from 'react-redux'
 
 import ENV from '../../../env.json'
 import { launchDeepLink, retryPendingDeepLink } from '../../actions/DeepLinkingActions.js'
 import { type WalletsState } from '../../reducers/scenes/WalletsReducer.js'
 import { type DeepLink, parseDeepLink } from '../../types/DeepLink.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { showError } from './AirshipInstance.js'
 
 type StateProps = {
@@ -66,13 +65,13 @@ class DeepLinkingManagerComponent extends React.Component<Props> {
   }
 }
 
-export const DeepLinkingManager = connect(
-  (state: RootState): StateProps => ({
+export const DeepLinkingManager = connect<StateProps, DispatchProps, {}>(
+  state => ({
     pendingDeepLink: state.pendingDeepLink,
     accountReferralLoaded: state.account.accountReferralLoaded,
     wallets: state.ui.wallets
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     launchDeepLink(link) {
       dispatch(launchDeepLink(link))
     },

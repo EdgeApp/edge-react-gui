@@ -14,7 +14,6 @@ import * as React from 'react'
 import { TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { type FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
 import { CHANGE_MINING_FEE_SEND_CONFIRMATION } from '../../constants/SceneKeys.js'
@@ -24,7 +23,7 @@ import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAd
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -573,8 +572,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SendScene = connect(
-  (state: RootState, ownProps: RouteProps): StateProps => {
+export const SendScene = connect<StateProps, DispatchProps, RouteProps>(
+  (state, ownProps) => {
     const { nativeAmount, transaction, transactionMetadata, error, pending, guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
     const isSendUsingFioAddress = guiMakeSpendInfo.isSendUsingFioAddress || (ownProps.guiMakeSpendInfo && ownProps.guiMakeSpendInfo.isSendUsingFioAddress)
 
@@ -600,7 +599,7 @@ export const SendScene = connect(
       isSendUsingFioAddress
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     reset() {
       dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
     },

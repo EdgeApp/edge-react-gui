@@ -4,7 +4,6 @@ import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { connect } from 'react-redux'
 
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { ClickableRow } from '../../../components/themed/ClickableRow'
@@ -13,7 +12,7 @@ import { formatNumber, formatTime } from '../../../locales/intl.js'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { getSelectedWallet } from '../../../selectors/WalletSelectors.js'
-import { type Dispatch, type RootState } from '../../../types/reduxTypes.js'
+import { connect } from '../../../types/reactRedux.js'
 import { type FioRequest, type GuiWallet } from '../../../types/types'
 import { getFiatSymbol } from '../../../util/utils'
 import { isRejectedFioRequest, isSentFioRequest } from '../util'
@@ -162,8 +161,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioRequestRowConnector = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => {
+export const FioRequestRowConnector = connect<StateProps, {}, OwnProps>(
+  (state, ownProps) => {
     const { fioRequest } = ownProps
     let displayDenomination = emptyDisplayDenomination
     const wallet: GuiWallet = getSelectedWallet(state)
@@ -195,5 +194,5 @@ export const FioRequestRowConnector = connect(
       fiatAmount
     }
   },
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(withTheme(FioRequestRow))

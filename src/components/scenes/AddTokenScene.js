@@ -3,7 +3,6 @@
 import _ from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
-import { connect } from 'react-redux'
 
 import { addNewToken } from '../../actions/AddTokenActions.js'
 import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/WalletAndCurrencyConstants.js'
@@ -11,7 +10,7 @@ import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { decimalPlacesToDenomination } from '../../util/utils.js'
@@ -225,12 +224,12 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const AddTokenScene = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => ({
+export const AddTokenScene = connect<StateProps, DispatchProps, OwnProps>(
+  (state, ownProps) => ({
     addTokenPending: state.ui.wallets.addTokenPending,
     wallet: state.ui.wallets.byId[ownProps.walletId]
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     addNewToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, walletType: string) {
       dispatch(addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination, walletType))
     }

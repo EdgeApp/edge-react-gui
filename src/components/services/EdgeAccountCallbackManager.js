@@ -4,12 +4,11 @@ import type { EdgeAccount } from 'edge-core-js'
 import { watchSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { SECURITY_ALERTS_SCENE } from '../../constants/SceneKeys.js'
 import { updateWalletsRequest } from '../../modules/Core/Wallets/action.js'
 import { updateExchangeRates } from '../../modules/ExchangeRates/action.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { Airship } from './AirshipInstance.js'
 
 type StateProps = {
@@ -100,11 +99,11 @@ class EdgeAccountCallbackManagerComponent extends React.Component<Props> {
   }
 }
 
-export const EdgeAccountCallbackManager = connect(
-  (state: RootState): StateProps => ({
+export const EdgeAccountCallbackManager = connect<StateProps, DispatchProps, {}>(
+  state => ({
     account: state.core.account
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     updateWalletsRequest() {
       dispatch(updateWalletsRequest())
     },

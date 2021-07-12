@@ -3,7 +3,6 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { FIO_ADDRESS_LIST, SEND } from '../../constants/SceneKeys.js'
 import { FIO_ADDRESS_DELIMITER } from '../../constants/WalletAndCurrencyConstants.js'
@@ -12,8 +11,7 @@ import s from '../../locales/strings'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioName, setDomainVisibility } from '../../modules/FioAddress/util'
-import type { RootState } from '../../reducers/RootReducer'
-import type { Dispatch } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -225,11 +223,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioDomainSettingsScene = connect(
-  (state: RootState) => ({
+export const FioDomainSettingsScene = connect<StateProps, DispatchProps, NavigationProps>(
+  state => ({
     isConnected: state.network.isConnected
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     refreshAllFioAddresses() {
       dispatch(refreshAllFioAddresses())
     }

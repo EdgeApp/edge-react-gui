@@ -4,11 +4,10 @@ import type { Disklet } from 'disklet'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native'
 import SortableListView from 'react-native-sortable-listview'
-import { connect } from 'react-redux'
 
 import { updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import s from '../../locales/strings.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type GuiWallet } from '../../types/types.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
 import { CrossFade } from '../common/CrossFade.js'
@@ -115,7 +114,6 @@ class WalletListComponent extends React.PureComponent<Props, State> {
         <View style={styles.listStack}>
           <CrossFade activeKey={loading ? 'spinner' : sorting ? 'sortList' : 'fullList'}>
             <ActivityIndicator key="spinner" color={theme.primaryText} style={styles.listSpinner} size="large" />
-            {/* $FlowFixMe */}
             <WalletList
               key="fullList"
               header={
@@ -191,8 +189,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListScene = connect(
-  (state: RootState): StateProps => {
+export const WalletListScene = connect<StateProps, DispatchProps, {}>(
+  state => {
     let { activeWalletIds } = state.ui.wallets
 
     // FIO disable changes below
@@ -212,7 +210,7 @@ export const WalletListScene = connect(
       needsPasswordCheck: state.ui.passwordReminder.needsPasswordCheck
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     updateActiveWalletsOrder(activeWalletIds) {
       dispatch(updateActiveWalletsOrder(activeWalletIds))
     }

@@ -4,7 +4,6 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
@@ -12,7 +11,7 @@ import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action.js'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util.js'
 import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import type { FioAddress, FioRequest, GuiWallet } from '../../types/types'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -262,8 +261,8 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
   }
 }
 
-export const SelectFioAddress = connect(
-  (state: RootState): StateProps => {
+export const SelectFioAddress = connect<StateProps, DispatchProps, OwnProps>(
+  state => {
     const guiWallet: GuiWallet = getSelectedWallet(state)
     const currencyCode: string = state.ui.wallets.selectedCurrencyCode
 
@@ -275,7 +274,7 @@ export const SelectFioAddress = connect(
       selectedWallet: guiWallet
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     refreshAllFioAddresses() {
       dispatch(refreshAllFioAddresses())
     }

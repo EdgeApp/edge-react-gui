@@ -5,12 +5,11 @@ import { type EdgeContext, type EdgeUserInfo } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../../../../../components/services/AirshipInstance.js'
 import s from '../../../../../locales/strings'
-import { type Dispatch, type RootState } from '../../../../../types/reduxTypes.js'
+import { connect } from '../../../../../types/reactRedux.js'
 import { logoutRequest } from '../../../../Login/action.js'
 import T from '../../../components/FormattedText/FormattedText.ui.js'
 import { deleteLocalAccount } from '../action.js'
@@ -135,13 +134,13 @@ class UserListComponent extends React.Component<Props, State> {
   }
 }
 
-export const UserList = connect(
-  (state: RootState): StateProps => ({
+export const UserList = connect<StateProps, DispatchProps, {}>(
+  state => ({
     context: state.core.context,
     disklet: state.core.disklet,
     currentUsername: state.core.account.username
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     logout(username) {
       dispatch(logoutRequest(username))
     },

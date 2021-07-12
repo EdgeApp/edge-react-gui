@@ -4,14 +4,13 @@ import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { RefreshControl } from 'react-native'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
-import { connect } from 'react-redux'
 
 import { selectWallet } from '../../actions/WalletActions.js'
 import { WALLET_LIST_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import { calculateWalletFiatBalanceUsingDefaultIsoFiat } from '../../selectors/WalletSelectors.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, CustomTokenInfo, FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyIcon, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { type FilterDetailsType, alphabeticalSort, checkCurrencyCodes, checkFilterWallet } from '../../util/utils'
@@ -368,8 +367,8 @@ class WalletListComponent extends React.PureComponent<Props> {
   }
 }
 
-export const WalletList: React.ComponentType<OwnProps> = connect(
-  (state: RootState): StateProps => {
+export const WalletList = connect<StateProps, DispatchProps, OwnProps>(
+  state => {
     let { activeWalletIds } = state.ui.wallets
 
     // FIO disable changes below
@@ -392,7 +391,7 @@ export const WalletList: React.ComponentType<OwnProps> = connect(
       wallets: state.ui.wallets.byId
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     selectWallet(walletId: string, currencyCode) {
       dispatch(selectWallet(walletId, currencyCode, WALLET_LIST_SCENE))
     }

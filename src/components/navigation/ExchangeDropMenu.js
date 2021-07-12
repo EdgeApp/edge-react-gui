@@ -3,13 +3,12 @@
 import * as React from 'react'
 import { Text, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
-import { connect } from 'react-redux'
 
 import { exchangeMax } from '../../actions/CryptoExchangeActions.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { scale } from '../../util/scaling.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 
@@ -123,14 +122,14 @@ const styles = {
   }
 }
 
-export const ExchangeDropMenu = connect(
-  (state: RootState): StateProps => {
+export const ExchangeDropMenu = connect<StateProps, DispatchProps, {}>(
+  state => {
     const currencyCode = state.cryptoExchange?.fromWallet?.currencyCode
     return {
       hasMaxSpend: currencyCode != null && getSpecialCurrencyInfo(currencyCode).noMaxSpend !== true
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     exchangeMax() {
       dispatch(exchangeMax())
     }
