@@ -4,14 +4,12 @@ import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { Image, Platform, ScrollView, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
 import { swapPluginLogos } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
-import type { RootState } from '../../reducers/RootReducer'
-import type { Dispatch } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import { type GuiSwapInfo } from '../../types/types.js'
 import { logEvent } from '../../util/tracking.js'
 import { CircleTimer } from '../common/CircleTimer'
@@ -274,8 +272,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeQuote = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => {
+export const CryptoExchangeQuote = connect<StateProps, DispatchProps, OwnProps>(
+  (state, ownProps) => {
     const { request } = ownProps.swapInfo
 
     const { account } = state.core
@@ -296,7 +294,7 @@ export const CryptoExchangeQuote = connect(
       toWalletCurrencyName
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     shift(swapInfo: GuiSwapInfo) {
       dispatch(shiftCryptoCurrency(swapInfo))
     },

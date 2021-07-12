@@ -2,12 +2,11 @@
 
 import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
-import { connect } from 'react-redux'
 
 import { checkPasswordRecovery } from '../../actions/RecoveryReminderActions.js'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../actions/TransactionListActions.js'
 import { refreshReceiveAddressRequest, refreshWallet, updateWalletLoadingProgress } from '../../actions/WalletActions.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { isReceivedTransaction } from '../../util/utils.js'
 
 type OwnProps = {
@@ -101,11 +100,11 @@ class EdgeWalletCallbackManagerComponent extends React.Component<Props> {
   }
 }
 
-export const EdgeWalletCallbackManager = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => ({
+export const EdgeWalletCallbackManager = connect<StateProps, DispatchProps, OwnProps>(
+  (state, ownProps) => ({
     wallet: state.core.account.currencyWallets[ownProps.id]
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     refreshReceiveAddressRequest(id) {
       dispatch(refreshReceiveAddressRequest(id))
     },

@@ -8,7 +8,6 @@ import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
 import {
   lockSettings,
@@ -37,7 +36,7 @@ import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { edgeDark } from '../../theme/variables/edgeDark.js'
 import { edgeLight } from '../../theme/variables/edgeLight.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -312,8 +311,8 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const SettingsScene = connect(
-  (state: RootState): StateProps => ({
+export const SettingsScene = connect<StateProps, DispatchProps, {}>(
+  state => ({
     account: state.core.account,
     context: state.core.context,
     autoLogoutTimeInSeconds: state.ui.settings.autoLogoutTimeInSeconds,
@@ -324,7 +323,7 @@ export const SettingsScene = connect(
     supportsTouchId: state.ui.settings.isTouchSupported,
     touchIdEnabled: state.ui.settings.isTouchEnabled
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     dispatchUpdateEnableTouchIdEnable(arg: boolean, account: EdgeAccount) {
       dispatch(updateTouchIdEnabled(arg, account))
     },

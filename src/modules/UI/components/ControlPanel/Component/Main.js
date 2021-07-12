@@ -4,7 +4,6 @@ import * as React from 'react'
 import { Image, Platform, ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { selectWalletFromModal } from '../../../../../actions/WalletActions.js'
@@ -39,7 +38,7 @@ import {
 import { getPrivateKeySweepableCurrencies } from '../../../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../../../locales/strings.js'
 import { THEME } from '../../../../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../../../../types/reduxTypes.js'
+import { connect } from '../../../../../types/reactRedux.js'
 import { scale } from '../../../../../util/scaling.js'
 import { logoutRequest } from '../../../../Login/action.js'
 import styles from '../style'
@@ -407,11 +406,11 @@ const FioRequestsButton = () => {
   )
 }
 
-export const Main = connect(
-  (state: RootState): StateProps => ({
+export const Main = connect<StateProps, DispatchProps, {}>(
+  state => ({
     usersView: state.ui.scenes.controlPanel.usersView
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     logout(username?: string) {
       dispatch(logoutRequest(username))
     },

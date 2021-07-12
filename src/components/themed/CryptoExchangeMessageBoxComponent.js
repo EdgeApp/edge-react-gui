@@ -2,10 +2,9 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
-import { connect } from 'react-redux'
 
 import s from '../../locales/strings'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText'
 
@@ -46,8 +45,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeMessageBox = connect(
-  (state: RootState): StateProps => {
+export const CryptoExchangeMessageBox = connect<StateProps, {}, {}>(
+  state => {
     const insufficient = state.cryptoExchange.insufficientError
     const genericError = state.cryptoExchange.genericShapeShiftError
 
@@ -63,5 +62,5 @@ export const CryptoExchangeMessageBox = connect(
       message
     }
   },
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(withTheme(CryptoExchangeMessageBoxComponent))

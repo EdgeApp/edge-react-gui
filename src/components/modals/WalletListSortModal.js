@@ -3,11 +3,10 @@
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
-import { connect } from 'react-redux'
 
 import { updateWalletsSort } from '../../actions/WalletListActions.js'
 import s from '../../locales/strings.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
@@ -89,11 +88,11 @@ class WalletListSortModalComponent extends React.PureComponent<Props, State> {
   }
 }
 
-export const WalletListSortModal = connect(
-  (state: RootState): StateProps => ({
+export const WalletListSortModal = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     sortOption: state.ui.settings.walletsSort
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     updateWalletsSort(sortOption: SortOption) {
       dispatch(updateWalletsSort(sortOption))
     }

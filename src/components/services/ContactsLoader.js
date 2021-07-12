@@ -3,10 +3,9 @@
 import * as React from 'react'
 import Contacts from 'react-native-contacts'
 import RNPermissions from 'react-native-permissions'
-import { connect } from 'react-redux'
 
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { GuiContact } from '../../types/types.js'
 import { showError } from '../services/AirshipInstance.js'
 
@@ -231,11 +230,11 @@ class ContactsLoaderComponent extends React.Component<Props> {
   }
 }
 
-export const ContactsLoader = connect(
-  (state: RootState): StateProps => ({
+export const ContactsLoader = connect<StateProps, DispatchProps, {}>(
+  state => ({
     contactsPermission: state.permissions.contacts
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     loadContactsSuccess(contacts: GuiContact[]) {
       dispatch({
         type: 'CONTACTS/LOAD_CONTACTS_SUCCESS',

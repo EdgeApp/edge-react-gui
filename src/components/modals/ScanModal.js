@@ -6,13 +6,11 @@ import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import { RNCamera } from 'react-native-camera'
 import RNPermissions from 'react-native-permissions'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui'
 import type { PermissionStatus } from '../../reducers/PermissionsReducer'
-import type { RootState } from '../../reducers/RootReducer'
-import type { Dispatch } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import { requestPermission } from '../services/PermissionsManager'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
@@ -170,13 +168,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const ScanModal = connect(
-  (state: RootState): StateProps => ({
+export const ScanModal = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     cameraPermission: state.permissions.camera,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
     scanEnabled: state.ui.scenes.scan.scanEnabled
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     toggleEnableTorch() {
       dispatch({ type: 'TOGGLE_ENABLE_TORCH' })
     },

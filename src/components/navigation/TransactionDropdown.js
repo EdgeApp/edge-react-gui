@@ -6,7 +6,6 @@ import { StyleSheet, Text } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { playReceiveSound } from '../../actions/SoundActions.js'
@@ -14,7 +13,7 @@ import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { convertNativeToDisplay } from '../../util/utils.js'
 import { AirshipDropdown } from '../common/AirshipDropdown.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -75,8 +74,8 @@ const styles = StyleSheet.create({
   }
 })
 
-const ConnectedTransactionDropdown = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => {
+const ConnectedTransactionDropdown = connect<StateProps, {}, OwnProps>(
+  (state, ownProps) => {
     const { tx } = ownProps
 
     if (!state.ui.settings.loginStatus) {
@@ -92,5 +91,5 @@ const ConnectedTransactionDropdown = connect(
       message: sprintf(s.strings.bitcoin_received, `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`)
     }
   },
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(TransactionDropdown)

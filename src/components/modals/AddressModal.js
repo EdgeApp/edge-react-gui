@@ -3,7 +3,6 @@
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, FlatList, Image, TouchableWithoutFeedback, View } from 'react-native'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import ENS_LOGO from '../../assets/images/ens_logo.png'
@@ -13,9 +12,9 @@ import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { type FioAddresses, checkExpiredFioAddress, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
-import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
+import { ResolutionError, ResolutionErrorCode } from '../common/ResolutionError.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
@@ -402,8 +401,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AddressModal = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => ({
+export const AddressModal = connect<StateProps, DispatchProps, OwnProps>(
+  (state, ownProps) => ({
     account: state.core.account,
     coreWallet: state.core.account.currencyWallets[ownProps.walletId],
     userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
@@ -411,7 +410,7 @@ export const AddressModal = connect(
     fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
     fioWallets: state.ui.wallets.fioWallets
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     refreshAllFioAddresses() {
       dispatch(refreshAllFioAddresses())
     }

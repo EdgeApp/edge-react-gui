@@ -4,7 +4,6 @@ import { type EdgeCurrencyConfig } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { checkHandleAvailability } from '../../actions/CreateWalletActions.js'
@@ -19,7 +18,7 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.
 import type { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
@@ -216,13 +215,13 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const CreateWalletAccountSetupScene = connect(
-  (state: RootState): StateProps => ({
+export const CreateWalletAccountSetupScene = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     isCheckingHandleAvailability: state.ui.scenes.createWallet.isCheckingHandleAvailability,
     handleAvailableStatus: state.ui.scenes.createWallet.handleAvailableStatus,
     currencyConfigs: state.core.account.currencyConfig
   }),
-  (dispatch: Dispatch, ownProps: OwnProps): DispatchProps => ({
+  (dispatch, ownProps) => ({
     checkHandleAvailability(handle: string) {
       dispatch(checkHandleAvailability(ownProps.selectedWalletType.currencyCode, handle))
     }

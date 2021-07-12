@@ -4,11 +4,11 @@ import Bugsnag from '@bugsnag/react-native'
 import * as React from 'react'
 import { Platform } from 'react-native'
 import { WebView } from 'react-native-webview'
-import { connect } from 'react-redux'
 import { Bridge, onMethod } from 'yaob'
 
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
 import { type GuiPlugin, type GuiPluginQuery, makePluginUri } from '../../types/GuiPluginTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
@@ -260,7 +260,7 @@ class GuiPluginView extends React.Component<Props, State> {
 
 // Connector -----------------------------------------------------------
 
-export const GuiPluginViewScene = connect(
-  (state: RootState): StateProps => ({ state }),
-  (dispatch: Dispatch): DispatchProps => ({ dispatch })
+export const GuiPluginViewScene = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({ state }),
+  dispatch => ({ dispatch })
 )(GuiPluginView)

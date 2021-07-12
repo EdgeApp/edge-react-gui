@@ -3,12 +3,11 @@
 import * as React from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
 import { NonInteractiveModal } from '../../modules/UI/components/Modals/NonInteractiveModal/NonInteractiveModal.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 
 type StateProps = {
   error: Error | null,
@@ -58,13 +57,13 @@ class SecondaryModalComponent extends React.Component<Props> {
   }
 }
 
-export const SecondaryModal = connect(
-  (state: RootState): StateProps => ({
+export const SecondaryModal = connect<StateProps, DispatchProps, {}>(
+  state => ({
     error: state.ui.scenes.scan.privateKeyModal.error,
     isSweeping: state.ui.scenes.scan.privateKeyModal.isSweeping,
     isActive: state.ui.scenes.scan.privateKeyModal.secondaryModal.isActive
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     onDeactivated() {
       dispatch({ type: 'PRIVATE_KEY_MODAL/SECONDARY_MODAL/DEACTIVATED' })
     }

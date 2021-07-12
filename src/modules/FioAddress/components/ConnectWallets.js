@@ -4,7 +4,6 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, Image, ScrollView, Switch, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { showError } from '../../../components/services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
@@ -12,7 +11,7 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { PrimaryButton } from '../../../components/themed/ThemedButtons.js'
 import { FIO_CONNECT_TO_WALLETS_CONFIRM } from '../../../constants/SceneKeys.js'
 import s from '../../../locales/strings.js'
-import { type Dispatch, type RootState } from '../../../types/reduxTypes'
+import { connect } from '../../../types/reactRedux.js'
 import type { FioConnectionWalletItem } from '../../../types/types'
 import { makeConnectWallets } from '../util'
 
@@ -272,8 +271,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const ConnectWalletsConnector = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => {
+export const ConnectWalletsConnector = connect<StateProps, {}, OwnProps>(
+  (state, ownProps) => {
     const wallets = state.ui.wallets.byId
     const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
 
@@ -286,5 +285,5 @@ export const ConnectWalletsConnector = connect(
       loading: false
     }
   },
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(withTheme(ConnectWallets))

@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { Image, Text, View } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
-import { connect } from 'react-redux'
 
 import accountIcon from '../../../../assets/images/sidenav/accounts.png'
 import { ExchangeRate } from '../../../../components/common/ExchangeRate.js'
@@ -11,7 +10,7 @@ import { SceneWrapper } from '../../../../components/common/SceneWrapper.js'
 import s from '../../../../locales/strings'
 import { getDisplayDenominationFull, getPrimaryExchangeDenomination } from '../../../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../../../selectors/WalletSelectors.js'
-import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
+import { connect } from '../../../../types/reactRedux.js'
 import type { GuiDenomination } from '../../../../types/types.js'
 import { emptyGuiDenomination } from '../../../../types/types.js'
 import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
@@ -118,8 +117,8 @@ class ControlPanelComponent extends React.Component<Props> {
   }
 }
 
-export const ControlPanel = connect(
-  (state: RootState): StateProps => {
+export const ControlPanel = connect<StateProps, DispatchProps, {}>(
+  state => {
     const guiWallet = getSelectedWallet(state)
     const currencyCode = state.ui.wallets.selectedCurrencyCode
     const exchangeRate = guiWallet ? getExchangeRate(state, currencyCode, guiWallet.isoFiatCurrencyCode) : 0
@@ -150,7 +149,7 @@ export const ControlPanel = connect(
       username: state.core.account.username
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     openSelectUser() {
       dispatch({ type: 'OPEN_SELECT_USER' })
     },

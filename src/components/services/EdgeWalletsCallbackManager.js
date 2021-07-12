@@ -1,9 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { connect } from 'react-redux'
 
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { EdgeWalletCallbackManager } from './EdgeWalletCallbackManager.js'
 
 type StateProps = {
@@ -17,9 +16,9 @@ class EdgeWalletsManager extends React.Component<Props> {
   }
 }
 
-export const EdgeWalletsCallbackManager = connect(
-  (state: RootState): StateProps => ({
+export const EdgeWalletsCallbackManager = connect<StateProps, {}, {}>(
+  state => ({
     ids: Object.keys(state.core.account.currencyWallets)
   }),
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(EdgeWalletsManager)

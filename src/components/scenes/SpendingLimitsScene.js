@@ -5,14 +5,13 @@ import * as React from 'react'
 import { StyleSheet, Switch } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { TextField } from 'react-native-material-textfield'
-import { connect } from 'react-redux'
 
 import { setSpendingLimits } from '../../actions/SpendingLimitsActions.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type SpendingLimits } from '../../types/types.js'
 import { getFiatSymbol } from '../../util/utils.js'
 
@@ -153,12 +152,12 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const SpendingLimitsScene = connect(
-  (state: RootState): StateProps => ({
+export const SpendingLimitsScene = connect<StateProps, DispatchProps, {}>(
+  state => ({
     currencySymbol: getFiatSymbol(state.ui.settings.defaultFiat),
     transactionSpendingLimit: state.ui.settings.spendingLimits.transaction
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     onSubmit(spendingLimits: SpendingLimits, password: string) {
       dispatch(setSpendingLimits(spendingLimits, password))
     }

@@ -3,10 +3,9 @@
 import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native'
-import { connect } from 'react-redux'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { getCurrencyInfo } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
@@ -156,8 +155,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListRow = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => {
+export const WalletListRow = connect<StateProps, {}, OwnProps>(
+  (state, ownProps) => {
     const { currencyCode, walletId, walletName } = ownProps
     const guiWallet = walletId ? state.ui.wallets.byId[walletId] : null
     let walletNameString = walletName
@@ -176,5 +175,5 @@ export const WalletListRow = connect(
       walletNameString
     }
   },
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(withTheme(WalletListRowComponent))

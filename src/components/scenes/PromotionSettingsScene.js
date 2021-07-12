@@ -4,13 +4,12 @@ import { createInputModal } from 'edge-components'
 import * as React from 'react'
 import { Text, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { activatePromotion, removePromotion } from '../../actions/AccountReferralActions.js'
 import s from '../../locales/strings.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral, type DeviceReferral } from '../../types/ReferralTypes.js'
 import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -107,12 +106,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const PromotionSettingsScene = connect(
-  (state: RootState): StateProps => ({
+export const PromotionSettingsScene = connect<StateProps, DispatchProps, {}>(
+  state => ({
     accountReferral: state.account.accountReferral,
     deviceReferral: state.deviceReferral
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     async activatePromotion(installerId: string): Promise<void> {
       await dispatch(activatePromotion(installerId))
     },

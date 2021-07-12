@@ -7,7 +7,6 @@ import RNPermissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
 import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { loginQrCodeScanned, parseScannedUri, qrCodeScanned } from '../../actions/ScanActions'
@@ -15,7 +14,7 @@ import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SecondaryModal } from '../modals/SecondaryModal.js'
@@ -235,15 +234,15 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const ScanScene = connect(
-  (state: RootState): StateProps => ({
+export const ScanScene = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     cameraPermission: state.permissions.camera,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
     scanEnabled: state.ui.scenes.scan.scanEnabled,
     currentWalletId: state.ui.scenes.transactionList.currentWalletId,
     currentCurrencyCode: state.ui.scenes.transactionList.currentCurrencyCode
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     qrCodeScanned(data) {
       dispatch(qrCodeScanned(data))
     },

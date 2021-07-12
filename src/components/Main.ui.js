@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { YellowBox } from 'react-native'
 import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import ENV from '../../env.json'
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
@@ -109,7 +108,7 @@ import { logoutRequest } from '../modules/Login/action.js'
 import { ControlPanel } from '../modules/UI/components/ControlPanel/ControlPanel.ui.js'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
-import { type Dispatch, type RootState } from '../types/reduxTypes.js'
+import { connect } from '../types/reactRedux.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
 import { AirshipToast } from './common/AirshipToast.js'
@@ -155,7 +154,10 @@ import { TransactionList } from './scenes/TransactionListScene.js'
 import { Airship } from './services/AirshipInstance.js'
 import { MenuTab } from './themed/MenuTab.js'
 
-const RouterWithRedux = connect()(Router)
+const RouterWithRedux = connect<{}, {}, {}>(
+  state => ({}),
+  dispatch => ({})
+)(Router)
 
 type DispatchProps = {
   registerDevice: () => void,
@@ -861,9 +863,9 @@ export class MainComponent extends React.Component<Props> {
   }
 }
 
-export const Main = connect(
-  (state: RootState) => ({}),
-  (dispatch: Dispatch): DispatchProps => ({
+export const Main = connect<{}, DispatchProps, {}>(
+  state => ({}),
+  dispatch => ({
     registerDevice() {
       dispatch(registerDevice())
     },

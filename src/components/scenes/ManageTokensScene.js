@@ -5,13 +5,12 @@ import { difference, keys, union } from 'lodash'
 import * as React from 'react'
 import { FlatList, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
 import { ADD_TOKEN, EDIT_TOKEN } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -303,13 +302,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const ManageTokensScene = connect(
-  (state: RootState): StateProps => ({
+export const ManageTokensScene = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     manageTokensPending: state.ui.wallets.manageTokensPending,
     settingsCustomTokens: state.ui.settings.customTokens,
     wallets: state.ui.wallets.byId
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     setEnabledTokensList(walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) {
       dispatch(setWalletEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
       dispatch(checkEnabledTokensArray(walletId, enabledTokens))

@@ -2,11 +2,10 @@
 
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
-import { connect } from 'react-redux'
 
 import { openDrawer } from '../../actions/ScenesActions.js'
 import { Fontello } from '../../assets/vector/index.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
 type DispatchProps = {
@@ -33,9 +32,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SideMenuButton = connect(
-  (state: RootState) => ({}),
-  (dispatch: Dispatch): DispatchProps => ({
+export const SideMenuButton = connect<{}, DispatchProps, {}>(
+  state => ({}),
+  dispatch => ({
     openDrawer() {
       dispatch(openDrawer())
     }

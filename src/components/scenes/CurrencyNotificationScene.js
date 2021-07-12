@@ -4,12 +4,11 @@ import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
 import { enableNotifications, fetchSettings } from '../../modules/Notifications/action'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
@@ -80,11 +79,11 @@ export class CurrencyNotificationComponent extends React.Component<Props, State>
   }
 }
 
-export const CurrencyNotificationScene = connect(
-  (state: RootState): StateProps => ({
+export const CurrencyNotificationScene = connect<StateProps, DispatchProps, NavigationProps>(
+  state => ({
     userId: state.core.account.rootLoginId
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     enableNotifications(currencyCode, hours, enabled) {
       dispatch(enableNotifications(currencyCode, hours, enabled))
     }
