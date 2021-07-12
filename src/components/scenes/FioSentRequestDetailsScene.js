@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
@@ -37,7 +38,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
     const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
     const amountToMultiply = parseFloat(amount)
 
-    return formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
+    return formatNumber(bns.mul(fiatPerCrypto.toString(), amountToMultiply.toString()), { toFixed: 2 }) || '0'
   }
 
   amountField = () => {
