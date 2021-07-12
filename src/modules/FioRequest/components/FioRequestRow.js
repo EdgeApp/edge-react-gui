@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import type { EdgeDenomination } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
@@ -185,8 +186,7 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
 
   const rateKey = `${tokenCode}_${isoFiatCurrencyCode}`
   const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
-  const amountToMultiply = parseFloat(fioRequest.content.amount)
-  const fiatAmount = formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
+  const fiatAmount = formatNumber(bns.mul(fiatPerCrypto.toString(), fioRequest.content.amount), { toFixed: 2 }) || '0'
 
   const out: StateProps = {
     displayDenomination,
