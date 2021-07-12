@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import * as React from 'react'
 
 import { FIAT_CODES_SYMBOLS } from '../../constants/WalletAndCurrencyConstants.js'
@@ -34,7 +35,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
     const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
     const amountToMultiply = parseFloat(amount)
 
-    return formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
+    return formatNumber(bns.mul(fiatPerCrypto.toFixed(18), amountToMultiply.toFixed(18)), { toFixed: 2 }) || '0'
   }
 
   amountField = () => {
