@@ -95,7 +95,7 @@ type FiatCryptoAmountUI = {
 
 type FiatCurrentAmountUI = {
   amount: string,
-  difference: number,
+  difference: string,
   percentage: string
 }
 
@@ -410,8 +410,9 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
     const amount = currentFiatAmount ? bns.toFixed(currentFiatAmount, 2, 2) : '0'
     const fiatAmount = amountFiat.replace(',', '.')
-    const difference = amount ? parseFloat(amount) - parseFloat(fiatAmount) : 0
-    const percentageFloat = amount && parseFloat(fiatAmount) > 0 ? (difference / parseFloat(fiatAmount)) * 100 : 0
+    const difference = amount ? bns.sub(amount, fiatAmount) : '0'
+    // Cannot us bns.div because div Truncates remainder
+    const percentageFloat = amount && parseFloat(fiatAmount) > 0 ? bns.mul((parseFloat(difference) / parseFloat(fiatAmount)).toString(), '100') : 0
     const percentage = bns.toFixed(percentageFloat.toString(), 2, 2)
 
     return {
