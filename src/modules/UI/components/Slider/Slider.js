@@ -9,7 +9,7 @@ import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.p
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
 import { EdgeText } from '../../../../components/themed/EdgeText'
 import s from '../../../../locales/strings.js'
-import { useEffect, useState } from '../../../../util/hooks.js'
+import { useEffect, useState } from '../../../../types/reactHooks.js'
 
 const COMPLETE_POINT: number = 3
 
