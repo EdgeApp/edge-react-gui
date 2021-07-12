@@ -15,7 +15,6 @@ const mapStateToProps = (state: RootState) => {
   const exchangeRate = guiWallet ? getExchangeRate(state, currencyCode, guiWallet.isoFiatCurrencyCode) : 0
   let primaryDisplayDenomination = null
   let primaryExchangeDenomination = null
-  let secondaryDisplayAmount = '0'
   let secondaryDisplayCurrencyCode = ''
   let currencyLogo = ''
 
@@ -29,9 +28,6 @@ const mapStateToProps = (state: RootState) => {
       secondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
       primaryDisplayDenomination = getDisplayDenominationFull(state, currencyCode)
       primaryExchangeDenomination = getPrimaryExchangeDenomination(state, currencyCode)
-      secondaryDisplayAmount =
-        (parseFloat(1) * parseFloat(secondaryToPrimaryRatio) * parseFloat(primaryDisplayDenomination.multiplier)) /
-        parseFloat(primaryExchangeDenomination.multiplier)
     }
   } catch (error) {
     console.log('ControlPanelGuiWalletId', guiWallet.id)
@@ -43,14 +39,12 @@ const mapStateToProps = (state: RootState) => {
   }
 
   return {
-    currencyCode,
     currencyLogo,
     primaryDisplayCurrencyCode: currencyCode,
     primaryDisplayDenomination,
     primaryExchangeDenomination,
     exchangeRate,
     secondaryDisplayCurrencyCode,
-    secondaryDisplayAmount,
     secondaryToPrimaryRatio,
     usersView: state.ui.scenes.controlPanel.usersView,
     username: state.core.account.username
