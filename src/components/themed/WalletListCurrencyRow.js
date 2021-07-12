@@ -1,4 +1,5 @@
 // @flow
+import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -54,10 +55,16 @@ class WalletListRowComponent extends React.PureComponent<Props> {
 
     // Yesterdays Percentage Difference
     const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`]
-    const yesterdayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
-    const differenceYesterday = exchangeRate ? exchangeRate - yesterdayExchangeRate : null
+    const yesterdayExchangeRate =
+      yesterdayUsdExchangeRate != null && fiatExchangeRate != null ? bns.mul(yesterdayUsdExchangeRate.toString(), fiatExchangeRate.toString()) : '0'
 
-    let differencePercentage = differenceYesterday ? (differenceYesterday / yesterdayExchangeRate) * 100 : null
+    const differenceYesterday = exchangeRate ? bns.sub(exchangeRate.toString(), yesterdayExchangeRate) : null
+
+    let differencePercentage =
+      differenceYesterday && yesterdayExchangeRate !== '0'
+        ? bns.mul((parseFloat(differenceYesterday) / parseFloat(yesterdayExchangeRate)).toString(), '100')
+        : null
+
     if (!yesterdayExchangeRate) {
       differencePercentage = ''
     }
@@ -67,14 +74,14 @@ class WalletListRowComponent extends React.PureComponent<Props> {
 
     if (!exchangeRate || !differencePercentage || isNaN(differencePercentage)) {
       differencePercentageString = ''
-    } else if (exchangeRate && differencePercentage && differencePercentage === 0) {
+    } else if (exchangeRate && differencePercentage && differencePercentage === '0') {
       differencePercentageString = '0.00%'
-    } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
+    } else if (exchangeRate && differencePercentage && parseFloat(differencePercentage) < 0) {
       differencePercentageStyle = 'Negative'
-      differencePercentageString = `-${Math.abs(differencePercentage).toFixed(1)}%`
-    } else if (exchangeRate && differencePercentage && differencePercentage > 0) {
+      differencePercentageString = `-${Math.abs(parseFloat(differencePercentage)).toFixed(1)}%`
+    } else if (exchangeRate && differencePercentage && parseFloat(differencePercentage) > 0) {
       differencePercentageStyle = 'Positive'
-      differencePercentageString = `+${Math.abs(differencePercentage).toFixed(1)}%`
+      differencePercentageString = `+${Math.abs(parseFloat(differencePercentage)).toFixed(1)}%`
     }
 
     return {
