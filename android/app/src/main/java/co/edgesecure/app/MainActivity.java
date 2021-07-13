@@ -27,12 +27,6 @@ public class MainActivity extends ReactActivity {
     }
   }
 
-  // As requested by the react-native-screens readme:
-  @Override
-  protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(null);
-  }
-
   @Override
   public void invokeDefaultOnBackPressed() {
     moveTaskToBack(true);

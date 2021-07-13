@@ -17,6 +17,7 @@ import s from '../../locales/strings.js'
 import THEME from '../../theme/variables/airbitz.js'
 import { type DeepLink } from '../../types/DeepLink.js'
 import { connect } from '../../types/reactRedux.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type GuiTouchIdInfo } from '../../types/types.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 import { UpdateModal } from '../modals/UpdateModal.js'
@@ -24,6 +25,10 @@ import { Airship, showError } from '../services/AirshipInstance.js'
 import { getBackgroundImageFromCDN } from './../../util/ThemeCache.js'
 import { LoadingScene } from './LoadingScene.js'
 
+type OwnProps = {
+  navigation: NavigationProp<'login'>,
+  route: RouteProp<'login'>
+}
 type StateProps = {
   account: EdgeAccount,
   context: EdgeContext,
@@ -37,7 +42,7 @@ type DispatchProps = {
   initializeAccount: (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => void,
   logout: () => void
 }
-type Props = StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps
 
 type State = {
   counter: number,
@@ -63,6 +68,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
   }
 
   async componentDidMount() {
+    console.log('!!!', this.props.route, this.props.navigation)
     const { YOLO_USERNAME, YOLO_PASSWORD } = ENV
     if (YOLO_USERNAME != null && YOLO_PASSWORD != null && firstRun) {
       const { context, initializeAccount } = this.props
@@ -125,6 +131,7 @@ class LoginSceneComponent extends React.Component<Props, State> {
 
   onLogin = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo | void) => {
     this.setState({ passwordRecoveryKey: undefined })
+    this.props.navigation.navigate('walletListScene', { boom: 'bm' })
     this.props.initializeAccount(account, touchIdInfo ?? dummyTouchIdInfo)
   }
 
@@ -173,7 +180,7 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const LoginScene = connect<StateProps, DispatchProps, {}>(
+export const LoginScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     account: state.core.account,
     context: state.core.context,

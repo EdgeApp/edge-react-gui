@@ -1,10 +1,8 @@
 // @flow
 
 import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeMetaToken, type EdgeTransaction, type OtpError } from 'edge-core-js'
-import * as React from 'react'
-import * as Flux from 'react-native-router-flux'
 
-import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput.js'
+import { type ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput.js'
 import { type GuiPlugin, type GuiPluginQuery } from './GuiPluginTypes.js'
 import {
   type CreateWalletType,
@@ -221,50 +219,22 @@ export type ParamList = {
  * The global `Actions` object for navigation.
  */
 export const Actions = {
-  get currentParams(): any {
-    // $FlowFixMe
-    return Flux.Actions.currentParams
-  },
+  get currentParams(): any {},
   get currentScene(): $Keys<ParamList> {
-    // $FlowFixMe
-    return Flux.Actions.currentScene
+    return 'edge'
   },
 
-  drawerClose() {
-    // $FlowFixMe
-    Flux.Actions.drawerClose()
-  },
-  drawerOpen() {
-    // $FlowFixMe
-    Flux.Actions.drawerOpen()
-  },
+  drawerClose() {},
+  drawerOpen() {},
 
-  jump<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
-    // $FlowFixMe
-    Flux.Actions.jump(name, { route: { name, params } })
-  },
-  push<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
-    // $FlowFixMe
-    Flux.Actions.push(name, { route: { name, params } })
-  },
-  replace<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
-    // $FlowFixMe
-    Flux.Actions.replace(name, { route: { name, params } })
-  },
+  jump<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {},
+  push<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {},
+  replace<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {},
 
-  refresh(params: any): void {
-    // $FlowFixMe
-    Flux.Actions.refresh({ route: { name: Flux.Actions.currentScene, params } })
-  },
+  refresh(params: any): void {},
 
-  pop(): void {
-    // $FlowFixMe
-    Flux.Actions.pop()
-  },
-  popTo(name: $Keys<ParamList>): void {
-    // $FlowFixMe
-    Flux.Actions.popTo(name)
-  }
+  pop(): void {},
+  popTo(name: $Keys<ParamList>): void {}
 }
 
 type NavigationEvent = 'didBlur' | 'didFocus' | 'willBlur' | 'willFocus'

@@ -4,9 +4,17 @@ import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
-export const LoadingScene = () => {
+type Props = {
+  route?: RouteProp<any>,
+  navigation?: NavigationProp<any>
+}
+
+export const LoadingScene = (props: Props) => {
+  console.log('!!!', props.route, props.navigation)
+
   return (
     <SceneWrapper background="header" hasHeader={false} hasTabs={false}>
       <View style={styles.container}>

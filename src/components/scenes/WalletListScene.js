@@ -74,6 +74,8 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount() {
+    console.log('!!!', this.props.route, this.props.navigation)
+
     this.props.needsPasswordCheck ? Airship.show(bridge => <PasswordReminderModal bridge={bridge} />) : this.showTutorial()
   }
 

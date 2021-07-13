@@ -54,7 +54,7 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, cur
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'LOGIN', data: account })
 
-  Actions.push(EDGE)
+  // Actions.push(EDGE)
   if (hasSecurityAlerts(account)) {
     Actions.push(SECURITY_ALERTS_SCENE)
   }
