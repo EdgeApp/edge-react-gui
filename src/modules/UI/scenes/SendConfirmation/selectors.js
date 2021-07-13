@@ -146,6 +146,7 @@ export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo): Spe
 
   const currencyCode = spendInfo.currencyCode
   const { nativeAmount } = spendInfo.spendTargets[0]
+  if (nativeAmount === '') return 'none' // TODO: Future change will make this null instead of ''
   if (!currencyCode || !nativeAmount) throw new Error('Invalid Spend Request')
 
   const { spendingLimits } = state.ui.settings
