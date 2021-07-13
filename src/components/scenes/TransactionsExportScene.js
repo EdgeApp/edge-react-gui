@@ -205,7 +205,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     // The non-string result appears to be a bug in the core,
     // which we are relying on to determine if the date range is empty:
     const csvFile = await showActivity(s.strings.export_transaction_loading, exportTransactionsToCSV(this.props.sourceWallet, transactionOptions))
-    if (typeof csvFile !== 'string') {
+    if (typeof csvFile !== 'string' || csvFile === '' || csvFile == null) {
       showError(s.strings.export_transaction_export_error)
       return
     }
