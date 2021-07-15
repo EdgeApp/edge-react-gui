@@ -242,7 +242,8 @@ export const edgeDark: Theme = {
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
-  fontFaceBold: palette.QuicksandMedium,
+  fontFaceMedium: palette.QuicksandMedium,
+  fontFaceBold: palette.QuicksandBold,
   fontFaceSymbols: Platform.OS === 'android' ? palette.SFUITextRegular : palette.QuicksandRegular,
 
   // TouchableHighlights underlay

@@ -149,7 +149,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   percentage: {
     fontSize: theme.rem(0.75),
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   },
   divider: {
     height: theme.rem(1 / 16),
