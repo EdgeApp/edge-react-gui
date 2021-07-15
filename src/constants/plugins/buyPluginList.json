@@ -324,7 +324,7 @@
     "paymentTypes": [
       "credit"
     ],
-    "description": "Fee: 6.5% / Settlement: 10 minutes\nDaily Limit: $5500\nMonthly Limit: $54000",
+    "description": "Fee: 6.5% / Settlement: 10 minutes\nDaily Limit: $5500\nMonthly Limit: $54000\nDoge supported on USA",
     "title": "Credit Card",
     "partnerIconPath": "https://content.edge.app/icon_black_small.png",
     "forCountries": [
@@ -348,7 +348,6 @@
       "BR",
       "BN",
       "BG",
-      "BF",
       "BI",
       "CV",
       "CM",
@@ -425,7 +424,6 @@
       "MD",
       "MC",
       "ME",
-      "MA",
       "MZ",
       "NA",
       "NR",
@@ -455,7 +453,6 @@
       "SM",
       "ST",
       "SA",
-      "SN",
       "RS",
       "SC",
       "SL",
@@ -476,7 +473,6 @@
       "TH",
       "TG",
       "TO",
-      "TT",
       "TN",
       "TR",
       "TM",

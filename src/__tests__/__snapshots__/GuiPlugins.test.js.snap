@@ -151,7 +151,8 @@ Monthly Limit: $47000",
     "deepQuery": Object {},
     "description": "Fee: 6.5% / Settlement: 10 minutes
 Daily Limit: $5500
-Monthly Limit: $54000",
+Monthly Limit: $54000
+Doge supported on USA",
     "partnerIconPath": "https://content.edge.app/icon_black_small.png",
     "paymentTypeLogoKey": "credit",
     "paymentTypes": Array [
@@ -229,7 +230,8 @@ Monthly Limit: $47000",
     "deepQuery": Object {},
     "description": "Fee: 6.5% / Settlement: 10 minutes
 Daily Limit: $5500
-Monthly Limit: $54000",
+Monthly Limit: $54000
+Doge supported on USA",
     "partnerIconPath": "https://content.edge.app/icon_black_small.png",
     "paymentTypeLogoKey": "applepay",
     "paymentTypes": Array [
