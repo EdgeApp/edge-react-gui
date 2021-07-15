@@ -56,8 +56,8 @@ export function PrimaryButton(props: Props) {
   )
 }
 
-export function SecondaryButton(props: Props & { widthRem?: number }) {
-  const { children, label, onPress, disabled, spinner, widthRem } = props
+export function SecondaryButton(props: Props & { widthRem?: number, bold?: boolean }) {
+  const { children, label, onPress, disabled, spinner, widthRem, bold = false } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
@@ -69,7 +69,7 @@ export function SecondaryButton(props: Props & { widthRem?: number }) {
       onPress={onPress}
       disabled={disabled}
     >
-      {label != null ? <Text style={styles.secondaryText}>{label}</Text> : null}
+      {label != null ? <Text style={[styles.secondaryText, bold && styles.boldText]}>{label}</Text> : null}
       {spinner ? <ActivityIndicator color={theme.primaryButtonText} style={styles.spinner} /> : null}
       {children}
     </TouchableOpacity>
@@ -263,6 +263,9 @@ const getStyles = cacheStyles((theme: Theme) => {
       marginRight: theme.rem(0.75),
       fontWeight: '600',
       fontSize: theme.rem(1.0)
+    },
+    boldText: {
+      fontFamily: theme.fontFaceBold
     }
   }
 })
