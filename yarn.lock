@@ -4824,10 +4824,10 @@ edge-exchange-plugins@^0.11.30:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.9.9:
-  version "0.9.9"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.9.tgz#139bc5bb605b04cb7a4ff5d3719439949cac8166"
-  integrity sha512-DXp36lLzeW8H2R8fDLsUA3CXJtNoJtFUQd+68aNHuyZqtrsUxMUw2p2wnFi3i0eJlEDHd7qQzNsQ3rF4MpLVSA==
+edge-login-ui-rn@^0.9.10:
+  version "0.9.10"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.10.tgz#c3ddba916b9b3f25481912fe26e3ea2f35a4627e"
+  integrity sha512-Xk23ldeodWkCZ7VTpjsVvkTLfa7qx7U6HyApaiNu3jrPZZljR1a3LFmbu7x+cFRS6RQYiQJUEXYHnSaFEXWIYA==
   dependencies:
     cleaners "^0.3.1"
     qrcode-generator "^1.4.4"
@@ -4838,7 +4838,7 @@ edge-login-ui-rn@^0.9.9:
     react-native-localize "^2.0.2"
     react-native-mail "^6.0.0"
     react-native-material-textfield "git://github.com/EdgeApp/react-native-material-textfield.git"
-    react-native-patina "^0.1.3"
+    react-native-patina "^0.1.4"
     react-native-permissions "^3.0.1"
     react-native-reanimated "^2.0.0"
     react-native-share "^5.1.4"
@@ -10507,7 +10507,7 @@ react-native-mymonero-core@^0.1.0:
   resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.1.0.tgz#57d160b076ae50c037cffa94760e4f2f3ca2de88"
   integrity sha512-2NV+V1GFP/NaKp9enVDWrSrA9gMMDSmBXPnNW/K2eEXyGV9fC0DJqDo6ljlKr7ANak1X5ln/6yV2Z7jrl2Xgwg==
 
-react-native-patina@^0.1.3, react-native-patina@^0.1.4:
+react-native-patina@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.4.tgz#9ff58e2b2b78dc126529e621f8992a1021659919"
   integrity sha512-6pV3wSC2+q5mbejKDrmSpJweuFCfFkzwSpB6mwlrZpuci0T/9mP80+P3YvtMtg/PFXdBCDu8o93SdxFWDS2u4A==
