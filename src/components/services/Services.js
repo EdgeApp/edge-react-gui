@@ -2,6 +2,7 @@
 
 import { makeReactNativeDisklet } from 'disklet'
 import { type EdgeContext } from 'edge-core-js/types'
+import { LoginUiProvider } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { MenuProvider } from 'react-native-popup-menu'
 import { Provider } from 'react-redux'
@@ -67,20 +68,15 @@ export class Services extends React.PureComponent<Props> {
     dispatch(loadDeviceReferral())
   }
 
-  renderGui() {
-    return (
-      <MenuProvider>
-        <Main />
-        <Airship avoidAndroidKeyboard statusBarTranslucent />
-      </MenuProvider>
-    )
-  }
-
   render() {
     return (
       <Provider store={this.store}>
-        <>
-          {this.renderGui()}
+        <LoginUiProvider>
+          <MenuProvider>
+            <Airship>
+              <Main />
+            </Airship>
+          </MenuProvider>
           <AutoLogout />
           <ContactsLoader />
           <DeepLinkingManager />
@@ -92,7 +88,7 @@ export class Services extends React.PureComponent<Props> {
           <NetworkActivity />
           <PasswordReminderService />
           <WalletLifecycle />
-        </>
+        </LoginUiProvider>
       </Provider>
     )
   }
