@@ -8,11 +8,22 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { unpackEdges } from '../../util/edges'
 import { type Theme, useTheme } from '../services/ThemeContext.js'
 
-export function ModalTitle(props: { children: React.Node, center?: boolean, paddingRem?: number[] | number }) {
+export function ModalTitle(props: { children: React.Node, center?: boolean, paddingRem?: number[] | number, bold?: boolean }) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  return <Text style={[styles.titleText, props.center ? styles.titleCenter : null, paddingStyles(props.paddingRem, theme)]}>{props.children}</Text>
+  return (
+    <Text
+      style={[
+        styles.titleText,
+        props.center ? styles.titleCenter : null,
+        paddingStyles(props.paddingRem, theme),
+        props.bold ? styles.boldText : styles.semiboldText
+      ]}
+    >
+      {props.children}
+    </Text>
+  )
 }
 
 export function ModalMessage(props: { children: React.Node }) {
@@ -52,8 +63,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   titleText: {
     color: theme.primaryText,
     fontFamily: theme.fontFaceMedium,
-    fontWeight: '600',
-    fontSize: theme.rem(1.25),
+    fontSize: theme.rem(1.2),
     margin: theme.rem(0.5)
   },
   titleCenter: {
@@ -65,5 +75,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontSize: theme.rem(1),
     margin: theme.rem(0.5),
     textAlign: 'left'
+  },
+  warning: {
+    color: theme.warningText
+  },
+  boldText: {
+    fontFamily: theme.fontFaceBold
+  },
+  semiboldText: {
+    fontWeight: '600'
   }
 }))
