@@ -12,7 +12,8 @@ import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { paymentProtocolUriReceived } from '../components/modals/paymentProtocolUriReceived.js'
 import { shouldContinueLegacy } from '../components/modals/shouldContinueLegacy.js'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { ADD_TOKEN, CURRENCY_PLUGIN_NAMES, EXCHANGE_SCENE, getSpecialCurrencyInfo, PLUGIN_BUY, SEND } from '../constants/indexConstants.js'
+import { ADD_TOKEN, EXCHANGE_SCENE, PLUGIN_BUY, SEND } from '../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
@@ -154,7 +155,11 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
     if (isLegacyAddressUri(parsedUri)) {
       // LEGACY ADDRESS URI
       if (await shouldContinueLegacy()) {
-        Actions[SEND]({ guiMakeSpendInfo: parsedUri, selectedWalletId, selectedCurrencyCode: currencyCode })
+        Actions[SEND]({
+          guiMakeSpendInfo: parsedUri,
+          selectedWalletId,
+          selectedCurrencyCode: currencyCode
+        })
       } else {
         dispatch({ type: 'ENABLE_SCAN' })
       }
@@ -172,7 +177,11 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, coreWallet)
 
       if (guiMakeSpendInfo != null) {
-        Actions[SEND]({ guiMakeSpendInfo, selectedWalletId, selectedCurrencyCode: currencyCode })
+        Actions[SEND]({
+          guiMakeSpendInfo,
+          selectedWalletId,
+          selectedCurrencyCode: currencyCode
+        })
       }
 
       return
@@ -199,7 +208,11 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       guiMakeSpendInfo.fioAddress = fioAddress
       guiMakeSpendInfo.isSendUsingFioAddress = true
     }
-    Actions[SEND]({ guiMakeSpendInfo, selectedWalletId, selectedCurrencyCode: currencyCode })
+    Actions[SEND]({
+      guiMakeSpendInfo,
+      selectedWalletId,
+      selectedCurrencyCode: currencyCode
+    })
     // dispatch(sendConfirmationUpdateTx(parsedUri))
   } catch (error) {
     // INVALID URI

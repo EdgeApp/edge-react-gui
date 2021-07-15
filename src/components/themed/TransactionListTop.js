@@ -2,16 +2,13 @@
 
 import { bns } from 'biggystring'
 import * as React from 'react'
-import { Image, TouchableOpacity, View } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
-import credLogo from '../../assets/images/cred_logo.png'
-import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
-import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
@@ -23,7 +20,6 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeTextFieldOutlined } from './EdgeOutlinedField'
 import { EdgeText } from './EdgeText.js'
 import { SceneHeader } from './SceneHeader'
-import { ButtonBox } from './ThemedButtons.js'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
 type OwnProps = {
@@ -43,8 +39,7 @@ export type StateProps = {
   fiatBalance: number,
   fiatSymbol: string,
   walletName: string,
-  isAccountBalanceVisible: boolean,
-  transactionsLength: number
+  isAccountBalanceVisible: boolean
 }
 
 export type DispatchProps = {
@@ -70,22 +65,6 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   componentDidUpdate(prevProps: Props) {
     if (prevProps.searching === false && this.props.searching === true && this.textInput.current) {
       this.textInput.current.focus()
-    }
-  }
-
-  renderEarnInterestCard = () => {
-    const { currencyCode, transactionsLength, theme } = this.props
-    const styles = getStyles(theme)
-
-    if (transactionsLength !== 0 && getSpecialCurrencyInfo(currencyCode).showEarnInterestCard) {
-      return (
-        <ButtonBox onPress={() => Actions.pluginEarnInterest({ plugin: guiPlugins.cred })} paddingRem={0}>
-          <View style={styles.earnInterestContainer}>
-            <Image style={styles.earnInterestImage} source={credLogo} resizeMode="contain" />
-            <EdgeText style={styles.earnInterestText}>{s.strings.earn_interest}</EdgeText>
-          </View>
-        </ButtonBox>
-      )
     }
   }
 
@@ -202,7 +181,6 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
                   <EdgeText style={styles.buttonsText}>{s.strings.fragment_send_subtitle}</EdgeText>
                 </TouchableOpacity>
               </View>
-              {this.renderEarnInterestCard()}
             </>
           )}
         </View>
@@ -281,23 +259,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginLeft: theme.rem(0.25)
   },
 
-  // Earn Interest Card
-  earnInterestContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: theme.rem(6),
-    backgroundColor: theme.tileBackground
-  },
-  earnInterestImage: {
-    width: theme.rem(2.5),
-    height: theme.rem(2.5),
-    padding: theme.rem(1)
-  },
-  earnInterestText: {
-    fontFamily: theme.fontFaceBold
-  },
-
   // Transactions Divider
   transactionsDividerText: {
     fontFamily: theme.fontFaceBold
@@ -340,8 +301,7 @@ export const TransactionListTop = connect(
       fiatBalance: fiatBalanceFormat,
       fiatSymbol: getFiatSymbol(guiWallet.isoFiatCurrencyCode),
       walletName: guiWallet.name,
-      isAccountBalanceVisible: state.ui.settings.isAccountBalanceVisible,
-      transactionsLength: state.ui.scenes.transactionList.transactions.length
+      isAccountBalanceVisible: state.ui.settings.isAccountBalanceVisible
     }
   },
   (dispatch: Dispatch): DispatchProps => ({

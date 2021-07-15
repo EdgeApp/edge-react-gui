@@ -4,7 +4,7 @@ import * as React from 'react'
 import { FlatList, Image } from 'react-native'
 import { getCountry } from 'react-native-localize'
 
-import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/indexConstants'
+import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/CountryConstants.js'
 import s from '../../locales/strings.js'
 import type { CountryData } from '../../types/types'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'

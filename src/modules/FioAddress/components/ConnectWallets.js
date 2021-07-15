@@ -10,7 +10,7 @@ import { showError } from '../../../components/services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { PrimaryButton } from '../../../components/themed/ThemedButtons.js'
-import * as Constants from '../../../constants/indexConstants'
+import { FIO_CONNECT_TO_WALLETS_CONFIRM } from '../../../constants/SceneKeys.js'
 import s from '../../../locales/strings.js'
 import { type RootState } from '../../../types/reduxTypes'
 import type { FioConnectionWalletItem } from '../../../types/types'
@@ -83,7 +83,7 @@ class ConnectWallets extends React.Component<FioConnectWalletStateProps & OwnPro
           return acc
         }, {})
       })
-      Actions[Constants.FIO_CONNECT_TO_WALLETS_CONFIRM]({
+      Actions[FIO_CONNECT_TO_WALLETS_CONFIRM]({
         fioAddressName,
         fioWallet,
         walletsToConnect: Object.values(connectWalletsMap),

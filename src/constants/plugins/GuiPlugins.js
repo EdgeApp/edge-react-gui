@@ -87,13 +87,6 @@ export const guiPlugins: { [pluginId: string]: GuiPlugin } = {
     lockUriPath: true,
     displayName: 'Bitrefill'
   },
-  cred: {
-    pluginId: 'cred',
-    storeId: 'cred',
-    baseUri: 'https://earn.mycred.io/edge',
-    displayName: 'Cred',
-    permissions: ['camera']
-  },
   transak: {
     pluginId: 'transak',
     storeId: 'transak',

@@ -6,7 +6,8 @@ import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import * as Constants from '../../constants/indexConstants'
+import { FIO_ADDRESS_REGISTER_SELECT_WALLET, FIO_ADDRESS_REGISTER_SUCCESS, WALLET_LIST } from '../../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { type RootState } from '../../types/reduxTypes'
@@ -36,7 +37,7 @@ const ONE_FREE_ADDRESS_PER_DOMAIN_ERROR = 'ONE_FREE_ADDRESS_PER_DOMAIN_ERROR'
 class FioNameConfirm extends React.PureComponent<Props> {
   isFioAddress = () => {
     const { fioName } = this.props
-    return fioName.indexOf(Constants.FIO_ADDRESS_DELIMITER) > -1
+    return fioName.indexOf(FIO_ADDRESS_DELIMITER) > -1
   }
 
   getFee = async () => {
@@ -65,7 +66,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
         if (response.error) {
           if (response.errorCode && response.errorCode === ONE_FREE_ADDRESS_PER_DOMAIN_ERROR && response.code === 400) {
             const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.fallbackRef)
-            const domainExists = publicDomains.find(domain => domain.domain === fioName.split(Constants.FIO_ADDRESS_DELIMITER)[1])
+            const domainExists = publicDomains.find(domain => domain.domain === fioName.split(FIO_ADDRESS_DELIMITER)[1])
             if (domainExists && !domainExists.free) {
               await Airship.show(bridge => (
                 <ButtonsModal
@@ -77,7 +78,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
                   }}
                 />
               ))
-              return Actions[Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET]({
+              return Actions[FIO_ADDRESS_REGISTER_SELECT_WALLET]({
                 fioAddress: fioName,
                 selectedWallet: paymentWallet,
                 selectedDomain: {
@@ -104,7 +105,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             }}
           />
         ))
-        Actions[Constants.WALLET_LIST]()
+        Actions[WALLET_LIST]()
       } else {
         // no free domains
         showError(s.strings.fio_get_fee_err_msg)
@@ -113,14 +114,26 @@ class FioNameConfirm extends React.PureComponent<Props> {
       try {
         if (this.isFioAddress()) {
           const { expiration, feeCollected } = await paymentWallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioName, ownerPublicKey })
-          window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ fioName, expiration, feeCollected }))
+          window.requestAnimationFrame(() =>
+            Actions[FIO_ADDRESS_REGISTER_SUCCESS]({
+              fioName,
+              expiration,
+              feeCollected
+            })
+          )
         } else {
           const { expiration, feeCollected } = await paymentWallet.otherMethods.fioAction('registerFioDomain', {
             fio_domain: fioName,
             max_fee: fee,
             owner_fio_public_key: ownerPublicKey
           })
-          window.requestAnimationFrame(() => Actions[Constants.FIO_ADDRESS_REGISTER_SUCCESS]({ fioName, expiration, feeCollected }))
+          window.requestAnimationFrame(() =>
+            Actions[FIO_ADDRESS_REGISTER_SUCCESS]({
+              fioName,
+              expiration,
+              feeCollected
+            })
+          )
         }
       } catch (e) {
         showError(s.strings.fio_register_address_err_msg)
@@ -139,7 +152,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
           <Tile
             type="static"
             title={this.isFioAddress() ? s.strings.fio_address_confirm_screen_label : s.strings.fio_domain_label}
-            body={this.isFioAddress() ? fioName : `${Constants.FIO_ADDRESS_DELIMITER}${fioName}`}
+            body={this.isFioAddress() ? fioName : `${FIO_ADDRESS_DELIMITER}${fioName}`}
           />
           <FioActionSubmit onSubmit={this.saveFioName} getOperationFee={this.getFee} fioWallet={paymentWallet} />
         </View>
@@ -159,7 +172,7 @@ const getStyles = cacheStyles(() => ({
 
 const FioNameConfirmScene = connect((state: RootState) => {
   const { account } = state.core
-  const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
+  const fioPlugin = account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
 
   return {
     fioPlugin,

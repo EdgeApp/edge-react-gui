@@ -14,7 +14,8 @@ import { EdgeText } from '../../../components/themed/EdgeText'
 import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
 import { ClickableText } from '../../../components/themed/ThemedButtons'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
-import * as Constants from '../../../constants/indexConstants'
+import { FIO_DOMAIN_REGISTER } from '../../../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings.js'
 import { type RootState } from '../../../types/reduxTypes'
 import type { FioDomain, FlatListItem } from '../../../types/types.js'
@@ -48,7 +49,7 @@ type Props = OwnProps & ThemeProps & StateProps
 
 const newDomainItem = {
   createNew: true,
-  value: { ...Constants.FIO_DOMAIN_DEFAULT, name: s.strings.fio_address_list_register_domain },
+  value: { ...FIO_DOMAIN_DEFAULT, name: s.strings.fio_address_list_register_domain },
   label: s.strings.fio_address_list_register_domain
 }
 
@@ -74,11 +75,11 @@ class DomainListModalComponent extends React.Component<Props, State> {
 
     const domains = publicDomains.map((pubDomain: FioDomain) => ({
       value: pubDomain,
-      label: `${Constants.FIO_ADDRESS_DELIMITER}${pubDomain.name}`
+      label: `${FIO_ADDRESS_DELIMITER}${pubDomain.name}`
     }))
     const userDomainsConverted = []
     for (const fioDomain of userDomains) {
-      userDomainsConverted.push({ value: fioDomain, label: `${Constants.FIO_ADDRESS_DELIMITER}${fioDomain.name}` })
+      userDomainsConverted.push({ value: fioDomain, label: `${FIO_ADDRESS_DELIMITER}${fioDomain.name}` })
     }
     userDomainsConverted.sort((userDomainA: Item, userDomainB: Item) => (userDomainA.value.name < userDomainB.value.name ? -1 : 1))
 
@@ -131,14 +132,14 @@ class DomainListModalComponent extends React.Component<Props, State> {
 
   selectCustom = () => {
     const { input } = this.state
-    const fioDomain = { ...Constants.FIO_DOMAIN_DEFAULT, name: input }
+    const fioDomain = { ...FIO_DOMAIN_DEFAULT, name: input }
 
     this.props.bridge.resolve(fioDomain)
   }
 
   registerNewDomain = () => {
     this.props.bridge.resolve(null)
-    Actions[Constants.FIO_DOMAIN_REGISTER]()
+    Actions[FIO_DOMAIN_REGISTER]()
   }
 
   selectItem = (value: any) => this.props.bridge.resolve(value)
@@ -248,7 +249,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const DomainListModal = connect((state: RootState): StateProps => {
   const { account } = state.core
   const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-  const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
+  const fioPlugin = account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
   return {
     userDomains: state.ui.scenes.fioAddress.fioDomains,
     fioWallets,

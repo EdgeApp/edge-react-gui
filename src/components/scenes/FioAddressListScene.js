@@ -9,7 +9,8 @@ import { connect } from 'react-redux'
 
 import fioAddressLogo from '../../assets/images/fio/fio_logo.png'
 import { Fontello } from '../../assets/vector'
-import * as Constants from '../../constants/indexConstants'
+import { FIO_ADDRESS_DETAILS, FIO_ADDRESS_REGISTER, FIO_DOMAIN_REGISTER, FIO_DOMAIN_SETTINGS } from '../../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { FioNameRow } from '../../modules/FioAddress/components/FioName'
@@ -95,14 +96,22 @@ class FioAddressList extends React.Component<Props, LocalState> {
 
   onAddressPress = (fioAddress: FioAddress) => {
     const { name, expiration } = fioAddress
-    Actions[Constants.FIO_ADDRESS_DETAILS]({ fioAddressName: name, expiration })
+    Actions[FIO_ADDRESS_DETAILS]({
+      fioAddressName: name,
+      expiration
+    })
   }
 
   onDomainPress = (fioDomain: FioDomain) => {
     const { fioWallets } = this.props
     const { name, expiration, walletId, isPublic } = fioDomain
     const fioWallet = fioWallets.find((fioWallet: EdgeCurrencyWallet) => fioWallet.id === walletId)
-    Actions[Constants.FIO_DOMAIN_SETTINGS]({ fioWallet, fioDomainName: name, expiration, isPublic })
+    Actions[FIO_DOMAIN_SETTINGS]({
+      fioWallet,
+      fioDomainName: name,
+      expiration,
+      isPublic
+    })
   }
 
   render() {
@@ -150,13 +159,13 @@ class FioAddressList extends React.Component<Props, LocalState> {
           </ScrollView>
 
           <View>
-            <ClickableText marginRem={[1, 1, 0]} onPress={Actions[Constants.FIO_ADDRESS_REGISTER]}>
+            <ClickableText marginRem={[1, 1, 0]} onPress={Actions[FIO_ADDRESS_REGISTER]}>
               <View style={styles.actionButton}>
                 <Fontello name="register-new-fio-icon" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
                 <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_screen_button_register}</EdgeText>
               </View>
             </ClickableText>
-            <ClickableText marginRem={[0, 1, 2, 1]} onPress={Actions[Constants.FIO_DOMAIN_REGISTER]}>
+            <ClickableText marginRem={[0, 1, 2, 1]} onPress={Actions[FIO_DOMAIN_REGISTER]}>
               <View style={styles.actionButton}>
                 <Fontello name="register-custom-fio" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
                 <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_domain_register}</EdgeText>
@@ -234,7 +243,7 @@ const FioAddressListScene = connect(
     const fioDomains: FioDomain[] = state.ui.scenes.fioAddress.fioDomains
     const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
     const loading: boolean = state.ui.scenes.fioAddress.fioAddressesLoading
-    const fioPlugin = account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
+    const fioPlugin = account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
 
     return {
       fioAddresses,

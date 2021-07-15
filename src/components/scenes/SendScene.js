@@ -19,8 +19,8 @@ import { connect } from 'react-redux'
 import { type FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
 import { activated as uniqueIdentifierModalActivated } from '../../actions/UniqueIdentifierModalActions.js'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
-import { CHANGE_MINING_FEE_SEND_CONFIRMATION, getSpecialCurrencyInfo } from '../../constants/indexConstants'
-import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
+import { CHANGE_MINING_FEE_SEND_CONFIRMATION } from '../../constants/SceneKeys.js'
+import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
@@ -239,7 +239,11 @@ class SendComponent extends React.PureComponent<Props, State> {
     )
   }
 
-  handleFeesChange = () => Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({ wallet: this.state.coreWallet, currencyCode: this.state.selectedCurrencyCode })
+  handleFeesChange = () =>
+    Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({
+      wallet: this.state.coreWallet,
+      currencyCode: this.state.selectedCurrencyCode
+    })
 
   handleFioAddressSelect = (fioAddress: string, fioWallet: EdgeCurrencyWallet, fioError: string) => {
     this.setState({

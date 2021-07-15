@@ -76,7 +76,11 @@ function handleLink(dispatch: Dispatch, state: RootState, link: DeepLink): boole
         showError(new Error(`No plugin named ${pluginId} exists`))
         return true
       }
-      Actions.push(PLUGIN_VIEW_DEEP, { plugin, deepPath: path, deepQuery: query })
+      Actions.push(PLUGIN_VIEW_DEEP, {
+        plugin,
+        deepPath: path,
+        deepQuery: query
+      })
       return true
     }
 

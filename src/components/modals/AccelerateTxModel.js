@@ -7,7 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { playSendSound } from '../../actions/SoundActions.js'
-import { TRANSACTION_DETAILS } from '../../constants/indexConstants'
+import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'

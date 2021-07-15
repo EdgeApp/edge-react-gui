@@ -6,7 +6,8 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
-import * as Constants from '../../constants/indexConstants.js'
+import { CREATE_WALLET_ACCOUNT_SETUP, CREATE_WALLET_NAME } from '../../constants/SceneKeys.js'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
@@ -62,13 +63,13 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     const { cleanedPrivateKey, selectedWalletType } = this.props
     if (this.isValidFiatType()) {
       // check if account-based or not
-      const specialCurrencyInfo = Constants.getSpecialCurrencyInfo(selectedWalletType.currencyCode)
+      const specialCurrencyInfo = getSpecialCurrencyInfo(selectedWalletType.currencyCode)
       // check if eos-like
-      let nextSceneKey = Constants.CREATE_WALLET_NAME
+      let nextSceneKey = CREATE_WALLET_NAME
       if (!specialCurrencyInfo.needsAccountNameSetup || cleanedPrivateKey) {
-        nextSceneKey = Constants.CREATE_WALLET_NAME
+        nextSceneKey = CREATE_WALLET_NAME
       } else {
-        nextSceneKey = Constants.CREATE_WALLET_ACCOUNT_SETUP
+        nextSceneKey = CREATE_WALLET_ACCOUNT_SETUP
       }
       Actions[nextSceneKey]({
         selectedWalletType: selectedWalletType,

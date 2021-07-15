@@ -22,7 +22,18 @@ import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import { type WalletListResult, WalletListModal } from '../../../../../components/modals/WalletListModal.js'
 import { LOGIN_QR, SWEEP_PRIVATE_KEY } from '../../../../../components/scenes/ScanScene'
 import { Airship } from '../../../../../components/services/AirshipInstance.js'
-import * as Constants from '../../../../../constants/indexConstants.js'
+import {
+  EXCHANGE_SCENE,
+  FIO_ADDRESS_LIST,
+  FIO_REQUEST_LIST,
+  PLUGIN_BUY,
+  PLUGIN_SELL,
+  REQUEST,
+  SCAN,
+  SETTINGS_OVERVIEW_TAB,
+  TERMS_OF_SERVICE,
+  WALLET_LIST_SCENE
+} from '../../../../../constants/SceneKeys.js'
 import { getPrivateKeySweepableCurrencies } from '../../../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../../../locales/strings.js'
 import { THEME } from '../../../../../theme/variables/airbitz.js'
@@ -101,7 +112,7 @@ const goToScene = (scene: string, sceneProps?: any) => {
   drawerClose()
 }
 
-const popToPluginBuyScene = () => goToScene(Constants.PLUGIN_BUY)
+const popToPluginBuyScene = () => goToScene(PLUGIN_BUY)
 const BuyButton = () => {
   return (
     <Button onPress={popToPluginBuyScene}>
@@ -122,7 +133,7 @@ const BuyButton = () => {
   )
 }
 
-const popToPluginSellScene = () => goToScene(Constants.PLUGIN_SELL)
+const popToPluginSellScene = () => goToScene(PLUGIN_SELL)
 const SellButton = () => {
   return (
     <Button onPress={popToPluginSellScene}>
@@ -143,7 +154,7 @@ const SellButton = () => {
   )
 }
 
-const popToWalletListScene = () => goToScene(Constants.WALLET_LIST_SCENE)
+const popToWalletListScene = () => goToScene(WALLET_LIST_SCENE)
 const WalletsButton = () => {
   return (
     <Button onPress={popToWalletListScene}>
@@ -164,7 +175,10 @@ const WalletsButton = () => {
   )
 }
 
-const popToSendScan = () => goToScene(Constants.SCAN, { data: LOGIN_QR })
+const popToSendScan = () =>
+  goToScene(SCAN, {
+    data: LOGIN_QR
+  })
 const ScanButton = () => {
   return (
     <Button onPress={popToSendScan}>
@@ -195,7 +209,9 @@ const SweepPrivateKeyButton = (props: SweepPrivateKeyButtonProps) => {
     )).then(({ walletId, currencyCode }: WalletListResult) => {
       if (walletId && currencyCode) {
         onSelectWallet(walletId, currencyCode)
-        Actions.jump(Constants.SCAN, { data: SWEEP_PRIVATE_KEY })
+        Actions.jump(SCAN, {
+          data: SWEEP_PRIVATE_KEY
+        })
       }
     })
   }
@@ -217,7 +233,7 @@ const SweepPrivateKeyButton = (props: SweepPrivateKeyButtonProps) => {
   )
 }
 
-const popToRequestScene = () => goToScene(Constants.REQUEST)
+const popToRequestScene = () => goToScene(REQUEST)
 const RequestButton = () => {
   return (
     <Button onPress={popToRequestScene}>
@@ -236,7 +252,7 @@ const RequestButton = () => {
   )
 }
 
-const popToExchangeScene = () => goToScene(Constants.EXCHANGE_SCENE)
+const popToExchangeScene = () => goToScene(EXCHANGE_SCENE)
 const ExchangeButton = () => {
   return (
     <Button onPress={popToExchangeScene}>
@@ -255,7 +271,7 @@ const ExchangeButton = () => {
   )
 }
 
-const popToTermsOfServiceScene = () => goToScene(Constants.TERMS_OF_SERVICE)
+const popToTermsOfServiceScene = () => goToScene(TERMS_OF_SERVICE)
 const TermsOfServiceButton = () => {
   return (
     <Button onPress={popToTermsOfServiceScene}>
@@ -301,7 +317,7 @@ const ShareButton = () => {
   )
 }
 
-const popToSettingsScene = () => goToScene(Constants.SETTINGS_OVERVIEW_TAB)
+const popToSettingsScene = () => goToScene(SETTINGS_OVERVIEW_TAB)
 const SettingsButton = () => {
   return (
     <Button onPress={popToSettingsScene}>
@@ -343,7 +359,7 @@ const LogoutButton = (props: LogoutButtonProps) => {
   )
 }
 
-const goToFioNamesScene = () => goToScene(Constants.FIO_ADDRESS_LIST)
+const goToFioNamesScene = () => goToScene(FIO_ADDRESS_LIST)
 const FioAddressButton = () => {
   // FIO disable changes below
   if (global.isFioDisabled) return null
@@ -364,7 +380,7 @@ const FioAddressButton = () => {
   )
 }
 
-const goToFioRequestsScene = () => goToScene(Constants.FIO_REQUEST_LIST)
+const goToFioRequestsScene = () => goToScene(FIO_REQUEST_LIST)
 const FioRequestsButton = () => {
   return (
     <Button onPress={goToFioRequestsScene}>

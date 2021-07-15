@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import invalidIcon from '../../assets/images/createWallet/invalid_icon.png'
 import validIcon from '../../assets/images/createWallet/valid_icon.png'
-import * as Constants from '../../constants/indexConstants'
+import { CREATE_WALLET_ACCOUNT_SELECT } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -84,7 +84,7 @@ export class CreateWalletAccountSetup extends React.Component<Props, State> {
 
   onSetup = () => {
     if (this.props.handleAvailableStatus === 'AVAILABLE') {
-      Actions[Constants.CREATE_WALLET_ACCOUNT_SELECT]({
+      Actions[CREATE_WALLET_ACCOUNT_SELECT]({
         ...this.props,
         accountName: this.state.accountHandle
       })

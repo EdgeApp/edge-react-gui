@@ -5,7 +5,7 @@ import { TextField } from 'react-native-material-textfield'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
