@@ -7,12 +7,11 @@ import { useEffect, useRef, useState } from '../../types/reactHooks.js'
 
 type Props = {
   visible: boolean,
-  noFadeIn?: boolean,
-  hidden?: boolean,
-  children: React.Node
+  children: React.Node,
+  noFadeIn?: boolean
 }
 
-const FadeComponent = ({ visible: propsVisible, noFadeIn, hidden, children }: Props) => {
+export const Fade = ({ visible: propsVisible, children, noFadeIn }: Props) => {
   const firstRender = useRef(true)
   const opacity = useSharedValue(noFadeIn ? 0.5 : 0)
   const [visible, setVisible] = useState<boolean>(propsVisible)
@@ -52,7 +51,9 @@ const FadeComponent = ({ visible: propsVisible, noFadeIn, hidden, children }: Pr
 
   const style = useAnimatedStyle(() => ({ opacity: interpolate(opacity.value, [0, 0.5, 1], [0, 1, 0]) }))
 
-  return <Animated.View style={style}>{hidden || visible ? children : null}</Animated.View>
+  return (
+    <Animated.View style={style} pointerEvents={visible ? 'auto' : 'none'}>
+      {children}
+    </Animated.View>
+  )
 }
-
-export const Fade = FadeComponent
