@@ -477,8 +477,6 @@
   "exchange_to_wallet": "Cambiar a %s",
   "wallet_list_modal_header_mru": "Carteras más recientes",
   "wallet_list_modal_header_all": "Todas las carteras",
-  "earn_interest": "Gana intereses",
-  "earn_interest_on": "Gana intereses de %s",
   "fio_address_first_screen_title": "Enviar y recibir con una dirección FIO fácil de recordar!",
   "fio_address_features": "• Funciona con todos los tokens y monedas\n• Asegurado desde su cartera\n• Completamente descentralizado",
   "fio_address_first_screen_end": "Similar a las direcciones web, tu dirección FIO puede ser usada para enviarte tokens y monedas sin ni siquiera ver o enviar tu clave pública.",
