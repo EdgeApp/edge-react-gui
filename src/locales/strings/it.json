@@ -583,8 +583,6 @@
   "wallet_list_modal_header_all": "Tutti i portafogli",
   "wallet_list_modal_creating_wallet": "Creazione Portafoglio. Attendere prego",
   "wallet_list_modal_enabling_token": "Sto abilitando il token. Attendere prego",
-  "earn_interest": "Guadagna interessi",
-  "earn_interest_on": "Guadagna interessi su %s",
   "fio_address_first_screen_title": "Invia e ricevi con un indirizzo FIO facile da ricordare!",
   "fio_address_features": "• Funziona con tutti i token e coin\n• Protetto dal tuo portafoglio\n• Completamente decentralizzato",
   "fio_address_first_screen_end": "Simile ai nomi a dominio dei siti web, il tuo indirizzo FIO può essere utilizzato per inviarti token e coin senza mai dover vedere o inviare la tua chiave pubblica.",
