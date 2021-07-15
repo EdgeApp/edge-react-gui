@@ -83,7 +83,7 @@ class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalSta
           <EdgeText style={[styles.text, styles.textInfo]} numberOfLines={3}>
             {s.strings.exchange_congratulations_msg_info}
           </EdgeText>
-          <Fade visible={showButton} hidden>
+          <Fade visible={showButton}>
             <SecondaryButton label={s.strings.string_done_cap} onPress={this.done} />
           </Fade>
           {this.renderConfetti()}
