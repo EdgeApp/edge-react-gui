@@ -26,11 +26,11 @@ export function ModalTitle(props: { children: React.Node, center?: boolean, padd
   )
 }
 
-export function ModalMessage(props: { children: React.Node }) {
+export function ModalMessage(props: { children: React.Node, paddingRem?: number[] | number, isWarning?: boolean }) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  return <Text style={styles.messageText}>{props.children}</Text>
+  return <Text style={[styles.messageText, paddingStyles(props.paddingRem, theme), props.isWarning && styles.warning]}>{props.children}</Text>
 }
 
 export function ModalCloseArrow(props: { onPress: () => void }) {
