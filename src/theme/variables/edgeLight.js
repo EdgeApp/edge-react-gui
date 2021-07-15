@@ -78,6 +78,9 @@ export const edgeLight: Theme = {
     return Math.round(scale(16) * size)
   },
 
+  // Common border
+  defaultBorderColor: palette.white,
+
   // Icons
   icon: palette.black,
   iconTappable: palette.edgeBlue,
