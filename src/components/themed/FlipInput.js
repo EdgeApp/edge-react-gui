@@ -577,12 +577,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginRight: theme.rem(1.5)
   },
   bottomAmount: {
-    fontFamily: theme.fontFaceBold,
+    fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1.5),
     marginRight: theme.rem(0.5)
   },
   bottomAmountMuted: {
-    fontFamily: theme.fontFaceBold,
+    fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1.5),
     marginLeft: theme.rem(-0.1), // Hack because of amount being bigger font size not aligning to the rest of the text on justified left
     marginRight: theme.rem(0.5),

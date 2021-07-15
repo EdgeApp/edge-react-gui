@@ -62,7 +62,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   header: {
     marginVertical: theme.rem(1),
-    fontFamily: theme.fontFaceBold,
+    fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1.25),
     includeFontPadding: false
   },
