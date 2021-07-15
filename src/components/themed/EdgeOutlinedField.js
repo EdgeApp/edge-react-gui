@@ -257,7 +257,7 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
             {...inputProps}
             ref={inputRef}
             style={inputStyles}
-            pointerEvents="none"
+            pointerEvents="auto"
             onFocus={handleFocus}
             onBlur={handleBlur}
             onChangeText={handleChangeText}
