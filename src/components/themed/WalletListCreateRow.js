@@ -166,7 +166,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'center'
   },
   labelText: {
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   }
 }))
 

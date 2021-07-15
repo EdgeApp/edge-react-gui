@@ -174,6 +174,7 @@ export type Theme = {
 
   // Fonts
   fontFaceDefault: string,
+  fontFaceMedium: string,
   fontFaceBold: string,
   fontFaceSymbols: string,
 

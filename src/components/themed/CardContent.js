@@ -80,7 +80,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'column'
   },
   contentTitle: {
-    fontFamily: theme.fontFaceBold,
+    fontFamily: theme.fontFaceMedium,
     fontWeight: '600'
   },
   contentValue: {
