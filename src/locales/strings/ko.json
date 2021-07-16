@@ -177,7 +177,6 @@
   "settings_title_currency": "기본 통화",
   "settings_title_pin_login": "PIN 재로그인",
   "settings_title": "설정",
-  "settings_alert_unlock": "계정 설정 잠금을 풀어주십시오.",
   "settings_enable_custom_nodes": "커스텀 노드를 활성화",
   "settings_set_custom_nodes_modal_title": "커스텀 노드 설정",
   "settings_set_custom_nodes_modal_instructions": "사용하고 싶은 커스텀 노드를 입력하십시오 (라인당 한대):",
