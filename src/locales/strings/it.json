@@ -270,7 +270,6 @@
   "settings_title_currency": "Valuta predefinita",
   "settings_title_pin_login": "PIN Re-login",
   "settings_title": "Impostazioni",
-  "settings_alert_unlock": "Sblocca le impostazioni dell'account",
   "settings_enable_custom_nodes": "Abilita nodi personalizzati",
   "settings_set_custom_nodes_modal_title": "Imposta i nodi personalizzati",
   "settings_set_custom_nodes_modal_instructions": "Inserisci qui in basso i nodi personalizzati che vuoi usare (uno per riga):",
