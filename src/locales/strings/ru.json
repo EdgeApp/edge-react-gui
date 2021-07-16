@@ -129,7 +129,6 @@
   "settings_title_currency": "Валюта по умолчанию",
   "settings_title_pin_login": "Повторный вход с использованием PIN-кода",
   "settings_title": "Настройки",
-  "settings_alert_unlock": "Пожалуйста, разблокируйте настройки учетной записи",
   "settings_enable_custom_nodes": "Включить пользовательские узлы",
   "settings_set_custom_nodes_modal_title": "Установить пользовательские узлы",
   "settings_set_custom_nodes_modal_instructions": "Пожалуйста, укажите пользовательские узлы, которые вы хотите использовать (по одному на строку):",
