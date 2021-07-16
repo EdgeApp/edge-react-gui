@@ -43,7 +43,7 @@ import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
 import { SendLogsModal } from '../modals/SendLogsModal'
-import { Airship, showError, showToast } from '../services/AirshipInstance.js'
+import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
@@ -122,10 +122,6 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     }
   }
 
-  unlockSettingsAlert() {
-    showToast(s.strings.settings_alert_unlock)
-  }
-
   handleUnlock = (): void => {
     if (!this.props.isLocked) {
       this.props.lockSettings()
@@ -135,19 +131,19 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   handleChangePassword = (): void => {
-    this.props.isLocked ? this.unlockSettingsAlert() : Actions.push(CHANGE_PASSWORD)
+    this.props.isLocked ? this.handleUnlock() : Actions.push(CHANGE_PASSWORD)
   }
 
   handleChangePin = (): void => {
-    this.props.isLocked ? this.unlockSettingsAlert() : Actions.push(CHANGE_PIN)
+    this.props.isLocked ? this.handleUnlock() : Actions.push(CHANGE_PIN)
   }
 
   handleChangeOtp = (): void => {
-    this.props.isLocked ? this.unlockSettingsAlert() : Actions.push(OTP_SETUP)
+    this.props.isLocked ? this.handleUnlock() : Actions.push(OTP_SETUP)
   }
 
   handleChangeRecovery = (): void => {
-    this.props.isLocked ? this.unlockSettingsAlert() : Actions.push(RECOVER_PASSWORD)
+    this.props.isLocked ? this.handleUnlock() : Actions.push(RECOVER_PASSWORD)
   }
 
   handleExchangeSettings = (): void => {
