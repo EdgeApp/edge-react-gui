@@ -176,7 +176,6 @@
   "settings_title_currency": "デフォルト通貨",
   "settings_title_pin_login": "PIN 再ログイン",
   "settings_title": "設定",
-  "settings_alert_unlock": "アカウント設定を解除してください",
   "settings_enable_custom_nodes": "カスタムノードを有効化する",
   "settings_set_custom_nodes_modal_title": "カスタムノードの設定",
   "settings_set_custom_nodes_modal_instructions": "利用したいカスタムノードを入力してください(一行につき一台)：",
