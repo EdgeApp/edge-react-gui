@@ -291,7 +291,6 @@ const strings = {
   settings_title_currency: 'Default Currency',
   settings_title_pin_login: 'PIN Re-login',
   settings_title: 'Settings',
-  settings_alert_unlock: 'Please unlock your account settings',
   settings_enable_custom_nodes: 'Enable Custom Nodes',
   settings_set_custom_nodes_modal_title: 'Set Custom Nodes',
   settings_set_custom_nodes_modal_instructions: 'Please enter the custom nodes you wish to use below (one per row):',
