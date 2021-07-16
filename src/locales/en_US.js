@@ -284,7 +284,6 @@ const strings = {
   settings_custom_nodes_title: 'Custom Nodes',
   settings_hours: 'Hour(s)',
   settings_minutes: 'Minute(s)',
-  settings_modal_send_logs_loading: 'Sending logs is in progress',
   settings_modal_send_logs_success: 'Logs have been sent',
   settings_modal_send_logs_failure: 'Sending logs has failed',
   settings_modal_send_logs_label: 'Type Notes Here',

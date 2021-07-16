@@ -7,8 +7,8 @@ import { getBrand, getBuildNumber, getDeviceId, getVersion } from 'react-native-
 import { base16, base64 } from 'rfc4648'
 
 import packageJson from '../../package.json'
-import { SingleInputModal } from '../components/modals/SingleInputModal.js'
-import { Airship, showActivity, showError, showToast } from '../components/services/AirshipInstance.js'
+import { TextInputModal } from '../components/modals/TextInputModal.js'
+import { Airship, showError, showToast } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import { sendLogs } from '../modules/Logs/api.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
@@ -20,18 +20,15 @@ export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetS
   if (!isConnected) return showError(s.strings.network_alert_title)
 
   Airship.show(bridge => (
-    <SingleInputModal
+    <TextInputModal
       bridge={bridge}
-      label={s.strings.settings_modal_send_logs_label}
+      inputLabel={s.strings.settings_modal_send_logs_label}
       returnKeyType="send"
       title={s.strings.settings_button_send_logs}
       onSubmit={async notes => {
-        try {
-          await showActivity(s.strings.settings_modal_send_logs_loading, dispatch(prepareLogs(notes)))
-          showToast(s.strings.settings_modal_send_logs_success)
-        } catch (error) {
-          showError(error)
-        }
+        await dispatch(prepareLogs(notes))
+        showToast(s.strings.settings_modal_send_logs_success)
+        return true
       }}
     />
   ))

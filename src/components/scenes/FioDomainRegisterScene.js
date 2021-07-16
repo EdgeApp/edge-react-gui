@@ -12,7 +12,7 @@ import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SingleInputModal } from '../modals/SingleInputModal'
+import { TextInputModal } from '../modals/TextInputModal.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -198,7 +198,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     this.handleFioDomainFocus()
 
     const fioDomain = await Airship.show(bridge => (
-      <SingleInputModal bridge={bridge} title={s.strings.fio_domain_choose_label} label={s.strings.fio_domain_label} value={this.state.fioDomain} />
+      <TextInputModal bridge={bridge} initialValue={this.state.fioDomain} inputLabel={s.strings.fio_domain_label} title={s.strings.fio_domain_choose_label} />
     ))
     if (fioDomain) this.handleFioDomainChange(fioDomain)
   }
