@@ -29,12 +29,13 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {
   message?: string,
   children?: React.Node,
   closeButton?: boolean,
-  buttons: Buttons
+  buttons: Buttons,
+  disableHideOnTapUnderlay?: boolean
 }) {
-  const { bridge, closeButton, title, message, children, buttons } = props
+  const { bridge, closeButton, title, message, children, buttons, disableHideOnTapUnderlay = false } = props
 
   return (
-    <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(undefined)} paddingRem={1}>
+    <ThemedModal bridge={bridge} onCancel={disableHideOnTapUnderlay ? () => {} : () => bridge.resolve(undefined)} paddingRem={1}>
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {message != null ? <ModalMessage>{message}</ModalMessage> : null}
       {children}

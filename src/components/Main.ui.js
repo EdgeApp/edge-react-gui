@@ -43,8 +43,6 @@ import AddToken from '../connectors/scenes/AddTokenConnector.js'
 import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
 import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
 import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
-import SendConfirmation from '../connectors/scenes/SendConfirmationConnector.js'
-import SendConfirmationOptions from '../connectors/SendConfirmationOptionsConnector.js'
 import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
@@ -406,27 +404,6 @@ export class MainComponent extends React.Component<Props> {
             </Stack>
           </Tabs>
 
-          <Stack key={Constants.SEND_CONFIRMATION} hideTabBar>
-            <Scene
-              key={Constants.SEND_CONFIRMATION_NOT_USED}
-              navTransparent
-              hideTabBar
-              panHandlers={null}
-              component={ifLoggedIn(SendConfirmation)}
-              renderTitle={<HeaderTitle showWalletNameOnly />}
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={this.renderSendConfirmationButton()}
-            />
-            <Scene
-              key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
-              navTransparent
-              component={ifLoggedIn(ChangeMiningFeeScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_change_mining_fee} />}
-              renderLeftButton={<BackButton onPress={this.handleBack} />}
-              renderRightButton={<HeaderTextButton type="help" placement="right" />}
-            />
-          </Stack>
-
           <Stack key={Constants.SEND} hideTabBar>
             <Scene
               key={Constants.SEND}
@@ -785,10 +762,6 @@ export class MainComponent extends React.Component<Props> {
 
   renderRequestMenuButton = () => {
     return <RequestDropMenu />
-  }
-
-  renderSendConfirmationButton = () => {
-    return <SendConfirmationOptions />
   }
 
   renderEmptyButton = () => {

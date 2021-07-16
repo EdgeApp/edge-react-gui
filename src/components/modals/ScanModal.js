@@ -177,11 +177,13 @@ export const ScanModal = connect(
     scanEnabled: state.ui.scenes.scan.scanEnabled
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    toggleEnableTorch: () => dispatch({ type: 'TOGGLE_ENABLE_TORCH' }),
-    disableScan: () => {
+    toggleEnableTorch() {
+      dispatch({ type: 'TOGGLE_ENABLE_TORCH' })
+    },
+    disableScan() {
       dispatch({ type: 'DISABLE_SCAN' })
     },
-    enableScan: () => {
+    enableScan() {
       dispatch({ type: 'ENABLE_SCAN' })
     }
   })

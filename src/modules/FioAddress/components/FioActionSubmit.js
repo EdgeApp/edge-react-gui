@@ -6,7 +6,9 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { connect } from 'react-redux'
 
-import { showError, showToast } from '../../../components/services/AirshipInstance'
+import type { WalletListResult } from '../../../components/modals/WalletListModal'
+import { WalletListModal } from '../../../components/modals/WalletListModal'
+import { Airship, showError, showToast } from '../../../components/services/AirshipInstance'
 import type { Theme, ThemeProps } from '../../../components/services/ThemeContext'
 import { cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
@@ -15,8 +17,8 @@ import { Tile } from '../../../components/themed/Tile'
 import * as Constants from '../../../constants/indexConstants'
 import s from '../../../locales/strings'
 import type { RootState } from '../../../reducers/RootReducer'
+import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { truncateDecimals } from '../../../util/utils'
-import { getDisplayDenomination } from '../../Settings/selectors'
 import { Slider } from '../../UI/components/Slider/Slider'
 
 const DIVIDE_PRECISION = 18
@@ -24,13 +26,14 @@ const DIVIDE_PRECISION = 18
 type OwnProps = {
   title?: string,
   successMessage?: string,
-  onSubmit?: number => Promise<any>,
+  onSubmit?: (wallet: EdgeCurrencyWallet, fee: number) => Promise<any>,
   onSuccess?: ({ expiration?: string }) => void,
   cancelOperation?: () => void,
   goTo?: (params: any) => void,
   getOperationFee: EdgeCurrencyWallet => Promise<number>,
   fioWallet: EdgeCurrencyWallet,
-  addressTitles?: boolean
+  addressTitles?: boolean,
+  showPaymentWalletPicker?: boolean
 }
 
 export type State = {
@@ -40,11 +43,14 @@ export type State = {
   feeLoading: boolean,
   fee: number | null,
   displayFee: number,
-  balance: number
+  balance: number,
+  paymentWallet?: EdgeCurrencyWallet
 }
 
 export type StateProps = {
-  denominationMultiplier: string
+  denominationMultiplier: string,
+  currencyWallets: { [string]: EdgeCurrencyWallet },
+  fioWallets: EdgeCurrencyWallet[]
 }
 
 type Props = OwnProps & ThemeProps & StateProps
@@ -59,7 +65,8 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
       feeLoading: false,
       fee: null,
       displayFee: 0,
-      balance: 0
+      balance: 0,
+      paymentWallet: props.fioWallet
     }
   }
 
@@ -73,9 +80,9 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   }
 
   onConfirm = async () => {
-    const { fioWallet, onSubmit, onSuccess, successMessage, addressTitles } = this.props
-    const { fee } = this.state
-    if (!fioWallet) {
+    const { onSubmit, onSuccess, successMessage, addressTitles } = this.props
+    const { paymentWallet, fee } = this.state
+    if (!paymentWallet) {
       const msg = addressTitles ? s.strings.fio_wallet_missing_for_fio_address : s.strings.fio_wallet_missing_for_fio_domain
       showError(msg)
       this.setState({ error: msg })
@@ -92,7 +99,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
       this.setState({ loading: true })
       let result: { expiration?: string } = {}
       if (onSubmit) {
-        result = await onSubmit(fee)
+        result = await onSubmit(paymentWallet, fee)
       }
 
       this.setState({ loading: false })
@@ -104,15 +111,33 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
     }
   }
 
+  handleWalletPress = () => {
+    const { fioWallet } = this.props
+    Airship.show(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={[fioWallet.currencyInfo.currencyCode]} />
+    ))
+      .then(({ walletId, currencyCode }: WalletListResult) => {
+        if (walletId && currencyCode) {
+          this.props.currencyWallets[walletId] &&
+            this.setState({ paymentWallet: this.props.currencyWallets[walletId] }, () => {
+              this.setBalance()
+              this.setFee()
+            })
+        }
+      })
+      .catch(error => console.log(error))
+  }
+
   setFee = async (): Promise<void> => {
-    const { fioWallet, getOperationFee, goTo } = this.props
+    const { getOperationFee, goTo } = this.props
+    const { paymentWallet } = this.state
     let fee = null
     let displayFee = 0
     let showSlider = false
-    if (fioWallet) {
+    if (paymentWallet) {
       this.setState({ feeLoading: true })
       try {
-        fee = await getOperationFee(fioWallet)
+        fee = await getOperationFee(paymentWallet)
         if (fee) {
           if (goTo) {
             this.setState({ feeLoading: false })
@@ -130,9 +155,10 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   }
 
   setBalance = (): void => {
-    const { fioWallet, addressTitles } = this.props
-    if (fioWallet) {
-      const balance = fioWallet.balances[fioWallet.currencyInfo.currencyCode] ?? '0'
+    const { addressTitles } = this.props
+    const { paymentWallet } = this.state
+    if (paymentWallet) {
+      const balance = paymentWallet.balances[paymentWallet.currencyInfo.currencyCode] ?? '0'
       this.setState({ balance: this.formatFio(balance) })
     } else {
       showError(addressTitles ? s.strings.fio_wallet_missing_for_fio_address : s.strings.fio_wallet_missing_for_fio_domain)
@@ -172,14 +198,22 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   }
 
   render(): React$Node {
-    const { title, theme } = this.props
-    const { loading, feeLoading, showSlider, displayFee, balance } = this.state
+    const { title, showPaymentWalletPicker, fioWallets, theme } = this.props
+    const { loading, feeLoading, showSlider, displayFee, paymentWallet, balance } = this.state
     const styles = getStyles(theme)
 
     return (
       <View>
         {feeLoading && <ActivityIndicator color={theme.iconTappable} style={styles.loader} size="small" />}
         {title ? <EdgeText style={styles.actionTitle}>{title}</EdgeText> : null}
+        {showPaymentWalletPicker && fioWallets.length > 1 ? (
+          <Tile
+            type="editable"
+            title={s.strings.select_wallet}
+            onPress={this.handleWalletPress}
+            body={paymentWallet && paymentWallet.name ? paymentWallet.name : ''}
+          />
+        ) : null}
         {this.renderFeeAndBalance()}
         <View style={styles.spacer} />
         {showSlider && (
@@ -234,6 +268,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
 export const FioActionSubmit = connect((state: RootState): StateProps => {
   const displayDenomination = getDisplayDenomination(state, Constants.FIO_STR)
   return {
-    denominationMultiplier: displayDenomination.multiplier
+    denominationMultiplier: displayDenomination.multiplier,
+    currencyWallets: state.core.account.currencyWallets,
+    fioWallets: state.ui.wallets.fioWallets
   }
 })(withTheme(FioActionSubmitComponent))

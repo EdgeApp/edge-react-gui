@@ -3,7 +3,7 @@
 import * as React from 'react'
 
 import s from '../../locales/strings.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeTextField.js'
+import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { WalletList } from '../themed/WalletList.js'
@@ -53,7 +53,7 @@ export class WalletListModal extends React.PureComponent<Props, State> {
     const { search, searching } = this.state
     return (
       <ThemedModal bridge={bridge} onCancel={() => bridge.resolve({})}>
-        <ModalTitle>{headerTitle}</ModalTitle>
+        <ModalTitle center>{headerTitle}</ModalTitle>
         <EdgeTextFieldOutlined
           returnKeyType="search"
           label={s.strings.search_wallets}
@@ -64,7 +64,8 @@ export class WalletListModal extends React.PureComponent<Props, State> {
           isClearable={searching}
           onClear={this.handleClearText}
           value={search}
-          marginRem={[0, 0, 0.25, 0]}
+          marginRem={[0.5, 0.75, 1.25]}
+          size="small"
         />
         <WalletList
           onPress={this.handleOnPress}

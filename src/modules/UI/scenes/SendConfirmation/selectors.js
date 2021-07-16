@@ -3,11 +3,11 @@
 import type { EdgeMetadata, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 
 import { type GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
+import { getExchangeDenomination } from '../../../../selectors/DenominationSelectors.js'
+import { convertCurrency } from '../../../../selectors/WalletSelectors.js'
 import { type RootState } from '../../../../types/reduxTypes.js'
 import { type SpendAuthType } from '../../../../types/types.js'
 import { convertNativeToExchange } from '../../../../util/utils.js'
-import { getExchangeDenomination } from '../../../Settings/selectors.js'
-import { convertCurrency } from '../../selectors.js'
 
 export const initialState = {
   forceUpdateGuiCounter: 0,
@@ -16,7 +16,7 @@ export const initialState = {
     networkFeeOption: 'standard',
     customNetworkFee: {},
     publicAddress: '',
-    nativeAmount: '0',
+    nativeAmount: '',
     metadata: {
       name: '',
       category: '',
@@ -27,7 +27,7 @@ export const initialState = {
   },
   spendInfo: null,
   transactionMetadata: null,
-  nativeAmount: '0',
+  nativeAmount: '',
 
   isEditable: true,
 
@@ -36,7 +36,7 @@ export const initialState = {
     date: 0,
     currencyCode: '',
     blockHeight: -1,
-    nativeAmount: '0',
+    nativeAmount: '',
     networkFee: '',
     parentNetworkFee: '',
     ourReceiveAddresses: [],
@@ -51,7 +51,9 @@ export const initialState = {
   authRequired: 'none',
   address: '',
 
-  toggleCryptoOnTop: 0
+  toggleCryptoOnTop: 0,
+
+  maxSpendSet: false
 }
 
 export const getTransaction = (state: RootState): EdgeTransaction => state.ui.scenes.sendConfirmation.transaction || initialState.transaction
@@ -144,6 +146,7 @@ export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo): Spe
 
   const currencyCode = spendInfo.currencyCode
   const { nativeAmount } = spendInfo.spendTargets[0]
+  if (nativeAmount === '') return 'none' // TODO: Future change will make this null instead of ''
   if (!currencyCode || !nativeAmount) throw new Error('Invalid Spend Request')
 
   const { spendingLimits } = state.ui.settings

@@ -4,20 +4,15 @@ import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
-import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import { Fontello } from '../../assets/vector/index.js'
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { getDefaultIsoFiat, getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import { getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { PromoCard } from '../themed/PromoCard.js'
 import { WiredBalanceBox } from '../themed/WiredBalanceBox.js'
-import { EdgeTextFieldOutlined } from './EdgeTextField.js'
+import { EdgeTextFieldOutlined } from './EdgeOutlinedField.js'
 
 type OwnProps = {
   sorting: boolean,
@@ -28,15 +23,7 @@ type OwnProps = {
   onChangeSearchingState: (searching: boolean) => void
 }
 
-type StateProps = {
-  exchangeRates: Object
-}
-
-type DispatchProps = {
-  toggleAccountBalanceVisibility(): void
-}
-
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & ThemeProps
 
 class WalletListHeaderComponent extends React.PureComponent<Props> {
   textInput = React.createRef()
@@ -85,7 +72,7 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
               ref={this.textInput}
               isClearable={searching}
               onClear={this.clearText}
-              marginRem={0}
+              marginRem={[0, 0, 1]}
             />
           </View>
           {searching && (
@@ -94,15 +81,7 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
             </TouchableOpacity>
           )}
         </View>
-        {!searching && (
-          <WiredBalanceBox
-            showBalance={getIsAccountBalanceVisible}
-            fiatAmount={getTotalFiatAmountFromExchangeRates}
-            isoFiatCurrencyCode={getDefaultIsoFiat}
-            onPress={this.props.toggleAccountBalanceVisibility}
-            exchangeRates={this.props.exchangeRates}
-          />
-        )}
+        {!searching && <WiredBalanceBox />}
         {!sorting && !searching && (
           <View style={styles.headerContainer}>
             <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
@@ -142,24 +121,15 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   searchContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     marginTop: theme.rem(0.5),
     marginHorizontal: theme.rem(1)
   },
   searchDoneButton: {
     justifyContent: 'center',
-    height: theme.rem(4.5),
     paddingLeft: theme.rem(0.75),
-    paddingBottom: theme.rem(0.25)
+    paddingBottom: theme.rem(1)
   }
 }))
 
-export const WalletListHeader = connect(
-  (state: RootState): StateProps => ({
-    exchangeRates: state.exchangeRates
-  }),
-  (dispatch: Dispatch): DispatchProps => ({
-    toggleAccountBalanceVisibility() {
-      dispatch(toggleAccountBalanceVisibility())
-    }
-  })
-)(withTheme(WalletListHeaderComponent))
+export const WalletListHeader = withTheme(WalletListHeaderComponent)

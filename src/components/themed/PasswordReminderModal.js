@@ -120,8 +120,14 @@ export const PasswordReminderModal = connect(
     account: state.core.account
   }),
   (dispatch: Dispatch): DispatchProps => ({
-    onSuccess: () => dispatch(passwordReminderSuccess()),
-    onRequestChangePassword: () => dispatch(requestChangePassword()),
-    onPostpone: () => dispatch(postponePasswordReminder())
+    onSuccess() {
+      dispatch(passwordReminderSuccess())
+    },
+    onRequestChangePassword() {
+      dispatch(requestChangePassword())
+    },
+    onPostpone() {
+      dispatch(postponePasswordReminder())
+    }
   })
 )(withTheme(PasswordReminderModalComponent))

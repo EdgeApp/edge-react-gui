@@ -27,6 +27,7 @@ const FadeComponent = ({ visible: propsVisible, hidden, children }: Props) => {
     })
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => animate(propsVisible ? 0.5 : 0), [])
 
   useEffect(() => {
@@ -38,6 +39,7 @@ const FadeComponent = ({ visible: propsVisible, hidden, children }: Props) => {
     if (propsVisible !== prevVisible) {
       animate(propsVisible ? 0.5 : 1)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [propsVisible])
 
   const style = useAnimatedStyle(() => ({ opacity: interpolate(opacity.value, [0, 0.5, 1], [0, 1, 0]) }))

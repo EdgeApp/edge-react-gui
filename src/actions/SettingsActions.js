@@ -15,7 +15,7 @@ import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
 import { sendLogs } from '../modules/Logs/action.js'
-import { convertCurrency } from '../modules/UI/selectors.js'
+import { convertCurrency } from '../selectors/WalletSelectors.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 
@@ -30,19 +30,6 @@ export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getSta
     type: 'UI/SETTINGS/UPDATE_SETTINGS',
     data: { settings: updatedSettings }
   })
-}
-
-export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  ACCOUNT_SETTINGS.setPINModeRequest(account, pinMode)
-    .then(() =>
-      dispatch({
-        type: 'UI/SETTINGS/SET_PIN_MODE',
-        data: { pinMode }
-      })
-    )
-    .catch(showError)
 }
 
 export const setAutoLogoutTimeInSecondsRequest = (autoLogoutTimeInSeconds: number) => (dispatch: Dispatch, getState: GetState) => {
@@ -103,19 +90,6 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
     .catch(showError)
 }
 
-export const setMerchantModeRequest = (merchantMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  ACCOUNT_SETTINGS.setMerchantModeRequest(account, merchantMode)
-    .then(() =>
-      dispatch({
-        type: 'UI/SETTINGS/SET_MERCHANT_MODE',
-        data: { merchantMode }
-      })
-    )
-    .catch(showError)
-}
-
 export const setPreferredSwapPluginId = (pluginId: string | void) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
@@ -124,19 +98,6 @@ export const setPreferredSwapPluginId = (pluginId: string | void) => (dispatch: 
       dispatch({
         type: 'UI/SETTINGS/SET_PREFERRED_SWAP_PLUGIN',
         data: pluginId
-      })
-    )
-    .catch(showError)
-}
-
-export const setBluetoothModeRequest = (bluetoothMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const { account } = state.core
-  ACCOUNT_SETTINGS.setBluetoothModeRequest(account, bluetoothMode)
-    .then(() =>
-      dispatch({
-        type: 'UI/SETTINGS/SET_BLUETOOTH_MODE',
-        data: { bluetoothMode }
       })
     )
     .catch(showError)

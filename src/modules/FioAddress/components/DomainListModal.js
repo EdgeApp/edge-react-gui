@@ -9,8 +9,8 @@ import { connect } from 'react-redux'
 
 import { Fontello } from '../../../assets/vector'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
+import { EdgeTextFieldOutlined } from '../../../components/themed/EdgeOutlinedField'
 import { EdgeText } from '../../../components/themed/EdgeText'
-import { EdgeTextFieldOutlined } from '../../../components/themed/EdgeTextField'
 import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
 import { ClickableText } from '../../../components/themed/ThemedButtons'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
@@ -198,6 +198,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
             marginRem={[0, 1]}
             ref={this.textInput}
             blurOnSubmit
+            size="small"
           />
         </View>
         <FlatList data={items} initialNumToRender={24} keyboardShouldPersistTaps="handled" keyExtractor={this.keyExtractor} renderItem={this.renderItem} />

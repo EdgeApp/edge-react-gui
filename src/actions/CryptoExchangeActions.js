@@ -25,8 +25,12 @@ import { Airship, showError } from '../components/services/AirshipInstance.js'
 import * as Constants from '../constants/indexConstants'
 import { formatNumber } from '../locales/intl.js'
 import s from '../locales/strings.js'
-import * as SETTINGS_SELECTORS from '../modules/Settings/selectors.js'
-import * as UI_SELECTORS from '../modules/UI/selectors'
+import {
+  getDisplayDenomination,
+  getDisplayDenominationFromSettings,
+  getExchangeDenomination,
+  getPrimaryExchangeDenomination
+} from '../selectors/DenominationSelectors.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
 import { bestOfPlugins } from '../util/ReferralHelpers.js'
@@ -74,12 +78,14 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
     Actions.popTo(Constants.EXCHANGE_SCENE)
     const insufficientFunds = asMaybeInsufficientFundsError(error)
     if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode) {
-      const { currencyCode } = insufficientFunds
+      const { currencyCode, networkFee = '' } = insufficientFunds
+      const multiplier = getExchangeDenomination(state, currencyCode).multiplier
+      const amountString = UTILS.roundedFee(networkFee, 2, multiplier)
       const result = await Airship.show(bridge => (
         <ButtonsModal
           bridge={bridge}
           title={s.strings.buy_crypto_modal_title}
-          message={sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}
+          message={`${amountString}${sprintf(s.strings.buy_parent_crypto_modal_message, currencyCode)}`}
           buttons={{
             buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
             exchange: { label: s.strings.buy_crypto_modal_exchange },
@@ -182,14 +188,14 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   const fromDisplayAmount = bns.toFixed(fromDisplayAmountTemp, 0, 8)
 
   // Format from fiat:
-  const fromExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, fromCurrencyCode)
+  const fromExchangeDenomination = getExchangeDenomination(state, fromCurrencyCode)
   const fromBalanceInCryptoDisplay = UTILS.convertNativeToExchange(fromExchangeDenomination.multiplier)(quote.fromNativeAmount)
   const fromBalanceInFiatRaw = await currencyConverter.convertCurrency(fromCurrencyCode, fromWallet.fiatCurrencyCode, Number(fromBalanceInCryptoDisplay))
   const fromFiat = formatNumber(fromBalanceInFiatRaw || 0, { toFixed: 2 })
 
   // Format crypto fee:
-  const settings = SETTINGS_SELECTORS.getSettings(state)
-  const feeDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, request.fromWallet.currencyInfo.currencyCode)
+  const { settings } = state.ui
+  const feeDenomination = getDisplayDenominationFromSettings(settings, request.fromWallet.currencyInfo.currencyCode)
   const feeNativeAmount = quote.networkFee.nativeAmount
   const feeTempAmount = bns.div(feeNativeAmount, feeDenomination.multiplier, DIVIDE_PRECISION)
   const feeDisplayAmount = bns.toFixed(feeTempAmount, 0, 6)
@@ -211,7 +217,7 @@ async function fetchSwapQuote(state: RootState, request: EdgeSwapRequest): Promi
   const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
 
   // Format to fiat:
-  const toExchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, toCurrencyCode)
+  const toExchangeDenomination = getExchangeDenomination(state, toCurrencyCode)
   const toBalanceInCryptoDisplay = UTILS.convertNativeToExchange(toExchangeDenomination.multiplier)(quote.toNativeAmount)
   const toBalanceInFiatRaw = await currencyConverter.convertCurrency(toCurrencyCode, toWallet.fiatCurrencyCode, Number(toBalanceInCryptoDisplay))
   const toFiat = formatNumber(toBalanceInFiatRaw || 0, { toFixed: 2 })
@@ -246,11 +252,11 @@ const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: G
 
   const aboveLimit = asMaybeSwapAboveLimitError(error)
   if (aboveLimit != null) {
-    const settings = SETTINGS_SELECTORS.getSettings(state)
-    const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
+    const { settings } = state.ui
+    const currentCurrencyDenomination = getDisplayDenominationFromSettings(settings, fromCurrencyCode)
 
     const { nativeMax } = aboveLimit
-    const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+    const displayDenomination = getDisplayDenomination(state, fromCurrencyCode)
     const nativeToDisplayRatio = displayDenomination.multiplier
     const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
 
@@ -262,11 +268,11 @@ const processSwapQuoteError = (error: mixed) => (dispatch: Dispatch, getState: G
 
   const belowLimit = asMaybeSwapBelowLimitError(error)
   if (belowLimit) {
-    const settings = SETTINGS_SELECTORS.getSettings(state)
-    const currentCurrencyDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(settings, fromCurrencyCode)
+    const { settings } = state.ui
+    const currentCurrencyDenomination = getDisplayDenominationFromSettings(settings, fromCurrencyCode)
 
     const { nativeMin } = belowLimit
-    const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+    const displayDenomination = getDisplayDenomination(state, fromCurrencyCode)
     const nativeToDisplayRatio = displayDenomination.multiplier
     const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
 
@@ -372,8 +378,8 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string, 
   const wallet = state.ui.wallets.byId[walletId]
   const cc = currencyCode || wallet.currencyCode
 
-  const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, cc)
-  const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, cc, wallet)
+  const primaryDisplayDenomination: GuiDenomination = getDisplayDenomination(state, cc)
+  const primaryExchangeDenomination: GuiDenomination = getPrimaryExchangeDenomination(state, cc, wallet)
   const primaryInfo: GuiCurrencyInfo = {
     displayCurrencyCode: cc,
     exchangeCurrencyCode: cc,
@@ -417,11 +423,11 @@ async function getBalanceMessage(state: RootState, wallet: GuiWallet, currencyCo
   const currencyConverter = account.rateCache
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)
+  const exchangeDenomination = getExchangeDenomination(state, currencyCode)
   const balanceInCryptoDisplay = UTILS.convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = await currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, Number(balanceInCryptoDisplay))
 
-  const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  const displayDenomination = getDisplayDenomination(state, currencyCode)
 
   const cryptoBalanceAmount: string = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto) // convert to correct denomination
   const cryptoBalanceAmountString = cryptoBalanceAmount ? formatNumber(UTILS.decimalOrZero(bns.toFixed(cryptoBalanceAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)

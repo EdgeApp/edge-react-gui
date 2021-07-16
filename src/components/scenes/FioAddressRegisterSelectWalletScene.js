@@ -11,7 +11,7 @@ import { sprintf } from 'sprintf-js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { getRegInfo } from '../../modules/FioAddress/util'
-import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
+import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import type { Dispatch } from '../../types/reduxTypes'
 import { type RootState } from '../../types/reduxTypes'
 import type { FioDomain, GuiWallet } from '../../types/types'
@@ -150,7 +150,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
       } else {
         this.props.onSelectWallet(walletId, paymentCurrencyCode)
 
-        const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, paymentCurrencyCode)
+        const exchangeDenomination = getExchangeDenomination(state, paymentCurrencyCode)
         let nativeAmount = bns.mul(allPaymentInfo[paymentCurrencyCode].amount, exchangeDenomination.multiplier)
         nativeAmount = bns.toFixed(nativeAmount, 0, 0)
 
@@ -272,9 +272,9 @@ const FioAddressRegisterSelectWalletScene = connect(
     const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
     const { account } = state.core
     const fioPlugin = account && account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
-    const fioDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, Constants.FIO_STR)
+    const fioDisplayDenomination = getDisplayDenomination(state, Constants.FIO_STR)
 
-    const defaultFiatCode = SETTINGS_SELECTORS.getDefaultIsoFiat(state)
+    const defaultFiatCode = state.ui.settings.defaultIsoFiat
 
     const out: StateProps = {
       state,

@@ -1,6 +1,6 @@
 // @flow
 
-import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
+import { bns, div, eq, gt, gte, mul, toFixed } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 import { Linking, Platform } from 'react-native'
@@ -9,11 +9,11 @@ import SafariView from 'react-native-safari-view'
 import { FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/indexConstants.js'
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD } from '../constants/WalletAndCurrencyConstants'
 import { formatNumber } from '../locales/intl.js'
-import type { ExchangeRatesState } from '../modules/ExchangeRates/reducer'
-import { emptyEdgeDenomination } from '../modules/Settings/selectors.js'
-import { convertCurrency, convertCurrencyFromExchangeRates } from '../modules/UI/selectors.js'
+import { emptyEdgeDenomination } from '../selectors/DenominationSelectors.js'
+import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet, TransactionListTx } from '../types/types.js'
+import { type GuiExchangeRates } from '../types/types.js'
 
 export const DIVIDE_PRECISION = 18
 
@@ -122,6 +122,29 @@ export const truncateDecimals = (input: string, precision: number, allowBlank: b
   return precision > 0 ? `${integers}.${decimals.slice(0, precision)}` : integers
 }
 
+// Counts zeros after decimal place in number. '0.00036' => 3
+export const zerosAfterDecimal = (input: string): number => {
+  if (!input.includes('.')) return 0
+  const decimals = input.split('.')[1]
+  let numZeros = 0
+  for (let i = 0; i <= decimals.length; i++) {
+    if (decimals[i] === '0') {
+      numZeros++
+    } else {
+      break
+    }
+  }
+  return numZeros
+}
+
+// Adds 1 to the least significant digit of a number. '12.00256' => '12.00257'
+export const roundUpToLeastSignificant = (input: string): string => {
+  if (!input.includes('.')) return input
+  const precision = input.split('.')[1].length
+  const oneExtra = `0.${'1'.padStart(precision, '0')}`
+  return bns.add(input, oneExtra)
+}
+
 export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   if (gte(input, '1')) {
     // do nothing to numbers greater than one
@@ -136,6 +159,15 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
       return truncatedToDecimals.replace(/0+$/, '') // then return the truncation
     }
   }
+}
+
+export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros: number, multiplier: string): string => {
+  if (nativeAmount === '') return nativeAmount
+  const displayAmount = div(nativeAmount, multiplier, DIVIDE_PRECISION)
+  const precision = zerosAfterDecimal(displayAmount) + decimalPlacesBeyondLeadingZeros
+  const truncatedAmount = truncateDecimals(displayAmount, precision)
+  if (gt(displayAmount, truncatedAmount)) return `${roundUpToLeastSignificant(truncatedAmount)} `
+  return `${truncatedAmount} `
 }
 
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
@@ -680,22 +712,22 @@ export const convertToFiatFee = (
   networkFee: string,
   exchangeMultiplier: string,
   currencyCode: string,
-  exchangeRates: ExchangeRatesState,
+  exchangeRates: GuiExchangeRates,
   isoFiatCurrencyCode: string
 ): { amount: string, style?: string } => {
   const cryptoFeeExchangeAmount = convertNativeToExchange(exchangeMultiplier)(networkFee)
   const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(cryptoFeeExchangeAmount))
   const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
   return {
-    amount: bns.toFixed(fiatFeeAmount.toString(), 2, 2),
-    style: feeAmountInUSD > FEE_ALERT_THRESHOLD ? feeStyle.danger : feeAmountInUSD > FEE_COLOR_THRESHOLD ? feeStyle.warning : undefined
+    amount: bns.toFixed(fiatFeeAmount, 2, 2),
+    style: parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD ? feeStyle.danger : parseFloat(feeAmountInUSD) > FEE_COLOR_THRESHOLD ? feeStyle.warning : undefined
   }
 }
 
 export const convertTransactionFeeToDisplayFee = (
   guiWallet: GuiWallet,
   currencyCode: string,
-  exchangeRates: ExchangeRatesState,
+  exchangeRates: GuiExchangeRates,
   transaction: EdgeTransaction | null,
   settings: any
 ): { fiatSymbol?: string, fiatAmount: string, fiatStyle?: string, cryptoSymbol?: string, cryptoAmount: string } => {

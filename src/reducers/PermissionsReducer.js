@@ -7,7 +7,7 @@ const { UNAVAILABLE, BLOCKED, DENIED, GRANTED, LIMITED } = RNPermissions.RESULTS
 
 // To add new permissions, just put them in this list an in `initialState`:
 export type Permission = 'camera' | 'contacts' | 'location'
-export type PermissionStatus = UNAVAILABLE | BLOCKED | DENIED | GRANTED | LIMITED
+export type PermissionStatus = typeof UNAVAILABLE | typeof BLOCKED | typeof DENIED | typeof GRANTED | typeof LIMITED
 export type PermissionsState = {
   [permission: Permission]: PermissionStatus
 }

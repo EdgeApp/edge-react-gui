@@ -599,7 +599,7 @@
     "paymentTypes": [
       "cash"
     ],
-    "description": "Fee: 5.5% / Settlement: 5min - 24hours\nLimit: $1000/day",
+    "description": "Fee: 5.5% / Settlement: 5min - 24hours\nMonthly Limit: $2000",
     "title": "Cash with Newsagent",
     "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
@@ -647,7 +647,7 @@
     "paymentTypes": [
       "cash"
     ],
-    "description": "Fee: 4.5% / Settlement: Instant\nLimit: $1000/day",
+    "description": "Fee: 4.5% / Settlement: Instant\nMonthly Limit: $2000",
     "title": "Australia Post",
     "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
@@ -671,7 +671,7 @@
     "paymentTypes": [
       "credit"
     ],
-    "description": "Fee: 2.9% / Settlement: Instant\nLimit: $5000/day",
+    "description": "Fee: 1.99% / Settlement: Instant\nLimit: $5000/day",
     "title": "Credit and Debit Card",
     "partnerIconPath": "https://content.edge.app/banxa.png",
     "forCountries": [
@@ -1027,7 +1027,7 @@
       "country": "hk",
       "payment_id": "6026"
     },
-    "description": "Fee: 2.9% / Settlement: Instant\nLimit: HK$50000/day"
+    "description": "Fee: 1.99% / Settlement: Instant\nLimit: HK$50000/day"
   },
   {
     "id": "banxa.credit",

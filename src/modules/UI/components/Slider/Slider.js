@@ -112,6 +112,7 @@ export const SliderComponent = (props: Props) => {
     if (completed && !props.showSpinner) {
       resetSlider()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.showSpinner])
 
   return (

@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 import { exportTransactionsToCSV, exportTransactionsToQBO } from '../../actions/TransactionExportActions.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
-import { getDisplayDenomination } from '../../modules/Settings/selectors.js'
+import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { DateModal } from '../modals/DateModal.js'
@@ -205,7 +205,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     // The non-string result appears to be a bug in the core,
     // which we are relying on to determine if the date range is empty:
     const csvFile = await showActivity(s.strings.export_transaction_loading, exportTransactionsToCSV(this.props.sourceWallet, transactionOptions))
-    if (typeof csvFile !== 'string') {
+    if (typeof csvFile !== 'string' || csvFile === '' || csvFile == null) {
       showError(s.strings.export_transaction_export_error)
       return
     }

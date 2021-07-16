@@ -229,6 +229,8 @@ class FioAddressRegister extends React.Component<Props, State> {
           errorMessage: ''
         })
       } catch (e) {
+        console.log(e.json)
+        console.log(e.message)
         this.setState({
           isValid: false,
           isAvailable: false,

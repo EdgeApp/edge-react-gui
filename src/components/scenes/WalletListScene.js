@@ -9,7 +9,6 @@ import { connect } from 'react-redux'
 import { updateActiveWalletsOrder } from '../../actions/WalletListActions.js'
 import XPubModal from '../../connectors/XPubModalConnector.js'
 import s from '../../locales/strings.js'
-import { getIsAccountBalanceVisible } from '../../modules/Settings/selectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { type GuiWallet } from '../../types/types.js'
 import { getWalletListSlideTutorial, setUserTutorialList } from '../../util/tutorial.js'
@@ -151,7 +150,7 @@ class WalletListComponent extends React.PureComponent<Props, State> {
   }
 
   renderSortableRow = (guiWallet: GuiWallet | void) => {
-    return <WalletListSortableRow guiWallet={guiWallet} showBalance={getIsAccountBalanceVisible} />
+    return <WalletListSortableRow guiWallet={guiWallet} />
   }
 
   disableSorting = () => this.setState({ sorting: false })

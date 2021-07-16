@@ -20,7 +20,7 @@ import sweepIcon from '../../../../../assets/images/sidenav/sweep.png'
 import termsIcon from '../../../../../assets/images/sidenav/terms.png'
 import walletIcon from '../../../../../assets/images/sidenav/wallets.png'
 import { type WalletListResult, WalletListModal } from '../../../../../components/modals/WalletListModal.js'
-import { SWEEP_PRIVATE_KEY } from '../../../../../components/scenes/ScanScene'
+import { LOGIN_QR, SWEEP_PRIVATE_KEY } from '../../../../../components/scenes/ScanScene'
 import { Airship } from '../../../../../components/services/AirshipInstance.js'
 import * as Constants from '../../../../../constants/indexConstants.js'
 import { getPrivateKeySweepableCurrencies } from '../../../../../constants/WalletAndCurrencyConstants.js'
@@ -164,7 +164,7 @@ const WalletsButton = () => {
   )
 }
 
-const popToSendScan = () => goToScene(Constants.SCAN, { data: '' })
+const popToSendScan = () => goToScene(Constants.SCAN, { data: LOGIN_QR })
 const ScanButton = () => {
   return (
     <Button onPress={popToSendScan}>

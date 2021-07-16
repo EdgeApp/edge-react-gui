@@ -578,11 +578,6 @@ const CATEGORIES_FILENAME = 'Categories.json'
 //  Settings
 // Core Settings
 
-export const setPINModeRequest = (account: EdgeAccount, pinMode: boolean) =>
-  pinMode // $FlowFixMe enablePIN not found on EdgeAccount type
-    ? account.enablePIN() // $FlowFixMe isablePIN not found on EdgeAccount type
-    : account.disablePIN()
-
 // Account Settings
 export const setAutoLogoutTimeInSecondsRequest = (account: EdgeAccount, autoLogoutTimeInSeconds: number) =>
   getSyncedSettings(account).then(settings => {
@@ -593,12 +588,6 @@ export const setAutoLogoutTimeInSecondsRequest = (account: EdgeAccount, autoLogo
 export const setDefaultFiatRequest = (account: EdgeAccount, defaultFiat: string) =>
   getSyncedSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { defaultFiat, defaultIsoFiat: `iso:${defaultFiat}` })
-    return setSyncedSettings(account, updatedSettings)
-  })
-
-export const setMerchantModeRequest = (account: EdgeAccount, merchantMode: boolean) =>
-  getSyncedSettings(account).then(settings => {
-    const updatedSettings = updateSettings(settings, { merchantMode })
     return setSyncedSettings(account, updatedSettings)
   })
 
@@ -622,12 +611,6 @@ export const setWalletsSort = (account: EdgeAccount, walletsSort: SortOption) =>
   })
 
 // Local Settings
-export const setBluetoothModeRequest = (account: EdgeAccount, bluetoothMode: boolean) =>
-  getLocalSettings(account).then(settings => {
-    const updatedSettings = updateSettings(settings, { bluetoothMode })
-    return setLocalSettings(account, updatedSettings)
-  })
-
 export const setPasswordReminderRequest = (account: EdgeAccount, passwordReminder: PasswordReminder) =>
   getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { passwordReminder })

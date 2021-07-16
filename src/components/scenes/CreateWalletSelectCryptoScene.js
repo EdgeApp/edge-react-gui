@@ -13,7 +13,7 @@ import { type CreateWalletType, type FlatListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
@@ -149,7 +149,7 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
               value={this.state.searchTerm}
               label={s.strings.create_wallet_choose_crypto}
               returnKeyType="search"
-              small
+              size="small"
               onClear={this.clearText}
               isClearable={isFocused}
               marginRem={[0, 1.75]}

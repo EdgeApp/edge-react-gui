@@ -12,8 +12,7 @@ import { sprintf } from 'sprintf-js'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import { getDomainRegInfo } from '../../modules/FioAddress/util'
-import { getExchangeDenomination } from '../../modules/Settings/selectors'
-import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
+import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes'
 import type { GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -255,7 +254,7 @@ const FioDomainRegisterSelectWalletScene = connect(
     const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
     const { account } = state.core
     const fioPlugin = account && account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
-    const fioDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, Constants.FIO_STR)
+    const fioDisplayDenomination = getDisplayDenomination(state, Constants.FIO_STR)
 
     return {
       state,

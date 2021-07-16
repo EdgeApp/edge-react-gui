@@ -16,19 +16,18 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { type FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions.js'
+import { type FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
 import { activated as uniqueIdentifierModalActivated } from '../../actions/UniqueIdentifierModalActions.js'
 import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
 import { CHANGE_MINING_FEE_SEND_CONFIRMATION, getSpecialCurrencyInfo } from '../../constants/indexConstants'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
-import type { ExchangeRatesState } from '../../modules/ExchangeRates/reducer'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
-import { convertCurrencyFromExchangeRates } from '../../modules/UI/selectors.js'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
+import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
-import type { GuiWallet } from '../../types/types.js'
+import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -51,7 +50,7 @@ type StateProps = {
   defaultSelectedWalletId: string,
   defaultSelectedWalletCurrencyCode: string,
   error: Error | null,
-  exchangeRates: ExchangeRatesState,
+  exchangeRates: GuiExchangeRates,
   lockInputs?: boolean,
   nativeAmount: string | null,
   pending: boolean,
@@ -213,7 +212,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     const recipientAddress = parsedUri ? parsedUri.publicAddress : spendTargets && spendTargets[0].publicAddress ? spendTargets[0].publicAddress : ''
 
     if (parsedUri) {
-      const nativeAmount = parsedUri.nativeAmount || '0'
+      const nativeAmount = parsedUri.nativeAmount || ''
       const spendTargets: EdgeSpendTarget[] = [
         {
           publicAddress: parsedUri.publicAddress,
@@ -234,7 +233,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     this.setState({ recipientAddress })
   }
 
-  handleFlipinputModal = () => {
+  handleFlipInputModal = () => {
     Airship.show(bridge => <FlipInputModal bridge={bridge} walletId={this.state.selectedWalletId} currencyCode={this.state.selectedCurrencyCode} />).catch(
       error => console.log(error)
     )
@@ -370,13 +369,15 @@ class SendComponent extends React.PureComponent<Props, State> {
       const cryptoExchangeDenomination = UTILS.getDenomination(selectedCurrencyCode, settings, 'exchange')
       const fiatDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
-      if (nativeAmount && !bns.eq(nativeAmount, '0')) {
+      if (nativeAmount === '') {
+        cryptoAmountSyntax = s.strings.string_amount
+      } else if (nativeAmount && !bns.eq(nativeAmount, '0')) {
         const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, UTILS.DIVIDE_PRECISION)
         const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, UTILS.DIVIDE_PRECISION)
         const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, parseFloat(exchangeAmount))
         cryptoAmountSyntax = `${displayAmount ?? '0'} ${cryptoDisplayDenomination.name}`
         if (fiatAmount) {
-          fiatAmountSyntax = `${fiatSymbol} ${fiatAmount.toFixed(2) ?? '0'}`
+          fiatAmountSyntax = `${fiatSymbol} ${bns.toFixed(fiatAmount, 2, 2) ?? '0'}`
         }
       } else {
         cryptoAmountSyntax = `0 ${cryptoDisplayDenomination.name}`
@@ -386,7 +387,7 @@ class SendComponent extends React.PureComponent<Props, State> {
         <Tile
           type={lockInputs || lockTilesMap.amount ? 'static' : 'touchable'}
           title={s.strings.fio_request_amount}
-          onPress={lockInputs || lockTilesMap.amount ? undefined : this.handleFlipinputModal}
+          onPress={lockInputs || lockTilesMap.amount ? undefined : this.handleFlipInputModal}
         >
           <EdgeText style={{ fontSize: theme.rem(2) }}>{cryptoAmountSyntax}</EdgeText>
           {fiatAmountSyntax == null ? null : <EdgeText>{fiatAmountSyntax}</EdgeText>}
@@ -600,17 +601,21 @@ export const SendScene = connect(
     reset() {
       dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
     },
-    sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId: string, selectedCurrencyCode: string) =>
-      dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode)),
+    async sendConfirmationUpdateTx(guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId: string, selectedCurrencyCode: string) {
+      await dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode))
+    },
     updateSpendPending(pending: boolean) {
       dispatch({
         type: 'UI/SEND_CONFIRMATION/UPDATE_SPEND_PENDING',
         data: { pending }
       })
     },
-    signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string): any =>
-      dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode)),
-    uniqueIdentifierButtonPressed: () => dispatch(uniqueIdentifierModalActivated()),
+    signBroadcastAndSave(fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) {
+      dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode))
+    },
+    uniqueIdentifierButtonPressed() {
+      dispatch(uniqueIdentifierModalActivated())
+    },
     onChangePin(pin: string) {
       dispatch({ type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin } })
     }

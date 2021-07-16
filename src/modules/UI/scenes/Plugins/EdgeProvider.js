@@ -284,7 +284,7 @@ export class EdgeProvider extends Bridgeable {
 
     const edgeSpendTargets: EdgeSpendTarget[] = []
     for (const spendTarget of spendTargets) {
-      let nativeAmount = '0'
+      let nativeAmount = ''
       if (spendTarget.nativeAmount != null) {
         nativeAmount = spendTarget.nativeAmount
       } else if (spendTarget.exchangeAmount != null) {

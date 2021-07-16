@@ -8,13 +8,13 @@ import { connect } from 'react-redux'
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import * as Constants from '../../constants/indexConstants.js'
 import s from '../../locales/strings.js'
-import { getDefaultFiat } from '../../modules/Settings/selectors.js'
+import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { CreateWalletType, FlatListItem, GuiFiatType } from '../../types/types.js'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
@@ -158,7 +158,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
               value={this.state.searchTerm}
               label={s.strings.fragment_wallets_addwallet_fiat_hint}
               returnKeyType="search"
-              small
+              size="small"
               onClear={this.clearText}
               isClearable={isFocused}
               marginRem={[0, 1.75]}

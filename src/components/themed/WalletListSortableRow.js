@@ -8,12 +8,11 @@ import { connect } from 'react-redux'
 
 import { formatNumberInput } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { type ExchangeRatesState } from '../../modules/ExchangeRates/reducer.js'
-import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors'
-import { calculateWalletFiatBalanceWithoutState } from '../../modules/UI/selectors.js'
 import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
+import { getDisplayDenominationFromSettings } from '../../selectors/DenominationSelectors.js'
+import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
 import { type RootState } from '../../types/reduxTypes.js'
-import { type GuiWallet } from '../../types/types.js'
+import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
@@ -21,12 +20,11 @@ import { EdgeText } from './EdgeText.js'
 const DIVIDE_PRECISION = 18
 
 type OwnProps = {
-  guiWallet?: GuiWallet,
-  showBalance: boolean | ((state: RootState) => boolean)
+  guiWallet?: GuiWallet
 }
 
 type StateProps = {
-  exchangeRates: ExchangeRatesState,
+  exchangeRates: GuiExchangeRates,
   showBalance: boolean,
   settings: SettingsState,
   walletFiatSymbol: string | null
@@ -53,7 +51,7 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
       )
     }
 
-    const displayDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(this.props.settings, guiWallet.currencyCode)
+    const displayDenomination = getDisplayDenominationFromSettings(this.props.settings, guiWallet.currencyCode)
     const multiplier = displayDenomination.multiplier
     const name = guiWallet.name || s.strings.string_no_name
     const symbol = displayDenomination.symbol
@@ -163,7 +161,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const WalletListSortableRow = connect((state: RootState, ownProps: OwnProps): StateProps => ({
-  showBalance: typeof ownProps.showBalance === 'function' ? ownProps.showBalance(state) : ownProps.showBalance,
+  showBalance: state.ui.settings.isAccountBalanceVisible,
   settings: state.ui.settings,
   exchangeRates: state.exchangeRates,
   walletFiatSymbol: ownProps.guiWallet ? getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode) : null

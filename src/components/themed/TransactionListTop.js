@@ -14,14 +14,14 @@ import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
 import { guiPlugins } from '../../constants/plugins/GuiPlugins.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { convertCurrency } from '../../modules/UI/selectors.js'
+import { convertCurrency } from '../../selectors/WalletSelectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { convertNativeToDenomination, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeTextFieldOutlined } from './EdgeOutlinedField'
 import { EdgeText } from './EdgeText.js'
-import { EdgeTextFieldOutlined } from './EdgeTextField.js'
 import { SceneHeader } from './SceneHeader'
 import { ButtonBox } from './ThemedButtons.js'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
@@ -305,13 +305,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   searchContainer: {
     flexDirection: 'row',
+    marginTop: theme.rem(0.5),
     marginRight: theme.rem(1)
   },
   searchDoneButton: {
     justifyContent: 'center',
-    height: theme.rem(4.5),
-    paddingLeft: theme.rem(0.75),
-    paddingBottom: theme.rem(0.25)
+    paddingLeft: theme.rem(0.75)
   }
 }))
 

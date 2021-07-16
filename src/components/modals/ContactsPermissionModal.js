@@ -10,6 +10,8 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { type AirshipBridge } from './modalParts.js'
 
+export type ContactsPermissionResult = 'allow' | 'deny'
+
 export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
   const { bridge } = props
   const theme = useTheme()
@@ -18,12 +20,13 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
   return (
     <ButtonsModal
       bridge={bridge}
+      disableHideOnTapUnderlay
       buttons={{
-        ok: { label: s.strings.string_allow }
+        allow: { label: s.strings.string_allow },
+        deny: { label: s.strings.string_deny, type: 'secondary' }
       }}
-      closeButton
     >
-      <View style={styles.heanderContainer}>
+      <View style={styles.headerContainer}>
         <View style={styles.iconCircle}>
           <Fontello name="edge.addresbook" size={theme.rem(1.5)} color={theme.icon} />
         </View>
@@ -43,10 +46,7 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    flex: 1
-  },
-  heanderContainer: {
+  headerContainer: {
     marginTop: theme.rem(1),
     justifyContent: 'center',
     alignItems: 'center'
@@ -71,10 +71,5 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   messageLast: {
     marginBottom: theme.rem(4)
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: theme.rem(0.5)
   }
 }))

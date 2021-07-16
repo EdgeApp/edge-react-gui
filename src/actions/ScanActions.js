@@ -9,8 +9,10 @@ import URL from 'url-parse'
 
 import { selectWalletForExchange } from '../actions/CryptoExchangeActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
+import { paymentProtocolUriReceived } from '../components/modals/paymentProtocolUriReceived.js'
+import { shouldContinueLegacy } from '../components/modals/shouldContinueLegacy.js'
 import { Airship, showError } from '../components/services/AirshipInstance'
-import { ADD_TOKEN, CURRENCY_PLUGIN_NAMES, EXCHANGE_SCENE, getSpecialCurrencyInfo, PLUGIN_BUY, SEND, SEND_CONFIRMATION } from '../constants/indexConstants.js'
+import { ADD_TOKEN, CURRENCY_PLUGIN_NAMES, EXCHANGE_SCENE, getSpecialCurrencyInfo, PLUGIN_BUY, SEND } from '../constants/indexConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
@@ -19,7 +21,6 @@ import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import type { GuiWallet } from '../types/types.js'
 import { denominationToDecimalPlaces, noOp } from '../util/utils.js'
 import { launchDeepLink } from './DeepLinkingActions.js'
-import { paymentProtocolUriReceived } from './SendConfirmationActions.js'
 
 export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, link: ReturnAddressLink) => {
   const { currencyName, sourceName = '', successUri = '' } = link
@@ -82,11 +83,12 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
   const guiWallet = state.ui.wallets.byId[selectedWalletId]
   const currencyCode = state.ui.wallets.selectedCurrencyCode
 
+  const walletId: string = state.ui.wallets.selectedWalletId
+  const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
+
   let fioAddress
   if (account && account.currencyConfig) {
     const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
-    const walletId: string = state.ui.wallets.selectedWalletId
-    const coreWallet: EdgeCurrencyWallet = currencyWallets[walletId]
     const currencyCode: string = state.ui.wallets.selectedCurrencyCode
     try {
       const publicAddress = await checkPubAddress(fioPlugin, data.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
@@ -98,7 +100,6 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       }
     }
   }
-
   // Check for things other than coins:
   try {
     const deepLink = parseDeepLink(data)
@@ -121,91 +122,117 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
     return showError(error)
   }
 
-  edgeWallet.parseUri(data, currencyCode).then(
-    (parsedUri: EdgeParsedUri) => {
-      dispatch({ type: 'PARSE_URI_SUCCEEDED', data: { parsedUri } })
+  try {
+    const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await edgeWallet.parseUri(data, currencyCode)
+    dispatch({ type: 'PARSE_URI_SUCCEEDED', data: { parsedUri } })
 
-      if (parsedUri.token) {
-        // TOKEN URI
-        const { contractAddress, currencyName } = parsedUri.token
-        const multiplier = parsedUri.token.denominations[0].multiplier
-        const currencyCode = parsedUri.token.currencyCode.toUpperCase()
-        let decimalPlaces = 18
-        if (multiplier) {
-          decimalPlaces = denominationToDecimalPlaces(multiplier)
-        }
-        const parameters = {
-          contractAddress,
-          currencyCode,
-          currencyName,
-          multiplier,
-          decimalPlaces,
-          walletId: selectedWalletId,
-          wallet: guiWallet,
-          onAddToken: noOp
-        }
-        return Actions[ADD_TOKEN](parameters)
+    if (parsedUri.token) {
+      // TOKEN URI
+      const { contractAddress, currencyName } = parsedUri.token
+      const multiplier = parsedUri.token.denominations[0].multiplier
+      const currencyCode = parsedUri.token.currencyCode.toUpperCase()
+      let decimalPlaces = 18
+
+      if (multiplier) {
+        decimalPlaces = denominationToDecimalPlaces(multiplier)
       }
 
-      if (isLegacyAddressUri(parsedUri)) {
-        // LEGACY ADDRESS URI
-        return dispatch(showLegacyAddressModal())
+      const parameters = {
+        contractAddress,
+        currencyCode,
+        currencyName,
+        multiplier,
+        decimalPlaces,
+        walletId: selectedWalletId,
+        wallet: guiWallet,
+        onAddToken: noOp
       }
 
-      if (isPrivateKeyUri(parsedUri)) {
-        // PRIVATE KEY URI
-        return dispatch(privateKeyModalActivated())
+      return Actions[ADD_TOKEN](parameters)
+    }
+
+    if (isLegacyAddressUri(parsedUri)) {
+      // LEGACY ADDRESS URI
+      if (await shouldContinueLegacy()) {
+        Actions[SEND]({ guiMakeSpendInfo: parsedUri, selectedWalletId, selectedCurrencyCode: currencyCode })
+      } else {
+        dispatch({ type: 'ENABLE_SCAN' })
       }
 
-      if (isPaymentProtocolUri(parsedUri)) {
-        // BIP70 URI
-        // $FlowFixMe
-        return dispatch(paymentProtocolUriReceived(parsedUri))
+      return
+    }
+
+    if (isPrivateKeyUri(parsedUri)) {
+      // PRIVATE KEY URI
+      return dispatch(privateKeyModalActivated())
+    }
+
+    if (isPaymentProtocolUri(parsedUri)) {
+      // BIP70 URI
+      const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, coreWallet)
+
+      if (guiMakeSpendInfo != null) {
+        Actions[SEND]({ guiMakeSpendInfo, selectedWalletId, selectedCurrencyCode: currencyCode })
       }
 
-      // PUBLIC ADDRESS URI
-      const nativeAmount = parsedUri.nativeAmount || '0'
-      const spendTargets: EdgeSpendTarget[] = [
-        {
-          publicAddress: parsedUri.publicAddress,
-          nativeAmount
-        }
-      ]
+      return
+    }
 
-      const guiMakeSpendInfo: GuiMakeSpendInfo = {
-        spendTargets,
-        lockInputs: false,
-        metadata: parsedUri.metadata,
-        uniqueIdentifier: parsedUri.uniqueIdentifier,
+    // PUBLIC ADDRESS URI
+    const nativeAmount = parsedUri.nativeAmount || ''
+    const spendTargets: EdgeSpendTarget[] = [
+      {
+        publicAddress: parsedUri.publicAddress,
         nativeAmount
       }
+    ]
 
-      if (fioAddress) {
-        guiMakeSpendInfo.fioAddress = fioAddress
-        guiMakeSpendInfo.isSendUsingFioAddress = true
-      }
-      Actions[SEND]({ guiMakeSpendInfo, selectedWalletId, selectedCurrencyCode: currencyCode })
-      // dispatch(sendConfirmationUpdateTx(parsedUri))
-    },
-    () => {
-      // INVALID URI
-      dispatch({ type: 'DISABLE_SCAN' })
-      setTimeout(
-        () =>
-          Alert.alert(
-            customErrorTitle || s.strings.scan_invalid_address_error_title,
-            customErrorDescription || s.strings.scan_invalid_address_error_description,
-            [
-              {
-                text: s.strings.string_ok,
-                onPress: () => dispatch({ type: 'ENABLE_SCAN' })
-              }
-            ]
-          ),
-        500
-      )
+    const guiMakeSpendInfo: GuiMakeSpendInfo = {
+      spendTargets,
+      lockInputs: false,
+      metadata: parsedUri.metadata,
+      uniqueIdentifier: parsedUri.uniqueIdentifier,
+      nativeAmount
     }
-  )
+
+    if (fioAddress) {
+      guiMakeSpendInfo.fioAddress = fioAddress
+      guiMakeSpendInfo.isSendUsingFioAddress = true
+    }
+    Actions[SEND]({ guiMakeSpendInfo, selectedWalletId, selectedCurrencyCode: currencyCode })
+    // dispatch(sendConfirmationUpdateTx(parsedUri))
+  } catch (error) {
+    // INVALID URI
+    dispatch({ type: 'DISABLE_SCAN' })
+    setTimeout(
+      () =>
+        Alert.alert(
+          customErrorTitle || s.strings.scan_invalid_address_error_title,
+          customErrorDescription || s.strings.scan_invalid_address_error_description,
+          [
+            {
+              text: s.strings.string_ok,
+              onPress: () => dispatch({ type: 'ENABLE_SCAN' })
+            }
+          ]
+        ),
+      500
+    )
+  }
+}
+
+export const loginQrCodeScanned = (data: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const isScanEnabled = state.ui.scenes.scan.scanEnabled
+
+  if (!isScanEnabled || !data) return
+
+  const deepLink = parseDeepLink(data)
+
+  if (deepLink.type === 'edgeLogin') {
+    dispatch({ type: 'DISABLE_SCAN' })
+    dispatch(launchDeepLink(deepLink))
+  }
 }
 
 export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: GetState) => {
@@ -232,38 +259,6 @@ export const isPrivateKeyUri = (parsedUri: EdgeParsedUri): boolean => {
 export const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
   // $FlowFixMe should be paymentProtocolUrl (lowercased)?
   return !!parsedUri.paymentProtocolURL && !parsedUri.publicAddress
-}
-
-export const legacyAddressModalContinueButtonPressed = () => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const parsedUri = state.ui.scenes.scan.parsedUri
-  setImmediate(() => {
-    if (!parsedUri) {
-      dispatch({ type: 'ENABLE_SCAN' })
-      return
-    }
-
-    Actions[SEND_CONFIRMATION]({ guiMakeSpendInfo: parsedUri })
-  })
-}
-
-export const showLegacyAddressModal = () => async (dispatch: Dispatch, getState: GetState) => {
-  const response = await Airship.show(bridge => (
-    <ButtonsModal
-      bridge={bridge}
-      title={s.strings.legacy_address_modal_title}
-      message={s.strings.legacy_address_modal_warning}
-      buttons={{
-        confirm: { label: s.strings.legacy_address_modal_continue },
-        cancel: { label: s.strings.legacy_address_modal_cancel, type: 'secondary' }
-      }}
-    />
-  ))
-  if (response === 'confirm') {
-    dispatch(legacyAddressModalContinueButtonPressed())
-  } else {
-    dispatch({ type: 'ENABLE_SCAN' })
-  }
 }
 
 export const privateKeyModalActivated = () => async (dispatch: Dispatch, getState: GetState) => {

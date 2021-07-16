@@ -1,5 +1,66 @@
 # edge-react-gui
 
+## 2.0.14 (2021-07-06)
+
+- New themed Create Account flow
+- Only allow for one FIO expired pop-up per login
+- Show required amount when there isn't sufficient parent currency to pay token transaction fee
+- Automatically adjust max send amount after changing fee
+- Logs and CSV Export TXs show which device was used to send the transaction
+- Replace all instances of old flip input with new one
+- "Delete wallet" replaced with "Archive Wallet" to reflect actual functionality
+- Remove Split BCH option from segwit bitcoin wallets
+- Fix token wallet loading on first login on new device
+- Fix recorded timestamp on FIO transactions
+- Fix incorrect recorded denomination in swap details
+- Fix negative fee values caused by incorrect precision
+- Sanitize PIN input
+- Update partner descriptions
+- Removed unused legacy code
+- Various visual fixes and enhancements
+- Update translations
+- Upgrade edge-core-js to v0.18.2
+  - Remove several methods and properties:
+    - `EdgeAccount.exchangeCache` - Use `EdgeAccount.rateCache` instead.
+    - `EdgeContext.getRecovery2Key` - Use `EdgeUserInfo.recovery2Key` instead.
+    - `EdgeContext.pinExists` - Use `EdgeUserInfo.pinLoginEnabled` instead.
+    - `EdgeContext.on('login')` - Use `EdgePendingEdgeLogin.watch('account')` instead.
+    - `EdgeContext.on('loginError')` - Use `EdgePendingEdgeLogin.watch('error')` instead.
+    - `EdgeContext.on('loginStart')` - Use `EdgePendingEdgeLogin.watch('username')` instead.
+    - `EdgeCurrencyWallet.exportTransactionsToCSV` - Moved to edge-react-gui project.
+    - `EdgeCurrencyWallet.exportTransactionsToQBO` - Moved to edge-react-gui project.
+    - `EdgeCurrencyWallet.getBalance` - Use `EdgeCurrencyWallet.balance` instead.
+    - `EdgeCurrencyWallet.getBlockHeight` - Use `EdgeCurrencyWallet.blockHeight` instead.
+    - `EdgeCurrencyWallet.getDisplayPrivateSeed` - Use `EdgeCurrencyWallet.displayPrivateSeed` instead.
+    - `EdgeCurrencyWallet.getDisplayPublicSeed` - Use `EdgeCurrencyWallet.displayPublicSeed` instead.
+    - `EdgeCurrencyWallet.startEngine` - Use `EdgeCurrencyWallet.changePaused(false)` instead.
+    - `EdgeCurrencyWallet.stopEngine` - Use `EdgeCurrencyWallet.changePaused(true)` instead.
+    - `EdgeEncodeUri.legacyAddress` - Use `EdgeEncodeUri.publicAddress` instead.
+    - `EdgeEncodeUri.segwitAddress` - Use `EdgeEncodeUri.publicAddress` instead.
+  - Remove the `options` prop on the `MakeEdgeContext` React Native component.
+    - Just pass any context options as normal props.
+  - Remove the `type` property from all error classes, as well as the global `errorNames` table.
+    - Use the new error-identification methods, such as `asMaybePasswordError`, to determine if an error is a specific type.
+  - Stop allowing `null` in places where we expect an `EdgeAccountOptions` object.
+    - Just pass `undefined` if this parameter isn't used.
+  - Return the `EdgeAccount.otpResetDate` as a `Date` object.
+  - The following changes affect Edge core plugins:
+    - Remove `EdgeIo.console` - Use `EdgeCorePluginOptions.log` instead.
+    - Define `EdgeCurrencyEngine` methods to return `Promise<void>` instead of `Promise<mixed>`.
+    - The core will no longer upgrade `pluginName` to `pluginId` for legacy currency plugins.
+  - Save the device description on sent transactions
+  - Add an optional InsufficientFundsError.networkFee field
+  - Avoid performing back-to-back initial syncs
+- Upgrade edge-currency-accountbased to v0.7.65
+  - ETH: Add checksum support
+  - BNB: Add additional API servers
+  - Add native fee amount to InsufficientFundsError
+  - FIO: Fixed timestamps in get_actions
+- Upgrade edge-login-ui-rn to v0.9.9
+  - rn: New themed Create Account flow
+  - rn: Fix Change Recovery Questions modal on large screens
+  - rn: Update translations
+
 ## 2.0.13 (2021-06-14)
 
 - Queue wallet loading to improve GUI performance

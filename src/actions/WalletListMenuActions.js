@@ -65,6 +65,8 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         }
         if (fioAddress) {
           dispatch(showDeleteWalletModal(walletId, s.strings.fragmet_wallets_delete_fio_extra_message_mobile))
+        } else if (wallet.currencyCode && wallet.currencyCode.toLowerCase() === 'eth') {
+          dispatch(showDeleteWalletModal(walletId, s.strings.fragmet_wallets_delete_eth_extra_message))
         } else {
           dispatch(showDeleteWalletModal(walletId))
         }

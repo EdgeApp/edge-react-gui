@@ -474,11 +474,6 @@ export const WALLET_LIST_MENU: Array<{
     value: 'getSeed'
   },
   {
-    currencyCodes: ['BTC', 'BCH'],
-    label: s.strings.string_split_wallet,
-    value: 'split'
-  },
-  {
     currencyCodes: ['ETH', 'RBTC', 'FTM', 'EOS', 'TLOS', 'WAX'],
     label: s.strings.string_add_edit_tokens,
     value: 'manageTokens'
@@ -517,7 +512,7 @@ export const WALLET_LIST_MENU: Array<{
     value: 'getRawKeys'
   },
   {
-    label: s.strings.string_delete_wallet,
+    label: s.strings.string_archive_wallet,
     value: 'delete'
   }
 ]

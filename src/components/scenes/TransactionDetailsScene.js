@@ -15,8 +15,8 @@ import { getSubcategories, setNewSubcategory, setTransactionDetails } from '../.
 import * as Constants from '../../constants/indexConstants'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { getDisplayDenomination, getPlugins, getSettings } from '../../modules/Settings/selectors.js'
-import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../modules/UI/selectors.js'
+import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
+import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../selectors/WalletSelectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
@@ -42,7 +42,7 @@ type StateProps = {
   contacts: GuiContact[],
   currencyCode: string,
   currencyInfo?: EdgeCurrencyInfo,
-  currentFiatAmount: number,
+  currentFiatAmount: string,
   destinationDenomination?: EdgeDenomination,
   destinationWallet?: GuiWallet,
   guiWallet: GuiWallet,
@@ -254,7 +254,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { plugin, isEstimate, orderId, payoutAddress, refundAddress } = swapData
     const sourceAmount = UTILS.convertNativeToDisplay(walletDefaultDenomProps.multiplier)(spendTargets[0].nativeAmount)
     const destinationAmount = UTILS.convertNativeToDisplay(destinationDenomination.multiplier)(swapData.payoutNativeAmount)
-    const destinationCurrencyCode = swapData.payoutCurrencyCode
+    const destinationCurrencyCode = destinationDenomination.name
 
     const createExchangeDataString = (newline: string = '\n') => {
       const destinationWalletName = destinationWallet ? destinationWallet.name : ''
@@ -408,7 +408,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     const { currentFiatAmount } = this.props
     const { amountFiat } = this.state
 
-    const amount = currentFiatAmount ? parseFloat(currentFiatAmount).toFixed(2).toString() : '0'
+    const amount = currentFiatAmount ? bns.toFixed(currentFiatAmount, 2, 2) : '0'
     const fiatAmount = amountFiat.replace(',', '.')
     const difference = amount ? parseFloat(amount) - parseFloat(fiatAmount) : 0
     const percentageFloat = amount && parseFloat(fiatAmount) > 0 ? (difference / parseFloat(fiatAmount)) * 100 : 0
@@ -588,10 +588,9 @@ export const TransactionDetailsScene = connect(
     const wallet = state.ui.wallets.byId[walletId || state.ui.wallets.selectedWalletId]
     const contacts = state.contacts
     const subcategoriesList = state.ui.scenes.transactionDetails.subcategories.sort()
-    const settings = getSettings(state)
+    const { settings } = state.ui
     const currencyCode = edgeTransaction.currencyCode
-    const plugins = getPlugins(state)
-    const allCurrencyInfos = plugins.allCurrencyInfos
+    const { allCurrencyInfos } = state.ui.settings.plugins
     const currencyInfo = UTILS.getCurrencyInfo(allCurrencyInfos, currencyCode)
     const walletDefaultDenomProps: EdgeDenomination = UTILS.isCryptoParentCurrency(wallet, edgeTransaction.currencyCode)
       ? UTILS.getDenomination(wallet.currencyCode, settings, 'exchange')

@@ -14,8 +14,9 @@ import { checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddres
 import type { RootState } from '../../reducers/RootReducer'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { AddressModal } from '../modals/AddressModal'
-import { ButtonsModal } from '../modals/ButtonsModal'
+import { paymentProtocolUriReceived } from '../modals/paymentProtocolUriReceived.js'
 import { ScanModal } from '../modals/ScanModal.js'
+import { shouldContinueLegacy } from '../modals/shouldContinueLegacy.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText'
@@ -52,17 +53,6 @@ const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
   return !!parsedUri.paymentProtocolURL && !parsedUri.publicAddress
 }
 
-const BITPAY = {
-  domain: 'bitpay.com',
-  merchantName: (memo: string) => {
-    // Example BitPay memo
-    // "Payment request for BitPay invoice DKffym7WxX6kzJ73yfYS7s for merchant Electronic Frontier Foundation"
-    // eslint-disable-next-line no-unused-vars
-    const [_, merchantName] = memo.split(' for merchant ')
-    return merchantName
-  }
-}
-
 class AddressTileComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
     super(props)
@@ -96,61 +86,6 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     this.props.resetSendTransaction()
   }
 
-  shouldContinueLegacy = async () => {
-    const response = await Airship.show(bridge => (
-      <ButtonsModal
-        bridge={bridge}
-        title={s.strings.legacy_address_modal_title}
-        message={s.strings.legacy_address_modal_warning}
-        buttons={{
-          confirm: { label: s.strings.legacy_address_modal_continue },
-          cancel: { label: s.strings.legacy_address_modal_cancel, type: 'secondary' }
-        }}
-      />
-    ))
-    if (response === 'confirm') {
-      return true
-    }
-
-    return false
-  }
-
-  paymentProtocolUriReceived = async ({ paymentProtocolURL }: { paymentProtocolURL?: string }) => {
-    const { coreWallet, onChangeAddress } = this.props
-    try {
-      if (!paymentProtocolURL) throw new Error('no paymentProtocolURL prop')
-      const paymentProtocolInfo = await coreWallet.getPaymentProtocolInfo(paymentProtocolURL)
-      const { domain, memo, nativeAmount, spendTargets } = paymentProtocolInfo
-
-      const name = domain === BITPAY.domain ? BITPAY.merchantName(memo) : domain
-      const notes = memo
-      const spendInfo = {
-        lockInputs: true,
-        networkFeeOption: 'standard',
-        metadata: {
-          name,
-          notes
-        },
-        nativeAmount,
-        spendTargets,
-        otherParams: { paymentProtocolInfo }
-      }
-      onChangeAddress(spendInfo)
-    } catch (e) {
-      console.log(e)
-      await Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={s.strings.scan_invalid_address_error_title}
-          message={s.strings.scan_invalid_address_error_description}
-          buttons={{
-            ok: { label: s.strings.string_ok }
-          }}
-        />
-      ))
-    }
-  }
-
   checkIfFioAddressExpired = async (address: string) => {
     if (await checkExpiredFioAddress(this.props.fioWallets[0], address)) {
       throw new Error(s.strings.fio_address_expired)
@@ -182,13 +117,19 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
       this.setState({ loading: false })
 
       if (isLegacyAddressUri(parsedUri)) {
-        if (!(await this.shouldContinueLegacy())) return
+        if (!(await shouldContinueLegacy())) return
       }
 
       // Missing isPrivateKeyUri Modal
 
       if (isPaymentProtocolUri(parsedUri)) {
-        return this.paymentProtocolUriReceived(parsedUri)
+        const guiMakeSpendInfo: ?GuiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, coreWallet)
+
+        if (guiMakeSpendInfo) {
+          onChangeAddress(guiMakeSpendInfo)
+        }
+
+        return
       }
 
       if (!parsedUri.publicAddress) {

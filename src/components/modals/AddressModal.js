@@ -17,7 +17,7 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
 import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeTextField'
+import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { SecondaryButton } from '../themed/ThemedButtons.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
@@ -39,7 +39,7 @@ type StateProps = {
   userFioAddresses: FioAddress[],
   userFioAddressesLoading: boolean,
   coreWallet: EdgeCurrencyWallet,
-  fioPlugin: EdgeCurrencyConfig,
+  fioPlugin: EdgeCurrencyConfig | null,
   fioWallets: EdgeCurrencyWallet[]
 }
 
@@ -88,6 +88,9 @@ class AddressModalConnected extends React.Component<Props, State> {
   componentDidUpdate(prevProps) {
     if (this.props.useUserFioAddressesOnly && prevProps.userFioAddresses !== this.props.userFioAddresses) {
       this.filterFioAddresses(this.state.uri)
+    }
+    if (!this.props.account) {
+      this.handleClose()
     }
   }
 
@@ -220,6 +223,7 @@ class AddressModalConnected extends React.Component<Props, State> {
       this.fioCheckQueue = 0
       try {
         const { currencyCode, coreWallet, fioPlugin } = this.props
+        if (!fioPlugin) return
         await checkPubAddress(fioPlugin, uri.toLowerCase(), coreWallet.currencyInfo.currencyCode, currencyCode)
         this.setStatusLabel(s.strings.fragment_send_address)
       } catch (e) {
@@ -240,6 +244,7 @@ class AddressModalConnected extends React.Component<Props, State> {
       this.fioCheckQueue = 0
       try {
         const { fioPlugin, fioWallets } = this.props
+        if (!fioPlugin) return
         if (await checkExpiredFioAddress(fioWallets[0], fioAddress)) {
           return this.setState({ fieldError: s.strings.fio_address_expired })
         }
@@ -270,7 +275,7 @@ class AddressModalConnected extends React.Component<Props, State> {
 
   isFioAddressValid = (fioAddress: string) => {
     const { fioPlugin } = this.props
-    return fioPlugin.otherMethods.isFioAddressValid(fioAddress)
+    return fioPlugin && fioPlugin.otherMethods.isFioAddressValid(fioAddress)
   }
 
   updateUri = (uri: string) => {
@@ -329,7 +334,7 @@ class AddressModalConnected extends React.Component<Props, State> {
         </ModalTitle>
         <View style={styles.container}>
           <EdgeTextFieldOutlined
-            small
+            size="small"
             autoFocus
             autoCorrect={false}
             returnKeyType="search"
@@ -377,7 +382,7 @@ const AddressModal = connect(
       coreWallet: currencyWallets[ownProps.walletId],
       userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
       userFioAddressesLoading: state.ui.scenes.fioAddress.fioAddressesLoading,
-      fioPlugin: account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+      fioPlugin: account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null,
       fioWallets: state.ui.wallets.fioWallets
     }
   },

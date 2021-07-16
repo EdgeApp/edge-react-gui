@@ -15,7 +15,7 @@ describe('Change Mining Fees', () => {
       }
     }
   }
-  const commonProps = { onSubmit, wallet }
+  const commonProps = { onSubmit, wallet, maxSpendSet: false }
 
   it('should render with standard props', () => {
     const renderer = new ShallowRenderer()

@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 
 import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenominationKeyRequest } from '../../actions/SettingsActions.js'
 import s from '../../locales/strings.js'
-import * as SETTINGS_SELECTORS from '../../modules/Settings/selectors.js'
+import { getDenominations, getDisplayDenominationKey } from '../../selectors/DenominationSelectors.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { GuiDenomination } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -154,8 +154,8 @@ export const CurrencySettingsScene = connect(
     const electrumServers = userSettings ? userSettings.electrumServers : []
     const disableFetchingServers = userSettings ? userSettings.disableFetchingServers : false
     return {
-      denominations: SETTINGS_SELECTORS.getDenominations(state, currencyCode),
-      selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(state, currencyCode),
+      denominations: getDenominations(state, currencyCode),
+      selectedDenominationKey: getDisplayDenominationKey(state, currencyCode),
       electrumServers,
       disableFetchingServers,
       defaultElectrumServer

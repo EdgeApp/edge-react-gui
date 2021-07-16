@@ -6,8 +6,8 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import s from '../../locales/strings.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
+import { EdgeTextFieldOutlined } from './EdgeOutlinedField'
 import { EdgeText } from './EdgeText.js'
-import { EdgeTextFieldOutlined } from './EdgeTextField'
 import Title from './Title'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
@@ -50,7 +50,7 @@ function ManageTokensHeader(props: Props) {
             onClear={onSearchClear}
             marginRem={0}
             isClearable
-            small
+            size="small"
           />
         </View>
       </View>
@@ -65,10 +65,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   searchContainer: {
     flexDirection: 'row',
-    marginTop: theme.rem(0.5),
+    marginTop: theme.rem(1),
     marginRight: theme.rem(2),
-    marginLeft: theme.rem(1),
-    marginBottom: theme.rem(-1)
+    marginLeft: theme.rem(1)
   },
   searchView: {
     flex: 1,
