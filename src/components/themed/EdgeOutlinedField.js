@@ -2,7 +2,7 @@
 
 // $FlowFixMe = forwardRef is not recognize by flow?
 import React, { forwardRef, useRef } from 'react'
-import { Platform, Text, TextInput, TextInputProps, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Platform, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Animated, { Extrapolate, interpolate, interpolateColor, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
@@ -22,25 +22,36 @@ const ANIMATION_STATES = {
   ERROR: 2
 }
 
-type InputOutlineProps = {
+type Props = {|
+  // Content options:
   label?: string,
   error?: string,
 
+  // Appearance:
+  isClearable?: boolean,
   marginRem?: number | number[],
-  isClearable: boolean,
-  size?: 'big' | 'small',
   showSearchIcon?: boolean,
-  onClear: () => void,
+  size?: 'big' | 'small',
 
-  ...TextInputProps
-}
+  // Callbacks:
+  onBlur?: () => void,
+  onChangeText?: (text: string) => void,
+  onClear?: () => void,
+  onFocus?: () => void,
 
-type InputOutline = {
-  focus: () => void,
-  blur: () => void,
-  isFocused: () => boolean,
-  clear: () => void
-}
+  // Other React Native TextInput properties:
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters',
+  autoCorrect?: boolean,
+  autoFocus?: boolean,
+  inputAccessoryViewID?: string,
+  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad',
+  maxLength?: number,
+  onSubmitEditing?: () => void,
+  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send',
+  secureTextEntry?: boolean,
+  testID?: string,
+  value?: string
+|}
 
 type CornerBorderProps = {
   theme: Theme,
@@ -79,27 +90,33 @@ const CornerBorder = ({ theme, corner, cornerHeight, placeholderSize, colorMap }
   return <Animated.View style={[corner === 'left' ? styles.cornerLeft : styles.cornerRight, cornerHeight, animatedContainerStyles]} />
 }
 
-const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref) => {
+const EdgeTextFieldOutlinedComponent = forwardRef((props: Props, ref) => {
   const {
+    // Content options:
     error,
     label: placeholder = '',
-    isClearable,
+
+    // Appearance:
+    isClearable = false,
     marginRem = 0.5,
     size = 'big',
     showSearchIcon = true,
+
+    // Callbacks:
+    onBlur,
+    onChangeText,
     onClear,
     onFocus,
-    onBlur,
 
+    // Other React Native TextInput properties:
     value = '',
-    onChangeText,
     ...inputProps
   } = props
 
   const [containerHeight, setContainerHeight] = useState(0)
 
   // animation
-  const inputRef: { current: InputOutline } = useRef<TextInput>(null)
+  const inputRef = useRef<TextInput>(null)
   const placeholderMap = useSharedValue(value ? ANIMATION_STATES.FOCUSED : ANIMATION_STATES.INIT)
   const placeholderSize = useSharedValue(ANIMATION_STATES.INIT)
   const containerWidth = useSharedValue(ANIMATION_STATES.INIT)
@@ -111,7 +128,7 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
   const isFocused = () => Boolean(inputRef.current && inputRef.current.isFocused())
   const clear = () => {
     Boolean(inputRef.current && inputRef.current.clear())
-    onChangeText('')
+    if (onChangeText != null) onChangeText('')
   }
 
   // styles
@@ -138,29 +155,29 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
     hintLeftMargin
   } = getSizeStyles(theme, size, showSearchIcon)
 
-  const errorState = useCallback(() => error !== null && error !== undefined && error !== '', [error])
+  const errorState = useCallback(() => error != null && error !== '', [error])
 
   const handleFocus = () => {
     placeholderMap.value = withTiming(ANIMATION_STATES.FOCUSED)
     if (!errorState()) colorMap.value = withTiming(ANIMATION_STATES.FOCUSED)
     focus()
-    if (onFocus) onFocus()
+    if (onFocus != null) onFocus()
   }
 
   const handleBlur = () => {
     if (!value) placeholderMap.value = withTiming(ANIMATION_STATES.INIT) // blur
     if (!errorState()) colorMap.value = withTiming(ANIMATION_STATES.INIT) // inactive
     blur()
-    if (onBlur) onBlur()
+    if (onBlur != null) onBlur()
   }
 
   const handleChangeText = (text: string) => {
-    onChangeText(text)
+    if (onChangeText != null) onChangeText(text)
   }
 
   const clearText = () => {
     clear()
-    onClear()
+    if (onClear != null) onClear()
   }
 
   const handlePlaceholderLayout = useCallback(
