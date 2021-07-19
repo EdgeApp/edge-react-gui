@@ -7,9 +7,9 @@ import { type AirshipBridge } from 'react-native-airship'
 import s from '../../locales/strings.js'
 import { useState } from '../../types/reactHooks.js'
 import { showError } from '../services/AirshipInstance.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField.js'
 import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type Props = {|
@@ -79,7 +79,7 @@ export function TextInputModal(props: Props) {
     <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(undefined)}>
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {message != null ? <ModalMessage>{message}</ModalMessage> : null}
-      <EdgeTextFieldOutlined
+      <OutlinedTextInput
         // Text input props:
         autoCapitalize={autoCapitalize}
         autoCorrect={autoCorrect}

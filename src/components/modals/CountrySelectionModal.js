@@ -9,8 +9,8 @@ import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/CountryConstants.j
 import s from '../../locales/strings.js'
 import type { CountryData } from '../../types/types'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -105,7 +105,7 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
         <ModalTitle center paddingRem={[0, 1, 0.5]}>
           {s.strings.buy_sell_crypto_select_country_button}
         </ModalTitle>
-        <EdgeTextFieldOutlined
+        <OutlinedTextInput
           autoFocus
           error=""
           keyboardType="default"

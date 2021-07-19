@@ -7,9 +7,9 @@ import { type AirshipBridge } from 'react-native-airship'
 
 import { Fontello } from '../../../assets/vector'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
-import { EdgeTextFieldOutlined } from '../../../components/themed/EdgeOutlinedField'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
+import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput.js'
 import { ClickableText } from '../../../components/themed/ThemedButtons'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import { FIO_DOMAIN_REGISTER } from '../../../constants/SceneKeys.js'
@@ -181,7 +181,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
           {s.strings.fio_address_choose_domain_label}
         </ModalTitle>
         <View style={{ marginHorizontal: theme.rem(0.75) }}>
-          <EdgeTextFieldOutlined
+          <OutlinedTextInput
             autoFocus
             autoCorrect={false}
             returnKeyType="search"

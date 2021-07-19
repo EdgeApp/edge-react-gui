@@ -90,7 +90,7 @@ const CornerBorder = ({ theme, corner, cornerHeight, placeholderSize, colorMap }
 }
 
 // $FlowFixMe = forwardRef is not recognize by flow?
-const EdgeTextFieldOutlinedComponent = React.forwardRef((props: Props, ref) => {
+const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
   const {
     // Content options:
     error,
@@ -485,4 +485,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const EdgeTextFieldOutlined = EdgeTextFieldOutlinedComponent
+export const OutlinedTextInput = OutlinedTextInputComponent

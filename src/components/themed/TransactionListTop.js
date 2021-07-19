@@ -17,8 +17,8 @@ import { convertNativeToDenomination, getDefaultDenomination, getDenomination, g
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from './EdgeOutlinedField'
 import { EdgeText } from './EdgeText.js'
+import { OutlinedTextInput } from './OutlinedTextInput.js'
 import { SceneHeader } from './SceneHeader'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
@@ -154,7 +154,7 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
           {!isEmpty && (
             <View style={styles.searchContainer}>
               <View style={{ flex: 1, flexDirection: 'column' }}>
-                <EdgeTextFieldOutlined
+                <OutlinedTextInput
                   returnKeyType="search"
                   label={s.strings.transaction_list_search}
                   onChangeText={this.handleOnChangeText}

@@ -12,7 +12,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from '../themed/EdgeText.js'
 import { PromoCard } from '../themed/PromoCard.js'
 import { WiredBalanceBox } from '../themed/WiredBalanceBox.js'
-import { EdgeTextFieldOutlined } from './EdgeOutlinedField.js'
+import { OutlinedTextInput } from './OutlinedTextInput.js'
 
 type OwnProps = {
   sorting: boolean,
@@ -63,7 +63,7 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
       <>
         <View style={styles.searchContainer}>
           <View style={{ flex: 1, flexDirection: 'column' }}>
-            <EdgeTextFieldOutlined
+            <OutlinedTextInput
               returnKeyType="search"
               label={s.strings.wallet_list_wallet_search}
               onChangeText={this.handleOnChangeText}

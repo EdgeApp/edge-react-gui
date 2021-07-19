@@ -9,8 +9,8 @@ import s from '../../locales/strings.js'
 import { Actions } from '../../types/routerTypes.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { MainButton } from '../themed/MainButton.js'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 
 export type CreateWalletNameOwnProps = {
@@ -84,7 +84,7 @@ export class CreateWalletName extends React.Component<Props, State> {
       <SceneWrapper avoidKeyboard background="theme">
         <SceneHeader withTopMargin title={s.strings.title_create_wallet} />
 
-        <EdgeTextFieldOutlined
+        <OutlinedTextInput
           onChangeText={this.handleChangeWalletName}
           value={this.state.walletName}
           onSubmitEditing={this.onNext}

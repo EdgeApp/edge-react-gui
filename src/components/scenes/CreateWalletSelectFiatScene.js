@@ -14,7 +14,7 @@ import type { CreateWalletType, FlatListItem, GuiFiatType } from '../../types/ty
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
@@ -148,7 +148,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_fiat} />
-            <EdgeTextFieldOutlined
+            <OutlinedTextInput
               autoFocus
               onFocus={this.handleOnFocus}
               onBlur={this.handleOnBlur}

@@ -4,8 +4,8 @@ import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { WalletList } from '../themed/WalletList.js'
 
@@ -54,7 +54,7 @@ export class WalletListModal extends React.PureComponent<Props, State> {
     return (
       <ThemedModal bridge={bridge} onCancel={() => bridge.resolve({})}>
         <ModalTitle center>{headerTitle}</ModalTitle>
-        <EdgeTextFieldOutlined
+        <OutlinedTextInput
           returnKeyType="search"
           label={s.strings.search_wallets}
           onChangeText={this.handleChangeSearchInput}

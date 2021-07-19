@@ -17,9 +17,9 @@ import { connect } from '../../types/reactRedux.js'
 import { ResolutionError, ResolutionErrorCode } from '../../types/ResolutionError.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
@@ -332,7 +332,7 @@ class AddressModalComponent extends React.Component<Props, State> {
           {title || s.strings.address_modal_default_header}
         </ModalTitle>
         <View style={styles.container}>
-          <EdgeTextFieldOutlined
+          <OutlinedTextInput
             size="small"
             autoFocus
             autoCorrect={false}
