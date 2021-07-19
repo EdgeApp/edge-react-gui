@@ -1,14 +1,13 @@
 // @flow
 
-// $FlowFixMe = forwardRef is not recognize by flow?
-import React, { forwardRef, useRef } from 'react'
-import { Platform, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import Animated, { Extrapolate, interpolate, interpolateColor, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import * as React from 'react'
+import { type TextStyle, type ViewStyle, Platform, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import Animated, { Extrapolate, interpolate, interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
-import { unpackEdges } from '../../util/edges'
-import { useCallback, useEffect, useImperativeHandle, useMemo, useState } from '../../util/hooks'
-import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
+import { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from '../../util/hooks.js'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
 const HINT_Y_PLATFORM_ADJUST = Platform.OS === 'android' ? -2 : 0
 const PADDING_VERTICAL = 1
@@ -57,8 +56,8 @@ type CornerBorderProps = {
   theme: Theme,
   corner: 'left' | 'right',
   cornerHeight: { height: number },
-  placeholderSize: SharedValue,
-  colorMap: SharedValue
+  placeholderSize: Animated.SharedValue<number>,
+  colorMap: Animated.SharedValue<number>
 }
 
 const getColor = (
@@ -90,7 +89,8 @@ const CornerBorder = ({ theme, corner, cornerHeight, placeholderSize, colorMap }
   return <Animated.View style={[corner === 'left' ? styles.cornerLeft : styles.cornerRight, cornerHeight, animatedContainerStyles]} />
 }
 
-const EdgeTextFieldOutlinedComponent = forwardRef((props: Props, ref) => {
+// $FlowFixMe = forwardRef is not recognize by flow?
+const EdgeTextFieldOutlinedComponent = React.forwardRef((props: Props, ref) => {
   const {
     // Content options:
     error,
@@ -98,7 +98,7 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: Props, ref) => {
 
     // Appearance:
     isClearable = false,
-    marginRem = 0.5,
+    marginRem,
     size = 'big',
     showSearchIcon = true,
 
@@ -134,7 +134,7 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: Props, ref) => {
   // styles
   const theme = useTheme()
   const styles = getStyles(theme)
-  const spacings = spacingStyles(marginRem, useTheme())
+  const spacings = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
   const placeholderSpacerWidthAdjust = theme.rem(1)
   const {
     inactiveColor,
@@ -257,6 +257,7 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: Props, ref) => {
 
   const placeholderStyle = useMemo(() => {
     return [...placeholderPaddingStyles, animatedPlaceholderStyles]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...placeholderPaddingStyles, animatedPlaceholderStyles])
 
   return (
@@ -301,17 +302,6 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: Props, ref) => {
   )
 })
 
-function spacingStyles(margin: number | number[], theme: Theme) {
-  const marginRem = unpackEdges(margin)
-
-  return {
-    marginBottom: theme.rem(marginRem.bottom),
-    marginLeft: theme.rem(marginRem.left),
-    marginRight: theme.rem(marginRem.right),
-    marginTop: theme.rem(marginRem.top)
-  }
-}
-
 // return depended on size styles and values
 const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', showSearchIcon: boolean = true) => {
   const styles = getStyles(theme)
@@ -324,11 +314,11 @@ const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', showSearchIc
   const placeholderSizeScale = 0.2
   let paddingVertical = theme.rem(PADDING_VERTICAL)
   let hintLeftMargin = -theme.rem(0.25)
-  const inputStyles = [styles.input]
-  const placeholderTextStyles = [styles.placeholderText]
-  const placeholderPaddingStyles = [styles.placeholder]
-  const placeholderSpacerPaddingStyles = [styles.placeholderSpacer]
-  const inputContainerStyles = [styles.inputContainer]
+  const inputStyles: TextStyle[] = [styles.input]
+  const placeholderTextStyles: TextStyle[] = [styles.placeholderText]
+  const placeholderPaddingStyles: TextStyle[] = [styles.placeholder]
+  const placeholderSpacerPaddingStyles: ViewStyle[] = [styles.placeholderSpacer]
+  const inputContainerStyles: ViewStyle[] = [styles.inputContainer]
   const prefixStyles = [styles.prefix]
   const suffixStyles = [styles.suffix]
   if (showSearchIcon) {
@@ -495,5 +485,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const EdgeTextFieldOutlined = EdgeTextFieldOutlinedComponent
-export { EdgeTextFieldOutlined }
+export const EdgeTextFieldOutlined = EdgeTextFieldOutlinedComponent
