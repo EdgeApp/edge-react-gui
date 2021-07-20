@@ -1,5 +1,9 @@
 # edge-react-gui
 
+## 2.0.15 (2021-07-19)
+
+- Return '0' if exchange rate isn't available
+
 ## 2.0.14 (2021-07-06)
 
 - New themed Create Account flow
