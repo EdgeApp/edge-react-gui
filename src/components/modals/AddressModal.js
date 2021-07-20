@@ -49,7 +49,7 @@ type DispatchProps = {
 type State = {
   uri: string,
   statusLabel: string,
-  fieldError: string,
+  fieldError: string | void,
   cryptoAddress?: string,
   fioAddresses: FioAddresses,
   filteredFioAddresses: string[],
@@ -69,7 +69,7 @@ class AddressModalComponent extends React.Component<Props, State> {
       uri: '',
       statusLabel: s.strings.fragment_send_address,
       cryptoAddress: undefined,
-      fieldError: '',
+      fieldError: undefined,
       fioAddresses: { addresses: {} },
       filteredFioAddresses: [],
       isFocused: false
@@ -261,7 +261,7 @@ class AddressModalComponent extends React.Component<Props, State> {
 
   checkIfFioAddress = async (uri: string) => {
     const { useUserFioAddressesOnly, checkAddressConnected } = this.props
-    this.setState({ fieldError: '' })
+    this.setState({ fieldError: undefined })
 
     if (await this.isFioAddressValid(uri)) {
       if (useUserFioAddressesOnly) return
@@ -314,7 +314,7 @@ class AddressModalComponent extends React.Component<Props, State> {
   handleSubmit = () => {
     const { uri, cryptoAddress, fieldError } = this.state
     const submitData = cryptoAddress || uri
-    if (fieldError) return
+    if (fieldError != null) return
     this.props.bridge.resolve(submitData)
   }
 

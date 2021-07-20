@@ -23,8 +23,8 @@ const ANIMATION_STATES = {
 
 type Props = {|
   // Content options:
-  label?: string,
   error?: string,
+  label?: string,
 
   // Appearance:
   isClearable?: boolean,
@@ -126,6 +126,8 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     ...inputProps
   } = props
 
+  const hasError = error != null
+
   const [containerHeight, setContainerHeight] = useState(0)
 
   // animation
@@ -168,18 +170,16 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     hintLeftMargin
   } = getSizeStyles(theme, size, showSearchIcon)
 
-  const errorState = useCallback(() => error != null && error !== '', [error])
-
   const handleFocus = () => {
     placeholderMap.value = withTiming(ANIMATION_STATES.FOCUSED)
-    if (!errorState()) colorMap.value = withTiming(ANIMATION_STATES.FOCUSED)
+    if (!hasError) colorMap.value = withTiming(ANIMATION_STATES.FOCUSED)
     focus()
     if (onFocus != null) onFocus()
   }
 
   const handleBlur = () => {
     if (!value) placeholderMap.value = withTiming(ANIMATION_STATES.INIT) // blur
-    if (!errorState()) colorMap.value = withTiming(ANIMATION_STATES.INIT) // inactive
+    if (!hasError) colorMap.value = withTiming(ANIMATION_STATES.INIT) // inactive
     blur()
     if (onBlur != null) onBlur()
   }
@@ -209,12 +209,12 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
 
   // error handling
   useEffect(() => {
-    if (errorState()) {
+    if (hasError) {
       colorMap.value = ANIMATION_STATES.ERROR
     } else {
       colorMap.value = isFocused() ? ANIMATION_STATES.FOCUSED : ANIMATION_STATES.INIT
     }
-  }, [error, colorMap, errorState])
+  }, [colorMap, hasError])
 
   const animatedPlaceholderStyles = useAnimatedStyle(() => ({
     transform: [
@@ -292,7 +292,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
             onFocus={handleFocus}
             onBlur={handleBlur}
             onChangeText={handleChangeText}
-            selectionColor={errorState() ? errorColor : activeColor}
+            selectionColor={hasError ? errorColor : activeColor}
             placeholder=""
             value={value}
           />
@@ -310,7 +310,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
       <Animated.View style={placeholderStyle} onLayout={handlePlaceholderLayout} pointerEvents="none">
         <Animated.Text style={[...placeholderTextStyles, animatedPlaceholderTextStyles]}>{placeholder}</Animated.Text>
       </Animated.View>
-      {errorState() ? <Text style={styles.errorText}>{error}</Text> : null}
+      {hasError ? <Text style={styles.errorText}>{error}</Text> : null}
     </Animated.View>
   )
 })

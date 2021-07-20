@@ -56,6 +56,11 @@ export function TextInputModal(props: Props) {
   const [spinning, setSpinning] = useState(false)
   const [text, setText] = useState(initialValue)
 
+  const handleChangeText = (text: string) => {
+    setText(text)
+    setErrorMessage(undefined)
+  }
+
   const handleSubmit = () => {
     if (onSubmit == null) return bridge.resolve(text)
     setSpinning(true)
@@ -92,10 +97,7 @@ export function TextInputModal(props: Props) {
         error={errorMessage}
         isClearable={text !== ''}
         marginRem={[1, 0.5]}
-        onChangeText={text => {
-          setText(text)
-          setErrorMessage(undefined)
-        }}
+        onChangeText={handleChangeText}
         onSubmitEditing={handleSubmit}
         showSearchIcon={false}
         value={text}
