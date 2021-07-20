@@ -66,10 +66,10 @@ export const convertCurrencyFromExchangeRates = (
   toCurrencyCode: string,
   amount: number
 ): string => {
-  if (!exchangeRates) return '0' // handle case of exchange rates not ready yet
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
+  if (!exchangeRates || exchangeRates[rateKey] == null) return '0' // handle case of exchange rates not ready yet
   const rate = exchangeRates[rateKey]
-  const convertedAmount = bns.mul(amount.toString(), rate.toString())
+  const convertedAmount = bns.mul(amount.toFixed(18), rate.toFixed(18))
   return convertedAmount
 }
 
