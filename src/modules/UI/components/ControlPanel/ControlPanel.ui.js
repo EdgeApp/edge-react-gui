@@ -22,14 +22,14 @@ import styles from './style'
 
 type StateProps = {
   currencyLogo: string,
+  exchangeRate: number,
   primaryDisplayCurrencyCode: string,
-  primaryDisplayDenomination: GuiDenomination,
-  primaryExchangeDenomination: GuiDenomination,
+  primaryDisplayDenomination?: GuiDenomination,
+  primaryExchangeDenomination?: GuiDenomination,
   secondaryDisplayCurrencyCode: string,
   secondaryToPrimaryRatio: number,
   username: string,
-  usersView: boolean,
-  exchangeRate: number
+  usersView: boolean
 }
 type DispatchProps = {
   openSelectUser: () => void,
@@ -121,9 +121,20 @@ export const ControlPanel = connect<StateProps, DispatchProps, {}>(
   state => {
     const guiWallet = getSelectedWallet(state)
     const currencyCode = state.ui.wallets.selectedCurrencyCode
-    const exchangeRate = guiWallet ? getExchangeRate(state, currencyCode, guiWallet.isoFiatCurrencyCode) : 0
 
-    // Try catch block to check specific details why the guiWallet.metaTokens becomes undefined
+    if (guiWallet == null || currencyCode == null) {
+      return {
+        currencyLogo: '',
+        exchangeRate: 0,
+        primaryDisplayCurrencyCode: '',
+        secondaryDisplayCurrencyCode: '',
+        secondaryToPrimaryRatio: 0,
+        username: state.core.account.username,
+        usersView: state.ui.scenes.controlPanel.usersView
+      }
+    }
+
+    const exchangeRate = getExchangeRate(state, currencyCode, guiWallet.isoFiatCurrencyCode)
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
     // if selected currencyCode is parent wallet currencyCode
     const currencyLogo = getCurrencyIcon(guiWallet.currencyCode, currencyCode).symbolImage
@@ -131,22 +142,17 @@ export const ControlPanel = connect<StateProps, DispatchProps, {}>(
     const secondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const primaryDisplayDenomination = getDisplayDenominationFull(state, currencyCode)
     const primaryExchangeDenomination = getPrimaryExchangeDenomination(state, currencyCode)
-    const secondaryDisplayAmount =
-      (parseFloat(1) * parseFloat(secondaryToPrimaryRatio) * parseFloat(primaryDisplayDenomination.multiplier)) /
-      parseFloat(primaryExchangeDenomination.multiplier)
 
     return {
-      currencyCode,
       currencyLogo,
+      exchangeRate,
       primaryDisplayCurrencyCode: currencyCode,
       primaryDisplayDenomination,
       primaryExchangeDenomination,
-      exchangeRate,
       secondaryDisplayCurrencyCode,
-      secondaryDisplayAmount,
       secondaryToPrimaryRatio,
-      usersView: state.ui.scenes.controlPanel.usersView,
-      username: state.core.account.username
+      username: state.core.account.username,
+      usersView: state.ui.scenes.controlPanel.usersView
     }
   },
   dispatch => ({
