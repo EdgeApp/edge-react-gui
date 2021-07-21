@@ -671,8 +671,8 @@ export function checkFilterWallet(details: FilterDetailsType, filterText: string
   }
 
   const walletName = details.name.replace(' ', '').toLowerCase()
-  const currencyName = details.currencyName.toLowerCase()
-  const filterString = filterText.toLowerCase()
+  const currencyName = details.currencyName.replace(' ', '').toLowerCase()
+  const filterString = filterText.replace(' ', '').toLowerCase()
   return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
 }
 
