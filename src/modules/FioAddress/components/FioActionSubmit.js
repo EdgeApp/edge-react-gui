@@ -14,7 +14,7 @@ import { cacheStyles, withTheme } from '../../../components/services/ThemeContex
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { SecondaryButton } from '../../../components/themed/ThemedButtons'
 import { Tile } from '../../../components/themed/Tile'
-import * as Constants from '../../../constants/indexConstants'
+import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings'
 import type { RootState } from '../../../reducers/RootReducer'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
@@ -266,7 +266,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const FioActionSubmit = connect((state: RootState): StateProps => {
-  const displayDenomination = getDisplayDenomination(state, Constants.FIO_STR)
+  const displayDenomination = getDisplayDenomination(state, FIO_STR)
   return {
     denominationMultiplier: displayDenomination.multiplier,
     currencyWallets: state.core.account.currencyWallets,

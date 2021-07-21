@@ -7,7 +7,7 @@ import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-na
 import { connect } from 'react-redux'
 
 import { deleteCustomToken, editCustomToken } from '../../actions/WalletActions.js'
-import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants'
+import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { TertiaryButton } from '../../modules/UI/components/Buttons/TertiaryButton.ui.js'

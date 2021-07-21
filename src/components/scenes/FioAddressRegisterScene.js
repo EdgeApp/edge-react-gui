@@ -8,7 +8,8 @@ import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { Fontello } from '../../assets/vector'
-import * as Constants from '../../constants/indexConstants'
+import { FIO_ADDRESS_REGISTER_SELECT_WALLET, FIO_NAME_CONFIRM } from '../../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { createFioWallet } from '../../modules/FioAddress/action'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
@@ -62,7 +63,7 @@ class FioAddressRegister extends React.Component<Props, State> {
 
   state = {
     selectedWallet: null,
-    selectedDomain: Constants.FIO_DOMAIN_DEFAULT,
+    selectedDomain: FIO_DOMAIN_DEFAULT,
     publicDomains: [],
     fioAddress: '',
     isValid: true,
@@ -108,7 +109,7 @@ class FioAddressRegister extends React.Component<Props, State> {
     try {
       const publicDomains = await fioPlugin.otherMethods.getDomains(fioPlugin.currencyInfo.defaultSettings.fallbackRef)
       const publicDomainsConverted = publicDomains
-        .sort(publicDomain => (publicDomain.domain === Constants.FIO_DOMAIN_DEFAULT.name ? -1 : 1))
+        .sort(publicDomain => (publicDomain.domain === FIO_DOMAIN_DEFAULT.name ? -1 : 1))
         .map((publicDomain: FioPublicDomain) => ({
           name: publicDomain.domain,
           expiration: new Date().toDateString(),
@@ -163,16 +164,16 @@ class FioAddressRegister extends React.Component<Props, State> {
     if (isValid && isAvailable && !loading && !walletLoading) {
       if (isConnected) {
         if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
-        const fullAddress = `${fioAddress}${Constants.FIO_ADDRESS_DELIMITER}${selectedDomain.name}`
+        const fullAddress = `${fioAddress}${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`
         if (selectedDomain.isFree) {
-          Actions[Constants.FIO_NAME_CONFIRM]({
+          Actions[FIO_NAME_CONFIRM]({
             fioName: fullAddress,
             paymentWallet: selectedWallet,
             fee: 0,
             ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
           })
         } else {
-          Actions[Constants.FIO_ADDRESS_REGISTER_SELECT_WALLET]({
+          Actions[FIO_ADDRESS_REGISTER_SELECT_WALLET]({
             fioAddress: fullAddress,
             selectedWallet,
             selectedDomain
@@ -220,7 +221,7 @@ class FioAddressRegister extends React.Component<Props, State> {
       }
 
       try {
-        const fullAddress = `${fioAddress}${Constants.FIO_ADDRESS_DELIMITER}${domain}`
+        const fullAddress = `${fioAddress}${FIO_ADDRESS_DELIMITER}${domain}`
         const isAvailable = fioPlugin.otherMethods ? await fioPlugin.otherMethods.validateAccount(fullAddress) : false
         this.setState({
           isValid: true,
@@ -291,13 +292,13 @@ class FioAddressRegister extends React.Component<Props, State> {
   }
 
   selectFioWallet = () => {
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={[Constants.FIO_STR]} />).then(
+    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={[FIO_STR]} />).then(
       ({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
-          if (currencyCode === Constants.FIO_STR) {
+          if (currencyCode === FIO_STR) {
             this.handleFioWalletChange(walletId)
           } else {
-            showError(`${s.strings.create_wallet_select_valid_crypto}: ${Constants.FIO_STR}`)
+            showError(`${s.strings.create_wallet_select_valid_crypto}: ${FIO_STR}`)
           }
         }
       }
@@ -429,7 +430,7 @@ class FioAddressRegister extends React.Component<Props, State> {
                 type="touchable"
                 title={s.strings.fio_address_choose_domain_label}
                 onPress={this.selectFioDomain}
-                body={domainsLoading ? s.strings.loading : `${Constants.FIO_ADDRESS_DELIMITER}${selectedDomain.name}`}
+                body={domainsLoading ? s.strings.loading : `${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`}
               />
               {this.renderFioWallets()}
             </View>
@@ -574,7 +575,7 @@ const FioAddressRegisterScene = connect(
       }
     }
     const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-    const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+    const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
 
     const out: StateProps = {
       fioWallets,

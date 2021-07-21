@@ -7,7 +7,7 @@ import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import { connect } from 'react-redux'
 
 import { selectWallet } from '../../actions/WalletActions.js'
-import { WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
+import { WALLET_LIST_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import { calculateWalletFiatBalanceUsingDefaultIsoFiat } from '../../selectors/WalletSelectors.js'

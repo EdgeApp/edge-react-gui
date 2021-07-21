@@ -8,7 +8,7 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { passwordReminderSuccess, postponePasswordReminder, requestChangePassword } from '../../actions/PasswordReminderActions.js'
-import { CHANGE_PASSWORD } from '../../constants/indexConstants.js'
+import { CHANGE_PASSWORD } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { showToast } from '../services/AirshipInstance.js'

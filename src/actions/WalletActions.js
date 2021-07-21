@@ -8,7 +8,8 @@ import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import * as Constants from '../constants/indexConstants.js'
+import { CREATE_WALLET_ACCOUNT_SETUP, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
+import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } from '../modules/Core/Account/settings.js'
 import { updateWalletsRequest } from '../modules/Core/Wallets/action.js'
@@ -45,7 +46,7 @@ export const selectWallet = (walletId: string, currencyCode: string, from?: stri
   if (wallet.paused) wallet.changePaused(false).catch(showError)
 
   dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
-  const { isAccountActivationRequired } = Constants.getSpecialCurrencyInfo(currencyCode)
+  const { isAccountActivationRequired } = getSpecialCurrencyInfo(currencyCode)
   if (isAccountActivationRequired) {
     // EOS needs different path in case not activated yet
     dispatch(selectEOSWallet(walletId, currencyCode, from))
@@ -74,7 +75,7 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
   const currentWalletId = state.ui.wallets.selectedWalletId
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
   const guiWallet = state.ui.wallets.byId[walletId]
-  if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode || from === Constants.WALLET_LIST_SCENE) {
+  if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode || from === WALLET_LIST_SCENE) {
     const { publicAddress } = guiWallet.receiveAddress
 
     if (publicAddress) {
@@ -103,7 +104,7 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
         isReactivation: true,
         existingWalletId: walletId
       }
-      Actions[Constants.CREATE_WALLET_ACCOUNT_SETUP](createWalletAccountSetupSceneProps)
+      Actions[CREATE_WALLET_ACCOUNT_SETUP](createWalletAccountSetupSceneProps)
       Airship.show(bridge => (
         <ButtonsModal
           bridge={bridge}

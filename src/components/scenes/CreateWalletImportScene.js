@@ -6,7 +6,8 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { CREATE_WALLET_SELECT_FIAT, CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
+import { CREATE_WALLET_SELECT_FIAT } from '../../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -59,7 +60,10 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
     currencyPlugin
       .importKey(input)
       .then(() => {
-        Actions[CREATE_WALLET_SELECT_FIAT]({ selectedWalletType, cleanedPrivateKey: input })
+        Actions[CREATE_WALLET_SELECT_FIAT]({
+          selectedWalletType,
+          cleanedPrivateKey: input
+        })
       })
       .catch(error => launchModal(errorModal(s.strings.create_wallet_failed_import_header, error)))
       .then(() => this.setState({ isProcessing: false }))

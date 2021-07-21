@@ -7,7 +7,8 @@ import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
-import * as Constants from '../../constants/indexConstants'
+import { FIO_DOMAIN_REGISTER_SELECT_WALLET } from '../../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -93,7 +94,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     if (isValid && isAvailable && !loading && !walletLoading) {
       if (isConnected) {
         if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
-        Actions[Constants.FIO_DOMAIN_REGISTER_SELECT_WALLET]({
+        Actions[FIO_DOMAIN_REGISTER_SELECT_WALLET]({
           fioDomain,
           selectedWallet
         })
@@ -182,13 +183,13 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
   selectFioWallet = async () => {
     const { walletId, currencyCode }: WalletListResult = await Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={[Constants.FIO_STR]} />
+      <WalletListModal bridge={bridge} headerTitle={s.strings.select_wallet} allowedCurrencyCodes={[FIO_STR]} />
     ))
     if (walletId && currencyCode) {
-      if (currencyCode === Constants.FIO_STR) {
+      if (currencyCode === FIO_STR) {
         this.handleFioWalletChange(walletId)
       } else {
-        showError(`${s.strings.create_wallet_select_valid_crypto}: ${Constants.FIO_STR}`)
+        showError(`${s.strings.create_wallet_select_valid_crypto}: ${FIO_STR}`)
       }
     }
   }
@@ -337,7 +338,7 @@ const FioDomainRegisterScene = connect((state: RootState) => {
     }
   }
   const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-  const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+  const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
 
   return {
     fioWallets,

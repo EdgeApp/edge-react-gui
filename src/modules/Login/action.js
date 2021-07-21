@@ -11,8 +11,8 @@ import { expiredFioNamesCheckDates } from '../../actions/FioActions.js'
 import { trackAccountEvent } from '../../actions/TrackingActions.js'
 import { checkEnabledTokensArray, getEnabledTokens, setWalletEnabledTokens } from '../../actions/WalletActions.js'
 import { showError } from '../../components/services/AirshipInstance.js'
-import * as Constants from '../../constants/indexConstants'
-import { SECURITY_ALERTS_SCENE } from '../../constants/indexConstants'
+import { EDGE, LOGIN, SECURITY_ALERTS_SCENE } from '../../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES, USD_FIAT } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { initialState as passwordReminderInitialState } from '../../reducers/PasswordReminderReducer.js'
 import { type AccountInitPayload } from '../../reducers/scenes/SettingsReducer.js'
@@ -55,7 +55,7 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, cur
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'LOGIN', data: account })
 
-  Actions[Constants.EDGE]()
+  Actions[EDGE]()
   if (hasSecurityAlerts(account)) {
     Actions.push(SECURITY_ALERTS_SCENE)
   }
@@ -95,7 +95,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
   }
   try {
     let newAccount = false
-    let defaultFiat = Constants.USD_FIAT
+    let defaultFiat = USD_FIAT
     if (account.activeWalletIds.length < 1) {
       const [phoneCurrency] = getCurrencies()
       if (typeof phoneCurrency === 'string' && phoneCurrency.length >= 3) {
@@ -226,7 +226,7 @@ export const mergeSettings = (
     }
 
     if (account && loadedSettings[key] != null) {
-      const currencyName = Constants.CURRENCY_PLUGIN_NAMES[key]
+      const currencyName = CURRENCY_PLUGIN_NAMES[key]
       const doesHaveDenominations = loadedSettings[key].denominations
       const doesHavePlugin = account.currencyConfig[currencyName]
       // if there are settings for this key
@@ -265,7 +265,9 @@ export const mergeSettings = (
 }
 
 export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
-  Actions.popTo(Constants.LOGIN, { username })
+  Actions.popTo(LOGIN, {
+    username
+  })
   const state = getState()
   const { account } = state.core
   dispatch({ type: 'LOGOUT', data: { username } })

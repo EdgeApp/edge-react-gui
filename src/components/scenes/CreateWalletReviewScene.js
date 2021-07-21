@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions.js'
 import CheckIcon from '../../assets/images/createWallet/check_icon_lg.png'
-import { WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
+import { WALLET_LIST_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'

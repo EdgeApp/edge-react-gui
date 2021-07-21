@@ -6,9 +6,8 @@ import { Actions } from 'react-native-router-flux'
 
 import { FioExpiredModal } from '../components/modals/FioExpiredModal'
 import { Airship } from '../components/services/AirshipInstance'
-import * as Constants from '../constants/indexConstants'
-import { FIO_ADDRESS_DELIMITER } from '../constants/indexConstants'
-import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants'
+import { FIO_ADDRESS_SETTINGS, FIO_DOMAIN_SETTINGS } from '../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER, FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants.js'
 import {
   addToFioAddressCache,
   getExpiredSoonFioNames,
@@ -60,7 +59,7 @@ export const checkFioObtData = (walletId: string, transactions: EdgeTransaction[
     }, 400)
   }
   try {
-    const fioPlugin = account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO]
+    const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
 
     for (const transaction: EdgeTransaction of transactions) {
       if (transaction.metadata) {
@@ -154,7 +153,7 @@ const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioName: FioAd
 
   if (answer) {
     if (isAddress) {
-      Actions[Constants.FIO_ADDRESS_SETTINGS]({
+      Actions[FIO_ADDRESS_SETTINGS]({
         showRenew: true,
         fioWallet,
         fioAddressName: fioName.name,
@@ -163,7 +162,7 @@ const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioName: FioAd
       return
     }
 
-    Actions[Constants.FIO_DOMAIN_SETTINGS]({
+    Actions[FIO_DOMAIN_SETTINGS]({
       showRenew: true,
       fioWallet,
       fioDomainName: fioName.name,

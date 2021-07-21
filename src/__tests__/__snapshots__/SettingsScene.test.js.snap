@@ -752,7 +752,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          focusable={false}
+          focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -1225,7 +1225,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          focusable={false}
+          focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -2173,7 +2173,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          focusable={false}
+          focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}
@@ -2646,7 +2646,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         </View>
         <View
           accessible={true}
-          focusable={false}
+          focusable={true}
           onClick={[Function]}
           onResponderGrant={[Function]}
           onResponderMove={[Function]}

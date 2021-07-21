@@ -12,8 +12,9 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import { connect } from 'react-redux'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
-import { COUNTRY_CODES, FLAG_LOGO_URL, PLUGIN_VIEW } from '../../constants/indexConstants.js'
+import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/CountryConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
+import { PLUGIN_VIEW } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
 import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
@@ -195,7 +196,11 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     // Launch!
-    return Actions[PLUGIN_VIEW]({ plugin, deepPath, deepQuery })
+    return Actions[PLUGIN_VIEW]({
+      plugin,
+      deepPath,
+      deepQuery
+    })
   }
 
   async showCountrySelectionModal() {

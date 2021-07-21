@@ -8,8 +8,8 @@ import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
-import * as Constants from '../../constants/indexConstants'
-import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants'
+import { ADD_TOKEN, EDIT_TOKEN } from '../../constants/SceneKeys.js'
+import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { type RootState } from '../../types/reduxTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
@@ -201,12 +201,21 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
 
   goToAddTokenScene = () => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions[Constants.ADD_TOKEN]({ walletId: id, metaTokens, onAddToken: this.onAddToken })
+    Actions[ADD_TOKEN]({
+      walletId: id,
+      metaTokens,
+      onAddToken: this.onAddToken
+    })
   }
 
   goToEditTokenScene = (currencyCode: string) => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions[Constants.EDIT_TOKEN]({ walletId: id, currencyCode, metaTokens, onDeleteToken: this.onDeleteToken })
+    Actions[EDIT_TOKEN]({
+      walletId: id,
+      currencyCode,
+      metaTokens,
+      onDeleteToken: this.onDeleteToken
+    })
   }
 
   render() {

@@ -13,7 +13,8 @@ import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
-import * as Constants from '../../constants/indexConstants'
+import { FIO_REQUEST_CONFIRMATION } from '../../constants/SceneKeys.js'
+import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
@@ -101,8 +102,8 @@ export class RequestComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const minimumPopupModalState: CurrencyMinimumPopupState = {}
-    Object.keys(Constants.SPECIAL_CURRENCY_INFO).forEach(currencyCode => {
-      if (Constants.getSpecialCurrencyInfo(currencyCode).minimumPopupModals) {
+    Object.keys(SPECIAL_CURRENCY_INFO).forEach(currencyCode => {
+      if (getSpecialCurrencyInfo(currencyCode).minimumPopupModals) {
         minimumPopupModalState[currencyCode] = 'NOT_YET_SHOWN'
       }
     })
@@ -232,7 +233,7 @@ export class RequestComponent extends React.Component<Props, State> {
   enqueueMinimumAmountModal = async () => {
     const { currencyCode } = this.props
     if (currencyCode == null) return
-    const { minimumPopupModals } = Constants.getSpecialCurrencyInfo(currencyCode)
+    const { minimumPopupModals } = getSpecialCurrencyInfo(currencyCode)
     if (minimumPopupModals == null) return
 
     await Airship.show(bridge => (
@@ -307,7 +308,7 @@ export class RequestComponent extends React.Component<Props, State> {
     const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, guiWallet } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
-    const { keysOnlyMode = false } = Constants.getSpecialCurrencyInfo(primaryCurrencyInfo.displayCurrencyCode)
+    const { keysOnlyMode = false } = getSpecialCurrencyInfo(primaryCurrencyInfo.displayCurrencyCode)
 
     return (
       <SceneWrapper background="header" hasTabs={false}>
@@ -406,7 +407,7 @@ export class RequestComponent extends React.Component<Props, State> {
     if (!props.currencyCode) return false
     if (this.state.minimumPopupModalState[props.currencyCode]) {
       if (this.state.minimumPopupModalState[props.currencyCode] === 'NOT_YET_SHOWN') {
-        const { minimumPopupModals } = Constants.getSpecialCurrencyInfo(props.currencyCode)
+        const { minimumPopupModals } = getSpecialCurrencyInfo(props.currencyCode)
         const minBalance = minimumPopupModals != null ? minimumPopupModals.minimumNativeBalance : '0'
         if (bns.lt(props.guiWallet.primaryNativeBalance, minBalance)) {
           return true
@@ -426,7 +427,7 @@ export class RequestComponent extends React.Component<Props, State> {
     let edgePayUri = 'https://deep.edge.app/'
     let addOnMessage = ''
     // if encoded (like XTZ), only share the public address
-    if (Constants.getSpecialCurrencyInfo(currencyCode).isUriEncodedStructure) {
+    if (getSpecialCurrencyInfo(currencyCode).isUriEncodedStructure) {
       sharedAddress = publicAddress
     } else {
       // Rebuild uri to preserve uriPrefix if amount is 0
@@ -477,7 +478,9 @@ export class RequestComponent extends React.Component<Props, State> {
         return
       }
     }
-    Actions[Constants.FIO_REQUEST_CONFIRMATION]({ amounts: this.amounts })
+    Actions[FIO_REQUEST_CONFIRMATION]({
+      amounts: this.amounts
+    })
   }
 
   fioMode = () => {

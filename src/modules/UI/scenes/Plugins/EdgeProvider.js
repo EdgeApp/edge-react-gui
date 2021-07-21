@@ -360,7 +360,11 @@ export class EdgeProvider extends Bridgeable {
       guiMakeSpendInfo.onBack = () => {
         resolve()
       }
-      Actions[SEND]({ guiMakeSpendInfo, selectedWalletId: coreWallet.id, selectedCurrencyCode })
+      Actions[SEND]({
+        guiMakeSpendInfo,
+        selectedWalletId: coreWallet.id,
+        selectedCurrencyCode
+      })
     })
 
     if (transaction != null) {

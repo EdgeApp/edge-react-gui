@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Image, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
-import * as Constants from '../../constants/SceneKeys'
+import { FIO_ADDRESS_LIST } from '../../constants/SceneKeys.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -55,7 +55,7 @@ class FioAddressRegistered extends React.Component<Props> {
               {formatDate(new Date(expiration))}
             </T>
           </View>
-          <PrimaryButton marginRem={2} onPress={Actions[Constants.FIO_ADDRESS_LIST]} label={s.strings.title_fio_names} />
+          <PrimaryButton marginRem={2} onPress={Actions[FIO_ADDRESS_LIST]} label={s.strings.title_fio_names} />
         </View>
       </SceneWrapper>
     )

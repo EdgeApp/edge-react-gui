@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import { FIAT_CODES_SYMBOLS } from '../../constants/indexConstants'
+import { FIAT_CODES_SYMBOLS } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatDate, formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'

@@ -7,7 +7,8 @@ import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import * as Constants from '../../constants/indexConstants'
+import { FIO_ADDRESS_SETTINGS, REQUEST } from '../../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache, checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddress/util'
@@ -135,7 +136,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
               />
             ))
             if (answer === 'ok') {
-              Actions[Constants.FIO_ADDRESS_SETTINGS]({
+              Actions[FIO_ADDRESS_SETTINGS]({
                 showRenew: true,
                 fioWallet,
                 fioAddressName: this.state.fioAddressFrom
@@ -172,7 +173,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         this.setState({ loading: false })
         showToast(s.strings.fio_request_ok_body)
         addToFioAddressCache(this.props.account, [this.state.fioAddressTo])
-        Actions.popTo(Constants.REQUEST)
+        Actions.popTo(REQUEST)
       } catch (error) {
         this.setState({ loading: false })
         this.resetSlider()
@@ -312,7 +313,7 @@ const FioRequestConfirmationScene = connect((state: RootState): StateProps => {
   const currencyCode: string = state.ui.wallets.selectedCurrencyCode
   const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
   const { isConnected } = state.network
-  const fioPlugin = account && account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
+  const fioPlugin = account && account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
 
   if (!guiWallet || !currencyCode) {
     return {

@@ -5,7 +5,7 @@ import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { FIO_ADDRESS_LIST, SEND } from '../../constants/SceneKeys'
+import { FIO_ADDRESS_LIST, SEND } from '../../constants/SceneKeys.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'

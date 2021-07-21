@@ -7,7 +7,7 @@ import ConfettiCannon from 'react-native-confetti-cannon'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import * as Constants from '../../constants/indexConstants'
+import { EXCHANGE_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import type { RootState } from '../../reducers/RootReducer'
 import { needToShowConfetti } from '../../util/show-confetti'
@@ -47,7 +47,7 @@ class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalSta
 
   done = () => {
     this.setState({ showButton: false })
-    Actions.popTo(Constants.EXCHANGE_SCENE)
+    Actions.popTo(EXCHANGE_SCENE)
   }
 
   showConfetti = async () => {
