@@ -2,15 +2,15 @@
 
 import NetInfo, { type NetInfoState } from '@react-native-community/netinfo'
 import * as React from 'react'
-import { connect } from 'react-redux'
 
 import s from '../../locales/strings'
-import { type Dispatch } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { showError } from './AirshipInstance'
 
-type Props = {
+type DispatchProps = {
   changeConnectivity: (isConnected: boolean) => void
 }
+type Props = DispatchProps
 
 class NetworkActivityComponent extends React.Component<Props> {
   netInfoUnsubscribe: void | (() => void)
@@ -37,11 +37,11 @@ class NetworkActivityComponent extends React.Component<Props> {
   }
 }
 
-export const NetworkActivity = connect(
-  () => ({}),
-  (dispatch: Dispatch) => ({
-    changeConnectivity: (isConnected: boolean) => {
-      return dispatch({
+export const NetworkActivity = connect<{}, DispatchProps, {}>(
+  state => ({}),
+  dispatch => ({
+    changeConnectivity(isConnected: boolean) {
+      dispatch({
         type: 'NETWORK/NETWORK_STATUS',
         data: { isConnected }
       })

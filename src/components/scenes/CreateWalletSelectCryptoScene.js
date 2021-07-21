@@ -4,12 +4,11 @@ import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, FlatList, Image, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { CREATE_WALLET_CHOICE, CREATE_WALLET_SELECT_FIAT } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type CreateWalletType, type FlatListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -189,9 +188,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CreateWalletSelectCryptoScene = connect(
-  (state: RootState): StateProps => ({
+export const CreateWalletSelectCryptoScene = connect<StateProps, {}, {}>(
+  state => ({
     account: state.core.account
   }),
-  (dispatch: Dispatch) => ({})
+  dispatch => ({})
 )(withTheme(CreateWalletSelectCryptoComponent))

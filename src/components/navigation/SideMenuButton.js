@@ -2,16 +2,16 @@
 
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
-import { connect } from 'react-redux'
 
 import { openDrawer } from '../../actions/ScenesActions.js'
 import { Fontello } from '../../assets/vector/index.js'
-import { type Dispatch } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
-type Props = {
-  openDrawer(): void
+type DispatchProps = {
+  openDrawer: () => void
 }
+type Props = DispatchProps
 
 function SideMenuButtonComponent(props: Props) {
   const theme = useTheme()
@@ -32,8 +32,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SideMenuButton = connect(null, (dispatch: Dispatch): Props => ({
-  openDrawer() {
-    dispatch(openDrawer())
-  }
-}))(SideMenuButtonComponent)
+export const SideMenuButton = connect<{}, DispatchProps, {}>(
+  state => ({}),
+  dispatch => ({
+    openDrawer() {
+      dispatch(openDrawer())
+    }
+  })
+)(SideMenuButtonComponent)

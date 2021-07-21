@@ -1,11 +1,6 @@
 // @flow
 
 import * as React from 'react'
-import * as ReactRedux from 'react-redux'
-
-import { type Dispatch, type RootState } from '../types/reduxTypes.js'
-
-// react hooks --------------------------------------------------------
 
 type SetState<S> = (value: S | ((state: S) => S)) => void
 
@@ -63,14 +58,3 @@ export const useReducer: UseReducer = React.useReducer
 export const useRef: UseRef = React.useRef
 // $FlowFixMe
 export const useState: UseState = React.useState
-
-// react-redux hooks --------------------------------------------------
-
-type UseDispatch = () => Dispatch
-
-type UseSelector = <T>((state: RootState) => T) => T
-
-// $FlowFixMe
-export const useDispatch: UseDispatch = ReactRedux.useDispatch
-// $FlowFixMe
-export const useSelector: UseSelector = ReactRedux.useSelector

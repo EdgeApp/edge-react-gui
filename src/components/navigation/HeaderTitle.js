@@ -2,11 +2,10 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
-import { connect } from 'react-redux'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import s from '../../locales/strings.js'
-import type { Dispatch, RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { ArrowDownTextIconButton } from '../common/ArrowDownTextIconButton.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -24,7 +23,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  onSelectWallet(string, string): void
+  onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
@@ -76,8 +75,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const HeaderTitle = connect(
-  (state: RootState): StateProps => {
+export const HeaderTitle = connect<StateProps, DispatchProps, OwnProps>(
+  state => {
     const walletId = state.ui.wallets.selectedWalletId
     const selectedWallet = state.ui.wallets.byId[walletId]
 
@@ -86,7 +85,9 @@ export const HeaderTitle = connect(
       selectedWalletCurrencyCode: state.ui.wallets.selectedCurrencyCode
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
-    onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
+  dispatch => ({
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch(selectWalletFromModal(walletId, currencyCode))
+    }
   })
 )(withTheme(HeaderTitleComponent))

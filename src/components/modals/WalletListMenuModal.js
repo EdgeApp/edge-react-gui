@@ -9,12 +9,14 @@ import { sprintf } from 'sprintf-js'
 import { type WalletListMenuKey, walletListMenuAction } from '../../actions/WalletListMenuActions.js'
 import { WALLET_LIST_MENU } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
+import { useEffect, useState } from '../../types/reactHooks.js'
+import { useDispatch, useSelector } from '../../types/reactRedux.js'
 import { getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
-import { useDispatch, useEffect, useSelector, useState } from '../../util/hooks.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { type AirshipBridge } from './modalParts'
+
 type Option = {
   value: WalletListMenuKey,
   label: string

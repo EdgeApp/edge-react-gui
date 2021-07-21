@@ -5,7 +5,6 @@ import * as React from 'react'
 import { FlatList, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { Fontello } from '../../../assets/vector'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
@@ -17,7 +16,7 @@ import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import { FIO_DOMAIN_REGISTER } from '../../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings.js'
-import { type RootState } from '../../../types/reduxTypes'
+import { connect } from '../../../types/reactRedux.js'
 import type { FioDomain, FlatListItem } from '../../../types/types.js'
 
 type Item = {
@@ -30,7 +29,7 @@ type Item = {
 type StateProps = {
   userDomains: FioDomain[],
   fioWallets: EdgeCurrencyWallet[],
-  fioPlugin: EdgeCurrencyConfig | null
+  fioPlugin?: EdgeCurrencyConfig
 }
 
 type OwnProps = {
@@ -246,13 +245,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const DomainListModal = connect((state: RootState): StateProps => {
-  const { account } = state.core
-  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-  const fioPlugin = account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
-  return {
+export const DomainListModal = connect<StateProps, {}, OwnProps>(
+  state => ({
     userDomains: state.ui.scenes.fioAddress.fioDomains,
-    fioWallets,
-    fioPlugin
-  }
-})(withTheme(DomainListModalComponent))
+    fioWallets: state.ui.wallets.fioWallets,
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+  }),
+  dispatch => ({})
+)(withTheme(DomainListModalComponent))

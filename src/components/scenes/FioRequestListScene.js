@@ -6,7 +6,6 @@ import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_ADDRESS_SETTINGS, FIO_SENT_REQUEST_DETAILS, SEND, TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
@@ -17,7 +16,7 @@ import { FioRequestRowConnector as FioRequestRow } from '../../modules/FioReques
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
-import type { Dispatch } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
 import type { FioRequest, GuiWallet } from '../../types/types'
 import FullScreenLoader from '../common/FullScreenLoader'
@@ -42,7 +41,7 @@ type LocalState = {
   fioRequestsSent: FioRequest[]
 }
 
-export type StateProps = {
+type StateProps = {
   state: RootState,
   account: EdgeAccount,
   wallets: { [walletId: string]: GuiWallet },
@@ -51,7 +50,7 @@ export type StateProps = {
   isConnected: boolean
 }
 
-export type DispatchProps = {
+type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 
@@ -626,8 +625,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioRequestListScene = connect(
-  (state: RootState): StateProps => ({
+export const FioRequestListScene = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     state,
     account: state.core.account,
     wallets: state.ui.wallets.byId,
@@ -635,10 +634,12 @@ const FioRequestListScene = connect(
     currencyWallets: state.core.account.currencyWallets,
     isConnected: state.network.isConnected
   }),
-  (dispatch: Dispatch): DispatchProps => ({
-    onSelectWallet: (walletId: string, currencyCode: string) => {
-      dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
+  dispatch => ({
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch({
+        type: 'UI/WALLETS/SELECT_WALLET',
+        data: { currencyCode, walletId }
+      })
     }
   })
 )(withTheme(FioRequestList))
-export { FioRequestListScene }

@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { YellowBox } from 'react-native'
 import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import ENV from '../../env.json'
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
@@ -30,18 +29,12 @@ import { FioDomainSettingsScene } from '../components/scenes/FioDomainSettingsSc
 import { FioRequestConfirmationScene } from '../components/scenes/FioRequestConfirmationScene.js'
 import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
-import ManageTokensScene from '../components/scenes/ManageTokensScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
 import { ScanScene } from '../components/scenes/ScanScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
-import AddToken from '../connectors/scenes/AddTokenConnector.js'
-import { CreateWalletAccountSelectConnector } from '../connectors/scenes/CreateWalletAccountSelectConnector.js'
-import { CreateWalletAccountSetupConnector } from '../connectors/scenes/CreateWalletAccountSetupConnector.js'
-import EdgeLoginSceneConnector from '../connectors/scenes/EdgeLoginSceneConnector'
-import SpendingLimitsConnector from '../connectors/SpendingLimitsConnector.js'
 import {
   ADD_TOKEN,
   CHANGE_MINING_FEE_SEND_CONFIRMATION,
@@ -112,10 +105,10 @@ import {
 import s from '../locales/strings.js'
 import { registerDevice } from '../modules/Device/action'
 import { logoutRequest } from '../modules/Login/action.js'
-import ControlPanel from '../modules/UI/components/ControlPanel/ControlPanelConnector'
+import { ControlPanel } from '../modules/UI/components/ControlPanel/ControlPanel.ui.js'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
-import { type Dispatch, type RootState } from '../types/reduxTypes.js'
+import { connect } from '../types/reactRedux.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
 import { AirshipToast } from './common/AirshipToast.js'
@@ -128,12 +121,16 @@ import { HeaderTextButton } from './navigation/HeaderTextButton.js'
 import { HeaderTitle } from './navigation/HeaderTitle.js'
 import { SideMenuButton } from './navigation/SideMenuButton.js'
 import { TransactionDetailsTitle } from './navigation/TransactionDetailsTitle.js'
+import { AddTokenScene } from './scenes/AddTokenScene.js'
 import { ChangeMiningFeeScene } from './scenes/ChangeMiningFeeScene.js'
 import { ChangePasswordScene } from './scenes/ChangePasswordScene.js'
 import { ChangePinScene } from './scenes/ChangePinScene.js'
+import { CreateWalletAccountSelectScene } from './scenes/CreateWalletAccountSelectScene.js'
+import { CreateWalletAccountSetupScene } from './scenes/CreateWalletAccountSetupScene.js'
 import { CreateWalletName } from './scenes/CreateWalletNameScene.js'
 import { CryptoExchangeQuoteProcessingScreen } from './scenes/CryptoExchangeQuoteProcessingScene.js'
 import { CurrencyNotificationScene } from './scenes/CurrencyNotificationScene'
+import { EdgeLoginScene } from './scenes/EdgeLoginScene.js'
 import { EditTokenScene } from './scenes/EditTokenScene.js'
 import { FioDomainRegisterScene } from './scenes/FioDomainRegisterScene'
 import { FioDomainRegisterSelectWalletScene } from './scenes/FioDomainRegisterSelectWalletScene'
@@ -141,6 +138,7 @@ import { FioNameConfirmScene } from './scenes/FioNameConfirmScene'
 import { GuiPluginListScene } from './scenes/GuiPluginListScene.js'
 import { GuiPluginViewScene } from './scenes/GuiPluginViewScene.js'
 import { LoginScene } from './scenes/LoginScene.js'
+import { ManageTokensScene } from './scenes/ManageTokensScene.js'
 import { NotificationScene } from './scenes/NotificationScene'
 import { OtpRepairScene } from './scenes/OtpRepairScene.js'
 import { OtpSettingsScene } from './scenes/OtpSettingsScene.js'
@@ -149,32 +147,34 @@ import { Request } from './scenes/RequestScene.js'
 import { SecurityAlertsScene } from './scenes/SecurityAlertsScene.js'
 import { SendScene } from './scenes/SendScene.js'
 import { SettingsScene } from './scenes/SettingsScene.js'
+import { SpendingLimitsScene } from './scenes/SpendingLimitsScene.js'
 import { TermsOfServiceComponent } from './scenes/TermsOfServiceScene.js'
 import { TransactionDetailsScene } from './scenes/TransactionDetailsScene.js'
 import { TransactionList } from './scenes/TransactionListScene.js'
 import { Airship } from './services/AirshipInstance.js'
 import { MenuTab } from './themed/MenuTab.js'
 
-const RouterWithRedux = connect()(Router)
+const RouterWithRedux = connect<{}, {}, {}>(
+  state => ({}),
+  dispatch => ({})
+)(Router)
 
 type DispatchProps = {
-  registerDevice(): void,
+  registerDevice: () => void,
 
   // Navigation actions:
-  logout(username?: string): void,
+  logout: (username?: string) => void,
 
   // Things to do when we enter certain scenes:
-  checkAndShowGetCryptoModal(selectedWalletId?: string, selectedCurrencyCode?: string): void,
-  checkEnabledExchanges(): void,
-  dispatchDisableScan(): void,
-  dispatchEnableScan(): void,
-  requestPermission(permission: Permission): void,
-  showReEnableOtpModal(): void
+  checkAndShowGetCryptoModal: (selectedWalletId?: string, selectedCurrencyCode?: string) => void,
+  checkEnabledExchanges: () => void,
+  dispatchDisableScan: () => void,
+  dispatchEnableScan: () => void,
+  requestPermission: (permission: Permission) => void,
+  showReEnableOtpModal: () => void
 }
 
-type StateProps = {}
-
-type Props = DispatchProps & StateProps
+type Props = DispatchProps
 
 export class MainComponent extends React.Component<Props> {
   backPressedOnce: boolean
@@ -205,7 +205,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={EDGE_LOGIN}
               navTransparent
-              component={ifLoggedIn(EdgeLoginSceneConnector)}
+              component={ifLoggedIn(EdgeLoginScene)}
               renderTitle={<HeaderTitle title={s.strings.title_edge_login} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<HeaderTextButton type="help" placement="right" />}
@@ -302,7 +302,7 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key={CREATE_WALLET_ACCOUNT_SETUP}
                 navTransparent
-                component={ifLoggedIn(CreateWalletAccountSetupConnector)}
+                component={ifLoggedIn(CreateWalletAccountSetupScene)}
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_create_account} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={<HeaderTextButton type="help" placement="right" />}
@@ -311,7 +311,7 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key={CREATE_WALLET_ACCOUNT_SELECT}
                 navTransparent
-                component={ifLoggedIn(CreateWalletAccountSelectConnector)}
+                component={ifLoggedIn(CreateWalletAccountSelectScene)}
                 renderTitle={<HeaderTitle title={s.strings.create_wallet_account_activate} />}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={<HeaderTextButton type="help" placement="right" />}
@@ -373,7 +373,7 @@ export class MainComponent extends React.Component<Props> {
               />
               <Scene
                 key={ADD_TOKEN}
-                component={ifLoggedIn(AddToken)}
+                component={ifLoggedIn(AddTokenScene)}
                 navTransparent
                 onLeft={Actions.pop}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
@@ -521,7 +521,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={ADD_TOKEN}
               navTransparent
-              component={ifLoggedIn(AddToken)}
+              component={ifLoggedIn(AddTokenScene)}
               renderTitle={<HeaderTitle title={s.strings.title_add_token} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
@@ -573,7 +573,7 @@ export class MainComponent extends React.Component<Props> {
             <Scene
               key={SPENDING_LIMITS}
               navTransparent
-              component={ifLoggedIn(SpendingLimitsConnector)}
+              component={ifLoggedIn(SpendingLimitsScene)}
               renderTitle={<HeaderTitle title={s.strings.spending_limits} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
@@ -863,9 +863,9 @@ export class MainComponent extends React.Component<Props> {
   }
 }
 
-export const Main = connect(
-  (state: RootState): StateProps => ({}),
-  (dispatch: Dispatch): DispatchProps => ({
+export const Main = connect<{}, DispatchProps, {}>(
+  state => ({}),
+  dispatch => ({
     registerDevice() {
       dispatch(registerDevice())
     },

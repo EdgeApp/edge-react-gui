@@ -6,7 +6,6 @@ import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_DOMAIN_CONFIRM, SEND, WALLET_LIST } from '../../constants/SceneKeys.js'
@@ -14,7 +13,8 @@ import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrenc
 import s from '../../locales/strings.js'
 import { getDomainRegInfo } from '../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
+import { type RootState } from '../../types/reduxTypes'
 import type { GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -28,7 +28,7 @@ import { Tile } from '../themed/Tile'
 type StateProps = {
   state: RootState,
   wallets: { [string]: GuiWallet },
-  fioPlugin: EdgeCurrencyConfig | null,
+  fioPlugin?: EdgeCurrencyConfig,
   fioWallets: EdgeCurrencyWallet[],
   fioDisplayDenomination: EdgeDenomination,
   isConnected: boolean
@@ -249,27 +249,21 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioDomainRegisterSelectWalletScene = connect(
-  (state: RootState) => {
-    const wallets = state.ui.wallets.byId
-    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-    const { account } = state.core
-    const fioPlugin = account && account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
-    const fioDisplayDenomination = getDisplayDenomination(state, FIO_STR)
-
-    return {
-      state,
-      fioWallets,
-      fioPlugin,
-      fioDisplayDenomination,
-      wallets,
-      isConnected: state.network.isConnected
-    }
-  },
-  (dispatch: Dispatch): DispatchProps => ({
-    onSelectWallet: (walletId: string, currencyCode: string) => {
-      dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
+export const FioDomainRegisterSelectWalletScene = connect<StateProps, DispatchProps, NavigationProps>(
+  state => ({
+    state,
+    fioWallets: state.ui.wallets.fioWallets,
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+    fioDisplayDenomination: getDisplayDenomination(state, FIO_STR),
+    wallets: state.ui.wallets.byId,
+    isConnected: state.network.isConnected
+  }),
+  dispatch => ({
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch({
+        type: 'UI/WALLETS/SELECT_WALLET',
+        data: { currencyCode, walletId }
+      })
     }
   })
 )(withTheme(FioDomainRegisterSelectWallet))
-export { FioDomainRegisterSelectWalletScene }

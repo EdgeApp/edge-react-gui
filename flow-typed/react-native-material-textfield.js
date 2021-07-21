@@ -1,7 +1,5 @@
 // @flow
 
-import * as React from 'react'
-
 declare module 'react-native-material-textfield' {
   declare export type ContentInset = {|
     top?: number,

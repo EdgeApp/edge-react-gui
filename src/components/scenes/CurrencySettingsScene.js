@@ -3,12 +3,11 @@
 import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, Text } from 'react-native'
-import { connect } from 'react-redux'
 
 import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenominationKeyRequest } from '../../actions/SettingsActions.js'
 import s from '../../locales/strings.js'
 import { getDenominations, getDisplayDenominationKey } from '../../selectors/DenominationSelectors.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { GuiDenomination } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SetCustomNodesModal } from '../modals/SetCustomNodesModal.ui.js'
@@ -30,10 +29,10 @@ type StateProps = {
   defaultElectrumServer: string
 }
 type DispatchProps = {
-  disableCustomNodes(): void,
-  enableCustomNodes(): void,
-  saveCustomNodesList(nodes: string[]): void,
-  selectDenomination(string): void
+  disableCustomNodes: () => void,
+  enableCustomNodes: () => void,
+  saveCustomNodesList: (nodes: string[]) => void,
+  selectDenomination: (denominationKey: string) => void
 }
 type Props = NavigationProps & StateProps & DispatchProps & ThemeProps
 
@@ -143,8 +142,8 @@ export class CurrencySettingsComponent extends React.Component<Props, State> {
   }
 }
 
-export const CurrencySettingsScene = connect(
-  (state: RootState, ownProps: NavigationProps): StateProps => {
+export const CurrencySettingsScene = connect<StateProps, DispatchProps, NavigationProps>(
+  (state, ownProps) => {
     const { currencyInfo } = ownProps
     const { currencyCode, defaultSettings, pluginId } = currencyInfo
 
@@ -161,7 +160,7 @@ export const CurrencySettingsScene = connect(
       defaultElectrumServer
     }
   },
-  (dispatch: Dispatch, ownProps: NavigationProps): DispatchProps => ({
+  (dispatch, ownProps) => ({
     disableCustomNodes() {
       dispatch(disableCustomNodes(ownProps.currencyInfo.currencyCode))
     },

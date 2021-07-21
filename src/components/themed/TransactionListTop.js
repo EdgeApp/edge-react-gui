@@ -5,14 +5,13 @@ import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
 import { selectWalletFromModal } from '../../actions/WalletActions.js'
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { convertCurrency } from '../../selectors/WalletSelectors.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { convertNativeToDenomination, getDefaultDenomination, getDenomination, getFiatSymbol } from '../../util/utils'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -27,22 +26,22 @@ type OwnProps = {
   isEmpty: boolean,
   searching: boolean,
   onChangeSortingState: (isSearching: boolean) => void,
-  onSearchTransaction: (searchString: string) => void,
-  onSelectWallet: (walletId: string, currencyCode: string) => void
+  onSearchTransaction: (searchString: string) => void
 }
 
-export type StateProps = {
+type StateProps = {
   cryptoAmount: string,
   currencyCode: string,
   denominationName: string,
   fiatCurrencyCode: string,
-  fiatBalance: number,
+  fiatBalance: string,
   fiatSymbol: string,
   walletName: string,
   isAccountBalanceVisible: boolean
 }
 
-export type DispatchProps = {
+type DispatchProps = {
+  onSelectWallet: (walletId: string, currencyCode: string) => void,
   toggleBalanceVisibility: () => void
 }
 
@@ -275,8 +274,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const TransactionListTop = connect(
-  (state: RootState) => {
+export const TransactionListTop = connect<StateProps, DispatchProps, OwnProps>(
+  state => {
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
     const guiWallet = state.ui.wallets.byId[selectedWalletId]
@@ -304,10 +303,12 @@ export const TransactionListTop = connect(
       isAccountBalanceVisible: state.ui.settings.isAccountBalanceVisible
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     toggleBalanceVisibility() {
       dispatch(toggleAccountBalanceVisibility())
     },
-    onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch(selectWalletFromModal(walletId, currencyCode))
+    }
   })
 )(withTheme(TransactionListTopComponent))

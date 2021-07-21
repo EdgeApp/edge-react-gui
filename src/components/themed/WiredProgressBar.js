@@ -2,9 +2,8 @@
 
 import * as React from 'react'
 import { Animated, Easing, View } from 'react-native'
-import { connect } from 'react-redux'
 
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 type StateProps = {
@@ -76,16 +75,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WiredProgressBar = connect((state: RootState): StateProps => {
-  const walletsForProgress = state.ui.wallets.walletLoadingProgress
-  const walletIds = Object.keys(walletsForProgress)
-  if (walletIds.length === 0) return { progress: 0 }
+export const WiredProgressBar = connect<StateProps, {}, {}>(
+  state => {
+    const walletsForProgress = state.ui.wallets.walletLoadingProgress
+    const walletIds = Object.keys(walletsForProgress)
+    if (walletIds.length === 0) return { progress: 0 }
 
-  let sum = 0
-  for (const walletId of walletIds) {
-    sum += walletsForProgress[walletId]
-  }
-  let ratio = sum / walletIds.length
-  if (ratio > 0.99999) ratio = 1
-  return { progress: ratio * 100 }
-}, null)(withTheme(ProgressBarComponent))
+    let sum = 0
+    for (const walletId of walletIds) {
+      sum += walletsForProgress[walletId]
+    }
+    let ratio = sum / walletIds.length
+    if (ratio > 0.99999) ratio = 1
+    return { progress: ratio * 100 }
+  },
+  dispatch => ({})
+)(withTheme(ProgressBarComponent))

@@ -5,7 +5,7 @@ import { type TextStyle, type ViewStyle, Platform, Text, TextInput, TouchableOpa
 import Animated, { Extrapolate, interpolate, interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
-import { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from '../../util/hooks.js'
+import { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from '../../types/reactHooks.js'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 

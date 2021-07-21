@@ -6,14 +6,13 @@ import { Alert, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
 import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
 import { expiredSoon, findWalletByFioAddress } from '../../modules/FioAddress/util'
-import type { RootState } from '../../reducers/RootReducer'
+import { connect } from '../../types/reactRedux.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
@@ -21,17 +20,17 @@ import { EdgeText } from '../themed/EdgeText.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
 import { SettingsRow } from '../themed/SettingsRow.js'
 
-export type StateProps = {
+type StateProps = {
   fioWallets: EdgeCurrencyWallet[]
 }
 
-export type NavProps = {
+type NavProps = {
   fioAddressName: string,
   expiration: string,
   navigation: any
 }
 
-export type LocalState = {
+type LocalState = {
   fioWalletLoading: boolean,
   fioWallet: EdgeCurrencyWallet | null
 }
@@ -171,9 +170,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioAddressDetailsScene = connect(
-  (state: RootState): StateProps => ({
+export const FioAddressDetailsScene = connect<StateProps, {}, NavProps>(
+  state => ({
     fioWallets: state.ui.wallets.fioWallets
   }),
-  {}
+  dispatch => ({})
 )(withTheme(FioAddressDetails))

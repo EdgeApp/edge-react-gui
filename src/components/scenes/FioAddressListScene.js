@@ -5,19 +5,16 @@ import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
 import fioAddressLogo from '../../assets/images/fio/fio_logo.png'
 import { Fontello } from '../../assets/vector'
 import { FIO_ADDRESS_DETAILS, FIO_ADDRESS_REGISTER, FIO_DOMAIN_REGISTER, FIO_DOMAIN_SETTINGS } from '../../constants/SceneKeys.js'
-import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { FioNameRow } from '../../modules/FioAddress/components/FioName'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import type { RootState } from '../../reducers/RootReducer'
 import { PLATFORM } from '../../theme/variables/platform'
-import type { Dispatch } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import type { FioAddress, FioDomain } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -27,12 +24,12 @@ import { Fade } from '../themed/Fade'
 import { SceneHeader } from '../themed/SceneHeader'
 import { ClickableText } from '../themed/ThemedButtons'
 
-export type LocalState = {
+type LocalState = {
   initLoading: boolean,
   prevLoading: boolean
 }
 
-export type StateProps = {
+type StateProps = {
   fioAddresses: FioAddress[],
   fioDomains: FioDomain[],
   fioWallets: EdgeCurrencyWallet[],
@@ -40,8 +37,8 @@ export type StateProps = {
   isConnected: boolean
 }
 
-export type DispatchProps = {
-  refreshAllFioAddresses: () => Promise<void>
+type DispatchProps = {
+  refreshAllFioAddresses: () => void
 }
 
 type NavigationProps = {
@@ -236,26 +233,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioAddressListScene = connect(
-  (state: RootState) => {
-    const { account } = state.core
-    const fioAddresses: FioAddress[] = state.ui.scenes.fioAddress.fioAddresses
-    const fioDomains: FioDomain[] = state.ui.scenes.fioAddress.fioDomains
-    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-    const loading: boolean = state.ui.scenes.fioAddress.fioAddressesLoading
-    const fioPlugin = account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
-
-    return {
-      fioAddresses,
-      fioDomains,
-      fioWallets,
-      fioPlugin,
-      loading,
-      isConnected: state.network.isConnected
+export const FioAddressListScene = connect<StateProps, DispatchProps, NavigationProps>(
+  state => ({
+    fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+    fioDomains: state.ui.scenes.fioAddress.fioDomains,
+    fioWallets: state.ui.wallets.fioWallets,
+    loading: state.ui.scenes.fioAddress.fioAddressesLoading,
+    isConnected: state.network.isConnected
+  }),
+  dispatch => ({
+    refreshAllFioAddresses() {
+      dispatch(refreshAllFioAddresses())
     }
-  },
-  (dispatch: Dispatch): DispatchProps => ({
-    refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses())
   })
 )(withTheme(FioAddressList))
-export { FioAddressListScene }

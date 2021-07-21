@@ -3,14 +3,13 @@
 import * as React from 'react'
 import { Alert, FlatList, Keyboard, StyleSheet, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { setDefaultFiatRequest } from '../../actions/SettingsActions'
 import s from '../../locales/strings.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { THEME } from '../../theme/variables/airbitz'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { FlatListItem, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { getSupportedFiats } from '../../util/utils'
@@ -21,7 +20,7 @@ type StateProps = {
   supportedFiats: GuiFiatType[]
 }
 type DispatchProps = {
-  onSelectFiat: string => void
+  onSelectFiat: (selectedDefaultFiat: string) => void
 }
 type Props = StateProps & DispatchProps
 
@@ -171,11 +170,11 @@ const stylesRaw = {
 }
 const styles: typeof stylesRaw = StyleSheet.create(stylesRaw)
 
-export const DefaultFiatSettingScene = connect(
-  (state: RootState): StateProps => ({
+export const DefaultFiatSettingScene = connect<StateProps, DispatchProps, {}>(
+  state => ({
     supportedFiats: getSupportedFiats(getDefaultFiat(state))
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     onSelectFiat(selectedDefaultFiat) {
       dispatch(setDefaultFiatRequest(selectedDefaultFiat))
       Actions.pop()

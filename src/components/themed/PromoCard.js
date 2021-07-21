@@ -3,11 +3,10 @@
 import * as React from 'react'
 import { Image, TouchableOpacity, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import { connect } from 'react-redux'
 
 import { hideMessageTweak } from '../../actions/AccountReferralActions.js'
 import { linkReferralWithCurrencies } from '../../actions/WalletListActions.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type MessageTweak } from '../../types/TweakTypes.js'
 import { type TweakSource, bestOfMessages } from '../../util/ReferralHelpers.js'
@@ -21,8 +20,8 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  hideMessageTweak(messageId: string, source: TweakSource): void,
-  linkReferralWithCurrencies(string): void
+  hideMessageTweak: (messageId: string, source: TweakSource) => void,
+  linkReferralWithCurrencies: (uri: string) => void
 }
 
 type Props = StateProps & DispatchProps & ThemeProps
@@ -86,12 +85,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const PromoCard = connect(
-  (state: RootState): StateProps => ({
+export const PromoCard = connect<StateProps, DispatchProps, {}>(
+  state => ({
     accountMessages: state.account.referralCache.accountMessages,
     accountReferral: state.account.accountReferral
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     hideMessageTweak(messageId: string, source: TweakSource) {
       dispatch(hideMessageTweak(messageId, source))
     },

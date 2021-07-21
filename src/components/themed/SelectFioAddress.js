@@ -4,7 +4,6 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
 import { FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
@@ -12,7 +11,7 @@ import s from '../../locales/strings.js'
 import { refreshAllFioAddresses } from '../../modules/FioAddress/action.js'
 import { checkRecordSendFee, findWalletByFioAddress, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util.js'
 import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import type { FioAddress, FioRequest, GuiWallet } from '../../types/types'
 import { AddressModal } from '../modals/AddressModal'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -22,7 +21,7 @@ import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { Tile } from './Tile.js'
 
-type SelectFioAddressOwnProps = {
+type OwnProps = {
   selected: string,
   memo: string,
   memoError: string,
@@ -32,7 +31,7 @@ type SelectFioAddressOwnProps = {
   isSendUsingFioAddress?: boolean
 }
 
-type SelectFioAddressProps = {
+type StateProps = {
   fioAddresses: FioAddress[],
   fioWallets: EdgeCurrencyWallet[],
   selectedWallet: GuiWallet,
@@ -43,7 +42,7 @@ type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
 
-type Props = SelectFioAddressOwnProps & SelectFioAddressProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type LocalState = {
   loading: boolean,
@@ -262,35 +261,22 @@ class SelectFioAddressComponent extends React.PureComponent<Props, LocalState> {
   }
 }
 
-const mapStateToProps = (state: RootState): SelectFioAddressProps => {
-  const guiWallet: GuiWallet = getSelectedWallet(state)
-  const currencyCode: string = state.ui.wallets.selectedCurrencyCode
-  const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-  const fioAddresses = state.ui.scenes.fioAddress.fioAddresses
+export const SelectFioAddress = connect<StateProps, DispatchProps, OwnProps>(
+  state => {
+    const guiWallet: GuiWallet = getSelectedWallet(state)
+    const currencyCode: string = state.ui.wallets.selectedCurrencyCode
 
-  if (!guiWallet || !currencyCode) {
     return {
-      loading: true,
-      fioAddresses,
-      fioWallets,
+      loading: !guiWallet || !currencyCode,
+      fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+      fioWallets: state.ui.wallets.fioWallets,
       currencyCode,
       selectedWallet: guiWallet
     }
-  }
-
-  return {
-    loading: false,
-    fioAddresses,
-    fioWallets,
-    currencyCode,
-    selectedWallet: guiWallet
-  }
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  refreshAllFioAddresses: () => {
-    dispatch(refreshAllFioAddresses())
-  }
-})
-
-export const SelectFioAddress = connect(mapStateToProps, mapDispatchToProps)(withTheme(SelectFioAddressComponent))
+  },
+  dispatch => ({
+    refreshAllFioAddresses() {
+      dispatch(refreshAllFioAddresses())
+    }
+  })
+)(withTheme(SelectFioAddressComponent))

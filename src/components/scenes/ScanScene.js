@@ -7,20 +7,23 @@ import RNPermissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
 import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { loginQrCodeScanned, parseScannedUri, qrCodeScanned } from '../../actions/ScanActions'
-import SecondaryModal from '../../connectors/SecondaryModalConnector.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
+import { SecondaryModal } from '../modals/SecondaryModal.js'
 import { SingleInputModal } from '../modals/SingleInputModal.js'
 import { Airship } from '../services/AirshipInstance'
+
+type OwnProps = {
+  data?: 'sweepPrivateKey' | 'loginQR'
+}
 
 type StateProps = {
   cameraPermission: PermissionStatus,
@@ -33,13 +36,12 @@ type StateProps = {
 type DispatchProps = {
   qrCodeScanned: (data: string) => void,
   loginQrCodeScanned: (data: string) => void,
-  parseScannedUri: (data: string, customErrorTitle: string, customErrorDescription: string) => Promise<void>,
+  parseScannedUri: (data: string, customErrorTitle: string, customErrorDescription: string) => void,
   toggleEnableTorch: () => void,
-  selectFromWalletForExchange: (walletId: string, currencyCode: string) => void,
-  data?: 'sweepPrivateKey' | 'loginQR'
+  selectFromWalletForExchange: (walletId: string, currencyCode: string) => void
 }
 
-type Props = StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps
 
 export const SWEEP_PRIVATE_KEY = 'sweepPrivateKey'
 export const LOGIN_QR = 'loginQR'
@@ -232,23 +234,23 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const ScanScene = connect(
-  (state: RootState): StateProps => ({
+export const ScanScene = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     cameraPermission: state.permissions.camera,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
     scanEnabled: state.ui.scenes.scan.scanEnabled,
     currentWalletId: state.ui.scenes.transactionList.currentWalletId,
     currentCurrencyCode: state.ui.scenes.transactionList.currentCurrencyCode
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     qrCodeScanned(data) {
       dispatch(qrCodeScanned(data))
     },
     loginQrCodeScanned(data) {
       dispatch(loginQrCodeScanned(data))
     },
-    async parseScannedUri(data, customErrorTitle, customErrorDescription) {
-      await dispatch(parseScannedUri(data, customErrorTitle, customErrorDescription))
+    parseScannedUri(data, customErrorTitle, customErrorDescription) {
+      dispatch(parseScannedUri(data, customErrorTitle, customErrorDescription))
     },
     toggleEnableTorch() {
       dispatch({ type: 'TOGGLE_ENABLE_TORCH' })

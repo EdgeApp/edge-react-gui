@@ -6,13 +6,12 @@ import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import { connect } from 'react-redux'
 
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddress/util'
-import type { RootState } from '../../reducers/RootReducer'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
+import { connect } from '../../types/reactRedux.js'
 import { AddressModal } from '../modals/AddressModal'
 import { paymentProtocolUriReceived } from '../modals/paymentProtocolUriReceived.js'
 import { ScanModal } from '../modals/ScanModal.js'
@@ -35,7 +34,7 @@ type OwnProps = {
   fioToAddress?: string
 }
 type StateProps = {
-  fioPlugin: EdgeCurrencyConfig | null,
+  fioPlugin?: EdgeCurrencyConfig,
   fioWallets: EdgeCurrencyWallet[]
 }
 type State = {
@@ -171,7 +170,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
 
   handleScan = () => {
     Airship.show(bridge => <ScanModal bridge={bridge} title={s.strings.scan_qr_label} />)
-      .then((result: string) => {
+      .then((result: string | void) => {
         if (result) {
           this.onChangeAddress(result)
         }
@@ -258,15 +257,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const AddressTileConnector = connect((state: RootState): StateProps => {
-  const { account } = state.core
-  const { guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
-  return {
-    fioToAddress: guiMakeSpendInfo && guiMakeSpendInfo.fioAddress ? guiMakeSpendInfo.fioAddress : undefined,
-    fioPlugin: account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null,
+const AddressTileConnector = connect<StateProps, {}, OwnProps>(
+  state => ({
+    fioToAddress: state.ui.scenes.sendConfirmation.guiMakeSpendInfo?.fioAddress,
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
     fioWallets: state.ui.wallets.fioWallets
-  }
-})(withTheme(AddressTileComponent))
+  }),
+  dispatch => ({})
+)(withTheme(AddressTileComponent))
 
 // $FlowFixMe - forwardRef is not recognize by flow?
 export const AddressTile = React.forwardRef((props, ref) => <AddressTileConnector {...props} addressTileRef={ref} />) // eslint-disable-line

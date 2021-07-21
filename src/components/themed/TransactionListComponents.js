@@ -2,24 +2,26 @@
 
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
-import { connect } from 'react-redux'
 
 import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { TransactionListTop } from '../themed/TransactionListTop.js'
 
-type TopProps = {
+type OwnProps = {
   walletId: string,
-  loading: boolean,
   isEmpty: boolean,
   searching: boolean,
   onChangeSortingState: (isSearching: boolean) => void,
   onSearchTransaction: (searchString: string) => void
 }
+type StateProps = {
+  loading: boolean
+}
+type Props = OwnProps & StateProps
 
-function TopComponent(props: TopProps) {
+function TopComponent(props: Props) {
   return props.loading ? (
     <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size="large" />
   ) : (
@@ -89,6 +91,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const Top = connect((state: RootState, ownProps: { walletId: string }): { loading: boolean } => ({
-  loading: !state.ui.wallets.byId[ownProps.walletId]
-}))(TopComponent)
+export const Top = connect<StateProps, {}, OwnProps>(
+  (state, ownProps) => ({
+    loading: !state.ui.wallets.byId[ownProps.walletId]
+  }),
+  dispatch => ({})
+)(TopComponent)

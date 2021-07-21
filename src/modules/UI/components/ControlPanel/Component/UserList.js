@@ -9,23 +9,29 @@ import { sprintf } from 'sprintf-js'
 
 import { showError } from '../../../../../components/services/AirshipInstance.js'
 import s from '../../../../../locales/strings'
+import { connect } from '../../../../../types/reactRedux.js'
+import { logoutRequest } from '../../../../Login/action.js'
 import T from '../../../components/FormattedText/FormattedText.ui.js'
+import { deleteLocalAccount } from '../action.js'
 import styles from '../style'
 
-type Props = {
-  logout: (username?: string) => void,
-  deleteLocalAccount: string => void,
+type StateProps = {
   context: EdgeContext,
   disklet: Disklet,
   currentUsername: string
 }
+type DispatchProps = {
+  logout: (username?: string) => void,
+  deleteLocalAccount: (username: string) => void
+}
+type Props = StateProps & DispatchProps
 
 type State = {
   localUsers: EdgeUserInfo[],
   mostRecentUsernames: string[]
 }
 
-export default class UserList extends React.Component<Props, State> {
+class UserListComponent extends React.Component<Props, State> {
   cleanups: Array<() => mixed> = []
 
   constructor(props: Props) {
@@ -127,3 +133,19 @@ export default class UserList extends React.Component<Props, State> {
     })
   }
 }
+
+export const UserList = connect<StateProps, DispatchProps, {}>(
+  state => ({
+    context: state.core.context,
+    disklet: state.core.disklet,
+    currentUsername: state.core.account.username
+  }),
+  dispatch => ({
+    logout(username) {
+      dispatch(logoutRequest(username))
+    },
+    deleteLocalAccount(username) {
+      dispatch(deleteLocalAccount(username))
+    }
+  })
+)(UserListComponent)

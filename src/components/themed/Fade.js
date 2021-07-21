@@ -3,7 +3,7 @@
 import * as React from 'react'
 import Animated, { interpolate, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
-import { useEffect, useRef, useState } from '../../util/hooks'
+import { useEffect, useRef, useState } from '../../types/reactHooks.js'
 
 type Props = {
   visible: boolean,

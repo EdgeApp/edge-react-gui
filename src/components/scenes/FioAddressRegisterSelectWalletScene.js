@@ -5,7 +5,6 @@ import { type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeDenomination
 import * as React from 'react'
 import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_NAME_CONFIRM, SEND, WALLET_LIST } from '../../constants/SceneKeys.js'
@@ -13,7 +12,7 @@ import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrenc
 import s from '../../locales/strings.js'
 import { getRegInfo } from '../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
-import type { Dispatch } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
 import type { FioDomain, GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -27,7 +26,7 @@ import { Tile } from '../themed/Tile'
 type StateProps = {
   state: RootState,
   wallets: { [string]: GuiWallet },
-  fioPlugin: EdgeCurrencyConfig | null,
+  fioPlugin?: EdgeCurrencyConfig,
   fioWallets: EdgeCurrencyWallet[],
   fioDisplayDenomination: EdgeDenomination,
   isConnected: boolean
@@ -271,31 +270,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioAddressRegisterSelectWalletScene = connect(
-  (state: RootState) => {
-    const wallets = state.ui.wallets.byId
-    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-    const { account } = state.core
-    const fioPlugin = account && account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null
-    const fioDisplayDenomination = getDisplayDenomination(state, FIO_STR)
-
-    const defaultFiatCode = state.ui.settings.defaultIsoFiat
-
-    const out: StateProps = {
-      state,
-      fioWallets,
-      fioPlugin,
-      fioDisplayDenomination,
-      defaultFiatCode,
-      wallets,
-      isConnected: state.network.isConnected
-    }
-    return out
-  },
-  (dispatch: Dispatch): DispatchProps => ({
-    onSelectWallet: (walletId: string, currencyCode: string) => {
-      dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
+export const FioAddressRegisterSelectWalletScene = connect<StateProps, DispatchProps, NavigationProps>(
+  state => ({
+    state,
+    fioWallets: state.ui.wallets.fioWallets,
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+    fioDisplayDenomination: getDisplayDenomination(state, FIO_STR),
+    defaultFiatCode: state.ui.settings.defaultIsoFiat,
+    wallets: state.ui.wallets.byId,
+    isConnected: state.network.isConnected
+  }),
+  dispatch => ({
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch({
+        type: 'UI/WALLETS/SELECT_WALLET',
+        data: { currencyCode, walletId }
+      })
     }
   })
 )(withTheme(FioAddressRegisterSelectWallet))
-export { FioAddressRegisterSelectWalletScene }

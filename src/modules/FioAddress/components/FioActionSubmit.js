@@ -4,7 +4,6 @@ import { bns } from 'biggystring'
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, View } from 'react-native'
-import { connect } from 'react-redux'
 
 import type { WalletListResult } from '../../../components/modals/WalletListModal'
 import { WalletListModal } from '../../../components/modals/WalletListModal'
@@ -16,8 +15,8 @@ import { SecondaryButton } from '../../../components/themed/ThemedButtons'
 import { Tile } from '../../../components/themed/Tile'
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings'
-import type { RootState } from '../../../reducers/RootReducer'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
+import { connect } from '../../../types/reactRedux.js'
 import { truncateDecimals } from '../../../util/utils'
 import { Slider } from '../../UI/components/Slider/Slider'
 
@@ -36,7 +35,7 @@ type OwnProps = {
   showPaymentWalletPicker?: boolean
 }
 
-export type State = {
+type State = {
   showSlider: boolean,
   loading: boolean,
   error: string,
@@ -47,7 +46,7 @@ export type State = {
   paymentWallet?: EdgeCurrencyWallet
 }
 
-export type StateProps = {
+type StateProps = {
   denominationMultiplier: string,
   currencyWallets: { [string]: EdgeCurrencyWallet },
   fioWallets: EdgeCurrencyWallet[]
@@ -262,11 +261,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioActionSubmit = connect((state: RootState): StateProps => {
-  const displayDenomination = getDisplayDenomination(state, FIO_STR)
-  return {
-    denominationMultiplier: displayDenomination.multiplier,
+export const FioActionSubmit = connect<StateProps, {}, OwnProps>(
+  state => ({
+    denominationMultiplier: getDisplayDenomination(state, FIO_STR).multiplier,
     currencyWallets: state.core.account.currencyWallets,
     fioWallets: state.ui.wallets.fioWallets
-  }
-})(withTheme(FioActionSubmitComponent))
+  }),
+  dispatch => ({})
+)(withTheme(FioActionSubmitComponent))

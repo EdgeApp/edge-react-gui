@@ -7,7 +7,6 @@ import * as React from 'react'
 import { Keyboard, Linking, Platform, StatusBar, StyleSheet, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
 import { getBundleId } from 'react-native-device-info'
-import { connect } from 'react-redux'
 
 import ENV from '../../../env.json'
 import edgeBackgroundImage from '../../assets/images/edgeBackground/login_bg.gif'
@@ -16,7 +15,7 @@ import s from '../../locales/strings.js'
 import { initializeAccount, logoutRequest } from '../../modules/Login/action.js'
 import THEME from '../../theme/variables/airbitz.js'
 import { type DeepLink } from '../../types/DeepLink.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type GuiTouchIdInfo } from '../../types/types.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 import { SendLogsModal } from '../modals/SendLogsModal'
@@ -32,9 +31,9 @@ type StateProps = {
   username: string
 }
 type DispatchProps = {
-  deepLinkHandled(): void,
-  initializeAccount(account: EdgeAccount, touchIdInfo: GuiTouchIdInfo): void,
-  logout(): void
+  deepLinkHandled: () => void,
+  initializeAccount: (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => void,
+  logout: () => void
 }
 type Props = StateProps & DispatchProps
 
@@ -168,16 +167,15 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const LoginScene = connect(
-  (state: RootState): StateProps => ({
+export const LoginScene = connect<StateProps, DispatchProps, {}>(
+  state => ({
     account: state.core.account,
     context: state.core.context,
     disklet: state.core.disklet,
     pendingDeepLink: state.pendingDeepLink,
     username: state.nextUsername == null ? '' : state.nextUsername
   }),
-
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     deepLinkHandled() {
       dispatch({ type: 'DEEP_LINK_HANDLED' })
     },

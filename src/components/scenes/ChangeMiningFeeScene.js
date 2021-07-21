@@ -5,7 +5,6 @@ import * as React from 'react'
 import { ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
-import { connect } from 'react-redux'
 
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions.js'
 import { FEE_STRINGS } from '../../constants/WalletAndCurrencyConstants.js'
@@ -15,7 +14,7 @@ import { getGuiMakeSpendInfo } from '../../modules/UI/scenes/SendConfirmation/se
 import { type FeeOption } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { dayText, nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
@@ -33,7 +32,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  onSubmit(networkFeeOption: string, customNetworkFee: Object, walletId: string, currencyCode?: string): mixed
+  onSubmit: (networkFeeOption: string, customNetworkFee: Object, walletId: string, currencyCode?: string) => void
 }
 
 type Props = OwnProps & StateProps & DispatchProps
@@ -211,14 +210,14 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const ChangeMiningFeeScene = connect(
-  (state: RootState): StateProps => ({
+export const ChangeMiningFeeScene = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     networkFeeOption: getGuiMakeSpendInfo(state).networkFeeOption,
     customNetworkFee: getGuiMakeSpendInfo(state).customNetworkFee,
     spendTargets: getGuiMakeSpendInfo(state).spendTargets,
     maxSpendSet: state.ui.scenes.sendConfirmation.maxSpendSet
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     onSubmit(networkFeeOption: string, customNetworkFee: Object, walletId: string, currencyCode?: string) {
       dispatch(sendConfirmationUpdateTx({ networkFeeOption, customNetworkFee }, true, walletId, currencyCode, true))
     }

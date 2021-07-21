@@ -2,16 +2,16 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
-import { connect } from 'react-redux'
 
 import s from '../../locales/strings'
-import type { RootState } from '../../reducers/RootReducer'
+import { connect } from '../../types/reactRedux.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText'
 
-export type Props = {
+type StateProps = {
   message: string
 }
+type Props = StateProps
 
 export class CryptoExchangeMessageBoxComponent extends React.PureComponent<Props & ThemeProps> {
   render() {
@@ -45,21 +45,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const mapStateToProps = (state: RootState): Props => {
-  const insufficient = state.cryptoExchange.insufficientError
-  const genericError = state.cryptoExchange.genericShapeShiftError
+export const CryptoExchangeMessageBox = connect<StateProps, {}, {}>(
+  state => {
+    const insufficient = state.cryptoExchange.insufficientError
+    const genericError = state.cryptoExchange.genericShapeShiftError
 
-  let message = ''
+    let message = ''
 
-  if (genericError) {
-    message = genericError
-  } else if (insufficient) {
-    message = s.strings.fragment_insufficient_funds
-  }
+    if (genericError) {
+      message = genericError
+    } else if (insufficient) {
+      message = s.strings.fragment_insufficient_funds
+    }
 
-  return {
-    message
-  }
-}
-
-export const CryptoExchangeMessageBox = connect(mapStateToProps, null)(withTheme(CryptoExchangeMessageBoxComponent))
+    return {
+      message
+    }
+  },
+  dispatch => ({})
+)(withTheme(CryptoExchangeMessageBoxComponent))

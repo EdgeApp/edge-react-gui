@@ -4,26 +4,25 @@ import type { EdgeAccount } from 'edge-core-js'
 import { watchSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { SECURITY_ALERTS_SCENE } from '../../constants/SceneKeys.js'
 import { updateWalletsRequest } from '../../modules/Core/Wallets/action.js'
 import { updateExchangeRates } from '../../modules/ExchangeRates/action.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { Airship } from './AirshipInstance.js'
 
-type EdgeAccountCallbackManagerStateProps = {
+type StateProps = {
   account: EdgeAccount
 }
 
-type EdgeAccountCallbackManagerDispatchProps = {
-  updateWalletsRequest: () => any,
-  updateExchangeRates: () => any
+type DispatchProps = {
+  updateWalletsRequest: () => void,
+  updateExchangeRates: () => void
 }
 
-type Props = EdgeAccountCallbackManagerStateProps & EdgeAccountCallbackManagerDispatchProps
+type Props = StateProps & DispatchProps
 
-class EdgeAccountCallbackManager extends React.Component<Props> {
+class EdgeAccountCallbackManagerComponent extends React.Component<Props> {
   cleanups: Array<() => mixed> = []
   lastAccount: EdgeAccount | void
 
@@ -100,17 +99,16 @@ class EdgeAccountCallbackManager extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: RootState): EdgeAccountCallbackManagerStateProps => {
-  return {
+export const EdgeAccountCallbackManager = connect<StateProps, DispatchProps, {}>(
+  state => ({
     account: state.core.account
-  }
-}
-
-const mapDispatchToProps = (dispatch: Dispatch): EdgeAccountCallbackManagerDispatchProps => {
-  return {
-    updateWalletsRequest: () => dispatch(updateWalletsRequest()),
-    updateExchangeRates: () => dispatch(updateExchangeRates())
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(EdgeAccountCallbackManager)
+  }),
+  dispatch => ({
+    updateWalletsRequest() {
+      dispatch(updateWalletsRequest())
+    },
+    updateExchangeRates() {
+      dispatch(updateExchangeRates())
+    }
+  })
+)(EdgeAccountCallbackManagerComponent)

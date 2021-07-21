@@ -4,7 +4,6 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { type SetNativeAmountInfo, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
@@ -12,7 +11,7 @@ import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
 import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type GuiCurrencyInfo, type GuiWallet, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
 import { getDenomFromIsoCode } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -51,8 +50,8 @@ type StateProps = {
   creatingWallet: boolean
 }
 type DispatchProps = {
-  onSelectWallet(walletId: string, currencyCode: string, direction: 'from' | 'to'): void,
-  getQuoteForTransaction(SetNativeAmountInfo): void
+  onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => void,
+  getQuoteForTransaction: SetNativeAmountInfo => void
 }
 type Props = StateProps & DispatchProps & ThemeProps
 
@@ -264,8 +263,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const DIVIDE_PRECISION = 18
 
-export const CryptoExchangeScene = connect(
-  (state: RootState): StateProps => {
+export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
+  state => {
     const fromWallet = state.cryptoExchange.fromWallet
     const toWallet = state.cryptoExchange.toWallet
     let fromCurrencyCode,
@@ -325,7 +324,7 @@ export const CryptoExchangeScene = connect(
       creatingWallet
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     getQuoteForTransaction(fromWalletNativeAmount) {
       dispatch(getQuoteForTransaction(fromWalletNativeAmount))
     },
