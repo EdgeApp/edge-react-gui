@@ -264,9 +264,7 @@ export const mergeSettings = (
 }
 
 export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
-  Actions.popTo(LOGIN, {
-    username
-  })
+  Actions.popTo(LOGIN)
   const state = getState()
   const { account } = state.core
   dispatch({ type: 'LOGOUT', data: { username } })
