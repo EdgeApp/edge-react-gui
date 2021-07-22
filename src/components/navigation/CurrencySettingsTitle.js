@@ -39,6 +39,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     resizeMode: 'contain'
   },
   text: {
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   }
 }))

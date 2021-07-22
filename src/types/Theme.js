@@ -5,6 +5,9 @@ export type Theme = {
   // The app scaling factor, which is the height of "normal" text:
   rem(size: number): number,
 
+  // Common border
+  defaultBorderColor: string,
+
   // Icons
   icon: string,
   iconTappable: string,
@@ -171,6 +174,7 @@ export type Theme = {
 
   // Fonts
   fontFaceDefault: string,
+  fontFaceMedium: string,
   fontFaceBold: string,
   fontFaceSymbols: string,
 
