@@ -3,8 +3,8 @@
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
+import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
-import { PrimaryButton, SecondaryButton } from '../themed/ThemedButtons.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type ButtonInfo = {
@@ -35,20 +35,13 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {
   const { bridge, closeButton, title, message, children, buttons, disableHideOnTapUnderlay = false } = props
 
   return (
-    <ThemedModal bridge={bridge} onCancel={disableHideOnTapUnderlay ? () => {} : () => bridge.resolve(undefined)} paddingRem={1}>
+    <ThemedModal bridge={bridge} paddingRem={1} onCancel={disableHideOnTapUnderlay ? () => {} : () => bridge.resolve(undefined)}>
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {message != null ? <ModalMessage>{message}</ModalMessage> : null}
       {children}
       {Object.keys(buttons).map(key => {
         const { label, type = 'primary' } = buttons[key]
-
-        switch (type) {
-          case 'primary':
-            return <PrimaryButton key={key} label={label} onPress={() => bridge.resolve(key)} marginRem={0.5} />
-          case 'secondary':
-            return <SecondaryButton key={key} label={label} onPress={() => bridge.resolve(key)} marginRem={0.5} />
-        }
-        return null
+        return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={() => bridge.resolve(key)} />
       })}
       {closeButton ? <ModalCloseArrow onPress={() => bridge.resolve(undefined)} /> : undefined}
     </ThemedModal>

@@ -16,12 +16,12 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 import { DateModal } from '../modals/DateModal.js'
 import { Airship, showActivity, showError } from '../services/AirshipInstance.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
+import { MainButton } from '../themed/MainButton.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
-import { PrimaryButton } from '../themed/ThemedButtons.js'
 
 type File = {
   contents: string,
@@ -99,7 +99,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
           <SettingsLabelRow text={s.strings.string_end} right={endDateString} onPress={this.handleEndDate} />
           <SettingsHeaderRow icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_export_type} />
           {Platform.OS === 'android' ? this.renderAndroidSwitches() : this.renderIosSwitches()}
-          {disabledExport ? null : <PrimaryButton label={s.strings.string_export} marginRem={1.5} onPress={this.handleSubmit} />}
+          {disabledExport ? null : <MainButton label={s.strings.string_export} marginRem={1.5} onPress={this.handleSubmit} />}
         </ScrollView>
       </SceneWrapper>
     )

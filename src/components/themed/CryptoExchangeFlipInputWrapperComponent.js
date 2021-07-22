@@ -9,8 +9,8 @@ import { Card } from './Card'
 import { EdgeText } from './EdgeText'
 import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput'
 import { ExchangedFlipInput } from './ExchangedFlipInput.js'
+import { MainButton } from './MainButton.js'
 import { SelectableRow } from './SelectableRow'
-import { SecondaryButton } from './ThemedButtons.js'
 
 export type Props = {
   guiWallet: GuiWallet,
@@ -65,7 +65,7 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & Th
     }
 
     if (!this.props.guiWallet || this.props.guiWallet.id === '' || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
-      return <SecondaryButton onPress={this.launchSelector} label={this.props.buttonText} />
+      return <MainButton label={this.props.buttonText} type="secondary" onPress={this.launchSelector} />
     }
     const guiWalletName = this.props.guiWallet.name
     const displayDenomination = this.props.primaryCurrencyInfo.displayCurrencyCode

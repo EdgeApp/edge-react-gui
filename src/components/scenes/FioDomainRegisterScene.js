@@ -20,8 +20,8 @@ import type { Theme, ThemeProps } from '../services/ThemeContext'
 import { cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FormError } from '../themed/FormError'
+import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { PrimaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
 
 type LocalState = {
@@ -208,14 +208,14 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
 
     if (isValid && isAvailable && !loading) {
       return (
-        <PrimaryButton
+        <MainButton
           marginRem={1}
           onPress={this.handleNextButton}
           label={walletLoading ? '' : s.strings.string_next_capitalized}
           disabled={!isAvailable || walletLoading}
         >
           {walletLoading ? <ActivityIndicator color={this.props.theme.iconTappable} /> : null}
-        </PrimaryButton>
+        </MainButton>
       )
     }
 

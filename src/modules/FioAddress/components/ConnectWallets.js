@@ -8,7 +8,7 @@ import { Actions } from 'react-native-router-flux'
 import { showError } from '../../../components/services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
-import { PrimaryButton } from '../../../components/themed/ThemedButtons.js'
+import { MainButton } from '../../../components/themed/MainButton.js'
 import { FIO_CONNECT_TO_WALLETS_CONFIRM } from '../../../constants/SceneKeys.js'
 import s from '../../../locales/strings.js'
 import { connect } from '../../../types/reactRedux.js'
@@ -63,7 +63,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
     })
   }
 
-  _onContinuePress = async (): Promise<void> => {
+  _onContinuePress = (): void => {
     const { fioAddressName, fioWallet, walletItems } = this.props
     const { connectWalletsMap, disconnectWalletsMap } = this.state
     const walletsToDisconnect = []
@@ -193,7 +193,7 @@ class ConnectWallets extends React.Component<Props, LocalState> {
           </ScrollView>
         </View>
         <View style={styles.bottomSection}>
-          <PrimaryButton onPress={this._onContinuePress} label={s.strings.string_next_capitalized} disabled={continueDisabled || disabled} />
+          <MainButton onPress={this._onContinuePress} label={s.strings.string_next_capitalized} disabled={continueDisabled || disabled} />
         </View>
       </View>
     )

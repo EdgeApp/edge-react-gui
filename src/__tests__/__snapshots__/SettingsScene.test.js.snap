@@ -1382,6 +1382,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           style={
             Object {
               "alignItems": "center",
+              "alignSelf": "auto",
               "backgroundColor": "#66EDA8",
               "borderColor": "rgba(255, 255, 255, 0)",
               "borderRadius": 6,
@@ -1392,6 +1393,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               "marginLeft": 45,
               "marginRight": 45,
               "marginTop": 45,
+              "minWidth": 202,
               "opacity": 1,
               "paddingBottom": 11,
               "paddingLeft": 11,
@@ -1404,11 +1406,10 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             style={
               Object {
                 "color": "#0E4B75",
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "Quicksand-Bold",
                 "fontSize": 22,
-                "includeFontPadding": false,
+                "lineHeight": 45,
                 "marginHorizontal": 11,
-                "marginVertical": 6,
               }
             }
           >
@@ -2803,6 +2804,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           style={
             Object {
               "alignItems": "center",
+              "alignSelf": "auto",
               "backgroundColor": "#66EDA8",
               "borderColor": "rgba(255, 255, 255, 0)",
               "borderRadius": 6,
@@ -2813,6 +2815,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               "marginLeft": 45,
               "marginRight": 45,
               "marginTop": 45,
+              "minWidth": 202,
               "opacity": 1,
               "paddingBottom": 11,
               "paddingLeft": 11,
@@ -2825,11 +2828,10 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             style={
               Object {
                 "color": "#0E4B75",
-                "fontFamily": "Quicksand-Medium",
+                "fontFamily": "Quicksand-Bold",
                 "fontSize": 22,
-                "includeFontPadding": false,
+                "lineHeight": 45,
                 "marginHorizontal": 11,
-                "marginVertical": 6,
               }
             }
           >
