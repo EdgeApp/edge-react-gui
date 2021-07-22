@@ -162,13 +162,12 @@ const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioName: FioAd
       return
     }
 
-    // $FlowFixMe
-    const { isPublic = false } = fioName
+    const typeHack: any = fioName
     Actions.push(FIO_DOMAIN_SETTINGS, {
       showRenew: true,
       fioWallet,
       fioDomainName: fioName.name,
-      isPublic,
+      isPublic: typeHack.isPublic || false,
       expiration: fioName.expiration
     })
   }
