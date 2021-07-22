@@ -1,6 +1,6 @@
 {
   "name": "edge-react-gui",
-  "version": "2.0.16",
+  "version": "2.0.16-rc1",
   "private": true,
   "description": "Edge Wallet React GUI",
   "homepage": "https://edge.app",
