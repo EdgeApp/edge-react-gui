@@ -14,7 +14,7 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship, showActivity, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, withTheme } from '../services/ThemeContext.js'
-import { PrimaryButton, SecondaryButton } from '../themed/ThemedButtons.js'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 
 type StateProps = {
   account: EdgeAccount
@@ -102,7 +102,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
 
         {otpKey != null ? this.renderKey(otpKey) : null}
         {otpKey != null ? (
-          <SecondaryButton label={s.strings.otp_disable} marginRem={0.5} onPress={this.handleDisable} />
+          <PrimaryButton label={s.strings.otp_disable} marginRem={0.5} outlined onPress={this.handleDisable} />
         ) : (
           <PrimaryButton label={s.strings.otp_enable} marginRem={0.5} onPress={this.handleEnable} />
         )}

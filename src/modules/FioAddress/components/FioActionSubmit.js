@@ -11,7 +11,7 @@ import { Airship, showError, showToast } from '../../../components/services/Airs
 import type { Theme, ThemeProps } from '../../../components/services/ThemeContext'
 import { cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
-import { SecondaryButton } from '../../../components/themed/ThemedButtons'
+import { PrimaryButton } from '../../../components/themed/PrimaryButton.js'
 import { Tile } from '../../../components/themed/Tile'
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings'
@@ -227,7 +227,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         )}
         <View style={styles.spacer} />
         <View style={styles.blockPadding}>
-          {!feeLoading && <SecondaryButton onPress={this.props.cancelOperation} disabled={loading || feeLoading} label={s.strings.string_cancel_cap} />}
+          {!feeLoading && <PrimaryButton disabled={loading || feeLoading} label={s.strings.string_cancel_cap} outlined onPress={this.props.cancelOperation} />}
         </View>
       </View>
     )

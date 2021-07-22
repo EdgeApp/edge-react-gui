@@ -18,7 +18,7 @@ import type { FioAddress, FlatListItem } from '../../types/types.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
-import { SecondaryButton } from '../themed/ThemedButtons.js'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { type AirshipBridge } from './modalParts.js'
 
@@ -364,7 +364,7 @@ class AddressModalComponent extends React.Component<Props, State> {
               <ActivityIndicator color={this.props.theme.iconTappable} />
             </View>
           )}
-          <SecondaryButton label={s.strings.submit} onPress={this.handleSubmit} marginRem={[0, 4]} />
+          <PrimaryButton label={s.strings.submit} marginRem={[0, 4]} outlined onPress={this.handleSubmit} />
         </View>
         <ModalCloseArrow onPress={this.handleClose} />
       </ThemedModal>

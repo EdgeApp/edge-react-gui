@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -41,40 +41,6 @@ type ColorProps = {
 
 type SquareButtonProps = Props & ColorProps
 type RadioButtonProps = Props & { value: boolean, right?: boolean }
-
-export function PrimaryButton(props: Props) {
-  const { children, label, onPress, disabled, spinner } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
-
-  return (
-    <TouchableOpacity style={[styles.primaryButton, spacingStyles(props, theme), disabled ? styles.disabled : null]} onPress={onPress} disabled={disabled}>
-      {label != null ? <Text style={styles.primaryText}>{label}</Text> : null}
-      {spinner != null ? <ActivityIndicator color={theme.primaryButtonText} style={styles.spinner} /> : null}
-      {children}
-    </TouchableOpacity>
-  )
-}
-
-export function SecondaryButton(props: Props & { widthRem?: number }) {
-  const { children, label, onPress, disabled, spinner, widthRem } = props
-  const theme = useTheme()
-  const styles = getStyles(theme)
-
-  const propsStyles = { width: widthRem }
-
-  return (
-    <TouchableOpacity
-      style={[styles.secondaryButton, spacingStyles(props, theme), disabled ? styles.disabled : null, propsStyles]}
-      onPress={onPress}
-      disabled={disabled}
-    >
-      {label != null ? <Text style={styles.secondaryText}>{label}</Text> : null}
-      {spinner ? <ActivityIndicator color={theme.primaryButtonText} style={styles.spinner} /> : null}
-      {children}
-    </TouchableOpacity>
-  )
-}
 
 export function ClickableText(props: Props) {
   const { children, label, onPress } = props
@@ -178,13 +144,6 @@ function spacingStyles(props: Props, theme: Theme) {
 }
 
 const getStyles = cacheStyles((theme: Theme) => {
-  const commonButton = {
-    alignItems: 'center',
-    borderRadius: theme.rem(0.25),
-    borderWidth: theme.rem(0.1),
-    flexDirection: 'row',
-    justifyContent: 'center'
-  }
   const commonText = {
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1),
@@ -194,24 +153,9 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 
   return {
-    primaryButton: {
-      ...commonButton,
-      backgroundColor: theme.primaryButton,
-      borderColor: theme.primaryButtonOutline
-    },
     primaryText: {
       ...commonText,
       color: theme.primaryButtonText
-    },
-
-    secondaryButton: {
-      ...commonButton,
-      backgroundColor: theme.secondaryButton,
-      borderColor: theme.secondaryButtonOutline
-    },
-    secondaryText: {
-      ...commonText,
-      color: theme.secondaryButtonText
     },
     squareButton: {
       height: '100%',
@@ -254,7 +198,6 @@ const getStyles = cacheStyles((theme: Theme) => {
 
       elevation: theme.rem(0.5)
     },
-    spinner: { height: theme.rem(2) },
     rightChevronContainer: {
       flexDirection: 'row',
       alignItems: 'center'

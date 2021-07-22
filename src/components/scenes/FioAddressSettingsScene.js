@@ -17,7 +17,7 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
-import { PrimaryButton } from '../themed/ThemedButtons'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 import { Tile } from '../themed/Tile'
 
 type LocalState = {

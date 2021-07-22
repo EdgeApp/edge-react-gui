@@ -22,8 +22,8 @@ import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInpu
 import { CryptoExchangeMessageBox } from '../themed/CryptoExchangeMessageBoxComponent'
 import type { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
 import { LineTextDivider } from '../themed/LineTextDivider'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { SecondaryButton } from '../themed/ThemedButtons'
 
 type StateProps = {
   // The following props are used to populate the CryptoExchangeFlipInputs
@@ -148,7 +148,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     const primaryNativeAmount = this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
     const showNext = this.props.fromCurrencyCode !== '' && this.props.toCurrencyCode !== '' && !this.props.calculatingMax && !!parseFloat(primaryNativeAmount)
     if (!showNext) return null
-    return <SecondaryButton onPress={this.getQuote} label={s.strings.string_next_capitalized} marginRem={[1.5, 0, 0]} />
+    return <PrimaryButton label={s.strings.string_next_capitalized} marginRem={[1.5, 0, 0]} outlined onPress={this.getQuote} />
   }
 
   renderDropUp = (whichWallet: 'from' | 'to') => {

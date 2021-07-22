@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator, Image, Keyboard, View } from 'react-native'
+import { Image, Keyboard, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions.js'
@@ -13,10 +13,11 @@ import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { FullScreenTransitionComponent } from '../common/FullScreenTransition.js'
 import { SceneWrapper } from '../common/SceneWrapper'
+import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { SecondaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
 
 type OwnProps = {
@@ -25,13 +26,10 @@ type OwnProps = {
   selectedWalletType: CreateWalletType,
   cleanedPrivateKey?: string // for creating wallet from import private key
 }
-type StateProps = {
-  isCreatingWallet: boolean
-}
 type DispatchProps = {
-  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string, cleanedPrivateKey?: string) => void
+  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string, cleanedPrivateKey?: string) => Promise<void>
 }
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & DispatchProps & ThemeProps
 
 type State = {
   isAnimationVisible: boolean
@@ -51,7 +49,7 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
 
   goToWalletList = () => Actions.popTo(WALLET_LIST_SCENE)
 
-  onSubmit = async () => {
+  async createWallet() {
     const { walletName, selectedWalletType, selectedFiat, cleanedPrivateKey, createCurrencyWallet } = this.props
     const createdWallet = await createCurrencyWallet(walletName, selectedWalletType.walletType, fixFiatCurrencyCode(selectedFiat.value), cleanedPrivateKey)
     // note that we will be using cleanedPrivateKey as a flag for an imported private key
@@ -62,8 +60,12 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
     }
   }
 
+  handleSubmit = async (): Promise<void> => {
+    await this.createWallet().catch(showError)
+  }
+
   render() {
-    const { isCreatingWallet, theme } = this.props
+    const { theme } = this.props
     const { isAnimationVisible } = this.state
     const styles = getStyles(theme)
 
@@ -83,14 +85,7 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
             />
             <Tile type="static" title={s.strings.create_wallet_fiat_type_label} body={this.props.selectedFiat.label} contentPadding={false} />
             <Tile type="static" title={s.strings.create_wallet_name_label} body={this.props.walletName} contentPadding={false} />
-
-            <SecondaryButton style={styles.create} onPress={this.onSubmit} disabled={isCreatingWallet} marginRem={[2, 5, 1]}>
-              {isCreatingWallet ? (
-                <ActivityIndicator color={theme.iconTappable} />
-              ) : (
-                <EdgeText style={styles.createWalletBtnText}>{s.strings.fragment_create_wallet_create_wallet}</EdgeText>
-              )}
-            </SecondaryButton>
+            <PrimaryButton alignSelf="center" label={s.strings.fragment_create_wallet_create_wallet} marginRem={[2, 1]} outlined onPress={this.handleSubmit} />
           </View>
         ) : (
           <FullScreenTransitionComponent
@@ -123,29 +118,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(0.5),
     marginBottom: theme.rem(2)
   },
-  text: {
-    color: theme.primaryText
-  },
-  create: {
-    flex: 1
-  },
   createWalletImportTransitionText: {
     fontSize: theme.rem(1.5),
     textAlign: 'center',
     color: theme.secondaryText
-  },
-  createWalletBtnText: {
-    color: theme.secondaryButtonText
   }
 }))
 
-export const CreateWalletReviewScene = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
-    isCreatingWallet: state.ui.scenes.createWallet.isCreatingWallet
-  }),
+export const CreateWalletReviewScene = connect<{}, DispatchProps, OwnProps>(
+  state => ({}),
   dispatch => ({
-    createCurrencyWallet(walletName: string, walletType: string, fiatCurrencyCode: string, importText?: string) {
-      dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, true, false, importText))
+    async createCurrencyWallet(walletName: string, walletType: string, fiatCurrencyCode: string, importText?: string) {
+      await dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, true, false, importText))
     }
   })
 )(withTheme(CreateWalletReviewComponent))

@@ -30,7 +30,7 @@ import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPerso
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
-import { PrimaryButton } from '../themed/ThemedButtons.js'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {

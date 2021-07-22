@@ -43,11 +43,11 @@ import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
 import { SendLogsModal } from '../modals/SendLogsModal'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
-import { PrimaryButton } from '../themed/ThemedButtons.js'
 
 type StateProps = {
   account: EdgeAccount,

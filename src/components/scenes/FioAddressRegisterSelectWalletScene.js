@@ -20,7 +20,7 @@ import { type WalletListResult, WalletListModal } from '../modals/WalletListModa
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
-import { PrimaryButton } from '../themed/ThemedButtons'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 import { Tile } from '../themed/Tile'
 
 type StateProps = {
@@ -94,18 +94,18 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
     this.setState({ loading: false })
   }
 
-  onNextPress = async () => {
+  onNextPress = (): void => {
     const { selectedDomain } = this.props
     const { activationCost } = this.state
 
     if (!activationCost || activationCost === 0) return
 
     if (selectedDomain.walletId) {
-      return this.proceed(selectedDomain.walletId, FIO_STR)
+      this.proceed(selectedDomain.walletId, FIO_STR)
     } else {
       const { paymentWallet } = this.state
       if (!paymentWallet || !paymentWallet.id) return
-      return this.proceed(paymentWallet.id, paymentWallet.currencyCode)
+      this.proceed(paymentWallet.id, paymentWallet.currencyCode)
     }
   }
 

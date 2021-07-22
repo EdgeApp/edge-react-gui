@@ -19,9 +19,9 @@ import { Airship } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import ManageTokensHeader from '../themed/ManageTokensHeader'
 import ManageTokensRow from '../themed/ManageTokensRow'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 import SceneFooter from '../themed/SceneFooter'
 import { SceneHeader } from '../themed/SceneHeader'
-import { SecondaryButton } from '../themed/ThemedButtons'
 import { getCurrencyIcon } from './../../util/CurrencyInfoHelpers'
 
 type OwnProps = {
@@ -259,21 +259,15 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
               />
             </View>
             <SceneFooter style={styles.buttonsArea} underline>
-              <SecondaryButton
+              <PrimaryButton
                 label={s.strings.string_save}
+                marginRem={[0.75]}
+                outlined
+                paddingRem={[0.3, 0, 0.5, 0]}
                 spinner={manageTokensPending}
                 onPress={this.saveEnabledTokenList}
-                marginRem={[0.75]}
-                paddingRem={[0.3, 0, 0.5, 0]}
-                widthRem={theme.rem(8.5)}
               />
-              <SecondaryButton
-                label={s.strings.addtoken_add}
-                onPress={this.goToAddTokenScene}
-                marginRem={[0.75]}
-                paddingRem={[0.3, 0, 0.5, 0]}
-                widthRem={theme.rem(8.5)}
-              />
+              <PrimaryButton label={s.strings.addtoken_add} marginRem={[0.75]} outlined paddingRem={[0.3, 0, 0.5, 0]} onPress={this.goToAddTokenScene} />
             </SceneFooter>
           </View>
         </View>

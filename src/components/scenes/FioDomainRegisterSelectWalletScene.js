@@ -22,7 +22,7 @@ import { type WalletListResult, WalletListModal } from '../modals/WalletListModa
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
-import { PrimaryButton } from '../themed/ThemedButtons'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 import { Tile } from '../themed/Tile'
 
 type StateProps = {
@@ -117,7 +117,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     }
   }
 
-  onNextPress = async () => {
+  onNextPress = (): void => {
     const { isConnected, selectedWallet, fioDomain, state } = this.props
     const { feeValue, paymentInfo: allPaymentInfo, paymentWallet } = this.state
 

@@ -20,8 +20,8 @@ import type { Theme, ThemeProps } from '../services/ThemeContext'
 import { cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
 import { FormError } from '../themed/FormError'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { PrimaryButton } from '../themed/ThemedButtons'
 import { Tile } from '../themed/Tile'
 
 type LocalState = {

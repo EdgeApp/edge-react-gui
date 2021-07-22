@@ -14,7 +14,7 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
-import { SecondaryButton } from '../themed/ThemedButtons'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 
 type StateProps = {
   userId: string,
@@ -84,7 +84,7 @@ class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalSta
             {s.strings.exchange_congratulations_msg_info}
           </EdgeText>
           <Fade visible={showButton}>
-            <SecondaryButton label={s.strings.string_done_cap} onPress={this.done} />
+            <PrimaryButton label={s.strings.string_done_cap} outlined onPress={this.done} />
           </Fade>
           {this.renderConfetti()}
         </View>

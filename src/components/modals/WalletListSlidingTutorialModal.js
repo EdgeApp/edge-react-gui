@@ -7,7 +7,7 @@ import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import s from '../../locales/strings.js'
 import { useTheme } from '../services/ThemeContext.js'
 import { ModalTitle } from '../themed/ModalParts.js'
-import { PrimaryButton } from '../themed/ThemedButtons.js'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 
 type Props = {
   bridge: AirshipBridge<void>

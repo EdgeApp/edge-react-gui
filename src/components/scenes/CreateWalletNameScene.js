@@ -10,8 +10,8 @@ import s from '../../locales/strings.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { SecondaryButton } from '../themed/ThemedButtons'
 
 export type CreateWalletNameOwnProps = {
   selectedFiat: GuiFiatType,
@@ -101,7 +101,7 @@ export class CreateWalletName extends React.Component<Props, State> {
           blurOnSubmit
           showSearchIcon={false}
         />
-        <SecondaryButton onPress={this.onNext} label={s.strings.string_next_capitalized} marginRem={[3, 6]} />
+        <PrimaryButton alignSelf="center" label={s.strings.string_next_capitalized} marginRem={[3, 1]} outlined onPress={this.onNext} />
       </SceneWrapper>
     )
   }

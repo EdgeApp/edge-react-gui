@@ -11,7 +11,7 @@ import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 import { Checkbox } from '../themed/Checkbox'
 import { Fade } from '../themed/Fade'
 import { ModalMessage, ModalTitle } from '../themed/ModalParts'
-import { SecondaryButton } from '../themed/ThemedButtons'
+import { PrimaryButton } from '../themed/PrimaryButton.js'
 import { ThemedModal } from '../themed/ThemedModal'
 
 type Props = {
@@ -36,7 +36,7 @@ export const MismatchTokenParamsModal = ({ bridge }: Props) => {
       </Checkbox>
       <View style={styles.alignSelfCenter}>
         <Fade visible={isChecked}>
-          <SecondaryButton marginRem={[0, 0, 1.35]} label={s.strings.confirm_finish} onPress={() => bridge.resolve(true)} />
+          <PrimaryButton label={s.strings.confirm_finish} marginRem={[0, 0, 1.35]} outlined onPress={() => bridge.resolve(true)} />
         </Fade>
       </View>
     </ThemedModal>
