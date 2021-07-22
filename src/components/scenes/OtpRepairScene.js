@@ -1,16 +1,16 @@
 // @flow
 
-import { type EdgeAccount, type EdgeContext, type OtpError } from 'edge-core-js'
+import { type EdgeAccount, type EdgeContext } from 'edge-core-js'
 import { OtpRepairScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { StatusBar, StyleSheet, View } from 'react-native'
 
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import { THEME } from '../modals/modalParts.js'
 
 type OwnProps = {
-  otpError: OtpError
+  route: RouteProp<'otpRepair'>
 }
 type StateProps = {
   account: EdgeAccount,
@@ -23,7 +23,8 @@ type Props = OwnProps & StateProps & DispatchProps
 
 class OtpRepairComponent extends React.Component<Props> {
   render() {
-    const { context, account, onComplete, otpError } = this.props
+    const { context, account, onComplete, route } = this.props
+    const { otpError } = route.params
 
     return (
       <View style={styles.container}>
