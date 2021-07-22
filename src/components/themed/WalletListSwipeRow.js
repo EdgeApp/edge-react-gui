@@ -7,7 +7,7 @@ import { SwipeRow } from 'react-native-swipe-list-view'
 import { Fontello } from '../../assets/vector/index.js'
 import { REQUEST, SEND, TRANSACTION_LIST } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
-import { type ParamList, Actions } from '../../types/routerTypes.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
@@ -99,20 +99,24 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
     ))
   }
 
-  openScene(key: $Keys<ParamList>) {
+  handleOpenRequest = () => {
     const { currencyCode, guiWallet } = this.props
     const walletId = guiWallet.id
     this.closeRow()
     this.props.selectWallet(walletId, currencyCode)
-    Actions.jump(key, { selectedWalletId: walletId, selectedCurrencyCode: currencyCode, isCameraOpen: true })
-  }
-
-  handleOpenRequest = () => {
-    this.openScene(REQUEST)
+    Actions.push(REQUEST)
   }
 
   handleOpenSend = () => {
-    this.openScene(SEND)
+    const { currencyCode, guiWallet } = this.props
+    const walletId = guiWallet.id
+    this.closeRow()
+    this.props.selectWallet(walletId, currencyCode)
+    Actions.push(SEND, {
+      selectedWalletId: walletId,
+      selectedCurrencyCode: currencyCode,
+      isCameraOpen: true
+    })
   }
 
   handleSwipeValueChange = ({ value }) => {

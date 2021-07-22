@@ -12,65 +12,65 @@ export type ParamList = {
   edge: void,
 
   // Logged-in scenes:
-  addToken: void,
-  changeMiningFee: void,
+  addToken: {}, // TODO
+  changeMiningFee: {}, // TODO
   changePassword: void,
   changePin: void,
-  createWalletAccountSelect: void,
-  createWalletAccountSetup: void,
-  createWalletChoice: void,
-  createWalletImport: void,
-  createWalletName: void,
-  createWalletReview: void,
+  createWalletAccountSelect: {}, // TODO
+  createWalletAccountSetup: {}, // TODO
+  createWalletChoice: {}, // TODO
+  createWalletImport: {}, // TODO
+  createWalletName: {}, // TODO
+  createWalletReview: {}, // TODO
   createWalletSelectCrypto: void,
-  createWalletSelectFiat: void,
-  currencyNotificationSettings: void,
-  currencySettings: void,
+  createWalletSelectFiat: {}, // TODO
+  currencyNotificationSettings: {}, // TODO
+  currencySettings: {}, // TODO
   defaultFiatSetting: void,
   edgeLogin: void,
-  editToken: void,
+  editToken: {}, // TODO
   exchange: void,
-  exchangeQuote: void,
+  exchangeQuote: {}, // TODO
   exchangeQuoteProcessing: void,
   exchangeScene: void,
   exchangeSettings: void,
   exchangeSuccess: void,
-  fioAddressDetails: void,
+  fioAddressDetails: {}, // TODO
   fioAddressList: void,
-  fioAddressRegister: void,
-  fioAddressRegisterSelectWallet: void,
-  fioAddressRegisterSuccess: void,
-  fioAddressSettings: void,
-  fioConnectToWalletsConfirm: void,
-  fioDomainConfirm: void,
+  fioAddressRegister: {}, // TODO
+  fioAddressRegisterSelectWallet: {}, // TODO
+  fioAddressRegisterSuccess: {}, // TODO
+  fioAddressSettings: {}, // TODO
+  fioConnectToWalletsConfirm: {}, // TODO
+  fioDomainConfirm: {}, // TODO
   fioDomainRegister: void,
-  fioDomainRegisterSelectWallet: void,
-  fioDomainSettings: void,
-  fioNameConfirm: void,
-  fioRequestConfirmation: void,
+  fioDomainRegisterSelectWallet: {}, // TODO
+  fioDomainSettings: {}, // TODO
+  fioNameConfirm: {}, // TODO
+  fioRequestConfirmation: {}, // TODO
   fioRequestList: void,
-  fioSentRequestDetails: void,
-  manageTokens: void,
+  fioSentRequestDetails: {}, // TODO
+  manageTokens: {}, // TODO
   notificationSettings: void,
-  otpRepair: void,
+  otpRepair: {}, // TODO
   otpSetup: void,
   passwordRecovery: void,
   pluginBuy: void,
   pluginSell: void,
-  pluginView: void,
-  pluginViewDeep: void,
+  pluginView: {}, // TODO
+  pluginViewDeep: {}, // TODO
   promotionSettings: void,
   request: void,
-  scan: void,
+  scan: {}, // TODO
   securityAlerts: void,
-  send: void,
+  send: {}, // TODO
   settingsOverview: void,
   settingsOverviewTab: void,
   spendingLimits: void,
   termsOfService: void,
-  transactionDetails: void,
+  transactionDetails: {}, // TODO
   transactionList: void,
-  transactionsExport: void,
+  transactionsExport: {}, // TODO
   walletList: void,
   walletListScene: void
 }
@@ -97,15 +97,15 @@ export const Actions = {
     Flux.Actions.drawerOpen()
   },
 
-  jump(name: $Keys<ParamList>, params: any): void {
+  jump<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
     // $FlowFixMe
     Flux.Actions.jump(name, params)
   },
-  push(name: $Keys<ParamList>, params: any): void {
+  push<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
     // $FlowFixMe
     Flux.Actions.push(name, params)
   },
-  replace(name: $Keys<ParamList>, params: any): void {
+  replace<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
     // $FlowFixMe
     Flux.Actions.replace(name, params)
   },
@@ -131,16 +131,16 @@ type Remover = { remove: () => void }
 /**
  * The type of the `navigation` prop passed to each scene.
  */
-export type NavigationProp = {
+export type NavigationProp<Name: $Keys<ParamList>> = {
   // Whether this scene is in the foreground:
   addListener: (event: NavigationEvent, callback: () => void) => Remover,
   isFocused: () => boolean,
 
   // Going places:
-  navigate: (name: $Keys<ParamList>, params: any) => void,
-  push: (name: $Keys<ParamList>, params: any) => void,
-  replace: (name: $Keys<ParamList>, params: any) => void,
-  setParams: (params: any) => void,
+  navigate: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
+  push: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
+  replace: <Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>) => void,
+  setParams: (params: $ElementType<ParamList, Name>) => void,
 
   // Returning:
   goBack: () => void,
@@ -154,4 +154,12 @@ export type NavigationProp = {
 
   // Internals nobody should need to touch:
   state: mixed
+}
+
+/**
+ * The type of the `route` prop passed to each scene.
+ */
+export type RouteProp<Name: $Keys<ParamList>> = {
+  name: Name,
+  params: $ElementType<ParamList, Name>
 }

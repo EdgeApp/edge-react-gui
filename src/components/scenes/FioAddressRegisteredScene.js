@@ -15,7 +15,7 @@ import { MainButton } from '../themed/MainButton.js'
 export type OwnProps = {
   fioName: string,
   expiration: string,
-  navigation: NavigationProp
+  navigation: NavigationProp<'fioAddressRegisterSuccess'>
 }
 
 type Props = OwnProps & ThemeProps

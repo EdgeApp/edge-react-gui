@@ -42,7 +42,7 @@ type DispatchProps = {
 }
 
 type OwnProps = {
-  navigation: NavigationProp
+  navigation: NavigationProp<'fioAddressList'>
 }
 
 type Props = StateProps & DispatchProps & OwnProps & ThemeProps
@@ -156,7 +156,7 @@ class FioAddressList extends React.Component<Props, LocalState> {
           </ScrollView>
 
           <View>
-            <ClickableText marginRem={[1, 1, 0]} onPress={() => Actions.push(FIO_ADDRESS_REGISTER)}>
+            <ClickableText marginRem={[1, 1, 0]} onPress={() => Actions.push(FIO_ADDRESS_REGISTER, {})}>
               <View style={styles.actionButton}>
                 <Fontello name="register-new-fio-icon" style={styles.actionIcon} color={theme.iconTappable} size={theme.rem(1)} />
                 <EdgeText style={styles.buttonText}>{s.strings.fio_address_list_screen_button_register}</EdgeText>

@@ -27,7 +27,7 @@ type StateProps = {
 type NavProps = {
   fioAddressName: string,
   expiration: string,
-  navigation: NavigationProp
+  navigation: NavigationProp<'fioAddressDetails'>
 }
 
 type LocalState = {
