@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { CREATE_WALLET_ACCOUNT_SETUP, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
+import { CREATE_WALLET_ACCOUNT_SETUP } from '../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } from '../modules/Core/Account/settings.js'
@@ -38,7 +38,7 @@ export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dis
   }
 }
 
-export const selectWallet = (walletId: string, currencyCode: string, from?: string) => (dispatch: Dispatch, getState: GetState) => {
+export const selectWallet = (walletId: string, currencyCode: string, alwaysActivate?: boolean) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { currencyWallets } = state.core.account
 
@@ -50,7 +50,11 @@ export const selectWallet = (walletId: string, currencyCode: string, from?: stri
   const { isAccountActivationRequired } = getSpecialCurrencyInfo(currencyCode)
   if (isAccountActivationRequired) {
     // EOS needs different path in case not activated yet
-    dispatch(selectEOSWallet(walletId, currencyCode, from))
+    const currentWalletId = state.ui.wallets.selectedWalletId
+    const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
+    if (alwaysActivate || walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
+      dispatch(selectEOSWallet(walletId, currencyCode))
+    }
     return
   }
   const currentWalletId = state.ui.wallets.selectedWalletId
@@ -71,50 +75,46 @@ export const selectWallet = (walletId: string, currencyCode: string, from?: stri
 }
 
 // check if the EOS wallet is activated (via public address blank string check) and route to activation scene(s)
-export const selectEOSWallet = (walletId: string, currencyCode: string, from?: string) => (dispatch: Dispatch, getState: GetState) => {
+const selectEOSWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const currentWalletId = state.ui.wallets.selectedWalletId
-  const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
   const guiWallet = state.ui.wallets.byId[walletId]
-  if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode || from === WALLET_LIST_SCENE) {
-    const { publicAddress } = guiWallet.receiveAddress
+  const { publicAddress } = guiWallet.receiveAddress
 
-    if (publicAddress) {
-      // already activated
-      dispatch({
-        type: 'UI/WALLETS/SELECT_WALLET',
-        data: { walletId, currencyCode }
-      })
-    } else {
-      // Update all wallets' addresses. Hopefully gets the updated address for the next time
-      // We enter the EOSIO wallet
-      dispatch(updateWalletsRequest())
-      // not activated yet
-      // find fiat and crypto (EOSIO) types and populate scene props
-      const supportedFiats = getSupportedFiats()
-      const fiatTypeIndex = supportedFiats.findIndex(fiatType => fiatType.value === guiWallet.fiatCurrencyCode)
-      const selectedFiat = supportedFiats[fiatTypeIndex]
-      const currencyInfos = getCurrencyInfos(state.core.account)
-      const currencyInfo = currencyInfos.find(info => info.currencyCode === currencyCode)
-      if (!currencyInfo) throw new Error('CannotFindCurrencyInfo')
-      const selectedWalletType = makeCreateWalletType(currencyInfo)
-      const createWalletAccountSetupSceneProps = {
-        accountHandle: guiWallet.name,
-        selectedWalletType,
-        selectedFiat,
-        isReactivation: true,
-        existingWalletId: walletId
-      }
-      Actions[CREATE_WALLET_ACCOUNT_SETUP](createWalletAccountSetupSceneProps)
-      Airship.show(bridge => (
-        <ButtonsModal
-          bridge={bridge}
-          title={s.strings.create_wallet_account_unfinished_activation_title}
-          message={sprintf(s.strings.create_wallet_account_unfinished_activation_message, guiWallet.currencyCode)}
-          buttons={{ ok: { label: s.strings.string_ok } }}
-        />
-      ))
+  if (publicAddress) {
+    // already activated
+    dispatch({
+      type: 'UI/WALLETS/SELECT_WALLET',
+      data: { walletId, currencyCode }
+    })
+  } else {
+    // Update all wallets' addresses. Hopefully gets the updated address for the next time
+    // We enter the EOSIO wallet
+    dispatch(updateWalletsRequest())
+    // not activated yet
+    // find fiat and crypto (EOSIO) types and populate scene props
+    const supportedFiats = getSupportedFiats()
+    const fiatTypeIndex = supportedFiats.findIndex(fiatType => fiatType.value === guiWallet.fiatCurrencyCode)
+    const selectedFiat = supportedFiats[fiatTypeIndex]
+    const currencyInfos = getCurrencyInfos(state.core.account)
+    const currencyInfo = currencyInfos.find(info => info.currencyCode === currencyCode)
+    if (!currencyInfo) throw new Error('CannotFindCurrencyInfo')
+    const selectedWalletType = makeCreateWalletType(currencyInfo)
+    const createWalletAccountSetupSceneProps = {
+      accountHandle: guiWallet.name,
+      selectedWalletType,
+      selectedFiat,
+      isReactivation: true,
+      existingWalletId: walletId
     }
+    Actions[CREATE_WALLET_ACCOUNT_SETUP](createWalletAccountSetupSceneProps)
+    Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        title={s.strings.create_wallet_account_unfinished_activation_title}
+        message={sprintf(s.strings.create_wallet_account_unfinished_activation_message, guiWallet.currencyCode)}
+        buttons={{ ok: { label: s.strings.string_ok } }}
+      />
+    ))
   }
 }
 
