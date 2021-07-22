@@ -1,6 +1,9 @@
 // @flow
 
 import * as React from 'react'
+import * as ReactRedux from 'react-redux'
+
+import { type Dispatch, type RootState, type ShallowEqual } from '../../types/reduxTypes'
 
 type SetState<S> = (value: S | ((state: S) => S)) => void
 
@@ -15,6 +18,10 @@ type UseEffect = (effect: () => void | (() => void), deps?: any[]) => void
 type UseImperativeHandle = (ref: any, init: () => any, deps?: any[]) => void
 
 type UseMemo = <T>(init: () => T, deps?: any[]) => T
+
+type UseDispatch = () => Dispatch
+
+type UseSelector = ((state: RootState) => any, shallowEqual?: ShallowEqual) => any
 
 type UseReducer = {
   // Normal version:
@@ -58,3 +65,10 @@ export const useReducer: UseReducer = React.useReducer
 export const useRef: UseRef = React.useRef
 // $FlowFixMe
 export const useState: UseState = React.useState
+
+// react-redux hooks --------------------------------------------------
+
+// $FlowFixMe
+export const useDispatch: UseDispatch = ReactRedux.useDispatch
+// $FlowFixMe
+export const useSelector: UseSelector = ReactRedux.useSelector
