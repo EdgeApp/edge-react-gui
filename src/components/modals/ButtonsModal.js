@@ -8,10 +8,10 @@ import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.
 import { PrimaryButton } from '../themed/PrimaryButton.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
-type ButtonInfo = {
+type ButtonInfo = {|
   label: string,
-  type?: 'primary' | 'secondary'
-}
+  outlined?: boolean
+|}
 
 /**
  * A modal with a title, message, and buttons.
@@ -41,8 +41,8 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {
       {message != null ? <ModalMessage>{message}</ModalMessage> : null}
       {children}
       {Object.keys(buttons).map(key => {
-        const { label, type = 'primary' } = buttons[key]
-        return <PrimaryButton key={key} label={label} marginRem={0.5} outlined={type === 'secondary'} onPress={() => bridge.resolve(key)} />
+        const { label, outlined = false } = buttons[key]
+        return <PrimaryButton key={key} label={label} marginRem={0.5} outlined={outlined} onPress={() => bridge.resolve(key)} />
       })}
       {closeButton ? <ModalCloseArrow onPress={() => bridge.resolve(undefined)} /> : undefined}
     </ThemedModal>

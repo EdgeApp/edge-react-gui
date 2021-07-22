@@ -57,7 +57,7 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
         message={s.strings.otp_modal_body}
         buttons={{
           ok: { label: s.strings.otp_disable },
-          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+          cancel: { label: s.strings.string_cancel_cap, outlined: true }
         }}
       />
     ))

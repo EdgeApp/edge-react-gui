@@ -118,7 +118,7 @@ export const sendConfirmationUpdateTx =
               buttons={{
                 buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
                 exchange: { label: s.strings.buy_crypto_modal_exchange },
-                cancel: { label: s.strings.buy_crypto_decline, type: 'secondary' }
+                cancel: { label: s.strings.buy_crypto_decline, outlined: true }
               }}
             />
           ))
@@ -416,7 +416,7 @@ export const displayFeeAlert = async (currency: string, fee: string) => {
       message={message}
       buttons={{
         confirm: { label: s.strings.title_send },
-        cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+        cancel: { label: s.strings.string_cancel_cap, outlined: true }
       }}
     />
   ))

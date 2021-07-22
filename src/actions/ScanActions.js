@@ -52,7 +52,7 @@ export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWal
           message={`${bodyString} ${host}`}
           buttons={{
             confirm: { label: s.strings.request_crypto_address_modal_send_address_button },
-            cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+            cancel: { label: s.strings.string_cancel_cap, outlined: true }
           }}
         />
       ))
@@ -282,7 +282,7 @@ export const privateKeyModalActivated = () => async (dispatch: Dispatch, getStat
       message={s.strings.private_key_modal_sweep_from_private_address_message}
       buttons={{
         confirm: { label: s.strings.private_key_modal_import },
-        cancel: { label: s.strings.private_key_modal_cancel, type: 'secondary' }
+        cancel: { label: s.strings.private_key_modal_cancel, outlined: true }
       }}
     />
   ))
@@ -349,7 +349,7 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
           buttons={{
             buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
             exchange: { label: s.strings.buy_crypto_modal_exchange },
-            decline: { label: s.strings.buy_crypto_decline, type: 'secondary' }
+            decline: { label: s.strings.buy_crypto_decline, outlined: true }
           }}
         />
       ))
@@ -363,7 +363,7 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
           message={messageSyntax}
           buttons={{
             exchange: { label: sprintf(s.strings.buy_crypto_modal_exchange) },
-            decline: { label: s.strings.buy_crypto_decline, type: 'secondary' }
+            decline: { label: s.strings.buy_crypto_decline, outlined: true }
           }}
         />
       ))

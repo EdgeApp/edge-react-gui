@@ -92,7 +92,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
           buttons={{
             buy: { label: sprintf(s.strings.buy_crypto_modal_buy_action, currencyCode) },
             exchange: { label: s.strings.buy_crypto_modal_exchange },
-            cancel: { label: s.strings.buy_crypto_decline, type: 'secondary' }
+            cancel: { label: s.strings.buy_crypto_decline, outlined: true }
           }}
         />
       ))

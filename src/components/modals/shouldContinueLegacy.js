@@ -14,7 +14,7 @@ export const shouldContinueLegacy = async () => {
       message={s.strings.legacy_address_modal_warning}
       buttons={{
         confirm: { label: s.strings.legacy_address_modal_continue },
-        cancel: { label: s.strings.legacy_address_modal_cancel, type: 'secondary' }
+        cancel: { label: s.strings.legacy_address_modal_cancel, outlined: true }
       }}
     />
   ))

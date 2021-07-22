@@ -110,7 +110,7 @@ const createWalletCheckModal = async (currencyCode: string): Promise<boolean> =>
       message={sprintf(s.strings.wallet_list_referral_link_ask_wallet_creation, currencyCode)}
       buttons={{
         ok: { label: s.strings.yes },
-        cancel: { label: s.strings.no, type: 'secondary' }
+        cancel: { label: s.strings.no, outlined: true }
       }}
     />
   ))

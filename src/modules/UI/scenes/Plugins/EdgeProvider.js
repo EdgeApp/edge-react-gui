@@ -227,7 +227,7 @@ export class EdgeProvider extends Bridgeable {
         message={sprintf(s.strings.transaction_history_permission, coreWallet.name)}
         buttons={{
           ok: { label: s.strings.yes },
-          cancel: { label: s.strings.no, type: 'secondary' }
+          cancel: { label: s.strings.no, outlined: true }
         }}
       />
     ))

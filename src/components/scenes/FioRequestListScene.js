@@ -186,7 +186,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         message={s.strings.fio_no_bundled_renew_err_msg}
         buttons={{
           ok: { label: s.strings.title_fio_renew_address },
-          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+          cancel: { label: s.strings.string_cancel_cap, outlined: true }
         }}
       />
     ))
@@ -282,7 +282,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         message={s.strings.fio_reject_request_message}
         buttons={{
           yes: { label: s.strings.yes },
-          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+          cancel: { label: s.strings.string_cancel_cap, outlined: true }
         }}
       />
     ))
@@ -302,7 +302,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         message={s.strings.fio_cancel_request_message}
         buttons={{
           yes: { label: s.strings.yes },
-          no: { label: s.strings.no, type: 'secondary' }
+          no: { label: s.strings.no, outlined: true }
         }}
       />
     ))

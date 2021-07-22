@@ -23,7 +23,7 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
       disableHideOnTapUnderlay
       buttons={{
         allow: { label: s.strings.string_allow },
-        deny: { label: s.strings.string_deny, type: 'secondary' }
+        deny: { label: s.strings.string_deny, outlined: true }
       }}
     >
       <View style={styles.headerContainer}>

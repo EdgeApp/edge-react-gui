@@ -153,7 +153,7 @@ class EditTokenComponent extends React.Component<Props, State> {
         message={s.strings.edittoken_delete_prompt}
         buttons={{
           ok: { label: s.strings.string_delete },
-          cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
+          cancel: { label: s.strings.string_cancel_cap, outlined: true }
         }}
       />
     ))
