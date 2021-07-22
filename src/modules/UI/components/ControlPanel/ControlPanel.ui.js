@@ -22,7 +22,7 @@ import { Main } from './Component/Main.js'
 import styles from './style'
 
 type OwnProps = {
-  navigation: NavigationProp
+  navigation: NavigationProp<'edge'>
 }
 
 type StateProps = {
