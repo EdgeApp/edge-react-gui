@@ -6,6 +6,8 @@ import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router
 
 import ENV from '../../env.json'
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
+import { registerDevice } from '../actions/DeviceIdActions.js'
+import { logoutRequest } from '../actions/LoginActions.js'
 import { checkAndShowGetCryptoModal } from '../actions/ScanActions.js'
 import { showReEnableOtpModal } from '../actions/SettingsActions.js'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
@@ -103,8 +105,6 @@ import {
   WALLET_LIST_SCENE
 } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
-import { registerDevice } from '../modules/Device/action'
-import { logoutRequest } from '../modules/Login/action.js'
 import { ControlPanel } from '../modules/UI/components/ControlPanel/ControlPanel.ui.js'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'

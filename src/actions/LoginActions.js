@@ -6,19 +6,10 @@ import { getCurrencies } from 'react-native-localize'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
-import { loadAccountReferral, refreshAccountReferral } from '../../actions/AccountReferralActions.js'
-import { expiredFioNamesCheckDates } from '../../actions/FioActions.js'
-import { trackAccountEvent } from '../../actions/TrackingActions.js'
-import { checkEnabledTokensArray, getEnabledTokens, setWalletEnabledTokens } from '../../actions/WalletActions.js'
-import { showError } from '../../components/services/AirshipInstance.js'
-import { EDGE, LOGIN, SECURITY_ALERTS_SCENE } from '../../constants/SceneKeys.js'
-import { CURRENCY_PLUGIN_NAMES, USD_FIAT } from '../../constants/WalletAndCurrencyConstants.js'
-import s from '../../locales/strings.js'
-import { initialState as passwordReminderInitialState } from '../../reducers/PasswordReminderReducer.js'
-import { type AccountInitPayload } from '../../reducers/scenes/SettingsReducer.js'
-import type { Dispatch, GetState } from '../../types/reduxTypes.js'
-import { type CustomTokenInfo, type GuiTouchIdInfo } from '../../types/types.js'
-import { runWithTimeout } from '../../util/utils.js'
+import { showError } from '../components/services/AirshipInstance.js'
+import { EDGE, LOGIN, SECURITY_ALERTS_SCENE } from '../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES, USD_FIAT } from '../constants/WalletAndCurrencyConstants.js'
+import s from '../locales/strings.js'
 import {
   getLocalSettings,
   getSyncedSettings,
@@ -29,9 +20,17 @@ import {
   setSyncedSettings,
   SYNCED_ACCOUNT_DEFAULTS,
   SYNCED_ACCOUNT_TYPES
-} from '../Core/Account/settings.js'
-import { updateWalletsEnabledTokens, updateWalletsRequest } from '../Core/Wallets/action.js'
-import { attachToUser } from '../Device/action'
+} from '../modules/Core/Account/settings.js'
+import { initialState as passwordReminderInitialState } from '../reducers/PasswordReminderReducer.js'
+import { type AccountInitPayload } from '../reducers/scenes/SettingsReducer.js'
+import { type Dispatch, type GetState } from '../types/reduxTypes.js'
+import { type CustomTokenInfo, type GuiTouchIdInfo } from '../types/types.js'
+import { runWithTimeout } from '../util/utils.js'
+import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions.js'
+import { attachToUser } from './DeviceIdActions.js'
+import { expiredFioNamesCheckDates } from './FioActions.js'
+import { trackAccountEvent } from './TrackingActions.js'
+import { checkEnabledTokensArray, getEnabledTokens, setWalletEnabledTokens, updateWalletsEnabledTokens, updateWalletsRequest } from './WalletActions.js'
 
 function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, currencyCode: string } {
   // Find the first wallet:

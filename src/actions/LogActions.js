@@ -5,13 +5,23 @@ import { Platform } from 'react-native'
 import { getBrand, getBuildNumber, getDeviceId, getVersion } from 'react-native-device-info'
 import { base16, base64 } from 'rfc4648'
 
-import packageJson from '../../../package.json'
-import s from '../../locales/strings.js'
-import type { Dispatch, GetState } from '../../types/reduxTypes.js'
-import * as LOGGER from '../../util/logger'
-import * as LOGS_API from './api'
+import packageJson from '../../package.json'
+import { showActivity, showError, showToast } from '../components/services/AirshipInstance'
+import s from '../locales/strings.js'
+import { sendLogs } from '../modules/Logs/api.js'
+import { type Dispatch, type GetState } from '../types/reduxTypes.js'
+import { log, readLogs } from '../util/logger.js'
 
-export const sendLogs = (text: string) => async (dispatch: Dispatch, getState: GetState) => {
+export const submitLogs = (notes: string) => async (dispatch: Dispatch) => {
+  try {
+    await showActivity(s.strings.settings_modal_send_logs_loading, dispatch(prepareLogs(notes)))
+    showToast(s.strings.settings_modal_send_logs_success)
+  } catch (error) {
+    showError(error)
+  }
+}
+
+const prepareLogs = (text: string) => async (dispatch: Dispatch, getState: GetState) => {
   const logOutput: LogOutput = {
     isoDate: new Date().toISOString(),
     uniqueId: Math.floor(Math.random() * 16777215).toString(16),
@@ -69,11 +79,11 @@ os: ${Platform.OS} ${Platform.Version}
 device: ${getBrand()} ${getDeviceId()}
 `
 
-  return LOGGER.log('SENDING LOGS WITH MESSAGE: ' + text)
-    .then(() => LOGGER.readLogs())
+  return log('SENDING LOGS WITH MESSAGE: ' + text)
+    .then(() => readLogs())
     .then(logs => {
       logOutput.data += logs || ''
-      return LOGS_API.sendLogs(logOutput)
+      return sendLogs(logOutput)
     })
     .catch(e => {
       throw new Error(`${s.strings.settings_modal_send_logs_failure} code ${e.message}`)
