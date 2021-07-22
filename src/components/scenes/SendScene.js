@@ -17,7 +17,7 @@ import { Actions } from 'react-native-router-flux'
 
 import { type FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
 import { selectWallet } from '../../actions/WalletActions'
-import { CHANGE_MINING_FEE_SEND_CONFIRMATION } from '../../constants/SceneKeys.js'
+import { CHANGE_MINING_FEE } from '../../constants/SceneKeys.js'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
@@ -240,7 +240,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleFeesChange = () =>
-    Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({
+    Actions.push(CHANGE_MINING_FEE, {
       wallet: this.state.coreWallet,
       currencyCode: this.state.selectedCurrencyCode
     })

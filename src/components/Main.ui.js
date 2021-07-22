@@ -39,7 +39,7 @@ import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
 import {
   ADD_TOKEN,
-  CHANGE_MINING_FEE_SEND_CONFIRMATION,
+  CHANGE_MINING_FEE,
   CHANGE_PASSWORD,
   CHANGE_PIN,
   CREATE_WALLET_ACCOUNT_SELECT,
@@ -480,7 +480,7 @@ export class MainComponent extends React.Component<Props> {
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
             <Scene
-              key={CHANGE_MINING_FEE_SEND_CONFIRMATION}
+              key={CHANGE_MINING_FEE}
               navTransparent
               component={ifLoggedIn(ChangeMiningFeeScene)}
               renderTitle={<HeaderTitle title={s.strings.title_change_mining_fee} />}
