@@ -2,6 +2,7 @@
 
 import { log10 } from 'biggystring'
 import * as React from 'react'
+import { StyleSheet } from 'react-native'
 
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
@@ -13,7 +14,8 @@ type Props = {
   primaryInfo: Object,
   primaryDisplayAmount?: string, // defaults to '1'
   secondaryInfo: Object,
-  secondaryDisplayAmount: string | number
+  secondaryDisplayAmount: string | number,
+  style?: StyleSheet.Styles
 }
 
 class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
@@ -61,7 +63,7 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
     }
 
     const exchangeRate = `${formattedPrimaryAmount} ${primaryDisplayName} = ${secondaryDisplaySymbol} ${formattedSecondaryAmount} ${secondaryCurrencyCode}`
-    return <EdgeText>{exchangeRate}</EdgeText>
+    return <EdgeText style={this.props.style}>{exchangeRate}</EdgeText>
   }
 }
 
