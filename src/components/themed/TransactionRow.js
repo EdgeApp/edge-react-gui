@@ -201,17 +201,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   transactionText: {
     flex: 1,
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   },
   positiveCryptoAmount: {
     marginLeft: theme.rem(0.5),
-    fontFamily: theme.fontFaceBold,
+    fontFamily: theme.fontFaceMedium,
     color: theme.positiveText,
     textAlign: 'right'
   },
   negativeCryptoAmount: {
     marginLeft: theme.rem(0.5),
-    fontFamily: theme.fontFaceBold,
+    fontFamily: theme.fontFaceMedium,
     color: theme.negativeText,
     textAlign: 'right'
   },

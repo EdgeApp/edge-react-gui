@@ -37,7 +37,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingHorizontal: theme.rem(1.5)
   },
   date: {
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   },
   time: {
     fontSize: theme.rem(0.75),
