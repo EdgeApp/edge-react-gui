@@ -13,13 +13,14 @@ import { getGuiMakeSpendInfo } from '../../modules/UI/scenes/SendConfirmation/se
 import { dayText, nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { type FeeOption } from '../../types/types.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
 
 type OwnProps = {
+  navigation: NavigationProp<'changeMiningFee'>,
   route: RouteProp<'changeMiningFee'>
 }
 
@@ -84,13 +85,14 @@ export class ChangeMiningFee extends React.Component<Props, State> {
       .makeSpend(testSpendInfo)
       .then(() => {
         this.props.onSubmit(networkFeeOption, customNetworkFee, wallet.id, currencyCode)
-        Actions.pop()
+        this.props.navigation.pop()
       })
       .catch(e => {
         let message = e.message
         if (e.name === 'ErrorBelowMinimumFee') message = `${s.strings.invalid_custom_fee} ${e.message}`
         showError(message)
       })
+    // this.props.navigation.push('SomewhereElse')
   }
 
   render() {

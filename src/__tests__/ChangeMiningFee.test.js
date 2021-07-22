@@ -15,13 +15,15 @@ describe('Change Mining Fees', () => {
       }
     }
   }
+  const typeHack: any = {}
   const commonProps = {
     onSubmit,
     maxSpendSet: false,
     route: {
       name: 'changeMiningFee',
       params: { wallet }
-    }
+    },
+    navigation: typeHack
   }
 
   it('should render with standard props', () => {
