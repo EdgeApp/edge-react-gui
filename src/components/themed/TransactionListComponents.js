@@ -77,7 +77,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   headerDate: {
     fontSize: theme.rem(0.75),
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   },
   headerLoaderContainer: {
     flex: 1,
@@ -87,7 +87,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   headerLoaderText: {
     fontSize: theme.rem(1.25),
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   }
 }))
 

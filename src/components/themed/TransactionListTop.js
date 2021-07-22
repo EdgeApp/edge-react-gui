@@ -227,7 +227,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   balanceBoxCurrency: {
     fontSize: theme.rem(2),
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   },
   balanceFiatBalance: {
     fontSize: theme.rem(1.25)
@@ -254,13 +254,13 @@ const getStyles = cacheStyles((theme: Theme) => ({
   buttonsText: {
     fontSize: theme.rem(1),
     color: theme.textLink,
-    fontFamily: theme.fontFaceBold,
+    fontFamily: theme.fontFaceMedium,
     marginLeft: theme.rem(0.25)
   },
 
   // Transactions Divider
   transactionsDividerText: {
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   },
 
   searchContainer: {
