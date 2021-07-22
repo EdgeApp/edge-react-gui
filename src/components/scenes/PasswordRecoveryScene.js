@@ -3,9 +3,9 @@
 import { type EdgeAccount, type EdgeContext } from 'edge-core-js'
 import { PasswordRecoveryScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { Actions } from 'react-native-router-flux'
 
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type StateProps = {

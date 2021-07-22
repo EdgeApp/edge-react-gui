@@ -3,7 +3,6 @@
 import { type EdgeCurrencyWallet, type EdgeSpendTarget } from 'edge-core-js/types'
 import * as React from 'react'
 import { ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
 
 import { sendConfirmationUpdateTx } from '../../actions/SendConfirmationActions.js'
@@ -14,6 +13,7 @@ import { getGuiMakeSpendInfo } from '../../modules/UI/scenes/SendConfirmation/se
 import { dayText, nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { type FeeOption } from '../../types/types.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'

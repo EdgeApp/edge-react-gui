@@ -2,13 +2,13 @@
 
 import * as React from 'react'
 import { ActivityIndicator, Image, Keyboard, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions.js'
 import CheckIcon from '../../assets/images/createWallet/check_icon_lg.png'
 import { WALLET_LIST_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { FullScreenTransitionComponent } from '../common/FullScreenTransition.js'

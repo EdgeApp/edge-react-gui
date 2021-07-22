@@ -2,12 +2,12 @@
 
 import * as React from 'react'
 import { Image, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { FIO_ADDRESS_LIST } from '../../constants/SceneKeys.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { PrimaryButton } from '../themed/ThemedButtons'

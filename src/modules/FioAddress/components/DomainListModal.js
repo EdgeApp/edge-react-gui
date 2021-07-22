@@ -4,7 +4,6 @@ import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
-import { Actions } from 'react-native-router-flux'
 
 import { Fontello } from '../../../assets/vector'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
@@ -17,6 +16,7 @@ import { FIO_DOMAIN_REGISTER } from '../../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings.js'
 import { connect } from '../../../types/reactRedux.js'
+import { Actions } from '../../../types/routerTypes.js'
 import type { FioDomain, FlatListItem } from '../../../types/types.js'
 
 type Item = {

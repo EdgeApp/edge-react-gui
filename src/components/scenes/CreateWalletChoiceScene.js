@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { Image, ScrollView, StyleSheet, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import WalletIcon from '../../assets/images/createWallet/wallet_icon_lg.png'
 import { CREATE_WALLET_IMPORT, CREATE_WALLET_SELECT_FIAT } from '../../constants/SceneKeys.js'
@@ -14,6 +13,7 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
+import { Actions } from '../../types/routerTypes.js'
 import { type CreateWalletType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 

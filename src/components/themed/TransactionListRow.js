@@ -3,12 +3,12 @@
 import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Actions } from 'react-native-router-flux'
 
 import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import * as intl from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { TransactionListTx } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import {

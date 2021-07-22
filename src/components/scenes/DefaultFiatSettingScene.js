@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { Alert, FlatList, Keyboard, StyleSheet, TouchableHighlight, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { setDefaultFiatRequest } from '../../actions/SettingsActions'
 import s from '../../locales/strings.js'
@@ -10,6 +9,7 @@ import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { FlatListItem, GuiFiatType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { getSupportedFiats } from '../../util/utils'

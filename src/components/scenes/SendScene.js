@@ -13,7 +13,6 @@ import {
 import * as React from 'react'
 import { TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { Actions } from 'react-native-router-flux'
 
 import { type FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
 import { CHANGE_MINING_FEE } from '../../constants/SceneKeys.js'
@@ -23,6 +22,7 @@ import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAd
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { type GuiExchangeRates, type GuiMakeSpendInfo, type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'

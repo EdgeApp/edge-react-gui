@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { YellowBox } from 'react-native'
-import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
+import { Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 
 import ENV from '../../env.json'
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
@@ -109,6 +109,7 @@ import { ControlPanel } from '../modules/UI/components/ControlPanel/ControlPanel
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { connect } from '../types/reactRedux.js'
+import { Actions } from '../types/routerTypes.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
 import { AirshipToast } from './common/AirshipToast.js'

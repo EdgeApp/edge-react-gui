@@ -2,7 +2,6 @@
 
 import { createInputModal, createSecureTextModal } from 'edge-components'
 import * as React from 'react'
-import { Actions } from 'react-native-router-flux'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
@@ -17,6 +16,7 @@ import { MANAGE_TOKENS, TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'

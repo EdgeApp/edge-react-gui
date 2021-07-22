@@ -3,7 +3,6 @@
 import { type EdgeCurrencyConfig } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { checkHandleAvailability } from '../../actions/CreateWalletActions.js'
@@ -19,6 +18,7 @@ import type { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletRe
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'

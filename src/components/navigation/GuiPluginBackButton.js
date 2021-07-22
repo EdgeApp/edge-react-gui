@@ -1,8 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { Actions } from 'react-native-router-flux'
 
+import { Actions } from '../../types/routerTypes.js'
 import { BackButton } from './BackButton.js'
 
 // The scene holds a ref to the webview:

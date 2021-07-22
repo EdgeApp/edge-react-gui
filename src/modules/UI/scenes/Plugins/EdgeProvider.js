@@ -5,7 +5,6 @@ import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeSpendTarget,
 import * as React from 'react'
 import { Linking } from 'react-native'
 import Mailer from 'react-native-mail'
-import { Actions } from 'react-native-router-flux'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { Bridgeable, update } from 'yaob'
@@ -19,6 +18,7 @@ import { SEND } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
 import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
+import { Actions } from '../../../../types/routerTypes.js'
 import { type GuiMakeSpendInfo, type GuiWallet } from '../../../../types/types.js'
 
 type EdgeReceiveAddress = {

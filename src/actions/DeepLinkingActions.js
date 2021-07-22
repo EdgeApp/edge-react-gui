@@ -1,7 +1,6 @@
 // @flow
 
 import { type EdgeCurrencyWallet } from 'edge-core-js'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { showError, showToast } from '../components/services/AirshipInstance.js'
@@ -10,6 +9,7 @@ import { EDGE_LOGIN, EXCHANGE_SCENE, PLUGIN_VIEW_DEEP, SCAN, WALLET_LIST_SCENE }
 import s from '../locales/strings.js'
 import { type DeepLink } from '../types/DeepLink.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import { activatePromotion } from './AccountReferralActions.js'
 import { loginWithEdge } from './EdgeLoginActions.js'
 import { doRequestAddress, parseScannedUri } from './ScanActions.js'
