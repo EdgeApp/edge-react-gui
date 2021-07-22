@@ -2,7 +2,6 @@
 
 import type { EdgeCurrencyWallet, EdgeTransaction } from 'edge-core-js'
 import React from 'react'
-import { Actions } from 'react-native-router-flux'
 
 import { FioExpiredModal } from '../components/modals/FioExpiredModal'
 import { Airship } from '../components/services/AirshipInstance'
@@ -18,6 +17,7 @@ import {
   setFioExpiredCheckToDisklet
 } from '../modules/FioAddress/util'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import type { FioAddress, FioDomain } from '../types/types'
 
 const EXPIRE_CHECK_TIMEOUT = 30000

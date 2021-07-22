@@ -3,7 +3,6 @@
 import type { EdgeLobby } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { isIPhoneX } from 'react-native-safe-area-view'
 import { sprintf } from 'sprintf-js'
 
@@ -13,6 +12,7 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import { THEME } from '../../theme/variables/airbitz'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type StateProps = {

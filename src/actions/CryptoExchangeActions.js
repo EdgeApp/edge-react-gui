@@ -16,7 +16,6 @@ import {
 } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { trackConversion } from '../actions/TrackingActions.js'
@@ -33,6 +32,7 @@ import {
   getPrimaryExchangeDenomination
 } from '../selectors/DenominationSelectors.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
 import { bestOfPlugins } from '../util/ReferralHelpers.js'
 import { logEvent } from '../util/tracking.js'

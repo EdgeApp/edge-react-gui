@@ -1,10 +1,10 @@
 // @flow
 
 import { OtpError } from 'edge-core-js'
-import { Actions } from 'react-native-router-flux'
 
 import { OTP_REPAIR_SCENE } from '../constants/SceneKeys.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 
 export const handleOtpError = (otpError: OtpError) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()

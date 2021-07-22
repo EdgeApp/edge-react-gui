@@ -2,7 +2,6 @@
 
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
-import { Actions } from 'react-native-router-flux'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
@@ -10,6 +9,7 @@ import { RECOVER_PASSWORD } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import { setPasswordRecoveryRemindersAsync } from '../modules/Core/Account/settings.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import { getTotalFiatAmountFromExchangeRates } from '../util/utils.js'
 
 const levels = [20, 200, 2000, 20000, 200000]

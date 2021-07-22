@@ -3,7 +3,6 @@ import { bns } from 'biggystring'
 import { type EdgeCurrencyWallet, type EdgeMetadata, type EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
@@ -14,6 +13,7 @@ import { CURRENCY_PLUGIN_NAMES } from '../constants/WalletAndCurrencyConstants.j
 import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import { logEvent } from '../util/tracking.js'
 import { selectWallet as selectWalletAction } from './WalletActions.js'
 

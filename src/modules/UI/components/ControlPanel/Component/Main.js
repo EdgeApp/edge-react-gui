@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { Image, Platform, ScrollView, Text, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import { sprintf } from 'sprintf-js'
 
@@ -40,6 +39,7 @@ import { getPrivateKeySweepableCurrencies } from '../../../../../constants/Walle
 import s from '../../../../../locales/strings.js'
 import { THEME } from '../../../../../theme/variables/airbitz.js'
 import { connect } from '../../../../../types/reactRedux.js'
+import { type ParamList, Actions } from '../../../../../types/routerTypes.js'
 import { scale } from '../../../../../util/scaling.js'
 import styles from '../style'
 import { Button } from './Button/Button.ui.js'
@@ -107,7 +107,7 @@ class MainComponent extends React.Component<Props> {
   }
 }
 
-const goToScene = (scene: string, sceneProps?: any) => {
+const goToScene = (scene: $Keys<ParamList>, sceneProps?: any) => {
   const { currentScene, drawerClose } = Actions
 
   if (currentScene !== scene) {

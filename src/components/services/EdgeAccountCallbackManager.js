@@ -3,12 +3,12 @@
 import type { EdgeAccount } from 'edge-core-js'
 import { watchSecurityAlerts } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { Actions } from 'react-native-router-flux'
 
 import { updateExchangeRates } from '../../actions/ExchangeRateActions.js'
 import { updateWalletsRequest } from '../../actions/WalletActions.js'
 import { SECURITY_ALERTS_SCENE } from '../../constants/SceneKeys.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { Airship } from './AirshipInstance.js'
 
 type StateProps = {

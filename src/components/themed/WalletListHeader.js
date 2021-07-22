@@ -2,12 +2,12 @@
 
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index.js'
 import { CREATE_WALLET_SELECT_CRYPTO } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
+import { Actions } from '../../types/routerTypes.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { PromoCard } from '../themed/PromoCard.js'

@@ -3,7 +3,6 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { FlatList, Image, ScrollView, Switch, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { showError } from '../../../components/services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
@@ -12,6 +11,7 @@ import { MainButton } from '../../../components/themed/MainButton.js'
 import { FIO_CONNECT_TO_WALLETS_CONFIRM } from '../../../constants/SceneKeys.js'
 import s from '../../../locales/strings.js'
 import { connect } from '../../../types/reactRedux.js'
+import { Actions } from '../../../types/routerTypes.js'
 import type { FioConnectionWalletItem } from '../../../types/types'
 import { makeConnectWallets } from '../util'
 
