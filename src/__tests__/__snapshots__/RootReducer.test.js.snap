@@ -18,6 +18,7 @@ Object {
   "core": Object {
     "account": Object {
       "activeWalletIds": Array [],
+      "currencyConfig": Object {},
       "currencyWallets": Object {},
     },
     "context": Object {},

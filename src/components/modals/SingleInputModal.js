@@ -4,7 +4,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 
-import { useEffect, useRef, useState } from '../../util/hooks'
+import { useEffect, useRef, useState } from '../../types/reactHooks.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'

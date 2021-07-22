@@ -8,29 +8,36 @@ import accountIcon from '../../../../assets/images/sidenav/accounts.png'
 import { ExchangeRate } from '../../../../components/common/ExchangeRate.js'
 import { SceneWrapper } from '../../../../components/common/SceneWrapper.js'
 import s from '../../../../locales/strings'
+import { getDisplayDenominationFull, getPrimaryExchangeDenomination } from '../../../../selectors/DenominationSelectors.js'
+import { getExchangeRate, getSelectedWallet } from '../../../../selectors/WalletSelectors.js'
+import { connect } from '../../../../types/reactRedux.js'
 import type { GuiDenomination } from '../../../../types/types.js'
 import { emptyGuiDenomination } from '../../../../types/types.js'
+import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
 import { getDenomFromIsoCode, getObjectDiff } from '../../../../util/utils.js'
 import FormattedText from '../FormattedText/FormattedText.ui.js'
 import { Button } from './Component/Button/Button.ui'
-import Main from './Component/MainConnector'
+import { Main } from './Component/Main.js'
 import styles from './style'
 
-export type Props = {
+type StateProps = {
   currencyLogo: string,
+  exchangeRate: number,
   primaryDisplayCurrencyCode: string,
-  primaryDisplayDenomination: GuiDenomination,
-  primaryExchangeDenomination: GuiDenomination,
+  primaryDisplayDenomination?: GuiDenomination,
+  primaryExchangeDenomination?: GuiDenomination,
   secondaryDisplayCurrencyCode: string,
   secondaryToPrimaryRatio: number,
   username: string,
-  openSelectUser: () => void,
-  closeSelectUser: () => void,
-  usersView: boolean,
-  exchangeRate: number
+  usersView: boolean
 }
+type DispatchProps = {
+  openSelectUser: () => void,
+  closeSelectUser: () => void
+}
+type Props = StateProps & DispatchProps
 
-export default class ControlPanel extends React.Component<Props> {
+class ControlPanelComponent extends React.Component<Props> {
   shouldComponentUpdate(nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, {
       primaryDisplayDenomination: true,
@@ -109,3 +116,51 @@ export default class ControlPanel extends React.Component<Props> {
     return this.props.usersView ? this.props.closeSelectUser() : this.props.openSelectUser()
   }
 }
+
+export const ControlPanel = connect<StateProps, DispatchProps, {}>(
+  state => {
+    const guiWallet = getSelectedWallet(state)
+    const currencyCode = state.ui.wallets.selectedCurrencyCode
+
+    if (guiWallet == null || currencyCode == null) {
+      return {
+        currencyLogo: '',
+        exchangeRate: 0,
+        primaryDisplayCurrencyCode: '',
+        secondaryDisplayCurrencyCode: '',
+        secondaryToPrimaryRatio: 0,
+        username: state.core.account.username,
+        usersView: state.ui.scenes.controlPanel.usersView
+      }
+    }
+
+    const exchangeRate = getExchangeRate(state, currencyCode, guiWallet.isoFiatCurrencyCode)
+    const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
+    // if selected currencyCode is parent wallet currencyCode
+    const currencyLogo = getCurrencyIcon(guiWallet.currencyCode, currencyCode).symbolImage
+    const secondaryDisplayCurrencyCode = guiWallet.fiatCurrencyCode
+    const secondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    const primaryDisplayDenomination = getDisplayDenominationFull(state, currencyCode)
+    const primaryExchangeDenomination = getPrimaryExchangeDenomination(state, currencyCode)
+
+    return {
+      currencyLogo,
+      exchangeRate,
+      primaryDisplayCurrencyCode: currencyCode,
+      primaryDisplayDenomination,
+      primaryExchangeDenomination,
+      secondaryDisplayCurrencyCode,
+      secondaryToPrimaryRatio,
+      username: state.core.account.username,
+      usersView: state.ui.scenes.controlPanel.usersView
+    }
+  },
+  dispatch => ({
+    openSelectUser() {
+      dispatch({ type: 'OPEN_SELECT_USER' })
+    },
+    closeSelectUser() {
+      dispatch({ type: 'CLOSE_SELECT_USER' })
+    }
+  })
+)(ControlPanelComponent)

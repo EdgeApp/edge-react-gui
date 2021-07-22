@@ -22,7 +22,8 @@ import { sprintf } from 'sprintf-js'
 import { trackConversion } from '../actions/TrackingActions.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import * as Constants from '../constants/indexConstants'
+import { EXCHANGE_QUOTE_PROCESSING_SCENE, EXCHANGE_QUOTE_SCENE, EXCHANGE_SCENE, EXCHANGE_SUCCESS_SCENE, PLUGIN_BUY } from '../constants/SceneKeys.js'
+import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../locales/intl.js'
 import s from '../locales/strings.js'
 import {
@@ -46,7 +47,7 @@ export type SetNativeAmountInfo = {
 }
 
 export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (dispatch: Dispatch, getState: GetState) => {
-  Actions[Constants.EXCHANGE_QUOTE_PROCESSING_SCENE]()
+  Actions[EXCHANGE_QUOTE_PROCESSING_SCENE]()
 
   const state = getState()
   const { fromWallet, toWallet, fromCurrencyCode, toCurrencyCode } = state.cryptoExchange
@@ -72,10 +73,12 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
 
     const swapInfo = await fetchSwapQuote(state, request)
 
-    Actions[Constants.EXCHANGE_QUOTE_SCENE]({ swapInfo })
+    Actions[EXCHANGE_QUOTE_SCENE]({
+      swapInfo
+    })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
   } catch (error) {
-    Actions.popTo(Constants.EXCHANGE_SCENE)
+    Actions.popTo(EXCHANGE_SCENE)
     const insufficientFunds = asMaybeInsufficientFundsError(error)
     if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode) {
       const { currencyCode, networkFee = '' } = insufficientFunds
@@ -95,7 +98,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
       ))
       switch (result) {
         case 'buy':
-          Actions.jump(Constants.PLUGIN_BUY)
+          Actions.jump(PLUGIN_BUY)
           return
         case 'exchange':
           dispatch({ type: 'SHIFT_COMPLETE' })
@@ -110,15 +113,17 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
 }
 
 export const exchangeTimerExpired = (swapInfo: GuiSwapInfo) => async (dispatch: Dispatch, getState: GetState) => {
-  if (Actions.currentScene !== Constants.EXCHANGE_QUOTE_SCENE) return
-  Actions[Constants.EXCHANGE_QUOTE_PROCESSING_SCENE]()
+  if (Actions.currentScene !== EXCHANGE_QUOTE_SCENE) return
+  Actions[EXCHANGE_QUOTE_PROCESSING_SCENE]()
 
   try {
     swapInfo = await fetchSwapQuote(getState(), swapInfo.request)
-    Actions[Constants.EXCHANGE_QUOTE_SCENE]({ swapInfo })
+    Actions[EXCHANGE_QUOTE_SCENE]({
+      swapInfo
+    })
     dispatch({ type: 'UPDATE_SWAP_QUOTE', data: swapInfo })
   } catch (error) {
-    Actions.popTo(Constants.EXCHANGE_SCENE)
+    Actions.popTo(EXCHANGE_SCENE)
     dispatch(processSwapQuoteError(error))
   }
 }
@@ -133,12 +138,12 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   const wallet: EdgeCurrencyWallet = currencyWallets[fromWallet.id]
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const parentCurrencyCode = wallet.currencyInfo.currencyCode
-  if (Constants.getSpecialCurrencyInfo(parentCurrencyCode).noMaxSpend) {
+  if (getSpecialCurrencyInfo(parentCurrencyCode).noMaxSpend) {
     const message = sprintf(s.strings.max_spend_unavailable_modal_message, wallet.currencyInfo.displayName)
     Alert.alert(s.strings.max_spend_unavailable_modal_title, message)
     return
   }
-  const dummyPublicAddress = Constants.getSpecialCurrencyInfo(parentCurrencyCode).dummyPublicAddress
+  const dummyPublicAddress = getSpecialCurrencyInfo(parentCurrencyCode).dummyPublicAddress
   dispatch({ type: 'START_CALC_MAX' })
   let primaryNativeAmount = '0'
 
@@ -345,7 +350,7 @@ export const shiftCryptoCurrency = (swapInfo: GuiSwapInfo) => async (dispatch: D
       name,
       category
     }
-    Actions[Constants.EXCHANGE_SUCCESS_SCENE]()
+    Actions[EXCHANGE_SUCCESS_SCENE]()
     await fromWallet.saveTxMetadata(result.transaction.txid, result.transaction.currencyCode, edgeMetaData)
 
     dispatch({ type: 'SHIFT_COMPLETE' })

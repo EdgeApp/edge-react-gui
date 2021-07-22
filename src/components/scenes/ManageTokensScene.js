@@ -5,13 +5,12 @@ import { difference, keys, union } from 'lodash'
 import * as React from 'react'
 import { FlatList, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
-import * as Constants from '../../constants/indexConstants'
-import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants'
+import { ADD_TOKEN, EDIT_TOKEN } from '../../constants/SceneKeys.js'
+import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -24,21 +23,21 @@ import SceneFooter from '../themed/SceneFooter'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SecondaryButton } from '../themed/ThemedButtons'
 import { getCurrencyIcon } from './../../util/CurrencyInfoHelpers'
-export type ManageTokensOwnProps = {
+
+type OwnProps = {
   guiWallet: GuiWallet
 }
-export type ManageTokensDispatchProps = {
-  setEnabledTokensList: (string, string[], string[]) => void
+type DispatchProps = {
+  setEnabledTokensList: (walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) => void
 }
 
-export type ManageTokensStateProps = {
-  guiWallet: GuiWallet,
+type StateProps = {
   wallets: { [walletId: string]: GuiWallet },
   manageTokensPending: boolean,
   settingsCustomTokens: CustomTokenInfo[]
 }
 
-type ManageTokensProps = ManageTokensOwnProps & ManageTokensDispatchProps & ManageTokensStateProps & ThemeProps
+type Props = OwnProps & DispatchProps & StateProps & ThemeProps
 
 type State = {
   walletId: string,
@@ -48,10 +47,10 @@ type State = {
   searchValue: string
 }
 
-class ManageTokensScene extends React.Component<ManageTokensProps, State> {
+class ManageTokensSceneComponent extends React.Component<Props, State> {
   textInput = React.createRef()
 
-  constructor(props: ManageTokensProps) {
+  constructor(props: Props) {
     super(props)
 
     const { enabledTokens, id } = this.props.guiWallet
@@ -201,12 +200,21 @@ class ManageTokensScene extends React.Component<ManageTokensProps, State> {
 
   goToAddTokenScene = () => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions[Constants.ADD_TOKEN]({ walletId: id, metaTokens, onAddToken: this.onAddToken })
+    Actions[ADD_TOKEN]({
+      walletId: id,
+      metaTokens,
+      onAddToken: this.onAddToken
+    })
   }
 
   goToEditTokenScene = (currencyCode: string) => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions[Constants.EDIT_TOKEN]({ walletId: id, currencyCode, metaTokens, onDeleteToken: this.onDeleteToken })
+    Actions[EDIT_TOKEN]({
+      walletId: id,
+      currencyCode,
+      metaTokens,
+      onDeleteToken: this.onDeleteToken
+    })
   }
 
   render() {
@@ -294,18 +302,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const mapStateToProps = (state: RootState, ownProps: ManageTokensOwnProps): ManageTokensStateProps => ({
-  manageTokensPending: state.ui.wallets.manageTokensPending,
-  guiWallet: ownProps.guiWallet,
-  settingsCustomTokens: state.ui.settings.customTokens,
-  wallets: state.ui.wallets.byId
-})
-
-const mapDispatchToProps = (dispatch: Dispatch): ManageTokensDispatchProps => ({
-  setEnabledTokensList: (walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) => {
-    dispatch(setWalletEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
-    dispatch(checkEnabledTokensArray(walletId, enabledTokens))
-  }
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(withTheme(ManageTokensScene))
+export const ManageTokensScene = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
+    manageTokensPending: state.ui.wallets.manageTokensPending,
+    settingsCustomTokens: state.ui.settings.customTokens,
+    wallets: state.ui.wallets.byId
+  }),
+  dispatch => ({
+    setEnabledTokensList(walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) {
+      dispatch(setWalletEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
+      dispatch(checkEnabledTokensArray(walletId, enabledTokens))
+    }
+  })
+)(withTheme(ManageTokensSceneComponent))

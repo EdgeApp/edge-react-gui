@@ -4,16 +4,15 @@ import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
-import { connect } from 'react-redux'
 
 import { deleteCustomToken, editCustomToken } from '../../actions/WalletActions.js'
-import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants'
+import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { TertiaryButton } from '../../modules/UI/components/Buttons/TertiaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { CustomTokenInfo } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import * as UTILS from '../../util/utils'
@@ -33,8 +32,15 @@ type StateProps = {
   editCustomTokenProcessing: boolean
 }
 type DispatchProps = {
-  deleteCustomToken(walletId: string, currencyCode: string): Promise<void>,
-  editCustomToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string): void
+  deleteCustomToken: (walletId: string, currencyCode: string) => Promise<void>,
+  editCustomToken: (
+    walletId: string,
+    currencyName: string,
+    currencyCode: string,
+    contractAddress: string,
+    denomination: string,
+    oldCurrencyCode: string
+  ) => void
 }
 type Props = OwnProps & StateProps & DispatchProps
 
@@ -278,12 +284,12 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const EditTokenScene = connect(
-  (state: RootState): StateProps => ({
+export const EditTokenScene = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     customTokens: state.ui.settings.customTokens,
     editCustomTokenProcessing: state.ui.scenes.editToken.editCustomTokenProcessing
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     async deleteCustomToken(walletId: string, currencyCode: string) {
       await dispatch(deleteCustomToken(walletId, currencyCode))
     },

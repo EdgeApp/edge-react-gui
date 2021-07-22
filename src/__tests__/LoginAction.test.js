@@ -1,8 +1,8 @@
+// @flow
 /* globals test expect */
-/* eslint-disable flowtype/require-valid-file-annotation */
 
+import { mergeSettings } from '../actions/LoginActions.js'
 import { LOCAL_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_TYPES, SYNCED_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_TYPES } from '../modules/Core/Account/settings.js'
-import { mergeSettings } from '../modules/Login/action.js'
 
 test('synced settings missing properties are replaced', () => {
   const loadedSyncedSettings = {}

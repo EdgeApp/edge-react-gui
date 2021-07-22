@@ -159,7 +159,6 @@ export const CURRENCY_PLUGIN_NAMES = {
 type SpecialCurrencyInfo = {|
   // Marketing:
   displayBuyCrypto?: boolean,
-  showEarnInterestCard?: boolean,
 
   // Localized GUI text:
   dummyPublicAddress?: string,
@@ -219,13 +218,11 @@ export const SPECIAL_CURRENCY_INFO: {
   BTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    showEarnInterestCard: false,
     isPrivateKeySweepable: true
   },
   BCH: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    showEarnInterestCard: false,
     isPrivateKeySweepable: true
   },
   BSV: {
@@ -239,7 +236,6 @@ export const SPECIAL_CURRENCY_INFO: {
   LTC: {
     displayBuyCrypto: true,
     isImportKeySupported: false,
-    showEarnInterestCard: false,
     isPrivateKeySweepable: true
   },
   RBTC: {
@@ -348,7 +344,6 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_instructions
     },
     isCustomTokensSupported: true,
-    showEarnInterestCard: false,
     isRbfSupported: true
   },
   ETC: {
@@ -390,15 +385,6 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_instructions
     },
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
-  },
-  TUSD: {
-    showEarnInterestCard: false
-  },
-  LBA: {
-    showEarnInterestCard: false
-  },
-  BAT: {
-    showEarnInterestCard: false
   },
   FIO: {
     dummyPublicAddress: 'FIO4uX8tSuBZyHJmpPfc5Q6WrZ9eXd33wdgfWvfJ2fjGsg9yH4Dkd',

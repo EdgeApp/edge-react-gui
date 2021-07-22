@@ -2,10 +2,9 @@
 
 import { type EdgeContext, type OtpError, asMaybeOtpError } from 'edge-core-js'
 import * as React from 'react'
-import { connect } from 'react-redux'
 
 import { handleOtpError } from '../../actions/AccountActions.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { AlertDropdown } from '../navigation/AlertDropdown.js'
 import { Airship } from './AirshipInstance.js'
 
@@ -18,7 +17,7 @@ type DispatchProps = {
 
 type Props = StateProps & DispatchProps
 
-class EdgeContextCallbackManager extends React.Component<Props> {
+class EdgeContextCallbackManagerComponent extends React.Component<Props> {
   cleanups: Array<() => mixed> = []
 
   constructor(props: Props) {
@@ -67,14 +66,14 @@ class EdgeContextCallbackManager extends React.Component<Props> {
   }
 }
 
-export default connect(
-  (state: RootState): StateProps => ({
+export const EdgeContextCallbackManager = connect<StateProps, DispatchProps, {}>(
+  state => ({
     account: state.core.account,
     context: state.core.context
   }),
-  (dispatch: Dispatch) => ({
+  dispatch => ({
     onOtpError(otpError: OtpError) {
       dispatch(handleOtpError(otpError))
     }
   })
-)(EdgeContextCallbackManager)
+)(EdgeContextCallbackManagerComponent)

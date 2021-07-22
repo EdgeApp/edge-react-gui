@@ -1,18 +1,18 @@
 // @flow
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 
-import { createCurrencyWallet } from '../../actions/CreateWalletActions'
-import * as Constants from '../../constants/indexConstants'
-import s from '../../locales/strings'
-import type { Dispatch, GetState } from '../../types/reduxTypes'
-import { refreshConnectedWalletsForFioAddress, refreshFioNames } from './util'
+import { FIO_WALLET_TYPE } from '../constants/WalletAndCurrencyConstants.js'
+import s from '../locales/strings.js'
+import { refreshConnectedWalletsForFioAddress, refreshFioNames } from '../modules/FioAddress/util.js'
+import { type Dispatch, type GetState } from '../types/reduxTypes.js'
+import { createCurrencyWallet } from './CreateWalletActions.js'
 
 export const createFioWallet =
   () =>
   (dispatch: Dispatch, getState: GetState): Promise<EdgeCurrencyWallet | any> => {
     const state = getState()
     const fiatCurrencyCode = state.ui.settings.defaultIsoFiat
-    return dispatch(createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, Constants.FIO_WALLET_TYPE, fiatCurrencyCode, false, false))
+    return dispatch(createCurrencyWallet(s.strings.fio_address_register_default_fio_wallet_name, FIO_WALLET_TYPE, fiatCurrencyCode, false, false))
   }
 
 export const refreshAllFioAddresses = () => async (dispatch: Dispatch, getState: GetState) => {

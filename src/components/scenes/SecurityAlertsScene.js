@@ -5,9 +5,8 @@ import { SecurityAlertsScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { StatusBar, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { THEME } from '../modals/modalParts.js'
 
 type StateProps = {
@@ -40,12 +39,12 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const SecurityAlertsScene = connect(
-  (state: RootState): StateProps => ({
+export const SecurityAlertsScene = connect<StateProps, DispatchProps, {}>(
+  state => ({
     context: state.core.context,
     account: state.core.account
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     onComplete() {
       Actions.pop()
     }

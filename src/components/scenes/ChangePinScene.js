@@ -4,9 +4,8 @@ import { type EdgeAccount, type EdgeContext } from 'edge-core-js'
 import { ChangePinScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type StateProps = {
@@ -30,12 +29,12 @@ class ChangePinComponent extends React.Component<Props> {
   }
 }
 
-export const ChangePinScene = connect(
-  (state: RootState): StateProps => ({
+export const ChangePinScene = connect<StateProps, DispatchProps, {}>(
+  state => ({
     context: state.core.context,
     account: state.core.account
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     onComplete: Actions.pop
   })
 )(ChangePinComponent)

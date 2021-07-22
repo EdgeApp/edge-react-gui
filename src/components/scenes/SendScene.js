@@ -14,24 +14,22 @@ import * as React from 'react'
 import { TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { type FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
-import { activated as uniqueIdentifierModalActivated } from '../../actions/UniqueIdentifierModalActions.js'
-import { UniqueIdentifierModalConnect as UniqueIdentifierModal } from '../../connectors/UniqueIdentifierModalConnector.js'
-import { CHANGE_MINING_FEE_SEND_CONFIRMATION, getSpecialCurrencyInfo } from '../../constants/indexConstants'
-import { FIO_STR } from '../../constants/WalletAndCurrencyConstants'
+import { CHANGE_MINING_FEE_SEND_CONFIRMATION } from '../../constants/SceneKeys.js'
+import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { FlipInputModal } from '../modals/FlipInputModal.js'
+import { UniqueIdentifierModal } from '../modals/UniqueIdentifierModal.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError } from '../services/AirshipInstance.js'
@@ -67,7 +65,7 @@ type StateProps = {
 
 type DispatchProps = {
   reset: () => void,
-  sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId: string, selectedCurrencyCode: string) => Promise<void>, // Somehow has a return??
+  sendConfirmationUpdateTx: (guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => void,
   signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => void,
   updateSpendPending: boolean => void,
   uniqueIdentifierButtonPressed: () => void,
@@ -239,7 +237,11 @@ class SendComponent extends React.PureComponent<Props, State> {
     )
   }
 
-  handleFeesChange = () => Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({ wallet: this.state.coreWallet, currencyCode: this.state.selectedCurrencyCode })
+  handleFeesChange = () =>
+    Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION]({
+      wallet: this.state.coreWallet,
+      currencyCode: this.state.selectedCurrencyCode
+    })
 
   handleFioAddressSelect = (fioAddress: string, fioWallet: EdgeCurrencyWallet, fioError: string) => {
     this.setState({
@@ -570,8 +572,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SendScene = connect(
-  (state: RootState, ownProps: RouteProps): StateProps => {
+export const SendScene = connect<StateProps, DispatchProps, RouteProps>(
+  (state, ownProps) => {
     const { nativeAmount, transaction, transactionMetadata, error, pending, guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
     const isSendUsingFioAddress = guiMakeSpendInfo.isSendUsingFioAddress || (ownProps.guiMakeSpendInfo && ownProps.guiMakeSpendInfo.isSendUsingFioAddress)
 
@@ -597,12 +599,12 @@ export const SendScene = connect(
       isSendUsingFioAddress
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     reset() {
       dispatch({ type: 'UI/SEND_CONFIRMATION/RESET' })
     },
-    async sendConfirmationUpdateTx(guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId: string, selectedCurrencyCode: string) {
-      await dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode))
+    sendConfirmationUpdateTx(guiMakeSpendInfo: GuiMakeSpendInfo, selectedWalletId?: string, selectedCurrencyCode?: string) {
+      dispatch(sendConfirmationUpdateTx(guiMakeSpendInfo, true, selectedWalletId, selectedCurrencyCode))
     },
     updateSpendPending(pending: boolean) {
       dispatch({
@@ -614,7 +616,7 @@ export const SendScene = connect(
       dispatch(signBroadcastAndSave(fioSender, selectedWalletId, selectedCurrencyCode))
     },
     uniqueIdentifierButtonPressed() {
-      dispatch(uniqueIdentifierModalActivated())
+      dispatch({ type: 'UNIQUE_IDENTIFIER_MODAL/ACTIVATED' })
     },
     onChangePin(pin: string) {
       dispatch({ type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin } })

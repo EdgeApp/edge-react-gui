@@ -1,6 +1,6 @@
 **/scratch.*
 /android/
-/flow-typed/
+/flow-typed/npm/
 /ios/
 /src/util/bridge/injectThisInWebView.js
 /src/util/bridge/rolledUp.js

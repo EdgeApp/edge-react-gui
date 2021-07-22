@@ -1,14 +1,13 @@
 // @flow
 
-// $FlowFixMe = forwardRef is not recognize by flow?
-import React, { forwardRef, useRef } from 'react'
-import { Platform, Text, TextInput, TextInputProps, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import Animated, { Extrapolate, interpolate, interpolateColor, SharedValue, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import * as React from 'react'
+import { type TextStyle, type ViewStyle, Platform, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import Animated, { Extrapolate, interpolate, interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
-import { unpackEdges } from '../../util/edges'
-import { useCallback, useEffect, useImperativeHandle, useMemo, useState } from '../../util/hooks'
-import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
+import { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from '../../types/reactHooks.js'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
+import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 
 const HINT_Y_PLATFORM_ADJUST = Platform.OS === 'android' ? -2 : 0
 const PADDING_VERTICAL = 1
@@ -22,32 +21,43 @@ const ANIMATION_STATES = {
   ERROR: 2
 }
 
-type InputOutlineProps = {
+type Props = {|
+  // Content options:
   label?: string,
   error?: string,
 
+  // Appearance:
+  isClearable?: boolean,
   marginRem?: number | number[],
-  isClearable: boolean,
-  size?: 'big' | 'small',
   showSearchIcon?: boolean,
-  onClear: () => void,
+  size?: 'big' | 'small',
 
-  ...TextInputProps
-}
+  // Callbacks:
+  onBlur?: () => void,
+  onChangeText?: (text: string) => void,
+  onClear?: () => void,
+  onFocus?: () => void,
 
-type InputOutline = {
-  focus: () => void,
-  blur: () => void,
-  isFocused: () => boolean,
-  clear: () => void
-}
+  // Other React Native TextInput properties:
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters',
+  autoCorrect?: boolean,
+  autoFocus?: boolean,
+  inputAccessoryViewID?: string,
+  keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad',
+  maxLength?: number,
+  onSubmitEditing?: () => void,
+  returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send',
+  secureTextEntry?: boolean,
+  testID?: string,
+  value?: string
+|}
 
 type CornerBorderProps = {
   theme: Theme,
   corner: 'left' | 'right',
   cornerHeight: { height: number },
-  placeholderSize: SharedValue,
-  colorMap: SharedValue
+  placeholderSize: Animated.SharedValue<number>,
+  colorMap: Animated.SharedValue<number>
 }
 
 const getColor = (
@@ -79,27 +89,34 @@ const CornerBorder = ({ theme, corner, cornerHeight, placeholderSize, colorMap }
   return <Animated.View style={[corner === 'left' ? styles.cornerLeft : styles.cornerRight, cornerHeight, animatedContainerStyles]} />
 }
 
-const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref) => {
+// $FlowFixMe = forwardRef is not recognize by flow?
+const EdgeTextFieldOutlinedComponent = React.forwardRef((props: Props, ref) => {
   const {
+    // Content options:
     error,
     label: placeholder = '',
-    isClearable,
-    marginRem = 0.5,
+
+    // Appearance:
+    isClearable = false,
+    marginRem,
     size = 'big',
     showSearchIcon = true,
+
+    // Callbacks:
+    onBlur,
+    onChangeText,
     onClear,
     onFocus,
-    onBlur,
 
+    // Other React Native TextInput properties:
     value = '',
-    onChangeText,
     ...inputProps
   } = props
 
   const [containerHeight, setContainerHeight] = useState(0)
 
   // animation
-  const inputRef: { current: InputOutline } = useRef<TextInput>(null)
+  const inputRef = useRef<TextInput>(null)
   const placeholderMap = useSharedValue(value ? ANIMATION_STATES.FOCUSED : ANIMATION_STATES.INIT)
   const placeholderSize = useSharedValue(ANIMATION_STATES.INIT)
   const containerWidth = useSharedValue(ANIMATION_STATES.INIT)
@@ -111,13 +128,13 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
   const isFocused = () => Boolean(inputRef.current && inputRef.current.isFocused())
   const clear = () => {
     Boolean(inputRef.current && inputRef.current.clear())
-    onChangeText('')
+    if (onChangeText != null) onChangeText('')
   }
 
   // styles
   const theme = useTheme()
   const styles = getStyles(theme)
-  const spacings = spacingStyles(marginRem, useTheme())
+  const spacings = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
   const placeholderSpacerWidthAdjust = theme.rem(1)
   const {
     inactiveColor,
@@ -138,29 +155,29 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
     hintLeftMargin
   } = getSizeStyles(theme, size, showSearchIcon)
 
-  const errorState = useCallback(() => error !== null && error !== undefined && error !== '', [error])
+  const errorState = useCallback(() => error != null && error !== '', [error])
 
   const handleFocus = () => {
     placeholderMap.value = withTiming(ANIMATION_STATES.FOCUSED)
     if (!errorState()) colorMap.value = withTiming(ANIMATION_STATES.FOCUSED)
     focus()
-    if (onFocus) onFocus()
+    if (onFocus != null) onFocus()
   }
 
   const handleBlur = () => {
     if (!value) placeholderMap.value = withTiming(ANIMATION_STATES.INIT) // blur
     if (!errorState()) colorMap.value = withTiming(ANIMATION_STATES.INIT) // inactive
     blur()
-    if (onBlur) onBlur()
+    if (onBlur != null) onBlur()
   }
 
   const handleChangeText = (text: string) => {
-    onChangeText(text)
+    if (onChangeText != null) onChangeText(text)
   }
 
   const clearText = () => {
     clear()
-    onClear()
+    if (onClear != null) onClear()
   }
 
   const handlePlaceholderLayout = useCallback(
@@ -240,6 +257,7 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
 
   const placeholderStyle = useMemo(() => {
     return [...placeholderPaddingStyles, animatedPlaceholderStyles]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...placeholderPaddingStyles, animatedPlaceholderStyles])
 
   return (
@@ -284,17 +302,6 @@ const EdgeTextFieldOutlinedComponent = forwardRef((props: InputOutlineProps, ref
   )
 })
 
-function spacingStyles(margin: number | number[], theme: Theme) {
-  const marginRem = unpackEdges(margin)
-
-  return {
-    marginBottom: theme.rem(marginRem.bottom),
-    marginLeft: theme.rem(marginRem.left),
-    marginRight: theme.rem(marginRem.right),
-    marginTop: theme.rem(marginRem.top)
-  }
-}
-
 // return depended on size styles and values
 const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', showSearchIcon: boolean = true) => {
   const styles = getStyles(theme)
@@ -307,11 +314,11 @@ const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', showSearchIc
   const placeholderSizeScale = 0.2
   let paddingVertical = theme.rem(PADDING_VERTICAL)
   let hintLeftMargin = -theme.rem(0.25)
-  const inputStyles = [styles.input]
-  const placeholderTextStyles = [styles.placeholderText]
-  const placeholderPaddingStyles = [styles.placeholder]
-  const placeholderSpacerPaddingStyles = [styles.placeholderSpacer]
-  const inputContainerStyles = [styles.inputContainer]
+  const inputStyles: TextStyle[] = [styles.input]
+  const placeholderTextStyles: TextStyle[] = [styles.placeholderText]
+  const placeholderPaddingStyles: TextStyle[] = [styles.placeholder]
+  const placeholderSpacerPaddingStyles: ViewStyle[] = [styles.placeholderSpacer]
+  const inputContainerStyles: ViewStyle[] = [styles.inputContainer]
   const prefixStyles = [styles.prefix]
   const suffixStyles = [styles.suffix]
   if (showSearchIcon) {
@@ -478,5 +485,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const EdgeTextFieldOutlined = EdgeTextFieldOutlinedComponent
-export { EdgeTextFieldOutlined }
+export const EdgeTextFieldOutlined = EdgeTextFieldOutlinedComponent

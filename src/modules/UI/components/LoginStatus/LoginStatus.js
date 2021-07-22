@@ -1,26 +1,22 @@
 // @flow
 
 import * as React from 'react'
-import { connect } from 'react-redux'
 
 import { LoadingScene } from '../../../../components/scenes/LoadingScene.js'
+import { connect } from '../../../../types/reactRedux.js'
 
-export function ifLoggedIn<Klass>(LoggedIn: Klass): Klass {
-  class IfLoggedIn extends React.Component<{ loginStatus: boolean, outerProps: any }> {
-    render() {
-      const { loginStatus, outerProps } = this.props
-      // $FlowFixMe
-      return loginStatus ? <LoggedIn {...outerProps} /> : <LoadingScene />
-    }
-  }
-  IfLoggedIn.displayName = 'IfLoggedIn'
+type StateProps = {
+  loginStatus: boolean
+}
 
-  const mapStateToProps = (state, ownProps: any): { loginStatus: boolean, outerProps: any } => ({
-    loginStatus: !!state.ui.settings.loginStatus,
-    outerProps: ownProps
+export function ifLoggedIn<Props>(Component: React.ComponentType<Props>): (props: Props) => React.Node {
+  return connect<StateProps, {}, Props>(
+    state => ({
+      loginStatus: state.ui.settings.loginStatus ?? false
+    }),
+    dispatch => ({})
+  )((props: Props & StateProps): React.Node => {
+    const { loginStatus, ...rest } = props
+    return loginStatus ? <Component {...rest} /> : <LoadingScene />
   })
-  const mergeProps = (stateProps, dispatchProps, ownProps) => stateProps
-
-  // $FlowFixMe
-  return connect(mapStateToProps, null, mergeProps)(IfLoggedIn)
 }

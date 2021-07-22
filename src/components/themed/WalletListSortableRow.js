@@ -4,14 +4,13 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
 import { formatNumberInput } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
 import { getDisplayDenominationFromSettings } from '../../selectors/DenominationSelectors.js'
 import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -160,9 +159,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListSortableRow = connect((state: RootState, ownProps: OwnProps): StateProps => ({
-  showBalance: state.ui.settings.isAccountBalanceVisible,
-  settings: state.ui.settings,
-  exchangeRates: state.exchangeRates,
-  walletFiatSymbol: ownProps.guiWallet ? getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode) : null
-}))(withTheme(WalletListSortableRowComponent))
+export const WalletListSortableRow = connect<StateProps, {}, OwnProps>(
+  (state, ownProps) => ({
+    showBalance: state.ui.settings.isAccountBalanceVisible,
+    settings: state.ui.settings,
+    exchangeRates: state.exchangeRates,
+    walletFiatSymbol: ownProps.guiWallet ? getFiatSymbol(ownProps.guiWallet.isoFiatCurrencyCode) : null
+  }),
+  dispatch => ({})
+)(withTheme(WalletListSortableRowComponent))

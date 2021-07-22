@@ -4,14 +4,13 @@ import type { EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeTransacti
 import React, { PureComponent } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { playSendSound } from '../../actions/SoundActions.js'
-import { TRANSACTION_DETAILS } from '../../constants/indexConstants'
+import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { GuiWallet } from '../../types/types.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
@@ -238,15 +237,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const AccelerateTxModel = connect((state: RootState, ownProps: OwnProps): StateProps => {
-  const { wallet } = ownProps
-
-  const edgeDenomination = getDisplayDenomination(state, wallet.currencyInfo.currencyCode)
-
-  return {
-    edgeDenomination,
+export const AccelerateTxModel = connect<StateProps, {}, OwnProps>(
+  (state, ownProps) => ({
+    edgeDenomination: getDisplayDenomination(state, ownProps.wallet.currencyInfo.currencyCode),
     selectedCurrencyCode: state.ui.wallets.selectedCurrencyCode,
     exchangeRates: state.exchangeRates,
     settings: state.ui.settings
-  }
-})(withTheme(AccelerateTxModelComponent))
+  }),
+  dispatch => ({})
+)(withTheme(AccelerateTxModelComponent))

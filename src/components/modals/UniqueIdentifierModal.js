@@ -5,28 +5,35 @@ import { TextField } from 'react-native-material-textfield'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
-import s from '../../locales/strings'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
+import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { InteractiveModal } from '../../modules/UI/components/Modals/InteractiveModal/InteractiveModal.ui.js'
+import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { connect } from '../../types/reactRedux.js'
 
-export type Props = {
-  isActive: boolean,
-  onConfirm: (uniqueIdentifier: string) => any,
-  onBackButtonPress: () => any,
-  onBackdropPress: () => any,
-  onModalHide: () => any,
-  onCancel: () => any,
+type OwnProps = {
   currencyCode: string,
-  uniqueIdentifier: string,
+  onConfirm: (info: GuiMakeSpendInfo) => void
+}
+type StateProps = {
+  isActive: boolean,
+  uniqueIdentifier: string
+}
+type DispatchProps = {
+  onDeactivated: () => void,
+  onModalHide: () => void,
   uniqueIdentifierChanged: (uniqueIdentifier: string) => void
 }
-export class UniqueIdentifierModal extends React.Component<Props> {
+
+type Props = OwnProps & StateProps & DispatchProps
+
+class UniqueIdentifierModalComponent extends React.Component<Props> {
   render() {
-    const { currencyCode, isActive, onBackButtonPress, onBackdropPress, onCancel, onModalHide, uniqueIdentifier, uniqueIdentifierChanged } = this.props
+    const { currencyCode, isActive, onDeactivated, onModalHide, uniqueIdentifier, uniqueIdentifierChanged } = this.props
 
     let title = ''
     let keyboardType = 'default'
@@ -37,7 +44,7 @@ export class UniqueIdentifierModal extends React.Component<Props> {
     }
 
     return (
-      <InteractiveModal legacy isActive={isActive} onBackdropPress={onBackdropPress} onBackButtonPress={onBackButtonPress} onModalHide={onModalHide}>
+      <InteractiveModal legacy isActive={isActive} onBackdropPress={onDeactivated} onBackButtonPress={onDeactivated} onModalHide={onModalHide}>
         <InteractiveModal.Icon>
           <IonIcon name="ios-key" size={30} />
         </InteractiveModal.Icon>
@@ -73,14 +80,14 @@ export class UniqueIdentifierModal extends React.Component<Props> {
         <InteractiveModal.Footer>
           <InteractiveModal.Row>
             <InteractiveModal.Item>
-              <SecondaryButton onPress={() => onCancel()} style={{ flex: -1 }}>
+              <SecondaryButton onPress={onDeactivated} style={{ flex: -1 }}>
                 <SecondaryButton.Text>
                   <Text>{s.strings.unique_identifier_modal_cancel}</Text>
                 </SecondaryButton.Text>
               </SecondaryButton>
             </InteractiveModal.Item>
             <InteractiveModal.Item>
-              <PrimaryButton onPress={() => this.onConfirm()} style={{ flex: -1 }}>
+              <PrimaryButton onPress={this.onConfirm} style={{ flex: -1 }}>
                 <PrimaryButton.Text>
                   <Text>{s.strings.unique_identifier_modal_confirm}</Text>
                 </PrimaryButton.Text>
@@ -94,6 +101,28 @@ export class UniqueIdentifierModal extends React.Component<Props> {
 
   onConfirm() {
     const { uniqueIdentifier } = this.props
-    this.props.onConfirm(uniqueIdentifier)
+    this.props.onDeactivated()
+    this.props.onConfirm({ uniqueIdentifier })
   }
 }
+
+export const UniqueIdentifierModal = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
+    isActive: state.ui.scenes.uniqueIdentifierModal.isActive,
+    uniqueIdentifier: state.ui.scenes.uniqueIdentifierModal.uniqueIdentifier ?? state.ui.scenes.sendConfirmation.guiMakeSpendInfo.uniqueIdentifier ?? ''
+  }),
+  dispatch => ({
+    onDeactivated() {
+      dispatch({ type: 'UNIQUE_IDENTIFIER_MODAL/DEACTIVATED' })
+    },
+    onModalHide() {
+      dispatch({ type: 'UNIQUE_IDENTIFIER_MODAL/RESET' })
+    },
+    uniqueIdentifierChanged(uniqueIdentifier: string) {
+      dispatch({
+        type: 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED',
+        data: { uniqueIdentifier }
+      })
+    }
+  })
+)(UniqueIdentifierModalComponent)

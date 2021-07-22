@@ -2,10 +2,9 @@
 
 import * as React from 'react'
 import { AppState } from 'react-native'
-import { connect } from 'react-redux'
 
-import { logoutRequest } from '../../modules/Login/action.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { logoutRequest } from '../../actions/LoginActions.js'
+import { connect } from '../../types/reactRedux.js'
 
 type AppStateType = 'active' | 'background' | 'inactive'
 
@@ -14,11 +13,14 @@ type State = {
   appState: AppStateType
 }
 
-type Props = {
+type StateProps = {
   autoLogoutTimeInSeconds: ?number,
-  loginStatus: boolean,
+  loginStatus: boolean
+}
+type DispatchProps = {
   logout: () => void
 }
+type Props = StateProps & DispatchProps
 
 class AutoLogoutComponent extends React.Component<Props, State> {
   state = {
@@ -69,14 +71,14 @@ class AutoLogoutComponent extends React.Component<Props, State> {
   }
 }
 
-export const AutoLogout = connect(
-  (state: RootState) => ({
-    loginStatus: state.ui.settings.loginStatus,
+export const AutoLogout = connect<StateProps, DispatchProps, {}>(
+  state => ({
+    loginStatus: state.ui.settings.loginStatus ?? false,
     autoLogoutTimeInSeconds: state.ui.settings.autoLogoutTimeInSeconds
   }),
-  (dispatch: Dispatch) => ({
+  dispatch => ({
     logout() {
-      return dispatch(logoutRequest())
+      dispatch(logoutRequest())
     }
   })
 )(AutoLogoutComponent)

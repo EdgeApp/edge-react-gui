@@ -1,0 +1,25 @@
+// @flow
+
+import * as React from 'react'
+import { type Store } from 'redux'
+
+declare module 'react-redux' {
+  declare type ProviderProps = {
+    store: Store<any, any>,
+    children?: React.Node
+  }
+  declare function Provider(props: ProviderProps): React.Node
+
+  // See ../src/util/react-redux.js for wrapped versions of:
+  // connect
+  // useDispatch
+  // useState
+
+  declare type DontUse = {
+    useTheEdgeWrapperInstead: true
+  }
+
+  declare function connect(useTheEdgeWrapperInstead: DontUse): void
+  declare function useDispatch(useTheEdgeWrapperInstead: DontUse): void
+  declare function useState(useTheEdgeWrapperInstead: DontUse): void
+}

@@ -7,7 +7,7 @@ import { isIPhoneX } from 'react-native-safe-area-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index.js'
-import * as Constants from '../../constants/indexConstants'
+import { EXCHANGE, PLUGIN_BUY, PLUGIN_SELL, WALLET_LIST, WALLET_LIST_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
@@ -19,16 +19,16 @@ type OwnProps = {
 type Props = OwnProps & ThemeProps
 
 const title = {
-  [Constants.WALLET_LIST]: s.strings.title_wallets,
-  [Constants.PLUGIN_BUY]: s.strings.title_buy,
-  [Constants.PLUGIN_SELL]: s.strings.title_sell,
-  [Constants.EXCHANGE]: s.strings.title_exchange
+  [WALLET_LIST]: s.strings.title_wallets,
+  [PLUGIN_BUY]: s.strings.title_buy,
+  [PLUGIN_SELL]: s.strings.title_sell,
+  [EXCHANGE]: s.strings.title_exchange
 }
 
 class MenuTabComponent extends React.PureComponent<Props> {
   handleOnPress = (route: string) => {
-    if (route === Constants.WALLET_LIST) {
-      return Actions.jump(Constants.WALLET_LIST_SCENE)
+    if (route === WALLET_LIST) {
+      return Actions.jump(WALLET_LIST_SCENE)
     }
     Actions.jump(route)
   }
@@ -43,10 +43,10 @@ class MenuTabComponent extends React.PureComponent<Props> {
         {state.routes.map((element, index) => {
           const color = activeTabIndex === index ? theme.tabBarIconHighlighted : theme.tabBarIcon
           const icon = {
-            [Constants.WALLET_LIST]: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
-            [Constants.PLUGIN_BUY]: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
-            [Constants.PLUGIN_SELL]: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
-            [Constants.EXCHANGE]: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />
+            [WALLET_LIST]: <Fontello name="wallet-1" size={theme.rem(1.25)} color={color} />,
+            [PLUGIN_BUY]: <Fontello name="buy" size={theme.rem(1.25)} color={color} />,
+            [PLUGIN_SELL]: <Fontello name="sell" size={theme.rem(1.25)} color={color} />,
+            [EXCHANGE]: <Ionicon name="swap-horizontal" size={theme.rem(1.25)} color={color} />
           }
           return (
             <TouchableOpacity style={styles.content} key={element.key} onPress={() => this.handleOnPress(element.key)}>

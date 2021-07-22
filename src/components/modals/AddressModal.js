@@ -3,19 +3,18 @@
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, FlatList, Image, TouchableWithoutFeedback, View } from 'react-native'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
+import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
 import ENS_LOGO from '../../assets/images/ens_logo.png'
 import FIO_LOGO from '../../assets/images/fio/fio_logo.png'
-import { CURRENCY_PLUGIN_NAMES } from '../../constants/indexConstants.js'
+import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { type FioAddresses, checkExpiredFioAddress, checkPubAddress, getFioAddressCache } from '../../modules/FioAddress/util.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
+import { ResolutionError, ResolutionErrorCode } from '../../types/ResolutionError.js'
 import type { FioAddress, FlatListItem } from '../../types/types.js'
-import ResolutionError, { ResolutionErrorCode } from '../common/ResolutionError.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
@@ -39,12 +38,12 @@ type StateProps = {
   userFioAddresses: FioAddress[],
   userFioAddressesLoading: boolean,
   coreWallet: EdgeCurrencyWallet,
-  fioPlugin: EdgeCurrencyConfig | null,
+  fioPlugin?: EdgeCurrencyConfig,
   fioWallets: EdgeCurrencyWallet[]
 }
 
 type DispatchProps = {
-  refreshAllFioAddresses: () => Promise<void>
+  refreshAllFioAddresses: () => void
 }
 
 type State = {
@@ -59,7 +58,7 @@ type State = {
 
 type Props = StateProps & OwnProps & DispatchProps & ThemeProps
 
-class AddressModalConnected extends React.Component<Props, State> {
+class AddressModalComponent extends React.Component<Props, State> {
   fioCheckQueue: number = 0
   textInput = React.createRef()
 
@@ -373,23 +372,6 @@ class AddressModalConnected extends React.Component<Props, State> {
   }
 }
 
-const AddressModal = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => {
-    const { account } = state.core
-    const { currencyWallets } = account
-    return {
-      account,
-      coreWallet: currencyWallets[ownProps.walletId],
-      userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
-      userFioAddressesLoading: state.ui.scenes.fioAddress.fioAddressesLoading,
-      fioPlugin: account.currencyConfig ? account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] : null,
-      fioWallets: state.ui.wallets.fioWallets
-    }
-  },
-  (dispatch: Dispatch): DispatchProps => ({ refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses()) })
-)(withTheme(AddressModalConnected))
-export { AddressModal }
-
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     flex: 1,
@@ -418,3 +400,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignItems: 'center'
   }
 }))
+
+export const AddressModal = connect<StateProps, DispatchProps, OwnProps>(
+  (state, ownProps) => ({
+    account: state.core.account,
+    coreWallet: state.core.account.currencyWallets[ownProps.walletId],
+    userFioAddresses: state.ui.scenes.fioAddress.fioAddresses,
+    userFioAddressesLoading: state.ui.scenes.fioAddress.fioAddressesLoading,
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+    fioWallets: state.ui.wallets.fioWallets
+  }),
+  dispatch => ({
+    refreshAllFioAddresses() {
+      dispatch(refreshAllFioAddresses())
+    }
+  })
+)(withTheme(AddressModalComponent))

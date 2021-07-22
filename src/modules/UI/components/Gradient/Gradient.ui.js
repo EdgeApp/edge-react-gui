@@ -9,7 +9,7 @@ import { type ThemeProps, withTheme } from '../../../../components/services/Them
 const UPPER_LEFT = { x: 0, y: 0 }
 const UPPER_RIGHT = { x: 1, y: 0 }
 
-export type OwnProps = {
+type OwnProps = {
   children?: React.Node,
   reverse?: boolean,
   style?: StyleSheet.Styles

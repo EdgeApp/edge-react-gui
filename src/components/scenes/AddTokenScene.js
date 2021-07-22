@@ -4,36 +4,36 @@ import _ from 'lodash'
 import * as React from 'react'
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from 'react-native'
 
-import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/indexConstants.js'
+import { addNewToken } from '../../actions/AddTokenActions.js'
+import { MAX_TOKEN_CODE_CHARACTERS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
+import { connect } from '../../types/reactRedux.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { decimalPlacesToDenomination } from '../../util/utils.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
-export type AddTokenOwnProps = {
-  walletId: string,
-  addTokenPending: Function,
-  addNewToken: Function,
+type OwnProps = {
   currentCustomTokens: CustomTokenInfo[],
-  wallet: GuiWallet,
-  onAddToken: Function,
+  onAddToken: (currencyCode: string) => void,
+  walletId: string,
+
   // adding properties in case coming from Scan scene (scan QR code to add token)
-  currencyName: string,
-  currencyCode: string,
-  contractAddress: string,
-  decimalPlaces: string
+  currencyName?: string,
+  currencyCode?: string,
+  contractAddress?: string,
+  decimalPlaces?: string
 }
 
-export type AddTokenDispatchProps = {
+type DispatchProps = {
   addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, type: string) => void
 }
 
-export type AddTokenStateProps = {
+type StateProps = {
   addTokenPending: boolean,
   wallet: GuiWallet
 }
@@ -47,17 +47,17 @@ type State = {
   enabled?: boolean
 }
 
-type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
+type Props = OwnProps & StateProps & DispatchProps
 
-export class AddToken extends React.Component<AddTokenProps, State> {
-  constructor(props: AddTokenProps) {
+class AddToken extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props)
-    const { currencyName, currencyCode, contractAddress, decimalPlaces } = props
+    const { currencyName = '', currencyCode = '', contractAddress = '', decimalPlaces = '' } = props
     this.state = {
-      currencyName: currencyName || '',
-      currencyCode: currencyCode || '',
-      contractAddress: contractAddress || '',
-      decimalPlaces: decimalPlaces || '',
+      currencyName,
+      currencyCode,
+      contractAddress,
+      decimalPlaces,
       multiplier: ''
     }
   }
@@ -223,3 +223,15 @@ const rawStyles = {
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
+
+export const AddTokenScene = connect<StateProps, DispatchProps, OwnProps>(
+  (state, ownProps) => ({
+    addTokenPending: state.ui.wallets.addTokenPending,
+    wallet: state.ui.wallets.byId[ownProps.walletId]
+  }),
+  dispatch => ({
+    addNewToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, walletType: string) {
+      dispatch(addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination, walletType))
+    }
+  })
+)(AddToken)

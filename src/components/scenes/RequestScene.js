@@ -9,17 +9,17 @@ import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, Touchab
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
+import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
 import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
-import * as Constants from '../../constants/indexConstants'
+import { FIO_REQUEST_CONFIRMATION } from '../../constants/SceneKeys.js'
+import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { decimalOrZero, DIVIDE_PRECISION, getCurrencyInfo, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
@@ -37,7 +37,7 @@ import { ShareButtons } from '../themed/ShareButtons.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
-export type RequestStateProps = {
+type StateProps = {
   currencyCode: string,
   currencyInfo: EdgeCurrencyInfo | null,
   edgeWallet: EdgeCurrencyWallet,
@@ -54,7 +54,7 @@ export type RequestStateProps = {
   isConnected: boolean,
   balance?: string
 }
-export type RequestLoadingProps = {
+type LoadingStateProps = {
   edgeWallet: null,
   currencyCode: null,
   currencyInfo: null,
@@ -71,16 +71,16 @@ export type RequestLoadingProps = {
   isConnected: boolean
 }
 
-export type RequestDispatchProps = {
-  refreshReceiveAddressRequest(string): void,
-  refreshAllFioAddresses: () => Promise<void>,
+type DispatchProps = {
+  refreshReceiveAddressRequest: (walletId: string) => void,
+  refreshAllFioAddresses: () => void,
   onSelectWallet: (walletId: string, currencyCode: string) => void
 }
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 type CurrencyMinimumPopupState = { [currencyCode: string]: ModalState }
 
-type LoadingProps = RequestLoadingProps & RequestDispatchProps & ThemeProps
-type LoadedProps = RequestStateProps & RequestDispatchProps & ThemeProps
+type LoadingProps = LoadingStateProps & DispatchProps & ThemeProps
+type LoadedProps = StateProps & DispatchProps & ThemeProps
 type Props = LoadingProps | LoadedProps
 
 type State = {
@@ -101,8 +101,8 @@ export class RequestComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const minimumPopupModalState: CurrencyMinimumPopupState = {}
-    Object.keys(Constants.SPECIAL_CURRENCY_INFO).forEach(currencyCode => {
-      if (Constants.getSpecialCurrencyInfo(currencyCode).minimumPopupModals) {
+    Object.keys(SPECIAL_CURRENCY_INFO).forEach(currencyCode => {
+      if (getSpecialCurrencyInfo(currencyCode).minimumPopupModals) {
         minimumPopupModalState[currencyCode] = 'NOT_YET_SHOWN'
       }
     })
@@ -232,7 +232,7 @@ export class RequestComponent extends React.Component<Props, State> {
   enqueueMinimumAmountModal = async () => {
     const { currencyCode } = this.props
     if (currencyCode == null) return
-    const { minimumPopupModals } = Constants.getSpecialCurrencyInfo(currencyCode)
+    const { minimumPopupModals } = getSpecialCurrencyInfo(currencyCode)
     if (minimumPopupModals == null) return
 
     await Airship.show(bridge => (
@@ -307,7 +307,7 @@ export class RequestComponent extends React.Component<Props, State> {
     const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio, guiWallet } = this.props
     const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
     const flipInputHeaderText = guiWallet ? sprintf(s.strings.send_to_wallet, guiWallet.name) : ''
-    const { keysOnlyMode = false } = Constants.getSpecialCurrencyInfo(primaryCurrencyInfo.displayCurrencyCode)
+    const { keysOnlyMode = false } = getSpecialCurrencyInfo(primaryCurrencyInfo.displayCurrencyCode)
 
     return (
       <SceneWrapper background="header" hasTabs={false}>
@@ -406,7 +406,7 @@ export class RequestComponent extends React.Component<Props, State> {
     if (!props.currencyCode) return false
     if (this.state.minimumPopupModalState[props.currencyCode]) {
       if (this.state.minimumPopupModalState[props.currencyCode] === 'NOT_YET_SHOWN') {
-        const { minimumPopupModals } = Constants.getSpecialCurrencyInfo(props.currencyCode)
+        const { minimumPopupModals } = getSpecialCurrencyInfo(props.currencyCode)
         const minBalance = minimumPopupModals != null ? minimumPopupModals.minimumNativeBalance : '0'
         if (bns.lt(props.guiWallet.primaryNativeBalance, minBalance)) {
           return true
@@ -426,7 +426,7 @@ export class RequestComponent extends React.Component<Props, State> {
     let edgePayUri = 'https://deep.edge.app/'
     let addOnMessage = ''
     // if encoded (like XTZ), only share the public address
-    if (Constants.getSpecialCurrencyInfo(currencyCode).isUriEncodedStructure) {
+    if (getSpecialCurrencyInfo(currencyCode).isUriEncodedStructure) {
       sharedAddress = publicAddress
     } else {
       // Rebuild uri to preserve uriPrefix if amount is 0
@@ -477,7 +477,9 @@ export class RequestComponent extends React.Component<Props, State> {
         return
       }
     }
-    Actions[Constants.FIO_REQUEST_CONFIRMATION]({ amounts: this.amounts })
+    Actions[FIO_REQUEST_CONFIRMATION]({
+      amounts: this.amounts
+    })
   }
 
   fioMode = () => {
@@ -557,8 +559,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const Request = connect(
-  (state: RootState): RequestStateProps | RequestLoadingProps => {
+export const Request = connect<StateProps | LoadingStateProps, DispatchProps, {}>(
+  state => {
     const { account } = state.core
     const { currencyWallets } = account
     const guiWallet: GuiWallet = getSelectedWallet(state)
@@ -636,11 +638,15 @@ export const Request = connect(
       balance
     }
   },
-  (dispatch: Dispatch): RequestDispatchProps => ({
-    refreshReceiveAddressRequest: (walletId: string) => {
+  dispatch => ({
+    refreshReceiveAddressRequest(walletId: string) {
       dispatch(refreshReceiveAddressRequest(walletId))
     },
-    refreshAllFioAddresses: () => dispatch(refreshAllFioAddresses()),
-    onSelectWallet: (walletId: string, currencyCode: string) => dispatch(selectWalletFromModal(walletId, currencyCode))
+    refreshAllFioAddresses() {
+      dispatch(refreshAllFioAddresses())
+    },
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch(selectWalletFromModal(walletId, currencyCode))
+    }
   })
 )(withTheme(RequestComponent))

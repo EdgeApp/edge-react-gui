@@ -4,9 +4,8 @@ import { type EdgeAccount, type EdgeContext } from 'edge-core-js'
 import { PasswordRecoveryScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type StateProps = {
@@ -30,12 +29,14 @@ class ChangeRecoveryComponent extends React.Component<Props> {
   }
 }
 
-export const ChangeRecoveryScene = connect(
-  (state: RootState): StateProps => ({
+export const ChangeRecoveryScene = connect<StateProps, DispatchProps, {}>(
+  state => ({
     context: state.core.context,
     account: state.core.account
   }),
-  (dispatch: Dispatch): DispatchProps => ({
-    onComplete: Actions.pop
+  dispatch => ({
+    onComplete() {
+      Actions.pop()
+    }
   })
 )(ChangeRecoveryComponent)

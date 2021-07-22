@@ -3,13 +3,12 @@
 import * as React from 'react'
 import { ActivityIndicator, Image, Keyboard, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { createCurrencyWallet } from '../../actions/CreateWalletActions.js'
 import CheckIcon from '../../assets/images/createWallet/check_icon_lg.png'
-import { WALLET_LIST_SCENE } from '../../constants/indexConstants.js'
+import { WALLET_LIST_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { FullScreenTransitionComponent } from '../common/FullScreenTransition.js'
@@ -30,7 +29,7 @@ type StateProps = {
   isCreatingWallet: boolean
 }
 type DispatchProps = {
-  createCurrencyWallet(walletName: string, walletType: string, fiatCurrencyCode: string, cleanedPrivateKey?: string): void
+  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string, cleanedPrivateKey?: string) => void
 }
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
@@ -140,11 +139,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CreateWalletReviewScene = connect(
-  (state: RootState): StateProps => ({
+export const CreateWalletReviewScene = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     isCreatingWallet: state.ui.scenes.createWallet.isCreatingWallet
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     createCurrencyWallet(walletName: string, walletType: string, fiatCurrencyCode: string, importText?: string) {
       dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode, true, false, importText))
     }

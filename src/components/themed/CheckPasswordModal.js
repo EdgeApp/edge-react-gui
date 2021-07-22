@@ -3,10 +3,9 @@
 import type { EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import { connect } from 'react-redux'
 
 import s from '../../locales/strings.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type AirshipBridge } from '../modals/modalParts.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
@@ -25,12 +24,12 @@ type StateProps = {
   account: EdgeAccount
 }
 
+type Props = OwnProps & StateProps & ThemeProps
+
 type State = {
   input: string,
   error: string
 }
-
-type Props = OwnProps & StateProps & ThemeProps
 
 class CheckPasswordModalComponent extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -85,10 +84,6 @@ class CheckPasswordModalComponent extends React.Component<Props, State> {
   }
 }
 
-export const CheckPasswordModal = connect((state: RootState): StateProps => ({
-  account: state.core.account
-}))(withTheme(CheckPasswordModalComponent))
-
 const getStyles = cacheStyles((theme: Theme) => ({
   container: {
     justifyContent: 'center',
@@ -111,3 +106,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginBottom: theme.rem(1.5)
   }
 }))
+
+export const CheckPasswordModal = connect<StateProps, {}, OwnProps>(
+  state => ({
+    account: state.core.account
+  }),
+  dispatch => ({})
+)(withTheme(CheckPasswordModalComponent))

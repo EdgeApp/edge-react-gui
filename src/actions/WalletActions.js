@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import { type EdgeCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
@@ -8,17 +8,19 @@ import { sprintf } from 'sprintf-js'
 
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import * as Constants from '../constants/indexConstants.js'
+import { CREATE_WALLET_ACCOUNT_SETUP, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
+import { getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { getSyncedSettings, setMostRecentWalletsSelected, setSyncedSettings } from '../modules/Core/Account/settings.js'
-import { updateWalletsRequest } from '../modules/Core/Wallets/action.js'
 import { getEnabledTokensFromFile, setEnabledTokens, updateEnabledTokens } from '../modules/Core/Wallets/EnabledTokens.js'
-import { updateExchangeRates } from '../modules/ExchangeRates/action.js'
-import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import type { CustomTokenInfo } from '../types/types.js'
+import { type Dispatch, type GetState } from '../types/reduxTypes.js'
+import { type CustomTokenInfo } from '../types/types.js'
 import { getCurrencyInfos, makeCreateWalletType } from '../util/CurrencyInfoHelpers.js'
-import * as UTILS from '../util/utils'
+import { getReceiveAddresses, getSupportedFiats, mergeTokens } from '../util/utils.js'
 import { addTokenAsync } from './AddTokenActions.js'
+import { updateExchangeRates } from './ExchangeRateActions.js'
+import { refreshConnectedWallets } from './FioActions.js'
+import { registerNotifications } from './NotificationActions.js'
 
 export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -45,7 +47,7 @@ export const selectWallet = (walletId: string, currencyCode: string, from?: stri
   if (wallet.paused) wallet.changePaused(false).catch(showError)
 
   dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
-  const { isAccountActivationRequired } = Constants.getSpecialCurrencyInfo(currencyCode)
+  const { isAccountActivationRequired } = getSpecialCurrencyInfo(currencyCode)
   if (isAccountActivationRequired) {
     // EOS needs different path in case not activated yet
     dispatch(selectEOSWallet(walletId, currencyCode, from))
@@ -74,7 +76,7 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
   const currentWalletId = state.ui.wallets.selectedWalletId
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
   const guiWallet = state.ui.wallets.byId[walletId]
-  if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode || from === Constants.WALLET_LIST_SCENE) {
+  if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode || from === WALLET_LIST_SCENE) {
     const { publicAddress } = guiWallet.receiveAddress
 
     if (publicAddress) {
@@ -89,7 +91,7 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
       dispatch(updateWalletsRequest())
       // not activated yet
       // find fiat and crypto (EOSIO) types and populate scene props
-      const supportedFiats = UTILS.getSupportedFiats()
+      const supportedFiats = getSupportedFiats()
       const fiatTypeIndex = supportedFiats.findIndex(fiatType => fiatType.value === guiWallet.fiatCurrencyCode)
       const selectedFiat = supportedFiats[fiatTypeIndex]
       const currencyInfos = getCurrencyInfos(state.core.account)
@@ -103,7 +105,7 @@ export const selectEOSWallet = (walletId: string, currencyCode: string, from?: s
         isReactivation: true,
         existingWalletId: walletId
       }
-      Actions[Constants.CREATE_WALLET_ACCOUNT_SETUP](createWalletAccountSetupSceneProps)
+      Actions[CREATE_WALLET_ACCOUNT_SETUP](createWalletAccountSetupSceneProps)
       Airship.show(bridge => (
         <ButtonsModal
           bridge={bridge}
@@ -284,7 +286,7 @@ export const editCustomToken = (
     const state = getState()
     const { customTokens } = state.ui.settings
     const guiWallet = state.ui.wallets.byId[walletId]
-    const allTokens = UTILS.mergeTokens(guiWallet.metaTokens, customTokens)
+    const allTokens = mergeTokens(guiWallet.metaTokens, customTokens)
     const indexInAllTokens = _.findIndex(allTokens, token => token.currencyCode === currencyCode)
     const tokenObj = assembleCustomToken(currencyName, currencyCode, contractAddress, denomination, guiWallet.type)
     if (indexInAllTokens >= 0) {
@@ -507,4 +509,57 @@ export const checkEnabledTokensArray = (walletId: string, newEnabledTokens: stri
       dispatch(removeMostRecentWallet(walletId, oldToken))
     }
   })
+}
+
+export const updateWalletsRequest = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const { account } = state.core
+  const { activeWalletIds, archivedWalletIds, currencyWallets } = account
+
+  if (activeWalletIds.length === Object.keys(currencyWallets).length) {
+    dispatch(registerNotifications())
+  }
+
+  const incomingWalletIds = activeWalletIds.filter(id => state.ui.wallets.byId[id] == null)
+  const receiveAddresses = await getReceiveAddresses(currencyWallets)
+
+  dispatch({
+    type: 'CORE/WALLETS/UPDATE_WALLETS',
+    data: {
+      activeWalletIds,
+      archivedWalletIds,
+      currencyWallets,
+      receiveAddresses
+    }
+  })
+  const newState = getState()
+  for (const walletId of incomingWalletIds) {
+    if (newState.ui.wallets.byId[walletId] == null) continue
+    await getEnabledTokens(walletId)(dispatch, getState)
+  }
+  refreshConnectedWallets(dispatch, getState, currencyWallets)
+  updateWalletsEnabledTokens(getState)
+}
+
+export const updateWalletsEnabledTokens = (getState: GetState) => {
+  const state = getState()
+  const { account } = state.core
+  const { currencyWallets } = account
+  for (const walletId: string of Object.keys(currencyWallets)) {
+    const edgeWallet: EdgeCurrencyWallet = currencyWallets[walletId]
+    if (edgeWallet.type === 'wallet:ethereum' || edgeWallet.type === 'wallet:rsk' || edgeWallet.type === 'wallet:fantom') {
+      if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
+        const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
+        const customTokens = state.ui.settings.customTokens
+        const enabledNotHiddenTokens = enabledTokens.filter(token => {
+          let isVisible = true // assume we will enable token
+          const tokenIndex = _.findIndex(customTokens, item => item.currencyCode === token)
+          // if token is not supposed to be visible, not point in enabling it
+          if (tokenIndex > -1 && customTokens[tokenIndex].isVisible === false) isVisible = false
+          return isVisible
+        })
+        edgeWallet.changeEnabledTokens(enabledNotHiddenTokens)
+      }
+    }
+  }
 }

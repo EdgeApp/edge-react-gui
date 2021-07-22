@@ -5,12 +5,11 @@ import * as React from 'react'
 import { Platform, ScrollView, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
 import { passwordReminderSuccess, postponePasswordReminder, requestChangePassword } from '../../actions/PasswordReminderActions.js'
-import { CHANGE_PASSWORD } from '../../constants/indexConstants.js'
+import { CHANGE_PASSWORD } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeTextField } from './EdgeTextField.js'
@@ -115,11 +114,11 @@ class PasswordReminderModalComponent extends React.PureComponent<Props, State> {
   }
 }
 
-export const PasswordReminderModal = connect(
-  (state: RootState): StateProps => ({
+export const PasswordReminderModal = connect<StateProps, DispatchProps, OwnProps>(
+  state => ({
     account: state.core.account
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     onSuccess() {
       dispatch(passwordReminderSuccess())
     },

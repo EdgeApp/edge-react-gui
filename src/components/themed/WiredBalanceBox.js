@@ -2,12 +2,11 @@
 
 import * as React from 'react'
 import { TouchableOpacity } from 'react-native'
-import { connect } from 'react-redux'
 
 import { toggleAccountBalanceVisibility } from '../../actions/WalletListActions.js'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import { getFiatSymbol, getTotalFiatAmountFromExchangeRates } from '../../util/utils.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -80,8 +79,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WiredBalanceBox = connect(
-  (state: RootState): StateProps => {
+export const WiredBalanceBox = connect<StateProps, DispatchProps, {}>(
+  state => {
     const { defaultIsoFiat } = state.ui.settings
     return {
       showBalance: state.ui.settings.isAccountBalanceVisible,
@@ -90,7 +89,7 @@ export const WiredBalanceBox = connect(
       exchangeRates: state.exchangeRates
     }
   },
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     toggleAccountBalanceVisibility() {
       dispatch(toggleAccountBalanceVisibility())
     }

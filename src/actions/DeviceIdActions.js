@@ -4,9 +4,9 @@ import iid from '@react-native-firebase/iid'
 import { Platform } from 'react-native'
 import { getBuildNumber, getUniqueId, getUserAgent, getVersion } from 'react-native-device-info'
 
-import ENV from '../../../env.json'
-import type { Dispatch, GetState } from '../../types/reduxTypes'
-import { notif1 } from '../notifServer'
+import ENV from '../../env.json'
+import { notif1 } from '../modules/notifServer.js'
+import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 
 export const registerDevice = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()

@@ -4,9 +4,9 @@ import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
-import { CREATE_WALLET_SELECT_FIAT, CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../../constants/indexConstants.js'
+import { CREATE_WALLET_SELECT_FIAT } from '../../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -15,7 +15,7 @@ import { errorModal } from '../../modules/UI/components/Modals/ErrorModal.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type CreateWalletType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { FormField } from '../common/FormField.js'
@@ -27,8 +27,7 @@ type OwnProps = {
 type StateProps = {
   account: EdgeAccount
 }
-type DispatchProps = {}
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps
 
 type State = {
   input: string,
@@ -59,7 +58,10 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
     currencyPlugin
       .importKey(input)
       .then(() => {
-        Actions[CREATE_WALLET_SELECT_FIAT]({ selectedWalletType, cleanedPrivateKey: input })
+        Actions[CREATE_WALLET_SELECT_FIAT]({
+          selectedWalletType,
+          cleanedPrivateKey: input
+        })
       })
       .catch(error => launchModal(errorModal(s.strings.create_wallet_failed_import_header, error)))
       .then(() => this.setState({ isProcessing: false }))
@@ -148,9 +150,9 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const CreateWalletImportScene = connect(
-  (state: RootState): StateProps => ({
+export const CreateWalletImportScene = connect<StateProps, {}, OwnProps>(
+  state => ({
     account: state.core.account
   }),
-  (dispatch: Dispatch): DispatchProps => ({})
+  dispatch => ({})
 )(CreateWalletImportComponent)

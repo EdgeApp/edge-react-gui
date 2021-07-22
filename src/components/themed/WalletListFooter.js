@@ -5,12 +5,11 @@ import * as React from 'react'
 import { Alert, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import { connect } from 'react-redux'
 
-import * as Constants from '../../constants/indexConstants.js'
+import { CREATE_WALLET_SELECT_CRYPTO, CREATE_WALLET_SELECT_FIAT } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type GuiWallet } from '../../types/types.js'
 import { makeCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
@@ -44,7 +43,7 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
     const styles = getStyles(theme)
     return (
       <View style={styles.container}>
-        {this.renderAddButton(s.strings.wallet_list_add_wallet, Actions[Constants.CREATE_WALLET_SELECT_CRYPTO])}
+        {this.renderAddButton(s.strings.wallet_list_add_wallet, Actions[CREATE_WALLET_SELECT_CRYPTO])}
         {this.renderAddButton(s.strings.wallet_list_add_token, this.addToken)}
       </View>
     )
@@ -81,7 +80,7 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
     ))
       .then(answer => {
         if (answer === 'confirm') {
-          Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
+          Actions[CREATE_WALLET_SELECT_FIAT]({
             selectedWalletType: makeCreateWalletType(ethereum.currencyInfo)
           })
         }
@@ -142,7 +141,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const WalletListFooter = connect((state: RootState): StateProps => ({
-  account: state.core.account,
-  wallets: state.ui.wallets.byId
-}))(withTheme(WalletListFooterComponent))
+export const WalletListFooter = connect<StateProps, {}, {}>(
+  state => ({
+    account: state.core.account,
+    wallets: state.ui.wallets.byId
+  }),
+  dispatch => ({})
+)(withTheme(WalletListFooterComponent))

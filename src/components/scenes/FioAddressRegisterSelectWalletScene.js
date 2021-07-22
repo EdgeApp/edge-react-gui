@@ -5,14 +5,14 @@ import { type EdgeCurrencyConfig, type EdgeCurrencyWallet, type EdgeDenomination
 import * as React from 'react'
 import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
-import * as Constants from '../../constants/indexConstants'
+import { FIO_NAME_CONFIRM, SEND, WALLET_LIST } from '../../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getRegInfo } from '../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
-import type { Dispatch } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
 import type { FioDomain, GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -26,7 +26,7 @@ import { Tile } from '../themed/Tile'
 type StateProps = {
   state: RootState,
   wallets: { [string]: GuiWallet },
-  fioPlugin: EdgeCurrencyConfig | null,
+  fioPlugin?: EdgeCurrencyConfig,
   fioWallets: EdgeCurrencyWallet[],
   fioDisplayDenomination: EdgeDenomination,
   isConnected: boolean
@@ -101,7 +101,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
     if (!activationCost || activationCost === 0) return
 
     if (selectedDomain.walletId) {
-      return this.proceed(selectedDomain.walletId, Constants.FIO_STR)
+      return this.proceed(selectedDomain.walletId, FIO_STR)
     } else {
       const { paymentWallet } = this.state
       if (!paymentWallet || !paymentWallet.id) return
@@ -138,10 +138,10 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
     const { feeValue, paymentInfo: allPaymentInfo } = this.state
 
     if (isConnected) {
-      if (paymentCurrencyCode === Constants.FIO_STR) {
+      if (paymentCurrencyCode === FIO_STR) {
         const { fioWallets } = this.props
         const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
-        Actions[Constants.FIO_NAME_CONFIRM]({
+        Actions[FIO_NAME_CONFIRM]({
           fioName: fioAddress,
           paymentWallet,
           fee: feeValue,
@@ -175,12 +175,16 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
                 sprintf(s.strings.fio_address_register_pending, s.strings.fio_address_register_form_field_label),
                 [{ text: s.strings.string_ok_cap }]
               )
-              Actions[Constants.WALLET_LIST]()
+              Actions[WALLET_LIST]()
             }
           }
         }
 
-        Actions[Constants.SEND]({ guiMakeSpendInfo, selectedWalletId: walletId, selectedCurrencyCode: paymentCurrencyCode })
+        Actions[SEND]({
+          guiMakeSpendInfo,
+          selectedWalletId: walletId,
+          selectedCurrencyCode: paymentCurrencyCode
+        })
       }
     } else {
       showError(s.strings.fio_network_alert_text)
@@ -192,7 +196,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
     const { activationCost, paymentWallet, loading } = this.state
 
     const nextDisabled = !activationCost || activationCost === 0 || (!selectedDomain.walletId && (!paymentWallet || !paymentWallet.id))
-    const costStr = loading ? s.strings.loading : `${activationCost} ${Constants.FIO_STR}`
+    const costStr = loading ? s.strings.loading : `${activationCost} ${FIO_STR}`
     const walletName = !paymentWallet || !paymentWallet.id ? s.strings.choose_your_wallet : wallets[paymentWallet.id].name
 
     return (
@@ -266,31 +270,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioAddressRegisterSelectWalletScene = connect(
-  (state: RootState) => {
-    const wallets = state.ui.wallets.byId
-    const fioWallets: EdgeCurrencyWallet[] = state.ui.wallets.fioWallets
-    const { account } = state.core
-    const fioPlugin = account && account.currencyConfig ? account.currencyConfig[Constants.CURRENCY_PLUGIN_NAMES.FIO] : null
-    const fioDisplayDenomination = getDisplayDenomination(state, Constants.FIO_STR)
-
-    const defaultFiatCode = state.ui.settings.defaultIsoFiat
-
-    const out: StateProps = {
-      state,
-      fioWallets,
-      fioPlugin,
-      fioDisplayDenomination,
-      defaultFiatCode,
-      wallets,
-      isConnected: state.network.isConnected
-    }
-    return out
-  },
-  (dispatch: Dispatch): DispatchProps => ({
-    onSelectWallet: (walletId: string, currencyCode: string) => {
-      dispatch({ type: 'UI/WALLETS/SELECT_WALLET', data: { currencyCode: currencyCode, walletId: walletId } })
+export const FioAddressRegisterSelectWalletScene = connect<StateProps, DispatchProps, NavigationProps>(
+  state => ({
+    state,
+    fioWallets: state.ui.wallets.fioWallets,
+    fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
+    fioDisplayDenomination: getDisplayDenomination(state, FIO_STR),
+    defaultFiatCode: state.ui.settings.defaultIsoFiat,
+    wallets: state.ui.wallets.byId,
+    isConnected: state.network.isConnected
+  }),
+  dispatch => ({
+    onSelectWallet(walletId: string, currencyCode: string) {
+      dispatch({
+        type: 'UI/WALLETS/SELECT_WALLET',
+        data: { currencyCode, walletId }
+      })
     }
   })
 )(withTheme(FioAddressRegisterSelectWallet))
-export { FioAddressRegisterSelectWalletScene }

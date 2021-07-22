@@ -4,13 +4,12 @@ import { type EdgePluginMap, type EdgeSwapConfig } from 'edge-core-js/types'
 import * as React from 'react'
 import { Image, ScrollView, Text, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import { connect } from 'react-redux'
 
 import { ignoreAccountSwap, removePromotion } from '../../actions/AccountReferralActions.js'
 import { setPreferredSwapPluginId } from '../../actions/SettingsActions.js'
 import { getSwapPluginIcon } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
@@ -23,9 +22,9 @@ import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
 type DispatchProps = {
-  changePreferredSwapPlugin(pluginId: string | void): void,
-  ignoreAccountSwap(): void,
-  removePromotion(installerId: string): void
+  changePreferredSwapPlugin: (pluginId: string | void) => void,
+  ignoreAccountSwap: () => void,
+  removePromotion: (installerId: string) => void
 }
 
 type StateProps = {
@@ -194,14 +193,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SwapSettingsScene = connect(
-  (state: RootState): StateProps => ({
+export const SwapSettingsScene = connect<StateProps, DispatchProps, ThemeProps>(
+  state => ({
     accountPlugins: state.account.referralCache.accountPlugins,
     accountReferral: state.account.accountReferral,
     exchanges: state.core.account.swapConfig,
     settingsPreferredSwap: state.ui.settings.preferredSwapPluginId
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     changePreferredSwapPlugin(pluginId) {
       dispatch(setPreferredSwapPluginId(pluginId))
     },

@@ -4,15 +4,13 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
-import * as Constants from '../../constants/indexConstants'
+import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import type { CcWalletMap } from '../../reducers/FioReducer'
-import type { RootState } from '../../reducers/RootReducer'
-import type { Dispatch } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import type { FioConnectionWalletItem } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -146,7 +144,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
             />
           ))
           if (answer === 'ok') {
-            Actions[Constants.FIO_ADDRESS_SETTINGS]({
+            Actions[FIO_ADDRESS_SETTINGS]({
               showRenew: true,
               fioWallet,
               fioAddressName: fioAddressName
@@ -241,26 +239,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const FioConnectWalletConfirmScene = connect(
-  (state: RootState, ownProps: RouteProps) => {
-    const ccWalletMap = state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName]
-    const out: StateProps = {
-      ccWalletMap,
-      isConnected: state.network.isConnected
-    }
-    return out
-  },
-  (dispatch: Dispatch): DispatchProps => ({
-    updateConnectedWallets: (fioAddress: string, ccWalletMap: CcWalletMap) => {
+export const FioConnectWalletConfirmScene = connect<StateProps, DispatchProps, RouteProps>(
+  (state, ownProps) => ({
+    ccWalletMap: state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName],
+    isConnected: state.network.isConnected
+  }),
+  dispatch => ({
+    updateConnectedWallets(fioAddress: string, ccWalletMap: CcWalletMap) {
       dispatch({
         type: 'FIO/UPDATE_CONNECTED_WALLETS_FOR_FIO_ADDRESS',
-        data: {
-          fioAddress,
-          ccWalletMap
-        }
+        data: { fioAddress, ccWalletMap }
       })
     }
   })
 )(withTheme(FioConnectWalletConfirm))
-
-export { FioConnectWalletConfirmScene }

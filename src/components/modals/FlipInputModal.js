@@ -5,15 +5,14 @@ import { asMaybeNoAmountSpecifiedError } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
-import { connect } from 'react-redux'
 import { sprintf } from 'sprintf-js'
 
 import { updateMaxSpend, updateTransactionAmount } from '../../actions/SendConfirmationActions.js'
-import * as Constants from '../../constants/indexConstants'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getExchangeRate } from '../../selectors/WalletSelectors.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { convertTransactionFeeToDisplayFee, DIVIDE_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
 import { ExchangeRate } from '../common/ExchangeRate.js'
@@ -97,7 +96,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
     return (
       <View style={styles.headerContainer}>
         <ModalTitle>{s.strings.string_enter_amount}</ModalTitle>
-        {Constants.getSpecialCurrencyInfo(this.props.currencyCode).noMaxSpend !== true ? (
+        {getSpecialCurrencyInfo(this.props.currencyCode).noMaxSpend !== true ? (
           <TouchableOpacity onPress={this.handleSendMaxAmount}>
             <EdgeText style={styles.headerMaxAmountText}>{s.strings.send_confirmation_max_button_title}</EdgeText>
           </TouchableOpacity>
@@ -234,8 +233,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FlipInputModal = connect(
-  (state: RootState, ownProps: OwnProps): StateProps => {
+export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
+  (state, ownProps) => {
     const { walletId, currencyCode } = ownProps
     const guiWallet = state.ui.wallets.byId[walletId]
     const { fiatCurrencyCode, isoFiatCurrencyCode } = guiWallet
@@ -310,9 +309,12 @@ export const FlipInputModal = connect(
       errorMessage
     }
   },
-  (dispatch: Dispatch) => ({
-    updateMaxSpend: (walletId: string, currencyCode: string) => dispatch(updateMaxSpend(walletId, currencyCode)),
-    updateTransactionAmount: (nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) =>
+  dispatch => ({
+    updateMaxSpend(walletId: string, currencyCode: string) {
+      dispatch(updateMaxSpend(walletId, currencyCode))
+    },
+    updateTransactionAmount(nativeAmount: string, exchangeAmount: string, walletId: string, currencyCode: string) {
       dispatch(updateTransactionAmount(nativeAmount, exchangeAmount, walletId, currencyCode))
+    }
   })
 )(withTheme(FlipInputModalComponent))

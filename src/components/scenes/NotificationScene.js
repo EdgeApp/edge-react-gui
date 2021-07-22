@@ -5,13 +5,12 @@ import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import { connect } from 'react-redux'
 
-import * as Constants from '../../constants/indexConstants'
+import { CURRENCY_NOTIFICATION_SETTINGS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../../selectors/WalletSelectors.js'
-import { type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
@@ -31,7 +30,7 @@ type State = {
 
 type Props = StateProps & ThemeProps
 
-export class NotificationComponent extends React.Component<Props, State> {
+class NotificationComponent extends React.Component<Props, State> {
   mounted: boolean
 
   constructor(props: Props) {
@@ -100,7 +99,12 @@ export class NotificationComponent extends React.Component<Props, State> {
               const { displayName, currencyCode } = currencyInfo
               const { symbolImage } = getCurrencyIcon(currencyCode)
               const icon = <Image style={styles.currencyLogo} source={{ uri: symbolImage }} />
-              const onPress = () => (enabled ? Actions[Constants.CURRENCY_NOTIFICATION_SETTINGS]({ currencyInfo }) : undefined)
+              const onPress = () =>
+                enabled
+                  ? Actions[CURRENCY_NOTIFICATION_SETTINGS]({
+                      currencyInfo
+                    })
+                  : undefined
 
               return <SettingsRow disabled={!enabled} key={currencyCode} icon={icon} text={displayName} right={rightArrow} onPress={onPress} />
             })}
@@ -123,9 +127,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const NotificationScene = connect((state: RootState): StateProps => {
-  return {
+export const NotificationScene = connect<StateProps, {}, {}>(
+  state => ({
     currencyInfos: getActiveWalletCurrencyInfos(state),
     userId: state.core.account.rootLoginId
-  }
-})(withTheme(NotificationComponent))
+  }),
+  dispatch => ({})
+)(withTheme(NotificationComponent))

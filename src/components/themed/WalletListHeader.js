@@ -6,7 +6,7 @@ import { Actions } from 'react-native-router-flux'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index.js'
-import * as Constants from '../../constants/indexConstants.js'
+import { CREATE_WALLET_SELECT_CRYPTO } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -86,7 +86,7 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
           <View style={styles.headerContainer}>
             <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
             <View key="defaultButtons" style={styles.headerButtonsContainer}>
-              <TouchableOpacity style={styles.addButton} onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
+              <TouchableOpacity style={styles.addButton} onPress={Actions[CREATE_WALLET_SELECT_CRYPTO]}>
                 <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
               <TouchableOpacity onPress={this.props.openSortModal}>

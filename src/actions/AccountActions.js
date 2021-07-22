@@ -12,6 +12,8 @@ export const handleOtpError = (otpError: OtpError) => (dispatch: Dispatch, getSt
 
   if (account.loggedIn && !otpErrorShown) {
     dispatch({ type: 'OTP_ERROR_SHOWN' })
-    Actions.push(OTP_REPAIR_SCENE, { otpError })
+    Actions.push(OTP_REPAIR_SCENE, {
+      otpError
+    })
   }
 }

@@ -69,4 +69,3 @@ export class ResolutionError extends Error {
     Object.setPrototypeOf(this, ResolutionError.prototype)
   }
 }
-export default ResolutionError

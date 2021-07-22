@@ -3,17 +3,15 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Actions } from 'react-native-router-flux'
-import { connect } from 'react-redux'
 
-import * as Constants from '../../constants/indexConstants'
-import { FIO_ADDRESS_LIST } from '../../constants/indexConstants'
+import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
+import { FIO_ADDRESS_LIST, SEND } from '../../constants/SceneKeys.js'
+import { FIO_ADDRESS_DELIMITER } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
-import { refreshAllFioAddresses } from '../../modules/FioAddress/action'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioName, setDomainVisibility } from '../../modules/FioAddress/util'
-import type { RootState } from '../../reducers/RootReducer'
-import type { Dispatch } from '../../types/reduxTypes'
+import { connect } from '../../types/reactRedux.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -144,7 +142,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
       }
     }
 
-    Actions[Constants.SEND]({
+    Actions[SEND]({
       guiMakeSpendInfo,
       selectedWalletId: this.props.fioWallet.id,
       selectedCurrencyCode: this.props.fioWallet.currencyInfo.currencyCode,
@@ -166,7 +164,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
 
     return (
       <SceneWrapper background="header">
-        <Tile type="static" title={s.strings.fio_domain_label} body={`${Constants.FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
+        <Tile type="static" title={s.strings.fio_domain_label} body={`${FIO_ADDRESS_DELIMITER} ${fioDomainName}`} />
         <Tile type="static" title={s.strings.fio_address_details_screen_expires} body={formatDate(new Date(expiration))} />
         {showVisibility && (
           <FioActionSubmit
@@ -225,12 +223,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioDomainSettingsScene = connect(
-  (state: RootState) => ({
+export const FioDomainSettingsScene = connect<StateProps, DispatchProps, NavigationProps>(
+  state => ({
     isConnected: state.network.isConnected
   }),
-  (dispatch: Dispatch): DispatchProps => ({
-    refreshAllFioAddresses: () => {
+  dispatch => ({
+    refreshAllFioAddresses() {
       dispatch(refreshAllFioAddresses())
     }
   })

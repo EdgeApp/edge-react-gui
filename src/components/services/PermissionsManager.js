@@ -4,10 +4,9 @@ import AsyncStorage from '@react-native-community/async-storage'
 import * as React from 'react'
 import { AppState, Platform } from 'react-native'
 import { check, checkMultiple, PERMISSIONS, request, RESULTS } from 'react-native-permissions'
-import { connect } from 'react-redux'
 
 import { type Permission, type PermissionsState, type PermissionStatus } from '../../reducers/PermissionsReducer.js'
-import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { connect } from '../../types/reactRedux.js'
 import { type ContactsPermissionResult, ContactsPermissionModal } from '../modals/ContactsPermissionModal.js'
 import { Airship, showError } from './AirshipInstance.js'
 
@@ -41,7 +40,7 @@ type StateProps = {
 }
 
 type DispatchProps = {
-  updatePermissions(permissions: PermissionsState): void
+  updatePermissions: (permissions: PermissionsState) => void
 }
 
 type Props = StateProps & DispatchProps
@@ -108,11 +107,11 @@ export async function requestPermission(data: Permission): Promise<PermissionSta
   return status
 }
 
-export const PermissionsManager = connect(
-  (state: RootState): StateProps => ({
+export const PermissionsManager = connect<StateProps, DispatchProps, {}>(
+  state => ({
     permissions: state.permissions
   }),
-  (dispatch: Dispatch): DispatchProps => ({
+  dispatch => ({
     updatePermissions(permissions: PermissionsState) {
       dispatch({ type: 'PERMISSIONS/UPDATE', data: permissions })
     }

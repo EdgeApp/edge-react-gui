@@ -9,7 +9,8 @@ import { sprintf } from 'sprintf-js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { type AccountPaymentParams } from '../components/scenes/CreateWalletAccountSelectScene.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
-import * as Constants from '../constants/indexConstants.js'
+import { SEND, WALLET_LIST_SCENE } from '../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
@@ -42,7 +43,7 @@ export const createCurrencyWallet =
       .createCurrencyWallet(type, opts)
       .then(edgeWallet => {
         const { currencyCode } = edgeWallet.currencyInfo
-        if (popScene) Actions.popTo(Constants.WALLET_LIST_SCENE)
+        if (popScene) Actions.popTo(WALLET_LIST_SCENE)
         dispatch({ type: 'UI/WALLETS/CREATE_WALLET_SUCCESS' })
         if (selectWallet) {
           dispatch(selectWalletAction(edgeWallet.id, currencyCode))
@@ -59,7 +60,7 @@ export const createCurrencyWallet =
 export const fetchAccountActivationInfo = (currencyCode: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const { account } = state.core
-  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
     const supportedCurrencies = currencyPlugin.otherMethods.getActivationSupportedCurrencies()
@@ -110,7 +111,7 @@ export const checkHandleAvailability = (currencyCode: string, accountName: strin
   dispatch({ type: 'IS_CHECKING_HANDLE_AVAILABILITY', data: true })
   const state = getState()
   const { account } = state.core
-  const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[currencyCode]
+  const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
   const currencyPlugin = account.currencyConfig[currencyPluginName]
   try {
     const data = await currencyPlugin.otherMethods.validateAccount(accountName)
@@ -138,7 +139,7 @@ export const createAccountTransaction =
     const createdWallet = state.ui.wallets.byId[createdWalletId]
     const paymentWallet = currencyWallets[paymentWalletId]
     const createdWalletCurrencyCode = createdWallet.currencyCode
-    const currencyPluginName = Constants.CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
+    const currencyPluginName = CURRENCY_PLUGIN_NAMES[createdWalletCurrencyCode]
     const currencyPlugin = account.currencyConfig[currencyPluginName]
     const { paymentAddress, amount, currencyCode } = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
     const handleAvailability = await currencyPlugin.otherMethods.validateAccount(accountName)
@@ -173,7 +174,7 @@ export const createAccountTransaction =
               notes: sprintf(s.strings.create_wallet_account_metadata_notes, createdWalletCurrencyCode, createdWalletCurrencyCode, 'support@edge.app')
             }
             paymentWallet.saveTxMetadata(edgeTransaction.txid, currencyCode, edgeMetadata).then(() => {
-              Actions.popTo(Constants.WALLET_LIST_SCENE)
+              Actions.popTo(WALLET_LIST_SCENE)
               setTimeout(() => {
                 Alert.alert(s.strings.create_wallet_account_payment_sent_title, s.strings.create_wallet_account_payment_sent_message)
               }, 750)
@@ -181,7 +182,11 @@ export const createAccountTransaction =
           }
         }
       }
-      Actions[Constants.SEND]({ guiMakeSpendInfo, selectedWalletId: paymentWalletId, selectedCurrencyCode: currencyCode })
+      Actions[SEND]({
+        guiMakeSpendInfo,
+        selectedWalletId: paymentWalletId,
+        selectedCurrencyCode: currencyCode
+      })
     } else {
       // if handle is now unavailable
       dispatch(createHandleUnavailableModal(createdWalletId, accountName))
