@@ -15,7 +15,7 @@ import { PrimaryButton } from '../themed/ThemedButtons'
 export type OwnProps = {
   fioName: string,
   expiration: string,
-  navigation: NavigationProp
+  navigation: NavigationProp<'fioAddressRegisterSuccess'>
 }
 
 type Props = OwnProps & ThemeProps

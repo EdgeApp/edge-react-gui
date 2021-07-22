@@ -55,7 +55,7 @@ type DispatchProps = {
 }
 
 type OwnProps = {
-  navigation: NavigationProp
+  navigation: NavigationProp<'fioRequestList'>
 }
 
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps

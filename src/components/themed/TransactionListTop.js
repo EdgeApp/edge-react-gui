@@ -125,7 +125,7 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
   }
 
   handleSend = (): void => {
-    Actions.push(SEND)
+    Actions.push(SEND, {})
   }
 
   handleSearchDone = () => {
