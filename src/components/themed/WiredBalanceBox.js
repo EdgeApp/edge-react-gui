@@ -71,11 +71,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   balanceBody: {
     fontSize: theme.rem(1.5),
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   },
   showBalance: {
     fontSize: theme.rem(1.5),
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   }
 }))
 

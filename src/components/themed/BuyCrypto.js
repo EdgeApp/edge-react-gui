@@ -70,7 +70,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginVertical: theme.rem(0.25)
   },
   buyCryptoText: {
-    fontFamily: theme.fontFaceBold,
+    fontFamily: theme.fontFaceMedium,
     marginVertical: theme.rem(0.25)
   },
   noTransactionContainer: {
