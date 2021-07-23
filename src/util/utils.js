@@ -481,7 +481,7 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
 
   let total = 0
   for (const currency of Object.keys(temporaryTotalCrypto)) {
-    total += convertCurrency(state, currency, isoFiatCurrencyCode, temporaryTotalCrypto[currency])
+    total += parseFloat(convertCurrency(state, currency, isoFiatCurrencyCode, temporaryTotalCrypto[currency].toFixed(18)))
   }
   return total
 }
