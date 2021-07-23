@@ -42,8 +42,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(1)
   },
   title: {
-    fontSize: theme.rem(1.25),
-    fontWeight: '600'
+    fontSize: theme.rem(1.2),
+    fontFamily: theme.fontFaceBold
   }
 }))
 
