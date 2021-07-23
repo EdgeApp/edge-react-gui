@@ -15,7 +15,14 @@ describe('Change Mining Fees', () => {
       }
     }
   }
-  const commonProps = { onSubmit, wallet, maxSpendSet: false }
+  const commonProps = {
+    onSubmit,
+    maxSpendSet: false,
+    route: {
+      name: 'changeMiningFee',
+      params: { wallet }
+    }
+  }
 
   it('should render with standard props', () => {
     const renderer = new ShallowRenderer()
