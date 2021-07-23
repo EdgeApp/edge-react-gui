@@ -239,11 +239,13 @@ class SendComponent extends React.PureComponent<Props, State> {
     )
   }
 
-  handleFeesChange = () =>
+  handleFeesChange = () => {
+    if (this.state.coreWallet == null) return
     Actions.push(CHANGE_MINING_FEE, {
       wallet: this.state.coreWallet,
       currencyCode: this.state.selectedCurrencyCode
     })
+  }
 
   handleFioAddressSelect = (fioAddress: string, fioWallet: EdgeCurrencyWallet, fioError: string) => {
     this.setState({

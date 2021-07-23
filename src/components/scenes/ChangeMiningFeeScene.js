@@ -1,6 +1,6 @@
 // @flow
 
-import { type EdgeCurrencyWallet, type EdgeSpendTarget } from 'edge-core-js/types'
+import { type EdgeSpendTarget } from 'edge-core-js/types'
 import * as React from 'react'
 import { ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
 import EntypoIcon from 'react-native-vector-icons/Entypo'
@@ -13,15 +13,14 @@ import { getGuiMakeSpendInfo } from '../../modules/UI/scenes/SendConfirmation/se
 import { dayText, nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import { type FeeOption } from '../../types/types.js'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
 
 type OwnProps = {
-  wallet: EdgeCurrencyWallet,
-  currencyCode?: string
+  route: RouteProp<'changeMiningFee'>
 }
 
 type StateProps = {
@@ -60,7 +59,7 @@ export class ChangeMiningFee extends React.Component<Props, State> {
   }
 
   getCustomFormat(): string[] | void {
-    const { wallet } = this.props
+    const { wallet } = this.props.route.params
     if (wallet.currencyInfo.defaultSettings != null) {
       const { customFeeSettings } = wallet.currencyInfo.defaultSettings
       return customFeeSettings
@@ -69,7 +68,8 @@ export class ChangeMiningFee extends React.Component<Props, State> {
 
   onSubmit = () => {
     const { networkFeeOption, customNetworkFee } = this.state
-    const { currencyCode, wallet, spendTargets = [], maxSpendSet } = this.props
+    const { spendTargets = [], maxSpendSet, route } = this.props
+    const { currencyCode, wallet } = route.params
     const testSpendInfo = {
       spendTargets: spendTargets.map(spendTarget => ({
         ...spendTarget,
