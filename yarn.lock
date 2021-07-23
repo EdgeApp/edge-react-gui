@@ -4813,10 +4813,10 @@ edge-exchange-plugins@^0.11.30:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.9.12:
-  version "0.9.12"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.12.tgz#ba4fc6128092aa3bbfaeec48d0c0845f315d0ee6"
-  integrity sha512-orTOGUU3iYLPivNv7jhnbM2nQPFl7OsnyUORGTmlLBn2XNk6oow9rdF/NYo5xK4T0Srzp0qnEAD3JfF+2/BTLQ==
+edge-login-ui-rn@^0.9.13:
+  version "0.9.13"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.13.tgz#56745f05966a632e78b6a87415784f587770fa03"
+  integrity sha512-fjsVwuC31RHwKT563h8RogBmyrJXZYjdLAwGESGxIDXK3mfACWo8/ZwrvV2Yc45A+ls3wVN/oVY7VyeTlE+36w==
   dependencies:
     cleaners "^0.3.1"
     qrcode-generator "^1.4.4"
