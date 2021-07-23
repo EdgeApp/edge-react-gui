@@ -124,3 +124,34 @@ export const Actions = {
     Flux.Actions.popTo(name)
   }
 }
+
+type NavigationEvent = 'didBlur' | 'didFocus' | 'willBlur' | 'willFocus'
+type Remover = { remove: () => void }
+
+/**
+ * The type of the `navigation` prop passed to each scene.
+ */
+export type NavigationProp = {
+  // Whether this scene is in the foreground:
+  addListener: (event: NavigationEvent, callback: () => void) => Remover,
+  isFocused: () => boolean,
+
+  // Going places:
+  navigate: (name: $Keys<ParamList>, params: any) => void,
+  push: (name: $Keys<ParamList>, params: any) => void,
+  replace: (name: $Keys<ParamList>, params: any) => void,
+  setParams: (params: any) => void,
+
+  // Returning:
+  goBack: () => void,
+  pop: () => void,
+  popToTop: () => void,
+
+  // Drawer:
+  closeDrawer: () => void,
+  openDrawer: () => void,
+  toggleDrawer: () => void,
+
+  // Internals nobody should need to touch:
+  state: mixed
+}

@@ -17,7 +17,7 @@ import { Gradient } from '../../modules/UI/components/Gradient/Gradient.ui'
 import { getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, Actions } from '../../types/routerTypes.js'
 import type { FioRequest, GuiWallet } from '../../types/types'
 import FullScreenLoader from '../common/FullScreenLoader'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -55,7 +55,7 @@ type DispatchProps = {
 }
 
 type OwnProps = {
-  navigation: any
+  navigation: NavigationProp
 }
 
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps

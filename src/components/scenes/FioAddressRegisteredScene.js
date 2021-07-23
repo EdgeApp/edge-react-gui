@@ -7,18 +7,18 @@ import { FIO_ADDRESS_LIST } from '../../constants/SceneKeys.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { PrimaryButton } from '../themed/ThemedButtons'
 
-export type NavProps = {
+export type OwnProps = {
   fioName: string,
   expiration: string,
-  navigation: any
+  navigation: NavigationProp
 }
 
-type Props = NavProps & ThemeProps
+type Props = OwnProps & ThemeProps
 
 class FioAddressRegistered extends React.Component<Props> {
   componentDidMount() {

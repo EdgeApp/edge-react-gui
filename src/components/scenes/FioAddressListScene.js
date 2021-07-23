@@ -14,7 +14,7 @@ import { FioNameRow } from '../../modules/FioAddress/components/FioName'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import { PLATFORM } from '../../theme/variables/platform'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, Actions } from '../../types/routerTypes.js'
 import type { FioAddress, FioDomain } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -41,11 +41,11 @@ type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
 
-type NavigationProps = {
-  navigation: any
+type OwnProps = {
+  navigation: NavigationProp
 }
 
-type Props = StateProps & DispatchProps & NavigationProps & ThemeProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
 class FioAddressList extends React.Component<Props, LocalState> {
   willFocusSubscription: { remove: () => void } | null = null
@@ -233,7 +233,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioAddressListScene = connect<StateProps, DispatchProps, NavigationProps>(
+export const FioAddressListScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     fioAddresses: state.ui.scenes.fioAddress.fioAddresses,
     fioDomains: state.ui.scenes.fioAddress.fioDomains,

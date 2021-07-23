@@ -12,7 +12,7 @@ import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
 import { expiredSoon, findWalletByFioAddress } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
@@ -27,7 +27,7 @@ type StateProps = {
 type NavProps = {
   fioAddressName: string,
   expiration: string,
-  navigation: any
+  navigation: NavigationProp
 }
 
 type LocalState = {
