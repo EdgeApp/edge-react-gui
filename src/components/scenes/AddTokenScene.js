@@ -2,17 +2,18 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { KeyboardAvoidingView, Platform, TextInput, View } from 'react-native'
+import { ScrollView, TextInput } from 'react-native'
 
 import { addNewToken } from '../../actions/AddTokenActions'
+import { useScrollToEnd } from '../../hooks/behaviors/useScrollToEnd'
 import s from '../../locales/strings.js'
 import { useEffect, useRef, useState } from '../../types/reactHooks'
 import { connect } from '../../types/reactRedux'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types'
+import { createValidation, MISMATCH_ERROR } from '../../util/customToken'
 import { decimalPlacesToDenomination } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { MismatchTokenParamsModal } from '../modals/MismatchTokenParamsModal'
-import { Airship, showError } from '../services/AirshipInstance'
+import { showError } from '../services/AirshipInstance'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { SceneHeader } from '../themed/SceneHeader'
@@ -22,7 +23,7 @@ export type OwnProps = {
   addTokenPending: boolean,
   currencyWallet: EdgeCurrencyWallet,
   currentCustomTokens?: CustomTokenInfo[],
-  currencyInfos: any[], // TODO: replace it with real data when it will be available. Also need better variable name
+  currencyTokenInfos: any[], // TODO: replace it with real data when it will be available. Also need better variable name
   wallet: GuiWallet,
   onAddToken: (currencyCode: string) => void
 }
@@ -64,12 +65,26 @@ const useReturnKeyType = (fieldsData: string[], updateCallback: (Array<'done' | 
   }, [...fieldsData, updateCallback])
 }
 
-export const AddToken = ({ addTokenPending, currentCustomTokens = [], currencyInfos, wallet, walletId, currencyWallet, addNewToken, onAddToken }: Props) => {
+const KEYBOARD_ANIMATION_TIME = 300
+
+export const AddToken = ({
+  addTokenPending,
+  currentCustomTokens = [],
+  currencyTokenInfos,
+  wallet,
+  walletId,
+  currencyWallet,
+  addNewToken,
+  onAddToken
+}: Props) => {
   const styles = getStyles(useTheme())
   const [currencyCode, setCurrencyCode] = useState<string>('')
   const [currencyName, setCurrencyName] = useState<string>('')
   const [contractAddress, setContractAddress] = useState<string>('')
   const [decimalPlaces, setDecimalPlaces] = useState<string>('')
+
+  const [isDecimalPlacesFocused, setIsDecimalPlacesFocused] = useState<boolean>(false)
+  const scrollViewRef = useScrollToEnd(isDecimalPlacesFocused, KEYBOARD_ANIMATION_TIME) // Not the best solution for keyboard avoiding when bottom field focused
 
   const [currencyCodeReturnKeyType, setCurrencyCodeReturnKeyType] = useState<ReturnKeyType>('next')
   const [currencyNameReturnKeyType, setCurrencyNameReturnKeyType] = useState<ReturnKeyType>('next')
@@ -81,43 +96,17 @@ export const AddToken = ({ addTokenPending, currentCustomTokens = [], currencyIn
   const contractAddressInputRef = useRef<TextInput>()
   const decimalPlacesInputRef = useRef<TextInput>()
 
-  const [isFirstInputFocused, setIsFirstInputFocused] = useState<boolean>(true)
-
-  const submitValidation = async () => {
-    const currentCustomTokenIndex = currentCustomTokens.findIndex(item => item.currencyCode === currencyCode)
-    const metaTokensIndex = wallet.metaTokens.findIndex(item => item.currencyCode === currencyCode)
-
-    // if token is hard-coded into wallets of this type
-    if (metaTokensIndex >= 0) throw new Error(s.strings.manage_tokens_duplicate_currency_code)
-
-    // if that token already exists and is visible (ie not deleted)
-    if (currentCustomTokenIndex >= 0 && currentCustomTokens[currentCustomTokenIndex].isVisible) {
-      throw new Error(s.strings.manage_tokens_duplicate_currency_code)
-    } else if (!currencyName || !currencyCode || !decimalPlaces || !contractAddress) {
-      throw new Error(s.strings.addtoken_invalid_information)
-    }
-  }
-
   const handleSubmit = async () => {
     try {
-      await submitValidation()
+      await createValidation(wallet, currentCustomTokens, currencyTokenInfos, {
+        currencyCode,
+        currencyName,
+        contractAddress,
+        decimalPlaces
+      })
     } catch (error) {
-      showError(error)
+      if (error.message !== MISMATCH_ERROR) showError(error)
       return
-    }
-
-    const isExists = currencyInfos.some(
-      (item: any) =>
-        item.currencyCode === currencyCode ||
-        item.currencyName === currencyName ||
-        item.decimalPlaces === decimalPlaces ||
-        item.contractAddress === contractAddress
-    )
-
-    if (!isExists) {
-      const isConfirm = await Airship.show(bridge => <MismatchTokenParamsModal bridge={bridge} />)
-
-      if (!isConfirm) return
     }
 
     const denomination = decimalPlacesToDenomination(decimalPlaces)
@@ -127,7 +116,7 @@ export const AddToken = ({ addTokenPending, currentCustomTokens = [], currencyIn
   }
 
   const autocompleteForm = () => {
-    const currencyInfo = currencyInfos.find(
+    const currencyInfo = currencyTokenInfos.find(
       (item: any) =>
         item.currencyCode === currencyCode ||
         item.currencyName === currencyName ||
@@ -143,20 +132,27 @@ export const AddToken = ({ addTokenPending, currentCustomTokens = [], currencyIn
     }
   }
 
-  const handleSubmitEditing = async () => {
+  const getIsNextFieldFocused = (): boolean => {
     const data = [currencyCode, currencyName, contractAddress, decimalPlaces]
     const inputRefs = [currencyCodeInputRef, currencyNameInputRef, contractAddressInputRef, decimalPlacesInputRef]
     const dataEmptyIndex = data.findIndex(item => item === '')
+    const isNextFieldFocused = dataEmptyIndex > -1
 
-    if (dataEmptyIndex === -1) {
-      handleSubmit()
-    } else {
-      autocompleteForm()
-
+    if (isNextFieldFocused) {
       const nextFocusedField = inputRefs[dataEmptyIndex].current
 
       if (nextFocusedField !== null) nextFocusedField.focus()
     }
+
+    return isNextFieldFocused
+  }
+
+  const handleSubmitEditing = () => {
+    const isNextFieldFocused = getIsNextFieldFocused()
+
+    if (!isNextFieldFocused) handleSubmit()
+
+    autocompleteForm()
   }
 
   useReturnKeyType([currencyCode, currencyName, contractAddress, decimalPlaces], (returnKeyTypes: ReturnKeyType[]) => {
@@ -169,61 +165,58 @@ export const AddToken = ({ addTokenPending, currentCustomTokens = [], currencyIn
   return (
     <SceneWrapper avoidKeyboard background="theme">
       <SceneHeader title={s.strings.title_add_token} style={styles.header} />
-      <KeyboardAvoidingView style={styles.container} enabled={!isFirstInputFocused} behavior={Platform.select({ ios: 'padding', android: 'height' })}>
-        <View style={[styles.container, styles.content, styles.justifyContent]}>
-          <EdgeTextFieldOutlined
-            ref={currencyCodeInputRef}
-            autoFocus
-            onFocus={() => setIsFirstInputFocused(true)}
-            onBlur={() => setIsFirstInputFocused(false)}
-            onChangeText={setCurrencyCode}
-            value={currencyCode}
-            autoCapitalize="characters"
-            returnKeyType={currencyCodeReturnKeyType}
-            label={s.strings.addtoken_currency_code_input_text}
-            showSearchIcon={false}
-            autoCorrect={false}
-            marginRem={[0.5, 0.6, 1]}
-            onSubmitEditing={handleSubmitEditing}
-          />
-          <EdgeTextFieldOutlined
-            ref={currencyNameInputRef}
-            onChangeText={setCurrencyName}
-            value={currencyName}
-            autoCapitalize="words"
-            returnKeyType={currencyNameReturnKeyType}
-            label={s.strings.addtoken_name_input_text}
-            showSearchIcon={false}
-            autoCorrect={false}
-            marginRem={[0.5, 0.6, 1]}
-            onSubmitEditing={handleSubmitEditing}
-          />
-          <EdgeTextFieldOutlined
-            ref={contractAddressInputRef}
-            onChangeText={setContractAddress}
-            value={contractAddress}
-            returnKeyType={contractAddressReturnKeyType}
-            label={s.strings.addtoken_contract_address_input_text}
-            showSearchIcon={false}
-            autoCorrect={false}
-            marginRem={[0.5, 0.6, 1]}
-            onSubmitEditing={handleSubmitEditing}
-          />
-          <EdgeTextFieldOutlined
-            ref={decimalPlacesInputRef}
-            onChangeText={setDecimalPlaces}
-            value={decimalPlaces}
-            returnKeyType={decimalPlacesReturnKeyType}
-            label={s.strings.addtoken_denomination_input_text}
-            keyboardType="numeric"
-            showSearchIcon={false}
-            autoCorrect={false}
-            marginRem={[0.5, 0.6, 0.5]}
-            onSubmitEditing={handleSubmitEditing}
-          />
-          <View style={styles.container} />
-        </View>
-      </KeyboardAvoidingView>
+      <ScrollView style={[styles.container, styles.content]} ref={scrollViewRef} alwaysBounceVertical={false}>
+        <EdgeTextFieldOutlined
+          ref={currencyCodeInputRef}
+          autoFocus
+          onChangeText={setCurrencyCode}
+          value={currencyCode}
+          autoCapitalize="characters"
+          returnKeyType={currencyCodeReturnKeyType}
+          label={s.strings.addtoken_currency_code_input_text}
+          showSearchIcon={false}
+          autoCorrect={false}
+          marginRem={[0.5, 0.6, 1]}
+          onSubmitEditing={handleSubmitEditing}
+        />
+        <EdgeTextFieldOutlined
+          ref={currencyNameInputRef}
+          onChangeText={setCurrencyName}
+          value={currencyName}
+          autoCapitalize="words"
+          returnKeyType={currencyNameReturnKeyType}
+          label={s.strings.addtoken_name_input_text}
+          showSearchIcon={false}
+          autoCorrect={false}
+          marginRem={[0.5, 0.6, 1]}
+          onSubmitEditing={handleSubmitEditing}
+        />
+        <EdgeTextFieldOutlined
+          ref={contractAddressInputRef}
+          onChangeText={setContractAddress}
+          value={contractAddress}
+          returnKeyType={contractAddressReturnKeyType}
+          label={s.strings.addtoken_contract_address_input_text}
+          showSearchIcon={false}
+          autoCorrect={false}
+          marginRem={[0.5, 0.6, 1]}
+          onSubmitEditing={handleSubmitEditing}
+        />
+        <EdgeTextFieldOutlined
+          ref={decimalPlacesInputRef}
+          onFocus={() => setIsDecimalPlacesFocused(true)}
+          onBlur={() => setIsDecimalPlacesFocused(false)}
+          onChangeText={setDecimalPlaces}
+          value={decimalPlaces}
+          returnKeyType={decimalPlacesReturnKeyType}
+          label={s.strings.addtoken_denomination_input_text}
+          keyboardType="numeric"
+          showSearchIcon={false}
+          autoCorrect={false}
+          marginRem={[0.5, 0.6, 0.5]}
+          onSubmitEditing={handleSubmitEditing}
+        />
+      </ScrollView>
     </SceneWrapper>
   )
 }
@@ -236,9 +229,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingHorizontal: theme.rem(1),
     overflow: 'hidden'
   },
-  justifyContent: {
-    justifyContent: 'flex-end'
-  },
   header: {
     marginBottom: 0
   }
@@ -249,7 +239,7 @@ export const AddTokenScene = connect<StateProps, DispatchProps, OwnProps>(
     addTokenPending: state.ui.wallets.addTokenPending,
     wallet: state.ui.wallets.byId[ownProps.walletId],
     currencyWallet: state.core.account.currencyWallets[ownProps.walletId],
-    currencyInfos: [] // TODO: replace it with real data when it will be available
+    currencyTokenInfos: [] // TODO: replace it with real data when it will be available
   }),
   dispatch => ({
     addNewToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, walletType: string) {
