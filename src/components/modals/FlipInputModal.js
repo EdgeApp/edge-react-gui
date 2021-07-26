@@ -11,7 +11,12 @@ import { updateMaxSpend, updateTransactionAmount } from '../../actions/SendConfi
 import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
-import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getExchangeRate } from '../../selectors/WalletSelectors.js'
+import {
+  convertCurrencyFromExchangeRates,
+  convertNativeToExchangeRateDenomination,
+  exchangeRatesToString,
+  getExchangeRate
+} from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
 import { convertTransactionFeeToDisplayFee, DIVIDE_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
@@ -247,7 +252,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     // Balances
     const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
     const balanceCrypto = convertNativeToExchangeRateDenomination(state.ui.settings, currencyCode, balanceInCrypto)
-    const balanceFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(balanceCrypto))
+    const balanceFiat = convertCurrencyFromExchangeRates(exchangeRatesToString(state.exchangeRates), currencyCode, isoFiatCurrencyCode, balanceCrypto)
 
     // FlipInput
     const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)

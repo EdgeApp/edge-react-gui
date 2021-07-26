@@ -61,15 +61,15 @@ const convertCurrencyWithoutState = (exchangeRates: { [string]: string }, fromCu
 }
 
 export const convertCurrencyFromExchangeRates = (
-  exchangeRates: { [string]: number },
+  exchangeRates: { [string]: string },
   fromCurrencyCode: string,
   toCurrencyCode: string,
-  amount: number
+  amount: string
 ): string => {
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   if (!exchangeRates || exchangeRates[rateKey] == null) return '0' // handle case of exchange rates not ready yet
   const rate = exchangeRates[rateKey]
-  const convertedAmount = bns.mul(amount.toFixed(18), rate.toFixed(18))
+  const convertedAmount = bns.mul(amount, rate)
   return convertedAmount
 }
 
@@ -137,7 +137,7 @@ export const findWalletByFioAddress = async (state: RootState, fioAddress: strin
   }
 }
 
-const exchangeRatesToString = (exchangeRates: { [string]: number }): { [string]: string } => {
+export const exchangeRatesToString = (exchangeRates: { [string]: number }): { [string]: string } => {
   const exchangeRateString = {}
   for (const rate in exchangeRates) {
     exchangeRateString[rate] = `${exchangeRates[rate]}`

@@ -9,7 +9,7 @@ import SafariView from 'react-native-safari-view'
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../locales/intl.js'
 import { emptyEdgeDenomination } from '../selectors/DenominationSelectors.js'
-import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
+import { convertCurrency, convertCurrencyFromExchangeRates, exchangeRatesToString } from '../selectors/WalletSelectors.js'
 import { type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet, TransactionListTx } from '../types/types.js'
 import { type GuiExchangeRates } from '../types/types.js'
@@ -715,8 +715,8 @@ export const convertToFiatFee = (
   isoFiatCurrencyCode: string
 ): { amount: string, style?: string } => {
   const cryptoFeeExchangeAmount = convertNativeToExchange(exchangeMultiplier)(networkFee)
-  const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(cryptoFeeExchangeAmount))
-  const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
+  const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRatesToString(exchangeRates), currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
+  const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRatesToString(exchangeRates), currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
   return {
     amount: bns.toFixed(fiatFeeAmount, 2, 2),
     style: parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD ? feeStyle.danger : parseFloat(feeAmountInUSD) > FEE_COLOR_THRESHOLD ? feeStyle.warning : undefined
