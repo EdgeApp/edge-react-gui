@@ -74,6 +74,7 @@
     "long": "4.0.0",
     "process-nextick-args": "2.0.0",
     "randombytes": "2.1.0",
+    "react-devtools-core": "4.13.0",
     "react-native-material-textfield": "0.16.1",
     "react-native-safe-area-view": "0.14.9",
     "readable-stream": "2.3.6",
