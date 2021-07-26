@@ -82,7 +82,6 @@
   "create_wallet_choice_instructions": "创建一个新的钱包，或者使用私人种子恢复现有钱包？",
   "create_wallet_choice_new_button": "创建新的钱包",
   "create_wallet_import_title": "导入钱包",
-  "create_wallet_import_instructions": "输入您的私人种子来验证和恢复相关钱包：",
   "create_wallet_import_input_prompt": "私钥",
   "create_wallet_import_successful": "导入成功！",
   "create_wallet_select_valid_crypto": "请选择有效的钱包类型",
