@@ -22,7 +22,7 @@ import s from '../../locales/strings.js'
 import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
-import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
+import { convertCurrencyFromExchangeRates, exchangeRatesToString } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
@@ -376,7 +376,12 @@ class SendComponent extends React.PureComponent<Props, State> {
       } else if (nativeAmount && !bns.eq(nativeAmount, '0')) {
         const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, UTILS.DIVIDE_PRECISION)
         const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, UTILS.DIVIDE_PRECISION)
-        const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, parseFloat(exchangeAmount))
+        const fiatAmount = convertCurrencyFromExchangeRates(
+          exchangeRatesToString(exchangeRates),
+          selectedCurrencyCode,
+          guiWallet.isoFiatCurrencyCode,
+          exchangeAmount
+        )
         cryptoAmountSyntax = `${displayAmount ?? '0'} ${cryptoDisplayDenomination.name}`
         if (fiatAmount) {
           fiatAmountSyntax = `${fiatSymbol} ${bns.toFixed(fiatAmount, 2, 2) ?? '0'}`

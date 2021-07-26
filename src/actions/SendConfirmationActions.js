@@ -17,7 +17,7 @@ import { addToFioAddressCache, recordSend } from '../modules/FioAddress/util'
 import { getAuthRequired, getSpendInfo, getSpendInfoWithoutState, getTransaction } from '../modules/UI/scenes/SendConfirmation/selectors'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
-import { convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/WalletSelectors.js'
+import { convertCurrencyFromExchangeRates, exchangeRatesToString, getExchangeRate } from '../selectors/WalletSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { convertNativeToExchange } from '../util/utils'
 import * as UTILS from '../util/utils.js'
@@ -237,13 +237,13 @@ export const signBroadcastAndSave =
     // check hwo high fee is and decide whether to display warninig
     const exchangeConverter = convertNativeToExchange(exchangeDenomination.multiplier)
     const cryptoFeeExchangeAmount = exchangeConverter(edgeUnsignedTransaction.networkFee)
-    const feeAmountInUSD = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
+    const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRatesToString(state.exchangeRates), currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
     if (parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD) {
       const feeAmountInWalletFiat = convertCurrencyFromExchangeRates(
-        state.exchangeRates,
+        exchangeRatesToString(state.exchangeRates),
         currencyCode,
         isoFiatCurrencyCode,
-        parseFloat(cryptoFeeExchangeAmount)
+        cryptoFeeExchangeAmount
       )
       const fiatDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? `${fiatDenomination.symbol} ` : ''

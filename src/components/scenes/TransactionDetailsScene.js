@@ -15,7 +15,7 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
-import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination } from '../../selectors/WalletSelectors.js'
+import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, exchangeRatesToString } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiContact, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
@@ -597,7 +597,12 @@ export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnPro
 
     const nativeAmount = getAbsoluteAmount(edgeTransaction)
     const cryptoAmount = convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
-    const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, parseFloat(cryptoAmount))
+    const currentFiatAmount = convertCurrencyFromExchangeRates(
+      exchangeRatesToString(state.exchangeRates),
+      currencyCode,
+      wallet.isoFiatCurrencyCode,
+      cryptoAmount
+    )
 
     const { swapData } = edgeTransaction
     if (swapData != null && typeof swapData.payoutCurrencyCode === 'string') {
