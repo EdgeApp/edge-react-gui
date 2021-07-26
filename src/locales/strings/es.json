@@ -103,7 +103,6 @@
   "create_wallet_choice_instructions": "¿Quieres crear una nueva cartera o restaurar una existente usando la semilla privada?",
   "create_wallet_choice_new_button": "Crear nueva cartera",
   "create_wallet_import_title": "Importar cartera",
-  "create_wallet_import_instructions": "Introduce tu semilla privada para verificar y restaurar la cartera asociada:",
   "create_wallet_import_input_prompt": "Semilla privada",
   "create_wallet_import_successful": "¡Importación correcta!",
   "create_wallet_select_valid_crypto": "Seleccione un tipo de cartera válido por favor",
