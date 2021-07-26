@@ -22,12 +22,12 @@ import styles from './style'
 
 type StateProps = {
   currencyLogo: string,
-  exchangeRate: number,
+  exchangeRate: string,
   primaryDisplayCurrencyCode: string,
   primaryDisplayDenomination?: GuiDenomination,
   primaryExchangeDenomination?: GuiDenomination,
   secondaryDisplayCurrencyCode: string,
-  secondaryToPrimaryRatio: number,
+  secondaryToPrimaryRatio: string,
   username: string,
   usersView: boolean
 }
@@ -125,10 +125,10 @@ export const ControlPanel = connect<StateProps, DispatchProps, {}>(
     if (guiWallet == null || currencyCode == null) {
       return {
         currencyLogo: '',
-        exchangeRate: 0,
+        exchangeRate: '0',
         primaryDisplayCurrencyCode: '',
         secondaryDisplayCurrencyCode: '',
-        secondaryToPrimaryRatio: 0,
+        secondaryToPrimaryRatio: '0',
         username: state.core.account.username,
         usersView: state.ui.scenes.controlPanel.usersView
       }

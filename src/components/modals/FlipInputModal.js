@@ -39,7 +39,7 @@ type StateProps = {
   flipInputHeaderLogo: string,
   primaryInfo: GuiCurrencyInfo,
   secondaryInfo: GuiCurrencyInfo,
-  fiatPerCrypto: number,
+  fiatPerCrypto: string,
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
 
@@ -143,7 +143,7 @@ class FlipInputModalComponent extends React.PureComponent<Props, State> {
             headerLogo={flipInputHeaderLogo}
             primaryCurrencyInfo={{ ...primaryInfo }}
             secondaryCurrencyInfo={{ ...secondaryInfo }}
-            exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
+            exchangeSecondaryToPrimaryRatio={parseFloat(fiatPerCrypto)}
             overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
             forceUpdateGuiCounter={0}
             onExchangeAmountChanged={this.handleExchangeAmountChange}
@@ -297,7 +297,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       flipInputHeaderLogo: guiWallet.symbolImageDarkMono || '',
       primaryInfo,
       secondaryInfo,
-      fiatPerCrypto: fiatPerCrypto || 0,
+      fiatPerCrypto: fiatPerCrypto || '0',
       overridePrimaryExchangeAmount,
       forceUpdateGuiCounter,
 

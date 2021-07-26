@@ -625,7 +625,7 @@ export const Request = connect<StateProps | LoadingStateProps, DispatchProps, {}
       currencyInfo: currencyInfo || null,
       currencyIcon,
       edgeWallet,
-      exchangeSecondaryToPrimaryRatio,
+      exchangeSecondaryToPrimaryRatio: parseFloat(exchangeSecondaryToPrimaryRatio),
       guiWallet,
       publicAddress: guiWallet?.receiveAddress?.publicAddress ?? '',
       legacyAddress: guiWallet?.receiveAddress?.legacyAddress ?? '',

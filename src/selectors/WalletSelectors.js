@@ -40,16 +40,16 @@ export const getActiveWalletCurrencyInfos = (state: RootState) => {
   return currencyInfos
 }
 
-export const getExchangeRate = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string): number => {
+export const getExchangeRate = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string): string => {
   const exchangeRates = state.exchangeRates
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
   const rate = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
-  return rate
+  return rate.toFixed(18)
 }
 
 export const convertCurrency = (state: RootState, fromCurrencyCode: string, toCurrencyCode: string, amount: string = '1'): string => {
   const exchangeRate = getExchangeRate(state, fromCurrencyCode, toCurrencyCode)
-  const convertedAmount = bns.mul(amount, exchangeRate.toFixed(18))
+  const convertedAmount = bns.mul(amount, exchangeRate)
   return convertedAmount
 }
 

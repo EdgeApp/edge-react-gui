@@ -272,7 +272,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       fromButtonText: string,
       fromNativeAmount: string,
       fromExchangeAmount: string,
-      fromFiatToCrypto: number
+      fromFiatToCrypto: string
     if (fromWallet) {
       fromCurrencyCode = state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name
       fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
@@ -285,10 +285,10 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       fromExchangeAmount = ''
       fromPrimaryInfo = emptyCurrencyInfo
       fromButtonText = s.strings.select_src_wallet
-      fromFiatToCrypto = 1
+      fromFiatToCrypto = '1'
     }
 
-    let toCurrencyCode, toPrimaryInfo: GuiCurrencyInfo, toButtonText: string, toNativeAmount: string, toExchangeAmount: string, toFiatToCrypto: number
+    let toCurrencyCode, toPrimaryInfo: GuiCurrencyInfo, toButtonText: string, toNativeAmount: string, toExchangeAmount: string, toFiatToCrypto: string
     if (toWallet) {
       toCurrencyCode = state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name
       toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
@@ -301,7 +301,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       toExchangeAmount = ''
       toPrimaryInfo = emptyCurrencyInfo
       toButtonText = s.strings.select_recv_wallet
-      toFiatToCrypto = 1
+      toFiatToCrypto = '1'
     }
     const creatingWallet = state.cryptoExchange.creatingWallet
     return {
@@ -310,13 +310,13 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       fromCurrencyCode,
       fromPrimaryInfo,
       fromButtonText,
-      fromFiatToCrypto,
+      fromFiatToCrypto: parseFloat(fromFiatToCrypto),
       toWallet: toWallet || emptyGuiWallet,
       toExchangeAmount,
       toCurrencyCode,
       toPrimaryInfo,
       toButtonText,
-      toFiatToCrypto,
+      toFiatToCrypto: parseFloat(toFiatToCrypto),
       fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon || '',
       toCurrencyIcon: state.cryptoExchange.toCurrencyIcon || '',
       forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
