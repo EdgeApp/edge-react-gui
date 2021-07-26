@@ -115,7 +115,6 @@ import { AirshipToast } from './common/AirshipToast.js'
 import { BackButton } from './navigation/BackButton.js'
 import { CurrencySettingsTitle } from './navigation/CurrencySettingsTitle.js'
 import { EdgeLogoHeader } from './navigation/EdgeLogoHeader.js'
-import { ExchangeDropMenu } from './navigation/ExchangeDropMenu.js'
 import { handlePluginBack, renderPluginBackButton } from './navigation/GuiPluginBackButton.js'
 import { HeaderTextButton } from './navigation/HeaderTextButton.js'
 import { HeaderTitle } from './navigation/HeaderTitle.js'
@@ -442,7 +441,7 @@ export class MainComponent extends React.Component<Props> {
                 key={EXCHANGE_SCENE}
                 navTransparent
                 component={ifLoggedIn(CryptoExchangeScene)}
-                renderLeftButton={this.renderExchangeButton()}
+                renderLeftButton={<HeaderTextButton type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
                 onEnter={() => this.props.checkEnabledExchanges()}
               />
@@ -807,10 +806,6 @@ export class MainComponent extends React.Component<Props> {
         </Scene>
       </Drawer>
     )
-  }
-
-  renderExchangeButton = () => {
-    return <ExchangeDropMenu />
   }
 
   renderEmptyButton = () => {
