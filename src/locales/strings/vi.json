@@ -7,7 +7,7 @@
   "drawer_request": "Yêu cầu",
   "drawer_sweep_private_key": "Quét từ khóa riêng",
   "drawer_wallets": "Ví",
-  "dropdown_exchange_max_amount": "Trao đổi số tiền tối đa",
+  "exchange_max_amount": "Trao đổi số tiền tối đa",
   "max_spend_unavailable_modal_title": "Max chi tiêu không có sẵn",
   "max_spend_unavailable_modal_message": "Không thể để tính toán số tiền có thể chi trả tối đa đối với tiền tệ %s. Vui lòng nhập số lượng.",
   "edge_description": "Ứng dụng này muốn tạo hoặc truy cập vào ví của mình với tài khoản Edge.\n\nSẽ không có quyền truy cập vào bất kỳ ví nào khác.",

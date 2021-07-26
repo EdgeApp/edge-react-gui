@@ -7,7 +7,7 @@
   "drawer_request": "Faire une demande",
   "drawer_sweep_private_key": "Effacer complétement la Clé Privée ",
   "drawer_wallets": "Portefeuilles",
-  "dropdown_exchange_max_amount": "Echanger le montant maximum ",
+  "exchange_max_amount": "Echanger le montant maximum ",
   "max_spend_unavailable_modal_title": "Le montant max dépenser indisponible",
   "max_spend_unavailable_modal_message": "Impossible de calculer le montant maximal de la devise %s. Veuillez entrer le montant.",
   "edge_description": "Cette application souhaite créer ou accéder à Wallet dans votre Edge compte.\n\n Il n'aura aucune accès à n’importe quel autres Wallet.",

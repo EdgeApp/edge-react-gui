@@ -41,7 +41,7 @@ const strings = {
   azteco_invalid_code: 'Invalid Azteco code.',
   azteco_service_unavailable: 'Error contacting Azteco server. Please try again later.',
   azteco_btc_only: 'Please choose a BTC wallet and scan again.',
-  dropdown_exchange_max_amount: 'Exchange Max Amount',
+  exchange_max_amount: 'Exchange Max',
   max_spend_unavailable_modal_title: 'Max Spend Unavailable',
   max_spend_unavailable_modal_message: 'Unable to calculate maximum spendable amount for currency %s. Please enter amount.',
   edge_description: 'This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.',

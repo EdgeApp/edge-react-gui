@@ -29,7 +29,7 @@
   "azteco_invalid_code": "Ungültiger Azteco-Code.",
   "azteco_service_unavailable": "Fehler beim Kontaktieren des Azteco-Servers. Bitte versuchen Sie es später erneut.",
   "azteco_btc_only": "Bitte selektieren Sie eine BTC-Wallet und scannen Sie erneut.",
-  "dropdown_exchange_max_amount": "Maximalen Betrag wechseln",
+  "exchange_max_amount": "Maximalen Betrag wechseln",
   "max_spend_unavailable_modal_title": "Max. Ausgaben nicht verfügbar",
   "max_spend_unavailable_modal_message": "Kann den maximal verfügbaren Betrag für Währung %s nicht berechnen. Bitte geben Sie den Betrag ein.",
   "edge_description": "Diese Anwendung möchte ihre Wallet's in Ihrem Edge-Konto erstellen oder aufrufen.\n\n Es wird keinen Zugriff auf jegliche andere Wallet's haben.",
