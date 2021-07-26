@@ -6,7 +6,7 @@ import { ActivityIndicator, Keyboard, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { sprintf } from 'sprintf-js'
 
-import { type SetNativeAmountInfo, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
+import { type SetNativeAmountInfo, exchangeMax, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
@@ -48,11 +48,15 @@ type StateProps = {
   // Number of times To and From wallets were flipped
   forceUpdateGuiCounter: number,
   calculatingMax: boolean,
-  creatingWallet: boolean
+  creatingWallet: boolean,
+
+  // Determines if a coin can have Exchange Max option
+  hasMaxSpend: boolean
 }
 type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => void,
-  getQuoteForTransaction: SetNativeAmountInfo => void
+  getQuoteForTransaction: SetNativeAmountInfo => void,
+  exchangeMax: () => void
 }
 type Props = StateProps & DispatchProps & ThemeProps
 
@@ -234,7 +238,13 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             isFocused={isFromFocused}
             focusMe={this.focusFromWallet}
             onNext={this.getQuote}
-          />
+          >
+            {this.props.hasMaxSpend && (
+              <View style={styles.exchangeMaxButton}>
+                <MainButton onPress={this.props.exchangeMax} marginRem={[1.2, 0, 0]} label={s.strings.exchange_max_amount} type="secondary" />
+              </View>
+            )}
+          </CryptoExchangeFlipInputWrapper>
           <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
           <CryptoExchangeFlipInputWrapper
             guiWallet={this.props.toWallet}
@@ -275,6 +285,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   spacer: {
     height: theme.rem(15)
+  },
+  exchangeMaxButton: {
+    alignSelf: 'center'
   }
 }))
 
@@ -289,7 +302,8 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       fromButtonText: string,
       fromNativeAmount: string,
       fromExchangeAmount: string,
-      fromFiatToCrypto: number
+      fromFiatToCrypto: number,
+      hasMaxSpend: boolean
     if (fromWallet) {
       fromCurrencyCode = state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name
       fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
@@ -297,12 +311,16 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       fromButtonText = fromWallet.name + ':' + fromCurrencyCode
       fromExchangeAmount = bns.div(fromNativeAmount, fromPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
       fromFiatToCrypto = getExchangeRate(state, fromPrimaryInfo.exchangeCurrencyCode, fromWallet.isoFiatCurrencyCode)
+
+      const currencyCode = state.cryptoExchange?.fromWallet?.currencyCode
+      hasMaxSpend = currencyCode != null && getSpecialCurrencyInfo(currencyCode).noMaxSpend !== true
     } else {
       fromCurrencyCode = ''
       fromExchangeAmount = ''
       fromPrimaryInfo = emptyCurrencyInfo
       fromButtonText = s.strings.select_src_wallet
       fromFiatToCrypto = 1
+      hasMaxSpend = false
     }
 
     let toCurrencyCode, toPrimaryInfo: GuiCurrencyInfo, toButtonText: string, toNativeAmount: string, toExchangeAmount: string, toFiatToCrypto: number
@@ -328,6 +346,7 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       fromPrimaryInfo,
       fromButtonText,
       fromFiatToCrypto,
+      hasMaxSpend,
       toWallet: toWallet || emptyGuiWallet,
       toExchangeAmount,
       toCurrencyCode,
@@ -348,6 +367,9 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
     onSelectWallet(walletId, currencyCode, direction) {
       dispatch(selectWalletForExchange(walletId, currencyCode, direction))
       dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
+    },
+    exchangeMax() {
+      dispatch(exchangeMax())
     }
   })
 )(withTheme(CryptoExchangeComponent))
