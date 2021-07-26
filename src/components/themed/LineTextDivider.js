@@ -44,7 +44,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   title: {
     fontSize: theme.rem(1),
     paddingHorizontal: theme.rem(0.75),
-    fontWeight: '600'
+    fontFamily: theme.fontFaceBold,
+    color: theme.secondaryText
   },
   lowerCase: {
     textTransform: 'lowercase'
