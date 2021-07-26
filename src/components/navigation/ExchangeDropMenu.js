@@ -51,7 +51,7 @@ class ExchangeDropMenuComponent extends React.Component<Props> {
             {hasMaxSpend ? (
               <MenuOption style={styles.menuOption} value="max">
                 <View style={styles.menuOptionItem}>
-                  <Text style={styles.optionText}>{s.strings.dropdown_exchange_max_amount}</Text>
+                  <Text style={styles.optionText}>{s.strings.exchange_max_amount}</Text>
                 </View>
               </MenuOption>
             ) : null}

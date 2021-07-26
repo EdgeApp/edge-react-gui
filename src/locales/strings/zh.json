@@ -7,7 +7,7 @@
   "drawer_request": "要求",
   "drawer_sweep_private_key": "扫描私钥",
   "drawer_wallets": "钱包",
-  "dropdown_exchange_max_amount": "兑换最大金额",
+  "exchange_max_amount": "兑换最大金额",
   "max_spend_unavailable_modal_title": "最大支出不可用",
   "max_spend_unavailable_modal_message": "无法计算货币 %s最高可花费金额。请输入金额。",
   "edge_description": "此应用程序希望在您的Edge帐户中创建或存取其钱包。\n 它将无法连接任何其他钱包。",
