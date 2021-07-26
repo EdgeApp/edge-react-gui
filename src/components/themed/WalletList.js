@@ -9,7 +9,7 @@ import { selectWallet } from '../../actions/WalletActions.js'
 import { WALLET_LIST_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings'
 import { SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
-import { calculateWalletFiatBalanceUsingDefaultIsoFiat } from '../../selectors/WalletSelectors.js'
+import { calculateWalletFiatBalanceUsingDefaultIsoFiat, exchangeRatesToString } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import type { CreateTokenType, CreateWalletType, CustomTokenInfo, FlatListItem, GuiWallet, MostRecentWallet } from '../../types/types.js'
 import { getCreateWalletTypes, getCurrencyIcon, getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
@@ -81,7 +81,7 @@ class WalletListComponent extends React.PureComponent<Props> {
     const getFiatBalance = (wallet: GuiWallet, fullCurrencyCode: string): number => {
       const { settings, exchangeRates } = this.props
       const currencyCode = getSortOptionsCurrencyCode(fullCurrencyCode)
-      const fiatBalanceString = calculateWalletFiatBalanceUsingDefaultIsoFiat(wallet, currencyCode, settings, exchangeRates)
+      const fiatBalanceString = calculateWalletFiatBalanceUsingDefaultIsoFiat(wallet, currencyCode, settings, exchangeRatesToString(exchangeRates))
       return parseFloat(fiatBalanceString)
     }
 

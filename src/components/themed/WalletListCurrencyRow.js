@@ -4,7 +4,7 @@ import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 
 import { formatNumber } from '../../locales/intl.js'
-import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
+import { calculateWalletFiatBalanceWithoutState, exchangeRatesToString } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates } from '../../types/types.js'
 import { getCryptoAmount, getCurrencyInfo, getDenomFromIsoCode, getDenomination, getFiatSymbol, getYesterdayDateRoundDownHour } from '../../util/utils'
@@ -181,7 +181,7 @@ export const WalletListCurrencyRow = connect<StateProps, {}, OwnProps>(
 
     // Fiat Balance
     const walletFiatSymbol = getFiatSymbol(guiWallet.isoFiatCurrencyCode)
-    const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)
+    const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRatesToString(exchangeRates))
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : '0'
     const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
     const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
