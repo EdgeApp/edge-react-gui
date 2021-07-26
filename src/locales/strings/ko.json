@@ -83,7 +83,6 @@
   "create_wallet_choice_instructions": "Seed를 사용하여 새로운 월렛을 생성, 또는 기존의 월렛을 복구하시겠습니다?",
   "create_wallet_choice_new_button": "새로운 월렛 생성",
   "create_wallet_import_title": "월렛 가져오기",
-  "create_wallet_import_instructions": "Seed를 입력하여 관련 월렛을 확인후 복구하세요.",
   "create_wallet_import_input_prompt": "Seed",
   "create_wallet_import_successful": "가져오기가 완료되었습니다.",
   "create_wallet_select_valid_crypto": "유효한 월렛 종류를 선택하십시오.",
