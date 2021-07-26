@@ -77,7 +77,7 @@ export const calculateWalletFiatBalanceWithoutState = (
   wallet: GuiWallet,
   currencyCode: string,
   settings: Object,
-  exchangeRates: { [string]: number }
+  exchangeRates: { [string]: string }
 ): string => {
   let fiatValue = '0' // default to zero if not calculable
   const nativeBalance = wallet.nativeBalances[currencyCode]
@@ -87,7 +87,7 @@ export const calculateWalletFiatBalanceWithoutState = (
   if (!exchangeDenomination) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
-  fiatValue = convertCurrencyWithoutState(exchangeRatesToString(exchangeRates), currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
+  fiatValue = convertCurrencyWithoutState(exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
   return formatNumber(fiatValue, { toFixed: 2 }) || '0'
 }
 
@@ -95,7 +95,7 @@ export const calculateWalletFiatBalanceUsingDefaultIsoFiat = (
   wallet: GuiWallet,
   currencyCode: string,
   settings: Object,
-  exchangeRates: { [string]: number }
+  exchangeRates: { [string]: string }
 ): string => {
   const nativeBalance = wallet.nativeBalances[currencyCode]
   if (!settings[currencyCode]) return '0'
@@ -105,7 +105,7 @@ export const calculateWalletFiatBalanceUsingDefaultIsoFiat = (
   if (!exchangeDenomination) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
-  return convertCurrencyWithoutState(exchangeRatesToString(exchangeRates), currencyCode, settings.defaultIsoFiat, cryptoAmount) || '0'
+  return convertCurrencyWithoutState(exchangeRates, currencyCode, settings.defaultIsoFiat, cryptoAmount) || '0'
 }
 
 export const convertNativeToExchangeRateDenomination = (settings: Object, currencyCode: string, nativeAmount: string): string => {
@@ -137,7 +137,7 @@ export const findWalletByFioAddress = async (state: RootState, fioAddress: strin
   }
 }
 
-const exchangeRatesToString = (exchangeRates: { [string]: number }): { [string]: string } => {
+export const exchangeRatesToString = (exchangeRates: { [string]: number }): { [string]: string } => {
   const exchangeRateString = {}
   for (const rate in exchangeRates) {
     exchangeRateString[rate] = `${exchangeRates[rate]}`

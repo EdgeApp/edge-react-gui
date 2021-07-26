@@ -9,7 +9,7 @@ import { formatNumberInput } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { type SettingsState } from '../../reducers/scenes/SettingsReducer.js'
 import { getDisplayDenominationFromSettings } from '../../selectors/DenominationSelectors.js'
-import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
+import { calculateWalletFiatBalanceWithoutState, exchangeRatesToString } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import { decimalOrZero, getFiatSymbol, truncateDecimals } from '../../util/utils'
@@ -59,7 +59,7 @@ class WalletListSortableRowComponent extends React.PureComponent<Props> {
     const preliminaryCryptoAmount = truncateDecimals(bns.div(guiWallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
     const finalCryptoAmount = formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
     const finalCryptoAmountString = showBalance ? `${symbol || ''} ${finalCryptoAmount}` : ''
-    const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRates)
+    const fiatBalance = calculateWalletFiatBalanceWithoutState(guiWallet, currencyCode, settings, exchangeRatesToString(exchangeRates))
     const fiatBalanceFormat = fiatBalance && parseFloat(fiatBalance) > 0.000001 ? fiatBalance : 0
     const fiatBalanceSymbol = showBalance && walletFiatSymbol ? walletFiatSymbol : ''
     const fiatBalanceString = showBalance ? fiatBalanceFormat : ''
