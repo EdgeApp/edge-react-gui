@@ -160,7 +160,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   iconText: {
     color: theme.primaryText,
-    fontWeight: '600',
+    fontFamily: theme.fontFaceBold,
     fontSize: theme.rem(1.25)
   }
 }))
