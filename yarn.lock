@@ -4713,10 +4713,10 @@ edge-components@^0.0.31:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.18.2:
-  version "0.18.2"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.2.tgz#665c5aef040e21167db767663af162f2e9123df0"
-  integrity sha512-gQ6YZMCgpCNrEsiSWNY9su2w9rst5b9g/YqtfS8GfKGIHPkItcCyQsYbyOSwetU5SNjwfwLA1Buriab3f5PZ8w==
+edge-core-js@^0.18.3:
+  version "0.18.3"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.3.tgz#2f70bf4136dacfa5cd4e2bc11f1c097aa20d4cf5"
+  integrity sha512-hjBJRqZ9+h6z6p+z9On2Z2ZzLMdC6gBOgXPrdswuOuU2oT4i5sp9zI7ThjA2c2g0eBaLfZEYzuDKJvKkYWnSqQ==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -4736,7 +4736,7 @@ edge-core-js@^0.18.2:
     rfc4648 "^1.4.0"
     scrypt-js "^2.0.3"
     yaob "^0.3.7"
-    yavent "^0.1.1"
+    yavent "^0.1.3"
 
 edge-currency-accountbased@^0.7.67:
   version "0.7.67"
@@ -13656,10 +13656,10 @@ yargs@^16.0.3:
     y18n "^5.0.5"
     yargs-parser "^20.2.2"
 
-yavent@^0.1.1:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/yavent/-/yavent-0.1.2.tgz#eb826c8c5e344e86e1398a463a3d5092f919edeb"
-  integrity sha512-hd1tUDabbB6dUoOcHLB1rRlydNC9DGKGMMwotnEvWdNyFNgSN7k4djW6Db6MtGPctGgiJyhDr26PFF1APfqoqA==
+yavent@^0.1.1, yavent@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/yavent/-/yavent-0.1.3.tgz#c86a5e1d013721eda9c732e820fb7d6aaf2ab4db"
+  integrity sha512-O6ZngnMCkiM1Bg/zP2XKgprjXUuHS0tSQjHxWhMc53avgNu6AT5zcmDm+oYxQLRXQ9ajlEQwQ+Rf7CghKt1u1A==
 
 yazl@2.5.1:
   version "2.5.1"
