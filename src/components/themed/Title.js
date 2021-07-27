@@ -45,7 +45,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   text: {
     flexShrink: 1,
     flexGrow: 1,
-    fontFamily: theme.fontFaceBold,
+    fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1),
     textAlign: 'left',
     color: theme.primaryText

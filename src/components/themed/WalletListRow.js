@@ -135,7 +135,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: '70%'
   },
   detailsCurrency: {
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   },
   detailsName: {
     flex: 1,

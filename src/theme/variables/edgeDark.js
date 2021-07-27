@@ -81,6 +81,9 @@ export const edgeDark: Theme = {
     return Math.round(scale(16) * size)
   },
 
+  // Common border
+  defaultBorderColor: palette.white,
+
   // Icons
   icon: palette.white,
   iconTappable: palette.edgeMint,
@@ -239,7 +242,8 @@ export const edgeDark: Theme = {
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
-  fontFaceBold: palette.QuicksandMedium,
+  fontFaceMedium: palette.QuicksandMedium,
+  fontFaceBold: palette.QuicksandBold,
   fontFaceSymbols: Platform.OS === 'android' ? palette.SFUITextRegular : palette.QuicksandRegular,
 
   // TouchableHighlights underlay

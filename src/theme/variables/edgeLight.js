@@ -78,6 +78,9 @@ export const edgeLight: Theme = {
     return Math.round(scale(16) * size)
   },
 
+  // Common border
+  defaultBorderColor: palette.white,
+
   // Icons
   icon: palette.black,
   iconTappable: palette.edgeBlue,
@@ -236,7 +239,8 @@ export const edgeLight: Theme = {
 
   // Fonts
   fontFaceDefault: palette.QuicksandRegular,
-  fontFaceBold: palette.QuicksandMedium,
+  fontFaceMedium: palette.QuicksandMedium,
+  fontFaceBold: palette.QuicksandBold,
   fontFaceSymbols: Platform.OS === 'android' ? palette.SFUITextRegular : palette.QuicksandRegular,
 
   // TouchableHighlights underlay

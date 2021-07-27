@@ -116,7 +116,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   addItem: {
     margin: theme.rem(0.25),
     color: theme.textLink,
-    fontFamily: theme.fontFaceBold
+    fontFamily: theme.fontFaceMedium
   },
   addItemText: {
     flexShrink: 1
@@ -136,7 +136,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     margin: theme.rem(0.25)
   },
   buyCryptoText: {
-    fontFamily: theme.fontFaceBold,
+    fontFamily: theme.fontFaceMedium,
     color: theme.textLink
   }
 }))

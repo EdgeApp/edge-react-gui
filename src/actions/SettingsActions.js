@@ -68,7 +68,8 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
       })
       const nextDefaultIsoFiat = getState().ui.settings.defaultIsoFiat
       // convert from previous fiat to next fiat
-      return convertCurrency(state, previousDefaultIsoFiat, nextDefaultIsoFiat, transaction.amount)
+      const fiatString = convertCurrency(state, previousDefaultIsoFiat, nextDefaultIsoFiat, transaction.amount.toFixed(18))
+      return parseFloat(fiatString)
     })
     .then(transactionAmount => {
       const nextSpendingLimits = {
