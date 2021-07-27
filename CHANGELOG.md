@@ -1,5 +1,45 @@
 # edge-react-gui
 
+## 2.0.16 (2021-07-26)
+
+- Code cleanups: connectors, actions, and constants
+- Add styles/utils for Add Custom Token scene
+- Ethereum checksum support
+- FIO: Fix custom domain registration when there isn't a name registered to address
+- Fade component fixes
+- UI component consistency fixes
+- Update translations
+- Update partner descriptions
+- Upgrade edge-currency-accountbased to v0.7.67
+  - XRP: Add x-address support
+  - Throw error if there is a checksum present and it fails verification
+- Upgrade edge-login-ui-rn to v0.9.12
+  - rn: Synchronize outlined text field logic fixes
+  - rn: Tighten the outlined text field props
+  - rn: Fix the crash in the QR-login modal
+  - rn: Run yarn precommit to update strings
+  - rn: Always close modals on the way out the door
+  - rn: Fix coding errors caught by TypeScript
+  - rn: Add missing react-native-gesture-handler dependency
+  - rn: Put withTheme after connect
+  - rn: Simplify the Fade component
+  - rn: Move the isASCII function to the right file
+  - rn: Use better export syntax
+  - rn: Use modern syntax for localization
+  - rn: Remove unused components & libraries
+  - rn: Implemented recovery translations
+  - rn: Add back button to the "TermsAndConditions" screen
+  - rn: Switch New Account flow screens positions: move "TermsAndConditions" screen after "Pin" screen and before "Wait" screen
+  - rn: Upgrade to react-native-airship v0.2.6
+- Upgrade edge-exchange-plugins to v0.11.30
+  - Totle: Fix error response handling
+- Upgrade edge-currency-bitcoin to v4.9.16
+  - BCH: Fix typo in BSV wallet type in forks array
+
+## 2.0.15 (2021-07-19)
+
+- Fix crash when attempting to send without an exchange rate present
+
 ## 2.0.14 (2021-07-06)
 
 - New themed Create Account flow
