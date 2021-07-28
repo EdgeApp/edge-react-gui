@@ -12,7 +12,7 @@ import { type Dispatch, type RootState } from '../types/reduxTypes.js'
 export function connect<StateProps, DispatchProps, OwnProps>(
   mapStateToProps: (state: RootState, ownProps: OwnProps) => StateProps,
   mapDispatchToProps: (dispatch: Dispatch, ownProps: OwnProps) => DispatchProps
-): (component: React.ComponentType<StateProps & DispatchProps & OwnProps>) => (props: OwnProps) => React.Node {
+): (component: React.ComponentType<StateProps & DispatchProps & OwnProps>) => React$StatelessFunctionalComponent<OwnProps> {
   // $FlowFixMe
   return ReactRedux.connect(mapStateToProps, mapDispatchToProps)
 }
