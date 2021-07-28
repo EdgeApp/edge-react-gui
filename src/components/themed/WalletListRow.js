@@ -13,8 +13,6 @@ import { EdgeText } from './EdgeText.js'
 type OwnProps = {
   currencyCode: string,
   children?: React.Node,
-  exchangeRateString?: string,
-  exchangeRateType?: 'Neutral' | 'Positive' | 'Negative',
   icon?: React.Node,
   editIcon?: React.Node,
   gradient?: boolean,
@@ -46,20 +44,7 @@ function WalletRow(props: { gradient?: boolean, children: React.Node }) {
 
 class WalletListRowComponent extends React.PureComponent<Props> {
   render() {
-    const {
-      currencyCode,
-      children,
-      exchangeRateString = '',
-      exchangeRateType = 'Neutral',
-      gradient = false,
-      icon,
-      editIcon,
-      loading = false,
-      onPress,
-      onLongPress,
-      walletNameString,
-      theme
-    } = this.props
+    const { currencyCode, children, gradient = false, icon, editIcon, loading = false, onPress, onLongPress, walletNameString, theme } = this.props
     const styles = getStyles(theme)
 
     return (
@@ -75,7 +60,6 @@ class WalletListRowComponent extends React.PureComponent<Props> {
               <View style={styles.detailsContainer}>
                 <View style={styles.detailsRow}>
                   <EdgeText style={[styles.detailsCurrency, { width: theme.rem(2.75) }]}>{currencyCode}</EdgeText>
-                  <EdgeText style={styles[`percentage${exchangeRateType}`]}>{exchangeRateString}</EdgeText>
                   {editIcon ? <View style={styles.editIcon}>{editIcon}</View> : null}
                 </View>
                 <EdgeText style={styles.detailsName}>{walletNameString}</EdgeText>
