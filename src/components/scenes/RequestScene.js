@@ -15,14 +15,13 @@ import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
 import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
 import { FIO_REQUEST_CONFIRMATION } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
-import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
-import { decimalOrZero, DIVIDE_PRECISION, getCurrencyInfo, getDenomFromIsoCode, getObjectDiff, truncateDecimals } from '../../util/utils.js'
+import { getCurrencyInfo, getDenomFromIsoCode, getObjectDiff } from '../../util/utils.js'
 import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
@@ -51,8 +50,7 @@ type StateProps = {
   secondaryCurrencyInfo: GuiCurrencyInfo,
   useLegacyAddress: boolean,
   fioAddressesExist: boolean,
-  isConnected: boolean,
-  balance?: string
+  isConnected: boolean
 }
 type LoadingStateProps = {
   edgeWallet: null,
@@ -611,12 +609,6 @@ export const Request = connect<StateProps | LoadingStateProps, DispatchProps, {}
     const exchangeSecondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     const fioAddressesExist = !!state.ui.scenes.fioAddress.fioAddresses.length
 
-    // balance
-    const isToken = guiWallet.currencyCode !== currencyCode
-    const nativeBalance = isToken ? guiWallet.nativeBalances[currencyCode] : guiWallet.primaryNativeBalance
-    const displayBalance = truncateDecimals(bns.div(nativeBalance, primaryDisplayDenomination.multiplier, DIVIDE_PRECISION), 6)
-    const balance = formatNumber(decimalOrZero(displayBalance, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
-
     // Icon
     const currencyIcon = getCurrencyIcon(guiWallet.currencyCode, currencyCode).symbolImage
 
@@ -634,8 +626,7 @@ export const Request = connect<StateProps | LoadingStateProps, DispatchProps, {}
       secondaryCurrencyInfo,
       useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
       fioAddressesExist,
-      isConnected: state.network.isConnected,
-      balance
+      isConnected: state.network.isConnected
     }
   },
   dispatch => ({
