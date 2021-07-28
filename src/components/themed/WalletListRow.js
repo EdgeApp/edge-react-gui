@@ -59,10 +59,14 @@ class WalletListRowComponent extends React.PureComponent<Props> {
               <View style={styles.iconContainer}>{icon}</View>
               <View style={styles.detailsContainer}>
                 <View style={styles.detailsRow}>
-                  <EdgeText style={[styles.detailsCurrency, { width: theme.rem(2.75) }]}>{currencyCode}</EdgeText>
+                  <EdgeText style={[styles.detailsCurrency, { width: theme.rem(2.75) }]} disableFontScaling>
+                    {currencyCode}
+                  </EdgeText>
                   {editIcon ? <View style={styles.editIcon}>{editIcon}</View> : null}
                 </View>
-                <EdgeText style={styles.detailsName}>{walletNameString}</EdgeText>
+                <EdgeText style={styles.detailsName} disableFontScaling>
+                  {walletNameString}
+                </EdgeText>
               </View>
               {children}
             </View>
