@@ -455,6 +455,7 @@ export class MainComponent extends React.Component<Props> {
               />
               <Scene
                 key={EXCHANGE_QUOTE_SCENE}
+                hideNavBar
                 navTransparent
                 component={ifLoggedIn(CryptoExchangeQuote)}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
