@@ -9,6 +9,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { playReceiveSound } from '../../actions/SoundActions.js'
+import { selectWallet } from '../../actions/WalletActions'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { nightText } from '../../styles/common/textStyles.js'
@@ -20,11 +21,11 @@ import { Airship } from '../services/AirshipInstance.js'
 
 let showing = false
 
-export function showTransactionDropdown(tx: EdgeTransaction) {
+export function showTransactionDropdown(tx: EdgeTransaction, walletId?: string) {
   if (!showing) {
     showing = true
     playReceiveSound().catch(error => console.log(error)) // Fail quietly
-    Airship.show(bridge => <ConnectedTransactionDropdown bridge={bridge} tx={tx} />).then(() => {
+    Airship.show(bridge => <ConnectedTransactionDropdown bridge={bridge} tx={tx} walletId={walletId} />).then(() => {
       showing = false
     })
   }
@@ -32,17 +33,22 @@ export function showTransactionDropdown(tx: EdgeTransaction) {
 
 type OwnProps = {
   bridge: AirshipBridge<void>,
-  tx: EdgeTransaction
+  tx: EdgeTransaction,
+  walletId?: string
 }
 
 type StateProps = {
   message: string
 }
 
-type Props = OwnProps & StateProps
+type DispatchProps = {
+  selectWallet: (walletId: string, currencyCode: string) => void
+}
+
+type Props = OwnProps & StateProps & DispatchProps
 
 export function TransactionDropdown(props: Props) {
-  const { bridge, message, tx } = props
+  const { bridge, message, tx, walletId, selectWallet } = props
 
   return (
     <AirshipDropdown
@@ -50,6 +56,7 @@ export function TransactionDropdown(props: Props) {
       backgroundColor={THEME.COLORS.PRIMARY}
       onPress={() => {
         bridge.resolve()
+        walletId && selectWallet(walletId, tx.currencyCode)
         Actions.transactionDetails({ edgeTransaction: tx })
       }}
     >
@@ -74,7 +81,7 @@ const styles = StyleSheet.create({
   }
 })
 
-const ConnectedTransactionDropdown = connect<StateProps, {}, OwnProps>(
+const ConnectedTransactionDropdown = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
     const { tx } = ownProps
 
@@ -91,5 +98,9 @@ const ConnectedTransactionDropdown = connect<StateProps, {}, OwnProps>(
       message: sprintf(s.strings.bitcoin_received, `${symbol ? symbol + ' ' : ''}${displayAmount} ${name}`)
     }
   },
-  dispatch => ({})
+  dispatch => ({
+    selectWallet: (walletId: string, currencyCode: string) => {
+      dispatch(selectWallet(walletId, currencyCode))
+    }
+  })
 )(TransactionDropdown)
