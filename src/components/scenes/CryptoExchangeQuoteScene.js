@@ -22,6 +22,7 @@ import { Card } from '../themed/Card'
 import { EdgeText } from '../themed/EdgeText'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent.js'
 import { LineTextDivider } from '../themed/LineTextDivider'
+import { SceneHeader } from '../themed/SceneHeader'
 import { ClickableText } from '../themed/ThemedButtons'
 
 type OwnProps = {
@@ -182,11 +183,9 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper background="theme">
+      <SceneWrapper hasHeader={false} background="theme">
+        <SceneHeader withTopMargin title={s.strings.title_exchange} underline />
         <ScrollView>
-          <View style={styles.topLogoRow}>
-            <Image source={swapPluginLogos[pluginId]} resizeMode="contain" style={styles.logoImage} />
-          </View>
           <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
           <ExchangeQuote
             cryptoAmount={fromDisplayAmount}
@@ -210,6 +209,10 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
             walletIcon={toCurrencyIcon}
             walletName={toWallet.name || ''}
           />
+          <View style={styles.poweredRow}>
+            <EdgeText style={styles.poweredText}>{s.strings.plugin_powered_by}</EdgeText>
+            <Image source={swapPluginLogos[pluginId]} resizeMode="contain" style={styles.poweredLogo} />
+          </View>
           {isEstimate && (
             <Card warning marginRem={[1.5, 1, 0]}>
               <ClickableText paddingRem={0} onPress={this.showExplanationForEstimate}>
@@ -237,17 +240,24 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  topLogoRow: {
+  poweredRow: {
+    display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingTop: theme.rem(0.5),
-    height: theme.rem(3.25),
-    paddingBottom: theme.rem(0.25)
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
+    height: theme.rem(1.5),
+    paddingRight: theme.rem(0.5),
+    marginTop: theme.rem(1)
   },
-  logoImage: {
-    position: 'relative',
-    maxWidth: '70%',
-    resizeMode: 'contain'
+  poweredText: {
+    fontSize: theme.rem(0.7),
+    color: theme.secondaryText,
+    marginRight: theme.rem(0.5)
+  },
+  poweredLogo: {
+    maxWidth: theme.rem(8),
+    maxHeight: theme.rem(2),
+    marginRight: theme.rem(0.5)
   },
   estimatedContainer: {
     marginBottom: theme.rem(0.25),
@@ -265,7 +275,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.warningText
   },
   slider: {
-    marginTop: theme.rem(1.5)
+    marginTop: theme.rem(2.5)
   },
   spacer: {
     height: theme.rem(8)
