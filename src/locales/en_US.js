@@ -675,6 +675,7 @@ const strings = {
   fio_address_details_screen_expires: 'Expires',
   fio_address_details_screen_manage_account_settings: 'Address Settings',
   fio_address_details_expired_soon: 'Your FIO address is about to expire.\nWould you like to renew it?',
+  fio_address_details_already_expired: 'Your FIO address is expired. Would you like to renew it?',
   fio_address_details_connect_to_wallets: 'Choose wallets to connect to your FIO address',
   fio_address_list_screen_button_register: 'Register New FIO Address',
   fio_address_list_domain_register: 'Register Custom FIO Domain',
