@@ -5,15 +5,16 @@ import * as React from 'react'
 
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
+import type { GuiCurrencyInfo } from '../../types/types.js'
 import { getObjectDiff, isCompleteExchangeData } from '../../util/utils'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 
 type Props = {
-  primaryInfo: Object,
+  primaryInfo: GuiCurrencyInfo,
   primaryDisplayAmount?: string, // defaults to '1'
-  secondaryInfo: Object,
-  secondaryDisplayAmount: string | number
+  secondaryInfo: GuiCurrencyInfo,
+  secondaryDisplayAmount: number
 }
 
 class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
@@ -31,7 +32,7 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
     const { primaryInfo, primaryDisplayAmount, secondaryInfo, secondaryDisplayAmount } = this.props
 
     const primaryDisplayName: string = primaryInfo.displayDenomination.name
-    const secondaryDisplaySymbol: string = secondaryInfo.displayDenomination.symbol
+    const secondaryDisplaySymbol = secondaryInfo.displayDenomination.symbol ?? ''
     const getDisplayExchangeAmount = secondaryDisplayAmount => {
       const primaryRatio = parseInt(primaryInfo.displayDenomination.multiplier) / parseInt(primaryInfo.exchangeDenomination.multiplier)
       const secondaryRatio = parseInt(secondaryInfo.displayDenomination.multiplier) / parseInt(secondaryInfo.exchangeDenomination.multiplier)
