@@ -78,10 +78,11 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class WalletListComponent extends React.PureComponent<Props> {
   sortWalletList(walletList: WalletListItem[]): WalletListItem[] {
-    const getFiatBalance = (wallet: GuiWallet, fullCurrencyCode: string) => {
+    const getFiatBalance = (wallet: GuiWallet, fullCurrencyCode: string): number => {
       const { settings, exchangeRates } = this.props
       const currencyCode = getSortOptionsCurrencyCode(fullCurrencyCode)
-      return calculateWalletFiatBalanceUsingDefaultIsoFiat(wallet, currencyCode, settings, exchangeRates)
+      const fiatBalanceString = calculateWalletFiatBalanceUsingDefaultIsoFiat(wallet, currencyCode, settings, exchangeRates)
+      return parseFloat(fiatBalanceString)
     }
 
     if (this.props.walletsSort === 'name') {
