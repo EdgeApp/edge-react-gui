@@ -189,6 +189,10 @@ export type Theme = {
   qrForegroundColor: string,
   qrBackgroundColor: string,
 
+  // Picker Color
+  pickerTextDark: string,
+  pickerTextLight: string,
+
   // Input Accessory
   inputAccessoryBackground: string,
   inputAccessoryText: string,
