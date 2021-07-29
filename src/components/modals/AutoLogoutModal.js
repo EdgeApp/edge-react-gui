@@ -2,7 +2,7 @@
 
 import { PrimaryButton, SecondaryButton } from 'edge-components'
 import * as React from 'react'
-import { Picker, Text, View } from 'react-native'
+import { Appearance, Picker, Text, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import s from '../../locales/strings.js'
@@ -41,12 +41,13 @@ class AutoLogoutModalComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { bridge } = this.props
+    const { bridge, theme } = this.props
+    const textColor = Appearance.getColorScheme() === 'dark' ? theme.pickerTextDark : theme.pickerTextLight
 
-    const numberPickerOptions = [<Picker.Item key="disable" label={s.strings.string_disable} value={0} />]
+    const numberPickerOptions = [<Picker.Item key="disable" label={s.strings.string_disable} value={0} color={textColor} />]
     for (let i = 1; i < 60; i++) {
       const text = String(i)
-      numberPickerOptions.push(<Picker.Item key={text} label={text} value={i} />)
+      numberPickerOptions.push(<Picker.Item key={text} label={text} value={i} color={textColor} />)
     }
 
     const numberPicker = (
@@ -57,10 +58,10 @@ class AutoLogoutModalComponent extends React.Component<Props, State> {
 
     const measurementPicker = (
       <Picker style={{ flex: 1 }} selectedValue={this.state.measurement} onValueChange={measurement => this.setState({ measurement })}>
-        <Picker.Item label={s.strings.settings_seconds} value="seconds" />
-        <Picker.Item label={s.strings.settings_minutes} value="minutes" />
-        <Picker.Item label={s.strings.settings_hours} value="hours" />
-        <Picker.Item label={s.strings.settings_days} value="days" />
+        <Picker.Item color={textColor} label={s.strings.settings_seconds} value="seconds" />
+        <Picker.Item color={textColor} label={s.strings.settings_minutes} value="minutes" />
+        <Picker.Item color={textColor} label={s.strings.settings_hours} value="hours" />
+        <Picker.Item color={textColor} label={s.strings.settings_days} value="days" />
       </Picker>
     )
 
