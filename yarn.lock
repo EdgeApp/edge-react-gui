@@ -10406,10 +10406,10 @@ react-native-mymonero-core@^0.1.0:
   resolved "https://registry.yarnpkg.com/react-native-mymonero-core/-/react-native-mymonero-core-0.1.0.tgz#57d160b076ae50c037cffa94760e4f2f3ca2de88"
   integrity sha512-2NV+V1GFP/NaKp9enVDWrSrA9gMMDSmBXPnNW/K2eEXyGV9fC0DJqDo6ljlKr7ANak1X5ln/6yV2Z7jrl2Xgwg==
 
-react-native-patina@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.4.tgz#9ff58e2b2b78dc126529e621f8992a1021659919"
-  integrity sha512-6pV3wSC2+q5mbejKDrmSpJweuFCfFkzwSpB6mwlrZpuci0T/9mP80+P3YvtMtg/PFXdBCDu8o93SdxFWDS2u4A==
+react-native-patina@^0.1.4, react-native-patina@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-patina/-/react-native-patina-0.1.5.tgz#76228b58357022ff364d524dd15715729db5ef85"
+  integrity sha512-HXFRDSYBnw87ktzSD7Y5YQ+jsJtlwC/yGSIleoy7SueNFRNzjjJfCK7/MugzXdietcRF9o9tmksL9ky0EciESQ==
 
 react-native-permissions@^3.0.0, react-native-permissions@^3.0.1:
   version "3.0.2"
