@@ -23,7 +23,10 @@ type Props = {
 export const Checkbox = ({ textStyle, disabled, children, value, onChange, marginRem, paddingRem, ellipsizeMode, numberOfLines }: Props) => {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const spacings = { ...getMarginSpacingStyles(marginRem || 0.5, theme.rem), ...getPaddingSpacingStyles(paddingRem || 1, theme.rem) }
+  const spacings = {
+    ...getMarginSpacingStyles(marginRem ?? 0.5, theme.rem),
+    ...getPaddingSpacingStyles(paddingRem ?? 1, theme.rem)
+  }
 
   return (
     <View style={[styles.container, spacings]}>
