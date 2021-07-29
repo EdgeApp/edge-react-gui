@@ -13,8 +13,8 @@ import { connect } from '../../types/reactRedux.js'
 import { showToast } from '../services/AirshipInstance.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeTextField } from './EdgeTextField.js'
+import { MainButton } from './MainButton.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from './ModalParts.js'
-import { PrimaryButton, SecondaryButton } from './ThemedButtons.js'
 import { ThemedModal } from './ThemedModal.js'
 
 type OwnProps = {
@@ -103,11 +103,11 @@ class PasswordReminderModalComponent extends React.PureComponent<Props, State> {
           Platform.OS === 'android' ? <View style={{ flex: 1 }} /> : null
         }
         {spinning ? (
-          <PrimaryButton marginRem={0.5} spinner />
+          <MainButton marginRem={0.5} spinner />
         ) : (
-          <PrimaryButton label={s.strings.password_reminder_check_password} marginRem={0.5} onPress={this.handleSubmit} />
+          <MainButton label={s.strings.password_reminder_check_password} marginRem={0.5} onPress={this.handleSubmit} />
         )}
-        <SecondaryButton label={s.strings.password_reminder_forgot_password} marginRem={0.5} onPress={this.handleRequestChangePassword} />
+        <MainButton label={s.strings.password_reminder_forgot_password} marginRem={0.5} type="secondary" onPress={this.handleRequestChangePassword} />
         <ModalCloseArrow onPress={this.handleCancel} />
       </ThemedModal>
     )

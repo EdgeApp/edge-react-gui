@@ -22,7 +22,7 @@ import { type WalletListResult, WalletListModal } from '../modals/WalletListModa
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
-import { PrimaryButton } from '../themed/ThemedButtons'
+import { MainButton } from '../themed/MainButton.js'
 import { Tile } from '../themed/Tile'
 
 type StateProps = {
@@ -117,7 +117,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     }
   }
 
-  onNextPress = async () => {
+  onNextPress = (): void => {
     const { isConnected, selectedWallet, fioDomain, state } = this.props
     const { feeValue, paymentInfo: allPaymentInfo, paymentWallet } = this.state
 
@@ -207,9 +207,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
             onPress={this.onWalletPress}
             disabled={!activationCost || activationCost === 0}
           />
-          {!loading && paymentWallet && paymentWallet.id && (
-            <PrimaryButton onPress={this.onNextPress} label={s.strings.string_next_capitalized} marginRem={1} />
-          )}
+          {!loading && paymentWallet && paymentWallet.id && <MainButton label={s.strings.string_next_capitalized} marginRem={1} onPress={this.onNextPress} />}
           {errorMessage && (
             <EdgeText style={styles.errorMessage} numberOfLines={3}>
               {errorMessage}

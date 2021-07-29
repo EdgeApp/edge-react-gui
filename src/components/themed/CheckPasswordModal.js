@@ -10,7 +10,7 @@ import { type AirshipBridge } from '../modals/modalParts.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { EdgeTextField } from './EdgeTextField.js'
-import { PrimaryButton, SecondaryButton } from './ThemedButtons.js'
+import { MainButton } from './MainButton.js'
 import { ThemedModal } from './ThemedModal.js'
 
 type OwnProps = {
@@ -77,8 +77,8 @@ class CheckPasswordModalComponent extends React.Component<Props, State> {
             secureTextEntry
           />
         </View>
-        <PrimaryButton label={buttonLabel} onPress={this.onSubmit} marginRem={[0.05, 0, 0.5, 0]} />
-        <SecondaryButton label={s.strings.string_cancel_cap} onPress={() => bridge.resolve(false)} marginRem={[0.05, 0, 0.5, 0]} />
+        <MainButton label={buttonLabel} marginRem={[0.05, 0, 0.5, 0]} onPress={this.onSubmit} />
+        <MainButton label={s.strings.string_cancel_cap} marginRem={[0.05, 0, 0.5, 0]} type="secondary" onPress={() => bridge.resolve(false)} />
       </ThemedModal>
     )
   }

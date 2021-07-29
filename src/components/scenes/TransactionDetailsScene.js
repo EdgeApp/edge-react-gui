@@ -30,7 +30,7 @@ import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPerso
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
-import { PrimaryButton } from '../themed/ThemedButtons.js'
+import { MainButton } from '../themed/MainButton.js'
 import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {
@@ -503,7 +503,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
               <EdgeText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</EdgeText>
             </TouchableWithoutFeedback>
-            <PrimaryButton onPress={this.onSaveTxDetails} label={s.strings.string_save} marginRem={[0, 2, 2]} />
+            <MainButton onPress={this.onSaveTxDetails} label={s.strings.string_save} marginRem={[0, 2, 2]} />
           </View>
         </ScrollView>
       </SceneWrapper>
