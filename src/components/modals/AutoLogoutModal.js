@@ -9,16 +9,19 @@ import s from '../../locales/strings.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type DisplayTime, displayToSeconds, secondsToDisplay } from '../../util/displayTime.js'
 import { LadderLayout } from '../common/LadderLayout.js'
+import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { type AirshipBridge, AirshipModal, ContentArea, dayText, IconCircle } from './modalParts.js'
 
-type Props = {
+type OwnProps = {
   bridge: AirshipBridge<number | null>,
   autoLogoutTimeInSeconds: number
 }
 
 type State = DisplayTime
 
-export class AutoLogoutModal extends React.Component<Props, State> {
+type Props = OwnProps & ThemeProps
+
+class AutoLogoutModalComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { autoLogoutTimeInSeconds } = this.props
@@ -89,3 +92,5 @@ export class AutoLogoutModal extends React.Component<Props, State> {
     )
   }
 }
+
+export const AutoLogoutModal = withTheme(AutoLogoutModalComponent)
