@@ -11,7 +11,7 @@ import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
-import { expiredSoon, findWalletByFioAddress } from '../../modules/FioAddress/util'
+import { alreadyExpired, expiredSoon, findWalletByFioAddress } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
@@ -80,6 +80,8 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
 
   checkExpiredSoon = (): boolean => expiredSoon(this.props.expiration)
 
+  checkAlreadyExpired = (): boolean => alreadyExpired(this.props.expiration)
+
   renderTitle = (title: string) => {
     const styles = getStyles(this.props.theme)
     return (
@@ -95,7 +97,11 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
     let icon, displayName
     if (this.checkExpiredSoon()) {
       icon = <IonIcon name="ios-warning" color={theme.warningIcon} size={theme.rem(1.5)} />
-      displayName = <EdgeText style={styles.warning}>{s.strings.fio_address_details_expired_soon}</EdgeText>
+      displayName = (
+        <EdgeText style={styles.warning}>
+          {this.checkAlreadyExpired() ? s.strings.fio_address_details_already_expired : s.strings.fio_address_details_expired_soon}
+        </EdgeText>
+      )
     } else {
       icon = <IonIcon name="ios-settings" color={theme.icon} size={theme.rem(1.5)} />
       displayName = <EdgeText style={styles.settingsText}>{s.strings.fio_address_details_screen_manage_account_settings}</EdgeText>
