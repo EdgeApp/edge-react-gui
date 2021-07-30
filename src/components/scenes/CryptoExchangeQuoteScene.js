@@ -2,8 +2,7 @@
 
 import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
-import { Image, Platform, ScrollView, View } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
+import { Image, ScrollView, View } from 'react-native'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
 import { swapPluginLogos } from '../../assets/images/exchange'
@@ -18,11 +17,9 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { Card } from '../themed/Card'
-import { EdgeText } from '../themed/EdgeText'
+import Alert from '../themed/Alert'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent.js'
 import { LineTextDivider } from '../themed/LineTextDivider'
-import { ClickableText } from '../themed/ThemedButtons'
 
 type OwnProps = {
   swapInfo: GuiSwapInfo
@@ -211,22 +208,15 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
             walletName={toWallet.name || ''}
           />
           {isEstimate && (
-            <Card warning marginRem={[1.5, 1, 0]}>
-              <ClickableText paddingRem={0} onPress={this.showExplanationForEstimate}>
-                <View style={styles.estimatedContainer}>
-                  <IonIcon
-                    name={Platform.OS === 'ios' ? 'ios-information-circle-outline' : 'md-information-circle-outline'}
-                    color={theme.warningIcon}
-                    size={theme.rem(1.25)}
-                  />
-                  <EdgeText style={styles.estimatedTitle}>{s.strings.estimated_quote}</EdgeText>
-                </View>
-                <EdgeText style={styles.estimatedText} numberOfLines={2}>
-                  {s.strings.estimated_exchange_message}
-                </EdgeText>
-              </ClickableText>
-            </Card>
+            <Alert
+              title={s.strings.estimated_quote}
+              message={s.strings.estimated_exchange_message}
+              type="warning"
+              marginRem={[1.5, 1]}
+              onPress={this.showExplanationForEstimate}
+            />
           )}
+
           <Slider parentStyle={styles.slider} onSlidingComplete={this.doShift} disabled={pending} showSpinner={pending} />
           {this.renderTimer()}
           <View style={styles.spacer} />
@@ -248,21 +238,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     position: 'relative',
     maxWidth: '70%',
     resizeMode: 'contain'
-  },
-  estimatedContainer: {
-    marginBottom: theme.rem(0.25),
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  estimatedTitle: {
-    color: theme.warningText,
-    marginLeft: theme.rem(0.5),
-    fontSize: theme.rem(0.75),
-    fontWeight: '600'
-  },
-  estimatedText: {
-    fontSize: theme.rem(0.75),
-    color: theme.warningText
   },
   slider: {
     marginTop: theme.rem(1.5)
