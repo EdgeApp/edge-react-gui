@@ -24,7 +24,7 @@ import { checkRecordSendFee, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAd
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import { type GuiExchangeRates, type GuiMakeSpendInfo, type GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -73,26 +73,10 @@ type DispatchProps = {
   selectWallet: (walletId: string, currencyCode: string) => void
 }
 
-type RouteProps = {
-  allowedCurrencyCodes?: string[],
-  guiMakeSpendInfo?: GuiMakeSpendInfo,
-  selectedWalletId?: string,
-  selectedCurrencyCode?: string,
-  isCameraOpen?: boolean,
-  lockTilesMap?: {
-    address?: boolean,
-    wallet?: boolean,
-    amount?: boolean
-  },
-  hiddenTilesMap?: {
-    address?: boolean,
-    amount?: boolean,
-    fioAddressSelect?: boolean
-  },
-  infoTiles?: Array<{ label: string, value: string }>
+type OwnProps = {
+  route: RouteProp<'send'>
 }
-
-type Props = StateProps & DispatchProps & RouteProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 type WalletStates = {
   selectedWalletId: string,
@@ -109,8 +93,8 @@ type State = {
 } & WalletStates
 
 class SendComponent extends React.PureComponent<Props, State> {
-  addressTile: ?React.ElementRef<typeof AddressTile>
-  pinInput: ?React.ElementRef<typeof TextInput> = React.createRef()
+  addressTile: AddressTile | void
+  pinInput: React.ElementRef<typeof TextInput> = React.createRef()
 
   constructor(props: Props) {
     super(props)
@@ -119,13 +103,19 @@ class SendComponent extends React.PureComponent<Props, State> {
       loading: false,
       resetSlider: false,
       fioSender: {
-        fioAddress: props.guiMakeSpendInfo && props.guiMakeSpendInfo.fioPendingRequest ? props.guiMakeSpendInfo.fioPendingRequest.payer_fio_address : '',
+        fioAddress:
+          props.route.params.guiMakeSpendInfo && props.route.params.guiMakeSpendInfo.fioPendingRequest
+            ? props.route.params.guiMakeSpendInfo.fioPendingRequest.payer_fio_address
+            : '',
         fioWallet: null,
         fioError: '',
-        memo: props.guiMakeSpendInfo && props.guiMakeSpendInfo.fioPendingRequest ? props.guiMakeSpendInfo.fioPendingRequest.content.memo : '',
+        memo:
+          props.route.params.guiMakeSpendInfo && props.route.params.guiMakeSpendInfo.fioPendingRequest
+            ? props.route.params.guiMakeSpendInfo.fioPendingRequest.content.memo
+            : '',
         memoError: ''
       },
-      ...this.setWallets(props, props.selectedWalletId, props.selectedCurrencyCode)
+      ...this.setWallets(props, props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode)
     }
   }
 
@@ -142,7 +132,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount(): void {
-    const { guiMakeSpendInfo } = this.props
+    const { guiMakeSpendInfo } = this.props.route.params
 
     if (guiMakeSpendInfo) {
       this.props.sendConfirmationUpdateTx(guiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
@@ -158,8 +148,9 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   componentWillUnmount() {
     this.props.reset()
-    if (this.props.guiMakeSpendInfo && this.props.guiMakeSpendInfo.onBack) {
-      this.props.guiMakeSpendInfo.onBack()
+    const { guiMakeSpendInfo } = this.props.route.params
+    if (guiMakeSpendInfo && guiMakeSpendInfo.onBack) {
+      guiMakeSpendInfo.onBack()
     }
   }
 
@@ -183,7 +174,9 @@ class SendComponent extends React.PureComponent<Props, State> {
     const { props } = this
     const oldSelectedCurrencyCode = this.state.selectedCurrencyCode
 
-    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={this.props.allowedCurrencyCodes} />)
+    Airship.show(bridge => (
+      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={this.props.route.params.allowedCurrencyCodes} />
+    ))
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
           props.selectWallet(walletId, currencyCode)
@@ -207,7 +200,8 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleChangeAddress = async (newGuiMakeSpendInfo: GuiMakeSpendInfo, parsedUri?: EdgeParsedUri) => {
-    const { sendConfirmationUpdateTx, guiMakeSpendInfo } = this.props
+    const { sendConfirmationUpdateTx, route } = this.props
+    const { guiMakeSpendInfo } = route.params
     const { spendTargets } = newGuiMakeSpendInfo
     const recipientAddress = parsedUri ? parsedUri.publicAddress : spendTargets && spendTargets[0].publicAddress ? spendTargets[0].publicAddress : ''
 
@@ -282,7 +276,8 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   submit = async () => {
-    const { guiMakeSpendInfo, updateSpendPending, signBroadcastAndSave } = this.props
+    const { guiMakeSpendInfo } = this.props.route.params
+    const { updateSpendPending, signBroadcastAndSave } = this.props
     const { selectedWalletId, selectedCurrencyCode } = this.state
     this.setState({ loading: true })
 
@@ -327,7 +322,9 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderSelectedWallet() {
-    const { lockInputs, lockTilesMap = {} } = this.props
+    const { lockInputs } = this.props
+    const { lockTilesMap = {} } = this.props.route.params
+
     const { guiWallet, selectedCurrencyCode } = this.state
 
     return (
@@ -341,9 +338,9 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAddressTile() {
-    const { isCameraOpen, lockInputs, lockTilesMap = {}, hiddenTilesMap = {} } = this.props
-    const { recipientAddress } = this.state
-    const { coreWallet, selectedCurrencyCode } = this.state
+    const { route, lockInputs } = this.props
+    const { isCameraOpen, lockTilesMap = {}, hiddenTilesMap = {} } = route.params
+    const { recipientAddress, coreWallet, selectedCurrencyCode } = this.state
 
     if (coreWallet && !hiddenTilesMap.address) {
       return (
@@ -365,7 +362,8 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAmount() {
-    const { exchangeRates, lockInputs, lockTilesMap = {}, hiddenTilesMap = {}, nativeAmount, settings, theme } = this.props
+    const { exchangeRates, lockInputs, nativeAmount, settings, theme } = this.props
+    const { lockTilesMap = {}, hiddenTilesMap = {} } = this.props.route.params
     const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
 
     if (recipientAddress && !hiddenTilesMap.amount) {
@@ -451,7 +449,8 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderSelectFioAddress() {
-    const { hiddenTilesMap = {}, guiMakeSpendInfo, isSendUsingFioAddress } = this.props
+    const { isSendUsingFioAddress } = this.props
+    const { hiddenTilesMap = {}, guiMakeSpendInfo } = this.props.route.params
     const { fioSender } = this.state
 
     if (hiddenTilesMap.fioAddressSelect) return null
@@ -505,7 +504,7 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderInfoTiles() {
-    const { infoTiles } = this.props
+    const { infoTiles } = this.props.route.params
 
     if (!infoTiles || !infoTiles.length) return null
     return infoTiles.map(({ label, value }) => <Tile key={label} type="static" title={label} body={value} />)
@@ -589,10 +588,11 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SendScene = connect<StateProps, DispatchProps, RouteProps>(
+export const SendScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
+    const routeSpendInfo = ownProps.route.params.guiMakeSpendInfo
     const { nativeAmount, transaction, transactionMetadata, error, pending, guiMakeSpendInfo } = state.ui.scenes.sendConfirmation
-    const isSendUsingFioAddress = guiMakeSpendInfo.isSendUsingFioAddress || (ownProps.guiMakeSpendInfo && ownProps.guiMakeSpendInfo.isSendUsingFioAddress)
+    const isSendUsingFioAddress = guiMakeSpendInfo.isSendUsingFioAddress || (routeSpendInfo && routeSpendInfo.isSendUsingFioAddress)
 
     return {
       account: state.core.account,

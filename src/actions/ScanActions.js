@@ -154,8 +154,9 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
     if (parsedUri.legacyAddress != null) {
       // LEGACY ADDRESS URI
       if (await shouldContinueLegacy()) {
+        const guiMakeSpendInfo = { ...parsedUri }
         Actions.push(SEND, {
-          guiMakeSpendInfo: parsedUri,
+          guiMakeSpendInfo,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
         })

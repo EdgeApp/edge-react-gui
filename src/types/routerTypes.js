@@ -3,6 +3,8 @@
 import { type EdgeCurrencyWallet, type OtpError } from 'edge-core-js'
 import * as Flux from 'react-native-router-flux'
 
+import { type GuiMakeSpendInfo } from './types.js'
+
 /**
  * Defines the acceptable route parameters for each scene key.
  */
@@ -69,7 +71,24 @@ export type ParamList = {
   request: void,
   scan: {}, // TODO
   securityAlerts: void,
-  send: {}, // TODO
+  send: {|
+    allowedCurrencyCodes?: string[],
+    guiMakeSpendInfo?: GuiMakeSpendInfo,
+    selectedWalletId?: string,
+    selectedCurrencyCode?: string,
+    isCameraOpen?: boolean,
+    lockTilesMap?: {
+      address?: boolean,
+      wallet?: boolean,
+      amount?: boolean
+    },
+    hiddenTilesMap?: {
+      address?: boolean,
+      amount?: boolean,
+      fioAddressSelect?: boolean
+    },
+    infoTiles?: Array<{ label: string, value: string }>
+  |},
   settingsOverview: void,
   settingsOverviewTab: void,
   spendingLimits: void,
