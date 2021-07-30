@@ -164,7 +164,8 @@ type SpecialCurrencyInfo = {|
   dummyPublicAddress?: string,
   minimumPopupModals?: {
     minimumNativeBalance: string,
-    modalMessage: string
+    modalMessage: string,
+    alertMessage: string
   },
   uniqueIdentifier?: {
     addButtonText: string,
@@ -256,7 +257,8 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     minimumPopupModals: {
       minimumNativeBalance: '10000000',
-      modalMessage: s.strings.request_xlm_minimum_notification_body
+      modalMessage: s.strings.request_xlm_minimum_notification_body,
+      alertMessage: s.strings.request_xlm_minimum_notification_alert_body
     },
     displayBuyCrypto: false,
     isImportKeySupported: {
@@ -273,7 +275,8 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     minimumPopupModals: {
       minimumNativeBalance: '20000000',
-      modalMessage: s.strings.request_xrp_minimum_notification_body
+      modalMessage: s.strings.request_xrp_minimum_notification_body,
+      alertMessage: s.strings.request_xrp_minimum_notification_alert_body
     },
     displayBuyCrypto: false,
     isImportKeySupported: {
