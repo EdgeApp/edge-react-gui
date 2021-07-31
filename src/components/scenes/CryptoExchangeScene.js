@@ -8,7 +8,7 @@ import { sprintf } from 'sprintf-js'
 
 import { type SetNativeAmountInfo, getQuoteForTransaction, selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { updateMostRecentWalletsSelected } from '../../actions/WalletActions.js'
-import { SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
+import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
@@ -18,6 +18,7 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import Alert from '../themed/Alert'
 import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInputWrapperComponent.js'
 import { CryptoExchangeMessageBox } from '../themed/CryptoExchangeMessageBoxComponent'
 import type { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
@@ -151,6 +152,20 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     return <MainButton label={s.strings.string_next_capitalized} marginRem={[1.5, 0, 0]} type="secondary" onPress={this.getQuote} />
   }
 
+  renderAlert = () => {
+    const {
+      fromWallet: { primaryNativeBalance },
+      fromCurrencyCode
+    } = this.props
+
+    const { minimumPopupModals } = getSpecialCurrencyInfo(fromCurrencyCode)
+
+    if (minimumPopupModals && primaryNativeBalance < minimumPopupModals.minimumNativeBalance) {
+      return <Alert marginRem={[1.5, 1]} title={s.strings.request_minimum_notification_title} message={minimumPopupModals.alertMessage} type="warning" />
+    }
+    return null
+  }
+
   renderDropUp = (whichWallet: 'from' | 'to') => {
     Airship.show(bridge => (
       <WalletListModal
@@ -197,6 +212,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
     const isToFocused = this.state.whichWalletFocus === 'to'
     const fromHeaderText = sprintf(s.strings.exchange_from_wallet, this.props.fromWallet.name)
     const toHeaderText = sprintf(s.strings.exchange_to_wallet, this.props.toWallet.name)
+
     return (
       <SceneWrapper background="theme">
         <SceneHeader withTopMargin title={s.strings.title_exchange} underline />
@@ -239,6 +255,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
           />
           {this.props.calculatingMax && <ActivityIndicator style={styles.spinner} color={this.props.theme.iconTappable} />}
           {this.renderButton()}
+          {this.renderAlert()}
           <View style={styles.spacer} />
         </KeyboardAwareScrollView>
       </SceneWrapper>
