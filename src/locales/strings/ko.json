@@ -8,7 +8,6 @@
   "drawer_request": "요청",
   "drawer_sweep_private_key": "개인 키를 스윕(Sweep) 하기",
   "drawer_wallets": "월렛",
-  "dropdown_exchange_max_amount": "최대 금액으로 거래",
   "max_spend_unavailable_modal_title": "최대 지출 불가",
   "max_spend_unavailable_modal_message": "통화 %s 의 최대 지출 가능 금액을 산출할 수 없습니다. 금액을 입력해주세요.",
   "edge_description": "이 어플리케이션은 고객님의 Edge 계정내의 월렛의 생성 또는 접속을 요구하고 있습니다. 다른 월렛에는 접속하지 않습니다.",
