@@ -830,6 +830,10 @@ export const expiredSoon = (expDate: string): boolean => {
   return new Date(expDate).getTime() - new Date().getTime() < MONTH
 }
 
+export const alreadyExpired = (expDate: string): boolean => {
+  return new Date(expDate).getTime() < new Date().getTime()
+}
+
 export const needToCheckExpired = (lastChecks: { [fioName: string]: Date }, fioName: string): boolean => {
   try {
     let lastCheck = lastChecks[fioName]
