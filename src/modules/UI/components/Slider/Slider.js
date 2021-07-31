@@ -9,7 +9,7 @@ import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.p
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../../components/services/ThemeContext.js'
 import { EdgeText } from '../../../../components/themed/EdgeText'
 import s from '../../../../locales/strings.js'
-import { useEffect, useState } from '../../../../types/reactHooks.js'
+import { useCallback, useEffect, useState } from '../../../../types/reactHooks.js'
 
 const COMPLETE_POINT: number = 3
 
@@ -58,19 +58,17 @@ export const SliderComponent = (props: Props) => {
   const translateX = useSharedValue(upperBound)
   const isSliding = useSharedValue(false)
 
-  const resetSlider = () => {
+  const resetSlider = useCallback(() => {
     translateX.value = withTiming(upperBound, {
       duration: 500,
       easing: Easing.inOut(Easing.exp)
     })
     setCompleted(false)
-  }
+  }, [translateX, setCompleted, upperBound])
   const complete = () => {
     onSlidingComplete()
     setCompleted(true)
   }
-
-  if (reset && translateX.value === 0) resetSlider()
 
   const onGestureEvent = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
@@ -108,12 +106,14 @@ export const SliderComponent = (props: Props) => {
     }
   })
 
+  // Reset slider state conditions:
   useEffect(() => {
-    if (completed && !props.showSpinner) {
-      resetSlider()
-    }
+    // Reset prop set by parent
+    if (reset) resetSlider()
+    // Completed prop set by parent and no longer showing spinner
+    else if (completed && !showSpinner) resetSlider()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.showSpinner])
+  }, [resetSlider, reset, showSpinner])
 
   return (
     <View style={[parentStyle, styles.sliderContainer]}>
