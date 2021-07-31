@@ -29,7 +29,8 @@ export type Props = {
   onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void,
   onNext: () => void,
   onFocus?: () => void,
-  onBlur?: () => void
+  onBlur?: () => void,
+  children?: React.Node
 }
 
 class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & ThemeProps> {
@@ -51,7 +52,8 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & Th
   }
 
   render() {
-    const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, overridePrimaryExchangeAmount, theme } = this.props
+    const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, overridePrimaryExchangeAmount, children, theme } =
+      this.props
     const styles = getStyles(theme)
 
     if (this.props.isThinking) {
@@ -109,6 +111,7 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & Th
           isFiatOnTop
           isFocus={false}
         />
+        {children}
       </Card>
     )
   }
@@ -160,7 +163,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   iconText: {
     color: theme.primaryText,
-    fontWeight: '600',
+    fontFamily: theme.fontFaceBold,
     fontSize: theme.rem(1.25)
   }
 }))
