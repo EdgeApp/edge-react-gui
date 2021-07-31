@@ -7,7 +7,6 @@
   "drawer_request": "リクエスト",
   "drawer_sweep_private_key": "プライベートキーをスウィープする",
   "drawer_wallets": "ウォレット",
-  "dropdown_exchange_max_amount": "上限額を交換",
   "max_spend_unavailable_modal_title": "これ以上の支出は不可能です",
   "max_spend_unavailable_modal_message": "これ以上の%s の使用はできません、金額を入力してください。",
   "edge_description": "このアプリはエッジアカウント内のウォレットの作成またはアクセスを求めています。\n他のウォレットには一切アクセスしません。",
