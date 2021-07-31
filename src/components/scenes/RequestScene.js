@@ -5,7 +5,7 @@ import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
-import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -22,9 +22,9 @@ import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { getCurrencyInfo, getDenomFromIsoCode, getObjectDiff } from '../../util/utils.js'
-import { QrCode } from '../common/QrCode.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { CenteredModal } from '../modals/CenteredModal'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -32,6 +32,7 @@ import { Card } from '../themed/Card.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { type ExchangedFlipInputAmounts, ExchangedFlipInput } from '../themed/ExchangedFlipInput.js'
 import { FlipInput } from '../themed/FlipInput.js'
+import { QrCode } from '../themed/QrCode'
 import { ShareButtons } from '../themed/ShareButtons.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
@@ -67,8 +68,7 @@ type State = {
   legacyAddress: string,
   encodedURI: string,
   minimumPopupModalState: CurrencyMinimumPopupState,
-  isFioMode: boolean,
-  qrCodeContainerHeight: number
+  isFioMode: boolean
 }
 
 const inputAccessoryViewID: string = 'cancelHeaderId'
@@ -90,8 +90,7 @@ export class RequestComponent extends React.Component<Props, State> {
       legacyAddress: props.legacyAddress,
       encodedURI: '',
       minimumPopupModalState,
-      isFioMode: false,
-      qrCodeContainerHeight: 0
+      isFioMode: false
     }
     if (this.shouldShowMinimumModal(props)) {
       const { currencyCode } = props
@@ -265,9 +264,12 @@ export class RequestComponent extends React.Component<Props, State> {
     })
   }
 
-  handleQrCodeLayout = (event: any) => {
-    const { height } = event.nativeEvent.layout
-    this.setState({ qrCodeContainerHeight: height })
+  handleQrCodePress = () => {
+    Airship.show(bridge => (
+      <CenteredModal bridge={bridge}>
+        <QrCode data={this.state.encodedURI} marginRem={0} />
+      </CenteredModal>
+    ))
   }
 
   render() {
@@ -321,11 +323,11 @@ export class RequestComponent extends React.Component<Props, State> {
                 </View>
               </InputAccessoryView>
             ) : null}
-            <View style={styles.qrContainer} onLayout={this.handleQrCodeLayout}>
-              {this.state.qrCodeContainerHeight < theme.rem(1) ? null : (
-                <QrCode data={this.state.encodedURI} size={this.state.qrCodeContainerHeight - theme.rem(1)} />
-              )}
-            </View>
+            <TouchableWithoutFeedback onPress={this.handleQrCodePress}>
+              <View style={styles.qrContainer}>
+                <QrCode data={this.state.encodedURI} />
+              </View>
+            </TouchableWithoutFeedback>
             <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
               <View style={styles.rightChevronContainer}>
                 <EdgeText>{s.strings.request_qr_your_receiving_wallet_address}</EdgeText>
@@ -499,12 +501,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
   qrContainer: {
     alignSelf: 'center',
-    aspectRatio: 1,
-    backgroundColor: theme.qrBackgroundColor,
-    borderRadius: theme.rem(0.5),
-    flex: 1,
-    margin: theme.rem(2),
-    padding: theme.rem(0.5)
+    flex: 1
   },
 
   rightChevronContainer: {

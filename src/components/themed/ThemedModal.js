@@ -22,18 +22,27 @@ type Props<T> = {
   // Control over the content area:
   flexDirection?: $PropertyType<ViewStyle, 'flexDirection'>,
   justifyContent?: $PropertyType<ViewStyle, 'justifyContent'>,
-  paddingRem?: number[] | number
+  paddingRem?: number[] | number,
+  position?: 'center' | 'bottom'
 }
 
 /**
  * The Airship modal, but connected to our theming system.
  */
 export function ThemedModal<T>(props: Props<T>) {
-  const { bridge, children = null, flexDirection, iconRem = 0, justifyContent, onCancel } = props
+  const { bridge, children = null, flexDirection, iconRem = 0, justifyContent, onCancel, position } = props
   const paddingRem = unpackEdges(props.paddingRem ?? 1)
   const theme = useTheme()
 
+  let margin = [theme.rem(iconRem / 2), 0, 0]
   paddingRem.top += iconRem / 2
+  let padding = packEdges(paddingRem).map(theme.rem)
+  const isModalCentered = position === 'center'
+
+  if (isModalCentered) {
+    margin = 0
+    padding = 0
+  }
 
   return (
     <AirshipModal
@@ -42,9 +51,10 @@ export function ThemedModal<T>(props: Props<T>) {
       borderRadius={theme.rem(1)}
       flexDirection={flexDirection}
       justifyContent={justifyContent}
-      margin={[theme.rem(iconRem / 2), 0, 0]}
+      margin={margin}
       onCancel={onCancel}
-      padding={packEdges(paddingRem).map(theme.rem)}
+      center={isModalCentered}
+      padding={padding}
       underlay={<BlurView blurType={theme.modalBlurType} style={StyleSheet.absoluteFill} />}
     >
       {children}
