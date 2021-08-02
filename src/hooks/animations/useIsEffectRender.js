@@ -1,6 +1,6 @@
 // @flow
 
-import { useEffect, useState } from '../../../types/reactHooks'
+import { useEffect, useState } from '../../types/reactHooks'
 
 const useIsEffectRender = (isRunEffect: boolean, druration: number) => {
   const [isRender, setIsRender] = useState(true)

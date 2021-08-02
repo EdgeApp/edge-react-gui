@@ -3,10 +3,10 @@
 import { StyleSheet } from 'react-native'
 import { Easing, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 
-import { useState } from '../../../types/reactHooks'
+import { useState } from '../../types/reactHooks'
 import useIsEffectRender from './useIsEffectRender'
 
-const useDropDown = (isOpen: boolean, durantionDown: number = 200, durantionOpacity: number = 200) => {
+export const useDropDown = (isOpen: boolean, durantionDown: number = 200, durantionOpacity: number = 200) => {
   const [listHeight, setListHeight] = useState(-1)
   const [isShadowRender, setIsShadowRender] = useState(true)
 
@@ -46,8 +46,6 @@ const useDropDown = (isOpen: boolean, durantionDown: number = 200, durantionOpac
     isRender: isShadowRender || isRender
   }
 }
-
-export default useDropDown
 
 const styles = StyleSheet.create({
   hide: {

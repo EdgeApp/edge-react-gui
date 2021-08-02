@@ -52,7 +52,7 @@ export default function ControlPanel({
   return (
     <SceneWrapper hasHeader={false} hasTabs={false} isGapTop={false} background="none">
       <View style={styles.panel}>
-        <PanelDisable isDisable={isViewUserList} />
+        <PanelDisable isVisable={isViewUserList} />
         <View style={styles.header}>
           <PanelLogo />
           <PanelCurrency />

@@ -10,10 +10,10 @@ import { EXCHANGE_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { needToShowConfetti } from '../../util/show-confetti'
+import { Fade } from '../animation/Fade'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
-import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton.js'
 
 type StateProps = {

@@ -2,20 +2,18 @@
 
 import * as React from 'react'
 
-import Fide from '../../../components/animation/Fide'
+import { Fade } from '../../../components/animation/Fade'
 import { type Theme, cacheStyles, useTheme } from '../../services/ThemeContext'
 
 type Props = {
-  isDisable: boolean
+  isVisable: boolean
 }
 
-export default function PanelDisable({ isDisable }: Props) {
+export default function PanelDisable({ isVisable }: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  // const FideComponent = useFide({ fideIn: 0.8 })
-
-  return <Fide style={styles.disable} isFideIn={isDisable} />
+  return <Fade style={styles.disable} visible={isVisable} fideInOpacity={0.8} />
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
