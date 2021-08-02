@@ -3210,9 +3210,9 @@ bs58check@2.1.2, bs58check@<3.0.0, bs58check@^1.0.8, bs58check@^2.1.1, bs58check
     create-hash "^1.1.0"
     safe-buffer "^5.1.2"
 
-"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
+"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
   version "2.1.2"
-  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#8ff31333a7626161c1484b461c20710bb9f97b93"
+  resolved "https://github.com/Groestlcoin/bs58grscheck#8ff31333a7626161c1484b461c20710bb9f97b93"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -10251,6 +10251,13 @@ react-native-airship@^0.2.6:
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.6.tgz#ee035570921101edd689f8795d06a486ebc7e2d4"
   integrity sha512-pa2rVwgef7HuD6NZUWSvFceoyPoALQktSSn9KaSkHj1aexUEvqDavnX7GmfrOabzYGLOdUNy5DYFhveLADF8CA==
+  dependencies:
+    yavent "^0.1.1"
+
+react-native-airship@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.7.tgz#9c4c080472e9d9e9454e3c2f75aae0001a603d72"
+  integrity sha512-z9xWFoGbntBbMKe46cz3V44pukGLJd1t+uMn+TPKgVcKkz3ajFz+nypbnKAIeiCkoHdSuSEYLZ1v2oYki/dzbQ==
   dependencies:
     yavent "^0.1.1"
 
