@@ -65,7 +65,6 @@
   "fragment_create_wallet_create_wallet": "Create Wallet",
   "fragment_create_wallet_select_valid": "Please select valid data",
   "fragment_insufficient_funds": "insufficient funds",
-  "fragmet_invalid_password": "Invalid Password",
   "fragment_request_copy_title": "Copy",
   "fragment_request_subtitle": "Request",
   "fragment_request_address_copied": "Request address successfully copied to clipboard",
