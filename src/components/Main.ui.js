@@ -10,6 +10,7 @@ import { registerDevice } from '../actions/DeviceIdActions.js'
 import { logoutRequest } from '../actions/LoginActions.js'
 import { checkAndShowGetCryptoModal } from '../actions/ScanActions.js'
 import { showReEnableOtpModal } from '../actions/SettingsActions.js'
+import ControlPanel from '../components/navigation/ControlPanel'
 import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletChoiceScene.js'
 import { CreateWalletImportScene } from '../components/scenes/CreateWalletImportScene.js'
 import { CreateWalletReviewScene } from '../components/scenes/CreateWalletReviewScene.js'
@@ -105,7 +106,6 @@ import {
   WALLET_LIST_SCENE
 } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
-import { ControlPanel } from '../modules/UI/components/ControlPanel/ControlPanel.ui.js'
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { connect } from '../types/reactRedux.js'
@@ -234,7 +234,16 @@ export class MainComponent extends React.Component<Props> {
 
   renderTabView = () => {
     return (
-      <Drawer key={EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton drawerPosition="right" drawerWidth={scale(280)}>
+      <Drawer
+        hideTabBar
+        drawerBackgroundColor="none"
+        key={EDGE}
+        hideNavBar
+        contentComponent={ControlPanel}
+        hideDrawerButton
+        drawerPosition="right"
+        drawerWidth={scale(275)}
+      >
         {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
         <Scene key="AllMyTabs" hideNavBar>
           <Tabs key={EDGE} swipeEnabled={false} tabBarPosition="bottom" tabBarComponent={MenuTab}>

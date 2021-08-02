@@ -5,12 +5,13 @@ import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaTo
 import _ from 'lodash'
 import { Linking, Platform } from 'react-native'
 import SafariView from 'react-native-safari-view'
+import * as ReactRedux from 'react-redux'
 
 import { FEE_ALERT_THRESHOLD, FEE_COLOR_THRESHOLD, FIAT_CODES_SYMBOLS, getSymbolFromCurrency } from '../constants/WalletAndCurrencyConstants.js'
 import { formatNumber } from '../locales/intl.js'
 import { emptyEdgeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrency, convertCurrencyFromExchangeRates } from '../selectors/WalletSelectors.js'
-import { type RootState } from '../types/reduxTypes.js'
+import { type RootState, type ShallowEqual } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet, TransactionListTx } from '../types/types.js'
 import { type GuiExchangeRates } from '../types/types.js'
 
@@ -811,3 +812,6 @@ export function getCryptoAmount(
     throw new Error(error)
   }
 }
+
+// $FlowFixMe
+export const reduxShallowEqual: ShallowEqual = ReactRedux.shallowEqual

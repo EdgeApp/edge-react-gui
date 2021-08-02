@@ -54,6 +54,7 @@ const palette = {
   accentOrange: '#F1AA19',
   darkBlueNavyGradient1: '#0C446A',
   darkBlueNavyGradient2: '#0D2145',
+  darkBlueNavyGradient3: '#0C1E3D',
 
   blackOp25: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
@@ -92,6 +93,10 @@ export const edgeDark: Theme = {
   iconLoadingOverlay: palette.whiteOp75,
   transactionListIconBackground: palette.darkBlue,
   buySellCustomPluginModalIcon: palette.darkBlue,
+
+  // Control panel
+  iconPanel: palette.edgeMint,
+  panelBackground: palette.darkBlueNavyGradient3,
 
   // Background
   backgroundGradientLeft: palette.edgeNavy,

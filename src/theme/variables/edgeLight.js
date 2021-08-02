@@ -53,6 +53,7 @@ const palette = {
   accentRed: '#E85466',
   accentBlue: '#0073D9',
   accentOrange: '#FF8A00',
+  darkBlueNavyGradient3: '#0C1E3D',
 
   blackOp25: 'rgba(0, 0, 0, .25)',
   blackOp50: 'rgba(0, 0, 0, .5)',
@@ -93,6 +94,10 @@ export const edgeLight: Theme = {
   // Background
   backgroundGradientLeft: palette.lightestGray,
   backgroundGradientRight: palette.lightestGray,
+
+  // Control panel
+  iconPanel: palette.edgeMint,
+  panelBackground: palette.darkBlueNavyGradient3,
 
   // Modal
   modal: palette.lightestGray,

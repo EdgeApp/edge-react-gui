@@ -40,7 +40,9 @@ type Props = {
   padding?: number,
 
   // True to make the scene scrolling (if avoidKeyboard is false):
-  scroll?: boolean
+  scroll?: boolean,
+
+  isGapTop?: boolean
 }
 
 /**
@@ -51,7 +53,7 @@ type Props = {
  */
 export class SceneWrapper extends React.Component<Props> {
   render() {
-    const { avoidKeyboard = false, hasHeader = true, hasTabs = true } = this.props
+    const { avoidKeyboard = false, hasHeader = true, hasTabs = true, isGapTop = true } = this.props
 
     return (
       <LayoutContext>
@@ -60,7 +62,7 @@ export class SceneWrapper extends React.Component<Props> {
           const gap = {
             ...safeAreaInsets,
             bottom: hasTabs ? 0 : safeAreaInsets.bottom,
-            top: safeAreaInsets.top + (hasHeader ? getHeaderHeight() : 0)
+            top: isGapTop ? safeAreaInsets.top + (hasHeader ? getHeaderHeight() : 0) : 0
           }
           const downValue = metrics.layout.height - gap.top
           const upValue = keyboardHeight => downValue - keyboardHeight
