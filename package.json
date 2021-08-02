@@ -161,6 +161,7 @@
     "redux": "^4.1.0",
     "redux-flipper": "^1.4.2",
     "redux-thunk": "^2.3.0",
+    "rn-qr-generator": "^1.1.7",
     "sprintf-js": "^1.1.1",
     "url-parse": "^1.4.4",
     "why-did-you-update": "^0.1.1"
