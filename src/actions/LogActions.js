@@ -1,24 +1,40 @@
 // @flow
 
 import { type EdgeDataDump } from 'edge-core-js'
+import * as React from 'react'
 import { Platform } from 'react-native'
 import { getBrand, getBuildNumber, getDeviceId, getVersion } from 'react-native-device-info'
 import { base16, base64 } from 'rfc4648'
 
 import packageJson from '../../package.json'
-import { showActivity, showError, showToast } from '../components/services/AirshipInstance'
+import { SingleInputModal } from '../components/modals/SingleInputModal.js'
+import { Airship, showActivity, showError, showToast } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
 import { sendLogs } from '../modules/Logs/api.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
 import { log, readLogs } from '../util/logger.js'
 
-export const submitLogs = (notes: string) => async (dispatch: Dispatch) => {
-  try {
-    await showActivity(s.strings.settings_modal_send_logs_loading, dispatch(prepareLogs(notes)))
-    showToast(s.strings.settings_modal_send_logs_success)
-  } catch (error) {
-    showError(error)
-  }
+export const showSendLogsModal = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const { isConnected } = state.network
+  if (!isConnected) return showError(s.strings.network_alert_title)
+
+  Airship.show(bridge => (
+    <SingleInputModal
+      bridge={bridge}
+      label={s.strings.settings_modal_send_logs_label}
+      returnKeyType="send"
+      title={s.strings.settings_button_send_logs}
+      onSubmit={async notes => {
+        try {
+          await showActivity(s.strings.settings_modal_send_logs_loading, dispatch(prepareLogs(notes)))
+          showToast(s.strings.settings_modal_send_logs_success)
+        } catch (error) {
+          showError(error)
+        }
+      }}
+    />
+  ))
 }
 
 const prepareLogs = (text: string) => async (dispatch: Dispatch, getState: GetState) => {
