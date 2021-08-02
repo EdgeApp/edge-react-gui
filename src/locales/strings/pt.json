@@ -8,7 +8,6 @@
   "drawer_request": "Pedir",
   "drawer_sweep_private_key": "Varrer Chave Privada",
   "drawer_wallets": "Carteiras",
-  "exchange_max_amount": "Quantia Máxima de troca",
   "edge_description": "Este aplicativo gostaria de criar ou acessar sua carteira de sua conta na Edge.\n\nEle não terá acesso a quaisquer outras carteiras.",
   "edge_description_warning": "Alerta: A aplicação \"%1$s\" está solicitando acesso completo à sua conta e todas as carteiras. \n\nSó aceite esta solicitação de login se você confiar nessa aplicação e de onde ela foi baixada.",
   "exchange_failed": "A troca Falhou",
