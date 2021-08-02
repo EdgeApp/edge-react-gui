@@ -11372,6 +11372,11 @@ rlp@^2.2.4:
   dependencies:
     bn.js "^4.11.1"
 
+rn-qr-generator@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/rn-qr-generator/-/rn-qr-generator-1.1.7.tgz#b962fff2c123f3fa891e274c9b65c5c5777eb3a8"
+  integrity sha512-6Wi4xqO0K2BojwLVVW9Qxyh5TzfZNsoFlZ8sMbwMdz+5qJzk3qAPwmB5s8LqmOMVeY2RZNuOmk//Emq5zn5xWg==
+
 rollup-plugin-node-resolve@4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/rollup-plugin-node-resolve/-/rollup-plugin-node-resolve-4.0.0.tgz#9bc6b8205e9936cc0e26bba2415f1ecf1e64d9b2"
