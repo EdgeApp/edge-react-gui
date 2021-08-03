@@ -1,6 +1,6 @@
 // @flow
 
-import { createInputModal, createSecureTextModal } from 'edge-components'
+import { createSecureTextModal } from 'edge-components'
 import * as React from 'react'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
@@ -8,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 import { launchModal } from '../components/common/ModalProvider.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { RawTextModal } from '../components/modals/RawTextModal.js'
+import { TextInputModal } from '../components/modals/TextInputModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { getTheme } from '../components/services/ThemeContext.js'
 import { CheckPasswordModal } from '../components/themed/CheckPasswordModal.js'
@@ -205,39 +206,26 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
 
     case 'rename': {
       return async (dispatch: Dispatch, getState: GetState) => {
-        try {
-          const state = getState()
-          const { currencyWallets } = state.core.account
-          const wallet = currencyWallets[walletId]
-          const walletName = wallet.name
-          const input = {
-            label: s.strings.fragment_wallets_rename_wallet,
-            autoCorrect: false,
-            returnKeyType: 'go',
-            initialValue: walletName,
-            autoFocus: true
-          }
-          const yesButton = {
-            title: s.strings.string_done_cap
-          }
-          const noButton = {
-            title: s.strings.string_cancel_cap
-          }
-          const renameWalletModal = createInputModal({
-            icon: <FontAwesomeIcon name="edit" size={30} />,
-            title: s.strings.fragment_wallets_rename_wallet,
-            input,
-            yesButton,
-            noButton
-          })
-          const resolveValue = await launchModal(renameWalletModal)
-          if (resolveValue) {
-            await wallet.renameWallet(resolveValue)
-            dispatch(refreshWallet(walletId))
-          }
-        } catch (error) {
-          showError(error)
-        }
+        const state = getState()
+        const { currencyWallets } = state.core.account
+        const wallet = currencyWallets[walletId]
+        const walletName = wallet.name ?? ''
+
+        await Airship.show(bridge => (
+          <TextInputModal
+            autoCorrect={false}
+            bridge={bridge}
+            initialValue={walletName}
+            inputLabel={s.strings.fragment_wallets_rename_wallet}
+            returnKeyType="go"
+            title={s.strings.fragment_wallets_rename_wallet}
+            onSubmit={async name => {
+              await wallet.renameWallet(name)
+              dispatch(refreshWallet(walletId))
+              return true
+            }}
+          />
+        ))
       }
     }
 
