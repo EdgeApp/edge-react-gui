@@ -6,7 +6,6 @@ import * as React from 'react'
 import { Image, Linking, Platform, ScrollView, TouchableWithoutFeedback, View } from 'react-native'
 import Mailer from 'react-native-mail'
 import SafariView from 'react-native-safari-view'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
@@ -277,14 +276,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
     }
 
     const openExchangeDetails = () => {
-      Airship.show(bridge => (
-        <RawTextModal
-          bridge={bridge}
-          body={createExchangeDataString()}
-          title={s.strings.transaction_details_exchange_details}
-          icon={<FontAwesomeIcon name="exchange" size={theme.rem(1.5)} color={theme.tileBackground} />}
-        />
-      ))
+      Airship.show(bridge => <RawTextModal bridge={bridge} body={createExchangeDataString()} title={s.strings.transaction_details_exchange_details} />)
     }
 
     const openUrl = () => {
