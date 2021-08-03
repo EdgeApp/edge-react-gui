@@ -93,6 +93,9 @@ export const edgeDark: Theme = {
   transactionListIconBackground: palette.darkBlue,
   buySellCustomPluginModalIcon: palette.darkBlue,
 
+  // Control panel
+  iconPanel: palette.edgeMint,
+
   // Background
   backgroundGradientLeft: palette.edgeNavy,
   backgroundGradientRight: palette.darkBlue,

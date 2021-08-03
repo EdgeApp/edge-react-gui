@@ -28,6 +28,9 @@ export type Theme = {
   // modalFullGradientLeft: string,
   // modalFullGradientRight: string,
 
+  // Control panel
+  iconPanel: string,
+
   // Tile
   // listHeaderBackground: string,
   tileBackground: string,
