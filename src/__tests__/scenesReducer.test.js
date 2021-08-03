@@ -63,10 +63,6 @@ test('initialState', () => {
       xPubSyntax: '',
       walletArchivesVisible: false,
       walletId: ''
-    },
-    uniqueIdentifierModal: {
-      isActive: false,
-      uniqueIdentifier: undefined
     }
   }
   const actual = scenesReducer(undefined, dummyAction)

@@ -7,7 +7,6 @@ import { type ControlPanelState, controlPanel } from '../../modules/UI/component
 import type { Action } from '../../types/reduxTypes.js'
 import { type EditTokenState, editToken } from '../EditTokenReducer.js'
 import { type RequestTypeState, requestType } from '../RequestTypeReducer.js'
-import { type UniqueIdentifierModalState, uniqueIdentifierModal } from '../UniqueIdentifierModalReducer.js'
 import { type CreateWalletState, createWallet } from './CreateWalletReducer.js'
 import { type ScanState, scan } from './ScanReducer.js'
 import { type SendConfirmationState, sendConfirmation } from './SendConfirmationReducer.js'
@@ -25,7 +24,6 @@ export type ScenesState = {
   +sendConfirmation: SendConfirmationState,
   +transactionDetails: TransactionDetailsState,
   +transactionList: TransactionListState,
-  +uniqueIdentifierModal: UniqueIdentifierModalState,
   +walletList: WalletListState
 }
 
@@ -39,6 +37,5 @@ export const scenes: Reducer<ScenesState, Action> = combineReducers({
   sendConfirmation,
   transactionDetails,
   transactionList,
-  uniqueIdentifierModal,
   walletList
 })

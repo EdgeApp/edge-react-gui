@@ -167,10 +167,10 @@ type SpecialCurrencyInfo = {|
     modalMessage: string,
     alertMessage: string
   },
-  uniqueIdentifier?: {
+  uniqueIdentifierInfo?: {
     addButtonText: string,
     identifierName: string,
-    identifierKeyboardType: 'default' | 'email-address' | 'numeric' | 'phone-pad' | 'number-pad' | 'decimal-pad'
+    keyboardType: 'default' | 'email-address' | 'numeric' | 'phone-pad' | 'number-pad' | 'decimal-pad'
   },
   isImportKeySupported?:
     | false
@@ -250,10 +250,10 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   XLM: {
     dummyPublicAddress: 'GBEVGJYAUKJ2TVPMC3GEPI2GGZQLMWZDRWJCVNBXCJ3ELYTDPHVQQM74',
-    uniqueIdentifier: {
+    uniqueIdentifierInfo: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo_id,
       identifierName: s.strings.unique_identifier_memo_id,
-      identifierKeyboardType: 'default'
+      keyboardType: 'default'
     },
     minimumPopupModals: {
       minimumNativeBalance: '10000000',
@@ -268,10 +268,10 @@ export const SPECIAL_CURRENCY_INFO: {
   },
   XRP: {
     dummyPublicAddress: 'rfuESo7eHUnvebxgaFjfYxfwXhM2uBPAj3',
-    uniqueIdentifier: {
+    uniqueIdentifierInfo: {
       addButtonText: s.strings.unique_identifier_dropdown_option_destination_tag,
       identifierName: s.strings.unique_identifier_destination_tag,
-      identifierKeyboardType: 'numeric'
+      keyboardType: 'numeric'
     },
     minimumPopupModals: {
       minimumNativeBalance: '20000000',
@@ -294,10 +294,10 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
-    uniqueIdentifier: {
+    uniqueIdentifierInfo: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo,
       identifierName: s.strings.unique_identifier_memo,
-      identifierKeyboardType: 'default'
+      keyboardType: 'default'
     },
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
@@ -310,10 +310,10 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: true,
     noChangeMiningFee: true,
-    uniqueIdentifier: {
+    uniqueIdentifierInfo: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo,
       identifierName: s.strings.unique_identifier_memo,
-      identifierKeyboardType: 'default'
+      keyboardType: 'default'
     },
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
@@ -326,10 +326,10 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: 'edgecreator2',
     needsAccountNameSetup: false,
     noChangeMiningFee: true,
-    uniqueIdentifier: {
+    uniqueIdentifierInfo: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo,
       identifierName: s.strings.unique_identifier_memo,
-      identifierKeyboardType: 'default'
+      keyboardType: 'default'
     },
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_active_key_input_prompt,
@@ -378,10 +378,10 @@ export const SPECIAL_CURRENCY_INFO: {
     }
   },
   BNB: {
-    uniqueIdentifier: {
+    uniqueIdentifierInfo: {
       addButtonText: s.strings.unique_identifier_dropdown_option_memo,
       identifierName: s.strings.unique_identifier_memo,
-      identifierKeyboardType: 'default'
+      keyboardType: 'default'
     },
     isImportKeySupported: {
       privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
