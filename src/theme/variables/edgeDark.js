@@ -59,7 +59,7 @@ const palette = {
   blackOp50: 'rgba(0, 0, 0, .5)',
 
   whiteOp10: 'rgba(255, 255, 255, .1)',
-  whiteOp05: 'rgba(255, 255, 255, .05)',
+  whiteOp05: 'rgba(164, 199, 223, 0.4)',
   whiteOp75: 'rgba(255, 255, 255, .75)',
 
   grayOp80: 'rgba(135, 147, 158, .8)',
