@@ -53,10 +53,10 @@ export const convertCurrency = (state: RootState, fromCurrencyCode: string, toCu
   return convertedAmount
 }
 
-const convertCurrencyWithoutState = (exchangeRates: { [string]: number }, fromCurrencyCode: string, toCurrencyCode: string, amount: number = 1) => {
+const convertCurrencyWithoutState = (exchangeRates: { [string]: string }, fromCurrencyCode: string, toCurrencyCode: string, amount: string = '1'): string => {
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
-  const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
-  const convertedAmount = amount * exchangeRate
+  const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : '0'
+  const convertedAmount = bns.mul(amount, exchangeRate)
   return convertedAmount
 }
 
@@ -73,16 +73,21 @@ export const convertCurrencyFromExchangeRates = (
   return convertedAmount
 }
 
-export const calculateWalletFiatBalanceWithoutState = (wallet: GuiWallet, currencyCode: string, settings: Object, exchangeRates: { [string]: number }) => {
-  let fiatValue = 0 // default to zero if not calculable
+export const calculateWalletFiatBalanceWithoutState = (
+  wallet: GuiWallet,
+  currencyCode: string,
+  settings: Object,
+  exchangeRates: { [string]: number }
+): string => {
+  let fiatValue = '0' // default to zero if not calculable
   const nativeBalance = wallet.nativeBalances[currencyCode]
   if (!nativeBalance || nativeBalance === '0') return '0'
   const denominations = settings[currencyCode].denominations
   const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
   if (!exchangeDenomination) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-  fiatValue = convertCurrencyWithoutState(exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
+  const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
+  fiatValue = convertCurrencyWithoutState(exchangeRatesToString(exchangeRates), currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
   return formatNumber(fiatValue, { toFixed: 2 }) || '0'
 }
 
@@ -91,16 +96,16 @@ export const calculateWalletFiatBalanceUsingDefaultIsoFiat = (
   currencyCode: string,
   settings: Object,
   exchangeRates: { [string]: number }
-) => {
+): string => {
   const nativeBalance = wallet.nativeBalances[currencyCode]
-  if (!settings[currencyCode]) return 0
+  if (!settings[currencyCode]) return '0'
   const denominations = settings[currencyCode].denominations
-  if (!nativeBalance || nativeBalance === '0' || !denominations) return 0
+  if (!nativeBalance || nativeBalance === '0' || !denominations) return '0'
   const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
-  if (!exchangeDenomination) return 0
+  if (!exchangeDenomination) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
-  const cryptoAmount: number = parseFloat(convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-  return convertCurrencyWithoutState(exchangeRates, currencyCode, settings.defaultIsoFiat, cryptoAmount) || 0
+  const cryptoAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeBalance)
+  return convertCurrencyWithoutState(exchangeRatesToString(exchangeRates), currencyCode, settings.defaultIsoFiat, cryptoAmount) || '0'
 }
 
 export const convertNativeToExchangeRateDenomination = (settings: Object, currencyCode: string, nativeAmount: string): string => {
@@ -130,4 +135,12 @@ export const findWalletByFioAddress = async (state: RootState, fioAddress: strin
   } else {
     return null
   }
+}
+
+const exchangeRatesToString = (exchangeRates: { [string]: number }): { [string]: string } => {
+  const exchangeRateString = {}
+  for (const rate in exchangeRates) {
+    exchangeRateString[rate] = `${exchangeRates[rate]}`
+  }
+  return exchangeRateString
 }

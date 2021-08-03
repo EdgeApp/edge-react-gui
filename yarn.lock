@@ -3210,9 +3210,9 @@ bs58check@2.1.2, bs58check@<3.0.0, bs58check@^1.0.8, bs58check@^2.1.1, bs58check
     create-hash "^1.1.0"
     safe-buffer "^5.1.2"
 
-"bs58grscheck@git+https://github.com/Groestlcoin/bs58grscheck.git":
+"bs58grscheck@https://github.com/Groestlcoin/bs58grscheck":
   version "2.1.2"
-  resolved "git+https://github.com/Groestlcoin/bs58grscheck.git#8ff31333a7626161c1484b461c20710bb9f97b93"
+  resolved "https://github.com/Groestlcoin/bs58grscheck#8ff31333a7626161c1484b461c20710bb9f97b93"
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
@@ -4713,10 +4713,10 @@ edge-components@^0.0.31:
   dependencies:
     react-native-linear-gradient "^2.4.0"
 
-edge-core-js@^0.18.3:
-  version "0.18.3"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.3.tgz#2f70bf4136dacfa5cd4e2bc11f1c097aa20d4cf5"
-  integrity sha512-hjBJRqZ9+h6z6p+z9On2Z2ZzLMdC6gBOgXPrdswuOuU2oT4i5sp9zI7ThjA2c2g0eBaLfZEYzuDKJvKkYWnSqQ==
+edge-core-js@^0.18.4:
+  version "0.18.4"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.4.tgz#3f7f692e3f240f8a455e5ff11cb3da723ab31f3e"
+  integrity sha512-zan+SXI8H7+0e1if3QHjOBeOxbq9p0RQNHgujaagN43U9ipAmooAqdDR6Bb/1qQpTPYppDokZCPZi/OJdfM8Xg==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -4801,10 +4801,10 @@ edge-currency-monero@^0.3.2:
     mymonero-core-js "git://github.com/EdgeApp/mymonero-core-js.git#matthew/txPrivateKey"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.11.31:
-  version "0.11.31"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.31.tgz#ac4504a1eca4ec40b3d692b10134713b05846574"
-  integrity sha512-U2ltvgnI2I1dhrT8MlxE3u1PrZt7665IL7nWPsmegv/ouwIc2vqnm19YUpG4DWyAb0259ehi1/PucFsRGTBgsA==
+edge-exchange-plugins@^0.11.32:
+  version "0.11.32"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.11.32.tgz#0145776ce3394abe5b186487f607f5a7599d3f2e"
+  integrity sha512-0Lq7whYYz3hapBtH00VapmvEQuwof2WbeONEi0DmTLiqBB1RMF2EFeARawImHOCkpNHKtlERz68wiofLOObRWA==
   dependencies:
     biggystring "^3.0.2"
     cleaners "^0.3.9"
@@ -4813,10 +4813,10 @@ edge-exchange-plugins@^0.11.31:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.9.13:
-  version "0.9.13"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.13.tgz#56745f05966a632e78b6a87415784f587770fa03"
-  integrity sha512-fjsVwuC31RHwKT563h8RogBmyrJXZYjdLAwGESGxIDXK3mfACWo8/ZwrvV2Yc45A+ls3wVN/oVY7VyeTlE+36w==
+edge-login-ui-rn@^0.9.14:
+  version "0.9.14"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.14.tgz#0d4531baa0bec6fe55f98891a1e21788e748a95a"
+  integrity sha512-LTLKnVmgn6fMPDTz8QBizt1SjjK7/66eAB/o75Sn/PusNVa0dmiU19549NldvTGoxWPzi/B8tszbT7WglDYlkQ==
   dependencies:
     cleaners "^0.3.1"
     qrcode-generator "^1.4.4"
@@ -10251,6 +10251,13 @@ react-native-airship@^0.2.6:
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.6.tgz#ee035570921101edd689f8795d06a486ebc7e2d4"
   integrity sha512-pa2rVwgef7HuD6NZUWSvFceoyPoALQktSSn9KaSkHj1aexUEvqDavnX7GmfrOabzYGLOdUNy5DYFhveLADF8CA==
+  dependencies:
+    yavent "^0.1.1"
+
+react-native-airship@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/react-native-airship/-/react-native-airship-0.2.7.tgz#9c4c080472e9d9e9454e3c2f75aae0001a603d72"
+  integrity sha512-z9xWFoGbntBbMKe46cz3V44pukGLJd1t+uMn+TPKgVcKkz3ajFz+nypbnKAIeiCkoHdSuSEYLZ1v2oYki/dzbQ==
   dependencies:
     yavent "^0.1.1"
 

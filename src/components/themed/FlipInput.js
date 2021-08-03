@@ -12,6 +12,7 @@ import s from '../../locales/strings.js'
 import * as UTILS from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { BlinkingCursor } from './BlinkingCursor'
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox, RightChevronButton } from './ThemedButtons.js'
 
@@ -431,6 +432,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
 
   bottomRow = (isFront: boolean) => {
     const { isEditable, inputAccessoryViewID, onNext, topReturnKeyType, theme } = this.props
+    const { textInputBackFocus } = this.state
     const styles = getStyles(theme)
     const displayAmount = isFront ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
     const decimalAmount = isFront ? this.state.primaryDecimalAmount : this.state.secondaryDecimalAmount
@@ -448,7 +450,10 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={onPress}>
         <View style={styles.bottomContainer} key="bottom">
-          <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
+          <View style={styles.valueContainer}>
+            {(!textInputBackFocus || !displayAmountCheck) && <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>}
+            <BlinkingCursor visible={textInputBackFocus} fontSize={1.5} color={theme.deactivatedText} />
+          </View>
           {!displayAmountCheck && <EdgeText style={styles.bottomCurrency}>{currencyName}</EdgeText>}
           <TextInput
             style={styles.hiddenTextInput}
@@ -576,16 +581,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     marginRight: theme.rem(1.5)
   },
+  valueContainer: {
+    flexDirection: 'row',
+    marginRight: theme.rem(0.5)
+  },
   bottomAmount: {
     fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(1.5),
-    marginRight: theme.rem(0.5)
+    fontSize: theme.rem(1.5)
   },
   bottomAmountMuted: {
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1.5),
     marginLeft: theme.rem(-0.1), // Hack because of amount being bigger font size not aligning to the rest of the text on justified left
-    marginRight: theme.rem(0.5),
     color: theme.deactivatedText
   },
   bottomCurrency: {
