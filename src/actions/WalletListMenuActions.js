@@ -7,11 +7,11 @@ import { sprintf } from 'sprintf-js'
 
 import { launchModal } from '../components/common/ModalProvider.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
-import { showInfoModal } from '../components/modals/InfoModal'
 import { RawTextModal } from '../components/modals/RawTextModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { getTheme } from '../components/services/ThemeContext.js'
 import { CheckPasswordModal } from '../components/themed/CheckPasswordModal.js'
+import { ModalMessage } from '../components/themed/ModalParts.js'
 import { MANAGE_TOKENS, TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -44,10 +44,12 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const wallet = wallets[walletId]
 
         if (Object.values(wallets).length === 1) {
-          showInfoModal(s.strings.cannot_delete_last_wallet_modal_title, [
-            s.strings.cannot_delete_last_wallet_modal_message_part_1,
-            s.strings.cannot_delete_last_wallet_modal_message_part_2
-          ])
+          Airship.show(bridge => (
+            <ButtonsModal bridge={bridge} buttons={{}} closeArrow title={s.strings.cannot_delete_last_wallet_modal_title}>
+              <ModalMessage>{s.strings.cannot_delete_last_wallet_modal_message_part_1}</ModalMessage>
+              <ModalMessage>{s.strings.cannot_delete_last_wallet_modal_message_part_2}</ModalMessage>
+            </ButtonsModal>
+          ))
           return
         }
 
@@ -132,7 +134,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
             <ButtonsModal
               title={s.strings.fragment_wallets_get_seed_wallet}
               bridge={bridge}
-              message={wallet.displayPrivateSeed || undefined}
+              message={wallet.displayPrivateSeed ?? ''}
               buttons={{ ok: { label: s.strings.string_ok_cap } }}
             />
           ))
