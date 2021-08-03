@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { FlatList, Image } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 import { getCountry } from 'react-native-localize'
 
 import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/CountryConstants.js'
@@ -12,7 +13,6 @@ import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ThemedModal } from '../themed/ThemedModal'
-import { type AirshipBridge } from './modalParts.js'
 
 type CountrySelectionModalProps = {
   countryCode: string,

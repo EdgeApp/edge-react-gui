@@ -2,15 +2,16 @@
 
 import * as React from 'react'
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../locales/strings.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { type GuiContact } from '../../types/types.js'
+import { AirshipModal } from '../common/AirshipModal.js'
 import { ContactSearchResults } from '../common/ContactSearchResults.js'
 import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
-import { type AirshipBridge, AirshipModal } from './modalParts'
 
 type Props = {
   bridge: AirshipBridge<null>,

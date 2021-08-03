@@ -3,6 +3,7 @@
 import type { EdgeAccount, EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, FlatList, Image, TouchableWithoutFeedback, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
@@ -20,7 +21,6 @@ import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
-import { type AirshipBridge } from './modalParts.js'
 
 type OwnProps = {
   bridge: AirshipBridge<string | null>,

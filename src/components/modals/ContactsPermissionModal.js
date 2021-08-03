@@ -2,13 +2,13 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 
 import { Fontello } from '../../assets/vector'
 import s from '../../locales/strings.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
-import { type AirshipBridge } from './modalParts.js'
 
 export type ContactsPermissionResult = 'allow' | 'deny'
 

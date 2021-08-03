@@ -2,12 +2,16 @@
 
 import * as React from 'react'
 import { Image, Text, TouchableHighlight, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 
 import edgeLogo from '../../assets/images/edgeLogo/Edge_logo_Icon.png'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
+import { dayText, textSize } from '../../styles/common/textStyles.js'
+import { THEME } from '../../theme/variables/airbitz.js'
+import { AirshipModal } from '../common/AirshipModal.js'
+import { IconCircle } from '../common/IconCircle.js'
 import { LadderLayout } from '../common/LadderLayout'
-import { type AirshipBridge, AirshipModal, dayText, IconCircle, textSize, THEME } from './modalParts.js'
 
 type Props = {
   bridge: AirshipBridge<void>,

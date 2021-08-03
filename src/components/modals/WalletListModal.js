@@ -1,13 +1,13 @@
 // @flow
 
 import * as React from 'react'
+import { type AirshipBridge } from 'react-native-airship'
 
 import s from '../../locales/strings.js'
 import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { WalletList } from '../themed/WalletList.js'
-import { type AirshipBridge } from './modalParts.js'
 
 export type WalletListResult = {
   walletId?: string,
