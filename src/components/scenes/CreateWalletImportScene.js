@@ -10,7 +10,6 @@ import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
-import { errorModal } from '../../modules/UI/components/Modals/ErrorModal.js'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
@@ -19,7 +18,8 @@ import { Actions } from '../../types/routerTypes.js'
 import { type CreateWalletType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { FormField } from '../common/FormField.js'
-import { launchModal } from '../common/ModalProvider.js'
+import { ButtonsModal } from '../modals/ButtonsModal.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 type OwnProps = {
   selectedWalletType: CreateWalletType
@@ -63,7 +63,16 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
           cleanedPrivateKey: input
         })
       })
-      .catch(error => launchModal(errorModal(s.strings.create_wallet_failed_import_header, error)))
+      .catch(error =>
+        Airship.show(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            buttons={{ ok: { label: s.strings.string_ok } }}
+            message={error.message}
+            title={s.strings.create_wallet_failed_import_header}
+          />
+        ))
+      )
       .then(() => this.setState({ isProcessing: false }))
   }
 
