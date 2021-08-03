@@ -301,7 +301,6 @@ const strings = {
   settings_promotion_affiliation_header: 'Affiliation Program',
   settings_promotion_header: 'Promotion Codes',
   settings_promotion_add: 'Add promotion code',
-  settings_promotion_adding: 'Adding promotion code %s...',
   settings_promotion_device_normal: 'This application was installed normally.',
   settings_promotion_device_installer: 'This application was installed via %s.',
   settings_promotion_device_currencies: 'New accounts will have wallets for: %s',
