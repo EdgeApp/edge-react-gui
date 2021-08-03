@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 
@@ -54,27 +55,27 @@ class WalletListRowComponent extends React.PureComponent<Props> {
 
     // Yesterdays Percentage Difference
     const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`]
-    const yesterdayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
-    const differenceYesterday = exchangeRate ? exchangeRate - yesterdayExchangeRate : null
+    const yesterdayExchangeRate =
+      yesterdayUsdExchangeRate != null && fiatExchangeRate != null ? bns.mul(yesterdayUsdExchangeRate.toFixed(18), fiatExchangeRate.toFixed(18)) : '0'
 
-    let differencePercentage = differenceYesterday ? (differenceYesterday / yesterdayExchangeRate) * 100 : null
-    if (!yesterdayExchangeRate) {
-      differencePercentage = ''
-    }
+    const differenceYesterday = exchangeRate ? bns.sub(exchangeRate.toFixed(18), yesterdayExchangeRate) : null
+
+    const differencePercentage =
+      differenceYesterday != null && yesterdayExchangeRate !== '0' ? bns.mul(bns.div(differenceYesterday, yesterdayExchangeRate, 4), '100') : null
 
     let differencePercentageString = ''
     let differencePercentageStyle = 'Neutral'
 
     if (!exchangeRate || !differencePercentage || isNaN(differencePercentage)) {
       differencePercentageString = ''
-    } else if (exchangeRate && differencePercentage && differencePercentage === 0) {
+    } else if (exchangeRate && differencePercentage && differencePercentage === '0') {
       differencePercentageString = '0.00%'
-    } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
+    } else if (exchangeRate && differencePercentage && bns.lt(differencePercentage, '0')) {
       differencePercentageStyle = 'Negative'
-      differencePercentageString = `-${Math.abs(differencePercentage).toFixed(1)}%`
-    } else if (exchangeRate && differencePercentage && differencePercentage > 0) {
+      differencePercentageString = `-${bns.toFixed(bns.abs(differencePercentage), 1, 1)}%`
+    } else if (exchangeRate && differencePercentage && bns.gt(differencePercentage, '0')) {
       differencePercentageStyle = 'Positive'
-      differencePercentageString = `+${Math.abs(differencePercentage).toFixed(1)}%`
+      differencePercentageString = `+${bns.toFixed(bns.abs(differencePercentage), 1, 1)}%`
     }
 
     return {
