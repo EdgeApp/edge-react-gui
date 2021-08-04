@@ -98,24 +98,21 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   constructor(props: Props) {
     super(props)
+    const { route } = this.props
+    const { selectedWalletId, selectedCurrencyCode, guiMakeSpendInfo } = route.params
+    const fioPendingRequest = guiMakeSpendInfo?.fioPendingRequest
     this.state = {
       recipientAddress: '',
       loading: false,
       resetSlider: false,
       fioSender: {
-        fioAddress:
-          props.route.params.guiMakeSpendInfo && props.route.params.guiMakeSpendInfo.fioPendingRequest
-            ? props.route.params.guiMakeSpendInfo.fioPendingRequest.payer_fio_address
-            : '',
+        fioAddress: fioPendingRequest?.payer_fio_address ?? '',
         fioWallet: null,
         fioError: '',
-        memo:
-          props.route.params.guiMakeSpendInfo && props.route.params.guiMakeSpendInfo.fioPendingRequest
-            ? props.route.params.guiMakeSpendInfo.fioPendingRequest.content.memo
-            : '',
+        memo: fioPendingRequest?.content.memo ?? '',
         memoError: ''
       },
-      ...this.setWallets(props, props.route.params.selectedWalletId, props.route.params.selectedCurrencyCode)
+      ...this.setWallets(props, selectedWalletId, selectedCurrencyCode)
     }
   }
 
@@ -132,8 +129,8 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount(): void {
-    const { guiMakeSpendInfo } = this.props.route.params
-
+    const { route } = this.props
+    const { guiMakeSpendInfo } = route.params
     if (guiMakeSpendInfo) {
       this.props.sendConfirmationUpdateTx(guiMakeSpendInfo, this.state.selectedWalletId, this.state.selectedCurrencyCode)
       const recipientAddress =
@@ -148,7 +145,8 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   componentWillUnmount() {
     this.props.reset()
-    const { guiMakeSpendInfo } = this.props.route.params
+    const { route } = this.props
+    const { guiMakeSpendInfo } = route.params
     if (guiMakeSpendInfo && guiMakeSpendInfo.onBack) {
       guiMakeSpendInfo.onBack()
     }
@@ -172,11 +170,10 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   handleWalletPress = () => {
     const { props } = this
+    const { route } = props
     const oldSelectedCurrencyCode = this.state.selectedCurrencyCode
 
-    Airship.show(bridge => (
-      <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={this.props.route.params.allowedCurrencyCodes} />
-    ))
+    Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={route.params.allowedCurrencyCodes} />)
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
           props.selectWallet(walletId, currencyCode)
@@ -276,12 +273,13 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   submit = async () => {
-    const { guiMakeSpendInfo } = this.props.route.params
-    const { updateSpendPending, signBroadcastAndSave } = this.props
+    const { updateSpendPending, signBroadcastAndSave, route } = this.props
+    const { guiMakeSpendInfo } = route.params
     const { selectedWalletId, selectedCurrencyCode } = this.state
+
     this.setState({ loading: true })
 
-    if (guiMakeSpendInfo && (guiMakeSpendInfo.isSendUsingFioAddress || guiMakeSpendInfo.fioPendingRequest)) {
+    if (guiMakeSpendInfo && (guiMakeSpendInfo?.isSendUsingFioAddress || guiMakeSpendInfo?.fioPendingRequest)) {
       const { fioSender } = this.state
       if (fioSender.fioWallet && fioSender.fioAddress && !guiMakeSpendInfo.fioPendingRequest) {
         updateSpendPending(true)
@@ -322,8 +320,8 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderSelectedWallet() {
-    const { lockInputs } = this.props
-    const { lockTilesMap = {} } = this.props.route.params
+    const { lockInputs, route } = this.props
+    const { lockTilesMap = {} } = route.params
 
     const { guiWallet, selectedCurrencyCode } = this.state
 
@@ -362,8 +360,8 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderAmount() {
-    const { exchangeRates, lockInputs, nativeAmount, settings, theme } = this.props
-    const { lockTilesMap = {}, hiddenTilesMap = {} } = this.props.route.params
+    const { exchangeRates, lockInputs, nativeAmount, settings, theme, route } = this.props
+    const { lockTilesMap = {}, hiddenTilesMap = {} } = route.params
     const { guiWallet, selectedCurrencyCode, recipientAddress } = this.state
 
     if (recipientAddress && !hiddenTilesMap.amount) {
@@ -449,9 +447,10 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderSelectFioAddress() {
-    const { isSendUsingFioAddress } = this.props
-    const { hiddenTilesMap = {}, guiMakeSpendInfo } = this.props.route.params
+    const { isSendUsingFioAddress, route } = this.props
     const { fioSender } = this.state
+    const { hiddenTilesMap = {}, guiMakeSpendInfo } = route.params
+    const fioPendingRequest = guiMakeSpendInfo?.fioPendingRequest
 
     if (hiddenTilesMap.fioAddressSelect) return null
     return (
@@ -462,7 +461,7 @@ class SendComponent extends React.PureComponent<Props, State> {
           memoError={fioSender.memoError}
           onSelect={this.handleFioAddressSelect}
           onMemoChange={this.handleMemoChange}
-          fioRequest={guiMakeSpendInfo && guiMakeSpendInfo.fioPendingRequest ? guiMakeSpendInfo.fioPendingRequest : undefined}
+          fioRequest={fioPendingRequest}
           isSendUsingFioAddress={isSendUsingFioAddress}
         />
       </View>
@@ -504,7 +503,8 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   renderInfoTiles() {
-    const { infoTiles } = this.props.route.params
+    const { route } = this.props
+    const { infoTiles } = route.params
 
     if (!infoTiles || !infoTiles.length) return null
     return infoTiles.map(({ label, value }) => <Tile key={label} type="static" title={label} body={value} />)
