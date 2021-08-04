@@ -182,7 +182,7 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
     const styles = getStyles(theme)
 
     return (
-      <SceneWrapper hasHeader={false} background="theme">
+      <SceneWrapper background="theme">
         <SceneHeader withTopMargin title={s.strings.title_exchange} underline />
         <ScrollView>
           <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
