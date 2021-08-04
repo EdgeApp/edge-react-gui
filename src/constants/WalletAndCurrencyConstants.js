@@ -1,4 +1,5 @@
 // @flow
+import { type EdgeTokenInfo } from 'edge-core-js'
 
 import { type WalletListMenuKey } from '../actions/WalletListMenuActions.js'
 import s from '../locales/strings.js'
@@ -182,6 +183,7 @@ type SpecialCurrencyInfo = {|
   allowZeroTx?: boolean,
   isAccountActivationRequired?: boolean,
   isCustomTokensSupported?: boolean,
+  customTokenParams?: EdgeTokenInfo,
   isRbfSupported?: boolean,
   isUriEncodedStructure?: boolean,
   needsAccountNameSetup?: boolean,
@@ -344,6 +346,12 @@ export const SPECIAL_CURRENCY_INFO: {
       privateKeyInstructions: s.strings.create_wallet_import_instructions
     },
     isCustomTokensSupported: true,
+    customTokenParams: {
+      currencyCode: 'USDT',
+      currencyName: 'Tether',
+      contractAddress: '0xdac17f958d2ee523a2206206994597c13d831ec7',
+      multiplier: '8'
+    },
     isRbfSupported: true
   },
   ETC: {
