@@ -21,11 +21,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 
 export type OwnProps = {
   walletId: string,
-  addTokenPending: boolean,
-  currencyWallet: EdgeCurrencyWallet,
   currentCustomTokens?: CustomTokenInfo[],
-  currencyTokenInfos: any[], // TODO: replace it with real data when it will be available. Also need better variable name
-  wallet: GuiWallet,
   onAddToken: (currencyCode: string) => void
 }
 
@@ -35,8 +31,9 @@ type DispatchProps = {
 
 type StateProps = {
   addTokenPending: boolean,
-  wallet: GuiWallet,
-  addTokenPending: boolean
+  currencyTokenInfos: any[], // TODO: replace it with real data when it will be available. Also need better variable name
+  currencyWallet: EdgeCurrencyWallet,
+  wallet: GuiWallet
 }
 
 type ReturnKeyType = 'next' | 'done'
