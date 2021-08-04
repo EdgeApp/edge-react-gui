@@ -24,7 +24,7 @@ const strings = {
   fio_address_choose_domain_label: 'Choose FIO Domain for Your Address',
   fio_address_expired: 'The FIO address has expired',
 
-  scan_qr_label: 'Scan QR',
+  scan_qr_label: 'Scan QR Code',
 
   // Error messages:
   error_token_exists: 'A currency named %s already exists',
@@ -92,6 +92,7 @@ const strings = {
   request_xlm_minimum_notification_alert_body: 'This wallet will always require a 1 XLM minimum',
   fragment_send_address: 'Address',
   fragment_send_flash: 'Flash',
+  fragment_send_album: 'Album',
   scan_invalid_address_error_title: 'Invalid Address',
   scan_invalid_address_error_description: 'Not a valid public address',
   fragment_send_subtitle: 'Send',
@@ -581,6 +582,7 @@ const strings = {
   exchange_will_be_received: '%1$s %2$s will be received',
   mining_fee: 'Max network fee',
   confirm_to_complete_exchange: 'Confirm to complete your exchange.',
+  scan_camera_missing_qrcode: 'No QR code detected in images provided.',
   scan_camera_permission_denied: 'To scan a QR Code, please enable Camera access in Settings',
   open_settings: 'Open Settings',
   currency_mismatch_popup_title: 'Currency Mismatch',
