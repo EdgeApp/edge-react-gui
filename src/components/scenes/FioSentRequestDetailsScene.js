@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import * as React from 'react'
 
 import { FIAT_CODES_SYMBOLS } from '../../constants/WalletAndCurrencyConstants.js'
@@ -28,13 +29,13 @@ type StateProps = {
 type Props = StateProps & NavigationProps & ThemeProps
 
 class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
-  fiatAmount = (currencyCode: string, amount: string) => {
+  fiatAmount = (currencyCode: string, amount: string = '0') => {
     const { exchangeRates, isoFiatCurrencyCode } = this.props
     const rateKey = `${currencyCode}_${isoFiatCurrencyCode}`
-    const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
-    const amountToMultiply = parseFloat(amount)
+    const fiatPerCrypto = exchangeRates[rateKey] ?? '0'
+    const fiatAmount = bns.mul(fiatPerCrypto, amount)
 
-    return formatNumber(fiatPerCrypto * amountToMultiply, { toFixed: 2 }) || '0'
+    return formatNumber(fiatAmount, { toFixed: 2 })
   }
 
   amountField = () => {

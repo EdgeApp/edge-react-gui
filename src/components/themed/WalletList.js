@@ -63,7 +63,7 @@ type StateProps = {
   activeWalletIds: string[],
   account: EdgeAccount,
   customTokens: CustomTokenInfo[],
-  exchangeRates: { [string]: number },
+  exchangeRates: { [string]: string },
   mostRecentWallets: MostRecentWallet[],
   settings: Object,
   walletsSort: SortOption,

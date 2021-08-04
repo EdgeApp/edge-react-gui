@@ -42,7 +42,7 @@ type StateProps = {
   currencyIcon?: string,
   currencyInfo?: EdgeCurrencyInfo,
   edgeWallet?: EdgeCurrencyWallet,
-  exchangeSecondaryToPrimaryRatio?: number,
+  exchangeSecondaryToPrimaryRatio?: string,
   fioAddressesExist?: boolean,
   guiWallet?: GuiWallet,
   isConnected: boolean,

@@ -22,12 +22,12 @@ import styles from './style'
 
 type StateProps = {
   currencyLogo: string,
-  exchangeRate: number,
+  exchangeRate: string,
   primaryDisplayCurrencyCode: string,
   primaryDisplayDenomination?: GuiDenomination,
   primaryExchangeDenomination?: GuiDenomination,
   secondaryDisplayCurrencyCode: string,
-  secondaryToPrimaryRatio: number,
+  secondaryToPrimaryRatio: string,
   username: string,
   usersView: boolean
 }
@@ -82,7 +82,7 @@ class ControlPanelComponent extends React.Component<Props> {
         <View style={styles.header}>
           {!!currencyLogo && <Image style={styles.iconImage} source={currencyLogoIcon} />}
           <View style={styles.exchangeContainer}>
-            {exchangeRate ? (
+            {exchangeRate !== '0' ? (
               <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
             ) : (
               <FormattedText style={styles.exchangeRateText}>{s.strings.exchange_rate_loading_singular}</FormattedText>
@@ -125,10 +125,10 @@ export const ControlPanel = connect<StateProps, DispatchProps, {}>(
     if (guiWallet == null || currencyCode == null) {
       return {
         currencyLogo: '',
-        exchangeRate: 0,
+        exchangeRate: '0',
         primaryDisplayCurrencyCode: '',
         secondaryDisplayCurrencyCode: '',
-        secondaryToPrimaryRatio: 0,
+        secondaryToPrimaryRatio: '0',
         username: state.core.account.username,
         usersView: state.ui.scenes.controlPanel.usersView
       }

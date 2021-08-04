@@ -185,8 +185,8 @@ export const FioRequestRowConnector = connect<StateProps, {}, OwnProps>(
     const exchangeRates = state.exchangeRates
 
     const rateKey = `${tokenCode}_${isoFiatCurrencyCode}`
-    const fiatPerCrypto = exchangeRates[rateKey] ? exchangeRates[rateKey] : 0
-    const fiatAmount = formatNumber(bns.mul(fiatPerCrypto.toFixed(18), fioRequest.content.amount), { toFixed: 2 }) || '0'
+    const fiatPerCrypto = exchangeRates[rateKey] ?? '0'
+    const fiatAmount = formatNumber(bns.mul(fiatPerCrypto, fioRequest.content.amount), { toFixed: 2 }) || '0'
 
     return {
       displayDenomination,

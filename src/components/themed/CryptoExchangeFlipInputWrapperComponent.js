@@ -19,7 +19,7 @@ export type Props = {
   headerText: string,
   primaryCurrencyInfo: GuiCurrencyInfo,
   secondaryCurrencyInfo: GuiCurrencyInfo,
-  fiatPerCrypto: number,
+  fiatPerCrypto: string,
   forceUpdateGuiCounter: number,
   overridePrimaryExchangeAmount: string,
   isFocused: boolean,
