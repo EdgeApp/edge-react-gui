@@ -195,7 +195,7 @@ export const edgeDark: Theme = {
 
   // Lines
   lineDivider: palette.whiteOp10,
-  titleLineDivider: palette.whiteOp75,
+  titleLineDivider: palette.blueGray,
   // textInputLine: palette.blueGray,
   // orLine: palette.blueGray,
   // tileDivider: palette.blueGray,
@@ -256,6 +256,10 @@ export const edgeDark: Theme = {
   // QR code
   qrForegroundColor: palette.black,
   qrBackgroundColor: palette.white,
+
+  // Picker Color
+  pickerTextDark: palette.white,
+  pickerTextLight: palette.black,
 
   // Input Accessory
   inputAccessoryBackground: palette.white,

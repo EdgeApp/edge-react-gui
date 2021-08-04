@@ -7,8 +7,8 @@ import { cacheStyles } from 'react-native-patina'
 
 import s from '../../locales/strings'
 import { type Theme, useTheme } from '../services/ThemeContext'
+import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
-import { SecondaryButton } from '../themed/ThemedButtons.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 export function FioExpiredModal(props: { bridge: AirshipBridge<boolean | void>, fioName: string, isAddress: boolean }) {
@@ -23,7 +23,7 @@ export function FioExpiredModal(props: { bridge: AirshipBridge<boolean | void>, 
       <ModalMessage>{fioName}</ModalMessage>
       <View style={styles.center}>
         <View style={styles.buttonWidth}>
-          <SecondaryButton label={s.strings.title_fio_renew} onPress={() => bridge.resolve(true)} marginRem={[1.75, 0, 1]} />
+          <MainButton label={s.strings.title_fio_renew} marginRem={[1.75, 0, 1]} type="secondary" onPress={() => bridge.resolve(true)} />
         </View>
       </View>
       <ModalCloseArrow onPress={() => bridge.resolve(undefined)} />

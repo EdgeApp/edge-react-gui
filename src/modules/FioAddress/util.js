@@ -10,7 +10,7 @@ import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import type { FioAddress, FioConnectionWalletItem, FioDomain, GuiWallet } from '../../types/types'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers'
-import { truncateDecimals } from '../../util/utils'
+import { DECIMAL_PRECISION, truncateDecimals } from '../../util/utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
 const FIO_ADDRESS_CACHE = 'FioAddressCache.json'
@@ -571,7 +571,7 @@ export const getRegInfo = async (
 
   try {
     feeValue = await selectedWallet.otherMethods.getFee('registerFioAddress')
-    activationCost = parseFloat(truncateDecimals(bns.div(`${feeValue}`, displayDenomination.multiplier, 18), 6))
+    activationCost = parseFloat(truncateDecimals(bns.div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION), 6))
   } catch (e) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
@@ -623,7 +623,7 @@ export const getDomainRegInfo = async (
 
   try {
     feeValue = await selectedWallet.otherMethods.getFee('registerFioDomain')
-    activationCost = parseFloat(truncateDecimals(bns.div(`${feeValue}`, displayDenomination.multiplier, 18), 6))
+    activationCost = parseFloat(truncateDecimals(bns.div(`${feeValue}`, displayDenomination.multiplier, DECIMAL_PRECISION), 6))
   } catch (e) {
     throw new Error(s.strings.fio_get_fee_err_msg)
   }
@@ -828,6 +828,10 @@ export const checkExpiredFioAddress = async (fioWallet?: EdgeCurrencyWallet, add
 
 export const expiredSoon = (expDate: string): boolean => {
   return new Date(expDate).getTime() - new Date().getTime() < MONTH
+}
+
+export const alreadyExpired = (expDate: string): boolean => {
+  return new Date(expDate).getTime() < new Date().getTime()
 }
 
 export const needToCheckExpired = (lastChecks: { [fioName: string]: Date }, fioName: string): boolean => {

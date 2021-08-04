@@ -11,16 +11,14 @@ import { Airship, showError, showToast } from '../../../components/services/Airs
 import type { Theme, ThemeProps } from '../../../components/services/ThemeContext'
 import { cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
-import { SecondaryButton } from '../../../components/themed/ThemedButtons'
+import { MainButton } from '../../../components/themed/MainButton.js'
 import { Tile } from '../../../components/themed/Tile'
 import { FIO_STR } from '../../../constants/WalletAndCurrencyConstants.js'
 import s from '../../../locales/strings'
 import { getDisplayDenomination } from '../../../selectors/DenominationSelectors.js'
 import { connect } from '../../../types/reactRedux.js'
-import { truncateDecimals } from '../../../util/utils'
+import { DECIMAL_PRECISION, truncateDecimals } from '../../../util/utils'
 import { Slider } from '../../UI/components/Slider/Slider'
-
-const DIVIDE_PRECISION = 18
 
 type OwnProps = {
   title?: string,
@@ -165,7 +163,7 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
   }
 
   formatFio(val: string): number {
-    return parseFloat(truncateDecimals(bns.div(val, this.props.denominationMultiplier, DIVIDE_PRECISION), 6))
+    return parseFloat(truncateDecimals(bns.div(val, this.props.denominationMultiplier, DECIMAL_PRECISION), 6))
   }
 
   renderFeeAndBalance() {
@@ -227,7 +225,9 @@ class FioActionSubmitComponent extends React.Component<Props, State> {
         )}
         <View style={styles.spacer} />
         <View style={styles.blockPadding}>
-          {!feeLoading && <SecondaryButton onPress={this.props.cancelOperation} disabled={loading || feeLoading} label={s.strings.string_cancel_cap} />}
+          {!feeLoading && (
+            <MainButton disabled={loading || feeLoading} label={s.strings.string_cancel_cap} type="secondary" onPress={this.props.cancelOperation} />
+          )}
         </View>
       </View>
     )

@@ -14,7 +14,7 @@ import { type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet, TransactionListTx } from '../types/types.js'
 import { type GuiExchangeRates } from '../types/types.js'
 
-export const DIVIDE_PRECISION = 18
+export const DECIMAL_PRECISION = 18
 
 export function capitalize(string: string): string {
   if (!string) return ''
@@ -162,7 +162,7 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
 
 export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros: number, multiplier: string): string => {
   if (nativeAmount === '') return nativeAmount
-  const displayAmount = div(nativeAmount, multiplier, DIVIDE_PRECISION)
+  const displayAmount = div(nativeAmount, multiplier, DECIMAL_PRECISION)
   const precision = zerosAfterDecimal(displayAmount) + decimalPlacesBeyondLeadingZeros
   const truncatedAmount = truncateDecimals(displayAmount, precision)
   if (gt(displayAmount, truncatedAmount)) return `${roundUpToLeastSignificant(truncatedAmount)} `
@@ -173,7 +173,7 @@ export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros
 export const convertNativeToDenomination =
   (nativeToTargetRatio: string) =>
   (nativeAmount: string): string =>
-    div(nativeAmount, nativeToTargetRatio, DIVIDE_PRECISION)
+    div(nativeAmount, nativeToTargetRatio, DECIMAL_PRECISION)
 
 // Alias for convertNativeToDenomination
 // Used to convert outputs from core to amounts ready for display
@@ -317,19 +317,20 @@ export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTrans
 }
 
 export type PrecisionAdjustParams = {
-  exchangeSecondaryToPrimaryRatio: number,
+  exchangeSecondaryToPrimaryRatio: string,
   secondaryExchangeMultiplier: string,
   primaryExchangeMultiplier: string
 }
 
 export function precisionAdjust(params: PrecisionAdjustParams): number {
-  const order = Math.floor(Math.log(params.exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
+  const exchangeSecondaryToPrimaryRatio = parseFloat(params.exchangeSecondaryToPrimaryRatio)
+  const order = Math.floor(Math.log(exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
   const exchangeRateOrderOfMagnitude = Math.pow(10, order)
 
   // Get the exchange rate in tenth of pennies
   const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), bns.mul(params.secondaryExchangeMultiplier, '10'))
 
-  const precisionAdjust = bns.div(exchangeRateString, params.primaryExchangeMultiplier, DIVIDE_PRECISION)
+  const precisionAdjust = bns.div(exchangeRateString, params.primaryExchangeMultiplier, DECIMAL_PRECISION)
 
   if (bns.lt(precisionAdjust, '1')) {
     const fPrecisionAdject = parseFloat(precisionAdjust)
@@ -481,7 +482,7 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
 
   let total = 0
   for (const currency of Object.keys(temporaryTotalCrypto)) {
-    total += parseFloat(convertCurrency(state, currency, isoFiatCurrencyCode, temporaryTotalCrypto[currency].toFixed(18)))
+    total += parseFloat(convertCurrency(state, currency, isoFiatCurrencyCode, temporaryTotalCrypto[currency].toFixed(DECIMAL_PRECISION)))
   }
   return total
 }
@@ -671,8 +672,8 @@ export function checkFilterWallet(details: FilterDetailsType, filterText: string
   }
 
   const walletName = details.name.replace(' ', '').toLowerCase()
-  const currencyName = details.currencyName.toLowerCase()
-  const filterString = filterText.toLowerCase()
+  const currencyName = details.currencyName.replace(' ', '').toLowerCase()
+  const filterString = filterText.replace(' ', '').toLowerCase()
   return walletName.includes(filterString) || currencyCode.includes(filterString) || currencyName.includes(filterString)
 }
 
@@ -698,7 +699,7 @@ export function maxPrimaryCurrencyConversionDecimals(primaryPrecision: number, p
 
 export const convertToCryptoFee = (networkFee: string, displayMultiplier: string, exchangeMultiplier: string): string => {
   const cryptoFeeExchangeDenomAmount = networkFee ? convertNativeToDisplay(exchangeMultiplier)(networkFee) : ''
-  const exchangeToDisplayMultiplierRatio = bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
+  const exchangeToDisplayMultiplierRatio = bns.div(exchangeMultiplier, displayMultiplier, DECIMAL_PRECISION)
   return bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
 }
 
@@ -715,8 +716,8 @@ export const convertToFiatFee = (
   isoFiatCurrencyCode: string
 ): { amount: string, style?: string } => {
   const cryptoFeeExchangeAmount = convertNativeToExchange(exchangeMultiplier)(networkFee)
-  const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(cryptoFeeExchangeAmount))
-  const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
+  const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
+  const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
   return {
     amount: bns.toFixed(fiatFeeAmount, 2, 2),
     style: parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD ? feeStyle.danger : parseFloat(feeAmountInUSD) > FEE_COLOR_THRESHOLD ? feeStyle.warning : undefined
@@ -787,7 +788,7 @@ export function getCryptoAmount(
   denomination: EdgeDenomination,
   exchangeDenomination: EdgeDenomination,
   fiatDenomination: EdgeDenomination,
-  exchangeRate?: number,
+  exchangeRate?: string,
   guiWallet: GuiWallet
 ): string {
   let maxConversionDecimals = 6
@@ -800,7 +801,7 @@ export function getCryptoAmount(
     maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(denomination.multiplier), precisionAdjustValue)
   }
   try {
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), maxConversionDecimals)
+    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DECIMAL_PRECISION), maxConversionDecimals)
     const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
     return `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}`
   } catch (error) {

@@ -20,7 +20,7 @@ import { type WalletListResult, WalletListModal } from '../modals/WalletListModa
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
-import { PrimaryButton } from '../themed/ThemedButtons'
+import { MainButton } from '../themed/MainButton.js'
 import { Tile } from '../themed/Tile'
 
 type StateProps = {
@@ -94,18 +94,18 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
     this.setState({ loading: false })
   }
 
-  onNextPress = async () => {
+  onNextPress = (): void => {
     const { selectedDomain } = this.props
     const { activationCost } = this.state
 
     if (!activationCost || activationCost === 0) return
 
     if (selectedDomain.walletId) {
-      return this.proceed(selectedDomain.walletId, FIO_STR)
+      this.proceed(selectedDomain.walletId, FIO_STR)
     } else {
       const { paymentWallet } = this.state
       if (!paymentWallet || !paymentWallet.id) return
-      return this.proceed(paymentWallet.id, paymentWallet.currencyCode)
+      this.proceed(paymentWallet.id, paymentWallet.currencyCode)
     }
   }
 
@@ -207,7 +207,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
         )}
         <Tile type="static" title={s.strings.create_wallet_account_amount_due} body={costStr} />
         {!loading && ((paymentWallet && paymentWallet.id) || selectedDomain.walletId !== '') && (
-          <PrimaryButton disabled={nextDisabled} onPress={this.onNextPress} label={s.strings.string_next_capitalized} marginRem={1} />
+          <MainButton disabled={nextDisabled} onPress={this.onNextPress} label={s.strings.string_next_capitalized} marginRem={1} />
         )}
         {loading && <ActivityIndicator color={this.props.theme.iconTappable} />}
       </>

@@ -1,16 +1,6 @@
 // @flow
 
 import { type Theme } from '../../../types/Theme.js'
-import transferFullLogo from '../edgeLogo/Edge_logo_L.png'
-import changellyFullLogo from './exchange_logo_changelly.png'
-import changenowFullLogo from './exchange_logo_changenow.png'
-import coinswitchFullLogo from './exchange_logo_coinswitch.png'
-import faastFullLogo from './exchange_logo_faast.png'
-import foxExchangeFullLogo from './exchange_logo_fox_exchange.png'
-import godexFullLogo from './exchange_logo_godex.png'
-import sideshiftFullLogo from './exchange_logo_sideshiftai.png'
-import switchainFullLogo from './exchange_logo_switchain.png'
-import totleFullLogo from './exchange_logo_totle.png'
 import changellyLogo from './settingsExchangeChangelly.png'
 import changenowLogo from './settingsExchangeChangenow.png'
 import coinswitchLogo from './settingsExchangeCoinswitch.png'
@@ -59,18 +49,4 @@ export const swapPluginIcons = {
   sideshift: sideshiftLogo,
   switchain: switchainLogo,
   totle: totleLogo
-}
-
-// Big logos for the quote scene:
-export const swapPluginLogos = {
-  changelly: changellyFullLogo,
-  changenow: changenowFullLogo,
-  coinswitch: coinswitchFullLogo,
-  faast: faastFullLogo,
-  foxExchange: foxExchangeFullLogo,
-  godex: godexFullLogo,
-  sideshift: sideshiftFullLogo,
-  switchain: switchainFullLogo,
-  totle: totleFullLogo,
-  transfer: transferFullLogo
 }

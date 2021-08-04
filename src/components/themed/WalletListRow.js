@@ -13,8 +13,6 @@ import { EdgeText } from './EdgeText.js'
 type OwnProps = {
   currencyCode: string,
   children?: React.Node,
-  exchangeRateString?: string,
-  exchangeRateType?: 'Neutral' | 'Positive' | 'Negative',
   icon?: React.Node,
   editIcon?: React.Node,
   gradient?: boolean,
@@ -46,20 +44,7 @@ function WalletRow(props: { gradient?: boolean, children: React.Node }) {
 
 class WalletListRowComponent extends React.PureComponent<Props> {
   render() {
-    const {
-      currencyCode,
-      children,
-      exchangeRateString = '',
-      exchangeRateType = 'Neutral',
-      gradient = false,
-      icon,
-      editIcon,
-      loading = false,
-      onPress,
-      onLongPress,
-      walletNameString,
-      theme
-    } = this.props
+    const { currencyCode, children, gradient = false, icon, editIcon, loading = false, onPress, onLongPress, walletNameString, theme } = this.props
     const styles = getStyles(theme)
 
     return (
@@ -74,11 +59,14 @@ class WalletListRowComponent extends React.PureComponent<Props> {
               <View style={styles.iconContainer}>{icon}</View>
               <View style={styles.detailsContainer}>
                 <View style={styles.detailsRow}>
-                  <EdgeText style={[styles.detailsCurrency, { width: theme.rem(2.75) }]}>{currencyCode}</EdgeText>
-                  <EdgeText style={styles[`percentage${exchangeRateType}`]}>{exchangeRateString}</EdgeText>
+                  <EdgeText style={styles.detailsCurrency} disableFontScaling>
+                    {currencyCode}
+                  </EdgeText>
                   {editIcon ? <View style={styles.editIcon}>{editIcon}</View> : null}
                 </View>
-                <EdgeText style={styles.detailsName}>{walletNameString}</EdgeText>
+                <EdgeText style={styles.detailsName} disableFontScaling>
+                  {walletNameString}
+                </EdgeText>
               </View>
               {children}
             </View>
@@ -127,31 +115,22 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Details
   detailsContainer: {
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    marginRight: theme.rem(0.5)
   },
   detailsRow: {
+    flex: 1,
     flexDirection: 'row',
-    alignItems: 'flex-end',
-    width: '70%'
+    alignItems: 'flex-end'
   },
   detailsCurrency: {
+    flex: 1,
     fontFamily: theme.fontFaceMedium
   },
   detailsName: {
     flex: 1,
     fontSize: theme.rem(0.75),
     color: theme.secondaryText
-  },
-
-  // Difference Percentage Styles
-  percentageNeutral: {
-    color: theme.secondaryText
-  },
-  percentagePositive: {
-    color: theme.positiveText
-  },
-  percentageNegative: {
-    color: theme.negativeText
   }
 }))
 

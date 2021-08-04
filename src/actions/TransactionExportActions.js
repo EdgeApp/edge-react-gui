@@ -4,6 +4,8 @@ import { abs, div, lt } from 'biggystring'
 import csvStringify from 'csv-stringify/lib/browser/sync'
 import { type EdgeCurrencyWallet, type EdgeGetTransactionsOptions, type EdgeTransaction } from 'edge-core-js'
 
+import { DECIMAL_PRECISION } from '../util/utils.js'
+
 export async function exportTransactionsToQBO(wallet: EdgeCurrencyWallet, opts: EdgeGetTransactionsOptions): Promise<string> {
   const txs: EdgeTransaction[] = await wallet.getTransactions(opts)
   const { currencyCode = wallet.currencyInfo.currencyCode, denomination } = opts
@@ -117,7 +119,7 @@ export function exportTransactionsToQBOInner(
   const now = makeOfxDate(dateNow / 1000)
 
   for (const edgeTx of edgeTransactions) {
-    const TRNAMT: string = denom ? div(edgeTx.nativeAmount, denom, 18) : edgeTx.nativeAmount
+    const TRNAMT: string = denom ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION) : edgeTx.nativeAmount
     const TRNTYPE = lt(edgeTx.nativeAmount, '0') ? 'DEBIT' : 'CREDIT'
     const DTPOSTED = makeOfxDate(edgeTx.date)
     let NAME: string = ''
@@ -234,8 +236,8 @@ export function exportTransactionsToCSVInner(
   const items: any[] = []
 
   for (const edgeTx of edgeTransactions) {
-    const amount: string = denom ? div(edgeTx.nativeAmount, denom, 18) : edgeTx.nativeAmount
-    const networkFeeField: string = denom ? div(edgeTx.networkFee, denom, 18) : edgeTx.networkFee
+    const amount: string = denom ? div(edgeTx.nativeAmount, denom, DECIMAL_PRECISION) : edgeTx.nativeAmount
+    const networkFeeField: string = denom ? div(edgeTx.networkFee, denom, DECIMAL_PRECISION) : edgeTx.networkFee
     const { date, time } = makeCsvDateTime(edgeTx.date)
     let name: string = ''
     let amountFiat: number = 0

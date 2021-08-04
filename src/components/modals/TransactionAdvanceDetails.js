@@ -2,6 +2,7 @@
 
 import React, { PureComponent } from 'react'
 import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native'
+import { getDeviceName } from 'react-native-device-info'
 import SafariView from 'react-native-safari-view'
 
 import s from '../../locales/strings.js'
@@ -36,9 +37,27 @@ type OwnProps = {
   url?: string
 }
 
+type State = {
+  deviceName: string
+}
+
 type Props = OwnProps & ThemeProps
 
-class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
+class TransactionAdvanceDetailsComponent extends PureComponent<Props, State> {
+  constructor(props: Props) {
+    super(props)
+
+    this.state = {
+      deviceName: ''
+    }
+  }
+
+  componentDidMount() {
+    getDeviceName().then(deviceName => {
+      this.setState({ deviceName })
+    })
+  }
+
   openUrl = () => {
     const { url } = this.props
     if (url) {
@@ -144,6 +163,8 @@ class TransactionAdvanceDetailsComponent extends PureComponent<Props> {
               />
             )}
             {signedTx && signedTx !== '' ? <Tile type="copy" title={s.strings.transaction_details_advance_details_raw_txbytes} body={signedTx} /> : null}
+
+            <Tile type="static" title={s.strings.transaction_details_advance_details_device} body={this.state.deviceName} />
           </ScrollView>
         </View>
         <ModalCloseArrow onPress={this.handleCancel} />

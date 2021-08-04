@@ -9,8 +9,8 @@ import { Card } from './Card'
 import { EdgeText } from './EdgeText'
 import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput'
 import { ExchangedFlipInput } from './ExchangedFlipInput.js'
+import { MainButton } from './MainButton.js'
 import { SelectableRow } from './SelectableRow'
-import { SecondaryButton } from './ThemedButtons.js'
 
 export type Props = {
   guiWallet: GuiWallet,
@@ -19,7 +19,7 @@ export type Props = {
   headerText: string,
   primaryCurrencyInfo: GuiCurrencyInfo,
   secondaryCurrencyInfo: GuiCurrencyInfo,
-  fiatPerCrypto: number,
+  fiatPerCrypto: string,
   forceUpdateGuiCounter: number,
   overridePrimaryExchangeAmount: string,
   isFocused: boolean,
@@ -29,7 +29,8 @@ export type Props = {
   onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void,
   onNext: () => void,
   onFocus?: () => void,
-  onBlur?: () => void
+  onBlur?: () => void,
+  children?: React.Node
 }
 
 class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & ThemeProps> {
@@ -51,7 +52,8 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & Th
   }
 
   render() {
-    const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, overridePrimaryExchangeAmount, theme } = this.props
+    const { onNext, primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, overridePrimaryExchangeAmount, children, theme } =
+      this.props
     const styles = getStyles(theme)
 
     if (this.props.isThinking) {
@@ -65,7 +67,7 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & Th
     }
 
     if (!this.props.guiWallet || this.props.guiWallet.id === '' || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
-      return <SecondaryButton onPress={this.launchSelector} label={this.props.buttonText} />
+      return <MainButton label={this.props.buttonText} type="secondary" onPress={this.launchSelector} />
     }
     const guiWalletName = this.props.guiWallet.name
     const displayDenomination = this.props.primaryCurrencyInfo.displayCurrencyCode
@@ -109,6 +111,7 @@ class CryptoExchangeFlipInputWrapperComponent extends React.Component<Props & Th
           isFiatOnTop
           isFocus={false}
         />
+        {children}
       </Card>
     )
   }
@@ -160,7 +163,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   iconText: {
     color: theme.primaryText,
-    fontWeight: '600',
+    fontFamily: theme.fontFaceBold,
     fontSize: theme.rem(1.25)
   }
 }))

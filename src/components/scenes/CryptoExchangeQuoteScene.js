@@ -2,11 +2,10 @@
 
 import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
-import { Image, Platform, ScrollView, View } from 'react-native'
-import IonIcon from 'react-native-vector-icons/Ionicons'
+import { Image, ScrollView, View } from 'react-native'
 
 import { exchangeTimerExpired, shiftCryptoCurrency } from '../../actions/CryptoExchangeActions'
-import { swapPluginLogos } from '../../assets/images/exchange'
+import { swapPluginIcons } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { connect } from '../../types/reactRedux.js'
@@ -18,11 +17,11 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { swapVerifyTerms } from '../modals/SwapVerifyTermsModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { Card } from '../themed/Card'
-import { EdgeText } from '../themed/EdgeText'
+import Alert from '../themed/Alert'
+import { EdgeText } from '../themed/EdgeText.js'
 import { ExchangeQuote } from '../themed/ExchangeQuoteComponent.js'
 import { LineTextDivider } from '../themed/LineTextDivider'
-import { ClickableText } from '../themed/ThemedButtons'
+import { SceneHeader } from '../themed/SceneHeader'
 
 type OwnProps = {
   swapInfo: GuiSwapInfo
@@ -179,14 +178,13 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
     const { fee, fromDisplayAmount, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
     const { isEstimate, pluginId } = swapInfo.quote
     const { fromWallet, toWallet } = swapInfo.request
+    const exchangeName = this.props.account.swapConfig[pluginId].swapInfo.displayName
     const styles = getStyles(theme)
 
     return (
       <SceneWrapper background="theme">
+        <SceneHeader withTopMargin title={s.strings.title_exchange} underline />
         <ScrollView>
-          <View style={styles.topLogoRow}>
-            <Image source={swapPluginLogos[pluginId]} resizeMode="contain" style={styles.logoImage} />
-          </View>
           <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
           <ExchangeQuote
             cryptoAmount={fromDisplayAmount}
@@ -210,23 +208,21 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
             walletIcon={toCurrencyIcon}
             walletName={toWallet.name || ''}
           />
+          <View style={styles.pluginRowPoweredByRow}>
+            <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
+            <Image style={styles.partnerIconImage} resizeMode="contain" source={swapPluginIcons[pluginId]} />
+            <EdgeText style={styles.footerText}>{' ' + exchangeName}</EdgeText>
+          </View>
           {isEstimate && (
-            <Card warning marginRem={[1.5, 1, 0]}>
-              <ClickableText paddingRem={0} onPress={this.showExplanationForEstimate}>
-                <View style={styles.estimatedContainer}>
-                  <IonIcon
-                    name={Platform.OS === 'ios' ? 'ios-information-circle-outline' : 'md-information-circle-outline'}
-                    color={theme.warningIcon}
-                    size={theme.rem(1.25)}
-                  />
-                  <EdgeText style={styles.estimatedTitle}>{s.strings.estimated_quote}</EdgeText>
-                </View>
-                <EdgeText style={styles.estimatedText} numberOfLines={2}>
-                  {s.strings.estimated_exchange_message}
-                </EdgeText>
-              </ClickableText>
-            </Card>
+            <Alert
+              title={s.strings.estimated_quote}
+              message={s.strings.estimated_exchange_message}
+              type="warning"
+              marginRem={[1.5, 1]}
+              onPress={this.showExplanationForEstimate}
+            />
           )}
+
           <Slider parentStyle={styles.slider} onSlidingComplete={this.doShift} disabled={pending} showSpinner={pending} />
           {this.renderTimer()}
           <View style={styles.spacer} />
@@ -237,35 +233,24 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  topLogoRow: {
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    paddingTop: theme.rem(0.5),
-    height: theme.rem(3.25),
-    paddingBottom: theme.rem(0.25)
+  footerText: {
+    fontSize: theme.rem(0.75),
+    color: theme.secondaryText
   },
-  logoImage: {
-    position: 'relative',
-    maxWidth: '70%',
-    resizeMode: 'contain'
+  partnerIconImage: {
+    aspectRatio: 1,
+    width: theme.rem(0.75),
+    height: theme.rem(0.75)
   },
-  estimatedContainer: {
-    marginBottom: theme.rem(0.25),
+  pluginRowPoweredByRow: {
+    marginTop: theme.rem(1),
     flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingRight: theme.rem(1),
     alignItems: 'center'
   },
-  estimatedTitle: {
-    color: theme.warningText,
-    marginLeft: theme.rem(0.5),
-    fontSize: theme.rem(0.75),
-    fontWeight: '600'
-  },
-  estimatedText: {
-    fontSize: theme.rem(0.75),
-    color: theme.warningText
-  },
   slider: {
-    marginTop: theme.rem(1.5)
+    marginTop: theme.rem(2.5)
   },
   spacer: {
     height: theme.rem(8)

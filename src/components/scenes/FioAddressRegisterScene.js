@@ -24,8 +24,9 @@ import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { FormError } from '../themed/FormError'
+import { MainButton } from '../themed/MainButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
-import { ClickableText, PrimaryButton } from '../themed/ThemedButtons'
+import { ClickableText } from '../themed/ThemedButtons.js'
 import { Tile } from '../themed/Tile'
 
 type State = {
@@ -321,14 +322,9 @@ class FioAddressRegister extends React.Component<Props, State> {
     if (isValid && isAvailable && !loading) {
       return (
         <View style={styles.buttons}>
-          <PrimaryButton
-            style={styles.next}
-            label={walletLoading ? '' : s.strings.string_next_capitalized}
-            onPress={this.handleNextButton}
-            disabled={!isAvailable || walletLoading}
-          >
+          <MainButton label={walletLoading ? '' : s.strings.string_next_capitalized} onPress={this.handleNextButton} disabled={!isAvailable || walletLoading}>
             {walletLoading ? <ActivityIndicator color={this.props.theme.icon} size="small" /> : null}
-          </PrimaryButton>
+          </MainButton>
         </View>
       )
     }
@@ -470,9 +466,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   buttons: {
     marginTop: theme.rem(1.5),
     paddingHorizontal: theme.rem(1)
-  },
-  next: {
-    flex: 1
   },
   error: {
     flex: 1,

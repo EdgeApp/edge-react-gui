@@ -164,7 +164,8 @@ type SpecialCurrencyInfo = {|
   dummyPublicAddress?: string,
   minimumPopupModals?: {
     minimumNativeBalance: string,
-    modalMessage: string
+    modalMessage: string,
+    alertMessage: string
   },
   uniqueIdentifier?: {
     addButtonText: string,
@@ -242,8 +243,8 @@ export const SPECIAL_CURRENCY_INFO: {
     dummyPublicAddress: '0x74f9452e22fe58e27575f176fc884729d88267ba', // rj116
     allowZeroTx: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_instructions
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true
   },
@@ -256,12 +257,13 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     minimumPopupModals: {
       minimumNativeBalance: '10000000',
-      modalMessage: s.strings.request_xlm_minimum_notification_body
+      modalMessage: s.strings.request_xlm_minimum_notification_body,
+      alertMessage: s.strings.request_xlm_minimum_notification_alert_body
     },
     displayBuyCrypto: false,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_instructions
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_key_instructions
     }
   },
   XRP: {
@@ -273,12 +275,13 @@ export const SPECIAL_CURRENCY_INFO: {
     },
     minimumPopupModals: {
       minimumNativeBalance: '20000000',
-      modalMessage: s.strings.request_xrp_minimum_notification_body
+      modalMessage: s.strings.request_xrp_minimum_notification_body,
+      alertMessage: s.strings.request_xrp_minimum_notification_alert_body
     },
     displayBuyCrypto: false,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_instructions
+      privateKeyLabel: s.strings.create_wallet_import_input_key_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_key_instructions
     }
   },
   XMR: {
@@ -340,8 +343,8 @@ export const SPECIAL_CURRENCY_INFO: {
     allowZeroTx: true,
     displayBuyCrypto: true,
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_instructions
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     isCustomTokensSupported: true,
     isRbfSupported: true
@@ -349,8 +352,8 @@ export const SPECIAL_CURRENCY_INFO: {
   ETC: {
     dummyPublicAddress: '0x0d73358506663d484945ba85d0cd435ad610b0a0',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_instructions
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     }
   },
   DAI: {
@@ -370,8 +373,8 @@ export const SPECIAL_CURRENCY_INFO: {
     isUriEncodedStructure: true,
     dummyPublicAddress: 'tz1cVgSd4oY25pDkH7vdvVp5DfPkZwT2hXwX',
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_instructions
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     }
   },
   BNB: {
@@ -381,8 +384,8 @@ export const SPECIAL_CURRENCY_INFO: {
       identifierKeyboardType: 'default'
     },
     isImportKeySupported: {
-      privateKeyLabel: s.strings.create_wallet_import_input_prompt,
-      privateKeyInstructions: s.strings.create_wallet_import_instructions
+      privateKeyLabel: s.strings.create_wallet_import_input_key_or_seed_prompt,
+      privateKeyInstructions: s.strings.create_wallet_import_input_key_or_seed_instructions
     },
     dummyPublicAddress: 'bnb1rt449yu7us6hmk4pmyr8talc60ydkwp4qkvcl7'
   },
