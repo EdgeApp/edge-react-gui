@@ -1,5 +1,6 @@
 // @flow
 
+import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 
@@ -39,6 +40,50 @@ type StateProps = {
 
 type Props = OwnProps & StateProps & ThemeProps
 
+type GetRatesParams = {
+  currencyCode: string,
+  exchangeRate?: number,
+  exchangeRates: GuiExchangeRates,
+  fiatExchangeRate: number,
+  walletFiatSymbol: string
+}
+
+export const getRate = (getRateParams: GetRatesParams) => {
+  const { currencyCode, exchangeRate, exchangeRates, fiatExchangeRate = 0, walletFiatSymbol } = getRateParams
+  // Create the default empty result function
+  const emptyResult = (...args) => ({
+    exchangeRateFiatSymbol: args[0] ?? '',
+    exchangeRateString: args[1] ?? '',
+    differencePercentageString: args[2] ? `${args[2]}%` : '',
+    differencePercentageStyle: args[3] ?? 'Neutral'
+  })
+  // If the `exchangeRate` is missing, return the default empty result
+  if (exchangeRate == null) return emptyResult()
+  // Today's Currency Exchange Rate
+  const todayExchangeRate = exchangeRate.toFixed(18)
+  const exchangeRateDecimals = bns.log10(todayExchangeRate) >= 3 ? 0 : 2
+  const exchangeRateString = formatNumber(exchangeRate, { toFixed: exchangeRateDecimals })
+  // Create the default zero change Exchange Rate result function
+  const result = (...args) => emptyResult(`${walletFiatSymbol} `, exchangeRateString, ...args)
+  // Yesterdays Exchange Rate
+  const currencyPair = `${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`
+  const yesterdayUsdExchangeRate = exchangeRates[currencyPair] ?? 0
+  // Return the Exchange Rate without `percentageString` in case we are missing yesterday's rates
+  if (yesterdayUsdExchangeRate === 0 || fiatExchangeRate === 0) return result()
+  // Calculate the percentage difference in rate between yesterday and today
+  const yesterdayExchangeRate = bns.mul(yesterdayUsdExchangeRate.toFixed(18), fiatExchangeRate.toFixed(18))
+  const differenceYesterday = bns.sub(todayExchangeRate, yesterdayExchangeRate)
+  const differencePercentage = bns.mul(bns.div(differenceYesterday, yesterdayExchangeRate, 3), '100')
+  // Return zero result
+  if (differencePercentage === '0') return result('0.00')
+  // If not zero, create the `percentageString`
+  const percentageString = bns.abs(differencePercentage)
+  // Return Positive result if greater then zero
+  if (bns.gt(differencePercentage, '0')) return result(`+${percentageString}`, 'Positive')
+  // If it's not zero or positive, it must be a Negative result
+  return result(`-${percentageString}`, 'Negative')
+}
+
 class WalletListRowComponent extends React.PureComponent<Props> {
   noOnPress = () => {}
   renderIcon() {
@@ -46,43 +91,8 @@ class WalletListRowComponent extends React.PureComponent<Props> {
   }
 
   getRate() {
-    const { currencyCode, exchangeRate, exchangeRates, fiatExchangeRate, walletFiatSymbol } = this.props
-    // Currency Exhange Rate
-    const exchangeRateFormat = exchangeRate ? formatNumber(exchangeRate, { toFixed: exchangeRate && Math.log10(exchangeRate) >= 3 ? 0 : 2 }) : null
-    const exchangeRateFiatSymbol = exchangeRateFormat ? `${walletFiatSymbol} ` : ''
-    const exchangeRateString = exchangeRateFormat ? `${exchangeRateFormat}` : ''
-
-    // Yesterdays Percentage Difference
-    const yesterdayUsdExchangeRate = exchangeRates[`${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`]
-    const yesterdayExchangeRate = yesterdayUsdExchangeRate * fiatExchangeRate
-    const differenceYesterday = exchangeRate ? exchangeRate - yesterdayExchangeRate : null
-
-    let differencePercentage = differenceYesterday ? (differenceYesterday / yesterdayExchangeRate) * 100 : null
-    if (!yesterdayExchangeRate) {
-      differencePercentage = ''
-    }
-
-    let differencePercentageString = ''
-    let differencePercentageStyle = 'Neutral'
-
-    if (!exchangeRate || !differencePercentage || isNaN(differencePercentage)) {
-      differencePercentageString = ''
-    } else if (exchangeRate && differencePercentage && differencePercentage === 0) {
-      differencePercentageString = '0.00%'
-    } else if (exchangeRate && differencePercentage && differencePercentage < 0) {
-      differencePercentageStyle = 'Negative'
-      differencePercentageString = `-${Math.abs(differencePercentage).toFixed(1)}%`
-    } else if (exchangeRate && differencePercentage && differencePercentage > 0) {
-      differencePercentageStyle = 'Positive'
-      differencePercentageString = `+${Math.abs(differencePercentage).toFixed(1)}%`
-    }
-
-    return {
-      differencePercentageStyle,
-      differencePercentageString,
-      exchangeRateFiatSymbol,
-      exchangeRateString
-    }
+    const { currencyCode, exchangeRate, exchangeRates, fiatExchangeRate = 0, walletFiatSymbol } = this.props
+    return getRate({ currencyCode, exchangeRate, exchangeRates, fiatExchangeRate, walletFiatSymbol })
   }
 
   renderChildren() {
