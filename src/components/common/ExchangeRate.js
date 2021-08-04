@@ -6,7 +6,7 @@ import * as React from 'react'
 import { formatNumber } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
-import { getObjectDiff, isCompleteExchangeData } from '../../util/utils'
+import { DECIMAL_PRECISION, getObjectDiff, isCompleteExchangeData } from '../../util/utils'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 
@@ -34,8 +34,8 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
     const primaryDisplayName: string = primaryInfo.displayDenomination.name
     const secondaryDisplaySymbol = secondaryInfo.displayDenomination.symbol ?? ''
     const getDisplayExchangeAmount = secondaryDisplayAmount => {
-      const primaryRatio = bns.div(primaryInfo.displayDenomination.multiplier, primaryInfo.exchangeDenomination.multiplier)
-      const secondaryRatio = bns.div(secondaryInfo.displayDenomination.multiplier, secondaryInfo.exchangeDenomination.multiplier)
+      const primaryRatio = bns.div(primaryInfo.displayDenomination.multiplier, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
+      const secondaryRatio = bns.div(secondaryInfo.displayDenomination.multiplier, secondaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
       return bns.mul(bns.div(primaryRatio, secondaryRatio, 4), secondaryDisplayAmount)
     }
     let precision = secondaryInfo.displayDenomination.multiplier ? bns.log10(secondaryInfo.displayDenomination.multiplier) : 0
