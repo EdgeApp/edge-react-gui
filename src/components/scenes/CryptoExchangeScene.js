@@ -13,7 +13,7 @@ import s from '../../locales/strings.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiCurrencyInfo, type GuiWallet, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
-import { getDenomFromIsoCode } from '../../util/utils.js'
+import { DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -309,8 +309,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     alignSelf: 'center'
   }
 }))
-
-const DIVIDE_PRECISION = 18
 
 export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
   state => {

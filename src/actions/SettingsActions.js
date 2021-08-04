@@ -17,6 +17,7 @@ import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { convertCurrency } from '../selectors/WalletSelectors.js'
 import { THEME } from '../theme/variables/airbitz.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
+import { DECIMAL_PRECISION } from '../util/utils.js'
 import { updateExchangeRates } from './ExchangeRateActions.js'
 
 export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getState: GetState) => {
@@ -68,7 +69,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
       })
       const nextDefaultIsoFiat = getState().ui.settings.defaultIsoFiat
       // convert from previous fiat to next fiat
-      const fiatString = convertCurrency(state, previousDefaultIsoFiat, nextDefaultIsoFiat, transaction.amount.toFixed(18))
+      const fiatString = convertCurrency(state, previousDefaultIsoFiat, nextDefaultIsoFiat, transaction.amount.toFixed(DECIMAL_PRECISION))
       return parseFloat(fiatString)
     })
     .then(transactionAmount => {

@@ -9,7 +9,7 @@ import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-nat
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import * as UTILS from '../../util/utils.js'
+import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils } from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { BlinkingCursor } from './BlinkingCursor'
@@ -117,7 +117,7 @@ const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string): Amou
   let secondaryDecimalAmount = bns.mul(primaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio)
 
   // Truncate to however many decimals the secondary format should have
-  secondaryDecimalAmount = UTILS.truncateDecimals(secondaryDecimalAmount, props.secondaryInfo.maxConversionDecimals)
+  secondaryDecimalAmount = truncateDecimalsUtils(secondaryDecimalAmount, props.secondaryInfo.maxConversionDecimals)
 
   // Format into locale specific format. Add currency symbol
   const secondaryDisplayAmount = formatNumberInput(prettifyNumber(secondaryDecimalAmount))
@@ -129,8 +129,9 @@ const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string): Amou
 // Pretty much the same as setPrimaryToSecondary
 const setSecondaryToPrimary = (props: Props, secondaryDecimalAmount: string): Amounts => {
   const secondaryDisplayAmount = formatNumberInput(prettifyNumber(secondaryDecimalAmount))
-  let primaryDecimalAmount = props.exchangeSecondaryToPrimaryRatio === '0' ? '0' : bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, 18)
-  primaryDecimalAmount = UTILS.truncateDecimals(primaryDecimalAmount, props.primaryInfo.maxConversionDecimals)
+  let primaryDecimalAmount =
+    props.exchangeSecondaryToPrimaryRatio === '0' ? '0' : bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, DECIMAL_PRECISION)
+  primaryDecimalAmount = truncateDecimalsUtils(primaryDecimalAmount, props.primaryInfo.maxConversionDecimals)
   const primaryDisplayAmount = formatNumberInput(prettifyNumber(primaryDecimalAmount))
   return { primaryDisplayAmount, primaryDecimalAmount, secondaryDisplayAmount, secondaryDecimalAmount }
 }

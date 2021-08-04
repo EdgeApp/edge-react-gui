@@ -19,8 +19,7 @@ import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReduce
 import { getExchangeDenomination } from '../selectors/DenominationSelectors.js'
 import { convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/WalletSelectors.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { convertNativeToExchange } from '../util/utils'
-import * as UTILS from '../util/utils.js'
+import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode, roundedFee } from '../util/utils'
 import { playSendSound } from './SoundActions.js'
 
 const XRP_DESTINATION_TAG_ERRORS = {
@@ -109,7 +108,7 @@ export const sendConfirmationUpdateTx =
         if (insufficientFunds != null && insufficientFunds.currencyCode != null && spendInfo.currencyCode !== insufficientFunds.currencyCode) {
           const { currencyCode, networkFee = '' } = insufficientFunds
           const multiplier = getExchangeDenomination(state, currencyCode).multiplier
-          const amountString = UTILS.roundedFee(networkFee, 2, multiplier)
+          const amountString = roundedFee(networkFee, 2, multiplier)
           const result = await Airship.show(bridge => (
             <ButtonsModal
               bridge={bridge}
@@ -240,7 +239,7 @@ export const signBroadcastAndSave =
     const feeAmountInUSD = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
     if (parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD) {
       const feeAmountInWalletFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
-      const fiatDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+      const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? `${fiatDenomination.symbol} ` : ''
       const feeString = `${fiatSymbol}${bns.toFixed(feeAmountInWalletFiat.toString(), 2, 2)}`
       const feeAlertResponse = await displayFeeAlert(guiWallet.currencyCode, feeString)
@@ -330,7 +329,7 @@ export const signBroadcastAndSave =
                 payeeFioAddress,
                 payerPublicAddress,
                 payeePublicAddress: guiMakeSpendInfo.publicAddress || publicAddress || '',
-                amount: amount && bns.div(amount, exchangeDenomination.multiplier, 18),
+                amount: amount && bns.div(amount, exchangeDenomination.multiplier, DECIMAL_PRECISION),
                 currencyCode: edgeSignedTransaction.currencyCode,
                 chainCode: chainCode || guiWallet.currencyCode,
                 txid: edgeSignedTransaction.txid,

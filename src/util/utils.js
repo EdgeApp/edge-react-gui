@@ -14,7 +14,7 @@ import { type RootState } from '../types/reduxTypes.js'
 import type { CustomTokenInfo, ExchangeData, GuiDenomination, GuiWallet, TransactionListTx } from '../types/types.js'
 import { type GuiExchangeRates } from '../types/types.js'
 
-export const DIVIDE_PRECISION = 18
+export const DECIMAL_PRECISION = 18
 
 export function capitalize(string: string): string {
   if (!string) return ''
@@ -162,7 +162,7 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
 
 export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros: number, multiplier: string): string => {
   if (nativeAmount === '') return nativeAmount
-  const displayAmount = div(nativeAmount, multiplier, DIVIDE_PRECISION)
+  const displayAmount = div(nativeAmount, multiplier, DECIMAL_PRECISION)
   const precision = zerosAfterDecimal(displayAmount) + decimalPlacesBeyondLeadingZeros
   const truncatedAmount = truncateDecimals(displayAmount, precision)
   if (gt(displayAmount, truncatedAmount)) return `${roundUpToLeastSignificant(truncatedAmount)} `
@@ -173,7 +173,7 @@ export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros
 export const convertNativeToDenomination =
   (nativeToTargetRatio: string) =>
   (nativeAmount: string): string =>
-    div(nativeAmount, nativeToTargetRatio, DIVIDE_PRECISION)
+    div(nativeAmount, nativeToTargetRatio, DECIMAL_PRECISION)
 
 // Alias for convertNativeToDenomination
 // Used to convert outputs from core to amounts ready for display
@@ -330,7 +330,7 @@ export function precisionAdjust(params: PrecisionAdjustParams): number {
   // Get the exchange rate in tenth of pennies
   const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), bns.mul(params.secondaryExchangeMultiplier, '10'))
 
-  const precisionAdjust = bns.div(exchangeRateString, params.primaryExchangeMultiplier, DIVIDE_PRECISION)
+  const precisionAdjust = bns.div(exchangeRateString, params.primaryExchangeMultiplier, DECIMAL_PRECISION)
 
   if (bns.lt(precisionAdjust, '1')) {
     const fPrecisionAdject = parseFloat(precisionAdjust)
@@ -482,7 +482,7 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
 
   let total = 0
   for (const currency of Object.keys(temporaryTotalCrypto)) {
-    total += parseFloat(convertCurrency(state, currency, isoFiatCurrencyCode, temporaryTotalCrypto[currency].toFixed(18)))
+    total += parseFloat(convertCurrency(state, currency, isoFiatCurrencyCode, temporaryTotalCrypto[currency].toFixed(DECIMAL_PRECISION)))
   }
   return total
 }
@@ -699,7 +699,7 @@ export function maxPrimaryCurrencyConversionDecimals(primaryPrecision: number, p
 
 export const convertToCryptoFee = (networkFee: string, displayMultiplier: string, exchangeMultiplier: string): string => {
   const cryptoFeeExchangeDenomAmount = networkFee ? convertNativeToDisplay(exchangeMultiplier)(networkFee) : ''
-  const exchangeToDisplayMultiplierRatio = bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
+  const exchangeToDisplayMultiplierRatio = bns.div(exchangeMultiplier, displayMultiplier, DECIMAL_PRECISION)
   return bns.mul(cryptoFeeExchangeDenomAmount, exchangeToDisplayMultiplierRatio)
 }
 
@@ -801,7 +801,7 @@ export function getCryptoAmount(
     maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(denomination.multiplier), precisionAdjustValue)
   }
   try {
-    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DIVIDE_PRECISION), maxConversionDecimals)
+    const preliminaryCryptoAmount = truncateDecimals(bns.div(balance, denomination.multiplier, DECIMAL_PRECISION), maxConversionDecimals)
     const finalCryptoAmount = formatNumber(decimalOrZero(preliminaryCryptoAmount, maxConversionDecimals)) // check if infinitesimal (would display as zero), cut off trailing zeroes
     return `${denomination.symbol ? denomination.symbol + ' ' : ''}${finalCryptoAmount}`
   } catch (error) {

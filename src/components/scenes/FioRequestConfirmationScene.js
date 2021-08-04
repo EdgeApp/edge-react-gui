@@ -17,7 +17,7 @@ import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelect
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types'
 import { emptyCurrencyInfo } from '../../types/types'
-import { getDenomFromIsoCode } from '../../util/utils'
+import { DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { AddressModal } from '../modals/AddressModal.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -110,7 +110,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
     if (walletAddress && fioPlugin) {
       const { fioWallet } = walletAddress
-      const val = bns.div(this.props.amounts.nativeAmount, this.props.primaryCurrencyInfo.exchangeDenomination.multiplier, 18)
+      const val = bns.div(this.props.amounts.nativeAmount, this.props.primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
       try {
         if (!this.props.isConnected) {
           showError(s.strings.fio_network_alert_text)
@@ -267,8 +267,8 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
     let cryptoAmount, exchangeAmount
     try {
-      cryptoAmount = bns.div(this.props.amounts.nativeAmount, primaryCurrencyInfo.displayDenomination.multiplier, 18)
-      exchangeAmount = bns.div(this.props.amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, 18)
+      cryptoAmount = bns.div(this.props.amounts.nativeAmount, primaryCurrencyInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
+      exchangeAmount = bns.div(this.props.amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
     } catch (e) {
       return null
     }
