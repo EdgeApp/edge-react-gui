@@ -2,7 +2,7 @@
 
 import { PrimaryButton, SecondaryButton } from 'edge-components'
 import * as React from 'react'
-import { Appearance, Picker, Text, View } from 'react-native'
+import { Appearance, Picker, Platform, Text, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import s from '../../locales/strings.js'
@@ -42,7 +42,8 @@ class AutoLogoutModalComponent extends React.Component<Props, State> {
 
   render() {
     const { bridge, theme } = this.props
-    const textColor = Appearance.getColorScheme() === 'dark' ? theme.pickerTextDark : theme.pickerTextLight
+    const pickerColor = Platform.OS === 'android' ? theme.pickerTextLight : null
+    const textColor = Appearance.getColorScheme() === 'dark' && Platform.OS === 'android' ? theme.pickerTextDark : theme.pickerTextLight
 
     const numberPickerOptions = [<Picker.Item key="disable" label={s.strings.string_disable} value={0} color={textColor} />]
     for (let i = 1; i < 60; i++) {
@@ -51,13 +52,13 @@ class AutoLogoutModalComponent extends React.Component<Props, State> {
     }
 
     const numberPicker = (
-      <Picker style={{ flex: 1 }} selectedValue={this.state.value} onValueChange={value => this.setState({ value })}>
+      <Picker style={{ flex: 1, color: pickerColor }} selectedValue={this.state.value} onValueChange={value => this.setState({ value })}>
         {numberPickerOptions}
       </Picker>
     )
 
     const measurementPicker = (
-      <Picker style={{ flex: 1 }} selectedValue={this.state.measurement} onValueChange={measurement => this.setState({ measurement })}>
+      <Picker style={{ flex: 1, color: pickerColor }} selectedValue={this.state.measurement} onValueChange={measurement => this.setState({ measurement })}>
         <Picker.Item color={textColor} label={s.strings.settings_seconds} value="seconds" />
         <Picker.Item color={textColor} label={s.strings.settings_minutes} value="minutes" />
         <Picker.Item color={textColor} label={s.strings.settings_hours} value="hours" />
