@@ -32,12 +32,12 @@ type StateProps = {
   fromExchangeAmount: string,
   fromPrimaryInfo: GuiCurrencyInfo,
   fromButtonText: string,
-  fromFiatToCrypto: number,
+  fromFiatToCrypto: string,
   toWallet: GuiWallet,
   toExchangeAmount: string,
   toPrimaryInfo: GuiCurrencyInfo,
   toButtonText: string,
-  toFiatToCrypto: number,
+  toFiatToCrypto: string,
 
   // The following props are used to populate the confirmation modal
   fromCurrencyCode: string,
@@ -295,69 +295,80 @@ const DIVIDE_PRECISION = 18
 
 export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
   state => {
-    const fromWallet = state.cryptoExchange.fromWallet
-    const toWallet = state.cryptoExchange.toWallet
-    let fromCurrencyCode,
-      fromPrimaryInfo: GuiCurrencyInfo,
-      fromButtonText: string,
-      fromNativeAmount: string,
-      fromExchangeAmount: string,
-      fromFiatToCrypto: number,
-      hasMaxSpend: boolean
+    const { cryptoExchange } = state
+
+    // Get the values of the 'From' Wallet
+    const { fromWallet } = cryptoExchange
+    let fromCurrencyCode = ''
+    let fromPrimaryInfo = emptyCurrencyInfo
+    let fromButtonText = s.strings.select_src_wallet
+    let fromNativeAmount = ''
+    let fromExchangeAmount = ''
+    let fromFiatToCrypto = '1'
+    let hasMaxSpend = false
     if (fromWallet) {
-      fromCurrencyCode = state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name
-      fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
-      fromNativeAmount = state.cryptoExchange.fromNativeAmount
-      fromButtonText = fromWallet.name + ':' + fromCurrencyCode
-      fromExchangeAmount = bns.div(fromNativeAmount, fromPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
-      fromFiatToCrypto = getExchangeRate(state, fromPrimaryInfo.exchangeCurrencyCode, fromWallet.isoFiatCurrencyCode)
+      const { fromNativeAmount: nativeAmount, fromWalletPrimaryInfo } = cryptoExchange
+      const {
+        displayDenomination: { name },
+        exchangeDenomination: { multiplier },
+        exchangeCurrencyCode
+      } = fromWalletPrimaryInfo
+      const { name: fromWalletName, isoFiatCurrencyCode } = fromWallet
 
-      const currencyCode = state.cryptoExchange?.fromWallet?.currencyCode
+      fromCurrencyCode = name
+      fromPrimaryInfo = fromWalletPrimaryInfo
+      fromNativeAmount = nativeAmount
+      fromButtonText = fromWalletName + ':' + fromCurrencyCode
+      fromExchangeAmount = bns.div(fromNativeAmount, multiplier, DIVIDE_PRECISION)
+      fromFiatToCrypto = getExchangeRate(state, exchangeCurrencyCode, isoFiatCurrencyCode)
+
+      const currencyCode = cryptoExchange?.fromWallet?.currencyCode
       hasMaxSpend = currencyCode != null && getSpecialCurrencyInfo(currencyCode).noMaxSpend !== true
-    } else {
-      fromCurrencyCode = ''
-      fromExchangeAmount = ''
-      fromPrimaryInfo = emptyCurrencyInfo
-      fromButtonText = s.strings.select_src_wallet
-      fromFiatToCrypto = 1
-      hasMaxSpend = false
     }
 
-    let toCurrencyCode, toPrimaryInfo: GuiCurrencyInfo, toButtonText: string, toNativeAmount: string, toExchangeAmount: string, toFiatToCrypto: number
+    // Get the values of the 'To' Wallet
+    const { toWallet } = cryptoExchange
+    let toCurrencyCode = ''
+    let toPrimaryInfo = emptyCurrencyInfo
+    let toButtonText = s.strings.select_recv_wallet
+    let toExchangeAmount = ''
+    let toFiatToCrypto = '1'
+
     if (toWallet) {
-      toCurrencyCode = state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name
-      toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
-      toNativeAmount = state.cryptoExchange.toNativeAmount
-      toButtonText = toWallet.name + ':' + toCurrencyCode
-      toExchangeAmount = bns.div(toNativeAmount, toPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
-      toFiatToCrypto = getExchangeRate(state, toPrimaryInfo.exchangeCurrencyCode, toWallet.isoFiatCurrencyCode)
-    } else {
-      toCurrencyCode = ''
-      toExchangeAmount = ''
-      toPrimaryInfo = emptyCurrencyInfo
-      toButtonText = s.strings.select_recv_wallet
-      toFiatToCrypto = 1
+      const { toNativeAmount, toWalletPrimaryInfo } = cryptoExchange
+      const {
+        displayDenomination: { name },
+        exchangeDenomination: { multiplier },
+        exchangeCurrencyCode
+      } = toWalletPrimaryInfo
+      const { name: toWalletName, isoFiatCurrencyCode } = toWallet
+
+      toCurrencyCode = name
+      toPrimaryInfo = toWalletPrimaryInfo
+      toButtonText = toWalletName + ':' + toCurrencyCode
+      toExchangeAmount = bns.div(toNativeAmount, multiplier, DIVIDE_PRECISION)
+      toFiatToCrypto = getExchangeRate(state, exchangeCurrencyCode, isoFiatCurrencyCode)
     }
-    const creatingWallet = state.cryptoExchange.creatingWallet
+
     return {
-      fromWallet: fromWallet || emptyGuiWallet,
+      fromWallet: fromWallet ?? emptyGuiWallet,
       fromExchangeAmount,
       fromCurrencyCode,
       fromPrimaryInfo,
       fromButtonText,
       fromFiatToCrypto,
       hasMaxSpend,
-      toWallet: toWallet || emptyGuiWallet,
+      toWallet: toWallet ?? emptyGuiWallet,
       toExchangeAmount,
       toCurrencyCode,
       toPrimaryInfo,
       toButtonText,
       toFiatToCrypto,
-      fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon || '',
-      toCurrencyIcon: state.cryptoExchange.toCurrencyIcon || '',
-      forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
-      calculatingMax: state.cryptoExchange.calculatingMax,
-      creatingWallet
+      fromCurrencyIcon: cryptoExchange.fromCurrencyIcon ?? '',
+      toCurrencyIcon: cryptoExchange.toCurrencyIcon ?? '',
+      forceUpdateGuiCounter: cryptoExchange.forceUpdateGuiCounter,
+      calculatingMax: cryptoExchange.calculatingMax,
+      creatingWallet: cryptoExchange.creatingWallet
     }
   },
   dispatch => ({

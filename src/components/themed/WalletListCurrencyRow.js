@@ -32,9 +32,9 @@ type StateProps = {
   fiatBalanceSymbol: string,
   fiatBalanceString: string,
   walletNameString: string,
-  exchangeRate?: number,
+  exchangeRate?: string,
   exchangeRates: GuiExchangeRates,
-  fiatExchangeRate: number,
+  fiatExchangeRate: string,
   walletFiatSymbol: string
 }
 
@@ -42,14 +42,14 @@ type Props = OwnProps & StateProps & ThemeProps
 
 type GetRatesParams = {
   currencyCode: string,
-  exchangeRate?: number,
+  exchangeRate?: string,
   exchangeRates: GuiExchangeRates,
-  fiatExchangeRate: number,
+  fiatExchangeRate: string,
   walletFiatSymbol: string
 }
 
 export const getRate = (getRateParams: GetRatesParams) => {
-  const { currencyCode, exchangeRate, exchangeRates, fiatExchangeRate = 0, walletFiatSymbol } = getRateParams
+  const { currencyCode, exchangeRate, exchangeRates, fiatExchangeRate = '0', walletFiatSymbol } = getRateParams
   // Create the default empty result function
   const emptyResult = (...args) => ({
     exchangeRateFiatSymbol: args[0] ?? '',
@@ -60,18 +60,18 @@ export const getRate = (getRateParams: GetRatesParams) => {
   // If the `exchangeRate` is missing, return the default empty result
   if (exchangeRate == null) return emptyResult()
   // Today's Currency Exchange Rate
-  const todayExchangeRate = exchangeRate.toFixed(18)
-  const exchangeRateDecimals = bns.log10(todayExchangeRate) >= 3 ? 0 : 2
+  const todayExchangeRate = exchangeRate
+  const exchangeRateDecimals = Math.log10(parseFloat(todayExchangeRate)) >= 3 ? 0 : 2
   const exchangeRateString = formatNumber(exchangeRate, { toFixed: exchangeRateDecimals })
   // Create the default zero change Exchange Rate result function
   const result = (...args) => emptyResult(`${walletFiatSymbol} `, exchangeRateString, ...args)
   // Yesterdays Exchange Rate
   const currencyPair = `${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`
-  const yesterdayUsdExchangeRate = exchangeRates[currencyPair] ?? 0
+  const yesterdayUsdExchangeRate = exchangeRates[currencyPair] ?? '0'
   // Return the Exchange Rate without `percentageString` in case we are missing yesterday's rates
-  if (yesterdayUsdExchangeRate === 0 || fiatExchangeRate === 0) return result()
+  if (yesterdayUsdExchangeRate === '0' || fiatExchangeRate === '0') return result()
   // Calculate the percentage difference in rate between yesterday and today
-  const yesterdayExchangeRate = bns.mul(yesterdayUsdExchangeRate.toFixed(18), fiatExchangeRate.toFixed(18))
+  const yesterdayExchangeRate = bns.mul(yesterdayUsdExchangeRate, fiatExchangeRate)
   const differenceYesterday = bns.sub(todayExchangeRate, yesterdayExchangeRate)
   const differencePercentage = bns.mul(bns.div(differenceYesterday, yesterdayExchangeRate, 3), '100')
   // Return zero result
@@ -91,7 +91,7 @@ class WalletListRowComponent extends React.PureComponent<Props> {
   }
 
   getRate() {
-    const { currencyCode, exchangeRate, exchangeRates, fiatExchangeRate = 0, walletFiatSymbol } = this.props
+    const { currencyCode, exchangeRate, exchangeRates, fiatExchangeRate, walletFiatSymbol } = this.props
     return getRate({ currencyCode, exchangeRate, exchangeRates, fiatExchangeRate, walletFiatSymbol })
   }
 
@@ -182,7 +182,7 @@ export const WalletListCurrencyRow = connect<StateProps, {}, OwnProps>(
     const exchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
     const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
     const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
-    const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : undefined
+    const exchangeRate = exchangeRates[rateKey] !== '0' ? exchangeRates[rateKey] : undefined
     const cryptoAmount = showBalance
       ? balance && balance !== '0'
         ? getCryptoAmount(balance, denomination, exchangeDenomination, fiatDenomination, exchangeRate, guiWallet)
@@ -196,7 +196,7 @@ export const WalletListCurrencyRow = connect<StateProps, {}, OwnProps>(
     const fiatBalanceSymbol = showBalance && exchangeRate ? walletFiatSymbol : ''
     const fiatBalanceString = showBalance && exchangeRate ? fiatBalanceFormat : ''
 
-    const fiatExchangeRate = guiWallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${guiWallet.isoFiatCurrencyCode}`] : 1
+    const fiatExchangeRate = guiWallet.isoFiatCurrencyCode !== 'iso:USD' ? exchangeRates[`iso:USD_${guiWallet.isoFiatCurrencyCode}`] : '1'
 
     let walletNameString = walletName
     if (walletNameString == null) {

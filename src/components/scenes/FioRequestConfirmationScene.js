@@ -28,7 +28,7 @@ import type { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
 import { Tile } from '../themed/Tile'
 
 type StateProps = {
-  exchangeSecondaryToPrimaryRatio: number,
+  exchangeSecondaryToPrimaryRatio: string,
   publicAddress: string,
   chainCode: string,
   primaryCurrencyInfo: GuiCurrencyInfo,
@@ -261,7 +261,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   render() {
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, theme } = this.props
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, theme, exchangeSecondaryToPrimaryRatio } = this.props
     const { fioAddressFrom, fioAddressTo, loading, memo, settingFioAddressTo, showSlider } = this.state
 
     if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
@@ -275,7 +275,7 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
     const styles = getStyles(theme)
 
-    const fiatAmount = formatNumber(this.props.exchangeSecondaryToPrimaryRatio * parseFloat(exchangeAmount), { toFixed: 2 }) || '0'
+    const fiatAmount = formatNumber(bns.mul(exchangeSecondaryToPrimaryRatio, exchangeAmount), { toFixed: 2 }) || '0'
     const cryptoName = primaryCurrencyInfo.displayDenomination.name
     const fiatName = secondaryCurrencyInfo.displayDenomination.name
 
@@ -316,7 +316,7 @@ export const FioRequestConfirmationScene = connect<StateProps, {}, NavigationPro
 
     if (!guiWallet || !currencyCode) {
       return {
-        exchangeSecondaryToPrimaryRatio: 0,
+        exchangeSecondaryToPrimaryRatio: '0',
         chainCode: '',
         primaryCurrencyInfo: emptyCurrencyInfo,
         secondaryCurrencyInfo: emptyCurrencyInfo,

@@ -220,7 +220,7 @@ export type SpendingLimits = {
 export type SpendAuthType = 'pin' | 'none'
 
 export type GuiExchangeRates = {
-  [pair: string]: number
+  [pair: string]: string
 }
 
 export type CountryData = {

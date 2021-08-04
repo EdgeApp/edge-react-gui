@@ -26,7 +26,7 @@ export type ExchangedFlipInputOwnProps = {
   onBlur?: () => void,
 
   // Exchange rate
-  exchangeSecondaryToPrimaryRatio: number,
+  exchangeSecondaryToPrimaryRatio: string,
 
   forceUpdateGuiCounter: number,
   keyboardVisible: boolean,
@@ -72,7 +72,7 @@ function propsToState(props: Props): State {
   // nextProps.exchangeSecondaryToPrimaryRatio // ie. 1/10000
   const primaryDisplayToExchangeRatio = getPrimaryDisplayToExchangeRatio(props) // 1/1000 for mBTC
   const secondaryDisplayToExchangeRatio = getSecondaryDisplayToExchangeRatio(props) // 1 for USD
-  let exchangeSecondaryToPrimaryRatio = bns.div(props.exchangeSecondaryToPrimaryRatio.toString(), primaryDisplayToExchangeRatio, DIVIDE_PRECISION) // Should be 1/10
+  let exchangeSecondaryToPrimaryRatio = bns.div(props.exchangeSecondaryToPrimaryRatio, primaryDisplayToExchangeRatio, DIVIDE_PRECISION) // Should be 1/10
 
   exchangeSecondaryToPrimaryRatio = bns.mul(exchangeSecondaryToPrimaryRatio, secondaryDisplayToExchangeRatio) // Noop usually for USD since we only ever use the same exchange and display multiplier
 

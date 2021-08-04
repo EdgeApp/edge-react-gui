@@ -237,14 +237,9 @@ export const signBroadcastAndSave =
     // check hwo high fee is and decide whether to display warninig
     const exchangeConverter = convertNativeToExchange(exchangeDenomination.multiplier)
     const cryptoFeeExchangeAmount = exchangeConverter(edgeUnsignedTransaction.networkFee)
-    const feeAmountInUSD = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
+    const feeAmountInUSD = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
     if (parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD) {
-      const feeAmountInWalletFiat = convertCurrencyFromExchangeRates(
-        state.exchangeRates,
-        currencyCode,
-        isoFiatCurrencyCode,
-        parseFloat(cryptoFeeExchangeAmount)
-      )
+      const feeAmountInWalletFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
       const fiatDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
       const fiatSymbol = fiatDenomination.symbol ? `${fiatDenomination.symbol} ` : ''
       const feeString = `${fiatSymbol}${bns.toFixed(feeAmountInWalletFiat.toString(), 2, 2)}`

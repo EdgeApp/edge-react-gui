@@ -1,5 +1,7 @@
 // @flow
 
+import { bns } from 'biggystring'
+
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { type GuiExchangeRates } from '../types/types.js'
 import { getYesterdayDateRoundDownHour } from '../util/utils.js'
@@ -62,17 +64,18 @@ async function buildExchangeRates(state: RootState): GuiExchangeRates {
     const key = exchangeRateKeys[i]
     const codes = key.split('_')
     const rate = rates[i]
+    const rateStr = rate.toFixed(18)
     const reverseExchangeRateKey = `${codes[1]}_${codes[0]}${codes[2] ? '_' + codes[2] : ''}`
     if (isNaN(rate)) {
-      finalExchangeRates[key] = 0
-      finalExchangeRates[reverseExchangeRateKey] = 0
+      finalExchangeRates[key] = '0'
+      finalExchangeRates[reverseExchangeRateKey] = '0'
     } else {
-      finalExchangeRates[key] = rate
+      finalExchangeRates[key] = rateStr
       if (rate !== 0) {
         // if it's a real rate and can be multiplicatively inverted
-        finalExchangeRates[reverseExchangeRateKey] = 1 / parseFloat(rate)
+        finalExchangeRates[reverseExchangeRateKey] = bns.div('1', rateStr, 18)
       } else {
-        finalExchangeRates[reverseExchangeRateKey] = 0
+        finalExchangeRates[reverseExchangeRateKey] = '0'
       }
     }
   }

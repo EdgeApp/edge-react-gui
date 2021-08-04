@@ -317,13 +317,14 @@ export const isSentTransaction = (edgeTransaction: TransactionListTx | EdgeTrans
 }
 
 export type PrecisionAdjustParams = {
-  exchangeSecondaryToPrimaryRatio: number,
+  exchangeSecondaryToPrimaryRatio: string,
   secondaryExchangeMultiplier: string,
   primaryExchangeMultiplier: string
 }
 
 export function precisionAdjust(params: PrecisionAdjustParams): number {
-  const order = Math.floor(Math.log(params.exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
+  const exchangeSecondaryToPrimaryRatio = parseFloat(params.exchangeSecondaryToPrimaryRatio)
+  const order = Math.floor(Math.log(exchangeSecondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
   const exchangeRateOrderOfMagnitude = Math.pow(10, order)
 
   // Get the exchange rate in tenth of pennies
@@ -715,8 +716,8 @@ export const convertToFiatFee = (
   isoFiatCurrencyCode: string
 ): { amount: string, style?: string } => {
   const cryptoFeeExchangeAmount = convertNativeToExchange(exchangeMultiplier)(networkFee)
-  const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(cryptoFeeExchangeAmount))
-  const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', parseFloat(cryptoFeeExchangeAmount))
+  const fiatFeeAmount = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, isoFiatCurrencyCode, cryptoFeeExchangeAmount)
+  const feeAmountInUSD = convertCurrencyFromExchangeRates(exchangeRates, currencyCode, 'iso:USD', cryptoFeeExchangeAmount)
   return {
     amount: bns.toFixed(fiatFeeAmount, 2, 2),
     style: parseFloat(feeAmountInUSD) > FEE_ALERT_THRESHOLD ? feeStyle.danger : parseFloat(feeAmountInUSD) > FEE_COLOR_THRESHOLD ? feeStyle.warning : undefined
@@ -787,7 +788,7 @@ export function getCryptoAmount(
   denomination: EdgeDenomination,
   exchangeDenomination: EdgeDenomination,
   fiatDenomination: EdgeDenomination,
-  exchangeRate?: number,
+  exchangeRate?: string,
   guiWallet: GuiWallet
 ): string {
   let maxConversionDecimals = 6

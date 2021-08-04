@@ -39,7 +39,7 @@ type StateProps = {
   flipInputHeaderLogo: string,
   primaryInfo: GuiCurrencyInfo,
   secondaryInfo: GuiCurrencyInfo,
-  fiatPerCrypto: number,
+  fiatPerCrypto: string,
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
 
@@ -247,7 +247,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     // Balances
     const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
     const balanceCrypto = convertNativeToExchangeRateDenomination(state.ui.settings, currencyCode, balanceInCrypto)
-    const balanceFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(balanceCrypto))
+    const balanceFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, balanceCrypto)
 
     // FlipInput
     const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
@@ -297,7 +297,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       flipInputHeaderLogo: guiWallet.symbolImageDarkMono || '',
       primaryInfo,
       secondaryInfo,
-      fiatPerCrypto: fiatPerCrypto || 0,
+      fiatPerCrypto: fiatPerCrypto ?? '0',
       overridePrimaryExchangeAmount,
       forceUpdateGuiCounter,
 
