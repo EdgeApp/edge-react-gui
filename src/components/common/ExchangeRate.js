@@ -34,8 +34,8 @@ class ExchangeRateComponent extends React.Component<Props & ThemeProps> {
     const primaryDisplayName: string = primaryInfo.displayDenomination.name
     const secondaryDisplaySymbol = secondaryInfo.displayDenomination.symbol ?? ''
     const getDisplayExchangeAmount = secondaryDisplayAmount => {
-      const primaryRatio = bns.div(primaryInfo.displayDenomination.multiplier, primaryInfo.exchangeDenomination.multiplier)
-      const secondaryRatio = bns.div(secondaryInfo.displayDenomination.multiplier, secondaryInfo.exchangeDenomination.multiplier)
+      const primaryRatio = bns.div(primaryInfo.displayDenomination.multiplier, primaryInfo.exchangeDenomination.multiplier, 4)
+      const secondaryRatio = bns.div(secondaryInfo.displayDenomination.multiplier, secondaryInfo.exchangeDenomination.multiplier, 4)
       return bns.mul(bns.div(primaryRatio, secondaryRatio, 4), secondaryDisplayAmount.toFixed(18))
     }
     let precision = secondaryInfo.displayDenomination.multiplier ? bns.log10(secondaryInfo.displayDenomination.multiplier) : 0
