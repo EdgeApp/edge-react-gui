@@ -50,8 +50,7 @@ test('initialState', () => {
         secondaryModal: {
           isActive: false
         }
-      },
-      parsedUri: null
+      }
     },
     sendConfirmation: SendConfirmationInitialState,
     transactionDetails: {

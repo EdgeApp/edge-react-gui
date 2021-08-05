@@ -1,5 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
-
+// @flow
 /* globals test expect */
 
 import { scan as scanReducer } from '../reducers/scenes/ScanReducer.js'
@@ -14,10 +13,9 @@ test('initialState', () => {
       },
       error: null,
       isSweeping: false
-    },
-    parsedUri: null
+    }
   }
-  const actual = scanReducer(undefined, {})
+  const actual = scanReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
 
   expect(actual).toEqual(expected)
 })

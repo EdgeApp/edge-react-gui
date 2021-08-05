@@ -151,7 +151,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       return Actions.push(ADD_TOKEN, parameters)
     }
 
-    if (isLegacyAddressUri(parsedUri)) {
+    if (parsedUri.legacyAddress != null) {
       // LEGACY ADDRESS URI
       if (await shouldContinueLegacy()) {
         Actions.push(SEND, {
@@ -166,12 +166,12 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       return
     }
 
-    if (isPrivateKeyUri(parsedUri)) {
+    if (parsedUri.privateKeys != null && parsedUri.privateKeys.length > 0) {
       // PRIVATE KEY URI
-      return dispatch(privateKeyModalActivated())
+      return dispatch(privateKeyModalActivated(parsedUri.privateKeys))
     }
 
-    if (isPaymentProtocolUri(parsedUri)) {
+    if (parsedUri.paymentProtocolURL != null && parsedUri.publicAddress == null) {
       // BIP70 URI
       const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, coreWallet)
 
@@ -256,24 +256,7 @@ export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: Ge
   dispatch(parseScannedUri(data))
 }
 
-export const isTokenUri = (parsedUri: EdgeParsedUri): boolean => {
-  return !!parsedUri.token
-}
-
-export const isLegacyAddressUri = (parsedUri: EdgeParsedUri): boolean => {
-  return !!parsedUri.legacyAddress
-}
-
-export const isPrivateKeyUri = (parsedUri: EdgeParsedUri): boolean => {
-  return !!parsedUri.privateKeys && parsedUri.privateKeys.length >= 1
-}
-
-export const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
-  // $FlowFixMe should be paymentProtocolUrl (lowercased)?
-  return !!parsedUri.paymentProtocolURL && !parsedUri.publicAddress
-}
-
-export const privateKeyModalActivated = () => async (dispatch: Dispatch, getState: GetState) => {
+const privateKeyModalActivated = (privateKeys: string[]) => async (dispatch: Dispatch, getState: GetState) => {
   const firstResponse = await Airship.show(bridge => (
     <ButtonsModal
       bridge={bridge}
@@ -294,15 +277,13 @@ export const privateKeyModalActivated = () => async (dispatch: Dispatch, getStat
     dispatch({ type: 'PRIVATE_KEY_MODAL/SECONDARY_MODAL/ACTIVATED' })
 
     const state = getState()
-    const parsedUri = state.ui.scenes.scan.parsedUri
-    if (!parsedUri) return
 
     const { currencyWallets } = state.core.account
     const selectedWalletId = state.ui.wallets.selectedWalletId
     const edgeWallet = currencyWallets[selectedWalletId]
 
     const spendInfo: EdgeSpendInfo = {
-      privateKeys: parsedUri.privateKeys,
+      privateKeys,
       spendTargets: []
     }
 
