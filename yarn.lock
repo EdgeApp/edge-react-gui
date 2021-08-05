@@ -10499,6 +10499,11 @@ react-native-gesture-handler@^1.10.3:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
+react-native-image-picker@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-4.0.6.tgz#0dfa5bb83bcf6ff58635ebb9201a185c2271e8cc"
+  integrity sha512-Pp3UWKUADuMG1mz12m6dSO/R2KnvXVEd77bldrfTMFpz4PFc4iVKo+bHeS79It0mUBezfzDMgfesg/OPLSugvQ==
+
 react-native-iphone-x-helper@^1.0.3:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.0.tgz#9f8a376eb00bc712115abff4420318a0063fa796"
@@ -11371,6 +11376,11 @@ rlp@^2.2.4:
   integrity sha512-HAfAmL6SDYNWPUOJNrM500x4Thn4PZsEy5pijPh40U9WfNk0z15hUYzO9xVIMAdIHdFtD8CBDHd75Td1g36Mjg==
   dependencies:
     bn.js "^4.11.1"
+
+rn-qr-generator@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/rn-qr-generator/-/rn-qr-generator-1.1.7.tgz#b962fff2c123f3fa891e274c9b65c5c5777eb3a8"
+  integrity sha512-6Wi4xqO0K2BojwLVVW9Qxyh5TzfZNsoFlZ8sMbwMdz+5qJzk3qAPwmB5s8LqmOMVeY2RZNuOmk//Emq5zn5xWg==
 
 rollup-plugin-node-resolve@4.0.0:
   version "4.0.0"

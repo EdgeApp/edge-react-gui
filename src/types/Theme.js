@@ -21,6 +21,9 @@ export type Theme = {
   backgroundGradientLeft: string,
   backgroundGradientRight: string,
 
+  // Overlay
+  overlayBackground: string,
+
   // Modal
   modal: string,
   modalBlurType: 'light' | 'dark',

@@ -1,12 +1,15 @@
 // @flow
-
 import Clipboard from '@react-native-community/clipboard'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { sprintf } from 'sprintf-js'
 
+import { addNewToken } from '../../actions/AddTokenActions'
+import { ADD_TOKEN } from '../../constants/SceneKeys'
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddress/util'
@@ -41,7 +44,10 @@ type State = {
   clipboard: string,
   loading: boolean
 }
-type Props = OwnProps & StateProps & ThemeProps
+type DispatchProps = {
+  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, type: string) => void
+}
+type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
 const isLegacyAddressUri = (parsedUri: EdgeParsedUri): boolean => {
   return !!parsedUri.legacyAddress
@@ -96,6 +102,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     const { onChangeAddress, coreWallet, currencyCode, fioPlugin } = this.props
 
     this.setState({ loading: true })
+
     let fioAddress
     if (fioPlugin) {
       try {
@@ -110,12 +117,42 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
         }
       }
     }
+
     try {
       const parsedUri: EdgeParsedUri & { paymentProtocolURL?: string } = await coreWallet.parseUri(address, currencyCode)
 
-      this.setState({ loading: false })
+      if (parsedUri.token != null) {
+        const { currencyCode, /* currencyName, */ contractAddress, denominations } = parsedUri.token
+        // Find the first denomination for the currencyCode
+        const denomination = denominations.find(d => d.name === currencyCode)
+
+        // If no contract address or denomination is found, then we show an invalid token error
+        if (contractAddress == null || denomination == null) {
+          showError(`${s.strings.scan_invalid_token_error_title} ${s.strings.scan_invalid_token_error_description}`)
+          return
+        }
+
+        // If the token is already added to the wallet, then show an error message to the user
+        const enabledTokens = await coreWallet.getEnabledTokens()
+        if (enabledTokens.indexOf(currencyCode) !== -1) {
+          showError(sprintf(s.strings.scan_address_add_token_exists_err_message, currencyCode, coreWallet.name))
+          this.setState({ loading: false })
+          return
+        }
+
+        // Redirect to the wallet list scene
+        Actions.push(ADD_TOKEN, {
+          walletId: coreWallet.id,
+          metaToken: parsedUri.token,
+          onAddToken: Actions.pop
+        })
+
+        this.setState({ loading: false })
+        return
+      }
 
       if (isLegacyAddressUri(parsedUri)) {
+        this.setState({ loading: false })
         if (!(await shouldContinueLegacy())) return
       }
 
@@ -128,16 +165,19 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
           onChangeAddress(guiMakeSpendInfo)
         }
 
+        this.setState({ loading: false })
         return
       }
 
       if (!parsedUri.publicAddress) {
+        this.setState({ loading: false })
         return showError(s.strings.scan_invalid_address_error_title)
       }
 
       // set address
       onChangeAddress({ fioAddress, isSendUsingFioAddress: !!fioAddress }, parsedUri)
     } catch (e) {
+      console.warn(e)
       showError(`${s.strings.scan_invalid_address_error_title} ${s.strings.scan_invalid_address_error_description}`)
       this.setState({ loading: false })
     }
@@ -257,13 +297,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-const AddressTileConnector = connect<StateProps, {}, OwnProps>(
+const AddressTileConnector = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     fioToAddress: state.ui.scenes.sendConfirmation.guiMakeSpendInfo?.fioAddress,
     fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO],
     fioWallets: state.ui.wallets.fioWallets
   }),
-  dispatch => ({})
+  dispatch => ({
+    addNewToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, walletType: string) {
+      dispatch(addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination, walletType))
+    }
+  })
 )(withTheme(AddressTileComponent))
 
 // $FlowFixMe - forwardRef is not recognize by flow?

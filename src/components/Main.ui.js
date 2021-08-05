@@ -377,7 +377,6 @@ export class MainComponent extends React.Component<Props> {
                 onLeft={Actions.pop}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={this.renderEmptyButton()}
-                renderTitle={<HeaderTitle title={s.strings.title_add_token} />}
               />
               <Scene
                 key={EDIT_TOKEN}
@@ -521,7 +520,16 @@ export class MainComponent extends React.Component<Props> {
               key={ADD_TOKEN}
               navTransparent
               component={ifLoggedIn(AddTokenScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_add_token} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+            />
+          </Stack>
+
+          <Stack key={ADD_TOKEN} hideTabBar>
+            <Scene
+              key={ADD_TOKEN}
+              navTransparent
+              component={ifLoggedIn(AddTokenScene)}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
             />
