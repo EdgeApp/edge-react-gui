@@ -208,6 +208,10 @@ export type ParamList = {
   settingsOverview: void,
   settingsOverviewTab: void,
   spendingLimits: void,
+  stakingOverview: {
+    currencyCode: string,
+    walletId: string
+  },
   termsOfService: void,
   transactionDetails: {|
     edgeTransaction: EdgeTransaction,
