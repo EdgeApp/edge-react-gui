@@ -525,6 +525,16 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
+          <Stack key={ADD_TOKEN} hideTabBar>
+            <Scene
+              key={ADD_TOKEN}
+              navTransparent
+              component={ifLoggedIn(AddTokenScene)}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+            />
+          </Stack>
+
           <Stack key={SETTINGS_OVERVIEW_TAB} hideDrawerButton>
             <Scene
               key={SETTINGS_OVERVIEW}

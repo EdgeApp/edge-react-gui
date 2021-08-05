@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeMetaToken } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, TextInput } from 'react-native'
 
@@ -22,6 +22,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 export type OwnProps = {
   walletId: string,
   currentCustomTokens?: CustomTokenInfo[],
+  metaToken?: EdgeMetaToken,
   onAddToken: (currencyCode: string) => void
 }
 
@@ -86,13 +87,18 @@ export const AddToken = ({
   walletId,
   currencyWallet,
   addNewToken,
+  metaToken,
   onAddToken
 }: Props) => {
   const styles = getStyles(useTheme())
-  const [currencyCode, setCurrencyCode] = useState<string>('')
-  const [currencyName, setCurrencyName] = useState<string>('')
-  const [contractAddress, setContractAddress] = useState<string>('')
-  const [decimalPlaces, setDecimalPlaces] = useState<string>('')
+  const { currencyCode: metaTokenCurrencyCode = '', currencyName: metaTokenCurrencyName = '', contractAddress: metaTokenContractAddress = '' } = metaToken ?? {}
+  const metaTokenDecimalPlaces = metaToken != null && metaToken.denominations[0] != null ? (metaToken.denominations[0].multiplier.length - 1).toString() : ''
+  const [currencyCode, setCurrencyCode] = useState<string>(metaTokenCurrencyCode ?? '')
+  const [currencyName, setCurrencyName] = useState<string>(metaTokenCurrencyName ?? '')
+  const [contractAddress, setContractAddress] = useState<string>(metaTokenContractAddress ?? '')
+  const [decimalPlaces, setDecimalPlaces] = useState<string>(metaTokenDecimalPlaces ?? '')
+
+  console.log(';;', metaToken)
 
   const [isDecimalPlacesFocused, setIsDecimalPlacesFocused] = useState<boolean>(false)
   const scrollViewRef = useScrollToEnd(isDecimalPlacesFocused, KEYBOARD_ANIMATION_TIME) // Not the best solution for keyboard avoiding when bottom field focused
