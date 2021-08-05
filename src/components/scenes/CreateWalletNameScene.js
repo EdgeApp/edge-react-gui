@@ -2,11 +2,11 @@
 
 import * as React from 'react'
 import { Alert } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { CREATE_WALLET_REVIEW } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
@@ -64,7 +64,7 @@ export class CreateWalletName extends React.Component<Props, State> {
   onNext = () => {
     const { cleanedPrivateKey, selectedFiat, selectedWalletType } = this.props
     if (this.isValidWalletName()) {
-      Actions[CREATE_WALLET_REVIEW]({
+      Actions.push(CREATE_WALLET_REVIEW, {
         walletName: this.state.walletName,
         selectedFiat: selectedFiat,
         selectedWalletType: selectedWalletType,

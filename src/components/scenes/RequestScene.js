@@ -6,7 +6,6 @@ import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-c
 import * as React from 'react'
 import type { RefObject } from 'react-native'
 import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -19,6 +18,7 @@ import s from '../../locales/strings.js'
 import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { getCurrencyInfo, getDenomFromIsoCode, getObjectDiff } from '../../util/utils.js'
@@ -454,7 +454,7 @@ export class RequestComponent extends React.Component<Props, State> {
         return
       }
     }
-    Actions[FIO_REQUEST_CONFIRMATION]({
+    Actions.push(FIO_REQUEST_CONFIRMATION, {
       amounts: this.amounts
     })
   }

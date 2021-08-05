@@ -3,7 +3,6 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
@@ -11,6 +10,7 @@ import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { FioConnectionWalletItem } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -144,7 +144,7 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
             />
           ))
           if (answer === 'ok') {
-            Actions[FIO_ADDRESS_SETTINGS]({
+            Actions.push(FIO_ADDRESS_SETTINGS, {
               showRenew: true,
               fioWallet,
               fioAddressName: fioAddressName

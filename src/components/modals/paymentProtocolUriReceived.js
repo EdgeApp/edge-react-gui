@@ -4,7 +4,7 @@ import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import React from 'react'
 
 import s from '../../locales/strings.js'
-import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
+import { type GuiMakeSpendInfo } from '../../types/types.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { ButtonsModal } from './ButtonsModal.js'
 

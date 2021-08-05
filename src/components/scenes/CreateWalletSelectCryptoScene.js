@@ -3,12 +3,12 @@
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, FlatList, Image, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { CREATE_WALLET_CHOICE, CREATE_WALLET_SELECT_FIAT } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { type CreateWalletType, type FlatListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -61,11 +61,11 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
 
     // Go to the next screen:
     if (isImportKeySupported) {
-      Actions[CREATE_WALLET_CHOICE]({
+      Actions.push(CREATE_WALLET_CHOICE, {
         selectedWalletType: createWalletType
       })
     } else {
-      Actions[CREATE_WALLET_SELECT_FIAT]({
+      Actions.push(CREATE_WALLET_SELECT_FIAT, {
         selectedWalletType: createWalletType
       })
     }

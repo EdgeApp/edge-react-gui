@@ -3,7 +3,6 @@
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, ScrollView, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { createFioWallet } from '../../actions/FioAddressActions.js'
@@ -11,6 +10,7 @@ import { FIO_DOMAIN_REGISTER_SELECT_WALLET } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SingleInputModal } from '../modals/SingleInputModal'
 import type { WalletListResult } from '../modals/WalletListModal'
@@ -94,7 +94,7 @@ class FioDomainRegister extends React.PureComponent<Props, LocalState> {
     if (isValid && isAvailable && !loading && !walletLoading) {
       if (isConnected) {
         if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
-        Actions[FIO_DOMAIN_REGISTER_SELECT_WALLET]({
+        Actions.push(FIO_DOMAIN_REGISTER_SELECT_WALLET, {
           fioDomain,
           selectedWallet
         })

@@ -3,13 +3,13 @@
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { FIO_ADDRESS_REGISTER_SELECT_WALLET, FIO_ADDRESS_REGISTER_SUCCESS, WALLET_LIST } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -77,7 +77,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
                   }}
                 />
               ))
-              return Actions[FIO_ADDRESS_REGISTER_SELECT_WALLET]({
+              return Actions.push(FIO_ADDRESS_REGISTER_SELECT_WALLET, {
                 fioAddress: fioName,
                 selectedWallet: paymentWallet,
                 selectedDomain: {
@@ -104,7 +104,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             }}
           />
         ))
-        Actions[WALLET_LIST]()
+        Actions.jump(WALLET_LIST)
       } else {
         // no free domains
         showError(s.strings.fio_get_fee_err_msg)
@@ -114,7 +114,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
         if (this.isFioAddress()) {
           const { expiration, feeCollected } = await paymentWallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioName, ownerPublicKey })
           window.requestAnimationFrame(() =>
-            Actions[FIO_ADDRESS_REGISTER_SUCCESS]({
+            Actions.push(FIO_ADDRESS_REGISTER_SUCCESS, {
               fioName,
               expiration,
               feeCollected
@@ -127,7 +127,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             owner_fio_public_key: ownerPublicKey
           })
           window.requestAnimationFrame(() =>
-            Actions[FIO_ADDRESS_REGISTER_SUCCESS]({
+            Actions.push(FIO_ADDRESS_REGISTER_SUCCESS, {
               fioName,
               expiration,
               feeCollected

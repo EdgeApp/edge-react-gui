@@ -3,7 +3,6 @@
 import { type EdgeAccount } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { CREATE_WALLET_SELECT_FIAT } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
@@ -16,6 +15,7 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { type CreateWalletType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { FormField } from '../common/FormField.js'
@@ -58,7 +58,7 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
     currencyPlugin
       .importKey(input)
       .then(() => {
-        Actions[CREATE_WALLET_SELECT_FIAT]({
+        Actions.push(CREATE_WALLET_SELECT_FIAT, {
           selectedWalletType,
           cleanedPrivateKey: input
         })

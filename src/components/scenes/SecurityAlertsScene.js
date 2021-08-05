@@ -4,9 +4,9 @@ import { type EdgeAccount, type EdgeContext } from 'edge-core-js'
 import { SecurityAlertsScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { StatusBar, StyleSheet, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { THEME } from '../modals/modalParts.js'
 
 type StateProps = {

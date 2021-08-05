@@ -3,7 +3,6 @@
 import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { CURRENCY_NOTIFICATION_SETTINGS } from '../../constants/SceneKeys.js'
@@ -11,6 +10,7 @@ import s from '../../locales/strings'
 import { notif1 } from '../../modules/notifServer.js'
 import { getActiveWalletCurrencyInfos } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance.js'
@@ -101,7 +101,7 @@ class NotificationComponent extends React.Component<Props, State> {
               const icon = <Image style={styles.currencyLogo} source={{ uri: symbolImage }} />
               const onPress = () =>
                 enabled
-                  ? Actions[CURRENCY_NOTIFICATION_SETTINGS]({
+                  ? Actions.push(CURRENCY_NOTIFICATION_SETTINGS, {
                       currencyInfo
                     })
                   : undefined

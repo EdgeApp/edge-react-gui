@@ -2,18 +2,18 @@
 
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { type Navigation, Actions } from 'react-native-router-flux'
 import { isIPhoneX } from 'react-native-safe-area-view'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index.js'
 import { EXCHANGE, PLUGIN_BUY, PLUGIN_SELL, WALLET_LIST, WALLET_LIST_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
+import { type NavigationProp, type ParamList, Actions } from '../../types/routerTypes.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 
 type OwnProps = {
-  navigation: Navigation
+  navigation: NavigationProp
 }
 
 type Props = OwnProps & ThemeProps
@@ -26,7 +26,7 @@ const title = {
 }
 
 class MenuTabComponent extends React.PureComponent<Props> {
-  handleOnPress = (route: string) => {
+  handleOnPress = (route: $Keys<ParamList>) => {
     if (route === WALLET_LIST) {
       return Actions.jump(WALLET_LIST_SCENE)
     }
@@ -36,7 +36,7 @@ class MenuTabComponent extends React.PureComponent<Props> {
   render() {
     const { theme } = this.props
     const styles = getStyles(theme)
-    const { state } = this.props.navigation
+    const state: any = this.props.navigation.state
     const activeTabIndex = state.index
     return (
       <View style={styles.container}>

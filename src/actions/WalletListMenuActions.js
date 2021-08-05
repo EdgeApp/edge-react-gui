@@ -2,7 +2,6 @@
 
 import { createInputModal, createSecureTextModal } from 'edge-components'
 import * as React from 'react'
-import { Actions } from 'react-native-router-flux'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import { sprintf } from 'sprintf-js'
 
@@ -13,10 +12,11 @@ import { RawTextModal } from '../components/modals/RawTextModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { getTheme } from '../components/services/ThemeContext.js'
 import { CheckPasswordModal } from '../components/themed/CheckPasswordModal.js'
-import { TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
+import { MANAGE_TOKENS, TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
 import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import { getWalletName } from '../util/CurrencyWalletHelpers.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'
@@ -31,7 +31,9 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const wallet = state.ui.wallets.byId[walletId]
-        Actions.manageTokens({ guiWallet: wallet })
+        Actions.push(MANAGE_TOKENS, {
+          guiWallet: wallet
+        })
       }
     }
 
@@ -101,7 +103,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const state = getState()
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
-        Actions[TRANSACTIONS_EXPORT]({
+        Actions.push(TRANSACTIONS_EXPORT, {
           sourceWallet: wallet,
           currencyCode
         })

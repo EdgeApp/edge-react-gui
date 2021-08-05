@@ -2,12 +2,12 @@
 
 import { type EdgeLobby } from 'edge-core-js/types'
 import { Alert } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { launchModal } from '../components/common/ModalProvider.js'
 import s from '../locales/strings.js'
 import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 
 export const loginWithEdge = (lobbyId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()

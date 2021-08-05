@@ -4,17 +4,18 @@ import { type EdgeTransaction } from 'edge-core-js/types'
 import * as React from 'react'
 import { StyleSheet, Text } from 'react-native'
 import { type AirshipBridge } from 'react-native-airship'
-import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { playReceiveSound } from '../../actions/SoundActions.js'
 import { selectWallet } from '../../actions/WalletActions'
+import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { nightText } from '../../styles/common/textStyles.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { convertNativeToDisplay } from '../../util/utils.js'
 import { AirshipDropdown } from '../common/AirshipDropdown.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -57,7 +58,9 @@ export function TransactionDropdown(props: Props) {
       onPress={() => {
         bridge.resolve()
         walletId && selectWallet(walletId, tx.currencyCode)
-        Actions.transactionDetails({ edgeTransaction: tx })
+        Actions.push(TRANSACTION_DETAILS, {
+          edgeTransaction: tx
+        })
       }}
     >
       <AntDesignIcon name="checkcircle" size={THEME.rem(2)} style={styles.icon} />

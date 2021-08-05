@@ -3,7 +3,6 @@
 import { type EdgeCurrencyConfig, type EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { createFioWallet } from '../../actions/FioAddressActions.js'
@@ -14,6 +13,7 @@ import s from '../../locales/strings.js'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
 import { checkIsDomainPublic } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { openLink } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -165,14 +165,14 @@ class FioAddressRegister extends React.Component<Props, State> {
         if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
         const fullAddress = `${fioAddress}${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`
         if (selectedDomain.isFree) {
-          Actions[FIO_NAME_CONFIRM]({
+          Actions.push(FIO_NAME_CONFIRM, {
             fioName: fullAddress,
             paymentWallet: selectedWallet,
             fee: 0,
             ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
           })
         } else {
-          Actions[FIO_ADDRESS_REGISTER_SELECT_WALLET]({
+          Actions.push(FIO_ADDRESS_REGISTER_SELECT_WALLET, {
             fioAddress: fullAddress,
             selectedWallet,
             selectedDomain

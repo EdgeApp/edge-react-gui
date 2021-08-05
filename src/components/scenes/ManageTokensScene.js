@@ -4,13 +4,13 @@ import type { EdgeMetaToken } from 'edge-core-js'
 import { difference, keys, union } from 'lodash'
 import * as React from 'react'
 import { FlatList, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { checkEnabledTokensArray, setWalletEnabledTokens } from '../../actions/WalletActions'
 import { ADD_TOKEN, EDIT_TOKEN } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -200,7 +200,7 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
 
   goToAddTokenScene = () => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions[ADD_TOKEN]({
+    Actions.push(ADD_TOKEN, {
       walletId: id,
       metaTokens,
       onAddToken: this.onAddToken
@@ -209,7 +209,7 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
 
   goToEditTokenScene = (currencyCode: string) => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions[EDIT_TOKEN]({
+    Actions.push(EDIT_TOKEN, {
       walletId: id,
       currencyCode,
       metaTokens,

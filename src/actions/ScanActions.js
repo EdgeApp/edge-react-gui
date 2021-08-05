@@ -3,7 +3,6 @@
 import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, Linking } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -16,10 +15,10 @@ import { ADD_TOKEN, EXCHANGE_SCENE, PLUGIN_BUY, SEND } from '../constants/SceneK
 import { CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
-import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { type ReturnAddressLink, parseDeepLink } from '../types/DeepLink.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import type { GuiWallet } from '../types/types.js'
+import { Actions } from '../types/routerTypes.js'
+import { type GuiMakeSpendInfo, type GuiWallet } from '../types/types.js'
 import { denominationToDecimalPlaces, noOp } from '../util/utils.js'
 import { launchDeepLink } from './DeepLinkingActions.js'
 
@@ -149,13 +148,13 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
         onAddToken: noOp
       }
 
-      return Actions[ADD_TOKEN](parameters)
+      return Actions.push(ADD_TOKEN, parameters)
     }
 
     if (isLegacyAddressUri(parsedUri)) {
       // LEGACY ADDRESS URI
       if (await shouldContinueLegacy()) {
-        Actions[SEND]({
+        Actions.push(SEND, {
           guiMakeSpendInfo: parsedUri,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
@@ -177,7 +176,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, coreWallet)
 
       if (guiMakeSpendInfo != null) {
-        Actions[SEND]({
+        Actions.push(SEND, {
           guiMakeSpendInfo,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
@@ -208,7 +207,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       guiMakeSpendInfo.fioAddress = fioAddress
       guiMakeSpendInfo.isSendUsingFioAddress = true
     }
-    Actions[SEND]({
+    Actions.push(SEND, {
       guiMakeSpendInfo,
       selectedWalletId,
       selectedCurrencyCode: currencyCode

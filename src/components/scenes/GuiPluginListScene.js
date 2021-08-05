@@ -6,7 +6,6 @@ import { createInputModal } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { FlatList, Image, Platform, TouchableOpacity, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
@@ -19,6 +18,7 @@ import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account
 import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
+import { Actions } from '../../types/routerTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { launchModal } from '../common/ModalProvider.js'
@@ -195,7 +195,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     // Launch!
-    return Actions[PLUGIN_VIEW]({
+    return Actions.push(PLUGIN_VIEW, {
       plugin,
       deepPath,
       deepQuery

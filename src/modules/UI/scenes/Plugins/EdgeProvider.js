@@ -5,7 +5,6 @@ import type { EdgeCurrencyWallet, EdgeMetadata, EdgeNetworkFee, EdgeSpendTarget,
 import * as React from 'react'
 import { Linking } from 'react-native'
 import Mailer from 'react-native-mail'
-import { Actions } from 'react-native-router-flux'
 import SafariView from 'react-native-safari-view'
 import { sprintf } from 'sprintf-js'
 import { Bridgeable, update } from 'yaob'
@@ -17,10 +16,10 @@ import { type WalletListResult, WalletListModal } from '../../../../components/m
 import { Airship, showError, showToast } from '../../../../components/services/AirshipInstance.js'
 import { SEND } from '../../../../constants/SceneKeys.js'
 import s from '../../../../locales/strings'
-import type { GuiMakeSpendInfo } from '../../../../reducers/scenes/SendConfirmationReducer.js'
 import { type GuiPlugin, type GuiPluginQuery } from '../../../../types/GuiPluginTypes.js'
 import { type Dispatch, type RootState } from '../../../../types/reduxTypes.js'
-import { type GuiWallet } from '../../../../types/types.js'
+import { Actions } from '../../../../types/routerTypes.js'
+import { type GuiMakeSpendInfo, type GuiWallet } from '../../../../types/types.js'
 
 type EdgeReceiveAddress = {
   publicAddress?: string,
@@ -360,7 +359,7 @@ export class EdgeProvider extends Bridgeable {
       guiMakeSpendInfo.onBack = () => {
         resolve()
       }
-      Actions[SEND]({
+      Actions.push(SEND, {
         guiMakeSpendInfo,
         selectedWalletId: coreWallet.id,
         selectedCurrencyCode

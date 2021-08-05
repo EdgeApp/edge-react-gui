@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { Alert, FlatList, Image, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
 import { CREATE_WALLET_ACCOUNT_SETUP, CREATE_WALLET_NAME } from '../../constants/SceneKeys.js'
@@ -10,6 +9,7 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import s from '../../locales/strings.js'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { CreateWalletType, FlatListItem, GuiFiatType } from '../../types/types.js'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -70,7 +70,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
       } else {
         nextSceneKey = CREATE_WALLET_ACCOUNT_SETUP
       }
-      Actions[nextSceneKey]({
+      Actions.push(nextSceneKey, {
         selectedWalletType: selectedWalletType,
         selectedFiat: this.getFiatType(this.state.selectedFiat),
         cleanedPrivateKey
