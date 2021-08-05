@@ -99,20 +99,20 @@ export const Actions = {
 
   jump(name: $Keys<ParamList>, params: any): void {
     // $FlowFixMe
-    Flux.Actions.jump(name, { route: { name, params } })
+    Flux.Actions.jump(name, params)
   },
   push(name: $Keys<ParamList>, params: any): void {
     // $FlowFixMe
-    Flux.Actions.push(name, { route: { name, params } })
+    Flux.Actions.push(name, params)
   },
   replace(name: $Keys<ParamList>, params: any): void {
     // $FlowFixMe
-    Flux.Actions.replace(name, { route: { name, params } })
+    Flux.Actions.replace(name, params)
   },
 
   refresh(params: any): void {
     // $FlowFixMe
-    Flux.Actions.refresh({ route: { name: Flux.Actions.currentScene, params } })
+    Flux.Actions.refresh(params)
   },
 
   pop(): void {
