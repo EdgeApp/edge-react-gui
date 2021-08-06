@@ -10,7 +10,7 @@ import s from '../../locales/strings'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import type { FioAddress, FioConnectionWalletItem, FioDomain, GuiWallet } from '../../types/types'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers'
-import { DECIMAL_PRECISION, truncateDecimals } from '../../util/utils'
+import { DECIMAL_PRECISION, truncateDecimals, zeroString } from '../../util/utils'
 
 const CONNECTED_WALLETS = 'ConnectedWallets.json'
 const FIO_ADDRESS_CACHE = 'FioAddressCache.json'
@@ -147,7 +147,7 @@ const isWalletConnected = async (
       chainCode
     })
 
-    if (publicAddress === '0' || !publicAddress) return false
+    if (zeroString(publicAddress)) return false
 
     const receiveAddress = await wallet.getReceiveAddress()
     if (publicAddress === receiveAddress.publicAddress) return true
