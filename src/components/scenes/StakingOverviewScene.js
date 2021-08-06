@@ -6,6 +6,7 @@ import { sprintf } from 'sprintf-js'
 
 import fioLogo from '../../assets/images/fio/fio_logo.png'
 import s from '../../locales/strings.js'
+import { Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ClickableText } from '../themed/ClickableText.js'
@@ -16,13 +17,12 @@ import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {
   currencyCode: string,
-  // eslint-disable-next-line react/no-unused-prop-types
   walletId: string
 }
 type Props = OwnProps & ThemeProps
 
 export const StakingOverviewSceneComponent = (props: Props) => {
-  const { theme, currencyCode } = props
+  const { theme, currencyCode, walletId } = props
   const styles = getStyles(theme)
 
   const items = [
@@ -43,8 +43,12 @@ export const StakingOverviewSceneComponent = (props: Props) => {
     }
   ]
 
-  const handlePressStake = () => {}
-  const handlePressUnstake = () => {}
+  const handlePressStake = () => {
+    Actions.jump('stakingChange', { change: 'add', currencyCode, walletId })
+  }
+  const handlePressUnstake = () => {
+    Actions.jump('stakingChange', { change: 'remove', currencyCode, walletId })
+  }
 
   const renderItems = () =>
     items.map(item => {
