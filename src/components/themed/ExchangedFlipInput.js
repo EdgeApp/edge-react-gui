@@ -4,7 +4,7 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 
 import type { GuiCurrencyInfo } from '../../types/types.js'
-import { DECIMAL_PRECISION, getObjectDiff, precisionAdjust } from '../../util/utils.js'
+import { DECIMAL_PRECISION, getObjectDiff, precisionAdjust, zeroString } from '../../util/utils.js'
 import type { FlipInputFieldInfo } from './FlipInput.js'
 import { FlipInput } from './FlipInput.js'
 
@@ -157,7 +157,7 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
     if (!this.props.isFiatOnTop) {
       return false
     }
-    return !bns.eq(this.state.exchangeSecondaryToPrimaryRatio, '0')
+    return !zeroString(this.state.exchangeSecondaryToPrimaryRatio)
   }
 
   toggleCryptoOnBottom = () => {

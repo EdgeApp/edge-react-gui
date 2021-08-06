@@ -19,8 +19,8 @@ import { checkPubAddress } from '../modules/FioAddress/util'
 import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { type ReturnAddressLink, parseDeepLink } from '../types/DeepLink.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import type { GuiWallet } from '../types/types.js'
-import { denominationToDecimalPlaces, noOp } from '../util/utils.js'
+import { type GuiWallet } from '../types/types.js'
+import { denominationToDecimalPlaces, noOp, zeroString } from '../util/utils.js'
 import { launchDeepLink } from './DeepLinkingActions.js'
 
 export const doRequestAddress = (dispatch: Dispatch, edgeWallet: EdgeCurrencyWallet, guiWallet: GuiWallet, link: ReturnAddressLink) => {
@@ -335,7 +335,7 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
     const wallet = wallets[selectedWalletId || state.ui.wallets.selectedWalletId]
     // check if balance is zero
     const balance = wallet.nativeBalances[currencyCode]
-    if (balance !== '0' || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit
+    if (!zeroString(balance) || shownWalletGetCryptoModals.includes(wallet.id)) return // if there's a balance then early exit
     shownWalletGetCryptoModals.push(wallet.id) // add to list of wallets with modal shown this session
     let threeButtonModal
     const { displayBuyCrypto } = getSpecialCurrencyInfo(currencyCode)
