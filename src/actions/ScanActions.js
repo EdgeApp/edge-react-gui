@@ -131,7 +131,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       const { contractAddress, currencyName } = parsedUri.token
       const multiplier = parsedUri.token.denominations[0].multiplier
       const currencyCode = parsedUri.token.currencyCode.toUpperCase()
-      let decimalPlaces = 18
+      let decimalPlaces = '18'
 
       if (multiplier) {
         decimalPlaces = denominationToDecimalPlaces(multiplier)
@@ -141,10 +141,8 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
         contractAddress,
         currencyCode,
         currencyName,
-        multiplier,
         decimalPlaces,
         walletId: selectedWalletId,
-        wallet: guiWallet,
         onAddToken: noOp
       }
 

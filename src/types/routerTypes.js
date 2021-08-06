@@ -13,9 +13,16 @@ export type ParamList = {
   root: void,
   login: void,
   edge: void,
-
   // Logged-in scenes:
-  addToken: {}, // TODO
+  addToken: {|
+    onAddToken: (currencyCode: string) => void,
+    walletId: string,
+    // adding properties in case coming from Scan scene (scan QR code to add token)
+    currencyName?: string,
+    currencyCode?: string,
+    contractAddress?: string,
+    decimalPlaces?: string
+  |},
   changeMiningFee: {|
     wallet: EdgeCurrencyWallet,
     currencyCode?: string

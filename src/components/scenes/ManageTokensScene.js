@@ -201,10 +201,9 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   goToAddTokenScene = () => {
-    const { id, metaTokens } = this.props.guiWallet
+    const { id } = this.props.guiWallet
     Actions.push(ADD_TOKEN, {
       walletId: id,
-      metaTokens,
       onAddToken: this.onAddToken
     })
   }

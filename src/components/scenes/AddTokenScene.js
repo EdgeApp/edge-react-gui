@@ -11,6 +11,7 @@ import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
+import { type RouteProp } from '../../types/routerTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
 import { decimalPlacesToDenomination } from '../../util/utils.js'
@@ -18,14 +19,7 @@ import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type OwnProps = {
-  onAddToken: (currencyCode: string) => void,
-  walletId: string,
-
-  // adding properties in case coming from Scan scene (scan QR code to add token)
-  currencyName?: string,
-  currencyCode?: string,
-  contractAddress?: string,
-  decimalPlaces?: string
+  route: RouteProp<'addToken'>
 }
 
 type DispatchProps = {
@@ -33,6 +27,7 @@ type DispatchProps = {
 }
 
 type StateProps = {
+  currentCustomTokens: CustomTokenInfo[],
   addTokenPending: boolean,
   currentCustomTokens: CustomTokenInfo[],
   wallet: GuiWallet
@@ -43,7 +38,6 @@ type State = {
   currencyCode: string,
   contractAddress: string,
   decimalPlaces: string,
-  multiplier: string,
   enabled?: boolean
 }
 
@@ -52,13 +46,13 @@ type Props = OwnProps & StateProps & DispatchProps
 class AddToken extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    const { currencyName = '', currencyCode = '', contractAddress = '', decimalPlaces = '' } = props
+    const { route } = this.props
+    const { currencyName = '', currencyCode = '', contractAddress = '', decimalPlaces = '' } = route.params
     this.state = {
       currencyName,
       currencyCode,
       contractAddress,
-      decimalPlaces,
-      multiplier: ''
+      decimalPlaces
     }
   }
 
@@ -153,8 +147,10 @@ class AddToken extends React.Component<Props, State> {
         currencyCode
       },
       () => {
+        const { route, currentCustomTokens, wallet, addNewToken } = this.props
         const { currencyName, decimalPlaces, contractAddress } = this.state
-        const { currentCustomTokens, wallet, walletId, addNewToken, onAddToken } = this.props
+        const { walletId, onAddToken } = route.params
+
         const currentCustomTokenIndex = _.findIndex(currentCustomTokens, item => item.currencyCode === currencyCode)
         const metaTokensIndex = _.findIndex(wallet.metaTokens, item => item.currencyCode === currencyCode)
         // if token is hard-coded into wallets of this type
@@ -228,7 +224,7 @@ export const AddTokenScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => ({
     addTokenPending: state.ui.wallets.addTokenPending,
     currentCustomTokens: state.ui.settings.customTokens,
-    wallet: state.ui.wallets.byId[ownProps.walletId]
+    wallet: state.ui.wallets.byId[ownProps.route.params.walletId]
   }),
   dispatch => ({
     addNewToken(walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, walletType: string) {
