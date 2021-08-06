@@ -68,10 +68,10 @@ export const getRate = (getRateParams: GetRatesParams) => {
   // Yesterdays Exchange Rate
   const currencyPair = `${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`
   const yesterdayUsdExchangeRate = exchangeRates[currencyPair] ?? '0'
-  // Return the Exchange Rate without `percentageString` in case we are missing yesterday's rates
-  if (yesterdayUsdExchangeRate === '0' || fiatExchangeRate === '0') return result()
-  // Calculate the percentage difference in rate between yesterday and today
   const yesterdayExchangeRate = bns.mul(yesterdayUsdExchangeRate, fiatExchangeRate)
+  // Return the Exchange Rate without `percentageString` in case we are missing yesterday's rate
+  if (yesterdayExchangeRate === '0') return result()
+  // Calculate the percentage difference in rate between yesterday and today
   const differenceYesterday = bns.sub(todayExchangeRate, yesterdayExchangeRate)
   const differencePercentage = bns.mul(bns.div(differenceYesterday, yesterdayExchangeRate, 3), '100')
   // Return zero result
