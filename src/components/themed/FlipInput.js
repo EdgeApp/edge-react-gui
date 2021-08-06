@@ -9,7 +9,7 @@ import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-nat
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils } from '../../util/utils.js'
+import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils, zeroString } from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { BlinkingCursor } from './BlinkingCursor'
@@ -129,9 +129,10 @@ const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string): Amou
 // Pretty much the same as setPrimaryToSecondary
 const setSecondaryToPrimary = (props: Props, secondaryDecimalAmount: string): Amounts => {
   const secondaryDisplayAmount = formatNumberInput(prettifyNumber(secondaryDecimalAmount))
-  let primaryDecimalAmount =
-    props.exchangeSecondaryToPrimaryRatio === '0' ? '0' : bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, DECIMAL_PRECISION)
-  primaryDecimalAmount = truncateDecimalsUtils(primaryDecimalAmount, props.primaryInfo.maxConversionDecimals)
+  const primaryAmountFull = zeroString(props.exchangeSecondaryToPrimaryRatio)
+    ? '0'
+    : bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, DECIMAL_PRECISION)
+  const primaryDecimalAmount = truncateDecimalsUtils(primaryAmountFull, props.primaryInfo.maxConversionDecimals)
   const primaryDisplayAmount = formatNumberInput(prettifyNumber(primaryDecimalAmount))
   return { primaryDisplayAmount, primaryDecimalAmount, secondaryDisplayAmount, secondaryDecimalAmount }
 }
@@ -194,7 +195,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   componentDidMount() {
     this.props.flipInputRef(this)
     setTimeout(() => {
-      if (this.props.keyboardVisible && this.props.overridePrimaryDecimalAmount === '0' && this.textInputFront) {
+      if (this.props.keyboardVisible && bns.eq(this.props.overridePrimaryDecimalAmount, '0') && this.textInputFront) {
         this.textInputFront.focus()
       }
     }, 400)
@@ -219,7 +220,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
       setTimeout(() => {
         if (this.state.isToggled) {
           const { exchangeSecondaryToPrimaryRatio } = this.props
-          if (bns.eq(exchangeSecondaryToPrimaryRatio, '0') || exchangeSecondaryToPrimaryRatio === '') {
+          if (zeroString(exchangeSecondaryToPrimaryRatio)) {
             this.toggleCryptoOnBottom()
           } else {
             this.textInputBack && this.textInputBack.focus()

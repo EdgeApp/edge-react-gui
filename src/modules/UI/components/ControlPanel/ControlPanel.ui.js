@@ -14,7 +14,7 @@ import { connect } from '../../../../types/reactRedux.js'
 import type { GuiDenomination } from '../../../../types/types.js'
 import { emptyGuiDenomination } from '../../../../types/types.js'
 import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
-import { getDenomFromIsoCode, getObjectDiff } from '../../../../util/utils.js'
+import { getDenomFromIsoCode, getObjectDiff, zeroString } from '../../../../util/utils.js'
 import FormattedText from '../FormattedText/FormattedText.ui.js'
 import { Button } from './Component/Button/Button.ui'
 import { Main } from './Component/Main.js'
@@ -82,7 +82,7 @@ class ControlPanelComponent extends React.Component<Props> {
         <View style={styles.header}>
           {!!currencyLogo && <Image style={styles.iconImage} source={currencyLogoIcon} />}
           <View style={styles.exchangeContainer}>
-            {exchangeRate !== '0' ? (
+            {!zeroString(exchangeRate) ? (
               <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
             ) : (
               <FormattedText style={styles.exchangeRateText}>{s.strings.exchange_rate_loading_singular}</FormattedText>

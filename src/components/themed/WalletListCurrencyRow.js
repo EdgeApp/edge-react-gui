@@ -8,7 +8,15 @@ import { formatNumber } from '../../locales/intl.js'
 import { calculateWalletFiatBalanceWithoutState } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiExchangeRates } from '../../types/types.js'
-import { getCryptoAmount, getCurrencyInfo, getDenomFromIsoCode, getDenomination, getFiatSymbol, getYesterdayDateRoundDownHour } from '../../util/utils'
+import {
+  getCryptoAmount,
+  getCurrencyInfo,
+  getDenomFromIsoCode,
+  getDenomination,
+  getFiatSymbol,
+  getYesterdayDateRoundDownHour,
+  zeroString
+} from '../../util/utils'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { CardContent } from './CardContent'
 import { ClickableRow } from './ClickableRow'
@@ -68,14 +76,14 @@ export const getRate = (getRateParams: GetRatesParams) => {
   // Yesterdays Exchange Rate
   const currencyPair = `${currencyCode}_iso:USD_${getYesterdayDateRoundDownHour()}`
   const yesterdayUsdExchangeRate = exchangeRates[currencyPair] ?? '0'
-  // Return the Exchange Rate without `percentageString` in case we are missing yesterday's rates
-  if (yesterdayUsdExchangeRate === '0' || fiatExchangeRate === '0') return result()
-  // Calculate the percentage difference in rate between yesterday and today
   const yesterdayExchangeRate = bns.mul(yesterdayUsdExchangeRate, fiatExchangeRate)
+  // Return the Exchange Rate without `percentageString` in case we are missing yesterday's rate
+  if (zeroString(yesterdayExchangeRate)) return result()
+  // Calculate the percentage difference in rate between yesterday and today
   const differenceYesterday = bns.sub(todayExchangeRate, yesterdayExchangeRate)
   const differencePercentage = bns.mul(bns.div(differenceYesterday, yesterdayExchangeRate, 3), '100')
   // Return zero result
-  if (differencePercentage === '0') return result('0.00')
+  if (zeroString(differencePercentage)) return result('0.00')
   // If not zero, create the `percentageString`
   const percentageString = bns.abs(differencePercentage)
   // Return Positive result if greater then zero
@@ -182,9 +190,9 @@ export const WalletListCurrencyRow = connect<StateProps, {}, OwnProps>(
     const exchangeDenomination = getDenomination(currencyCode, settings, 'exchange')
     const fiatDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
     const rateKey = `${currencyCode}_${guiWallet.isoFiatCurrencyCode}`
-    const exchangeRate = exchangeRates[rateKey] !== '0' ? exchangeRates[rateKey] : undefined
+    const exchangeRate = !zeroString(exchangeRates[rateKey]) ? exchangeRates[rateKey] : undefined
     const cryptoAmount = showBalance
-      ? balance && balance !== '0'
+      ? !zeroString(balance)
         ? getCryptoAmount(balance, denomination, exchangeDenomination, fiatDenomination, exchangeRate, guiWallet)
         : '0'
       : ''

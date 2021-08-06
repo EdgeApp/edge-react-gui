@@ -127,7 +127,7 @@ export const zerosAfterDecimal = (input: string): number => {
   const decimals = input.split('.')[1]
   let numZeros = 0
   for (let i = 0; i <= decimals.length; i++) {
-    if (decimals[i] === '0') {
+    if (eq(decimals[i], '0')) {
       numZeros++
     } else {
       break
@@ -143,6 +143,8 @@ export const roundUpToLeastSignificant = (input: string): string => {
   const oneExtra = `0.${'1'.padStart(precision, '0')}`
   return bns.add(input, oneExtra)
 }
+
+export const zeroString = (input: any): boolean => input == null || typeof input !== 'string' || input === '' || eq(input, '0')
 
 export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   if (gte(input, '1')) {
@@ -455,7 +457,7 @@ export const getTotalFiatAmountFromExchangeRates = (state: RootState, isoFiatCur
       const isDisabledToken = currencyCode !== wallet.currencyCode && !wallet.enabledTokens.includes(currencyCode)
       if (isDisabledToken) continue
       // if it is a non-zero amount then we will process it
-      if (nativeBalance && nativeBalance !== '0') {
+      if (!zeroString(nativeBalance)) {
         let denominations
         // check to see if it's a currency first
         if (settings[currencyCode]) {

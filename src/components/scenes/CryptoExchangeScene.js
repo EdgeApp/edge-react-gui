@@ -13,7 +13,7 @@ import s from '../../locales/strings.js'
 import { getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type GuiCurrencyInfo, type GuiWallet, emptyCurrencyInfo, emptyGuiWallet } from '../../types/types.js'
-import { DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
+import { DECIMAL_PRECISION, getDenomFromIsoCode, zeroString } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -128,7 +128,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
       whichWallet: this.state.whichWalletFocus,
       primaryNativeAmount: this.state.whichWalletFocus === 'from' ? this.state.fromAmountNative : this.state.toAmountNative
     }
-    if (data.primaryNativeAmount && data.primaryNativeAmount !== '0' && data.primaryNativeAmount) {
+    if (!zeroString(data.primaryNativeAmount)) {
       this.props.getQuoteForTransaction(data)
       Keyboard.dismiss()
       return

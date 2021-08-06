@@ -6,7 +6,7 @@ import { type EdgeCurrencyWallet } from 'edge-core-js'
 import { formatNumber } from '../locales/intl.js'
 import { type RootState } from '../types/reduxTypes.js'
 import { type GuiWallet } from '../types/types.js'
-import { convertNativeToExchange } from '../util/utils.js'
+import { convertNativeToExchange, zeroString } from '../util/utils.js'
 
 export function getSelectedWallet(state: RootState): GuiWallet {
   return state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
@@ -55,7 +55,7 @@ export const convertCurrency = (state: RootState, fromCurrencyCode: string, toCu
 
 const convertCurrencyWithoutState = (exchangeRates: { [string]: string }, fromCurrencyCode: string, toCurrencyCode: string, amount: string = '1'): string => {
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
-  const exchangeRate = exchangeRates[rateKey] ? exchangeRates[rateKey] : '0'
+  const exchangeRate = exchangeRates[rateKey] != null ? exchangeRates[rateKey] : '0'
   const convertedAmount = bns.mul(amount, exchangeRate)
   return convertedAmount
 }
@@ -67,7 +67,7 @@ export const convertCurrencyFromExchangeRates = (
   amount: string
 ): string => {
   const rateKey = `${fromCurrencyCode}_${toCurrencyCode}`
-  if (!exchangeRates || exchangeRates[rateKey] == null) return '0' // handle case of exchange rates not ready yet
+  if (exchangeRates == null || exchangeRates[rateKey] == null) return '0' // handle case of exchange rates not ready yet
   const rate = exchangeRates[rateKey]
   const convertedAmount = bns.mul(amount, rate)
   return convertedAmount
@@ -81,7 +81,7 @@ export const calculateWalletFiatBalanceWithoutState = (
 ): string => {
   let fiatValue = '0' // default to zero if not calculable
   const nativeBalance = wallet.nativeBalances[currencyCode]
-  if (!nativeBalance || nativeBalance === '0') return '0'
+  if (zeroString(nativeBalance)) return '0'
   const denominations = settings[currencyCode].denominations
   const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
   if (!exchangeDenomination) return '0'
@@ -100,7 +100,7 @@ export const calculateWalletFiatBalanceUsingDefaultIsoFiat = (
   const nativeBalance = wallet.nativeBalances[currencyCode]
   if (!settings[currencyCode]) return '0'
   const denominations = settings[currencyCode].denominations
-  if (!nativeBalance || nativeBalance === '0' || !denominations) return '0'
+  if (zeroString(nativeBalance) || denominations == null) return '0'
   const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
   if (!exchangeDenomination) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
@@ -111,7 +111,7 @@ export const calculateWalletFiatBalanceUsingDefaultIsoFiat = (
 export const convertNativeToExchangeRateDenomination = (settings: Object, currencyCode: string, nativeAmount: string): string => {
   const denominations = settings[currencyCode].denominations
   const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
-  if (!exchangeDenomination || !nativeAmount || nativeAmount === '0') return '0'
+  if (!exchangeDenomination || zeroString(nativeAmount)) return '0'
   const nativeToExchangeRatio: string = exchangeDenomination.multiplier
   return convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
 }
