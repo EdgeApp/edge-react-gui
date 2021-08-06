@@ -60,25 +60,22 @@ async function buildExchangeRates(state: RootState): GuiExchangeRates {
       })
     )
   )
+
   for (let i = 0; i < exchangeRateKeys.length; i++) {
     const key = exchangeRateKeys[i]
     const codes = key.split('_')
-    const rate = rates[i]
-    const rateStr = rate.toFixed(DECIMAL_PRECISION)
     const reverseExchangeRateKey = `${codes[1]}_${codes[0]}${codes[2] ? '_' + codes[2] : ''}`
-    if (isNaN(rate)) {
-      finalExchangeRates[key] = '0'
-      finalExchangeRates[reverseExchangeRateKey] = '0'
-    } else {
+    const rate = rates[i]
+    finalExchangeRates[key] = '0'
+    finalExchangeRates[reverseExchangeRateKey] = '0'
+
+    if (rate != null && !isNaN(rate) && rate !== 0) {
+      const rateStr = rate.toFixed(DECIMAL_PRECISION)
       finalExchangeRates[key] = rateStr
-      if (rate !== 0) {
-        // if it's a real rate and can be multiplicatively inverted
-        finalExchangeRates[reverseExchangeRateKey] = bns.div('1', rateStr, DECIMAL_PRECISION)
-      } else {
-        finalExchangeRates[reverseExchangeRateKey] = '0'
-      }
+      finalExchangeRates[reverseExchangeRateKey] = bns.div('1', rateStr, DECIMAL_PRECISION)
     }
   }
+
   return finalExchangeRates
 }
 
