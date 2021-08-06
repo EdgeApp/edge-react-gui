@@ -144,6 +144,8 @@ export const roundUpToLeastSignificant = (input: string): string => {
   return bns.add(input, oneExtra)
 }
 
+export const zeroString = (input: any): boolean => input == null || typeof input !== 'string' || input === '' || eq(input, '0')
+
 export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   if (gte(input, '1')) {
     // do nothing to numbers greater than one
