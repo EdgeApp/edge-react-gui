@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -257,52 +257,39 @@ export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: Ge
 }
 
 const privateKeyModalActivated = (privateKeys: string[]) => async (dispatch: Dispatch, getState: GetState) => {
-  const firstResponse = await Airship.show(bridge => (
+  const state = getState()
+
+  const { currencyWallets } = state.core.account
+  const selectedWalletId = state.ui.wallets.selectedWalletId
+  const edgeWallet = currencyWallets[selectedWalletId]
+
+  await Airship.show(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.private_key_modal_sweep_from_private_address}
       message={s.strings.private_key_modal_sweep_from_private_address_message}
       buttons={{
-        confirm: { label: s.strings.private_key_modal_import },
+        confirm: {
+          label: s.strings.private_key_modal_import,
+          async onPress() {
+            await sweepPrivateKeys(edgeWallet, privateKeys)
+            return true
+          }
+        },
         cancel: { label: s.strings.private_key_modal_cancel, type: 'secondary' }
       }}
     />
   ))
-  if (firstResponse !== 'confirm') {
-    dispatch({ type: 'ENABLE_SCAN' })
-    return
-  }
-  setTimeout(() => {
-    dispatch({ type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_START' })
-    dispatch({ type: 'PRIVATE_KEY_MODAL/SECONDARY_MODAL/ACTIVATED' })
+  dispatch({ type: 'ENABLE_SCAN' })
+}
 
-    const state = getState()
-
-    const { currencyWallets } = state.core.account
-    const selectedWalletId = state.ui.wallets.selectedWalletId
-    const edgeWallet = currencyWallets[selectedWalletId]
-
-    const spendInfo: EdgeSpendInfo = {
-      privateKeys,
-      spendTargets: []
-    }
-
-    edgeWallet.sweepPrivateKeys(spendInfo).then(
-      (unsignedTx: EdgeTransaction) => {
-        edgeWallet
-          .signTx(unsignedTx)
-          .then(signedTx => edgeWallet.broadcastTx(signedTx))
-          .then(() => dispatch({ type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_SUCCESS' }))
-      },
-      (error: Error) => {
-        console.log(error)
-        dispatch({
-          type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL',
-          data: { error }
-        })
-      }
-    )
-  }, 1000)
+async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[]) {
+  const unsignedTx = await wallet.sweepPrivateKeys({
+    privateKeys,
+    spendTargets: []
+  })
+  const signedTx = await wallet.signTx(unsignedTx)
+  await wallet.broadcastTx(signedTx)
 }
 
 const shownWalletGetCryptoModals = []

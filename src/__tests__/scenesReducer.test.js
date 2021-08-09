@@ -43,14 +43,7 @@ test('initialState', () => {
     },
     scan: {
       scanEnabled: false,
-      torchEnabled: false,
-      privateKeyModal: {
-        error: null,
-        isSweeping: false,
-        secondaryModal: {
-          isActive: false
-        }
-      }
+      torchEnabled: false
     },
     sendConfirmation: SendConfirmationInitialState,
     transactionDetails: {
