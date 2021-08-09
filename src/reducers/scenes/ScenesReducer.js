@@ -12,7 +12,6 @@ import { type ScanState, scan } from './ScanReducer.js'
 import { type SendConfirmationState, sendConfirmation } from './SendConfirmationReducer.js'
 import { type TransactionDetailsState, transactionDetails } from './TransactionDetailsReducer.js'
 import { type TransactionListState, transactionList } from './TransactionListReducer.js'
-import { type WalletListState, walletList } from './WalletListReducer.js'
 
 export type ScenesState = {
   +controlPanel: ControlPanelState,
@@ -23,8 +22,7 @@ export type ScenesState = {
   +scan: ScanState,
   +sendConfirmation: SendConfirmationState,
   +transactionDetails: TransactionDetailsState,
-  +transactionList: TransactionListState,
-  +walletList: WalletListState
+  +transactionList: TransactionListState
 }
 
 export const scenes: Reducer<ScenesState, Action> = combineReducers({
@@ -36,6 +34,5 @@ export const scenes: Reducer<ScenesState, Action> = combineReducers({
   scan,
   sendConfirmation,
   transactionDetails,
-  transactionList,
-  walletList
+  transactionList
 })

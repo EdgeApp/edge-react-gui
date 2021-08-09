@@ -56,12 +56,6 @@ test('initialState', () => {
       currentEndIndex: 0,
       numTransactions: 0,
       currentWalletId: ''
-    },
-    walletList: {
-      viewXPubWalletModalVisible: false,
-      xPubExplorer: '',
-      xPubSyntax: '',
-      walletId: ''
     }
   }
   const actual = scenesReducer(undefined, dummyAction)

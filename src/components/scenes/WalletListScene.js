@@ -14,7 +14,6 @@ import { CrossFade } from '../common/CrossFade.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { WalletListSlidingTutorialModal } from '../modals/WalletListSlidingTutorialModal.js'
 import { WalletListSortModal } from '../modals/WalletListSortModal.js'
-import { XPubModal } from '../modals/XPubModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -142,7 +141,6 @@ class WalletListComponent extends React.PureComponent<Props, State> {
             />
           </CrossFade>
         </View>
-        <XPubModal />
       </SceneWrapper>
     )
   }

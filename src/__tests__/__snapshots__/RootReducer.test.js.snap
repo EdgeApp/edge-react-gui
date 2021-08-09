@@ -196,12 +196,6 @@ Object {
         "transactionIdMap": Object {},
         "transactions": Array [],
       },
-      "walletList": Object {
-        "viewXPubWalletModalVisible": false,
-        "walletId": "",
-        "xPubExplorer": "",
-        "xPubSyntax": "",
-      },
     },
     "settings": Object {
       "AAVE": Object {
