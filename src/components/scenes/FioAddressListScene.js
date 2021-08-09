@@ -18,10 +18,10 @@ import type { FioAddress, FioDomain } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { ClickableText } from '../themed/ClickableText'
 import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { SceneHeader } from '../themed/SceneHeader'
-import { ClickableText } from '../themed/ThemedButtons'
 
 type LocalState = {
   initLoading: boolean,
@@ -210,11 +210,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     textAlign: 'center',
     padding: theme.rem(1)
   },
-  buttonText: {
-    marginLeft: theme.rem(0.5),
-    color: theme.textLink,
-    textAlign: 'center'
-  },
   iconImg: {
     height: theme.rem(2.25),
     marginRight: theme.rem(1.5)
@@ -223,14 +218,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     width: theme.rem(1.5),
     marginRight: theme.rem(1),
     textAlign: 'center'
-  },
-  actionButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  actionIcon: {
-    marginTop: theme.rem(0.25)
   }
 }))
 

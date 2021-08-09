@@ -1,13 +1,12 @@
 // @flow
 
 import * as React from 'react'
-import { Platform, StyleSheet, View } from 'react-native'
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { useSpacing } from '../../hooks/useSpacing'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
-import { ClickableText } from '../themed/ThemedButtons'
 
 type AlerType = 'info' | 'warning' | 'error' | 'success'
 
@@ -77,13 +76,7 @@ export function Alert({ type, title, message, numberOfLines = 2, marginRem, padd
     </View>
   )
 
-  return onPress ? (
-    <ClickableText paddingRem={0} onPress={onPress}>
-      {result}
-    </ClickableText>
-  ) : (
-    result
-  )
+  return onPress ? <TouchableOpacity onPress={onPress}>{result}</TouchableOpacity> : result
 }
 
 const getStyles = (theme: Theme, { typeColor }: StylesOptions) =>
