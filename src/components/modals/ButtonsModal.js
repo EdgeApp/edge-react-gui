@@ -23,19 +23,21 @@ type ButtonInfo = {
  * Build a custom modal component if you need form fields, check boxes,
  * or other interactive elements.
  */
-export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {
+export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
   bridge: AirshipBridge<$Keys<Buttons> | void>,
   title?: string,
   message?: string,
   children?: React.Node,
-  closeButton?: boolean,
   buttons: Buttons,
-  disableHideOnTapUnderlay?: boolean
-}) {
-  const { bridge, closeButton, title, message, children, buttons, disableHideOnTapUnderlay = false } = props
+  closeArrow?: boolean,
+  disableCancel?: boolean
+|}) {
+  const { bridge, title, message, children, buttons, closeArrow = false, disableCancel = false } = props
+
+  const handleCancel = disableCancel ? () => {} : () => bridge.resolve(undefined)
 
   return (
-    <ThemedModal bridge={bridge} paddingRem={1} onCancel={disableHideOnTapUnderlay ? () => {} : () => bridge.resolve(undefined)}>
+    <ThemedModal bridge={bridge} paddingRem={1} onCancel={handleCancel}>
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {message != null ? <ModalMessage>{message}</ModalMessage> : null}
       {children}
@@ -43,7 +45,7 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {
         const { label, type = 'primary' } = buttons[key]
         return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={() => bridge.resolve(key)} />
       })}
-      {closeButton ? <ModalCloseArrow onPress={() => bridge.resolve(undefined)} /> : undefined}
+      {closeArrow ? <ModalCloseArrow onPress={handleCancel} /> : null}
     </ThemedModal>
   )
 }

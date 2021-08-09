@@ -8,6 +8,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
+import { showSendLogsModal } from '../../actions/LogActions.js'
 import {
   setAutoLogoutTimeInSecondsRequest,
   setDeveloperModeOn,
@@ -40,7 +41,6 @@ import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { AutoLogoutModal } from '../modals/AutoLogoutModal.js'
-import { SendLogsModal } from '../modals/SendLogsModal'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, changeTheme, getTheme, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
@@ -62,6 +62,7 @@ type StateProps = {
 }
 type DispatchProps = {
   dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: EdgeAccount) => void,
+  handleSendLogs: () => void,
   lockSettings: () => void,
   onTogglePinLoginEnabled: (enableLogin: boolean) => void,
   setAutoLogoutTimeInSeconds: (autoLogoutTimeInSeconds: number) => void,
@@ -205,12 +206,8 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
       .catch(showError)
   }
 
-  handleSendLogs = (): void => {
-    Airship.show(bridge => <SendLogsModal bridge={bridge} />)
-  }
-
   render() {
-    const { account, theme, isLocked } = this.props
+    const { account, theme, handleSendLogs, isLocked } = this.props
     const iconSize = theme.rem(1.25)
     const styles = getStyles(theme)
 
@@ -292,7 +289,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             value={this.state.defaultLogLevel === 'info'}
             onPress={this.handleVerboseLoggingToggle}
           />
-          <MainButton label={s.strings.settings_button_send_logs} marginRem={2} onPress={this.handleSendLogs} />
+          <MainButton label={s.strings.settings_button_send_logs} marginRem={2} onPress={handleSendLogs} />
         </ScrollView>
       </SceneWrapper>
     )
@@ -325,6 +322,9 @@ export const SettingsScene = connect<StateProps, DispatchProps, {}>(
   dispatch => ({
     dispatchUpdateEnableTouchIdEnable(arg: boolean, account: EdgeAccount) {
       dispatch(updateTouchIdEnabled(arg, account))
+    },
+    handleSendLogs() {
+      dispatch(showSendLogsModal())
     },
     lockSettings() {
       dispatch({

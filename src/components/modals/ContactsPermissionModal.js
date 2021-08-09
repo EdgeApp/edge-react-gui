@@ -20,7 +20,7 @@ export function ContactsPermissionModal(props: { bridge: AirshipBridge<any> }) {
   return (
     <ButtonsModal
       bridge={bridge}
-      disableHideOnTapUnderlay
+      disableCancel
       buttons={{
         allow: { label: s.strings.string_allow },
         deny: { label: s.strings.string_deny, type: 'secondary' }
