@@ -94,6 +94,9 @@ export const edgeLight: Theme = {
   backgroundGradientLeft: palette.lightestGray,
   backgroundGradientRight: palette.lightestGray,
 
+  // Overlay
+  cameraOverlay: palette.gray,
+
   // Modal
   modal: palette.lightestGray,
   modalBlurType: 'dark',
