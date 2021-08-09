@@ -59,7 +59,8 @@ export class ChangeMiningFee extends React.Component<Props, State> {
   }
 
   getCustomFormat(): string[] | void {
-    const { wallet } = this.props.route.params
+    const { route } = this.props
+    const { wallet } = route.params
     if (wallet.currencyInfo.defaultSettings != null) {
       const { customFeeSettings } = wallet.currencyInfo.defaultSettings
       return customFeeSettings
