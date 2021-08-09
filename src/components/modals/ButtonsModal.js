@@ -3,13 +3,21 @@
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
 
+import { showError } from '../services/AirshipInstance.js'
 import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type ButtonInfo = {
   label: string,
-  type?: 'primary' | 'secondary'
+  type?: 'primary' | 'secondary',
+
+  // The modal will show a spinner as long as this promise is pending.
+  // Returning true will dismiss the modal,
+  // but returning false will leave the modal up.
+  // Although multiple buttons can be spinning at once,
+  // a spinning button cannot be clicked again until the promise resolves.
+  onPress?: () => Promise<boolean>
 }
 
 /**
@@ -42,8 +50,19 @@ export function ButtonsModal<Buttons: { [key: string]: ButtonInfo }>(props: {|
       {message != null ? <ModalMessage>{message}</ModalMessage> : null}
       {children}
       {Object.keys(buttons).map(key => {
-        const { label, type = 'primary' } = buttons[key]
-        return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={() => bridge.resolve(key)} />
+        const { type = 'primary', label, onPress } = buttons[key]
+
+        const handlePress = (): void | Promise<void> => {
+          if (onPress == null) return bridge.resolve(key)
+          return onPress().then(
+            result => {
+              if (result) bridge.resolve(key)
+            },
+            error => showError(error)
+          )
+        }
+
+        return <MainButton key={key} label={label} marginRem={0.5} type={type} onPress={handlePress} />
       })}
       {closeArrow ? <ModalCloseArrow onPress={handleCancel} /> : null}
     </ThemedModal>
