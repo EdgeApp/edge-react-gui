@@ -198,7 +198,6 @@ Object {
       },
       "walletList": Object {
         "viewXPubWalletModalVisible": false,
-        "walletArchivesVisible": false,
         "walletId": "",
         "xPubExplorer": "",
         "xPubSyntax": "",

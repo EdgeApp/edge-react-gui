@@ -7,7 +7,6 @@ import { xPubExplorer, xPubSyntax } from './XPubModalReducer.js'
 
 export type WalletListState = {
   +viewXPubWalletModalVisible: boolean,
-  +walletArchivesVisible: boolean,
   +walletId: string,
   +xPubSyntax: string,
   +xPubExplorer: string
@@ -23,17 +22,6 @@ const walletId = (state = '', action: Action): string => {
       return ''
     }
 
-    default:
-      return state
-  }
-}
-
-const walletArchivesVisible = (state = false, action: Action): boolean => {
-  switch (action.type) {
-    // case ACTION.OPEN_WALLET_ARCHIVES:
-    //   return true
-    // case ACTION.CLOSE_WALLET_ARCHIVES:
-    //   return false
     default:
       return state
   }
@@ -56,7 +44,6 @@ const viewXPubWalletModalVisible = (state = false, action: Action): boolean => {
 
 export const walletList: Reducer<WalletListState, Action> = combineReducers({
   viewXPubWalletModalVisible,
-  walletArchivesVisible,
   walletId,
   xPubSyntax,
   xPubExplorer
