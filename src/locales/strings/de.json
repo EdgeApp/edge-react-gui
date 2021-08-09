@@ -19,7 +19,6 @@
   "fio_domain_choose_label": "Wählen Sie eine FIO-Domain",
   "fio_address_choose_domain_label": "FIO-Domain für Ihre Adresse auswählen",
   "fio_address_expired": "Die FIO-Adresse ist abgelaufen",
-  "scan_qr_label": "QR scannen",
   "error_token_exists": "Eine Währung namens %s existiert bereits",
   "warning_low_or_custom_fee": "Die Nutzung einer niedrigen Gebühr kann die Dauer erhöhen, die für die Bestätigung Ihrer Transaktion benötigt wird.",
   "warning_alphanumeric": "Nur Buchstaben und Zahlen können verwendet werden",
