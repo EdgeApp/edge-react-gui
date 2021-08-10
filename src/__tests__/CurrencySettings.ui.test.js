@@ -32,7 +32,8 @@ describe('CurrencySettings', () => {
       enableCustomNodes: jest.fn(),
       saveCustomNodesList: jest.fn(),
       selectDenomination: jest.fn(),
-      theme: edgeDark
+      theme: edgeDark,
+      currencyCode: 'BTG'
     }
     const actual = renderer.render(<CurrencySettingsComponent {...props} />)
 
