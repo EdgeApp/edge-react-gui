@@ -1,18 +1,31 @@
 // @flow
 
 import * as React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text, TouchableOpacity, View } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { unpackEdges } from '../../util/edges'
 import { type Theme, useTheme } from '../services/ThemeContext.js'
 
-export function ModalTitle(props: { children: React.Node, center?: boolean, paddingRem?: number[] | number }) {
+type ModalTitleProps = {
+  children: React.Node,
+  center?: boolean,
+  paddingRem?: number[] | number,
+  icon?: React.Node
+}
+
+export function ModalTitle(props: ModalTitleProps) {
+  const { icon = null } = props
   const theme = useTheme()
   const styles = getStyles(theme)
 
-  return <Text style={[styles.titleText, props.center ? styles.titleCenter : null, paddingStyles(props.paddingRem, theme)]}>{props.children}</Text>
+  return (
+    <View style={styles.titleContainer}>
+      {icon ? <View style={styles.titleIconContainer}>{icon}</View> : null}
+      <Text style={[styles.titleText, props.center ? styles.titleCenter : null, paddingStyles(props.paddingRem, theme)]}>{props.children}</Text>
+    </View>
+  )
 }
 
 export function ModalMessage(props: { children: React.Node, paddingRem?: number[] | number, isWarning?: boolean }) {
@@ -48,6 +61,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
   closeArrow: {
     alignItems: 'center',
     paddingTop: theme.rem(1)
+  },
+  titleContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    margin: theme.rem(0.5)
+  },
+  titleIconContainer: {
+    marginRight: theme.rem(0.5)
   },
   titleText: {
     color: theme.primaryText,
