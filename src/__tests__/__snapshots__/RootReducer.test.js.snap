@@ -196,10 +196,6 @@ Object {
         "transactionIdMap": Object {},
         "transactions": Array [],
       },
-      "uniqueIdentifierModal": Object {
-        "isActive": false,
-        "uniqueIdentifier": undefined,
-      },
       "walletList": Object {
         "viewXPubWalletModalVisible": false,
         "walletArchivesVisible": false,

@@ -74,9 +74,6 @@ type NoDataActionName =
   | 'UI/WALLETS/CREATE_WALLET_FAILURE'
   | 'UI/WALLETS/CREATE_WALLET_START'
   | 'UI/WALLETS/CREATE_WALLET_SUCCESS'
-  | 'UNIQUE_IDENTIFIER_MODAL/ACTIVATED'
-  | 'UNIQUE_IDENTIFIER_MODAL/DEACTIVATED'
-  | 'UNIQUE_IDENTIFIER_MODAL/RESET'
   | 'USE_LEGACY_REQUEST_ADDRESS'
   | 'USE_REGULAR_REQUEST_ADDRESS'
   | 'FIO/EXPIRED_REMINDER_SHOWN'
@@ -227,7 +224,6 @@ export type Action =
       data: { currencyCode: string, walletId: string }
     }
   | { type: 'UI/WALLETS/UPSERT_WALLETS', data: { wallets: EdgeCurrencyWallet[] } }
-  | { type: 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED', data: { uniqueIdentifier: string } }
   | {
       type: 'UPDATE_EXISTING_TOKEN_SUCCESS',
       data: { tokenObj: CustomTokenInfo }
