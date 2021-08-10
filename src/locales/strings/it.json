@@ -77,6 +77,7 @@
   "request_xlm_minimum_notification_alert_body": "Questo portafoglio richiederà sempre un minimo di 1 XLM",
   "fragment_send_address": "Indirizzo",
   "fragment_send_flash": "Flash",
+  "fragment_send_album": "Galleria",
   "scan_invalid_address_error_title": "Indirizzo non valido",
   "scan_invalid_address_error_description": "Non è un valido indirizzo pubblico",
   "fragment_send_subtitle": "Invia",
