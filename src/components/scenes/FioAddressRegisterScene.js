@@ -17,7 +17,7 @@ import { Actions } from '../../types/routerTypes.js'
 import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { openLink } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { SingleInputModal } from '../modals/SingleInputModal'
+import { TextInputModal } from '../modals/TextInputModal.js'
 import type { WalletListResult } from '../modals/WalletListModal'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
@@ -271,13 +271,13 @@ class FioAddressRegister extends React.Component<Props, State> {
   editAddressPressed = () => {
     this.handleFioAddressFocus()
     Airship.show(bridge => (
-      <SingleInputModal
+      <TextInputModal
         bridge={bridge}
+        initialValue={this.state.fioAddress}
+        inputLabel={s.strings.fio_address_register_form_field_label}
         title={s.strings.fio_address_choose_label}
-        label={s.strings.fio_address_register_form_field_label}
-        value={this.state.fioAddress}
       />
-    )).then((response: string | null) => {
+    )).then((response: string | void) => {
       if (response) {
         this.handleFioAddressChange(response)
       }

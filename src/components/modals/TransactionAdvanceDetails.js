@@ -2,6 +2,7 @@
 
 import React, { PureComponent } from 'react'
 import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 import { getDeviceName } from 'react-native-device-info'
 import SafariView from 'react-native-safari-view'
 
@@ -11,7 +12,6 @@ import { EdgeText } from '../themed/EdgeText.js'
 import { ModalCloseArrow } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { Tile } from '../themed/Tile.js'
-import { type AirshipBridge } from './modalParts'
 
 const localizedFeeText = {
   satPerVByte: s.strings.transaction_details_advance_details_satpervbyte,

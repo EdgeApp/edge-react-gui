@@ -3,6 +3,7 @@
 import type { EdgeCurrencyWallet, EdgeDenomination, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import React, { PureComponent } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 
 import { playSendSound } from '../../actions/SoundActions.js'
 import { TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
@@ -19,7 +20,6 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 import { Tile } from '../themed/Tile.js'
-import { type AirshipBridge } from './modalParts'
 
 type Status = 'confirming' | 'sending' | 'sent'
 

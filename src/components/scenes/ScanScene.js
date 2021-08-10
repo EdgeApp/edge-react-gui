@@ -19,7 +19,7 @@ import { Actions } from '../../types/routerTypes.js'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SecondaryModal } from '../modals/SecondaryModal.js'
-import { SingleInputModal } from '../modals/SingleInputModal.js'
+import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship } from '../services/AirshipInstance'
 
 type OwnProps = {
@@ -93,7 +93,7 @@ export class Scan extends React.Component<Props> {
 
   _onTogglePrivateKeyModal = async () => {
     const uri = await Airship.show(bridge => (
-      <SingleInputModal bridge={bridge} title={s.strings.scan_private_key_modal_title} label={s.strings.scan_private_key_modal_label} />
+      <TextInputModal bridge={bridge} inputLabel={s.strings.scan_private_key_modal_label} title={s.strings.scan_private_key_modal_title} />
     ))
 
     if (uri) {

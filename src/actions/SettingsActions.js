@@ -1,12 +1,9 @@
 // @flow
 
-import { createSecureTextModal } from 'edge-components'
 import type { EdgeAccount } from 'edge-core-js'
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import * as React from 'react'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
-import { launchModal } from '../components/common/ModalProvider.js'
 import { ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { Airship, showError } from '../components/services/AirshipInstance.js'
 import { WALLET_LIST } from '../constants/SceneKeys.js'
@@ -14,10 +11,10 @@ import { CURRENCY_PLUGIN_NAMES } from '../constants/WalletAndCurrencyConstants.j
 import s from '../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../modules/Core/Account/settings.js'
 import { convertCurrency } from '../selectors/WalletSelectors.js'
-import { THEME } from '../theme/variables/airbitz.js'
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { DECIMAL_PRECISION } from '../util/utils.js'
+import { validatePassword } from './AccountActions.js'
 import { updateExchangeRates } from './ExchangeRateActions.js'
 
 export const updateOneSetting = (setting: Object) => (dispatch: Dispatch, getState: GetState) => {
@@ -219,54 +216,12 @@ export const saveCustomNodesList = (currencyCode: string, nodesList: string[]) =
 }
 
 export const showUnlockSettingsModal = () => async (dispatch: Dispatch, getState: GetState) => {
-  try {
-    const input = {
-      label: s.strings.enter_your_password,
-      autoCorrect: false,
-      returnKeyType: 'go',
-      initialValue: '',
-      autoFocus: true
-    }
-    const yesButton = {
-      title: s.strings.string_done_cap
-    }
-    const noButton = {
-      title: s.strings.string_cancel_cap
-    }
-    const validateInput = async (input): Promise<{ success: boolean, message: string }> => {
-      const state = getState()
-      const { account } = state.core
-      const isPassword = await account.checkPassword(input)
-      if (isPassword) {
-        dispatch({ type: 'PASSWORD_USED' })
-        return {
-          success: true,
-          message: ''
-        }
-      } else {
-        return {
-          success: false,
-          message: s.strings.password_reminder_invalid
-        }
-      }
-    }
-    const unlockSettingsModal = createSecureTextModal({
-      icon: <AntDesignIcon style={{ position: 'relative', left: 1 }} name="lock" color={THEME.COLORS.PRIMARY} size={30} />,
-      title: s.strings.confirm_password_text,
-      input,
-      yesButton,
-      noButton,
-      validateInput
+  const passwordValid = await dispatch(validatePassword())
+  if (passwordValid) {
+    dispatch({
+      type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
+      data: false
     })
-    const resolveValue = await launchModal(unlockSettingsModal)
-    if (resolveValue) {
-      dispatch({
-        type: 'UI/SETTINGS/SET_SETTINGS_LOCK',
-        data: false
-      })
-    }
-  } catch (error) {
-    showError(error)
   }
 }
 
