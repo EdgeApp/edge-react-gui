@@ -8,7 +8,7 @@ const config = {
   testPathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/e2e'],
 
   // Don't run node_modules through Babel, except specific ones that still need it:
-  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(edge-components/|@react-native|react-native|react-navigation))']
+  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(@react-native|react-native|react-navigation))']
 }
 
 // Produce junit and cobertura output when on Jenkins:
