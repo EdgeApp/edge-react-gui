@@ -141,7 +141,7 @@ export const getSpendInfoWithoutState = (newSpendInfo?: GuiMakeSpendInfo = {}, s
 }
 
 export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo): SpendAuthType => {
-  const isEnabled = state.ui.settings.spendingLimits.transaction.isEnabled
+  const isEnabled = state.ui.settings.globalSpendingLimits.transaction.isEnabled
   if (!isEnabled) return 'none'
 
   const currencyCode = spendInfo.currencyCode
@@ -149,12 +149,12 @@ export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo): Spe
   if (nativeAmount === '') return 'none' // TODO: Future change will make this null instead of ''
   if (!currencyCode || !nativeAmount) throw new Error('Invalid Spend Request')
 
-  const { spendingLimits } = state.ui.settings
+  const { globalSpendingLimits } = state.ui.settings
   const isoFiatCurrencyCode = state.ui.settings.defaultIsoFiat
   const nativeToExchangeRatio = getExchangeDenomination(state, currencyCode).multiplier
   const exchangeAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
   const fiatAmount = convertCurrency(state, currencyCode, isoFiatCurrencyCode, exchangeAmount)
-  const exceedsLimit = bns.gte(fiatAmount, spendingLimits.transaction.amount.toFixed(DECIMAL_PRECISION))
+  const exceedsLimit = bns.gte(fiatAmount, globalSpendingLimits.transaction.amount.toFixed(DECIMAL_PRECISION))
 
   return exceedsLimit ? 'pin' : 'none'
 }

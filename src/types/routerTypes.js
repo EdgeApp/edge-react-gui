@@ -66,7 +66,7 @@ export type ParamList = {
   send: void,
   settingsOverview: void,
   settingsOverviewTab: void,
-  spendingLimits: void,
+  globalSpendingLimits: void,
   termsOfService: void,
   transactionDetails: void,
   transactionList: void,

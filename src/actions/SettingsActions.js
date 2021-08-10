@@ -48,9 +48,8 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
   const { account } = state.core
 
   // PSEUDO_CODE
-  // get spendingLimits
-  const spendingLimits = state.ui.settings.spendingLimits
-  const { transaction } = spendingLimits
+  // get globalSpendingLimits
+  const { transaction } = state.ui.settings.globalSpendingLimits
   const previousDefaultIsoFiat = state.ui.settings.defaultIsoFiat
 
   Promise.resolve()
@@ -70,7 +69,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
       return parseFloat(fiatString)
     })
     .then(transactionAmount => {
-      const nextSpendingLimits = {
+      const nextGlobalSpendingLimits = {
         transaction: {
           ...transaction,
           amount: parseFloat(transactionAmount.toFixed(2))
@@ -78,11 +77,11 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
       }
 
       // update spending limits in account settings
-      ACCOUNT_SETTINGS.setSpendingLimits(account, nextSpendingLimits)
+      ACCOUNT_SETTINGS.setGlobalSpendingLimits(account, nextGlobalSpendingLimits)
       // update spending limits in settings
       dispatch({
-        type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
-        data: { spendingLimits: nextSpendingLimits }
+        type: 'SPENDING_LIMITS/NEW_GLOBAL_SPENDING_LIMITS',
+        data: { globalSpendingLimits: nextGlobalSpendingLimits }
       })
       dispatch(updateExchangeRates())
     })

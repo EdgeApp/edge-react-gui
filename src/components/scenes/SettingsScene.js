@@ -23,11 +23,11 @@ import {
   CURRENCY_SETTINGS,
   DEFAULT_FIAT_SETTING,
   EXCHANGE_SETTINGS,
+  GLOBAL_SPENDING_LIMITS,
   NOTIFICATION_SETTINGS,
   OTP_SETUP,
   PROMOTION_SETTINGS,
   RECOVER_PASSWORD,
-  SPENDING_LIMITS,
   TERMS_OF_SERVICE
 } from '../../constants/SceneKeys.js'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants.js'
@@ -149,8 +149,8 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     Actions.push(EXCHANGE_SETTINGS)
   }
 
-  handleSpendingLimits = (): void => {
-    Actions.push(SPENDING_LIMITS)
+  handleGlobalSpendingLimits = (): void => {
+    Actions.push(GLOBAL_SPENDING_LIMITS)
   }
 
   handleAutoLogout = (): void => {
@@ -247,7 +247,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
 
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} text={s.strings.settings_options_title_cap} />
           <SettingsRow right={rightArrow} text={s.strings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
-          <SettingsRow right={rightArrow} text={s.strings.spending_limits} onPress={this.handleSpendingLimits} />
+          <SettingsRow right={rightArrow} text={s.strings.spending_limits} onPress={this.handleGlobalSpendingLimits} />
           <SettingsLabelRow right={autoLogoutRightText} text={s.strings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
           <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} text={s.strings.settings_title_currency} onPress={this.handleDefaultFiat} />
 

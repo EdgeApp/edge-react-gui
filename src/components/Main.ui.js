@@ -77,6 +77,7 @@ import {
   FIO_REQUEST_CONFIRMATION,
   FIO_REQUEST_LIST,
   FIO_SENT_REQUEST_DETAILS,
+  GLOBAL_SPENDING_LIMITS,
   LOGIN,
   MANAGE_TOKENS,
   MANAGE_TOKENS_NOT_USED,
@@ -96,7 +97,6 @@ import {
   SEND,
   SETTINGS_OVERVIEW,
   SETTINGS_OVERVIEW_TAB,
-  SPENDING_LIMITS,
   TERMS_OF_SERVICE,
   TRANSACTION_DETAILS,
   TRANSACTION_LIST,
@@ -571,7 +571,7 @@ export class MainComponent extends React.Component<Props> {
               renderRightButton={this.renderEmptyButton()}
             />
             <Scene
-              key={SPENDING_LIMITS}
+              key={GLOBAL_SPENDING_LIMITS}
               navTransparent
               component={ifLoggedIn(SpendingLimitsScene)}
               renderTitle={<HeaderTitle title={s.strings.spending_limits} />}

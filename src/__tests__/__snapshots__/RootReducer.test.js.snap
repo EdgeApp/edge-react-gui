@@ -579,6 +579,12 @@ Object {
       "defaultFiat": "USD",
       "defaultIsoFiat": "iso:USD",
       "developerModeOn": false,
+      "globalSpendingLimits": Object {
+        "transaction": Object {
+          "amount": 0,
+          "isEnabled": false,
+        },
+      },
       "isAccountBalanceVisible": true,
       "isTouchEnabled": false,
       "isTouchSupported": false,
@@ -607,12 +613,6 @@ Object {
         "supportedWalletTypes": Array [],
       },
       "preferredSwapPluginId": "",
-      "spendingLimits": Object {
-        "transaction": Object {
-          "amount": 0,
-          "isEnabled": false,
-        },
-      },
       "walletsSort": "default",
     },
     "wallets": Object {

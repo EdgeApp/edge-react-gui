@@ -1,13 +1,13 @@
 // @flow
 /* globals describe it expect */
 
-import { initialState, spendingLimits } from '../reducers/SpendingLimitsReducer.js'
+import { globalSpendingLimits, initialState } from '../reducers/GlobalSpendingLimitsReducer.js'
 
 const dummyAction = { type: 'DUMMY_ACTION_PLEASE_IGNORE' }
 
 describe('spendingLimits', () => {
   it('should render initialState', () => {
-    const actual = spendingLimits(undefined, dummyAction)
+    const actual = globalSpendingLimits(undefined, dummyAction)
 
     expect(actual).toMatchSnapshot()
   })
@@ -17,7 +17,7 @@ describe('spendingLimits', () => {
       const loginAction = {
         type: 'ACCOUNT_INIT_COMPLETE',
         data: {
-          spendingLimits: {
+          globalSpendingLimits: {
             transaction: {
               isEnabled: false,
               amount: 150
@@ -26,7 +26,7 @@ describe('spendingLimits', () => {
         }
       }
       // $FlowFixMe: The action should have many other properties
-      const actual = spendingLimits(initialState, loginAction)
+      const actual = globalSpendingLimits(initialState, loginAction)
 
       expect(actual).toMatchSnapshot()
     })
@@ -41,9 +41,9 @@ describe('spendingLimits', () => {
         }
       }
       const updateAction = {
-        type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
+        type: 'SPENDING_LIMITS/NEW_GLOBAL_SPENDING_LIMITS',
         data: {
-          spendingLimits: {
+          globalSpendingLimits: {
             transaction: {
               isEnabled: false,
               amount: 234
@@ -51,7 +51,7 @@ describe('spendingLimits', () => {
           }
         }
       }
-      const actual = spendingLimits(initialState, updateAction)
+      const actual = globalSpendingLimits(initialState, updateAction)
 
       expect(actual).toMatchSnapshot()
     })
@@ -64,9 +64,9 @@ describe('spendingLimits', () => {
         }
       }
       const updateAction = {
-        type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
+        type: 'SPENDING_LIMITS/NEW_GLOBAL_SPENDING_LIMITS',
         data: {
-          spendingLimits: {
+          globalSpendingLimits: {
             transaction: {
               isEnabled: true,
               amount: 234
@@ -74,7 +74,7 @@ describe('spendingLimits', () => {
           }
         }
       }
-      const actual = spendingLimits(initialState, updateAction)
+      const actual = globalSpendingLimits(initialState, updateAction)
 
       expect(actual).toMatchSnapshot()
     })

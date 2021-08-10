@@ -554,7 +554,7 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
   },
   isAccountBalanceVisible: true,
   isWalletFiatBalanceVisible: false,
-  spendingLimits: {
+  globalSpendingLimits: {
     transaction: {
       amount: 0,
       isEnabled: false
@@ -568,7 +568,7 @@ export const LOCAL_ACCOUNT_TYPES = {
   passwordReminder: 'object',
   isAccountBalanceVisible: 'boolean',
   isWalletFiatBalanceVisible: 'boolean',
-  spendingLimits: 'object'
+  globalSpendingLimits: 'object'
 }
 
 const SYNCED_SETTINGS_FILENAME = 'Settings.json'
@@ -638,9 +638,9 @@ export type SpendingLimits = {
   }
 }
 
-export const setSpendingLimits = (account: EdgeAccount, spendingLimits: SpendingLimits) => {
+export const setGlobalSpendingLimits = (account: EdgeAccount, globalSpendingLimits: SpendingLimits) => {
   return getLocalSettings(account).then(settings => {
-    const updatedSettings = updateSettings(settings, { spendingLimits })
+    const updatedSettings = updateSettings(settings, { globalSpendingLimits })
     return setLocalSettings(account, updatedSettings)
   })
 }

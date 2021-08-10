@@ -8,8 +8,8 @@ import { LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/C
 import type { Action } from '../../types/reduxTypes.js'
 import { type CustomTokenInfo, type GuiTouchIdInfo, type MostRecentWallet, type SpendingLimits } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
+import { globalSpendingLimits } from '../GlobalSpendingLimitsReducer.js'
 import { type PasswordReminderState } from '../PasswordReminderReducer.js'
-import { spendingLimits } from '../SpendingLimitsReducer.js'
 
 // prettier-ignore
 export type PasswordReminderLevels = {
@@ -39,7 +39,7 @@ export type AccountInitPayload = {|
   passwordReminder: PasswordReminderState,
   pinLoginEnabled: boolean,
   preferredSwapPluginId: string | void,
-  spendingLimits: SpendingLimits,
+  globalSpendingLimits: SpendingLimits,
   touchIdInfo: GuiTouchIdInfo,
   walletId: string,
   walletsSort: SortOption
@@ -61,7 +61,7 @@ export const initialState = {
   isAccountBalanceVisible: true,
   walletsSort: 'default',
   mostRecentWallets: [],
-  spendingLimits: {
+  globalSpendingLimits: {
     transaction: {
       isEnabled: false,
       amount: 0
@@ -127,7 +127,7 @@ export type SettingsState = {
   isAccountBalanceVisible: boolean,
   walletsSort: SortOption,
   mostRecentWallets: MostRecentWallet[],
-  spendingLimits: {
+  globalSpendingLimits: {
     transaction: {
       isEnabled: boolean,
       amount: number
@@ -482,12 +482,12 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
     result = legacy
   }
 
-  const spendingLimitsObj = spendingLimits(state.spendingLimits, action)
+  const globalSpendingLimitsObj = globalSpendingLimits(state.globalSpendingLimits, action)
 
-  if (spendingLimitsObj !== state.spendingLimits) {
+  if (globalSpendingLimitsObj !== state.globalSpendingLimits) {
     result = {
       ...result,
-      spendingLimits: spendingLimitsObj
+      globalSpendingLimits: globalSpendingLimitsObj
     }
   }
 

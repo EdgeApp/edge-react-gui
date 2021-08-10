@@ -87,7 +87,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdI
     passwordReminder: passwordReminderInitialState,
     pinLoginEnabled: false,
     preferredSwapPluginId: undefined,
-    spendingLimits: { transaction: { isEnabled: false, amount: 0 } },
+    globalSpendingLimits: { transaction: { isEnabled: false, amount: 0 } },
     touchIdInfo,
     walletId: '',
     walletsSort: 'default'
