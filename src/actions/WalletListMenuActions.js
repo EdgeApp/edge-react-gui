@@ -1,12 +1,14 @@
 // @flow
 
+import Clipboard from '@react-native-community/clipboard'
 import * as React from 'react'
+import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { ButtonsModal } from '../components/modals/ButtonsModal.js'
+import { type ButtonInfo, ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { RawTextModal } from '../components/modals/RawTextModal.js'
 import { TextInputModal } from '../components/modals/TextInputModal.js'
-import { Airship } from '../components/services/AirshipInstance.js'
+import { Airship, showToast } from '../components/services/AirshipInstance.js'
 import { ModalMessage } from '../components/themed/ModalParts.js'
 import { MANAGE_TOKENS, TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
@@ -89,10 +91,35 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const { currencyWallets } = state.core.account
-        const wallet = currencyWallets[walletId]
-        const xPub = wallet.displayPublicSeed
-        const xPubExplorer = wallet.currencyInfo.xpubExplorer && xPub ? sprintf(wallet.currencyInfo.xpubExplorer, xPub) : ''
-        dispatch({ type: 'OPEN_VIEWXPUB_WALLET_MODAL', data: { xPub, walletId, xPubExplorer } })
+        const { displayPublicSeed, currencyInfo } = currencyWallets[walletId]
+        const { xpubExplorer } = currencyInfo
+
+        const copy: ButtonInfo = {
+          label: s.strings.fragment_request_copy_title,
+          type: 'secondary'
+        }
+        const link: ButtonInfo = {
+          label: s.strings.transaction_details_show_advanced_block_explorer,
+          type: 'secondary'
+        }
+        Airship.show(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            buttons={xpubExplorer != null ? { copy, link } : { copy }}
+            closeArrow
+            message={displayPublicSeed ?? ''}
+            title={s.strings.fragment_wallets_view_xpub}
+          />
+        )).then((result: 'copy' | 'link' | void) => {
+          switch (result) {
+            case 'copy':
+              Clipboard.setString(displayPublicSeed)
+              showToast(s.strings.fragment_wallets_pubkey_copied_title)
+              break
+            case 'link':
+              if (xpubExplorer != null) Linking.openURL(sprintf(currencyInfo.xpubExplorer, displayPublicSeed))
+          }
+        })
       }
     }
 

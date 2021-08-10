@@ -42,7 +42,6 @@ type NoDataActionName =
   | 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
   | 'ADD_TOKEN_START'
   | 'CLOSE_SELECT_USER'
-  | 'CLOSE_VIEWXPUB_WALLET_MODAL'
   | 'DEEP_LINK_HANDLED'
   | 'DEVELOPER_MODE_OFF'
   | 'DEVELOPER_MODE_ON'
@@ -133,10 +132,6 @@ export type Action =
   | { type: 'LOGIN', data: EdgeAccount }
   | { type: 'LOGOUT', data: { username?: string } }
   | { type: 'MESSAGE_TWEAK_HIDDEN', data: { messageId: string, source: TweakSource } }
-  | {
-      type: 'OPEN_VIEWXPUB_WALLET_MODAL',
-      data: { walletId: string, xPub: string | null, xPubExplorer: string }
-    }
   | {
       type: 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS',
       data: {
