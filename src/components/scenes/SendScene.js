@@ -533,7 +533,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
     return (
       <SceneWrapper background="theme">
-        <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)}>
+        <KeyboardAwareScrollView extraScrollHeight={theme.rem(2.75)} enableOnAndroid>
           {this.renderSelectedWallet()}
           {this.renderAddressTile()}
           {this.renderAmount()}
