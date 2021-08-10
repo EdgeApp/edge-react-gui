@@ -34,6 +34,7 @@ type DispatchProps = {
 type StateProps = {
   wallets: { [walletId: string]: GuiWallet },
   manageTokensPending: boolean,
+  metaTokens: EdgeMetaToken[],
   settingsCustomTokens: CustomTokenInfo[]
 }
 
@@ -43,7 +44,6 @@ type State = {
   walletId: string,
   enabledList: string[],
   combinedCurrencyInfos: EdgeMetaToken[],
-  tokens: EdgeMetaToken[],
   searchValue: string
 }
 
@@ -59,7 +59,6 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
       walletId: id,
       enabledList: [...enabledTokens],
       combinedCurrencyInfos: [],
-      tokens: this.getTokens(),
       searchValue: ''
     }
   }
@@ -71,11 +70,12 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   updateTokens() {
-    this.setState({ tokens: this.getTokens(), enabledList: [...this.props.guiWallet.enabledTokens] })
+    this.setState({ enabledList: [...this.props.guiWallet.enabledTokens] })
   }
 
   getTokens(): EdgeMetaToken[] {
-    const { metaTokens, currencyCode } = this.props.guiWallet
+    const { metaTokens } = this.props
+    const { currencyCode } = this.props.guiWallet
 
     const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
 
@@ -156,7 +156,8 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   getFilteredTokens = (): EdgeMetaToken[] => {
-    const { searchValue, tokens } = this.state
+    const { searchValue } = this.state
+    const tokens = this.getTokens()
 
     const RegexObj = new RegExp(searchValue, 'i')
     return tokens.filter(({ currencyCode, currencyName }) => RegexObj.test(currencyCode) || RegexObj.test(currencyName))
@@ -297,11 +298,16 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const ManageTokensScene = connect<StateProps, DispatchProps, OwnProps>(
-  state => ({
-    manageTokensPending: state.ui.wallets.manageTokensPending,
-    settingsCustomTokens: state.ui.settings.customTokens,
-    wallets: state.ui.wallets.byId
-  }),
+  (state, ownProps) => {
+    const wallets = state.ui.wallets.byId
+    const wallet = wallets[ownProps.guiWallet.id]
+    return {
+      manageTokensPending: state.ui.wallets.manageTokensPending,
+      settingsCustomTokens: state.ui.settings.customTokens,
+      metaTokens: wallet.metaTokens,
+      wallets
+    }
+  },
   dispatch => ({
     setEnabledTokensList(walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) {
       dispatch(setWalletEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
