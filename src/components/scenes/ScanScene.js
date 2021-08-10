@@ -18,7 +18,6 @@ import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SecondaryModal } from '../modals/SecondaryModal.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship } from '../services/AirshipInstance'
 
@@ -56,28 +55,25 @@ export class Scan extends React.Component<Props> {
 
   render() {
     return (
-      <>
-        <SceneWrapper background="header" hasTabs={false}>
-          {this.renderCameraArea()}
-          <View style={styles.overlayButtonAreaWrap}>
-            {this.props.data === SWEEP_PRIVATE_KEY && (
-              <TouchableHighlight style={styles.bottomButton} onPress={this._onTogglePrivateKeyModal} underlayColor={THEME.COLORS.SECONDARY}>
-                <View style={styles.bottomButtonTextWrap}>
-                  <FontAwesome name="edit" style={styles.privateKeyIcon} />
-                  <T style={styles.bottomButtonText}>{s.strings.scan_private_key_button_title}</T>
-                </View>
-              </TouchableHighlight>
-            )}
-            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={THEME.COLORS.SECONDARY}>
+      <SceneWrapper background="header" hasTabs={false}>
+        {this.renderCameraArea()}
+        <View style={styles.overlayButtonAreaWrap}>
+          {this.props.data === SWEEP_PRIVATE_KEY && (
+            <TouchableHighlight style={styles.bottomButton} onPress={this._onTogglePrivateKeyModal} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
-                <IonIcon style={styles.flashIcon} name="ios-flash" size={scale(24)} />
-                <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
+                <FontAwesome name="edit" style={styles.privateKeyIcon} />
+                <T style={styles.bottomButtonText}>{s.strings.scan_private_key_button_title}</T>
               </View>
             </TouchableHighlight>
-          </View>
-        </SceneWrapper>
-        <SecondaryModal />
-      </>
+          )}
+          <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={THEME.COLORS.SECONDARY}>
+            <View style={styles.bottomButtonTextWrap}>
+              <IonIcon style={styles.flashIcon} name="ios-flash" size={scale(24)} />
+              <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
+            </View>
+          </TouchableHighlight>
+        </View>
+      </SceneWrapper>
     )
   }
 
