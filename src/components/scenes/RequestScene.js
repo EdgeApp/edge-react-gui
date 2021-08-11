@@ -24,7 +24,7 @@ import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { getCurrencyInfo, getDenomFromIsoCode, getObjectDiff } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
-import { CenteredModal } from '../modals/CenteredModal'
+import { QrModal } from '../modals/QrModal.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -265,11 +265,7 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   handleQrCodePress = () => {
-    Airship.show(bridge => (
-      <CenteredModal bridge={bridge}>
-        <QrCode data={this.state.encodedURI} marginRem={0} />
-      </CenteredModal>
-    ))
+    Airship.show(bridge => <QrModal bridge={bridge} data={this.state.encodedURI} />)
   }
 
   render() {
