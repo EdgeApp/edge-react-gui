@@ -5,7 +5,7 @@ import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
-import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
 import Share from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
@@ -24,7 +24,7 @@ import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { getCurrencyInfo, getDenomFromIsoCode, getObjectDiff } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
-import { CenteredModal } from '../modals/CenteredModal'
+import { QrModal } from '../modals/QrModal.js'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -265,11 +265,7 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   handleQrCodePress = () => {
-    Airship.show(bridge => (
-      <CenteredModal bridge={bridge}>
-        <QrCode data={this.state.encodedURI} marginRem={0} />
-      </CenteredModal>
-    ))
+    Airship.show(bridge => <QrModal bridge={bridge} data={this.state.encodedURI} />)
   }
 
   render() {
@@ -323,11 +319,7 @@ export class RequestComponent extends React.Component<Props, State> {
                 </View>
               </InputAccessoryView>
             ) : null}
-            <TouchableWithoutFeedback onPress={this.handleQrCodePress}>
-              <View style={styles.qrContainer}>
-                <QrCode data={this.state.encodedURI} />
-              </View>
-            </TouchableWithoutFeedback>
+            <QrCode data={this.state.encodedURI} onPress={this.handleQrCodePress} />
             <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
               <View style={styles.rightChevronContainer}>
                 <EdgeText>{s.strings.request_qr_your_receiving_wallet_address}</EdgeText>
@@ -497,11 +489,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(2),
     marginBottom: theme.rem(0.5)
-  },
-
-  qrContainer: {
-    alignSelf: 'center',
-    flex: 1
   },
 
   rightChevronContainer: {
