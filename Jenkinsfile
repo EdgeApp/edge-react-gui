@@ -90,6 +90,7 @@ pipeline {
           branch 'master'
           branch 'test-feta'
           branch 'test-gouda'
+          branch 'test-halloumi'
           branch 'test-paneer'
           branch 'test'
           branch 'yolo'
