@@ -4763,13 +4763,6 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-components@^0.0.31:
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/edge-components/-/edge-components-0.0.31.tgz#54304cd58c76188f4f36798b59a3a6a30ce84859"
-  integrity sha512-dBnc8yqAr7Vd0N6NcMT+P+gzt6QapVVFNb5EOnQbpJRqdXoNsXSezYupOBA9vh+Ns8bpJcJEs5wJynWD3Qy4dw==
-  dependencies:
-    react-native-linear-gradient "^2.4.0"
-
 edge-core-js@^0.18.4:
   version "0.18.4"
   resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.4.tgz#3f7f692e3f240f8a455e5ff11cb3da723ab31f3e"
@@ -10524,7 +10517,7 @@ react-native-keyboard-aware-scroll-view@^0.9.1, react-native-keyboard-aware-scro
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
 
-react-native-linear-gradient@^2.0.0, react-native-linear-gradient@^2.4.0, react-native-linear-gradient@^2.5.6:
+react-native-linear-gradient@^2.0.0, react-native-linear-gradient@^2.5.6:
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
   integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
