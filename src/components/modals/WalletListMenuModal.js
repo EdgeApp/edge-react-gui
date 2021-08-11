@@ -57,7 +57,16 @@ const getWalletOptions = async (params: {
   }
 
   if (isToken) {
-    return [{ label: s.strings.fragment_wallets_export_transactions, value: 'exportWalletTransactions' }]
+    return [
+      {
+        label: s.strings.string_resync,
+        value: 'resync'
+      },
+      {
+        label: s.strings.fragment_wallets_export_transactions,
+        value: 'exportWalletTransactions'
+      }
+    ]
   }
 
   const result = []
