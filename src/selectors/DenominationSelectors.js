@@ -27,7 +27,7 @@ export const emptyEdgeDenomination: EdgeDenomination = {
   symbol: ''
 }
 
-export const getDenominations = (state: RootState, currencyCode: string): EdgeDenomination[] => {
+const getDenominations = (state: RootState, currencyCode: string): EdgeDenomination[] => {
   const currencySettings = state.ui.settings[currencyCode] || isoFiatDenominations[currencyCode]
   if (currencySettings == null || currencySettings.denominations == null) {
     return [emptyEdgeDenomination]
