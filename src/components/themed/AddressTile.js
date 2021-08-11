@@ -152,14 +152,14 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   _setClipboard = async props => {
-    const coreWallet = props.coreWallet
+    const { coreWallet, currencyCode } = props
 
     try {
       this.setState({ loading: true })
       const uri = await Clipboard.getString()
 
       // Will throw in case uri is invalid
-      await coreWallet.parseUri(uri)
+      await coreWallet.parseUri(uri, currencyCode)
 
       this.setState({
         clipboard: uri,
