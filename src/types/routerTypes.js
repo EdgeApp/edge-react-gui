@@ -3,7 +3,7 @@
 import { type EdgeCurrencyWallet, type OtpError } from 'edge-core-js'
 import * as Flux from 'react-native-router-flux'
 
-import { type GuiMakeSpendInfo } from './types.js'
+import { type CreateWalletType, type GuiFiatType, type GuiMakeSpendInfo } from './types.js'
 
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -16,27 +16,53 @@ export type ParamList = {
   // Logged-in scenes:
   addToken: {|
     onAddToken: (currencyCode: string) => void,
-    walletId: string,
-    // adding properties in case coming from Scan scene (scan QR code to add token)
-    currencyName?: string,
-    currencyCode?: string,
     contractAddress?: string,
-    decimalPlaces?: string
+    currencyCode?: string,
+    currencyName?: string,
+    decimalPlaces?: string,
+    walletId: string
   |},
   changeMiningFee: {|
-    wallet: EdgeCurrencyWallet,
-    currencyCode?: string
+    currencyCode?: string,
+    wallet: EdgeCurrencyWallet
   |},
   changePassword: void,
   changePin: void,
-  createWalletAccountSelect: {}, // TODO
-  createWalletAccountSetup: {}, // TODO
-  createWalletChoice: {}, // TODO
-  createWalletImport: {}, // TODO
-  createWalletName: {}, // TODO
-  createWalletReview: {}, // TODO
+  createWalletAccountSelect: {|
+    accountName: string,
+    existingWalletId?: string,
+    selectedFiat: GuiFiatType,
+    selectedWalletType: CreateWalletType
+  |},
+  createWalletAccountSetup: {|
+    accountHandle?: string,
+    existingWalletId?: string,
+    isReactivation?: boolean,
+    selectedFiat: GuiFiatType,
+    selectedWalletType: CreateWalletType
+  |},
+  createWalletChoice: {|
+    selectedWalletType: CreateWalletType
+  |},
+  createWalletImport: {|
+    selectedWalletType: CreateWalletType
+  |},
+  createWalletName: {|
+    cleanedPrivateKey?: string,
+    selectedFiat: GuiFiatType,
+    selectedWalletType: CreateWalletType
+  |},
+  createWalletReview: {|
+    cleanedPrivateKey?: string, // for creating wallet from import private key
+    selectedFiat: GuiFiatType,
+    selectedWalletType: CreateWalletType,
+    walletName: string
+  |},
   createWalletSelectCrypto: void,
-  createWalletSelectFiat: {}, // TODO
+  createWalletSelectFiat: {|
+    selectedWalletType: CreateWalletType,
+    cleanedPrivateKey?: string
+  |},
   currencyNotificationSettings: {}, // TODO
   currencySettings: {}, // TODO
   defaultFiatSetting: void,

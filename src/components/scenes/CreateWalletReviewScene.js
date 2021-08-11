@@ -8,8 +8,8 @@ import CheckIcon from '../../assets/images/createWallet/check_icon_lg.png'
 import { WALLET_LIST_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
-import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
+// import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { fixFiatCurrencyCode } from '../../util/utils'
 import { FullScreenTransitionComponent } from '../common/FullScreenTransition.js'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -21,10 +21,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../themed/Tile'
 
 type OwnProps = {
-  walletName: string,
-  selectedFiat: GuiFiatType,
-  selectedWalletType: CreateWalletType,
-  cleanedPrivateKey?: string // for creating wallet from import private key
+  route: RouteProp<'createWalletReview'>
 }
 type DispatchProps = {
   createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string, cleanedPrivateKey?: string) => Promise<void>
@@ -50,7 +47,8 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
   goToWalletList = () => Actions.popTo(WALLET_LIST_SCENE)
 
   async createWallet() {
-    const { walletName, selectedWalletType, selectedFiat, cleanedPrivateKey, createCurrencyWallet } = this.props
+    const { createCurrencyWallet, route } = this.props
+    const { walletName, selectedWalletType, selectedFiat, cleanedPrivateKey } = route.params
     const createdWallet = await createCurrencyWallet(walletName, selectedWalletType.walletType, fixFiatCurrencyCode(selectedFiat.value), cleanedPrivateKey)
     // note that we will be using cleanedPrivateKey as a flag for an imported private key
     if (createdWallet && cleanedPrivateKey) {
@@ -65,7 +63,8 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { theme } = this.props
+    const { theme, route } = this.props
+    const { selectedWalletType, selectedFiat, walletName } = route.params
     const { isAnimationVisible } = this.state
     const styles = getStyles(theme)
 
@@ -80,11 +79,11 @@ class CreateWalletReviewComponent extends React.Component<Props, State> {
             <Tile
               type="static"
               title={s.strings.create_wallet_crypto_type_label}
-              body={`${this.props.selectedWalletType.currencyName} - ${this.props.selectedWalletType.currencyCode}`}
+              body={`${selectedWalletType.currencyName} - ${selectedWalletType.currencyCode}`}
               contentPadding={false}
             />
-            <Tile type="static" title={s.strings.create_wallet_fiat_type_label} body={this.props.selectedFiat.label} contentPadding={false} />
-            <Tile type="static" title={s.strings.create_wallet_name_label} body={this.props.walletName} contentPadding={false} />
+            <Tile type="static" title={s.strings.create_wallet_fiat_type_label} body={selectedFiat.label} contentPadding={false} />
+            <Tile type="static" title={s.strings.create_wallet_name_label} body={walletName} contentPadding={false} />
             <MainButton
               alignSelf="center"
               label={s.strings.fragment_create_wallet_create_wallet}

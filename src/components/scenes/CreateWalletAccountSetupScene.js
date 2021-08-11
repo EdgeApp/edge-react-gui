@@ -18,8 +18,7 @@ import type { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletRe
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
-import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
@@ -29,11 +28,7 @@ import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 const deviceWidth = PLATFORM.deviceWidth
 
 type OwnProps = {
-  selectedFiat: GuiFiatType,
-  selectedWalletType: CreateWalletType,
-  accountHandle?: string,
-  isReactivation?: boolean,
-  existingWalletId?: string
+  route: RouteProp<'createWalletAccountSetup'>
 }
 
 type StateProps = {
@@ -56,9 +51,10 @@ class CreateWalletAccountSetup extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-
+    const { route } = props
+    const { accountHandle } = route.params
     this.state = {
-      accountHandle: props.accountHandle || ''
+      accountHandle: accountHandle || ''
     }
     if (this.state.accountHandle) {
       props.checkHandleAvailability(this.state.accountHandle)
@@ -85,10 +81,14 @@ class CreateWalletAccountSetup extends React.Component<Props, State> {
   }
 
   onSetup = () => {
-    if (this.props.handleAvailableStatus === 'AVAILABLE') {
+    const { handleAvailableStatus, route } = this.props
+    if (handleAvailableStatus === 'AVAILABLE') {
+      const { selectedFiat, selectedWalletType, existingWalletId } = route.params
       Actions.push(CREATE_WALLET_ACCOUNT_SELECT, {
-        ...this.props,
-        accountName: this.state.accountHandle
+        selectedFiat: selectedFiat || '',
+        selectedWalletType: selectedWalletType || '',
+        accountName: this.state.accountHandle,
+        existingWalletId: existingWalletId || ''
       })
     }
   }
@@ -105,13 +105,16 @@ class CreateWalletAccountSetup extends React.Component<Props, State> {
   }
 
   render() {
-    const { isCheckingHandleAvailability, handleAvailableStatus, selectedWalletType, currencyConfigs } = this.props
+    const { isCheckingHandleAvailability, handleAvailableStatus, currencyConfigs, route } = this.props
     const { accountHandle } = this.state
+
+    const { selectedWalletType } = route.params
     const { currencyCode } = selectedWalletType
     const walletTypeValue = selectedWalletType.walletType.replace('wallet:', '')
     const { symbolImage } = getCurrencyIcon(currencyConfigs[walletTypeValue].currencyInfo.currencyCode)
     const isHandleAvailable: boolean = handleAvailableStatus === 'AVAILABLE'
     const validityIcon = isHandleAvailable ? validIcon : invalidIcon
+
     let chooseHandleErrorMessage = ''
     if (handleAvailableStatus === 'INVALID') {
       chooseHandleErrorMessage = s.strings.create_wallet_account_invalid_account_name
@@ -223,7 +226,7 @@ export const CreateWalletAccountSetupScene = connect<StateProps, DispatchProps, 
   }),
   (dispatch, ownProps) => ({
     checkHandleAvailability(handle: string) {
-      dispatch(checkHandleAvailability(ownProps.selectedWalletType.currencyCode, handle))
+      dispatch(checkHandleAvailability(ownProps.route.params.selectedWalletType.currencyCode, handle))
     }
   })
 )(CreateWalletAccountSetup)

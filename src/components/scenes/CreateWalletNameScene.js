@@ -6,17 +6,15 @@ import { sprintf } from 'sprintf-js'
 
 import { CREATE_WALLET_REVIEW } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
-import { Actions } from '../../types/routerTypes.js'
-import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
+// import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { MainButton } from '../themed/MainButton.js'
 import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 
 export type CreateWalletNameOwnProps = {
-  selectedFiat: GuiFiatType,
-  selectedWalletType: CreateWalletType,
-  cleanedPrivateKey?: string
+  route: RouteProp<'createWalletName'>
 }
 type Props = CreateWalletNameOwnProps
 type State = {
@@ -28,12 +26,15 @@ export class CreateWalletName extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
+    const { route } = props
+    const { currencyCode, currencyName } = route.params.selectedWalletType
+
     let walletName = ''
     // XXX Hack for Ripple
-    if (this.props.selectedWalletType.currencyCode.toLowerCase() === 'xrp') {
+    if (currencyCode.toLowerCase() === 'xrp') {
       walletName = sprintf(s.strings.my_crypto_wallet_name, 'XRP')
     } else {
-      walletName = sprintf(s.strings.my_crypto_wallet_name, this.props.selectedWalletType.currencyName)
+      walletName = sprintf(s.strings.my_crypto_wallet_name, currencyName)
     }
     this.state = { walletName }
   }
@@ -53,7 +54,8 @@ export class CreateWalletName extends React.Component<Props, State> {
   }
 
   onNext = () => {
-    const { cleanedPrivateKey, selectedFiat, selectedWalletType } = this.props
+    const { route } = this.props
+    const { cleanedPrivateKey, selectedFiat, selectedWalletType } = route.params
     if (this.isValidWalletName()) {
       Actions.push(CREATE_WALLET_REVIEW, {
         walletName: this.state.walletName,
