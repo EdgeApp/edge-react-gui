@@ -3,28 +3,32 @@
 import { Shape, Surface, Transform } from '@react-native-community/art'
 import qrcodeGenerator from 'qrcode-generator'
 import * as React from 'react'
-import { View } from 'react-native'
+import { TouchableWithoutFeedback, View } from 'react-native'
 
 import { useState } from '../../types/reactHooks'
-import { getMarginSpacingStyles } from '../../util/edges'
+import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext'
 
-type Props = {
+type Props = {|
   data: string,
   cellsPadding?: number, // In QR cells
-  backgroundColor?: string,
-  foregroundColor?: string,
-  marginRem?: number[] | number
-}
+  marginRem?: number[] | number,
+  onPress?: () => void
+|}
 
 export function QrCode(props: Props) {
   const theme = useTheme()
   const styles = getStyles(theme)
-  const { data, cellsPadding = 1, backgroundColor = theme.qrBackgroundColor, foregroundColor = theme.qrForegroundColor, marginRem } = props
+  const { data, cellsPadding = 1, marginRem, onPress } = props
+  const margin = sidesToMargin(mapSides(fixSides(marginRem, 2), theme.rem))
 
-  const [qrCodeContainerHeight, setQrCodeContainerHeight] = useState<number>(0)
+  // Scale the surface to match the container's size (minus padding):
+  const [containerHeight, setContainerHeight] = useState<number>(0)
+  const size = containerHeight - theme.rem(1)
 
-  const size = qrCodeContainerHeight - theme.rem(1)
+  const handleLayout = (event: any) => {
+    setContainerHeight(event.nativeEvent.layout.height)
+  }
 
   // Generate an SVG path:
   const code = qrcodeGenerator(0, 'H')
@@ -37,28 +41,29 @@ export function QrCode(props: Props) {
   const sizeInCells = code.getModuleCount() + 2 * cellsPadding
   const transform = new Transform().scale(size / sizeInCells)
 
-  const handleQrCodeLayout = (event: any) => {
-    setQrCodeContainerHeight(event.nativeEvent.layout.height)
-  }
-
   return (
-    <View style={[styles.qrCode, getMarginSpacingStyles(marginRem ?? 2, theme.rem)]} onLayout={handleQrCodeLayout}>
-      {qrCodeContainerHeight > theme.rem(1) && (
-        <Surface height={size} width={size} style={{ backgroundColor }}>
-          <Shape d={path} fill={foregroundColor} transform={transform} />
-        </Surface>
-      )}
-    </View>
+    <TouchableWithoutFeedback onPress={onPress}>
+      <View style={[styles.container, margin]} onLayout={handleLayout}>
+        {size <= 0 ? null : (
+          <Surface height={size} width={size} style={styles.surface}>
+            <Shape d={path} fill={theme.qrForegroundColor} transform={transform} />
+          </Surface>
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  qrCode: {
+  container: {
+    alignSelf: 'center',
     aspectRatio: 1,
-    flex: 1,
+    backgroundColor: theme.qrBackgroundColor,
     borderRadius: theme.rem(0.5),
-    margin: theme.rem(2),
-    padding: theme.rem(0.5),
+    flex: 1,
+    padding: theme.rem(0.5)
+  },
+  surface: {
     backgroundColor: theme.qrBackgroundColor
   }
 }))

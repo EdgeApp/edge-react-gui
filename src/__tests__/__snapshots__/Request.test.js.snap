@@ -100,22 +100,10 @@ exports[`Request should render with loaded props 1`] = `
         </ForwardRef>
       </View>
     </InputAccessoryView>
-    <TouchableWithoutFeedback
+    <QrCode
+      data=""
       onPress={[Function]}
-    >
-      <View
-        style={
-          Object {
-            "alignSelf": "center",
-            "flex": 1,
-          }
-        }
-      >
-        <QrCode
-          data=""
-        />
-      </View>
-    </TouchableWithoutFeedback>
+    />
     <ForwardRef
       onPress={[Function]}
     >
