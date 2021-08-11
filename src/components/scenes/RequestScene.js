@@ -5,7 +5,7 @@ import { bns } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import * as React from 'react'
 import type { RefObject } from 'react-native'
-import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, InputAccessoryView, Linking, Platform, Text, TouchableOpacity, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import Share from 'react-native-share'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -323,11 +323,7 @@ export class RequestComponent extends React.Component<Props, State> {
                 </View>
               </InputAccessoryView>
             ) : null}
-            <TouchableWithoutFeedback onPress={this.handleQrCodePress}>
-              <View style={styles.qrContainer}>
-                <QrCode data={this.state.encodedURI} />
-              </View>
-            </TouchableWithoutFeedback>
+            <QrCode data={this.state.encodedURI} onPress={this.handleQrCodePress} />
             <TouchableOpacity onPress={this.handleAddressBlockExplorer}>
               <View style={styles.rightChevronContainer}>
                 <EdgeText>{s.strings.request_qr_your_receiving_wallet_address}</EdgeText>
@@ -497,11 +493,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(2),
     marginBottom: theme.rem(0.5)
-  },
-
-  qrContainer: {
-    alignSelf: 'center',
-    flex: 1
   },
 
   rightChevronContainer: {
