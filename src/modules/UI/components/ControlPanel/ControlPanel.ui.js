@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, Keyboard, Text, View } from 'react-native'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 
 import accountIcon from '../../../../assets/images/sidenav/accounts.png'
@@ -11,6 +11,7 @@ import s from '../../../../locales/strings'
 import { getDisplayDenominationFull, getPrimaryExchangeDenomination } from '../../../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../../../selectors/WalletSelectors.js'
 import { connect } from '../../../../types/reactRedux.js'
+import { type NavigationProp } from '../../../../types/routerTypes.js'
 import type { GuiDenomination } from '../../../../types/types.js'
 import { emptyGuiDenomination } from '../../../../types/types.js'
 import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
@@ -19,6 +20,10 @@ import FormattedText from '../FormattedText/FormattedText.ui.js'
 import { Button } from './Component/Button/Button.ui'
 import { Main } from './Component/Main.js'
 import styles from './style'
+
+type OwnProps = {
+  navigation: NavigationProp
+}
 
 type StateProps = {
   currencyLogo: string,
@@ -35,9 +40,16 @@ type DispatchProps = {
   openSelectUser: () => void,
   closeSelectUser: () => void
 }
-type Props = StateProps & DispatchProps
+type Props = OwnProps & StateProps & DispatchProps
 
 class ControlPanelComponent extends React.Component<Props> {
+  componentDidUpdate(prevProps: Props) {
+    // $FlowExpectedError - isDrawerOpen is mixed result but should be boolean
+    if (this.props.navigation.state.isDrawerOpen && !prevProps.navigation.state.isDrawerOpen) {
+      Keyboard.dismiss()
+    }
+  }
+
   shouldComponentUpdate(nextProps: Props) {
     const diffElement = getObjectDiff(this.props, nextProps, {
       primaryDisplayDenomination: true,
@@ -117,7 +129,7 @@ class ControlPanelComponent extends React.Component<Props> {
   }
 }
 
-export const ControlPanel = connect<StateProps, DispatchProps, {}>(
+export const ControlPanel = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     const guiWallet = getSelectedWallet(state)
     const currencyCode = state.ui.wallets.selectedCurrencyCode
