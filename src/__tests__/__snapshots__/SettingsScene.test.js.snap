@@ -133,19 +133,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -205,19 +201,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -277,19 +269,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -349,19 +337,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -426,6 +410,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 "backgroundColor": "rgba(255, 255, 255, 0)",
                 "flexDirection": "row",
                 "justifyContent": "flex-start",
+                "marginBottom": 1,
                 "minHeight": 62,
                 "padding": 22,
               }
@@ -556,19 +541,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -628,19 +609,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -700,19 +677,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -763,19 +736,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -826,19 +795,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -900,19 +865,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -972,19 +933,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -1044,19 +1001,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -1118,19 +1071,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -1192,19 +1141,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -1236,19 +1181,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -1308,19 +1249,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -1555,19 +1492,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -1627,19 +1560,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -1699,19 +1628,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -1771,19 +1696,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -1848,6 +1769,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 "backgroundColor": "rgba(255, 255, 255, 0)",
                 "flexDirection": "row",
                 "justifyContent": "flex-start",
+                "marginBottom": 1,
                 "minHeight": 62,
                 "padding": 22,
               }
@@ -1978,19 +1900,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -2050,19 +1968,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -2122,19 +2036,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -2185,19 +2095,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -2248,19 +2154,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -2322,19 +2224,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -2394,19 +2292,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -2466,19 +2360,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -2540,19 +2430,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -2614,19 +2500,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -2658,19 +2540,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text
@@ -2730,19 +2608,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
         >
           <View
             style={
-              Array [
-                Object {
-                  "alignItems": "center",
-                  "backgroundColor": "rgba(255, 255, 255, 0)",
-                  "flexDirection": "row",
-                  "justifyContent": "flex-start",
-                  "minHeight": 62,
-                  "padding": 22,
-                },
-                Object {
-                  "marginBottom": 1,
-                },
-              ]
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "rgba(255, 255, 255, 0)",
+                "flexDirection": "row",
+                "justifyContent": "flex-start",
+                "marginBottom": 1,
+                "minHeight": 62,
+                "padding": 22,
+              }
             }
           >
             <Text

@@ -238,7 +238,6 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           <SettingsRow disabled={this.props.isLocked} right={rightArrow} text={s.strings.settings_button_pin} onPress={this.handleChangePin} />
           <SettingsRow disabled={this.props.isLocked} right={rightArrow} text={s.strings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
           <SettingsRow
-            bottomGap={false}
             disabled={this.props.isLocked}
             right={rightArrow}
             text={s.strings.settings_button_password_recovery}
