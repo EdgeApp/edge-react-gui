@@ -9,23 +9,31 @@ import { setSpendingLimits } from '../../actions/SpendingLimitsActions.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
+import { DEFAULT_PLUGIN_SPENDING_LIMITS } from '../../reducers/SpendingLimitsReducer'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
 import { type SpendingLimits } from '../../types/types.js'
 import { getFiatSymbol } from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 
+type OwnProps = {
+  // eslint-disable-next-line react/no-unused-prop-types
+  currencyCode: string,
+  // eslint-disable-next-line react/no-unused-prop-types
+  fiatCurrencyCode: string
+}
+
 type StateProps = {
   transactionSpendingLimit: {
     amount: number,
     isEnabled: boolean
   },
-  currencySymbol: string
+  fiatCurrencySymbol: string
 }
 type DispatchProps = {
-  onSubmit: (spendingLimits: SpendingLimits, password: string) => mixed
+  onSubmit: (spendingLimits: SpendingLimits, password: string, currencyCode?: string, fiatCurrencyCode?: string) => mixed
 }
-type Props = StateProps & DispatchProps
+type Props = StateProps & DispatchProps & OwnProps
 
 type State = {
   password: string,
@@ -44,7 +52,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { currencySymbol } = this.props
+    const { fiatCurrencySymbol } = this.props
     const { transactionAmount, transactionIsEnabled } = this.state
     const { onTransactionIsEnabledChanged, onTransactionAmountChanged, onPasswordChanged, onSubmit } = this
 
@@ -75,7 +83,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
             onChangeText={onTransactionAmountChanged}
             containerStyle={[{ flex: 1 }]}
             label={s.strings.spending_limits_tx_title}
-            suffix={currencySymbol}
+            suffix={fiatCurrencySymbol}
             autoCorrect={false}
             keyboardType="numeric"
           />
@@ -141,14 +149,24 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const SpendingLimitsScene = connect<StateProps, DispatchProps, {}>(
-  state => ({
-    currencySymbol: getFiatSymbol(state.ui.settings.defaultFiat),
-    transactionSpendingLimit: state.ui.settings.spendingLimits.transaction
-  }),
-  dispatch => ({
+export const SpendingLimitsScene = connect<StateProps, DispatchProps, OwnProps>(
+  (state, ownProps) => {
+    let fiatCurrencyCode = state.ui.settings.defaultFiat
+    let transactionSpendingLimit = state.ui.settings.spendingLimits.transaction
+
+    if (ownProps.fiatCurrencyCode && ownProps.currencyCode) {
+      fiatCurrencyCode = ownProps.fiatCurrencyCode
+      transactionSpendingLimit = (state.ui.settings.spendingLimits.pluginLimits[ownProps.currencyCode] ?? DEFAULT_PLUGIN_SPENDING_LIMITS).transaction
+    }
+
+    return {
+      fiatCurrencySymbol: getFiatSymbol(fiatCurrencyCode),
+      transactionSpendingLimit
+    }
+  },
+  (dispatch, ownProps) => ({
     onSubmit(spendingLimits: SpendingLimits, password: string) {
-      dispatch(setSpendingLimits(spendingLimits, password))
+      dispatch(setSpendingLimits(spendingLimits, password, ownProps.currencyCode, ownProps.fiatCurrencyCode))
     }
   })
 )(SpendingLimitsComponent)
