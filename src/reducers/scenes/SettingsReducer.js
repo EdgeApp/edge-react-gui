@@ -6,10 +6,10 @@ import _ from 'lodash'
 import type { SortOption } from '../../components/modals/WalletListSortModal.js'
 import { LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../modules/Core/Account/settings.js'
 import type { Action } from '../../types/reduxTypes.js'
-import { type CustomTokenInfo, type GuiTouchIdInfo, type MostRecentWallet, type SpendingLimits } from '../../types/types.js'
+import { type CustomTokenInfo, type GuiTouchIdInfo, type MostRecentWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { type PasswordReminderState } from '../PasswordReminderReducer.js'
-import { spendingLimits } from '../SpendingLimitsReducer.js'
+import { type SpendingLimitsState, spendingLimits } from '../SpendingLimitsReducer.js'
 
 // prettier-ignore
 export type PasswordReminderLevels = {
@@ -39,7 +39,7 @@ export type AccountInitPayload = {|
   passwordReminder: PasswordReminderState,
   pinLoginEnabled: boolean,
   preferredSwapPluginId: string | void,
-  spendingLimits: SpendingLimits,
+  spendingLimits: SpendingLimitsState,
   touchIdInfo: GuiTouchIdInfo,
   walletId: string,
   walletsSort: SortOption
@@ -65,7 +65,8 @@ export const initialState = {
     transaction: {
       isEnabled: false,
       amount: 0
-    }
+    },
+    pluginLimits: {}
   },
   developerModeOn: false,
   // prettier-ignore
@@ -127,12 +128,7 @@ export type SettingsState = {
   isAccountBalanceVisible: boolean,
   walletsSort: SortOption,
   mostRecentWallets: MostRecentWallet[],
-  spendingLimits: {
-    transaction: {
-      isEnabled: boolean,
-      amount: number
-    }
-  },
+  spendingLimits: SpendingLimitsState,
   developerModeOn: boolean,
   passwordRecoveryRemindersShown: PasswordReminderLevels
 }

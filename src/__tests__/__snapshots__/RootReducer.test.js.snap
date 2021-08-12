@@ -608,6 +608,7 @@ Object {
       },
       "preferredSwapPluginId": "",
       "spendingLimits": Object {
+        "pluginLimits": Object {},
         "transaction": Object {
           "amount": 0,
           "isEnabled": false,

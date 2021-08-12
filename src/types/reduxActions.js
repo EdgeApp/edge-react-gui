@@ -162,7 +162,7 @@ export type Action =
   | { type: 'SET_LOBBY_ERROR', data: string }
   | { type: 'SET_FROM_WALLET_MAX', data: string }
   | { type: 'SET_TRANSACTION_SUBCATEGORIES', data: { subcategories: string[] } }
-  | { type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS', data: { spendingLimits: SpendingLimits } }
+  | { type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS', data: { spendingLimits: SpendingLimits, currencyCode?: string, fiatCurrencyCode?: string } }
   | {
       type: 'UI/SCENES/TRANSACTION_LIST/UPDATE_TRANSACTIONS',
       data: {

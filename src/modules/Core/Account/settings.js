@@ -5,6 +5,7 @@ import type { EdgeAccount } from 'edge-core-js'
 
 import type { SortOption } from '../../../components/modals/WalletListSortModal.js'
 import { showError } from '../../../components/services/AirshipInstance.js'
+import type { SpendingLimitsState } from '../../../reducers/SpendingLimitsReducer'
 import type { MostRecentWallet, PasswordReminder } from '../../../types/types.js'
 import { categories } from './subcategories.js'
 
@@ -558,7 +559,8 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
     transaction: {
       amount: 0,
       isEnabled: false
-    }
+    },
+    pluginLimits: {}
   }
 }
 
@@ -631,14 +633,7 @@ export const setDeveloperModeOn = (account: EdgeAccount, developerModeOn: boolea
   })
 }
 
-export type SpendingLimits = {
-  transaction: {
-    amount: number,
-    isEnabled: boolean
-  }
-}
-
-export const setSpendingLimits = (account: EdgeAccount, spendingLimits: SpendingLimits) => {
+export const setSpendingLimits = (account: EdgeAccount, spendingLimits: SpendingLimitsState) => {
   return getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { spendingLimits })
     return setLocalSettings(account, updatedSettings)

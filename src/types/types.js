@@ -218,6 +218,10 @@ export type SpendingLimits = {
   }
 }
 
+export type PluginSpendingLimits = {
+  fiatCurrencyCode: string
+} & SpendingLimits
+
 export type SpendAuthType = 'pin' | 'none'
 
 export type GuiExchangeRates = {
