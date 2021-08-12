@@ -312,85 +312,85 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
     denomination: '100000000'
   },
   YFI: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   CRV: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   BAL: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   SUSHI: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   UMA: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   BADGER: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   IDLE: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   NXM: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   CREAM: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   PICKLE: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   CVP: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   ROOK: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   DOUGH: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   COMBO: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   INDEX: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   WETH: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   RENBTC: {
-    denominations: '100000000'
+    denomination: '100000000'
   },
   RENBCH: {
-    denominations: '100000000'
+    denomination: '100000000'
   },
   RENZEC: {
-    denominations: '100000000'
+    denomination: '100000000'
   },
   TBTC: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   DPI: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   YETI: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   BAND: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   REN: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   AMPL: {
-    denominations: '1000000000'
+    denomination: '1000000000'
   },
   OCEAN: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   UNI: {
-    denominations: '1000000000000000000'
+    denomination: '1000000000000000000'
   },
   FTM: {
     denomination: '1000000000000000000'
