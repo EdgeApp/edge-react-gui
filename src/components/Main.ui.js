@@ -154,7 +154,14 @@ import { TransactionList } from './scenes/TransactionListScene.js'
 import { Airship } from './services/AirshipInstance.js'
 import { MenuTab } from './themed/MenuTab.js'
 
-const RouterWithRedux = connect<{}, {}, {}>(
+const RouterWithRedux = connect<
+  {},
+  {},
+  {
+    children?: React.Node,
+    backAndroidHandler?: () => boolean
+  }
+>(
   state => ({}),
   dispatch => ({})
 )(Router)

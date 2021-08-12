@@ -206,7 +206,6 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         walletId={this.props.walletId}
         currencyCode={this.props.currencyCode}
         title={s.strings.fio_confirm_request_fio_title}
-        subtitle={s.strings.fio_confirm_request_fio_subtitle_from}
         useUserFioAddressesOnly
       />
     ))
@@ -233,7 +232,6 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         walletId={this.props.walletId}
         currencyCode={this.props.currencyCode}
         title={s.strings.fio_confirm_request_fio_title}
-        subtitle={s.strings.fio_confirm_request_fio_subtitle_to}
         isFioOnly
       />
     ))
