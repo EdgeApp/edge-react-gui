@@ -23,7 +23,7 @@ type Section = {
 }
 
 type StateProps = {
-  getTransactions(opts?: EdgeGetTransactionsOptions): Promise<EdgeTransaction[]>,
+  getTransactions: (opts?: EdgeGetTransactionsOptions) => Promise<EdgeTransaction[]>,
   numTransactions: number,
   selectedWalletId: string,
   selectedCurrencyCode: string,

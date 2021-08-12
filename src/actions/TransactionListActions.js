@@ -176,7 +176,7 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: EdgeT
   if (isTransactionForSelectedWallet) dispatch(fetchTransactions(walletId, selectedCurrencyCode, options))
   if (receivedTxs.length) dispatch(checkFioObtData(walletId, receivedTxs))
   if (!UTILS.isReceivedTransaction(edgeTransaction)) return
-  showTransactionDropdown(edgeTransaction)
+  showTransactionDropdown(edgeTransaction, walletId)
 }
 
 export const fetchTransactions = (walletId: string, currencyCode: string, options?: Object) => (dispatch: Dispatch, getState: GetState) => {

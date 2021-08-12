@@ -14,7 +14,7 @@ import { connect } from '../../../../types/reactRedux.js'
 import type { GuiDenomination } from '../../../../types/types.js'
 import { emptyGuiDenomination } from '../../../../types/types.js'
 import { getCurrencyIcon } from '../../../../util/CurrencyInfoHelpers.js'
-import { getDenomFromIsoCode, getObjectDiff } from '../../../../util/utils.js'
+import { getDenomFromIsoCode, getObjectDiff, zeroString } from '../../../../util/utils.js'
 import FormattedText from '../FormattedText/FormattedText.ui.js'
 import { Button } from './Component/Button/Button.ui'
 import { Main } from './Component/Main.js'
@@ -22,12 +22,12 @@ import styles from './style'
 
 type StateProps = {
   currencyLogo: string,
-  exchangeRate: number,
+  exchangeRate: string,
   primaryDisplayCurrencyCode: string,
   primaryDisplayDenomination?: GuiDenomination,
   primaryExchangeDenomination?: GuiDenomination,
   secondaryDisplayCurrencyCode: string,
-  secondaryToPrimaryRatio: number,
+  secondaryToPrimaryRatio: string,
   username: string,
   usersView: boolean
 }
@@ -82,7 +82,7 @@ class ControlPanelComponent extends React.Component<Props> {
         <View style={styles.header}>
           {!!currencyLogo && <Image style={styles.iconImage} source={currencyLogoIcon} />}
           <View style={styles.exchangeContainer}>
-            {exchangeRate ? (
+            {!zeroString(exchangeRate) ? (
               <ExchangeRate primaryInfo={primaryCurrencyInfo} secondaryInfo={secondaryCurrencyInfo} secondaryDisplayAmount={secondaryToPrimaryRatio} />
             ) : (
               <FormattedText style={styles.exchangeRateText}>{s.strings.exchange_rate_loading_singular}</FormattedText>
@@ -125,10 +125,10 @@ export const ControlPanel = connect<StateProps, DispatchProps, {}>(
     if (guiWallet == null || currencyCode == null) {
       return {
         currencyLogo: '',
-        exchangeRate: 0,
+        exchangeRate: '0',
         primaryDisplayCurrencyCode: '',
         secondaryDisplayCurrencyCode: '',
-        secondaryToPrimaryRatio: 0,
+        secondaryToPrimaryRatio: '0',
         username: state.core.account.username,
         usersView: state.ui.scenes.controlPanel.usersView
       }

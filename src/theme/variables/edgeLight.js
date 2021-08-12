@@ -254,6 +254,10 @@ export const edgeLight: Theme = {
   qrForegroundColor: palette.black,
   qrBackgroundColor: palette.white,
 
+  // Picker Color
+  pickerTextDark: palette.white,
+  pickerTextLight: palette.black,
+
   // Input Accessory
   inputAccessoryBackground: palette.white,
   inputAccessoryText: palette.accentBlue,

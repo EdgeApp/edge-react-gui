@@ -1,8 +1,10 @@
 // @flow
 
+import { bns } from 'biggystring'
+
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { type GuiExchangeRates } from '../types/types.js'
-import { getYesterdayDateRoundDownHour } from '../util/utils.js'
+import { DECIMAL_PRECISION, getYesterdayDateRoundDownHour } from '../util/utils.js'
 
 export const updateExchangeRates = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -58,24 +60,22 @@ async function buildExchangeRates(state: RootState): GuiExchangeRates {
       })
     )
   )
+
   for (let i = 0; i < exchangeRateKeys.length; i++) {
     const key = exchangeRateKeys[i]
     const codes = key.split('_')
-    const rate = rates[i]
     const reverseExchangeRateKey = `${codes[1]}_${codes[0]}${codes[2] ? '_' + codes[2] : ''}`
-    if (isNaN(rate)) {
-      finalExchangeRates[key] = 0
-      finalExchangeRates[reverseExchangeRateKey] = 0
-    } else {
-      finalExchangeRates[key] = rate
-      if (rate !== 0) {
-        // if it's a real rate and can be multiplicatively inverted
-        finalExchangeRates[reverseExchangeRateKey] = 1 / parseFloat(rate)
-      } else {
-        finalExchangeRates[reverseExchangeRateKey] = 0
-      }
+    const rate = rates[i]
+    finalExchangeRates[key] = '0'
+    finalExchangeRates[reverseExchangeRateKey] = '0'
+
+    if (rate != null && !isNaN(rate) && rate !== 0) {
+      const rateStr = rate.toFixed(DECIMAL_PRECISION)
+      finalExchangeRates[key] = rateStr
+      finalExchangeRates[reverseExchangeRateKey] = bns.div('1', rateStr, DECIMAL_PRECISION)
     }
   }
+
   return finalExchangeRates
 }
 

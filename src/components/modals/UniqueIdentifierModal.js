@@ -99,7 +99,7 @@ class UniqueIdentifierModalComponent extends React.Component<Props> {
     )
   }
 
-  onConfirm() {
+  onConfirm = () => {
     const { uniqueIdentifier } = this.props
     this.props.onDeactivated()
     this.props.onConfirm({ uniqueIdentifier })

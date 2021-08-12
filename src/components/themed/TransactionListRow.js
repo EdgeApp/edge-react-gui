@@ -11,7 +11,7 @@ import { connect } from '../../types/reactRedux.js'
 import type { TransactionListTx } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import {
-  DIVIDE_PRECISION,
+  DECIMAL_PRECISION,
   getDenomFromIsoCode,
   getDenomination,
   getFiatSymbol,
@@ -114,7 +114,7 @@ export const TransactionListRow = connect<StateProps, {}, OwnProps>(
       })
       maxConversionDecimals = maxPrimaryCurrencyConversionDecimals(bns.log10(displayDenomination.multiplier), precisionAdjustValue)
     }
-    const cryptoAmount = bns.div(bns.abs(transaction.nativeAmount || '0'), displayDenomination.multiplier, DIVIDE_PRECISION)
+    const cryptoAmount = bns.div(bns.abs(transaction.nativeAmount || '0'), displayDenomination.multiplier, DECIMAL_PRECISION)
     const cryptoAmountFormat = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(cryptoAmount, maxConversionDecimals), maxConversionDecimals))
 
     // FiatAmount

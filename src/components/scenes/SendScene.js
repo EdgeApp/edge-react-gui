@@ -16,6 +16,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Actions } from 'react-native-router-flux'
 
 import { type FioSenderInfo, sendConfirmationUpdateTx, signBroadcastAndSave } from '../../actions/SendConfirmationActions'
+import { selectWallet } from '../../actions/WalletActions'
 import { CHANGE_MINING_FEE_SEND_CONFIRMATION } from '../../constants/SceneKeys.js'
 import { FIO_STR, getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
@@ -69,7 +70,8 @@ type DispatchProps = {
   signBroadcastAndSave: (fioSender?: FioSenderInfo, selectedWalletId?: string, selectedCurrencyCode?: string) => void,
   updateSpendPending: boolean => void,
   uniqueIdentifierButtonPressed: () => void,
-  onChangePin: (pin: string) => void
+  onChangePin: (pin: string) => void,
+  selectWallet: (walletId: string, currencyCode: string) => void
 }
 
 type RouteProps = {
@@ -185,6 +187,7 @@ class SendComponent extends React.PureComponent<Props, State> {
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={this.props.allowedCurrencyCodes} />)
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
+          props.selectWallet(walletId, currencyCode)
           this.setState(
             {
               ...this.state,
@@ -373,10 +376,10 @@ class SendComponent extends React.PureComponent<Props, State> {
       const fiatSymbol = fiatDenomination.symbol ? fiatDenomination.symbol : ''
       if (nativeAmount === '') {
         cryptoAmountSyntax = s.strings.string_amount
-      } else if (nativeAmount && !bns.eq(nativeAmount, '0')) {
-        const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, UTILS.DIVIDE_PRECISION)
-        const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, UTILS.DIVIDE_PRECISION)
-        const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, parseFloat(exchangeAmount))
+      } else if (nativeAmount != null && !bns.eq(nativeAmount, '0')) {
+        const displayAmount = bns.div(nativeAmount, cryptoDisplayDenomination.multiplier, UTILS.DECIMAL_PRECISION)
+        const exchangeAmount = bns.div(nativeAmount, cryptoExchangeDenomination.multiplier, UTILS.DECIMAL_PRECISION)
+        const fiatAmount = convertCurrencyFromExchangeRates(exchangeRates, selectedCurrencyCode, guiWallet.isoFiatCurrencyCode, exchangeAmount)
         cryptoAmountSyntax = `${displayAmount ?? '0'} ${cryptoDisplayDenomination.name}`
         if (fiatAmount) {
           fiatAmountSyntax = `${fiatSymbol} ${bns.toFixed(fiatAmount, 2, 2) ?? '0'}`
@@ -620,6 +623,9 @@ export const SendScene = connect<StateProps, DispatchProps, RouteProps>(
     },
     onChangePin(pin: string) {
       dispatch({ type: 'UI/SEND_CONFIRMATION/NEW_PIN', data: { pin } })
+    },
+    selectWallet(walletId: string, currencyCode: string) {
+      dispatch(selectWallet(walletId, currencyCode))
     }
   })
 )(withTheme(SendComponent))

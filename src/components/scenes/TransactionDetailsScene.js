@@ -30,7 +30,7 @@ import { TransactionDetailsPersonInput } from '../modals/TransactionDetailsPerso
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
-import { PrimaryButton } from '../themed/ThemedButtons.js'
+import { MainButton } from '../themed/MainButton.js'
 import { Tile } from '../themed/Tile.js'
 
 type OwnProps = {
@@ -94,7 +94,7 @@ type FiatCryptoAmountUI = {
 
 type FiatCurrentAmountUI = {
   amount: string,
-  difference: number,
+  difference: string,
   percentage: string
 }
 
@@ -409,9 +409,9 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
 
     const amount = currentFiatAmount ? bns.toFixed(currentFiatAmount, 2, 2) : '0'
     const fiatAmount = amountFiat.replace(',', '.')
-    const difference = amount ? parseFloat(amount) - parseFloat(fiatAmount) : 0
-    const percentageFloat = amount && parseFloat(fiatAmount) > 0 ? (difference / parseFloat(fiatAmount)) * 100 : 0
-    const percentage = bns.toFixed(percentageFloat.toString(), 2, 2)
+    const difference = amount ? bns.sub(amount, fiatAmount) : '0'
+    const percentageFloat = amount && bns.gt(fiatAmount, '0') ? bns.mul(bns.div(difference, fiatAmount, 4), '100') : '0'
+    const percentage = bns.toFixed(percentageFloat, 2, 2)
 
     return {
       amount,
@@ -503,7 +503,7 @@ export class TransactionDetailsComponent extends React.Component<Props, State> {
             <TouchableWithoutFeedback onPress={this.openAdvancedDetails}>
               <EdgeText style={styles.textAdvancedTransaction}>{s.strings.transaction_details_view_advanced_data}</EdgeText>
             </TouchableWithoutFeedback>
-            <PrimaryButton onPress={this.onSaveTxDetails} label={s.strings.string_save} marginRem={[0, 2, 2]} />
+            <MainButton onPress={this.onSaveTxDetails} label={s.strings.string_save} marginRem={[0, 2, 2]} />
           </View>
         </ScrollView>
       </SceneWrapper>
@@ -597,7 +597,7 @@ export const TransactionDetailsScene = connect<StateProps, DispatchProps, OwnPro
 
     const nativeAmount = getAbsoluteAmount(edgeTransaction)
     const cryptoAmount = convertNativeToExchangeRateDenomination(settings, currencyCode, nativeAmount)
-    const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, parseFloat(cryptoAmount))
+    const currentFiatAmount = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, wallet.isoFiatCurrencyCode, cryptoAmount)
 
     const { swapData } = edgeTransaction
     if (swapData != null && typeof swapData.payoutCurrencyCode === 'string') {

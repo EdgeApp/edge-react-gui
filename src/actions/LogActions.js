@@ -68,7 +68,7 @@ const prepareLogs = (text: string) => async (dispatch: Dispatch, getState: GetSt
         logOutput.loggedInUser.wallets.push({
           currencyCode,
           repoId: getRepoId(wallet.keys.syncKey),
-          pluginDump: global.__DEV__ ? await wallet.dumpData() : undefined
+          pluginDump: await wallet.dumpData()
         })
       }
     }

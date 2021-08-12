@@ -17,7 +17,8 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText'
-import { ClickableText, PrimaryButton } from '../themed/ThemedButtons'
+import { MainButton } from '../themed/MainButton.js'
+import { ClickableText } from '../themed/ThemedButtons.js'
 import { Tile } from '../themed/Tile'
 
 type State = {
@@ -193,8 +194,8 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         {showTransfer && <FioActionSubmit goTo={this.goToTransfer} getOperationFee={this.getTransferFee} fioWallet={fioWallet} />}
         {!showRenew && !showVisibility && !showTransfer && (
           <>
-            <PrimaryButton label={s.strings.title_fio_renew_domain} onPress={this.onRenewPress} marginRem={[1.5, 1, 0.25]} />
-            <PrimaryButton label={s.strings.title_fio_transfer_domain} onPress={this.onTransferPress} marginRem={[0.25, 1]} />
+            <MainButton label={s.strings.title_fio_renew_domain} onPress={this.onRenewPress} marginRem={[1.5, 1, 0.25]} />
+            <MainButton label={s.strings.title_fio_transfer_domain} onPress={this.onTransferPress} marginRem={[0.25, 1]} />
             <ClickableText onPress={this.onVisibilityPress} marginRem={[0.25, 1]}>
               <EdgeText style={styles.visibilityText}>{isPublic ? s.strings.title_fio_make_private_domain : s.strings.title_fio_make_public_domain}</EdgeText>
             </ClickableText>

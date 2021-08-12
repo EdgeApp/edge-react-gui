@@ -9,23 +9,25 @@ type OwnProps = {
   children: React.Node,
   ellipsizeMode?: string,
   numberOfLines?: number,
-  style?: StyleSheet.Styles
+  style?: StyleSheet.Styles,
+  disableFontScaling?: boolean
 }
 
 class EdgeTextComponent extends React.PureComponent<OwnProps & ThemeProps> {
   render() {
-    const { children, style, theme, ...props } = this.props
+    const { children, style, theme, disableFontScaling = false, ...props } = this.props
     const { text, androidAdjust } = getStyles(theme)
     let numberOfLines = this.props.numberOfLines || 1
     if (typeof children === 'string' && children.includes('\n')) {
       numberOfLines = numberOfLines + (children.match(/\n/g) || []).length
     }
+
     return (
       <Text
         style={[text, style, Platform.OS === 'android' ? androidAdjust : null]}
         numberOfLines={numberOfLines}
-        allowFontScaling
-        adjustsFontSizeToFit
+        allowFontScaling={!disableFontScaling}
+        adjustsFontSizeToFit={!disableFontScaling}
         minimumFontScale={0.65}
         {...props}
       >

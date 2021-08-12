@@ -9,9 +9,10 @@ import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-nat
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
-import * as UTILS from '../../util/utils.js'
+import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils, zeroString } from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { BlinkingCursor } from './BlinkingCursor'
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox, RightChevronButton } from './ThemedButtons.js'
 
@@ -116,7 +117,7 @@ const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string): Amou
   let secondaryDecimalAmount = bns.mul(primaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio)
 
   // Truncate to however many decimals the secondary format should have
-  secondaryDecimalAmount = UTILS.truncateDecimals(secondaryDecimalAmount, props.secondaryInfo.maxConversionDecimals)
+  secondaryDecimalAmount = truncateDecimalsUtils(secondaryDecimalAmount, props.secondaryInfo.maxConversionDecimals)
 
   // Format into locale specific format. Add currency symbol
   const secondaryDisplayAmount = formatNumberInput(prettifyNumber(secondaryDecimalAmount))
@@ -128,8 +129,10 @@ const setPrimaryToSecondary = (props: Props, primaryDecimalAmount: string): Amou
 // Pretty much the same as setPrimaryToSecondary
 const setSecondaryToPrimary = (props: Props, secondaryDecimalAmount: string): Amounts => {
   const secondaryDisplayAmount = formatNumberInput(prettifyNumber(secondaryDecimalAmount))
-  let primaryDecimalAmount = props.exchangeSecondaryToPrimaryRatio === '0' ? '0' : bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, 18)
-  primaryDecimalAmount = UTILS.truncateDecimals(primaryDecimalAmount, props.primaryInfo.maxConversionDecimals)
+  const primaryAmountFull = zeroString(props.exchangeSecondaryToPrimaryRatio)
+    ? '0'
+    : bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, DECIMAL_PRECISION)
+  const primaryDecimalAmount = truncateDecimalsUtils(primaryAmountFull, props.primaryInfo.maxConversionDecimals)
   const primaryDisplayAmount = formatNumberInput(prettifyNumber(primaryDecimalAmount))
   return { primaryDisplayAmount, primaryDecimalAmount, secondaryDisplayAmount, secondaryDecimalAmount }
 }
@@ -192,7 +195,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   componentDidMount() {
     this.props.flipInputRef(this)
     setTimeout(() => {
-      if (this.props.keyboardVisible && this.props.overridePrimaryDecimalAmount === '0' && this.textInputFront) {
+      if (this.props.keyboardVisible && bns.eq(this.props.overridePrimaryDecimalAmount, '0') && this.textInputFront) {
         this.textInputFront.focus()
       }
     }, 400)
@@ -217,7 +220,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
       setTimeout(() => {
         if (this.state.isToggled) {
           const { exchangeSecondaryToPrimaryRatio } = this.props
-          if (bns.eq(exchangeSecondaryToPrimaryRatio, '0') || exchangeSecondaryToPrimaryRatio === '') {
+          if (zeroString(exchangeSecondaryToPrimaryRatio)) {
             this.toggleCryptoOnBottom()
           } else {
             this.textInputBack && this.textInputBack.focus()
@@ -431,6 +434,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
 
   bottomRow = (isFront: boolean) => {
     const { isEditable, inputAccessoryViewID, onNext, topReturnKeyType, theme } = this.props
+    const { textInputBackFocus } = this.state
     const styles = getStyles(theme)
     const displayAmount = isFront ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
     const decimalAmount = isFront ? this.state.primaryDecimalAmount : this.state.secondaryDecimalAmount
@@ -448,7 +452,10 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     return (
       <TouchableWithoutFeedback onPress={onPress}>
         <View style={styles.bottomContainer} key="bottom">
-          <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
+          <View style={styles.valueContainer}>
+            {(!textInputBackFocus || !displayAmountCheck) && <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>}
+            <BlinkingCursor visible={textInputBackFocus} fontSize={1.5} color={theme.deactivatedText} />
+          </View>
           {!displayAmountCheck && <EdgeText style={styles.bottomCurrency}>{currencyName}</EdgeText>}
           <TextInput
             style={styles.hiddenTextInput}
@@ -576,16 +583,18 @@ const getStyles = cacheStyles((theme: Theme) => ({
     flexDirection: 'row',
     marginRight: theme.rem(1.5)
   },
+  valueContainer: {
+    flexDirection: 'row',
+    marginRight: theme.rem(0.5)
+  },
   bottomAmount: {
     fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(1.5),
-    marginRight: theme.rem(0.5)
+    fontSize: theme.rem(1.5)
   },
   bottomAmountMuted: {
     fontFamily: theme.fontFaceMedium,
     fontSize: theme.rem(1.5),
     marginLeft: theme.rem(-0.1), // Hack because of amount being bigger font size not aligning to the rest of the text on justified left
-    marginRight: theme.rem(0.5),
     color: theme.deactivatedText
   },
   bottomCurrency: {

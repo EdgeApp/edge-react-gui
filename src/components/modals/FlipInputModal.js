@@ -14,7 +14,7 @@ import { getDisplayDenomination, getExchangeDenomination } from '../../selectors
 import { convertCurrencyFromExchangeRates, convertNativeToExchangeRateDenomination, getExchangeRate } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import type { GuiCurrencyInfo } from '../../types/types.js'
-import { convertTransactionFeeToDisplayFee, DIVIDE_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
+import { convertTransactionFeeToDisplayFee, DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils.js'
 import { ExchangeRate } from '../common/ExchangeRate.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { Card } from '../themed/Card'
@@ -39,7 +39,7 @@ type StateProps = {
   flipInputHeaderLogo: string,
   primaryInfo: GuiCurrencyInfo,
   secondaryInfo: GuiCurrencyInfo,
-  fiatPerCrypto: number,
+  fiatPerCrypto: string,
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
 
@@ -247,7 +247,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     // Balances
     const balanceInCrypto = guiWallet.nativeBalances[currencyCode]
     const balanceCrypto = convertNativeToExchangeRateDenomination(state.ui.settings, currencyCode, balanceInCrypto)
-    const balanceFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, parseFloat(balanceCrypto))
+    const balanceFiat = convertCurrencyFromExchangeRates(state.exchangeRates, currencyCode, isoFiatCurrencyCode, balanceCrypto)
 
     // FlipInput
     const fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
@@ -267,7 +267,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
     }
 
     const { forceUpdateGuiCounter, nativeAmount } = state.ui.scenes.sendConfirmation
-    const overridePrimaryExchangeAmount = bns.div(nativeAmount, primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
+    const overridePrimaryExchangeAmount = bns.div(nativeAmount, primaryInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
 
     // Fees
     const transactionFee = convertTransactionFeeToDisplayFee(
@@ -297,7 +297,7 @@ export const FlipInputModal = connect<StateProps, DispatchProps, OwnProps>(
       flipInputHeaderLogo: guiWallet.symbolImageDarkMono || '',
       primaryInfo,
       secondaryInfo,
-      fiatPerCrypto: fiatPerCrypto || 0,
+      fiatPerCrypto: fiatPerCrypto ?? '0',
       overridePrimaryExchangeAmount,
       forceUpdateGuiCounter,
 

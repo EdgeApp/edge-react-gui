@@ -8,7 +8,7 @@ import { getExchangeDenomination } from '../../../../selectors/DenominationSelec
 import { convertCurrency } from '../../../../selectors/WalletSelectors.js'
 import { type RootState } from '../../../../types/reduxTypes.js'
 import { type SpendAuthType } from '../../../../types/types.js'
-import { convertNativeToExchange } from '../../../../util/utils.js'
+import { convertNativeToExchange, DECIMAL_PRECISION } from '../../../../util/utils.js'
 
 export const initialState = {
   forceUpdateGuiCounter: 0,
@@ -155,7 +155,7 @@ export const getAuthRequired = (state: RootState, spendInfo: EdgeSpendInfo): Spe
   const nativeToExchangeRatio = getExchangeDenomination(state, currencyCode).multiplier
   const exchangeAmount = convertNativeToExchange(nativeToExchangeRatio)(nativeAmount)
   const fiatAmount = convertCurrency(state, currencyCode, isoFiatCurrencyCode, exchangeAmount)
-  const exceedsLimit = bns.gte(fiatAmount, spendingLimits.transaction.amount.toFixed(18))
+  const exceedsLimit = bns.gte(fiatAmount, spendingLimits.transaction.amount.toFixed(DECIMAL_PRECISION))
 
   return exceedsLimit ? 'pin' : 'none'
 }

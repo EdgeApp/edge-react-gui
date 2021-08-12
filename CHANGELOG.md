@@ -1,5 +1,47 @@
 # edge-react-gui
 
+## 2.0.17 (2021-08-02)
+
+- Add Exchange Max function Exchange scene
+- ETH: EIP-1559 support
+- Themed Change Password and Change PIN
+- Make request QR tappable to increase accessibility
+- DGB: fix private key sweeping
+- Change exchange rates to strings and refactor accompanying functions
+- Add blinking cursor to FlipInput
+- Reconfigure exchange quote scene
+- Update the PrimaryButton component design
+- Fix font color on auto-logout modal
+- Fix whitespace handling in wallet search
+- Fix error when saving transaction metadata
+- Prevent scene-specific modals from lingering after leaving scene
+- Save device name to sent transaction metadata
+- Add styles/utils for Add Custom Token scene
+- Update text strings and translations
+- Upgrade "edge-core-js to v0.18.4
+  - fixed: Ensure that transactions never have `undefined` as a `nativeAmount`.
+  - fixed: Change the WebPack build settings to allow easier debugging.
+  - fixed: Fix the React Native WebView bundle to work on really old devices.
+- Upgrade edge-currency-bitcoin to v4.9.17
+  - Linting fixes
+  - Update travis file to use node 14, fix the yarn install step and added more testing steps
+  - Add plugin test fixtures for Digibyte including all the supported WIF variations
+  - Add a wif serializer to Digibyte's to keep supporting the old Private Key prefix
+  - Update Digibyte's Private Key prefix to match the new standard
+- Upgrade edge-currency-accountbased to v0.7.68
+  - Add base fee multiplier ETH fee algorithm (EIP 1559)
+  - Add Ethereum testnet server URIs to support testnets for development
+  - Fix blockbook server URIs
+- Upgrade edge-exchange-plugins to v0.11.32
+  - Swap: Ensure all quotes expire in the future
+  - Currency Converter: Fix response cleaner
+  - Bitmax: Update url to ascendex.com
+- Upgrade edge-login-ui-rn to v0.9.14
+  - rn: Use hooks for the public login screen
+  - rn: Font size consistency fixes
+  - rn: Close modals on scene exit.
+  - rn: Add type definitions for TypeScript (this release re-writes the entire codebase into TypeScript, but this should be the only externally-visible difference).
+
 ## 2.0.16 (2021-07-26)
 
 - Code cleanups: connectors, actions, and constants
