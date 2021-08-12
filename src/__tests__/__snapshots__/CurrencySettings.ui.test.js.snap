@@ -96,6 +96,23 @@ exports[`CurrencySettings should render 1`] = `
       text=""
       value={true}
     />
+    <React.Fragment>
+      <WithTheme(SettingsHeaderRowComponent)
+        text="Spending Limits"
+      />
+      <WithTheme(SettingsRowComponent)
+        onPress={[Function]}
+        right={
+          <Icon
+            allowFontScaling={false}
+            color="#FFFFFF"
+            name="right"
+            size={22}
+          />
+        }
+        text="Transaction Spending Limit"
+      />
+    </React.Fragment>
   </ScrollView>
 </SceneWrapper>
 `;

@@ -3,12 +3,15 @@
 import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, Text } from 'react-native'
+import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
 import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenominationKeyRequest } from '../../actions/SettingsActions.js'
+import { CURRENCY_SETTINGS_SELECT_FIAT, SPENDING_LIMITS } from '../../constants/SceneKeys'
 import s from '../../locales/strings.js'
 import { getDenominations, getDisplayDenominationKey } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import type { GuiDenomination } from '../../types/types.js'
+import { Actions } from '../../types/routerTypes'
+import type { GuiDenomination, GuiFiatType } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SetCustomNodesModal } from '../modals/SetCustomNodesModal.ui.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
@@ -16,7 +19,6 @@ import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
-
 type NavigationProps = {
   // eslint-disable-next-line react/no-unused-prop-types
   currencyInfo: EdgeCurrencyInfo
@@ -26,7 +28,8 @@ type StateProps = {
   selectedDenominationKey: string,
   electrumServers: string[],
   disableFetchingServers: boolean,
-  defaultElectrumServer: string
+  defaultElectrumServer: string,
+  currencyCode: string
 }
 type DispatchProps = {
   disableCustomNodes: () => void,
@@ -92,8 +95,24 @@ export class CurrencySettingsComponent extends React.Component<Props, State> {
     }
   }
 
+  selectFiatNextHandler = (isValidFiatType: boolean, selectedFiat: GuiFiatType) => {
+    Actions.push(SPENDING_LIMITS, {
+      currencyCode: this.props.currencyCode,
+      fiatCurrencyCode: selectedFiat.value
+    })
+  }
+
+  handleSetSpendingLimit = () => {
+    Actions.push(CURRENCY_SETTINGS_SELECT_FIAT, {
+      onNext: this.selectFiatNextHandler
+    })
+  }
+
   render() {
     const { theme } = this.props
+
+    const rightArrow = <AntDesignIcon color={theme.icon} name="right" size={theme.rem(1)} />
+
     return (
       <SceneWrapper background="theme" hasTabs={false}>
         <ScrollView>
@@ -136,6 +155,10 @@ export class CurrencySettingsComponent extends React.Component<Props, State> {
               />
             </>
           )}
+          <>
+            <SettingsHeaderRow text={s.strings.spending_limits} />
+            <SettingsRow text={s.strings.spending_limits_tx_title} right={rightArrow} onPress={this.handleSetSpendingLimit} />
+          </>
         </ScrollView>
       </SceneWrapper>
     )
@@ -157,7 +180,8 @@ export const CurrencySettingsScene = connect<StateProps, DispatchProps, Navigati
       selectedDenominationKey: getDisplayDenominationKey(state, currencyCode),
       electrumServers,
       disableFetchingServers,
-      defaultElectrumServer
+      defaultElectrumServer,
+      currencyCode
     }
   },
   (dispatch, ownProps) => ({

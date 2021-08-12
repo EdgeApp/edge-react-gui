@@ -52,6 +52,7 @@ import {
   CREATE_WALLET_SELECT_FIAT,
   CURRENCY_NOTIFICATION_SETTINGS,
   CURRENCY_SETTINGS,
+  CURRENCY_SETTINGS_SELECT_FIAT,
   DEFAULT_FIAT_SETTING,
   EDGE,
   EDGE_LOGIN,
@@ -591,6 +592,13 @@ export class MainComponent extends React.Component<Props> {
               navTransparent
               component={ifLoggedIn(CurrencySettingsScene)}
               renderTitle={props => <CurrencySettingsTitle currencyInfo={props.currencyInfo} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={this.renderEmptyButton()}
+            />
+            <Scene
+              key={CURRENCY_SETTINGS_SELECT_FIAT}
+              navTransparent
+              component={ifLoggedIn(SelectFiatScene)}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={this.renderEmptyButton()}
             />
