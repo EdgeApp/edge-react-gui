@@ -553,7 +553,6 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
     nonPasswordLoginsLimit: 4
   },
   isAccountBalanceVisible: true,
-  isWalletFiatBalanceVisible: false,
   spendingLimits: {
     transaction: {
       amount: 0,
@@ -567,7 +566,6 @@ export const LOCAL_ACCOUNT_TYPES = {
   developerModeOn: 'boolean',
   passwordReminder: 'object',
   isAccountBalanceVisible: 'boolean',
-  isWalletFiatBalanceVisible: 'boolean',
   spendingLimits: 'object'
 }
 
