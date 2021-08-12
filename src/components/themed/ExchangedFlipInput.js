@@ -40,7 +40,8 @@ export type ExchangedFlipInputOwnProps = {
   inputAccessoryViewID?: string,
   headerText: string,
   headerLogo: string | void,
-  headerCallback?: () => void
+  headerCallback?: () => void,
+  onError?: (error: string | void) => void
 }
 
 type Props = ExchangedFlipInputOwnProps
@@ -178,6 +179,7 @@ export class ExchangedFlipInput extends React.Component<Props, State> {
         secondaryInfo={this.state.secondaryInfo}
         forceUpdateGuiCounter={this.props.forceUpdateGuiCounter}
         onAmountChanged={this.onAmountChanged}
+        onError={this.props.onError}
         keyboardVisible={this.props.keyboardVisible}
         isEditable={this.props.isEditable}
         isFiatOnTop={this.isFiatOnTop()}
