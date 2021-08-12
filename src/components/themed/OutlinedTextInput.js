@@ -1,34 +1,24 @@
 // @flow
 
 import * as React from 'react'
-import { type TextStyle, type ViewStyle, Platform, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import Animated, { Extrapolate, interpolate, interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import { Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 
-import { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from '../../types/reactHooks.js'
+import { useCallback, useEffect, useImperativeHandle, useRef, useState } from '../../types/reactHooks.js'
 import { fixSides, mapSides, sidesToMargin } from '../../util/sides.js'
-import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
-
-const HINT_Y_PLATFORM_ADJUST = Platform.OS === 'android' ? -2 : 0
-const PADDING_VERTICAL = 1
-const PADDING_VERTICAL_SMALL = 0.65
-const FONT_SIZE = 1
-const FONT_SIZE_SMALL = 0.875
-
-const ANIMATION_STATES = {
-  INIT: 0,
-  FOCUSED: 1,
-  ERROR: 2
-}
+import { cacheStyles, useTheme } from '../services/ThemeContext.js'
 
 type Props = {|
-  // Content options:
+  // Contents:
   error?: string,
   label?: string,
+  value: string,
 
   // Appearance:
   clearIcon?: boolean,
   marginRem?: number | number[],
+  multiline?: boolean,
   searchIcon?: boolean,
 
   // Callbacks:
@@ -48,8 +38,7 @@ type Props = {|
   onSubmitEditing?: () => void,
   returnKeyType?: 'done' | 'go' | 'next' | 'search' | 'send',
   secureTextEntry?: boolean,
-  testID?: string,
-  value?: string
+  testID?: string
 |}
 
 /**
@@ -64,53 +53,18 @@ declare export class OutlinedTextInputRef extends React.Component<Props> {
   clear: () => void;
 }
 
-type CornerBorderProps = {
-  theme: Theme,
-  corner: 'left' | 'right',
-  cornerHeight: { height: number },
-  placeholderSize: Animated.SharedValue<number>,
-  colorMap: Animated.SharedValue<number>
-}
-
-const getColor = (
-  placeholderSizeValue: number,
-  colorMapValue: number,
-  colors: { inactiveColor: string, activeColor: string, errorColor: string },
-  doNotCheckPlaceholder: boolean = false
-) => {
-  'worklet'
-  const { inactiveColor, activeColor, errorColor } = colors
-  return doNotCheckPlaceholder || placeholderSizeValue > 0
-    ? interpolateColor(colorMapValue, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED, ANIMATION_STATES.ERROR], [inactiveColor, activeColor, errorColor])
-    : inactiveColor
-}
-
-const CornerBorder = ({ theme, corner, cornerHeight, placeholderSize, colorMap }: CornerBorderProps) => {
-  const styles = getStyles(theme)
-  const { inactiveColor, activeColor, errorColor } = getSizeStyles(theme)
-
-  const animatedContainerStyles = useAnimatedStyle(() => {
-    const color = getColor(placeholderSize.value, colorMap.value, { inactiveColor, activeColor, errorColor })
-    return {
-      borderTopColor: color,
-      borderBottomColor: color,
-      borderLeftColor: color,
-      borderRightColor: color
-    }
-  })
-  return <Animated.View style={[corner === 'left' ? styles.cornerLeft : styles.cornerRight, cornerHeight, animatedContainerStyles]} />
-}
-
-// $FlowFixMe = forwardRef is not recognize by flow?
+// $FlowFixMe Our version of Flow doesn't have forwardRef:
 const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
   const {
-    // Content options:
+    // Contents:
     error,
-    label: placeholder = '',
+    label,
+    value,
 
     // Appearance:
     clearIcon = false,
     marginRem,
+    multiline = false,
     searchIcon = false,
 
     // Callbacks:
@@ -119,363 +73,270 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     onClear,
     onFocus,
 
-    // Other React Native TextInput properties:
-    value = '',
     ...inputProps
   } = props
-
-  const hasError = error != null
-
-  const [containerHeight, setContainerHeight] = useState(0)
-
-  // animation
-  const inputRef = useRef<TextInput>(null)
-  const placeholderMap = useSharedValue(value ? ANIMATION_STATES.FOCUSED : ANIMATION_STATES.INIT)
-  const placeholderSize = useSharedValue(ANIMATION_STATES.INIT)
-  const containerWidth = useSharedValue(ANIMATION_STATES.INIT)
-  const colorMap = useSharedValue(ANIMATION_STATES.INIT)
-
-  // input methods
-  const focus = () => inputRef.current && inputRef.current.focus()
-  const blur = () => inputRef.current && inputRef.current.blur()
-  const isFocused = () => Boolean(inputRef.current && inputRef.current.isFocused())
-  const clear = () => {
-    Boolean(inputRef.current && inputRef.current.clear())
-    if (onChangeText != null) onChangeText('')
-  }
-
-  // styles
   const theme = useTheme()
   const styles = getStyles(theme)
-  const spacings = sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem))
-  const placeholderSpacerWidthAdjust = theme.rem(1)
-  const {
-    inactiveColor,
-    activeColor,
-    errorColor,
-    fontSize,
-    placeholderSpacerAdjust,
-    placeholderScale,
-    placeholderSizeScale,
-    paddingVertical,
-    inputStyles,
-    placeholderTextStyles,
-    placeholderPaddingStyles,
-    placeholderSpacerPaddingStyles,
-    inputContainerStyles,
-    prefixStyles,
-    suffixStyles,
-    hintLeftMargin
-  } = getSizeStyles(theme, searchIcon)
 
+  const hasError = error != null
+  const hasLabel = label != null
+  const hasValue = value !== ''
+
+  // Imperative methods:
+  const inputRef = useRef<TextInput>(null)
+  function blur(): void {
+    if (inputRef.current != null) inputRef.current.blur()
+  }
+  function clear(): void {
+    if (inputRef.current != null) inputRef.current.clear()
+    if (onChangeText != null) onChangeText('')
+    if (onClear != null) onClear()
+  }
+  function focus(): void {
+    if (inputRef.current != null) inputRef.current.focus()
+  }
+  function isFocused(): boolean {
+    return inputRef.current != null ? inputRef.current.isFocused() : false
+  }
+  useImperativeHandle(ref, () => ({ blur, clear, focus, isFocused }))
+
+  // Captures the width of the placeholder label:
+  const [labelWidth, setLabelWidth] = useState(0)
+  const handleLabelLayout = event => setLabelWidth(event.nativeEvent.layout.width)
+
+  // Animates between 0 and 1 based our error state:
+  const errorAnimation = useSharedValue(0)
+  useEffect(() => {
+    errorAnimation.value = withTiming(hasError ? 1 : 0)
+  }, [errorAnimation, hasError])
+
+  // Animates between 0 and 1 based on focus:
+  const focusAnimation = useSharedValue(0)
+  const handleBlur = () => {
+    focusAnimation.value = withTiming(0)
+    if (onBlur != null) onBlur()
+  }
   const handleFocus = () => {
-    placeholderMap.value = withTiming(ANIMATION_STATES.FOCUSED)
-    if (!hasError) colorMap.value = withTiming(ANIMATION_STATES.FOCUSED)
-    focus()
+    focusAnimation.value = withTiming(1)
     if (onFocus != null) onFocus()
   }
 
-  const handleBlur = () => {
-    if (!value) placeholderMap.value = withTiming(ANIMATION_STATES.INIT) // blur
-    if (!hasError) colorMap.value = withTiming(ANIMATION_STATES.INIT) // inactive
-    blur()
-    if (onBlur != null) onBlur()
+  // Label dimensions:
+  const labelLeft = theme.rem(1)
+  const labelPadding = theme.rem(0.25) // Gap in the top line
+  const labelShrink = 0.25 // How much to shrink the text
+  const translateX =
+    (searchIcon ? theme.rem(-1.875) : 0) +
+    labelPadding +
+    // Compensate for the scaling origin being in the center:
+    -0.5 * labelShrink * labelWidth
+  const translateY = theme.rem(-1.5)
+
+  // React-controlled styles:
+  const containerPadding = {
+    paddingLeft: searchIcon ? theme.rem(2.875) : theme.rem(1),
+    paddingRight: clearIcon ? theme.rem(2.875) : theme.rem(1)
+  }
+  const containerStyle = {
+    ...containerPadding,
+    ...sidesToMargin(mapSides(fixSides(marginRem, 0.5), theme.rem)),
+    flexGrow: multiline ? 1 : 0,
+    paddingVertical: multiline
+      ? // Tweaked to align the first input line with the label text:
+        Platform.OS === 'android'
+        ? theme.rem(0.75)
+        : theme.rem(0.625)
+      : 0
+  }
+  const textInputStyle = {
+    flexGrow: multiline ? 1 : 0
   }
 
-  const handleChangeText = (text: string) => {
-    if (onChangeText != null) onChangeText(text)
-  }
-
-  const clearText = () => {
-    clear()
-    if (onClear != null) onClear()
-  }
-
-  const handlePlaceholderLayout = useCallback(
-    ({ nativeEvent }) => {
-      const { width } = nativeEvent.layout
-      placeholderSize.value = width
+  // Animated styles:
+  const getColor = useCallback(
+    (errorValue, focusValue) => {
+      'worklet'
+      const focusColor = interpolateColor(focusValue, [0, 1], [theme.secondaryText, theme.iconTappable])
+      return interpolateColor(errorValue, [0, 1], [focusColor, theme.dangerText])
     },
-    [placeholderSize]
+    [theme]
   )
-
-  const handleContainerLayout = ({ nativeEvent }) => {
-    const { width, height } = nativeEvent.layout
-    containerWidth.value = width
-    setContainerHeight(height)
-  }
-
-  // error handling
-  useEffect(() => {
-    if (hasError) {
-      colorMap.value = ANIMATION_STATES.ERROR
-    } else {
-      colorMap.value = isFocused() ? ANIMATION_STATES.FOCUSED : ANIMATION_STATES.INIT
-    }
-  }, [colorMap, hasError])
-
-  const animatedPlaceholderStyles = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateY: interpolate(
-          placeholderMap.value,
-          [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED],
-          [0, -(paddingVertical + fontSize * placeholderScale) + HINT_Y_PLATFORM_ADJUST]
-        )
-      },
-      {
-        scale: interpolate(placeholderMap.value, [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED], [1, placeholderScale])
-      },
-      {
-        translateX: interpolate(
-          placeholderMap.value,
-          [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED],
-          [0, -placeholderSize.value * placeholderSizeScale - hintLeftMargin]
-        )
-      }
-    ]
+  const bottomStyle = useAnimatedStyle(() => ({
+    borderColor: getColor(errorAnimation.value, focusAnimation.value)
   }))
-
-  const animatedPlaceholderTextStyles = useAnimatedStyle(() => ({
-    color: getColor(placeholderSize.value, colorMap.value, { inactiveColor, activeColor, errorColor }, true)
+  const leftStyle = useAnimatedStyle(() => ({
+    borderColor: getColor(errorAnimation.value, focusAnimation.value)
   }))
-
-  const animatedPlaceholderSpacerStyles = useAnimatedStyle(() => ({
-    width: interpolate(
-      placeholderMap.value,
-      [ANIMATION_STATES.INIT, ANIMATION_STATES.FOCUSED],
-      [containerWidth.value - placeholderSpacerWidthAdjust, containerWidth.value - placeholderSize.value * placeholderScale - placeholderSpacerAdjust],
-      Extrapolate.CLAMP
-    ),
-    backgroundColor: getColor(placeholderSize.value, colorMap.value, { inactiveColor, activeColor, errorColor })
+  const rightStyle = useAnimatedStyle(() => ({
+    borderColor: getColor(errorAnimation.value, focusAnimation.value)
   }))
-  const cornerHeight = { height: containerHeight }
-  const animatedContainerStyle = useAnimatedStyle(() => {
-    const color = getColor(placeholderSize.value, colorMap.value, { inactiveColor, activeColor, errorColor })
+  const topStyle = useAnimatedStyle(() => {
+    const labelProgress = hasLabel ? (hasValue ? 1 : focusAnimation.value) : 0
     return {
-      borderBottomColor: color,
-      borderLeftColor: color,
-      borderRightColor: color
+      borderColor: getColor(errorAnimation.value, focusAnimation.value),
+      left: labelLeft + labelProgress * (2 * labelPadding + labelWidth * (1 - labelShrink))
     }
   })
-
-  useImperativeHandle(ref, () => ({
-    focus: handleFocus,
-    blur: handleBlur,
-    isFocused: isFocused(),
-    clear: clear
+  const labelStyle = useAnimatedStyle(() => {
+    const labelProgress = hasValue ? 1 : focusAnimation.value
+    return {
+      color: getColor(errorAnimation.value, focusAnimation.value),
+      transform: [{ translateY: labelProgress * translateY }, { translateX: labelProgress * translateX }, { scale: 1 - labelProgress * labelShrink }]
+    }
+  })
+  const errorStyle = useAnimatedStyle(() => ({
+    opacity: errorAnimation.value
   }))
 
-  const placeholderStyle = useMemo(() => {
-    return [...placeholderPaddingStyles, animatedPlaceholderStyles]
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...placeholderPaddingStyles, animatedPlaceholderStyles])
-
   return (
-    <Animated.View style={[styles.container, animatedContainerStyle, spacings]} onLayout={handleContainerLayout}>
-      <CornerBorder theme={theme} corner="left" cornerHeight={cornerHeight} placeholderSize={placeholderSize} colorMap={colorMap} />
-      <CornerBorder theme={theme} corner="right" cornerHeight={cornerHeight} placeholderSize={placeholderSize} colorMap={colorMap} />
-      <TouchableWithoutFeedback onPress={handleFocus}>
-        <View style={inputContainerStyles}>
-          {searchIcon ? (
-            <View style={prefixStyles}>
-              <AntDesignIcon name="search1" color={theme.iconDeactivated} size={theme.rem(1)} />
-            </View>
-          ) : null}
-          <TextInput
-            {...inputProps}
-            ref={inputRef}
-            style={inputStyles}
-            pointerEvents="auto"
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onChangeText={handleChangeText}
-            selectionColor={hasError ? errorColor : activeColor}
-            placeholder=""
-            value={value}
-          />
-          {clearIcon && isFocused() && (
-            <View style={suffixStyles}>
-              <TouchableOpacity onPress={clearText} style={styles.clearContainer}>
-                <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />
-              </TouchableOpacity>
-            </View>
-          )}
+    <TouchableWithoutFeedback onPress={() => focus()}>
+      <View style={[styles.container, containerStyle]}>
+        <Animated.View style={[styles.bottomLine, bottomStyle]} />
+        <Animated.View style={[styles.leftCap, leftStyle]} />
+        <Animated.View style={[styles.rightCap, rightStyle]} />
+        <Animated.View style={[styles.topLine, topStyle]} />
+        <View style={[styles.labelContainer, containerPadding]}>
+          <Animated.Text numberOfLines={1} style={[styles.labelText, labelStyle]} onLayout={handleLabelLayout}>
+            {label}
+          </Animated.Text>
         </View>
-      </TouchableWithoutFeedback>
-
-      <Animated.View style={[...placeholderSpacerPaddingStyles, animatedPlaceholderSpacerStyles]} />
-      <Animated.View style={placeholderStyle} onLayout={handlePlaceholderLayout} pointerEvents="none">
-        <Animated.Text style={[...placeholderTextStyles, animatedPlaceholderTextStyles]}>{placeholder}</Animated.Text>
-      </Animated.View>
-      {hasError ? <Text style={styles.errorText}>{error}</Text> : null}
-    </Animated.View>
+        <Animated.Text numberOfLines={1} style={[styles.errorText, errorStyle]}>
+          {error}
+        </Animated.Text>
+        {!searchIcon ? null : <AntDesignIcon name="search1" style={styles.searchIcon} />}
+        {!clearIcon || !hasValue ? null : (
+          <TouchableOpacity style={styles.clearTapArea} onPress={() => clear()}>
+            <AntDesignIcon name="close" style={styles.clearIcon} />
+          </TouchableOpacity>
+        )}
+        <TextInput
+          ref={inputRef}
+          {...inputProps}
+          multiline={multiline}
+          selectionColor={hasError ? theme.dangerText : theme.primaryText}
+          style={[styles.textInput, textInputStyle]}
+          textAlignVertical="top"
+          value={value}
+          // Callbacks:
+          onBlur={handleBlur}
+          onChangeText={onChangeText}
+          onFocus={handleFocus}
+        />
+      </View>
+    </TouchableWithoutFeedback>
   )
 })
 
-// return depended on size styles and values
-const getSizeStyles = (theme: Theme, searchIcon: boolean = true) => {
-  const styles = getStyles(theme)
-  const inactiveColor = theme.secondaryText
-  const activeColor = theme.iconTappable
-  const errorColor = theme.dangerText
-  const fontSize = theme.rem(FONT_SIZE)
-  const placeholderSpacerAdjust = theme.rem(2.25) - 1
-  const placeholderScale = 0.7
-  const placeholderSizeScale = 0.2
-  const paddingVertical = theme.rem(PADDING_VERTICAL)
-  let hintLeftMargin = -theme.rem(0.25)
-  const inputStyles: TextStyle[] = [styles.input]
-  const placeholderTextStyles: TextStyle[] = [styles.placeholderText]
-  const placeholderPaddingStyles: TextStyle[] = [styles.placeholder]
-  const placeholderSpacerPaddingStyles: ViewStyle[] = [styles.placeholderSpacer]
-  const inputContainerStyles: ViewStyle[] = [styles.inputContainer]
-  const prefixStyles = [styles.prefix]
-  const suffixStyles = [styles.suffix]
-  if (searchIcon) {
-    placeholderPaddingStyles.push(styles.placeholderWithPrefix)
-    hintLeftMargin = theme.rem(2.25)
+const getStyles = cacheStyles(theme => {
+  // A top or bottom line in the border puzzle:
+  const commonLine = {
+    borderTopWidth: theme.thinLineWidth,
+    position: 'absolute',
+    left: theme.rem(1),
+    right: theme.rem(1)
+  }
+
+  // A left or right C-shape in the border puzzle:
+  const commonCap = {
+    borderBottomWidth: theme.thinLineWidth,
+    borderTopWidth: theme.thinLineWidth,
+    position: 'absolute',
+    bottom: 0,
+    top: 0,
+    width: theme.rem(1)
   }
 
   return {
-    inactiveColor,
-    activeColor,
-    errorColor,
-    fontSize,
-    placeholderSpacerAdjust,
-    placeholderScale,
-    placeholderSizeScale,
-    paddingVertical,
-    inputStyles,
-    placeholderTextStyles,
-    placeholderPaddingStyles,
-    placeholderSpacerPaddingStyles,
-    inputContainerStyles,
-    prefixStyles,
-    suffixStyles,
-    hintLeftMargin
-  }
-}
+    // Provides a layout container for the text input:
+    container: {
+      justifyContent: 'center',
+      minHeight: theme.rem(3),
+      paddingHorizontal: theme.rem(1)
+    },
 
-const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    borderBottomWidth: theme.thinLineWidth,
-    borderLeftWidth: theme.thinLineWidth,
-    borderRightWidth: theme.thinLineWidth,
-    borderRadius: theme.rem(0.5),
-    alignSelf: 'stretch',
-    flexDirection: 'row',
-    backgroundColor: 'transparent'
-  },
-  cornerLeft: {
-    borderTopWidth: theme.thinLineWidth,
-    borderLeftWidth: theme.thinLineWidth,
-    borderBottomWidth: 0,
-    borderRightWidth: 0,
-    borderTopLeftRadius: theme.rem(0.5),
-    borderBottomLeftRadius: theme.rem(0.5),
-    position: 'absolute',
-    left: -theme.thinLineWidth,
-    top: -theme.thinLineWidth,
-    width: theme.rem(1),
-    height: '100%'
-  },
-  cornerRight: {
-    borderTopWidth: theme.thinLineWidth,
-    borderRightWidth: theme.thinLineWidth,
-    borderBottomWidth: 0,
-    borderLeftWidth: 0,
-    borderTopRightRadius: theme.rem(0.5),
-    borderBottomRightRadius: theme.rem(0.5),
-    position: 'absolute',
-    right: -theme.thinLineWidth,
-    top: -theme.thinLineWidth,
-    width: theme.rem(1),
-    height: '100%'
-  },
-  inputContainer: {
-    flex: 1,
-    paddingVertical: theme.rem(PADDING_VERTICAL),
-    paddingHorizontal: theme.rem(1),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  inputContainerSmall: {
-    paddingVertical: theme.rem(PADDING_VERTICAL_SMALL),
-    paddingHorizontal: theme.rem(0.75)
-  },
-  prefixPadding: {
-    paddingLeft: theme.rem(2)
-  },
-  suffixPadding: {
-    paddingRight: theme.rem(2)
-  },
-  input: {
-    flex: 1,
-    fontSize: theme.rem(FONT_SIZE),
-    fontFamily: theme.fontFaceDefault,
-    paddingVertical: 0,
-    color: theme.primaryText
-  },
-  inputSmall: {
-    fontSize: theme.rem(FONT_SIZE_SMALL)
-  },
-  prefixSmall: {
-    marginRight: theme.rem(0.5)
-  },
-  suffixSmall: {
-    marginLeft: theme.rem(0.5)
-  },
-  prefix: {
-    marginRight: theme.rem(0.75)
-  },
-  suffix: {
-    marginLeft: theme.rem(0.75)
-  },
-  placeholder: {
-    position: 'absolute',
-    top: theme.rem(PADDING_VERTICAL),
-    left: theme.rem(1)
-  },
-  placeholderWithPrefix: {
-    left: theme.rem(2.75)
-  },
-  placeholderSmall: {
-    top: theme.rem(PADDING_VERTICAL_SMALL),
-    left: theme.rem(0.75)
-  },
-  placeholderSmallWithPrefix: {
-    left: theme.rem(2.25)
-  },
-  placeholderText: {
-    fontSize: theme.rem(FONT_SIZE),
-    fontFamily: theme.fontFaceDefault
-  },
-  placeholderTextSmall: {
-    fontSize: theme.rem(FONT_SIZE_SMALL)
-  },
-  placeholderSpacer: {
-    position: 'absolute',
-    top: -theme.thinLineWidth,
-    right: theme.rem(0.5),
-    height: theme.thinLineWidth,
-    width: '85%'
-  },
-  placeholderSpacerSmall: {
-    right: theme.rem(0.625)
-  },
-  errorText: {
-    position: 'absolute',
-    color: theme.dangerText,
-    fontSize: theme.rem(0.5),
-    fontFamily: theme.fontFaceDefault,
-    bottom: -theme.rem(0.5) - theme.rem(0.25),
-    left: theme.rem(0.75)
-  },
-  clearContainer: {
-    paddingTop: theme.rem(0.125)
+    // Provides a layout container for the placeholder label:
+    labelContainer: {
+      height: theme.rem(3),
+      justifyContent: 'center',
+      paddingHorizontal: theme.rem(1),
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0
+    },
+
+    // The text input and placeholder label both float
+    // in their respective containers, allowing React to center them:
+    labelText: {
+      alignSelf: 'flex-start',
+      fontFamily: theme.fontFaceDefault,
+      fontSize: theme.rem(1),
+      padding: 0
+    },
+    textInput: {
+      alignSelf: 'stretch',
+      color: theme.primaryText,
+      fontFamily: theme.fontFaceDefault,
+      fontSize: theme.rem(1),
+      padding: 0
+    },
+
+    // We render our border in four pieces, so we can animate the top gap:
+    bottomLine: {
+      ...commonLine,
+      bottom: 0
+    },
+    topLine: {
+      ...commonLine,
+      top: 0
+    },
+    leftCap: {
+      ...commonCap,
+      borderLeftWidth: theme.thinLineWidth,
+      borderRightWidth: 0,
+      borderBottomLeftRadius: theme.rem(0.5),
+      borderTopLeftRadius: theme.rem(0.5),
+      left: 0
+    },
+    rightCap: {
+      ...commonCap,
+      borderLeftWidth: 0,
+      borderRightWidth: theme.thinLineWidth,
+      borderBottomRightRadius: theme.rem(0.5),
+      borderTopRightRadius: theme.rem(0.5),
+      right: 0
+    },
+
+    // Icons:
+    searchIcon: {
+      color: theme.iconDeactivated,
+      fontSize: theme.rem(1),
+      padding: theme.rem(1),
+      position: 'absolute',
+      left: 0,
+      top: 0
+    },
+    clearTapArea: {
+      position: 'absolute',
+      right: 0,
+      top: 0
+    },
+    clearIcon: {
+      color: theme.iconDeactivated,
+      fontSize: theme.rem(1),
+      padding: theme.rem(1)
+    },
+
+    // The error text hangs out in the margin area below the main box:
+    errorText: {
+      color: theme.dangerText,
+      fontFamily: theme.fontFaceDefault,
+      fontSize: theme.rem(0.75),
+      position: 'absolute',
+      bottom: -theme.rem(0.875),
+      left: theme.rem(0.75)
+    }
   }
-}))
+})
 
 export const OutlinedTextInput: Class<OutlinedTextInputRef> = OutlinedTextInputComponent
