@@ -1,6 +1,5 @@
 // @flow
 
-import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView, Text } from 'react-native'
 
@@ -8,6 +7,7 @@ import { disableCustomNodes, enableCustomNodes, saveCustomNodesList, setDenomina
 import s from '../../locales/strings.js'
 import { getDenominations, getDisplayDenominationKey } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
+import { type RouteProp } from '../../types/routerTypes.js'
 import type { GuiDenomination } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { SetCustomNodesModal } from '../modals/SetCustomNodesModal.ui.js'
@@ -17,9 +17,8 @@ import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 
-type NavigationProps = {
-  // eslint-disable-next-line react/no-unused-prop-types
-  currencyInfo: EdgeCurrencyInfo
+type OwnProps = {
+  route: RouteProp<'currencySettings'>
 }
 type StateProps = {
   denominations: GuiDenomination[],
@@ -34,7 +33,7 @@ type DispatchProps = {
   saveCustomNodesList: (nodes: string[]) => void,
   selectDenomination: (denominationKey: string) => void
 }
-type Props = NavigationProps & StateProps & DispatchProps & ThemeProps
+type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 type State = {
   isSetCustomNodesModalVisible: boolean,
@@ -142,9 +141,10 @@ export class CurrencySettingsComponent extends React.Component<Props, State> {
   }
 }
 
-export const CurrencySettingsScene = connect<StateProps, DispatchProps, NavigationProps>(
+export const CurrencySettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   (state, ownProps) => {
-    const { currencyInfo } = ownProps
+    const { route } = ownProps
+    const { currencyInfo } = route.params
     const { currencyCode, defaultSettings, pluginId } = currencyInfo
 
     const { account } = state.core
@@ -162,16 +162,16 @@ export const CurrencySettingsScene = connect<StateProps, DispatchProps, Navigati
   },
   (dispatch, ownProps) => ({
     disableCustomNodes() {
-      dispatch(disableCustomNodes(ownProps.currencyInfo.currencyCode))
+      dispatch(disableCustomNodes(ownProps.route.params.currencyInfo.currencyCode))
     },
     enableCustomNodes() {
-      dispatch(enableCustomNodes(ownProps.currencyInfo.currencyCode))
+      dispatch(enableCustomNodes(ownProps.route.params.currencyInfo.currencyCode))
     },
     selectDenomination(denominationKey) {
-      dispatch(setDenominationKeyRequest(ownProps.currencyInfo.currencyCode, denominationKey))
+      dispatch(setDenominationKeyRequest(ownProps.route.params.currencyInfo.currencyCode, denominationKey))
     },
     saveCustomNodesList(nodesList: string[]) {
-      dispatch(saveCustomNodesList(ownProps.currencyInfo.currencyCode, nodesList))
+      dispatch(saveCustomNodesList(ownProps.route.params.currencyInfo.currencyCode, nodesList))
     }
   })
 )(withTheme(CurrencySettingsComponent))
