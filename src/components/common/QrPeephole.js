@@ -22,11 +22,6 @@ const Component = (props: Props) => {
   const cornerLegroom = 15
   const strokeWidth = 6
 
-  // Gradient
-  const fillColor = theme.cameraOverlay
-  const gradientEdgeOpacity = '1'
-  const gradientCenterOpacity = '0.4'
-
   // Colors
   const highlightColor = theme.iconTappable
 
@@ -41,10 +36,10 @@ const Component = (props: Props) => {
 
       <Defs>
         <LinearGradient id="Gradient" x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor={fillColor} stopOpacity={gradientEdgeOpacity} />
-          <Stop offset="0.2" stopColor={fillColor} stopOpacity={gradientCenterOpacity} />
-          <Stop offset="0.8" stopColor={fillColor} stopOpacity={gradientCenterOpacity} />
-          <Stop offset="1" stopColor={fillColor} stopOpacity={gradientEdgeOpacity} />
+          <Stop offset="0" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpStart} />
+          <Stop offset="0.2" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpEnd} />
+          <Stop offset="0.8" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpEnd} />
+          <Stop offset="1" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpStart} />
         </LinearGradient>
         <Mask id="Mask" maskUnits="userSpaceOnUse" x="0" y="0" width={width} height={height}>
           <Rect x="0" y="0" width={width} height={height} fill="white" />
