@@ -570,7 +570,6 @@ Object {
       "ZRX": Object {
         "denomination": "1000000000000000000",
       },
-      "account": null,
       "autoLogoutTimeInSeconds": 3600,
       "bluetoothMode": false,
       "changesLocked": true,
