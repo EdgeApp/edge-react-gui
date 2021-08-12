@@ -1,16 +1,13 @@
 // @flow
 
 import * as React from 'react'
-import { Alert, FlatList, Image, View } from 'react-native'
+import { FlatList, Image, View } from 'react-native'
 
 import { FIAT_COUNTRY } from '../../constants/CountryConstants'
-import { CREATE_WALLET_ACCOUNT_SETUP, CREATE_WALLET_NAME } from '../../constants/SceneKeys.js'
-import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
-import type { CreateWalletType, FlatListItem, GuiFiatType } from '../../types/types.js'
+import type { FlatListItem, GuiFiatType } from '../../types/types.js'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -19,8 +16,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
 type OwnProps = {
-  selectedWalletType: CreateWalletType,
-  cleanedPrivateKey?: string
+  onNext: (isValidFiatType: boolean, selectedFiat: GuiFiatType) => void
 }
 type StateProps = {
   supportedFiats: GuiFiatType[]
@@ -58,26 +54,8 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     return this.props.supportedFiats[fiatTypeIndex]
   }
 
-  onNext = () => {
-    const { cleanedPrivateKey, selectedWalletType } = this.props
-    if (this.isValidFiatType()) {
-      // check if account-based or not
-      const specialCurrencyInfo = getSpecialCurrencyInfo(selectedWalletType.currencyCode)
-      // check if eos-like
-      let nextSceneKey = CREATE_WALLET_NAME
-      if (!specialCurrencyInfo.needsAccountNameSetup || cleanedPrivateKey) {
-        nextSceneKey = CREATE_WALLET_NAME
-      } else {
-        nextSceneKey = CREATE_WALLET_ACCOUNT_SETUP
-      }
-      Actions.push(nextSceneKey, {
-        selectedWalletType: selectedWalletType,
-        selectedFiat: this.getFiatType(this.state.selectedFiat),
-        cleanedPrivateKey
-      })
-    } else {
-      Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_fiat)
-    }
+  handleNext = () => {
+    this.props.onNext(this.isValidFiatType(), this.getFiatType(this.state.selectedFiat))
   }
 
   handleSearchTermChange = (searchTerm: string) => {
@@ -94,7 +72,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
         {
           selectedFiat: selectedFiat.value
         },
-        this.onNext
+        this.handleNext
       )
     }
   }
@@ -198,7 +176,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CreateWalletSelectFiatScene = connect<StateProps, {}, OwnProps>(
+export const SelectFiatScene = connect<StateProps, {}, OwnProps>(
   state => ({
     supportedFiats: getSupportedFiats(getDefaultFiat(state))
   }),

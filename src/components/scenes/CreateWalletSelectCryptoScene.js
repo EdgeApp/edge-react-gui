@@ -9,8 +9,9 @@ import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/W
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
-import { type CreateWalletType, type FlatListItem } from '../../types/types.js'
+import type { CreateWalletType, FlatListItem, GuiFiatType } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
+import { сreateWalletSelectFiatNextHandler } from '../../util/scene/сreateWalletSelectFiatNextHandler'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
@@ -45,6 +46,14 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     return getCreateWalletTypes(account).find(type => type.walletType === walletType)
   }
 
+  selectFiatNextHandler = (isValidFiatType: boolean, selectedFiat: GuiFiatType) => {
+    const createWalletType = this.getWalletType(this.state.selectedWalletType)
+
+    if (createWalletType == null) return
+
+    сreateWalletSelectFiatNextHandler(isValidFiatType, selectedFiat, createWalletType)
+  }
+
   onNext = () => {
     const { selectedWalletType } = this.state
 
@@ -66,7 +75,7 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
       })
     } else {
       Actions.push(CREATE_WALLET_SELECT_FIAT, {
-        selectedWalletType: createWalletType
+        onNext: this.selectFiatNextHandler
       })
     }
   }

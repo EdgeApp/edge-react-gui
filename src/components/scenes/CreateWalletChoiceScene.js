@@ -14,25 +14,28 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { Actions } from '../../types/routerTypes.js'
-import { type CreateWalletType } from '../../types/types.js'
+import type { CreateWalletType, GuiFiatType } from '../../types/types'
 import { scale } from '../../util/scaling.js'
+import { сreateWalletSelectFiatNextHandler } from '../../util/scene/сreateWalletSelectFiatNextHandler'
 
 type CreateWalletChoiceProps = {
   selectedWalletType: CreateWalletType
 }
 
 export class CreateWalletChoiceComponent extends React.PureComponent<CreateWalletChoiceProps> {
+  selectFiatNextHandler = (isValidFiatType: boolean, selectedFiat: GuiFiatType) => {
+    сreateWalletSelectFiatNextHandler(isValidFiatType, selectedFiat, this.props.selectedWalletType)
+  }
+
   onSelectNew = () => {
-    const { selectedWalletType } = this.props
     Actions.push(CREATE_WALLET_SELECT_FIAT, {
-      selectedWalletType
+      onNext: this.selectFiatNextHandler
     })
   }
 
   onSelectRestore = () => {
-    const { selectedWalletType } = this.props
     Actions.push(CREATE_WALLET_IMPORT, {
-      selectedWalletType
+      onNext: this.selectFiatNextHandler
     })
   }
 
