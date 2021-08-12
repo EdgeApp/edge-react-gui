@@ -3,7 +3,6 @@
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, View } from 'react-native'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
@@ -18,7 +17,7 @@ import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
 import { EdgeText } from '../themed/EdgeText.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow'
-import { SettingsRow } from '../themed/SettingsRow.js'
+import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
 type StateProps = {
   fioWallets: EdgeCurrencyWallet[]
@@ -107,14 +106,7 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
       displayName = <EdgeText style={styles.settingsText}>{s.strings.fio_address_details_screen_manage_account_settings}</EdgeText>
     }
 
-    return (
-      <SettingsRow
-        icon={icon}
-        text={displayName}
-        onPress={this._onPressAccountSettings}
-        right={<AntDesignIcon name="right" color={theme.icon} size={theme.rem(1)} />}
-      />
-    )
+    return <SettingsTappableRow icon={icon} text={displayName} onPress={this._onPressAccountSettings} />
   }
 
   render() {

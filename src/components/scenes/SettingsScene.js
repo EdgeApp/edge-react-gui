@@ -48,6 +48,7 @@ import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
+import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
 type StateProps = {
   account: EdgeAccount,
@@ -220,8 +221,6 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     }
     const autoLogoutRightText = autoLogout.value === 0 ? s.strings.string_disable : `${autoLogout.value} ${timeStrings[autoLogout.measurement]}`
 
-    const rightArrow = <AntDesignIcon color={theme.icon} name="right" size={theme.rem(1)} />
-
     return (
       <SceneWrapper background="theme" hasTabs={false}>
         <ScrollView>
@@ -234,19 +233,14 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             text={isLocked ? s.strings.settings_button_unlock_settings : s.strings.settings_button_lock_settings}
             onPress={this.handleUnlock}
           />
-          <SettingsRow disabled={this.props.isLocked} right={rightArrow} text={s.strings.settings_button_change_password} onPress={this.handleChangePassword} />
-          <SettingsRow disabled={this.props.isLocked} right={rightArrow} text={s.strings.settings_button_pin} onPress={this.handleChangePin} />
-          <SettingsRow disabled={this.props.isLocked} right={rightArrow} text={s.strings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
-          <SettingsRow
-            disabled={this.props.isLocked}
-            right={rightArrow}
-            text={s.strings.settings_button_password_recovery}
-            onPress={this.handleChangeRecovery}
-          />
+          <SettingsTappableRow disabled={this.props.isLocked} text={s.strings.settings_button_change_password} onPress={this.handleChangePassword} />
+          <SettingsTappableRow disabled={this.props.isLocked} text={s.strings.settings_button_pin} onPress={this.handleChangePin} />
+          <SettingsTappableRow disabled={this.props.isLocked} text={s.strings.settings_button_setup_two_factor} onPress={this.handleChangeOtp} />
+          <SettingsTappableRow disabled={this.props.isLocked} text={s.strings.settings_button_password_recovery} onPress={this.handleChangeRecovery} />
 
           <SettingsHeaderRow icon={<IonIcon color={theme.icon} name="ios-options" size={iconSize} />} text={s.strings.settings_options_title_cap} />
-          <SettingsRow right={rightArrow} text={s.strings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
-          <SettingsRow right={rightArrow} text={s.strings.spending_limits} onPress={this.handleSpendingLimits} />
+          <SettingsTappableRow text={s.strings.settings_exchange_settings} onPress={this.handleExchangeSettings} />
+          <SettingsTappableRow text={s.strings.spending_limits} onPress={this.handleSpendingLimits} />
           <SettingsLabelRow right={autoLogoutRightText} text={s.strings.settings_title_auto_logoff} onPress={this.handleAutoLogout} />
           <SettingsLabelRow right={this.props.defaultFiat.replace('iso:', '')} text={s.strings.settings_title_currency} onPress={this.handleDefaultFiat} />
 
@@ -255,7 +249,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             <SettingsSwitchRow key="useTouchID" text={this.state.touchIdText} value={this.props.touchIdEnabled} onPress={this.handleTouchIdToggle} />
           )}
 
-          <SettingsRow right={rightArrow} text={s.strings.settings_notifications} onPress={this.handleNotificationSettings} />
+          <SettingsTappableRow text={s.strings.settings_notifications} onPress={this.handleNotificationSettings} />
           {CURRENCY_SETTINGS_KEYS.map(pluginId => {
             if (account.currencyConfig[pluginId] == null) return null
             const { currencyInfo } = account.currencyConfig[pluginId]
@@ -267,10 +261,10 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
                 currencyInfo
               })
 
-            return <SettingsRow key={pluginId} icon={icon} right={rightArrow} text={displayName} onPress={onPress} />
+            return <SettingsTappableRow key={pluginId} icon={icon} text={displayName} onPress={onPress} />
           })}
 
-          <SettingsRow right={rightArrow} text={s.strings.title_promotion_settings} onPress={this.handlePromotionSettings} />
+          <SettingsTappableRow text={s.strings.title_promotion_settings} onPress={this.handlePromotionSettings} />
           <SettingsSwitchRow
             key="developerMode"
             text={s.strings.settings_developer_mode}
@@ -280,8 +274,8 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
           {this.props.developerModeOn && (
             <SettingsSwitchRow key="darkTheme" text={s.strings.settings_dark_theme} value={this.state.darkTheme} onPress={this.handleDarkThemeToggle} />
           )}
-          <SettingsRow text={s.strings.restore_wallets_modal_title} onPress={this.props.showRestoreWalletsModal} />
-          <SettingsRow right={rightArrow} text={s.strings.title_terms_of_service} onPress={this.handleTermsOfService} />
+          <SettingsTappableRow text={s.strings.restore_wallets_modal_title} onPress={this.props.showRestoreWalletsModal} />
+          <SettingsTappableRow text={s.strings.title_terms_of_service} onPress={this.handleTermsOfService} />
           <SettingsSwitchRow
             key="verboseLogging"
             text={s.strings.settings_verbose_logging}

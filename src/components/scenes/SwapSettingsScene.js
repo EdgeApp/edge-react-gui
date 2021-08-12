@@ -20,6 +20,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
+import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
 type DispatchProps = {
   changePreferredSwapPlugin: (pluginId: string | void) => void,
@@ -139,21 +140,7 @@ export class SwapSettings extends React.Component<Props, State> {
     const pluginId = activePlugins.preferredSwapPluginId
     const { swapSource } = activePlugins
 
-    // Pick the instructions format:
-    const { instructions, handlePress, right } =
-      swapSource.type === 'promotion'
-        ? {
-            instructions: s.strings.swap_preferred_promo_instructions,
-            handlePress: () => this.props.removePromotion(swapSource.installerId),
-            right: <AntDesignIcon name="close" color={theme.icon} size={iconSize} style={styles.swapIcon} />
-          }
-        : {
-            instructions: s.strings.swap_preferred_instructions,
-            handlePress: this.handlePreferredModal,
-            right: <AntDesignIcon name="right" color={theme.iconTappable} size={iconSize} style={styles.swapIcon} />
-          }
-
-    // Pick the selection row:
+    // Pick the plugin description:
     const { text, icon } =
       pluginId != null && exchanges[pluginId] != null
         ? {
@@ -165,13 +152,29 @@ export class SwapSettings extends React.Component<Props, State> {
             icon: <AntDesignIcon name="barschart" color={theme.icon} size={iconSize} style={styles.swapIcon} />
           }
 
+    // If a promo controls the swap plugin, provide a disable option:
+    if (swapSource.type === 'promotion') {
+      return (
+        <>
+          <View style={styles.instructionArea}>
+            <Text style={styles.instructionText}>{s.strings.swap_preferred_promo_instructions}</Text>
+          </View>
+          <SettingsRow
+            icon={icon}
+            text={text}
+            onPress={() => this.props.removePromotion(swapSource.installerId)}
+            right={<AntDesignIcon name="close" color={theme.iconTappable} size={iconSize} style={styles.swapIcon} />}
+          />
+        </>
+      )
+    }
+
     return (
       <>
         <View style={styles.instructionArea}>
-          <Text style={styles.instructionText}>{instructions}</Text>
+          <Text style={styles.instructionText}>{s.strings.swap_preferred_instructions}</Text>
         </View>
-
-        <SettingsRow icon={icon} text={text} onPress={handlePress} right={right} />
+        <SettingsTappableRow icon={icon} text={text} onPress={this.handlePreferredModal} />
       </>
     )
   }

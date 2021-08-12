@@ -238,20 +238,22 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -306,20 +308,22 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -374,20 +378,22 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -442,20 +448,22 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -578,20 +586,22 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -646,20 +656,22 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -902,20 +914,22 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -970,20 +984,22 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -1166,6 +1182,36 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             >
               Restore Wallets
             </Text>
+            <View
+              style={
+                Object {
+                  "paddingLeft": 17,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": "#66EDA8",
+                      "fontSize": 22,
+                    },
+                    undefined,
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
           </View>
         </View>
         <View
@@ -1218,20 +1264,22 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -1597,20 +1645,22 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -1665,20 +1715,22 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -1733,20 +1785,22 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -1801,20 +1855,22 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -1937,20 +1993,22 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -2005,20 +2063,22 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -2261,20 +2321,22 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -2329,20 +2391,22 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
@@ -2525,6 +2589,36 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             >
               Restore Wallets
             </Text>
+            <View
+              style={
+                Object {
+                  "paddingLeft": 17,
+                }
+              }
+            >
+              <Text
+                allowFontScaling={false}
+                style={
+                  Array [
+                    Object {
+                      "color": "#66EDA8",
+                      "fontSize": 22,
+                    },
+                    undefined,
+                    Object {
+                      "fontFamily": "FontAwesome5Free-Solid",
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                    },
+                    Object {
+                      "fontWeight": "900",
+                    },
+                  ]
+                }
+              >
+                
+              </Text>
+            </View>
           </View>
         </View>
         <View
@@ -2577,20 +2671,22 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 style={
                   Array [
                     Object {
-                      "color": "#FFFFFF",
+                      "color": "#66EDA8",
                       "fontSize": 22,
                     },
                     undefined,
                     Object {
-                      "fontFamily": "anticon",
+                      "fontFamily": "FontAwesome5Free-Solid",
                       "fontStyle": "normal",
                       "fontWeight": "normal",
                     },
-                    Object {},
+                    Object {
+                      "fontWeight": "900",
+                    },
                   ]
                 }
               >
-                
+                
               </Text>
             </View>
           </View>
