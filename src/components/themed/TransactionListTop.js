@@ -18,7 +18,7 @@ import { type WalletListResult, WalletListModal } from '../modals/WalletListModa
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
-import { OutlinedTextInput } from './OutlinedTextInput.js'
+import { type OutlinedTextInputRef, OutlinedTextInput } from './OutlinedTextInput.js'
 import { SceneHeader } from './SceneHeader'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
@@ -53,7 +53,7 @@ type State = {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class TransactionListTopComponent extends React.PureComponent<Props, State> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)

@@ -9,7 +9,7 @@ import { Fontello } from '../../../assets/vector'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../../../components/services/ThemeContext'
 import { EdgeText } from '../../../components/themed/EdgeText'
 import { ModalCloseArrow, ModalTitle } from '../../../components/themed/ModalParts.js'
-import { OutlinedTextInput } from '../../../components/themed/OutlinedTextInput.js'
+import { type OutlinedTextInputRef, OutlinedTextInput } from '../../../components/themed/OutlinedTextInput.js'
 import { ClickableText } from '../../../components/themed/ThemedButtons'
 import { ThemedModal } from '../../../components/themed/ThemedModal.js'
 import { FIO_DOMAIN_REGISTER } from '../../../constants/SceneKeys.js'
@@ -53,7 +53,7 @@ const newDomainItem = {
 }
 
 class DomainListModalComponent extends React.Component<Props, State> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
   constructor(props: Props) {
     super(props)
     this.state = {

@@ -13,7 +13,7 @@ import { type CreateWalletType, type FlatListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
+import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
@@ -29,7 +29,7 @@ type State = {
 }
 
 class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)

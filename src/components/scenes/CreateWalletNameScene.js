@@ -10,7 +10,7 @@ import { Actions } from '../../types/routerTypes.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { MainButton } from '../themed/MainButton.js'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
+import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 
 export type CreateWalletNameOwnProps = {
@@ -25,7 +25,7 @@ type State = {
 }
 
 export class CreateWalletName extends React.Component<Props, State> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)

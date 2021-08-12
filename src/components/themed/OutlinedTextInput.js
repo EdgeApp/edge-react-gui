@@ -42,6 +42,7 @@ type Props = {|
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters',
   autoCorrect?: boolean,
   autoFocus?: boolean,
+  blurOnSubmit?: boolean,
   inputAccessoryViewID?: string,
   keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad',
   maxLength?: number,
@@ -51,6 +52,18 @@ type Props = {|
   testID?: string,
   value?: string
 |}
+
+/**
+ * Type definitions for our static methods.
+ * Create a ref object using `useRef<OutlinedTextInputRef>(null)` or
+ * `const ref: { current: OutlinedTextInputRef | null } = createRef()`
+ */
+declare export class OutlinedTextInputRef extends React.Component<Props> {
+  focus: () => void;
+  blur: () => void;
+  isFocused: () => boolean;
+  clear: () => void;
+}
 
 type CornerBorderProps = {
   theme: Theme,
@@ -485,4 +498,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const OutlinedTextInput = OutlinedTextInputComponent
+export const OutlinedTextInput: Class<OutlinedTextInputRef> = OutlinedTextInputComponent

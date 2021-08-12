@@ -19,7 +19,7 @@ import type { FioAddress, FlatListItem } from '../../types/types.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
+import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type OwnProps = {
@@ -60,7 +60,7 @@ type Props = StateProps & OwnProps & DispatchProps & ThemeProps
 
 class AddressModalComponent extends React.Component<Props, State> {
   fioCheckQueue: number = 0
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)

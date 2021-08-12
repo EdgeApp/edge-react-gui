@@ -10,7 +10,7 @@ import s from '../../locales/strings.js'
 import type { CountryData } from '../../types/types'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts'
-import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
+import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SelectableRow } from '../themed/SelectableRow'
 import { ThemedModal } from '../themed/ThemedModal'
 
@@ -28,7 +28,7 @@ type CountrySelectionModalState = {
 type Props = CountrySelectionModalProps & ThemeProps
 
 class CountrySelectionModalComponent extends React.Component<Props, CountrySelectionModalState> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
   constructor(props: Props) {
     super(props)
     const deviceCountry = getCountry() // "US"

@@ -31,8 +31,6 @@ type State = {
 type Props = OwnProps
 
 export class WalletListModal extends React.PureComponent<Props, State> {
-  textInput = React.createRef()
-
   constructor(props: Props) {
     super(props)
     this.state = { search: '', searching: false }
@@ -60,7 +58,6 @@ export class WalletListModal extends React.PureComponent<Props, State> {
           onChangeText={this.handleChangeSearchInput}
           onFocus={this.handleTextFieldFocus}
           onBlur={this.handleTextFieldBlur}
-          ref={this.textInput}
           isClearable={searching}
           onClear={this.handleClearText}
           value={search}
