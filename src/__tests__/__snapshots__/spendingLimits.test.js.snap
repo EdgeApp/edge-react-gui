@@ -2,6 +2,7 @@
 
 exports[`spendingLimits from spending limits scene should disable 1`] = `
 Object {
+  "pluginLimits": Object {},
   "transaction": Object {
     "amount": 234,
     "isEnabled": false,
@@ -11,6 +12,7 @@ Object {
 
 exports[`spendingLimits from spending limits scene should enable 1`] = `
 Object {
+  "pluginLimits": Object {},
   "transaction": Object {
     "amount": 234,
     "isEnabled": true,
@@ -20,6 +22,7 @@ Object {
 
 exports[`spendingLimits should render initialState 1`] = `
 Object {
+  "pluginLimits": Object {},
   "transaction": Object {
     "amount": 0,
     "isEnabled": false,
@@ -29,6 +32,7 @@ Object {
 
 exports[`spendingLimits when logging in should update 1`] = `
 Object {
+  "pluginLimits": Object {},
   "transaction": Object {
     "amount": 150,
     "isEnabled": false,

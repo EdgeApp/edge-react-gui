@@ -50,7 +50,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
   // PSEUDO_CODE
   // get spendingLimits
   const spendingLimits = state.ui.settings.spendingLimits
-  const { transaction } = spendingLimits
+  const { transaction, pluginLimits } = spendingLimits
   const previousDefaultIsoFiat = state.ui.settings.defaultIsoFiat
 
   Promise.resolve()
@@ -78,7 +78,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
       }
 
       // update spending limits in account settings
-      ACCOUNT_SETTINGS.setSpendingLimits(account, nextSpendingLimits)
+      ACCOUNT_SETTINGS.setSpendingLimits(account, { ...nextSpendingLimits, pluginLimits })
       // update spending limits in settings
       dispatch({
         type: 'SPENDING_LIMITS/NEW_SPENDING_LIMITS',
