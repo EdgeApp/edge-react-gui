@@ -30,7 +30,8 @@ type OwnProps = {
   title?: string,
   isFioOnly?: boolean,
   useUserFioAddressesOnly?: boolean,
-  checkAddressConnected?: boolean
+  checkAddressConnected?: boolean,
+  showSearchIcon?: boolean
 }
 
 type StateProps = {
@@ -323,7 +324,7 @@ class AddressModalComponent extends React.Component<Props, State> {
 
   render() {
     const { uri, statusLabel, fieldError, filteredFioAddresses, isFocused } = this.state
-    const { title, userFioAddressesLoading } = this.props
+    const { title, userFioAddressesLoading, showSearchIcon = true } = this.props
     const styles = getStyles(this.props.theme)
 
     return (
@@ -350,6 +351,7 @@ class AddressModalComponent extends React.Component<Props, State> {
             ref={this.textInput}
             error={fieldError}
             blurOnSubmit
+            showSearchIcon={showSearchIcon}
           />
           {!userFioAddressesLoading ? (
             <FlatList
