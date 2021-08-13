@@ -1,5 +1,5 @@
 // @flow
-import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type OtpError } from 'edge-core-js'
+import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeMetaToken, type OtpError } from 'edge-core-js'
 import * as Flux from 'react-native-router-flux'
 
 import { type CreateWalletType, type GuiFiatType, type GuiMakeSpendInfo } from './types.js'
@@ -70,7 +70,12 @@ export type ParamList = {
   |},
   defaultFiatSetting: void,
   edgeLogin: void,
-  editToken: {}, // TODO
+  editToken: {|
+    currencyCode: string,
+    metaTokens: EdgeMetaToken[],
+    onDeleteToken(currencyCode: string): void,
+    walletId: string
+  |},
   exchange: void,
   exchangeQuote: {}, // TODO
   exchangeQuoteProcessing: void,
