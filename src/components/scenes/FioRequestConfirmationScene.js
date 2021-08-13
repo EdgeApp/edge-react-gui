@@ -235,7 +235,6 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
         title={s.strings.fio_confirm_request_fio_title}
         subtitle={s.strings.fio_confirm_request_fio_subtitle_to}
         isFioOnly
-        showSearchIcon={false}
       />
     ))
     if (fioAddressTo === null) {
