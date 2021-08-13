@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeGetTransactionsOptions } from 'edge-core-js'
+import type { EdgeGetTransactionsOptions } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, ScrollView } from 'react-native'
 import RNFS from 'react-native-fs'
@@ -12,6 +12,7 @@ import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
+import { type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { DateModal } from '../modals/DateModal.js'
 import { Airship, showActivity, showError } from '../services/AirshipInstance.js'
@@ -30,8 +31,7 @@ type File = {
 }
 
 type OwnProps = {
-  sourceWallet: EdgeCurrencyWallet,
-  currencyCode: string
+  route: RouteProp<'transactionsExport'>
 }
 
 type StateProps = {
@@ -81,9 +81,10 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   render() {
     const { startDate, endDate, isExportCsv, isExportQbo } = this.state
     const { theme } = this.props
+    const { sourceWallet, currencyCode } = this.props.route.params
     const iconSize = theme.rem(1.25)
 
-    const walletName = `${this.props.sourceWallet.name || s.strings.string_no_wallet_name} (${this.props.currencyCode})`
+    const walletName = `${sourceWallet.name || s.strings.string_no_wallet_name} (${currencyCode})`
     const startDateString = formatDate(startDate)
     const endDateString = formatDate(endDate)
     const disabledExport = !isExportQbo && !isExportCsv
@@ -164,7 +165,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 
   pickFileName() {
-    const { sourceWallet, currencyCode } = this.props
+    const { sourceWallet, currencyCode } = this.props.route.params
     const now = new Date()
 
     const walletName = sourceWallet.name != null ? sourceWallet.name : s.strings.string_no_wallet_name
@@ -189,7 +190,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
   async exportFiles(): Promise<void> {
     const { isExportQbo, isExportCsv, startDate, endDate } = this.state
-    const { sourceWallet, currencyCode, multiplier } = this.props
+    const { sourceWallet, currencyCode } = this.props.route.params
+    const { multiplier } = this.props
     const transactionOptions: EdgeGetTransactionsOptions = {
       denomination: multiplier,
       currencyCode,
@@ -203,7 +205,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
     // The non-string result appears to be a bug in the core,
     // which we are relying on to determine if the date range is empty:
-    const csvFile = await showActivity(s.strings.export_transaction_loading, exportTransactionsToCSV(this.props.sourceWallet, transactionOptions))
+    const csvFile = await showActivity(s.strings.export_transaction_loading, exportTransactionsToCSV(sourceWallet, transactionOptions))
     if (typeof csvFile !== 'string' || csvFile === '' || csvFile == null) {
       showError(s.strings.export_transaction_export_error)
       return
@@ -277,7 +279,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
 export const TransactionsExportScene = connect<StateProps, {}, OwnProps>(
   (state, ownProps) => ({
-    multiplier: getDisplayDenomination(state, ownProps.currencyCode).multiplier
+    multiplier: getDisplayDenomination(state, ownProps.route.params.currencyCode).multiplier
   }),
   dispatch => ({})
 )(withTheme(TransactionsExportSceneComponent))

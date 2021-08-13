@@ -10,13 +10,13 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { updateOneSetting } from '../../actions/SettingsActions.js'
 import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/CountryConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
-import { PLUGIN_VIEW } from '../../constants/SceneKeys.js'
+import { PLUGIN_VIEW_DEEP } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
 import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -55,7 +55,7 @@ const pluginPartnerLogos = {
 }
 
 type OwnProps = {
-  direction?: 'buy' | 'sell'
+  route: RouteProp<'pluginView'>
 }
 
 type StateProps = {
@@ -88,13 +88,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   async componentDidMount() {
-    await this.checkDisclaimer()
-    this.checkCountry()
-
+    const { checkDisclaimer, checkCountry, setState } = this
+    await checkDisclaimer()
+    checkCountry()
     const text = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
     if (text != null) {
       const clean = asDeveloperUri(JSON.parse(text))
-      this.setState({ developerUri: clean.uri })
+      setState({ developerUri: clean.uri })
     }
   }
 
@@ -155,12 +155,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
-    const { pluginId, deepQuery } = listRow
+    const { countryCode } = this.props
+    const { pluginId, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
     // Add countryCode
     if (plugin.needsCountryCode) {
-      deepQuery.countryCode = this.props.countryCode
+      deepQuery.countryCode = countryCode
     }
 
     // Grab a custom URI if necessary:
@@ -190,7 +191,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     // Launch!
-    return Actions.push(PLUGIN_VIEW, {
+    return Actions.push(PLUGIN_VIEW_DEEP, {
       plugin,
       deepPath,
       deepQuery
@@ -251,7 +252,9 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, developerModeOn, direction, theme } = this.props
+    const { props } = this
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, theme, route } = props
+    const { direction } = route.params
     const styles = getStyles(theme)
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 

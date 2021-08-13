@@ -7,14 +7,13 @@ import { FIO_ADDRESS_LIST } from '../../constants/SceneKeys.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { type NavigationProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp, Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
 
 export type OwnProps = {
-  fioName: string,
-  expiration: string,
+  route: RouteProp<'fioAddressRegister'>,
   navigation: NavigationProp<'fioAddressRegisterSuccess'>
 }
 
@@ -22,9 +21,10 @@ type Props = OwnProps & ThemeProps
 
 class FioAddressRegistered extends React.Component<Props> {
   componentDidMount() {
-    const { fioName } = this.props
+    const { fioName, expiration } = this.props.route.params
     this.props.navigation.setParams({
-      renderTitle: this.renderTitle(fioName)
+      fioName,
+      expiration
     })
   }
 
@@ -38,7 +38,8 @@ class FioAddressRegistered extends React.Component<Props> {
   }
 
   render() {
-    const { fioName, expiration, theme } = this.props
+    const { theme } = this.props
+    const { fioName, expiration } = this.props.route.params
     const styles = getStyles(theme)
 
     return (

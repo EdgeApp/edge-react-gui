@@ -15,14 +15,14 @@ import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship } from '../services/AirshipInstance'
 
 type OwnProps = {
-  data?: 'sweepPrivateKey' | 'loginQR'
+  route: RouteProp<'scan'>
 }
 
 type StateProps = {
@@ -48,17 +48,19 @@ export const LOGIN_QR = 'loginQR'
 
 export class Scan extends React.Component<Props> {
   componentDidUpdate(prevProps: Props) {
-    if (this.props.data !== prevProps.data && Actions.currentScene !== 'DrawerOpen') {
+    const { data } = this.props.route.params
+    if (data !== prevProps.route.params.data && Actions.currentScene !== 'DrawerOpen') {
       Actions.drawerClose()
     }
   }
 
   render() {
+    const { data } = this.props.route.params
     return (
       <SceneWrapper background="header" hasTabs={false}>
         {this.renderCameraArea()}
         <View style={styles.overlayButtonAreaWrap}>
-          {this.props.data === SWEEP_PRIVATE_KEY && (
+          {data === SWEEP_PRIVATE_KEY && (
             <TouchableHighlight style={styles.bottomButton} onPress={this._onTogglePrivateKeyModal} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
                 <FontAwesome name="edit" style={styles.privateKeyIcon} />
@@ -102,7 +104,8 @@ export class Scan extends React.Component<Props> {
   }
 
   onBarCodeRead = ({ data: scannedData }: { data: string }) => {
-    const { data, loginQrCodeScanned, qrCodeScanned } = this.props
+    const { data } = this.props.route.params
+    const { loginQrCodeScanned, qrCodeScanned } = this.props
     return data === LOGIN_QR ? loginQrCodeScanned(scannedData) : qrCodeScanned(scannedData)
   }
 

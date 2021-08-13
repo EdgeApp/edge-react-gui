@@ -14,7 +14,7 @@ import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types'
 import { emptyCurrencyInfo } from '../../types/types'
 import { DECIMAL_PRECISION, getDenomFromIsoCode } from '../../util/utils'
@@ -24,7 +24,6 @@ import { ButtonsModal } from '../modals/ButtonsModal'
 import { TransactionDetailsNotesInput } from '../modals/TransactionDetailsNotesInput.js'
 import { Airship, showError, showToast } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import type { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
 import { Tile } from '../themed/Tile'
 
 type StateProps = {
@@ -41,11 +40,11 @@ type StateProps = {
   currencyCode: string
 }
 
-type NavigationProps = {
-  amounts: ExchangedFlipInputAmounts
+type OwnProps = {
+  route: RouteProp<'fioRequestConfirmation'>
 }
 
-type Props = StateProps & NavigationProps & ThemeProps
+type Props = StateProps & ThemeProps & OwnProps
 
 type State = {
   loading: boolean,
@@ -104,15 +103,16 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   onConfirm = async () => {
-    const { fioPlugin } = this.props
+    const { fioPlugin, primaryCurrencyInfo, isConnected, publicAddress, chainCode, account } = this.props
+    const { amounts } = this.props.route.params
     const { walletAddresses, fioAddressFrom } = this.state
     const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
 
     if (walletAddress && fioPlugin) {
       const { fioWallet } = walletAddress
-      const val = bns.div(this.props.amounts.nativeAmount, this.props.primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
+      const val = bns.div(amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
       try {
-        if (!this.props.isConnected) {
+        if (!isConnected) {
           showError(s.strings.fio_network_alert_text)
           return
         }
@@ -162,16 +162,16 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
           payerFioAddress: this.state.fioAddressTo,
           payeeFioAddress: this.state.fioAddressFrom,
           payerFioPublicKey: payerPublicKey,
-          payeeTokenPublicAddress: this.props.publicAddress,
+          payeeTokenPublicAddress: publicAddress,
           amount: val,
-          tokenCode: this.props.primaryCurrencyInfo.exchangeCurrencyCode,
-          chainCode: this.props.chainCode || this.props.primaryCurrencyInfo.exchangeCurrencyCode,
+          tokenCode: primaryCurrencyInfo.exchangeCurrencyCode,
+          chainCode: chainCode || primaryCurrencyInfo.exchangeCurrencyCode,
           memo: this.state.memo,
           maxFee: 0
         })
         this.setState({ loading: false })
         showToast(s.strings.fio_request_ok_body)
-        addToFioAddressCache(this.props.account, [this.state.fioAddressTo])
+        addToFioAddressCache(account, [this.state.fioAddressTo])
         Actions.popTo(REQUEST)
       } catch (error) {
         this.setState({ loading: false })
@@ -198,13 +198,13 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   openFioAddressFromModal = async () => {
-    const { fioPlugin } = this.props
+    const { fioPlugin, walletId, currencyCode } = this.props
     const { walletAddresses } = this.state
     const fioAddressFrom = await Airship.show(bridge => (
       <AddressModal
         bridge={bridge}
-        walletId={this.props.walletId}
-        currencyCode={this.props.currencyCode}
+        walletId={walletId}
+        currencyCode={currencyCode}
         title={s.strings.fio_confirm_request_fio_title}
         subtitle={s.strings.fio_confirm_request_fio_subtitle_from}
         useUserFioAddressesOnly
@@ -226,12 +226,14 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   openFioAddressToModal = async () => {
+    const { fioWallets, fioPlugin, walletId, currencyCode } = this.props
+
     this.setState({ settingFioAddressTo: true })
     const fioAddressTo = await Airship.show(bridge => (
       <AddressModal
         bridge={bridge}
-        walletId={this.props.walletId}
-        currencyCode={this.props.currencyCode}
+        walletId={walletId}
+        currencyCode={currencyCode}
         title={s.strings.fio_confirm_request_fio_title}
         subtitle={s.strings.fio_confirm_request_fio_subtitle_to}
         isFioOnly
@@ -239,9 +241,9 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
     ))
     if (fioAddressTo === null) {
       this.showError()
-    } else if (await checkExpiredFioAddress(this.props.fioWallets[0], fioAddressTo ?? '')) {
+    } else if (await checkExpiredFioAddress(fioWallets[0], fioAddressTo ?? '')) {
       this.showError(s.strings.fio_address_expired)
-    } else if (this.props.fioPlugin && !(await this.props.fioPlugin.otherMethods.doesAccountExist(fioAddressTo))) {
+    } else if (fioPlugin && !(await fioPlugin.otherMethods.doesAccountExist(fioAddressTo))) {
       this.showError(`${s.strings.send_fio_request_error_addr_not_exist}${fioAddressTo ? '\n' + fioAddressTo : ''}`)
     } else if (this.state.fioAddressFrom === fioAddressTo) {
       this.showError(s.strings.fio_confirm_request_error_to_same)
@@ -262,13 +264,15 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
 
   render() {
     const { primaryCurrencyInfo, secondaryCurrencyInfo, theme, exchangeSecondaryToPrimaryRatio } = this.props
+    const { amounts } = this.props.route.params
+
     const { fioAddressFrom, fioAddressTo, loading, memo, settingFioAddressTo, showSlider } = this.state
 
     if (!primaryCurrencyInfo || !secondaryCurrencyInfo) return null
     let cryptoAmount, exchangeAmount
     try {
-      cryptoAmount = bns.div(this.props.amounts.nativeAmount, primaryCurrencyInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
-      exchangeAmount = bns.div(this.props.amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
+      cryptoAmount = bns.div(amounts.nativeAmount, primaryCurrencyInfo.displayDenomination.multiplier, DECIMAL_PRECISION)
+      exchangeAmount = bns.div(amounts.nativeAmount, primaryCurrencyInfo.exchangeDenomination.multiplier, DECIMAL_PRECISION)
     } catch (e) {
       return null
     }
@@ -306,7 +310,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioRequestConfirmationScene = connect<StateProps, {}, NavigationProps>(
+export const FioRequestConfirmationScene = connect<StateProps, {}, OwnProps>(
   state => {
     const guiWallet: GuiWallet = getSelectedWallet(state)
     const { account } = state.core

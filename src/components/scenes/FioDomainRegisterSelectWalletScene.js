@@ -14,7 +14,7 @@ import { getDomainRegInfo } from '../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
-import { Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -34,9 +34,8 @@ type StateProps = {
   isConnected: boolean
 }
 
-type NavigationProps = {
-  fioDomain: string,
-  selectedWallet: EdgeCurrencyWallet
+type OwnProps = {
+  route: RouteProp<'fioDomainRegisterSelectWallet'>
 }
 
 type DispatchProps = {
@@ -56,7 +55,7 @@ type LocalState = {
   errorMessage?: string
 }
 
-type Props = NavigationProps & StateProps & DispatchProps & ThemeProps
+type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalState> {
   state: LocalState = {
@@ -73,14 +72,15 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
 
   getRegInfo = async () => {
     this.setState({ loading: true })
-
-    if (this.props.fioPlugin) {
+    const { fioDomain, selectedWallet } = this.props.route.params
+    const { fioPlugin, fioDisplayDenomination } = this.props
+    if (fioPlugin != null) {
       try {
         const { activationCost, feeValue, supportedCurrencies, paymentInfo } = await getDomainRegInfo(
-          this.props.fioPlugin,
-          this.props.fioDomain,
-          this.props.selectedWallet,
-          this.props.fioDisplayDenomination
+          fioPlugin,
+          fioDomain,
+          selectedWallet,
+          fioDisplayDenomination
         )
         this.setState({ activationCost, feeValue, supportedCurrencies, paymentInfo })
       } catch (e) {
@@ -118,7 +118,8 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   }
 
   onNextPress = (): void => {
-    const { isConnected, selectedWallet, fioDomain, state } = this.props
+    const { fioDomain, selectedWallet } = this.props.route.params
+    const { isConnected, state } = this.props
     const { feeValue, paymentInfo: allPaymentInfo, paymentWallet } = this.state
 
     if (!paymentWallet || !paymentWallet.id) return
@@ -127,7 +128,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     if (isConnected) {
       if (paymentCurrencyCode === FIO_STR) {
         const { fioWallets } = this.props
-        const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
+        const paymentWallet = (fioWallets.find(fioWallet => fioWallet.id === walletId): any)
         Actions.push(FIO_DOMAIN_CONFIRM, {
           fioName: fioDomain,
           paymentWallet,
@@ -184,7 +185,8 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   }
 
   render() {
-    const { theme, wallets, fioDomain } = this.props
+    const { fioDomain } = this.props.route.params
+    const { theme, wallets } = this.props
     const { activationCost, loading, paymentWallet, errorMessage } = this.state
     const styles = getStyles(theme)
     const detailsText = sprintf(s.strings.fio_domain_wallet_selection_text, loading ? '-' : activationCost)
@@ -247,7 +249,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioDomainRegisterSelectWalletScene = connect<StateProps, DispatchProps, NavigationProps>(
+export const FioDomainRegisterSelectWalletScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     state,
     fioWallets: state.ui.wallets.fioWallets,

@@ -7,9 +7,10 @@ import { WebView } from 'react-native-webview'
 import { Bridge, onMethod } from 'yaob'
 
 import { EdgeProvider } from '../../modules/UI/scenes/Plugins/EdgeProvider.js'
-import { type GuiPlugin, type GuiPluginQuery, makePluginUri } from '../../types/GuiPluginTypes.js'
+import { type GuiPlugin, makePluginUri } from '../../types/GuiPluginTypes.js'
 import { connect } from '../../types/reactRedux.js'
 import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
+import { type RouteProp } from '../../types/routerTypes.js'
 import { javascript } from '../../util/bridge/injectThisInWebView.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -112,17 +113,12 @@ function makeOuterWebViewBridge<Root>(onRoot: (root: Root) => mixed, debug: bool
 // Plugin scene --------------------------------------------------------
 
 type OwnProps = {
-  // The GUI plugin we are showing the user:
-  plugin: GuiPlugin,
-
-  // Set these to add stuff to the plugin URI:
-  deepPath?: string,
-  deepQuery?: GuiPluginQuery
+  route: RouteProp<'pluginViewDeep'>
 }
 
 type DispatchProps = { dispatch: Dispatch }
 type StateProps = { state: RootState }
-type Props = OwnProps & DispatchProps & StateProps
+type Props = DispatchProps & StateProps & OwnProps
 
 type State = {
   webViewKey: number
@@ -141,7 +137,8 @@ class GuiPluginView extends React.Component<Props, State> {
   _webview: WebView | void
 
   constructor(props) {
-    const { deepPath, deepQuery, dispatch, plugin, state } = props
+    const { route, dispatch, state } = props
+    const { deepPath, deepQuery, plugin } = route.params
     super(props)
     setPluginScene(this)
 
@@ -182,7 +179,8 @@ class GuiPluginView extends React.Component<Props, State> {
   }
 
   componentDidUpdate() {
-    const { deepPath, deepQuery, plugin, state } = this.props
+    const { route, state } = this.props
+    const { deepPath, deepQuery, plugin } = route.params
     this.updatePromoCode(plugin, state)
     this._edgeProvider._updateState(state, deepPath, deepQuery, this._promoCode)
   }
@@ -196,7 +194,8 @@ class GuiPluginView extends React.Component<Props, State> {
   }
 
   async checkPermissions() {
-    const { plugin } = this.props
+    const { route } = this.props
+    const { plugin } = route.params
     const { permissions = [] } = plugin
     for (const name of permissions) await requestPermission(name)
   }
@@ -220,7 +219,10 @@ class GuiPluginView extends React.Component<Props, State> {
   }
 
   render() {
-    const { plugin, deepPath, deepQuery } = this.props
+    const { onLoadProgress, onNavigationStateChange, props, state, _callbacks } = this
+    const { route } = props
+    const { webViewKey } = state
+    const { deepPath, deepQuery, plugin } = route.params
     const { originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = plugin
     const uri = makePluginUri(plugin, {
       deepPath,
@@ -241,12 +243,12 @@ class GuiPluginView extends React.Component<Props, State> {
           geolocationEnabled
           injectedJavaScript={javascript}
           javaScriptEnabled
-          onLoadProgress={this.onLoadProgress}
-          onNavigationStateChange={this.onNavigationStateChange}
-          onMessage={this._callbacks.onMessage}
+          onLoadProgress={onLoadProgress}
+          onNavigationStateChange={onNavigationStateChange}
+          onMessage={_callbacks.onMessage}
           originWhitelist={originWhitelist}
-          key={`webView${this.state.webViewKey}`}
-          ref={this._callbacks.setRef}
+          key={`webView${webViewKey}`}
+          ref={_callbacks.setRef}
           setWebContentsDebuggingEnabled
           source={{ uri }}
           userAgent={userAgent + ' hasEdgeProvider edge/app.edge.'}

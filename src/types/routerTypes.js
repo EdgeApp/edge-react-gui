@@ -1,8 +1,19 @@
 // @flow
-import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeMetaToken, type OtpError } from 'edge-core-js'
+import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeMetaToken, type EdgeTransaction, type OtpError } from 'edge-core-js'
 import * as Flux from 'react-native-router-flux'
 
-import { type CreateWalletType, type GuiFiatType, type GuiMakeSpendInfo, type GuiSwapInfo, type GuiWallet } from './types.js'
+import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput.js'
+import { type GuiPlugin, type GuiPluginQuery } from './GuiPluginTypes.js'
+import {
+  type CreateWalletType,
+  type FioConnectionWalletItem,
+  type FioDomain,
+  type FioRequest,
+  type GuiFiatType,
+  type GuiMakeSpendInfo,
+  type GuiSwapInfo,
+  type GuiWallet
+} from './types.js'
 
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -84,21 +95,69 @@ export type ParamList = {
   exchangeScene: void,
   exchangeSettings: void,
   exchangeSuccess: void,
-  fioAddressDetails: {}, // TODO
+  fioAddressDetails: {|
+    fioAddressName: string,
+    expiration: string
+  |},
   fioAddressList: void,
-  fioAddressRegister: {}, // TODO
-  fioAddressRegisterSelectWallet: {}, // TODO
-  fioAddressRegisterSuccess: {}, // TODO
-  fioAddressSettings: {}, // TODO
-  fioConnectToWalletsConfirm: {}, // TODO
-  fioDomainConfirm: {}, // TODO
+  fioAddressRegister: {|
+    fioName: string,
+    expiration: string
+  |},
+  fioAddressRegisterSelectWallet: {|
+    fioAddress: string,
+    selectedWallet: EdgeCurrencyWallet,
+    selectedDomain: FioDomain,
+    isFallback?: boolean
+  |},
+  fioAddressRegisterSuccess: {|
+    fioName: string,
+    expiration: string
+  |},
+  fioAddressSettings: {|
+    fioWallet: EdgeCurrencyWallet,
+    fioAddressName: string,
+    expiration?: string,
+    showRenew?: boolean,
+    refreshAfterRenew?: boolean
+  |},
+  fioConnectToWalletsConfirm: {|
+    fioWallet: EdgeCurrencyWallet,
+    fioAddressName: string,
+    walletsToConnect: FioConnectionWalletItem[],
+    walletsToDisconnect: FioConnectionWalletItem[]
+  |},
+  fioDomainConfirm: {|
+    fioName: string,
+    paymentWallet: EdgeCurrencyWallet,
+    fee: number,
+    ownerPublicKey: string
+  |},
   fioDomainRegister: void,
-  fioDomainRegisterSelectWallet: {}, // TODO
-  fioDomainSettings: {}, // TODO
-  fioNameConfirm: {}, // TODO
-  fioRequestConfirmation: {}, // TODO
+  fioDomainRegisterSelectWallet: {|
+    fioDomain: string,
+    selectedWallet: EdgeCurrencyWallet
+  |},
+  fioDomainSettings: {|
+    fioWallet: EdgeCurrencyWallet,
+    fioDomainName: string,
+    isPublic: boolean,
+    expiration: string,
+    showRenew?: boolean
+  |},
+  fioNameConfirm: {|
+    fioName: string,
+    paymentWallet: EdgeCurrencyWallet,
+    fee: number,
+    ownerPublicKey: string
+  |},
+  fioRequestConfirmation: {|
+    amounts: ExchangedFlipInputAmounts
+  |},
   fioRequestList: void,
-  fioSentRequestDetails: {}, // TODO
+  fioSentRequestDetails: {|
+    selectedFioSentRequest: FioRequest
+  |},
   manageTokens: {|
     guiWallet: GuiWallet
   |},
@@ -110,11 +169,22 @@ export type ParamList = {
   passwordRecovery: void,
   pluginBuy: void,
   pluginSell: void,
-  pluginView: {}, // TODO
-  pluginViewDeep: {}, // TODO
+  pluginView: {|
+    direction?: 'buy' | 'sell'
+  |},
+  pluginViewDeep: {|
+    // The GUI plugin we are showing the user:
+    plugin: GuiPlugin,
+
+    // Set these to add stuff to the plugin URI:
+    deepPath?: string,
+    deepQuery?: GuiPluginQuery
+  |},
   promotionSettings: void,
   request: void,
-  scan: {}, // TODO
+  scan: {|
+    data?: 'sweepPrivateKey' | 'loginQR'
+  |}, // TODO
   securityAlerts: void,
   send: {|
     allowedCurrencyCodes?: string[],
@@ -138,9 +208,15 @@ export type ParamList = {
   settingsOverviewTab: void,
   spendingLimits: void,
   termsOfService: void,
-  transactionDetails: {}, // TODO
+  transactionDetails: {|
+    edgeTransaction: EdgeTransaction,
+    thumbnailPath?: string
+  |},
   transactionList: void,
-  transactionsExport: {}, // TODO
+  transactionsExport: {|
+    sourceWallet: EdgeCurrencyWallet,
+    currencyCode: string
+  |},
   walletList: void,
   walletListScene: void
 }

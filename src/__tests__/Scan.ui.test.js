@@ -6,11 +6,16 @@ import RNPermissions from 'react-native-permissions'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { Scan } from '../components/scenes/ScanScene.js'
-
 describe('Scan component', () => {
   it('should render with BLOCKED props', () => {
     const renderer = new ShallowRenderer()
     const props = {
+      route: {
+        name: 'scan',
+        params: {
+          data: 'loginQR'
+        }
+      },
       cameraPermission: RNPermissions.BLOCKED,
       torchEnabled: false,
       scanEnabled: false,
@@ -35,6 +40,12 @@ describe('Scan component', () => {
   it('should render with GRANTED props', () => {
     const renderer = new ShallowRenderer()
     const props = {
+      route: {
+        name: 'scan',
+        params: {
+          data: 'loginQR'
+        }
+      },
       cameraPermission: RNPermissions.GRANTED,
       torchEnabled: false,
       scanEnabled: false,

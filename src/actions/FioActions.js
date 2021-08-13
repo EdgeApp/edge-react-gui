@@ -166,7 +166,7 @@ const showFioExpiredModal = async (fioWallet: EdgeCurrencyWallet, fioName: FioAd
       showRenew: true,
       fioWallet,
       fioDomainName: fioName.name,
-      isPublic: fioName.isPublic || false,
+      isPublic: !!fioName.isPublic || false,
       expiration: fioName.expiration
     })
   }

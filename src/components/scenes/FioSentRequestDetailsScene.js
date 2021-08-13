@@ -9,15 +9,15 @@ import s from '../../locales/strings.js'
 import { isRejectedFioRequest, isSentFioRequest } from '../../modules/FioRequest/util'
 import { getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { type FioRequest, type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
+import { type RouteProp } from '../../types/routerTypes.js'
+import { type GuiExchangeRates, type GuiWallet } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText'
 import { SceneHeader } from '../themed/SceneHeader'
 import { Tile } from '../themed/Tile'
-
-type NavigationProps = {
-  selectedFioSentRequest: FioRequest
+type OwnProps = {
+  route: RouteProp<'fioSentRequestDetails'>
 }
 
 type StateProps = {
@@ -26,7 +26,7 @@ type StateProps = {
   exchangeRates: GuiExchangeRates
 }
 
-type Props = StateProps & NavigationProps & ThemeProps
+type Props = StateProps & OwnProps & ThemeProps
 
 class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
   fiatAmount = (currencyCode: string, amount: string = '0') => {
@@ -40,9 +40,9 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
 
   amountField = () => {
     const {
-      fiatSymbol,
       selectedFioSentRequest: { content }
-    } = this.props
+    } = this.props.route.params
+    const { fiatSymbol } = this.props
     const { amount } = content
     const tokenCode = content.token_code.toUpperCase()
     const text = `${amount} ${tokenCode} (${fiatSymbol} ${this.fiatAmount(tokenCode, amount)})`
@@ -66,7 +66,7 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { selectedFioSentRequest } = this.props
+    const { selectedFioSentRequest } = this.props.route.params
     return (
       <SceneWrapper background="header">
         <SceneHeader title={s.strings.title_fio_sent_request_details} underline />
@@ -94,7 +94,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioSentRequestDetailsScene = connect<StateProps, {}, NavigationProps>(
+export const FioSentRequestDetailsScene = connect<StateProps, {}, OwnProps>(
   state => {
     const wallet: GuiWallet = getSelectedWallet(state)
     return {
