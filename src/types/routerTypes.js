@@ -2,7 +2,7 @@
 import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeMetaToken, type OtpError } from 'edge-core-js'
 import * as Flux from 'react-native-router-flux'
 
-import { type CreateWalletType, type GuiFiatType, type GuiMakeSpendInfo } from './types.js'
+import { type CreateWalletType, type GuiFiatType, type GuiMakeSpendInfo, type GuiWallet } from './types.js'
 
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -97,7 +97,9 @@ export type ParamList = {
   fioRequestConfirmation: {}, // TODO
   fioRequestList: void,
   fioSentRequestDetails: {}, // TODO
-  manageTokens: {}, // TODO
+  manageTokens: {|
+    guiWallet: GuiWallet
+  |},
   notificationSettings: void,
   otpRepair: {|
     otpError: OtpError
