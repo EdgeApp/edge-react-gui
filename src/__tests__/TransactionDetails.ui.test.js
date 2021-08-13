@@ -86,6 +86,7 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
+    // @flow--ignore-line
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()
@@ -131,6 +132,7 @@ describe('TransactionDetails.ui', () => {
 
   it('should render with tx date off by 1000x in past', () => {
     const renderer = new ShallowRenderer()
+
     const props = {
       route: {
         name: 'transactionDetails',
