@@ -203,6 +203,18 @@ const EdgeTextFieldOutlinedComponent = React.forwardRef((props: Props, ref) => {
     }
   }, [error, colorMap, errorState])
 
+  const prevValue = useRef<string>('')
+
+  // handle start placeholder animation when value changed programmatically without field focus
+  useEffect(() => {
+    if (prevValue.current === '' && value !== prevValue.current) {
+      placeholderMap.value = withTiming(ANIMATION_STATES.FOCUSED)
+      if (!errorState()) colorMap.value = withTiming(ANIMATION_STATES.FOCUSED)
+
+      prevValue.current = value
+    }
+  }, [value])
+
   const animatedPlaceholderStyles = useAnimatedStyle(() => ({
     transform: [
       {
