@@ -5,6 +5,7 @@ import * as React from 'react'
 import { ScrollView, TextInput } from 'react-native'
 
 import { addNewToken } from '../../actions/AddTokenActions'
+import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstants.js'
 import { useScrollToEnd } from '../../hooks/behaviors/useScrollToEnd'
 import s from '../../locales/strings.js'
 import { useEffect, useRef, useState } from '../../types/reactHooks'
@@ -67,6 +68,19 @@ const useReturnKeyType = (fieldsData: string[], updateCallback: (Array<'done' | 
 
 const KEYBOARD_ANIMATION_TIME = 300
 
+export const uriValidation = async (currencyWallet: EdgeCurrencyWallet, obj: { [key: string]: string }): Promise<string> => {
+  const tokenDefaults = getSpecialCurrencyInfo(currencyWallet.currencyInfo.currencyCode).customTokenParams
+  if (tokenDefaults == null) return ''
+  const { currencyCode, currencyName, contractAddress, multiplier } = { ...tokenDefaults, ...obj }
+  const testUri = `${currencyWallet.currencyInfo.pluginId}:token-${contractAddress}?symbol=${currencyCode}&decimals=${multiplier}&name=${currencyName}`
+  try {
+    await currencyWallet.parseUri(testUri)
+  } catch (e) {
+    return e.message
+  }
+  return ''
+}
+
 export const AddToken = ({ addTokenPending, currentCustomTokens = [], wallet, walletId, currencyWallet, addNewToken, onAddToken }: Props) => {
   const styles = getStyles(useTheme())
   const [currencyCode, setCurrencyCode] = useState<string>('')
@@ -76,6 +90,11 @@ export const AddToken = ({ addTokenPending, currentCustomTokens = [], wallet, wa
 
   const [isDecimalPlacesFocused, setIsDecimalPlacesFocused] = useState<boolean>(false)
   const scrollViewRef = useScrollToEnd(isDecimalPlacesFocused, KEYBOARD_ANIMATION_TIME) // Not the best solution for keyboard avoiding when bottom field focused
+
+  const [currencyCodeError, setCurrencyCodeError] = useState<string>('')
+  const [currencyNameError, setCurrencyNameError] = useState<string>('')
+  const [contractAddressError, setContractAddressError] = useState<string>('')
+  const [decimalPlacesError, setDecimalPlacesError] = useState<string>('')
 
   const [currencyCodeReturnKeyType, setCurrencyCodeReturnKeyType] = useState<ReturnKeyType>('next')
   const [currencyNameReturnKeyType, setCurrencyNameReturnKeyType] = useState<ReturnKeyType>('next')
@@ -96,6 +115,8 @@ export const AddToken = ({ addTokenPending, currentCustomTokens = [], wallet, wa
   const prevCurrencyCode = prevCurrencyCodeRef.current
 
   const handleSubmit = async () => {
+    if (currencyCodeError !== '' || decimalPlacesError !== '' || currencyNameError !== '' || contractAddressError !== '') return
+
     try {
       await createValidation(wallet, currentCustomTokens, currencyWallet, {
         currencyCode,
@@ -156,6 +177,42 @@ export const AddToken = ({ addTokenPending, currentCustomTokens = [], wallet, wa
     setDecimalPlacesReturnKeyType(returnKeyTypes[3])
   })
 
+  const handleChangeCurrencyCode = async (value: string) => {
+    setCurrencyCode(value)
+    setCurrencyCodeError(
+      await uriValidation(currencyWallet, {
+        currencyCode: value
+      })
+    )
+  }
+
+  const handleChangeCurrencyName = async (value: string) => {
+    setCurrencyName(value)
+    setCurrencyNameError(
+      await uriValidation(currencyWallet, {
+        currencyName: value
+      })
+    )
+  }
+
+  const handleChangeContractAddress = async (value: string) => {
+    setContractAddress(value)
+    setContractAddressError(
+      await uriValidation(currencyWallet, {
+        contractAddress: value
+      })
+    )
+  }
+
+  const handleChangeDecimalPlaces = async (value: string) => {
+    setDecimalPlaces(value)
+    setDecimalPlacesError(
+      await uriValidation(currencyWallet, {
+        multiplier: value
+      })
+    )
+  }
+
   return (
     <SceneWrapper avoidKeyboard background="theme">
       <SceneHeader title={s.strings.title_add_token} style={styles.header} />
@@ -163,11 +220,12 @@ export const AddToken = ({ addTokenPending, currentCustomTokens = [], wallet, wa
         <EdgeTextFieldOutlined
           ref={currencyCodeInputRef}
           autoFocus
-          onChangeText={setCurrencyCode}
+          onChangeText={handleChangeCurrencyCode}
           value={currencyCode}
           autoCapitalize="characters"
           returnKeyType={currencyCodeReturnKeyType}
           label={s.strings.addtoken_currency_code_input_text}
+          error={currencyCodeError}
           showSearchIcon={false}
           autoCorrect={false}
           marginRem={[0.5, 0.6, 1]}
@@ -176,11 +234,12 @@ export const AddToken = ({ addTokenPending, currentCustomTokens = [], wallet, wa
         />
         <EdgeTextFieldOutlined
           ref={currencyNameInputRef}
-          onChangeText={setCurrencyName}
+          onChangeText={handleChangeCurrencyName}
           value={currencyName}
           autoCapitalize="words"
           returnKeyType={currencyNameReturnKeyType}
           label={s.strings.addtoken_name_input_text}
+          error={currencyNameError}
           showSearchIcon={false}
           autoCorrect={false}
           marginRem={[0.5, 0.6, 1]}
@@ -188,10 +247,11 @@ export const AddToken = ({ addTokenPending, currentCustomTokens = [], wallet, wa
         />
         <EdgeTextFieldOutlined
           ref={contractAddressInputRef}
-          onChangeText={setContractAddress}
+          onChangeText={handleChangeContractAddress}
           value={contractAddress}
           returnKeyType={contractAddressReturnKeyType}
           label={s.strings.addtoken_contract_address_input_text}
+          error={contractAddressError}
           showSearchIcon={false}
           autoCorrect={false}
           marginRem={[0.5, 0.6, 1]}
@@ -201,14 +261,15 @@ export const AddToken = ({ addTokenPending, currentCustomTokens = [], wallet, wa
           ref={decimalPlacesInputRef}
           onFocus={() => setIsDecimalPlacesFocused(true)}
           onBlur={() => setIsDecimalPlacesFocused(false)}
-          onChangeText={setDecimalPlaces}
+          onChangeText={handleChangeDecimalPlaces}
           value={decimalPlaces}
           returnKeyType={decimalPlacesReturnKeyType}
           label={s.strings.addtoken_denomination_input_text}
+          error={decimalPlacesError}
           keyboardType="numeric"
           showSearchIcon={false}
           autoCorrect={false}
-          marginRem={[0.5, 0.6, 0.5]}
+          marginRem={[0.5, 0.6, 1]}
           onSubmitEditing={handleSubmitEditing}
         />
       </ScrollView>
