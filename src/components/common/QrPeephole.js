@@ -8,13 +8,14 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 type OwnProps = {
   width: number,
   height: number,
-  holeTop: number,
-  holeSize: number
+  holeSize: number,
+  holeX: number,
+  holeY: number
 }
 type Props = OwnProps & ThemeProps
 
 const Component = (props: Props) => {
-  const { width, height, theme, holeTop, holeSize } = props
+  const { width, height, theme, holeSize, holeX, holeY } = props
   const styles = getStyles(theme)
 
   // Corner radius
@@ -22,17 +23,8 @@ const Component = (props: Props) => {
   const cornerLegroom = 15
   const strokeWidth = 6
 
-  // Gradient
-  const fillColor = theme.cameraOverlay
-  const gradientEdgeOpacity = '1'
-  const gradientCenterOpacity = '0.4'
-
   // Colors
   const highlightColor = theme.iconTappable
-
-  // Hole cutout
-  const holeX = Math.round((width - holeSize) / 2)
-  const holeY = holeTop
 
   return (
     <Svg style={styles.overlay} width={width} height={height}>
@@ -41,10 +33,10 @@ const Component = (props: Props) => {
 
       <Defs>
         <LinearGradient id="Gradient" x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor={fillColor} stopOpacity={gradientEdgeOpacity} />
-          <Stop offset="0.2" stopColor={fillColor} stopOpacity={gradientCenterOpacity} />
-          <Stop offset="0.8" stopColor={fillColor} stopOpacity={gradientCenterOpacity} />
-          <Stop offset="1" stopColor={fillColor} stopOpacity={gradientEdgeOpacity} />
+          <Stop offset="0" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpStart} />
+          <Stop offset="0.2" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpEnd} />
+          <Stop offset="0.8" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpEnd} />
+          <Stop offset="1" stopColor={theme.cameraOverlayColor} stopOpacity={theme.cameraOverlayOpStart} />
         </LinearGradient>
         <Mask id="Mask" maskUnits="userSpaceOnUse" x="0" y="0" width={width} height={height}>
           <Rect x="0" y="0" width={width} height={height} fill="white" />

@@ -97,8 +97,10 @@ export const edgeDark: Theme = {
   backgroundGradientLeft: palette.edgeNavy,
   backgroundGradientRight: palette.darkBlue,
 
-  // Overlay
-  cameraOverlay: palette.gray,
+  // Camera Overlay
+  cameraOverlayColor: palette.black,
+  cameraOverlayOpStart: 0.7,
+  cameraOverlayOpEnd: 0.3,
 
   // Modal
   modal: palette.edgeNavy,

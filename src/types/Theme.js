@@ -21,8 +21,10 @@ export type Theme = {
   backgroundGradientLeft: string,
   backgroundGradientRight: string,
 
-  // Overlay
-  cameraOverlay: string,
+  // Camera Overlay
+  cameraOverlayColor: string,
+  cameraOverlayOpStart: number,
+  cameraOverlayOpEnd: number,
 
   // Modal
   modal: string,
