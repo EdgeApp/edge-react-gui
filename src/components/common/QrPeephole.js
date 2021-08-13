@@ -8,13 +8,14 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 type OwnProps = {
   width: number,
   height: number,
-  holeTop: number,
-  holeSize: number
+  holeSize: number,
+  holeX: number,
+  holeY: number
 }
 type Props = OwnProps & ThemeProps
 
 const Component = (props: Props) => {
-  const { width, height, theme, holeTop, holeSize } = props
+  const { width, height, theme, holeSize, holeX, holeY } = props
   const styles = getStyles(theme)
 
   // Corner radius
@@ -24,10 +25,6 @@ const Component = (props: Props) => {
 
   // Colors
   const highlightColor = theme.iconTappable
-
-  // Hole cutout
-  const holeX = Math.round((width - holeSize) / 2)
-  const holeY = holeTop
 
   return (
     <Svg style={styles.overlay} width={width} height={height}>

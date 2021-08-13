@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react'
-import { type LayoutChangeEvent, ActivityIndicator, Linking, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Linking, TouchableOpacity, View } from 'react-native'
 import { type AirshipBridge, AirshipModal } from 'react-native-airship'
 import { RNCamera } from 'react-native-camera'
 // $FlowFixMe
@@ -9,14 +9,17 @@ import RNPermissions from 'react-native-permissions'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import RNQRGenerator from 'rn-qr-generator'
 
+import { useLayout } from '../../hooks/useLayout.js'
+import { useWindowSize } from '../../hooks/useWindowSize.js'
 import s from '../../locales/strings.js'
 import type { PermissionStatus } from '../../reducers/PermissionsReducer'
-import { useEffect, useState } from '../../types/reactHooks.js'
+import { useEffect } from '../../types/reactHooks.js'
 import { connect } from '../../types/reactRedux.js'
 import { QrPeephole } from '../common/QrPeephole.js'
 import { showError, showWarning } from '../services/AirshipInstance.js'
 import { requestPermission } from '../services/PermissionsManager'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { EdgeText } from '../themed/EdgeText.js'
 import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalMessage } from '../themed/ModalParts'
 import { SceneHeader } from '../themed/SceneHeader.js'
@@ -42,6 +45,9 @@ type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 const Component = (props: Props) => {
   const { bridge, theme, title, enableScan, disableScan, scanEnabled, toggleEnableTorch, torchEnabled, cameraPermission } = props
   const styles = getStyles(theme)
+
+  const { width: windowWidth, height: windowHeight } = useWindowSize()
+  const isLandscape = windowWidth > windowHeight
 
   // Mount effects
   useEffect(() => {
@@ -102,27 +108,22 @@ const Component = (props: Props) => {
     )
   }
 
-  const handleLayoutCameraContainer = (event: LayoutChangeEvent) => {
-    setQrPeepholeHeight(event.nativeEvent.layout.height)
-    setQrPeepholeWidth(event.nativeEvent.layout.width)
-  }
-
-  const handleLayoutPeepholeSpace = (event: LayoutChangeEvent) => {
-    setPeepholeSpaceY(event.nativeEvent.layout.y)
-    setPeepholeSpaceHeight(event.nativeEvent.layout.height)
-  }
+  // const handleLayout = (setRect: (rect: LayoutRectangle) => void) => (event: LayoutChangeEvent) => {
+  //   setRect(event.nativeEvent.layout)
+  // }
 
   const handleClose = () => {
     bridge.resolve()
   }
 
   const airshipMarginTop = theme.rem(3)
-  const [peepholeWidth, setQrPeepholeWidth] = useState(0)
-  const [peepholeHeight, setQrPeepholeHeight] = useState(0)
-  const [peepholeSpaceHeight, setPeepholeSpaceHeight] = useState(0)
-  const [peepholeSpaceY, setPeepholeSpaceY] = useState(0)
-  const peepholeSize = Math.round((peepholeWidth * 2) / 3)
-  const peepholeTop = peepholeSpaceY + (peepholeSpaceHeight - peepholeSize) / 2
+  const [headerContainerLayout, handleLayoutHeaderContainer] = useLayout()
+  const [cameraContainerLayout, handleLayoutCameraContainer] = useLayout()
+  const [peepholeSpaceLayout, handleLayoutPeepholeSpace] = useLayout()
+
+  const holeSize = Math.round((Math.min(peepholeSpaceLayout.height, peepholeSpaceLayout.width) * 2) / 3)
+  const holeX = (peepholeSpaceLayout.width - holeSize) / 2
+  const holeY = headerContainerLayout.y + headerContainerLayout.height + (peepholeSpaceLayout.height - holeSize) / 2
 
   const renderModalContent = () => {
     if (!scanEnabled) {
@@ -153,22 +154,31 @@ const Component = (props: Props) => {
             />
           </View>
 
-          <QrPeephole width={peepholeWidth} height={peepholeHeight} holeSize={peepholeSize} holeTop={peepholeTop} />
+          <QrPeephole
+            width={cameraContainerLayout.width}
+            height={cameraContainerLayout.height}
+            holeSize={holeSize}
+            holeX={holeX}
+            holeY={holeY}
+            /* holeOffset={holeOffset} */
+          />
 
           <View style={styles.overlayContainer}>
-            <View style={styles.headerContainer}>
+            <View style={styles.headerContainer} onLayout={handleLayoutHeaderContainer}>
               <SceneHeader withTopMargin title={title} underline />
             </View>
-            <View style={[styles.peepholeSpace, { minHeight: peepholeSize }]} onLayout={handleLayoutPeepholeSpace} />
-            <View style={styles.buttonsContainer}>
-              <TouchableOpacity style={styles.iconButton} onPress={handleFlash}>
-                <Ionicon style={styles.icon} name="flash-outline" size={theme.rem(1.5)} />
-                <ModalMessage>{s.strings.fragment_send_flash}</ModalMessage>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
-                <Ionicon style={styles.icon} name="albums-outline" size={theme.rem(1.5)} />
-                <ModalMessage>{s.strings.fragment_send_album}</ModalMessage>
-              </TouchableOpacity>
+            <View style={[styles.inner, { flexDirection: isLandscape ? 'row' : 'column' }]}>
+              <View style={styles.peepholeSpace} onLayout={handleLayoutPeepholeSpace} />
+              <View style={[styles.buttonsContainer, { flexDirection: isLandscape ? 'column-reverse' : 'row' }]}>
+                <TouchableOpacity style={styles.iconButton} onPress={handleFlash}>
+                  <Ionicon style={styles.icon} name="flash-outline" size={theme.rem(1.5)} />
+                  <EdgeText>{s.strings.fragment_send_flash}</EdgeText>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.iconButton} onPress={handleAlbum}>
+                  <Ionicon style={styles.icon} name="albums-outline" size={theme.rem(1.5)} />
+                  <EdgeText>{s.strings.fragment_send_album}</EdgeText>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </>
@@ -183,7 +193,15 @@ const Component = (props: Props) => {
   }
 
   return (
-    <AirshipModal bridge={bridge} margin={[airshipMarginTop, 0, 0]} padding={0} backgroundColor={theme.modal} onCancel={handleClose} overflow="hidden">
+    <AirshipModal
+      bridge={bridge}
+      margin={[airshipMarginTop, 0, 0]}
+      padding={0}
+      backgroundColor={theme.modal}
+      onCancel={handleClose}
+      overflow="hidden"
+      maxWidth={windowWidth}
+    >
       {renderModalContent()}
       <ModalCloseArrow onPress={handleClose} />
     </AirshipModal>
@@ -212,17 +230,19 @@ const getStyles = cacheStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     flex: 1
   },
+  inner: {
+    flex: 1
+  },
   headerContainer: {
     justifyContent: 'flex-end',
     marginTop: theme.rem(1)
   },
   peepholeSpace: {
-    aspectRatio: 1
+    flex: 2
   },
   // Buttons
   buttonsContainer: {
     flex: 1,
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around'
   },
