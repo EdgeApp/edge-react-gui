@@ -19,7 +19,8 @@ import { convertCurrencyFromExchangeRates, getExchangeRate } from '../selectors/
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import { type GuiMakeSpendInfo } from '../types/types.js'
-import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode, roundedFee } from '../util/utils'
+import { convertFeeToRoundedFee } from '../util/conversionUtils.js'
+import { convertNativeToExchange, DECIMAL_PRECISION, getDenomFromIsoCode } from '../util/utils'
 import { playSendSound } from './SoundActions.js'
 
 const XRP_DESTINATION_TAG_ERRORS = {
@@ -108,7 +109,7 @@ export const sendConfirmationUpdateTx =
         if (insufficientFunds != null && insufficientFunds.currencyCode != null && spendInfo.currencyCode !== insufficientFunds.currencyCode) {
           const { currencyCode, networkFee = '' } = insufficientFunds
           const multiplier = getExchangeDenomination(state, currencyCode).multiplier
-          const amountString = roundedFee(networkFee, 2, multiplier)
+          const amountString = convertFeeToRoundedFee(networkFee, multiplier)
           const result = await Airship.show(bridge => (
             <ButtonsModal
               bridge={bridge}

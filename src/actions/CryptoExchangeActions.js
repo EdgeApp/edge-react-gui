@@ -34,9 +34,10 @@ import {
 import { type Dispatch, type GetState, type RootState } from '../types/reduxTypes.js'
 import { Actions } from '../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiSwapInfo, GuiWallet } from '../types/types.js'
+import { convertFeeToRoundedFee } from '../util/conversionUtils.js'
 import { bestOfPlugins } from '../util/ReferralHelpers.js'
 import { logEvent } from '../util/tracking.js'
-import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, decimalOrZero, getDenomFromIsoCode, roundedFee } from '../util/utils'
+import { convertNativeToDisplay, convertNativeToExchange, DECIMAL_PRECISION, decimalOrZero, getDenomFromIsoCode } from '../util/utils'
 import { updateSwapCount } from './RequestReviewActions.js'
 
 export type SetNativeAmountInfo = {
@@ -81,7 +82,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
     if (insufficientFunds != null && insufficientFunds.currencyCode != null && fromCurrencyCode !== insufficientFunds.currencyCode) {
       const { currencyCode, networkFee = '' } = insufficientFunds
       const multiplier = getExchangeDenomination(state, currencyCode).multiplier
-      const amountString = roundedFee(networkFee, 2, multiplier)
+      const amountString = convertFeeToRoundedFee(networkFee, multiplier)
       const result = await Airship.show(bridge => (
         <ButtonsModal
           bridge={bridge}

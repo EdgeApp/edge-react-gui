@@ -1,6 +1,6 @@
 // @flow
 
-import { bns, div, eq, gt, gte, mul, toFixed } from 'biggystring'
+import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
 import type { EdgeCurrencyInfo, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 import { Linking, Platform } from 'react-native'
@@ -121,29 +121,6 @@ export const truncateDecimals = (input: string, precision: number, allowBlank: b
   return precision > 0 ? `${integers}.${decimals.slice(0, precision)}` : integers
 }
 
-// Counts zeros after decimal place in number. '0.00036' => 3
-export const zerosAfterDecimal = (input: string): number => {
-  if (!input.includes('.')) return 0
-  const decimals = input.split('.')[1]
-  let numZeros = 0
-  for (let i = 0; i <= decimals.length; i++) {
-    if (eq(decimals[i], '0')) {
-      numZeros++
-    } else {
-      break
-    }
-  }
-  return numZeros
-}
-
-// Adds 1 to the least significant digit of a number. '12.00256' => '12.00257'
-export const roundUpToLeastSignificant = (input: string): string => {
-  if (!input.includes('.')) return input
-  const precision = input.split('.')[1].length
-  const oneExtra = `0.${'1'.padStart(precision, '0')}`
-  return bns.add(input, oneExtra)
-}
-
 export const zeroString = (input: any): boolean => input == null || typeof input !== 'string' || input === '' || eq(input, '0')
 
 export const decimalOrZero = (input: string, decimalPlaces: number): string => {
@@ -160,15 +137,6 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
       return truncatedToDecimals.replace(/0+$/, '') // then return the truncation
     }
   }
-}
-
-export const roundedFee = (nativeAmount: string, decimalPlacesBeyondLeadingZeros: number, multiplier: string): string => {
-  if (nativeAmount === '') return nativeAmount
-  const displayAmount = div(nativeAmount, multiplier, DECIMAL_PRECISION)
-  const precision = zerosAfterDecimal(displayAmount) + decimalPlacesBeyondLeadingZeros
-  const truncatedAmount = truncateDecimals(displayAmount, precision)
-  if (gt(displayAmount, truncatedAmount)) return `${roundUpToLeastSignificant(truncatedAmount)} `
-  return `${truncatedAmount} `
 }
 
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)

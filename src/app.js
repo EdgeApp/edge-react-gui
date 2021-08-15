@@ -13,7 +13,8 @@ import { log, logToServer } from './util/logger'
 Bugsnag.start({
   apiKey: ENV.BUGSNAG_API_KEY,
   onError: event => {
-    log(`Bugsnag Device ID: ${event.device.id ?? ''}`)
+    const deviceID = event.device.id ?? ''
+    log(`Bugsnag Device ID: ${deviceID}`)
     return event
   }
 })

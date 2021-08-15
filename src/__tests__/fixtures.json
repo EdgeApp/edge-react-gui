@@ -117,15 +117,10 @@
   },
   "zerosAfterDecimal": {
     "title": "Zeros after decimal place of",
-    "input": ["0.00036270", "128372", "12392.0123", "123.456"],
-    "output": [3, 0, 1, 0]
+    "input": ["0.00036270", "128372", "12392.0123", "123.456", "0.000000000001", "01.000000000001", "01.100000000001", "0100.000010000001", "0100", "0000", "0", ""],
+    "output": [3, 0, 1, 0, 11, 11, 0, 4, 0, 0, 0, 0]
   },
-  "roundUpToLeastSignificant": {
-    "title": "Rounded up to least significant digit of",
-    "input": ["123.4567", "0.0001239", "123"],
-    "output": ["123.4568", "0.000124", "123"]
-  },
-  "roundedFee": {
+  "convertFeeToRoundedFee": {
     "title": "Truncate and rounded up to least significant digit of",
     "input": [{
       "amount": "1234567",
@@ -144,7 +139,12 @@
       "amount": "",
       "decimalPlacesBeyondLeadingZeros": 12,
       "multiplier": "1000000000"
+    },
+    {
+      "amount": "1.12312000000000000321",
+      "decimalPlacesBeyondLeadingZeros": 2,
+      "multiplier": "1"
     }],
-    "output": ["0.0000013 ", "548735948.753 ", "0.1 ", ""]
+    "output": ["0.0000013 ", "548735948.753 ", "0.1 ", "", "1.13 "]
   }
 }

@@ -23,10 +23,7 @@ import {
   mergeTokens,
   MILLISECONDS_PER_DAY,
   precisionAdjust,
-  roundedFee,
-  roundUpToLeastSignificant,
-  truncateDecimals,
-  zerosAfterDecimal
+  truncateDecimals
 } from '../util/utils.js'
 import fixtures from './fixtures.json'
 
@@ -704,40 +701,6 @@ describe('getExchangeDenomination', function () {
   input.forEach((currency, index) => {
     test(`${title} ${currency}`, function () {
       expect(getDenomination(currency, fixtures.settings, 'exchange')).toMatchObject(output[index])
-    })
-  })
-})
-
-describe('zerosAfterDecimal', function () {
-  const tests = fixtures.zerosAfterDecimal
-  const { title, input, output } = tests
-
-  input.forEach((amount, index) => {
-    test(`${title} ${amount}`, function () {
-      expect(zerosAfterDecimal(amount)).toBe(output[index])
-    })
-  })
-})
-
-describe('roundUpToLeastSignificant', function () {
-  const tests = fixtures.roundUpToLeastSignificant
-  const { title, input, output } = tests
-
-  input.forEach((amount, index) => {
-    test(`${title} ${amount}`, function () {
-      expect(roundUpToLeastSignificant(amount)).toBe(output[index])
-    })
-  })
-})
-
-describe('roundedFee', function () {
-  const tests = fixtures.roundedFee
-  const { title, input, output } = tests
-
-  input.forEach((obj, index) => {
-    const { amount, decimalPlacesBeyondLeadingZeros, multiplier } = obj
-    test(`${title} ${amount}`, function () {
-      expect(roundedFee(amount, decimalPlacesBeyondLeadingZeros, multiplier)).toBe(output[index])
     })
   })
 })

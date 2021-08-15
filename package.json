@@ -97,6 +97,7 @@
     "@react-native-firebase/iid": "^10.0.0",
     "@react-native-firebase/messaging": "^10.0.0",
     "async-lock": "^1.1.2",
+    "big.js": "^6.1.1",
     "biggystring": "^3.0.2",
     "cleaners": "^0.3.7",
     "core-js": "^2.5.2",
