@@ -62,7 +62,6 @@ export class WalletListModal extends React.PureComponent<Props, State> {
           onClear={this.handleClearText}
           value={search}
           marginRem={[0.5, 0.75, 1.25]}
-          size="small"
           searchIcon
         />
         <WalletList

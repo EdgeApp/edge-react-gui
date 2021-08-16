@@ -186,7 +186,6 @@ class DomainListModalComponent extends React.Component<Props, State> {
             marginRem={[0, 1]}
             ref={this.textInput}
             blurOnSubmit
-            size="small"
             searchIcon
           />
         </View>

@@ -50,7 +50,6 @@ function ManageTokensHeader(props: Props) {
             onClear={onSearchClear}
             marginRem={0}
             clearIcon
-            size="small"
             searchIcon
           />
         </View>

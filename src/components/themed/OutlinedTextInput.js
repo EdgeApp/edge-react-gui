@@ -30,7 +30,6 @@ type Props = {|
   clearIcon?: boolean,
   marginRem?: number | number[],
   searchIcon?: boolean,
-  size?: 'big' | 'small',
 
   // Callbacks:
   onBlur?: () => void,
@@ -112,7 +111,6 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     // Appearance:
     clearIcon = false,
     marginRem,
-    size = 'big',
     searchIcon = false,
 
     // Callbacks:
@@ -168,7 +166,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     prefixStyles,
     suffixStyles,
     hintLeftMargin
-  } = getSizeStyles(theme, size, searchIcon)
+  } = getSizeStyles(theme, searchIcon)
 
   const handleFocus = () => {
     placeholderMap.value = withTiming(ANIMATION_STATES.FOCUSED)
@@ -316,16 +314,16 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
 })
 
 // return depended on size styles and values
-const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', searchIcon: boolean = true) => {
+const getSizeStyles = (theme: Theme, searchIcon: boolean = true) => {
   const styles = getStyles(theme)
   const inactiveColor = theme.secondaryText
   const activeColor = theme.iconTappable
   const errorColor = theme.dangerText
-  let fontSize = theme.rem(FONT_SIZE)
-  let placeholderSpacerAdjust = theme.rem(2.25) - 1
+  const fontSize = theme.rem(FONT_SIZE)
+  const placeholderSpacerAdjust = theme.rem(2.25) - 1
   const placeholderScale = 0.7
   const placeholderSizeScale = 0.2
-  let paddingVertical = theme.rem(PADDING_VERTICAL)
+  const paddingVertical = theme.rem(PADDING_VERTICAL)
   let hintLeftMargin = -theme.rem(0.25)
   const inputStyles: TextStyle[] = [styles.input]
   const placeholderTextStyles: TextStyle[] = [styles.placeholderText]
@@ -337,24 +335,6 @@ const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', searchIcon: 
   if (searchIcon) {
     placeholderPaddingStyles.push(styles.placeholderWithPrefix)
     hintLeftMargin = theme.rem(2.25)
-  }
-  if (size === 'small') {
-    fontSize = theme.rem(FONT_SIZE_SMALL)
-    paddingVertical = theme.rem(PADDING_VERTICAL_SMALL)
-    placeholderSpacerAdjust = theme.rem(2)
-    inputStyles.push(styles.inputSmall)
-    placeholderTextStyles.push(styles.placeholderTextSmall)
-    placeholderPaddingStyles.push(styles.placeholderSmall)
-    placeholderSpacerPaddingStyles.push(styles.placeholderSpacerSmall)
-    inputContainerStyles.push(styles.inputContainerSmall)
-    prefixStyles.push(styles.prefixSmall)
-    suffixStyles.push(styles.suffixSmall)
-    hintLeftMargin = -theme.rem(0.5) + 1
-
-    if (searchIcon) {
-      placeholderPaddingStyles.push(styles.placeholderSmallWithPrefix)
-      hintLeftMargin = theme.rem(1.75) - 1
-    }
   }
 
   return {
