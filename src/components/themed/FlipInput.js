@@ -434,7 +434,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
 
   bottomRow = (isFront: boolean) => {
     const { isEditable, inputAccessoryViewID, onNext, topReturnKeyType, theme } = this.props
-    const { textInputBackFocus } = this.state
+    const { textInputBackFocus, textInputFrontFocus } = this.state
     const styles = getStyles(theme)
     const displayAmount = isFront ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
     const decimalAmount = isFront ? this.state.primaryDecimalAmount : this.state.secondaryDecimalAmount
@@ -448,13 +448,14 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     const displayAmountCheck = !decimalAmount || decimalAmount.match(/^0*$/)
     const displayAmountString = displayAmountCheck ? s.strings.string_enter_amount : displayAmount
     const displayAmountStyle = displayAmountCheck ? styles.bottomAmountMuted : styles.bottomAmount
+    const textInputFocus = textInputFrontFocus || textInputBackFocus
 
     return (
       <TouchableWithoutFeedback onPress={onPress}>
         <View style={styles.bottomContainer} key="bottom">
           <View style={styles.valueContainer}>
-            {(!textInputBackFocus || !displayAmountCheck) && <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>}
-            <BlinkingCursor visible={textInputBackFocus} fontSize={1.5} color={theme.deactivatedText} />
+            {(!textInputFocus || !displayAmountCheck) && <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>}
+            <BlinkingCursor visible={textInputFocus} fontSize={1.5} color={theme.deactivatedText} />
           </View>
           {!displayAmountCheck && <EdgeText style={styles.bottomCurrency}>{currencyName}</EdgeText>}
           <TextInput
