@@ -1393,6 +1393,7 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               "marginLeft": 45,
               "marginRight": 45,
               "marginTop": 45,
+              "minHeight": 67,
               "minWidth": 202,
               "opacity": 1,
               "paddingBottom": 11,
@@ -1403,12 +1404,14 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
           }
         >
           <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.75}
+            numberOfLines={1}
             style={
               Object {
                 "color": "#0E4B75",
                 "fontFamily": "Quicksand-Bold",
                 "fontSize": 22,
-                "lineHeight": 45,
                 "marginHorizontal": 11,
               }
             }
@@ -2815,6 +2818,7 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               "marginLeft": 45,
               "marginRight": 45,
               "marginTop": 45,
+              "minHeight": 67,
               "minWidth": 202,
               "opacity": 1,
               "paddingBottom": 11,
@@ -2825,12 +2829,14 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
           }
         >
           <Text
+            adjustsFontSizeToFit={true}
+            minimumFontScale={0.75}
+            numberOfLines={1}
             style={
               Object {
                 "color": "#0E4B75",
                 "fontFamily": "Quicksand-Bold",
                 "fontSize": 22,
-                "lineHeight": 45,
                 "marginHorizontal": 11,
               }
             }
