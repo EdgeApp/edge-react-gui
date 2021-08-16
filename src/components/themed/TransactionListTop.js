@@ -165,6 +165,7 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
                   isClearable={searching}
                   onClear={this.clearText}
                   marginRem={0}
+                  searchIcon
                 />
               </View>
               {searching && (

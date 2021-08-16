@@ -199,6 +199,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
             ref={this.textInput}
             blurOnSubmit
             size="small"
+            searchIcon
           />
         </View>
         <FlatList data={items} initialNumToRender={24} keyboardShouldPersistTaps="handled" keyExtractor={this.keyExtractor} renderItem={this.renderItem} />

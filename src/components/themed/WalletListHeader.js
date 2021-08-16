@@ -73,6 +73,7 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
               isClearable={searching}
               onClear={this.clearText}
               marginRem={[0, 0, 1]}
+              searchIcon
             />
           </View>
           {searching && (

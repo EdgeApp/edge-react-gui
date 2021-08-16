@@ -99,7 +99,6 @@ export function TextInputModal(props: Props) {
         marginRem={[1, 0.5]}
         onChangeText={handleChangeText}
         onSubmitEditing={handleSubmit}
-        showSearchIcon={false}
         value={text}
       />
       {

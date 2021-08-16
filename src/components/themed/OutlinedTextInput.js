@@ -29,7 +29,7 @@ type Props = {|
   // Appearance:
   isClearable?: boolean,
   marginRem?: number | number[],
-  showSearchIcon?: boolean,
+  searchIcon?: boolean,
   size?: 'big' | 'small',
 
   // Callbacks:
@@ -113,7 +113,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     isClearable = false,
     marginRem,
     size = 'big',
-    showSearchIcon = true,
+    searchIcon = false,
 
     // Callbacks:
     onBlur,
@@ -168,7 +168,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     prefixStyles,
     suffixStyles,
     hintLeftMargin
-  } = getSizeStyles(theme, size, showSearchIcon)
+  } = getSizeStyles(theme, size, searchIcon)
 
   const handleFocus = () => {
     placeholderMap.value = withTiming(ANIMATION_STATES.FOCUSED)
@@ -279,7 +279,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
       <CornerBorder theme={theme} corner="right" cornerHeight={cornerHeight} placeholderSize={placeholderSize} colorMap={colorMap} />
       <TouchableWithoutFeedback onPress={handleFocus}>
         <View style={inputContainerStyles}>
-          {showSearchIcon ? (
+          {searchIcon ? (
             <View style={prefixStyles}>
               <AntDesignIcon name="search1" color={theme.iconDeactivated} size={theme.rem(1)} />
             </View>
@@ -316,7 +316,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
 })
 
 // return depended on size styles and values
-const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', showSearchIcon: boolean = true) => {
+const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', searchIcon: boolean = true) => {
   const styles = getStyles(theme)
   const inactiveColor = theme.secondaryText
   const activeColor = theme.iconTappable
@@ -334,7 +334,7 @@ const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', showSearchIc
   const inputContainerStyles: ViewStyle[] = [styles.inputContainer]
   const prefixStyles = [styles.prefix]
   const suffixStyles = [styles.suffix]
-  if (showSearchIcon) {
+  if (searchIcon) {
     placeholderPaddingStyles.push(styles.placeholderWithPrefix)
     hintLeftMargin = theme.rem(2.25)
   }
@@ -351,7 +351,7 @@ const getSizeStyles = (theme: Theme, size: 'big' | 'small' = 'big', showSearchIc
     suffixStyles.push(styles.suffixSmall)
     hintLeftMargin = -theme.rem(0.5) + 1
 
-    if (showSearchIcon) {
+    if (searchIcon) {
       placeholderPaddingStyles.push(styles.placeholderSmallWithPrefix)
       hintLeftMargin = theme.rem(1.75) - 1
     }

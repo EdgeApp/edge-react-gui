@@ -350,7 +350,6 @@ class AddressModalComponent extends React.Component<Props, State> {
             ref={this.textInput}
             error={fieldError}
             blurOnSubmit
-            showSearchIcon={false}
           />
           {!userFioAddressesLoading ? (
             <FlatList

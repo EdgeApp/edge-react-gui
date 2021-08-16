@@ -51,6 +51,7 @@ function ManageTokensHeader(props: Props) {
             marginRem={0}
             isClearable
             size="small"
+            searchIcon
           />
         </View>
       </View>

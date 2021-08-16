@@ -122,6 +122,7 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
           marginRem={[0, 1.75]}
           ref={this.textInput}
           blurOnSubmit
+          searchIcon
         />
         <FlatList
           style={styles.list}

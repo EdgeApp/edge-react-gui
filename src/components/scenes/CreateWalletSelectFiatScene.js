@@ -164,6 +164,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
               marginRem={[0, 1.75]}
               ref={this.textInput}
               blurOnSubmit
+              searchIcon
             />
             <FlatList
               style={styles.resultList}

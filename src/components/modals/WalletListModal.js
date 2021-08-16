@@ -63,6 +63,7 @@ export class WalletListModal extends React.PureComponent<Props, State> {
           value={search}
           marginRem={[0.5, 0.75, 1.25]}
           size="small"
+          searchIcon
         />
         <WalletList
           onPress={this.handleOnPress}
