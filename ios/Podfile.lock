@@ -501,7 +501,7 @@ PODS:
     - React-Core
   - RNQrGenerator (1.1.7):
     - React
-  - RNReanimated (2.0.0):
+  - RNReanimated (2.2.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -831,7 +831,7 @@ SPEC CHECKSUMS:
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   edge-login-ui-rn: 3de2a56437484e802e02c033e803ee1e8ff29aef
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: fa499e5f6bc9eb280639658945c847de7f769d9d
+  FBReactNativeSpec: 86d9e030dbb7af0ba0eb4e1b6d52e4af26c7f1f3
   Firebase: e1e089d9aac215a52442583f818ab61de3c4581b
   FirebaseAnalytics: 9f8f4feab1f3fddf4e4515f8f022fe6aa9e51043
   FirebaseCore: 0a43b7f1c5b36f3358cd703011ca4c7e0df55870
@@ -911,7 +911,7 @@ SPEC CHECKSUMS:
   RNLocalize: 43f6c30d8e19ad92282ae434d310fb463b31f419
   RNPermissions: 58c1eb5638504e3afda963a8b0f43b6752132b05
   RNQrGenerator: 86fb623932ed29627c6a95b8dc94af5e93d8abe1
-  RNReanimated: 64f6c5789f82818c07ba3c71864b73619cb23c76
+  RNReanimated: 9c13c86454bfd54dab7505c1a054470bfecd2563
   RNShare: 8af5349f05fc042d230674dd650d19789187ff9c
   RNSound: da030221e6ac7e8290c6b43f2b5f2133a8e225b0
   RNStoreReview: 62d6afd7c37db711a594bbffca6b0ea3a812b7a8
@@ -923,4 +923,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 99afeb1d9ab89efc9196aae342f9809649de3fe1
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.2
