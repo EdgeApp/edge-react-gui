@@ -27,7 +27,7 @@ type Props = {|
   label?: string,
 
   // Appearance:
-  isClearable?: boolean,
+  clearIcon?: boolean,
   marginRem?: number | number[],
   searchIcon?: boolean,
   size?: 'big' | 'small',
@@ -110,7 +110,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
     label: placeholder = '',
 
     // Appearance:
-    isClearable = false,
+    clearIcon = false,
     marginRem,
     size = 'big',
     searchIcon = false,
@@ -296,7 +296,7 @@ const OutlinedTextInputComponent = React.forwardRef((props: Props, ref) => {
             placeholder=""
             value={value}
           />
-          {isClearable && isFocused() && (
+          {clearIcon && isFocused() && (
             <View style={suffixStyles}>
               <TouchableOpacity onPress={clearText} style={styles.clearContainer}>
                 <AntDesignIcon name="close" color={theme.icon} size={theme.rem(1)} />

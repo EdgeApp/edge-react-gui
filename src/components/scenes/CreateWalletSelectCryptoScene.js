@@ -24,8 +24,7 @@ type Props = StateProps & ThemeProps
 
 type State = {
   selectedWalletType: string,
-  searchTerm: string,
-  isFocused: boolean
+  searchTerm: string
 }
 
 class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
@@ -35,8 +34,7 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     super(props)
     this.state = {
       selectedWalletType: '',
-      searchTerm: '',
-      isFocused: true
+      searchTerm: ''
     }
   }
 
@@ -88,14 +86,6 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     }
   }
 
-  handleOnFocus = () => {
-    this.setState({ isFocused: true })
-  }
-
-  handleOnBlur = () => {
-    this.setState({ isFocused: false })
-  }
-
   renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
     const { theme } = this.props
     const { walletType, symbolImageDarkMono, currencyCode } = data.item
@@ -122,7 +112,7 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
 
   render() {
     const { account } = this.props
-    const { searchTerm, isFocused } = this.state
+    const { searchTerm } = this.state
     const lowerSearch = searchTerm.toLowerCase()
     const styles = getStyles(this.props.theme)
 
@@ -141,8 +131,6 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
             <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
             <OutlinedTextInput
               autoFocus
-              onFocus={this.handleOnFocus}
-              onBlur={this.handleOnBlur}
               autoCorrect={false}
               autoCapitalize="words"
               onChangeText={this.handleSearchTermChange}
@@ -151,7 +139,7 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
               returnKeyType="search"
               size="small"
               onClear={this.clearText}
-              isClearable={isFocused}
+              clearIcon
               marginRem={[0, 1.75]}
               ref={this.textInput}
               blurOnSubmit

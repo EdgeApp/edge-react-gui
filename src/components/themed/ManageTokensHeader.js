@@ -49,7 +49,7 @@ function ManageTokensHeader(props: Props) {
             ref={textInput}
             onClear={onSearchClear}
             marginRem={0}
-            isClearable
+            clearIcon
             size="small"
             searchIcon
           />

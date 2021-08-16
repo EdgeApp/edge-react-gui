@@ -52,8 +52,7 @@ type State = {
   fieldError: string | void,
   cryptoAddress?: string,
   fioAddresses: FioAddresses,
-  filteredFioAddresses: string[],
-  isFocused: boolean
+  filteredFioAddresses: string[]
 }
 
 type Props = StateProps & OwnProps & DispatchProps & ThemeProps
@@ -71,8 +70,7 @@ class AddressModalComponent extends React.Component<Props, State> {
       cryptoAddress: undefined,
       fieldError: undefined,
       fioAddresses: { addresses: {} },
-      filteredFioAddresses: [],
-      isFocused: false
+      filteredFioAddresses: []
     }
   }
 
@@ -142,14 +140,6 @@ class AddressModalComponent extends React.Component<Props, State> {
     if (this.textInput.current) {
       this.textInput.current.blur()
     }
-  }
-
-  fieldOnFocus = () => {
-    this.setState({ isFocused: true })
-  }
-
-  fieldOnBlur = () => {
-    this.setState({ isFocused: false })
   }
 
   onChangeTextDelayed = (domain: string) => {
@@ -322,7 +312,7 @@ class AddressModalComponent extends React.Component<Props, State> {
   keyExtractor = (item: string, index: number) => index.toString()
 
   render() {
-    const { uri, statusLabel, fieldError, filteredFioAddresses, isFocused } = this.state
+    const { uri, statusLabel, fieldError, filteredFioAddresses } = this.state
     const { title, userFioAddressesLoading } = this.props
     const styles = getStyles(this.props.theme)
 
@@ -341,11 +331,9 @@ class AddressModalComponent extends React.Component<Props, State> {
             label={statusLabel}
             onChangeText={this.onChangeTextDelayed}
             onSubmitEditing={this.handleSubmit}
-            onFocus={this.fieldOnFocus}
-            onBlur={this.fieldOnBlur}
             value={uri}
             onClear={this.clearText}
-            isClearable={isFocused}
+            clearIcon
             marginRem={[0, 1]}
             ref={this.textInput}
             error={fieldError}

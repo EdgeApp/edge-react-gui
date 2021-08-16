@@ -58,7 +58,7 @@ export class WalletListModal extends React.PureComponent<Props, State> {
           onChangeText={this.handleChangeSearchInput}
           onFocus={this.handleTextFieldFocus}
           onBlur={this.handleTextFieldBlur}
-          isClearable={searching}
+          clearIcon
           onClear={this.handleClearText}
           value={search}
           marginRem={[0.5, 0.75, 1.25]}

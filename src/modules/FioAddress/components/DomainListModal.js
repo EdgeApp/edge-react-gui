@@ -39,7 +39,6 @@ type OwnProps = {
 
 type State = {
   input: string,
-  isFocused: boolean,
   domains: Item[],
   prevDomainsJson: string
 }
@@ -59,8 +58,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
     this.state = {
       input: '',
       domains: [],
-      prevDomainsJson: '',
-      isFocused: false
+      prevDomainsJson: ''
     }
   }
 
@@ -96,14 +94,6 @@ class DomainListModalComponent extends React.Component<Props, State> {
     if (this.textInput.current) {
       this.textInput.current.blur()
     }
-  }
-
-  fieldOnFocus = () => {
-    this.setState({ isFocused: true })
-  }
-
-  fieldOnBlur = () => {
-    this.setState({ isFocused: false })
   }
 
   getItems = () => {
@@ -173,7 +163,7 @@ class DomainListModalComponent extends React.Component<Props, State> {
   onSearchFilterChange = (input: string) => this.setState({ input })
   render() {
     const { bridge, theme } = this.props
-    const { input, isFocused } = this.state
+    const { input } = this.state
     const items = this.getItems()
     return (
       <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(null)} paddingRem={[1, 0]}>
@@ -190,11 +180,9 @@ class DomainListModalComponent extends React.Component<Props, State> {
             label={s.strings.fio_domain_label}
             onChangeText={this.onSearchFilterChange}
             onSubmitEditing={this.selectCustom}
-            onFocus={this.fieldOnFocus}
-            onBlur={this.fieldOnBlur}
             value={input}
             onClear={this.clearText}
-            isClearable={isFocused}
+            clearIcon
             marginRem={[0, 1]}
             ref={this.textInput}
             blurOnSubmit

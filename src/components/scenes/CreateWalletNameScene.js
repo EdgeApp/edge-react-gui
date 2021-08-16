@@ -20,8 +20,7 @@ export type CreateWalletNameOwnProps = {
 }
 type Props = CreateWalletNameOwnProps
 type State = {
-  walletName: string,
-  isFocused: boolean
+  walletName: string
 }
 
 export class CreateWalletName extends React.Component<Props, State> {
@@ -36,7 +35,7 @@ export class CreateWalletName extends React.Component<Props, State> {
     } else {
       walletName = sprintf(s.strings.my_crypto_wallet_name, this.props.selectedWalletType.currencyName)
     }
-    this.state = { walletName, isFocused: true }
+    this.state = { walletName }
   }
 
   isValidWalletName = () => {
@@ -51,14 +50,6 @@ export class CreateWalletName extends React.Component<Props, State> {
     if (this.textInput.current) {
       this.textInput.current.blur()
     }
-  }
-
-  handleOnFocus = () => {
-    this.setState({ isFocused: true })
-  }
-
-  handleOnBlur = () => {
-    this.setState({ isFocused: false })
   }
 
   onNext = () => {
@@ -91,11 +82,9 @@ export class CreateWalletName extends React.Component<Props, State> {
           autoFocus
           autoCorrect={false}
           returnKeyType="next"
-          onFocus={this.handleOnFocus}
-          onBlur={this.handleOnBlur}
           label={s.strings.fragment_wallets_addwallet_name_hint}
           onClear={this.clearText}
-          isClearable={this.state.isFocused}
+          clearIcon
           marginRem={[0, 1.75]}
           ref={this.textInput}
           blurOnSubmit

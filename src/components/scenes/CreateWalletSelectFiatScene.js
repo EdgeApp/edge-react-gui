@@ -29,8 +29,7 @@ type Props = OwnProps & StateProps & ThemeProps
 
 type State = {
   searchTerm: string,
-  selectedFiat: string,
-  isFocused: boolean
+  selectedFiat: string
 }
 
 class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
@@ -40,8 +39,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     super(props)
     this.state = {
       searchTerm: '',
-      selectedFiat: '',
-      isFocused: true
+      selectedFiat: ''
     }
   }
 
@@ -106,14 +104,6 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
     }
   }
 
-  handleOnFocus = () => {
-    this.setState({ isFocused: true })
-  }
-
-  handleOnBlur = () => {
-    this.setState({ isFocused: false })
-  }
-
   renderFiatTypeResult = (data: FlatListItem<GuiFiatType>) => {
     const styles = getStyles(this.props.theme)
     const fiatCountry = FIAT_COUNTRY[data.item.value]
@@ -137,7 +127,6 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { isFocused } = this.state
     const styles = getStyles(this.props.theme)
     const filteredArray = this.props.supportedFiats.filter(entry => {
       return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
@@ -150,8 +139,6 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
             <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_fiat} />
             <OutlinedTextInput
               autoFocus
-              onFocus={this.handleOnFocus}
-              onBlur={this.handleOnBlur}
               autoCorrect={false}
               autoCapitalize="words"
               onChangeText={this.handleSearchTermChange}
@@ -160,7 +147,7 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
               returnKeyType="search"
               size="small"
               onClear={this.clearText}
-              isClearable={isFocused}
+              clearIcon
               marginRem={[0, 1.75]}
               ref={this.textInput}
               blurOnSubmit

@@ -21,8 +21,7 @@ type CountrySelectionModalProps = {
 
 type CountrySelectionModalState = {
   input: string,
-  countryCode: string,
-  isFocused: boolean
+  countryCode: string
 }
 
 type Props = CountrySelectionModalProps & ThemeProps
@@ -34,8 +33,7 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
     const deviceCountry = getCountry() // "US"
     this.state = {
       input: '',
-      countryCode: props.countryCode || deviceCountry || 'US',
-      isFocused: true
+      countryCode: props.countryCode || deviceCountry || 'US'
     }
   }
 
@@ -54,14 +52,6 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
     if (this.textInput.current) {
       this.textInput.current.blur()
     }
-  }
-
-  handleOnFocus = () => {
-    this.setState({ isFocused: true })
-  }
-
-  handleOnBlur = () => {
-    this.setState({ isFocused: false })
   }
 
   _renderItem = (data: { item: CountryData }) => {
@@ -85,7 +75,7 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
 
   render() {
     const { bridge, theme } = this.props
-    const { input, countryCode, isFocused } = this.state
+    const { input, countryCode } = this.state
     const styles = getStyles(theme)
     const lowerCaseInput = input.toLowerCase()
     const upperCaseInput = input.toUpperCase()
@@ -111,14 +101,12 @@ class CountrySelectionModalComponent extends React.Component<Props, CountrySelec
           label={s.strings.buy_sell_crypto_select_country_button}
           onChangeText={this.updateCountryInput}
           value={input}
-          onFocus={this.handleOnFocus}
-          onBlur={this.handleOnBlur}
           autoCorrect={false}
           autoCapitalize="words"
           returnKeyType="search"
           size="small"
           onClear={this.clearText}
-          isClearable={isFocused}
+          clearIcon
           marginRem={[0, 1.75]}
           ref={this.textInput}
           blurOnSubmit
