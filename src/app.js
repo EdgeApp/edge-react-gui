@@ -2,7 +2,6 @@
 /* global __DEV__ */
 
 import Bugsnag from '@bugsnag/react-native'
-import * as React from 'react'
 import { LogBox, Platform, StatusBar, Text, TextInput } from 'react-native'
 import RNFS from 'react-native-fs'
 
@@ -25,7 +24,6 @@ if (StatusBar.setTranslucent != null) {
   StatusBar.setBackgroundColor(THEME.COLORS.APP_STATUS_BAR)
 }
 
-const ENABLE_WHY_DID_YOU_UPDATE = false
 const ENABLE_PERF_LOGGING = false
 const PERF_LOGGING_ONLY = false
 
@@ -70,11 +68,6 @@ if (!__DEV__) {
   console.warn = log
   // $FlowFixMe
   console.error = log
-}
-
-if (__DEV__ && ENABLE_WHY_DID_YOU_UPDATE) {
-  const { whyDidYouUpdate } = require('why-did-you-update')
-  whyDidYouUpdate(React)
 }
 
 if (ENV.LOG_SERVER) {
