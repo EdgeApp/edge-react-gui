@@ -8,6 +8,7 @@ import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
 import { sprintf } from 'sprintf-js'
 
 import { FIO_ADDRESS_SETTINGS, FIO_SENT_REQUEST_DETAILS, SEND, TRANSACTION_DETAILS } from '../../constants/SceneKeys.js'
+import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { addToFioAddressCache, cancelFioRequest, FIO_NO_BUNDLED_ERR_CODE } from '../../modules/FioAddress/util'
@@ -38,7 +39,11 @@ type LocalState = {
   fullScreenLoader: boolean,
   addressCachedUpdated: boolean,
   fioRequestsPending: FioRequest[],
-  fioRequestsSent: FioRequest[]
+  fioRequestsSent: FioRequest[],
+  prevPendingAmount: number,
+  prevSentAmount: number,
+  pendingRequestPaging: { [string]: number },
+  sentRequestPaging: { [string]: number }
 }
 
 type StateProps = {
@@ -73,7 +78,11 @@ class FioRequestList extends React.Component<Props, LocalState> {
       addressCachedUpdated: false,
       fullScreenLoader: false,
       fioRequestsPending: [],
-      fioRequestsSent: []
+      fioRequestsSent: [],
+      prevPendingAmount: -1,
+      prevSentAmount: -1,
+      pendingRequestPaging: {},
+      sentRequestPaging: {}
     }
   }
 
@@ -108,76 +117,41 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   getFioRequestsPending = async () => {
-    const { fioWallets = [] } = this.props
-    let fioRequestsPending = []
-    if (fioWallets.length) {
-      try {
-        for (const wallet of fioWallets) {
-          const fioPublicKey = wallet.publicWalletInfo.keys.publicKey
-          const fioAddresses = await wallet.otherMethods.getFioAddresses()
-          const approveNeededFioRequests = await wallet.otherMethods.getApproveNeededFioRequests()
-          if (fioAddresses.length > 0) {
-            try {
-              const { requests } = await wallet.otherMethods.fioAction('getPendingFioRequests', { fioPublicKey })
-              if (requests) {
-                fioRequestsPending = [
-                  ...fioRequestsPending,
-                  ...requests
-                    .filter(request => !approveNeededFioRequests[request.fio_request_id])
-                    .map(request => {
-                      request.fioWalletId = wallet.id
-                      return request
-                    })
-                ]
-              } else {
-                showError(s.strings.fio_get_requests_error)
-              }
-            } catch (e) {
-              //
-            }
-          }
-        }
-      } catch (e) {
-        showError(s.strings.fio_get_requests_error)
-      }
+    const { fioWallets = [], account } = this.props
+    const { pendingRequestPaging, fioRequestsPending } = this.state
+    const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    this.setState({ loadingPending: true, prevPendingAmount: fioRequestsPending.length })
+    let newRequests = []
+    try {
+      newRequests = await this.getFioRequests(fioWallets, pendingRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.PENDING, true)
+    } catch (e) {
+      showError(e.message)
     }
 
-    this.setState({ fioRequestsPending: fioRequestsPending.sort((a, b) => (a.time_stamp < b.time_stamp ? 1 : -1)), loadingPending: false })
+    this.setState({
+      fioRequestsPending: [...fioRequestsPending, ...newRequests],
+      loadingPending: false,
+      pendingRequestPaging
+    })
   }
 
   getFioRequestsSent = async () => {
-    const { fioWallets = [] } = this.props
-    let fioRequestsSent = []
-    if (fioWallets.length) {
-      try {
-        for (const wallet of fioWallets) {
-          const fioPublicKey = wallet.publicWalletInfo.keys.publicKey
-          const fioAddresses = await wallet.otherMethods.getFioAddresses()
-          if (fioAddresses.length > 0) {
-            try {
-              const { requests } = await wallet.otherMethods.fioAction('getSentFioRequests', { fioPublicKey })
-              if (requests) {
-                fioRequestsSent = [
-                  ...fioRequestsSent,
-                  ...requests.map(request => {
-                    request.fioWalletId = wallet.id
-                    return request
-                  })
-                ]
-              } else {
-                showError(s.strings.fio_get_requests_error)
-              }
-            } catch (e) {
-              //
-            }
-          }
-        }
-      } catch (e) {
-        showError(s.strings.fio_get_requests_error)
-      }
+    const { fioWallets = [], account } = this.props
+    const { fioRequestsSent, sentRequestPaging } = this.state
+    const fioPlugin = account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO]
+    this.setState({ loadingSent: true, prevSentAmount: fioRequestsSent.length })
+    let newRequests = []
+    try {
+      newRequests = await this.getFioRequests(fioWallets, sentRequestPaging, fioPlugin.currencyInfo.defaultSettings.fioRequestsTypes.SENT)
+    } catch (e) {
+      showError(e.message)
     }
 
-    this.setState({ fioRequestsSent: fioRequestsSent.sort((a, b) => (a.time_stamp > b.time_stamp ? -1 : 1)), loadingSent: false })
+    this.setState({
+      fioRequestsSent: [...fioRequestsSent, ...newRequests],
+      loadingSent: false,
+      sentRequestPaging
+    })
   }
 
   getFioRequests = async (
@@ -526,6 +500,20 @@ class FioRequestList extends React.Component<Props, LocalState> {
     return item.fio_request_id.toString()
   }
 
+  pendingLazyLoad = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
+    const { loadingPending, fioRequestsPending, prevPendingAmount } = this.state
+    if (!loadingPending && (prevPendingAmount < fioRequestsPending.length || (distanceFromEnd < 0 && fioRequestsPending.length > 0))) {
+      this.getFioRequestsPending()
+    }
+  }
+
+  sentLazyLoad = ({ distanceFromEnd }: { distanceFromEnd: number }) => {
+    const { loadingSent, fioRequestsSent, prevSentAmount } = this.state
+    if (!loadingSent && (prevSentAmount < fioRequestsSent.length || (distanceFromEnd < 0 && fioRequestsSent.length > 0))) {
+      this.getFioRequestsSent()
+    }
+  }
+
   renderPending = (itemObj: { item: FioRequest }) => {
     const { item: fioRequest } = itemObj
     return <FioRequestRow fioRequest={fioRequest} onSelect={this.selectPendingRequest} />
@@ -576,8 +564,9 @@ class FioRequestList extends React.Component<Props, LocalState> {
             <SceneHeader title={s.strings.fio_pending_requests} underline />
             {!loadingPending && !fioRequestsPending.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
             <View style={styles.container}>
-              {loadingPending && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
+              {loadingPending && !fioRequestsPending.length && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
               <SwipeListView
+                initialNumToRender={10}
                 useSectionList
                 sections={this.pendingRequestHeaders()}
                 renderItem={this.renderPending}
@@ -585,6 +574,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
                 renderHiddenItem={this.renderHiddenItem}
                 renderSectionHeader={this.headerRowUsingTitle}
                 rightOpenValue={theme.rem(-HIDDEN_MENU_BUTTONS_WIDTH)}
+                onEndReached={this.pendingLazyLoad}
+                onEndReachedThreshold={SCROLL_THRESHOLD}
                 disableRightSwipe
               />
             </View>
@@ -593,10 +584,9 @@ class FioRequestList extends React.Component<Props, LocalState> {
             <SceneHeader title={s.strings.fio_sent_requests} underline withTopMargin />
             {!loadingSent && !fioRequestsSent.length ? <EdgeText style={styles.emptyListText}>{s.strings.fio_no_requests_label}</EdgeText> : null}
             <View style={styles.container}>
-              {loadingSent && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
+              {loadingSent && !fioRequestsSent.length && <ActivityIndicator color={theme.iconTappable} style={styles.loading} size="small" />}
               <SwipeListView
-                initialNumToRender={fioRequestsSent ? fioRequestsSent.length : 0}
-                onEndReachedThreshold={SCROLL_THRESHOLD}
+                initialNumToRender={10}
                 useSectionList
                 sections={this.sentRequestHeaders()}
                 renderItem={this.renderSent}
@@ -605,6 +595,8 @@ class FioRequestList extends React.Component<Props, LocalState> {
                 renderSectionHeader={this.headerRowUsingTitle}
                 rightOpenValue={theme.rem(-HIDDEN_MENU_BUTTONS_WIDTH)}
                 disableRightSwipe
+                onEndReached={this.sentLazyLoad}
+                onEndReachedThreshold={SCROLL_THRESHOLD}
               />
             </View>
           </View>
