@@ -1,5 +1,13 @@
 # edge-react-gui
 
+## 2.0.18 (2021-08-18)
+
+- Fix issue when sending ETC, FTM, and RSK
+- Pass currency code to parseUri
+- Upgrade edge-currency-accountbased to v0.7.69
+  - Add: Improved support for EIP-681 URI parsing of payments and token transfers
+  - Fix: Unable to send transactions on ETC, FTM, and RSK networks
+
 ## 2.0.17 (2021-08-02)
 
 - Add Exchange Max function Exchange scene
