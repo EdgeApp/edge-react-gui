@@ -60,6 +60,8 @@ type OwnProps = {
 
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
+const ITEMS_PER_PAGE = 50
+
 class FioRequestList extends React.Component<Props, LocalState> {
   willFocusSubscription: { remove: () => void } | null = null
 
@@ -176,6 +178,33 @@ class FioRequestList extends React.Component<Props, LocalState> {
     }
 
     this.setState({ fioRequestsSent: fioRequestsSent.sort((a, b) => (a.time_stamp > b.time_stamp ? -1 : 1)), loadingSent: false })
+  }
+
+  getFioRequests = async (
+    fioWallets: EdgeCurrencyWallet[],
+    paging: { [fioPublicKey: string]: number },
+    requestsType: string,
+    newFirst: boolean = false
+  ): Promise<FioRequest[]> => {
+    const nextFioRequests: FioRequest[] = []
+    if (fioWallets.length) {
+      try {
+        for (const wallet of fioWallets) {
+          const fioPublicKey = wallet.publicWalletInfo.keys.publicKey
+          if (paging[fioPublicKey] == null) paging[fioPublicKey] = 1
+
+          const fioRequests = await wallet.otherMethods.getFioRequests(requestsType, paging[fioPublicKey], ITEMS_PER_PAGE, newFirst)
+          nextFioRequests.push(...fioRequests.map((request: FioRequest) => ({ ...request, fioWalletId: wallet.id })))
+          paging[fioPublicKey]++
+        }
+      } catch (e) {
+        throw new Error(s.strings.fio_get_requests_error)
+      }
+    }
+    if (newFirst) {
+      return nextFioRequests.sort((a, b) => (a.time_stamp < b.time_stamp ? 1 : -1))
+    }
+    return nextFioRequests.sort((a, b) => (a.time_stamp < b.time_stamp ? -1 : 1))
   }
 
   showRenewAlert = async (fioWallet: EdgeCurrencyWallet, fioAddressName: string) => {
