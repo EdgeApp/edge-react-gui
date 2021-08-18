@@ -10,9 +10,8 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
-import type { GuiFiatType, GuiWallet } from '../../types/types'
+import { type GuiWallet } from '../../types/types.js'
 import { makeCreateWalletType } from '../../util/CurrencyInfoHelpers.js'
-import { сreateWalletSelectFiatNextHandler } from '../../util/scene/сreateWalletSelectFiatNextHandler'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -50,18 +49,6 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
     )
   }
 
-  selectFiatNextHandler = (isValidFiatType: boolean, selectedFiat: GuiFiatType) => {
-    const {
-      account: {
-        currencyConfig: { ethereum }
-      }
-    } = this.props
-
-    if (ethereum == null) return
-
-    сreateWalletSelectFiatNextHandler(isValidFiatType, selectedFiat, makeCreateWalletType(ethereum.currencyInfo))
-  }
-
   addToken = () => {
     const { account, wallets } = this.props
 
@@ -96,7 +83,7 @@ class WalletListFooterComponent extends React.PureComponent<StateProps & ThemePr
       .then(answer => {
         if (answer === 'confirm') {
           Actions.push(CREATE_WALLET_SELECT_FIAT, {
-            onNext: this.selectFiatNextHandler
+            selectedWalletType: makeCreateWalletType(ethereum.currencyInfo)
           })
         }
       })

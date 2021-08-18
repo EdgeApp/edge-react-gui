@@ -15,9 +15,8 @@ import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
 import { Actions } from '../../types/routerTypes.js'
-import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
+import { type CreateWalletType } from '../../types/types.js'
 import { scale } from '../../util/scaling.js'
-import { сreateWalletSelectFiatNextHandler } from '../../util/scene/сreateWalletSelectFiatNextHandler'
 import { FormField } from '../common/FormField.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship } from '../services/AirshipInstance.js'
@@ -48,10 +47,6 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
     }
   }
 
-  selectFiatNextHandler = (isValidFiatType: boolean, selectedFiat: GuiFiatType) => {
-    сreateWalletSelectFiatNextHandler(isValidFiatType, selectedFiat, this.props.selectedWalletType, this.state.input)
-  }
-
   handleNext = (): void => {
     const { account, selectedWalletType } = this.props
     const { input } = this.state
@@ -64,7 +59,8 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
       .importKey(input)
       .then(() => {
         Actions.push(CREATE_WALLET_SELECT_FIAT, {
-          onNext: this.selectFiatNextHandler
+          selectedWalletType,
+          cleanedPrivateKey: input
         })
       })
       .catch(error =>

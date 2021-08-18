@@ -14,6 +14,7 @@ import { CreateWalletChoiceComponent } from '../components/scenes/CreateWalletCh
 import { CreateWalletImportScene } from '../components/scenes/CreateWalletImportScene.js'
 import { CreateWalletReviewScene } from '../components/scenes/CreateWalletReviewScene.js'
 import { CreateWalletSelectCryptoScene } from '../components/scenes/CreateWalletSelectCryptoScene.js'
+import { CreateWalletSelectFiatScene } from '../components/scenes/CreateWalletSelectFiatScene.js'
 import { CryptoExchangeQuote } from '../components/scenes/CryptoExchangeQuoteScene.js'
 import { CryptoExchangeScene } from '../components/scenes/CryptoExchangeScene.js'
 import { CryptoExchangeSuccessScene } from '../components/scenes/CryptoExchangeSuccessScene.js'
@@ -32,7 +33,6 @@ import { FioRequestListScene } from '../components/scenes/FioRequestListScene'
 import { FioSentRequestDetailsScene } from '../components/scenes/FioSentRequestDetailsScene'
 import { PromotionSettingsScene } from '../components/scenes/PromotionSettingsScene.js'
 import { ScanScene } from '../components/scenes/ScanScene.js'
-import { SelectFiatScene } from '../components/scenes/SelectFiatScene.js'
 import { SwapSettingsScene } from '../components/scenes/SwapSettingsScene.js'
 import { TransactionsExportScene } from '../components/scenes/TransactionsExportScene.js'
 import { WalletListScene } from '../components/scenes/WalletListScene.js'
@@ -286,7 +286,7 @@ export class MainComponent extends React.Component<Props> {
               <Scene
                 key={CREATE_WALLET_SELECT_FIAT}
                 navTransparent
-                component={ifLoggedIn(SelectFiatScene)}
+                component={ifLoggedIn(CreateWalletSelectFiatScene)}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={this.renderEmptyButton()}
               />
