@@ -74,7 +74,11 @@ export function MainButton(props: Props) {
 
   return (
     <TouchableOpacity disabled={disabled || pending} style={[touchableStyle, dynamicStyles]} onPress={handlePress}>
-      {label != null && !pending ? <Text style={textStyle}>{label}</Text> : null}
+      {label != null && !pending ? (
+        <Text adjustsFontSizeToFit minimumFontScale={0.75} numberOfLines={1} style={textStyle}>
+          {label}
+        </Text>
+      ) : null}
       {!pending ? children : null}
       {spinner || pending ? <ActivityIndicator color={spinnerColor} style={styles.spinner} /> : null}
     </TouchableOpacity>
@@ -88,12 +92,12 @@ const getStyles = cacheStyles((theme: Theme) => {
     borderWidth: theme.rem(0.1),
     flexDirection: 'row',
     justifyContent: 'center',
+    minHeight: theme.rem(3),
     minWidth: theme.rem(9)
   }
   const commonText = {
     fontFamily: theme.fontFaceBold,
     fontSize: theme.rem(1),
-    lineHeight: theme.rem(2),
     marginHorizontal: theme.rem(0.5)
   }
 
@@ -119,9 +123,6 @@ const getStyles = cacheStyles((theme: Theme) => {
     },
 
     // Common styles:
-    disabled: {
-      opacity: 0.7
-    },
     spinner: {
       height: theme.rem(2),
       marginHorizontal: theme.rem(0.5)

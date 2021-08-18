@@ -17,10 +17,10 @@ import { SceneWrapper } from '../common/SceneWrapper.js'
 import { WalletListModal } from '../modals/WalletListModal'
 import { Airship } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
+import { DividerLine } from '../themed/DividerLine'
 import { MainButton } from '../themed/MainButton.js'
 import ManageTokensHeader from '../themed/ManageTokensHeader'
 import ManageTokensRow from '../themed/ManageTokensRow'
-import SceneFooter from '../themed/SceneFooter'
 import { SceneHeader } from '../themed/SceneHeader'
 import { getCurrencyIcon } from './../../util/CurrencyInfoHelpers'
 
@@ -228,48 +228,41 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
 
     return (
       <SceneWrapper>
-        <View style={styles.container}>
-          <SceneHeader underline>
-            <ManageTokensHeader
-              textInput={this.textInput}
-              walletName={name}
+        <SceneHeader underline>
+          <ManageTokensHeader
+            textInput={this.textInput}
+            walletName={name}
+            walletId={this.props.guiWallet.id}
+            currencyCode={currencyCode}
+            changeSearchValue={this.changeSearchValue}
+            onSearchClear={this.onSearchClear}
+            onSelectWallet={this.onSelectWallet}
+            searchValue={this.state.searchValue}
+          />
+        </SceneHeader>
+        <FlatList
+          keyExtractor={item => item.currencyCode}
+          data={this.getFilteredTokens()}
+          renderItem={metaToken => (
+            <ManageTokensRow
+              goToEditTokenScene={this.goToEditTokenScene}
+              metaToken={metaToken}
               walletId={this.props.guiWallet.id}
-              currencyCode={currencyCode}
-              changeSearchValue={this.changeSearchValue}
-              onSearchClear={this.onSearchClear}
-              onSelectWallet={this.onSelectWallet}
-              searchValue={this.state.searchValue}
+              symbolImage={getCurrencyIcon(currencyCode, metaToken.item.currencyCode ?? undefined).symbolImage}
+              toggleToken={this.toggleToken}
+              enabledList={this.state.enabledList}
+              metaTokens={this.props.guiWallet.metaTokens}
             />
-          </SceneHeader>
-          <View style={styles.tokensWrapper}>
-            <View style={styles.tokensArea}>
-              <FlatList
-                keyExtractor={item => item.currencyCode}
-                data={this.getFilteredTokens()}
-                renderItem={metaToken => (
-                  <ManageTokensRow
-                    goToEditTokenScene={this.goToEditTokenScene}
-                    metaToken={metaToken}
-                    walletId={this.props.guiWallet.id}
-                    symbolImage={getCurrencyIcon(currencyCode, metaToken.item.currencyCode ?? undefined).symbolImage}
-                    toggleToken={this.toggleToken}
-                    enabledList={this.state.enabledList}
-                    metaTokens={this.props.guiWallet.metaTokens}
-                  />
-                )}
-              />
-            </View>
-            <SceneFooter style={styles.buttonsArea} underline>
-              <MainButton
-                label={s.strings.string_save}
-                marginRem={[0.75]}
-                paddingRem={[0.3, 0, 0.5, 0]}
-                spinner={manageTokensPending}
-                type="secondary"
-                onPress={this.saveEnabledTokenList}
-              />
-              <MainButton label={s.strings.addtoken_add} marginRem={[0.75]} paddingRem={[0.3, 0, 0.5, 0]} type="secondary" onPress={this.goToAddTokenScene} />
-            </SceneFooter>
+          )}
+          style={styles.tokensArea}
+        />
+        <DividerLine marginRem={[0, 1]} />
+        <View style={styles.buttonsArea}>
+          <View style={styles.buttonWrapper}>
+            <MainButton label={s.strings.string_save} marginRem={0.5} spinner={manageTokensPending} type="secondary" onPress={this.saveEnabledTokenList} />
+          </View>
+          <View style={styles.buttonWrapper}>
+            <MainButton label={s.strings.addtoken_add} marginRem={0.5} type="secondary" onPress={this.goToAddTokenScene} />
           </View>
         </View>
       </SceneWrapper>
@@ -278,22 +271,19 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({
-  container: {
-    position: 'relative',
-    flex: 1
-  },
-  tokensWrapper: {
-    flex: 1
-  },
   tokensArea: {
+    marginTop: theme.rem(-0.5),
     flex: 4
   },
+  buttonWrapper: {
+    flex: 1
+  },
   buttonsArea: {
-    display: 'flex',
+    alignItems: 'center',
+    alignSelf: 'stretch',
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'stretch'
+    padding: theme.rem(0.5)
   }
 }))
 
