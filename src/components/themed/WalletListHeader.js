@@ -12,7 +12,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { EdgeText } from '../themed/EdgeText.js'
 import { PromoCard } from '../themed/PromoCard.js'
 import { WiredBalanceBox } from '../themed/WiredBalanceBox.js'
-import { EdgeTextFieldOutlined } from './EdgeOutlinedField.js'
+import { type OutlinedTextInputRef, OutlinedTextInput } from './OutlinedTextInput.js'
 
 type OwnProps = {
   sorting: boolean,
@@ -26,7 +26,7 @@ type OwnProps = {
 type Props = OwnProps & ThemeProps
 
 class WalletListHeaderComponent extends React.PureComponent<Props> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   componentDidUpdate(prevProps: Props) {
     if (prevProps.searching === false && this.props.searching === true && this.textInput.current) {
@@ -63,16 +63,17 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
       <>
         <View style={styles.searchContainer}>
           <View style={{ flex: 1, flexDirection: 'column' }}>
-            <EdgeTextFieldOutlined
+            <OutlinedTextInput
               returnKeyType="search"
               label={s.strings.wallet_list_wallet_search}
               onChangeText={this.handleOnChangeText}
               value={searchText}
               onFocus={this.handleTextFieldFocus}
               ref={this.textInput}
-              isClearable={searching}
+              clearIcon
               onClear={this.clearText}
               marginRem={[0, 0, 1]}
+              searchIcon
             />
           </View>
           {searching && (

@@ -7,9 +7,9 @@ import { type AirshipBridge } from 'react-native-airship'
 import s from '../../locales/strings.js'
 import { useState } from '../../types/reactHooks.js'
 import { showError } from '../services/AirshipInstance.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField.js'
 import { MainButton } from '../themed/MainButton.js'
 import { ModalCloseArrow, ModalMessage, ModalTitle } from '../themed/ModalParts.js'
+import { OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 type Props = {|
@@ -56,6 +56,11 @@ export function TextInputModal(props: Props) {
   const [spinning, setSpinning] = useState(false)
   const [text, setText] = useState(initialValue)
 
+  const handleChangeText = (text: string) => {
+    setText(text)
+    setErrorMessage(undefined)
+  }
+
   const handleSubmit = () => {
     if (onSubmit == null) return bridge.resolve(text)
     setSpinning(true)
@@ -79,7 +84,7 @@ export function TextInputModal(props: Props) {
     <ThemedModal bridge={bridge} onCancel={() => bridge.resolve(undefined)}>
       {title != null ? <ModalTitle>{title}</ModalTitle> : null}
       {message != null ? <ModalMessage>{message}</ModalMessage> : null}
-      <EdgeTextFieldOutlined
+      <OutlinedTextInput
         // Text input props:
         autoCapitalize={autoCapitalize}
         autoCorrect={autoCorrect}
@@ -90,14 +95,10 @@ export function TextInputModal(props: Props) {
         // Our props:
         autoFocus
         error={errorMessage}
-        isClearable={text !== ''}
+        clearIcon
         marginRem={[1, 0.5]}
-        onChangeText={text => {
-          setText(text)
-          setErrorMessage(undefined)
-        }}
+        onChangeText={handleChangeText}
         onSubmitEditing={handleSubmit}
-        showSearchIcon={false}
         value={text}
       />
       {

@@ -21,6 +21,7 @@ import { DividerLine } from '../themed/DividerLine'
 import { MainButton } from '../themed/MainButton.js'
 import ManageTokensHeader from '../themed/ManageTokensHeader'
 import ManageTokensRow from '../themed/ManageTokensRow'
+import { type OutlinedTextInputRef } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 import { getCurrencyIcon } from './../../util/CurrencyInfoHelpers'
 
@@ -48,7 +49,7 @@ type State = {
 }
 
 class ManageTokensSceneComponent extends React.Component<Props, State> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)

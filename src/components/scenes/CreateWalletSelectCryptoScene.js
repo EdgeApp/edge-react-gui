@@ -13,7 +13,7 @@ import { type CreateWalletType, type FlatListItem } from '../../types/types.js'
 import { getCreateWalletTypes } from '../../util/CurrencyInfoHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
+import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
@@ -24,19 +24,17 @@ type Props = StateProps & ThemeProps
 
 type State = {
   selectedWalletType: string,
-  searchTerm: string,
-  isFocused: boolean
+  searchTerm: string
 }
 
 class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)
     this.state = {
       selectedWalletType: '',
-      searchTerm: '',
-      isFocused: true
+      searchTerm: ''
     }
   }
 
@@ -88,14 +86,6 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
     }
   }
 
-  handleOnFocus = () => {
-    this.setState({ isFocused: true })
-  }
-
-  handleOnBlur = () => {
-    this.setState({ isFocused: false })
-  }
-
   renderWalletTypeResult = (data: FlatListItem<CreateWalletType>) => {
     const { theme } = this.props
     const { walletType, symbolImageDarkMono, currencyCode } = data.item
@@ -122,7 +112,7 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
 
   render() {
     const { account } = this.props
-    const { searchTerm, isFocused } = this.state
+    const { searchTerm } = this.state
     const lowerSearch = searchTerm.toLowerCase()
     const styles = getStyles(this.props.theme)
 
@@ -139,22 +129,20 @@ class CreateWalletSelectCryptoComponent extends React.Component<Props, State> {
         {gap => (
           <View style={[styles.content, { marginBottom: -gap.bottom }]}>
             <SceneHeader withTopMargin title={s.strings.title_create_wallet_select_crypto} />
-            <EdgeTextFieldOutlined
+            <OutlinedTextInput
               autoFocus
-              onFocus={this.handleOnFocus}
-              onBlur={this.handleOnBlur}
               autoCorrect={false}
               autoCapitalize="words"
               onChangeText={this.handleSearchTermChange}
               value={this.state.searchTerm}
               label={s.strings.create_wallet_choose_crypto}
               returnKeyType="search"
-              size="small"
               onClear={this.clearText}
-              isClearable={isFocused}
+              clearIcon
               marginRem={[0, 1.75]}
               ref={this.textInput}
               blurOnSubmit
+              searchIcon
             />
             <FlatList
               style={styles.resultList}

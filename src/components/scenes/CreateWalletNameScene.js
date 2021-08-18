@@ -9,8 +9,8 @@ import s from '../../locales/strings.js'
 import { Actions } from '../../types/routerTypes.js'
 import type { CreateWalletType, GuiFiatType } from '../../types/types.js'
 import { SceneWrapper } from '../common/SceneWrapper'
-import { EdgeTextFieldOutlined } from '../themed/EdgeOutlinedField'
 import { MainButton } from '../themed/MainButton.js'
+import { type OutlinedTextInputRef, OutlinedTextInput } from '../themed/OutlinedTextInput.js'
 import { SceneHeader } from '../themed/SceneHeader'
 
 export type CreateWalletNameOwnProps = {
@@ -20,12 +20,11 @@ export type CreateWalletNameOwnProps = {
 }
 type Props = CreateWalletNameOwnProps
 type State = {
-  walletName: string,
-  isFocused: boolean
+  walletName: string
 }
 
 export class CreateWalletName extends React.Component<Props, State> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)
@@ -36,7 +35,7 @@ export class CreateWalletName extends React.Component<Props, State> {
     } else {
       walletName = sprintf(s.strings.my_crypto_wallet_name, this.props.selectedWalletType.currencyName)
     }
-    this.state = { walletName, isFocused: true }
+    this.state = { walletName }
   }
 
   isValidWalletName = () => {
@@ -51,14 +50,6 @@ export class CreateWalletName extends React.Component<Props, State> {
     if (this.textInput.current) {
       this.textInput.current.blur()
     }
-  }
-
-  handleOnFocus = () => {
-    this.setState({ isFocused: true })
-  }
-
-  handleOnBlur = () => {
-    this.setState({ isFocused: false })
   }
 
   onNext = () => {
@@ -84,22 +75,19 @@ export class CreateWalletName extends React.Component<Props, State> {
       <SceneWrapper avoidKeyboard background="theme">
         <SceneHeader withTopMargin title={s.strings.title_create_wallet} />
 
-        <EdgeTextFieldOutlined
+        <OutlinedTextInput
           onChangeText={this.handleChangeWalletName}
           value={this.state.walletName}
           onSubmitEditing={this.onNext}
           autoFocus
           autoCorrect={false}
           returnKeyType="next"
-          onFocus={this.handleOnFocus}
-          onBlur={this.handleOnBlur}
           label={s.strings.fragment_wallets_addwallet_name_hint}
           onClear={this.clearText}
-          isClearable={this.state.isFocused}
+          clearIcon
           marginRem={[0, 1.75]}
           ref={this.textInput}
           blurOnSubmit
-          showSearchIcon={false}
         />
         <MainButton alignSelf="center" label={s.strings.string_next_capitalized} marginRem={[3, 1]} type="secondary" onPress={this.onNext} />
       </SceneWrapper>

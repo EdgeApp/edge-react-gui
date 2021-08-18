@@ -17,8 +17,8 @@ import { convertNativeToDenomination, getDefaultDenomination, getDenomination, g
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { EdgeTextFieldOutlined } from './EdgeOutlinedField'
 import { EdgeText } from './EdgeText.js'
+import { type OutlinedTextInputRef, OutlinedTextInput } from './OutlinedTextInput.js'
 import { SceneHeader } from './SceneHeader'
 import { WalletProgressIcon } from './WalletProgressIcon.js'
 
@@ -53,7 +53,7 @@ type State = {
 type Props = OwnProps & StateProps & DispatchProps & ThemeProps
 
 class TransactionListTopComponent extends React.PureComponent<Props, State> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)
@@ -154,7 +154,7 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
           {!isEmpty && (
             <View style={styles.searchContainer}>
               <View style={{ flex: 1, flexDirection: 'column' }}>
-                <EdgeTextFieldOutlined
+                <OutlinedTextInput
                   returnKeyType="search"
                   label={s.strings.transaction_list_search}
                   onChangeText={this.handleOnChangeText}
@@ -162,9 +162,10 @@ class TransactionListTopComponent extends React.PureComponent<Props, State> {
                   onFocus={this.handleTextFieldFocus}
                   onBlur={this.handleTextFieldBlur}
                   ref={this.textInput}
-                  isClearable={searching}
+                  clearIcon
                   onClear={this.clearText}
                   marginRem={0}
+                  searchIcon
                 />
               </View>
               {searching && (
