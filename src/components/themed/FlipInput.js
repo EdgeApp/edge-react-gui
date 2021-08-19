@@ -450,6 +450,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     const displayAmountCheck = decimalAmount.match(/^0*$/) && !showCursor
     const displayAmountString = displayAmountCheck ? s.strings.string_amount : displayAmount
     const displayAmountStyle = displayAmountCheck ? styles.bottomAmountMuted : styles.bottomAmount
+    const currencyNameStyle = displayAmountCheck ? styles.bottomCurrencyMuted : styles.bottomCurrency
 
     return (
       <TouchableWithoutFeedback onPress={onPress}>
@@ -458,7 +459,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
             <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
             {showCursor && <BlinkingCursor fontSize={1.5} color={theme.deactivatedText} />}
           </View>
-          {!displayAmountCheck && <EdgeText style={styles.bottomCurrency}>{currencyName}</EdgeText>}
+          <EdgeText style={currencyNameStyle}>{currencyName}</EdgeText>
           <TextInput
             style={styles.hiddenTextInput}
             value=""
@@ -614,6 +615,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   bottomCurrency: {
     paddingTop: theme.rem(0.125)
+  },
+  bottomCurrencyMuted: {
+    paddingTop: theme.rem(0.125),
+    color: theme.deactivatedText
   },
   blinkingCursor: {
     color: theme.deactivatedText,
