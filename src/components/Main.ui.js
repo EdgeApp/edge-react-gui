@@ -343,16 +343,6 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={REQUEST}
-                navTransparent
-                component={ifLoggedIn(Request)}
-                renderTitle={<EdgeLogoHeader />}
-                renderRightButton={<SideMenuButton />}
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
-                hideTabBar
-              />
-
-              <Scene
                 key={FIO_REQUEST_CONFIRMATION}
                 navTransparent
                 component={ifLoggedIn(FioRequestConfirmationScene)}
@@ -468,6 +458,17 @@ export class MainComponent extends React.Component<Props> {
               />
             </Stack>
           </Tabs>
+
+          <Stack key={REQUEST} hideTabBar>
+            <Scene
+              key={REQUEST}
+              component={ifLoggedIn(Request)}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              renderTitle={<EdgeLogoHeader />}
+            />
+          </Stack>
 
           <Stack key={SEND} hideTabBar>
             <Scene
