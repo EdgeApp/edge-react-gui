@@ -237,7 +237,7 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
           )}
           {fioToAddress == null ? null : <EdgeText>{fioToAddress + '\n'}</EdgeText>}
           {recipientAddress == null ? null : (
-            <EdgeText numberOfLines={3} adjustsFontSizeToFit={false}>
+            <EdgeText numberOfLines={3} disableFontScaling>
               {recipientAddress}
             </EdgeText>
           )}
