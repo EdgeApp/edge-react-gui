@@ -437,7 +437,8 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     const { textInputBackFocus, textInputFrontFocus } = this.state
     const showCursor = textInputBackFocus || textInputFrontFocus
     const styles = getStyles(theme)
-    const displayAmount = isFront ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
+    let displayAmount = isFront ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
+    if (displayAmount === '0') displayAmount = ''
     const decimalAmount = isFront ? this.state.primaryDecimalAmount : this.state.secondaryDecimalAmount
     const currencyName = isFront ? this.props.primaryInfo.currencyName : this.props.secondaryInfo.currencyName
     const onPress = isFront ? this.textInputFrontFocus : this.textInputBackFocus
@@ -446,7 +447,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     const onFocus = isFront ? this.textInputFrontFocusTrue : this.textInputBackFocusTrue
     const onBlur = isFront ? this.textInputFrontFocusFalse : this.textInputBackFocusFalse
     const ref = isFront ? this.getTextInputFrontRef : this.getTextInputBackRef
-    const displayAmountCheck = !decimalAmount || decimalAmount.match(/^0*$/)
+    const displayAmountCheck = decimalAmount.match(/^0*$/) && !showCursor
     const displayAmountString = displayAmountCheck ? s.strings.string_amount : displayAmount
     const displayAmountStyle = displayAmountCheck ? styles.bottomAmountMuted : styles.bottomAmount
 
@@ -454,7 +455,7 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
       <TouchableWithoutFeedback onPress={onPress}>
         <View style={styles.bottomContainer} key="bottom">
           <View style={styles.valueContainer}>
-            {(!textInputBackFocus || !displayAmountCheck) && <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>}
+            <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
             {showCursor && <BlinkingCursor fontSize={1.5} color={theme.deactivatedText} />}
           </View>
           {!displayAmountCheck && <EdgeText style={styles.bottomCurrency}>{currencyName}</EdgeText>}
