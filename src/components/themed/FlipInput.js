@@ -5,14 +5,14 @@ import { bns } from 'biggystring'
 import * as React from 'react'
 import { type Event, Animated, Image, Platform, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger, renderers } from 'react-native-popup-menu'
+import Reamimated, { Easing, useAnimatedStyle, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 
 import { Fontello } from '../../assets/vector'
 import { formatNumberInput, prettifyNumber, truncateDecimals, truncateDecimalsPeriod } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import { DECIMAL_PRECISION, truncateDecimals as truncateDecimalsUtils, zeroString } from '../../util/utils.js'
 import { showError } from '../services/AirshipInstance.js'
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
-import { BlinkingCursor } from './BlinkingCursor'
+import { type Theme, type ThemeProps, cacheStyles, useTheme, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from './EdgeText.js'
 import { ButtonBox, RightChevronButton } from './ThemedButtons.js'
 
@@ -434,9 +434,11 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
 
   bottomRow = (isFront: boolean) => {
     const { isEditable, inputAccessoryViewID, onNext, topReturnKeyType, theme } = this.props
-    const { textInputBackFocus } = this.state
+    const { textInputBackFocus, textInputFrontFocus } = this.state
+    const showCursor = textInputBackFocus || textInputFrontFocus
     const styles = getStyles(theme)
-    const displayAmount = isFront ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
+    let displayAmount = isFront ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
+    if (displayAmount === '0') displayAmount = ''
     const decimalAmount = isFront ? this.state.primaryDecimalAmount : this.state.secondaryDecimalAmount
     const currencyName = isFront ? this.props.primaryInfo.currencyName : this.props.secondaryInfo.currencyName
     const onPress = isFront ? this.textInputFrontFocus : this.textInputBackFocus
@@ -445,18 +447,19 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
     const onFocus = isFront ? this.textInputFrontFocusTrue : this.textInputBackFocusTrue
     const onBlur = isFront ? this.textInputFrontFocusFalse : this.textInputBackFocusFalse
     const ref = isFront ? this.getTextInputFrontRef : this.getTextInputBackRef
-    const displayAmountCheck = !decimalAmount || decimalAmount.match(/^0*$/)
-    const displayAmountString = displayAmountCheck ? s.strings.string_enter_amount : displayAmount
+    const displayAmountCheck = decimalAmount.match(/^0*$/) && !showCursor
+    const displayAmountString = displayAmountCheck ? s.strings.string_amount : displayAmount
     const displayAmountStyle = displayAmountCheck ? styles.bottomAmountMuted : styles.bottomAmount
+    const currencyNameStyle = displayAmountCheck ? styles.bottomCurrencyMuted : styles.bottomCurrency
 
     return (
       <TouchableWithoutFeedback onPress={onPress}>
         <View style={styles.bottomContainer} key="bottom">
           <View style={styles.valueContainer}>
-            {(!textInputBackFocus || !displayAmountCheck) && <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>}
-            <BlinkingCursor visible={textInputBackFocus} fontSize={1.5} color={theme.deactivatedText} />
+            <EdgeText style={displayAmountStyle}>{displayAmountString}</EdgeText>
+            {showCursor && <BlinkingCursor fontSize={1.5} color={theme.deactivatedText} />}
           </View>
-          {!displayAmountCheck && <EdgeText style={styles.bottomCurrency}>{currencyName}</EdgeText>}
+          <EdgeText style={currencyNameStyle}>{currencyName}</EdgeText>
           <TextInput
             style={styles.hiddenTextInput}
             value=""
@@ -537,6 +540,17 @@ class FlipInputComponent extends React.PureComponent<Props, State> {
   }
 }
 
+const BlinkingCursor = () => {
+  const theme = useTheme()
+  const styles = getStyles(theme)
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: withRepeat(withSequence(withTiming(1, { easing: Easing.in(Easing.exp) }), withTiming(0, { easing: Easing.out(Easing.exp) })), -1)
+  }))
+
+  // eslint-disable-next-line react-native/no-raw-text
+  return <Reamimated.Text style={[styles.blinkingCursor, animatedStyle]}>|</Reamimated.Text>
+}
+
 const getStyles = cacheStyles((theme: Theme) => ({
   // Header
   headerContainer: {
@@ -581,7 +595,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   // Top Amount
   bottomContainer: {
     flexDirection: 'row',
-    marginRight: theme.rem(1.5)
+    marginRight: theme.rem(1.5),
+    minHeight: theme.rem(2)
   },
   valueContainer: {
     flexDirection: 'row',
@@ -589,7 +604,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   bottomAmount: {
     fontFamily: theme.fontFaceMedium,
-    fontSize: theme.rem(1.5)
+    fontSize: theme.rem(1.5),
+    minHeight: theme.rem(1.5)
   },
   bottomAmountMuted: {
     fontFamily: theme.fontFaceMedium,
@@ -599,6 +615,17 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   bottomCurrency: {
     paddingTop: theme.rem(0.125)
+  },
+  bottomCurrencyMuted: {
+    paddingTop: theme.rem(0.125),
+    color: theme.deactivatedText
+  },
+  blinkingCursor: {
+    color: theme.deactivatedText,
+    fontSize: theme.rem(1.5),
+    position: 'absolute',
+    right: theme.rem(-0.25),
+    top: 0
   },
   hiddenTextInput: {
     position: 'absolute',
