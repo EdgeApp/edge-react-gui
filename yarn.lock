@@ -1779,6 +1779,13 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
+"@sucrase/webpack-loader@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@sucrase/webpack-loader/-/webpack-loader-2.0.0.tgz#b8a70b8d3df3eeb570e6a3315e1a9c6b723e4a37"
+  integrity sha512-KUfWr83g70Qm+ZqjGL+M4tX01taDP3BldQcI6NSMlDf7WTDfuo0RvLlS0ekF6dPVslNyZhbFFBy2OBTB6Sa6+Q==
+  dependencies:
+    loader-utils "^1.1.0"
+
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@szmarczak/http-timer/-/http-timer-1.1.2.tgz#b1665e2c461a2cd92f4c1bbf50d5454de0d4b421"
@@ -4756,17 +4763,10 @@ ed25519@0.0.4:
     bindings "^1.2.1"
     nan "^2.0.9"
 
-edge-components@^0.0.31:
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/edge-components/-/edge-components-0.0.31.tgz#54304cd58c76188f4f36798b59a3a6a30ce84859"
-  integrity sha512-dBnc8yqAr7Vd0N6NcMT+P+gzt6QapVVFNb5EOnQbpJRqdXoNsXSezYupOBA9vh+Ns8bpJcJEs5wJynWD3Qy4dw==
-  dependencies:
-    react-native-linear-gradient "^2.4.0"
-
-edge-core-js@^0.18.4:
-  version "0.18.4"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.4.tgz#3f7f692e3f240f8a455e5ff11cb3da723ab31f3e"
-  integrity sha512-zan+SXI8H7+0e1if3QHjOBeOxbq9p0RQNHgujaagN43U9ipAmooAqdDR6Bb/1qQpTPYppDokZCPZi/OJdfM8Xg==
+edge-core-js@^0.18.5:
+  version "0.18.5"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.18.5.tgz#afbc41603d7bad62f094b82049090e0cc8da2b02"
+  integrity sha512-qG949aPLBcekdtlLUYPevJl+NVqNzvUHlCNP5J1ec0cVyOAnkZTqSANqT6pz2YJ/l/rUMsaGQR4aIu+hslDA6A==
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -4819,10 +4819,10 @@ edge-currency-accountbased@^0.7.69:
     uri-js "^3.0.2"
     url-parse "^1.4.1"
 
-edge-currency-bitcoin@^4.9.17:
-  version "4.9.17"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.17.tgz#ae5e4bf77328167e59e28d1a6a1cbc011e7c84b9"
-  integrity sha512-BK0zfh2heuguln07SY5q4xm8FkpBZ6HO2dJAA5PcCnZTyNkbRt3JUW/wPD+UKai9bTXEgIexTUcwmf+xadFRMQ==
+edge-currency-bitcoin@^4.9.18:
+  version "4.9.18"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-4.9.18.tgz#5dcda5a98bd73931f9fbd66a6a8feace391cd1b9"
+  integrity sha512-z7hPq+Dvg0MEzToSbZCZgXYTf8MX3wsR6Hq8qxMo33IJjrWsw1WhnfiVnQH1RUcKK33eQ40+JS1EtL+QPHUCdw==
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "3.0.2"
@@ -4864,10 +4864,10 @@ edge-exchange-plugins@^0.11.32:
     iso4217 "^0.2.0"
     utf8 "^3.0.0"
 
-edge-login-ui-rn@^0.9.14:
-  version "0.9.14"
-  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.14.tgz#0d4531baa0bec6fe55f98891a1e21788e748a95a"
-  integrity sha512-LTLKnVmgn6fMPDTz8QBizt1SjjK7/66eAB/o75Sn/PusNVa0dmiU19549NldvTGoxWPzi/B8tszbT7WglDYlkQ==
+edge-login-ui-rn@^0.9.16:
+  version "0.9.16"
+  resolved "https://registry.yarnpkg.com/edge-login-ui-rn/-/edge-login-ui-rn-0.9.16.tgz#a081a978ec0cf7cb67960a28a6a20db42e2b13d5"
+  integrity sha512-CJIi3SajNEOcTuFAlOjRvl8fyw2UnHn1G1W1JjpBeSiL3Px5keWvTDb6S62jTuYL6j6qe+952JhS3LzehviRZA==
   dependencies:
     cleaners "^0.3.1"
     qrcode-generator "^1.4.4"
@@ -4876,7 +4876,7 @@ edge-login-ui-rn@^0.9.14:
     react-native-keyboard-aware-scroll-view "^0.9.1"
     react-native-linear-gradient "^2.0.0"
     react-native-localize "^2.0.2"
-    react-native-mail "^6.0.0"
+    react-native-mail "^6.1.0"
     react-native-material-textfield "git://github.com/EdgeApp/react-native-material-textfield.git"
     react-native-patina "^0.1.4"
     react-native-permissions "^3.0.1"
@@ -8215,7 +8215,7 @@ loader-runner@^2.4.0:
   resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-2.4.0.tgz#ed47066bfe534d7e84c4c7b9998c2a75607d9357"
   integrity sha512-Jsmr89RcXGIwivFY21FcRrisYZfvLMTWx5kOLc+JTxtpBOG6xML0vzbc6SEQG2FO9/4Fc3wW4LVcB5DmGflaRw==
 
-loader-utils@^1.2.3, loader-utils@^1.4.0:
+loader-utils@^1.1.0, loader-utils@^1.2.3, loader-utils@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-1.4.0.tgz#c579b5e34cb34b1a74edc6c1fb36bfa371d5a613"
   integrity sha512-qH0WSMBtn/oHuwjy/NucEgbx5dbxxnxup9s4PVXJUDHZBQY+s0NWA9rJf53RBnQZxfch7euUui7hpoAPvALZdA==
@@ -10499,6 +10499,11 @@ react-native-gesture-handler@^1.10.3:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
+react-native-image-picker@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-4.0.6.tgz#0dfa5bb83bcf6ff58635ebb9201a185c2271e8cc"
+  integrity sha512-Pp3UWKUADuMG1mz12m6dSO/R2KnvXVEd77bldrfTMFpz4PFc4iVKo+bHeS79It0mUBezfzDMgfesg/OPLSugvQ==
+
 react-native-iphone-x-helper@^1.0.3:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.0.tgz#9f8a376eb00bc712115abff4420318a0063fa796"
@@ -10512,7 +10517,7 @@ react-native-keyboard-aware-scroll-view@^0.9.1, react-native-keyboard-aware-scro
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
 
-react-native-linear-gradient@^2.0.0, react-native-linear-gradient@^2.4.0, react-native-linear-gradient@^2.5.6:
+react-native-linear-gradient@^2.0.0, react-native-linear-gradient@^2.5.6:
   version "2.5.6"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
   integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
@@ -10526,6 +10531,11 @@ react-native-mail@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.0.0.tgz#7e8014cccff794098f8de012fc822c57d28f7d72"
   integrity sha512-aQjCxKmPIwwX+voC2oK5Lj54Gfuvkodhp9lYFpPMxYYCXXtADuuZMsNWN7jSeqVuQHQzJZvYhgRtYqx0UDoKoQ==
+
+react-native-mail@^6.1.0:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-mail/-/react-native-mail-6.1.1.tgz#f1b1f8034c84d2510a93e4a2a795f0db5a13595e"
+  integrity sha512-pTs180wwyh7hN/iyTC9SfOX579U4YhDlHOLxi47IGvhPJENqO/QFdBq+wWKxyhNqdQuVSy+LoeIxLreWnIeYmg==
 
 react-native-material-textfield@0.16.1, react-native-material-textfield@^0.16.1, "react-native-material-textfield@git://github.com/EdgeApp/react-native-material-textfield.git":
   version "0.16.1"
@@ -10575,10 +10585,10 @@ react-native-randombytes@^3.5.3:
     buffer "^4.9.1"
     sjcl "^1.0.3"
 
-react-native-reanimated@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.0.0.tgz#0eb2f196e8fde23cf918530074134177aaee8702"
-  integrity sha512-kIrdBoXSky7DQ62SOgosgimKM+Lt+SzAaM+ovVpCLBcwUK2aYRfLxa9ffgvKjeH9/n7dONlwEMjbKssGkuyq2Q==
+react-native-reanimated@^2.0.0, react-native-reanimated@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.2.0.tgz#a6412c56b4e591d1f00fac949f62d0c72c357c78"
+  integrity sha512-lOJDd+5w1gY6DHGXG2jD1dsjzQmXQ2699HUc3IztvI2WP4zUT+UAA+zSG+5JiBS5DUnTL8YhhkmUQmr1KNGO5w==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.10.4"
     fbjs "^3.0.0"
@@ -11376,6 +11386,11 @@ rlp@^2.2.4:
   integrity sha512-HAfAmL6SDYNWPUOJNrM500x4Thn4PZsEy5pijPh40U9WfNk0z15hUYzO9xVIMAdIHdFtD8CBDHd75Td1g36Mjg==
   dependencies:
     bn.js "^4.11.1"
+
+rn-qr-generator@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/rn-qr-generator/-/rn-qr-generator-1.1.7.tgz#b962fff2c123f3fa891e274c9b65c5c5777eb3a8"
+  integrity sha512-6Wi4xqO0K2BojwLVVW9Qxyh5TzfZNsoFlZ8sMbwMdz+5qJzk3qAPwmB5s8LqmOMVeY2RZNuOmk//Emq5zn5xWg==
 
 rollup-plugin-node-resolve@4.0.0:
   version "4.0.0"
@@ -12353,10 +12368,10 @@ strip-json-comments@~2.0.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
 
-sucrase@^3.15.0:
-  version "3.18.1"
-  resolved "https://registry.yarnpkg.com/sucrase/-/sucrase-3.18.1.tgz#7c699d5148734b1105542ca4ea2aa69bcab7f728"
-  integrity sha512-TRyO38wwOPhLLlM8QLOG3TgMj0FKk+arlTrS9pRAanF8cAcHvgRPKIYWGO25mPSp/Rj87zMMTjFfkqIZGI6ZdA==
+sucrase@^3.20.0:
+  version "3.20.0"
+  resolved "https://registry.yarnpkg.com/sucrase/-/sucrase-3.20.0.tgz#a80e865830e27d66a912c938491d474164b06205"
+  integrity sha512-Rsp+BX7DRuCleJvBAHN7gQ3ddk7U0rJev19XlIBF6dAq9vX4Tr5mHk4E7+ig/I7BM3DLYotCmm20lfBElT2XtQ==
   dependencies:
     commander "^4.0.0"
     glob "7.1.6"

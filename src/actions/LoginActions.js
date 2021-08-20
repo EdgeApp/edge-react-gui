@@ -3,7 +3,6 @@
 import { type EdgeAccount, type EdgeCurrencyInfo } from 'edge-core-js/types'
 import { hasSecurityAlerts } from 'edge-login-ui-rn'
 import { getCurrencies } from 'react-native-localize'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { showError } from '../components/services/AirshipInstance.js'
@@ -24,6 +23,7 @@ import {
 import { initialState as passwordReminderInitialState } from '../reducers/PasswordReminderReducer.js'
 import { type AccountInitPayload } from '../reducers/scenes/SettingsReducer.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import { type CustomTokenInfo, type GuiTouchIdInfo } from '../types/types.js'
 import { runWithTimeout } from '../util/utils.js'
 import { loadAccountReferral, refreshAccountReferral } from './AccountReferralActions.js'
@@ -54,7 +54,7 @@ function getFirstActiveWalletInfo(account: EdgeAccount): { walletId: string, cur
 export const initializeAccount = (account: EdgeAccount, touchIdInfo: GuiTouchIdInfo) => async (dispatch: Dispatch, getState: GetState) => {
   dispatch({ type: 'LOGIN', data: account })
 
-  Actions[EDGE]()
+  Actions.push(EDGE)
   if (hasSecurityAlerts(account)) {
     Actions.push(SECURITY_ALERTS_SCENE)
   }
@@ -264,9 +264,7 @@ export const mergeSettings = (
 }
 
 export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
-  Actions.popTo(LOGIN, {
-    username
-  })
+  Actions.popTo(LOGIN)
   const state = getState()
   const { account } = state.core
   dispatch({ type: 'LOGOUT', data: { username } })

@@ -2,13 +2,10 @@
 
 import AsyncStorage from '@react-native-community/async-storage'
 import { asObject, asString } from 'cleaners'
-import { createInputModal } from 'edge-components'
 import { type EdgeAccount } from 'edge-core-js/types'
 import * as React from 'react'
 import { FlatList, Image, Platform, TouchableOpacity, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { updateOneSetting } from '../../actions/SettingsActions.js'
 import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/CountryConstants.js'
@@ -19,12 +16,13 @@ import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account
 import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
+import { Actions } from '../../types/routerTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
-import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { CountrySelectionModal } from '../modals/CountrySelectionModal.js'
+import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
@@ -157,7 +155,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
-    const { theme } = this.props
     const { pluginId, deepQuery } = listRow
     const plugin = guiPlugins[pluginId]
 
@@ -170,20 +167,18 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     let { deepPath } = listRow
     if (pluginId === 'custom') {
       const { developerUri } = this.state
-      const modal = createInputModal({
-        icon: <IonIcon name="md-globe" size={theme.rem(2.75)} color={theme.buySellCustomPluginModalIcon} />,
-        title: s.strings.load_plugin,
-        input: {
-          label: s.strings.plugin_url,
-          autoCorrect: false,
-          returnKeyType: 'go',
-          initialValue: developerUri,
-          autoFocus: true
-        },
-        yesButton: { title: s.strings.load_plugin },
-        noButton: { title: s.strings.string_cancel_cap }
-      })
-      deepPath = await launchModal(modal)
+      deepPath = await Airship.show(bridge => (
+        <TextInputModal
+          autoCorrect={false}
+          autoCapitalize="none"
+          bridge={bridge}
+          initialValue={developerUri}
+          inputLabel={s.strings.plugin_url}
+          returnKeyType="go"
+          submitLabel={s.strings.load_plugin}
+          title={s.strings.load_plugin}
+        />
+      ))
       if (deepPath == null) return
 
       if (deepPath !== developerUri) {
@@ -195,7 +190,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     // Launch!
-    return Actions[PLUGIN_VIEW]({
+    return Actions.push(PLUGIN_VIEW, {
       plugin,
       deepPath,
       deepQuery

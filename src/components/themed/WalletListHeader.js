@@ -2,17 +2,17 @@
 
 import * as React from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 import { Fontello } from '../../assets/vector/index.js'
 import { CREATE_WALLET_SELECT_CRYPTO } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
+import { Actions } from '../../types/routerTypes.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { EdgeText } from '../themed/EdgeText.js'
 import { PromoCard } from '../themed/PromoCard.js'
 import { WiredBalanceBox } from '../themed/WiredBalanceBox.js'
-import { EdgeTextFieldOutlined } from './EdgeOutlinedField.js'
+import { type OutlinedTextInputRef, OutlinedTextInput } from './OutlinedTextInput.js'
 
 type OwnProps = {
   sorting: boolean,
@@ -26,7 +26,7 @@ type OwnProps = {
 type Props = OwnProps & ThemeProps
 
 class WalletListHeaderComponent extends React.PureComponent<Props> {
-  textInput = React.createRef()
+  textInput: { current: OutlinedTextInputRef | null } = React.createRef()
 
   componentDidUpdate(prevProps: Props) {
     if (prevProps.searching === false && this.props.searching === true && this.textInput.current) {
@@ -63,16 +63,17 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
       <>
         <View style={styles.searchContainer}>
           <View style={{ flex: 1, flexDirection: 'column' }}>
-            <EdgeTextFieldOutlined
+            <OutlinedTextInput
               returnKeyType="search"
               label={s.strings.wallet_list_wallet_search}
               onChangeText={this.handleOnChangeText}
               value={searchText}
               onFocus={this.handleTextFieldFocus}
               ref={this.textInput}
-              isClearable={searching}
+              clearIcon
               onClear={this.clearText}
               marginRem={[0, 0, 1]}
+              searchIcon
             />
           </View>
           {searching && (
@@ -86,7 +87,7 @@ class WalletListHeaderComponent extends React.PureComponent<Props> {
           <View style={styles.headerContainer}>
             <EdgeText style={styles.headerText}>{s.strings.title_wallets}</EdgeText>
             <View key="defaultButtons" style={styles.headerButtonsContainer}>
-              <TouchableOpacity style={styles.addButton} onPress={Actions[CREATE_WALLET_SELECT_CRYPTO]}>
+              <TouchableOpacity style={styles.addButton} onPress={() => Actions.push(CREATE_WALLET_SELECT_CRYPTO)}>
                 <Ionicon name="md-add" size={theme.rem(1.5)} color={theme.iconTappable} />
               </TouchableOpacity>
               <TouchableOpacity onPress={this.props.openSortModal}>

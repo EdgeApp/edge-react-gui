@@ -3,12 +3,12 @@
 import { type EdgeCurrencyInfo } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import { enableNotifications, fetchSettings } from '../../actions/NotificationActions.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { showError } from '../services/AirshipInstance'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'

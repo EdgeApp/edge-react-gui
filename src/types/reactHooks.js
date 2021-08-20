@@ -29,11 +29,12 @@ type UseReducer = {
 }
 
 type UseRef = {
-  // Component ref:
-  <ElementType: React$ElementType>(): { current: null | React$ElementRef<ElementType> },
-
   // Value container:
-  <T>(init: T): { current: T }
+  <T>(init: T): { current: T },
+  <T>(): { current: T | void },
+
+  // Component ref:
+  <T>(init: T | null): { current: T | null }
 }
 
 type UseState = <S>(init: S | (() => S)) => [S, SetState<S>]

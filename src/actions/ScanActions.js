@@ -1,9 +1,8 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendInfo, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeParsedUri, EdgeSpendTarget } from 'edge-core-js'
 import * as React from 'react'
 import { Alert, Linking } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 import URL from 'url-parse'
 
@@ -16,10 +15,10 @@ import { ADD_TOKEN, EXCHANGE_SCENE, PLUGIN_BUY, SEND } from '../constants/SceneK
 import { CURRENCY_PLUGIN_NAMES, getSpecialCurrencyInfo } from '../constants/WalletAndCurrencyConstants.js'
 import s from '../locales/strings.js'
 import { checkPubAddress } from '../modules/FioAddress/util'
-import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { type ReturnAddressLink, parseDeepLink } from '../types/DeepLink.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
-import { type GuiWallet } from '../types/types.js'
+import { Actions } from '../types/routerTypes.js'
+import { type GuiMakeSpendInfo, type GuiWallet } from '../types/types.js'
 import { denominationToDecimalPlaces, noOp, zeroString } from '../util/utils.js'
 import { launchDeepLink } from './DeepLinkingActions.js'
 
@@ -149,13 +148,13 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
         onAddToken: noOp
       }
 
-      return Actions[ADD_TOKEN](parameters)
+      return Actions.push(ADD_TOKEN, parameters)
     }
 
-    if (isLegacyAddressUri(parsedUri)) {
+    if (parsedUri.legacyAddress != null) {
       // LEGACY ADDRESS URI
       if (await shouldContinueLegacy()) {
-        Actions[SEND]({
+        Actions.push(SEND, {
           guiMakeSpendInfo: parsedUri,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
@@ -167,17 +166,17 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       return
     }
 
-    if (isPrivateKeyUri(parsedUri)) {
+    if (parsedUri.privateKeys != null && parsedUri.privateKeys.length > 0) {
       // PRIVATE KEY URI
-      return dispatch(privateKeyModalActivated())
+      return dispatch(privateKeyModalActivated(parsedUri.privateKeys))
     }
 
-    if (isPaymentProtocolUri(parsedUri)) {
+    if (parsedUri.paymentProtocolURL != null && parsedUri.publicAddress == null) {
       // BIP70 URI
       const guiMakeSpendInfo = await paymentProtocolUriReceived(parsedUri, coreWallet)
 
       if (guiMakeSpendInfo != null) {
-        Actions[SEND]({
+        Actions.push(SEND, {
           guiMakeSpendInfo,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
@@ -208,7 +207,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       guiMakeSpendInfo.fioAddress = fioAddress
       guiMakeSpendInfo.isSendUsingFioAddress = true
     }
-    Actions[SEND]({
+    Actions.push(SEND, {
       guiMakeSpendInfo,
       selectedWalletId,
       selectedCurrencyCode: currencyCode
@@ -257,72 +256,40 @@ export const qrCodeScanned = (data: string) => (dispatch: Dispatch, getState: Ge
   dispatch(parseScannedUri(data))
 }
 
-export const isTokenUri = (parsedUri: EdgeParsedUri): boolean => {
-  return !!parsedUri.token
-}
+const privateKeyModalActivated = (privateKeys: string[]) => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
 
-export const isLegacyAddressUri = (parsedUri: EdgeParsedUri): boolean => {
-  return !!parsedUri.legacyAddress
-}
+  const { currencyWallets } = state.core.account
+  const selectedWalletId = state.ui.wallets.selectedWalletId
+  const edgeWallet = currencyWallets[selectedWalletId]
 
-export const isPrivateKeyUri = (parsedUri: EdgeParsedUri): boolean => {
-  return !!parsedUri.privateKeys && parsedUri.privateKeys.length >= 1
-}
-
-export const isPaymentProtocolUri = (parsedUri: EdgeParsedUri): boolean => {
-  // $FlowFixMe should be paymentProtocolUrl (lowercased)?
-  return !!parsedUri.paymentProtocolURL && !parsedUri.publicAddress
-}
-
-export const privateKeyModalActivated = () => async (dispatch: Dispatch, getState: GetState) => {
-  const firstResponse = await Airship.show(bridge => (
+  await Airship.show(bridge => (
     <ButtonsModal
       bridge={bridge}
       title={s.strings.private_key_modal_sweep_from_private_address}
       message={s.strings.private_key_modal_sweep_from_private_address_message}
       buttons={{
-        confirm: { label: s.strings.private_key_modal_import },
+        confirm: {
+          label: s.strings.private_key_modal_import,
+          async onPress() {
+            await sweepPrivateKeys(edgeWallet, privateKeys)
+            return true
+          }
+        },
         cancel: { label: s.strings.private_key_modal_cancel, type: 'secondary' }
       }}
     />
   ))
-  if (firstResponse !== 'confirm') {
-    dispatch({ type: 'ENABLE_SCAN' })
-    return
-  }
-  setTimeout(() => {
-    dispatch({ type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_START' })
-    dispatch({ type: 'PRIVATE_KEY_MODAL/SECONDARY_MODAL/ACTIVATED' })
+  dispatch({ type: 'ENABLE_SCAN' })
+}
 
-    const state = getState()
-    const parsedUri = state.ui.scenes.scan.parsedUri
-    if (!parsedUri) return
-
-    const { currencyWallets } = state.core.account
-    const selectedWalletId = state.ui.wallets.selectedWalletId
-    const edgeWallet = currencyWallets[selectedWalletId]
-
-    const spendInfo: EdgeSpendInfo = {
-      privateKeys: parsedUri.privateKeys,
-      spendTargets: []
-    }
-
-    edgeWallet.sweepPrivateKeys(spendInfo).then(
-      (unsignedTx: EdgeTransaction) => {
-        edgeWallet
-          .signTx(unsignedTx)
-          .then(signedTx => edgeWallet.broadcastTx(signedTx))
-          .then(() => dispatch({ type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_SUCCESS' }))
-      },
-      (error: Error) => {
-        console.log(error)
-        dispatch({
-          type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL',
-          data: { error }
-        })
-      }
-    )
-  }, 1000)
+async function sweepPrivateKeys(wallet: EdgeCurrencyWallet, privateKeys: string[]) {
+  const unsignedTx = await wallet.sweepPrivateKeys({
+    privateKeys,
+    spendTargets: []
+  })
+  const signedTx = await wallet.signTx(unsignedTx)
+  await wallet.broadcastTx(signedTx)
 }
 
 const shownWalletGetCryptoModals = []

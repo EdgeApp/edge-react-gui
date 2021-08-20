@@ -1,19 +1,19 @@
 // @flow
 
-import { Gradient, Scene } from 'edge-components'
 import * as React from 'react'
-import { StyleSheet, Switch } from 'react-native'
+import { StyleSheet, Switch, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { TextField } from 'react-native-material-textfield'
 
 import { setSpendingLimits } from '../../actions/SpendingLimitsActions.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
-import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
+import FormattedText from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
 import { type SpendingLimits } from '../../types/types.js'
 import { getFiatSymbol } from '../../util/utils.js'
+import { SceneWrapper } from '../common/SceneWrapper.js'
 
 type StateProps = {
   transactionSpendingLimit: {
@@ -49,60 +49,44 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
     const { onTransactionIsEnabledChanged, onTransactionAmountChanged, onPasswordChanged, onSubmit } = this
 
     return (
-      <SafeAreaView style={{}}>
-        <Gradient style={styles.gradient} />
+      <SceneWrapper background="body" hasHeader>
+        <KeyboardAwareScrollView contentContainerStyle={styles.scene}>
+          <TextField
+            baseColor={THEME.COLORS.GRAY_2}
+            tintColor={THEME.COLORS.GRAY_2}
+            secureTextEntry
+            label={s.strings.enter_your_password}
+            onChangeText={onPasswordChanged}
+          />
 
-        <Scene key="SpendingLimitsSceneKey" style={styles.scene}>
-          <KeyboardAwareScrollView>
-            <Scene.Header>
-              <TextField
-                baseColor={THEME.COLORS.GRAY_2}
-                tintColor={THEME.COLORS.GRAY_2}
-                secureTextEntry
-                label={s.strings.enter_your_password}
-                onChangeText={onPasswordChanged}
-              />
-            </Scene.Header>
+          <View style={styles.switchRow}>
+            <View style={styles.textBlock}>
+              <FormattedText style={styles.bodyText}>{s.strings.spending_limits_tx_title}</FormattedText>
+              <FormattedText style={styles.bodyText}>{s.strings.spending_limits_tx_description}</FormattedText>
+            </View>
+            <Switch onValueChange={onTransactionIsEnabledChanged} value={transactionIsEnabled} />
+          </View>
 
-            <Scene.Padding style={styles.spacer} />
+          <TextField
+            tintColor={THEME.COLORS.SECONDARY}
+            baseColor={THEME.COLORS.SECONDARY}
+            disabled={!transactionIsEnabled}
+            value={transactionAmount.toString()}
+            onChangeText={onTransactionAmountChanged}
+            containerStyle={[{ flex: 1 }]}
+            label={s.strings.spending_limits_tx_title}
+            suffix={currencySymbol}
+            autoCorrect={false}
+            keyboardType="numeric"
+          />
 
-            <Scene.Body>
-              <Scene.Row>
-                <Scene.Item>
-                  <Scene.Body.Text style={styles.bodyText}>{s.strings.spending_limits_tx_title}</Scene.Body.Text>
+          <View style={styles.spacer} />
 
-                  <Scene.Body.Text style={styles.bodyText}>{s.strings.spending_limits_tx_description}</Scene.Body.Text>
-                </Scene.Item>
-
-                <Switch onValueChange={onTransactionIsEnabledChanged} value={transactionIsEnabled} />
-              </Scene.Row>
-
-              <Scene.Row>
-                <TextField
-                  tintColor={THEME.COLORS.SECONDARY}
-                  baseColor={THEME.COLORS.SECONDARY}
-                  disabled={!transactionIsEnabled}
-                  value={transactionAmount.toString()}
-                  onChangeText={onTransactionAmountChanged}
-                  containerStyle={[{ flex: 1 }]}
-                  label={s.strings.spending_limits_tx_title}
-                  suffix={currencySymbol}
-                  autoCorrect={false}
-                  keyboardType="numeric"
-                />
-              </Scene.Row>
-            </Scene.Body>
-
-            <Scene.Padding style={styles.spacer} />
-
-            <Scene.Footer>
-              <PrimaryButton onPress={onSubmit}>
-                <PrimaryButton.Text>{s.strings.save}</PrimaryButton.Text>
-              </PrimaryButton>
-            </Scene.Footer>
-          </KeyboardAwareScrollView>
-        </Scene>
-      </SafeAreaView>
+          <PrimaryButton onPress={onSubmit}>
+            <PrimaryButton.Text>{s.strings.save}</PrimaryButton.Text>
+          </PrimaryButton>
+        </KeyboardAwareScrollView>
+      </SceneWrapper>
     )
   }
 
@@ -136,18 +120,23 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
 
 const rawStyles = {
   scene: {
-    padding: 24,
-    backgroundColor: THEME.COLORS.WHITE
+    alignItems: 'stretch',
+    padding: 24
   },
   spacer: {
     height: 28
   },
-  gradient: {
-    height: THEME.HEADER
+  switchRow: {
+    flexDirection: 'row',
+    paddingVertical: 28
+  },
+  textBlock: {
+    flex: 1
   },
   bodyText: {
     color: THEME.COLORS.PRIMARY,
-    fontFamily: THEME.FONTS.DEFAULT
+    fontFamily: THEME.FONTS.DEFAULT,
+    fontSize: 14
   }
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)

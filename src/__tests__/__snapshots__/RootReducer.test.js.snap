@@ -142,14 +142,6 @@ Object {
         "useLegacyAddress": false,
       },
       "scan": Object {
-        "parsedUri": null,
-        "privateKeyModal": Object {
-          "error": null,
-          "isSweeping": false,
-          "secondaryModal": Object {
-            "isActive": false,
-          },
-        },
         "scanEnabled": false,
         "torchEnabled": false,
       },
@@ -203,17 +195,6 @@ Object {
         "numTransactions": 0,
         "transactionIdMap": Object {},
         "transactions": Array [],
-      },
-      "uniqueIdentifierModal": Object {
-        "isActive": false,
-        "uniqueIdentifier": undefined,
-      },
-      "walletList": Object {
-        "viewXPubWalletModalVisible": false,
-        "walletArchivesVisible": false,
-        "walletId": "",
-        "xPubExplorer": "",
-        "xPubSyntax": "",
       },
     },
     "settings": Object {

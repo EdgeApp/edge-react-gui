@@ -3,7 +3,6 @@
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ActivityIndicator, Image, ScrollView, StyleSheet, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
 import {
@@ -21,6 +20,7 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.
 import { getDefaultDenomination } from '../../selectors/DenominationSelectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { CreateWalletType, GuiFiatType, GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'

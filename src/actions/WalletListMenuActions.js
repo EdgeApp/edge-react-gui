@@ -1,23 +1,21 @@
 // @flow
 
-import { createInputModal, createSecureTextModal } from 'edge-components'
+import Clipboard from '@react-native-community/clipboard'
 import * as React from 'react'
-import { Actions } from 'react-native-router-flux'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
+import { Linking } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { launchModal } from '../components/common/ModalProvider.js'
-import { ButtonsModal } from '../components/modals/ButtonsModal.js'
-import { showInfoModal } from '../components/modals/InfoModal'
+import { type ButtonInfo, ButtonsModal } from '../components/modals/ButtonsModal.js'
 import { RawTextModal } from '../components/modals/RawTextModal.js'
-import { Airship, showError } from '../components/services/AirshipInstance.js'
-import { getTheme } from '../components/services/ThemeContext.js'
-import { CheckPasswordModal } from '../components/themed/CheckPasswordModal.js'
-import { TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
+import { TextInputModal } from '../components/modals/TextInputModal.js'
+import { Airship, showToast } from '../components/services/AirshipInstance.js'
+import { ModalMessage } from '../components/themed/ModalParts.js'
+import { MANAGE_TOKENS, TRANSACTIONS_EXPORT } from '../constants/SceneKeys.js'
 import s from '../locales/strings.js'
-import Text from '../modules/UI/components/FormattedText/FormattedText.ui.js'
 import type { Dispatch, GetState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 import { getWalletName } from '../util/CurrencyWalletHelpers.js'
+import { validatePassword } from './AccountActions.js'
 import { showDeleteWalletModal } from './DeleteWalletModalActions.js'
 import { showResyncWalletModal } from './ResyncWalletModalActions.js'
 import { showSplitWalletModal } from './SplitWalletModalActions.js'
@@ -31,7 +29,9 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const wallet = state.ui.wallets.byId[walletId]
-        Actions.manageTokens({ guiWallet: wallet })
+        Actions.push(MANAGE_TOKENS, {
+          guiWallet: wallet
+        })
       }
     }
 
@@ -42,10 +42,12 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const wallet = wallets[walletId]
 
         if (Object.values(wallets).length === 1) {
-          showInfoModal(s.strings.cannot_delete_last_wallet_modal_title, [
-            s.strings.cannot_delete_last_wallet_modal_message_part_1,
-            s.strings.cannot_delete_last_wallet_modal_message_part_2
-          ])
+          Airship.show(bridge => (
+            <ButtonsModal bridge={bridge} buttons={{}} closeArrow title={s.strings.cannot_delete_last_wallet_modal_title}>
+              <ModalMessage>{s.strings.cannot_delete_last_wallet_modal_message_part_1}</ModalMessage>
+              <ModalMessage>{s.strings.cannot_delete_last_wallet_modal_message_part_2}</ModalMessage>
+            </ButtonsModal>
+          ))
           return
         }
 
@@ -89,10 +91,35 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const { currencyWallets } = state.core.account
-        const wallet = currencyWallets[walletId]
-        const xPub = wallet.displayPublicSeed
-        const xPubExplorer = wallet.currencyInfo.xpubExplorer && xPub ? sprintf(wallet.currencyInfo.xpubExplorer, xPub) : ''
-        dispatch({ type: 'OPEN_VIEWXPUB_WALLET_MODAL', data: { xPub, walletId, xPubExplorer } })
+        const { displayPublicSeed, currencyInfo } = currencyWallets[walletId]
+        const { xpubExplorer } = currencyInfo
+
+        const copy: ButtonInfo = {
+          label: s.strings.fragment_request_copy_title,
+          type: 'secondary'
+        }
+        const link: ButtonInfo = {
+          label: s.strings.transaction_details_show_advanced_block_explorer,
+          type: 'secondary'
+        }
+        Airship.show(bridge => (
+          <ButtonsModal
+            bridge={bridge}
+            buttons={xpubExplorer != null ? { copy, link } : { copy }}
+            closeArrow
+            message={displayPublicSeed ?? ''}
+            title={s.strings.fragment_wallets_view_xpub}
+          />
+        )).then((result: 'copy' | 'link' | void) => {
+          switch (result) {
+            case 'copy':
+              Clipboard.setString(displayPublicSeed)
+              showToast(s.strings.fragment_wallets_pubkey_copied_title)
+              break
+            case 'link':
+              if (xpubExplorer != null) Linking.openURL(sprintf(currencyInfo.xpubExplorer, displayPublicSeed))
+          }
+        })
       }
     }
 
@@ -101,7 +128,7 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const state = getState()
         const { currencyWallets } = state.core.account
         const wallet = currencyWallets[walletId]
-        Actions[TRANSACTIONS_EXPORT]({
+        Actions.push(TRANSACTIONS_EXPORT, {
           sourceWallet: wallet,
           currencyCode
         })
@@ -114,23 +141,20 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
         const { account } = state.core
         const { currencyWallets } = account
         const wallet = currencyWallets[walletId]
-        const message = `${s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}\n${getWalletName(wallet)}`
 
-        const passwordValid = await Airship.show(bridge => (
-          <CheckPasswordModal
-            bridge={bridge}
-            buttonLabel={s.strings.fragment_wallets_get_seed_wallet}
-            message={message}
-            title={s.strings.fragment_wallets_get_seed_wallet}
-          />
-        ))
+        const passwordValid = await dispatch(
+          validatePassword({
+            message: `${s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}\n${getWalletName(wallet)}`,
+            submitLabel: s.strings.fragment_wallets_get_seed_wallet
+          })
+        )
 
         if (passwordValid) {
           await Airship.show(bridge => (
             <ButtonsModal
               title={s.strings.fragment_wallets_get_seed_wallet}
               bridge={bridge}
-              message={wallet.displayPrivateSeed || undefined}
+              message={wallet.displayPrivateSeed ?? ''}
               buttons={{ ok: { label: s.strings.string_ok_cap } }}
             />
           ))
@@ -140,100 +164,45 @@ export function walletListMenuAction(walletId: string, option: WalletListMenuKey
 
     case 'getRawKeys': {
       return async (dispatch: Dispatch, getState: GetState) => {
-        const state = getState()
-        const theme = getTheme()
-        const icon = <FontAwesomeIcon style={{ left: theme.rem(0.125) }} name="user-secret" color={theme.tileBackground} size={theme.rem(2)} />
-
-        const { account } = state.core
-
-        try {
-          const input = {
-            label: s.strings.confirm_password_text,
-            autoCorrect: false,
-            returnKeyType: 'go',
-            initialValue: '',
-            autoFocus: true
-          }
-          const yesButton = {
-            title: s.strings.string_get_raw_keys
-          }
-          const noButton = {
-            title: s.strings.string_cancel_cap
-          }
-
-          const validateInput = async input => {
-            const isPassword = await account.checkPassword(input)
-            if (isPassword) {
-              dispatch({ type: 'PASSWORD_USED' })
-              return {
-                success: true,
-                message: ''
-              }
-            } else {
-              return {
-                success: false,
-                message: s.strings.password_reminder_invalid
-              }
-            }
-          }
-
-          const getSeedModal = createSecureTextModal({
-            icon,
-            title: s.strings.string_get_raw_keys,
-            message: <Text>{s.strings.fragment_wallets_get_raw_key_wallet_confirm_message}</Text>,
-            input,
-            yesButton,
-            noButton,
-            validateInput
+        const passwordValid = await dispatch(
+          validatePassword({
+            message: s.strings.fragment_wallets_get_raw_key_wallet_confirm_message,
+            submitLabel: s.strings.string_get_raw_keys
           })
-          const resolveValue = await launchModal(getSeedModal)
+        )
+        if (passwordValid) {
+          const state = getState()
+          const { account } = state.core
 
-          if (resolveValue) {
-            const keys = account.allKeys.find(key => key.id === walletId)
-            const seed = keys ? JSON.stringify(keys.keys, null, 2) : ''
-            Airship.show(bridge => <RawTextModal bridge={bridge} body={seed} title={s.strings.string_raw_keys} icon={icon} disableCopy />)
-          }
-        } catch (error) {
-          showError(error)
+          const keys = account.allKeys.find(key => key.id === walletId)
+          const seed = keys ? JSON.stringify(keys.keys, null, 2) : ''
+          Airship.show(bridge => <RawTextModal bridge={bridge} body={seed} title={s.strings.string_raw_keys} disableCopy />)
         }
       }
     }
 
     case 'rename': {
       return async (dispatch: Dispatch, getState: GetState) => {
-        try {
-          const state = getState()
-          const { currencyWallets } = state.core.account
-          const wallet = currencyWallets[walletId]
-          const walletName = wallet.name
-          const input = {
-            label: s.strings.fragment_wallets_rename_wallet,
-            autoCorrect: false,
-            returnKeyType: 'go',
-            initialValue: walletName,
-            autoFocus: true
-          }
-          const yesButton = {
-            title: s.strings.string_done_cap
-          }
-          const noButton = {
-            title: s.strings.string_cancel_cap
-          }
-          const renameWalletModal = createInputModal({
-            icon: <FontAwesomeIcon name="edit" size={30} />,
-            title: s.strings.fragment_wallets_rename_wallet,
-            input,
-            yesButton,
-            noButton
-          })
-          const resolveValue = await launchModal(renameWalletModal)
-          if (resolveValue) {
-            await wallet.renameWallet(resolveValue)
-            dispatch(refreshWallet(walletId))
-          }
-        } catch (error) {
-          showError(error)
-        }
+        const state = getState()
+        const { currencyWallets } = state.core.account
+        const wallet = currencyWallets[walletId]
+        const walletName = wallet.name ?? ''
+
+        await Airship.show(bridge => (
+          <TextInputModal
+            autoCorrect={false}
+            bridge={bridge}
+            initialValue={walletName}
+            inputLabel={s.strings.fragment_wallets_rename_wallet}
+            returnKeyType="go"
+            title={s.strings.fragment_wallets_rename_wallet}
+            onSubmit={async name => {
+              await wallet.renameWallet(name)
+              dispatch(refreshWallet(walletId))
+              return true
+            }}
+          />
+        ))
       }
     }
 

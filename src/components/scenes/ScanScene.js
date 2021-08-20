@@ -4,21 +4,21 @@ import * as React from 'react'
 import { ActivityIndicator, Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import { RNCamera } from 'react-native-camera'
 import RNPermissions from 'react-native-permissions'
-import { Actions } from 'react-native-router-flux'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { selectWalletForExchange } from '../../actions/CryptoExchangeActions.js'
 import { loginQrCodeScanned, parseScannedUri, qrCodeScanned } from '../../actions/ScanActions'
+import { EXCHANGE_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
 import { type PermissionStatus } from '../../reducers/PermissionsReducer.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import { scale } from '../../util/scaling.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { SecondaryModal } from '../modals/SecondaryModal.js'
-import { SingleInputModal } from '../modals/SingleInputModal.js'
+import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship } from '../services/AirshipInstance'
 
 type OwnProps = {
@@ -55,35 +55,32 @@ export class Scan extends React.Component<Props> {
 
   render() {
     return (
-      <>
-        <SceneWrapper background="header" hasTabs={false}>
-          {this.renderCameraArea()}
-          <View style={styles.overlayButtonAreaWrap}>
-            {this.props.data === SWEEP_PRIVATE_KEY && (
-              <TouchableHighlight style={styles.bottomButton} onPress={this._onTogglePrivateKeyModal} underlayColor={THEME.COLORS.SECONDARY}>
-                <View style={styles.bottomButtonTextWrap}>
-                  <FontAwesome name="edit" style={styles.privateKeyIcon} />
-                  <T style={styles.bottomButtonText}>{s.strings.scan_private_key_button_title}</T>
-                </View>
-              </TouchableHighlight>
-            )}
-            <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={THEME.COLORS.SECONDARY}>
+      <SceneWrapper background="header" hasTabs={false}>
+        {this.renderCameraArea()}
+        <View style={styles.overlayButtonAreaWrap}>
+          {this.props.data === SWEEP_PRIVATE_KEY && (
+            <TouchableHighlight style={styles.bottomButton} onPress={this._onTogglePrivateKeyModal} underlayColor={THEME.COLORS.SECONDARY}>
               <View style={styles.bottomButtonTextWrap}>
-                <IonIcon style={styles.flashIcon} name="ios-flash" size={scale(24)} />
-                <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
+                <FontAwesome name="edit" style={styles.privateKeyIcon} />
+                <T style={styles.bottomButtonText}>{s.strings.scan_private_key_button_title}</T>
               </View>
             </TouchableHighlight>
-          </View>
-        </SceneWrapper>
-        <SecondaryModal />
-      </>
+          )}
+          <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={THEME.COLORS.SECONDARY}>
+            <View style={styles.bottomButtonTextWrap}>
+              <IonIcon style={styles.flashIcon} name="ios-flash" size={scale(24)} />
+              <T style={styles.bottomButtonText}>{s.strings.fragment_send_flash}</T>
+            </View>
+          </TouchableHighlight>
+        </View>
+      </SceneWrapper>
     )
   }
 
   _onPressTransfer = () => {
     const { selectFromWalletForExchange, currentWalletId, currentCurrencyCode } = this.props
     selectFromWalletForExchange(currentWalletId, currentCurrencyCode)
-    Actions.exchangeScene()
+    Actions.push(EXCHANGE_SCENE)
   }
 
   _onToggleTorch = () => {
@@ -92,7 +89,7 @@ export class Scan extends React.Component<Props> {
 
   _onTogglePrivateKeyModal = async () => {
     const uri = await Airship.show(bridge => (
-      <SingleInputModal bridge={bridge} title={s.strings.scan_private_key_modal_title} label={s.strings.scan_private_key_modal_label} />
+      <TextInputModal bridge={bridge} inputLabel={s.strings.scan_private_key_modal_label} title={s.strings.scan_private_key_modal_title} />
     ))
 
     if (uri) {

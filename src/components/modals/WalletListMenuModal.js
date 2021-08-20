@@ -3,6 +3,7 @@
 import { type EdgeAccount } from 'edge-core-js'
 import React from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { type AirshipBridge } from 'react-native-airship'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
@@ -15,7 +16,6 @@ import { getCurrencyInfos } from '../../util/CurrencyInfoHelpers.js'
 import { type Theme, cacheStyles, useTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
-import { type AirshipBridge } from './modalParts'
 
 type Option = {
   value: WalletListMenuKey,
@@ -57,7 +57,16 @@ const getWalletOptions = async (params: {
   }
 
   if (isToken) {
-    return [{ label: s.strings.fragment_wallets_export_transactions, value: 'exportWalletTransactions' }]
+    return [
+      {
+        label: s.strings.string_resync,
+        value: 'resync'
+      },
+      {
+        label: s.strings.fragment_wallets_export_transactions,
+        value: 'exportWalletTransactions'
+      }
+    ]
   }
 
   const result = []

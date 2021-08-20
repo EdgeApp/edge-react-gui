@@ -65,4 +65,4 @@ export const rawStyles = {
   }
 }
 
-export const styles = StyleSheet.create(rawStyles)
+export const styles: typeof rawStyles = StyleSheet.create(rawStyles)

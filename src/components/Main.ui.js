@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { YellowBox } from 'react-native'
-import { Actions, Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
+import { Drawer, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 
 import ENV from '../../env.json'
 import { checkEnabledExchanges } from '../actions/CryptoExchangeActions.js'
@@ -39,7 +39,7 @@ import { WalletListScene } from '../components/scenes/WalletListScene.js'
 import { requestPermission } from '../components/services/PermissionsManager.js'
 import {
   ADD_TOKEN,
-  CHANGE_MINING_FEE_SEND_CONFIRMATION,
+  CHANGE_MINING_FEE,
   CHANGE_PASSWORD,
   CHANGE_PIN,
   CREATE_WALLET_ACCOUNT_SELECT,
@@ -109,6 +109,7 @@ import { ControlPanel } from '../modules/UI/components/ControlPanel/ControlPanel
 import { ifLoggedIn } from '../modules/UI/components/LoginStatus/LoginStatus.js'
 import { type Permission } from '../reducers/PermissionsReducer.js'
 import { connect } from '../types/reactRedux.js'
+import { Actions } from '../types/routerTypes.js'
 import { scale } from '../util/scaling.js'
 import { logEvent } from '../util/tracking.js'
 import { AirshipToast } from './common/AirshipToast.js'
@@ -342,25 +343,6 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={REQUEST}
-                navTransparent
-                component={ifLoggedIn(Request)}
-                renderTitle={<EdgeLogoHeader />}
-                renderRightButton={<SideMenuButton />}
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
-                hideTabBar
-              />
-
-              <Scene
-                key={FIO_REQUEST_CONFIRMATION}
-                navTransparent
-                component={ifLoggedIn(FioRequestConfirmationScene)}
-                renderTitle={<HeaderTitle title={s.strings.fio_confirm_request_header} />}
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
-                renderRightButton={<SideMenuButton />}
-              />
-
-              <Scene
                 key={MANAGE_TOKENS}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={this.renderEmptyButton()}
@@ -468,6 +450,25 @@ export class MainComponent extends React.Component<Props> {
             </Stack>
           </Tabs>
 
+          <Stack key={REQUEST} hideTabBar>
+            <Scene
+              key={REQUEST}
+              component={ifLoggedIn(Request)}
+              navTransparent
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+              renderTitle={<EdgeLogoHeader />}
+            />
+            <Scene
+              key={FIO_REQUEST_CONFIRMATION}
+              navTransparent
+              component={ifLoggedIn(FioRequestConfirmationScene)}
+              renderTitle={<HeaderTitle title={s.strings.fio_confirm_request_header} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
+            />
+          </Stack>
+
           <Stack key={SEND} hideTabBar>
             <Scene
               key={SEND}
@@ -480,7 +481,7 @@ export class MainComponent extends React.Component<Props> {
               renderLeftButton={<BackButton onPress={this.handleBack} />}
             />
             <Scene
-              key={CHANGE_MINING_FEE_SEND_CONFIRMATION}
+              key={CHANGE_MINING_FEE}
               navTransparent
               component={ifLoggedIn(ChangeMiningFeeScene)}
               renderTitle={<HeaderTitle title={s.strings.title_change_mining_fee} />}

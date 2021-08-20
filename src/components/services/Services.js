@@ -17,7 +17,6 @@ import { type Dispatch, type RootState } from '../../types/reduxTypes.js'
 import { errorAlert } from '../../util/middleware/errorAlert.js'
 import { loginStatusChecker } from '../../util/middleware/loginStatusChecker.js'
 import { perfLogger } from '../../util/middleware/perfLogger.js'
-import { ModalProvider } from '../common/ModalProvider.js'
 import { Main } from '../Main.ui.js'
 import { Airship } from './AirshipInstance.js'
 import { AutoLogout } from './AutoLogout.js'
@@ -83,7 +82,6 @@ export class Services extends React.PureComponent<Props> {
           <EdgeAccountCallbackManager />
           <EdgeContextCallbackManager />
           <EdgeWalletsCallbackManager />
-          <ModalProvider />
           <PermissionsManager />
           <NetworkActivity />
           <PasswordReminderService />

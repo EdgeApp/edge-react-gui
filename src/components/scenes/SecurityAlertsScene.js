@@ -4,10 +4,10 @@ import { type EdgeAccount, type EdgeContext } from 'edge-core-js'
 import { SecurityAlertsScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
 import { StatusBar, StyleSheet, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
+import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
-import { THEME } from '../modals/modalParts.js'
+import { Actions } from '../../types/routerTypes.js'
 
 type StateProps = {
   account: EdgeAccount,

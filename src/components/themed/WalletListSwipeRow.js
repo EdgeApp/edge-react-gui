@@ -2,12 +2,12 @@
 
 import * as React from 'react'
 import { Dimensions, Platform, View } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { Fontello } from '../../assets/vector/index.js'
-import { REQUEST, SEND } from '../../constants/SceneKeys.js'
+import { REQUEST, SEND, TRANSACTION_LIST } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo, WALLET_LIST_OPTIONS_ICON } from '../../constants/WalletAndCurrencyConstants.js'
+import { type ParamList, Actions } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { WalletListMenuModal } from '../modals/WalletListMenuModal.js'
@@ -75,10 +75,10 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
       // if it's not EOS then go to txList, if it's EOS and activated with publicAddress then go to txList
       const { isAccountActivationRequired } = getSpecialCurrencyInfo(currencyCode)
       if (!isAccountActivationRequired || (isAccountActivationRequired && publicAddress)) {
-        Actions.transactionList({ params: 'walletList' })
+        Actions.push(TRANSACTION_LIST)
       }
     } else {
-      Actions.transactionList({ params: 'walletList' })
+      Actions.push(TRANSACTION_LIST)
     }
   }
 
@@ -99,7 +99,7 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
     ))
   }
 
-  openScene(key: string) {
+  openScene(key: $Keys<ParamList>) {
     const { currencyCode, guiWallet } = this.props
     const walletId = guiWallet.id
     this.closeRow()

@@ -16,7 +16,6 @@ import { type SortOption } from '../components/modals/WalletListSortModal.js'
 import type { CcWalletMap } from '../reducers/FioReducer'
 import { type PermissionsState } from '../reducers/PermissionsReducer.js'
 import type { AccountActivationPaymentInfo, HandleActivationInfo, HandleAvailableStatus } from '../reducers/scenes/CreateWalletReducer.js'
-import { type GuiMakeSpendInfo } from '../reducers/scenes/SendConfirmationReducer.js'
 import { type AccountInitPayload, type SettingsState } from '../reducers/scenes/SettingsReducer.js'
 import { type TweakSource } from '../util/ReferralHelpers.js'
 import { type DeepLink } from './DeepLink.js'
@@ -29,6 +28,7 @@ import {
   type GuiContact,
   type GuiCurrencyInfo,
   type GuiExchangeRates,
+  type GuiMakeSpendInfo,
   type GuiSwapInfo,
   type GuiWallet,
   type MostRecentWallet,
@@ -42,7 +42,6 @@ type NoDataActionName =
   | 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
   | 'ADD_TOKEN_START'
   | 'CLOSE_SELECT_USER'
-  | 'CLOSE_VIEWXPUB_WALLET_MODAL'
   | 'DEEP_LINK_HANDLED'
   | 'DEVELOPER_MODE_OFF'
   | 'DEVELOPER_MODE_ON'
@@ -63,10 +62,6 @@ type NoDataActionName =
   | 'PASSWORD_REMINDER_MODAL/REQUEST_CHANGE_PASSWORD'
   | 'PASSWORD_REMINDER/PASSWORD_REMINDER_POSTPONED'
   | 'PASSWORD_USED'
-  | 'PRIVATE_KEY_MODAL/SECONDARY_MODAL/ACTIVATED'
-  | 'PRIVATE_KEY_MODAL/SECONDARY_MODAL/DEACTIVATED'
-  | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_START'
-  | 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_SUCCESS'
   | 'PROCESS_EDGE_LOGIN'
   | 'RECEIVED_INSUFFICIENT_FUNDS_ERROR'
   | 'SHIFT_COMPLETE'
@@ -78,9 +73,6 @@ type NoDataActionName =
   | 'UI/WALLETS/CREATE_WALLET_FAILURE'
   | 'UI/WALLETS/CREATE_WALLET_START'
   | 'UI/WALLETS/CREATE_WALLET_SUCCESS'
-  | 'UNIQUE_IDENTIFIER_MODAL/ACTIVATED'
-  | 'UNIQUE_IDENTIFIER_MODAL/DEACTIVATED'
-  | 'UNIQUE_IDENTIFIER_MODAL/RESET'
   | 'USE_LEGACY_REQUEST_ADDRESS'
   | 'USE_REGULAR_REQUEST_ADDRESS'
   | 'FIO/EXPIRED_REMINDER_SHOWN'
@@ -141,10 +133,6 @@ export type Action =
   | { type: 'LOGOUT', data: { username?: string } }
   | { type: 'MESSAGE_TWEAK_HIDDEN', data: { messageId: string, source: TweakSource } }
   | {
-      type: 'OPEN_VIEWXPUB_WALLET_MODAL',
-      data: { walletId: string, xPub: string | null, xPubExplorer: string }
-    }
-  | {
       type: 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS',
       data: {
         tokenObj: CustomTokenInfo,
@@ -153,7 +141,6 @@ export type Action =
       }
     }
   | { type: 'PERMISSIONS/UPDATE', data: PermissionsState }
-  | { type: 'PRIVATE_KEY_MODAL/SWEEP_PRIVATE_KEY_FAIL', data: { error: Error } }
   | { type: 'PROMOTION_ADDED', data: Promotion }
   | { type: 'PROMOTION_REMOVED', data: string /* installerId */ }
   | { type: 'HANDLE_AVAILABLE_STATUS', data: HandleAvailableStatus }
@@ -232,7 +219,6 @@ export type Action =
       data: { currencyCode: string, walletId: string }
     }
   | { type: 'UI/WALLETS/UPSERT_WALLETS', data: { wallets: EdgeCurrencyWallet[] } }
-  | { type: 'UNIQUE_IDENTIFIER_MODAL/UNIQUE_IDENTIFIER_CHANGED', data: { uniqueIdentifier: string } }
   | {
       type: 'UPDATE_EXISTING_TOKEN_SUCCESS',
       data: { tokenObj: CustomTokenInfo }

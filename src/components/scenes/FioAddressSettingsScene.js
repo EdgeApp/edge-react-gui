@@ -2,7 +2,6 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Actions } from 'react-native-router-flux'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
 import { FIO_ADDRESS_LIST, SEND } from '../../constants/SceneKeys'
@@ -11,6 +10,7 @@ import s from '../../locales/strings'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { getRenewalFee, getTransferFee, renewFioName } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
+import { Actions } from '../../types/routerTypes.js'
 import type { FioAddress } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -142,7 +142,7 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
       }
     }
 
-    Actions[SEND]({
+    Actions.push(SEND, {
       guiMakeSpendInfo,
       selectedWalletId: this.props.fioWallet.id,
       selectedCurrencyCode: this.props.fioWallet.currencyInfo.currencyCode,

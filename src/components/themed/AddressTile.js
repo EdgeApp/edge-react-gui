@@ -3,15 +3,15 @@
 import Clipboard from '@react-native-community/clipboard'
 import type { EdgeCurrencyConfig, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import * as React from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { AppState, TouchableOpacity, View } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 
 import { CURRENCY_PLUGIN_NAMES } from '../../constants/WalletAndCurrencyConstants'
 import s from '../../locales/strings.js'
 import { checkExpiredFioAddress, checkPubAddress } from '../../modules/FioAddress/util'
-import { type GuiMakeSpendInfo } from '../../reducers/scenes/SendConfirmationReducer.js'
 import { connect } from '../../types/reactRedux.js'
+import { type GuiMakeSpendInfo } from '../../types/types.js'
 import { AddressModal } from '../modals/AddressModal'
 import { paymentProtocolUriReceived } from '../modals/paymentProtocolUriReceived.js'
 import { ScanModal } from '../modals/ScanModal.js'
@@ -63,6 +63,8 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   componentDidMount(): void {
+    AppState.addEventListener('change', this.handleAppStateChange)
+
     this._setClipboard(this.props)
     this.props.addressTileRef(this)
     if (this.props.isCameraOpen) {
@@ -71,6 +73,8 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
   }
 
   componentWillUnmount(): void {
+    AppState.removeEventListener('change', this.handleAppStateChange)
+
     this.props.addressTileRef(undefined)
   }
 
@@ -78,6 +82,10 @@ class AddressTileComponent extends React.PureComponent<Props, State> {
     if (this.props.isCameraOpen && !prevProps.isCameraOpen) {
       this.handleScan()
     }
+  }
+
+  handleAppStateChange = appState => {
+    if (appState === 'active') this._setClipboard(this.props)
   }
 
   reset() {

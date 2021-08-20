@@ -1,6 +1,5 @@
 // @flow
 
-import { createInputModal } from 'edge-components'
 import * as React from 'react'
 import { Text, View } from 'react-native'
 import AntDesignIcon from 'react-native-vector-icons/AntDesign'
@@ -8,12 +7,11 @@ import { sprintf } from 'sprintf-js'
 
 import { activatePromotion, removePromotion } from '../../actions/AccountReferralActions.js'
 import s from '../../locales/strings.js'
-import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral, type DeviceReferral } from '../../types/ReferralTypes.js'
-import { launchModal } from '../common/ModalProvider.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
-import { showActivity } from '../services/AirshipInstance.js'
+import { TextInputModal } from '../modals/TextInputModal.js'
+import { Airship, showActivity } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
@@ -71,25 +69,18 @@ export class PromotionSettingsComponent extends React.Component<Props> {
   }
 
   handleAdd = () => {
-    launchModal(
-      createInputModal({
-        icon: <AntDesignIcon name="pluscircleo" color={THEME.COLORS.SECONDARY} size={THEME.rem(2)} />,
-        title: s.strings.settings_promotion_add,
-        input: {
-          autoCorrect: false,
-          returnKeyType: 'go',
-          label: '',
-          initialValue: '',
-          autoFocus: true
-        },
-        yesButton: { title: s.strings.string_done_cap },
-        noButton: { title: s.strings.string_cancel_cap }
-      })
-    ).then(installerId => {
-      if (installerId != null) {
-        showActivity(sprintf(s.strings.settings_promotion_adding, installerId), this.props.activatePromotion(installerId))
-      }
-    })
+    Airship.show(bridge => (
+      <TextInputModal
+        autoCorrect={false}
+        bridge={bridge}
+        returnKeyType="go"
+        title={s.strings.settings_promotion_add}
+        onSubmit={async installerId => {
+          await this.props.activatePromotion(installerId)
+          return true
+        }}
+      />
+    ))
   }
 }
 

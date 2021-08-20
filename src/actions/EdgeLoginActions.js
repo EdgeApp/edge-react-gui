@@ -1,13 +1,14 @@
 // @flow
 
 import { type EdgeLobby } from 'edge-core-js/types'
+import * as React from 'react'
 import { Alert } from 'react-native'
-import { Actions } from 'react-native-router-flux'
 
-import { launchModal } from '../components/common/ModalProvider.js'
+import { ButtonsModal } from '../components/modals/ButtonsModal.js'
+import { Airship } from '../components/services/AirshipInstance.js'
 import s from '../locales/strings.js'
-import { errorModal } from '../modules/UI/components/Modals/ErrorModal.js'
 import { type Dispatch, type GetState } from '../types/reduxTypes.js'
+import { Actions } from '../types/routerTypes.js'
 
 export const loginWithEdge = (lobbyId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -39,7 +40,13 @@ export const lobbyLogin = () => async (dispatch: Dispatch, getState: GetState) =
     }, 750)
   } catch (e) {
     dispatch({ type: 'EDGE_LOBBY_ACCEPT_FAILED' })
-    e.message = e.message.includes('Could not reach') ? s.strings.edge_login_fail_message : e.message
-    launchModal(errorModal(s.strings.edge_login_failed, e))
+    Airship.show(bridge => (
+      <ButtonsModal
+        bridge={bridge}
+        buttons={{ ok: { label: s.strings.string_ok } }}
+        message={e.message.includes('Could not reach') ? s.strings.edge_login_fail_message : e.message}
+        title={s.strings.edge_login_failed}
+      />
+    ))
   }
 }
