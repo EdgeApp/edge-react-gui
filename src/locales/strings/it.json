@@ -210,7 +210,7 @@
   "search_wallets": "Cerca portafogli",
   "search_tokens": "Cerca Token",
   "select_wallet": "Scegli il portafoglio",
-  "select_recv_wallet": "Seleziona il portafoglio di ricezione",
+  "select_recv_wallet": "Seleziona il portafoglio di destinazione",
   "select_src_wallet": "Seleziona il portafoglio d'origine",
   "send_confirmation_fee_line": "Commissione: + %s (%s)",
   "send_confirmation_max_button_title": "Invia il massimo",
