@@ -54,7 +54,7 @@
   "addtoken_invalid_information": "Per favore inserisci le corrette informazioni del token e riprova",
   "addtoken_denomination_input_text": "Numero di decimali",
   "addtoken_name_input_text": "Nome del token",
-  "addtoken_add": "Aggiungi personalizzato",
+  "addtoken_add": "Aggiungi custom",
   "edittoken_top_instructions": "Completa le informazioni del token e premi \"Salva\":",
   "edittoken_delete_token": "Cancella il token",
   "edittoken_delete_prompt": "Sei sicuro di voler cancellare questo token?",
