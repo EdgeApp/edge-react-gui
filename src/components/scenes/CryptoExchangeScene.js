@@ -24,6 +24,7 @@ import { CryptoExchangeMessageBox } from '../themed/CryptoExchangeMessageBoxComp
 import type { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { MainButton } from '../themed/MainButton.js'
+import { MiniButton } from '../themed/MiniButton.js'
 import { SceneHeader } from '../themed/SceneHeader'
 
 type StateProps = {
@@ -56,7 +57,7 @@ type StateProps = {
 type DispatchProps = {
   onSelectWallet: (walletId: string, currencyCode: string, direction: 'from' | 'to') => void,
   getQuoteForTransaction: SetNativeAmountInfo => void,
-  exchangeMax: () => void
+  exchangeMax: () => Promise<void>
 }
 type Props = StateProps & DispatchProps & ThemeProps
 
@@ -259,9 +260,7 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
             onNext={this.getQuote}
           >
             {this.props.hasMaxSpend && (
-              <View style={styles.exchangeMaxButton}>
-                <MainButton onPress={this.props.exchangeMax} marginRem={[1.2, 0, 0]} label={s.strings.exchange_max_amount} type="secondary" />
-              </View>
+              <MiniButton alignSelf="center" label={s.strings.exchange_max_amount} marginRem={[1.2, 0, 0]} onPress={this.props.exchangeMax} />
             )}
           </CryptoExchangeFlipInputWrapper>
           <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
@@ -304,9 +303,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   spacer: {
     height: theme.rem(15)
-  },
-  exchangeMaxButton: {
-    alignSelf: 'center'
   }
 }))
 
@@ -377,8 +373,8 @@ export const CryptoExchangeScene = connect<StateProps, DispatchProps, {}>(
       dispatch(selectWalletForExchange(walletId, currencyCode, direction))
       dispatch(updateMostRecentWalletsSelected(walletId, currencyCode))
     },
-    exchangeMax() {
-      dispatch(exchangeMax())
+    async exchangeMax() {
+      await dispatch(exchangeMax())
     }
   })
 )(withTheme(CryptoExchangeComponent))

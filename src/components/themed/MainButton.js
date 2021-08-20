@@ -4,7 +4,7 @@ import * as React from 'react'
 import { ActivityIndicator, Text, TouchableOpacity } from 'react-native'
 import { cacheStyles } from 'react-native-patina'
 
-import { useState } from '../../types/reactHooks.js'
+import { usePendingPress } from '../../hooks/usePendingPress.js'
 import { fixSides, mapSides, sidesToMargin, sidesToPadding } from '../../util/sides.js'
 import { type Theme, useTheme } from '../services/ThemeContext.js'
 
@@ -48,16 +48,7 @@ export function MainButton(props: Props) {
   const { alignSelf = 'auto', children, disabled = false, label, marginRem, onPress, type = 'primary', paddingRem, spinner = false } = props
 
   // `onPress` promise logic:
-  const [pending, setPending] = useState(false)
-  const handlePress = () => {
-    if (onPress == null || pending) return
-    const out = onPress()
-    if (out != null && typeof out.then === 'function') {
-      setPending(true)
-      const onDone = () => setPending(false)
-      out.then(onDone, onDone)
-    }
-  }
+  const [pending, handlePress] = usePendingPress(onPress)
 
   // Styles:
   const theme = useTheme()
