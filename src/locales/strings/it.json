@@ -514,7 +514,7 @@
   "restore_wallets_modal_cancel": "Cancella",
   "unique_identifier": "Identificatore univoco",
   "unique_identifier_memo": "Promemoria",
-  "unique_identifier_memo_id": "Nota ID",
+  "unique_identifier_memo_id": "Memo ID",
   "unique_identifier_destination_tag": "Tag di destinazione",
   "unique_identifier_dropdown_option_memo": "Aggiungi Promemoria",
   "unique_identifier_dropdown_option_memo_id": "Aggiungi una nota ID",
