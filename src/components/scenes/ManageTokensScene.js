@@ -231,20 +231,8 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      changeSearchValue,
-      getFilteredTokens,
-      goToAddTokenScene,
-      goToEditTokenScene,
-      onSearchClear,
-      onSelectWallet,
-      props,
-      saveEnabledTokenList,
-      state,
-      textInput,
-      toggleToken
-    } = this
-    const { route, manageTokensPending, theme } = props
+    const { route, manageTokensPending, theme } = this.props
+    const { searchValue, enabledList } = this.state
     const { guiWallet } = route.params
     const { name, currencyCode } = guiWallet
     const styles = getStyles(theme)
@@ -253,27 +241,27 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
       <SceneWrapper>
         <SceneHeader underline>
           <ManageTokensHeader
-            textInput={textInput}
+            textInput={this.textInput}
             walletName={name}
             walletId={guiWallet.id}
             currencyCode={currencyCode}
-            changeSearchValue={changeSearchValue}
-            onSearchClear={onSearchClear}
-            onSelectWallet={onSelectWallet}
-            searchValue={state.searchValue}
+            changeSearchValue={this.changeSearchValue}
+            onSearchClear={this.onSearchClear}
+            onSelectWallet={this.onSelectWallet}
+            searchValue={searchValue}
           />
         </SceneHeader>
         <FlatList
           keyExtractor={item => item.currencyCode}
-          data={getFilteredTokens()}
+          data={this.getFilteredTokens()}
           renderItem={metaToken => (
             <ManageTokensRow
-              goToEditTokenScene={goToEditTokenScene}
+              goToEditTokenScene={this.goToEditTokenScene}
               metaToken={metaToken}
               walletId={guiWallet.id}
-              symbolImage={getCurrencyIcon(currencyCode, metaToken.item.currencyCode ?? undefined).symbolImage}
-              toggleToken={toggleToken}
-              enabledList={state.enabledList}
+              symbolImage={getCurrencyIcon(currencyCode, metaToken.item.currencyCode).symbolImage}
+              toggleToken={this.toggleToken}
+              enabledList={enabledList}
               metaTokens={guiWallet.metaTokens}
             />
           )}
@@ -282,10 +270,10 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
         <DividerLine marginRem={[0, 1]} />
         <View style={styles.buttonsArea}>
           <View style={styles.buttonWrapper}>
-            <MainButton label={s.strings.string_save} marginRem={0.5} spinner={manageTokensPending} type="secondary" onPress={saveEnabledTokenList} />
+            <MainButton label={s.strings.string_save} marginRem={0.5} spinner={manageTokensPending} type="secondary" onPress={this.saveEnabledTokenList} />
           </View>
           <View style={styles.buttonWrapper}>
-            <MainButton label={s.strings.addtoken_add} marginRem={0.5} type="secondary" onPress={goToAddTokenScene} />
+            <MainButton label={s.strings.addtoken_add} marginRem={0.5} type="secondary" onPress={this.goToAddTokenScene} />
           </View>
         </View>
       </SceneWrapper>

@@ -88,13 +88,12 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   async componentDidMount() {
-    const { checkDisclaimer, checkCountry, setState } = this
-    await checkDisclaimer()
-    checkCountry()
+    await this.checkDisclaimer()
+    this.checkCountry()
     const text = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
     if (text != null) {
       const clean = asDeveloperUri(JSON.parse(text))
-      setState({ developerUri: clean.uri })
+      this.setState({ developerUri: clean.uri })
     }
   }
 
@@ -252,8 +251,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { props } = this
-    const { accountPlugins, accountReferral, countryCode, developerModeOn, theme, route } = props
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, theme, route } = this.props
     const { direction } = route.params
     const styles = getStyles(theme)
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)

@@ -139,7 +139,8 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
     if (isConnected) {
       if (paymentCurrencyCode === FIO_STR) {
         const { fioWallets } = this.props
-        const paymentWallet = (fioWallets.find(fioWallet => fioWallet.id === walletId): any)
+        const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
+        if (paymentWallet == null) return
         Actions.push(FIO_NAME_CONFIRM, {
           fioName: fioAddress,
           paymentWallet,

@@ -52,11 +52,9 @@ class CreateWalletAccountSetup extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     const { route } = props
-    const { accountHandle } = route.params
-    this.state = {
-      accountHandle: accountHandle || ''
-    }
-    if (this.state.accountHandle) {
+    const { accountHandle = '' } = route.params
+    this.state = { accountHandle }
+    if (this.state.accountHandle !== '') {
       props.checkHandleAvailability(this.state.accountHandle)
     }
     this.debouncedCheckHandleAvailability = debounce(this.checkHandleAvailability, 400, false)
@@ -83,12 +81,12 @@ class CreateWalletAccountSetup extends React.Component<Props, State> {
   onSetup = () => {
     const { handleAvailableStatus, route } = this.props
     if (handleAvailableStatus === 'AVAILABLE') {
-      const { selectedFiat, selectedWalletType, existingWalletId } = route.params
+      const { selectedFiat, selectedWalletType, existingWalletId = '' } = route.params
       Actions.push(CREATE_WALLET_ACCOUNT_SELECT, {
-        selectedFiat: selectedFiat || '',
-        selectedWalletType: selectedWalletType || '',
+        selectedFiat: selectedFiat,
+        selectedWalletType: selectedWalletType,
         accountName: this.state.accountHandle,
-        existingWalletId: existingWalletId || ''
+        existingWalletId: existingWalletId
       })
     }
   }

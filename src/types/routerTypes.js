@@ -1,4 +1,5 @@
 // @flow
+
 import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeMetaToken, type EdgeTransaction, type OtpError } from 'edge-core-js'
 import * as Flux from 'react-native-router-flux'
 
@@ -100,10 +101,7 @@ export type ParamList = {
     expiration: string
   |},
   fioAddressList: void,
-  fioAddressRegister: {|
-    fioName: string,
-    expiration: string
-  |},
+  fioAddressRegister: void,
   fioAddressRegisterSelectWallet: {|
     fioAddress: string,
     selectedWallet: EdgeCurrencyWallet,

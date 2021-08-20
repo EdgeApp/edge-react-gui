@@ -13,7 +13,7 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { MainButton } from '../themed/MainButton.js'
 
 export type OwnProps = {
-  route: RouteProp<'fioAddressRegister'>,
+  route: RouteProp<'fioAddressRegisterSuccess'>,
   navigation: NavigationProp<'fioAddressRegisterSuccess'>
 }
 
@@ -38,8 +38,8 @@ class FioAddressRegistered extends React.Component<Props> {
   }
 
   render() {
-    const { theme } = this.props
-    const { fioName, expiration } = this.props.route.params
+    const { theme, route } = this.props
+    const { fioName, expiration } = route.params
     const styles = getStyles(theme)
 
     return (

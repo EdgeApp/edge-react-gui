@@ -66,7 +66,7 @@ class EditTokenComponent extends React.Component<Props, State> {
         contractAddress,
         decimalPlaces,
         multiplier: '',
-        currencyCode: currencyCode,
+        currencyCode,
         errorMessage: ''
       }
     } else {

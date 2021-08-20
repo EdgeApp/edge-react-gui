@@ -27,7 +27,6 @@ type DispatchProps = {
 }
 
 type StateProps = {
-  currentCustomTokens: CustomTokenInfo[],
   addTokenPending: boolean,
   currentCustomTokens: CustomTokenInfo[],
   wallet: GuiWallet

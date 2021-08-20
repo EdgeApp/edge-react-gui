@@ -24,14 +24,16 @@ type Props = OwnProps
 
 export class CreateWalletChoiceComponent extends React.PureComponent<Props> {
   onSelectNew = () => {
-    const { selectedWalletType } = this.props.route.params
+    const { route } = this.props
+    const { selectedWalletType } = route.params
     Actions.push(CREATE_WALLET_SELECT_FIAT, {
       selectedWalletType
     })
   }
 
   onSelectRestore = () => {
-    const { selectedWalletType } = this.props.route.params
+    const { route } = this.props
+    const { selectedWalletType } = route.params
     Actions.push(CREATE_WALLET_IMPORT, {
       selectedWalletType
     })

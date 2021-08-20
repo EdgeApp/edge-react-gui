@@ -86,7 +86,6 @@ describe('TransactionDetails.ui', () => {
       displayDropdownAlert: jest.fn(),
       theme: getTheme()
     }
-    // @flow--ignore-line
     const actual = renderer.render(<TransactionDetailsComponent {...props} />)
 
     expect(actual).toMatchSnapshot()

@@ -43,7 +43,8 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   }
 
   componentDidMount() {
-    const { fioAddressName, expiration } = this.props.route.params
+    const { route } = this.props
+    const { fioAddressName, expiration } = route.params
     if (!fioAddressName) {
       Alert.alert(s.strings.fio_address_details_screen_alert_title, s.strings.fio_address_details_screen_alert_message, [
         { text: s.strings.fio_address_details_screen_alert_button }
@@ -57,8 +58,8 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   }
 
   findFioWallet = async () => {
-    const { fioWallets } = this.props
-    const { fioAddressName } = this.props.route.params
+    const { fioWallets, route } = this.props
+    const { fioAddressName } = route.params
 
     this.setState({ fioWalletLoading: true })
     const fioWallet = await findWalletByFioAddress(fioWallets, fioAddressName)

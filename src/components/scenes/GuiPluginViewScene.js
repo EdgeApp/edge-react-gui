@@ -219,9 +219,8 @@ class GuiPluginView extends React.Component<Props, State> {
   }
 
   render() {
-    const { onLoadProgress, onNavigationStateChange, props, state, _callbacks } = this
-    const { route } = props
-    const { webViewKey } = state
+    const { route } = this.props
+    const { webViewKey } = this.state
     const { deepPath, deepQuery, plugin } = route.params
     const { originWhitelist = ['file://*', 'https://*', 'http://*', 'edge://*'] } = plugin
     const uri = makePluginUri(plugin, {
@@ -243,12 +242,12 @@ class GuiPluginView extends React.Component<Props, State> {
           geolocationEnabled
           injectedJavaScript={javascript}
           javaScriptEnabled
-          onLoadProgress={onLoadProgress}
-          onNavigationStateChange={onNavigationStateChange}
-          onMessage={_callbacks.onMessage}
+          onLoadProgress={this.onLoadProgress}
+          onNavigationStateChange={this.onNavigationStateChange}
+          onMessage={this._callbacks.onMessage}
           originWhitelist={originWhitelist}
           key={`webView${webViewKey}`}
-          ref={_callbacks.setRef}
+          ref={this._callbacks.setRef}
           setWebContentsDebuggingEnabled
           source={{ uri }}
           userAgent={userAgent + ' hasEdgeProvider edge/app.edge.'}

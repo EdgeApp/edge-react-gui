@@ -28,15 +28,16 @@ import { logEvent } from '../../util/tracking.js'
 import { fixFiatCurrencyCode } from '../../util/utils.js'
 import { Airship } from '../services/AirshipInstance.js'
 
-type OwnProps = {
-  route: RouteProp<'createWalletAccountSelect'>
-}
 export type AccountPaymentParams = {
   requestedAccountName: string,
   currencyCode: string,
   ownerPublicKey: string,
   activePublicKey: string,
   requestedAccountCurrencyCode: string
+}
+
+type OwnProps = {
+  route: RouteProp<'createWalletAccountSelect'>
 }
 
 type StateProps = {
@@ -187,9 +188,8 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   renderPaymentReview = () => {
-    const { route } = this.props
+    const { wallets, paymentCurrencyCode, isCreatingWallet, amount, activationCost, paymentDenominationSymbol, route } = this.props
     const { walletId, createdWallet } = this.state
-    const { wallets, paymentCurrencyCode, isCreatingWallet, amount, activationCost, paymentDenominationSymbol } = this.props
     const { accountName, selectedWalletType, selectedFiat } = route.params
 
     const wallet = wallets[walletId]
@@ -249,9 +249,8 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   render() {
-    const { route } = this.props
+    const { route, currencyConfigs, supportedCurrencies, activationCost, wallets, walletAccountActivationQuoteError } = this.props
     const { selectedWalletType } = route.params
-    const { currencyConfigs, supportedCurrencies, activationCost, wallets, walletAccountActivationQuoteError } = this.props
     const { walletId } = this.state
     const walletTypeValue = selectedWalletType.walletType.replace('wallet:', '')
     const { symbolImage } = getCurrencyIcon(currencyConfigs[walletTypeValue].currencyInfo.currencyCode)

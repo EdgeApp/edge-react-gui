@@ -128,7 +128,8 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
     if (isConnected) {
       if (paymentCurrencyCode === FIO_STR) {
         const { fioWallets } = this.props
-        const paymentWallet = (fioWallets.find(fioWallet => fioWallet.id === walletId): any)
+        const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
+        if (paymentWallet == null) return
         Actions.push(FIO_DOMAIN_CONFIRM, {
           fioName: fioDomain,
           paymentWallet,

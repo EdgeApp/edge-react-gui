@@ -187,9 +187,8 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { showExplanationForEstimate, doShift, renderTimer, props } = this
     const { account, fromCurrencyIcon, fromDenomination, fromWalletCurrencyName, toCurrencyIcon, toDenomination, toWalletCurrencyName, pending, theme, route } =
-      props
+      this.props
     const { swapInfo } = route.params
     const { fee, fromDisplayAmount, fromFiat, fromTotalFiat, toDisplayAmount, toFiat, quote, request } = swapInfo
     const { fiatCurrencyCode } = request.fromWallet
@@ -234,12 +233,12 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
               message={s.strings.estimated_exchange_message}
               type="warning"
               marginRem={[1.5, 1]}
-              onPress={showExplanationForEstimate}
+              onPress={this.showExplanationForEstimate}
             />
           )}
 
-          <Slider parentStyle={styles.slider} onSlidingComplete={doShift} disabled={pending} showSpinner={pending} />
-          {renderTimer()}
+          <Slider parentStyle={styles.slider} onSlidingComplete={this.doShift} disabled={pending} showSpinner={pending} />
+          {this.renderTimer()}
           <View style={styles.spacer} />
         </ScrollView>
       </SceneWrapper>

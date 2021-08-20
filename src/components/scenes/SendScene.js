@@ -94,7 +94,7 @@ type State = {
 
 class SendComponent extends React.PureComponent<Props, State> {
   addressTile: AddressTile | void
-  pinInput: React.ElementRef<typeof TextInput> = React.createRef()
+  pinInput: { current: TextInput | null } = React.createRef()
 
   constructor(props: Props) {
     super(props)
@@ -169,18 +169,17 @@ class SendComponent extends React.PureComponent<Props, State> {
   }
 
   handleWalletPress = () => {
-    const { props } = this
-    const { route } = props
+    const { selectWallet, route } = this.props
     const oldSelectedCurrencyCode = this.state.selectedCurrencyCode
 
     Airship.show(bridge => <WalletListModal bridge={bridge} headerTitle={s.strings.fio_src_wallet} allowedCurrencyCodes={route.params.allowedCurrencyCodes} />)
       .then(({ walletId, currencyCode }: WalletListResult) => {
         if (walletId && currencyCode) {
-          props.selectWallet(walletId, currencyCode)
+          selectWallet(walletId, currencyCode)
           this.setState(
             {
               ...this.state,
-              ...this.setWallets(props, walletId, currencyCode)
+              ...this.setWallets(this.props, walletId, currencyCode)
             },
             () => {
               if (!this.addressTile) return

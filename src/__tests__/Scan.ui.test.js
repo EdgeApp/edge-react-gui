@@ -6,6 +6,7 @@ import RNPermissions from 'react-native-permissions'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { Scan } from '../components/scenes/ScanScene.js'
+
 describe('Scan component', () => {
   it('should render with BLOCKED props', () => {
     const renderer = new ShallowRenderer()
