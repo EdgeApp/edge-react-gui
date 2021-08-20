@@ -343,15 +343,6 @@ export class MainComponent extends React.Component<Props> {
               />
 
               <Scene
-                key={FIO_REQUEST_CONFIRMATION}
-                navTransparent
-                component={ifLoggedIn(FioRequestConfirmationScene)}
-                renderTitle={<HeaderTitle title={s.strings.fio_confirm_request_header} />}
-                renderLeftButton={<BackButton onPress={this.handleBack} />}
-                renderRightButton={<SideMenuButton />}
-              />
-
-              <Scene
                 key={MANAGE_TOKENS}
                 renderLeftButton={<BackButton onPress={this.handleBack} />}
                 renderRightButton={this.renderEmptyButton()}
@@ -467,6 +458,14 @@ export class MainComponent extends React.Component<Props> {
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
               renderTitle={<EdgeLogoHeader />}
+            />
+            <Scene
+              key={FIO_REQUEST_CONFIRMATION}
+              navTransparent
+              component={ifLoggedIn(FioRequestConfirmationScene)}
+              renderTitle={<HeaderTitle title={s.strings.fio_confirm_request_header} />}
+              renderLeftButton={<BackButton onPress={this.handleBack} />}
+              renderRightButton={<SideMenuButton />}
             />
           </Stack>
 
