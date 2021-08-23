@@ -9,8 +9,8 @@ import { getSpecialCurrencyInfo } from '../../constants/WalletAndCurrencyConstan
 import s from '../../locales/strings.js'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
-import type { CreateWalletType, FlatListItem, GuiFiatType } from '../../types/types.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import type { FlatListItem, GuiFiatType } from '../../types/types.js'
 import { getSupportedFiats } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -19,8 +19,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { SelectableRow } from '../themed/SelectableRow'
 
 type OwnProps = {
-  selectedWalletType: CreateWalletType,
-  cleanedPrivateKey?: string
+  route: RouteProp<'createWalletSelectFiat'>
 }
 type StateProps = {
   supportedFiats: GuiFiatType[]
@@ -57,22 +56,25 @@ class CreateWalletSelectFiatComponent extends React.Component<Props, State> {
   }
 
   onNext = () => {
-    const { cleanedPrivateKey, selectedWalletType } = this.props
+    const { route } = this.props
+    const { cleanedPrivateKey, selectedWalletType } = route.params
+
     if (this.isValidFiatType()) {
       // check if account-based or not
       const specialCurrencyInfo = getSpecialCurrencyInfo(selectedWalletType.currencyCode)
       // check if eos-like
-      let nextSceneKey = CREATE_WALLET_NAME
       if (!specialCurrencyInfo.needsAccountNameSetup || cleanedPrivateKey) {
-        nextSceneKey = CREATE_WALLET_NAME
+        Actions.push(CREATE_WALLET_NAME, {
+          selectedWalletType: selectedWalletType,
+          selectedFiat: this.getFiatType(this.state.selectedFiat),
+          cleanedPrivateKey
+        })
       } else {
-        nextSceneKey = CREATE_WALLET_ACCOUNT_SETUP
+        Actions.push(CREATE_WALLET_ACCOUNT_SETUP, {
+          selectedWalletType: selectedWalletType,
+          selectedFiat: this.getFiatType(this.state.selectedFiat)
+        })
       }
-      Actions.push(nextSceneKey, {
-        selectedWalletType: selectedWalletType,
-        selectedFiat: this.getFiatType(this.state.selectedFiat),
-        cleanedPrivateKey
-      })
     } else {
       Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_fiat)
     }

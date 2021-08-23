@@ -1,7 +1,21 @@
 // @flow
 
+import { type EdgeCurrencyInfo, type EdgeCurrencyWallet, type EdgeMetaToken, type EdgeTransaction, type OtpError } from 'edge-core-js'
 import * as React from 'react'
 import * as Flux from 'react-native-router-flux'
+
+import type { ExchangedFlipInputAmounts } from '../components/themed/ExchangedFlipInput.js'
+import { type GuiPlugin, type GuiPluginQuery } from './GuiPluginTypes.js'
+import {
+  type CreateWalletType,
+  type FioConnectionWalletItem,
+  type FioDomain,
+  type FioRequest,
+  type GuiFiatType,
+  type GuiMakeSpendInfo,
+  type GuiSwapInfo,
+  type GuiWallet
+} from './types.js'
 
 /**
  * Defines the acceptable route parameters for each scene key.
@@ -11,67 +25,194 @@ export type ParamList = {
   root: void,
   login: void,
   edge: void,
-
   // Logged-in scenes:
-  addToken: {}, // TODO
-  changeMiningFee: {}, // TODO
+  addToken: {|
+    onAddToken: (currencyCode: string) => void,
+    contractAddress?: string,
+    currencyCode?: string,
+    currencyName?: string,
+    decimalPlaces?: string,
+    walletId: string
+  |},
+  changeMiningFee: {|
+    currencyCode?: string,
+    wallet: EdgeCurrencyWallet
+  |},
   changePassword: void,
   changePin: void,
-  createWalletAccountSelect: {}, // TODO
-  createWalletAccountSetup: {}, // TODO
-  createWalletChoice: {}, // TODO
-  createWalletImport: {}, // TODO
-  createWalletName: {}, // TODO
-  createWalletReview: {}, // TODO
+  createWalletAccountSelect: {|
+    accountName: string,
+    existingWalletId?: string,
+    selectedFiat: GuiFiatType,
+    selectedWalletType: CreateWalletType
+  |},
+  createWalletAccountSetup: {|
+    accountHandle?: string,
+    existingWalletId?: string,
+    isReactivation?: boolean,
+    selectedFiat: GuiFiatType,
+    selectedWalletType: CreateWalletType
+  |},
+  createWalletChoice: {|
+    selectedWalletType: CreateWalletType
+  |},
+  createWalletImport: {|
+    selectedWalletType: CreateWalletType
+  |},
+  createWalletName: {|
+    cleanedPrivateKey?: string,
+    selectedFiat: GuiFiatType,
+    selectedWalletType: CreateWalletType
+  |},
+  createWalletReview: {|
+    cleanedPrivateKey?: string, // for creating wallet from import private key
+    selectedFiat: GuiFiatType,
+    selectedWalletType: CreateWalletType,
+    walletName: string
+  |},
   createWalletSelectCrypto: void,
-  createWalletSelectFiat: {}, // TODO
-  currencyNotificationSettings: {}, // TODO
-  currencySettings: {}, // TODO
+  createWalletSelectFiat: {|
+    selectedWalletType: CreateWalletType,
+    cleanedPrivateKey?: string
+  |},
+  currencyNotificationSettings: {|
+    currencyInfo: EdgeCurrencyInfo
+  |},
+  currencySettings: {|
+    currencyInfo: EdgeCurrencyInfo
+  |},
   defaultFiatSetting: void,
   edgeLogin: void,
-  editToken: {}, // TODO
+  editToken: {|
+    currencyCode: string,
+    metaTokens: EdgeMetaToken[],
+    onDeleteToken(currencyCode: string): void,
+    walletId: string
+  |},
   exchange: void,
-  exchangeQuote: {}, // TODO
+  exchangeQuote: {|
+    swapInfo: GuiSwapInfo
+  |},
   exchangeQuoteProcessing: void,
   exchangeScene: void,
   exchangeSettings: void,
   exchangeSuccess: void,
-  fioAddressDetails: {}, // TODO
+  fioAddressDetails: {|
+    fioAddressName: string,
+    expiration: string
+  |},
   fioAddressList: void,
-  fioAddressRegister: {}, // TODO
-  fioAddressRegisterSelectWallet: {}, // TODO
-  fioAddressRegisterSuccess: {}, // TODO
-  fioAddressSettings: {}, // TODO
-  fioConnectToWalletsConfirm: {}, // TODO
-  fioDomainConfirm: {}, // TODO
+  fioAddressRegister: void,
+  fioAddressRegisterSelectWallet: {|
+    fioAddress: string,
+    selectedWallet: EdgeCurrencyWallet,
+    selectedDomain: FioDomain,
+    isFallback?: boolean
+  |},
+  fioAddressRegisterSuccess: {|
+    fioName: string,
+    expiration: string
+  |},
+  fioAddressSettings: {|
+    fioWallet: EdgeCurrencyWallet,
+    fioAddressName: string,
+    expiration?: string,
+    showRenew?: boolean,
+    refreshAfterRenew?: boolean
+  |},
+  fioConnectToWalletsConfirm: {|
+    fioWallet: EdgeCurrencyWallet,
+    fioAddressName: string,
+    walletsToConnect: FioConnectionWalletItem[],
+    walletsToDisconnect: FioConnectionWalletItem[]
+  |},
+  fioDomainConfirm: {|
+    fioName: string,
+    paymentWallet: EdgeCurrencyWallet,
+    fee: number,
+    ownerPublicKey: string
+  |},
   fioDomainRegister: void,
-  fioDomainRegisterSelectWallet: {}, // TODO
-  fioDomainSettings: {}, // TODO
-  fioNameConfirm: {}, // TODO
-  fioRequestConfirmation: {}, // TODO
+  fioDomainRegisterSelectWallet: {|
+    fioDomain: string,
+    selectedWallet: EdgeCurrencyWallet
+  |},
+  fioDomainSettings: {|
+    fioWallet: EdgeCurrencyWallet,
+    fioDomainName: string,
+    isPublic: boolean,
+    expiration: string,
+    showRenew?: boolean
+  |},
+  fioNameConfirm: {|
+    fioName: string,
+    paymentWallet: EdgeCurrencyWallet,
+    fee: number,
+    ownerPublicKey: string
+  |},
+  fioRequestConfirmation: {|
+    amounts: ExchangedFlipInputAmounts
+  |},
   fioRequestList: void,
-  fioSentRequestDetails: {}, // TODO
-  manageTokens: {}, // TODO
+  fioSentRequestDetails: {|
+    selectedFioSentRequest: FioRequest
+  |},
+  manageTokens: {|
+    guiWallet: GuiWallet
+  |},
   notificationSettings: void,
-  otpRepair: {}, // TODO
+  otpRepair: {|
+    otpError: OtpError
+  |},
   otpSetup: void,
   passwordRecovery: void,
-  pluginBuy: void,
-  pluginSell: void,
-  pluginView: {}, // TODO
-  pluginViewDeep: {}, // TODO
+  pluginBuy: {| direction: 'buy' |},
+  pluginSell: {| direction: 'sell' |},
+  pluginView: {|
+    // The GUI plugin we are showing the user:
+    plugin: GuiPlugin,
+
+    // Set these to add stuff to the plugin URI:
+    deepPath?: string,
+    deepQuery?: GuiPluginQuery
+  |},
   promotionSettings: void,
   request: void,
-  scan: {}, // TODO
+  scan: {|
+    data?: 'sweepPrivateKey' | 'loginQR'
+  |}, // TODO
   securityAlerts: void,
-  send: {}, // TODO
+  send: {|
+    allowedCurrencyCodes?: string[],
+    guiMakeSpendInfo?: GuiMakeSpendInfo,
+    selectedWalletId?: string,
+    selectedCurrencyCode?: string,
+    isCameraOpen?: boolean,
+    lockTilesMap?: {
+      address?: boolean,
+      wallet?: boolean,
+      amount?: boolean
+    },
+    hiddenTilesMap?: {
+      address?: boolean,
+      amount?: boolean,
+      fioAddressSelect?: boolean
+    },
+    infoTiles?: Array<{ label: string, value: string }>
+  |},
   settingsOverview: void,
   settingsOverviewTab: void,
   spendingLimits: void,
   termsOfService: void,
-  transactionDetails: {}, // TODO
+  transactionDetails: {|
+    edgeTransaction: EdgeTransaction,
+    thumbnailPath?: string
+  |},
   transactionList: void,
-  transactionsExport: {}, // TODO
+  transactionsExport: {|
+    sourceWallet: EdgeCurrencyWallet,
+    currencyCode: string
+  |},
   walletList: void,
   walletListScene: void
 }

@@ -131,7 +131,7 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
       const { contractAddress, currencyName } = parsedUri.token
       const multiplier = parsedUri.token.denominations[0].multiplier
       const currencyCode = parsedUri.token.currencyCode.toUpperCase()
-      let decimalPlaces = 18
+      let decimalPlaces = '18'
 
       if (multiplier) {
         decimalPlaces = denominationToDecimalPlaces(multiplier)
@@ -141,10 +141,8 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
         contractAddress,
         currencyCode,
         currencyName,
-        multiplier,
         decimalPlaces,
         walletId: selectedWalletId,
-        wallet: guiWallet,
         onAddToken: noOp
       }
 
@@ -154,8 +152,9 @@ export const parseScannedUri = (data: string, customErrorTitle?: string, customE
     if (parsedUri.legacyAddress != null) {
       // LEGACY ADDRESS URI
       if (await shouldContinueLegacy()) {
+        const guiMakeSpendInfo: GuiMakeSpendInfo = { ...parsedUri }
         Actions.push(SEND, {
-          guiMakeSpendInfo: parsedUri,
+          guiMakeSpendInfo,
           selectedWalletId,
           selectedCurrencyCode: currencyCode
         })
@@ -336,7 +335,7 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
       ))
     }
     if (threeButtonModal === 'buy') {
-      Actions.jump(PLUGIN_BUY)
+      Actions.jump(PLUGIN_BUY, { direction: 'buy' })
     } else if (threeButtonModal === 'exchange') {
       dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
       Actions.jump(EXCHANGE_SCENE)

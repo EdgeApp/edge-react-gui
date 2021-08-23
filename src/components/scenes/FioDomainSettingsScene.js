@@ -11,7 +11,7 @@ import s from '../../locales/strings'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioName, setDomainVisibility } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -34,16 +34,11 @@ type StateProps = {
 type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
-
-type NavigationProps = {
-  fioWallet: EdgeCurrencyWallet,
-  fioDomainName: string,
-  isPublic: boolean,
-  expiration: string,
-  showRenew?: boolean
+type OwnProps = {
+  route: RouteProp<'fioDomainSettings'>
 }
 
-type Props = NavigationProps & StateProps & ThemeProps & DispatchProps
+type Props = StateProps & ThemeProps & DispatchProps & OwnProps
 
 export class FioDomainSettingsComponent extends React.Component<Props, State> {
   state: State = {
@@ -53,7 +48,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { showRenew } = this.props
+    const { showRenew } = this.props.route.params
     if (showRenew) {
       this.setState({ showRenew: true })
     }
@@ -65,9 +60,10 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   afterTransferSuccess = async () => {
-    const { theme } = this.props
+    const { theme, route } = this.props
+    const { fioDomainName } = route.params
     const styles = getStyles(theme)
-    const domainName = `@${this.props.fioDomainName || ''}`
+    const domainName = `@${fioDomainName || ''}`
     const transferredMessage = ` ${s.strings.fio_domain_transferred.toLowerCase()}`
     await Airship.show(bridge => (
       <ButtonsModal
@@ -107,7 +103,9 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet, true)
 
   setDomainVisibility = async (fioWallet: EdgeCurrencyWallet, fee: number) => {
-    const { fioDomainName, isPublic, isConnected } = this.props
+    const { isConnected, route } = this.props
+    const { fioDomainName, isPublic } = route.params
+
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
@@ -116,7 +114,9 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   renewDomain = async (fioWallet: EdgeCurrencyWallet, renewalFee: number) => {
-    const { fioDomainName, isConnected } = this.props
+    const { isConnected, route } = this.props
+    const { fioDomainName } = route.params
+
     if (!isConnected) {
       throw new Error(s.strings.fio_network_alert_text)
     }
@@ -128,13 +128,15 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     const { fee: transferFee } = params
     if (!transferFee) return showError(s.strings.fio_get_fee_err_msg)
     this.cancelOperation()
+    const { route } = this.props
+    const { fioDomainName, fioWallet } = route.params
 
     const guiMakeSpendInfo = {
       nativeAmount: `${transferFee}`,
-      currencyCode: this.props.fioWallet.currencyInfo.currencyCode,
+      currencyCode: fioWallet.currencyInfo.currencyCode,
       otherParams: {
         fioAction: 'transferFioDomain',
-        fioParams: { fioDomain: this.props.fioDomainName, newOwnerKey: '', maxFee: transferFee }
+        fioParams: { fioDomain: fioDomainName, newOwnerKey: '', maxFee: transferFee }
       },
       onDone: (err, edgeTransaction) => {
         if (!err) {
@@ -145,8 +147,8 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
 
     Actions.push(SEND, {
       guiMakeSpendInfo,
-      selectedWalletId: this.props.fioWallet.id,
-      selectedCurrencyCode: this.props.fioWallet.currencyInfo.currencyCode,
+      selectedWalletId: fioWallet.id,
+      selectedCurrencyCode: fioWallet.currencyInfo.currencyCode,
       lockTilesMap: {
         wallet: true
       },
@@ -154,12 +156,14 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         amount: true,
         fioAddressSelect: true
       },
-      infoTiles: [{ label: s.strings.fio_domain_to_transfer, value: `@${this.props.fioDomainName}` }]
+      infoTiles: [{ label: s.strings.fio_domain_to_transfer, value: `@${fioDomainName}` }]
     })
   }
 
   render() {
-    const { fioWallet, fioDomainName, expiration, isPublic, theme } = this.props
+    const { theme, route } = this.props
+    const { fioWallet, fioDomainName, expiration, isPublic } = route.params
+
     const { showRenew, showVisibility, showTransfer } = this.state
     const styles = getStyles(theme)
 
@@ -224,7 +228,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioDomainSettingsScene = connect<StateProps, DispatchProps, NavigationProps>(
+export const FioDomainSettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     isConnected: state.network.isConnected
   }),

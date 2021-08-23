@@ -13,24 +13,27 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
-import { Actions } from '../../types/routerTypes.js'
-import { type CreateWalletType } from '../../types/types.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import { scale } from '../../util/scaling.js'
 
-type CreateWalletChoiceProps = {
-  selectedWalletType: CreateWalletType
+type OwnProps = {
+  route: RouteProp<'createWalletChoice'>
 }
 
-export class CreateWalletChoiceComponent extends React.PureComponent<CreateWalletChoiceProps> {
+type Props = OwnProps
+
+export class CreateWalletChoiceComponent extends React.PureComponent<Props> {
   onSelectNew = () => {
-    const { selectedWalletType } = this.props
+    const { route } = this.props
+    const { selectedWalletType } = route.params
     Actions.push(CREATE_WALLET_SELECT_FIAT, {
       selectedWalletType
     })
   }
 
   onSelectRestore = () => {
-    const { selectedWalletType } = this.props
+    const { route } = this.props
+    const { selectedWalletType } = route.params
     Actions.push(CREATE_WALLET_IMPORT, {
       selectedWalletType
     })

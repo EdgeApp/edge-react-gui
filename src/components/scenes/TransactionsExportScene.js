@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeGetTransactionsOptions } from 'edge-core-js'
+import type { EdgeGetTransactionsOptions } from 'edge-core-js'
 import * as React from 'react'
 import { Platform, ScrollView } from 'react-native'
 import RNFS from 'react-native-fs'
@@ -12,6 +12,7 @@ import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
+import { type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { DateModal } from '../modals/DateModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
@@ -30,8 +31,7 @@ type File = {
 }
 
 type OwnProps = {
-  sourceWallet: EdgeCurrencyWallet,
-  currencyCode: string
+  route: RouteProp<'transactionsExport'>
 }
 
 type StateProps = {
@@ -80,10 +80,11 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
   render() {
     const { startDate, endDate, isExportCsv, isExportQbo } = this.state
-    const { theme } = this.props
+    const { theme, route } = this.props
+    const { sourceWallet, currencyCode } = route.params
     const iconSize = theme.rem(1.25)
 
-    const walletName = `${this.props.sourceWallet.name || s.strings.string_no_wallet_name} (${this.props.currencyCode})`
+    const walletName = `${sourceWallet.name || s.strings.string_no_wallet_name} (${currencyCode})`
     const startDateString = formatDate(startDate)
     const endDateString = formatDate(endDate)
     const disabledExport = !isExportQbo && !isExportCsv
@@ -155,7 +156,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 
   handleSubmit = async (): Promise<void> => {
-    const { sourceWallet, currencyCode, multiplier } = this.props
+    const { multiplier, route } = this.props
+    const { sourceWallet, currencyCode } = route.params
     const { isExportQbo, isExportCsv, startDate, endDate } = this.state
     if (startDate.getTime() > endDate.getTime()) {
       showError(s.strings.export_transaction_error)
@@ -268,8 +270,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 }
 
 export const TransactionsExportScene = connect<StateProps, {}, OwnProps>(
-  (state, ownProps) => ({
-    multiplier: getDisplayDenomination(state, ownProps.currencyCode).multiplier
+  (state, { route: { params } }) => ({
+    multiplier: getDisplayDenomination(state, params.currencyCode).multiplier
   }),
   dispatch => ({})
 )(withTheme(TransactionsExportSceneComponent))

@@ -392,7 +392,7 @@ export class MainComponent extends React.Component<Props> {
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
-                direction="buy"
+                route={{ params: { direction: 'buy' } }}
               />
               <Scene
                 key={PLUGIN_VIEW}
@@ -412,7 +412,7 @@ export class MainComponent extends React.Component<Props> {
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
-                direction="sell"
+                route={{ params: { direction: 'sell' } }}
               />
               <Scene
                 key={PLUGIN_VIEW}

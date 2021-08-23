@@ -10,7 +10,7 @@ import { ADD_TOKEN, EDIT_TOKEN } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo, PREFERRED_TOKENS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import type { CustomTokenInfo, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -26,7 +26,7 @@ import { SceneHeader } from '../themed/SceneHeader'
 import { getCurrencyIcon } from './../../util/CurrencyInfoHelpers'
 
 type OwnProps = {
-  guiWallet: GuiWallet
+  route: RouteProp<'manageTokens'>
 }
 type DispatchProps = {
   setEnabledTokensList: (walletId: string, enabledTokens: string[], oldEnabledTokensList: string[]) => void
@@ -53,8 +53,9 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-
-    const { enabledTokens, id } = this.props.guiWallet
+    const { route } = this.props
+    const { guiWallet } = route.params
+    const { enabledTokens, id } = guiWallet
 
     this.state = {
       walletId: id,
@@ -65,18 +66,23 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.guiWallet.id !== prevProps.guiWallet.id) {
+    const { route } = this.props
+    const { guiWallet } = route.params
+    if (guiWallet.id !== prevProps.route.params.guiWallet.id) {
       this.updateTokens()
     }
   }
 
   updateTokens() {
-    this.setState({ enabledList: [...this.props.guiWallet.enabledTokens] })
+    const { route } = this.props
+    const { guiWallet } = route.params
+    this.setState({ enabledList: [...guiWallet.enabledTokens] })
   }
 
   getTokens(): EdgeMetaToken[] {
-    const { metaTokens } = this.props
-    const { currencyCode } = this.props.guiWallet
+    const { route } = this.props
+    const { guiWallet } = route.params
+    const { metaTokens, currencyCode } = guiWallet
 
     const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
 
@@ -85,7 +91,7 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
     const accountMetaTokenInfo: CustomTokenInfo[] = specialCurrencyInfo.isCustomTokensSupported ? [...customTokens] : []
 
     const filteredTokenInfo = accountMetaTokenInfo.filter(token => {
-      return token.walletType === this.props.guiWallet.type || token.walletType === undefined
+      return token.walletType === guiWallet.type || token.walletType === undefined
     })
 
     const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, filteredTokenInfo)
@@ -176,7 +182,9 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   saveEnabledTokenList = () => {
-    const { id } = this.props.guiWallet
+    const { route } = this.props
+    const { guiWallet } = route.params
+    const { id } = guiWallet
     const disabledList: string[] = []
     // get disabled list
     for (const val of this.state.combinedCurrencyInfos) {
@@ -201,16 +209,19 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   goToAddTokenScene = () => {
-    const { id, metaTokens } = this.props.guiWallet
+    const { route } = this.props
+    const { guiWallet } = route.params
+    const { id } = guiWallet
     Actions.push(ADD_TOKEN, {
       walletId: id,
-      metaTokens,
       onAddToken: this.onAddToken
     })
   }
 
   goToEditTokenScene = (currencyCode: string) => {
-    const { id, metaTokens } = this.props.guiWallet
+    const { route } = this.props
+    const { guiWallet } = route.params
+    const { id, metaTokens } = guiWallet
     Actions.push(EDIT_TOKEN, {
       walletId: id,
       currencyCode,
@@ -220,11 +231,10 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { name, currencyCode } = this.props.guiWallet
-    const { manageTokensPending } = this.props
-
-    const { theme } = this.props
-
+    const { route, manageTokensPending, theme } = this.props
+    const { searchValue, enabledList } = this.state
+    const { guiWallet } = route.params
+    const { name, currencyCode } = guiWallet
     const styles = getStyles(theme)
 
     return (
@@ -233,12 +243,12 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
           <ManageTokensHeader
             textInput={this.textInput}
             walletName={name}
-            walletId={this.props.guiWallet.id}
+            walletId={guiWallet.id}
             currencyCode={currencyCode}
             changeSearchValue={this.changeSearchValue}
             onSearchClear={this.onSearchClear}
             onSelectWallet={this.onSelectWallet}
-            searchValue={this.state.searchValue}
+            searchValue={searchValue}
           />
         </SceneHeader>
         <FlatList
@@ -248,11 +258,11 @@ class ManageTokensSceneComponent extends React.Component<Props, State> {
             <ManageTokensRow
               goToEditTokenScene={this.goToEditTokenScene}
               metaToken={metaToken}
-              walletId={this.props.guiWallet.id}
-              symbolImage={getCurrencyIcon(currencyCode, metaToken.item.currencyCode ?? undefined).symbolImage}
+              walletId={guiWallet.id}
+              symbolImage={getCurrencyIcon(currencyCode, metaToken.item.currencyCode).symbolImage}
               toggleToken={this.toggleToken}
-              enabledList={this.state.enabledList}
-              metaTokens={this.props.guiWallet.metaTokens}
+              enabledList={enabledList}
+              metaTokens={guiWallet.metaTokens}
             />
           )}
           style={styles.tokensArea}
@@ -289,9 +299,10 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const ManageTokensScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, ownProps) => {
+  (state, { route: { params } }) => {
+    const { guiWallet } = params
     const wallets = state.ui.wallets.byId
-    const wallet = wallets[ownProps.guiWallet.id]
+    const wallet = wallets[guiWallet.id]
     return {
       manageTokensPending: state.ui.wallets.manageTokensPending,
       settingsCustomTokens: state.ui.settings.customTokens,

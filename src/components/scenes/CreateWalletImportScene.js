@@ -14,15 +14,14 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
-import { type CreateWalletType } from '../../types/types.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import { scale } from '../../util/scaling.js'
 import { FormField } from '../common/FormField.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 
 type OwnProps = {
-  selectedWalletType: CreateWalletType
+  route: RouteProp<'createWalletImport'>
 }
 type StateProps = {
   account: EdgeAccount
@@ -48,7 +47,8 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
   }
 
   handleNext = (): void => {
-    const { account, selectedWalletType } = this.props
+    const { route, account } = this.props
+    const { selectedWalletType } = route.params
     const { input } = this.state
     const { currencyCode } = selectedWalletType
     const currencyPluginName = CURRENCY_PLUGIN_NAMES[currencyCode]
@@ -81,9 +81,11 @@ class CreateWalletImportComponent extends React.Component<Props, State> {
   }
 
   render() {
+    const { route } = this.props
     const { error, isProcessing, input } = this.state
-    const { selectedWalletType } = this.props
+    const { selectedWalletType } = route.params
     const { currencyCode } = selectedWalletType
+
     const specialCurrencyInfo = getSpecialCurrencyInfo(currencyCode)
     if (!specialCurrencyInfo.isImportKeySupported) throw new Error()
     const instructionSyntax = specialCurrencyInfo.isImportKeySupported.privateKeyInstructions
