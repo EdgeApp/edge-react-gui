@@ -60,8 +60,8 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   afterTransferSuccess = async () => {
-    const { theme } = this.props
-    const { fioDomainName } = this.props.route.params
+    const { theme, route } = this.props
+    const { fioDomainName } = route.params
     const styles = getStyles(theme)
     const domainName = `@${fioDomainName || ''}`
     const transferredMessage = ` ${s.strings.fio_domain_transferred.toLowerCase()}`
@@ -103,8 +103,8 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet, true)
 
   setDomainVisibility = async (fioWallet: EdgeCurrencyWallet, fee: number) => {
-    const { isConnected } = this.props
-    const { fioDomainName, isPublic } = this.props.route.params
+    const { isConnected, route } = this.props
+    const { fioDomainName, isPublic } = route.params
 
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
@@ -114,8 +114,8 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   renewDomain = async (fioWallet: EdgeCurrencyWallet, renewalFee: number) => {
-    const { isConnected } = this.props
-    const { fioDomainName } = this.props.route.params
+    const { isConnected, route } = this.props
+    const { fioDomainName } = route.params
 
     if (!isConnected) {
       throw new Error(s.strings.fio_network_alert_text)
@@ -128,7 +128,8 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
     const { fee: transferFee } = params
     if (!transferFee) return showError(s.strings.fio_get_fee_err_msg)
     this.cancelOperation()
-    const { fioDomainName, fioWallet } = this.props.route.params
+    const { route } = this.props
+    const { fioDomainName, fioWallet } = route.params
 
     const guiMakeSpendInfo = {
       nativeAmount: `${transferFee}`,
@@ -160,8 +161,8 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { theme } = this.props
-    const { fioWallet, fioDomainName, expiration, isPublic } = this.props.route.params
+    const { theme, route } = this.props
+    const { fioWallet, fioDomainName, expiration, isPublic } = route.params
 
     const { showRenew, showVisibility, showTransfer } = this.state
     const styles = getStyles(theme)

@@ -48,8 +48,8 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
   }
 
   confirm = async (): Promise<void> => {
-    const { fioWallet, fioAddressName, walletsToConnect, walletsToDisconnect } = this.props.route.params
-    const { updateConnectedWallets, ccWalletMap, isConnected } = this.props
+    const { updateConnectedWallets, ccWalletMap, isConnected, route } = this.props
+    const { fioWallet, fioAddressName, walletsToConnect, walletsToDisconnect } = route.params
     if (isConnected) {
       this.setState({ connectWalletsLoading: true })
       const newCcWalletMap = { ...ccWalletMap }
@@ -179,8 +179,8 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
   }
 
   render() {
-    const { theme } = this.props
-    const { fioAddressName, walletsToConnect, walletsToDisconnect } = this.props.route.params
+    const { theme, route } = this.props
+    const { fioAddressName, walletsToConnect, walletsToDisconnect } = route.params
     const { acknowledge, connectWalletsLoading, showSlider } = this.state
     const styles = getStyles(theme)
 

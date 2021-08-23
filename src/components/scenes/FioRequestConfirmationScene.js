@@ -103,8 +103,8 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   onConfirm = async () => {
-    const { fioPlugin, primaryCurrencyInfo, isConnected, publicAddress, chainCode, account } = this.props
-    const { amounts } = this.props.route.params
+    const { fioPlugin, primaryCurrencyInfo, isConnected, publicAddress, chainCode, account, route } = this.props
+    const { amounts } = route.params
     const { walletAddresses, fioAddressFrom } = this.state
     const walletAddress = walletAddresses.find(({ fioAddress }) => fioAddress === fioAddressFrom)
 
@@ -263,8 +263,8 @@ export class FioRequestConfirmationConnected extends React.Component<Props, Stat
   }
 
   render() {
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, theme, exchangeSecondaryToPrimaryRatio } = this.props
-    const { amounts } = this.props.route.params
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, theme, exchangeSecondaryToPrimaryRatio, route } = this.props
+    const { amounts } = route.params
 
     const { fioAddressFrom, fioAddressTo, loading, memo, settingFioAddressTo, showSlider } = this.state
 

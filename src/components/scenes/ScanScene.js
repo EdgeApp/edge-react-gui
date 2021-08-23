@@ -48,14 +48,16 @@ export const LOGIN_QR = 'loginQR'
 
 export class Scan extends React.Component<Props> {
   componentDidUpdate(prevProps: Props) {
-    const { data } = this.props.route.params
+    const { route } = this.props
+    const { data } = route.params
     if (data !== prevProps.route.params.data && Actions.currentScene !== 'DrawerOpen') {
       Actions.drawerClose()
     }
   }
 
   render() {
-    const { data } = this.props.route.params
+    const { route } = this.props
+    const { data } = route.params
     return (
       <SceneWrapper background="header" hasTabs={false}>
         {this.renderCameraArea()}
@@ -104,8 +106,8 @@ export class Scan extends React.Component<Props> {
   }
 
   onBarCodeRead = ({ data: scannedData }: { data: string }) => {
-    const { data } = this.props.route.params
-    const { loginQrCodeScanned, qrCodeScanned } = this.props
+    const { loginQrCodeScanned, qrCodeScanned, route } = this.props
+    const { data } = route.params
     return data === LOGIN_QR ? loginQrCodeScanned(scannedData) : qrCodeScanned(scannedData)
   }
 

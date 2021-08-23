@@ -67,7 +67,8 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   }
 
   _onPressAccountSettings = (): void => {
-    const { fioAddressName, expiration } = this.props.route.params
+    const { route } = this.props
+    const { fioAddressName, expiration } = route.params
     const { fioWallet } = this.state
     if (fioWallet) {
       Actions.push(FIO_ADDRESS_SETTINGS, {
@@ -121,8 +122,8 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   }
 
   render() {
-    const { theme } = this.props
-    const { fioAddressName, expiration } = this.props.route.params
+    const { theme, route } = this.props
+    const { fioAddressName, expiration } = route.params
     const styles = getStyles(theme)
     const expirationLabel = `${s.strings.fio_address_details_screen_expires} ${formatDate(new Date(expiration))}`
 

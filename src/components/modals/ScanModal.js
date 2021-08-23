@@ -55,7 +55,7 @@ const Component = (props: Props) => {
     requestPermission('camera')
 
     return disableScan
-  }, [])
+  }, [disableScan, enableScan])
 
   const handleBarCodeRead = (result: { data: string }) => {
     bridge.resolve(result.data)

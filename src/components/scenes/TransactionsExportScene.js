@@ -80,8 +80,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
 
   render() {
     const { startDate, endDate, isExportCsv, isExportQbo } = this.state
-    const { theme } = this.props
-    const { sourceWallet, currencyCode } = this.props.route.params
+    const { theme, route } = this.props
+    const { sourceWallet, currencyCode } = route.params
     const iconSize = theme.rem(1.25)
 
     const walletName = `${sourceWallet.name || s.strings.string_no_wallet_name} (${currencyCode})`
@@ -165,7 +165,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 
   pickFileName() {
-    const { sourceWallet, currencyCode } = this.props.route.params
+    const { route } = this.props
+    const { sourceWallet, currencyCode } = route.params
     const now = new Date()
 
     const walletName = sourceWallet.name != null ? sourceWallet.name : s.strings.string_no_wallet_name
@@ -189,8 +190,9 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
   }
 
   async exportFiles(): Promise<void> {
+    const { route } = this.props
     const { isExportQbo, isExportCsv, startDate, endDate } = this.state
-    const { sourceWallet, currencyCode } = this.props.route.params
+    const { sourceWallet, currencyCode } = route.params
     const { multiplier } = this.props
     const transactionOptions: EdgeGetTransactionsOptions = {
       denomination: multiplier,

@@ -37,11 +37,13 @@ class FioNameConfirm extends React.PureComponent<Props> {
   }
 
   getFee = async () => {
-    return this.props.route.params.fee
+    const { fee } = this.props.route.params
+    return fee
   }
 
   saveFioName = async () => {
-    const { fioName, paymentWallet, ownerPublicKey, fee } = this.props.route.params
+    const { route } = this.props
+    const { fioName, paymentWallet, ownerPublicKey, fee } = route.params
 
     const { isConnected, fioPlugin } = this.props
     if (!isConnected) {
@@ -138,7 +140,8 @@ class FioNameConfirm extends React.PureComponent<Props> {
   }
 
   render() {
-    const { fioName, paymentWallet } = this.props.route.params
+    const { route } = this.props
+    const { fioName, paymentWallet } = route.params
     const styles = getStyles()
 
     return (

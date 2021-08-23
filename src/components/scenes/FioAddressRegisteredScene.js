@@ -21,7 +21,8 @@ type Props = OwnProps & ThemeProps
 
 class FioAddressRegistered extends React.Component<Props> {
   componentDidMount() {
-    const { fioName, expiration } = this.props.route.params
+    const { route } = this.props
+    const { fioName, expiration } = route.params
     this.props.navigation.setParams({
       fioName,
       expiration

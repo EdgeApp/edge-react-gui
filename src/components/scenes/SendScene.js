@@ -1,15 +1,8 @@
 // @flow
 
 import { bns } from 'biggystring'
-import {
-  type EdgeAccount,
-  type EdgeCurrencyWallet,
-  type EdgeMetadata,
-  type EdgeParsedUri,
-  type EdgeSpendTarget,
-  type EdgeTransaction,
-  asMaybeNoAmountSpecifiedError
-} from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet, EdgeMetadata, EdgeParsedUri, EdgeSpendTarget, EdgeTransaction } from 'edge-core-js'
+import { asMaybeNoAmountSpecifiedError } from 'edge-core-js'
 import * as React from 'react'
 import { TextInput, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -25,7 +18,7 @@ import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { convertCurrencyFromExchangeRates } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RouteProp, Actions } from '../../types/routerTypes.js'
-import { type GuiExchangeRates, type GuiMakeSpendInfo, type GuiWallet } from '../../types/types.js'
+import type { GuiExchangeRates, GuiMakeSpendInfo, GuiWallet } from '../../types/types.js'
 import * as UTILS from '../../util/utils.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -266,7 +259,7 @@ class SendComponent extends React.PureComponent<Props, State> {
 
   handleChangePin = (pin: string) => {
     this.props.onChangePin(pin)
-    if (pin.length >= PIN_MAX_LENGTH && this.pinInput) {
+    if (pin.length >= PIN_MAX_LENGTH && this.pinInput.current != null) {
       this.pinInput.current.blur()
     }
   }

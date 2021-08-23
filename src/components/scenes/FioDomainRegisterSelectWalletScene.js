@@ -72,8 +72,8 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
 
   getRegInfo = async () => {
     this.setState({ loading: true })
-    const { fioDomain, selectedWallet } = this.props.route.params
-    const { fioPlugin, fioDisplayDenomination } = this.props
+    const { fioPlugin, fioDisplayDenomination, route } = this.props
+    const { fioDomain, selectedWallet } = route.params
     if (fioPlugin != null) {
       try {
         const { activationCost, feeValue, supportedCurrencies, paymentInfo } = await getDomainRegInfo(
@@ -118,8 +118,8 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   }
 
   onNextPress = (): void => {
-    const { fioDomain, selectedWallet } = this.props.route.params
-    const { isConnected, state } = this.props
+    const { isConnected, state, route } = this.props
+    const { fioDomain, selectedWallet } = route.params
     const { feeValue, paymentInfo: allPaymentInfo, paymentWallet } = this.state
 
     if (!paymentWallet || !paymentWallet.id) return
@@ -186,8 +186,8 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   }
 
   render() {
-    const { fioDomain } = this.props.route.params
-    const { theme, wallets } = this.props
+    const { theme, wallets, route } = this.props
+    const { fioDomain } = route.params
     const { activationCost, loading, paymentWallet, errorMessage } = this.state
     const styles = getStyles(theme)
     const detailsText = sprintf(s.strings.fio_domain_wallet_selection_text, loading ? '-' : activationCost)

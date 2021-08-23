@@ -39,10 +39,10 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
   }
 
   amountField = () => {
+    const { fiatSymbol, route } = this.props
     const {
       selectedFioSentRequest: { content }
-    } = this.props.route.params
-    const { fiatSymbol } = this.props
+    } = route.params
     const { amount } = content
     const tokenCode = content.token_code.toUpperCase()
     const text = `${amount} ${tokenCode} (${fiatSymbol} ${this.fiatAmount(tokenCode, amount)})`
@@ -66,7 +66,8 @@ class FioSentRequestDetailsComponent extends React.PureComponent<Props> {
   }
 
   render() {
-    const { selectedFioSentRequest } = this.props.route.params
+    const { route } = this.props
+    const { selectedFioSentRequest } = route.params
     return (
       <SceneWrapper background="header">
         <SceneHeader title={s.strings.title_fio_sent_request_details} underline />

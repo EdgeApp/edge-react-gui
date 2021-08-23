@@ -47,8 +47,8 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   componentDidMount(): * {
-    const { refreshAllFioAddresses } = this.props
-    const { showRenew } = this.props.route.params
+    const { refreshAllFioAddresses, route } = this.props
+    const { showRenew } = route.params
     refreshAllFioAddresses()
     if (showRenew) {
       this.setState({ showRenew: true })
@@ -56,8 +56,8 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   afterRenewSuccess = ({ expiration }) => {
-    const { refreshAllFioAddresses } = this.props
-    const { fioAddressName, refreshAfterRenew } = this.props.route.params
+    const { refreshAllFioAddresses, route } = this.props
+    const { fioAddressName, refreshAfterRenew } = route.params
 
     refreshAllFioAddresses()
 
@@ -72,7 +72,8 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   afterTransferSuccess = async () => {
-    const { fioAddressName = '' } = this.props.route.params
+    const { route } = this.props
+    const { fioAddressName = '' } = route.params
 
     const addressName = `@${fioAddressName}`
     // todo: styles for message
@@ -92,8 +93,8 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   getExpiration = (): string => {
-    const { fioAddressName } = this.props.route.params
-    const { fioAddresses } = this.props
+    const { fioAddresses, route } = this.props
+    const { fioAddressName } = route.params
     const fioAddress = fioAddresses.find(({ name }) => fioAddressName === name)
     if (fioAddress) return fioAddress.expiration
     return ''
@@ -116,8 +117,8 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   getTransferFee = async (fioWallet: EdgeCurrencyWallet) => getTransferFee(fioWallet)
 
   renewAddress = async (fioWallet: EdgeCurrencyWallet, renewalFee: number) => {
-    const { isConnected } = this.props
-    const { fioAddressName } = this.props.route.params
+    const { isConnected, route } = this.props
+    const { fioAddressName } = route.params
 
     if (!isConnected) {
       showError(s.strings.fio_network_alert_text)
@@ -127,7 +128,8 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   goToTransfer = (params: { fee: number }) => {
-    const { fioWallet, fioAddressName } = this.props.route.params
+    const { route } = this.props
+    const { fioWallet, fioAddressName } = route.params
 
     const { fee: transferFee } = params
     if (!transferFee) return showError(s.strings.fio_get_fee_err_msg)
@@ -163,7 +165,8 @@ class FioAddressSettingsComponent extends React.Component<Props, LocalState> {
   }
 
   render() {
-    const { fioAddressName, fioWallet, expiration = this.getExpiration() } = this.props.route.params
+    const { route } = this.props
+    const { fioAddressName, fioWallet, expiration = this.getExpiration() } = route.params
     const { showRenew, showTransfer } = this.state
 
     return (
