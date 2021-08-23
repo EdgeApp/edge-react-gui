@@ -30,7 +30,7 @@ type Props = OwnProps & StateProps & ThemeProps
 
 class BuyCryptoComponent extends React.PureComponent<Props> {
   handlePress = (): void => {
-    Actions.push(PLUGIN_BUY)
+    Actions.push(PLUGIN_BUY, { direction: 'buy' })
   }
 
   render() {

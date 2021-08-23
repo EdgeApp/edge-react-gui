@@ -26,10 +26,16 @@ const title: { [name: $Keys<ParamList>]: string } = {
 
 class MenuTabComponent extends React.PureComponent<Props> {
   handleOnPress = (route: 'walletList' | 'pluginBuy' | 'pluginSell' | 'exchange') => {
-    if (route === 'walletList') {
-      return Actions.jump('walletListScene')
+    switch (route) {
+      case 'walletList':
+        return Actions.jump('walletListScene')
+      case 'pluginBuy':
+        return Actions.jump('pluginBuy', { direction: 'buy' })
+      case 'pluginSell':
+        return Actions.jump('pluginSell', { direction: 'sell' })
+      case 'exchange':
+        return Actions.jump('exchange')
     }
-    Actions.jump(route)
   }
 
   render() {

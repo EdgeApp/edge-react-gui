@@ -27,14 +27,18 @@ exports[`TransactionDetails.ui should render 1`] = `
             }
           }
         >
-          <Icon
-            allowFontScaling={false}
-            name="person"
-            size={45}
+          <Image
+            source={
+              Object {
+                "uri": "thumb/nail/path",
+              }
+            }
             style={
               Object {
-                "color": "#FFFFFF",
+                "borderRadius": 22,
+                "height": 45,
                 "marginRight": 11,
+                "width": 45,
               }
             }
           />
@@ -252,14 +256,18 @@ exports[`TransactionDetails.ui should render with negative nativeAmount and fiat
             }
           }
         >
-          <Icon
-            allowFontScaling={false}
-            name="person"
-            size={45}
+          <Image
+            source={
+              Object {
+                "uri": "thumb/nail/path",
+              }
+            }
             style={
               Object {
-                "color": "#FFFFFF",
+                "borderRadius": 22,
+                "height": 45,
                 "marginRight": 11,
+                "width": 45,
               }
             }
           />
@@ -477,14 +485,18 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in future
             }
           }
         >
-          <Icon
-            allowFontScaling={false}
-            name="person"
-            size={45}
+          <Image
+            source={
+              Object {
+                "uri": "thumb/nail/path",
+              }
+            }
             style={
               Object {
-                "color": "#FFFFFF",
+                "borderRadius": 22,
+                "height": 45,
                 "marginRight": 11,
+                "width": 45,
               }
             }
           />
@@ -702,14 +714,18 @@ exports[`TransactionDetails.ui should render with tx date off by 1000x in past 1
             }
           }
         >
-          <Icon
-            allowFontScaling={false}
-            name="person"
-            size={45}
+          <Image
+            source={
+              Object {
+                "uri": "thumb/nail/path",
+              }
+            }
             style={
               Object {
-                "color": "#FFFFFF",
+                "borderRadius": 22,
+                "height": 45,
                 "marginRight": 11,
+                "width": 45,
               }
             }
           />

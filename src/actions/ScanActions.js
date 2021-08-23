@@ -335,7 +335,7 @@ export const checkAndShowGetCryptoModal = (selectedWalletId?: string, selectedCu
       ))
     }
     if (threeButtonModal === 'buy') {
-      Actions.jump(PLUGIN_BUY)
+      Actions.jump(PLUGIN_BUY, { direction: 'buy' })
     } else if (threeButtonModal === 'exchange') {
       dispatch(selectWalletForExchange(wallet.id, currencyCode, 'to'))
       Actions.jump(EXCHANGE_SCENE)

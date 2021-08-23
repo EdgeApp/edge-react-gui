@@ -10,7 +10,7 @@ import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { updateOneSetting } from '../../actions/SettingsActions.js'
 import { COUNTRY_CODES, FLAG_LOGO_URL } from '../../constants/CountryConstants.js'
 import { customPluginRow, guiPlugins } from '../../constants/plugins/GuiPlugins.js'
-import { PLUGIN_VIEW_DEEP } from '../../constants/SceneKeys.js'
+import { PLUGIN_VIEW } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account/settings.js'
 import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
@@ -55,7 +55,7 @@ const pluginPartnerLogos = {
 }
 
 type OwnProps = {
-  route: RouteProp<'pluginView'>
+  route: RouteProp<'pluginBuy'> | RouteProp<'pluginSell'>
 }
 
 type StateProps = {
@@ -190,7 +190,7 @@ class GuiPluginList extends React.PureComponent<Props, State> {
     }
 
     // Launch!
-    return Actions.push(PLUGIN_VIEW_DEEP, {
+    return Actions.push(PLUGIN_VIEW, {
       plugin,
       deepPath,
       deepQuery

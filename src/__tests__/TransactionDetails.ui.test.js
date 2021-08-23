@@ -70,12 +70,12 @@ describe('TransactionDetails.ui', () => {
             otherParams: {},
             wallet: fakeCoreWallet,
             blockHeight: 0
-          }
+          },
+          thumbnailPath: 'thumb/nail/path'
         }
       },
       contacts: [],
       subcategoriesList: [],
-      thumbnailPath: 'thumb/nail/path',
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
       currentFiatAmount: '120',
@@ -108,12 +108,12 @@ describe('TransactionDetails.ui', () => {
             otherParams: {},
             wallet: fakeCoreWallet,
             blockHeight: 0
-          }
+          },
+          thumbnailPath: 'thumb/nail/path'
         }
       },
       contacts: [],
       subcategoriesList: [],
-      thumbnailPath: 'thumb/nail/path',
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
       currentFiatAmount: '120',
@@ -147,12 +147,12 @@ describe('TransactionDetails.ui', () => {
             otherParams: {},
             wallet: fakeCoreWallet,
             blockHeight: 0
-          }
+          },
+          thumbnailPath: 'thumb/nail/path'
         }
       },
       contacts: [],
       subcategoriesList: [],
-      thumbnailPath: 'thumb/nail/path',
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
       currentFiatAmount: '120',
@@ -188,12 +188,12 @@ describe('TransactionDetails.ui', () => {
             metadata: {
               amountFiat: -6392.93
             }
-          }
+          },
+          thumbnailPath: 'thumb/nail/path'
         }
       },
       contacts: [],
       subcategoriesList: [],
-      thumbnailPath: 'thumb/nail/path',
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
       currentFiatAmount: '120',

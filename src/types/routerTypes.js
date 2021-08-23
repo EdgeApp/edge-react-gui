@@ -165,12 +165,9 @@ export type ParamList = {
   |},
   otpSetup: void,
   passwordRecovery: void,
-  pluginBuy: void,
-  pluginSell: void,
+  pluginBuy: {| direction: 'buy' |},
+  pluginSell: {| direction: 'sell' |},
   pluginView: {|
-    direction?: 'buy' | 'sell'
-  |},
-  pluginViewDeep: {|
     // The GUI plugin we are showing the user:
     plugin: GuiPlugin,
 
@@ -243,20 +240,20 @@ export const Actions = {
 
   jump<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
     // $FlowFixMe
-    Flux.Actions.jump(name, params)
+    Flux.Actions.jump(name, { route: { name, params } })
   },
   push<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
     // $FlowFixMe
-    Flux.Actions.push(name, params)
+    Flux.Actions.push(name, { route: { name, params } })
   },
   replace<Name: $Keys<ParamList>>(name: Name, params: $ElementType<ParamList, Name>): void {
     // $FlowFixMe
-    Flux.Actions.replace(name, params)
+    Flux.Actions.replace(name, { route: { name, params } })
   },
 
   refresh(params: any): void {
     // $FlowFixMe
-    Flux.Actions.refresh(params)
+    Flux.Actions.refresh({ route: { name: Flux.Actions.currentScene, params } })
   },
 
   pop(): void {

@@ -86,7 +86,6 @@ import {
   PLUGIN_BUY,
   PLUGIN_SELL,
   PLUGIN_VIEW,
-  PLUGIN_VIEW_DEEP,
   PROMOTION_SETTINGS,
   RECOVER_PASSWORD,
   REQUEST,
@@ -405,7 +404,7 @@ export class MainComponent extends React.Component<Props> {
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
-                direction="buy"
+                route={{ params: { direction: 'buy' } }}
               />
               <Scene
                 key={PLUGIN_VIEW}
@@ -425,7 +424,7 @@ export class MainComponent extends React.Component<Props> {
                 renderLeftButton={<HeaderTextButton type="help" placement="left" />}
                 renderRightButton={<SideMenuButton />}
                 onLeft={Actions.pop}
-                direction="sell"
+                route={{ params: { direction: 'sell' } }}
               />
               <Scene
                 key={PLUGIN_VIEW}
@@ -630,7 +629,7 @@ export class MainComponent extends React.Component<Props> {
             />
           </Stack>
 
-          <Stack key={PLUGIN_VIEW_DEEP} hideDrawerButton>
+          <Stack key={PLUGIN_VIEW} hideDrawerButton>
             <Scene
               key={PLUGIN_VIEW}
               navTransparent
