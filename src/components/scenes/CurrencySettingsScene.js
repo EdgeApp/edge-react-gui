@@ -14,8 +14,8 @@ import { SetCustomNodesModal } from '../modals/SetCustomNodesModal.ui.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
-import { SettingsRow } from '../themed/SettingsRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
+import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
 type NavigationProps = {
   // eslint-disable-next-line react/no-unused-prop-types
@@ -129,7 +129,7 @@ export class CurrencySettingsComponent extends React.Component<Props, State> {
                 value={this.props.disableFetchingServers}
                 onPress={this.onChangeEnableCustomNodes}
               />
-              <SettingsRow
+              <SettingsTappableRow
                 disabled={!this.props.disableFetchingServers}
                 text={s.strings.settings_set_custom_nodes_modal_title}
                 onPress={() => this.openSetCustomNodesModal('row')}

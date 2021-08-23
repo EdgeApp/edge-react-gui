@@ -2,15 +2,13 @@
 
 import * as React from 'react'
 import { type AirshipBridge } from 'react-native-airship'
-import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'
 
 import { updateWalletsSort } from '../../actions/WalletListActions.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { ModalCloseArrow, ModalTitle } from '../themed/ModalParts.js'
 import { SettingsRadioRow } from '../themed/SettingsRadioRow.js'
-import { SettingsRow } from '../themed/SettingsRow.js'
+import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 import { ThemedModal } from '../themed/ThemedModal.js'
 
 const options = [
@@ -40,7 +38,7 @@ type State = {
   option: SortOption
 }
 
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = OwnProps & StateProps & DispatchProps
 
 class WalletListSortModalComponent extends React.PureComponent<Props, State> {
   constructor(props: Props) {
@@ -63,14 +61,13 @@ class WalletListSortModalComponent extends React.PureComponent<Props, State> {
   handleOptionKey = (option: SortOption) => (this.state.option === option ? this.setState({ option: 'default' }) : this.setState({ option }))
 
   render() {
-    const { bridge, theme } = this.props
+    const { bridge } = this.props
     return (
       <ThemedModal bridge={bridge} onCancel={this.handleCloseModal}>
         <ModalTitle>{s.strings.wallet_list_sort_title}</ModalTitle>
         {options.map(option => {
           if (option.key === 'manual') {
-            const icon = <FontAwesomeIcon name="chevron-right" color={theme.iconTappable} size={theme.rem(1)} />
-            return <SettingsRow key={option.key} text={option.title} right={icon} onPress={this.handleManualOption} />
+            return <SettingsTappableRow key={option.key} text={option.title} onPress={this.handleManualOption} />
           } else {
             return (
               <SettingsRadioRow
@@ -97,4 +94,4 @@ export const WalletListSortModal = connect<StateProps, DispatchProps, OwnProps>(
       dispatch(updateWalletsSort(sortOption))
     }
   })
-)(withTheme(WalletListSortModalComponent))
+)(WalletListSortModalComponent)

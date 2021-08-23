@@ -71,6 +71,7 @@ export class PromotionSettingsComponent extends React.Component<Props> {
   handleAdd = () => {
     Airship.show(bridge => (
       <TextInputModal
+        autoCapitalize="none"
         autoCorrect={false}
         bridge={bridge}
         returnKeyType="go"

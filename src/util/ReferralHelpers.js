@@ -87,7 +87,7 @@ export function bestOfPlugins(
   for (const promo of accountReferral.promotions) {
     const fromPromo = summarizePlugins(promo.plugins, now)
     out = mergePluginSummaries(out, fromPromo)
-    if (out.preferredSwapPluginId === fromPromo.preferredSwapPluginId) {
+    if (out.preferredSwapPluginId === fromPromo.preferredSwapPluginId && fromPromo.preferredFiatPluginId != null) {
       swapSource = { type: 'promotion', installerId: promo.installerId }
     }
   }
