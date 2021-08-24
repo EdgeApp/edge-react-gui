@@ -169,10 +169,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
-                    "color": "#66EDA8",
-                    "fontSize": 28,
+                    "color": undefined,
+                    "fontSize": 12,
                   },
-                  undefined,
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
                   Object {
                     "fontFamily": "anticon",
                     "fontStyle": "normal",
@@ -235,10 +238,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
-                    "color": "#66EDA8",
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "rgba(255, 255, 255, .75)",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -303,10 +309,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
-                    "color": "#66EDA8",
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "rgba(255, 255, 255, .75)",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -371,10 +380,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
-                    "color": "#66EDA8",
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "rgba(255, 255, 255, .75)",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -439,10 +451,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
-                    "color": "#66EDA8",
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
+                    "color": "rgba(255, 255, 255, .75)",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -575,10 +590,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -643,10 +661,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -897,10 +918,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -965,10 +989,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -1177,10 +1204,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -1245,10 +1275,13 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -1561,10 +1594,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
-                    "color": "#66EDA8",
-                    "fontSize": 28,
+                    "color": undefined,
+                    "fontSize": 12,
                   },
-                  undefined,
+                  Object {
+                    "color": "#66EDA8",
+                    "fontSize": 22,
+                  },
                   Object {
                     "fontFamily": "anticon",
                     "fontStyle": "normal",
@@ -1627,10 +1663,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -1695,10 +1734,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -1763,10 +1805,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -1831,10 +1876,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -1967,10 +2015,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -2035,10 +2086,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -2289,10 +2343,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -2357,10 +2414,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -2569,10 +2629,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",
@@ -2637,10 +2700,13 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
               style={
                 Array [
                   Object {
+                    "color": undefined,
+                    "fontSize": 12,
+                  },
+                  Object {
                     "color": "#66EDA8",
                     "fontSize": 22,
                   },
-                  undefined,
                   Object {
                     "fontFamily": "FontAwesome5Free-Solid",
                     "fontStyle": "normal",

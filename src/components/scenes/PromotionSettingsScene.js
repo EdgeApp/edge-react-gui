@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import { Text, View } from 'react-native'
-import AntDesignIcon from 'react-native-vector-icons/AntDesign'
 import { sprintf } from 'sprintf-js'
 
 import { activatePromotion, removePromotion } from '../../actions/AccountReferralActions.js'
@@ -14,7 +13,7 @@ import { TextInputModal } from '../modals/TextInputModal.js'
 import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
-import { SettingsRow } from '../themed/SettingsRow.js'
+import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
 type StateProps = {
   accountReferral: AccountReferral,
@@ -30,9 +29,6 @@ export class PromotionSettingsComponent extends React.Component<Props> {
   render() {
     const { accountReferral, deviceReferral, removePromotion, theme } = this.props
     const styles = getStyles(theme)
-
-    const addIcon = <AntDesignIcon name="pluscircleo" color={theme.iconTappable} size={theme.rem(1)} />
-    const deleteIcon = <AntDesignIcon name="close" color={theme.iconTappable} size={theme.rem(1)} />
 
     return (
       <SceneWrapper background="theme" hasTabs={false}>
@@ -54,9 +50,14 @@ export class PromotionSettingsComponent extends React.Component<Props> {
         </View>
         <SettingsHeaderRow text={s.strings.settings_promotion_header} />
         {accountReferral.promotions.map(promotion => (
-          <SettingsRow key={promotion.installerId} text={promotion.installerId} right={deleteIcon} onPress={() => removePromotion(promotion.installerId)} />
+          <SettingsTappableRow
+            action="delete"
+            key={promotion.installerId}
+            text={promotion.installerId}
+            onPress={() => removePromotion(promotion.installerId)}
+          />
         ))}
-        <SettingsRow text={s.strings.settings_promotion_add} right={addIcon} onPress={this.handleAdd} />
+        <SettingsTappableRow action="add" text={s.strings.settings_promotion_add} onPress={this.handleAdd} />
       </SceneWrapper>
     )
   }
