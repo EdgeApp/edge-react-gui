@@ -1,5 +1,44 @@
 # edge-react-gui
 
+## 2.1.0 (2021-08-23)
+
+- New UI2 themed Scan scene
+- Reimplement OutlinedTextInput
+- New UI2 themed raw text modal
+- Replace old modals with themed ButtonsModal
+- Add Resync option to tokens
+- Add minimum balance check to Exchange and partner plugins scenes
+- Add type-checking to react-native-router-flux
+- Remove tab bar from Request scene
+- Remove magnifying glass icon from Address modal
+- Always check clipboard for address when entering Send scene
+- Fix button text font size and autoshrinking
+- Fix FlipInput component visual issues
+- Fix FIO Request button
+- Fix error when cancelling the share menu
+- Fix crash when cancelling high fee modal
+- Fix keyboard hiding PIN entry on Send scene
+- Fix tokens still appearing in list after deletion
+- Unfocus keyboard when side menu is opened
+- Remove edge-components
+- Various text and visual fixes
+- Update translations
+- edge-core-js to v0.18.5
+  - fixed: If multiple metadata files exist for a single transaction, always load the oldest one
+- edge-currency-bitcoin to v4.9.18
+  - BCH: Update xpub explorer URL
+- edge-login-ui-rn to v0.9.16
+  rn: Fix Change PIN scene losing access to keyboard
+  rn: Fix error when cancelling sending
+  rn: Enable Typescript strict mode and fix type definitions
+  rn: Update translations
+
+## 2.0.19 (2021-08-20)
+
+- Fix issue with sending ERC-20 tokens
+- Upgrade edge-currency-accountbased to v0.7.69
+  - Fix: Regression caused by EIP-681 parseUri implementation
+
 ## 2.0.18 (2021-08-18)
 
 - Fix issue when sending ETC, FTM, and RSK
