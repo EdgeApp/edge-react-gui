@@ -20,6 +20,7 @@ exports[`CurrencySettings should render 1`] = `
             "flexShrink": 1,
             "fontFamily": "Quicksand-Regular",
             "fontSize": 22,
+            "paddingHorizontal": 11,
             "textAlign": "left",
           }
         }
@@ -47,6 +48,7 @@ exports[`CurrencySettings should render 1`] = `
             "flexShrink": 1,
             "fontFamily": "Quicksand-Regular",
             "fontSize": 22,
+            "paddingHorizontal": 11,
             "textAlign": "left",
           }
         }
@@ -74,6 +76,7 @@ exports[`CurrencySettings should render 1`] = `
             "flexShrink": 1,
             "fontFamily": "Quicksand-Regular",
             "fontSize": 22,
+            "paddingHorizontal": 11,
             "textAlign": "left",
           }
         }

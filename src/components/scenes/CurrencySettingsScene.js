@@ -146,17 +146,20 @@ export function CurrencySettingsComponent(props: Props) {
 }
 
 const getStyles = cacheStyles(theme => ({
+  // We use a hack to make the text tappable separately from the switch.
   labelContainer: {
     flexGrow: 10,
     flexShrink: 1,
-    margin: -theme.rem(1),
-    padding: theme.rem(1)
+    // Stretch outward to cover the row:
+    margin: -theme.rem(0.5),
+    padding: theme.rem(0.5)
   },
   labelText: {
     color: theme.primaryText,
     flexShrink: 1,
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
+    paddingHorizontal: theme.rem(0.5),
     textAlign: 'left'
   },
   symbolText: {

@@ -19,9 +19,15 @@ exports[`Change Mining Fees should render with custom props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="speedometer"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
@@ -31,9 +37,15 @@ exports[`Change Mining Fees should render with custom props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="speedometer-medium"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
@@ -43,9 +55,15 @@ exports[`Change Mining Fees should render with custom props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="speedometer-slow"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
@@ -55,9 +73,15 @@ exports[`Change Mining Fees should render with custom props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="gear"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <MainButton
@@ -90,9 +114,15 @@ exports[`Change Mining Fees should render with high props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="speedometer"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
@@ -102,9 +132,15 @@ exports[`Change Mining Fees should render with high props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="speedometer-medium"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
@@ -114,9 +150,15 @@ exports[`Change Mining Fees should render with high props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="speedometer-slow"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
@@ -126,9 +168,15 @@ exports[`Change Mining Fees should render with high props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="gear"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <MainButton
@@ -161,9 +209,15 @@ exports[`Change Mining Fees should render with low props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="speedometer"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
@@ -173,9 +227,15 @@ exports[`Change Mining Fees should render with low props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="speedometer-medium"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
@@ -185,9 +245,15 @@ exports[`Change Mining Fees should render with low props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="speedometer-slow"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
@@ -197,9 +263,15 @@ exports[`Change Mining Fees should render with low props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="gear"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <MainButton
@@ -232,9 +304,15 @@ exports[`Change Mining Fees should render with standard props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="speedometer"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
@@ -244,9 +322,15 @@ exports[`Change Mining Fees should render with standard props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="speedometer-medium"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
@@ -256,9 +340,15 @@ exports[`Change Mining Fees should render with standard props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="speedometer-slow"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
@@ -268,9 +358,15 @@ exports[`Change Mining Fees should render with standard props 1`] = `
     >
       <Icon
         allowFontScaling={false}
-        color="#66EDA8"
         name="gear"
-        size={28}
+        size={12}
+        style={
+          Object {
+            "color": "#66EDA8",
+            "fontSize": 28,
+            "paddingHorizontal": 11,
+          }
+        }
       />
     </WithTheme(SettingsRadioRowComponent)>
     <MainButton

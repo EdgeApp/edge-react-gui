@@ -123,6 +123,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   currencyLogo: {
     height: theme.rem(1.25),
     width: theme.rem(1.25),
+    marginHorizontal: theme.rem(0.5),
     resizeMode: 'contain'
   },
   loader: {

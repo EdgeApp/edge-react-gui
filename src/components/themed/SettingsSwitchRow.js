@@ -32,8 +32,13 @@ type Props = OwnProps & ThemeProps
 function SettingsSwitchRowComponent(props: Props): React.Node {
   const { children, disabled, label, theme, value, onPress } = props
 
+  const style = {
+    marginHorizontal: theme.rem(0.5),
+    padding: 0
+  }
+
   const right = (
-    <View pointerEvents="none">
+    <View pointerEvents="none" style={style}>
       <Switch
         disabled={disabled}
         ios_backgroundColor={theme.toggleButtonOff}

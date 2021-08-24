@@ -101,9 +101,9 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
 
   render() {
     const { theme } = this.props
+    const styles = getStyles(theme)
 
     const customFormat = this.getCustomFormat()
-    const iconSize = theme.rem(1.25)
     const { networkFeeOption } = this.state
 
     return (
@@ -118,7 +118,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
                 value={networkFeeOption === feeSetting}
                 onPress={() => this.setState({ networkFeeOption: feeSetting })}
               >
-                <MaterialCommunityIcons name={feeOptions[feeSetting].icon} size={iconSize} color={theme.iconTappable} />
+                <MaterialCommunityIcons name={feeOptions[feeSetting].icon} style={styles.settingsIcon} />
               </SettingsRadioRow>
             )
           })}
@@ -129,7 +129,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
               value={networkFeeOption === 'custom'}
               onPress={() => this.setState({ networkFeeOption: 'custom' })}
             >
-              <Evilicons name="gear" size={iconSize} color={theme.iconTappable} />
+              <Evilicons name="gear" style={styles.settingsIcon} />
             </SettingsRadioRow>
           ) : null}
           {customFormat != null ? this.renderCustomFeeTextInput(customFormat) : null}
@@ -193,6 +193,11 @@ const getStyles = cacheStyles((theme: Theme) => {
       height: iconSize,
       width: iconSize,
       resizeMode: 'contain'
+    },
+    settingsIcon: {
+      color: theme.iconTappable,
+      fontSize: theme.rem(1.25),
+      paddingHorizontal: theme.rem(0.5)
     }
   }
 })

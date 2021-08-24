@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Text } from 'react-native'
 
-import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
+import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { SettingsRow } from './SettingsRow.js'
 
 type OwnProps = {
@@ -31,22 +31,20 @@ type Props = OwnProps & ThemeProps
  */
 export function SettingsLabelRowComponent(props: Props): React.Node {
   const { children, disabled, label, right, theme, onPress } = props
-  const styles = getStyles(theme)
 
-  const rightText = <Text style={styles.labelText}>{right}</Text>
+  const style = {
+    color: disabled ? theme.deactivatedText : theme.textLink,
+    fontFamily: theme.fontFaceDefault,
+    fontSize: theme.rem(1),
+    marginHorizontal: theme.rem(0.5)
+  }
+
+  const rightText = <Text style={style}>{right}</Text>
   return (
     <SettingsRow disabled={disabled} label={label} right={rightText} onPress={onPress}>
       {children}
     </SettingsRow>
   )
 }
-
-const getStyles = cacheStyles((theme: Theme) => ({
-  labelText: {
-    fontFamily: theme.fontFaceDefault,
-    fontSize: theme.rem(1),
-    color: theme.textLink
-  }
-}))
 
 export const SettingsLabelRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsLabelRowComponent)

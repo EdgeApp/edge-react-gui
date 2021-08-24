@@ -297,6 +297,7 @@ const getStyles = cacheStyles((theme: Theme) => {
     currencyLogo: {
       height: iconSize,
       width: iconSize,
+      marginHorizontal: theme.rem(0.5),
       resizeMode: 'contain'
     }
   }

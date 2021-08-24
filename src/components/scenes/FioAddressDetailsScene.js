@@ -83,11 +83,12 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   renderAccountSettings = () => {
     const { theme } = this.props
     const styles = getStyles(theme)
+
     if (this.checkExpiredSoon()) {
       return (
         <SettingsTappableRow onPress={this._onPressAccountSettings}>
-          <IonIcon name="ios-warning" color={theme.warningIcon} size={theme.rem(1.5)} />
-          <EdgeText style={styles.warning}>
+          <IonIcon name="ios-warning" color={theme.warningIcon} style={styles.settingsIcon} />
+          <EdgeText style={styles.settingsWarning}>
             {this.checkAlreadyExpired() ? s.strings.fio_address_details_already_expired : s.strings.fio_address_details_expired_soon}
           </EdgeText>
         </SettingsTappableRow>
@@ -96,7 +97,7 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
 
     return (
       <SettingsTappableRow label={s.strings.fio_address_details_screen_manage_account_settings} onPress={this._onPressAccountSettings}>
-        <IonIcon name="ios-settings" color={theme.icon} size={theme.rem(1.5)} />
+        <IonIcon name="ios-settings" color={theme.icon} style={styles.settingsIcon} />
       </SettingsTappableRow>
     )
   }
@@ -133,20 +134,14 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(-0.5),
     paddingBottom: theme.rem(0.75)
   },
-  settingsText: {
-    color: theme.primaryText,
-    fontSize: theme.rem(1)
+  settingsIcon: {
+    fontSize: theme.rem(1.5),
+    paddingHorizontal: theme.rem(0.5)
   },
-  settingsTile: {
-    paddingHorizontal: theme.rem(1)
-  },
-  settingsTitle: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  warning: {
+  settingsWarning: {
     fontSize: theme.rem(1),
-    color: theme.warningText
+    color: theme.warningText,
+    paddingHorizontal: theme.rem(0.5)
   }
 }))
 

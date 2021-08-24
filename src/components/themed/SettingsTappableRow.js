@@ -37,7 +37,8 @@ function SettingsTappableRowComponent(props: Props): React.Node {
 
   const style = {
     color: disabled ? theme.iconDeactivated : theme.iconTappable,
-    fontSize: theme.rem(1)
+    fontSize: theme.rem(1),
+    marginHorizontal: theme.rem(0.5)
   }
 
   const rightIcon =

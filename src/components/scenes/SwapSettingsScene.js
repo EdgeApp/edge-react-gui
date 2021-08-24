@@ -137,8 +137,8 @@ export class SwapSettings extends React.Component<Props, State> {
 
   renderPreferredArea() {
     const { accountPlugins, exchanges, accountReferral, settingsPreferredSwap, theme } = this.props
-    const iconSize = theme.rem(1.25)
     const styles = getStyles(theme)
+    const iconSize = theme.rem(1.25)
 
     // Pick plugin:
     const activePlugins = bestOfPlugins(accountPlugins, accountReferral, settingsPreferredSwap)
@@ -196,7 +196,8 @@ const getStyles = cacheStyles((theme: Theme) => ({
   },
   swapIcon: {
     height: theme.rem(1.25),
-    width: theme.rem(1.25)
+    width: theme.rem(1.25),
+    marginHorizontal: theme.rem(0.5)
   }
 }))
 
