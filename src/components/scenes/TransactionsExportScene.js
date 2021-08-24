@@ -14,7 +14,7 @@ import { getDisplayDenomination } from '../../selectors/DenominationSelectors.js
 import { connect } from '../../types/reactRedux.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { DateModal } from '../modals/DateModal.js'
-import { Airship, showActivity, showError } from '../services/AirshipInstance.js'
+import { Airship, showError } from '../services/AirshipInstance.js'
 import { type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
@@ -154,17 +154,14 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     this.setState(state => ({ isExportCsv: !state.isExportCsv }))
   }
 
-  handleSubmit = (): void => {
-    const { startDate, endDate } = this.state
+  handleSubmit = async (): Promise<void> => {
+    const { sourceWallet, currencyCode, multiplier } = this.props
+    const { isExportQbo, isExportCsv, startDate, endDate } = this.state
     if (startDate.getTime() > endDate.getTime()) {
       showError(s.strings.export_transaction_error)
       return
     }
-    this.exportFiles().catch(showError)
-  }
 
-  pickFileName() {
-    const { sourceWallet, currencyCode } = this.props
     const now = new Date()
 
     const walletName = sourceWallet.name != null ? sourceWallet.name : s.strings.string_no_wallet_name
@@ -181,29 +178,24 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
       now.getSeconds().toString()
 
     const fileName = `${walletName}-${fullCurrencyCode}-${dateString}`
-    return fileName
       .replace(/[^\w\s-]/g, '') // Delete weird characters
       .trim()
       .replace(/[-\s]+/g, '-') // Collapse spaces & dashes
-  }
 
-  async exportFiles(): Promise<void> {
-    const { isExportQbo, isExportCsv, startDate, endDate } = this.state
-    const { sourceWallet, currencyCode, multiplier } = this.props
     const transactionOptions: EdgeGetTransactionsOptions = {
       denomination: multiplier,
       currencyCode,
       startDate,
       endDate
     }
+    const txs = await sourceWallet.getTransactions(transactionOptions)
 
-    const fileName = this.pickFileName()
     const files: File[] = []
     const formats: string[] = []
 
     // The non-string result appears to be a bug in the core,
     // which we are relying on to determine if the date range is empty:
-    const csvFile = await showActivity(s.strings.export_transaction_loading, exportTransactionsToCSV(this.props.sourceWallet, transactionOptions))
+    const csvFile = await exportTransactionsToCSV(sourceWallet, txs, transactionOptions)
     if (typeof csvFile !== 'string' || csvFile === '' || csvFile == null) {
       showError(s.strings.export_transaction_export_error)
       return
@@ -219,7 +211,7 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     }
 
     if (isExportQbo) {
-      const qboFile = await showActivity(s.strings.export_transaction_loading, exportTransactionsToQBO(sourceWallet, transactionOptions))
+      const qboFile = await exportTransactionsToQBO(sourceWallet, txs, transactionOptions)
       files.push({
         contents: qboFile,
         mimeType: 'application/vnd.intu.qbo',

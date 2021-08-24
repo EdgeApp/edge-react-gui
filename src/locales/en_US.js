@@ -799,7 +799,6 @@ const strings = {
   string_expiration: 'Expiration',
   export_transaction_error: 'Start date should be earlier than the end date',
   export_transaction_export_error: 'No transactions in the date range chosen',
-  export_transaction_loading: 'Exporting Transactions…',
   string_allow: 'Allow',
   string_deny: 'Deny',
 
