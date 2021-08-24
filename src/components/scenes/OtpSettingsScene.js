@@ -12,7 +12,7 @@ import { B } from '../../styles/common/textStyles.js'
 import { connect } from '../../types/reactRedux.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
-import { Airship, showActivity, showError, showToast } from '../services/AirshipInstance.js'
+import { Airship, showError, showToast } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
 
@@ -56,20 +56,22 @@ class OtpSettingsSceneComponent extends React.Component<Props, State> {
         title={s.strings.otp_modal_headline}
         message={s.strings.otp_modal_body}
         buttons={{
-          ok: { label: s.strings.otp_disable },
+          ok: {
+            label: s.strings.otp_disable,
+            async onPress() {
+              await account.disableOtp()
+              return true
+            }
+          },
           cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
         }}
       />
-    ))
-      .then(button => {
-        if (button === 'ok') return showActivity(s.strings.otp_disable, account.disableOtp())
-      })
-      .catch(showError)
+    )).catch(showError)
   }
 
-  handleEnable = (): void => {
+  handleEnable = async (): Promise<void> => {
     const { account } = this.props
-    showActivity(s.strings.otp_enable, account.enableOtp()).catch(showError)
+    await account.enableOtp()
   }
 
   handleToggleKey = (): void => {
