@@ -19,7 +19,7 @@ import * as UTILS from '../../util/utils'
 import { FormField } from '../common/FormField.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { ButtonsModal } from '../modals/ButtonsModal.js'
-import { Airship, showActivity } from '../services/AirshipInstance.js'
+import { Airship } from '../services/AirshipInstance.js'
 
 type OwnProps = {
   currencyCode: string,
@@ -144,23 +144,26 @@ class EditTokenComponent extends React.Component<Props, State> {
     )
   }
 
-  deleteToken = async () => {
-    const { walletId, currencyCode } = this.props
-    const result = await Airship.show(bridge => (
+  deleteToken = () => {
+    const { currencyCode, deleteCustomToken, onDeleteToken, walletId } = this.props
+    Airship.show(bridge => (
       <ButtonsModal
         bridge={bridge}
         title={s.strings.string_delete}
         message={s.strings.edittoken_delete_prompt}
         buttons={{
-          ok: { label: s.strings.string_delete },
+          ok: {
+            label: s.strings.string_delete,
+            async onPress() {
+              await deleteCustomToken(walletId, currencyCode)
+              onDeleteToken(currencyCode)
+              return true
+            }
+          },
           cancel: { label: s.strings.string_cancel_cap, type: 'secondary' }
         }}
       />
     ))
-    if (result === 'ok') {
-      showActivity(s.strings.string_delete, this.props.deleteCustomToken(walletId, currencyCode))
-      this.props.onDeleteToken(currencyCode)
-    }
   }
 
   onChangeName = (input: string) => {
