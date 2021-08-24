@@ -19,19 +19,22 @@
 - Fix crash when cancelling high fee modal
 - Fix keyboard hiding PIN entry on Send scene
 - Fix tokens still appearing in list after deletion
+- Add apikey to Fantom initialization
 - Unfocus keyboard when side menu is opened
 - Remove edge-components
 - Various text and visual fixes
 - Update translations
-- edge-core-js to v0.18.5
+- Upgrade edge-core-js to v0.18.5
   - fixed: If multiple metadata files exist for a single transaction, always load the oldest one
-- edge-currency-bitcoin to v4.9.18
+- Upgrade edge-currency-bitcoin to v4.9.18
   - BCH: Update xpub explorer URL
-- edge-login-ui-rn to v0.9.16
+- Upgrade edge-login-ui-rn to v0.9.16
   rn: Fix Change PIN scene losing access to keyboard
   rn: Fix error when cancelling sending
   rn: Enable Typescript strict mode and fix type definitions
   rn: Update translations
+- Upgrade edge-currency-accountbased to v0.7.71
+  - FTM: Add apikey to ftmscan.com requests
 
 ## 2.0.19 (2021-08-20)
 
