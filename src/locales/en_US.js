@@ -726,8 +726,6 @@ const strings = {
   fio_confirm_request_from: 'Send Request From',
   fio_confirm_request_to: 'Send Request To',
   fio_confirm_request_fio_title: 'Choose FIO Address',
-  fio_confirm_request_fio_subtitle_from: 'Send request from which address?',
-  fio_confirm_request_fio_subtitle_to: 'Enter address to request payment from',
   fio_confirm_request_amount: 'Amount',
   fio_confirm_request_memo: 'Memo',
   fio_confirm_request_input_title_memo: 'Enter Request Memo',

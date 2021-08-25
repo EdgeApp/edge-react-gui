@@ -13,9 +13,7 @@ function CryptoExchangeQuoteProcessingScreenComponent(props: ThemeProps) {
   return (
     <SceneWrapper background="header" hasTabs={false}>
       <View style={styles.container}>
-        <EdgeText style={styles.title} isBold>
-          {s.strings.hang_tight}
-        </EdgeText>
+        <EdgeText style={styles.title}>{s.strings.hang_tight}</EdgeText>
         <EdgeText style={styles.findingText} numberOfLines={2}>
           {s.strings.trying_to_find}
         </EdgeText>

@@ -223,7 +223,7 @@ Object {
         "denomination": "1000000000000000000",
       },
       "AMPL": Object {
-        "denominations": "1000000000",
+        "denomination": "1000000000",
       },
       "ANT": Object {
         "denomination": "1000000000000000000",
@@ -262,13 +262,13 @@ Object {
         "denomination": "1000000000000000000",
       },
       "BADGER": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "BAL": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "BAND": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "BAT": Object {
         "denomination": "1000000000000000000",
@@ -298,19 +298,19 @@ Object {
         "denomination": "100000000",
       },
       "COMBO": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "COMP": Object {
         "denomination": "1000000000000000000",
       },
       "CREAM": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "CREP": Object {
         "denomination": "100000000",
       },
       "CRV": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "CSAI": Object {
         "denomination": "100000000",
@@ -319,7 +319,7 @@ Object {
         "denomination": "100000000",
       },
       "CVP": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "CWBTC": Object {
         "denomination": "100000000",
@@ -340,10 +340,10 @@ Object {
         "denomination": "100000000",
       },
       "DOUGH": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "DPI": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "EOS": Object {
         "denomination": "10000",
@@ -391,13 +391,13 @@ Object {
         "denomination": "1000000000000000000",
       },
       "IDLE": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "IND": Object {
         "denomination": "1000000000000000000",
       },
       "INDEX": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "KIN": Object {
         "denomination": "1000000000000000000",
@@ -427,10 +427,10 @@ Object {
         "denomination": "1000000000000000000",
       },
       "NXM": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "OCEAN": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "OMG": Object {
         "denomination": "1000000000000000000",
@@ -442,7 +442,7 @@ Object {
         "denomination": "1000000000000000000",
       },
       "PICKLE": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "POLY": Object {
         "denomination": "1000000000000000000",
@@ -454,16 +454,16 @@ Object {
         "denomination": "1000000000000000000",
       },
       "REN": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "RENBCH": Object {
-        "denominations": "100000000",
+        "denomination": "100000000",
       },
       "RENBTC": Object {
-        "denominations": "100000000",
+        "denomination": "100000000",
       },
       "RENZEC": Object {
-        "denominations": "100000000",
+        "denomination": "100000000",
       },
       "REP": Object {
         "denomination": "1000000000000000000",
@@ -475,7 +475,7 @@ Object {
         "denomination": "1000000000000000000",
       },
       "ROOK": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "RVN": Object {
         "denomination": "100000000",
@@ -502,10 +502,10 @@ Object {
         "denomination": "1000000000000000000",
       },
       "SUSHI": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "TBTC": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "TESTBTC": Object {
         "denomination": "100000000",
@@ -520,10 +520,10 @@ Object {
         "denomination": "100000000",
       },
       "UMA": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "UNI": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "USDC": Object {
         "denomination": "1000000",
@@ -544,7 +544,7 @@ Object {
         "denomination": "100000000",
       },
       "WETH": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "WINGS": Object {
         "denomination": "1000000000000000000",
@@ -562,15 +562,14 @@ Object {
         "denomination": "1000000",
       },
       "YETI": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "YFI": Object {
-        "denominations": "1000000000000000000",
+        "denomination": "1000000000000000000",
       },
       "ZRX": Object {
         "denomination": "1000000000000000000",
       },
-      "account": null,
       "autoLogoutTimeInSeconds": 3600,
       "bluetoothMode": false,
       "changesLocked": true,

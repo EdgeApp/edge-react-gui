@@ -154,9 +154,7 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
           left={{
             children: (
               <View style={styles.swipeOptionsContainer}>
-                <EdgeText style={styles.swipeOptionsIcon} adjustsFontSizeToFit={false}>
-                  {WALLET_LIST_OPTIONS_ICON}
-                </EdgeText>
+                <EdgeText style={styles.swipeOptionsIcon}>{WALLET_LIST_OPTIONS_ICON}</EdgeText>
               </View>
             ),
             color: 'default',
@@ -175,9 +173,7 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
           right={{
             children: (
               <View style={styles.swipeOptionsContainer}>
-                <EdgeText style={styles.swipeOptionsIcon} adjustsFontSizeToFit={false}>
-                  {WALLET_LIST_OPTIONS_ICON}
-                </EdgeText>
+                <EdgeText style={styles.swipeOptionsIcon}>{WALLET_LIST_OPTIONS_ICON}</EdgeText>
               </View>
             ),
             color: 'default',
