@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { Dimensions, Platform, View } from 'react-native'
+import { Dimensions, Keyboard, Platform, View } from 'react-native'
 import { SwipeRow } from 'react-native-swipe-list-view'
 
 import { Fontello } from '../../assets/vector/index.js'
@@ -61,6 +61,7 @@ class WalletListSwipeRowComponent extends React.PureComponent<Props & ThemeProps
     if (swipeRow) {
       swipeRow.closeRow()
     }
+    Keyboard.dismiss()
   }
 
   handleSelectWallet = (): void => {
