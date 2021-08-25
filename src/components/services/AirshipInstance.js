@@ -1,33 +1,12 @@
 // @flow
 
 import * as React from 'react'
-import { ActivityIndicator } from 'react-native'
 import { makeAirship } from 'react-native-airship'
 
-import { THEME } from '../../theme/variables/airbitz.js'
-import { AirshipToast, toastUnit } from '../common/AirshipToast.js'
+import { AirshipToast } from '../common/AirshipToast.js'
 import { AlertDropdown } from '../navigation/AlertDropdown.js'
 
 export const Airship = makeAirship()
-
-/**
- * Shows a message & activity spinner tied to the lifetime of a promise.
- */
-export function showActivity<T>(message: string, promise: Promise<T>): Promise<T> {
-  Airship.show(bridge => {
-    // Hide the toast when the activity completes:
-    promise.then(
-      () => bridge.resolve(),
-      () => bridge.resolve()
-    )
-    return (
-      <AirshipToast bridge={bridge} message={message}>
-        <ActivityIndicator color={THEME.COLORS.BLACK} style={{ marginLeft: toastUnit }} />
-      </AirshipToast>
-    )
-  })
-  return promise
-}
 
 /**
  * Shows an error alert to the user.
