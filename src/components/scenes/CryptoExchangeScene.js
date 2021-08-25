@@ -20,7 +20,6 @@ import { Airship, showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import Alert from '../themed/Alert'
 import { CryptoExchangeFlipInputWrapper } from '../themed/CryptoExchangeFlipInputWrapperComponent.js'
-import { CryptoExchangeMessageBox } from '../themed/CryptoExchangeMessageBoxComponent'
 import type { ExchangedFlipInputAmounts } from '../themed/ExchangedFlipInput'
 import { LineTextDivider } from '../themed/LineTextDivider'
 import { MainButton } from '../themed/MainButton.js'
@@ -254,7 +253,6 @@ class CryptoExchangeComponent extends React.Component<Props, State> {
       <SceneWrapper background="theme">
         <SceneHeader withTopMargin title={s.strings.title_exchange} underline />
         <KeyboardAwareScrollView style={styles.mainScrollView} keyboardShouldPersistTaps="always" contentContainerStyle={styles.scrollViewContentContainer}>
-          <CryptoExchangeMessageBox />
           <LineTextDivider title={s.strings.fragment_send_from_label} lowerCased />
           <CryptoExchangeFlipInputWrapper
             guiWallet={this.props.fromWallet}
