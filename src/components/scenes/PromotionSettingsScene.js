@@ -11,7 +11,7 @@ import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral, type DeviceReferral } from '../../types/ReferralTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { TextInputModal } from '../modals/TextInputModal.js'
-import { Airship, showActivity } from '../services/AirshipInstance.js'
+import { Airship } from '../services/AirshipInstance.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { SettingsHeaderRow } from '../themed/SettingsHeaderRow.js'
 import { SettingsRow } from '../themed/SettingsRow.js'
@@ -54,14 +54,7 @@ export class PromotionSettingsComponent extends React.Component<Props> {
         </View>
         <SettingsHeaderRow text={s.strings.settings_promotion_header} />
         {accountReferral.promotions.map(promotion => (
-          <SettingsRow
-            key={promotion.installerId}
-            text={promotion.installerId}
-            right={deleteIcon}
-            onPress={() => {
-              showActivity('', removePromotion(promotion.installerId))
-            }}
-          />
+          <SettingsRow key={promotion.installerId} text={promotion.installerId} right={deleteIcon} onPress={() => removePromotion(promotion.installerId)} />
         ))}
         <SettingsRow text={s.strings.settings_promotion_add} right={addIcon} onPress={this.handleAdd} />
       </SceneWrapper>
