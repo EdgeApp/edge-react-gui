@@ -839,28 +839,32 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 }
               }
             >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
+              <View
+                pointerEvents="none"
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  disabled={false}
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#66EDA8"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -1049,28 +1053,32 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 }
               }
             >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
+              <View
+                pointerEvents="none"
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  disabled={false}
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#66EDA8"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -1119,28 +1127,32 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 }
               }
             >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
+              <View
+                pointerEvents="none"
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  disabled={false}
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#66EDA8"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -1329,28 +1341,32 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
                 }
               }
             >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
+              <View
+                pointerEvents="none"
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  disabled={false}
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#66EDA8"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -2249,28 +2265,32 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 }
               }
             >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
+              <View
+                pointerEvents="none"
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  disabled={false}
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#66EDA8"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -2459,28 +2479,32 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 }
               }
             >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
+              <View
+                pointerEvents="none"
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  disabled={false}
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#66EDA8"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -2529,28 +2553,32 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 }
               }
             >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
+              <View
+                pointerEvents="none"
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  disabled={false}
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#66EDA8"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -2739,28 +2767,32 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
                 }
               }
             >
-              <RCTSwitch
-                accessibilityRole="switch"
-                disabled={false}
-                onChange={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
-                onTintColor="#66EDA8"
-                style={
-                  Array [
-                    Object {
-                      "height": 31,
-                      "width": 51,
-                    },
-                    Object {
-                      "backgroundColor": "#87939E",
-                      "borderRadius": 16,
-                    },
-                  ]
-                }
-                tintColor="#87939E"
-                value={true}
-              />
+              <View
+                pointerEvents="none"
+              >
+                <RCTSwitch
+                  accessibilityRole="switch"
+                  disabled={false}
+                  onChange={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  onTintColor="#66EDA8"
+                  style={
+                    Array [
+                      Object {
+                        "height": 31,
+                        "width": 51,
+                      },
+                      Object {
+                        "backgroundColor": "#87939E",
+                        "borderRadius": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#87939E"
+                  value={true}
+                />
+              </View>
             </View>
           </View>
         </View>

@@ -11,7 +11,11 @@ type OwnProps = {
   icon?: React.Node,
   text: string,
   right: string,
-  onPress: () => void
+
+  // Called when the user presses the row.
+  // If the callback returns a promise, the row will disable itself
+  // and show a spinner until the promise resolves.
+  onPress?: () => void | Promise<void>
 }
 
 type Props = OwnProps & ThemeProps
@@ -34,4 +38,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SettingsLabelRow = withTheme(SettingsLabelRowComponent)
+export const SettingsLabelRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsLabelRowComponent)

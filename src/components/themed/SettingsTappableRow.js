@@ -10,7 +10,11 @@ type OwnProps = {
   disabled?: boolean, // Show with grey style
   icon?: React.Node,
   text: string | React.Node,
-  onPress?: () => void
+
+  // Called when the user presses the row.
+  // If the callback returns a promise, the row will disable itself
+  // and show a spinner until the promise resolves.
+  onPress?: () => void | Promise<void>
 }
 
 type Props = OwnProps & ThemeProps
@@ -26,4 +30,4 @@ function SettingsTappableRowComponent(props: Props): React.Node {
   return <SettingsRow disabled={disabled} icon={icon} text={text} right={rightArrow} onPress={onPress} />
 }
 
-export const SettingsTappableRow = withTheme(SettingsTappableRowComponent)
+export const SettingsTappableRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsTappableRowComponent)

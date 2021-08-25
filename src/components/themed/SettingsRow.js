@@ -1,8 +1,9 @@
 // @flow
 
 import * as React from 'react'
-import { Text, TouchableHighlight, View } from 'react-native'
+import { ActivityIndicator, Text, TouchableHighlight, View } from 'react-native'
 
+import { usePendingPress } from '../../hooks/usePendingPress.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 type OwnProps = {
@@ -10,7 +11,11 @@ type OwnProps = {
   icon?: React.Node,
   text: string | React.Node,
   right?: React.Node,
-  onPress?: () => void
+
+  // Called when the user presses the row.
+  // If the callback returns a promise, the row will disable itself
+  // and show a spinner until the promise resolves.
+  onPress?: () => void | Promise<void>
 }
 
 type Props = OwnProps & ThemeProps
@@ -23,12 +28,18 @@ function SettingsRowComponent(props: Props): React.Node {
   const { disabled = false, icon, text, theme, right, onPress } = props
   const styles = getStyles(theme)
 
+  const [pending, handlePress] = usePendingPress(onPress)
+
   return (
-    <TouchableHighlight onPress={onPress} underlayColor={theme.settingsRowPressed}>
+    <TouchableHighlight onPress={handlePress} underlayColor={theme.settingsRowPressed}>
       <View style={styles.row}>
         {icon != null ? <View style={styles.paddingLeftIcon}>{icon}</View> : undefined}
         <Text style={disabled ? styles.disabledText : styles.text}>{text}</Text>
-        {right != null ? <View style={styles.paddingRightIcon}>{right}</View> : undefined}
+        {pending ? (
+          <ActivityIndicator color={theme.iconTappable} style={styles.spinner} />
+        ) : right != null ? (
+          <View style={styles.paddingRightIcon}>{right}</View>
+        ) : undefined}
       </View>
     </TouchableHighlight>
   )
@@ -69,6 +80,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
     paddingRight: theme.rem(0.75)
   },
   paddingRightIcon: {
+    paddingLeft: theme.rem(0.75)
+  },
+  spinner: {
     paddingLeft: theme.rem(0.75)
   }
 }))
