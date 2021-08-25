@@ -25,7 +25,7 @@ import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 type DispatchProps = {
   changePreferredSwapPlugin: (pluginId: string | void) => void,
   ignoreAccountSwap: () => void,
-  removePromotion: (installerId: string) => void
+  removePromotion: (installerId: string) => Promise<void>
 }
 
 type StateProps = {
@@ -115,12 +115,18 @@ export class SwapSettings extends React.Component<Props, State> {
     const { displayName } = exchanges[pluginId].swapInfo
     const logo = this.renderPluginIcon(pluginId)
 
-    function handlePress() {
-      const newValue = !exchanges[pluginId].enabled
-      exchanges[pluginId].changeEnabled(newValue)
-    }
-
-    return <SettingsSwitchRow key={pluginId} icon={logo} text={displayName} value={this.state.enabled[pluginId]} onPress={handlePress} />
+    return (
+      <SettingsSwitchRow
+        key={pluginId}
+        icon={logo}
+        text={displayName}
+        value={this.state.enabled[pluginId]}
+        onPress={async () => {
+          const newValue = !exchanges[pluginId].enabled
+          await exchanges[pluginId].changeEnabled(newValue)
+        }}
+      />
+    )
   }
 
   renderPluginIcon(pluginId: string): React.Node {
@@ -210,8 +216,8 @@ export const SwapSettingsScene = connect<StateProps, DispatchProps, ThemeProps>(
     ignoreAccountSwap() {
       dispatch(ignoreAccountSwap())
     },
-    removePromotion(installerId: string) {
-      dispatch(removePromotion(installerId))
+    async removePromotion(installerId: string) {
+      await dispatch(removePromotion(installerId))
     }
   })
 )(withTheme(SwapSettings))
