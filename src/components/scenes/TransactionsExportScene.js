@@ -92,13 +92,13 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     return (
       <SceneWrapper background="theme">
         <ScrollView>
-          <SettingsRow text={walletName} onPress={() => undefined} />
-          <SettingsHeaderRow icon={<EntypoIcon name="calendar" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_date_range} />
-          <SettingsRow text={s.strings.export_transaction_this_month} onPress={this.setThisMonth} />
-          <SettingsRow text={s.strings.export_transaction_last_month} onPress={this.setLastMonth} />
-          <SettingsLabelRow text={s.strings.string_start} right={startDateString} onPress={this.handleStartDate} />
-          <SettingsLabelRow text={s.strings.string_end} right={endDateString} onPress={this.handleEndDate} />
-          <SettingsHeaderRow icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />} text={s.strings.export_transaction_export_type} />
+          <SettingsRow label={walletName} onPress={() => undefined} />
+          <SettingsHeaderRow icon={<EntypoIcon name="calendar" color={theme.icon} size={iconSize} />} label={s.strings.export_transaction_date_range} />
+          <SettingsRow label={s.strings.export_transaction_this_month} onPress={this.setThisMonth} />
+          <SettingsRow label={s.strings.export_transaction_last_month} onPress={this.setLastMonth} />
+          <SettingsLabelRow label={s.strings.string_start} right={startDateString} onPress={this.handleStartDate} />
+          <SettingsLabelRow label={s.strings.string_end} right={endDateString} onPress={this.handleEndDate} />
+          <SettingsHeaderRow icon={<EntypoIcon name="export" color={theme.icon} size={iconSize} />} label={s.strings.export_transaction_export_type} />
           {Platform.OS === 'android' ? this.renderAndroidSwitches() : this.renderIosSwitches()}
           {disabledExport ? null : <MainButton label={s.strings.string_export} marginRem={1.5} onPress={this.handleSubmit} />}
         </ScrollView>
@@ -110,8 +110,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const { isExportCsv, isExportQbo } = this.state
     return (
       <>
-        <SettingsRadioRow key="exportQbo" text={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleAndroidToggle} />
-        <SettingsRadioRow key="exportCsv" text={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.handleAndroidToggle} />
+        <SettingsRadioRow label={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleAndroidToggle} />
+        <SettingsRadioRow label={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.handleAndroidToggle} />
       </>
     )
   }
@@ -120,8 +120,8 @@ class TransactionsExportSceneComponent extends React.PureComponent<Props, State>
     const { isExportCsv, isExportQbo } = this.state
     return (
       <>
-        <SettingsSwitchRow key="exportQbo" text={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleQboToggle} />
-        <SettingsSwitchRow key="exportCsv" text={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.handleCsvToggle} />
+        <SettingsSwitchRow label={s.strings.export_transaction_quickbooks_qbo} value={isExportQbo} onPress={this.handleQboToggle} />
+        <SettingsSwitchRow label={s.strings.export_transaction_csv} value={isExportCsv} onPress={this.handleCsvToggle} />
       </>
     )
   }

@@ -13,7 +13,7 @@ type OwnProps = {
   disabled?: boolean,
 
   // Insert a text label after the other children when set:
-  text?: string,
+  label?: string,
 
   // Whether the radio component is selected or not:
   value: boolean,
@@ -30,10 +30,10 @@ type Props = OwnProps & ThemeProps
  * A settings row with a radio selector on the right side.
  */
 function SettingsRadioRowComponent(props: Props): React.Node {
-  const { children, disabled = false, text, value, onPress } = props
+  const { children, disabled = false, label, value, onPress } = props
 
   return (
-    <SettingsRow disabled={disabled} text={text} right={<RadioIcon value={value} />} onPress={onPress}>
+    <SettingsRow disabled={disabled} label={label} right={<RadioIcon value={value} />} onPress={onPress}>
       {children}
     </SettingsRow>
   )

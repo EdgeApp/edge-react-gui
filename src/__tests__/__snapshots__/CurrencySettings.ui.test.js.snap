@@ -7,11 +7,10 @@ exports[`CurrencySettings should render 1`] = `
 >
   <ScrollView>
     <WithTheme(SettingsHeaderRowComponent)
-      text="Denominations"
+      label="Denominations"
     />
     <WithTheme(SettingsRadioRowComponent)
       onPress={[Function]}
-      text=""
       value={false}
     >
       <Text
@@ -39,7 +38,6 @@ exports[`CurrencySettings should render 1`] = `
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
       onPress={[Function]}
-      text=""
       value={false}
     >
       <Text
@@ -67,7 +65,6 @@ exports[`CurrencySettings should render 1`] = `
     </WithTheme(SettingsRadioRowComponent)>
     <WithTheme(SettingsRadioRowComponent)
       onPress={[Function]}
-      text=""
       value={true}
     >
       <Text

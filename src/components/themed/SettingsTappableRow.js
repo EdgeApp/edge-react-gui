@@ -18,7 +18,7 @@ type OwnProps = {
   disabled?: boolean,
 
   // Insert a text label after the other children when set:
-  text?: string,
+  label?: string,
 
   // Called when the user presses the row.
   // If the callback returns a promise, the row will disable itself
@@ -33,7 +33,7 @@ type Props = OwnProps & ThemeProps
  * The default icon is a navigation arrow, but other options are available.
  */
 function SettingsTappableRowComponent(props: Props): React.Node {
-  const { action = 'navigate', children, disabled, text, theme, onPress } = props
+  const { action = 'navigate', children, disabled, label, theme, onPress } = props
 
   const style = {
     color: disabled ? theme.iconDeactivated : theme.iconTappable,
@@ -51,7 +51,7 @@ function SettingsTappableRowComponent(props: Props): React.Node {
       <AntDesignIcon name={action} style={style} />
     )
   return (
-    <SettingsRow disabled={disabled} text={text} right={rightIcon} onPress={onPress}>
+    <SettingsRow disabled={disabled} label={label} right={rightIcon} onPress={onPress}>
       {children}
     </SettingsRow>
   )

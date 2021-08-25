@@ -95,7 +95,7 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
     }
 
     return (
-      <SettingsTappableRow text={s.strings.fio_address_details_screen_manage_account_settings} onPress={this._onPressAccountSettings}>
+      <SettingsTappableRow label={s.strings.fio_address_details_screen_manage_account_settings} onPress={this._onPressAccountSettings}>
         <IonIcon name="ios-settings" color={theme.icon} size={theme.rem(1.5)} />
       </SettingsTappableRow>
     )
@@ -113,8 +113,7 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
         {this.renderAccountSettings()}
         <SettingsHeaderRow
           icon={<IonIcon name="ios-link" color={theme.primaryText} size={theme.rem(1.5)} />}
-          numberOfLines={2}
-          text={s.strings.fio_address_details_connect_to_wallets}
+          label={s.strings.fio_address_details_connect_to_wallets}
         />
         <ConnectWallets fioAddressName={fioAddressName} fioWallet={this.state.fioWallet} disabled={this.state.fioWalletLoading} />
       </SceneWrapper>

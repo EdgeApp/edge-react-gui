@@ -93,28 +93,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
-            allowFontScaling={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
             style={
-              Array [
-                Object {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                },
-                null,
-              ]
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+                "textAlign": "left",
+              }
             }
           >
             Account: some user
@@ -514,28 +501,15 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
-            allowFontScaling={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
             style={
-              Array [
-                Object {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                },
-                null,
-              ]
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+                "textAlign": "left",
+              }
             }
           >
             Options
@@ -1514,28 +1488,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
-            allowFontScaling={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
             style={
-              Array [
-                Object {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                },
-                null,
-              ]
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+                "textAlign": "left",
+              }
             }
           >
             Account: some user
@@ -1935,28 +1896,15 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             </Text>
           </View>
           <Text
-            adjustsFontSizeToFit={true}
-            allowFontScaling={true}
-            minimumFontScale={0.65}
-            numberOfLines={1}
             style={
-              Array [
-                Object {
-                  "color": "#FFFFFF",
-                  "fontFamily": "Quicksand-Regular",
-                  "fontSize": 22,
-                  "includeFontPadding": false,
-                },
-                Object {
-                  "color": "#FFFFFF",
-                  "flexGrow": 1,
-                  "flexShrink": 1,
-                  "fontFamily": "Quicksand-Medium",
-                  "fontSize": 22,
-                  "textAlign": "left",
-                },
-                null,
-              ]
+              Object {
+                "color": "#FFFFFF",
+                "flexGrow": 1,
+                "flexShrink": 1,
+                "fontFamily": "Quicksand-Medium",
+                "fontSize": 22,
+                "textAlign": "left",
+              }
             }
           >
             Options

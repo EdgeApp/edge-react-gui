@@ -13,7 +13,7 @@ type OwnProps = {
   disabled?: boolean,
 
   // Insert a text label after the other children when set:
-  text?: string,
+  label?: string,
 
   // An interactive control to render on the right:
   right?: React.Node,
@@ -31,7 +31,7 @@ type Props = OwnProps & ThemeProps
  * which can be some combination of React children and a plain text label.
  */
 function SettingsRowComponent(props: Props): React.Node {
-  const { children, disabled = false, text, theme, right, onPress } = props
+  const { children, disabled = false, label, theme, right, onPress } = props
   const styles = getStyles(theme)
 
   const [pending, handlePress] = usePendingPress(onPress)
@@ -45,7 +45,7 @@ function SettingsRowComponent(props: Props): React.Node {
     <TouchableHighlight onPress={handlePress} underlayColor={theme.settingsRowPressed}>
       <View style={styles.row}>
         {children}
-        <Text style={[disabled ? styles.disabledText : styles.text, textStyle]}>{text}</Text>
+        {label == null ? null : <Text style={[disabled ? styles.disabledText : styles.text, textStyle]}>{label}</Text>}
         {pending ? <ActivityIndicator color={theme.iconTappable} style={styles.spinner} /> : right}
       </View>
     </TouchableHighlight>

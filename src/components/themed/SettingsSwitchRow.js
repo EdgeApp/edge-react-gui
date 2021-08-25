@@ -13,7 +13,7 @@ type OwnProps = {
   disabled?: boolean,
 
   // Insert a text label after the other children when set:
-  text?: string,
+  label?: string,
 
   // Whether the switch component is active or not:
   value: boolean,
@@ -30,7 +30,7 @@ type Props = OwnProps & ThemeProps
  * A settings row with a switch component on the right side.
  */
 function SettingsSwitchRowComponent(props: Props): React.Node {
-  const { children, disabled, text, theme, value, onPress } = props
+  const { children, disabled, label, theme, value, onPress } = props
 
   const right = (
     <View pointerEvents="none">
@@ -47,7 +47,7 @@ function SettingsSwitchRowComponent(props: Props): React.Node {
     </View>
   )
   return (
-    <SettingsRow disabled={disabled} text={text} right={right} onPress={onPress}>
+    <SettingsRow disabled={disabled} label={label} right={right} onPress={onPress}>
       {children}
     </SettingsRow>
   )

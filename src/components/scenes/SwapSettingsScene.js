@@ -102,7 +102,7 @@ export class SwapSettings extends React.Component<Props, State> {
             <Text style={styles.instructionText}>{s.strings.settings_exchange_instruction}</Text>
           </View>
           {this.sortedIds.map(pluginId => this.renderPlugin(pluginId))}
-          <SettingsHeaderRow text={s.strings.swap_preferred_header} />
+          <SettingsHeaderRow label={s.strings.swap_preferred_header} />
           {this.renderPreferredArea()}
         </ScrollView>
       </SceneWrapper>
@@ -116,7 +116,7 @@ export class SwapSettings extends React.Component<Props, State> {
     return (
       <SettingsSwitchRow
         key={pluginId}
-        text={displayName}
+        label={displayName}
         value={this.state.enabled[pluginId]}
         onPress={async () => {
           const newValue = !exchanges[pluginId].enabled
@@ -146,14 +146,14 @@ export class SwapSettings extends React.Component<Props, State> {
     const { swapSource } = activePlugins
 
     // Pick the plugin description:
-    const { text, icon } =
+    const { label, icon } =
       pluginId != null && exchanges[pluginId] != null
         ? {
-            text: exchanges[pluginId].swapInfo.displayName,
+            label: exchanges[pluginId].swapInfo.displayName,
             icon: this.renderPluginIcon(pluginId)
           }
         : {
-            text: s.strings.swap_preferred_cheapest,
+            label: s.strings.swap_preferred_cheapest,
             icon: <AntDesignIcon name="barschart" color={theme.icon} size={iconSize} style={styles.swapIcon} />
           }
 
@@ -164,7 +164,7 @@ export class SwapSettings extends React.Component<Props, State> {
           <View style={styles.instructionArea}>
             <Text style={styles.instructionText}>{s.strings.swap_preferred_promo_instructions}</Text>
           </View>
-          <SettingsTappableRow action="delete" text={text} onPress={() => this.props.removePromotion(swapSource.installerId)}>
+          <SettingsTappableRow action="delete" label={label} onPress={() => this.props.removePromotion(swapSource.installerId)}>
             {icon}
           </SettingsTappableRow>
         </>
@@ -176,7 +176,7 @@ export class SwapSettings extends React.Component<Props, State> {
         <View style={styles.instructionArea}>
           <Text style={styles.instructionText}>{s.strings.swap_preferred_instructions}</Text>
         </View>
-        <SettingsTappableRow text={text} onPress={this.handlePreferredModal}>
+        <SettingsTappableRow label={label} onPress={this.handlePreferredModal}>
           {icon}
         </SettingsTappableRow>
       </>

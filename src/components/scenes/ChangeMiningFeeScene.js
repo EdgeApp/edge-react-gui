@@ -114,7 +114,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
             return (
               <SettingsRadioRow
                 key={feeOptions[feeSetting].text}
-                text={feeOptions[feeSetting].text}
+                label={feeOptions[feeSetting].text}
                 value={networkFeeOption === feeSetting}
                 onPress={() => this.setState({ networkFeeOption: feeSetting })}
               >
@@ -125,7 +125,7 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
           {customFormat != null ? (
             <SettingsRadioRow
               key={s.strings.mining_fee_custom_label_choice}
-              text={s.strings.mining_fee_custom_label_choice}
+              label={s.strings.mining_fee_custom_label_choice}
               value={networkFeeOption === 'custom'}
               onPress={() => this.setState({ networkFeeOption: 'custom' })}
             >

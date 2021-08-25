@@ -32,7 +32,7 @@ export class PromotionSettingsComponent extends React.Component<Props> {
 
     return (
       <SceneWrapper background="theme" hasTabs={false}>
-        <SettingsHeaderRow text={s.strings.settings_promotion_affiliation_header} />
+        <SettingsHeaderRow label={s.strings.settings_promotion_affiliation_header} />
         <View style={styles.textBlock}>
           <Text style={styles.textRow}>
             {deviceReferral.installerId == null
@@ -48,16 +48,16 @@ export class PromotionSettingsComponent extends React.Component<Props> {
               : sprintf(s.strings.settings_promotion_account_installer, accountReferral.installerId)}
           </Text>
         </View>
-        <SettingsHeaderRow text={s.strings.settings_promotion_header} />
+        <SettingsHeaderRow label={s.strings.settings_promotion_header} />
         {accountReferral.promotions.map(promotion => (
           <SettingsTappableRow
             action="delete"
             key={promotion.installerId}
-            text={promotion.installerId}
+            label={promotion.installerId}
             onPress={() => removePromotion(promotion.installerId)}
           />
         ))}
-        <SettingsTappableRow action="add" text={s.strings.settings_promotion_add} onPress={this.handleAdd} />
+        <SettingsTappableRow action="add" label={s.strings.settings_promotion_add} onPress={this.handleAdd} />
       </SceneWrapper>
     )
   }
