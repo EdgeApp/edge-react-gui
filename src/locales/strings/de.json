@@ -677,8 +677,6 @@
   "fio_confirm_request_from": "Anfrage senden von",
   "fio_confirm_request_to": "Anfrage senden an",
   "fio_confirm_request_fio_title": "FIO-Adresse auswählen",
-  "fio_confirm_request_fio_subtitle_from": "Anfrage von welcher Adresse senden?",
-  "fio_confirm_request_fio_subtitle_to": "Adresse für Zahlungsanforderung eingeben",
   "fio_confirm_request_amount": "Betrag",
   "fio_confirm_request_memo": "Notiz",
   "fio_confirm_request_input_title_memo": "Anfrage-Notiz eingeben",
