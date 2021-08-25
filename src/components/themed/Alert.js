@@ -31,6 +31,8 @@ export const useAlertTypeColor = (type: AlerType) => {
   switch (type) {
     case 'warning':
       return theme.warningText
+    case 'error':
+      return theme.dangerText
     default:
       return theme.primaryText
   }
@@ -40,6 +42,7 @@ export const useAlertTypeColor = (type: AlerType) => {
 export const useAlertTypeIcon = (type: AlerType, color: string, size: number, style: StyleSheet.Styles) => {
   switch (type) {
     case 'warning':
+    case 'error':
       return (
         <IonIcon style={style} name={Platform.OS === 'ios' ? 'ios-information-circle-outline' : 'md-information-circle-outline'} color={color} size={size} />
       )
