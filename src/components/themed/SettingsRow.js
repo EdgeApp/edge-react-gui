@@ -7,9 +7,15 @@ import { usePendingPress } from '../../hooks/usePendingPress.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 
 type OwnProps = {
-  disabled?: boolean, // Show with grey style
-  icon?: React.Node,
-  text: string | React.Node,
+  children?: React.Node,
+
+  // Show with a dim style when set. Defaults to false:
+  disabled?: boolean,
+
+  // Insert a text label after the other children when set:
+  text?: string,
+
+  // An interactive control to render on the right:
   right?: React.Node,
 
   // Called when the user presses the row.
@@ -21,24 +27,24 @@ type OwnProps = {
 type Props = OwnProps & ThemeProps
 
 /**
- * A settings row features tappable text, as well as an optional icon
- * on the left and another optional component on the right.
+ * A settings row places an interactive control next to a description,
+ * which can be some combination of React children and a plain text label.
  */
 function SettingsRowComponent(props: Props): React.Node {
-  const { disabled = false, icon, text, theme, right, onPress } = props
+  const { children, disabled = false, text, theme, right, onPress } = props
   const styles = getStyles(theme)
 
   const [pending, handlePress] = usePendingPress(onPress)
 
   const textStyle = {
-    marginLeft: icon == null ? 0 : theme.rem(0.75),
+    marginLeft: children == null ? 0 : theme.rem(0.75),
     marginRight: right == null && !pending ? 0 : theme.rem(0.75)
   }
 
   return (
     <TouchableHighlight onPress={handlePress} underlayColor={theme.settingsRowPressed}>
       <View style={styles.row}>
-        {icon}
+        {children}
         <Text style={[disabled ? styles.disabledText : styles.text, textStyle]}>{text}</Text>
         {pending ? <ActivityIndicator color={theme.iconTappable} style={styles.spinner} /> : right}
       </View>

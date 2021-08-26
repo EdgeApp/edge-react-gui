@@ -7,9 +7,15 @@ import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services
 import { SettingsRow } from './SettingsRow.js'
 
 type OwnProps = {
+  children?: React.Node,
+
+  // Show with a dim style when set. Defaults to false:
   disabled?: boolean,
-  icon?: React.Node,
-  text: string,
+
+  // Insert a text label after the other children when set:
+  text?: string,
+
+  // An interactive text label to render on the right:
   right: string,
 
   // Called when the user presses the row.
@@ -24,10 +30,14 @@ type Props = OwnProps & ThemeProps
  * A settings row with a smaller text on the right side.
  */
 export function SettingsLabelRowComponent(props: Props): React.Node {
-  const { disabled, icon, text, theme, right, onPress } = props
+  const { children, disabled, text, theme, right, onPress } = props
   const styles = getStyles(theme)
 
-  return <SettingsRow disabled={disabled} icon={icon} text={text} right={<Text style={styles.labelText}>{right}</Text>} onPress={onPress} />
+  return (
+    <SettingsRow disabled={disabled} text={text} right={<Text style={styles.labelText}>{right}</Text>} onPress={onPress}>
+      {children}
+    </SettingsRow>
+  )
 }
 
 const getStyles = cacheStyles((theme: Theme) => ({

@@ -112,19 +112,19 @@ export class SwapSettings extends React.Component<Props, State> {
   renderPlugin(pluginId: string) {
     const { exchanges } = this.props
     const { displayName } = exchanges[pluginId].swapInfo
-    const logo = this.renderPluginIcon(pluginId)
 
     return (
       <SettingsSwitchRow
         key={pluginId}
-        icon={logo}
         text={displayName}
         value={this.state.enabled[pluginId]}
         onPress={async () => {
           const newValue = !exchanges[pluginId].enabled
           await exchanges[pluginId].changeEnabled(newValue)
         }}
-      />
+      >
+        {this.renderPluginIcon(pluginId)}
+      </SettingsSwitchRow>
     )
   }
 
@@ -164,7 +164,9 @@ export class SwapSettings extends React.Component<Props, State> {
           <View style={styles.instructionArea}>
             <Text style={styles.instructionText}>{s.strings.swap_preferred_promo_instructions}</Text>
           </View>
-          <SettingsTappableRow action="delete" icon={icon} text={text} onPress={() => this.props.removePromotion(swapSource.installerId)} />
+          <SettingsTappableRow action="delete" text={text} onPress={() => this.props.removePromotion(swapSource.installerId)}>
+            {icon}
+          </SettingsTappableRow>
         </>
       )
     }
@@ -174,7 +176,9 @@ export class SwapSettings extends React.Component<Props, State> {
         <View style={styles.instructionArea}>
           <Text style={styles.instructionText}>{s.strings.swap_preferred_instructions}</Text>
         </View>
-        <SettingsTappableRow icon={icon} text={text} onPress={this.handlePreferredModal} />
+        <SettingsTappableRow text={text} onPress={this.handlePreferredModal}>
+          {icon}
+        </SettingsTappableRow>
       </>
     )
   }

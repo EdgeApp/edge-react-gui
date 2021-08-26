@@ -846,7 +846,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             >
               <RCTSwitch
                 accessibilityRole="switch"
-                disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
@@ -1060,7 +1059,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             >
               <RCTSwitch
                 accessibilityRole="switch"
-                disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
@@ -1132,7 +1130,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             >
               <RCTSwitch
                 accessibilityRole="switch"
-                disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
@@ -1346,7 +1343,6 @@ exports[`MyComponent should render Locked SettingsOverview 1`] = `
             >
               <RCTSwitch
                 accessibilityRole="switch"
-                disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
@@ -2271,7 +2267,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             >
               <RCTSwitch
                 accessibilityRole="switch"
-                disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
@@ -2485,7 +2480,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             >
               <RCTSwitch
                 accessibilityRole="switch"
-                disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
@@ -2557,7 +2551,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             >
               <RCTSwitch
                 accessibilityRole="switch"
-                disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}
@@ -2771,7 +2764,6 @@ exports[`MyComponent should render UnLocked SettingsOverview 1`] = `
             >
               <RCTSwitch
                 accessibilityRole="switch"
-                disabled={false}
                 onChange={[Function]}
                 onResponderTerminationRequest={[Function]}
                 onStartShouldSetResponder={[Function]}

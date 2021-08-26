@@ -113,22 +113,24 @@ export class ChangeMiningFeeComponent extends React.PureComponent<Props, State> 
           {Object.keys(feeOptions).map(feeSetting => {
             return (
               <SettingsRadioRow
-                icon={<MaterialCommunityIcons name={feeOptions[feeSetting].icon} size={iconSize} color={theme.iconTappable} />}
                 key={feeOptions[feeSetting].text}
                 text={feeOptions[feeSetting].text}
                 value={networkFeeOption === feeSetting}
                 onPress={() => this.setState({ networkFeeOption: feeSetting })}
-              />
+              >
+                <MaterialCommunityIcons name={feeOptions[feeSetting].icon} size={iconSize} color={theme.iconTappable} />
+              </SettingsRadioRow>
             )
           })}
           {customFormat != null ? (
             <SettingsRadioRow
-              icon={<Evilicons name="gear" size={iconSize} color={theme.iconTappable} />}
               key={s.strings.mining_fee_custom_label_choice}
               text={s.strings.mining_fee_custom_label_choice}
               value={networkFeeOption === 'custom'}
               onPress={() => this.setState({ networkFeeOption: 'custom' })}
-            />
+            >
+              <Evilicons name="gear" size={iconSize} color={theme.iconTappable} />
+            </SettingsRadioRow>
           ) : null}
           {customFormat != null ? this.renderCustomFeeTextInput(customFormat) : null}
           {this.renderFeeWarning()}

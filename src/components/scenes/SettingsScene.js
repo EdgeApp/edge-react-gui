@@ -254,13 +254,16 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             const { currencyInfo } = account.currencyConfig[pluginId]
             const { displayName, currencyCode } = currencyInfo
             const { symbolImage } = getCurrencyIcon(currencyCode)
-            const icon = <FastImage source={{ uri: symbolImage }} style={styles.currencyLogo} />
             const onPress = () =>
               navigation.navigate('currencySettings', {
                 currencyInfo
               })
 
-            return <SettingsTappableRow key={pluginId} icon={icon} text={displayName} onPress={onPress} />
+            return (
+              <SettingsTappableRow key={pluginId} text={displayName} onPress={onPress}>
+                <FastImage source={{ uri: symbolImage }} style={styles.currencyLogo} />
+              </SettingsTappableRow>
+            )
           })}
 
           <SettingsTappableRow text={s.strings.title_promotion_settings} onPress={this.handlePromotionSettings} />

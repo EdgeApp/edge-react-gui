@@ -83,20 +83,22 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   renderAccountSettings = () => {
     const { theme } = this.props
     const styles = getStyles(theme)
-    let icon, displayName
     if (this.checkExpiredSoon()) {
-      icon = <IonIcon name="ios-warning" color={theme.warningIcon} size={theme.rem(1.5)} />
-      displayName = (
-        <EdgeText style={styles.warning}>
-          {this.checkAlreadyExpired() ? s.strings.fio_address_details_already_expired : s.strings.fio_address_details_expired_soon}
-        </EdgeText>
+      return (
+        <SettingsTappableRow onPress={this._onPressAccountSettings}>
+          <IonIcon name="ios-warning" color={theme.warningIcon} size={theme.rem(1.5)} />
+          <EdgeText style={styles.warning}>
+            {this.checkAlreadyExpired() ? s.strings.fio_address_details_already_expired : s.strings.fio_address_details_expired_soon}
+          </EdgeText>
+        </SettingsTappableRow>
       )
-    } else {
-      icon = <IonIcon name="ios-settings" color={theme.icon} size={theme.rem(1.5)} />
-      displayName = <EdgeText style={styles.settingsText}>{s.strings.fio_address_details_screen_manage_account_settings}</EdgeText>
     }
 
-    return <SettingsTappableRow icon={icon} text={displayName} onPress={this._onPressAccountSettings} />
+    return (
+      <SettingsTappableRow text={s.strings.fio_address_details_screen_manage_account_settings} onPress={this._onPressAccountSettings}>
+        <IonIcon name="ios-settings" color={theme.icon} size={theme.rem(1.5)} />
+      </SettingsTappableRow>
+    )
   }
 
   render() {

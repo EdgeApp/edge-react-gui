@@ -110,17 +110,11 @@ export function CurrencySettingsComponent(props: Props) {
         {!disableFetchingServers ? null : (
           <>
             {electrumServers.map((server, i) => (
-              <SettingsTappableRow
-                key={`row${i}`}
-                action="delete"
-                icon={
-                  <TouchableOpacity onPress={() => handleEditNode(i)} style={styles.labelContainer}>
-                    <Text style={styles.labelText}>{server}</Text>
-                  </TouchableOpacity>
-                }
-                text=""
-                onPress={() => handleDeleteNode(i)}
-              />
+              <SettingsTappableRow key={`row${i}`} action="delete" onPress={() => handleDeleteNode(i)}>
+                <TouchableOpacity onPress={() => handleEditNode(i)} style={styles.labelContainer}>
+                  <Text style={styles.labelText}>{server}</Text>
+                </TouchableOpacity>
+              </SettingsTappableRow>
             ))}
             <SettingsTappableRow action="add" text={s.strings.settings_add_custom_node} onPress={handleEditNode} />
           </>
@@ -135,14 +129,15 @@ export function CurrencySettingsComponent(props: Props) {
         <SettingsHeaderRow text={s.strings.settings_denominations_title} />
         {denominations.map(denomination => {
           const key = denomination.multiplier
-          const left = (
-            <Text style={styles.labelText}>
-              <Text style={styles.symbolText}>{denomination.symbol}</Text>
-              {' - ' + denomination.name}
-            </Text>
-          )
           const isSelected = key === selectedDenominationKey
-          return <SettingsRadioRow key={denomination.multiplier} icon={left} text="" value={isSelected} onPress={() => selectDenomination(currencyCode, key)} />
+          return (
+            <SettingsRadioRow key={denomination.multiplier} text="" value={isSelected} onPress={() => selectDenomination(currencyCode, key)}>
+              <Text style={styles.labelText}>
+                <Text style={styles.symbolText}>{denomination.symbol}</Text>
+                {' - ' + denomination.name}
+              </Text>
+            </SettingsRadioRow>
+          )
         })}
         {defaults == null || settings == null ? null : renderCustomNodes(defaults, settings)}
       </ScrollView>

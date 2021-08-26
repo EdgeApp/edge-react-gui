@@ -12,9 +12,13 @@ type OwnProps = {
   // Defaults to navigate, which shows an arrow.
   action?: 'navigate' | 'add' | 'delete' | 'lock' | 'unlock',
 
-  disabled?: boolean, // Show with grey style
-  icon?: React.Node,
-  text: string | React.Node,
+  children?: React.Node,
+
+  // Show with a dim style when set. Defaults to false:
+  disabled?: boolean,
+
+  // Insert a text label after the other children when set:
+  text?: string,
 
   // Called when the user presses the row.
   // If the callback returns a promise, the row will disable itself
@@ -29,7 +33,7 @@ type Props = OwnProps & ThemeProps
  * The default icon is a navigation arrow, but other options are available.
  */
 function SettingsTappableRowComponent(props: Props): React.Node {
-  const { action = 'navigate', disabled, icon, text, theme, onPress } = props
+  const { action = 'navigate', children, disabled, text, theme, onPress } = props
 
   const style = {
     color: disabled ? theme.iconDeactivated : theme.iconTappable,
@@ -46,7 +50,11 @@ function SettingsTappableRowComponent(props: Props): React.Node {
     ) : (
       <AntDesignIcon name={action} style={style} />
     )
-  return <SettingsRow disabled={disabled} icon={icon} text={text} right={rightIcon} onPress={onPress} />
+  return (
+    <SettingsRow disabled={disabled} text={text} right={rightIcon} onPress={onPress}>
+      {children}
+    </SettingsRow>
+  )
 }
 
 export const SettingsTappableRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsTappableRowComponent)
