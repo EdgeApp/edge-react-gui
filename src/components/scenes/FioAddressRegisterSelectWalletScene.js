@@ -6,14 +6,13 @@ import * as React from 'react'
 import { ActivityIndicator, Alert, Image, ScrollView, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
-import { FIO_NAME_CONFIRM, SEND, WALLET_LIST } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getRegInfo } from '../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type WalletListResult, WalletListModal } from '../modals/WalletListModal.js'
@@ -33,6 +32,7 @@ type StateProps = {
 }
 
 type OwnProps = {
+  navigation: NavigationProp<'fioAddressRegisterSelectWallet'>,
   route: RouteProp<'fioAddressRegisterSelectWallet'>
 }
 
@@ -133,7 +133,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
   }
 
   proceed = async (walletId: string, paymentCurrencyCode: string) => {
-    const { isConnected, state, route } = this.props
+    const { isConnected, state, navigation, route } = this.props
     const { selectedWallet, fioAddress } = route.params
     const { feeValue, paymentInfo: allPaymentInfo } = this.state
 
@@ -142,7 +142,7 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
         const { fioWallets } = this.props
         const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
         if (paymentWallet == null) return
-        Actions.push(FIO_NAME_CONFIRM, {
+        navigation.navigate('fioNameConfirm', {
           fioName: fioAddress,
           paymentWallet,
           fee: feeValue,
@@ -176,12 +176,12 @@ class FioAddressRegisterSelectWallet extends React.Component<Props, LocalState> 
                 sprintf(s.strings.fio_address_register_pending, s.strings.fio_address_register_form_field_label),
                 [{ text: s.strings.string_ok_cap }]
               )
-              Actions.jump(WALLET_LIST)
+              navigation.navigate('walletList')
             }
           }
         }
 
-        Actions.push(SEND, {
+        navigation.navigate('send', {
           guiMakeSpendInfo,
           selectedWalletId: walletId,
           selectedCurrencyCode: paymentCurrencyCode

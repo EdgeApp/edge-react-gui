@@ -7,14 +7,13 @@ import { ScrollView, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { sprintf } from 'sprintf-js'
 
-import { FIO_DOMAIN_CONFIRM, SEND, WALLET_LIST } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDomainRegInfo } from '../../modules/FioAddress/util'
 import { getDisplayDenomination, getExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { connect } from '../../types/reactRedux.js'
 import { type RootState } from '../../types/reduxTypes'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -35,6 +34,7 @@ type StateProps = {
 }
 
 type OwnProps = {
+  navigation: NavigationProp<'fioDomainRegisterSelectWallet'>,
   route: RouteProp<'fioDomainRegisterSelectWallet'>
 }
 
@@ -118,7 +118,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
   }
 
   onNextPress = (): void => {
-    const { isConnected, state, route } = this.props
+    const { isConnected, state, navigation, route } = this.props
     const { fioDomain, selectedWallet } = route.params
     const { feeValue, paymentInfo: allPaymentInfo, paymentWallet } = this.state
 
@@ -130,7 +130,7 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
         const { fioWallets } = this.props
         const paymentWallet = fioWallets.find(fioWallet => fioWallet.id === walletId)
         if (paymentWallet == null) return
-        Actions.push(FIO_DOMAIN_CONFIRM, {
+        navigation.navigate('fioDomainConfirm', {
           fioName: fioDomain,
           paymentWallet,
           fee: feeValue,
@@ -169,12 +169,12 @@ class FioDomainRegisterSelectWallet extends React.PureComponent<Props, LocalStat
                   }}
                 />
               ))
-              Actions.jump(WALLET_LIST)
+              navigation.navigate('walletList')
             }
           }
         }
 
-        Actions.push(SEND, {
+        navigation.navigate('send', {
           guiMakeSpendInfo,
           selectedWalletId: walletId,
           selectedCurrencyCode: paymentCurrencyCode

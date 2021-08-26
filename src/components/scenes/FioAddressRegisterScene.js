@@ -7,13 +7,12 @@ import { sprintf } from 'sprintf-js'
 
 import { createFioWallet } from '../../actions/FioAddressActions.js'
 import { Fontello } from '../../assets/vector'
-import { FIO_ADDRESS_REGISTER_SELECT_WALLET, FIO_NAME_CONFIRM } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER, FIO_DOMAIN_DEFAULT, FIO_STR } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { DomainListModal } from '../../modules/FioAddress/components/DomainListModal'
 import { checkIsDomainPublic } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import type { FioDomain, FioPublicDomain } from '../../types/types'
 import { openLink } from '../../util/utils'
 import { SceneWrapper } from '../common/SceneWrapper'
@@ -45,6 +44,9 @@ type State = {
   errorMessage: string
 }
 
+type OwnProps = {
+  navigation: NavigationProp<'fioAddressRegister'>
+}
 type StateProps = {
   fioWallets: EdgeCurrencyWallet[],
   fioPlugin: EdgeCurrencyConfig,
@@ -55,7 +57,7 @@ type DispatchProps = {
   createFioWallet: () => Promise<EdgeCurrencyWallet>
 }
 
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
 class FioAddressRegister extends React.Component<Props, State> {
   fioCheckQueue: number = 0
@@ -158,21 +160,21 @@ class FioAddressRegister extends React.Component<Props, State> {
   }
 
   handleNextButton = (): void => {
-    const { isConnected } = this.props
+    const { isConnected, navigation } = this.props
     const { fioAddress, selectedWallet, selectedDomain, isValid, isAvailable, loading, walletLoading } = this.state
     if (isValid && isAvailable && !loading && !walletLoading) {
       if (isConnected) {
         if (!selectedWallet) return showError(s.strings.create_wallet_failed_message)
         const fullAddress = `${fioAddress}${FIO_ADDRESS_DELIMITER}${selectedDomain.name}`
         if (selectedDomain.isFree) {
-          Actions.push(FIO_NAME_CONFIRM, {
+          navigation.navigate('fioNameConfirm', {
             fioName: fullAddress,
             paymentWallet: selectedWallet,
             fee: 0,
             ownerPublicKey: selectedWallet.publicWalletInfo.keys.publicKey
           })
         } else {
-          Actions.push(FIO_ADDRESS_REGISTER_SELECT_WALLET, {
+          navigation.navigate('fioAddressRegisterSelectWallet', {
             fioAddress: fullAddress,
             selectedWallet,
             selectedDomain
@@ -557,7 +559,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
 
 const typeHack: any = {}
 
-export const FioAddressRegisterScene = connect<StateProps, DispatchProps, {}>(
+export const FioAddressRegisterScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     fioWallets: state.ui.wallets.fioWallets,
     fioPlugin: state.core.account.currencyConfig[CURRENCY_PLUGIN_NAMES.FIO] ?? typeHack,

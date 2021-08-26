@@ -12,13 +12,12 @@ import { sprintf } from 'sprintf-js'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
 import { refreshReceiveAddressRequest, selectWalletFromModal } from '../../actions/WalletActions'
-import { FIO_REQUEST_CONFIRMATION } from '../../constants/SceneKeys.js'
 import { getSpecialCurrencyInfo, SPECIAL_CURRENCY_INFO } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { getDisplayDenomination, getPrimaryExchangeDenomination } from '../../selectors/DenominationSelectors.js'
 import { getExchangeRate, getSelectedWallet } from '../../selectors/WalletSelectors.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import type { GuiCurrencyInfo, GuiDenomination, GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { getCurrencyInfo, getDenomFromIsoCode, getObjectDiff } from '../../util/utils.js'
@@ -37,6 +36,9 @@ import { ShareButtons } from '../themed/ShareButtons.js'
 
 const PUBLIC_ADDRESS_REFRESH_MS = 2000
 
+type OwnProps = {
+  navigation: NavigationProp<'request'>
+}
 type StateProps = {
   currencyCode?: string,
   currencyIcon?: string,
@@ -61,7 +63,7 @@ type DispatchProps = {
 type ModalState = 'NOT_YET_SHOWN' | 'VISIBLE' | 'SHOWN'
 type CurrencyMinimumPopupState = { [currencyCode: string]: ModalState }
 
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
 type State = {
   publicAddress: string,
@@ -435,6 +437,7 @@ export class RequestComponent extends React.Component<Props, State> {
   }
 
   fioAddressModal = () => {
+    const { navigation } = this.props
     if (!this.props.isConnected) {
       showError(s.strings.fio_network_alert_text)
       return
@@ -452,7 +455,7 @@ export class RequestComponent extends React.Component<Props, State> {
         return
       }
     }
-    Actions.push(FIO_REQUEST_CONFIRMATION, {
+    navigation.navigate('fioRequestConfirmation', {
       amounts: this.amounts
     })
   }
@@ -528,7 +531,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const Request = connect<StateProps, DispatchProps, {}>(
+export const Request = connect<StateProps, DispatchProps, OwnProps>(
   state => {
     const { account } = state.core
     const { currencyWallets } = account

@@ -4,7 +4,6 @@ import * as React from 'react'
 import { Image, ScrollView, StyleSheet, View } from 'react-native'
 
 import WalletIcon from '../../assets/images/createWallet/wallet_icon_lg.png'
-import { CREATE_WALLET_IMPORT, CREATE_WALLET_SELECT_FIAT } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import { SecondaryButton } from '../../modules/UI/components/Buttons/SecondaryButton.ui.js'
@@ -13,10 +12,11 @@ import Gradient from '../../modules/UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.ui.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { scale } from '../../util/scaling.js'
 
 type OwnProps = {
+  navigation: NavigationProp<'createWalletChoice'>,
   route: RouteProp<'createWalletChoice'>
 }
 
@@ -24,17 +24,17 @@ type Props = OwnProps
 
 export class CreateWalletChoiceComponent extends React.PureComponent<Props> {
   onSelectNew = () => {
-    const { route } = this.props
+    const { navigation, route } = this.props
     const { selectedWalletType } = route.params
-    Actions.push(CREATE_WALLET_SELECT_FIAT, {
+    navigation.navigate('createWalletSelectFiat', {
       selectedWalletType
     })
   }
 
   onSelectRestore = () => {
-    const { route } = this.props
+    const { navigation, route } = this.props
     const { selectedWalletType } = route.params
-    Actions.push(CREATE_WALLET_IMPORT, {
+    navigation.navigate('createWalletImport', {
       selectedWalletType
     })
   }

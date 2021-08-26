@@ -3,16 +3,16 @@
 import * as React from 'react'
 import { Image, View } from 'react-native'
 
-import { FIO_ADDRESS_LIST } from '../../constants/SceneKeys.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
 
-export type OwnProps = {
+type OwnProps = {
+  navigation: NavigationProp<'fioAddressRegisterSuccess'>,
   route: RouteProp<'fioAddressRegisterSuccess'>
 }
 
@@ -20,7 +20,7 @@ type Props = OwnProps & ThemeProps
 
 class FioAddressRegistered extends React.Component<Props> {
   render() {
-    const { theme, route } = this.props
+    const { theme, navigation, route } = this.props
     const { fioName, expiration } = route.params
     const styles = getStyles(theme)
 
@@ -38,7 +38,7 @@ class FioAddressRegistered extends React.Component<Props> {
               {formatDate(new Date(expiration))}
             </T>
           </View>
-          <MainButton marginRem={2} onPress={() => Actions.push(FIO_ADDRESS_LIST)} label={s.strings.title_fio_names} />
+          <MainButton marginRem={2} onPress={() => navigation.navigate('fioAddressList')} label={s.strings.title_fio_names} />
         </View>
       </SceneWrapper>
     )

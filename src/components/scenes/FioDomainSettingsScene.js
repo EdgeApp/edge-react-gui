@@ -4,14 +4,13 @@ import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 
 import { refreshAllFioAddresses } from '../../actions/FioAddressActions.js'
-import { FIO_ADDRESS_LIST, SEND } from '../../constants/SceneKeys.js'
 import { FIO_ADDRESS_DELIMITER } from '../../constants/WalletAndCurrencyConstants.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { getDomainSetVisibilityFee, getRenewalFee, getTransferFee, renewFioName, setDomainVisibility } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -35,6 +34,7 @@ type DispatchProps = {
   refreshAllFioAddresses: () => void
 }
 type OwnProps = {
+  navigation: NavigationProp<'fioDomainSettings'>,
   route: RouteProp<'fioDomainSettings'>
 }
 
@@ -55,12 +55,13 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   afterSuccess = () => {
+    const { navigation } = this.props
     this.props.refreshAllFioAddresses()
-    Actions.pop()
+    navigation.goBack()
   }
 
   afterTransferSuccess = async () => {
-    const { theme, route } = this.props
+    const { theme, navigation, route } = this.props
     const { fioDomainName } = route.params
     const styles = getStyles(theme)
     const domainName = `@${fioDomainName || ''}`
@@ -79,7 +80,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
         </EdgeText>
       </ButtonsModal>
     ))
-    return Actions.popTo(FIO_ADDRESS_LIST)
+    return navigation.navigate('fioAddressList')
   }
 
   onVisibilityPress = () => {
@@ -125,6 +126,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
   }
 
   goToTransfer = (params: { fee: number }) => {
+    const { navigation } = this.props
     const { fee: transferFee } = params
     if (!transferFee) return showError(s.strings.fio_get_fee_err_msg)
     this.cancelOperation()
@@ -145,7 +147,7 @@ export class FioDomainSettingsComponent extends React.Component<Props, State> {
       }
     }
 
-    Actions.push(SEND, {
+    navigation.navigate('send', {
       guiMakeSpendInfo,
       selectedWalletId: fioWallet.id,
       selectedCurrencyCode: fioWallet.currencyInfo.currencyCode,

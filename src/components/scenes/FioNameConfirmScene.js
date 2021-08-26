@@ -4,12 +4,11 @@ import { type EdgeCurrencyConfig } from 'edge-core-js'
 import * as React from 'react'
 import { View } from 'react-native'
 
-import { FIO_ADDRESS_REGISTER_SELECT_WALLET, FIO_ADDRESS_REGISTER_SUCCESS, WALLET_LIST } from '../../constants/SceneKeys.js'
 import { CURRENCY_PLUGIN_NAMES, FIO_ADDRESS_DELIMITER } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings.js'
 import { FioActionSubmit } from '../../modules/FioAddress/components/FioActionSubmit'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
 import { Airship, showError } from '../services/AirshipInstance'
@@ -23,6 +22,7 @@ type StateProps = {
 }
 
 type OwnProps = {
+  navigation: NavigationProp<'fioNameConfirm'>,
   route: RouteProp<'fioNameConfirm'>
 }
 
@@ -42,7 +42,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
   }
 
   saveFioName = async () => {
-    const { route } = this.props
+    const { navigation, route } = this.props
     const { fioName, paymentWallet, ownerPublicKey, fee } = route.params
 
     const { isConnected, fioPlugin } = this.props
@@ -78,7 +78,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
                   }}
                 />
               ))
-              return Actions.push(FIO_ADDRESS_REGISTER_SELECT_WALLET, {
+              return navigation.navigate('fioAddressRegisterSelectWallet', {
                 fioAddress: fioName,
                 selectedWallet: paymentWallet,
                 selectedDomain: {
@@ -105,7 +105,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             }}
           />
         ))
-        Actions.jump(WALLET_LIST)
+        navigation.navigate('walletList')
       } else {
         // no free domains
         showError(s.strings.fio_get_fee_err_msg)
@@ -115,7 +115,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
         if (this.isFioAddress()) {
           const { expiration } = await paymentWallet.otherMethods.fioAction('registerFioAddress', { fioAddress: fioName, ownerPublicKey })
           window.requestAnimationFrame(() =>
-            Actions.push(FIO_ADDRESS_REGISTER_SUCCESS, {
+            navigation.navigate('fioAddressRegisterSuccess', {
               fioName,
               expiration
             })
@@ -127,7 +127,7 @@ class FioNameConfirm extends React.PureComponent<Props> {
             owner_fio_public_key: ownerPublicKey
           })
           window.requestAnimationFrame(() =>
-            Actions.push(FIO_ADDRESS_REGISTER_SUCCESS, {
+            navigation.navigate('fioAddressRegisterSuccess', {
               fioName,
               expiration
             })

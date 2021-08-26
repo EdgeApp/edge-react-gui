@@ -20,7 +20,7 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.
 import { getDefaultDenomination } from '../../selectors/DenominationSelectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type RouteProp } from '../../types/routerTypes.js'
 import type { GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
@@ -106,10 +106,6 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
 
   componentDidMount() {
     logEvent('ActivateWalletSelect')
-  }
-
-  onBack = () => {
-    Actions.pop()
   }
 
   onPressSelect = () => {

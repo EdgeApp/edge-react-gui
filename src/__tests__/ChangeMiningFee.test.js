@@ -5,6 +5,7 @@ import * as React from 'react'
 import ShallowRenderer from 'react-test-renderer/shallow'
 
 import { ChangeMiningFee } from '../components/scenes/ChangeMiningFeeScene.js'
+import { fakeNavigation } from '../util/fake/fakeNavigation.js'
 
 describe('Change Mining Fees', () => {
   const onSubmit = jest.fn()
@@ -21,7 +22,8 @@ describe('Change Mining Fees', () => {
     route: {
       name: 'changeMiningFee',
       params: { wallet }
-    }
+    },
+    navigation: fakeNavigation
   }
 
   it('should render with standard props', () => {

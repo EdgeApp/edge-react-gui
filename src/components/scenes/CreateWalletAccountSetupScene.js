@@ -8,7 +8,6 @@ import { sprintf } from 'sprintf-js'
 import { checkHandleAvailability } from '../../actions/CreateWalletActions.js'
 import invalidIcon from '../../assets/images/createWallet/invalid_icon.png'
 import validIcon from '../../assets/images/createWallet/valid_icon.png'
-import { CREATE_WALLET_ACCOUNT_SELECT } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { PrimaryButton } from '../../modules/UI/components/Buttons/PrimaryButton.ui.js'
 import Text from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
@@ -18,7 +17,7 @@ import type { HandleAvailableStatus } from '../../reducers/scenes/CreateWalletRe
 import { THEME } from '../../theme/variables/airbitz.js'
 import { PLATFORM } from '../../theme/variables/platform.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
@@ -28,6 +27,7 @@ import { FormField, MaterialInputOnWhite } from '../common/FormField.js'
 const deviceWidth = PLATFORM.deviceWidth
 
 type OwnProps = {
+  navigation: NavigationProp<'createWalletAccountSetup'>,
   route: RouteProp<'createWalletAccountSetup'>
 }
 
@@ -64,10 +64,6 @@ class CreateWalletAccountSetup extends React.Component<Props, State> {
     logEvent('ActivateWalletStart')
   }
 
-  onBack = () => {
-    Actions.pop()
-  }
-
   handleChangeHandle = (accountHandle: string) => {
     this.setState({ accountHandle })
     this.debouncedCheckHandleAvailability()
@@ -79,10 +75,10 @@ class CreateWalletAccountSetup extends React.Component<Props, State> {
   }
 
   onSetup = () => {
-    const { handleAvailableStatus, route } = this.props
+    const { handleAvailableStatus, navigation, route } = this.props
     if (handleAvailableStatus === 'AVAILABLE') {
       const { selectedFiat, selectedWalletType, existingWalletId = '' } = route.params
-      Actions.push(CREATE_WALLET_ACCOUNT_SELECT, {
+      navigation.navigate('createWalletAccountSelect', {
         selectedFiat,
         selectedWalletType,
         accountName: this.state.accountHandle,

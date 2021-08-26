@@ -16,26 +16,13 @@ import {
   togglePinLoginEnabled,
   updateTouchIdEnabled
 } from '../../actions/SettingsActions'
-import {
-  CHANGE_PASSWORD,
-  CHANGE_PIN,
-  CURRENCY_SETTINGS,
-  DEFAULT_FIAT_SETTING,
-  EXCHANGE_SETTINGS,
-  NOTIFICATION_SETTINGS,
-  OTP_SETUP,
-  PROMOTION_SETTINGS,
-  RECOVER_PASSWORD,
-  SPENDING_LIMITS,
-  TERMS_OF_SERVICE
-} from '../../constants/SceneKeys.js'
 import { CURRENCY_SETTINGS_KEYS } from '../../constants/WalletAndCurrencyConstants.js'
 import s from '../../locales/strings'
 import { getDefaultFiat } from '../../selectors/SettingsSelectors.js'
 import { edgeDark } from '../../theme/variables/edgeDark.js'
 import { edgeLight } from '../../theme/variables/edgeLight.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { secondsToDisplay } from '../../util/displayTime.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -48,6 +35,9 @@ import { SettingsLabelRow } from '../themed/SettingsLabelRow.js'
 import { SettingsSwitchRow } from '../themed/SettingsSwitchRow.js'
 import { SettingsTappableRow } from '../themed/SettingsTappableRow.js'
 
+type OwnProps = {
+  navigation: NavigationProp<'settingsOverview'>
+}
 type StateProps = {
   account: EdgeAccount,
   context: EdgeContext,
@@ -69,7 +59,7 @@ type DispatchProps = {
   showUnlockSettingsModal: () => void,
   toggleDeveloperMode: (developerModeOn: boolean) => void
 }
-type Props = StateProps & DispatchProps & ThemeProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
 type State = {
   touchIdText: string,
@@ -129,27 +119,33 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   handleChangePassword = (): void => {
-    this.props.isLocked ? this.handleUnlock() : Actions.push(CHANGE_PASSWORD)
+    const { navigation } = this.props
+    this.props.isLocked ? this.handleUnlock() : navigation.navigate('changePassword')
   }
 
   handleChangePin = (): void => {
-    this.props.isLocked ? this.handleUnlock() : Actions.push(CHANGE_PIN)
+    const { navigation } = this.props
+    this.props.isLocked ? this.handleUnlock() : navigation.navigate('changePin')
   }
 
   handleChangeOtp = (): void => {
-    this.props.isLocked ? this.handleUnlock() : Actions.push(OTP_SETUP)
+    const { navigation } = this.props
+    this.props.isLocked ? this.handleUnlock() : navigation.navigate('otpSetup')
   }
 
   handleChangeRecovery = (): void => {
-    this.props.isLocked ? this.handleUnlock() : Actions.push(RECOVER_PASSWORD)
+    const { navigation } = this.props
+    this.props.isLocked ? this.handleUnlock() : navigation.navigate('passwordRecovery')
   }
 
   handleExchangeSettings = (): void => {
-    Actions.push(EXCHANGE_SETTINGS)
+    const { navigation } = this.props
+    navigation.navigate('exchangeSettings')
   }
 
   handleSpendingLimits = (): void => {
-    Actions.push(SPENDING_LIMITS)
+    const { navigation } = this.props
+    navigation.navigate('spendingLimits')
   }
 
   handleAutoLogout = (): void => {
@@ -161,11 +157,13 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   handleDefaultFiat = (): void => {
-    Actions.push(DEFAULT_FIAT_SETTING)
+    const { navigation } = this.props
+    navigation.navigate('defaultFiatSetting')
   }
 
   handlePromotionSettings = (): void => {
-    Actions.push(PROMOTION_SETTINGS)
+    const { navigation } = this.props
+    navigation.navigate('promotionSettings')
   }
 
   handlePinToggle = async (): Promise<void> => {
@@ -177,7 +175,8 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   handleNotificationSettings = (): void => {
-    Actions.push(NOTIFICATION_SETTINGS)
+    const { navigation } = this.props
+    navigation.navigate('notificationSettings')
   }
 
   handleDeveloperToggle = (): void => {
@@ -191,7 +190,8 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   handleTermsOfService = (): void => {
-    Actions.push(TERMS_OF_SERVICE)
+    const { navigation } = this.props
+    navigation.navigate('termsOfService')
   }
 
   handleVerboseLoggingToggle = (): void => {
@@ -206,7 +206,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { account, theme, handleSendLogs, isLocked } = this.props
+    const { account, theme, handleSendLogs, isLocked, navigation } = this.props
     const iconSize = theme.rem(1.25)
     const styles = getStyles(theme)
 
@@ -255,7 +255,7 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
             const { symbolImage } = getCurrencyIcon(currencyCode)
             const icon = <Image source={{ uri: symbolImage }} style={styles.currencyLogo} />
             const onPress = () =>
-              Actions.push(CURRENCY_SETTINGS, {
+              navigation.navigate('currencySettings', {
                 currencyInfo
               })
 
@@ -298,7 +298,7 @@ const getStyles = cacheStyles((theme: Theme) => {
   }
 })
 
-export const SettingsScene = connect<StateProps, DispatchProps, {}>(
+export const SettingsScene = connect<StateProps, DispatchProps, OwnProps>(
   state => ({
     account: state.core.account,
     context: state.core.context,

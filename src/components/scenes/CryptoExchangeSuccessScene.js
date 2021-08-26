@@ -5,10 +5,9 @@ import * as React from 'react'
 import { View } from 'react-native'
 import ConfettiCannon from 'react-native-confetti-cannon'
 
-import { EXCHANGE_SCENE } from '../../constants/SceneKeys.js'
 import s from '../../locales/strings.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type NavigationProp } from '../../types/routerTypes.js'
 import { needToShowConfetti } from '../../util/show-confetti'
 import { SceneWrapper } from '../common/SceneWrapper.js'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
@@ -16,6 +15,9 @@ import { EdgeText } from '../themed/EdgeText'
 import { Fade } from '../themed/Fade'
 import { MainButton } from '../themed/MainButton.js'
 
+type OwnProps = {
+  navigation: NavigationProp<'createWalletSelectFiat'>
+}
 type StateProps = {
   userId: string,
   disklet: Disklet
@@ -26,7 +28,7 @@ type LocalState = {
   showConfetti: boolean
 }
 
-type Props = StateProps & ThemeProps
+type Props = StateProps & OwnProps & ThemeProps
 
 const confettiProps = {
   count: 250,
@@ -45,8 +47,9 @@ class CryptoExchangeSuccessComponent extends React.PureComponent<Props, LocalSta
   }
 
   done = () => {
+    const { navigation } = this.props
     this.setState({ showButton: false })
-    Actions.popTo(EXCHANGE_SCENE)
+    navigation.navigate('exchangeScene')
   }
 
   showConfetti = async () => {
@@ -116,7 +119,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const CryptoExchangeSuccessScene = connect<StateProps, {}, {}>(
+export const CryptoExchangeSuccessScene = connect<StateProps, {}, OwnProps>(
   state => ({
     userId: state.core.account.id,
     disklet: state.core.disklet

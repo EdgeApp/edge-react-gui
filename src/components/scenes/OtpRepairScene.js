@@ -7,28 +7,27 @@ import { StatusBar, StyleSheet, View } from 'react-native'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
-import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import { type NavigationProp, type RouteProp } from '../../types/routerTypes.js'
 
 type OwnProps = {
+  navigation: NavigationProp<'otpRepair'>,
   route: RouteProp<'otpRepair'>
 }
 type StateProps = {
   account: EdgeAccount,
   context: EdgeContext
 }
-type DispatchProps = {
-  onComplete: () => void
-}
-type Props = OwnProps & StateProps & DispatchProps
+type Props = OwnProps & StateProps
 
 class OtpRepairComponent extends React.Component<Props> {
   render() {
-    const { context, account, onComplete, route } = this.props
+    const { context, account, navigation, route } = this.props
     const { otpError } = route.params
+    const handleComplete = () => navigation.goBack()
 
     return (
       <View style={styles.container}>
-        <OtpRepairScreen account={account} context={context} onComplete={onComplete} otpError={otpError} />
+        <OtpRepairScreen account={account} context={context} onComplete={handleComplete} otpError={otpError} />
       </View>
     )
   }
@@ -43,14 +42,10 @@ const rawStyles = {
 }
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
-export const OtpRepairScene = connect<StateProps, DispatchProps, OwnProps>(
+export const OtpRepairScene = connect<StateProps, {}, OwnProps>(
   state => ({
     context: state.core.context,
     account: state.core.account
   }),
-  dispatch => ({
-    onComplete() {
-      Actions.pop()
-    }
-  })
+  dispatch => ({})
 )(OtpRepairComponent)
