@@ -744,7 +744,6 @@
   "string_expiration": "Ablaufdatum",
   "export_transaction_error": "Das Startdatum sollte vor dem Enddatum liegen",
   "export_transaction_export_error": "Keine Transaktionen im gewählten Datumsbereich",
-  "export_transaction_loading": "Exportiere Transaktionen…",
   "string_allow": "Zulassen",
   "string_deny": "Ablehnen",
   "step": "Schritt",
