@@ -584,7 +584,7 @@
   "plugin_powered_by": "Offerto da",
   "no_exchange_rate": "Tasso di cambio non disponibile",
   "send_from_wallet": "Invia da %s",
-  "send_to_wallet": "Ricevi da %s",
+  "send_to_wallet": "Ricevi su %s",
   "exchange_from_wallet": "Scambia da %s",
   "exchange_to_wallet": "Scambia in %s",
   "wallet_list_modal_header_mru": "Portafogli più recenti",
