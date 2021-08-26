@@ -123,7 +123,7 @@ export const sendConfirmationUpdateTx =
           ))
           switch (result) {
             case 'buy':
-              Actions.jump(PLUGIN_BUY)
+              Actions.jump(PLUGIN_BUY, { direction: 'buy' })
               return
             case 'exchange':
               dispatch(selectWalletForExchange(walletId, currencyCode, 'to'))

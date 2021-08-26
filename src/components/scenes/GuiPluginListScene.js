@@ -16,7 +16,7 @@ import { getSyncedSettings, setSyncedSettings } from '../../modules/Core/Account
 import { type GuiPluginRow, asGuiPluginJson, filterGuiPluginJson } from '../../types/GuiPluginTypes.js'
 import { connect } from '../../types/reactRedux.js'
 import { type AccountReferral } from '../../types/ReferralTypes.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import { type PluginTweak } from '../../types/TweakTypes.js'
 import { bestOfPlugins } from '../../util/ReferralHelpers.js'
 import { SceneWrapper } from '../common/SceneWrapper.js'
@@ -55,7 +55,7 @@ const pluginPartnerLogos = {
 }
 
 type OwnProps = {
-  direction?: 'buy' | 'sell'
+  route: RouteProp<'pluginBuy'> | RouteProp<'pluginSell'>
 }
 
 type StateProps = {
@@ -90,7 +90,6 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   async componentDidMount() {
     await this.checkDisclaimer()
     this.checkCountry()
-
     const text = await AsyncStorage.getItem(DEVELOPER_PLUGIN_KEY)
     if (text != null) {
       const clean = asDeveloperUri(JSON.parse(text))
@@ -155,12 +154,13 @@ class GuiPluginList extends React.PureComponent<Props, State> {
    * Launch the provided plugin, including pre-flight checks.
    */
   async openPlugin(listRow: GuiPluginRow) {
-    const { pluginId, deepQuery } = listRow
+    const { countryCode } = this.props
+    const { pluginId, deepQuery = {} } = listRow
     const plugin = guiPlugins[pluginId]
 
     // Add countryCode
     if (plugin.needsCountryCode) {
-      deepQuery.countryCode = this.props.countryCode
+      deepQuery.countryCode = countryCode
     }
 
     // Grab a custom URI if necessary:
@@ -251,7 +251,8 @@ class GuiPluginList extends React.PureComponent<Props, State> {
   }
 
   render() {
-    const { accountPlugins, accountReferral, countryCode, developerModeOn, direction, theme } = this.props
+    const { accountPlugins, accountReferral, countryCode, developerModeOn, theme, route } = this.props
+    const { direction } = route.params
     const styles = getStyles(theme)
     const countryData = COUNTRY_CODES.find(country => country['alpha-2'] === countryCode)
 

@@ -55,13 +55,13 @@ type DispatchProps = {
 }
 
 type OwnProps = {
-  navigation: NavigationProp
+  navigation: NavigationProp<'fioRequestList'>
 }
 
 type Props = OwnProps & StateProps & ThemeProps & DispatchProps
 
 class FioRequestList extends React.Component<Props, LocalState> {
-  willFocusSubscription: { remove: () => void } | null = null
+  willFocusSubscription: (() => void) | null = null
 
   constructor(props: Props) {
     super(props)
@@ -83,7 +83,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
   }
 
   componentWillUnmount(): void {
-    this.willFocusSubscription && this.willFocusSubscription.remove()
+    if (this.willFocusSubscription != null) this.willFocusSubscription()
   }
 
   componentDidUpdate = () => {
@@ -418,7 +418,7 @@ class FioRequestList extends React.Component<Props, LocalState> {
         }
       },
       onDone: (err, edgeTransaction) => {
-        if (!err) {
+        if (!err && edgeTransaction != null) {
           this.getFioRequestsPending()
           Actions.replace(TRANSACTION_DETAILS, { edgeTransaction })
         }

@@ -56,21 +56,26 @@ describe('TransactionDetails.ui', () => {
   it('should render', () => {
     const renderer = new ShallowRenderer()
     const props = {
-      edgeTransaction: {
-        txid: 'this is the txid',
-        currencyCode: 'BTC',
-        date: 1535752780.947, // 2018-08-31T21:59:40.947Z
-        nativeAmount: '123',
-        networkFee: '1',
-        ourReceiveAddresses: ['this is an address'],
-        signedTx: 'this is a signed tx',
-        otherParams: {},
-        wallet: fakeCoreWallet,
-        blockHeight: 0
+      route: {
+        name: 'transactionDetails',
+        params: {
+          edgeTransaction: {
+            txid: 'this is the txid',
+            currencyCode: 'BTC',
+            date: 1535752780.947, // 2018-08-31T21:59:40.947Z
+            nativeAmount: '123',
+            networkFee: '1',
+            ourReceiveAddresses: ['this is an address'],
+            signedTx: 'this is a signed tx',
+            otherParams: {},
+            wallet: fakeCoreWallet,
+            blockHeight: 0
+          },
+          thumbnailPath: 'thumb/nail/path'
+        }
       },
       contacts: [],
       subcategoriesList: [],
-      thumbnailPath: 'thumb/nail/path',
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
       currentFiatAmount: '120',
@@ -89,21 +94,26 @@ describe('TransactionDetails.ui', () => {
   it('should render with tx date off by 1000x in future', () => {
     const renderer = new ShallowRenderer()
     const props = {
-      edgeTransaction: {
-        txid: 'this is the txid',
-        currencyCode: 'BTC',
-        date: 1535752780.947 * 1000,
-        nativeAmount: '123',
-        networkFee: '1',
-        ourReceiveAddresses: ['this is an address'],
-        signedTx: 'this is a signed tx',
-        otherParams: {},
-        wallet: fakeCoreWallet,
-        blockHeight: 0
+      route: {
+        name: 'transactionDetails',
+        params: {
+          edgeTransaction: {
+            txid: 'this is the txid',
+            currencyCode: 'BTC',
+            date: 1535752780.947 * 1000,
+            nativeAmount: '123',
+            networkFee: '1',
+            ourReceiveAddresses: ['this is an address'],
+            signedTx: 'this is a signed tx',
+            otherParams: {},
+            wallet: fakeCoreWallet,
+            blockHeight: 0
+          },
+          thumbnailPath: 'thumb/nail/path'
+        }
       },
       contacts: [],
       subcategoriesList: [],
-      thumbnailPath: 'thumb/nail/path',
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
       currentFiatAmount: '120',
@@ -121,22 +131,28 @@ describe('TransactionDetails.ui', () => {
 
   it('should render with tx date off by 1000x in past', () => {
     const renderer = new ShallowRenderer()
+
     const props = {
-      edgeTransaction: {
-        txid: 'this is the txid',
-        currencyCode: 'BTC',
-        date: 1535752780.947 / 1000,
-        nativeAmount: '123',
-        networkFee: '1',
-        ourReceiveAddresses: ['this is an address'],
-        signedTx: 'this is a signed tx',
-        otherParams: {},
-        wallet: fakeCoreWallet,
-        blockHeight: 0
+      route: {
+        name: 'transactionDetails',
+        params: {
+          edgeTransaction: {
+            txid: 'this is the txid',
+            currencyCode: 'BTC',
+            date: 1535752780.947 / 1000,
+            nativeAmount: '123',
+            networkFee: '1',
+            ourReceiveAddresses: ['this is an address'],
+            signedTx: 'this is a signed tx',
+            otherParams: {},
+            wallet: fakeCoreWallet,
+            blockHeight: 0
+          },
+          thumbnailPath: 'thumb/nail/path'
+        }
       },
       contacts: [],
       subcategoriesList: [],
-      thumbnailPath: 'thumb/nail/path',
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
       currentFiatAmount: '120',
@@ -155,24 +171,29 @@ describe('TransactionDetails.ui', () => {
   it('should render with negative nativeAmount and fiatAmount', () => {
     const renderer = new ShallowRenderer()
     const props = {
-      edgeTransaction: {
-        txid: 'this is the txid',
-        currencyCode: 'BTC',
-        date: 1535752780.947, // 2018-08-31T21:59:40.947Z
-        nativeAmount: '-123',
-        networkFee: '1',
-        ourReceiveAddresses: ['this is an address'],
-        signedTx: 'this is a signed tx',
-        otherParams: {},
-        wallet: fakeCoreWallet,
-        blockHeight: 0,
-        metadata: {
-          amountFiat: -6392.93
+      route: {
+        name: 'transactionDetails',
+        params: {
+          edgeTransaction: {
+            txid: 'this is the txid',
+            currencyCode: 'BTC',
+            date: 1535752780.947, // 2018-08-31T21:59:40.947Z
+            nativeAmount: '-123',
+            networkFee: '1',
+            ourReceiveAddresses: ['this is an address'],
+            signedTx: 'this is a signed tx',
+            otherParams: {},
+            wallet: fakeCoreWallet,
+            blockHeight: 0,
+            metadata: {
+              amountFiat: -6392.93
+            }
+          },
+          thumbnailPath: 'thumb/nail/path'
         }
       },
       contacts: [],
       subcategoriesList: [],
-      thumbnailPath: 'thumb/nail/path',
       currencyCode: 'BTC',
       guiWallet: fakeGuiWallet,
       currentFiatAmount: '120',

@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, View } from 'react-native'
+import { Alert } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
@@ -11,7 +11,7 @@ import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
 import { alreadyExpired, expiredSoon, findWalletByFioAddress } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
-import { type NavigationProp, Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
@@ -23,10 +23,8 @@ type StateProps = {
   fioWallets: EdgeCurrencyWallet[]
 }
 
-type NavProps = {
-  fioAddressName: string,
-  expiration: string,
-  navigation: NavigationProp
+type OwnProps = {
+  route: RouteProp<'fioAddressDetails'>
 }
 
 type LocalState = {
@@ -34,7 +32,7 @@ type LocalState = {
   fioWallet: EdgeCurrencyWallet | null
 }
 
-type Props = StateProps & NavProps & ThemeProps
+type Props = StateProps & ThemeProps & OwnProps
 
 class FioAddressDetails extends React.Component<Props, LocalState> {
   state: LocalState = {
@@ -43,27 +41,28 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   }
 
   componentDidMount() {
-    const { fioAddressName } = this.props
+    const { route } = this.props
+    const { fioAddressName } = route.params
     if (!fioAddressName) {
       Alert.alert(s.strings.fio_address_details_screen_alert_title, s.strings.fio_address_details_screen_alert_message, [
         { text: s.strings.fio_address_details_screen_alert_button }
       ])
     }
-    this.props.navigation.setParams({
-      renderTitle: this.renderTitle(fioAddressName)
-    })
     this.findFioWallet()
   }
 
   findFioWallet = async () => {
-    const { fioAddressName, fioWallets } = this.props
+    const { fioWallets, route } = this.props
+    const { fioAddressName } = route.params
+
     this.setState({ fioWalletLoading: true })
     const fioWallet = await findWalletByFioAddress(fioWallets, fioAddressName)
     this.setState({ fioWalletLoading: false, fioWallet })
   }
 
   _onPressAccountSettings = (): void => {
-    const { fioAddressName, expiration } = this.props
+    const { route } = this.props
+    const { fioAddressName, expiration } = route.params
     const { fioWallet } = this.state
     if (fioWallet) {
       Actions.push(FIO_ADDRESS_SETTINGS, {
@@ -77,18 +76,9 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
     }
   }
 
-  checkExpiredSoon = (): boolean => expiredSoon(this.props.expiration)
+  checkExpiredSoon = (): boolean => expiredSoon(this.props.route.params.expiration)
 
-  checkAlreadyExpired = (): boolean => alreadyExpired(this.props.expiration)
-
-  renderTitle = (title: string) => {
-    const styles = getStyles(this.props.theme)
-    return (
-      <View style={styles.titleWrapper}>
-        <EdgeText style={styles.titleStyle}>{title}</EdgeText>
-      </View>
-    )
-  }
+  checkAlreadyExpired = (): boolean => alreadyExpired(this.props.route.params.expiration)
 
   renderAccountSettings = () => {
     const { theme } = this.props
@@ -110,7 +100,8 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   }
 
   render() {
-    const { fioAddressName, expiration, theme } = this.props
+    const { theme, route } = this.props
+    const { fioAddressName, expiration } = route.params
     const styles = getStyles(theme)
     const expirationLabel = `${s.strings.fio_address_details_screen_expires} ${formatDate(new Date(expiration))}`
 
@@ -134,22 +125,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText,
     fontSize: theme.rem(1)
   },
-  titleStyle: {
-    alignSelf: 'center',
-    fontSize: 20,
-    color: theme.primaryText
-  },
   expiration: {
     fontSize: theme.rem(0.75),
     color: theme.primaryText,
     textAlign: 'center',
     marginTop: theme.rem(-0.5),
     paddingBottom: theme.rem(0.75)
-  },
-  titleWrapper: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%'
   },
   settingsText: {
     color: theme.primaryText,
@@ -168,7 +149,7 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioAddressDetailsScene = connect<StateProps, {}, NavProps>(
+export const FioAddressDetailsScene = connect<StateProps, {}, OwnProps>(
   state => ({
     fioWallets: state.ui.wallets.fioWallets
   }),

@@ -9,6 +9,7 @@ import { swapPluginIcons } from '../../assets/images/exchange'
 import s from '../../locales/strings.js'
 import { Slider } from '../../modules/UI/components/Slider/Slider'
 import { connect } from '../../types/reactRedux.js'
+import { type RouteProp } from '../../types/routerTypes.js'
 import { type GuiSwapInfo } from '../../types/types.js'
 import { logEvent } from '../../util/tracking.js'
 import { CircleTimer } from '../common/CircleTimer'
@@ -24,7 +25,7 @@ import { LineTextDivider } from '../themed/LineTextDivider'
 import { SceneHeader } from '../themed/SceneHeader'
 
 type OwnProps = {
-  swapInfo: GuiSwapInfo
+  route: RouteProp<'exchangeQuote'>
 }
 type StateProps = {
   account: EdgeAccount,
@@ -40,7 +41,7 @@ type DispatchProps = {
   shift: (swapInfo: GuiSwapInfo) => void,
   timeExpired: (swapInfo: GuiSwapInfo) => void
 }
-type Props = OwnProps & StateProps & DispatchProps & ThemeProps
+type Props = StateProps & DispatchProps & ThemeProps & OwnProps
 
 type State = {}
 
@@ -48,6 +49,8 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
   calledApprove: true
 
   componentDidMount = () => {
+    const { route } = this.props
+    const { pluginId } = route.params.swapInfo.quote
     const check = {
       changelly: this.checkChangellyKYC,
       changenow: this.checkChangeNowKYC,
@@ -56,7 +59,7 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
       switchain: this.checkSwitchainKYC
     }
     try {
-      if (check[this.props.swapInfo.quote.pluginId]) check[this.props.swapInfo.quote.pluginId]()
+      if (check[pluginId]) check[pluginId]()
     } catch (e) {
       showError(e)
     }
@@ -64,18 +67,23 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    const { swapInfo } = this.props
-    if (!this.calledApprove) swapInfo.quote.close()
+    const { route } = this.props
+    const { swapInfo } = route.params
+    const { quote } = swapInfo
+
+    if (!this.calledApprove) quote.close()
   }
 
   doShift = () => {
-    const { shift, swapInfo } = this.props
+    const { shift, route } = this.props
+    const { swapInfo } = route.params
     this.calledApprove = true
     shift(swapInfo)
   }
 
   renderTimer = () => {
-    const { swapInfo, timeExpired } = this.props
+    const { timeExpired, route } = this.props
+    const { swapInfo } = route.params
     const { expirationDate } = swapInfo.quote
 
     if (!expirationDate) return null
@@ -83,7 +91,9 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
   }
 
   async checkChangellyKYC() {
-    const { account, swapInfo, timeExpired } = this.props
+    const { route, account, timeExpired } = this.props
+    const { swapInfo } = route.params
+
     const result = await swapVerifyTerms(account.swapConfig.changelly, [
       {
         text: s.strings.swap_terms_terms_link,
@@ -102,7 +112,8 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
   }
 
   async checkSwitchainKYC() {
-    const { account, swapInfo, timeExpired } = this.props
+    const { route, account, timeExpired } = this.props
+    const { swapInfo } = route.params
     const result = await swapVerifyTerms(account.swapConfig.switchain, [
       {
         text: s.strings.swap_terms_terms_link,
@@ -121,7 +132,8 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
   }
 
   async checkChangeNowKYC() {
-    const { account, swapInfo, timeExpired } = this.props
+    const { route, account, timeExpired } = this.props
+    const { swapInfo } = route.params
     const result = await swapVerifyTerms(account.swapConfig.changenow, [
       {
         text: s.strings.swap_terms_terms_link,
@@ -140,7 +152,8 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
   }
 
   async checkCoinswitchKYC() {
-    const { account, swapInfo, timeExpired } = this.props
+    const { route, account, timeExpired } = this.props
+    const { swapInfo } = route.params
     const result = await swapVerifyTerms(account.swapConfig.coinswitch, [
       {
         text: s.strings.swap_terms_terms_link,
@@ -151,7 +164,8 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
   }
 
   async checkFoxExchangeKYC() {
-    const { account, swapInfo, timeExpired } = this.props
+    const { route, account, timeExpired } = this.props
+    const { swapInfo } = route.params
     const result = await swapVerifyTerms(account.swapConfig.foxExchange, [
       {
         text: s.strings.swap_terms_terms_link,
@@ -173,12 +187,14 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
   }
 
   render() {
-    const { fromCurrencyIcon, fromDenomination, fromWalletCurrencyName, swapInfo, toCurrencyIcon, toDenomination, toWalletCurrencyName, pending, theme } =
+    const { account, fromCurrencyIcon, fromDenomination, fromWalletCurrencyName, toCurrencyIcon, toDenomination, toWalletCurrencyName, pending, theme, route } =
       this.props
-    const { fee, fromDisplayAmount, fromFiat, fromTotalFiat, toDisplayAmount, toFiat } = swapInfo
-    const { isEstimate, pluginId } = swapInfo.quote
-    const { fromWallet, toWallet } = swapInfo.request
-    const exchangeName = this.props.account.swapConfig[pluginId].swapInfo.displayName
+    const { swapInfo } = route.params
+    const { fee, fromDisplayAmount, fromFiat, fromTotalFiat, toDisplayAmount, toFiat, quote, request } = swapInfo
+    const { fiatCurrencyCode } = request.fromWallet
+    const { pluginId } = quote
+    const swapConfig = account.swapConfig[pluginId]
+    const exchangeName = swapConfig.swapInfo.displayName
     const styles = getStyles(theme)
 
     return (
@@ -191,12 +207,12 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
             currency={fromWalletCurrencyName}
             currencyCode={fromDenomination}
             fiatCurrencyAmount={fromFiat}
-            fiatCurrencyCode={fromWallet.fiatCurrencyCode.replace('iso:', '')}
+            fiatCurrencyCode={fiatCurrencyCode.replace('iso:', '')}
             isTop
             miningFee={fee}
             total={fromTotalFiat}
             walletIcon={fromCurrencyIcon}
-            walletName={fromWallet.name || ''}
+            walletName={request.fromWallet.name || ''}
           />
           <LineTextDivider title={s.strings.string_to_capitalize} lowerCased />
           <ExchangeQuote
@@ -204,16 +220,16 @@ class CryptoExchangeQuoteScreenComponent extends React.Component<Props, State> {
             currency={toWalletCurrencyName}
             currencyCode={toDenomination}
             fiatCurrencyAmount={toFiat}
-            fiatCurrencyCode={toWallet.fiatCurrencyCode.replace('iso:', '')}
+            fiatCurrencyCode={request.toWallet.fiatCurrencyCode.replace('iso:', '')}
             walletIcon={toCurrencyIcon}
-            walletName={toWallet.name || ''}
+            walletName={request.toWallet.name || ''}
           />
           <View style={styles.pluginRowPoweredByRow}>
             <EdgeText style={styles.footerText}>{s.strings.plugin_powered_by + ' '}</EdgeText>
-            <Image style={styles.partnerIconImage} resizeMode="contain" source={swapPluginIcons[pluginId]} />
+            <Image style={styles.partnerIconImage} resizeMode="contain" source={swapPluginIcons[quote.pluginId]} />
             <EdgeText style={styles.footerText}>{' ' + exchangeName}</EdgeText>
           </View>
-          {isEstimate && (
+          {quote.isEstimate && (
             <Alert
               title={s.strings.estimated_quote}
               message={s.strings.estimated_exchange_message}
@@ -258,12 +274,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
 }))
 
 export const CryptoExchangeQuote = connect<StateProps, DispatchProps, OwnProps>(
-  (state, ownProps) => {
-    const { request } = ownProps.swapInfo
+  (state, { route: { params } }) => {
+    const { swapInfo } = params
+    const { request } = swapInfo
 
     const { account } = state.core
-    const fromWallet = state.cryptoExchange.fromWallet
-    const toWallet = state.cryptoExchange.toWallet
+    const { fromWallet, toWallet } = state.cryptoExchange
 
     const toWalletCurrencyName = toWallet != null ? toWallet.currencyNames[request.toCurrencyCode] : ''
     const fromWalletCurrencyName = fromWallet != null ? fromWallet.currencyNames[request.fromCurrencyCode] : ''

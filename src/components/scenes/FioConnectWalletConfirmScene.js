@@ -1,6 +1,5 @@
 // @flow
 
-import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
 import { ScrollView } from 'react-native'
 
@@ -10,7 +9,7 @@ import { FIO_NO_BUNDLED_ERR_CODE, updatePubAddressesForFioAddress } from '../../
 import { Slider } from '../../modules/UI/components/Slider/Slider.js'
 import type { CcWalletMap } from '../../reducers/FioReducer'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
 import type { FioConnectionWalletItem } from '../../types/types'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { ButtonsModal } from '../modals/ButtonsModal'
@@ -31,18 +30,15 @@ type StateProps = {
   isConnected: boolean
 }
 
-type RouteProps = {
-  fioWallet: EdgeCurrencyWallet,
-  fioAddressName: string,
-  walletsToConnect: FioConnectionWalletItem[],
-  walletsToDisconnect: FioConnectionWalletItem[]
+type OwnProps = {
+  route: RouteProp<'fioConnectToWalletsConfirm'>
 }
 
 type DispatchProps = {
   updateConnectedWallets: (fioAddress: string, ccWalletMap: CcWalletMap) => void
 }
 
-type Props = StateProps & DispatchProps & RouteProps & ThemeProps
+type Props = StateProps & DispatchProps & OwnProps & ThemeProps
 
 export class FioConnectWalletConfirm extends React.Component<Props, State> {
   state = {
@@ -52,7 +48,8 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
   }
 
   confirm = async (): Promise<void> => {
-    const { fioWallet, fioAddressName, walletsToConnect, walletsToDisconnect, updateConnectedWallets, ccWalletMap, isConnected } = this.props
+    const { updateConnectedWallets, ccWalletMap, isConnected, route } = this.props
+    const { fioWallet, fioAddressName, walletsToConnect, walletsToDisconnect } = route.params
     if (isConnected) {
       this.setState({ connectWalletsLoading: true })
       const newCcWalletMap = { ...ccWalletMap }
@@ -182,7 +179,8 @@ export class FioConnectWalletConfirm extends React.Component<Props, State> {
   }
 
   render() {
-    const { fioAddressName, walletsToConnect, walletsToDisconnect, theme } = this.props
+    const { theme, route } = this.props
+    const { fioAddressName, walletsToConnect, walletsToDisconnect } = route.params
     const { acknowledge, connectWalletsLoading, showSlider } = this.state
     const styles = getStyles(theme)
 
@@ -239,9 +237,9 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const FioConnectWalletConfirmScene = connect<StateProps, DispatchProps, RouteProps>(
-  (state, ownProps) => ({
-    ccWalletMap: state.ui.fio.connectedWalletsByFioAddress[ownProps.fioAddressName],
+export const FioConnectWalletConfirmScene = connect<StateProps, DispatchProps, OwnProps>(
+  (state, { route: { params } }) => ({
+    ccWalletMap: state.ui.fio.connectedWalletsByFioAddress[params.fioAddressName],
     isConnected: state.network.isConnected
   }),
   dispatch => ({

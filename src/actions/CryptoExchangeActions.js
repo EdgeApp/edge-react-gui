@@ -96,7 +96,7 @@ export const getQuoteForTransaction = (info: SetNativeAmountInfo) => async (disp
       ))
       switch (result) {
         case 'buy':
-          Actions.jump(PLUGIN_BUY)
+          Actions.jump(PLUGIN_BUY, { direction: 'buy' })
           return
         case 'exchange':
           dispatch({ type: 'SHIFT_COMPLETE' })

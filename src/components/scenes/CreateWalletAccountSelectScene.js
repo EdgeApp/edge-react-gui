@@ -20,8 +20,8 @@ import SafeAreaView from '../../modules/UI/components/SafeAreaView/SafeAreaView.
 import { getDefaultDenomination } from '../../selectors/DenominationSelectors.js'
 import { THEME } from '../../theme/variables/airbitz.js'
 import { connect } from '../../types/reactRedux.js'
-import { Actions } from '../../types/routerTypes.js'
-import type { CreateWalletType, GuiFiatType, GuiWallet } from '../../types/types.js'
+import { type RouteProp, Actions } from '../../types/routerTypes.js'
+import type { GuiWallet } from '../../types/types.js'
 import { getCurrencyIcon } from '../../util/CurrencyInfoHelpers.js'
 import { scale } from '../../util/scaling.js'
 import { logEvent } from '../../util/tracking.js'
@@ -36,6 +36,10 @@ export type AccountPaymentParams = {
   requestedAccountCurrencyCode: string
 }
 
+type OwnProps = {
+  route: RouteProp<'createWalletAccountSelect'>
+}
+
 type StateProps = {
   wallets: { [string]: GuiWallet },
   paymentCurrencyCode: string,
@@ -47,14 +51,6 @@ type StateProps = {
   existingCoreWallet?: EdgeCurrencyWallet,
   walletAccountActivationQuoteError: string,
   currencyConfigs: { [key: string]: EdgeCurrencyConfig }
-}
-
-type OwnProps = {
-  selectedFiat: GuiFiatType,
-  selectedWalletType: CreateWalletType,
-  accountName: string,
-  // eslint-disable-next-line react/no-unused-prop-types
-  existingWalletId?: string
 }
 
 type DispatchProps = {
@@ -83,7 +79,8 @@ type State = {
 class CreateWalletAccountSelect extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
-    const { selectedFiat, selectedWalletType, createAccountBasedWallet, accountName } = props
+    const { createAccountBasedWallet, route } = this.props
+    const { selectedFiat, selectedWalletType, accountName } = route.params
     let createdWallet
     if (props.existingCoreWallet != null) {
       createdWallet = this.renameAndReturnWallet(props.existingCoreWallet)
@@ -96,12 +93,13 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
       walletName: '',
       createdWallet
     }
-    const currencyCode = props.selectedWalletType.currencyCode
+    const currencyCode = selectedWalletType.currencyCode
     props.fetchAccountActivationInfo(currencyCode)
   }
 
   renameAndReturnWallet = async (wallet: EdgeCurrencyWallet) => {
-    const { accountName } = this.props
+    const { route } = this.props
+    const { accountName } = route.params
     await wallet.renameWallet(accountName)
     return wallet
   }
@@ -132,7 +130,8 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   onPressSubmit = async () => {
-    const { createAccountTransaction, accountName } = this.props
+    const { createAccountTransaction, route } = this.props
+    const { accountName } = route.params
     const { walletId } = this.state
     const createdWallet = await this.state.createdWallet
     const createdWalletId = createdWallet.id
@@ -141,7 +140,8 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   onSelectWallet = async (walletId: string, paymentCurrencyCode: string) => {
-    const { wallets, accountName, fetchWalletAccountActivationPaymentInfo, setWalletAccountActivationQuoteError, selectedWalletType } = this.props
+    const { fetchWalletAccountActivationPaymentInfo, setWalletAccountActivationQuoteError, wallets, route } = this.props
+    const { accountName, selectedWalletType } = route.params
     setWalletAccountActivationQuoteError('') // reset fetching quote error to falsy
     const paymentWallet = wallets[walletId]
     const walletName = paymentWallet.name
@@ -162,7 +162,8 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   renderSelectWallet = () => {
-    const { activationCost, selectedWalletType } = this.props
+    const { activationCost, route } = this.props
+    const { selectedWalletType } = route.params
     const currencyCode = selectedWalletType.currencyCode
     const isSelectWalletDisabled = !activationCost || activationCost === ''
     return (
@@ -187,9 +188,10 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   renderPaymentReview = () => {
-    const { wallets, paymentCurrencyCode, accountName, isCreatingWallet, amount, selectedWalletType, selectedFiat, activationCost, paymentDenominationSymbol } =
-      this.props
+    const { wallets, paymentCurrencyCode, isCreatingWallet, amount, activationCost, paymentDenominationSymbol, route } = this.props
     const { walletId, createdWallet } = this.state
+    const { accountName, selectedWalletType, selectedFiat } = route.params
+
     const wallet = wallets[walletId]
     if (!wallet) return null
     const { name, symbolImageDarkMono } = wallet
@@ -247,7 +249,8 @@ class CreateWalletAccountSelect extends React.Component<Props, State> {
   }
 
   render() {
-    const { currencyConfigs, supportedCurrencies, selectedWalletType, activationCost, wallets, walletAccountActivationQuoteError } = this.props
+    const { route, currencyConfigs, supportedCurrencies, activationCost, wallets, walletAccountActivationQuoteError } = this.props
+    const { selectedWalletType } = route.params
     const { walletId } = this.state
     const walletTypeValue = selectedWalletType.walletType.replace('wallet:', '')
     const { symbolImage } = getCurrencyIcon(currencyConfigs[walletTypeValue].currencyInfo.currencyCode)
@@ -399,15 +402,17 @@ const rawStyles = {
 const styles: typeof rawStyles = StyleSheet.create(rawStyles)
 
 export const CreateWalletAccountSelectScene = connect<StateProps, DispatchProps, OwnProps>(
-  (state, ownProps) => {
+  (state, { route: { params } }) => {
     const { currencyWallets } = state.core.account
+    const { existingWalletId } = params
+
     const wallets = state.ui.wallets.byId
     const handleActivationInfo = state.ui.scenes.createWallet.handleActivationInfo
     const walletAccountActivationPaymentInfo = state.ui.scenes.createWallet.walletAccountActivationPaymentInfo
     const { supportedCurrencies, activationCost } = handleActivationInfo
     const { currencyCode, amount } = walletAccountActivationPaymentInfo
     const isCreatingWallet = state.ui.scenes.createWallet.isCreatingWallet
-    const existingCoreWallet = ownProps.existingWalletId ? currencyWallets[ownProps.existingWalletId] : undefined
+    const existingCoreWallet = existingWalletId ? currencyWallets[existingWalletId] : undefined
     const paymentDenomination = currencyCode ? getDefaultDenomination(state, currencyCode) : {}
 
     let paymentDenominationSymbol

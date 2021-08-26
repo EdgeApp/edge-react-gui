@@ -46,7 +46,6 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
   render() {
     const { currencySymbol } = this.props
     const { transactionAmount, transactionIsEnabled } = this.state
-    const { onTransactionIsEnabledChanged, onTransactionAmountChanged, onPasswordChanged, onSubmit } = this
 
     return (
       <SceneWrapper background="body" hasHeader>
@@ -56,7 +55,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
             tintColor={THEME.COLORS.GRAY_2}
             secureTextEntry
             label={s.strings.enter_your_password}
-            onChangeText={onPasswordChanged}
+            onChangeText={this.onPasswordChanged}
           />
 
           <View style={styles.switchRow}>
@@ -64,7 +63,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
               <FormattedText style={styles.bodyText}>{s.strings.spending_limits_tx_title}</FormattedText>
               <FormattedText style={styles.bodyText}>{s.strings.spending_limits_tx_description}</FormattedText>
             </View>
-            <Switch onValueChange={onTransactionIsEnabledChanged} value={transactionIsEnabled} />
+            <Switch onValueChange={this.onTransactionIsEnabledChanged} value={transactionIsEnabled} />
           </View>
 
           <TextField
@@ -72,7 +71,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
             baseColor={THEME.COLORS.SECONDARY}
             disabled={!transactionIsEnabled}
             value={transactionAmount.toString()}
-            onChangeText={onTransactionAmountChanged}
+            onChangeText={this.onTransactionAmountChanged}
             containerStyle={[{ flex: 1 }]}
             label={s.strings.spending_limits_tx_title}
             suffix={currencySymbol}
@@ -82,7 +81,7 @@ class SpendingLimitsComponent extends React.Component<Props, State> {
 
           <View style={styles.spacer} />
 
-          <PrimaryButton onPress={onSubmit}>
+          <PrimaryButton onPress={this.onSubmit}>
             <PrimaryButton.Text>{s.strings.save}</PrimaryButton.Text>
           </PrimaryButton>
         </KeyboardAwareScrollView>

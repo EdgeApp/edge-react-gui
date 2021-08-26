@@ -13,8 +13,12 @@ describe('CurrencySettings', () => {
   it('should render', () => {
     const renderer = new ShallowRenderer()
     const props = {
-      // NavigationProps:
-      currencyInfo: typeHack,
+      route: {
+        name: 'currencySettings',
+        params: {
+          currencyInfo: typeHack
+        }
+      },
 
       // StateProps:
       denominations: [
