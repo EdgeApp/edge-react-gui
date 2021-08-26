@@ -30,16 +30,17 @@ function SettingsRowComponent(props: Props): React.Node {
 
   const [pending, handlePress] = usePendingPress(onPress)
 
+  const textStyle = {
+    marginLeft: icon == null ? 0 : theme.rem(0.75),
+    marginRight: right == null && !pending ? 0 : theme.rem(0.75)
+  }
+
   return (
     <TouchableHighlight onPress={handlePress} underlayColor={theme.settingsRowPressed}>
       <View style={styles.row}>
-        {icon != null ? <View style={styles.paddingLeftIcon}>{icon}</View> : undefined}
-        <Text style={disabled ? styles.disabledText : styles.text}>{text}</Text>
-        {pending ? (
-          <ActivityIndicator color={theme.iconTappable} style={styles.spinner} />
-        ) : right != null ? (
-          <View style={styles.paddingRightIcon}>{right}</View>
-        ) : undefined}
+        {icon}
+        <Text style={[disabled ? styles.disabledText : styles.text, textStyle]}>{text}</Text>
+        {pending ? <ActivityIndicator color={theme.iconTappable} style={styles.spinner} /> : right}
       </View>
     </TouchableHighlight>
   )
@@ -75,12 +76,6 @@ const getStyles = cacheStyles((theme: Theme) => ({
     fontFamily: theme.fontFaceDefault,
     fontSize: theme.rem(1),
     textAlign: 'left'
-  },
-  paddingLeftIcon: {
-    paddingRight: theme.rem(0.75)
-  },
-  paddingRightIcon: {
-    paddingLeft: theme.rem(0.75)
   },
   spinner: {
     paddingLeft: theme.rem(0.75)
