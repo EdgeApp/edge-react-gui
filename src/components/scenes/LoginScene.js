@@ -4,7 +4,7 @@ import { Disklet } from 'disklet'
 import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import { LoginScreen } from 'edge-login-ui-rn'
 import * as React from 'react'
-import { Keyboard, Linking, Platform, StatusBar, StyleSheet, View } from 'react-native'
+import { type ImageSourcePropType, Keyboard, Linking, Platform, StatusBar, StyleSheet, View } from 'react-native'
 import { checkVersion } from 'react-native-check-version'
 import { getBundleId } from 'react-native-device-info'
 
@@ -21,6 +21,7 @@ import { type GuiTouchIdInfo } from '../../types/types.js'
 import { showHelpModal } from '../modals/HelpModal.js'
 import { UpdateModal } from '../modals/UpdateModal.js'
 import { Airship, showError } from '../services/AirshipInstance.js'
+import { getBackgroundImageFromCDN } from './../../util/ThemeCache.js'
 import { LoadingScene } from './LoadingScene.js'
 
 type StateProps = {
@@ -40,7 +41,8 @@ type Props = StateProps & DispatchProps
 
 type State = {
   counter: number,
-  passwordRecoveryKey?: string
+  passwordRecoveryKey?: string,
+  backgroundImage: ImageSourcePropType | null
 }
 
 let firstRun = true
@@ -51,7 +53,8 @@ class LoginSceneComponent extends React.Component<Props, State> {
 
     this.state = {
       counter: 0,
-      needsUpdate: false
+      needsUpdate: false,
+      backgroundImage: null
     }
   }
 
@@ -94,6 +97,9 @@ class LoginSceneComponent extends React.Component<Props, State> {
         />
       ))
     }
+    getBackgroundImageFromCDN(this.props.disklet)
+      .then(backgroundImage => this.setState({ backgroundImage }))
+      .catch(e => this.setState({ backgroundImage: edgeBackgroundImage }))
   }
 
   componentDidUpdate(oldProps: Props) {
@@ -124,25 +130,27 @@ class LoginSceneComponent extends React.Component<Props, State> {
 
   render() {
     const { context, handleSendLogs, username } = this.props
-    const { counter, passwordRecoveryKey } = this.state
+    const { counter, passwordRecoveryKey, backgroundImage } = this.state
 
     return this.props.account.username == null ? (
       <View style={styles.container} testID="edge: login-scene">
-        <LoginScreen
-          username={username}
-          accountOptions={{ pauseWallets: true }}
-          context={context}
-          recoveryLogin={passwordRecoveryKey}
-          onLogin={this.onLogin}
-          fontDescription={{ regularFontFamily: THEME.FONTS.DEFAULT }}
-          key={String(counter)}
-          appName={s.strings.app_name_short}
-          backgroundImage={edgeBackgroundImage}
-          primaryLogo={edgeLogo}
-          primaryLogoCallback={handleSendLogs}
-          parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
-          skipSecurityAlerts
-        />
+        {backgroundImage == null ? null : (
+          <LoginScreen
+            username={username}
+            accountOptions={{ pauseWallets: true }}
+            context={context}
+            recoveryLogin={passwordRecoveryKey}
+            onLogin={this.onLogin}
+            fontDescription={{ regularFontFamily: THEME.FONTS.DEFAULT }}
+            key={String(counter)}
+            appName={s.strings.app_name_short}
+            backgroundImage={backgroundImage}
+            primaryLogo={edgeLogo}
+            primaryLogoCallback={handleSendLogs}
+            parentButton={{ text: s.strings.string_help, callback: this.onClickHelp }}
+            skipSecurityAlerts
+          />
+        )}
       </View>
     ) : (
       <LoadingScene />
