@@ -125,9 +125,9 @@ export const updateTouchIdEnabled = (isTouchEnabled: boolean, account: EdgeAccou
     data: { isTouchEnabled }
   })
   if (isTouchEnabled) {
-    enableTouchId(account)
+    await enableTouchId(account)
   } else {
-    disableTouchId(account)
+    await disableTouchId(account)
   }
 }
 

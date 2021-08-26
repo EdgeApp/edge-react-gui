@@ -62,10 +62,10 @@ type StateProps = {
   touchIdEnabled: boolean
 }
 type DispatchProps = {
-  dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: EdgeAccount) => void,
+  dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: EdgeAccount) => Promise<void>,
   handleSendLogs: () => void,
   lockSettings: () => void,
-  onTogglePinLoginEnabled: (enableLogin: boolean) => void,
+  onTogglePinLoginEnabled: (enableLogin: boolean) => Promise<void>,
   setAutoLogoutTimeInSeconds: (autoLogoutTimeInSeconds: number) => void,
   showRestoreWalletsModal: () => void,
   showUnlockSettingsModal: () => void,
@@ -170,12 +170,12 @@ export class SettingsSceneComponent extends React.Component<Props, State> {
     Actions.push(PROMOTION_SETTINGS)
   }
 
-  handlePinToggle = (): void => {
-    this.props.onTogglePinLoginEnabled(!this.props.pinLoginEnabled)
+  handlePinToggle = async (): Promise<void> => {
+    await this.props.onTogglePinLoginEnabled(!this.props.pinLoginEnabled)
   }
 
-  handleTouchIdToggle = (): void => {
-    this.props.dispatchUpdateEnableTouchIdEnable(!this.props.touchIdEnabled, this.props.account)
+  handleTouchIdToggle = async (): Promise<void> => {
+    await this.props.dispatchUpdateEnableTouchIdEnable(!this.props.touchIdEnabled, this.props.account)
   }
 
   handleNotificationSettings = (): void => {
@@ -313,8 +313,8 @@ export const SettingsScene = connect<StateProps, DispatchProps, {}>(
     touchIdEnabled: state.ui.settings.isTouchEnabled
   }),
   dispatch => ({
-    dispatchUpdateEnableTouchIdEnable(arg: boolean, account: EdgeAccount) {
-      dispatch(updateTouchIdEnabled(arg, account))
+    async dispatchUpdateEnableTouchIdEnable(arg: boolean, account: EdgeAccount) {
+      await dispatch(updateTouchIdEnabled(arg, account))
     },
     handleSendLogs() {
       dispatch(showSendLogsModal())
@@ -325,8 +325,8 @@ export const SettingsScene = connect<StateProps, DispatchProps, {}>(
         data: true
       })
     },
-    onTogglePinLoginEnabled(enableLogin: boolean) {
-      dispatch(togglePinLoginEnabled(enableLogin))
+    async onTogglePinLoginEnabled(enableLogin: boolean) {
+      await dispatch(togglePinLoginEnabled(enableLogin))
     },
     setAutoLogoutTimeInSeconds(autoLogoutTimeInSeconds: number) {
       dispatch(setAutoLogoutTimeInSecondsRequest(autoLogoutTimeInSeconds))

@@ -6,14 +6,12 @@ import { type EdgeCurrencyWallet, type EdgeGetTransactionsOptions, type EdgeTran
 
 import { DECIMAL_PRECISION } from '../util/utils.js'
 
-export async function exportTransactionsToQBO(wallet: EdgeCurrencyWallet, opts: EdgeGetTransactionsOptions): Promise<string> {
-  const txs: EdgeTransaction[] = await wallet.getTransactions(opts)
+export async function exportTransactionsToQBO(wallet: EdgeCurrencyWallet, txs: EdgeTransaction[], opts: EdgeGetTransactionsOptions): Promise<string> {
   const { currencyCode = wallet.currencyInfo.currencyCode, denomination } = opts
   return exportTransactionsToQBOInner(txs, currencyCode, wallet.fiatCurrencyCode, denomination, Date.now())
 }
 
-export async function exportTransactionsToCSV(wallet: EdgeCurrencyWallet, opts: EdgeGetTransactionsOptions = {}): Promise<string> {
-  const txs: EdgeTransaction[] = await wallet.getTransactions(opts)
+export async function exportTransactionsToCSV(wallet: EdgeCurrencyWallet, txs: EdgeTransaction[], opts: EdgeGetTransactionsOptions = {}): Promise<string> {
   const { currencyCode = wallet.currencyInfo.currencyCode, denomination } = opts
 
   let denomName = ''

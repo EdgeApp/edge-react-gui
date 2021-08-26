@@ -6,6 +6,16 @@ import { type AirshipBridge } from 'react-native-airship'
 
 import { THEME } from '../../theme/variables/airbitz.js'
 import { scale } from '../../util/scaling.js'
+import { Airship } from '../services/AirshipInstance.js'
+
+/**
+ * Shows a message & activity spinner on a fullscreen backdrop, tied to the lifetime of a promise.
+ * No touches will be registed at it's lifetime.
+ */
+export function showFullScreenSpinner<T>(message: string, promise: Promise<T>): Promise<T> {
+  Airship.show(bridge => <AirshipFullScreenSpinner bridge={bridge} message={message} activity={promise} />)
+  return promise
+}
 
 const fadeInTime = 300
 const fadeOutTime = 1000
@@ -20,7 +30,7 @@ type Props = {
   activity?: Promise<mixed>
 }
 
-export class AirshipFullScreenSpinner extends React.Component<Props> {
+class AirshipFullScreenSpinner extends React.Component<Props> {
   opacity: Animated.Value
 
   constructor(props: Props) {

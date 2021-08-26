@@ -58,4 +58,4 @@ const getStyles = cacheStyles((theme: Theme) => ({
   }
 }))
 
-export const SettingsHeaderRow = withTheme(SettingsHeaderRowComponent)
+export const SettingsHeaderRow: React.StatelessFunctionalComponent<$Exact<OwnProps>> = withTheme(SettingsHeaderRowComponent)
