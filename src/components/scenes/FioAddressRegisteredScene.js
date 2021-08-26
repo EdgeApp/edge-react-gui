@@ -7,36 +7,19 @@ import { FIO_ADDRESS_LIST } from '../../constants/SceneKeys.js'
 import { formatDate } from '../../locales/intl.js'
 import s from '../../locales/strings.js'
 import T from '../../modules/UI/components/FormattedText/FormattedText.ui.js'
-import { type NavigationProp, Actions } from '../../types/routerTypes.js'
+import { Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext.js'
 import { MainButton } from '../themed/MainButton.js'
 
 export type OwnProps = {
   fioName: string,
-  expiration: string,
-  navigation: NavigationProp
+  expiration: string
 }
 
 type Props = OwnProps & ThemeProps
 
 class FioAddressRegistered extends React.Component<Props> {
-  componentDidMount() {
-    const { fioName } = this.props
-    this.props.navigation.setParams({
-      renderTitle: this.renderTitle(fioName)
-    })
-  }
-
-  renderTitle = (title: string) => {
-    const styles = getStyles(this.props.theme)
-    return (
-      <View style={styles.titleWrapper}>
-        <T style={styles.titleStyle}>{title}</T>
-      </View>
-    )
-  }
-
   render() {
     const { fioName, expiration, theme } = this.props
     const styles = getStyles(theme)
@@ -90,22 +73,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     marginTop: theme.rem(1.25),
     marginBottom: theme.rem(0.75)
   },
-  titleStyle: {
-    alignSelf: 'center',
-    fontSize: theme.rem(1.25),
-    color: theme.primaryText
-  },
   expiration: {
     fontSize: theme.rem(0.75),
     color: theme.primaryText,
     textAlign: 'center',
     marginTop: theme.rem(-0.5),
     paddingBottom: theme.rem(0.75)
-  },
-  titleWrapper: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%'
   }
 }))
 

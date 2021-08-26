@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyWallet } from 'edge-core-js'
 import * as React from 'react'
-import { Alert, View } from 'react-native'
+import { Alert } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import { FIO_ADDRESS_SETTINGS } from '../../constants/SceneKeys.js'
@@ -11,7 +11,7 @@ import s from '../../locales/strings.js'
 import { ConnectWalletsConnector as ConnectWallets } from '../../modules/FioAddress/components/ConnectWallets'
 import { alreadyExpired, expiredSoon, findWalletByFioAddress } from '../../modules/FioAddress/util'
 import { connect } from '../../types/reactRedux.js'
-import { type NavigationProp, Actions } from '../../types/routerTypes.js'
+import { Actions } from '../../types/routerTypes.js'
 import { SceneWrapper } from '../common/SceneWrapper'
 import { showError } from '../services/AirshipInstance'
 import { type Theme, type ThemeProps, cacheStyles, withTheme } from '../services/ThemeContext'
@@ -25,8 +25,7 @@ type StateProps = {
 
 type NavProps = {
   fioAddressName: string,
-  expiration: string,
-  navigation: NavigationProp
+  expiration: string
 }
 
 type LocalState = {
@@ -49,9 +48,6 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
         { text: s.strings.fio_address_details_screen_alert_button }
       ])
     }
-    this.props.navigation.setParams({
-      renderTitle: this.renderTitle(fioAddressName)
-    })
     this.findFioWallet()
   }
 
@@ -80,15 +76,6 @@ class FioAddressDetails extends React.Component<Props, LocalState> {
   checkExpiredSoon = (): boolean => expiredSoon(this.props.expiration)
 
   checkAlreadyExpired = (): boolean => alreadyExpired(this.props.expiration)
-
-  renderTitle = (title: string) => {
-    const styles = getStyles(this.props.theme)
-    return (
-      <View style={styles.titleWrapper}>
-        <EdgeText style={styles.titleStyle}>{title}</EdgeText>
-      </View>
-    )
-  }
 
   renderAccountSettings = () => {
     const { theme } = this.props
@@ -134,22 +121,12 @@ const getStyles = cacheStyles((theme: Theme) => ({
     color: theme.primaryText,
     fontSize: theme.rem(1)
   },
-  titleStyle: {
-    alignSelf: 'center',
-    fontSize: 20,
-    color: theme.primaryText
-  },
   expiration: {
     fontSize: theme.rem(0.75),
     color: theme.primaryText,
     textAlign: 'center',
     marginTop: theme.rem(-0.5),
     paddingBottom: theme.rem(0.75)
-  },
-  titleWrapper: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%'
   },
   settingsText: {
     color: theme.primaryText,

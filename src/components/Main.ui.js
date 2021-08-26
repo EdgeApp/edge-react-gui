@@ -739,7 +739,7 @@ export class MainComponent extends React.Component<Props> {
               key={FIO_ADDRESS_DETAILS}
               navTransparent
               component={ifLoggedIn(FioAddressDetailsScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_fio_address} />}
+              renderTitle={props => <HeaderTitle title={props.fioAddressName} />}
               renderLeftButton={<BackButton onPress={this.handleBack} />}
               renderRightButton={<SideMenuButton />}
             />
@@ -771,7 +771,7 @@ export class MainComponent extends React.Component<Props> {
               key={FIO_ADDRESS_REGISTER_SUCCESS}
               navTransparent
               component={ifLoggedIn(FioAddressRegisteredScene)}
-              renderTitle={<HeaderTitle title={s.strings.title_fio_address} />}
+              renderTitle={props => <HeaderTitle title={props.fioName} />}
               renderRightButton={<SideMenuButton />}
               renderLeftButton={this.renderEmptyButton()}
             />
