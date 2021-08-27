@@ -1,6 +1,6 @@
 // @flow
 
-import { asNumber, asObject } from 'cleaners'
+import { asMap, asNumber, asObject } from 'cleaners'
 import { Disklet } from 'disklet'
 import { ImageSourcePropType, Platform } from 'react-native'
 import RNFS from 'react-native-fs'
@@ -10,15 +10,15 @@ const directory = Platform.OS === 'ios' ? RNFS.DocumentDirectoryPath : RNFS.Exte
 const THEME_CACHE_FILE_NAME = 'themeCache.json'
 const EDGE_CONTENT_SERVER = 'https://content.edge.app'
 
-const asThemeCache = asObject(asNumber)
+const asThemeCache = asMap(asObject({ start: asNumber, expiration: asNumber }))
+type ThemeCache = $Call<typeof asThemeCache>
 
 type ItemTimestamps = { start: number, expiration: number }
 
-type ThemeCache = {
-  [name: string]: { cachedTimestamp: number }
+async function getThemeCache(disklet: Disklet): Promise<ThemeCache> {
+  const data = await disklet.getText(THEME_CACHE_FILE_NAME)
+  return asThemeCache(JSON.parse(data))
 }
-
-const getThemeCache = async (disklet: Disklet): ThemeCache => asThemeCache(JSON.parse(await disklet.getText(THEME_CACHE_FILE_NAME)))
 
 const setThemeCache = async (disklet: Disklet, data: ThemeCache): Promise<void> => await disklet.setText(THEME_CACHE_FILE_NAME, JSON.stringify(data))
 
@@ -36,12 +36,7 @@ export async function getBackgroundImageFromCDN(disklet: Disklet): Promise<Image
   const BACKGROUND_IMAGE_LOCAL_URI = `file://${directory}/${BACKGROUND_IMAGE_FILE_NAME}`
   const now = Date.now()
 
-  let cache = {}
-  try {
-    cache = await getThemeCache(disklet)
-  } catch (e) {
-    // Failure is OK
-  }
+  const cache: ThemeCache = await getThemeCache(disklet).catch(() => ({}))
   if (cache[BACKGROUND_IMAGE_URL] == null) {
     cache[BACKGROUND_IMAGE_URL] = { cachedTimestamp: now }
   }
