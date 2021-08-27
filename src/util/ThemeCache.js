@@ -43,7 +43,7 @@ export async function getBackgroundImageFromCDN(disklet: Disklet): Promise<Image
     // Failure is OK
   }
   if (cache[BACKGROUND_IMAGE_URL] == null) {
-    cache[BACKGROUND_IMAGE_URL].cachedTimestamp = now
+    cache[BACKGROUND_IMAGE_URL] = { cachedTimestamp: now }
   }
 
   try {
