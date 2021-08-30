@@ -1,6 +1,6 @@
 // @flow
 
-import { asMap, asNumber, asObject, uncleaner } from 'cleaners'
+import { asDate, asMap, asObject, uncleaner } from 'cleaners'
 import { Disklet } from 'disklet'
 import { ImageSourcePropType, Platform } from 'react-native'
 import RNFS from 'react-native-fs'
@@ -10,11 +10,18 @@ const directory = Platform.OS === 'ios' ? RNFS.DocumentDirectoryPath : RNFS.Exte
 const THEME_CACHE_FILE_NAME = 'themeCache.json'
 const EDGE_CONTENT_SERVER = 'https://content.edge.app'
 
-const asThemeCache = asMap(asObject({ start: asNumber, expiration: asNumber }))
+const asThemeCache = asObject({
+  assets: asMap(
+    asObject({
+      start: asDate,
+      expiration: asDate
+    })
+  )
+})
 const wasThemeCache = uncleaner(asThemeCache)
 type ThemeCache = $Call<typeof asThemeCache>
 
-type ItemTimestamps = { start: number, expiration: number }
+type ItemTimestamps = { start: Date, expiration: Date }
 
 async function getThemeCache(disklet: Disklet): Promise<ThemeCache> {
   const data = await disklet.getText(THEME_CACHE_FILE_NAME)
@@ -31,21 +38,22 @@ const getThemeItemTimestamps = async (url: string): Promise<ItemTimestamps> => {
   const start = response.headers.get('x-amz-meta-start-date') // '2021-08-26T01:37:50Z'
   const expiration = response.headers.get('x-amz-meta-expiration-date') // '2021-08-29T01:37:50Z'
   if (start == null || expiration == null) throw new Error('Failed to find file on CDN')
-  return { start: Date.parse(start), expiration: Date.parse(expiration) }
+  return { start: new Date(start), expiration: new Date(expiration) }
 }
 
 const downloadFile = async (disklet: Disklet, fromUrl: string, toFile: string): Promise<void> => {
   // See if the server even has an image for us in the first place:
-  const cache: ThemeCache = await getThemeCache(disklet).catch(() => ({}))
+  const cache: ThemeCache = await getThemeCache(disklet).catch(() => ({ assets: {} }))
   const { start, expiration } = await getThemeItemTimestamps(fromUrl)
-  if (expiration < Date.now()) return
-  if (cache[fromUrl] != null && cache[fromUrl].start === start && cache[fromUrl].expiration === expiration) return
+  if (expiration.valueOf() < Date.now()) return
+  const cacheTimes = cache.assets[fromUrl]
+  if (cacheTimes != null && cacheTimes.start.valueOf() === start.valueOf() && cacheTimes.expiration.valueOf() === expiration.valueOf()) return
 
   // Download file whenever local file timestamps do not equal remote file timestamps
   const download = RNFS.downloadFile({ fromUrl, toFile })
   const status = await download.promise
   if (status.statusCode !== 200) throw new Error('Failed to download')
-  cache[fromUrl] = { start, expiration }
+  cache.assets[fromUrl] = { start, expiration }
   await setThemeCache(disklet, cache)
 }
 
@@ -56,13 +64,9 @@ export async function getBackgroundImage(disklet: Disklet, fallback: ImageSource
   const now = Date.now()
   let image = fallback
 
-  const cache: ThemeCache = await getThemeCache(disklet).catch(() => ({}))
-  if (
-    cache[BACKGROUND_IMAGE_URL] != null &&
-    cache[BACKGROUND_IMAGE_URL].start < now &&
-    cache[BACKGROUND_IMAGE_URL].expiration > now &&
-    (await RNFS.exists(BACKGROUND_IMAGE_LOCAL_URI))
-  ) {
+  const cache: ThemeCache = await getThemeCache(disklet).catch(() => ({ assets: {} }))
+  const cacheTimes = cache.assets[BACKGROUND_IMAGE_URL]
+  if (cacheTimes != null && cacheTimes.start.valueOf() < now && cacheTimes.expiration.valueOf() > now && (await RNFS.exists(BACKGROUND_IMAGE_LOCAL_URI))) {
     image = { uri: BACKGROUND_IMAGE_LOCAL_URI }
   }
   // Always return existing local file but query and download new remote file in the background
